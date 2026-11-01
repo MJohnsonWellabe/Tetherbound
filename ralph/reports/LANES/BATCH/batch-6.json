@@ -1,0 +1,174 @@
+{
+ "batch": 6,
+ "base": "3ba3d3f14088aaf33df9814fe6f0dd4e2ee196a4",
+ "items": [
+  {
+   "item": "F36 Pebbik remake",
+   "camera_set": "F36",
+   "stands": [
+    "pebbik"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Reedwing remake",
+   "camera_set": "F36",
+   "stands": [
+    "reedwing"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Ribbonray remake",
+   "camera_set": "F36",
+   "stands": [
+    "ribbonray"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Ripplet remake",
+   "camera_set": "F36",
+   "stands": [
+    "ripplet"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Riptusk remake",
+   "camera_set": "F36",
+   "stands": [
+    "riptusk"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Riverdrake remake",
+   "camera_set": "F36",
+   "stands": [
+    "riverdrake"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Shadelet remake",
+   "camera_set": "F36",
+   "stands": [
+    "shadelet"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Sirenseal remake",
+   "camera_set": "F36",
+   "stands": [
+    "sirenseal"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Skyrill remake",
+   "camera_set": "F36",
+   "stands": [
+    "skyrill"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Solmane remake",
+   "camera_set": "F36",
+   "stands": [
+    "solmane"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Sparkit remake",
+   "camera_set": "F36",
+   "stands": [
+    "sparkit"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Staticub remake",
+   "camera_set": "F36",
+   "stands": [
+    "staticub"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Stormbrush remake",
+   "camera_set": "F36",
+   "stands": [
+    "stormbrush"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Stormraven remake",
+   "camera_set": "F36",
+   "stands": [
+    "stormraven"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Tempestwing remake",
+   "camera_set": "F36",
+   "stands": [
+    "tempestwing"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Thundertunnel remake",
+   "camera_set": "F36",
+   "stands": [
+    "thundertunnel"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Tidecoil remake",
+   "camera_set": "F36",
+   "stands": [
+    "tidecoil"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Torrentoad remake",
+   "camera_set": "F36",
+   "stands": [
+    "torrentoad"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Tuskroot remake",
+   "camera_set": "F36",
+   "stands": [
+    "tuskroot"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Voltarach remake",
+   "camera_set": "F36",
+   "stands": [
+    "voltarach"
+   ],
+   "lane": "REMAKES2"
+  },
+  {
+   "item": "F36 Voltwig remake",
+   "camera_set": "F36",
+   "stands": [
+    "voltwig"
+   ],
+   "lane": "REMAKES2"
+  }
+ ]
+}

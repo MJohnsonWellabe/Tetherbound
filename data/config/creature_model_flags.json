@@ -632,7 +632,7 @@
     },
     "remake_owner1101_pebbik": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Pebbik, a small sturdy desert fox-like creature with big ears, sandy fur (Meshy 01a197ea-bc18-71e5-9ce1-9a9018362f13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the thin green-gold lines and amber eyes. Provenance: assets/creatures/tetherbound/pebbik/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "pebbik": {
           "model": "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101.glb",
@@ -655,7 +655,7 @@
     },
     "remake_owner1101_reedwing": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Reedwing, a large teal-headed duck-like waterbird with cream breast and teal wings (Meshy 01a197eb-77a3-77db-bf12-e82900d4a52c). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips, folded wings at the established 2.65 m; emission on the aqua eyes and thin aqua lines on the teal head and wings. Provenance: assets/creatures/tetherbound/reedwing/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "reedwing": {
           "model": "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101.glb",
@@ -673,7 +673,7 @@
     },
     "remake_owner1101_ribbonray": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Ribbonray, a large flying manta ray with long ribbon tail, lilac and pink-violet skin (Meshy 01a197eb-8359-76c8-9c5e-1e58ef8cf73e). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips (it stands on two legs; the ray wings rig as spread wings) at the established 3.7 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/ribbonray/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "ribbonray": {
           "model": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101.glb",
@@ -691,7 +691,7 @@
     },
     "remake_owner1101_ripplet": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Ripplet, a water starter creature: a lean otter-like creature with fin-shaped ears, sky-teal fur and cream belly (Meshy 01a197ec-b437-740d-9194-1dae04f16d5c). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.6 m; emission on the bright aqua markings and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/ripplet/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "ripplet": {
           "model": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101.glb",
@@ -714,7 +714,7 @@
     },
     "remake_owner1101_riptusk": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riptusk, a large walrus-like armoured sea beast with long tusks, blue-grey hide with sandy plates (Meshy 01a197ed-364b-733d-8048-2e07c93b064f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the thin aqua lines on the hide and eyes. Provenance: assets/creatures/tetherbound/riptusk/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "riptusk": {
           "model": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101.glb",
@@ -737,7 +737,7 @@
     },
     "remake_owner1101_riverdrake": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riverdrake, a lean river drake lizard with a crest along its head and spine, blue scales and amber crest (Meshy 01a197ed-424e-7645-aabb-b223008f0477). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.0 m; emission on the thin aqua lines between the blue scales and eyes. Provenance: assets/creatures/tetherbound/riverdrake/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "riverdrake": {
           "model": "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101.glb",
@@ -760,7 +760,7 @@
     },
     "remake_owner1101_shadelet": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Shadelet, a lean dark lizard-drake with dusky navy-black scales and small spines (Meshy 01a197ee-4c70-725d-9d60-6eca27aa6f86). Baked grass disc stripped (fragmented-shell mode, low_islands). dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 2.8 m; emission on the violet eyes. Provenance: assets/creatures/tetherbound/shadelet/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "shadelet": {
           "model": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101.glb",
@@ -783,7 +783,7 @@
     },
     "remake_owner1101_sirenseal": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sirenseal, a large seal with long fin-like frills on its head and neck, pale grey-blue with darker blue spots (Meshy 01a197ee-4383-70ad-9243-f2f8c3e6feff). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua frill lines and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/sirenseal/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "sirenseal": {
           "model": "res://assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101.glb",
@@ -806,7 +806,7 @@
     },
     "remake_owner1101_skyrill": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Skyrill, a flying-squirrel glider with wide gliding membranes, sandy brown fur (Meshy 01a197ee-c4be-77b8-b29c-e2f42ec62ab5). No baked ground patch. rig_glider.py biped-glider rig (15 bones) and animate_quadruped.py glider clips (six) at the established 3.25 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/skyrill/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "skyrill": {
           "model": "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101.glb",
@@ -824,7 +824,7 @@
     },
     "remake_owner1101_solmane": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Solmane, a legendary winged lion with a great mane, warm gold and cream coat with feathered wings (Meshy 01a197ef-0b4c-7024-a8e4-e3f9cda621ae). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 6.7 m; no glow pixel found in the albedo for the reference's pale-blue eyes and wisps; no emission added. Provenance: assets/creatures/tetherbound/solmane/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "solmane": {
           "model": "res://assets/creatures/tetherbound/solmane/candidate_owner1101/models/creature_solmane_owner1101.glb",
@@ -847,7 +847,7 @@
     },
     "remake_owner1101_sparkit": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sparkit, a lean fennec fox with huge ears, yellow and black fur with a zig-zag tail (Meshy 01a197ef-c6ca-707e-a25f-84f3434e6678). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 1.95 m; emission on the electric-blue eyes and blue-white lightning on the legs (storm creature). Provenance: assets/creatures/tetherbound/sparkit/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "sparkit": {
           "model": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101.glb",
@@ -870,7 +870,7 @@
     },
     "remake_owner1101_staticub": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Staticub, a young brown bear cub, the cub of the storm bear, warm brown fur (Meshy 01a197f0-825a-7574-825c-18eae9afbb13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/staticub/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "staticub": {
           "model": "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101.glb",
@@ -893,7 +893,7 @@
     },
     "remake_owner1101_stormbrush": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Stormbrush, a large badger-porcupine with long dark quills and a black and white face (Meshy 01a197f1-edfd-71e2-9dd8-6d3133671854). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the blue-white lightning lines in the quills and eyes (storm creature). Provenance: assets/creatures/tetherbound/stormbrush/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "stormbrush": {
           "model": "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101.glb",
@@ -916,7 +916,7 @@
     },
     "remake_owner1101_stormraven": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Stormraven, a large dark blue-black raven (Meshy 01a197f2-6f21-7387-aa40-010c6cabd694). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips with the Pipwing shell-aware torso measurement (candidate_owner1101/source/prepare_stormraven_owner1101.py), folded wings at the established 3.4 m; emission on the blue-white lightning veins and eyes (storm creature). Provenance: assets/creatures/tetherbound/stormraven/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "stormraven": {
           "model": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101.glb",
@@ -934,7 +934,7 @@
     },
     "remake_owner1101_tempestwing": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tempestwing, a large dragonfly creature with long translucent wings, pale gold and grey body (Meshy 01a197f3-2ad5-763e-85f5-a210bf02e8cf). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.15 m; emission on the cyan eyes and wisp lines. Provenance: assets/creatures/tetherbound/tempestwing/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "tempestwing": {
           "model": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101.glb",
@@ -957,7 +957,7 @@
     },
     "remake_owner1101_thundertunnel": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Thundertunnel, a large mole with big digging claws and dark brown velvet fur (Meshy 01a197f3-38d1-72d6-9286-2f389cf6305a). Baked plinth stripped. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 2.8 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/thundertunnel/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "thundertunnel": {
           "model": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101.glb",
@@ -980,7 +980,7 @@
     },
     "remake_owner1101_tidecoil": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tidecoil, a great sea serpent with frilled fins, teal-blue scales and pale violet fin frills (Meshy 01a197f4-a320-77c9-9475-98800042782b). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 5.5 m; emission on the aqua specks and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/tidecoil/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "tidecoil": {
           "model": "res://assets/creatures/tetherbound/tidecoil/candidate_owner1101/models/creature_tidecoil_owner1101.glb",
@@ -1003,7 +1003,7 @@
     },
     "remake_owner1101_torrentoad": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Torrentoad, a large powerful toad with long jumping legs, olive-green and teal skin (Meshy 01a197f4-adb9-70a9-9a79-98ac4e375ade). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua lines and eyes. Provenance: assets/creatures/tetherbound/torrentoad/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "torrentoad": {
           "model": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101.glb",
@@ -1026,7 +1026,7 @@
     },
     "remake_owner1101_tuskroot": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tuskroot, a big grown wild boar with heavy tusks, brown bristly coat, the adult form of a young root boar (Meshy 01a197f5-2f19-7013-a06a-67e1f70089e6). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.6 m; no glow painted in the albedo (the reference has natural amber eyes); no emission added. Provenance: assets/creatures/tetherbound/tuskroot/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "tuskroot": {
           "model": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101.glb",
@@ -1049,7 +1049,7 @@
     },
     "remake_owner1101_voltarach": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Voltarach, a large spider creature with long armoured legs, black and gold carapace (Meshy 01a197f5-3ad0-777d-865a-baedfe11982f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the electric-blue sparks and eyes (storm creature). Provenance: assets/creatures/tetherbound/voltarach/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "voltarach": {
           "model": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101.glb",
@@ -1072,7 +1072,7 @@
     },
     "remake_owner1101_voltwig": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Voltwig, a lean chameleon-like lizard with twig-like spines, leaf-green and yellow skin (Meshy 01a197f7-1be6-707e-827a-286aeca1ac50). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue eyes and spark points (storm creature). Provenance: assets/creatures/tetherbound/voltwig/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "voltwig": {
           "model": "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101.glb",
