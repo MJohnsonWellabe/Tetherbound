@@ -617,7 +617,7 @@ func _play() -> void:
 		"09_cloudreach_handoff":
 			# As earned_chain_runner's tidewake_handoff, one chapter on: Home Key
 			# home, hang the earned Tidewake relic, Use/Enter the Cloudreach arch.
-			# A carried-full Satchel holds the Nerissa hand-off (portal key + relic)
+			# A carried-full Satchel holds the Nerissa coin payout and hand-off (portal key + relic)
 			# as boss_handoff_make_satchel_room; the player makes room first through
 			# the approved Satchel Drop, then the held duty delivers.
 			if not await _make_handoff_room(world):
@@ -645,7 +645,10 @@ func _make_handoff_room(world: Node3D) -> bool:
 	room._world = world
 	room._game = game
 	room._menu = game.call("menu")
-	if not await room.free_slots_for([{"id": "cloudreach_portal_key"}]):
+	# Two held rewards need room: Nerissa's coin payout (the carried coin stack is
+	# at its 999 cap, so it opens a new stack and takes the first freed slot) and
+	# the hand-off's portal key (diagnosed 1 Nov: one freed slot went to coin x456).
+	if not await room.free_slots_for([{"id": "coin"}, {"id": "cloudreach_portal_key"}]):
 		failures.append("cloudreach_handoff: Satchel room for the Nerissa hand-off failed: " + str(room.result().failures))
 		return false
 	for row: Variant in (room.result().get("receipts", []) as Array):
