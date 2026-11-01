@@ -9,7 +9,7 @@ const FLAG := "uiposes_riptusk_side_faint_prone_rest"
 
 func test_riptusk_flag_is_off_and_well_formed() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(POSES_PATH))
-	var entry: Dictionary = data.candidate_role_flags[FLAG]
+	var entry: Dictionary = data.lane_role_flags[FLAG]
 	assert_false(bool(entry.enabled), "Riptusk pose flag ships OFF")
 	assert_true("rest" in entry.adds_roles)
 	for id: String in ["riptusk", "water_riptusk"]:

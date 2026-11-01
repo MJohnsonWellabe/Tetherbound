@@ -47,7 +47,7 @@
  },
  {
   "item": "P2-028",
-  "flag": "data/creatures/f36_pose_candidates.json:candidate_role_flags.uiposes_riptusk_side_faint_prone_rest.enabled",
+  "flag": "data/creatures/f36_pose_candidates.json:lane_role_flags.uiposes_riptusk_side_faint_prone_rest.enabled",
   "camera_set": "tools/phase2_capture_creatures.gd --biome=water --only=ripplet,riptusk,aquaryn --seed=2042",
   "stands": [
    "tidewake__ripplet__fainted",
@@ -57,7 +57,7 @@
  },
  {
   "item": "P2-029",
-  "flag": "data/creatures/f36_pose_candidates.json:candidate_role_flags.uiposes_riptusk_side_faint_prone_rest.enabled",
+  "flag": "data/creatures/f36_pose_candidates.json:lane_role_flags.uiposes_riptusk_side_faint_prone_rest.enabled",
   "camera_set": "tools/phase2_capture_creatures.gd --biome=water --only=riptusk,torrentoad --seed=2042",
   "stands": [
    "tidewake__riptusk__resting",
