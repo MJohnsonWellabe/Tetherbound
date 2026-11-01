@@ -1,24 +1,18 @@
 # STORMCAMS lane (tb/vis-storm-cams): status
 
-## Summary (1 Nov, 16:15 UTC; rolling batches, coordinator sweeps every ~45 min)
-- **Criteria closed: zero.** Nothing here is judged; every candidate is flag-OFF on this branch and listed in `MANIFEST.json` (32 rows, one per item x flag x tool/biome; `group` 1 = dialogue camera + Nalia + plaza paving, `group` 2 = Stormwood scene + catch camera).
-- **Stand names** are the capture tools' own frame names: Tidewake dialogue frames are `water__...` (the tool's prefix; the catalogue says `tidewake__`), catch frames are the tool's file names (`03-strike`) under a per-biome camera set.
-- **Biggest swings (CPU sanity only, no scores):**
-  - Dialogue camera (11 items): `twoshot_v2` + `speaker_light_candidate`. Every dialogue frame captured on CPU now frames its speaker medium-close beside the panel (Marrow, Nysa, Nerissa, Nalia, Bex, Irva, Kelm, Veyra, Solene, Hald, Quarry Foreman).
-  - P2-083/P2-081 Marrow: fixed in the dialogue capture fixture (always on): it stood the player on the forest floor 150 m under Marrow's Dynamo deck. **Both GPU arms must use this branch's `tools/phase2_capture_dialogue.gd`** or the Marrow frames are not comparable.
-  - P2-074 Nalia: authored spot is up a sand wall with no stand; placement candidate moves her to the flat below.
-  - P2-041 Crown Arch: the catalogue camera (and the road) saw the Meshy arch edge-on; round 2 turns it to face the road and it reads as an arch.
-  - P2-076 plaza paving around Kelm and Veyra (anchored on their runtime bodies; Veyra's on the measured summit floor).
-  - P2-046 bigger harvest heroes, distinct crown silhouette; P2-043 rock collars at the spike feet.
-  - P2-113/P2-059: existing never-judged `catching.json framed_camera` (no change here).
-- **Parked:** P2-070 Glass Sink material (fog sets the floor colour at that depth; needs basin geometry).
-- **Composability:** flag keys are new blocks inside existing configs; code hunks are local (`conversation_camera.gd`, `cloudreach_world.gd` route-detail loop, Water NPC placement reads via one helper). No overlap found with tb/vis-water-sky's `cloudreach_world.gd` hunks.
-- **Landing note (twoshot_v2 ON):** `test_conversation_camera_aftermath_profile.gd::test_aftermath_lens_stays_near_a_far_speaker` asserts the ordinary push-in's lens stays more than 6 m from an 18 m speaker; twoshot_v2 frames closer by design, so that assertion fails with the flag on. It is left untouched here; landing the flag ON needs it re-stated, not skipped. My own 'ships OFF' assertions also flip at landing.
-- **Checks:** 328 focused unit tests (every test file touching a changed script, incl. flag scopes) pass, 0 failed, with all flags OFF.
-- **Not in scope / not attempted:** P2-087's stronghold orange grade itself (only the push-in and speaker light reach it), P2-056, P2-044 (creature lane), P2-038, P2-092, P2-040.
-
-Lane scope: Stormwood (F41) scene/material/placement items and every dialogue-camera item; camera-class items.
-Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` with its flag (all default OFF on this branch) for the 18:00 UTC `tb/vis-batch1` build.
+## Summary (1 Nov, 17:50 UTC; rolling batches)
+- **Criteria closed: zero.** Nothing here is judged yet. Every candidate is flag-OFF on this branch; `MANIFEST.json` has 42 rows (item x flag x tool/biome) in four groups:
+  - **Group 1** (dialogue camera, 11 items + Nalia + plaza paving): `twoshot_v2`, `speaker_light_candidate`, `water_npc_placement_candidate`, `plaza_paving_candidate`.
+  - **Group 2** (Stormwood scene + catch camera): Crown Arch round 2, Glass Field rock collars, harvest heroes round 2, `catching.json framed_camera`.
+  - **Group 3**: candy tiers (P2-045, working after a new approach), P2-082/P2-084 dialogue, Lantern Pools flags (P2-038), Stormwood character rim (P2-056, P2-055).
+  - **Group 4**: road puddles (P2-040).
+- **Both GPU arms need this branch's `tools/phase2_capture_dialogue.gd`**: it stands the player on Captain Marrow's Dynamo deck (it used to shoot him from the forest floor 150 m below), which the P2-083/P2-081 frames depend on.
+- **Stand names** are the capture tools' own frame names: Tidewake dialogue frames are `water__...`; catch frames are the tool's file names (`03-strike`) under a per-biome camera set.
+- **Parked:** P2-070 Glass Sink material (fog sets the floor colour; needs basin geometry); Fenn's frame in P2-084 (he stands against a giant trunk; a scatter-aware sight check made it worse and is off).
+- **Landing note (twoshot_v2 ON):** `test_conversation_camera_aftermath_profile.gd::test_aftermath_lens_stays_near_a_far_speaker` asserts the ordinary push-in's lens stays more than 6 m from an 18 m speaker; twoshot_v2 frames closer by design, so that one assertion fails with the flag on. Left untouched; landing the flag ON needs it re-stated, not skipped. The "ships OFF" assertions in `test_storm_cams_candidates.gd` and `test_conversation_camera.gd` also flip at landing.
+- **Composability:** flags are new keys or blocks inside existing configs, plus new files (`stormwood_harvest_hero2.json`, `water_npc_placement_candidate.json`, `stormwood_character_rim.json`); code hunks are local. No overlap with tb/vis-water-sky's `cloudreach_world.gd` hunks.
+- **Checks:** every test file touching a changed script passes with all flags OFF (328 tests at 16:10, plus the later focused reruns, 0 failed).
+- **Not attempted (other lanes or new art):** P2-087's stronghold grade itself, P2-044 (creatures), P2-092 (fight spacing), P2-109/P2-112/P2-089/P2-062 (mount and fight cameras).
 
 ## Candidates on this branch (all flags OFF)
 | Item(s) | Flag | What it changes |
