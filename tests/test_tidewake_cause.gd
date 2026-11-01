@@ -37,7 +37,7 @@ func test_sea_part_applies_its_water_and_offshore_keys() -> void:
 		assert_eq(water[key], wanted[key], "sea sets surfaces.water.%s" % key)
 	# The shipping surface keys the part does not name survive.
 	assert_eq(water.roughness, _raw().surfaces.water.roughness)
-	assert_eq(on.offshore.deep_colour, "#124862")
+	assert_eq(on.offshore.deep_colour, "#0f3f5a")
 	assert_eq(on.offshore.specular, _raw().offshore.specular)
 	assert_false(on.has("cause_light_look"), "sea does not touch light")
 
@@ -66,3 +66,16 @@ func test_parts_compose() -> void:
 	assert_true(on.has("cause_light_look"))
 	assert_true(on.has("lesson_clusters_candidate"))
 	assert_eq(float(on.surfaces.water.haze_strength), 0.3)
+
+
+func test_currents_part_strips_restored_paint() -> void:
+	var off := PROFILE.resolve(_raw())
+	var on := _with(["currents"])
+	assert_true(on.has("current_flow"), "currents brings current_flow into play")
+	var restored: Dictionary = on.current_flow.state_shader.restored
+	for key: String in ["dash_fill", "streak_density", "comet_opacity", "chevron_opacity", "channel_edge_opacity", "lane_opacity"]:
+		assert_eq(float(restored[key]), 0.0, "restored %s is off" % key)
+	# The live look is current_flow's own, unchanged.
+	assert_eq(on.current_flow.state_shader.live, _raw().current_flow.state_shader.live)
+	if not off.has("current_flow"):
+		assert_false(_with(["sea"]).has("current_flow"), "only currents restores current_flow")
