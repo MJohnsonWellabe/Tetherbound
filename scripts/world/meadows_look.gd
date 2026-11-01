@@ -8,11 +8,24 @@ var _meadows_candidate: Dictionary = {}
 
 
 func _load() -> Dictionary:
-	var base := super._load()
+	var base := light_candidate_look(super._load())
 	_meadows_candidate = MEADOWS_SURFACES.settings()
 	if not bool(_meadows_candidate.get("enabled", false)):
 		return base
 	return merged_look(base, _meadows_candidate.get("lighting", {}))
+
+
+## Group 3 (vis-meadows, OFF until GPU-judged): meadows_look.json
+## `light_candidate.look` is merged over art.json for the Meadows rig only,
+## the same recursive overlay a realm look uses. Off: `base` unchanged.
+static func light_candidate_look(base: Dictionary) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MEADOWS_SURFACES.CONFIG))
+	if not parsed is Dictionary:
+		return base
+	var candidate: Dictionary = (parsed as Dictionary).get("light_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return base
+	return merged_look(base, candidate.get("look", {}))
 
 
 func _ready() -> void:

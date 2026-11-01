@@ -185,6 +185,8 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - To reproduce the leak every time, run the child with `--write-movie <png> --fixed-fps 30` under xvfb. In movie mode audio mixes only on frames, so a sound playing at quit always leaks.
   - Never loosen the leak assertion. `ralph/reports/NETFIX/leak-1025/NOTE.md` has the details.
 
+- **Parse check without an import (disk-tight containers):** when `.godot` has no import and a full import won't fit, generate `.godot/global_script_class_cache.cfg` from the repo's `class_name` lines (`list=[{"base": &"<extends>", "class": &"<name>", "icon": "", "is_abstract": false, "is_tool": false, "language": &"GDScript", "path": "res://<file>"}, …]`), then run `godot --headless --path . --check-only --script res://<file>.gd`. It reports real parse errors (for example a parameter shadowed by a loop variable). Asset preloads fail without an import, so check a script whose own preloads block the parse in a temporary copy with those `const X := preload("res://…png")` lines stubbed to `null`, and delete the copy. It is not a substitute for `run_tests.gd`.
+
 **CPU captures (xvfb, Compatibility, Low)**
 - **Prefix:** `timeout <s> xvfb-run -a -s "-screen 0 1280x800x24" godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility --resolution 1280x720 --script res://tools/<tool>.gd -- …`
   - Never combine `--headless` with a capture.

@@ -59,3 +59,31 @@ func test_shipping_candidate_only_names_existing_sections_and_rows() -> void:
 			for row: Dictionary in hall_1.append[section][list_key]:
 				if row.has("model"):
 					assert_true(ResourceLoader.exists(str(row.model)), "appended model is installed: " + str(row.model))
+
+
+func test_hall_2_ships_off_and_off_leaves_hall_1_result_unchanged() -> void:
+	var cfg := _shipping()
+	assert_false(bool(cfg.get("hall_2", {}).get("enabled", true)), "HALL-2 ships OFF until GPU-judged")
+	var with_off := cfg.duplicate(true)
+	HALL.apply_hall_1(with_off)
+	var hall_1_only := cfg.duplicate(true)
+	hall_1_only.erase("hall_2")
+	HALL.apply_hall_1(hall_1_only)
+	with_off.erase("hall_2")
+	assert_eq(JSON.stringify(with_off), JSON.stringify(hall_1_only), "OFF changes nothing beyond hall_1")
+
+
+func test_hall_2_on_layers_after_hall_1_and_caps_the_altar() -> void:
+	var cfg := _shipping()
+	cfg.hall_2.enabled = true
+	HALL.apply_hall_1(cfg)
+	assert_eq(float(cfg.interior_ambient.night_ambient), 0.12, "hall_2 wins over hall_1's night ambient")
+	assert_eq(float(cfg.arch_facades.depth_scale), 0.45)
+	var altars := (cfg.hall_great_hall.pieces as Array).filter(func(r: Variant) -> bool:
+		return r is Dictionary and str(r.get("model", "")).ends_with("hall_shrine_altar.glb"))
+	assert_eq(altars.size(), 1, "one altar after hall_1 and hall_2 swap it")
+	assert_true(float(altars[0].emission_energy) < 1.0, "altar mask capped below white bloom")
+	var glows := (cfg.hall_dressing.pieces as Array).filter(func(r: Variant) -> bool:
+		return r is Dictionary and str(r.get("name", "")) == "ShrineGlow")
+	assert_eq(glows.size(), 1)
+	assert_eq(float(glows[0].light.energy), 1.0)
