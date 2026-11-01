@@ -80,6 +80,9 @@ var _arbiter: Node = null
 var _last_provider: Node3D = null
 var _bind_timer: float = 0.0
 var _active: bool = false
+## Speaker key and rim lights for the push-in (camera.json conversation
+## .speaker_lights, OFF by default); freed when the conversation comes down.
+var _speaker_lights: Array[Node3D] = []
 
 
 func _ready() -> void:
@@ -139,6 +142,8 @@ func begin(speaker: Node3D = null, profile: String = "") -> bool:
 	if who == null:
 		return false
 	_active = bool(rig.call("enter_conversation", who, profile_config(profile)))
+	if _active:
+		_light_speaker(who)
 	return _active
 
 
@@ -173,9 +178,65 @@ static func profile_config(profile: String) -> Dictionary:
 ## The conversation came down. Safe to call when nothing pushed in.
 func end() -> void:
 	_active = false
+	_clear_speaker_lights()
 	var rig := _rig()
 	if rig != null and rig.has_method("exit_conversation"):
 		rig.call("exit_conversation")
+
+
+## GPU judges (1 Nov) on character close-ups: "no rim or key light". A soft
+## key light in front of the speaker's face, from the camera's side, and a
+## fainter rim light behind them, both shadowless, so the face and silhouette
+## read in dialogue. Data: camera.json conversation.speaker_lights; OFF unless
+## `enabled` is true.
+static func speaker_light_positions(speaker_pos: Vector3, camera_pos: Vector3, speaker_height: float,
+		cfg: Dictionary) -> Dictionary:
+	var face := speaker_pos + Vector3.UP * speaker_height * float(cfg.get("face_height_frac", 0.88))
+	var toward := camera_pos - face
+	toward.y = 0.0
+	toward = toward.normalized() if toward.length() > 0.001 else Vector3.FORWARD
+	var side := toward.cross(Vector3.UP).normalized()
+	var key := face + toward * float(cfg.get("key_forward_m", 1.3)) \
+		+ side * float(cfg.get("key_side_m", 0.7)) + Vector3.UP * float(cfg.get("key_up_m", 0.35))
+	var rim := face - toward * float(cfg.get("rim_back_m", 1.1)) \
+		- side * float(cfg.get("key_side_m", 0.7)) * 0.5 + Vector3.UP * float(cfg.get("rim_up_m", 0.5))
+	return {"face": face, "key": key, "rim": rim}
+
+
+func _light_speaker(who: Node3D) -> void:
+	_clear_speaker_lights()
+	var cfg: Variant = _config.get("speaker_lights", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)) or not is_inside_tree():
+		return
+	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+	if camera == null:
+		return
+	var height := float(who.call("height")) if who.has_method("height") else 1.75
+	var at := speaker_light_positions(world_position(who), camera.global_position, height, cfg)
+	var colour_value: Array = (cfg as Dictionary).get("color", [1.0, 0.96, 0.9])
+	var colour := Color(float(colour_value[0]), float(colour_value[1]), float(colour_value[2]))
+	for role: String in ["key", "rim"]:
+		var light := OmniLight3D.new()
+		light.name = "ConversationSpeaker%sLight" % role.capitalize()
+		light.top_level = true
+		light.shadow_enabled = false
+		light.light_color = colour
+		light.light_specular = 0.25
+		light.light_energy = float((cfg as Dictionary).get("%s_energy" % role, 0.8 if role == "key" else 0.5))
+		light.omni_range = float((cfg as Dictionary).get("range_m", 3.5))
+		var host: Node = get_tree().current_scene
+		if host == null:
+			host = self
+		host.add_child(light)
+		light.global_position = at[role]
+		_speaker_lights.append(light)
+
+
+func _clear_speaker_lights() -> void:
+	for light: Node3D in _speaker_lights:
+		if is_instance_valid(light):
+			light.queue_free()
+	_speaker_lights.clear()
 
 
 ## Who this conversation is with, ASKED AT THE MOMENT THE BOX GOES UP rather

@@ -4,6 +4,14 @@
 
 ## Summary (1 Nov 2026)
 
+## Group 6 (1 Nov, pushed): key and rim light in dialogue close-ups
+
+This answers the judges' note "no rim or key light in close-ups" in game.
+- **What it does:** when the conversation camera pushes in, `conversation_camera.gd` adds a soft, shadowless key light in front of the speaker's face from the camera's side, and a fainter rim light behind them. Both are freed when the conversation ends.
+- **Flag:** `camera.json conversation.speaker_lights.enabled` (OFF). Energies 0.8 and 0.5, range 3.5 m.
+- **Test:** a new case in `tests/test_conversation_camera.gd` covers the placement and the OFF default, and the whole file passes (32/32).
+- **Not render-checked:** the dialogue capture (`phase2_capture_dialogue.gd`) boots the full world, which this container cannot import. Judge it on the DLG1 command set.
+
 ## Group 5 (1 Nov, pushed): human characters, one look flag each
 
 The coordinator moved this lane to human characters: the creature species are now being remade from Meshy models by the two remake lanes. The judges' notes on the villager and grunt anchors (about 5.8–6.6) were: soft, flat faces with dot eyes and no catchlight; no rim or key light; a stiff A-pose; muddy, low-contrast materials.

@@ -678,5 +678,15 @@
    "28-former-tether-member-threequarter"
   ],
   "group": 5
+ },
+ {
+  "item": "Character close-ups: dialogue key and rim light (all speakers)",
+  "flag": "data/config/camera.json:conversation.speaker_lights.enabled",
+  "camera_set": "dialogue (phase2_capture_dialogue.gd, the DLG1 command set)",
+  "stands": [
+   "every DLG1 dialogue frame"
+  ],
+  "group": 6,
+  "note": "Not render-checked on CPU: the dialogue capture boots the full world, which this container cannot import. Placement is unit-tested."
  }
 ]

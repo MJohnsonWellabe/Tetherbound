@@ -737,3 +737,23 @@ func test_a_conversation_shot_swings_off_a_creature_the_arm_passes_through() -> 
 	var look_end := swung_lens + (head - swung_lens).normalized() * ((head - swung_lens).length() - 0.3)
 	assert_false(_flank_blocks(swung_lens, look_end), "the swung lens sees the speaker past the creature")
 	assert_true(swung_lens.distance_to(lens) > 0.3, "the camera moved off the blocked line")
+
+
+## Speaker lights (camera.json conversation.speaker_lights, OFF by default):
+## the key light sits in front of the face on the camera's side, the rim light
+## behind the speaker, both above the ground and near the face.
+func test_speaker_lights_ship_off_and_place_key_in_front_and_rim_behind() -> void:
+	var CAM := preload("res://scripts/player/conversation_camera.gd")
+	var cfg: Dictionary = CAM.config().get("speaker_lights", {})
+	assert_true(not cfg.is_empty(), "camera.json declares conversation.speaker_lights")
+	assert_false(bool(cfg.get("enabled", true)), "speaker lights ship OFF")
+	var speaker := Vector3(2.0, 0.0, 5.0)
+	var camera := Vector3(2.0, 1.6, 0.0)
+	var at: Dictionary = CAM.speaker_light_positions(speaker, camera, 1.8, cfg)
+	var face: Vector3 = at.face
+	var key: Vector3 = at.key
+	var rim: Vector3 = at.rim
+	assert_true(key.z < face.z, "the key light is on the camera's side of the face")
+	assert_true(rim.z > face.z, "the rim light is behind the speaker")
+	assert_true(key.y > face.y and rim.y > face.y, "both lights sit above the face")
+	assert_true(key.distance_to(face) < 2.5 and rim.distance_to(face) < 2.5, "both lights stay close to the face")
