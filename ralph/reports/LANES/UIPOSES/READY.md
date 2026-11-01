@@ -17,6 +17,17 @@
 
 Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
 
+## Group 3: P2-108 Aquaryn mounted swim (4.97)
+
+- **Flag:** `data/config/water_mount_presentation.json:enabled`, new file.
+- **When on, the mounted Aquaryn:**
+  - sits 0.9 m deeper while swimming. Its 5 m body had about 4 m above the surface; the seated rider stays at least 0.2 m above sea level, which the test checks at the deepest bob;
+  - bobs ±0.12 m over 1.8 s;
+  - stops casting mesh shadows, and its blob contact shadow is hidden. Both are restored exactly on leaving the water.
+- **Code:** `water_mount_presentation.gd`, called from `water_mounted_swim.gd`.
+- **CPU capture (first pass):** the deeper sit and the swim pose read. The seabed blob was still visible, so the blob is now hidden too.
+- **Not mine:** frame 05 shows the existing ally camera fade turning the mount see-through.
+
 ## Group 2 (rolling batches, coordinator 1 Nov): P2-095 / P2-096 craft round 4
 
 - **Built on:** tb/world-craft-icons, merged into this branch.

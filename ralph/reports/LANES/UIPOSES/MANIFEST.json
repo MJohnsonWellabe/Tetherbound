@@ -164,5 +164,16 @@
    "meadows__system__crafting"
   ],
   "group": 2
+ },
+ {
+  "item": "P2-108",
+  "flag": "data/config/water_mount_presentation.json:enabled",
+  "camera_set": "tools/phase2_capture_tidewake_mounted_swim.gd --seed=2042",
+  "stands": [
+   "tidewake__system__mounted-swim-03-mounted",
+   "tidewake__system__mounted-swim-04-mounted",
+   "tidewake__system__mounted-swim-05-mounted"
+  ],
+  "group": 3
  }
 ]
