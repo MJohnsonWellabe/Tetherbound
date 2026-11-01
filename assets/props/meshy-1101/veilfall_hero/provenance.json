@@ -1,0 +1,25 @@
+{
+ "asset": "veilfall_hero",
+ "date": "2026-11-01",
+ "authority": "CLAUDE.md standing owner direction 1 (Meshy, no cap); coordinator-drafted reference, existing Meshy license, no purchase",
+ "reference": {
+  "tool": "Meshy text-to-image nano-banana",
+  "task_id": "01a19850-45b3-74e8-aa6e-c9eac65b1d9f",
+  "prompt": "Veilfall: a tall isolated sea-cliff mountain with a soft natural silhouette, pale sandy-grey layered rock and green vegetation ledges, several wide white waterfalls pouring from high clefts as continuous veils of white water and mist down the cliff faces into a turquoise pool, not a cone, irregular shoulders and plateaus, single hero landmark prop for a stylised-realism open-world action RPG (Valheim light, Palworld world), whole object visible and centered, isolated on a plain light grey background, soft even daylight, three-quarter elevated view, painterly polished game concept art, readable silhouette, naturalistic materials, no red or crimson, no text, no people, no creatures",
+  "file": "reference/veilfall_reference.png"
+ },
+ "model": {
+  "tool": "Meshy image-to-3D",
+  "task_id": "01a19851-897d-7726-80ed-9d7d72aa8d03",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 30000,
+   "symmetry_mode": "auto"
+  }
+ },
+ "status": "candidate: OFF until its scene passes the yardstick",
+ "why": "P2-010/F39 Veilfall 3.35: distant mountain reads as a geometric dark cone with broken streaks; ask for a natural silhouette with continuous white veils"
+}

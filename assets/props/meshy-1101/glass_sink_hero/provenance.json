@@ -1,0 +1,25 @@
+{
+ "asset": "glass_sink_hero",
+ "date": "2026-11-01",
+ "authority": "CLAUDE.md standing owner direction 1 (Meshy, no cap); coordinator-drafted reference, existing Meshy license, no purchase",
+ "reference": {
+  "tool": "Meshy text-to-image nano-banana",
+  "task_id": "01a19850-4019-75ac-b215-f5b1838d5ac7",
+  "prompt": "The Glass Sink: a wide natural circular sinkhole basin cut into a mossy forest floor, irregular broken rock rim with blue-green moss and roots, rough stepped stone terraces descending inward, the floor of the bowl a smooth fused pool of dark indigo volcanic glass with pale violet reflections and branching crack lines, clusters of translucent blue glass crystal spikes growing from the rim and terraces, single hero landmark prop for a stylised-realism open-world action RPG (Valheim light, Palworld world), whole object visible and centered, isolated on a plain light grey background, soft even daylight, three-quarter elevated view, painterly polished game concept art, readable silhouette, naturalistic materials, no red or crimson, no text, no people, no creatures",
+  "file": "reference/glass_sink_reference.png"
+ },
+ "model": {
+  "tool": "Meshy image-to-3D",
+  "task_id": "01a19851-8981-7285-a1ee-e17d9a16ca1e",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 30000,
+   "symmetry_mode": "auto"
+  }
+ },
+ "status": "candidate: OFF until its scene passes the yardstick",
+ "why": "P2-070 Glass Sink 3.19-5.06: judges ask for a shaped bowl with glass material and a rim transition"
+}
