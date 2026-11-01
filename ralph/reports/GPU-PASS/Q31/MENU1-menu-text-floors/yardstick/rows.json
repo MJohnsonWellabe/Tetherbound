@@ -1,0 +1,232 @@
+[
+ {
+  "batch": 1,
+  "code": "Ka",
+  "label": "MENU1 P2-004 High cand|ctl",
+  "side": "P2-004-ctl-High",
+  "mapped": 6.75,
+  "judges": [
+   7.17,
+   6.92,
+   6.16
+  ],
+  "defects": [
+   {
+    "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+   },
+   {
+    "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+   },
+   {
+    "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ka",
+  "label": "MENU1 P2-004 High cand|ctl",
+  "side": "P2-004-cand-High",
+  "mapped": 6.75,
+  "judges": [
+   7.17,
+   6.92,
+   6.16
+  ],
+  "defects": [
+   {
+    "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+   },
+   {
+    "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+   },
+   {
+    "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Aa",
+  "label": "MENU1 P2-007 High cand|ctl",
+  "side": "P2-007-cand-High",
+  "mapped": 5.91,
+  "judges": [
+   6.29,
+   6.04,
+   5.41
+  ],
+  "defects": [
+   {
+    "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+   },
+   {
+    "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+   },
+   {
+    "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Aa",
+  "label": "MENU1 P2-007 High cand|ctl",
+  "side": "P2-007-ctl-High",
+  "mapped": 5.91,
+  "judges": [
+   6.29,
+   6.04,
+   5.41
+  ],
+  "defects": [
+   {
+    "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+   },
+   {
+    "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+   },
+   {
+    "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Nx",
+  "label": "MENU1 P2-032 High cand|ctl",
+  "side": "P2-032-cand-High",
+  "mapped": 5.74,
+  "judges": [
+   6.04,
+   5.41,
+   5.79
+  ],
+  "defects": [
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   },
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   },
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Nx",
+  "label": "MENU1 P2-032 High cand|ctl",
+  "side": "P2-032-ctl-High",
+  "mapped": 5.74,
+  "judges": [
+   6.04,
+   5.41,
+   5.79
+  ],
+  "defects": [
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   },
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   },
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Aq",
+  "label": "MENU1 P2-001 High cand|ctl",
+  "side": "P2-001-ctl-High",
+  "mapped": 6.25,
+  "judges": [
+   6.66,
+   6.41,
+   5.66
+  ],
+  "defects": [
+   {
+    "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+   },
+   {
+    "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+   },
+   {
+    "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Aq",
+  "label": "MENU1 P2-001 High cand|ctl",
+  "side": "P2-001-cand-High",
+  "mapped": 6.25,
+  "judges": [
+   6.66,
+   6.41,
+   5.66
+  ],
+  "defects": [
+   {
+    "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+   },
+   {
+    "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+   },
+   {
+    "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Hy",
+  "label": "MENU1 P2-031 High cand|ctl",
+  "side": "P2-031-ctl-High",
+  "mapped": 5.62,
+  "judges": [
+   6.04,
+   5.66,
+   5.16
+  ],
+  "defects": [
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+   },
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+   },
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Hy",
+  "label": "MENU1 P2-031 High cand|ctl",
+  "side": "P2-031-cand-High",
+  "mapped": 6.12,
+  "judges": [
+   6.54,
+   6.16,
+   5.66
+  ],
+  "defects": [
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+   },
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+   },
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+   }
+  ]
+ }
+]
