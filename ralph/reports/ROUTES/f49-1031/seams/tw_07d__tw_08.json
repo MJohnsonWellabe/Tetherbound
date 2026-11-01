@@ -1,9 +1,9 @@
 {
  "kind": "f49_piece_seam",
  "from_piece": "07d_nerissa",
- "from_commit": "9846e94c54b6b4f98540029125818241c0f83798",
+ "from_commit": "02e8f4cbd7f10509427008ae5a13587d57bacdab",
  "to_piece": "08_ending",
- "to_commit": "9846e94c54b6b4f98540029125818241c0f83798",
+ "to_commit": "02e8f4cbd7f10509427008ae5a13587d57bacdab",
  "to_loaded_from": "/home/user/rb/tw_07d",
  "end_state": {
   "realm": "water",
@@ -115,9 +115,26 @@
    "wild_once_3103"
   ],
   "inventory": {
-   "coin": 456,
+   "axe": 1,
+   "coin": 999,
+   "driftwood": 2,
+   "elixir_guard": 1,
+   "elixir_vigour": 1,
+   "essence_air": 52,
+   "fiber": 3,
+   "hammer": 1,
+   "hide_vest": 1,
    "home_key": 1,
-   "revive": 3
+   "knife": 1,
+   "orb_basic": 44,
+   "orb_greater": 7,
+   "pickaxe": 1,
+   "potion_large": 7,
+   "potion_small": 12,
+   "revive": 17,
+   "rootstone": 19,
+   "tm_earth_fist": 1,
+   "torch": 1
   },
   "party": [
    {
@@ -171,7 +188,7 @@
  },
  "differences": [],
  "matches": true,
- "producer_save_tree_sha256_committed": "8fb36ed5628d26b593ff93a7e838fec84efe51435ca78387df62c94f82aa39d4",
+ "producer_save_tree_sha256_committed": "5d39b1bfa07b7caf817eccfb5b2bcb6969da03049d41e7dd4f8af77f014f3e23",
  "save_byte_identical": true,
  "consumer_from": "/home/user/rb/tw_07d"
 }
