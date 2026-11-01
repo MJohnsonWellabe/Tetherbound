@@ -652,5 +652,152 @@
    "meadows__inventory__trainer__stronghold_elite__dialogue"
   ],
   "group": 1
+ },
+ {
+  "item": "P2-062",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_fights.gd --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042",
+  "stands": [
+   "meadows__fights__south_bridge_grunt-01",
+   "meadows__fights__south_bridge_grunt-02",
+   "meadows__fights__south_bridge_grunt-03"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-063",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_fights.gd --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042",
+  "stands": [
+   "meadows__fights__south_bridge_grunt-02",
+   "meadows__fights__south_bridge_grunt-03",
+   "meadows__fights__south_bridge_grunt-05"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-064",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_fights.gd --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042",
+  "stands": [
+   "meadows__fights__warden_aldis-03",
+   "meadows__fights__warden_aldis-05",
+   "meadows__fights__warden_aldis-08"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-089",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --interval=1.0 --max-frames=32 --level=53 --pilot=READER --cap-s=180 --render-only-saves --seed=2042",
+  "stands": [
+   "tidewake__fight__venn__t-023_02",
+   "tidewake__fight__venn__t-024_02",
+   "tidewake__fight__venn__t-025_02"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-101",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --interval=4.0 --max-frames=150 --level=55 --pilot=READER --cap-s=240 --tells-per-opponent=1 --hits-per-opponent=1 --render-only-saves --seed=2042",
+  "stands": [
+   "tidewake__fight__venn_full__tell-ended-180_08",
+   "tidewake__fight__venn_full__t-208_00",
+   "tidewake__fight__venn_full__t-216_00"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-088",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --interval=1.0 --max-frames=32 --level=53 --pilot=READER --cap-s=180 --render-only-saves --seed=2042",
+  "stands": [
+   "tidewake__fight__venn__t-000_00",
+   "tidewake__fight__venn__tell-start-000_48",
+   "tidewake__fight__venn__t-003_02"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-090",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --interval=1.0 --max-frames=32 --level=53 --pilot=READER --cap-s=180 --render-only-saves --seed=2042",
+  "stands": [
+   "tidewake__fight__venn__t-000_00",
+   "tidewake__fight__venn__tell-start-001_65",
+   "tidewake__fight__venn__t-016_00"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-091",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --interval=1.0 --max-frames=32 --level=53 --pilot=READER --cap-s=180 --render-only-saves --seed=2042",
+  "stands": [
+   "tidewake__fight__venn__t-000_00",
+   "tidewake__fight__venn__tell-start-000_48"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-091",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_nerissa --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves --seed=2042",
+  "stands": [
+   "tidewake__fight__nerissa__t-000_00"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-112",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_cloudreach_live_fight.gd --seed=2042",
+  "stands": [
+   "cloudreach__fight__veyra_live__live-2430",
+   "cloudreach__fight__veyra_live__live-3510",
+   "cloudreach__fight__veyra_live__live-3870"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-092",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_fights.gd --ids=capacitor_alpha --seconds=18 --interval=1.0 --seed=2042",
+  "stands": [
+   "stormwood__fight__capacitor_alpha-i01",
+   "stormwood__fight__capacitor_alpha-tell1-a-start",
+   "stormwood__fight__capacitor_alpha-tell1-e-impact"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-093",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_fights.gd --ids=capacitor_alpha --seconds=18 --interval=1.0 --seed=2042",
+  "stands": [
+   "stormwood__fight__capacitor_alpha-tell1-d-strike",
+   "stormwood__fight__capacitor_alpha-tell1-e-impact"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-093",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+  "stands": [
+   "stormwood__fight__hollows_alpha-tell1-e-impact"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-110",
+  "flag": "data/config/camfx.json:impact_fx.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120 --interval=5 --seed=2042",
+  "stands": [
+   "stormwood__fight__hollows_long__hollows_alpha-i13",
+   "stormwood__fight__hollows_long__hollows_alpha-99-after"
+  ],
+  "group": 2
  }
 ]
