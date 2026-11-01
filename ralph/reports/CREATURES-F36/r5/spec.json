@@ -1,0 +1,38 @@
+[
+ {
+  "label": "bramblebun",
+  "a": "bramblebun-base.png",
+  "b": "bramblebun-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The creature stands no taller than, or barely above, the 1.80 m trainer"
+  ]
+ },
+ {
+  "label": "trailpup",
+  "a": "trailpup-base.png",
+  "b": "trailpup-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The creature stands no taller than, or barely above, the 1.80 m trainer"
+  ]
+ },
+ {
+  "label": "duskhush",
+  "a": "duskhush-base.png",
+  "b": "duskhush-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The creature stands no taller than, or barely above, the 1.80 m trainer"
+  ]
+ },
+ {
+  "label": "brooktail",
+  "a": "brooktail-base.png",
+  "b": "brooktail-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The creature stands no taller than, or barely above, the 1.80 m trainer"
+  ]
+ }
+]

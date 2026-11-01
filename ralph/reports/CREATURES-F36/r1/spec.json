@@ -1,0 +1,38 @@
+[
+ {
+  "label": "ripplet",
+  "a": "ripplet-base.png",
+  "b": "ripplet-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The coat reads as one flat teal value with no lighter belly"
+  ]
+ },
+ {
+  "label": "aquaryn",
+  "a": "aquaryn-base.png",
+  "b": "aquaryn-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The hit react lifts the forefeet off the ground instead of staying grounded"
+  ]
+ },
+ {
+  "label": "water_aquaryn",
+  "a": "water_aquaryn-base.png",
+  "b": "water_aquaryn-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The hit react lifts the forefeet off the ground instead of staying grounded"
+  ]
+ },
+ {
+  "label": "breezetail",
+  "a": "breezetail-base.png",
+  "b": "breezetail-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "A busy blue harness print"
+  ]
+ }
+]

@@ -1,47 +1,47 @@
 {
- "_comment": "Candidate clip amplitude changes for species that play their own authored clips, OFF by default (scripts/creatures/creature_body.gd _apply_clip_flags). An enabled flag scales each named role's keys relative to the clip's first key: a number scales rotation and position alike, a {rotation, position} pair scales them apart (0..2). The GPU judges an arm by flipping enabled.",
- "flags": {
-  "creatures_f36_grounded_hit_remakes": {
-   "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): hit react 'barely differs from standing' PARTIAL 3/3 for cindercub 7.13 and trailpup 7.00 (near-bar; owner close-out exception). They play their own clips, so the recipe flinch cannot reach them: the recoil is exaggerated (rotation x1.6) with the feet planted (position x0.5). CPU r8: cindercub 6.69 -> 7.04, trailpup 6.69 -> 7.00, hit defect FIXED for 2-3 judges. Bramblebun (+0.11) and duskhush (+0.04) left out.",
-   "enabled": true,
-   "species": {
-    "cindercub": {
-     "hit": {
-      "rotation": 1.6,
-      "position": 0.5
-     }
+  "_comment": "Candidate clip amplitude changes for species that play their own authored clips, OFF by default (scripts/creatures/creature_body.gd _apply_clip_flags). An enabled flag scales each named role's keys relative to the clip's first key: a number scales rotation and position alike, a {rotation, position} pair scales them apart (0..2). The GPU judges an arm by flipping enabled.",
+  "flags": {
+    "creatures_f36_grounded_hit_remakes": {
+      "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): hit react 'barely differs from standing' PARTIAL 3/3 for cindercub 7.13 and trailpup 7.00 (near-bar; owner close-out exception). They play their own clips, so the recipe flinch cannot reach them: the recoil is exaggerated (rotation x1.6) with the feet planted (position x0.5). CPU r8: cindercub 6.69 -> 7.04, trailpup 6.69 -> 7.00, hit defect FIXED for 2-3 judges. Bramblebun (+0.11) and duskhush (+0.04) left out.",
+      "enabled": true,
+      "species": {
+        "cindercub": {
+          "hit": {
+            "rotation": 1.6,
+            "position": 0.5
+          }
+        },
+        "trailpup": {
+          "hit": {
+            "rotation": 1.6,
+            "position": 0.5
+          }
+        }
+      }
     },
-    "trailpup": {
-     "hit": {
-      "rotation": 1.6,
-      "position": 0.5
-     }
+    "creatures_vis_grounded_hit_bramblebun": {
+      "_why": "VIS-CREATURES (1 Nov). GPU ROSTER-1 High: bramblebun 7.19, hit react PARTIAL 3/3, it 'looks airborne' (a hop). It plays its own clips, so the recipe flinch cannot reach it: keep the recoil (rotation x1.35) and plant the feet (position x0.25). Same hook as the landed cindercub/trailpup arm (CO16 +0.28 to +0.32).",
+      "enabled": false,
+      "species": {
+        "bramblebun": {
+          "hit": {
+            "rotation": 1.35,
+            "position": 0.25
+          }
+        }
+      }
+    },
+    "creatures_vis_grounded_hit_water_cannonback": {
+      "_why": "VIS-CREATURES (1 Nov). GPU ROSTER-1 High: water_cannonback 6.72, hit react PARTIAL 3/3 (barely differs from standing); it plays its own clips. Recoil exaggerated (rotation x1.6) with the body kept on the water (position x0.5), as the landed cindercub/trailpup arm.",
+      "enabled": false,
+      "species": {
+        "water_cannonback": {
+          "hit": {
+            "rotation": 1.6,
+            "position": 0.5
+          }
+        }
+      }
     }
-   }
-  },
-  "creatures_vis_grounded_hit_bramblebun": {
-   "_why": "VIS-CREATURES (1 Nov). GPU ROSTER-1 High: bramblebun 7.19, hit react PARTIAL 3/3, it 'looks airborne' (a hop). It plays its own clips, so the recipe flinch cannot reach it: keep the recoil (rotation x1.35) and plant the feet (position x0.25). Same hook as the landed cindercub/trailpup arm (CO16 +0.28 to +0.32).",
-   "enabled": false,
-   "species": {
-    "bramblebun": {
-     "hit": {
-      "rotation": 1.35,
-      "position": 0.25
-     }
-    }
-   }
-  },
-  "creatures_vis_grounded_hit_water_cannonback": {
-   "_why": "VIS-CREATURES (1 Nov). GPU ROSTER-1 High: water_cannonback 6.72, hit react PARTIAL 3/3 (barely differs from standing); it plays its own clips. Recoil exaggerated (rotation x1.6) with the body kept on the water (position x0.5), as the landed cindercub/trailpup arm.",
-   "enabled": false,
-   "species": {
-    "water_cannonback": {
-     "hit": {
-      "rotation": 1.6,
-      "position": 0.5
-     }
-    }
-   }
   }
- }
 }

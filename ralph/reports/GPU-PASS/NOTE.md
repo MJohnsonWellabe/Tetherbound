@@ -1,5 +1,182 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-9, Mudsnout, Paddlenewt and Riftfrill taller (flag, High first); this tree supersedes CO-F36-8's
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-9-on` e8da58fe1cc82fd919ed02cf564318748fc214b4.
+  - The candidate is CO-F36-8's all-flags tree plus one scale flag, so use this tree for every CREATURES-F36 flag arm (table in the CO-F36-8 request below).
+  - With every flag `false` it renders as main.
+- **To judge:** set `flags.creatures_f36_taller_than_trainer_3.enabled` to `true` in `data/config/creature_scale_flags.json`.
+  - mudsnout grows x1.5 (2.0 -> 3.0 m); paddlenewt and riftfrill x1.8 (2.15 -> 3.87 m).
+- **CPU r10** (three judges, confirming, r 0.92): mudsnout 6.22 -> 7.02, paddlenewt 6.18 -> 6.94, riftfrill 6.13 -> 6.90. The height defect goes from PRESENT x3 to FIXED x3 on all three.
+- **Verdict:** `ralph/reports/CREATURES-F36/r10/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:** `capture_f36_poses.gd --whole-body --context --species=mudsnout,paddlenewt,riftfrill --out=<fresh dir> --source-commit=e8da58fe1cc82fd919ed02cf564318748fc214b4`, plain.
+- **Report:** MET at High and the height defect call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-8, Pipwing and Sparkit taller, plus ONE TREE FOR EVERY CREATURES-F36 FLAG ARM (High first)
+
+- **One tree for all the flag arms:** check out `tb/co-f36-8-on` 4c13f7560ef4b01d88895b0cfdd592c2f42e9435 and import once (seven new coat textures).
+  - With every flag `false` it renders as main a41e1b30.
+  - Then flip one flag per arm:
+
+    | Arm | Flag | Species |
+    |---|---|---|
+    | CO-F36-2 | `data/creatures/f36_pose_candidates.json` `candidate_role_flags.creatures_f36_sirenseal_grounded_hit` | sirenseal, `--candidate` |
+    | CO-F36-3 | `data/config/creature_scale_flags.json` `creatures_f36_taller_than_trainer` | duskhush, brooktail, plain |
+    | CO-F36-4 | `data/config/creature_coat_flags.json` `creatures_f36_coat_lift` | cindercub, duskhush plain; ashtusk, thundertunnel `--candidate` |
+    | CO-F36-5 | `creatures_f36_coat_lift_2` | shadelet `--candidate`; stormtrail, nightburrow plain |
+    | CO-F36-6 | `data/config/creature_clip_flags.json` `creatures_f36_grounded_hit_remakes` | cindercub, trailpup, plain |
+    | CO-F36-7 | `creatures_f36_matte_finish` | skyrill, voltarach, cragclaw `--candidate`; sparkit, reedwing plain; GPU-only candidate |
+    | CO-F36-8 | `creatures_f36_taller_than_trainer_2` | pipwing, sparkit, plain |
+
+  - CO-F36-1 (Cragclaw and Skyrill side-lie faints) is the only arm that is not a flag; it stays on its own branch.
+- **CO-F36-8 itself:** pipwing x1.6 (1.9 -> 3.0 m) and sparkit x1.6 (1.95 -> 3.1 m). Height and collider radius grow together.
+  - GPU roster has pipwing at 6.66 and sparkit at 6.28 (R3 scale).
+  - CPU r9 (three judges, confirming, r 0.95): 5.67 -> 6.78, 5.62 -> 6.39.
+  - Verdict: `ralph/reports/CREATURES-F36/r9/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:** `capture_f36_poses.gd --whole-body --context --species=<list> --out=<fresh dir> --source-commit=4c13f7560ef4b01d88895b0cfdd592c2f42e9435`.
+  - Add `--candidate` for recipe species, as in the table.
+  - The control capture is the same tree with every flag `false`.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-7, matte finish for chrome and plastic creatures (flag, High first, GPU-only candidate)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-7-on` d2fa6f63c4a2af2962a980f038ef59cab690e405.
+  - The candidate is built on CO-F36-6, so it holds CO-F36-4 through -7. Each has its own flag; all are `false` by default.
+- **To judge:** set `flags.creatures_f36_matte_finish.enabled` to `true` (coat hook, `data/config/creature_coat_flags.json`).
+  - **Skyrill, Voltarach, Sparkit, Reedwing:** metallic goes to 0. The roughness map is replaced by a constant 0.8–0.85, and specular is 0.35.
+  - **Cragclaw:** roughness 0.92, specular 0.25.
+- **Why:** GPU roster 24 Oct, R4 "off-style materials":
+  - skyrill 6.33: "chrome-mirror skin"
+  - voltarach 6.87: "chrome-gold statue shader"
+  - sparkit 6.28: "flat mustard material"
+  - reedwing 6.78: "decal-like"
+  - cragclaw 6.40: "plasticky salmon skin"
+- **No CPU score:** CPU Compatibility renders no environment reflections, and the flag-on and flag-off CPU frames look the same. This is a GPU-only candidate, so please judge it only when the queue has room.
+- **Capture, High first:**
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=skyrill,voltarach,cragclaw --out=<fresh dir> --source-commit=<arm sha>`
+  - `capture_f36_poses.gd --whole-body --context --species=sparkit,reedwing --out=<fresh dir> --source-commit=<arm sha>`
+- **Combining arms:** CO-F36-1's Cragclaw and Skyrill faints are a separate branch from main; they combine with this one at landing.
+- **Report:** MET at High and the chrome or plastic call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-6, stronger grounded hit react for Cindercub and Trailpup (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-6-on` 66dc86a09e0d957c421cfa62a27a2da6c508a3b2.
+  - The candidate is built on CO-F36-5 (which contains CO-F36-4) and adds the flag-off clip hook plus `data/config/creature_clip_flags.json`.
+  - With every flag `false` it renders exactly as main.
+- **One tree for four arms:** after one import for the coat textures, this tree judges CO-F36-4, -5 and -6 by flipping one flag each:
+  - `creatures_f36_coat_lift` (CO-F36-4)
+  - `creatures_f36_coat_lift_2` (CO-F36-5)
+  - `creatures_f36_grounded_hit_remakes` (CO-F36-6)
+  - Flags can be combined. Cindercub has both a coat lift and this hit change.
+- **Why:** ROSTER-1 High has cindercub at 7.13 and trailpup at 7.00, both with the hit react PARTIAL 3/3 ("barely differs from standing"). They play their own clips.
+  - Enabled, the hit clip's rotation is scaled x1.6 and its root position x0.5.
+- **CPU r8** (three judges, confirming): 6.69 -> 7.04 and 6.69 -> 7.00. That is under 0.5, sent under the near-bar close-out exception; the hit defect is FIXED for 2 of 3 judges.
+- **Verdict:** `ralph/reports/CREATURES-F36/r8/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `capture_f36_poses.gd --whole-body --context --species=cindercub,trailpup --out=<fresh dir> --source-commit=<arm sha>`
+  - Plain run, no `--candidate`.
+- **Report:**
+  - MET at High: per flag, and for cindercub with both its flags on.
+  - The hit defect call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-5, coat value lift batch 2 (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-5-on` c2b5851b4bcb1cfd45d891eb9a98842e3ea82ffc.
+  - The candidate is built on CO-F36-4 and contains it.
+  - With both coat flags `false` it renders exactly as main.
+- **To judge:**
+  1. Run one import, for the seven new coat textures across CO-F36-4 and -5.
+  2. Set `flags.creatures_f36_coat_lift_2.enabled` to `true`.
+  - This tree can also judge CO-F36-4 by flipping `creatures_f36_coat_lift` instead.
+- **Species:**
+  - shadelet 6.29: "near-black, no rim light".
+  - stormtrail 5.98: "flat black placeholder dog".
+  - nightburrow 6.67: CO12 "coat noisy".
+- **CPU r7** (three judges, confirming, r 0.98): 5.59 -> 6.63, 5.63 -> 6.88, 5.72 -> 6.30.
+- **Verdict:** `ralph/reports/CREATURES-F36/r7/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=shadelet --out=<fresh dir> --source-commit=<arm sha>`
+  - `capture_f36_poses.gd --whole-body --context --species=stormtrail,nightburrow --out=<fresh dir> --source-commit=<arm sha>`
+- **Report:** MET at High and the dark-body defect call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-4, coat value lift for four dark creatures (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-4-on` 529829e882fee4ba71ff0a25f734af2da60051fc.
+  - The candidate is main plus a flag-off coat hook in `scripts/creatures/creature_body.gd`, `data/config/creature_coat_flags.json`, and four graded coat PNGs with their `.import` files.
+  - With the flag `false` it renders exactly as main.
+- **To judge:**
+  1. Run one import, for the four new textures.
+  2. Set `flags.creatures_f36_coat_lift.enabled` to `true`.
+- **Species:** cindercub 7.13, duskhush 6.77 and ashtusk 6.68 (ROSTER-1 "rim light and value lift"), plus thundertunnel 6.49 (CO12: "a dark mound with no readable face").
+- **CPU r6** (three judges, confirming, r 0.996): 5.83 -> 6.93, 5.42 -> 6.56, 5.74 -> 6.79, 6.01 -> 6.70. The dark-body defect goes from PRESENT to PARTIAL on all four.
+- **Verdict:** `ralph/reports/CREATURES-F36/r6/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first.** Same tool and flags as the other F36 arms:
+  - `capture_f36_poses.gd --whole-body --context --species=cindercub,duskhush --out=<fresh dir> --source-commit=<arm sha>`, plain.
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=ashtusk,thundertunnel --out=<fresh dir> --source-commit=<arm sha>`; both play pose recipes.
+- **Combining arms:** CO-F36-3 (duskhush taller) and this arm are independent flags and can be enabled together on one tree.
+- **Report:**
+  - MET at High.
+  - The dark-body defect call.
+  - Any reserved-red read on Cindercub's embers.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-3, Duskhush and Brooktail taller than the trainer (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-3-on` d13f2db3345f8a72c809ab2c94c7f28062965c26.
+  - The candidate is main plus a flag-off scale hook in `scripts/creatures/creature_species.gd` and `data/config/creature_scale_flags.json`.
+  - With the flag `false` it renders exactly as main.
+- **To judge:** set `flags.creatures_f36_taller_than_trainer.enabled` to `true`. No re-import is needed.
+  - Duskhush grows x1.35 (2.3 -> 3.1 m) and Brooktail x1.4 (2.1 -> 2.94 m).
+  - Height and collider radius grow together.
+- **Why:** ROSTER-1 High has duskhush at 6.77 and brooktail at 6.84; both stand barely above the trainer.
+- **CPU r5** (three judges, confirming, r 0.98): duskhush 5.81 -> 6.31, brooktail 5.81 -> 6.56. Both height defects go from PARTIAL x3 to FIXED x3.
+- **Verdict:** `ralph/reports/CREATURES-F36/r5/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --whole-body --context --species=duskhush,brooktail --out=<fresh dir> --source-commit=<arm sha>`
+  - Plain run, no `--candidate`: neither species plays a pose recipe.
+- **Report:**
+  - MET at High.
+  - The height defect call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-2, Sirenseal grounded hit (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-2-on` 505bc2e5ffad9bde51fa9919c2db7f8879af5fa1.
+  - The candidate is main plus the flag-off `candidate_role_flags` hook in `scripts/creatures/creature_pose_candidates.gd` and one flag in `data/creatures/f36_pose_candidates.json`.
+  - With the flag `false` it renders exactly as main.
+- **To judge:** on the candidate tree, set `candidate_role_flags.creatures_f36_sirenseal_grounded_hit.enabled` to `true`.
+  - No re-import is needed; the change is code plus JSON only.
+- **Why:** ROSTER-1 High has sirenseal at 6.81, with the hit react PARTIAL 3/3 and the whole body leaving the floor.
+  - Enabled, land Sirenseal's hit keeps 15% of its pivot rotation and 70% of its body recoil.
+  - water_sirenseal (7.27) is untouched.
+- **CPU r4** (three judges, confirming, r 0.95): 5.90 -> 7.14 (+1.24), airborne hit FIXED x3.
+- **Verdict:** `ralph/reports/CREATURES-F36/r4/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --whole-body --context --species=sirenseal,water_sirenseal --out=<fresh dir> --source-commit=<arm sha>`
+  - water_sirenseal is a no-change check.
+- **Report:**
+  - MET at High.
+  - The hit defect call.
+  - Whether water_sirenseal is unchanged.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-1, side-lie faints for Cragclaw and Skyrill
+
+- **Arms:** control main 3a0e1fa0d8446c5dffa3359a3c3543fa6ded18ca vs candidate `tb/co-f36-1-on` e5667aecd6e8cdcf66c9a33e9a69df049229b12e.
+  - The candidate is main plus one data change: the Cragclaw and Skyrill faint recipes in `data/creatures/f36_pose_candidates.json` roll the body 70 deg onto its side, back to the camera.
+  - water_cragclaw plays Cragclaw's recipe.
+- **Why:** GPU roster 24 Oct named these defects:
+  - Cragclaw 5.87: faint the same as standing.
+  - water_cragclaw 6.32: faint poses the same as standing.
+  - Skyrill 6.33: faint keeps head and sail up.
+- **CPU r2** (three judges, confirming, r 0.90): Cragclaw 5.71 -> 6.24, water_cragclaw 5.71 -> 6.24, Skyrill 6.00 -> 6.53 (+0.53 each). Skyrill's defect is FIXED x3; the crab's is PARTIAL x3 (it tips onto its shell edge).
+- **Verdict:** `ralph/reports/CREATURES-F36/r2/VERDICT.md` on `tb/creatures-f36`.
+- **Capture,** each arm at its own SHA on a clean tree, Medium and High, standard roster crop:
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --whole-body --context --species=cragclaw,water_cragclaw,skyrill --out=<fresh dir> --source-commit=<arm sha>`
+  - All three are in `enabled_species`, so `--candidate` installs.
+- **High first;** add Medium only if High reaches 7.5.
+- **No re-import needed:** the arm changes only `data/creatures/f36_pose_candidates.json` (two recipe lines plus a provenance key). It can be judged on any imported main tree by checking out that one file at e5667aecd.
+- **Report:**
+  - MET per form per preset.
+  - The faint defect calls.
+  - Whether the crab's shell-edge tip reads as grounded.
+
 ## READY (24 Oct): newest first
 
 - **F38#0 / F26#3 Meadows matrix on main 779422f10.** The matrix evidence is DELIVERED (High 354/528 and Medium 355/528 frames, plus the fight at 84/85). **F26#3 (Meadows) is REOPENED.**

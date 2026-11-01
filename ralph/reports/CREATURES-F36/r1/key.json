@@ -1,0 +1,41 @@
+{
+ "Oa": {
+  "anchor": false,
+  "label": "water_aquaryn",
+  "A": "water_aquaryn-cand.png",
+  "B": "water_aquaryn-base.png"
+ },
+ "Rl": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Py": {
+  "anchor": false,
+  "label": "aquaryn",
+  "A": "aquaryn-base.png",
+  "B": "aquaryn-cand.png"
+ },
+ "Lj": {
+  "anchor": false,
+  "label": "ripplet",
+  "A": "ripplet-base.png",
+  "B": "ripplet-cand.png"
+ },
+ "Uc": {
+  "anchor": false,
+  "label": "breezetail",
+  "A": "breezetail-cand.png",
+  "B": "breezetail-base.png"
+ },
+ "Ns": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ss": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ }
+}

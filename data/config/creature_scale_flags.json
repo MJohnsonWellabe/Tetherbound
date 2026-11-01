@@ -1,58 +1,66 @@
 {
- "_comment": "Candidate creature scale-ups, OFF by default (scripts/creatures/creature_species.gd _apply_scale_flags). An enabled flag multiplies each named species' placeholder height and collider radius by its factor (>= 1: grow the smaller side, never shrink). The GPU judges an arm by flipping enabled; landing one is a separate gameplay check (bed fit, ride seats, spawn clearance).",
- "flags": {
-  "creatures_f36_taller_than_trainer": {
-   "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (31 Oct, coordinator): duskhush 6.77 and brooktail 6.84 stand at or barely above the 1.80 m trainer (bounding heights 2.3 / 2.1 m). Hard rule: creatures taller than the trainer; grow the smaller side. CPU r5 (three judges, confirming, r 0.98): duskhush x1.35 5.81 -> 6.31, brooktail x1.4 5.81 -> 6.56. Bramblebun x1.3 (+0.15) and trailpup x1.3 (+0.10) were within noise (their height already read FIXED) and are left out.",
-   "enabled": true,
-   "species": {
-    "duskhush": 1.35,
-    "brooktail": 1.4
-   }
-  },
-  "creatures_f36_taller_than_trainer_2": {
-   "_why": "CREATURES-F36 height batch 2 (31 Oct). GPU roster 24 Oct R3: pipwing 6.66 (1.9 m bounds) and sparkit 6.28 'below the trainer's height' (1.95 m, mostly ears). CPU r9 (three judges, confirming, r 0.95): pipwing x1.6 5.67 -> 6.78, sparkit x1.6 5.62 -> 6.39. Paddlenewt and riftfrill x1.4 (+0.25 / +0.14) and glimmermoth x1.3 (+0.15) left out: their body line still reads low.",
-   "enabled": true,
-   "species": {
-    "pipwing": 1.6,
-    "sparkit": 1.6
-   }
-  },
-  "creatures_f36_taller_than_trainer_4": {"_why": "P2-017/P2-020 (vis-meadows, 1 Nov, OFF until GPU-judged): today's re-score reads the hare (bramblebun) and the owlet (duskhush) at or below the 1.80 m trainer. Hard rule: creatures taller than the trainer, grow the smaller side. bramblebun x1.3 (left out of batch 1 when its height read FIXED; it no longer does); duskhush a further x1.15 over batch 1's x1.35 (flags multiply, creature_species.gd). Neither has an evolution line to stay under.", "enabled": false, "species": {"bramblebun": 1.3, "duskhush": 1.15}}, "creatures_f36_taller_than_trainer_3": {
-   "_why": "CREATURES-F36 height batch 3 (31 Oct). GPU roster 24 Oct R3: mudsnout (2.0 m bounds; its back at trainer height; stays under its evolution Tuskroot's 3.6 m at x1.5); paddlenewt 6.75 and riftfrill 6.51, whose x1.4 in r9 left the body line low (+0.25 / +0.14), so x1.8. CPU r10 (three judges, confirming, r 0.92): mudsnout 6.22 -> 7.02, paddlenewt 6.18 -> 6.94, riftfrill 6.13 -> 6.90.",
-   "enabled": true,
-   "species": {
-    "mudsnout": 1.5,
-    "paddlenewt": 1.8,
-    "riftfrill": 1.8
-   }
-  },
-  "creatures_vis_taller_mirejaw": {
-   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: mirejaw 6.52 'Low, at trainer height' (R3, listed as config-only); not in the three landed height flags. Hard rule: creatures taller than the 1.80 m trainer; grow the smaller side. x1.35 (2.8 -> 3.78 m placeholder height); the CO16 height arms gained +0.24 to +0.64 at x1.35-1.8.",
-   "enabled": false,
-   "species": {
-    "mirejaw": 1.35
-   }
-  },
-  "remake_owner1101_body_line": {
-   "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). Owner-rule remakes whose body line (the top of the middle 40% of the body in the posed idle clip, ears, crests, wings and tails excluded; measured from each candidate GLB at its placeholder height) sits under 2.3 m against the 1.80 m trainer: sparkit 1.63, glimmermoth 1.80, galewisp 2.15, craghorn 2.20, bramblebun 2.22, shadelet 2.26, cliffspike 2.29. Each factor brings the body line to about 2.4 m. Hard rule: grow the smaller side, never shrink. Craghorn x1.09 stays under its evolution Stormcapra (3.50 -> 3.82 m < 3.85 m). Stacks with creatures_f36_taller_than_trainer_4 (bramblebun x1.3) if both are enabled: judge one or the other. Applies to the species whatever model is live; written for the remake models (remake_owner1101_* ON).",
-   "enabled": false,
-   "species": {
-    "sparkit": 1.47,
-    "glimmermoth": 1.35,
-    "galewisp": 1.15,
-    "craghorn": 1.09,
-    "bramblebun": 1.1,
-    "shadelet": 1.08,
-    "cliffspike": 1.05
-   }
-  },
-  "remake_owner1101_judged_short": {
-   "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature-stage judges read Terrapup (head at trainer height) and Pipwing as standing at or barely above the 1.80 m trainer. Measured from the candidate GLBs their posed body lines are 3.00 m and 2.73 m (bounding 3.20 / 3.04 m), so this arm tests the judges' read directly: x1.15 (terrapup 3.68 m, pipwing 3.50 m). Grow only; neither has an evolution line to stay under. Terrapup x1.15 also grows its rendered footprint past the installed dog3 box its remake was fitted to for the Burrow Warrens admission (tests/smoke_arena_contain.gd), so landing this arm needs that smoke re-run.",
-   "enabled": false,
-   "species": {
-    "terrapup": 1.15,
-    "pipwing": 1.15
-   }
+  "_comment": "Candidate creature scale-ups, OFF by default (scripts/creatures/creature_species.gd _apply_scale_flags). An enabled flag multiplies each named species' placeholder height and collider radius by its factor (>= 1: grow the smaller side, never shrink). The GPU judges an arm by flipping enabled; landing one is a separate gameplay check (bed fit, ride seats, spawn clearance).",
+  "flags": {
+    "creatures_f36_taller_than_trainer": {
+      "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (31 Oct, coordinator): duskhush 6.77 and brooktail 6.84 stand at or barely above the 1.80 m trainer (bounding heights 2.3 / 2.1 m). Hard rule: creatures taller than the trainer; grow the smaller side. CPU r5 (three judges, confirming, r 0.98): duskhush x1.35 5.81 -> 6.31, brooktail x1.4 5.81 -> 6.56. Bramblebun x1.3 (+0.15) and trailpup x1.3 (+0.10) were within noise (their height already read FIXED) and are left out.",
+      "enabled": true,
+      "species": {
+        "duskhush": 1.35,
+        "brooktail": 1.4
+      }
+    },
+    "creatures_f36_taller_than_trainer_2": {
+      "_why": "CREATURES-F36 height batch 2 (31 Oct). GPU roster 24 Oct R3: pipwing 6.66 (1.9 m bounds) and sparkit 6.28 'below the trainer's height' (1.95 m, mostly ears). CPU r9 (three judges, confirming, r 0.95): pipwing x1.6 5.67 -> 6.78, sparkit x1.6 5.62 -> 6.39. Paddlenewt and riftfrill x1.4 (+0.25 / +0.14) and glimmermoth x1.3 (+0.15) left out: their body line still reads low.",
+      "enabled": true,
+      "species": {
+        "pipwing": 1.6,
+        "sparkit": 1.6
+      }
+    },
+    "creatures_f36_taller_than_trainer_4": {
+      "_why": "P2-017/P2-020 (vis-meadows, 1 Nov, OFF until GPU-judged): today's re-score reads the hare (bramblebun) and the owlet (duskhush) at or below the 1.80 m trainer. Hard rule: creatures taller than the trainer, grow the smaller side. bramblebun x1.3 (left out of batch 1 when its height read FIXED; it no longer does); duskhush a further x1.15 over batch 1's x1.35 (flags multiply, creature_species.gd). Neither has an evolution line to stay under.",
+      "enabled": false,
+      "species": {
+        "bramblebun": 1.3,
+        "duskhush": 1.15
+      }
+    },
+    "creatures_f36_taller_than_trainer_3": {
+      "_why": "CREATURES-F36 height batch 3 (31 Oct). GPU roster 24 Oct R3: mudsnout (2.0 m bounds; its back at trainer height; stays under its evolution Tuskroot's 3.6 m at x1.5); paddlenewt 6.75 and riftfrill 6.51, whose x1.4 in r9 left the body line low (+0.25 / +0.14), so x1.8. CPU r10 (three judges, confirming, r 0.92): mudsnout 6.22 -> 7.02, paddlenewt 6.18 -> 6.94, riftfrill 6.13 -> 6.90.",
+      "enabled": true,
+      "species": {
+        "mudsnout": 1.5,
+        "paddlenewt": 1.8,
+        "riftfrill": 1.8
+      }
+    },
+    "creatures_vis_taller_mirejaw": {
+      "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: mirejaw 6.52 'Low, at trainer height' (R3, listed as config-only); not in the three landed height flags. Hard rule: creatures taller than the 1.80 m trainer; grow the smaller side. x1.35 (2.8 -> 3.78 m placeholder height); the CO16 height arms gained +0.24 to +0.64 at x1.35-1.8.",
+      "enabled": false,
+      "species": {
+        "mirejaw": 1.35
+      }
+    },
+    "remake_owner1101_body_line": {
+      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). Owner-rule remakes whose body line (the top of the middle 40% of the body in the posed idle clip, ears, crests, wings and tails excluded; measured from each candidate GLB at its placeholder height) sits under 2.3 m against the 1.80 m trainer: sparkit 1.63, glimmermoth 1.80, galewisp 2.15, craghorn 2.20, bramblebun 2.22, shadelet 2.26, cliffspike 2.29. Each factor brings the body line to about 2.4 m. Hard rule: grow the smaller side, never shrink. Craghorn x1.09 stays under its evolution Stormcapra (3.50 -> 3.82 m < 3.85 m). Stacks with creatures_f36_taller_than_trainer_4 (bramblebun x1.3) if both are enabled: judge one or the other. Applies to the species whatever model is live; written for the remake models (remake_owner1101_* ON).",
+      "enabled": false,
+      "species": {
+        "sparkit": 1.47,
+        "glimmermoth": 1.35,
+        "galewisp": 1.15,
+        "craghorn": 1.09,
+        "bramblebun": 1.1,
+        "shadelet": 1.08,
+        "cliffspike": 1.05
+      }
+    },
+    "remake_owner1101_judged_short": {
+      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature-stage judges read Terrapup (head at trainer height) and Pipwing as standing at or barely above the 1.80 m trainer. Measured from the candidate GLBs their posed body lines are 3.00 m and 2.73 m (bounding 3.20 / 3.04 m), so this arm tests the judges' read directly: x1.15 (terrapup 3.68 m, pipwing 3.50 m). Grow only; neither has an evolution line to stay under. Terrapup x1.15 also grows its rendered footprint past the installed dog3 box its remake was fitted to for the Burrow Warrens admission (tests/smoke_arena_contain.gd), so landing this arm needs that smoke re-run.",
+      "enabled": false,
+      "species": {
+        "terrapup": 1.15,
+        "pipwing": 1.15
+      }
+    }
   }
- }
 }

@@ -1,482 +1,482 @@
 {
- "_comment": "Candidate creature coats, OFF by default (scripts/creatures/creature_body.gd _apply_coat_flags). An enabled flag maps an ordinary coat's live albedo path to a graded file; an emission slot carrying the same image follows it; shiny bodies are untouched. The GPU judges an arm by flipping enabled; the graded files need an import like any new texture.",
- "flags": {
-  "creatures_f36_coat_lift": {
-   "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): cindercub 7.13, duskhush 6.77 and ashtusk 6.68 want a value lift and rim; GPU CO12 (31 Oct): thundertunnel 6.49 / 6.50 is still 'a dark mound with no readable face' after its first lift. Grades from tools/art_pipeline/grade_coat_value.py.",
-   "enabled": true,
-   "coats": {
-    "res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0_base_color_vivid.png": "res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0_base_color_vivid_coat_lift.png",
-    "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0.jpg": "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0_coat_lift.png",
-    "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk.png": "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk_coat_lift.png",
-    "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid_coat_lift.png"
-   }
-  },
-  "creatures_f36_coat_lift_2": {
-   "_why": "CREATURES-F36 batch 2 (31 Oct). GPU roster 24 Oct: shadelet 6.29 'near-black, no rim light; silhouette dissolves', stormtrail 5.98 'flat black placeholder dog'; CO12 31 Oct: nightburrow 6.67 'coat noisy and speckled'. Same grade as creatures_f36_coat_lift (tools/art_pipeline/grade_coat_value.py), gentler on the night and storm variants.",
-   "enabled": true,
-   "coats": {
-    "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0_base_color.jpg": "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0_base_color_coat_lift.png",
-    "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail.png": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail_coat_lift.png",
-    "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_coat_lift.png"
-   }
-  },
-  "creatures_f36_matte_finish": {
-   "_why": "CREATURES-F36 (31 Oct). GPU roster 24 Oct off-style materials (R4): skyrill 6.33 'chrome-mirror skin', voltarach 6.87 'chrome-gold statue shader', sparkit 6.28 'flat mustard material', reedwing 6.78 'decal-like', cragclaw 6.40 'plasticky salmon skin'. Probed live materials: skyrill, sparkit and reedwing render metallic 1.0 over their metallic maps; voltarach takes its gloss from its roughness map. Matte: metallic off, a constant fur/hide roughness, lower specular.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/skyrill/models/skyrill_extracted_base_color_vivid.png": {
-     "metallic": 0.0,
-     "roughness": 0.85,
-     "specular": 0.35
+  "_comment": "Candidate creature coats, OFF by default (scripts/creatures/creature_body.gd _apply_coat_flags). An enabled flag maps an ordinary coat's live albedo path to a graded file; an emission slot carrying the same image follows it; shiny bodies are untouched. The GPU judges an arm by flipping enabled; the graded files need an import like any new texture.",
+  "flags": {
+    "creatures_f36_coat_lift": {
+      "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): cindercub 7.13, duskhush 6.77 and ashtusk 6.68 want a value lift and rim; GPU CO12 (31 Oct): thundertunnel 6.49 / 6.50 is still 'a dark mound with no readable face' after its first lift. Grades from tools/art_pipeline/grade_coat_value.py.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0_base_color_vivid.png": "res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0_base_color_vivid_coat_lift.png",
+        "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0.jpg": "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0_coat_lift.png",
+        "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk.png": "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk_coat_lift.png",
+        "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid_coat_lift.png"
+      }
     },
-    "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
-     "metallic": 0.0,
-     "roughness": 0.8,
-     "specular": 0.35
+    "creatures_f36_coat_lift_2": {
+      "_why": "CREATURES-F36 batch 2 (31 Oct). GPU roster 24 Oct: shadelet 6.29 'near-black, no rim light; silhouette dissolves', stormtrail 5.98 'flat black placeholder dog'; CO12 31 Oct: nightburrow 6.67 'coat noisy and speckled'. Same grade as creatures_f36_coat_lift (tools/art_pipeline/grade_coat_value.py), gentler on the night and storm variants.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0_base_color.jpg": "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0_base_color_coat_lift.png",
+        "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail.png": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail_coat_lift.png",
+        "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_coat_lift.png"
+      }
     },
-    "res://assets/creatures/tetherbound/sparkit/models/creature_sparkit_lod0_base_color.jpg": {
-     "metallic": 0.0,
-     "roughness": 0.85,
-     "specular": 0.35
+    "creatures_f36_matte_finish": {
+      "_why": "CREATURES-F36 (31 Oct). GPU roster 24 Oct off-style materials (R4): skyrill 6.33 'chrome-mirror skin', voltarach 6.87 'chrome-gold statue shader', sparkit 6.28 'flat mustard material', reedwing 6.78 'decal-like', cragclaw 6.40 'plasticky salmon skin'. Probed live materials: skyrill, sparkit and reedwing render metallic 1.0 over their metallic maps; voltarach takes its gloss from its roughness map. Matte: metallic off, a constant fur/hide roughness, lower specular.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/skyrill/models/skyrill_extracted_base_color_vivid.png": {
+          "metallic": 0.0,
+          "roughness": 0.85,
+          "specular": 0.35
+        },
+        "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
+          "metallic": 0.0,
+          "roughness": 0.8,
+          "specular": 0.35
+        },
+        "res://assets/creatures/tetherbound/sparkit/models/creature_sparkit_lod0_base_color.jpg": {
+          "metallic": 0.0,
+          "roughness": 0.85,
+          "specular": 0.35
+        },
+        "res://assets/creatures/tetherbound/reedwing/models/creature_reedwing_lod0_base_color_vivid.png": {
+          "metallic": 0.0,
+          "roughness": 0.85,
+          "specular": 0.35
+        },
+        "res://assets/creatures/tetherbound/cragclaw/models/cragclaw_extracted_base_color_vivid.png": {
+          "roughness": 0.92,
+          "specular": 0.25
+        }
+      }
     },
-    "res://assets/creatures/tetherbound/reedwing/models/creature_reedwing_lod0_base_color_vivid.png": {
-     "metallic": 0.0,
-     "roughness": 0.85,
-     "specular": 0.35
+    "creatures_vis_coat_fulgocobra": {
+      "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct (F36-1/roster-base-1e83cafa0): fulgocobra 6.38, 'dark brown on stage' (R2 value and rim). Value lift as the landed coat lifts (CO16: +0.5 to +1.0 on dark coats). Grade: tools/art_pipeline/grade_vis_creatures.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_vis1.png"
+      }
     },
-    "res://assets/creatures/tetherbound/cragclaw/models/cragclaw_extracted_base_color_vivid.png": {
-     "roughness": 0.92,
-     "specular": 0.25
+    "creatures_vis_coat_mirejaw": {
+      "_why": "VIS-CREATURES (1 Nov). GPU CO9 27 Oct: mirejaw 6.39 / 6.23, water_mirejaw 6.28; roster 24 Oct 'dark faint blob; stretched dark bar on the tail'. Gentle lift of the darkest hide; rides with creatures_vis_taller_mirejaw. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_vis1.png"
+      }
+    },
+    "creatures_vis_coat_cannonback": {
+      "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: cannonback 6.92, 'brass-gear machinery shell reads as kitbash' (R4 off-style material); water_cannonback 6.72 (ROSTER-1). The brass/olive plating loses most of its saturation toward weathered horn; blue plates and face keep their pixels. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_vis1.png"
+      }
+    },
+    "creatures_vis_coat_abyssal_guardian": {
+      "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: abyssal_guardian 6.91, 'glossy vinyl-blue skin with regular dots; toy-like' (R4); water form 6.63. Cyan dots blend most of the way into the hide, the blue is a little deeper, and the self-lit emission drops to 0.6 so the stage light models the form. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6.png": {
+          "albedo": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6_vis1.png",
+          "emission_scale": 0.6
+        }
+      }
+    },
+    "creatures_vis_coat_veridian": {
+      "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: veridian 6.63, 'moss noise'; GPU 1024: 'bone-white bands read as a skeleton'. White bands drop to warm ivory; moss smoothed (median) so it reads as growth. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_Image_0.jpg": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_Image_0_vis1.png"
+      }
+    },
+    "creatures_vis_coat_voltarach": {
+      "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: voltarach 6.87 'chrome-gold statue shader; face lost'; CO34: 'a dark bronze/black base with thin gold arcs and readable blue eyes. Today the gold covers most of the body.' The gold halo darkens to bronze (arc cores keep their value), the black base lifts to dark bronze, the blue eyes brighten. Probed: its maps are already matte (metallic 0, roughness map mean 0.67), so the gold look is in the albedo, not the material values. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_vis1.png"
+      }
+    },
+    "creatures_vis_coat_mudsnout": {
+      "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: mudsnout 6.96 'single tan value flattens the face'; CO16 7.40 with its height (0.10 short; faint reads alert). Local value contrast so muzzle, eyes and bristle blocks separate. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_vis1.png"
+      }
+    },
+    "creatures_vis_coat_solmane": {
+      "_why": "VIS-CREATURES (1 Nov). GPU CO11 27 Oct: solmane 6.55 / 6.68. Pale washed tan at small size: modest local contrast and slightly darker highlights so the head reads; its faint pose is not touched here. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_vis1.png"
+      }
+    },
+    "creatures_vis_trait_bramblebun": {
+      "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: bramble and leaf growth over the back and ears (coordinator's owner note: 'Bramblebun: bramble and leaf growth'; ROSTER-1 7.19). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_bramblebun when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/bramblebun/candidate_nat1022/models/creature_bramblebun_nat1022_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/bramblebun/candidate_nat1022/models/creature_bramblebun_nat1022_Image_0_trait1.png"
+        }
+      }
+    },
+    "creatures_vis_trait_trailpup": {
+      "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: an earth-ochre stripe along the spine with a faint warm glow (coordinator's owner note: 'Trailpup: a dust-trail or earth-stripe glow'; ROSTER-1 7.00). Glow energy 0.5, kept low: earth is not a glowing element, so this is the one trait to read first if judges call it unnatural. Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_trailpup when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_trait1_glow.png",
+          "emission_energy": 1.2
+        }
+      }
+    },
+    "creatures_vis_trait_mudsnout": {
+      "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: a moss carpet over the shoulders and back (the original owner board: 'moss carpeting mudsnout's shoulders'). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_mudsnout when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_trait1.png"
+        }
+      }
+    },
+    "creatures_vis_trait_mirejaw": {
+      "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: swamp moss along the back (water/swamp). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_mirejaw when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_trait1.png"
+        }
+      }
+    },
+    "creatures_vis_trait_cannonback": {
+      "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: water-weed grown over the shell top, replacing the 'machinery' read (water). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_cannonback when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": {
+          "albedo": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_trait1.png"
+        }
+      }
+    },
+    "creatures_vis_trait_fulgocobra": {
+      "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: gold lightning running along its pattern's edges (electric; the boards' missing 'Fulgocobra gold veins', GPU P2 1022), lit as a thin rim, never across the hide. Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_fulgocobra when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": {
+          "albedo": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1_glow.png",
+          "emission_energy": 2.0
+        }
+      }
+    },
+    "creatures_vis_trait_riverdrake": {
+      "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: bioluminescent cyan along the crest and frill rims (water). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_riverdrake when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid.png": {
+          "albedo": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1_glow.png",
+          "emission_energy": 2.0
+        }
+      }
+    },
+    "creatures_vis_trait_solmane": {
+      "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: sky-blue tips on the upper wing feathers (air), a tint with no glow. Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_solmane when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": {
+          "albedo": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_trait1.png"
+        }
+      }
+    },
+    "creatures_vis_glow_mudsnout": {
+      "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in amber (ground). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_glow2.png",
+          "emission_energy": 1.4
+        }
+      }
+    },
+    "creatures_vis_glow_mirejaw": {
+      "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_glow2.png",
+          "emission_energy": 1.4
+        }
+      }
+    },
+    "creatures_vis_glow_cannonback": {
+      "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": {
+          "albedo": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_glow2.png",
+          "emission_energy": 1.4
+        }
+      }
+    },
+    "creatures_vis_glow_fulgocobra": {
+      "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes in gold (electric), keeping its group-3 lightning rims. Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": {
+          "albedo": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_glow2.png",
+          "emission_energy": 2.0
+        }
+      }
+    },
+    "creatures_vis_glow_riverdrake": {
+      "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water), keeping its group-3 frill rims. Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid.png": {
+          "albedo": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_glow2.png",
+          "emission_energy": 2.0
+        }
+      }
+    },
+    "creatures_vis_glow_solmane": {
+      "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in pale sky (air). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": {
+          "albedo": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_trait1.png",
+          "emission": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_glow2.png",
+          "emission_energy": 1.4
+        }
+      }
+    },
+    "creatures_vis_glow_voltarach": {
+      "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes in its board's blue eyes (electric). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_vis1.png",
+          "emission": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_glow2.png",
+          "emission_energy": 1.6
+        }
+      }
+    },
+    "remake_owner1101_glow_read": {
+      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage (1 Nov, three judges): the owner rule's fantasy element (glowing eyes plus element lines, veins or spots) does not read at gameplay distance on the remakes; only Brooktail's aqua spots showed (its map covers 2.8% of the texture at mean 0.76; Terrapup's 0.02%, eye dots only; Bramblebun's veins mean 0.52). One shared pass for all 46 remakes with a glow mask: the existing arc_emission mask (same hue choices) lit fully, a small halo inside the UV island for eye-only and thin-line masks (none above 2% coverage, so spots never become a body glow), purer element hue so Compatibility's LDR clip keeps the colour (warm glows held at hue 28+), emission energy 2.6 / 2.0 / 1.4 by coverage under 0.15% / under 2% / above. Bramblebun's core is rebuilt from its crevice veins (hue 112-155, about 3%; leaves stay unlit) at 2.0. Solmane and Tuskroot have no glow map (none in the concept / natural amber eyes). Real emission, not bloom: it reads with glow off. Script tools/art_pipeline/remake_owner1101_finish.py glow.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_glow_read.png",
+          "emission_energy": 1.4
+        },
+        "res://assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_glow_read.png",
+          "emission_energy": 1.4
+        },
+        "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_glow_read.png",
+          "emission_energy": 1.4
+        },
+        "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/cloudfang/candidate_owner1101/models/creature_cloudfang_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/cloudfang/candidate_owner1101/models/creature_cloudfang_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/craghorn/candidate_owner1101/models/creature_craghorn_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/craghorn/candidate_owner1101/models/creature_craghorn_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/frostclaw/candidate_owner1101/models/creature_frostclaw_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/frostclaw/candidate_owner1101/models/creature_frostclaw_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_read.png",
+          "emission_energy": 1.4
+        },
+        "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/mudsnout/candidate_owner1101/models/creature_mudsnout_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/mudsnout/candidate_owner1101/models/creature_mudsnout_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/pipwing/candidate_owner1101/models/creature_pipwing_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/pipwing/candidate_owner1101/models/creature_pipwing_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read.png",
+          "emission_energy": 1.4
+        },
+        "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/tidecoil/candidate_owner1101/models/creature_tidecoil_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/tidecoil/candidate_owner1101/models/creature_tidecoil_owner1101_glow_read.png",
+          "emission_energy": 1.4
+        },
+        "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101_glow_read.png",
+          "emission_energy": 2.0
+        }
+      }
+    },
+    "remake_owner1101_plate_blend": {
+      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage: Terrapup's 'evenly tiled green plates look stuck on, generated'; Bramblebun's bark plates read 'like a plaster cast'. Terrapup: pale bevel rims flattened, stone tone varies between warm stone and moss across the body, moss in the crevices between tiles, plate edges darken into moss and dirt where they meet the coat. Bramblebun: grainy pale bark plates (region vote on carved-grain contrast, so the soft white belly and inner-ear fur stay) go warm brown (hue 28-36, saturation under 0.5, clear of Team Tether red) with grain kept, and moss creeps in from the veins and leaves. Eyes, veins and fur keep their pixels; mesh and UVs untouched. Script tools/art_pipeline/remake_owner1101_finish.py plate.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0_plate_blend.jpg"
+        },
+        "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0_plate_blend.jpg"
+        }
+      }
+    },
+    "remake_owner1101_dark_lift": {
+      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage: dark remake bodies (Brooktail, the black river otter; Voltarach) sink into dark ground. The same value lift as creatures_f36_coat_lift (dark low-saturation texels x1.35-1.4 plus 0.03, feathered; eyes, mouth line and the saturated aqua spots and blue sparks keep their pixels), gentle enough to keep the black identity. Pairs with remake_owner1101_glow_read (its emission map applies over the lifted albedo). Script tools/art_pipeline/grade_coat_value.py brooktail_owner1101 voltarach_owner1101.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0_coat_lift.jpg"
+        },
+        "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_Image_0_coat_lift.jpg"
+        }
+      }
     }
-   }
-  },
-  "creatures_vis_coat_fulgocobra": {
-   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct (F36-1/roster-base-1e83cafa0): fulgocobra 6.38, 'dark brown on stage' (R2 value and rim). Value lift as the landed coat lifts (CO16: +0.5 to +1.0 on dark coats). Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_vis1.png"
-   }
-  },
-  "creatures_vis_coat_mirejaw": {
-   "_why": "VIS-CREATURES (1 Nov). GPU CO9 27 Oct: mirejaw 6.39 / 6.23, water_mirejaw 6.28; roster 24 Oct 'dark faint blob; stretched dark bar on the tail'. Gentle lift of the darkest hide; rides with creatures_vis_taller_mirejaw. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_vis1.png"
-   }
-  },
-  "creatures_vis_coat_cannonback": {
-   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: cannonback 6.92, 'brass-gear machinery shell reads as kitbash' (R4 off-style material); water_cannonback 6.72 (ROSTER-1). The brass/olive plating loses most of its saturation toward weathered horn; blue plates and face keep their pixels. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_vis1.png"
-   }
-  },
-  "creatures_vis_coat_abyssal_guardian": {
-   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: abyssal_guardian 6.91, 'glossy vinyl-blue skin with regular dots; toy-like' (R4); water form 6.63. Cyan dots blend most of the way into the hide, the blue is a little deeper, and the self-lit emission drops to 0.6 so the stage light models the form. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6.png": {
-     "albedo": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6_vis1.png",
-     "emission_scale": 0.6
-    }
-   }
-  },
-  "creatures_vis_coat_veridian": {
-   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: veridian 6.63, 'moss noise'; GPU 1024: 'bone-white bands read as a skeleton'. White bands drop to warm ivory; moss smoothed (median) so it reads as growth. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_Image_0.jpg": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_Image_0_vis1.png"
-   }
-  },
-  "creatures_vis_coat_voltarach": {
-   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: voltarach 6.87 'chrome-gold statue shader; face lost'; CO34: 'a dark bronze/black base with thin gold arcs and readable blue eyes. Today the gold covers most of the body.' The gold halo darkens to bronze (arc cores keep their value), the black base lifts to dark bronze, the blue eyes brighten. Probed: its maps are already matte (metallic 0, roughness map mean 0.67), so the gold look is in the albedo, not the material values. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_vis1.png"
-   }
-  },
-  "creatures_vis_coat_mudsnout": {
-   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: mudsnout 6.96 'single tan value flattens the face'; CO16 7.40 with its height (0.10 short; faint reads alert). Local value contrast so muzzle, eyes and bristle blocks separate. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_vis1.png"
-   }
-  },
-  "creatures_vis_coat_solmane": {
-   "_why": "VIS-CREATURES (1 Nov). GPU CO11 27 Oct: solmane 6.55 / 6.68. Pale washed tan at small size: modest local contrast and slightly darker highlights so the head reads; its faint pose is not touched here. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_vis1.png"
-   }
-  },
-  "creatures_vis_trait_bramblebun": {
-   "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: bramble and leaf growth over the back and ears (coordinator's owner note: 'Bramblebun: bramble and leaf growth'; ROSTER-1 7.19). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_bramblebun when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/bramblebun/candidate_nat1022/models/creature_bramblebun_nat1022_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/bramblebun/candidate_nat1022/models/creature_bramblebun_nat1022_Image_0_trait1.png"
-    }
-   }
-  },
-  "creatures_vis_trait_trailpup": {
-   "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: an earth-ochre stripe along the spine with a faint warm glow (coordinator's owner note: 'Trailpup: a dust-trail or earth-stripe glow'; ROSTER-1 7.00). Glow energy 0.5, kept low: earth is not a glowing element, so this is the one trait to read first if judges call it unnatural. Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_trailpup when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_trait1_glow.png",
-     "emission_energy": 1.2
-    }
-   }
-  },
-  "creatures_vis_trait_mudsnout": {
-   "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: a moss carpet over the shoulders and back (the original owner board: 'moss carpeting mudsnout's shoulders'). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_mudsnout when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_trait1.png"
-    }
-   }
-  },
-  "creatures_vis_trait_mirejaw": {
-   "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: swamp moss along the back (water/swamp). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_mirejaw when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_trait1.png"
-    }
-   }
-  },
-  "creatures_vis_trait_cannonback": {
-   "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: water-weed grown over the shell top, replacing the 'machinery' read (water). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_cannonback when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": {
-     "albedo": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_trait1.png"
-    }
-   }
-  },
-  "creatures_vis_trait_fulgocobra": {
-   "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: gold lightning running along its pattern's edges (electric; the boards' missing 'Fulgocobra gold veins', GPU P2 1022), lit as a thin rim, never across the hide. Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_fulgocobra when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": {
-     "albedo": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1_glow.png",
-     "emission_energy": 2.0
-    }
-   }
-  },
-  "creatures_vis_trait_riverdrake": {
-   "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: bioluminescent cyan along the crest and frill rims (water). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_riverdrake when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid.png": {
-     "albedo": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1_glow.png",
-     "emission_energy": 2.0
-    }
-   }
-  },
-  "creatures_vis_trait_solmane": {
-   "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: sky-blue tips on the upper wing feathers (air), a tint with no glow. Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_solmane when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": {
-     "albedo": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_trait1.png"
-    }
-   }
-  },
-  "creatures_vis_glow_mudsnout": {
-   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in amber (ground). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_glow2.png",
-     "emission_energy": 1.4
-    }
-   }
-  },
-  "creatures_vis_glow_mirejaw": {
-   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_glow2.png",
-     "emission_energy": 1.4
-    }
-   }
-  },
-  "creatures_vis_glow_cannonback": {
-   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": {
-     "albedo": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_glow2.png",
-     "emission_energy": 1.4
-    }
-   }
-  },
-  "creatures_vis_glow_fulgocobra": {
-   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes in gold (electric), keeping its group-3 lightning rims. Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": {
-     "albedo": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_glow2.png",
-     "emission_energy": 2.0
-    }
-   }
-  },
-  "creatures_vis_glow_riverdrake": {
-   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water), keeping its group-3 frill rims. Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid.png": {
-     "albedo": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_glow2.png",
-     "emission_energy": 2.0
-    }
-   }
-  },
-  "creatures_vis_glow_solmane": {
-   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in pale sky (air). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": {
-     "albedo": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_trait1.png",
-     "emission": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_glow2.png",
-     "emission_energy": 1.4
-    }
-   }
-  },
-  "creatures_vis_glow_voltarach": {
-   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes in its board's blue eyes (electric). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_vis1.png",
-     "emission": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_glow2.png",
-     "emission_energy": 1.6
-    }
-   }
-  },
-  "remake_owner1101_glow_read": {
-   "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage (1 Nov, three judges): the owner rule's fantasy element (glowing eyes plus element lines, veins or spots) does not read at gameplay distance on the remakes; only Brooktail's aqua spots showed (its map covers 2.8% of the texture at mean 0.76; Terrapup's 0.02%, eye dots only; Bramblebun's veins mean 0.52). One shared pass for all 46 remakes with a glow mask: the existing arc_emission mask (same hue choices) lit fully, a small halo inside the UV island for eye-only and thin-line masks (none above 2% coverage, so spots never become a body glow), purer element hue so Compatibility's LDR clip keeps the colour (warm glows held at hue 28+), emission energy 2.6 / 2.0 / 1.4 by coverage under 0.15% / under 2% / above. Bramblebun's core is rebuilt from its crevice veins (hue 112-155, about 3%; leaves stay unlit) at 2.0. Solmane and Tuskroot have no glow map (none in the concept / natural amber eyes). Real emission, not bloom: it reads with glow off. Script tools/art_pipeline/remake_owner1101_finish.py glow.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_glow_read.png",
-     "emission_energy": 1.4
-    },
-    "res://assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_glow_read.png",
-     "emission_energy": 1.4
-    },
-    "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_glow_read.png",
-     "emission_energy": 1.4
-    },
-    "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/cloudfang/candidate_owner1101/models/creature_cloudfang_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/cloudfang/candidate_owner1101/models/creature_cloudfang_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/craghorn/candidate_owner1101/models/creature_craghorn_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/craghorn/candidate_owner1101/models/creature_craghorn_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/frostclaw/candidate_owner1101/models/creature_frostclaw_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/frostclaw/candidate_owner1101/models/creature_frostclaw_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_read.png",
-     "emission_energy": 1.4
-    },
-    "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/mudsnout/candidate_owner1101/models/creature_mudsnout_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/mudsnout/candidate_owner1101/models/creature_mudsnout_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/pipwing/candidate_owner1101/models/creature_pipwing_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/pipwing/candidate_owner1101/models/creature_pipwing_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read.png",
-     "emission_energy": 1.4
-    },
-    "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/tidecoil/candidate_owner1101/models/creature_tidecoil_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/tidecoil/candidate_owner1101/models/creature_tidecoil_owner1101_glow_read.png",
-     "emission_energy": 1.4
-    },
-    "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    },
-    "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_glow_read.png",
-     "emission_energy": 2.6
-    },
-    "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101_Image_0.jpg": {
-     "emission": "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101_glow_read.png",
-     "emission_energy": 2.0
-    }
-   }
-  },
-  "remake_owner1101_plate_blend": {
-   "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage: Terrapup's 'evenly tiled green plates look stuck on, generated'; Bramblebun's bark plates read 'like a plaster cast'. Terrapup: pale bevel rims flattened, stone tone varies between warm stone and moss across the body, moss in the crevices between tiles, plate edges darken into moss and dirt where they meet the coat. Bramblebun: grainy pale bark plates (region vote on carved-grain contrast, so the soft white belly and inner-ear fur stay) go warm brown (hue 28-36, saturation under 0.5, clear of Team Tether red) with grain kept, and moss creeps in from the veins and leaves. Eyes, veins and fur keep their pixels; mesh and UVs untouched. Script tools/art_pipeline/remake_owner1101_finish.py plate.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0_plate_blend.jpg"
-    },
-    "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0_plate_blend.jpg"
-    }
-   }
-  },
-  "remake_owner1101_dark_lift": {
-   "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage: dark remake bodies (Brooktail, the black river otter; Voltarach) sink into dark ground. The same value lift as creatures_f36_coat_lift (dark low-saturation texels x1.35-1.4 plus 0.03, feathered; eyes, mouth line and the saturated aqua spots and blue sparks keep their pixels), gentle enough to keep the black identity. Pairs with remake_owner1101_glow_read (its emission map applies over the lifted albedo). Script tools/art_pipeline/grade_coat_value.py brooktail_owner1101 voltarach_owner1101.",
-   "enabled": false,
-   "coats": {
-    "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0_coat_lift.jpg"
-    },
-    "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_Image_0.jpg": {
-     "albedo": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_Image_0_coat_lift.jpg"
-    }
-   }
   }
- }
 }
