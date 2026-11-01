@@ -3,17 +3,56 @@
   "scope": "client_presentation",
   "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",
   "light_pass_1101": {
-    "enabled": false,
+    "enabled": true,
     "scope": "client_presentation",
     "_why": "Owner priority 1 Nov: judges cite flat light and crushed darks on almost every Stormwood frame and ask for the fixed purple storm sky, copper and glass highlights, a key with rim on creatures, depth fog and fill so subjects read. One switch: the rig sections and materials below merge over this file's own (stormwood_look.gd with_light_pass), `rim` becomes the storm rim light (stronger and cooler than the parked r26 candidate, which was judged on CPU only) and `fill` adds a soft shadowless fill. Sky stays the fixed purple storm; Surge phase deltas still apply on top. Client presentation only; no bake input. OFF until GPU judged.",
     "rig": {
-      "sun": {"energy": 1.95, "colour": "#e6e0fb"},
-      "sky": {"top_colour": "#4a3f73", "horizon_colour": "#7a74a8", "ground_horizon_colour": "#6a6390", "horizon_haze_colour": "#7a74a8", "cloud_lit": "#c4bce0", "cloud_shade": "#6f6896"},
-      "environment": {"ambient_colour": "#a9b6c8", "ambient_energy": 1.9, "exposure": 1.42, "fog_density": 0.0011, "fog_colour": "#776fa3", "aerial_perspective": 0.55, "adjustment_contrast": 1.12, "adjustment_saturation": 1.12}
+      "sun": {
+        "energy": 1.95,
+        "colour": "#e6e0fb"
+      },
+      "sky": {
+        "top_colour": "#4a3f73",
+        "horizon_colour": "#7a74a8",
+        "ground_horizon_colour": "#6a6390",
+        "horizon_haze_colour": "#7a74a8",
+        "cloud_lit": "#c4bce0",
+        "cloud_shade": "#6f6896"
+      },
+      "environment": {
+        "ambient_colour": "#a9b6c8",
+        "ambient_energy": 1.9,
+        "exposure": 1.42,
+        "fog_density": 0.0011,
+        "fog_colour": "#776fa3",
+        "aerial_perspective": 0.55,
+        "adjustment_contrast": 1.12,
+        "adjustment_saturation": 1.12
+      }
     },
-    "materials": {"solid_specular": 0.42, "roughness_floor": 0.4},
-    "rim": {"rim_colour": "#b4c2ff", "rim_energy": 1.05, "rim_specular": 0.9, "rim_rotation_deg": [-18.0, 320.0], "environment": {}},
-    "fill": {"colour": "#c6d4f2", "energy": 0.35, "specular": 0.1, "rotation_deg": [-55.0, 200.0]}
+    "materials": {
+      "solid_specular": 0.42,
+      "roughness_floor": 0.4
+    },
+    "rim": {
+      "rim_colour": "#b4c2ff",
+      "rim_energy": 1.05,
+      "rim_specular": 0.9,
+      "rim_rotation_deg": [
+        -18.0,
+        320.0
+      ],
+      "environment": {}
+    },
+    "fill": {
+      "colour": "#c6d4f2",
+      "energy": 0.35,
+      "specular": 0.1,
+      "rotation_deg": [
+        -55.0,
+        200.0
+      ]
+    }
   },
   "storm_light": {
     "enabled": false,
@@ -22,21 +61,82 @@
     "rim_colour": "#93a8ff",
     "rim_energy": 0.6,
     "rim_specular": 0.6,
-    "rim_rotation_deg": [-14.0, 320.0],
-    "environment": {"adjustment_contrast": 1.16, "adjustment_saturation": 1.14}
+    "rim_rotation_deg": [
+      -14.0,
+      320.0
+    ],
+    "environment": {
+      "adjustment_contrast": 1.16,
+      "adjustment_saturation": 1.14
+    }
   },
   "rig": {
-    "sun": {"pitch_deg": -44.0, "yaw_deg": 140.0, "energy": 1.65, "colour": "#ddd9f3", "angular_distance": 2.5},
-    "sky": {"top_colour": "#51476f", "horizon_colour": "#6f7a9c", "ground_horizon_colour": "#696485", "ground_bottom_colour": "#303b3a", "energy": 1.0, "cloud_lit": "#b8b2cc", "cloud_shade": "#7e7896", "cloud_base": "#6c6686", "horizon_haze_colour": "#6f7a9c", "sun_colour": "#d8d0ec"},
-    "environment": {"ambient_colour": "#aab0bc", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 1.35, "fog_density": 0.00028, "fog_colour": "#6f7a9c", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 1.1, "player_character_rim_scale": 1.0}
+    "sun": {
+      "pitch_deg": -44.0,
+      "yaw_deg": 140.0,
+      "energy": 1.65,
+      "colour": "#ddd9f3",
+      "angular_distance": 2.5
+    },
+    "sky": {
+      "top_colour": "#51476f",
+      "horizon_colour": "#6f7a9c",
+      "ground_horizon_colour": "#696485",
+      "ground_bottom_colour": "#303b3a",
+      "energy": 1.0,
+      "cloud_lit": "#b8b2cc",
+      "cloud_shade": "#7e7896",
+      "cloud_base": "#6c6686",
+      "horizon_haze_colour": "#6f7a9c",
+      "sun_colour": "#d8d0ec"
+    },
+    "environment": {
+      "ambient_colour": "#aab0bc",
+      "ambient_energy": 1.65,
+      "ambient_sky_contribution": 0.18,
+      "exposure": 1.35,
+      "fog_density": 0.00028,
+      "fog_colour": "#6f7a9c",
+      "fog_sky_affect": 0.0,
+      "aerial_perspective": 0.35,
+      "adjustment_enabled": true,
+      "adjustment_brightness": 1.0,
+      "adjustment_contrast": 1.06,
+      "adjustment_saturation": 1.1,
+      "player_character_rim_scale": 1.0
+    }
   },
   "terrain": {
-    "grass": {"normal_depth": 0.38, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
-    "soil": {"normal_depth": 0.3, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
-    "rock": {"normal_depth": 0.5, "uv_scale": 0.24},
-    "path": {"normal_depth": 0.32, "uv_scale": 0.5},
-    "damp": {"normal_depth": 0.24, "uv_scale": 0.5},
-    "forest_floor": {"normal_depth": 0.36, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5}
+    "grass": {
+      "normal_depth": 0.38,
+      "uv_scale": 0.5,
+      "detiling_rotation": 0.35,
+      "detiling_shift": 0.5
+    },
+    "soil": {
+      "normal_depth": 0.3,
+      "uv_scale": 0.5,
+      "detiling_rotation": 0.35,
+      "detiling_shift": 0.5
+    },
+    "rock": {
+      "normal_depth": 0.5,
+      "uv_scale": 0.24
+    },
+    "path": {
+      "normal_depth": 0.32,
+      "uv_scale": 0.5
+    },
+    "damp": {
+      "normal_depth": 0.24,
+      "uv_scale": 0.5
+    },
+    "forest_floor": {
+      "normal_depth": 0.36,
+      "uv_scale": 0.5,
+      "detiling_rotation": 0.35,
+      "detiling_shift": 0.5
+    }
   },
   "materials": {
     "_comment": "Installed base textures, alpha masks, authored tint and emission remain authoritative. Metre-based relief and restrained broad variation unify opaque world surfaces; emissive effects and actor materials are excluded.",
@@ -64,7 +164,23 @@
       "res://scripts/world/stormheart_cut_wood.gdshader",
       "res://scripts/world/foliage_camera_visibility.gdshader"
     ],
-    "world_roots": ["Vegetation", "StormwoodGroundCover", "StormheartTree", "Rootgate", "RodfolkSettlements", "StormwoodPockets", "StormwoodRodLine", "StormglassArches", "StormwoodRodStations", "GlassFieldPresentation", "StruckSentinelPresentation", "StormwoodHarvests", "StormwoodCamps"],
-    "world_groups": ["placed_building"]
+    "world_roots": [
+      "Vegetation",
+      "StormwoodGroundCover",
+      "StormheartTree",
+      "Rootgate",
+      "RodfolkSettlements",
+      "StormwoodPockets",
+      "StormwoodRodLine",
+      "StormglassArches",
+      "StormwoodRodStations",
+      "GlassFieldPresentation",
+      "StruckSentinelPresentation",
+      "StormwoodHarvests",
+      "StormwoodCamps"
+    ],
+    "world_groups": [
+      "placed_building"
+    ]
   }
 }

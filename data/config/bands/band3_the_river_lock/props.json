@@ -9,13 +9,22 @@
       "_why": "GATE-D3, the region's camp/rest siting (prompt 64: 'a reasonable recovery/staging point before or around the relay approach should exist'). Sited on the flattest ground measured anywhere in the band (vegetation.json order 3000, 0.35m of spread over an 8m box), right past the spine's bend into the relay road and well short of either picket. Deliberately NOT a healer or a second camp mechanic -- the game has exactly one rest structure (scripts/build/camp.gd) and this is not a second one. What stands here is evidence a traveller already used this spot: a seat, a set-down pack, a water barrel. It reads as an obvious place to plant your own camp before pushing into Team Tether ground, not as a free-heal station inside the gauntlet.",
       "rest": {
         "_why": "T5-CADENCE, overturning this cluster's own line above -- named rather than quietly overwritten. The `_why` reads 'Deliberately NOT a healer or a second camp mechanic -- the game has exactly one rest structure (scripts/build/camp.gd) and this is not a second one.' That was a coherent decision while rest lived in one buildable. T4-REGIONS measured what it cost: a site literally named \"rest\", holding a bed, scored FAIL on exit criterion E's 'a sensible camp/recovery opportunity', in a band whose player arrives across 668m of empty spine and walks into a four-stage Team Tether gauntlet. It is STILL not a second rest mechanic. `scripts/world/rest_point.gd` calls `night_rest.gd`, which is the same single definition `camp.gd` calls -- one mechanic, reachable from the camps the world already advertises. What changes is that the promise the name makes is now kept.\n\nThe 'free-heal station inside the gauntlet' worry the old note raises is worth answering rather than ignoring: this camp is 60m SHORT of the first picket, on the approach side, and resting costs a night and an autosave. It is the place you prepare before pushing in, which is what the note itself says it should read as -- not a mid-fight refill, because rest is not reachable mid-fight.\n\nRE-SITED, OP-0905-08 sweep (owner playtest 2026-09-05, filed against band 1's `trail_camp` but the same siting defect exists here). The original `at` [215.3, 3697.0] sat 5.2m from this cluster's own documented centre (`_why_clustered` above: 'a 2.5m ring around one centre at (211.0, 3700.0)') -- so at radius 3.2 the fire (1.5m from the old point, in reach) was nearly the only thing that was: the Bench (3.9m), the Barrel (6.9m), the Crate (6.9m) and the Bag (4.8m) were all outside. Moved onto the cluster's own documented ring centre, radius raised so the fire (the farthest authored prop from that centre, at 3.28m) sits inside with margin; the Bench, Barrel, Crate, Bag and Axe are all under 2.5m from here.",
-        "at": [211.0, 3700.0],
+        "at": [
+          211.0,
+          3700.0
+        ],
         "radius": 4.0,
         "label": "Rest until morning",
-        "craft_at": [212.9, 3696.4],
+        "craft_at": [
+          212.9,
+          3696.4
+        ],
         "creature_bed": {
           "_why": "The bedroll this site already advertised, made real, at the exact position and yaw the `Bed_Twin1` prop held. The mesh changes to `generated_camp/camp_bed.glb` for the same reason band 2's ranger camp swaps it: `creature_bed.gd`'s header records two independent blind critics calling `Bed_Twin1` 'a human bed labelled creature bed', and the camp set has since shipped a lashed-log bed that belongs to this game. What it buys the player is the thing this band most needs before the relay -- `game_state.gd::_tick_creature_bed_recovery()` heals an occupant over real time whether or not the player stands here, so an injured creature can be left at the last safe ground and collected after, which is exit criterion H3's expedition decision in the one place in the chapter it most obviously belongs.",
-          "at": [212.4, 3701.3],
+          "at": [
+            212.4,
+            3701.3
+          ],
           "yaw_deg": -65.0,
           "bed_index": -13
         }
@@ -23,7 +32,10 @@
       "props": [
         {
           "model": "Bench",
-          "at": [211.9, 3698.9],
+          "at": [
+            211.9,
+            3698.9
+          ],
           "yaw_deg": 25.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -31,7 +43,10 @@
         },
         {
           "model": "Barrel",
-          "at": [209.8, 3701.2],
+          "at": [
+            209.8,
+            3701.2
+          ],
           "yaw_deg": -10.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -39,7 +54,10 @@
         },
         {
           "model": "Bag",
-          "at": [211.3, 3699.6],
+          "at": [
+            211.3,
+            3699.6
+          ],
           "yaw_deg": 110.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -47,7 +65,10 @@
         },
         {
           "model": "campfire_stone_ring",
-          "at": [213.9, 3697.6],
+          "at": [
+            213.9,
+            3697.6
+          ],
           "yaw_deg": 40.0,
           "scale": 0.95,
           "sink_m": 0.04,
@@ -56,7 +77,10 @@
         },
         {
           "model": "Bonfire_Fire",
-          "at": [213.9, 3697.6],
+          "at": [
+            213.9,
+            3697.6
+          ],
           "yaw_deg": -20.0,
           "scale": 0.45,
           "sink_m": 0.03,
@@ -66,7 +90,10 @@
         },
         {
           "model": "Axe_Bronze",
-          "at": [210.2, 3698.4],
+          "at": [
+            210.2,
+            3698.4
+          ],
           "yaw_deg": 40.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -74,7 +101,10 @@
         },
         {
           "model": "Crate_Wooden",
-          "at": [210.5, 3701.9],
+          "at": [
+            210.5,
+            3701.9
+          ],
           "yaw_deg": -15.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -92,7 +122,10 @@
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [238.1, 3680.1],
+          "at": [
+            238.1,
+            3680.1
+          ],
           "yaw_deg": 36.9,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -100,7 +133,10 @@
         },
         {
           "model": "Barrel",
-          "at": [237.1, 3681.3],
+          "at": [
+            237.1,
+            3681.3
+          ],
           "yaw_deg": -25.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -108,7 +144,10 @@
         },
         {
           "model": "FarmCrate_Empty",
-          "at": [236.2, 3682.6],
+          "at": [
+            236.2,
+            3682.6
+          ],
           "yaw_deg": 36.9,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -116,7 +155,10 @@
         },
         {
           "model": "Crate_Wooden",
-          "at": [244.3, 3669.9],
+          "at": [
+            244.3,
+            3669.9
+          ],
           "yaw_deg": 22.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -124,7 +166,10 @@
         },
         {
           "model": "Barrel",
-          "at": [245.1, 3670.7],
+          "at": [
+            245.1,
+            3670.7
+          ],
           "yaw_deg": 15.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -132,7 +177,10 @@
         },
         {
           "model": "Rope_1",
-          "at": [244.9, 3669.0],
+          "at": [
+            244.9,
+            3669.0
+          ],
           "yaw_deg": 37.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -140,7 +188,10 @@
         },
         {
           "model": "Bench",
-          "at": [241.7, 3669.4],
+          "at": [
+            241.7,
+            3669.4
+          ],
           "yaw_deg": -160.7,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -148,7 +199,10 @@
         },
         {
           "model": "Bag",
-          "at": [243.6, 3669.5],
+          "at": [
+            243.6,
+            3669.5
+          ],
           "yaw_deg": 150.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -156,7 +210,10 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [243.0, 3666.4],
+          "at": [
+            243.0,
+            3666.4
+          ],
           "yaw_deg": 0.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -164,7 +221,10 @@
         },
         {
           "model": "Bonfire_Fire",
-          "at": [241.4, 3667.3],
+          "at": [
+            241.4,
+            3667.3
+          ],
           "yaw_deg": 60.0,
           "sink_m": 0.03,
           "scale": 0.6,
@@ -177,7 +237,10 @@
         },
         {
           "model": "campfire_stone_ring",
-          "at": [241.4, 3667.3],
+          "at": [
+            241.4,
+            3667.3
+          ],
           "yaw_deg": -10.0,
           "sink_m": 0.04,
           "scale": 1.05,
@@ -188,7 +251,10 @@
         },
         {
           "model": "tree-log-small",
-          "at": [242.55, 3667.65],
+          "at": [
+            242.55,
+            3667.65
+          ],
           "yaw_deg": 73.0,
           "pitch_deg": 3.0,
           "sink_m": 0.03,
@@ -198,7 +264,10 @@
         },
         {
           "model": "tree-log",
-          "at": [240.0, 3666.3],
+          "at": [
+            240.0,
+            3666.3
+          ],
           "yaw_deg": -22.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -207,7 +276,10 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [243.9, 3670.6],
+          "at": [
+            243.9,
+            3670.6
+          ],
           "yaw_deg": 100.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -215,7 +287,10 @@
         },
         {
           "model": "tree-log",
-          "at": [239.5, 3665.8],
+          "at": [
+            239.5,
+            3665.8
+          ],
           "yaw_deg": -38.5,
           "sink_m": 0.03,
           "scale": 1.15,
@@ -224,7 +299,10 @@
         },
         {
           "model": "camp_tent",
-          "at": [245.8, 3664.6],
+          "at": [
+            245.8,
+            3664.6
+          ],
           "yaw_deg": 120.0,
           "sink_m": -0.58,
           "scale": 0.9,
@@ -233,20 +311,29 @@
         },
         {
           "model": "Banner_1",
-          "at": [237.6, 3679.0],
+          "at": [
+            237.6,
+            3679.0
+          ],
           "yaw_deg": 36.9,
           "sink_m": -2.4,
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
+            "MI_Banner": {
+              "color": "#7a2430",
+              "profile": "dimensional_cloth"
+            }
           },
           "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The former castle cloth cutout is replaced by the already-installed 2.39m Banner_1 standard, using the accepted Hallward 1.55x seating and the same oxblood faction material. It remains at the west end of the barricade, squared to the road bearing, with route clearance unchanged."
         },
         {
           "model": "Stool",
           "dir": "res://assets/props/quaternius_furniture",
-          "at": [239.5, 3677.5],
+          "at": [
+            239.5,
+            3677.5
+          ],
           "yaw_deg": 216.9,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -254,7 +341,10 @@
         },
         {
           "model": "Whetstone",
-          "at": [242.6, 3670.6],
+          "at": [
+            242.6,
+            3670.6
+          ],
           "yaw_deg": -15.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -264,13 +354,194 @@
     },
     {
       "order": 3002,
-      "name": "relay_station", "candidate_props": {"_why": "P2-013 (vis-meadows, 1 Nov, OFF until GPU-judged): today's re-score (5.59) reads the yard as empty cobble filling about 60% of the frame. Visual-only groups (props.gd candidate_props, no colliders) stand at the wall feet, t +-12.4..13.9 in the site's (s,t) frame and 9+ m off the road axis the relay smoke walks: crate stacks, a cart and a barrel group on the west wall; farm crates, metal stock with chain, and Team Tether pipe stock on the east. Pairs with tether_relay.json ground_pad.p2_013_candidate (the tiling).", "enabled": false, "props": [{"model": "Crate_Wooden", "at": [330.62, 3764.93], "yaw_deg": 10, "sink_m": 0.05, "scale": 1.0}, {"model": "Crate_Wooden", "at": [330.61, 3766.01], "yaw_deg": -25, "sink_m": 0.05, "scale": 1.0}, {"model": "Crate_Metal", "at": [330.62, 3765.29], "yaw_deg": 5, "sink_m": 0.05, "scale": 0.9}, {"model": "Stall_Cart_Empty", "at": [335.72, 3758.72], "yaw_deg": 80, "sink_m": 0.05, "scale": 1.0}, {"model": "Barrel", "at": [339.78, 3751.19], "yaw_deg": 0, "sink_m": 0.05, "scale": 1.0}, {"model": "Barrel", "at": [340.7, 3750.73], "yaw_deg": 30, "sink_m": 0.05, "scale": 1.0}, {"model": "Barrel", "at": [339.59, 3750.58], "yaw_deg": 0, "sink_m": 0.05, "scale": 1.0}, {"model": "Bucket_Metal", "at": [341.4, 3750.24], "yaw_deg": 0, "sink_m": 0.05, "scale": 1.0}, {"model": "FarmCrate_Empty", "at": [354.04, 3777.31], "yaw_deg": 15, "sink_m": 0.05, "scale": 1.0}, {"model": "FarmCrate_Empty", "at": [353.84, 3778.14], "yaw_deg": -10, "sink_m": 0.05, "scale": 1.0}, {"model": "Barrel_Holder", "at": [355.0, 3776.27], "yaw_deg": 90, "sink_m": 0.05, "scale": 1.0}, {"model": "Crate_Metal", "at": [359.21, 3769.94], "yaw_deg": 20, "sink_m": 0.05, "scale": 1.1}, {"model": "Crate_Metal", "at": [359.94, 3769.22], "yaw_deg": -5, "sink_m": 0.05, "scale": 1.0}, {"model": "Chain_Coil", "at": [359.73, 3768.11], "yaw_deg": 0, "sink_m": 0.05, "scale": 1.0}, {"model": "tt_pipe_straight", "at": [363.56, 3763.21], "yaw_deg": 85, "sink_m": 0.02, "scale": 0.9, "dir": "res://assets/environment/team_tether/hall"}, {"model": "tt_pipe_straight", "at": [363.57, 3762.49], "yaw_deg": 92, "sink_m": 0.02, "scale": 0.9, "dir": "res://assets/environment/team_tether/hall"}, {"model": "Rope_2", "at": [362.5, 3763.7], "yaw_deg": 40, "sink_m": 0.05, "scale": 1.0}]},
+      "name": "relay_station",
+      "candidate_props": {
+        "_why": "P2-013 (vis-meadows, 1 Nov, OFF until GPU-judged): today's re-score (5.59) reads the yard as empty cobble filling about 60% of the frame. Visual-only groups (props.gd candidate_props, no colliders) stand at the wall feet, t +-12.4..13.9 in the site's (s,t) frame and 9+ m off the road axis the relay smoke walks: crate stacks, a cart and a barrel group on the west wall; farm crates, metal stock with chain, and Team Tether pipe stock on the east. Pairs with tether_relay.json ground_pad.p2_013_candidate (the tiling).",
+        "enabled": true,
+        "props": [
+          {
+            "model": "Crate_Wooden",
+            "at": [
+              330.62,
+              3764.93
+            ],
+            "yaw_deg": 10,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Crate_Wooden",
+            "at": [
+              330.61,
+              3766.01
+            ],
+            "yaw_deg": -25,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Crate_Metal",
+            "at": [
+              330.62,
+              3765.29
+            ],
+            "yaw_deg": 5,
+            "sink_m": 0.05,
+            "scale": 0.9
+          },
+          {
+            "model": "Stall_Cart_Empty",
+            "at": [
+              335.72,
+              3758.72
+            ],
+            "yaw_deg": 80,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Barrel",
+            "at": [
+              339.78,
+              3751.19
+            ],
+            "yaw_deg": 0,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Barrel",
+            "at": [
+              340.7,
+              3750.73
+            ],
+            "yaw_deg": 30,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Barrel",
+            "at": [
+              339.59,
+              3750.58
+            ],
+            "yaw_deg": 0,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Bucket_Metal",
+            "at": [
+              341.4,
+              3750.24
+            ],
+            "yaw_deg": 0,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "FarmCrate_Empty",
+            "at": [
+              354.04,
+              3777.31
+            ],
+            "yaw_deg": 15,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "FarmCrate_Empty",
+            "at": [
+              353.84,
+              3778.14
+            ],
+            "yaw_deg": -10,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Barrel_Holder",
+            "at": [
+              355.0,
+              3776.27
+            ],
+            "yaw_deg": 90,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Crate_Metal",
+            "at": [
+              359.21,
+              3769.94
+            ],
+            "yaw_deg": 20,
+            "sink_m": 0.05,
+            "scale": 1.1
+          },
+          {
+            "model": "Crate_Metal",
+            "at": [
+              359.94,
+              3769.22
+            ],
+            "yaw_deg": -5,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "Chain_Coil",
+            "at": [
+              359.73,
+              3768.11
+            ],
+            "yaw_deg": 0,
+            "sink_m": 0.05,
+            "scale": 1.0
+          },
+          {
+            "model": "tt_pipe_straight",
+            "at": [
+              363.56,
+              3763.21
+            ],
+            "yaw_deg": 85,
+            "sink_m": 0.02,
+            "scale": 0.9,
+            "dir": "res://assets/environment/team_tether/hall"
+          },
+          {
+            "model": "tt_pipe_straight",
+            "at": [
+              363.57,
+              3762.49
+            ],
+            "yaw_deg": 92,
+            "sink_m": 0.02,
+            "scale": 0.9,
+            "dir": "res://assets/environment/team_tether/hall"
+          },
+          {
+            "model": "Rope_2",
+            "at": [
+              362.5,
+              3763.7
+            ],
+            "yaw_deg": 40,
+            "sink_m": 0.05,
+            "scale": 1.0
+          }
+        ]
+      },
       "_why": "GATE-D3, adopting tether_relay.json's own open invitation (`_comment_props`): the site's loose gear, placed inside the compound yard rather than duplicated in that file. Positions are the site's own (s,t) local frame (tether_relay.json's `_frame`) converted to world metres -- s around -7..-9 (just inside the gate, off the road axis every fight stands on) so the crates sit in the yard corner rather than in the walk line between Hess/Orrin/Dell and the console.",
       "_why_added_e3": "E3-RELAY-POPULATION (ralph/reports/audit/E-2026-08-31.md §E3). The five props above all sit at t=+6..+10 (the east side of the yard) or s=-9.4/t=+11 (near the gate but off to the west) -- every one of them is off the camera axis `06-relay-standing`/`06-relay-apparatus` actually look down (the eye-to-apparatus line runs from local (-8,-2) to (7,-9), i.e. toward NEGATIVE t), which the audit's own fresh capture confirmed: the clutter is in the scene but not in the frame, the same 'built but not legible' defect the Hall's own occupation layer has. The three items below sit ON that sightline (local s -1..-4, t -3.6..-5.3, next to the `Relay Watch` grunt in relay_site.json) instead of duplicating the existing cluster's own corner.",
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [350.4, 3770.0],
+          "at": [
+            350.4,
+            3770.0
+          ],
           "yaw_deg": 40.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -278,7 +549,10 @@
         },
         {
           "model": "FarmCrate_Empty",
-          "at": [349.0, 3770.3],
+          "at": [
+            349.0,
+            3770.3
+          ],
           "yaw_deg": -30.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -286,7 +560,10 @@
         },
         {
           "model": "Barrel",
-          "at": [352.8, 3769.2],
+          "at": [
+            352.8,
+            3769.2
+          ],
           "yaw_deg": 0.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -294,7 +571,10 @@
         },
         {
           "model": "Pickaxe_Bronze",
-          "at": [339.4, 3764.9],
+          "at": [
+            339.4,
+            3764.9
+          ],
           "yaw_deg": 70.0,
           "pitch_deg": -70.0,
           "sink_m": 0.02,
@@ -303,7 +583,10 @@
         },
         {
           "model": "Bag",
-          "at": [344.5, 3753.8],
+          "at": [
+            344.5,
+            3753.8
+          ],
           "yaw_deg": 150.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -311,7 +594,10 @@
         },
         {
           "model": "Crate_Wooden",
-          "at": [346.13, 3758.57],
+          "at": [
+            346.13,
+            3758.57
+          ],
           "yaw_deg": -15.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -319,7 +605,10 @@
         },
         {
           "model": "Whetstone",
-          "at": [344.77, 3761.27],
+          "at": [
+            344.77,
+            3761.27
+          ],
           "yaw_deg": 60.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -327,7 +616,10 @@
         },
         {
           "model": "Axe_Bronze",
-          "at": [343.81, 3759.65],
+          "at": [
+            343.81,
+            3759.65
+          ],
           "yaw_deg": 20.0,
           "pitch_deg": -75.0,
           "sink_m": 0.02,
@@ -344,7 +636,10 @@
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [-156.6, 4187.4],
+          "at": [
+            -156.6,
+            4187.4
+          ],
           "yaw_deg": 8.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -352,7 +647,10 @@
         },
         {
           "model": "Rope_1",
-          "at": [-155.9, 4186.1],
+          "at": [
+            -155.9,
+            4186.1
+          ],
           "yaw_deg": -20.0,
           "sink_m": 0.03,
           "scale": 1.1,
@@ -360,7 +658,10 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [-157.4, 4185.2],
+          "at": [
+            -157.4,
+            4185.2
+          ],
           "yaw_deg": 140.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -368,7 +669,10 @@
         },
         {
           "model": "Workbench",
-          "at": [-147.6, 4188.6],
+          "at": [
+            -147.6,
+            4188.6
+          ],
           "yaw_deg": -75.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -376,7 +680,10 @@
         },
         {
           "model": "Anvil_Log",
-          "at": [-148.4, 4187.1],
+          "at": [
+            -148.4,
+            4187.1
+          ],
           "yaw_deg": 20.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -384,7 +691,10 @@
         },
         {
           "model": "Barrel",
-          "at": [-146.9, 4185.9],
+          "at": [
+            -146.9,
+            4185.9
+          ],
           "yaw_deg": 0.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -400,7 +710,10 @@
       "props": [
         {
           "model": "FarmCrate_Apple",
-          "at": [-139.9, 4217.4],
+          "at": [
+            -139.9,
+            4217.4
+          ],
           "yaw_deg": 25.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -408,7 +721,10 @@
         },
         {
           "model": "FarmCrate_Empty",
-          "at": [-138.6, 4216.4],
+          "at": [
+            -138.6,
+            4216.4
+          ],
           "yaw_deg": -40.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -416,7 +732,10 @@
         },
         {
           "model": "Barrel",
-          "at": [-141.0, 4218.6],
+          "at": [
+            -141.0,
+            4218.6
+          ],
           "yaw_deg": 0.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -424,7 +743,10 @@
         },
         {
           "model": "Bench",
-          "at": [-142.2, 4220.3],
+          "at": [
+            -142.2,
+            4220.3
+          ],
           "yaw_deg": 105.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -432,7 +754,10 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [-141.3, 4221.2],
+          "at": [
+            -141.3,
+            4221.2
+          ],
           "yaw_deg": 60.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -440,7 +765,10 @@
         },
         {
           "model": "Floor_UnevenBrick",
-          "at": [-140.46, 4219.83],
+          "at": [
+            -140.46,
+            4219.83
+          ],
           "yaw_deg": 105.0,
           "sink_m": 0.03,
           "scale": 0.55,
@@ -449,7 +777,10 @@
         },
         {
           "model": "Floor_UnevenBrick",
-          "at": [-138.72, 4219.36],
+          "at": [
+            -138.72,
+            4219.36
+          ],
           "yaw_deg": 105.0,
           "sink_m": 0.03,
           "scale": 0.55,
@@ -465,7 +796,10 @@
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [-71.4, 3250.6],
+          "at": [
+            -71.4,
+            3250.6
+          ],
           "yaw_deg": 25.0,
           "roll_deg": 72.0,
           "sink_m": 0.05,
@@ -474,7 +808,10 @@
         },
         {
           "model": "FarmCrate_Empty",
-          "at": [-68.2, 3251.2],
+          "at": [
+            -68.2,
+            3251.2
+          ],
           "yaw_deg": -40.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -482,7 +819,10 @@
         },
         {
           "model": "Barrel",
-          "at": [-72.3, 3253.9],
+          "at": [
+            -72.3,
+            3253.9
+          ],
           "yaw_deg": 15.0,
           "roll_deg": 86.0,
           "sink_m": 0.05,
@@ -491,7 +831,10 @@
         },
         {
           "model": "Rope_1",
-          "at": [-69.6, 3253.2],
+          "at": [
+            -69.6,
+            3253.2
+          ],
           "yaw_deg": 100.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -499,7 +842,10 @@
         },
         {
           "model": "Bag",
-          "at": [-67.4, 3253.9],
+          "at": [
+            -67.4,
+            3253.9
+          ],
           "yaw_deg": 150.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -507,7 +853,10 @@
         },
         {
           "model": "Pickaxe_Bronze",
-          "at": [-70.6, 3254.6],
+          "at": [
+            -70.6,
+            3254.6
+          ],
           "yaw_deg": 60.0,
           "pitch_deg": -68.0,
           "sink_m": 0.02,
@@ -516,19 +865,28 @@
         },
         {
           "model": "Banner_1",
-          "at": [-68.0, 3248.0],
+          "at": [
+            -68.0,
+            3248.0
+          ],
           "yaw_deg": 42.0,
           "sink_m": -2.4,
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": {"color": "#d86870", "profile": "dimensional_cloth"}
+            "MI_Banner": {
+              "color": "#d86870",
+              "profile": "dimensional_cloth"
+            }
           },
           "_why": "STONEWATER-0912. One installed route standard remains on the dry eastern shoulder, clear of the wagon silhouette; its lighter Tether-red colour is preserved while the dimensional cloth profile remaps the dark source atlas so the panel remains readable at road distance."
         },
         {
           "model": "Rock_Medium_2",
-          "at": [-66.5, 3249.8],
+          "at": [
+            -66.5,
+            3249.8
+          ],
           "yaw_deg": 80.0,
           "sink_m": 0.03,
           "scale": 0.2,
@@ -537,7 +895,10 @@
         },
         {
           "model": "Bush_Common",
-          "at": [-75.1, 3255.8],
+          "at": [
+            -75.1,
+            3255.8
+          ],
           "yaw_deg": 0.0,
           "scale": 0.4,
           "dir": "res://assets/environment/stylized_nature",
@@ -545,7 +906,10 @@
         },
         {
           "model": "Grass_Wide_Tall",
-          "at": [-64.8, 3254.2],
+          "at": [
+            -64.8,
+            3254.2
+          ],
           "yaw_deg": 0.0,
           "scale": 0.5,
           "dir": "res://assets/environment/stylized_nature",
@@ -560,7 +924,10 @@
       "props": [
         {
           "model": "Rock_Medium_1",
-          "at": [-130.2, 3452.4],
+          "at": [
+            -130.2,
+            3452.4
+          ],
           "yaw_deg": 35.0,
           "sink_m": 0.1,
           "scale": 0.55,
@@ -569,7 +936,10 @@
         },
         {
           "model": "Rock_Medium_3",
-          "at": [-126.4, 3453.1],
+          "at": [
+            -126.4,
+            3453.1
+          ],
           "yaw_deg": 200.0,
           "sink_m": 0.08,
           "scale": 0.42,
@@ -578,7 +948,10 @@
         },
         {
           "model": "Rock_Medium_2",
-          "at": [-129.1, 3447.6],
+          "at": [
+            -129.1,
+            3447.6
+          ],
           "yaw_deg": 310.0,
           "sink_m": 0.06,
           "scale": 0.34,
@@ -587,7 +960,10 @@
         },
         {
           "model": "tree-log",
-          "at": [-126.8, 3449.4],
+          "at": [
+            -126.8,
+            3449.4
+          ],
           "yaw_deg": 108.0,
           "sink_m": 0.04,
           "scale": 1.15,
@@ -596,7 +972,10 @@
         },
         {
           "model": "Bag",
-          "at": [-127.6, 3450.4],
+          "at": [
+            -127.6,
+            3450.4
+          ],
           "yaw_deg": 20.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -604,7 +983,10 @@
         },
         {
           "model": "Rope_1",
-          "at": [-129.6, 3449.9],
+          "at": [
+            -129.6,
+            3449.9
+          ],
           "yaw_deg": 70.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -612,7 +994,10 @@
         },
         {
           "model": "Bush_Common_Flowers",
-          "at": [-131.8, 3446.8],
+          "at": [
+            -131.8,
+            3446.8
+          ],
           "yaw_deg": 0.0,
           "scale": 0.4,
           "dir": "res://assets/environment/stylized_nature",
@@ -620,7 +1005,10 @@
         },
         {
           "model": "Grass_Wide_Tall",
-          "at": [-124.6, 3454.2],
+          "at": [
+            -124.6,
+            3454.2
+          ],
           "yaw_deg": 0.0,
           "scale": 0.5,
           "dir": "res://assets/environment/stylized_nature",
@@ -635,7 +1023,10 @@
       "props": [
         {
           "model": "Rock_Medium_1",
-          "at": [-4.0, 3568.5],
+          "at": [
+            -4.0,
+            3568.5
+          ],
           "yaw_deg": 25.0,
           "sink_m": 0.08,
           "scale": 0.34,
@@ -644,7 +1035,10 @@
         },
         {
           "model": "Rock_Medium_2",
-          "at": [19.5, 3567.0],
+          "at": [
+            19.5,
+            3567.0
+          ],
           "yaw_deg": 190.0,
           "sink_m": 0.06,
           "scale": 0.28,
@@ -653,7 +1047,10 @@
         },
         {
           "model": "Rock_Medium_3",
-          "at": [7.0, 3569.5],
+          "at": [
+            7.0,
+            3569.5
+          ],
           "yaw_deg": 300.0,
           "sink_m": 0.06,
           "scale": 0.3,
@@ -662,7 +1059,10 @@
         },
         {
           "model": "Fern_1",
-          "at": [18.5, 3564.0],
+          "at": [
+            18.5,
+            3564.0
+          ],
           "yaw_deg": 0.0,
           "scale": 0.34,
           "dir": "res://assets/environment/stylized_nature",
@@ -671,7 +1071,10 @@
         },
         {
           "model": "Fern_1",
-          "at": [-2.5, 3566.5],
+          "at": [
+            -2.5,
+            3566.5
+          ],
           "yaw_deg": 0.0,
           "scale": 0.28,
           "dir": "res://assets/environment/stylized_nature",
@@ -680,7 +1083,10 @@
         },
         {
           "model": "Bush_Common",
-          "at": [20.0, 3560.0],
+          "at": [
+            20.0,
+            3560.0
+          ],
           "yaw_deg": 0.0,
           "scale": 0.38,
           "dir": "res://assets/environment/stylized_nature",
@@ -688,7 +1094,10 @@
         },
         {
           "model": "Grass_Wide_Tall",
-          "at": [-3.5, 3554.5],
+          "at": [
+            -3.5,
+            3554.5
+          ],
           "yaw_deg": 0.0,
           "scale": 0.55,
           "dir": "res://assets/environment/stylized_nature",
@@ -696,7 +1105,10 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [17.5, 3569.0],
+          "at": [
+            17.5,
+            3569.0
+          ],
           "yaw_deg": -30.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -711,7 +1123,10 @@
       "props": [
         {
           "model": "tree-log",
-          "at": [75.6, 4498.4],
+          "at": [
+            75.6,
+            4498.4
+          ],
           "yaw_deg": 30.0,
           "sink_m": 0.04,
           "scale": 1.2,
@@ -720,7 +1135,10 @@
         },
         {
           "model": "tree-log-small",
-          "at": [81.0, 4501.9],
+          "at": [
+            81.0,
+            4501.9
+          ],
           "yaw_deg": 12.0,
           "pitch_deg": 3.0,
           "sink_m": 0.03,
@@ -730,7 +1148,10 @@
         },
         {
           "model": "Axe_Bronze",
-          "at": [78.9, 4501.6],
+          "at": [
+            78.9,
+            4501.6
+          ],
           "yaw_deg": 55.0,
           "pitch_deg": -66.0,
           "sink_m": 0.04,
@@ -739,7 +1160,10 @@
         },
         {
           "model": "Crate_Wooden",
-          "at": [80.2, 4498.9],
+          "at": [
+            80.2,
+            4498.9
+          ],
           "yaw_deg": -20.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -747,7 +1171,10 @@
         },
         {
           "model": "Rope_1",
-          "at": [76.8, 4501.2],
+          "at": [
+            76.8,
+            4501.2
+          ],
           "yaw_deg": 95.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -755,7 +1182,10 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [79.6, 4503.0],
+          "at": [
+            79.6,
+            4503.0
+          ],
           "yaw_deg": 40.0,
           "sink_m": 0.04,
           "scale": 1.0,
@@ -763,7 +1193,10 @@
         },
         {
           "model": "Bag",
-          "at": [77.2, 4503.4],
+          "at": [
+            77.2,
+            4503.4
+          ],
           "yaw_deg": 165.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -771,7 +1204,10 @@
         },
         {
           "model": "Bush_Common",
-          "at": [83.4, 4504.6],
+          "at": [
+            83.4,
+            4504.6
+          ],
           "yaw_deg": 0.0,
           "scale": 0.42,
           "dir": "res://assets/environment/stylized_nature",
@@ -786,7 +1222,10 @@
       "props": [
         {
           "model": "Crate_Wooden",
-          "at": [125.6, 4647.6],
+          "at": [
+            125.6,
+            4647.6
+          ],
           "yaw_deg": 20.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -794,7 +1233,10 @@
         },
         {
           "model": "Barrel",
-          "at": [128.9, 4648.2],
+          "at": [
+            128.9,
+            4648.2
+          ],
           "yaw_deg": -35.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -802,7 +1244,10 @@
         },
         {
           "model": "Bench",
-          "at": [126.4, 4650.6],
+          "at": [
+            126.4,
+            4650.6
+          ],
           "yaw_deg": 70.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -810,7 +1255,10 @@
         },
         {
           "model": "Bag",
-          "at": [127.9, 4650.0],
+          "at": [
+            127.9,
+            4650.0
+          ],
           "yaw_deg": 140.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -818,19 +1266,28 @@
         },
         {
           "model": "Banner_1",
-          "at": [123.8, 4651.4],
+          "at": [
+            123.8,
+            4651.4
+          ],
           "yaw_deg": 55.0,
           "sink_m": -2.4,
           "scale": 1.55,
           "dir": "res://assets/props/quaternius_fantasy",
           "retint": {
-            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
+            "MI_Banner": {
+              "color": "#7a2430",
+              "profile": "dimensional_cloth"
+            }
           },
           "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The abandoned watchpost now carries the same installed vertical Banner_1 standard, seating, scale and oxblood material as the other Team Tether sites. Position and route clearance are unchanged; the full pole silhouette supplies the hierarchy read without a paper-cutout lean."
         },
         {
           "model": "Rope_1",
-          "at": [129.4, 4650.8],
+          "at": [
+            129.4,
+            4650.8
+          ],
           "yaw_deg": 100.0,
           "sink_m": 0.03,
           "scale": 1.0,
@@ -838,7 +1295,10 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [124.6, 4646.8],
+          "at": [
+            124.6,
+            4646.8
+          ],
           "yaw_deg": -60.0,
           "roll_deg": 74.0,
           "sink_m": 0.04,
@@ -847,7 +1307,10 @@
         },
         {
           "model": "Rock_Medium_3",
-          "at": [130.6, 4646.4],
+          "at": [
+            130.6,
+            4646.4
+          ],
           "yaw_deg": 140.0,
           "sink_m": 0.04,
           "scale": 0.2,
@@ -864,7 +1327,10 @@
       "props": [
         {
           "model": "Bench",
-          "at": [-97.0, 4353.0],
+          "at": [
+            -97.0,
+            4353.0
+          ],
           "yaw_deg": 19.5,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -872,7 +1338,10 @@
         },
         {
           "model": "Barrel",
-          "at": [-98.5, 4354.0],
+          "at": [
+            -98.5,
+            4354.0
+          ],
           "yaw_deg": -10.0,
           "sink_m": 0.05,
           "scale": 1.0,
@@ -880,7 +1349,10 @@
         },
         {
           "model": "Rock_Medium_3",
-          "at": [-96.0, 4352.0],
+          "at": [
+            -96.0,
+            4352.0
+          ],
           "yaw_deg": 140.0,
           "sink_m": 0.04,
           "scale": 0.2,
@@ -897,9 +1369,16 @@
         {
           "name": "OverlookCrownWest",
           "model": "Rock_Medium_2",
-          "at": [-289.4, 4177.1],
+          "at": [
+            -289.4,
+            4177.1
+          ],
           "yaw_deg": 24.0,
-          "scale_xyz": [0.82, 0.72, 1.02],
+          "scale_xyz": [
+            0.82,
+            0.72,
+            1.02
+          ],
           "sink_m": 0.34,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "largest of three low, partly buried lip stones; shifted away from the ordinary stand and reduced so it frames rather than eclipses the water axis"
@@ -907,9 +1386,16 @@
         {
           "name": "OverlookCrownMiddle",
           "model": "Rock_Medium_3",
-          "at": [-286.6, 4177.4],
+          "at": [
+            -286.6,
+            4177.4
+          ],
           "yaw_deg": 109.0,
-          "scale_xyz": [0.60, 0.54, 0.72],
+          "scale_xyz": [
+            0.6,
+            0.54,
+            0.72
+          ],
           "sink_m": 0.25,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "small companion lip stone offset in depth and height, joining the west rock without forming a pale three-boulder wall"
@@ -917,9 +1403,16 @@
         {
           "name": "OverlookCrownEast",
           "model": "Rock_Medium_1",
-          "at": [-283.9, 4177.0],
+          "at": [
+            -283.9,
+            4177.0
+          ],
           "yaw_deg": -38.0,
-          "scale_xyz": [0.42, 0.38, 0.55],
+          "scale_xyz": [
+            0.42,
+            0.38,
+            0.55
+          ],
           "sink_m": 0.18,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "smallest closing lip stone, kept below the player's silhouette with the east side fully open toward the hero water"
@@ -927,9 +1420,16 @@
         {
           "name": "NearShelfWest",
           "model": "Rock_Medium_1",
-          "at": [-305.0, 4182.3],
+          "at": [
+            -305.0,
+            4182.3
+          ],
           "yaw_deg": 72.0,
-          "scale_xyz": [1.10, 0.48, 1.75],
+          "scale_xyz": [
+            1.1,
+            0.48,
+            1.75
+          ],
           "sink_m": 0.82,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "low wide shelf following the water edge without repeating the crown's upright silhouette"
@@ -937,19 +1437,33 @@
         {
           "name": "NearShelfEast",
           "model": "Rock_Medium_2",
-          "at": [-257.0, 4181.4],
+          "at": [
+            -257.0,
+            4181.4
+          ],
           "yaw_deg": -68.0,
-          "scale_xyz": [0.92, 0.42, 1.45],
-          "sink_m": 0.70,
+          "scale_xyz": [
+            0.92,
+            0.42,
+            1.45
+          ],
+          "sink_m": 0.7,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "an unpaired shelf well east of the hero crown; the 48m gap keeps the near bank navigable and lets open water dominate"
         },
         {
           "name": "FarShelfWest",
           "model": "Rock_Medium_3",
-          "at": [-307.0, 4204.0],
+          "at": [
+            -307.0,
+            4204.0
+          ],
           "yaw_deg": 12.0,
-          "scale_xyz": [1.35, 1.20, 1.65],
+          "scale_xyz": [
+            1.35,
+            1.2,
+            1.65
+          ],
           "sink_m": 0.15,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "largest waterline shelf, seated on the flat bed just inside the far toe so it rises naturally from the water instead of bridging the steep wall from one sampled point"
@@ -957,9 +1471,16 @@
         {
           "name": "FarShelfMiddle",
           "model": "Rock_Medium_1",
-          "at": [-293.5, 4204.4],
+          "at": [
+            -293.5,
+            4204.4
+          ],
           "yaw_deg": 81.0,
-          "scale_xyz": [0.90, 0.80, 1.05],
+          "scale_xyz": [
+            0.9,
+            0.8,
+            1.05
+          ],
           "sink_m": 0.12,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "smaller waterline stone thirteen metres east, deliberately different in height and footprint so the toe cannot read as repeated wall blocks"
@@ -967,9 +1488,16 @@
         {
           "name": "FarShelfEast",
           "model": "Rock_Medium_2",
-          "at": [-266.0, 4203.8],
+          "at": [
+            -266.0,
+            4203.8
+          ],
           "yaw_deg": -37.0,
-          "scale_xyz": [1.15, 1.00, 1.35],
+          "scale_xyz": [
+            1.15,
+            1.0,
+            1.35
+          ],
           "sink_m": 0.14,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "third waterline shelf after a longer open run, leaving broad passages of exposed bank and open water between natural toe beats"
@@ -977,9 +1505,16 @@
         {
           "name": "FarRimOutcropWest",
           "model": "Rock_Medium_2",
-          "at": [-315.0, 4211.8],
+          "at": [
+            -315.0,
+            4211.8
+          ],
           "yaw_deg": 29.0,
-          "scale_xyz": [1.28, 1.82, 1.46],
+          "scale_xyz": [
+            1.28,
+            1.82,
+            1.46
+          ],
           "sink_m": 0.22,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "tallest rim-top mass, above but offset from the west waterline shelf; its deliberately high shoulder starts a varied plateau silhouette without occupying the steep face"
@@ -987,9 +1522,16 @@
         {
           "name": "FarRimOutcropMiddle",
           "model": "Rock_Medium_3",
-          "at": [-281.0, 4211.5],
+          "at": [
+            -281.0,
+            4211.5
+          ],
           "yaw_deg": -54.0,
-          "scale_xyz": [0.68, 0.70, 0.88],
+          "scale_xyz": [
+            0.68,
+            0.7,
+            0.88
+          ],
           "sink_m": 0.16,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "low central rim stone with no matching toe rock beneath it; the pronounced height drop prevents a constant parapet rhythm"
@@ -997,9 +1539,16 @@
         {
           "name": "FarRimOutcropEast",
           "model": "Rock_Medium_1",
-          "at": [-250.0, 4212.2],
+          "at": [
+            -250.0,
+            4212.2
+          ],
           "yaw_deg": 74.0,
-          "scale_xyz": [1.08, 1.42, 1.34],
+          "scale_xyz": [
+            1.08,
+            1.42,
+            1.34
+          ],
           "sink_m": 0.18,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "mid-height east rim end-cap after the longest open interval, grounded on the plateau and kept well clear of Old Mill Crossing"
@@ -1007,9 +1556,16 @@
         {
           "name": "NearReedsWestTall",
           "model": "Grass_Wheat",
-          "at": [-299.0, 4178.2],
+          "at": [
+            -299.0,
+            4178.2
+          ],
           "yaw_deg": 24.0,
-          "scale_xyz": [1.15, 1.35, 1.15],
+          "scale_xyz": [
+            1.15,
+            1.35,
+            1.15
+          ],
           "sink_m": 0.08,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "tall lead plant beside the west shelf; Grass_Wheat's vertical blade-and-seed silhouette supplies the installed kit's closest reed vocabulary"
@@ -1017,7 +1573,10 @@
         {
           "name": "NearReedsWestLow",
           "model": "Grass_Wispy_Tall",
-          "at": [-296.8, 4178.6],
+          "at": [
+            -296.8,
+            4178.6
+          ],
           "yaw_deg": -18.0,
           "scale": 0.85,
           "sink_m": 0.06,
@@ -1027,9 +1586,16 @@
         {
           "name": "NearReedsCrown",
           "model": "Grass_Wide_Tall",
-          "at": [-278.6, 4178.0],
+          "at": [
+            -278.6,
+            4178.0
+          ],
           "yaw_deg": 67.0,
-          "scale_xyz": [0.90, 1.05, 0.90],
+          "scale_xyz": [
+            0.9,
+            1.05,
+            0.9
+          ],
           "sink_m": 0.06,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "single green accent at the open side of the overlook crown, tying the hero stones to the water edge"
@@ -1037,9 +1603,16 @@
         {
           "name": "NearReedsEastTall",
           "model": "Grass_Wheat",
-          "at": [-251.5, 4178.3],
+          "at": [
+            -251.5,
+            4178.3
+          ],
           "yaw_deg": 119.0,
-          "scale_xyz": [1.0, 1.25, 1.0],
+          "scale_xyz": [
+            1.0,
+            1.25,
+            1.0
+          ],
           "sink_m": 0.07,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "the second near-bank beat after a long clear run, avoiding a continuous decorative fringe"
@@ -1047,7 +1620,10 @@
         {
           "name": "NearReedsEastLow",
           "model": "Grass_Wispy_Tall",
-          "at": [-249.7, 4178.8],
+          "at": [
+            -249.7,
+            4178.8
+          ],
           "yaw_deg": 8.0,
           "scale": 0.78,
           "sink_m": 0.05,
@@ -1057,9 +1633,16 @@
         {
           "name": "FarReedsWestTall",
           "model": "Grass_Wheat",
-          "at": [-313.0, 4214.2],
+          "at": [
+            -313.0,
+            4214.2
+          ],
           "yaw_deg": -42.0,
-          "scale_xyz": [1.65, 2.55, 1.65],
+          "scale_xyz": [
+            1.65,
+            2.55,
+            1.65
+          ],
           "sink_m": 0.08,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "far-bank vertical accent beside the largest shelf, interrupting the pale terrain face in the approach composition"
@@ -1067,9 +1650,16 @@
         {
           "name": "FarReedsWestLow",
           "model": "Grass_Wispy_Tall",
-          "at": [-310.6, 4214.6],
+          "at": [
+            -310.6,
+            4214.6
+          ],
           "yaw_deg": 15.0,
-          "scale_xyz": [1.20, 1.45, 1.20],
+          "scale_xyz": [
+            1.2,
+            1.45,
+            1.2
+          ],
           "sink_m": 0.05,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "short companion tucked between shelf and tall plant"
@@ -1077,9 +1667,16 @@
         {
           "name": "FarReedsMiddle",
           "model": "Grass_Wide_Tall",
-          "at": [-284.0, 4214.0],
+          "at": [
+            -284.0,
+            4214.0
+          ],
           "yaw_deg": 91.0,
-          "scale_xyz": [1.35, 1.85, 1.35],
+          "scale_xyz": [
+            1.35,
+            1.85,
+            1.35
+          ],
           "sink_m": 0.07,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "isolated middle clump, offset from both stone shelves so flora and geology do not repeat as paired stamps"
@@ -1087,9 +1684,16 @@
         {
           "name": "FarReedsEastTall",
           "model": "Grass_Wheat",
-          "at": [-258.0, 4214.3],
+          "at": [
+            -258.0,
+            4214.3
+          ],
           "yaw_deg": 31.0,
-          "scale_xyz": [1.55, 2.30, 1.55],
+          "scale_xyz": [
+            1.55,
+            2.3,
+            1.55
+          ],
           "sink_m": 0.08,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "far-bank end cap after the last shelf, broadening the authored rhythm across the frame"
@@ -1097,9 +1701,16 @@
         {
           "name": "FarReedsEastLow",
           "model": "Grass_Wispy_Tall",
-          "at": [-255.8, 4214.8],
+          "at": [
+            -255.8,
+            4214.8
+          ],
           "yaw_deg": -25.0,
-          "scale_xyz": [1.10, 1.35, 1.10],
+          "scale_xyz": [
+            1.1,
+            1.35,
+            1.1
+          ],
           "sink_m": 0.05,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "low companion on the outer side, keeping the clump asymmetric"
@@ -1107,19 +1718,33 @@
         {
           "name": "FloodplainWestShoulderStone",
           "model": "Rock_Medium_1",
-          "at": [-389.0, 4231.0],
+          "at": [
+            -389.0,
+            4231.0
+          ],
           "yaw_deg": 18.0,
-          "scale_xyz": [1.35, 0.72, 1.65],
-          "sink_m": 0.30,
+          "scale_xyz": [
+            1.35,
+            0.72,
+            1.65
+          ],
+          "sink_m": 0.3,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "low stone on the west lobe's inland rise, separated from the waterline rocks by a broad planted bench"
         },
         {
           "name": "FloodplainWestWetGrass",
           "model": "Grass_Wide_Tall",
-          "at": [-374.0, 4218.5],
+          "at": [
+            -374.0,
+            4218.5
+          ],
           "yaw_deg": -31.0,
-          "scale_xyz": [1.55, 1.80, 1.55],
+          "scale_xyz": [
+            1.55,
+            1.8,
+            1.55
+          ],
           "sink_m": 0.08,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "isolated wet-grass mass inside the widest low shelf; no continuous ornamental fringe"
@@ -1127,9 +1752,16 @@
         {
           "name": "FloodplainMiddleShoulderStone",
           "model": "Rock_Medium_3",
-          "at": [-307.0, 4233.0],
+          "at": [
+            -307.0,
+            4233.0
+          ],
           "yaw_deg": 67.0,
-          "scale_xyz": [0.92, 0.58, 1.24],
+          "scale_xyz": [
+            0.92,
+            0.58,
+            1.24
+          ],
           "sink_m": 0.24,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "smaller stone marks the higher middle shoulder and keeps the three lobes unequal"
@@ -1137,9 +1769,16 @@
         {
           "name": "FloodplainMiddleWetGrass",
           "model": "Grass_Wheat",
-          "at": [-292.0, 4219.0],
+          "at": [
+            -292.0,
+            4219.0
+          ],
           "yaw_deg": 103.0,
-          "scale_xyz": [1.35, 1.70, 1.35],
+          "scale_xyz": [
+            1.35,
+            1.7,
+            1.35
+          ],
           "sink_m": 0.08,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "single reed-like break across the middle floodplain shelf"
@@ -1147,9 +1786,16 @@
         {
           "name": "FloodplainEastShoulderStone",
           "model": "Rock_Medium_2",
-          "at": [-226.0, 4229.0],
+          "at": [
+            -226.0,
+            4229.0
+          ],
           "yaw_deg": -48.0,
-          "scale_xyz": [1.18, 0.84, 1.42],
+          "scale_xyz": [
+            1.18,
+            0.84,
+            1.42
+          ],
           "sink_m": 0.28,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "east shoulder stone ends the natural-bank rhythm before the protected Old Mill gap"
@@ -1157,9 +1803,16 @@
         {
           "name": "FloodplainEastWetGrass",
           "model": "Grass_Wispy_Tall",
-          "at": [-244.0, 4218.0],
+          "at": [
+            -244.0,
+            4218.0
+          ],
           "yaw_deg": 22.0,
-          "scale_xyz": [1.45, 1.65, 1.45],
+          "scale_xyz": [
+            1.45,
+            1.65,
+            1.45
+          ],
           "sink_m": 0.06,
           "dir": "res://assets/environment/stylized_nature",
           "_why": "low vegetation on the east inset shelf ties the bend to the new floodplain without hiding the tower"
@@ -1206,7 +1859,12 @@
           "yaw_deg": 105.0,
           "sink_m": -3.57,
           "scale": 2.9,
-          "retint": {"MI_Banner": {"color": "#2f7fa0", "profile": "dimensional_cloth"}},
+          "retint": {
+            "MI_Banner": {
+              "color": "#2f7fa0",
+              "profile": "dimensional_cloth"
+            }
+          },
           "_why": "VERIFIER full-bar judge (#356 5859347449): from 60-148 m nothing marked Doss's camp as its own place; its black column is the same one Juno's and Bram's use, and the judge took it for the Relay's smoke. A tall river-blue pennant on the crest north-west of the perch (moved from (-25.5,4168) after a re-judge read the signal column in front of it from the loop: here it stands ~14 m across the loop's line of sight from the fire, so pennant and column separate) (the installed fantasy-prop family's Banner_2 -- Banner_1 is Team Tether's roadside standard, oxblood only, test_meadows_banner_standards_0912.gd -- in river blue, at 2.9 scale, seated by its own 1.23 m below-origin extent: sink -3.57) gives the ranger's camp a silhouette of its own against the sky from the river loop. Probe --camp-grid: the crest edge here is in the loop's sightline."
         }
       ]

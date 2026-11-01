@@ -2,9 +2,8 @@
   "_why_fight_presentation_1025b": "Fights close-1025 ON (coordinator asks after r4/r5 + GPU G3): code-blind CPU r6, 3 fresh judges, mapped, shipped look -> r6: Venn 5.92 -> 6.56, Warden 6.19 -> 6.81, Riverwatch 6.43 -> 7.05, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54 (with the pilot ghost fix ef4591a18); r7 trainer fights (r6 + stagger label + flash drop + a steadier lens, the lens kept OFF): Warden 5.93 -> 6.32, grunt 6.08 -> 5.93. ralph/reports/FIGHTS/close-1024/NOTE.md Here: fight.pilot_min_screen_fraction 0.10 in every fight.",
   "_why_fight_presentation_1025": "Fights close-1024 generic fight presentation ON (owner 24 Oct: 'I don't like how the fights outline the area of the attack'; cand_gen_h). Code-blind yardstick, CPU, 3 fresh judges, mapped, before -> after: Meadows Warden hall 4.85 -> 5.88, Riverwatch 5.64 -> 6.99 (r4); Veyra 5.60 -> 6.21, Stormwood glass_field 5.71 -> 6.13, Venn 5.38 -> 6.07 (r5). Outlines and impact disc FIXED in every after set; tell 'where' still PARTIAL/PRESENT (dust only). Presentation only: timings, footprints and the AI's telegraph unchanged. GPU confirms 7.5. ralph/reports/FIGHTS/close-1024/NOTE.md Here: fallback_max_steps 2 (the Venn seabed pop) and the Riverwatch pilot_min_screen_fraction 0.10.",
   "_comment": "Camera behaviour that is not the exploration orbit. The orbit itself still lives in movement.json's `camera` block; this file holds the modes that take the rig away from it. Today that is the conversation push-in (D73 sec6, closure plan CL-G10).",
-
   "occlusion_fade": {
-    "enabled": false,
+    "enabled": true,
     "scope": "client_presentation",
     "_why": "Owner priority 1 Nov: judges cite cameras inside canopies and walls on almost every frame (Meadows mill stands, the Warden arena, the stronghold courtyard, Cloudreach plazas). When enabled, every biome's gameplay, fight and dialogue camera fades what it renders between the subject's chest and the lens: a mesh goes fade_transparency see-through, a tall scatter instance (a tree, a canopy) is hidden, both restored as soon as they stop blocking. The arm length and stands are unchanged, so capture stands are not moved. Collider-less geometry included; skinned bodies, grass, effect cards and anything under min_height_m are never faded. scripts/player/camera_occlusion.gd, camera_rig.gd _fade_occluders. Client presentation only. OFF until GPU judged.",
     "fade_transparency": 0.8,
@@ -14,27 +13,38 @@
     "rate_hz": 8.0
   },
   "conversation": {
-    "speaker_lights": {"_why": "VIS-CREATURES group 6 (1 Nov). GPU judges on character close-ups: 'no rim or key light'. A soft shadowless key light in front of the speaker's face from the camera's side and a fainter rim behind (scripts/player/conversation_camera.gd speaker_light_positions). OFF until judged.", "enabled": false, "key_energy": 0.8, "rim_energy": 0.5, "range_m": 3.5, "face_height_frac": 0.88, "key_forward_m": 1.3, "key_side_m": 0.7, "key_up_m": 0.35, "rim_back_m": 1.1, "rim_up_m": 0.5, "color": [1.0, 0.96, 0.9]},
+    "speaker_lights": {
+      "_why": "VIS-CREATURES group 6 (1 Nov). GPU judges on character close-ups: 'no rim or key light'. A soft shadowless key light in front of the speaker's face from the camera's side and a fainter rim behind (scripts/player/conversation_camera.gd speaker_light_positions). OFF until judged.",
+      "enabled": false,
+      "key_energy": 0.8,
+      "rim_energy": 0.5,
+      "range_m": 3.5,
+      "face_height_frac": 0.88,
+      "key_forward_m": 1.3,
+      "key_side_m": 0.7,
+      "key_up_m": 0.35,
+      "rim_back_m": 1.1,
+      "rim_up_m": 0.5,
+      "color": [
+        1.0,
+        0.96,
+        0.9
+      ]
+    },
     "_comment": "The two-shot the rig blends to while a conversation is on screen. Distances in metres, angles in degrees. The rig is a SpringArm3D: `distance` is the arm length from the framing pivot to the camera, and the engine shortens it further if something is in the way.",
-
     "distance": 3.5,
     "blend_time": 0.45,
     "fov": 40.0,
-
     "_comment_bias": "Where along the trainer -> speaker line the frame is centred. 0 is the trainer, 1 is the speaker. High, because the shot is about the person talking: at 0.78 the speaker lands near the middle of frame and the trainer's near shoulder falls on the opposite third.",
     "speaker_bias": 0.78,
-
     "_comment_shoulder": "How far the camera is swung off the trainer -> speaker axis, which is what puts the trainer's shoulder in frame instead of the back of their head.",
     "shoulder_yaw_deg": 18.0,
     "elevation_deg": 7.0,
-
     "_comment_anchors": "The framing points on each body. The trainer's is a fixed height above the followed body (so it still works mounted, where the followed body is the mount). The speaker's is a fraction of that character's own height, so a tall NPC is framed on the chest rather than the belt.",
     "trainer_anchor_height": 1.45,
     "speaker_anchor_frac": 0.78,
-
     "_comment_guards": "Nothing here may put the camera inside EITHER person, and a conversation opened from across a field is not a conversation this shot is for.",
     "min_speaker_clearance": 1.25,
-
     "_comment_trainer_clearance": "The same guard pointed the other way, and it is the one a cramped room breaks. The framing pivot sits most of the way toward the speaker, so the trainer stands between it and the lens: shorten the arm enough and the camera walks forward through the back of the player's own head. Measured in Bram's inn before this existed -- the lens ended up 0.36m from the trainer's centre line and their hair filled the left third of the frame. When the room cannot pay for both this and the speaker bias, the BIAS gives way (the pivot slides back toward the trainer, which pushes the lens further behind them); the shot loses some of its lean onto the speaker rather than losing the frame.",
     "min_trainer_clearance": 1.0,
     "min_pair_separation": 0.6,
@@ -43,8 +53,28 @@
     "speaker_light_candidate": {
       "enabled": false,
       "_why": "GPU DLG-2 (1 Nov): P2-074 'add key, rim and fog depth to the dim chamber' (Nerissa); P2-087/P2-083 speakers read dark-on-dark against walls and under decks. When enabled, conversation_camera.gd places a soft warm-neutral key from the lens side and a cool rim from behind the speaker while the push-in is up (offset = [toward lens, right, up] m from the speaker's chest), freed on close. No shadows; client presentation only. CPU r1: with the key 1.7 m toward the lens it sat on the trainer in close conversations and blew their face out white; it now stands camera-right (the trainer is camera-left) with a short steep falloff. TUNABLE.",
-      "key": {"offset": [1.0, 1.4, 0.9], "colour": "#fff2e2", "energy": 0.9, "range": 3.0, "attenuation": 2.0},
-      "rim": {"offset": [-1.3, -0.7, 1.0], "colour": "#bcd2ff", "energy": 1.5, "range": 3.4, "attenuation": 1.4}
+      "key": {
+        "offset": [
+          1.0,
+          1.4,
+          0.9
+        ],
+        "colour": "#fff2e2",
+        "energy": 0.9,
+        "range": 3.0,
+        "attenuation": 2.0
+      },
+      "rim": {
+        "offset": [
+          -1.3,
+          -0.7,
+          1.0
+        ],
+        "colour": "#bcd2ff",
+        "energy": 1.5,
+        "range": 3.4,
+        "attenuation": 1.4
+      }
     },
     "twoshot_v2": {
       "enabled": false,
@@ -54,7 +84,10 @@
       "shoulder_yaw_deg": 22.0,
       "elevation_deg": 6.0,
       "close_shoulder_extra_deg": 16.0,
-      "close_gap_m": [1.8, 2.8],
+      "close_gap_m": [
+        1.8,
+        2.8
+      ],
       "speaker_sight_multimesh": false,
       "speaker_sight_multimesh_min_height_m": 2.5,
       "_why_multimesh": "CPU r1 (Fenn, P2-084): the push-in stood behind a scattered Stormwood trunk and framed bark. Scatter is MultiMesh, which the mesh sight test skips; with this the sight test also checks tall shadow-casting scatter (camera_rig.gd _multimesh_blocks) and the existing swing search finds a clear angle. PARKED false: CPU r2/r3 put Fenn's lens inside a trunk (fully black frame); unverified elsewhere.",
@@ -65,13 +98,33 @@
     "_why_require_speaker_sight": "F41 P2-083 (Stormwood dialogue frames: overhead geometry or the trainer hid the named speaker; Tamsin's challenge fell back to the 2.1 m shot with the lens inside dark geometry). A conversation shot whose line to the speaker is blocked swings round the pivot to the nearest reachable angle that sees them, the same tested search the aftermath profile already uses (camera_rig.gd _swing_for_sight). It acts only when the speaker is blocked.",
     "speaker_sight_meshes": true,
     "_why_speaker_sight_meshes": "F41 P2-083: the sight check above sweeps only what the camera arm collides with, and creatures are pass-through while the Team Tether banner has no collider, so a companion's flank or Marrow's banner filled the lens and still read as clear. With this on, a visible mesh other than the speaker's or the player's crossing the lens-to-speaker line also counts as blocked (camera_rig.gd `_speaker_hidden_by_meshes`).",
-
     "_comment_fallback": "Indoors -- Mira's cottage, Bram's inn -- there is often no 3.5m of room behind the trainer. When the arm's own sweep says the two-shot is blocked before `clearance_ratio` of its length, the shot is re-solved as a closer over-shoulder against whatever room is actually there.",
     "clearance_ratio": 0.82,
     "_comment_profiles": "F04#3 (round-1 judge D): a trainer's post-fight lines opened on the villager push-in (3.5 m, fov 40), which crowded the Warden and his arena into a head-and-shoulders shot. `aftermath` frames the trainer and the player wider and higher so the place they fought in stays in shot; encounter_director.gd::_present_trainer_victory asks for it. TUNABLE.",
     "profiles": {
-      "aftermath": {"distance": 5.2, "fov": 52.0, "elevation_deg": 13.0, "speaker_bias": 0.6, "shoulder_yaw_deg": 24.0, "ally_back_m": -0.6, "ally_side_m": 2.6, "ally_behind_lens_m": 2.2, "max_speaker_distance_m": 6.0, "require_speaker_sight": true, "speaker_frame_candidate_enabled": false, "_why_speaker_frame_candidate_enabled": "P2-087 trial: the aftermath shot checks scenery sightlines but not whether the named speaker anchor projects inside the camera frame. When enabled, the camera searches reachable shoulder swings that keep the speaker in-frame. OFF until matched code-blind review.", "_why_require_speaker_sight": "F04#6 (aftermath render af2 03e7486c): Vess stands at the start of the Watchtower Spur, and its signpost stood between the lens and her for her whole victory speech. A shot whose line to the speaker is blocked swings round the pivot to the nearest reachable angle that sees them (camera_rig.gd _swing_for_sight). TUNABLE.", "_why_max_speaker_distance_m": "F04#6 (judge r4 7121d40c): after a fight the player can stand ten metres from the captain, and the shot framed from there left Vess small behind a signpost. The pivot slides toward the speaker until the lens is no further than this from them (conversation_camera.gd solve). TUNABLE.", "_why_ally_behind_lens_m": "F04#3/#6 (render 36422108408 a01): beside the player a large ally still filled a third of the shot. After the shot is solved the ally stands this far behind the lens (encounter_director.gd _step_ally_behind_the_lens). TUNABLE.",
-        "fallback": {"distance": 3.4, "fov": 54.0, "elevation_deg": 10.0, "speaker_bias": 0.6}}
+      "aftermath": {
+        "distance": 5.2,
+        "fov": 52.0,
+        "elevation_deg": 13.0,
+        "speaker_bias": 0.6,
+        "shoulder_yaw_deg": 24.0,
+        "ally_back_m": -0.6,
+        "ally_side_m": 2.6,
+        "ally_behind_lens_m": 2.2,
+        "max_speaker_distance_m": 6.0,
+        "require_speaker_sight": true,
+        "speaker_frame_candidate_enabled": false,
+        "_why_speaker_frame_candidate_enabled": "P2-087 trial: the aftermath shot checks scenery sightlines but not whether the named speaker anchor projects inside the camera frame. When enabled, the camera searches reachable shoulder swings that keep the speaker in-frame. OFF until matched code-blind review.",
+        "_why_require_speaker_sight": "F04#6 (aftermath render af2 03e7486c): Vess stands at the start of the Watchtower Spur, and its signpost stood between the lens and her for her whole victory speech. A shot whose line to the speaker is blocked swings round the pivot to the nearest reachable angle that sees them (camera_rig.gd _swing_for_sight). TUNABLE.",
+        "_why_max_speaker_distance_m": "F04#6 (judge r4 7121d40c): after a fight the player can stand ten metres from the captain, and the shot framed from there left Vess small behind a signpost. The pivot slides toward the speaker until the lens is no further than this from them (conversation_camera.gd solve). TUNABLE.",
+        "_why_ally_behind_lens_m": "F04#3/#6 (render 36422108408 a01): beside the player a large ally still filled a third of the shot. After the shot is solved the ally stands this far behind the lens (encounter_director.gd _step_ally_behind_the_lens). TUNABLE.",
+        "fallback": {
+          "distance": 3.4,
+          "fov": 54.0,
+          "elevation_deg": 10.0,
+          "speaker_bias": 0.6
+        }
+      }
     },
     "fallback": {
       "distance": 2.1,
@@ -79,12 +132,20 @@
       "elevation_deg": 5.0,
       "fov": 46.0,
       "speaker_bias": 0.7,
-
       "_comment_swing_search": "Extra degrees of swing to try, in order, when even the closer shot has no room BEHIND the trainer. A corner is the case: backed into one, the wall is a metre behind the player's shoulders and the open floor is off to the side, so a shot that insists on standing behind them ends up either in the wall or in the back of their head -- captured once, the trainer's hair filling the middle of frame with Bram entirely hidden behind it. Swinging the camera round the pivot walks it toward the room that does exist and turns the shot into a profile two-shot, which is what a person with a camera would do in that corner. Tried nearest-first, both ways, and the first swing whose measured room fits the arm wins; if none fits, the roomiest is used.",
-      "swing_search_deg": [0.0, 25.0, -25.0, 50.0, -50.0, 75.0, -75.0, 100.0, -100.0]
+      "swing_search_deg": [
+        0.0,
+        25.0,
+        -25.0,
+        50.0,
+        -50.0,
+        75.0,
+        -75.0,
+        100.0,
+        -100.0
+      ]
     }
   },
-
   "fight": {
     "_comment": "F21#4 presentation framing from both measured rendered bounds. All nine pair offsets preserve actual body scale. Solver diagnostics do not replace the code-blind size-matrix judge. Spring-arm/world sweep and manual-look grace remain authoritative for the local camera.",
     "enabled": true,
@@ -98,7 +159,12 @@
     "_why_pilot_min_screen_fraction": "Fights close-1025 (ON since 25 Oct, r6/r7): the pilot size floor (the solver never pulls back so far that the piloted creature renders under this fraction of the frame height) in every fight; it used to apply only in Stormwood sight-line fights, so per_trainer fractions elsewhere were inert. Judges r4/r5: the pilot is a speck on dark moss and pale sand.",
     "_scope_pilot_min_screen_fraction": "Client-local presentation only; no authority, save or network state.",
     "pilot_min_screen_fraction": 0.1,
-    "per_trainer": {"captain_riverwatch": {"max_distance_m": 14.0, "pilot_min_screen_fraction": 0.1}},
+    "per_trainer": {
+      "captain_riverwatch": {
+        "max_distance_m": 14.0,
+        "pilot_min_screen_fraction": 0.1
+      }
+    },
     "readability": {
       "_comment": "Camera-only conservative oriented whole-render envelopes include the trainer and foreground creatures. Actual projected envelope intersection is checked for front-to-back depth, including lower silhouettes; no hidden body, scale/collision change or sparse ellipsoid shortcut. Independent whole-frame pixels remain required.",
       "hud_margin_px": 12.0,
