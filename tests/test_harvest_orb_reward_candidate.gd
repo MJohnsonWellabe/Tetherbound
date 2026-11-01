@@ -18,5 +18,5 @@ func test_candidate_ships_off_and_targets_one_basic_orb_node() -> void:
 			if value is Array:
 				rows = value
 	var hits := rows.filter(func(r: Variant) -> bool:
-		return r is Dictionary and "order:%s" % str(r.get("order")) == str(cfg.target_node_id) and str(r.get("item")) == "orb_basic")
+		return r is Dictionary and "order:%d" % int(r.get("order", -1)) == str(cfg.target_node_id) and str(r.get("item")) == "orb_basic")
 	assert_eq(hits.size(), 1, "the target node is the band-1 Basic Orb")
