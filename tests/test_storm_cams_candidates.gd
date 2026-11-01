@@ -97,3 +97,23 @@ func test_water_npc_placement_ships_off_and_moves_only_named_npcs() -> void:
 	on["enabled"] = true
 	assert_eq(placement.offset(nalia, on), on["offsets"]["water_nalia"], "ON moves Nalia")
 	assert_eq(placement.offset(bren, on), [9.0, 0.0, 12.0], "ON leaves everyone else alone")
+
+
+func test_stormwood_character_rim_ships_off_and_dresses_only_shadowed_meshes() -> void:
+	var rim := preload("res://scripts/world/stormwood_character_rim.gd")
+	assert_false(bool(_json("res://data/config/stormwood_character_rim.json").get("enabled", true)),
+		"the P2-056 candidate ships OFF")
+	var body := Node3D.new()
+	var mesh := MeshInstance3D.new()
+	mesh.mesh = BoxMesh.new()
+	body.add_child(mesh)
+	var card := MeshInstance3D.new()
+	card.mesh = QuadMesh.new()
+	card.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	body.add_child(card)
+	var material := rim.overlay({"colour": "#b8c8ff", "energy": 0.45, "power": 3.0})
+	assert_eq(rim.dress(body, material), 1, "only the shadow-casting body mesh takes the rim")
+	assert_eq(mesh.material_overlay, material, "the body mesh carries the rim overlay")
+	assert_eq(card.material_overlay, null, "effect cards are left alone")
+	assert_eq(rim.dress(body, material), 0, "dressing twice changes nothing")
+	body.free()

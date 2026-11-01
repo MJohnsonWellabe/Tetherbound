@@ -1,0 +1,8 @@
+{
+  "_comment": "P2-056 (GPU 3.91; judges: Stormwood uniformed officers 'are small dark figures lost against dark green-teal grass, with no rim light or uniform accent to pick them out'). When enabled, scripts/world/stormwood_character_rim.gd gives every Stormwood person and trainer body a cool fresnel backlight edge (shaders/character_rim_overlay.gdshader, material overlay, additive, no shadows). Client presentation only; no other realm. OFF until GPU judged.",
+  "scope": "client_presentation",
+  "enabled": false,
+  "colour": "#b8c8ff",
+  "energy": 0.45,
+  "power": 3.0
+}
