@@ -325,6 +325,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_sparkit": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sparkit, a lean fennec fox with huge ears, yellow and black fur with a zig-zag tail (Meshy 01a197ef-c6ca-707e-a25f-84f3434e6678). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 1.95 m; emission on the electric-blue eyes and blue-white lightning on the legs (storm creature). Provenance: assets/creatures/tetherbound/sparkit/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "sparkit": {
+     "model": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101.glb",
+     "colourway_source_species": "sparkit_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }
