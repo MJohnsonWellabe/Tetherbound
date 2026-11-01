@@ -164,8 +164,6 @@ static func config_for(key: String, appearance_variant: String = "",
 	if not parsed is Dictionary:
 		return {}
 	var entry: Variant = (parsed as Dictionary).get(key, {})
-	if entry is Dictionary:
-		entry = with_body_flags(entry, key)
 	return with_clip_candidate(with_appearance_variant(entry, key, appearance_variant, variant_settings)) \
 		if entry is Dictionary else {}
 
@@ -193,7 +191,9 @@ static func with_clip_candidate(cfg: Dictionary) -> Dictionary:
 ## The returned portrait belongs to exactly the same resolved appearance.
 static func with_appearance_variant(cfg: Dictionary, base_profile: String,
 		appearance_variant: String, variant_settings: Dictionary = {}) -> Dictionary:
-	return APPEARANCE_VARIANTS.resolve(cfg, base_profile, appearance_variant, variant_settings)
+	# Body flags (OFF by default) apply first, so an appearance variant still
+	# wins over a flagged body; applying them twice is harmless (same values).
+	return APPEARANCE_VARIANTS.resolve(with_body_flags(cfg, base_profile), base_profile, appearance_variant, variant_settings)
 
 
 ## GPU arms (owner, 31 Oct): a candidate NPC body look ships as a named flag in
