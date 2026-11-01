@@ -32,6 +32,27 @@
    "species": {
     "mirejaw": 1.35
    }
+  },
+  "remake_owner1101_body_line": {
+   "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). Owner-rule remakes whose body line (the top of the middle 40% of the body in the posed idle clip, ears, crests, wings and tails excluded; measured from each candidate GLB at its placeholder height) sits under 2.3 m against the 1.80 m trainer: sparkit 1.63, glimmermoth 1.80, galewisp 2.15, craghorn 2.20, bramblebun 2.22, shadelet 2.26, cliffspike 2.29. Each factor brings the body line to about 2.4 m. Hard rule: grow the smaller side, never shrink. Craghorn x1.09 stays under its evolution Stormcapra (3.50 -> 3.82 m < 3.85 m). Stacks with creatures_f36_taller_than_trainer_4 (bramblebun x1.3) if both are enabled: judge one or the other. Applies to the species whatever model is live; written for the remake models (remake_owner1101_* ON).",
+   "enabled": false,
+   "species": {
+    "sparkit": 1.47,
+    "glimmermoth": 1.35,
+    "galewisp": 1.15,
+    "craghorn": 1.09,
+    "bramblebun": 1.1,
+    "shadelet": 1.08,
+    "cliffspike": 1.05
+   }
+  },
+  "remake_owner1101_judged_short": {
+   "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature-stage judges read Terrapup (head at trainer height) and Pipwing as standing at or barely above the 1.80 m trainer. Measured from the candidate GLBs their posed body lines are 3.00 m and 2.73 m (bounding 3.20 / 3.04 m), so this arm tests the judges' read directly: x1.15 (terrapup 3.68 m, pipwing 3.50 m). Grow only; neither has an evolution line to stay under. Terrapup x1.15 also grows its rendered footprint past the installed dog3 box its remake was fitted to for the Burrow Warrens admission (tests/smoke_arena_contain.gd), so landing this arm needs that smoke re-run.",
+   "enabled": false,
+   "species": {
+    "terrapup": 1.15,
+    "pipwing": 1.15
+   }
   }
  }
 }

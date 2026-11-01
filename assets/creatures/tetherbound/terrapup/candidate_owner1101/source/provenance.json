@@ -76,7 +76,8 @@
     "regrounded_by": 0.0342
    }
   },
-  "emission_rule": "data/creatures/arc_emission.json species.terrapup_owner1101"
+  "emission_rule": "data/creatures/arc_emission.json species.terrapup_owner1101",
+  "footprint_fit_2026_11_01": "Cause-remakes lane (PR #793 CI, smoke_arena_contain Burrow Warrens admission): re-proportioned to the installed candidate_dog3 mesh box 1.2213 x 3.2 x 4.8958 m (x 0.830, z 1.047 about the box centre; height unchanged), bones moved with the mesh and rebound, translation keys shifted by the same per-bone offset. Script: source/fit_installed_footprint.py."
  },
  "flag": "data/config/creature_model_flags.json:remake_owner1101_terrapup",
  "test": "tests/test_creature_model_flags.gd"

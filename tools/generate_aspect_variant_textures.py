@@ -285,9 +285,20 @@ def build_glow_map(albedo_rgb, source_rgb, anatomy, glow_specs, size, seed_key="
     return np.clip(canvas, 0.0, 1.0), notes
 
 
+## Owner-rule remakes (1 Nov 2026): `--remake` repaints each variant onto its
+## base's `<species>/candidate_owner1101` mesh instead of `source_model`, so the
+## remake flags can carry the variant (aspect variants reuse the base mesh,
+## tests/test_dual_type.gd). Those remakes ship an albedo-derived emission map
+## (`<glb stem>_arc_emission.png`, arc_emission.py); creature_body.gd's swap
+## reads the variant glow as that map's `_<variant>` sibling.
+REMAKE_FOLDER = "candidate_owner1101"
+
+
 def main():
     spec = load_spec()
-    wanted = sys.argv[1:] or sorted(spec.keys())
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    remake_mode = "--remake" in sys.argv[1:]
+    wanted = args or sorted(spec.keys())
     for variant in wanted:
         if variant not in spec:
             print("skip %s: not in %s" % (variant, SPEC_PATH))
@@ -300,6 +311,8 @@ def main():
         # creature_body.gd::_texture_for() reads `<that stem>_<variant>.png`
         # and `<that stem>_emissive_<variant>.png` beside it.
         remake = entry.get("source_model", "")
+        if remake_mode:
+            remake = "%s/%s" % (entry["source_species"], REMAKE_FOLDER)
         if remake:
             source = remake
             models = os.path.join(ROOT, "assets", "creatures", "tetherbound", remake, "models")
@@ -308,6 +321,9 @@ def main():
             textures = {"base_color": stem + ".jpg"}
             albedo_target = "%s_%s.png" % (stem, variant)
             emissive_target = "%s_emissive_%s.png" % (stem, variant)
+            arc = os.path.join(models, os.path.splitext(glb)[0] + "_arc_emission.png")
+            if remake_mode and os.path.exists(arc):
+                emissive_target = "%s_%s.png" % (os.path.splitext(arc)[0], variant)
         else:
             textures = find_textures(source)
             albedo_target = variant_path(textures["base_color"], variant)
