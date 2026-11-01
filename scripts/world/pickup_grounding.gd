@@ -49,7 +49,8 @@ static func spec_for(item_id: String, realm: String) -> Dictionary:
 	return {}
 
 
-static func apply(pickup: Node3D, visual: Node3D, item_id: String, realm: String, placement_id: String = "") -> void:
+static func apply(pickup: Node3D, visual: Node3D, item_id: String, realm: String, placement_id: String = "",
+		make_visual: Callable = Callable()) -> void:
 	if pickup == null or visual == null or pickup.has_meta(APPLIED):
 		return
 	var spec := spec_for(item_id, realm)
@@ -62,10 +63,11 @@ static func apply(pickup: Node3D, visual: Node3D, item_id: String, realm: String
 	scale *= float(tier.get("scale_mult", 1.0))
 	if not is_equal_approx(scale, 1.0):
 		visual.scale *= scale
+	visual.set_meta(&"pickup_grounding_scale", scale)
 	var root := Node3D.new()
 	root.name = "PickupGrounding"
 	pickup.add_child(root)
-	_tier_cluster(pickup, visual, tier)
+	_tier_cluster(pickup, visual, tier, make_visual)
 	var stone_cfg: Dictionary = spec.get("stone", {})
 	var stone_top := 0.0
 	if not stone_cfg.is_empty():
@@ -106,7 +108,12 @@ const _CLUSTER := [
 ]
 
 
-static func _tier_cluster(pickup: Node3D, visual: Node3D, tier: Dictionary) -> void:
+## `make_visual` builds a fresh visual for the same item (the pickup's own
+## factory). Preferred over duplicating: the candy visuals' tier tint and fit
+## did not survive `duplicate()` in either mode (CPU r1/r2: Great and Rare
+## copies came back as oversized green sweets).
+static func _tier_cluster(pickup: Node3D, visual: Node3D, tier: Dictionary,
+		make_visual: Callable = Callable()) -> void:
 	var count := int(tier.get("count", 1))
 	if count <= 1:
 		return
@@ -114,17 +121,22 @@ static func _tier_cluster(pickup: Node3D, visual: Node3D, tier: Dictionary) -> v
 	var copy_scale := float(tier.get("copy_scale", 0.85))
 	visual.position.x -= spread * 0.25
 	for i in mini(count - 1, _CLUSTER.size()):
-		# Not DUPLICATE_USE_INSTANTIATION: a glTF child would be re-instanced
-		# from file and lose the tier tint and fit scale applied at runtime
-		# (CPU r1: Great's copy came back as an oversized green sweet).
-		var copy := visual.duplicate(Node.DUPLICATE_SIGNALS | Node.DUPLICATE_GROUPS | Node.DUPLICATE_SCRIPTS) as Node3D
+		var copy: Node3D = null
+		if make_visual.is_valid():
+			copy = make_visual.call() as Node3D
+			if copy == null:
+				return
+			# The factory's base scale times the size step `apply` gave `visual`.
+			copy.scale = copy.scale * float(visual.get_meta(&"pickup_grounding_scale", 1.0))
+		else:
+			copy = visual.duplicate(Node.DUPLICATE_SIGNALS | Node.DUPLICATE_GROUPS | Node.DUPLICATE_SCRIPTS) as Node3D
 		if copy == null:
 			continue
 		copy.name = "%sTierCopy%d" % [visual.name, i + 1]
 		var row: Array = _CLUSTER[i]
 		copy.position = visual.position + (row[0] as Vector3) * spread
 		copy.rotation.y = visual.rotation.y + float(row[1])
-		copy.scale = visual.scale * copy_scale
+		copy.scale = (copy.scale if make_visual.is_valid() else visual.scale) * copy_scale
 		pickup.add_child(copy)
 
 
