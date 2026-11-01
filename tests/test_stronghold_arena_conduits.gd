@@ -10,7 +10,7 @@ const CONFIG := "res://data/config/stronghold.json"
 
 func test_flag_ships_off() -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
-	assert_false(bool(cfg.site.get("conduits_stop_at_arena_wall", true)), "P2-064 candidate ships OFF")
+	assert_true(bool(cfg.site.get("conduits_stop_at_arena_wall", false)), "P2-064 candidate ships ON: cloud yardstick 1 Nov batch-1, 4.59 -> 6.25")
 
 
 func test_clip_moves_the_arena_end_to_its_wall_line() -> void:

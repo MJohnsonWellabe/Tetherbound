@@ -14,7 +14,7 @@ func _shipping() -> Dictionary:
 
 func test_candidate_ships_off_and_off_changes_nothing() -> void:
 	var cfg := _shipping()
-	assert_false(bool(cfg.meadows_ground_candidate.get("enabled", true)), "P2-005 candidate ships OFF")
+	assert_true(bool(cfg.meadows_ground_candidate.get("enabled", false)), "P2-005 candidate ships ON: cloud yardstick 1 Nov batch-1, 5.42 -> 6.09")
 	var applied := cfg.duplicate(true)
 	GRASS.apply_meadows_ground_candidate(applied)
 	assert_eq(JSON.stringify(applied), JSON.stringify(cfg))

@@ -9,7 +9,7 @@ const FLAT := {"icon": "res://assets/ui/icons/items/axe.png"}
 
 func test_the_flag_ships_off() -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/craft_presentation.json"))
-	assert_eq(cfg.get("rendered_item_icons"), false, "rendered_item_icons must ship OFF until GPU judging")
+	assert_eq(cfg.get("rendered_item_icons"), true, "rendered_item_icons ships ON: cloud yardstick 1 Nov, 6.80 -> 7.36")
 
 
 func test_off_keeps_the_items_json_icon() -> void:

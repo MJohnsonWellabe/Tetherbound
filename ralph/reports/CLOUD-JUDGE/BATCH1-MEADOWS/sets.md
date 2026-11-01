@@ -1,0 +1,9 @@
+- Uh.png: side A left, side B right. Game frames of mill and settlements: 3 camera stand(s), stacked top to bottom, same stands on both sides.
+- Bm.png: side A left, side B right. Game frames of ground cover: 3 camera stand(s), stacked top to bottom, same stands on both sides.
+- Di.png: side A left, side B right. Game frames of catch sequence camera framing: 3 camera stand(s), stacked top to bottom, same stands on both sides.
+- Ye.png: side A left, side B right. Game frames of Burrow Warrens hillside: 3 camera stand(s), stacked top to bottom, same stands on both sides.
+- Lv.png: side A left, side B right. One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.
+- Ok.png: side A left, side B right. Game frames of Warden arena boundary: 3 camera stand(s), stacked top to bottom, same stands on both sides.
+- Hm.png: side A left, side B right. A placed homestead wall in the Meadows: a close view (top) and the full gameplay view (bottom). Judge whether it reads as a built homestead wall that belongs in the world.
+- Yd.png: side A left, side B right. Five Meadows sites where the player defeats an enemy-faction trainer. Each row is one site: a 'before' frame (enemy holds the site) then an 'after' frame (same camera after the win). Judge whether each after frame reads as a distinct, believable aftermath particular to that site, with no clutter or artefacts, in the key art's world.
+- Cn.png: side A left, side B right. Game frames of Team Tether stronghold: 3 camera stand(s), stacked top to bottom, same stands on both sides.
