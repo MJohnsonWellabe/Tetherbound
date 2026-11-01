@@ -34,5 +34,14 @@
    "ripplet"
   ],
   "group": 4
+ },
+ {
+  "item": "F36 Riptusk remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_riptusk.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riptusk"
+  ],
+  "group": 5
  }
 ]
