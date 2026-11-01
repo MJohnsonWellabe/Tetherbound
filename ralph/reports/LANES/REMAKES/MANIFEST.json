@@ -1,0 +1,47 @@
+[
+ {
+  "item": "F36 (0) #1 Terrapup",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_terrapup",
+  "camera_set": "F36",
+  "stands": [
+   "terrapup"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 (0) #5 Bramblebun",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_bramblebun",
+  "camera_set": "F36",
+  "stands": [
+   "bramblebun"
+  ],
+  "group": 2
+ },
+ {
+  "item": "F36 (1) Trailpup",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_trailpup",
+  "camera_set": "F36",
+  "stands": [
+   "trailpup"
+  ],
+  "group": 3
+ },
+ {
+  "item": "F36 (1) Brooktail",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_brooktail",
+  "camera_set": "F36",
+  "stands": [
+   "brooktail"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 (1) Pipwing",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_pipwing",
+  "camera_set": "F36",
+  "stands": [
+   "pipwing"
+  ],
+  "group": 5
+ }
+]

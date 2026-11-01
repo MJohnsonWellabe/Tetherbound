@@ -13,5 +13,42 @@
   "target_polycount": 30000,
   "symmetry_mode": "auto"
  },
- "status": "raw Meshy candidate; not rigged, not imported, flag-off; .gdignore keeps it out of the import until the rig lane prepares it"
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_bramblebun (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes (creature-remake lane)",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (wraps rig_quadruped.join_and_normalise/find_legs, cleanup_mesh.decimate_to; dog3 rig and skin recipe)",
+   "tools/art_pipeline/blender/strip_ground_patch.py",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, run unchanged)",
+   "tools/art_pipeline/arc_emission.py (emissive map; rule in data/creatures/arc_emission.json)",
+   "tools/art_pipeline/texture_import_policy.py --apply (VRAM compressed, mode 2)"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/bramblebun/candidate_owner1101/source/bramblebun_a.glb rigged.glb prepare-report.json '{\"species\":\"bramblebun\",\"height\":3.0,\"patch\":false}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb ; python3 tools/art_pipeline/arc_emission.py bramblebun_owner1101",
+  "report": "assets/creatures/tetherbound/bramblebun/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped (root, pelvis, spine, neck, head, tail_1-2, front/rear upper/lower x2)",
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ],
+   "clips_match_installed": "superset of the installed model's clip roles",
+   "height_m": 3.0,
+   "triangles": 28000,
+   "ground_patch": "none: no baked ground patch"
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.bramblebun_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_bramblebun",
+ "test": "tests/test_creature_model_flags.gd"
 }
