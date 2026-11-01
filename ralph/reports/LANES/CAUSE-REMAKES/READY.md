@@ -1,5 +1,51 @@
 # Cause lane: owner-rule remakes finish (tb/cause-remakes)
 
+## Status at 23:45 UTC 1 Nov: nothing has run locally. Bramblebun fixed but not run; Ripplet parked
+
+**No species in groups 6–15 has been run locally against the coordinator's named tests**
+(`test_creature_model_flags`, `test_creature_rest_pose`, `test_dual_type`,
+`test_f36_pose_candidates`, `smoke_combat`, `smoke_arena_contain`,
+`smoke_bramblebun_colourway_binding`).
+- **Why.** The container has 0.74 GB of disk left; a Godot import needs several GB.
+- **What would free the space.** Replacing the 21 GB git store (2,021 commits) with a depth-1
+  clone of this branch would free about 13 GB, and everything is pushed. That step was refused
+  as an irreversible local deletion. It needs the owner's permission, or a lane with disk.
+- **What "ready" means here.** Each fix argues its contract from the code path and is ready to
+  run. CI or a lane with an import must confirm it before a flag turns on.
+
+- **Bramblebun** (group 15; `tests/smoke_bramblebun_colourway_binding.gd`).
+  - **Colourway source.** The remake flag now keeps `colourway_source_species:
+    "bramblebun_nat1022"`, so Bramblebun's colourway rules (`shiny_colourways.json`
+    `bramblebun`) still govern. The textures resolve beside the remake's own albedo
+    (`creature_body._texture_for`, the `.jpg` branch), so they use the remake's UVs.
+  - **Shiny and alpha.** `bramblebun/candidate_owner1101/source/author_colourways.py` writes:
+    - `_Image_0_shiny.png` from `rules`: a pale silver hare with green veins, the rule's
+      documented intent;
+    - `_Image_0_alpha.png` from `vivid_rules`, because an alpha without `alpha_rules`
+      inherits them (the repaint tool's convention): a warm hazel coat.
+  - **Glow.** It also writes the matching `_arc_emission_<suffix>.png`. Without it the swap
+    would self-light the whole albedo.
+  - **Left out.** No `_vivid` is written, so the ordinary remake is unchanged. The old mesh's
+    leaf-growth overlays would cover 17–22% of the body, so they are left out (owner rule: no
+    full-body overgrowth).
+  - **Known interaction.** With `remake_owner1101_plate_blend` ON, the alpha keeps the
+    plate-blend albedo instead of its colourway: coat flags run first and rename the albedo.
+- **Ripplet: PARKED** (`tests/smoke_combat.gd`: the camera's followed anchor sits 2.5 m from the
+  trainer and 2.8 m from the creature).
+  - **What the remake changes.** The remake's rendered box is 1.94 × 3.6 × 5.87 m, against the
+    installed nat1024b's 2.86 × 3.6 × 5.73 m: 0.92 m narrower and 0.14 m longer.
+  - **Where the anchor comes from.** The fight camera's pivot is
+    `FIGHT_CAMERA.solve(...)`.pivot, applied as `set_framing_pivot_offset`
+    (combat_manager.gd ~2834). The solver frames both rendered boxes. The smoke subtracts
+    height and shoulder from the rig position but not that framing offset, so the box change
+    moves the pivot toward the midpoint, and the trainer stands there (`trainer_aside`: 2.4 m
+    side, 1.2 m back).
+  - **Why parked.** This cannot be localised without running the solver. Matching the
+    installed box, as was done for Terrapup, would mean making Ripplet 47% wider, which breaks
+    its identity, and padding the box would only game the test. Next step: a lane with an
+    import runs `smoke_combat` with the flag ON and logs `_fight_camera_solution` (pivot,
+    distance, yaw offset) for both models.
+
 ## Terrapup and Riptusk: ready to turn ON (1 Nov, third coordinator request)
 
 No test was edited. They are MANIFEST groups 13 and 14. As before, the named tests have not

@@ -614,5 +614,14 @@
    "riptusk"
   ],
   "group": 14
+ },
+ {
+  "item": "F36 Bramblebun remake (alpha/shiny colourways on the remake)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_bramblebun.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "bramblebun"
+  ],
+  "group": 15
  }
 ]
