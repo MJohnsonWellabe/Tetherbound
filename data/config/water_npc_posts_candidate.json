@@ -1,11 +1,16 @@
 {
-  "_comment": "tb/vis-water-sky group 3 (P2-074 Tidewake dialogue speaker visibility, GPU 3.54; P2-073 dialogue framing). Resident Nalia's authored post (shellwatch + [0, 23]) stands about 13 m up the wall of the island's carved dune passage, so her post view shows the trainer facing a sand wall and the dialogue capture finds no stand beside her (DLG_SPEAKER refused). On: water_scene_npcs.gd posts each listed NPC at this island-local offset instead, measured on the passage floor (water_heightfield height_at: 16.5-16.6 m, flat), in front of the post camera. Position of the body only: conversation, prompt, flags and chains unchanged. Preview --watersky-posts-candidate.",
+  "_comment": "tb/vis-water-sky group 3 (P2-074 Tidewake dialogue speaker visibility, GPU 3.54; P2-073 dialogue framing). Resident Nalia's authored post (shellwatch + [0, 23]) stands about 13 m up the wall of the island's carved dune passage, so her post view shows the trainer facing a sand wall and the dialogue capture finds no stand beside her (DLG_SPEAKER refused). On: water_scene_npcs.gd posts each listed NPC at this island-local offset instead, measured on the passage floor (water_heightfield height_at: 16.5-16.6 m, flat), in front of the post camera. Position of the body only: conversation, prompt, flags and chains unchanged. Preview --watersky-posts-candidate. Trainer Rune (gull_rest + [6, -20]) stands ~5 m down the plateau edge below the crest (dialogue capture: 'no stand beside the body', speaker tiny and far); posted at [-3, -20] on the flat 29.1-29.4 m plateau (water_encounter_runtime_data.gd reads the same override for trainer bodies).",
   "enabled": false,
   "offsets": {
     "water_nalia": [
       -9.0,
       0.0,
       25.0
+    ],
+    "water_trainer_rune": [
+      -3.0,
+      0.0,
+      -20.0
     ]
   }
 }

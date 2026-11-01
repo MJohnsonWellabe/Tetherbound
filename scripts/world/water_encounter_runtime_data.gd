@@ -51,6 +51,9 @@ static func build(world_config: Dictionary, characters: Dictionary, encounters: 
 		var position_source: Dictionary = bodies.get(reuse_id, authored)
 		var island := str(position_source.get("island_id", ""))
 		var offset: Array = position_source.get("island_local_offset", [])
+		# tb/vis-water-sky (flag-off): measured repost of a trainer standing on a slope.
+		offset = preload("res://scripts/world/water_scene_npcs.gd").post_offset(
+			reuse_id if bodies.has(reuse_id) else id, offset)
 		if not centres.has(island) or offset.size() != 3:
 			errors.append("Trainer has invalid island placement: " + id)
 			continue
