@@ -539,7 +539,8 @@ func _run() -> void:
 		# The handoff is the F49 portal leg tests/helpers/f49_campaign_journey.gd
 		# plays: Home Key -> hang the held Cloudreach relic -> Stormwood arch.
 		var travel := PORTAL.new(self, game)
-		var ok: bool = await _make_handoff_room("cloudreach", "stormwood_portal_key")
+		var ok: bool = await _drop_surplus_consumables()
+		if ok: ok = await _make_handoff_room("cloudreach", "stormwood_portal_key")
 		if ok: ok = await travel.home_key()
 		if ok: ok = await travel.hang_relic("cloudreach")
 		if ok:
@@ -803,16 +804,13 @@ func _release_world_input() -> void:
 ## the chest if absent, stores every stack not kept). Kept: tools, Home Key and
 ## keys (the helper forces those), the large-potion healing stack, revives,
 ## coin, the worn hide vest and the torch. Nothing is dropped. Disclosed.
-const STORMWOOD_KEEP := ["potion_large", "revive", "coin", "hide_vest", "torch"]
+const STORMWOOD_KEEP := ["potion_large", "revive", "orb_basic", "coin", "hide_vest", "torch"]
 
 func _stormwood_deposit() -> bool:
 	var world := current_scene as Node3D
 	# Coordinator-approved (b) then (a), 1 Nov: the chest that frees room costs
 	# wood x8 + fiber x4 (two new stacks) and the Satchel is full, so first drop
 	# the smaller duplicate potion_small and revive stacks (approved Satchel Drop).
-	for id: String in ["potion_small", "revive"]:
-		if not await _drop_smaller_duplicate(world, id):
-			return false
 	var result: Dictionary = await load("res://tools/earned_saves/wip_fights/storage_trip.gd").new().run(
 		self, world, game, {"keep": STORMWOOD_KEEP, "return": false})
 	for row: Variant in result.get("receipts", result.get("transcript", [])):
@@ -825,26 +823,51 @@ func _stormwood_deposit() -> bool:
 	return true
 
 
-func _drop_smaller_duplicate(world: Node3D, id: String) -> bool:
+
+## Owner decision (1 Nov, via coordinator): keep the 24-slot Satchel, change no
+## game code; before 07's home trip drop, in one go through the approved
+## Satchel Drop, as many named surplus consumable stacks as it takes for every
+## held reward, the Storage Chest materials and about 6 free slots after the
+## chest. Kept: the team's essentials (tools, keys, coin, worn gear), one
+## healing stack (potion_large), one revive stack and one orb stack (the
+## largest orb_basic). Every drop is disclosed. A drop is verified by the
+## stack's count falling: a held reward may refill the freed slot at once.
+const SURPLUS_DROPS := [["gale_fiber", "all"], ["cloudberry", "all"], ["potion_small", "all"],
+	["revive", "extra"], ["orb_basic", "extra"], ["orb_greater", "all"], ["elixir_guard", "all"], ["elixir_vigour", "all"]]
+
+func _drop_surplus_consumables() -> bool:
+	var world := current_scene as Node3D
 	var inventory: RefCounted = game.get("inventory")
-	var slots: Array[int] = []
-	for i in int(inventory.call("slot_count")):
-		if str((inventory.call("stack_at", i) as Dictionary).get("id", "")) == id: slots.append(i)
-	if slots.size() < 2:
-		return true
-	var smallest := slots[0]
-	for i: int in slots:
-		if int((inventory.call("stack_at", i) as Dictionary).get("n", 0)) <= int((inventory.call("stack_at", smallest) as Dictionary).get("n", 0)):
-			smallest = i
-	var n := int((inventory.call("stack_at", smallest) as Dictionary).get("n", 0))
+	for rule: Array in SURPLUS_DROPS:
+		var id: String = rule[0]
+		for _guard in 4:
+			var slots: Array[int] = []
+			for i in int(inventory.call("slot_count")):
+				if str((inventory.call("stack_at", i) as Dictionary).get("id", "")) == id: slots.append(i)
+			if slots.is_empty() or (rule[1] == "extra" and slots.size() < 2): break
+			var pick := slots[0]
+			for i: int in slots:
+				if int((inventory.call("stack_at", i) as Dictionary).get("n", 0)) < int((inventory.call("stack_at", pick) as Dictionary).get("n", 0)): pick = i
+			if not await _drop_counted(world, pick, id): return false
+	return true
+
+
+func _drop_counted(world: Node3D, slot: int, id: String) -> bool:
+	var inventory: RefCounted = game.get("inventory")
+	var n := int((inventory.call("stack_at", slot) as Dictionary).get("n", 0))
+	var before := int(inventory.call("count", id))
 	await _release_world_input()
 	var room: RefCounted = load("res://tests/helpers/meadows_earned_team_segment.gd").new()
 	room._tree = self
 	room._world = world
 	room._game = game
 	room._menu = game.call("menu")
-	if not await room._drop_slot(smallest):
-		failures.append("Piece 07: Satchel Drop of the smaller %s stack failed: %s" % [id, str(room.result().failures)])
-		return false
-	disclosures.append("Piece 07: DROPPED the smaller duplicate %s stack (x%d, slot %d) through the Satchel to make room to build the Storage Chest" % [id, n, smallest])
+	var ok: bool = await room._drop_slot(slot)
+	if not ok:
+		await _release_world_input()
+		if int(inventory.call("count", id)) != before - n:
+			failures.append("Piece 07: Satchel Drop of %s x%d failed: %s" % [id, n, str(room.result().failures)])
+			return false
+		disclosures.append("Piece 07: Drop of %s x%d confirmed by count; the freed slot was refilled by a held reward" % [id, n])
+	disclosures.append("Piece 07: DROPPED surplus %s x%d (slot %d) through the Satchel before the home trip (owner decision: 24 slots kept)" % [id, n, slot])
 	return true
