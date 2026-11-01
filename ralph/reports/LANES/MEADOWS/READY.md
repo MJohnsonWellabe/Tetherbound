@@ -1,5 +1,7 @@
 # Meadows visual lane (tb/vis-meadows), 1 Nov 2026
 
+**18:35 UTC, PAUSED (owner direction via coordinator).** Pushed head before this note: c6f07b95e (includes the test_harvest_orb_reward_candidate.gd `%d` fix and the matching game-side id fix). No edit was in progress. My 20:00 scheduled check-in is cancelled. The lane is idle until the coordinator sends scores. MANIFEST groups 1–5 are unchanged.
+
 **18:30 UTC, P2-034 fix:** the coordinator's CI catch was real. The test now uses `"order:%d" % int(...)`, the same line as tb/land-vis-1 3261a8e35. It is also a game bug: `harvest_node.gd` builds `_node_id` with `str()` of a JSON float, so the Basic Orb node's id is `order:1029.0`, and `meadows_orb_reward_presentation.json`'s `order:1029` target never matched (verified in Godot 4.7: `str(1029.0)` gives `1029.0`). `_is_meadows_orb_reward_candidate_enabled` now accepts both forms. `_node_id` is unchanged, because it keys the save flag. Without this, P2-034 ON would have rendered exactly as OFF.
 
 **18:25 UTC, group 5 (from the coordinator's 18:12 re-score, in its order):**
