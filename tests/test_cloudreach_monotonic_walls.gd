@@ -2,7 +2,7 @@ extends "res://tests/test_case.gd"
 
 ## Owner 31 Oct 2026, Cloudreach "big cylinders that don't touch the ground":
 ## the cliff-wall bulge case. With the flag on, a _mesa wall never overhangs
-## going down, and rings only ever move inward.
+## going down or tucks under its crown edge.
 
 const WORLD := preload("res://scripts/world/cloudreach_world.gd")
 const GROUNDING := preload("res://scripts/world/cloudreach_grounding.gd")
@@ -13,7 +13,7 @@ func test_flag_defaults_off() -> void:
 		"monotonic_walls ships off until the GPU verdict")
 
 
-func test_wall_pushes_never_overhang_and_only_move_inward() -> void:
+func test_wall_pushes_never_overhang() -> void:
 	var seeds := 0
 	for seed_value in range(0, 400, 7):
 		for step in 48:
@@ -25,7 +25,8 @@ func test_wall_pushes_never_overhang_and_only_move_inward() -> void:
 			var pushes: Vector2 = WORLD.monotonic_wall_pushes(upper, lower, bottom)
 			assert_true(pushes.x <= pushes.y + 1e-6, "upper ring must not overhang the lower ring")
 			assert_true(pushes.y <= bottom + 1e-6, "lower ring must not overhang the bottom ring")
-			assert_true(pushes.x <= upper + 1e-6 and pushes.y <= lower + 1e-6, "rings only move inward")
-			assert_true(pushes.x >= 0.86 - 1e-6, "upper ring stays inside its original range")
+			assert_true(pushes.x >= 1.0 - 1e-6, "upper ring never tucks under the crown edge")
+			assert_true(pushes.y <= maxf(lower, 1.0) + 1e-6, "lower ring never moves out past its own push")
+			assert_true(pushes.x <= 1.22 + 1e-6, "upper ring stays inside its original range")
 			seeds += 1
 	assert_true(seeds > 0)

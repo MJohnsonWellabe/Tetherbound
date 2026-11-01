@@ -125,7 +125,7 @@ var _config: Dictionary = {}
 var _visual_config: Dictionary = {}
 ## Owner 31 Oct 2026 (floating drums): when on, every _mesa wall widens or
 ## stays plumb going down, so a bulge never overhangs a recessed band that a
-## lower meadow crown cuts across. Flag: cloudreach_grounding.json
+## lower meadow crown cuts across, and never tucks under the crown. Flag: cloudreach_grounding.json
 ## "monotonic_walls" (default off); preview --cloudreach-walls-candidate.
 var _monotonic_walls := false
 ## Same flag file, "skip_floating_shelves": wall shelves hanging over walkable
@@ -5573,13 +5573,14 @@ func _disc(parent: Node, label: String, centre: Vector3, radius: float, height: 
 
 
 ## Wall ring pushes for a cliff that never overhangs going down (owner 31 Oct
-## 2026, "big cylinders that don't touch the ground"): each ring is pulled IN
-## to at most the ring below it, so the wall only widens or stays plumb. Rings
-## only move inward, never out over a road or meadow, and every result stays
-## inside the original push ranges. Returns Vector2(upper, lower).
+## 2026, "big cylinders that don't touch the ground"): top (1.0) <= upper <=
+## lower <= bottom. A ring wider than the one below it is pulled in to it, and
+## an upper ring tucked under the crown (push < 1) is brought out to the crown
+## edge, so a meadow that cuts a mass just under its crown never stands under
+## a rock roof. Returns Vector2(upper, lower).
 static func monotonic_wall_pushes(upper_push: float, lower_push: float, bottom_push: float) -> Vector2:
-	var lower := minf(lower_push, bottom_push)
-	return Vector2(minf(upper_push, lower), lower)
+	var lower := clampf(lower_push, 1.0, maxf(bottom_push, 1.0))
+	return Vector2(clampf(upper_push, 1.0, lower), lower)
 
 
 func _mesa(
