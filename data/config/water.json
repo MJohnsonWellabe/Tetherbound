@@ -255,6 +255,31 @@
     "_comment_alpha": "Between the pond's 0.48 and the stream's 0.78. The channel is raw cut earth 6-9m under the surface through the middle reaches; at the pond's alpha the whole river read as its own dark bed seen through glass, which is the measurement EV5 already made once when it split the stream's alpha off.",
     "flow_speed": 0.7,
     "flow_stretch": 0.7,
+    "surface_candidate": {
+      "_why": "P2-006 (vis-meadows, 1 Nov, OFF until GPU-judged): GPU F38 river_lock_1 (Old Mill Crossing) and village_road PARTIAL, river_lock_0 PRESENT, catalog 'the mill water is a broad flat blue surface with abrupt sparse banks'. water.gd::apply_river_candidate merges `merge` into this river block (bank reeds 90 -> 130 clumps, scrub 70 -> 100, wider bands so the waterline is grown over, not a hard edge); river_candidate_shader sets `shader` on the river material only: finer, stronger ripples (wave_uv_scale 0.12 -> 0.2, strength 0.4 -> 0.8), a darker green-teal deep with a mid band so the channel has depth, more sky fresnel, and bank foam/surf so the edge reads as moving water. Pond and stream unchanged. Presentation only.",
+      "enabled": false,
+      "merge": {
+        "reeds": {"clumps": 130, "per_clump": 16, "band_above": 0.7},
+        "bank_scrub": {"clumps": 100, "per_clump": 6, "band_below": -0.3}
+      },
+      "shader": {
+        "deep_colour": "#123c3c",
+        "mid_colour": "#2a5f57",
+        "mid_depth_m": 1.6,
+        "shallow_colour": "#5f8f72",
+        "wave_uv_scale": 0.2,
+        "wave_strength": 0.8,
+        "wave_speed": 0.022,
+        "fresnel_colour": "#9fb8bf",
+        "fresnel_strength": 0.55,
+        "fresnel_power": 4.0,
+        "roughness_value": 0.06,
+        "foam_depth": 0.32,
+        "surf_strength": 0.35,
+        "surf_depth_m": 0.4,
+        "surf_breakup": 0.55
+      }
+    },
     "_comment_flow": "A big river runs slower than the brook (1.1) and its ripples are longer. Direction is the course's own authored order -- north, off the rise's flank, to the southern ring.",
     "reeds": {
       "models": [

@@ -118,7 +118,14 @@ func build(config: Dictionary) -> bool:
 ## e.g. {"hall_timber_frame": {"pieces": ["NavePost_-12_-1"]}}. Applied before
 ## any node is built, so the builders see one ordinary config.
 static func apply_hall_1(config: Dictionary) -> void:
-	var hall_1: Dictionary = config.get("hall_1", {})
+	apply_hall_layer(config, "hall_1")
+	# HALL-2 (vis-meadows, 1 Nov, OFF until GPU-judged): the HALL-1 judges'
+	# follow-ups, layered the same way on top of hall_1.
+	apply_hall_layer(config, "hall_2")
+
+
+static func apply_hall_layer(config: Dictionary, key: String) -> void:
+	var hall_1: Dictionary = config.get(key, {})
 	if not bool(hall_1.get("enabled", false)):
 		return
 	_deep_merge(config, hall_1.get("merge", {}))
