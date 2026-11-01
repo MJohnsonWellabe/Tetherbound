@@ -1,0 +1,11 @@
+Ml: "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+Ld: none
+Za: "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+Vd: "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer"
+Gs: "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles"
+Yd: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Ep: none
+Ie: "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground"
+Sz: "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes"
+Xb: none
+Gy: "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view"

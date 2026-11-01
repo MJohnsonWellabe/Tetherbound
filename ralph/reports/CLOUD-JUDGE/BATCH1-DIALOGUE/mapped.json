@@ -1,0 +1,214 @@
+{
+ "bar": 7.0,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7812,
+  "least_squares_slope": 0.8522,
+  "method": "linear",
+  "slope": 0.8522,
+  "intercept": 1.5207,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.634,
+ "top_anchor_reference": 7.07,
+ "confirming_batch": false,
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.633,
+   "reference": 6.53,
+   "mapped": 5.469,
+   "residual": 1.061
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.933,
+   "reference": 4.0,
+   "mapped": 4.873,
+   "residual": -0.873
+  },
+  "f36_0_gap:C3A": {
+   "measured": 6.6,
+   "reference": 6.5,
+   "mapped": 7.145,
+   "residual": -0.645
+  },
+  "f36_0_gap:C3B": {
+   "measured": 6.233,
+   "reference": 7.07,
+   "mapped": 6.833,
+   "residual": 0.237
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.867,
+   "reference": 6.75,
+   "mapped": 6.521,
+   "residual": 0.229
+  },
+  "f04_6_r22:control": {
+   "measured": 5.067,
+   "reference": 5.83,
+   "mapped": 5.839,
+   "residual": -0.009
+  }
+ },
+ "candidates": {
+  "P2-083 cand": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.9,
+   "mapped_judges": [
+    5.78,
+    6.12,
+    5.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-083 main": {
+   "measured_mean": 4.533,
+   "mapped_mean": 5.38,
+   "mapped_judges": [
+    5.53,
+    5.44,
+    5.19
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-077 cand": {
+   "measured_mean": 6.4,
+   "mapped_mean": 6.98,
+   "mapped_judges": [
+    6.98,
+    6.98,
+    6.98
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-077 main": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.38,
+   "mapped_judges": [
+    6.46,
+    6.29,
+    6.38
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-076 main": {
+   "measured_mean": 6.233,
+   "mapped_mean": 6.83,
+   "mapped_judges": [
+    6.8,
+    7.06,
+    6.63
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-076 cand": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.09,
+   "mapped_judges": [
+    7.15,
+    7.23,
+    6.89
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "P2-081 cand": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.58,
+   "mapped_judges": [
+    6.38,
+    6.8,
+    6.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-081 main": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.55,
+   "mapped_judges": [
+    6.63,
+    6.29,
+    6.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-078 cand": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.26,
+   "mapped_judges": [
+    6.29,
+    6.46,
+    6.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-078 main": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.5,
+   "mapped_judges": [
+    5.78,
+    5.44,
+    5.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-079 main": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.5,
+   "mapped_judges": [
+    5.61,
+    5.44,
+    5.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-079 cand": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.61,
+   "mapped_judges": [
+    5.78,
+    5.78,
+    5.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.07): P2-076 cand; extrapolated, confirm in a batch whose anchors reach at least 7.35 (anchor_tiles.py --include craft or --include f36_0_npc:C1)"
+ ]
+}

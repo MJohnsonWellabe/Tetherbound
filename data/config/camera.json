@@ -40,13 +40,13 @@
     "max_speaker_distance": 9.0,
     "min_distance": 1.2,
     "speaker_light_candidate": {
-      "enabled": false,
+      "enabled": true,
       "_why": "GPU DLG-2 (1 Nov): P2-074 'add key, rim and fog depth to the dim chamber' (Nerissa); P2-087/P2-083 speakers read dark-on-dark against walls and under decks. When enabled, conversation_camera.gd places a soft warm-neutral key from the lens side and a cool rim from behind the speaker while the push-in is up (offset = [toward lens, right, up] m from the speaker's chest), freed on close. No shadows; client presentation only. CPU r1: with the key 1.7 m toward the lens it sat on the trainer in close conversations and blew their face out white; it now stands camera-right (the trainer is camera-left) with a short steep falloff. TUNABLE.",
       "key": {"offset": [1.0, 1.4, 0.9], "colour": "#fff2e2", "energy": 0.9, "range": 3.0, "attenuation": 2.0},
       "rim": {"offset": [-1.3, -0.7, 1.0], "colour": "#bcd2ff", "energy": 1.5, "range": 3.4, "attenuation": 1.4}
     },
     "twoshot_v2": {
-      "enabled": false,
+      "enabled": true,
       "_why": "GPU DLG-2 (1 Nov, P2-073/P2-074/P2-076/P2-083): the speaker reads small and mid-ground while the player's back takes about a third of the frame. When enabled these keys replace the villager push-in's: the lens stands closer (2.9 m), leans further onto the speaker (0.86) and swings wider (22 deg) so the speaker fills about three quarters of frame height beside the panel and the trainer is a shoulder at the frame edge; the speaker-in-frame search keeps the named body inside the safe area. Aftermath profile keys still win. conversation_camera.gd with_twoshot_v2. TUNABLE.",
       "distance": 2.9,
       "speaker_bias": 0.86,

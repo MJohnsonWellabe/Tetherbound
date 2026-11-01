@@ -1,0 +1,59 @@
+{
+ "Cc": {
+  "anchor": false,
+  "label": "P2-013",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-013_b.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-013_a.jpg"
+ },
+ "Tw": {
+  "anchor": false,
+  "label": "P2-020",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-020_a.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-020_b.jpg"
+ },
+ "Fg": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Qb": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Sb": {
+  "anchor": false,
+  "label": "P2-001",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-001_a.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-001_b.jpg"
+ },
+ "Od": {
+  "anchor": true,
+  "A": "f36_0_npc:C9B",
+  "B": "f36_0_npc:C9A"
+ },
+ "He": {
+  "anchor": false,
+  "label": "P2-078",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-078_b.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-078_a.jpg"
+ },
+ "Qh": {
+  "anchor": false,
+  "label": "P2-016",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-016_b.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-016_a.jpg"
+ },
+ "Ay": {
+  "anchor": false,
+  "label": "P2-061",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-061_b.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-061_a.jpg"
+ },
+ "Fb": {
+  "anchor": false,
+  "label": "P2-034",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-034_b.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/ums/P2-034_a.jpg"
+ }
+}

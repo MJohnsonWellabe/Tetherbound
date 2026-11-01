@@ -66,21 +66,22 @@ func test_harvest_hero2_is_off_and_gives_crown_its_own_silhouette() -> void:
 		"the crown grade must stand taller")
 
 
-func test_glass_field_rock_collar_ships_off() -> void:
+func test_glass_field_rock_collar_ships_on() -> void:
 	var cfg := _json("res://data/config/stormwood_glass_field.json")
 	var collar: Dictionary = cfg.get("rock_collar_candidate", {})
 	assert_true(collar.has("stones"), "the P2-043 candidate must be declared")
-	assert_false(bool(collar.get("enabled", true)), "the candidate ships OFF")
+	assert_true(bool(collar.get("enabled", false)), "the candidate ships ON: cloud yardstick 1 Nov batch-1, P2-043 5.51 -> 5.68")
 
 
-func test_crown_arch_round2_ships_off_and_raises_the_arch_when_on() -> void:
+func test_crown_arch_round2_ships_on_and_raises_the_arch() -> void:
 	var hero := preload("res://scripts/world/stormwood_crown_arch_hero.gd")
 	var cfg := _json("res://data/config/crown_arch_hero.json")
-	assert_false(bool((cfg["round2_candidate"] as Dictionary).get("enabled", true)), "ships OFF")
-	assert_eq(hero.with_round2(cfg)["height_m"], cfg["height_m"], "OFF leaves the landed arch")
-	var cand: Dictionary = (cfg["round2_candidate"] as Dictionary).duplicate(true)
-	cand["enabled"] = true
-	cfg["round2_candidate"] = cand
+	assert_true(bool((cfg["round2_candidate"] as Dictionary).get("enabled", false)), "ships ON: cloud yardstick 1 Nov batch-1, P2-041 4.93 -> 5.31")
+	var off := cfg.duplicate(true)
+	var off_cand: Dictionary = (off["round2_candidate"] as Dictionary).duplicate(true)
+	off_cand["enabled"] = false
+	off["round2_candidate"] = off_cand
+	assert_eq(hero.with_round2(off)["height_m"], off["height_m"], "OFF leaves the landed arch")
 	var on := hero.with_round2(cfg)
 	assert_true(float(on["height_m"]) > 5.5, "round 2 stands the arch taller")
 	assert_true(on.has("edge_dressing"), "round 2 dresses the slab edge")

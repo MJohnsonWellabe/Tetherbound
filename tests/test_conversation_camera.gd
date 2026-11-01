@@ -785,13 +785,13 @@ func test_twoshot_v2_frames_the_speaker_closer_with_the_trainer_behind_the_lens(
 		"the wider swing must move the trainer toward the frame edge")
 
 
-func test_speaker_light_candidate_ships_off_and_places_key_front_rim_behind() -> void:
+func test_speaker_light_candidate_ships_on_and_places_key_front_rim_behind() -> void:
 	var cfg := CONVERSATION.config()
 	var lights: Dictionary = cfg.get("speaker_light_candidate", {})
 	assert_true(lights.has("key") and lights.has("rim"), "camera.json must declare the candidate")
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONVERSATION.CONFIG_PATH))
 	var shipped: Dictionary = ((raw as Dictionary)["conversation"] as Dictionary)["speaker_light_candidate"]
-	assert_false(bool(shipped.get("enabled", true)), "the candidate ships OFF")
+	assert_true(bool(shipped.get("enabled", false)), "the candidate ships ON: cloud yardstick 1 Nov batch-1/batch-3 dialogue, P2-078 5.50 -> 6.26, P2-074 4.75 -> 6.34")
 	var anchor := Vector3(0.0, 1.4, 0.0)
 	var toward_lens := Vector3(0.0, 0.1, 1.0)
 	var at := CONVERSATION.speaker_light_positions(anchor, toward_lens, lights)
