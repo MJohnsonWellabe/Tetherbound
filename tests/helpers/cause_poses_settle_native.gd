@@ -89,8 +89,9 @@ func _case(species: String, recipe: bool) -> void:
 	var animation := player.get_animation(StringName(faint))
 	var end := animation.length
 	var points: PackedVector3Array = rig.posed(animation, end, rig.pivot_rotation(animation, end), rig.pivot_position(animation, end))
-	var height: float = SETTLE.Rig.height(points)
-	_check(height < rig.standing_height * 0.7, "%s ON: faint ends collapsed (%.2f of %.2f m)" % [species, height, rig.standing_height])
+	var legs: Variant = rig.limb_direction(animation, end, rig.pivot_rotation(animation, end), rig.pivot_position(animation, end))
+	var from_down := rad_to_deg((legs as Vector3).angle_to(Vector3.DOWN)) if legs is Vector3 else 0.0
+	_check(from_down > 45.0 and from_down < 120.0, "%s ON: faint ends side-lying, legs out to the side (%.0f deg from down)" % [species, from_down])
 	var low: float = SETTLE.Rig.min_y(points)
 	_check(absf(low - (rig.ground_y - rig.standing_height * 0.015)) < 0.03 * rig.standing_height,
 		"%s ON: faint end touches the ground line (%.3f vs %.3f)" % [species, low, rig.ground_y])

@@ -5,7 +5,7 @@
  "exclude_species": [],
  "faint": {
   "grounded": {"enabled": false, "sink_frac": 0.015, "recentre": true, "max_shift_frac": 0.6},
-  "side_lie": {"enabled": false, "collapse_ratio": 0.62, "roll_deg": 78.0, "roll_sign": 1.0, "roll_start": 0.2, "roll_end": 0.85},
+  "side_lie": {"enabled": false, "collapse_ratio": 0.62, "roll_deg": 78.0, "roll_sign": 1.0, "roll_start": 0.2, "roll_end": 0.85, "min_roll_deg": 10.0, "_exclude_why": "Shelled and many-legged bodies collapse flat on their own legs rather than rolling onto an edge (CPU stage: Cragclaw stood on its shell rim).", "exclude_species": ["cragclaw", "cannonback", "mosshell", "voltarach", "burrowback"]},
   "head_lift": {"enabled": false, "min_elevation_deg": 10.0, "max_lift_deg": 35.0, "ramp_start": 0.5},
   "face_camera": {"enabled": false, "max_turn_deg": 110.0, "turn_end": 0.7}
  },

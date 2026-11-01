@@ -68,8 +68,11 @@ static func any_enabled(cfg: Dictionary) -> bool:
 
 
 static func excluded(cfg: Dictionary, species_id: String) -> bool:
-	var skip: Array = cfg.get("exclude_species", [])
-	return species_id in skip or species_id.trim_prefix("water_") in skip
+	return _listed(cfg.get("exclude_species", []), species_id)
+
+
+static func _listed(list: Variant, species_id: String) -> bool:
+	return list is Array and (species_id in list or species_id.trim_prefix("water_") in list)
 
 
 ## Rewrite the clips this body resolves for faint and hit. Returns the role ->
@@ -87,6 +90,7 @@ static func apply(body: Node3D, model: Node3D, player: AnimationPlayer, clips: D
 	if animation_root == null:
 		return clips
 	var rig := Rig.new(model, skeleton, animation_root, int(settings.get("sample_vertices", 2400)))
+	rig.species_id = species_id
 	if rig.empty():
 		return clips
 	var idle := _animation(player, str(clips.get("idle", "")))
@@ -179,8 +183,20 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	var end := animation.length
 	var final := rig.posed(animation, end, rotations[-1], positions[-1])
 	var final_height := Rig.height(final)
-	if not side.is_empty() and final_height > rig.standing_height * float(side.get("collapse_ratio", 0.62)):
-		var roll := deg_to_rad(float(side.get("roll_deg", 78.0)) * float(side.get("roll_sign", 1.0)))
+	var roll := 0.0
+	if not side.is_empty() and not _listed(side.get("exclude_species", []), rig.species_id):
+		var legs: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
+		var target := deg_to_rad(float(side.get("roll_deg", 78.0)) * signf(float(side.get("roll_sign", 1.0))))
+		if legs is Vector3:
+			# Roll about the forward axis until the legs lie out to the side:
+			# a standing or crouched faint (legs down) and a legs-up faint both
+			# end side-lying; a faint already on its side is left alone.
+			roll = rig.roll_to_side(legs as Vector3, target)
+		elif final_height > rig.standing_height * float(side.get("collapse_ratio", 0.62)):
+			roll = target
+		if absf(roll) < deg_to_rad(float(side.get("min_roll_deg", 10.0))):
+			roll = 0.0
+	if roll != 0.0:
 		var start := float(side.get("roll_start", 0.2))
 		var finish := maxf(start + 0.05, float(side.get("roll_end", 0.85)))
 		for i in times.size():
@@ -315,6 +331,7 @@ class Rig:
 	var standing_height := 0.0
 	var ground_y := 0.0
 	var standing_centre := Vector2.ZERO
+	var species_id := ""
 	var _animation_root: Node
 
 	func _init(pivot: Node3D, skel: Skeleton3D, animation_root: Node, budget: int) -> void:
@@ -503,6 +520,42 @@ class Rig:
 			axis = base.basis.z
 			axis.y = 0.0
 		forward = axis.normalized() if axis.length() > 0.001 else Vector3.BACK
+
+	## Mean direction from the trunk (pelvis, spine) to the lower limbs (legs,
+	## not wings), in body space; null when the rig names no lower limbs.
+	func limb_direction(animation: Animation, t: float, rotation: Quaternion, position: Vector3) -> Variant:
+		var to_body := _pivot(rotation, position) * to_model
+		var globals := global_poses(animation, t)
+		var trunk := Vector3.ZERO
+		var trunk_count := 0
+		for name: String in ["pelvis", "spine"]:
+			var bone := skeleton.find_bone(name)
+			if bone >= 0:
+				trunk += (to_body * globals[bone]).origin
+				trunk_count += 1
+		if trunk_count == 0:
+			return null
+		trunk /= float(trunk_count)
+		var sum := Vector3.ZERO
+		var count := 0
+		for bone in skeleton.get_bone_count():
+			var name := str(skeleton.get_bone_name(bone)).to_lower()
+			if name.contains("wing") or not (name.contains("lower") or name.contains("foot") or name.contains("paw")):
+				continue
+			sum += (to_body * globals[bone]).origin - trunk
+			count += 1
+		if count == 0 or sum.length() < 0.001:
+			return null
+		return sum / float(count)
+
+	## Signed roll about `forward` that turns the legs' direction (projected
+	## across the body) onto `target` radians from straight down.
+	func roll_to_side(legs: Vector3, target: float) -> float:
+		var across := legs - forward * legs.dot(forward)
+		if across.length() < 0.001:
+			return 0.0
+		var goal := Quaternion(forward, target) * Vector3.DOWN
+		return atan2(forward.dot(across.cross(goal)), across.dot(goal))
 
 	## Lift the neck so the head at the clip's end sits at least
 	## `min_elevation_deg` above level, ramped in over the clip's end.
