@@ -1,5 +1,7 @@
 extends "res://scripts/ui/menu_tab.gd"
 
+const MENU_TEXT := preload("res://scripts/ui/menu_text_floors.gd")
+
 ## Five stable rows, readable at handheld resolution and navigable with the
 ## existing menu focus system. Values update without rebuilding focused rows.
 const SKILLS := preload("res://scripts/player/player_skills.gd")
@@ -22,7 +24,9 @@ func build() -> void:
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SKILLS.CONFIG_PATH))
 	var title := Label.new()
 	title.text = "Skills grow as you travel and catch creatures."
-	title.add_theme_font_size_override("font_size", 24)
+	MENU_TEXT.secondary(title, 24)
+	if MENU_TEXT.on():
+		title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(title)
 	for id: String in SKILLS.IDS:
 		var row := VBoxContainer.new()
@@ -31,7 +35,7 @@ func build() -> void:
 		label.text = str(config.skills[id].name)
 		label.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		label.custom_minimum_size.y = 42
-		label.add_theme_font_size_override("font_size", 24)
+		label.add_theme_font_size_override("font_size", MENU_TEXT.prompt_px(24))
 		var description := str(config.skills[id].description)
 		label.pressed.connect(func() -> void:
 			_selected = id
@@ -53,7 +57,9 @@ func build() -> void:
 		var button := Button.new()
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.custom_minimum_size.y = 42
-		button.add_theme_font_size_override("font_size", 20)
+		button.add_theme_font_size_override("font_size", MENU_TEXT.read_px(20))
+		if MENU_TEXT.on():
+			button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		button.pressed.connect(_consume.bind(item_id))
 		candy_row.add_child(button)
 		_candy_buttons[item_id] = button
