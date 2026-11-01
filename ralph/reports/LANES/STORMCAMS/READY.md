@@ -14,7 +14,7 @@ Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every 
 | P2-070 (PARKED, not in manifest) | `data/config/stormwood_glass_sink.json` `dark_pool_candidate.enabled` | Darker obsidian floor and far fade. CPU r1/r2: barely visible; at the sink's depth the Stormwood distance fog sets the floor colour, not its material, so no >0.5 gain is expected. Needs the basin geometry the judges asked for (new art). |
 | P2-041 | `data/config/crown_arch_hero.json` `round2_candidate.enabled` | Arch visual turned 90 deg to face the road (the catalogue camera and every road approach saw it edge-on as a single pillar), 7.0 m tall; small rock dressing breaks the square slab edge. |
 | P2-043 | `data/config/stormwood_glass_field.json` `rock_collar_candidate.enabled` | Rock collar at each Meshy spike foot; flat scar patch hidden. |
-| P2-045 | `data/config/pickup_grounding.json` `tier_candidate.enabled` | Candy tiers as one / two / three sweets with a size step. |
+| P2-045 (PARKED, not in manifest) | `data/config/pickup_grounding.json` `tier_candidate.enabled` | Candy tiers as one / two / three sweets. CPU r1/r2: duplicated copies came back as oversized green sweets (both duplicate modes); r3 (copies from the pickup's own factory) produced no copies for the Stormwood candies. Two misses plus a changed approach: parked. Next idea: find which builder makes the Stormwood candy visual and add the tier copies there. |
 | P2-046 | `data/config/stormwood_harvest_hero2.json` `enabled` | Bigger harvest heroes; crown uses the tall glass-spike silhouette; grass clearings. Separate file so the scatter bake stays fresh. |
 | P2-113, P2-059 | `data/config/catching.json` `framed_camera.enabled` | Existing, never GPU-judged catch camera candidate (wider aim, stand-off resolve shot). No change on this branch. |
 
@@ -25,5 +25,5 @@ Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every 
 - Stormwood locations: Crown Arch seen edge-on by the catalogue camera (cause of "single tall pillar"); with round 2 turned to face the road, r2 reads clearly as an arch with its crown keystone (slab edge still hard; six stones per side after r2). Glass Field spikes sit on rock collars (lightened after r1).
 - Tidewake Nalia r2 (placement 3.6 m out): framed against a valley view to the shore instead of the sand wall.
 - Meadows: Quarry Foreman visible among the rock faces (P2-079); Warder Solene medium-close and lit in the courtyard (the stronghold's warm grade remains; P2-087 relies on the push-in and speaker light).
-- Stormwood inventory: harvest heroes larger, crown grade a tall spike cluster distinct from plain stormglass; candy tier copies came back as re-instanced green sweets (Godot duplicate re-instantiates glTF children) - fixed (no-instantiation duplicate), re-check queued.
+- Stormwood inventory: harvest heroes larger, crown grade a tall spike cluster distinct from plain stormglass; candy tier copies failed three ways (see P2-045 row); parked.
 - Glass Sink r1/r2: the floor colour is set by distance fog at that depth; the material candidate barely shows. Parked.

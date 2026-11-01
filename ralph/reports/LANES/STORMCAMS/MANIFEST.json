@@ -254,16 +254,6 @@
   ]
  },
  {
-  "item": "P2-045",
-  "flag": "data/config/pickup_grounding.json:tier_candidate.enabled",
-  "camera_set": "tools/phase2_capture_world_inventory.gd (job.json repro per stand)",
-  "stands": [
-   "stormwood__inventory__pickup__good_candy",
-   "stormwood__inventory__pickup__great_candy",
-   "stormwood__inventory__pickup__rare_candy"
-  ]
- },
- {
   "item": "P2-046",
   "flag": "data/config/stormwood_harvest_hero2.json:enabled",
   "camera_set": "tools/phase2_capture_world_inventory.gd (job.json repro per stand)",
