@@ -110,3 +110,17 @@ func test_stand_guard_on_reads_window_and_fallback_offsets() -> void:
 	assert_eq(CAPTURE.stand_guard_offsets(path), [18.0, 26.0])
 	assert_eq(CAPTURE.capture_overhead_failure(null, Vector3.ZERO, 8.0, 1, []), "",
 		"no space, no verdict")
+
+
+func test_light_foliage_backlight_only_on_thin_leaves_when_on() -> void:
+	var FINISH := preload("res://scripts/world/meadows_surface_finish.gd")
+	var off := StandardMaterial3D.new()
+	assert_false(FINISH.finish_cause_foliage("Leaves", off), "OFF changes nothing")
+	assert_false(off.backlight_enabled)
+	var path := _fixture(CONFIG, ["cause_light"])
+	var leaves := StandardMaterial3D.new()
+	assert_true(FINISH.finish_cause_foliage("Leaves", leaves, path))
+	assert_almost_eq(leaves.backlight.r, 0.45)
+	assert_false(leaves.rim_enabled, "no rim: the fight-fade converter refuses it")
+	var bark := StandardMaterial3D.new()
+	assert_false(FINISH.finish_cause_foliage("Bark", bark, path), "bark untouched")

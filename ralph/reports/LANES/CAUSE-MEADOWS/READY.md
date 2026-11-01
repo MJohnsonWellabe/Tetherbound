@@ -1,5 +1,8 @@
 # Cause lane: Meadows light, atmosphere and ground (tb/cause-meadows)
 
+**Group 2 (1 Nov, ~23:30 UTC): cause_light r2.** Same flag, `data/config/meadows_look.json:cause_light.enabled`. It adds `cause_light.foliage`: the Meadows scatter leaves and flowers get backlight 0.45 instead of 0.28, for the "card-like trees". This is backlight only. A leaf rim would make `foliage_standard_shader.gd`'s converter refuse those materials, and that would drop them out of the fight foliage fade. MANIFEST repeats every cause_light entry as `group: 2`; capture them on this head. The foliage logic was run headless, and the test case is in `tests/test_meadows_cause_flags.gd`.
+
+
 **Group 1 (1 Nov, ~23:00 UTC).** Three flags, all OFF. MANIFEST.json has an entry for every Meadows catalogue item whose frames each flag changes (138 entries). UI-only items are left out: P2-001, P2-002, P2-007, P2-031, P2-061, P2-095 and P2-096. P2-004 (HUD) gets the light flag only.
 
 | Flag (set true) | What it changes |
