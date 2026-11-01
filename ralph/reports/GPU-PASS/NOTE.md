@@ -517,3 +517,63 @@ Skip F39#4 (reopened 24 Oct: the Veilfall close-up needs new art first). F21#5 c
 - **P2-041 CPU gain is not like-for-like.** In b1 and b2 the Crown Arch candidate frame came from a multi-subset boot of `phase2_capture_locations.gd`. Landmark rows with no authored heading take `_route_forward(destination_index)`, and a landmark's `destination_index` counts only the landmarks matched in that boot, so the candidate faced the arch head-on while main (single-subset job command) saw it edge-on. Treat the +1.75 / +2.18 as unmeasured. Capture P2-041 with the job.json command exactly (single subset) on both arms; a matched-stand CPU re-judge (b3) follows.
 - Other WD items are unaffected (spot rows, the inventory, sink, camps and routes tools fix their stands independently of the subset list).
 - Harness note for TECHNICAL 8.1: capture a landmark A/B with the identical `--subset` list on both arms.
+## ARM REQUEST TW-look-1 (Tidewake look lane, tb/tidewake-look, 31 Oct 2026 ~4:50 PM CT)
+
+Owner 31 Oct: Tidewake locations "too cluttered ... beach huts ... the focus". **Judge High first**, then Medium only if High maps to 7.5 or above.
+
+- **Arms:**
+  - Main: current origin/main (a41e1b30 or later).
+  - On: `tb/tidewake-1-on` at 29ca0d23b45159a09ffb4ffa9e82716f9c61112b. This is the judged s2 state with `beach_scene_candidate` and `beach_declutter_candidate` removed from `sections_off`.
+  - Capture the on arm from that exact commit: later `tb/tidewake-look` commits change `beach_scene_candidate` for round 2.
+- **Import first:** the new Meshy 1031 set is under `assets/props/meshy-1031/tidewake/`. Its texture `.import` files are on `compress/mode=2`.
+- **Stands:** 12 location stands, day approach and close (24 frames per arm):
+  ```
+  godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/phase2_capture_locations.gd -- --biome=water --preset=High --source-commit=<sha> --times=day --views=approach,close --seed=2042 --output=res://<fresh dir> --subset=water__gull_rest__19 --subset=water__gull_rest__20 --subset=water__salt_crown__11 --subset=water__salt_crown__12 --subset=water__tidal_cradle__09 --subset=water__tidal_cradle__10 --subset=water__drowned_garden__21 --subset=water__drowned_garden__22 --subset=water__lantern_cove__17 --subset=water__lantern_cove__18 --subset=water__first_shore__01 --subset=water__first_shore__02
+  ```
+- **Judge:**
+  - One set per island: a 2x2 of its two sites, approach | close.
+  - Recorded defects: "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention"; "Named location reads as a generic slope with no clear focal building or landmark".
+- **CPU result** (`ralph/reports/TIDEWAKE-LOOK/r1/VERDICT.md`, mapped, confirming batch, slope 0.98, RMSE 0.51), these six islands:
+
+  | Island | Main | Arm |
+  |---|---|---|
+  | gull_rest | 5.29 | 6.17 |
+  | salt_crown | 5.03 | 5.78 |
+  | tidal_cradle | 5.16 | 5.81 |
+  | drowned_garden | 5.55 | 6.11 |
+  | lantern_cove | 5.49 | 6.01 |
+  | first_shore | 5.59 | 6.08 |
+  | **Mean** | **5.35** | **5.99 (+0.64)** |
+
+  All 11 islands: 5.59 → 6.03.
+- **Rows:** F39#30 / F39#32 Tidewake location frames, P2-011 named destinations, P2-008 shore; F13#5 inhabited docks (declutter section).
+
+## ARM REQUEST TW-look-2 (Tidewake look lane, 31 Oct 2026 evening CT). Supersedes TW-look-1; run this one instead.
+
+Same owner request and method as TW-look-1. **Judge High first.**
+
+- **Arms:**
+  - Main: current origin/main.
+  - On: `tb/tidewake-2-on` at 773118e1f499ac751baeec1aca3f34f38bebe3a3. This is the judged r2b state (8dfd1f4d2) with `beach_scene_candidate`, `beach_declutter_candidate` and `beach_groups_candidate` ON.
+  - Import first: the Meshy 1031 set.
+- **Stands:** 18 location stands, day approach and close (36 frames per arm). Use the TW-look-1 command with these subsets:
+  ```
+  --subset=water__gull_rest__19 --subset=water__gull_rest__20 --subset=water__tidal_cradle__09 --subset=water__tidal_cradle__10 --subset=water__lantern_cove__17 --subset=water__lantern_cove__18 --subset=water__salt_crown__11 --subset=water__salt_crown__12 --subset=water__reedhaven__03 --subset=water__reedhaven__04 --subset=water__sluice_isle__13 --subset=water__sluice_isle__14 --subset=water__first_shore__01 --subset=water__first_shore__02 --subset=water__deep_watch__23 --subset=water__deep_watch__24 --subset=water__drowned_garden__21 --subset=water__drowned_garden__22
+  ```
+- **Judge:** one set per island (2x2: its two sites, approach | close). Same recorded defects as TW-look-1.
+- **CPU result** (`ralph/reports/TIDEWAKE-LOOK/r3/VERDICT.md`, direct batch against main, confirming, r 0.97, RMSE 0.27):
+
+  | Island | Main | On |
+  |---|---|---|
+  | gull_rest | 4.73 | 5.72 |
+  | tidal_cradle | 4.55 | 5.54 |
+  | lantern_cove | 5.18 | 6.04 |
+  | salt_crown | 4.32 | 5.18 |
+  | reedhaven | 5.36 | 6.17 |
+  | sluice_isle | 5.09 | 5.90 |
+  | first_shore | 5.27 | 6.04 |
+  | deep_watch | 5.04 | 5.63 |
+  | drowned_garden | 5.36 | 5.95 |
+  | **Mean** | | **+0.79** |
+
+- **Rows:** F39#30 / F39#32 Tidewake location frames, P2-011 named destinations, P2-008 shore; F13#5 inhabited docks.

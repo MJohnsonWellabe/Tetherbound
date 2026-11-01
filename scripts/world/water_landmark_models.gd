@@ -27,7 +27,7 @@ func build(water_world: Node3D) -> void:
 		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
 		+ (look.get("veilfall_mountain_candidate", []) as Array) + (look.get("veilfall_buttress_candidate", []) as Array) \
 		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array) \
-		+ (look.get("beach_scene_candidate", []) as Array) \
+		+ (look.get("beach_scene_candidate", []) as Array) + (look.get("beach_groups_candidate", []) as Array) \
 		+ (look.get("cause_horizon_props", []) as Array)
 	specs = _destination_read(specs)
 	_cladding(water_world, look.get("veilfall_cladding_candidate", {}))
