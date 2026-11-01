@@ -1694,6 +1694,10 @@ func _apply_config(cfg: Dictionary) -> void:
 	for key: String in ["tint_base", "tint_tip", "zone_moss_tint"]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, Color(str(cfg[key])))
+	# P2-008 (flag-off): feather the hard ruled edge of every built-ground
+	# clearing (beach bars, plazas, camps) instead of cutting blades on a circle.
+	if bool(cfg.get("built_feather_enabled", false)):
+		_material.set_shader_parameter("built_feather_m", maxf(0.0, float(cfg.get("built_feather_m", 2.5))))
 	for key: String in ["zone_bare", "zone_moss"]:
 		var pair: Array = cfg.get(key, [])
 		if pair.size() == 2:
