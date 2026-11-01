@@ -164,9 +164,10 @@ static func config_for(key: String, appearance_variant: String = "",
 	if not parsed is Dictionary:
 		return {}
 	var entry: Variant = (parsed as Dictionary).get(key, {})
-	if not entry is Dictionary:
-		return {}
-	return with_clip_candidate(with_appearance_variant(with_body_flags(entry, key), key, appearance_variant, variant_settings))
+	if entry is Dictionary:
+		entry = with_body_flags(entry, key)
+	return with_clip_candidate(with_appearance_variant(entry, key, appearance_variant, variant_settings)) \
+		if entry is Dictionary else {}
 
 
 ## P2-065 (vis-meadows, OFF until GPU-judged): a rig's `clip_candidate`
@@ -186,6 +187,13 @@ static func with_clip_candidate(cfg: Dictionary) -> Dictionary:
 	clips.merge((candidate as Dictionary).get("clips", {}) as Dictionary, true)
 	out["clips"] = clips
 	return out
+
+
+## Apply after rank/base dressing so its palette and badges remain intact.
+## The returned portrait belongs to exactly the same resolved appearance.
+static func with_appearance_variant(cfg: Dictionary, base_profile: String,
+		appearance_variant: String, variant_settings: Dictionary = {}) -> Dictionary:
+	return APPEARANCE_VARIANTS.resolve(cfg, base_profile, appearance_variant, variant_settings)
 
 
 ## GPU arms (owner, 31 Oct): a candidate NPC body look ships as a named flag in
@@ -228,13 +236,6 @@ static func with_body_flags(cfg: Dictionary, key: String, flags_doc: Variant = n
 			else:
 				push_error("character body flag %s: %s.%s is not a body-surface key" % [flag, key, field])
 	return out
-
-
-## Apply after rank/base dressing so its palette and badges remain intact.
-## The returned portrait belongs to exactly the same resolved appearance.
-static func with_appearance_variant(cfg: Dictionary, base_profile: String,
-		appearance_variant: String, variant_settings: Dictionary = {}) -> Dictionary:
-	return APPEARANCE_VARIANTS.resolve(cfg, base_profile, appearance_variant, variant_settings)
 
 
 func has_model() -> bool:
