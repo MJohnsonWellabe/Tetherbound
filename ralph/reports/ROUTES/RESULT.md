@@ -1,4 +1,16 @@
-# Routes lane (tb/routes-f49), F49#0 Tidewake: result 1 Nov 2026 (resume), 08 -> 09 MATCHED; Tidewake late chain complete
+# Routes lane (tb/routes-f49): Cloudreach result 1 Nov 2026, STOPPED on two failures at Cloudreach 06 -> 07
+
+## Cloudreach seams matched and pushed (saves `f49_cr_01..06`, seams `ralph/reports/ROUTES/f49-1031/seams/`)
+- **C1** Tidewake 09 → Cloudreach 01 (replaces `cloudreach_arrival_generated`), then 01 → 02 → 03 → 04.
+- **C3** Cloudreach 04 → 05 (replaces `cloudreach_05_generated_veyra_boundary`), then 05 → 06 (Veyra, chapter complete).
+- Harness fix 1479767e: arrival gathers make Satchel room (driftwood drop, cloudberry feed).
+
+## Blocker: Cloudreach 06 → 07 (failed twice; stopped)
+- Attempt 1 (1479767e): `07_stormward_handoff` "relic hanging produced no actual portable relics_hung state". `f49_cr_06` Satchel is 24/24 and the Veyra `boss_relic` duty is held as `boss_handoff_make_satchel_room` (coin payout + `stormwood_portal_key` need two slots, as at Tidewake 09).
+- Attempt 2 (0905b749, `_make_handoff_room`): feeding cloudberries ran first, then the approved Satchel Drop (`meadows_earned_team_segment._drop_slot`) of gale_fiber failed "Controller focus did not reach the satchel slot to drop". Likely cause: after the care/feed passes, Satchel focus is not on a slot button when `_focus_slot` starts (it navigates from the current focus owner), or the slot index moved after feeding. Next: open the Satchel, re-read `find_slot` after feeding, and wait for focus to land on a slot button before navigating (the Tidewake 09 drop of fiber/rootstone worked with no feed beforehand).
+- Input `f49_cr_06` is committed; nothing else needs rerunning.
+
+## Tidewake result 1 Nov 2026 (resume): 08 -> 09 MATCHED; Tidewake late chain complete
 
 ## 1 Nov resume: seams matched and pushed
 - **07b → 07c MATCH** (02e8f4cb; a79aa8f7): fixed the 07c trainer death. Diagnosis (health/position trace): 07c climbed the Veilfall exterior spine and then walked straight to Venn's stance at the landing camp, stepping off the plateau near (320,142,3881) (vy −90 m/s, health 100 → 0 at (346,17,3819)), leaving the whole Satchel in a death satchel. 07c now takes spine point 1 only (07d walks points 2..4 to the cave) and fails if a death satchel is left. Venn beaten in 1651 s with every stack kept.
