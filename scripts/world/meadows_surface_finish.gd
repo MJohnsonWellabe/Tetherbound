@@ -23,6 +23,43 @@ static func settings() -> Dictionary:
 	return _settings
 
 
+## Cause lane tb/cause-meadows (OFF until GPU-judged): `cause_light.foliage`
+## raises the thin-leaf backlight on Meadows scatter foliage so canopies take
+## transmitted sun instead of reading as flat cards. Backlight only: a rim is a
+## non-default property that foliage_standard_shader.gd's converter refuses,
+## which would drop those leaves out of the fight foliage fade. Returns whether
+## it changed `material`. `path` is a parameter for unit tests.
+static func finish_cause_foliage(material_name: String, material: BaseMaterial3D,
+		path: String = CONFIG) -> bool:
+	if material == null or not preload("res://scripts/world/imported_materials.gd") \
+			.is_thin_foliage_material(material_name):
+		return false
+	var strength := cause_foliage_backlight(path)
+	if strength <= 0.0:
+		return false
+	material.backlight_enabled = true
+	material.backlight = Color(strength, strength, strength, 1.0)
+	return true
+
+
+static var _cause_backlight := -1.0
+
+
+## `cause_light.foliage.backlight` while `cause_light.enabled`, else 0.0.
+static func cause_foliage_backlight(path: String = CONFIG) -> float:
+	if path == CONFIG and _cause_backlight >= 0.0:
+		return _cause_backlight
+	var value := 0.0
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if parsed is Dictionary:
+		var cause: Dictionary = (parsed as Dictionary).get("cause_light", {})
+		if bool(cause.get("enabled", false)):
+			value = clampf(float((cause.get("foliage", {}) as Dictionary).get("backlight", 0.0)), 0.0, 1.0)
+	if path == CONFIG:
+		_cause_backlight = value
+	return value
+
+
 static func finish_standard(source: BaseMaterial3D) -> BaseMaterial3D:
 	if not bool(settings().get("enabled", false)) or source.has_meta("meadows_finish"):
 		return source

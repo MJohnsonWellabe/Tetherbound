@@ -1445,10 +1445,28 @@ func _apply_field_separation() -> void:
 		float(SPECIES.placeholder(species_id).get("field_rim", 0.0)), 0.0, FIELD_RIM_MAX)
 	var tier_strength := clampf(
 		float(TIER_RIM_STRENGTH.get(tier, 0.0)), 0.0, FIELD_RIM_MAX)
-	var strength := maxf(field_strength, tier_strength)
+	var strength := maxf(maxf(field_strength, tier_strength), _field_rim_floor)
 	if strength <= 0.0:
 		return
 	_rim_light_node(_model, strength, "field")
+
+
+## Cause lane tb/cause-meadows (OFF until GPU-judged): a biome look may give
+## every creature a faint field rim (`creature_field_rim_floor`, set by
+## `world_look.gd`) so bodies separate from the grass. It is a floor under the
+## per-species and tier rims, capped below the uncommon tier's rim so the
+## rarity rungs and the alpha's 0.65 stay distinct. Read when a body applies
+## its presence (spawn), not retroactively.
+const FIELD_RIM_FLOOR_MAX := 0.12
+static var _field_rim_floor := 0.0
+
+
+static func set_field_rim_floor(value: float) -> void:
+	_field_rim_floor = clampf(value, 0.0, FIELD_RIM_FLOOR_MAX)
+
+
+static func field_rim_floor() -> float:
+	return _field_rim_floor
 
 
 ## OWNER DIRECTIVE 2026-09-01, "bigger or brighter". BACKLOG-B2-GRASS-SEPARATION
