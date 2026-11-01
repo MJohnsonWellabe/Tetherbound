@@ -22,7 +22,7 @@
         "shafts": {
           "enabled": true,
           "colour": "#d4cdf2",
-          "intensity": 0.16,
+          "intensity": 0.2,
           "cell_m": 70.0,
           "ring": 3,
           "chance": 0.34,
@@ -50,20 +50,20 @@
             "sun_energy_mult": 0.66,
             "ambient_colour": "#a4a6c4",
             "ambient_energy_mult": 0.84,
-            "ceiling_colour": "#6a6396",
-            "ceiling_contrast": 0.6,
-            "ceiling_definition": 0.6,
-            "ceiling_rim": 0.38,
-            "ceiling_thin_glow": 0.16,
-            "sheet_glow": 0.14,
+            "ceiling_colour": "#5f5889",
+            "ceiling_contrast": 0.45,
+            "ceiling_definition": 0.35,
+            "ceiling_rim": 0.22,
+            "ceiling_thin_glow": 0.06,
+            "sheet_glow": 0.08,
             "sheet_glow_rate": 0.16,
             "shafts": 0.75
           },
           "building": {
             "sun_energy_mult": 0.48,
             "ambient_energy_mult": 0.7,
-            "ceiling_contrast": 0.7,
-            "ceiling_definition": 0.65,
+            "ceiling_contrast": 0.6,
+            "ceiling_definition": 0.4,
             "ceiling_rim": 0.3,
             "ceiling_thin_glow": 0.1,
             "sheet_glow": 0.32,
@@ -72,8 +72,8 @@
           "break": {
             "sun_energy_mult": 0.38,
             "ambient_energy_mult": 0.72,
-            "ceiling_contrast": 0.75,
-            "ceiling_definition": 0.7,
+            "ceiling_contrast": 0.65,
+            "ceiling_definition": 0.45,
             "ceiling_rim": 0.26,
             "ceiling_thin_glow": 0.08,
             "shafts": 0.2
@@ -82,7 +82,7 @@
             "sun_energy_mult": 0.62,
             "ambient_energy_mult": 0.8,
             "ceiling_contrast": 0.55,
-            "ceiling_definition": 0.55,
+            "ceiling_definition": 0.35,
             "ceiling_rim": 0.45,
             "ceiling_thin_glow": 0.22,
             "shafts": 1.0
@@ -105,24 +105,24 @@
       "overlay": {
         "rain": {
           "soft_edge": 1.0,
-          "soft_edge_power": 1.8,
+          "soft_edge_power": 2.2,
           "radial_segments": 6,
           "max_drops": 2200,
-          "streak_width_m": 0.034,
+          "streak_width_m": 0.07,
           "streak_length_m": 1.15,
-          "colour": "#b4bad0",
-          "alpha": 0.42,
+          "colour": "#a6adc6",
+          "alpha": 0.3,
           "scale_min": 0.6,
           "far_layer": {
             "max_drops": 2000,
-            "streak_width_m": 0.026,
+            "streak_width_m": 0.045,
             "streak_length_m": 0.8,
-            "alpha": 0.18
+            "alpha": 0.15
           },
           "curtain_layer": {
-            "streak_width_m": 0.11,
+            "streak_width_m": 0.14,
             "streak_length_m": 3.6,
-            "alpha": 0.12
+            "alpha": 0.1
           }
         }
       }

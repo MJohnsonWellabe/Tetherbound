@@ -18,6 +18,7 @@ const LAMP_POST_TOP_M := 1.0
 const LAMP_POST_HEIGHT_M := 3.25
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
+const DECK_LIGHT := preload("res://scripts/world/stormheart_deck_light.gd")
 const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
 const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshader")
 const SPLIT_BARK := preload("res://scripts/world/stormheart_split_bark.gd")
@@ -736,7 +737,7 @@ func _deck_light(settings: Dictionary) -> void:
 	var holder := Node3D.new()
 	holder.name = "DeckLight1101"
 	add_child(holder)
-	for ring: Dictionary in deck_light_poses(settings):
+	for ring: Dictionary in DECK_LIGHT.poses(settings):
 		var lamp := OmniLight3D.new()
 		lamp.name = str(ring.name)
 		lamp.position = ring.position
@@ -763,21 +764,6 @@ func _deck_light(settings: Dictionary) -> void:
 		holder.add_child(spot)
 	if _cut_wood != null and settings.has("board_variation"):
 		_cut_wood.set_shader_parameter("board_variation", float(settings.board_variation))
-
-
-## Tree-local lantern positions for deck_light_1101 (pure; tested).
-static func deck_light_poses(settings: Dictionary) -> Array[Dictionary]:
-	var out: Array[Dictionary] = []
-	for ring: Dictionary in settings.get("rings", []):
-		var count := int(ring.get("count", 0))
-		var radius := float(ring.get("radius_m", 20.0))
-		var height := float(ring.get("height_m", 4.0))
-		var phase := deg_to_rad(float(ring.get("phase_deg", 0.0)))
-		for i in count:
-			var a := phase + TAU * float(i) / float(maxi(1, count))
-			out.append({"name": "%s_%d" % [str(ring.get("id", "ring")), i],
-				"position": Vector3(cos(a) * radius, height, sin(a) * radius)})
-	return out
 
 
 ## All construction here dresses existing floors/rails. Braces hang below the

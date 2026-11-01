@@ -7,7 +7,8 @@ extends "res://tests/test_case.gd"
 const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 const SHAFTS := preload("res://scripts/world/stormwood_storm_shafts.gd")
 const COVER := preload("res://scripts/world/stormwood_ground_cover.gd")
-const TREE := preload("res://scripts/world/stormheart_tree.gd")
+const DECK_LIGHT := preload("res://scripts/world/stormheart_deck_light.gd")
+const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 
 
 func _json(path: String) -> Dictionary:
@@ -121,10 +122,10 @@ func test_moss_variation_on_sets_typed_uniforms_without_red() -> void:
 
 
 func test_deck_light_ships_off_and_lays_out_its_rings() -> void:
-	var presentation := _json(TREE.PRESENTATION_PATH)
+	var presentation := _json(PRESENTATION_PATH)
 	var settings: Dictionary = presentation.deck_light_1101
 	assert_false(bool(settings.get("enabled", true)), "ships OFF")
-	var poses := TREE.deck_light_poses(settings)
+	var poses := DECK_LIGHT.poses(settings)
 	var expected := 0
 	for ring: Dictionary in settings.rings:
 		expected += int(ring.count)
