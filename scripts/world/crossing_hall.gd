@@ -61,6 +61,7 @@ func build(config: Dictionary) -> bool:
 		_config["interior_ambient"] = ambient
 		if waymark.has("daylight_windows"):
 			_config["daylight_windows"] = waymark["daylight_windows"].duplicate(true)
+	apply_hall_1(_config)
 	add_to_group("crossing_halls")
 	for entry: Dictionary in _config.arches:
 		_build_arch(entry)
@@ -107,6 +108,43 @@ func build(config: Dictionary) -> bool:
 	refresh_from_game()
 	set_process(true)
 	return true
+
+
+## HALL-1 (F17#6 GPU swing, OFF until judged): one flag layers a candidate
+## over the shipped Hall. `merge` deep-merges into existing sections (nested
+## dictionaries merge key by key, anything else replaces); `append` adds rows
+## to a section's list, e.g. {"hall_furnishing": {"pieces": [...]}}; `remove`
+## drops a section's list rows by name, e.g. {"hall_timber_frame": {"pieces":
+## ["NavePost_-12_-1"]}}. Applied before any node is built, so the builders
+## see one ordinary config.
+static func apply_hall_1(config: Dictionary) -> void:
+	var hall_1: Dictionary = config.get("hall_1", {})
+	if not bool(hall_1.get("enabled", false)):
+		return
+	_deep_merge(config, hall_1.get("merge", {}))
+	var remove: Dictionary = hall_1.get("remove", {})
+	for section: String in remove:
+		var target: Dictionary = config.get(section, {})
+		for key: String in remove[section]:
+			var names: Array = remove[section][key]
+			target[key] = (target.get(key, []) as Array).filter(func(row: Variant) -> bool:
+				return not (row is Dictionary and str(row.get("name", "")) in names))
+	var append: Dictionary = hall_1.get("append", {})
+	for section: String in append:
+		var target: Dictionary = config.get(section, {})
+		for key: String in append[section]:
+			var rows: Array = target.get(key, []).duplicate(true)
+			rows.append_array((append[section][key] as Array).duplicate(true))
+			target[key] = rows
+		config[section] = target
+
+
+static func _deep_merge(into: Dictionary, from: Dictionary) -> void:
+	for key: Variant in from:
+		if into.get(key) is Dictionary and from[key] is Dictionary:
+			_deep_merge(into[key], from[key])
+		else:
+			into[key] = from[key].duplicate(true) if from[key] is Dictionary or from[key] is Array else from[key]
 
 
 static func validate_layout(config: Dictionary) -> bool:

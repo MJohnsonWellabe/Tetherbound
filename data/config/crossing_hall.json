@@ -1,4 +1,11 @@
 {
+  "hall_1": {
+    "_why": "HALL-1 (F17#6 GPU swing, coordinator queue 31 Oct): one flag layers a candidate over the shipped Hall (crossing_hall.gd apply_hall_1). merge = nested overrides, append = extra list rows, remove = list rows dropped by name. OFF until a Medium/High GPU judgement against main; 7.5 on both closes F17#6.",
+    "enabled": false,
+    "merge": {},
+    "append": {},
+    "remove": {}
+  },
   "hall_hero_assets": {
     "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
     "enabled": true,
