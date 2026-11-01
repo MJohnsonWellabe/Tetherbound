@@ -4,7 +4,7 @@
 
 ## Round 3 (1 Nov 2026, ~23:00 UTC): remakes are the shipping models
 
-**Use MANIFEST group 3.** It supersedes groups 1 and 2: 75 entries, each with a `baseline` field. Every entry is judged with all 49 `remake_owner1101_*` flags ON, as the coordinator directed (1 Nov). Each F36 row's `note` names its stage form:
+**Use MANIFEST group 4** (the group 3 entries, re-marked after the legless head drop). It supersedes groups 1–3: 75 entries, each with a `baseline` field. Every entry is judged with all 49 `remake_owner1101_*` flags ON, as the coordinator directed (1 Nov). Each F36 row's `note` names its stage form:
 - remake rigs: no `--candidate` (60 rows, counting water forms);
 - recipe species that have no remake: `--candidate`.
 
