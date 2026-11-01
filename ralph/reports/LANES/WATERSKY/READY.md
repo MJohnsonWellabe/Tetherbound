@@ -1,4 +1,15 @@
-# WATERSKY lane (tb/vis-water-sky): Tidewake F39 + Cloudreach F40 scene/material/placement
+# WATERSKY lane (tb/vis-water-sky): Tidewake F39 + Cloudreach F40
+
+## STATUS 19:55 UTC: PAUSED (coordinator 18:32 owner direction; this lane's messages to the coordinator are refused, so this note is the channel)
+
+- The pause message reached this session at 19:51, after group 3 had grown. Two changes went in after 18:32:
+  1. Trainer Rune joins the posts candidate (`water_npc_posts_candidate.json`, read by `water_encounter_runtime_data.gd`). CPU-verified push-in two-shot.
+  2. A P2-109 dismount attempt (no visible change). Reverted in 29abe8150; net zero.
+- **Not done, waiting for your word after scores:**
+  - Dropping my Nalia repost in favour of tb/vis-storm-cams. On request I'll remove the Nalia offset, keep Rune, and remove the MANIFEST P2-074 entry.
+  - Wiring the Meshy Veilfall mountain (tb/meshy-landmarks-1101 5a44380c9).
+- Parked: P2-109. The ghost is the follower Aquaryn trailing a running trainer into the camera; that's shared follower code (`follower_creature.gd`).
+- Criteria closed: zero (no GPU verdicts received yet).
 
 ## Group 3 (1 Nov; shared cause 2, the camera has no speaker): flag `data/config/water_npc_posts_candidate.json:enabled`
 
