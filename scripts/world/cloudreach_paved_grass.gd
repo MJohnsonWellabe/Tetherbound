@@ -78,10 +78,12 @@ static func clear(world: Node, paving_materials: Array, cfg: Dictionary) -> int:
 			continue
 		var xform := _xform(instances)
 		var bounds := (xform * multimesh.get_aabb()).grow(1.0)
+		# A renderer without real mesh storage (headless) reports an empty AABB.
+		var bounded := multimesh.get_aabb().size.length() > 0.001
 		var grid := {}
 		for box: Dictionary in boxes:
 			var box_aabb: AABB = box.aabb
-			if not bounds.intersects(box_aabb):
+			if bounded and not bounds.intersects(box_aabb):
 				continue
 			for cx in range(floori(box_aabb.position.x / CELL_M), floori(box_aabb.end.x / CELL_M) + 1):
 				for cz in range(floori(box_aabb.position.z / CELL_M), floori(box_aabb.end.z / CELL_M) + 1):
