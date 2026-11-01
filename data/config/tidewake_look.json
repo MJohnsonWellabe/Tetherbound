@@ -50,7 +50,7 @@
       "enabled": false,
       "restore": ["lesson_clusters_candidate"],
       "merge": {
-        "dunes": {"flank_strength": 0.4, "flank_scale": 0.3, "strata_strength": 0.0, "scrub_strength": 0.55, "scrub_scale": 0.06, "scrub_colour": "#7d7a5a", "face_shade_strength": 0.2}
+        "dunes": {"flank_strength": 0.28, "flank_scale": 0.3, "strata_strength": 0.0, "scrub_strength": 0.55, "scrub_scale": 0.06, "scrub_colour": "#7d7a5a", "face_shade_strength": 0.2}
       }
     }
   },

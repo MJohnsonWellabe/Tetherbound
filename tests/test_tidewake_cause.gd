@@ -56,7 +56,7 @@ func test_dunes_part_restores_dressing_and_sets_dune_form() -> void:
 	assert_true(on.has("lesson_clusters_candidate"), "lesson clusters come into play with dunes")
 	for section: String in ["dune_grass_candidate", "stones_candidate"]:
 		assert_false(on.has(section), "%s thins the dressing and stays off" % section)
-	assert_eq(float(on.dunes.flank_strength), 0.4)
+	assert_eq(float(on.dunes.flank_strength), 0.28)
 	assert_eq(on.dunes.sand_colour, off.dunes.sand_colour, "sand colour is kept")
 	assert_false(on.has("surfaces_candidate"), "unlisted sections stay off")
 

@@ -198,11 +198,12 @@ const MATERIAL := """
 			coast_dune_face_shade_start_y, abs(dune_normal.y) + (patch - 0.5) * 0.06);
 		sand *= 1.0 - face_shade * coast_dune_face_shade_strength;
 		if (coast_dune_flank_strength > 0.0 || coast_dune_strata_strength > 0.0) {
-			float steep = 1.0 - smoothstep(0.6, 0.9, abs(dune_normal.y));
+			// Moderate dune flanks only: near-vertical walls (P2-074's passage
+			// wall) turned the runnels into hard horizontal stripes on CPU.
+			float steep = smoothstep(0.3, 0.5, abs(dune_normal.y)) * (1.0 - smoothstep(0.6, 0.9, abs(dune_normal.y)));
 			vec2 across_dir = normalize(vec2(-dune_normal.z, dune_normal.x) + vec2(0.0001));
 			float across = dot(v_vertex.xz, across_dir);
-			float runnel = coast_noise(vec2(across * coast_dune_flank_scale, v_vertex.y * 0.05)) * 0.65
-				+ coast_noise(vec2(across * coast_dune_flank_scale * 3.1, v_vertex.y * 0.16 + 3.7)) * 0.35;
+			float runnel = coast_noise(vec2(across * coast_dune_flank_scale, v_vertex.y * 0.04));
 			sand *= 1.0 + (runnel - 0.5) * 2.0 * coast_dune_flank_strength * steep;
 			float bed_warp = coast_noise(vec2(across * 0.05, v_vertex.y * 0.02)) * 3.0;
 			float strata = smoothstep(0.55, 0.95, sin(v_vertex.y * 1.4 + bed_warp * 2.0) * 0.5 + 0.5);
