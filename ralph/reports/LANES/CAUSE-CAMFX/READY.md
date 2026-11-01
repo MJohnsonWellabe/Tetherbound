@@ -1,5 +1,11 @@
 # CAUSE-CAMFX lane (tb/cause-camfx): cameras and effects
 
+## Summary (1 Nov, 22:10 UTC)
+- **Criteria closed: zero.** Five flag-OFF candidates are in `data/config/camfx.json`: `catch_orb`, `flame`, `fight_fade` (group 1), `impact_fx` (group 2) and `dialogue_open` (group 3). There is also one always-on capture-fixture fix: Kell and Sela now stand at their posts in `tools/phase2_capture_dialogue.gd`. `MANIFEST.json` has 121 rows.
+- **Verification:** the new `tests/test_camfx_candidates.gd` passes (11 tests, 63 assertions). The touched camera, conversation, orb, VFX and catch tests also pass, run with stubbed asset preloads. The flame, crack and impact objects rendered on Compatibility (llvmpipe) in a minimal probe project (`_sheet_cpu_shader_probe.jpg`). **No in-game CPU capture was possible:** the disk allowance cannot hold a Godot import, so the orb model, fades and dialogue swing are unrendered in the game.
+- **Not merged with main:** #792 had not merged by 22:10, so main is not merged in yet. The coordinator should merge `origin/main` when landing.
+- **Parked / not mine:** the telegraph rings are already outline-off with dust tells on this base. P2-109 (the Aquaryn dismount camera) is a mount camera, not touched. "Missing stands" for P2-073/074/075/086/087: none were missing.
+
 ## Status (1 Nov, group 1)
 - **Criteria closed: zero.** Nothing here is judged. Every candidate is flag-OFF in `data/config/camfx.json` (one block per sub-cause, so it composes with every other lane's flags; no shared config file edited).
 - **No CPU capture was possible in this container.** The writable disk allowance left ~0.9 GB beside a 21 GB pack, and a Godot import needs several GB. So the candidates are unverified on screen. Each was parse-checked and unit-tested with stubbed asset preloads (TECHNICAL §8.1 disk-tight route). The GPU arm is the first render; please capture before judging.
