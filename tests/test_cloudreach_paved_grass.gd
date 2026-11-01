@@ -11,7 +11,7 @@ func test_flag_defaults_off() -> void:
 	assert_false(bool(GROUNDING.read_config().get("clear_paved_grass", true)))
 
 
-func test_clears_only_tufts_on_the_paved_top() -> void:
+func test_paved_top_covers_only_tufts_on_or_through_it() -> void:
 	var world := Node3D.new()
 	var paving := StandardMaterial3D.new()
 	var dais := MeshInstance3D.new()
@@ -21,21 +21,15 @@ func test_clears_only_tufts_on_the_paved_top() -> void:
 	dais.material_override = paving
 	dais.position = Vector3(100.0, 0.65, 50.0)
 	world.add_child(dais)
-	var tufts := MultiMeshInstance3D.new()
-	var multimesh := MultiMesh.new()
-	multimesh.transform_format = MultiMesh.TRANSFORM_3D
-	multimesh.mesh = BoxMesh.new()
-	multimesh.instance_count = 4
-	var points := [Vector3(100.0, 1.3, 50.0), Vector3(110.0, 0.4, 55.0),
-		Vector3(120.0, 0.0, 50.0), Vector3(100.0, 5.0, 50.0)]
-	for i in points.size():
-		multimesh.set_instance_transform(i, Transform3D(Basis(), points[i]))
-	tufts.multimesh = multimesh
-	world.add_child(tufts)
-	var cleared: int = PAVED.clear(world, [paving], {})
-	assert_eq(cleared, 2, "the tuft on the top and the one poking up from under it")
-	assert_true(multimesh.get_instance_transform(0).basis.get_scale().is_zero_approx())
-	assert_true(multimesh.get_instance_transform(1).basis.get_scale().is_zero_approx())
-	assert_false(multimesh.get_instance_transform(2).basis.get_scale().is_zero_approx(), "beside the dais")
-	assert_false(multimesh.get_instance_transform(3).basis.get_scale().is_zero_approx(), "far above it")
+	# The headless runner's dummy renderer does not store MultiMesh instance
+	# transforms, so the per-tuft test is checked directly on the box set.
+	var boxes: Array[Dictionary] = PAVED.paved_boxes(world, [paving], 2.0)
+	assert_eq(boxes.size(), 1, "the dais is one paved top")
+	var top: Dictionary = boxes[0]
+	assert_true(PAVED.covers(top, Vector3(100.0, 1.3, 50.0), 1.6, 0.6), "tuft on the paved top")
+	assert_true(PAVED.covers(top, Vector3(110.0, 0.4, 55.0), 1.6, 0.6), "tuft poking up through it")
+	assert_false(PAVED.covers(top, Vector3(120.0, 0.0, 50.0), 1.6, 0.6), "tuft beside the dais")
+	assert_false(PAVED.covers(top, Vector3(100.0, 5.0, 50.0), 1.6, 0.6), "far above it")
+	var other := StandardMaterial3D.new()
+	assert_eq(PAVED.paved_boxes(world, [other], 2.0).size(), 0, "only paving materials count")
 	world.free()

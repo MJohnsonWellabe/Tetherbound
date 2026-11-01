@@ -22,6 +22,8 @@ extends Node3D
 const CONFIG_PATH := "res://data/config/cloudreach_grounding.json"
 const PREVIEW_ARG := "--cloudreach-grounding-candidate"
 const REPORT_ARG := "--cloudreach-grounding-report"
+const CLOUD_CARD_ARG := "--cloudreach-cloudcards-candidate"
+const CLOUD_CARD_TEXTURE := "res://assets/environment/cloudreach/cloud_bank_v1.png"
 const ROCKS: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf"),
 	preload("res://assets/environment/stylized_nature/Rock_Medium_2.gltf"),
@@ -52,6 +54,10 @@ func build(world: Node3D) -> void:
 	_world = world
 	_cfg = read_config()
 	_report = OS.get_cmdline_user_args().has(REPORT_ARG)
+	if bool(_cfg.get("skip_grounded_cloud_cards", false)) or OS.get_cmdline_user_args().has(CLOUD_CARD_ARG):
+		var hidden := hide_grounded_cloud_cards(world, float(_cfg.get("cloud_card_clear_m", 40.0)))
+		if _report:
+			print("[cloudreach_grounding] cloud_cards_hidden=", hidden)
 	if not enabled(_cfg) and not _report:
 		return
 	var apply := enabled(_cfg)
@@ -587,3 +593,45 @@ func _rock_ring(base: Vector3, foot_radius: float, ground_y: float, seed_value: 
 			geometry.visibility_range_end = 420.0
 		placed += 1
 	return placed
+
+
+## Owner 31 Oct 2026 floating drums, flag "skip_grounded_cloud_cards": a
+## settlement cloud-ring card (cloudreach_settlement_life.gd `_cloud_ring`,
+## a 150-300 m Y-billboard cumulus quad) that lands on or just above a
+## walkable meadow stands in the grass shaded dark and reads from the ground
+## as a rock drum hanging overhead (a triangle ray probe at the owner's stand,
+## 16.5, 4313.2). Runs after every builder, so roads and crowns are known.
+## Such cards are hidden; cards over the open cloud sea are unchanged.
+func hide_grounded_cloud_cards(world: Node3D, clear_m: float) -> int:
+	var hidden := 0
+	for vista: Node in world.get_children():
+		if not (vista is Node3D):
+			continue
+		for child: Node in vista.get_children():
+			var card := child as MeshInstance3D
+			if card == null or not (card.mesh is QuadMesh) or not card.visible:
+				continue
+			var material := card.material_override as StandardMaterial3D
+			if material == null or material.albedo_texture == null \
+					or material.albedo_texture.resource_path != CLOUD_CARD_TEXTURE:
+				continue
+			var width := (card.mesh as QuadMesh).size.x
+			if card_meets_ground(world, card.global_position, width, clear_m):
+				card.visible = false
+				hidden += 1
+	return hidden
+
+
+## Whether a billboard card centred at `at`, `width` wide and half as tall,
+## reaches walkable ground: a surface under its footprint stands above its
+## bottom edge minus `clear_m`.
+static func card_meets_ground(world: Node3D, at: Vector3, width: float, clear_m: float) -> bool:
+	if not world.has_method("ground_height_at"):
+		return false
+	var bottom := at.y - width * 0.25
+	for offset: Vector2 in [Vector2.ZERO, Vector2(0.5, 0.0), Vector2(-0.5, 0.0), Vector2(0.0, 0.5), Vector2(0.0, -0.5),
+			Vector2(0.25, 0.0), Vector2(-0.25, 0.0), Vector2(0.0, 0.25), Vector2(0.0, -0.25)]:
+		var ground: float = world.call("ground_height_at", at.x + offset.x * width, at.z + offset.y * width)
+		if is_finite(ground) and ground >= bottom - clear_m and ground <= at.y + width * 0.25 + clear_m:
+			return true
+	return false

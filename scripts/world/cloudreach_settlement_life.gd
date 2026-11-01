@@ -375,7 +375,7 @@ func _dress_vista(world: Node3D, spec: Dictionary) -> void:
 	if not (spec.get("cloud_ring", {}) as Dictionary).is_empty():
 		rings.push_front(spec.cloud_ring)
 	for ring: Dictionary in rings:
-		_cloud_ring(vista, ring, world)
+		_cloud_ring(vista, ring)
 
 
 func _lamp_post(world: Node3D, parent: Node3D, post: Dictionary, lamp: Dictionary, timber: Material) -> void:
@@ -518,18 +518,7 @@ func _collide(placement: Node3D, size: Vector3, fraction: float) -> void:
 ## A bank of installed cumulus cards wrapping each settlement just below its
 ## rim, so the horizon past the plateau reads as a cloud sea, not open water.
 ## Lit cards: the moon turns them night-blue with the rest of the scene.
-func _cloud_ring(parent: Node3D, ring: Dictionary, world: Node3D = null) -> void:
-	# Owner 31 Oct 2026 ("big cylinders that don't touch the ground"),
-	# tb/vis-water-sky, flag-off: a ring card that lands on or just above a
-	# walkable meadow is a 150-300 m flat card standing in the grass, shaded
-	# dark, and reads from the ground as a rock drum hanging overhead (owner
-	# stand 16.5, 4313.2). With cloudreach_grounding.json skip_grounded_cloud_cards
-	# on, such a card is not placed; cards over the open cloud sea are unchanged.
-	var grounding_cfg: Dictionary = preload("res://scripts/world/cloudreach_grounding.gd").read_config()
-	var skip_clear := -1.0
-	if world != null and world.has_method("ground_height_at") and (bool(grounding_cfg.get("skip_grounded_cloud_cards", false)) \
-			or OS.get_cmdline_user_args().has("--cloudreach-cloudcards-candidate")):
-		skip_clear = float(grounding_cfg.get("cloud_card_clear_m", 40.0))
+func _cloud_ring(parent: Node3D, ring: Dictionary) -> void:
 	var material := StandardMaterial3D.new()
 	material.albedo_texture = load("res://assets/environment/cloudreach/cloud_bank_v1.png") as Texture2D
 	material.albedo_color = Color(str(ring.get("tint", "#e8ecf2")))
@@ -559,23 +548,8 @@ func _cloud_ring(parent: Node3D, ring: Dictionary, world: Node3D = null) -> void
 			var r := rng.randf_range(float(radius[0]), float(radius[1]))
 			card.position = centre + Vector3(sin(angle) * r,
 				-rng.randf_range(float(drop[0]), float(drop[1])), cos(angle) * r)
-			if skip_clear >= 0.0 and card_meets_ground(world, card.position, w, skip_clear):
-				card.free()
-				continue
 			card.visibility_range_end = float(ring.get("visible_m", 2500.0))
 			parent.add_child(card)
-
-
-## Whether a billboard cloud card centred at `at`, `width` wide and half as
-## tall, reaches walkable ground: any surface under its footprint stands above
-## its bottom edge minus `clear_m`.
-static func card_meets_ground(world: Node3D, at: Vector3, width: float, clear_m: float) -> bool:
-	var bottom := at.y - width * 0.25
-	for offset: Vector2 in [Vector2.ZERO, Vector2(0.5, 0.0), Vector2(-0.5, 0.0), Vector2(0.0, 0.5), Vector2(0.0, -0.5)]:
-		var ground: float = world.call("ground_height_at", at.x + offset.x * width, at.z + offset.y * width)
-		if is_finite(ground) and ground >= bottom - clear_m:
-			return true
-	return false
 
 
 func _set_visibility(node: Node, distance: float) -> void:
