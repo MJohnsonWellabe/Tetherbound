@@ -1,6 +1,17 @@
 # WATERSKY lane (tb/vis-water-sky): Tidewake F39 + Cloudreach F40 scene/material/placement
 
-## Summary (1 Nov 2026, for the 18:00 UTC tb/vis-batch1 cutoff)
+## Group 2 (1 Nov, rolling batches; coordinator: shared fixes first). All flags OFF; entries in MANIFEST.json with "group": 2
+
+| Fix | Flag (set true) | CPU check |
+|---|---|---|
+| Tidewake light and atmosphere | `tidewake_look.json:watersky_light_candidate.enabled` | Day: warmer, lower key with longer modelling shadows on the dunes; cooler ambient; aerial fog; character rim 0.35. Sand stays pale (r2 raised ambient 0.9 → 1.0 and exposure to 0.78 after r1 greyed it). Night: more fill (ambient 0.26 → 0.5, exposure 0.88, moon 1.1); figures and dunes read. |
+| Cloudreach light and atmosphere | `cloudreach_light_candidate.json:enabled` | Day only: warmer, lower key; cooler, lower ambient (1.9 → 1.6) so pale stone reads warm against cool shade; contrast/saturation; aerial fog; rim. r1's night block darkened the night lawn, so night stays as shipped. |
+| Cloudreach ground-cover clustering | `cloudreach_ground_cluster.json:enabled` | Dry (straw-olive) and lush (deep green) turf patches from one field; grass tufts thin on the dry patches and gather on the lush ones. r2 halves the patch size (frequency 0.07) so a frame shows both kinds. |
+| Tidewake ground-cover clustering | `water_ground_cover.json:watersky_cluster_candidate.enabled` | Tighter, denser bush/flower drifts on dune grass. Barely visible at First Shore; ride-along. |
+
+Stands: every Tidewake/Cloudreach location, route and dialogue frame that the item judging covers (`ralph/reports/VISUAL/item-scores/job.json`), by tool frame name. Tests: 6 tests, 0 failed (`test_cloudreach_ground_cluster`, `test_cloudreach_paved_grass`, `test_cloudreach_monotonic_walls`).
+
+## Group 1 summary (1 Nov 2026)
 
 **Criteria closed: zero.** No GPU verdict yet. Every change is behind a flag that ships **OFF**. `MANIFEST.json` lists each item with its flag, camera set and stands. Per the coordinator's 1 Nov update there are no single-candidate READY lines.
 
