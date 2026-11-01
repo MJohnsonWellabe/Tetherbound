@@ -1968,5 +1968,5 @@ static func river_candidate_shader(cfg: Dictionary) -> Dictionary:
 	var shader: Dictionary = candidate.get("shader", {})
 	for key: String in shader:
 		var value: Variant = shader[key]
-		out[key] = Color(value) if value is String and (value as String).begins_with("#") else value
+		out[key] = Color(str(value)) if value is String and (value as String).begins_with("#") else value
 	return out
