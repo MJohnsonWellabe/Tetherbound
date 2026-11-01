@@ -10,3 +10,5 @@ Capture speed (coordinator 1 Nov, ~10:15 CST): from here on every imported tree 
 per-frame scene walk fixed, shell waits by the world's ready flag, --jobs, --ground-cover-cache; renders the same, identical
 grass/flower/bush counts) and Cloudreach launches pass --ground-cover-cache. main/ Meadows was shot on main 2f2901db0 before the merge;
 main/'s remaining biomes and extras are shot on local 9ba38c96b = 2f2901db0 + tb/capture-speed. Batch trees: <batch sha> + tb/capture-speed.
+
+Dialogue fixture (coordinator 1 Nov): main/'s frames for batch-1's dialogue stands were shot with batch-1's tools/phase2_capture_dialogue.gd byte-copied from 73a5d9f65 (tool-only; game = main 2f2901db0), so main/ and batch1/ dialogue frames use the same fixture. Realm-flight stands (meadows c016/c017/c026) are skipped on main until the shell-wait fix lands.
