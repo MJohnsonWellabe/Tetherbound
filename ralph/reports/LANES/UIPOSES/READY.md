@@ -1,5 +1,20 @@
 # UIPOSES lane (UI + creature/trainer pose rows) — READY
 
+## Final summary before the 18:00 UTC cutoff (1 Nov 2026, written ~16:40 UTC)
+
+- **Head:** `2a151563cdd5f179eeb00200765bb134d810a01c` on `tb/vis-ui-poses`. It merges cleanly with origin/main and with tb/vis-creatures, tb/craft-r3, tb/vis-meadows, tb/vis-storm-cams, tb/vis-water-sky and tb/world-craft-icons (checked with `git merge-tree`).
+- **Seven flags, all OFF on the branch, listed in `MANIFEST.json`:**
+  - `readout_side_enabled`
+  - `catch_card` (with `calm_seal`)
+  - `lane_role_flags.uiposes_riptusk_side_faint_prone_rest`
+  - `victory_focus`
+  - `hang_pose.body`
+  - `satchel_focus`
+- **Items covered:** P2-001, P2-028, P2-029, P2-058, P2-061, P2-103, P2-111, P2-114, P2-117, P2-119.
+- **Criteria closed: zero.** These are game changes awaiting GPU verdicts. No CPU scores are claimed.
+- **Shared-file touches:** small, flag-gated hunks in `playground_hud.gd`, `combat_hud.gd`, `capture_reticle.gd`, `tab_backpack.gd`, `trainer_model.gd`, `orb.gd`, `creature_pose_candidates.gd` and `trainer_reward_delivery.gd`. Config is only new keys: hud.json `victory_focus`/`catch_card`, menu.json `satchel_focus`, `fly_traversal.json` `hang_pose.body`, `capture_readout_visual.json` side keys, and `f36_pose_candidates.json` `lane_role_flags` at the end of the file.
+- **After the cutoff:** available for one fix round on returned items.
+
 Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
 
 ## Candidates in the batch (CPU sanity capture done for each unless noted; no CPU scores claimed)
