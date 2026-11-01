@@ -868,11 +868,6 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 	var player := players[0] as AnimationPlayer
 	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {})).duplicate(true)
 	_apply_clip_flags(player, clips)
-	if has_meta(POSE_SETTLE.META):
-		remove_meta(POSE_SETTLE.META)
-	# CAUSE-POSES (creature_pose_settle.json, OFF): grounded, side-lying faint
-	# and a visible planted hit for every rig, recipe or own clips.
-	clips = POSE_SETTLE.apply(self, _model, player, clips, species_id)
 	# This preview rig's keyed paw strike can wind up through the real tell.
 	# Ordinary Brooktail keeps its installed impact-time attack playback.
 	if not art_model_override.is_empty() and art_model_attack_contact_phase > 0.0 and art_model_attack_contact_phase < 1.0:
@@ -887,6 +882,12 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 		clips["hit_start_phase"] = float((impact as Dictionary).get("start_phase", 0.0))
 		clips["hit_release_phase"] = float((impact as Dictionary).get("release_phase",
 			(impact as Dictionary).get("start_phase", 0.0)))
+	if has_meta(POSE_SETTLE.META):
+		remove_meta(POSE_SETTLE.META)
+	# CAUSE-POSES (creature_pose_settle.json, OFF): grounded, side-lying faint
+	# and a visible planted hit for every rig, recipe or own clips. Bed rests
+	# keep finishing the unsettled installed faint.
+	clips = POSE_SETTLE.apply(self, _model, player, clips, species_id)
 	_animator = ANIMATOR.new(player, clips)
 	if bool(get_meta("f36_pose_candidate_installed", false)) or bool(get_meta(POSE_SETTLE.META, false)):
 		_animator.call("bind_candidate_pivot", _model)

@@ -11,10 +11,11 @@ const SETTLE := preload("res://scripts/creatures/creature_pose_settle.gd")
 
 func test_ships_off() -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SETTLE.PATH))
-	assert_false(SETTLE.any_enabled(cfg), "every creature_pose_settle section defaults OFF")
-	for role: String in ["faint", "hit"]:
-		for part: String in (cfg[role] as Dictionary):
-			assert_false(bool(cfg[role][part].enabled), "%s.%s is OFF" % [role, part])
+	assert_false(bool(cfg.get("enabled", true)), "the creature_pose_settle arm (master enabled) ships OFF")
+	assert_false(SETTLE.any_enabled(cfg), "no section applies while the master flag is OFF")
+	var on := cfg.duplicate(true)
+	on["enabled"] = true
+	assert_true(SETTLE.any_enabled(on), "flipping the master flag alone arms the sections")
 
 
 func test_off_and_on_bodies_on_initialized_scene_tree() -> void:

@@ -1,0 +1,753 @@
+[
+ {
+  "item": "F36#1 abyssal_guardian (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "abyssal_guardian"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 aeriex (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "aeriex"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 aquaryn (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "aquaryn"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 ashtusk (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ashtusk"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 breezetail (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "breezetail"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 brooktail (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "brooktail"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 cannonback (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cannonback"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 cliffspike (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cliffspike"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 cloudfang (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cloudfang"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 cragclaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cragclaw"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 craghorn (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "craghorn"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 frostclaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "frostclaw"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 fulgocobra (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "fulgocobra"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 galewisp (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "galewisp"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 glimmermoth (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "glimmermoth"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 mangrove_monitor (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mangrove_monitor"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 mirejaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 mosshock (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mosshock"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 ribbonray (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ribbonray"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 riptusk (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riptusk"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 riverdrake (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riverdrake"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 shadelet (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "shadelet"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 sirenseal (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sirenseal"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 skyrill (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "skyrill"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 solmane (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "solmane"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 sparkit (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sparkit"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 staticub (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "staticub"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 stormbrush (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormbrush"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 stormcapra (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormcapra"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 stormursa (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormursa"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 tanglevolt (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tanglevolt"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 tempestwing (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tempestwing"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 thundertunnel (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "thundertunnel"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 tidecoil (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tidecoil"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 torrentoad (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "torrentoad"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 tuskroot (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tuskroot"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 voltarach (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltarach"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 voltwig (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltwig"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_abyssal_guardian (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_abyssal_guardian"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_aquaryn (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_aquaryn"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_cragclaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_cragclaw"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_mangrove_monitor (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_mangrove_monitor"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_mirejaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_mirejaw"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_riptusk (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_riptusk"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_riverdrake (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_riverdrake"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_sirenseal (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_sirenseal"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_tidecoil (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_tidecoil"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 water_torrentoad (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_torrentoad"
+  ],
+  "group": 1,
+  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 bramblebun (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "bramblebun"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 burrowback (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "burrowback"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 cindercub (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cindercub"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 duskhush (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "duskhush"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 galecrest (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "galecrest"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 meadowhart (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "meadowhart"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 mosshell (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mosshell"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 mudsnout (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mudsnout"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 nightburrow (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "nightburrow"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 paddlenewt (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "paddlenewt"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 pebbik (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "pebbik"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 pipwing (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "pipwing"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 reedwing (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "reedwing"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 riftfrill (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riftfrill"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 ripplet (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ripplet"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 stormraven (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormraven"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 stormtrail (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormtrail"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 terrapup (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "terrapup"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 trailpup (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "trailpup"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 veridian (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "veridian"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_cannonback (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_cannonback"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_mosshell (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_mosshell"
+  ],
+  "group": 1,
+  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "P2-015",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "tools/phase2_capture_creatures.gd --biome=meadows --only=terrapup,veridian --seed=2042",
+  "stands": [
+   "meadows__terrapup__fainted",
+   "meadows__veridian__fainted"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-016",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "tools/phase2_capture_creatures.gd --biome=meadows --only=terrapup,nightburrow --seed=2042",
+  "stands": [
+   "meadows__terrapup__hurt",
+   "meadows__nightburrow__hurt"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-020",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "tools/phase2_capture_creatures.gd --biome=meadows --only=mosshell --seed=2042",
+  "stands": [
+   "meadows__mosshell__fainted"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-063",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "tools/phase2_capture_fights.gd (job.json P2-063 repro: --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 ...)",
+  "stands": [
+   "meadows__fights__south_bridge_grunt-02",
+   "meadows__fights__south_bridge_grunt-03",
+   "meadows__fights__south_bridge_grunt-05"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-028",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "tools/phase2_capture_creatures.gd --biome=water --only=ripplet,riptusk,aquaryn --seed=2042",
+  "stands": [
+   "tidewake__ripplet__fainted",
+   "tidewake__riptusk__fainted",
+   "tidewake__aquaryn__fainted"
+  ],
+  "group": 1
+ }
+]

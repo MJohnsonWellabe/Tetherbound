@@ -12,7 +12,8 @@ extends RefCounted
 ## roster and all 49 remake_owner1101_* candidates) share one rig convention
 ## (root, pelvis, spine, neck, head, ...), so one clip-level pass covers both.
 ##
-## data/config/creature_pose_settle.json (each section its own flag, all OFF)
+## data/config/creature_pose_settle.json (master `enabled`, OFF; each section
+## also has its own switch so a GPU arm can drop one)
 ## rewrites the resolved faint and hit clips once per body, in a per-body copy
 ## of their library, under the clip's own name (stages that play a clip by name
 ## see the same result as the game):
@@ -34,6 +35,7 @@ extends RefCounted
 const PATH := "res://data/config/creature_pose_settle.json"
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const META := "pose_settle_installed"
+const ORIGINALS := &"pose_settle_original"
 
 static var _config: Dictionary = {}
 static var _config_loaded := false
@@ -55,11 +57,15 @@ static func set_config_for_test(value: Variant) -> void:
 
 
 static func _section(cfg: Dictionary, role: String, part: String) -> Dictionary:
+	if not bool(cfg.get("enabled", false)):
+		return {}
 	var block: Variant = (cfg.get(role, {}) as Dictionary).get(part, {}) if cfg.get(role, {}) is Dictionary else {}
 	return block if block is Dictionary and bool((block as Dictionary).get("enabled", false)) else {}
 
 
 static func any_enabled(cfg: Dictionary) -> bool:
+	if not bool(cfg.get("enabled", false)):
+		return false
 	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"],
 			["hit", "recoil"], ["hit", "grounded"]]:
 		if not _section(cfg, pair[0], pair[1]).is_empty():
@@ -110,6 +116,10 @@ static func apply(body: Node3D, model: Node3D, player: AnimationPlayer, clips: D
 			edited = settle_hit(rig, source, settings)
 		if edited == null:
 			continue
+		if role == "faint" and str(clips.get("rest_faint", "")) == name:
+			# Bed rests finish the installed faint; keep them on the original.
+			_keep_original(player, source)
+			clips["rest_faint"] = "%s/faint" % ORIGINALS
 		_replace(player, name, edited)
 		changed = true
 	if changed:
@@ -126,6 +136,14 @@ static func _animation(player: AnimationPlayer, name: String) -> Animation:
 	if name.is_empty() or not player.has_animation(StringName(name)):
 		return null
 	return player.get_animation(StringName(name))
+
+
+static func _keep_original(player: AnimationPlayer, source: Animation) -> void:
+	var library := AnimationLibrary.new()
+	library.add_animation(&"faint", source)
+	if player.has_animation_library(ORIGINALS):
+		player.remove_animation_library(ORIGINALS)
+	player.add_animation_library(ORIGINALS, library)
 
 
 ## Replace one clip in a per-body copy of its library; the shared imported
@@ -184,15 +202,20 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	var final := rig.posed(animation, end, rotations[-1], positions[-1])
 	var final_height := Rig.height(final)
 	var roll := 0.0
-	if not side.is_empty() and not _listed(side.get("exclude_species", []), rig.species_id):
+	if not side.is_empty():
 		var legs: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
 		var target := deg_to_rad(float(side.get("roll_deg", 78.0)) * signf(float(side.get("roll_sign", 1.0))))
+		# Shelled and many-legged bodies collapse flat on their own legs: their
+		# target is legs-down, which also rights a belly-up turtle.
+		var upright := _listed(side.get("upright_species", []), rig.species_id)
+		if upright:
+			target = 0.0
 		if legs is Vector3:
 			# Roll about the forward axis until the legs lie out to the side:
 			# a standing or crouched faint (legs down) and a legs-up faint both
 			# end side-lying; a faint already on its side is left alone.
 			roll = rig.roll_to_side(legs as Vector3, target)
-		elif final_height > rig.standing_height * float(side.get("collapse_ratio", 0.62)):
+		elif not upright and final_height > rig.standing_height * float(side.get("collapse_ratio", 0.62)):
 			roll = target
 		if absf(roll) < deg_to_rad(float(side.get("min_roll_deg", 10.0))):
 			roll = 0.0
@@ -221,7 +244,8 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	rig.write_pivot(animation, times, rotations, positions)
 	animation.set_meta("settle_faint", {"forward": rig.forward,
 		"centre": Vector3(rig.standing_centre.x, 0.0, rig.standing_centre.y),
-		"rotations": rotations.duplicate(), "positions": positions.duplicate(), "times": times})
+		"rotations": rotations.duplicate(), "positions": positions.duplicate(), "times": times,
+		"roll_deg": rad_to_deg(roll)})
 	return animation
 
 

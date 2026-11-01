@@ -20,6 +20,7 @@ func _check(ok: bool, message: String) -> void:
 
 func _all_on() -> Dictionary:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SETTLE.PATH))
+	cfg["enabled"] = true
 	for role: String in ["faint", "hit"]:
 		for part: String in (cfg[role] as Dictionary):
 			cfg[role][part]["enabled"] = true
@@ -100,6 +101,10 @@ func _case(species: String, recipe: bool) -> void:
 	_check(SETTLE.Rig.min_y(mid) < rig.ground_y + 0.03 * rig.standing_height, "%s ON: faint mid does not float" % species)
 	var offset: Vector2 = SETTLE.Rig.centre_xz(points) - rig.standing_centre
 	_check(offset.length() < 0.05 * rig.standing_height, "%s ON: fainted body stays over its shadow" % species)
+	if not recipe:
+		var rest := str(clips.get("rest_faint", ""))
+		_check(rest != faint and player.has_animation(StringName(rest)) and _pivot_tracks(on, rest) == 0,
+			"%s ON: bed rests keep the unsettled installed faint (%s)" % [species, rest])
 	var hit_name := _clip(on, "hit")
 	var hit := player.get_animation(StringName(hit_name))
 	_check(_pivot_tracks(on, hit_name) == 2, "%s ON: hit keys the model pivot" % species)
@@ -111,9 +116,27 @@ func _case(species: String, recipe: bool) -> void:
 	on.free()
 
 
+func _upright_case() -> void:
+	SETTLE.set_config_for_test(_all_on())
+	var body := _spawn("mosshell")
+	var player := _player(body)
+	var clips: Dictionary = body.get("_animator").get("_clips")
+	var faint := player.get_animation(StringName(str(clips.get("faint", ""))))
+	var model: Node3D = body.get("_model")
+	var skeleton := model.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
+	var rig = SETTLE.Rig.new(model, skeleton, player.get_node(player.root_node), 2400)
+	rig.measure_standing(player.get_animation(StringName(str(clips.get("idle", "")))))
+	var end := faint.length
+	var legs: Variant = rig.limb_direction(faint, end, rig.pivot_rotation(faint, end), rig.pivot_position(faint, end))
+	var from_down := rad_to_deg((legs as Vector3).angle_to(Vector3.DOWN)) if legs is Vector3 else 180.0
+	_check(from_down < 45.0, "mosshell ON (upright species): faint ends shell-up on its legs (%.0f deg from down)" % from_down)
+	body.free()
+
+
 func _run() -> void:
 	_case("frostclaw", true)
 	_case("veridian", false)
+	_upright_case()
 	SETTLE.set_config_for_test(null)
 	await process_frame
 	print("CAUSE_POSES_RESULT=" + JSON.stringify({"assertions": assertions, "failures": failures}))
