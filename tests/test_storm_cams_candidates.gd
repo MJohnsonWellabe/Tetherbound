@@ -150,3 +150,14 @@ func test_stormwood_light_pass_ships_off_and_merges_when_on() -> void:
 	assert_true(bool(on["storm_light"]["enabled"]), "the pass turns the rim light on")
 	assert_true(on.has("storm_fill"), "the pass adds the fill light")
 	assert_eq(on["rig"]["sun"]["pitch_deg"], cfg["rig"]["sun"]["pitch_deg"], "unlisted rig keys keep their values")
+
+
+func test_catch_framed_r2_and_hud_prompt_clear_ship_off() -> void:
+	var catching := _json("res://data/config/catching.json")
+	var r2: Dictionary = (catching["framed_camera"] as Dictionary)["r2"]
+	assert_false(bool(r2.get("enabled", true)), "the P2-059 round-2 framing ships OFF")
+	assert_true(float((r2["resolve_camera"] as Dictionary)["pitch_start_deg"])
+			> float((catching["framed_camera"]["resolve_camera"] as Dictionary)["pitch_start_deg"]),
+		"round 2 is a shallower resolve shot")
+	var hud := _json("res://data/config/hud.json")
+	assert_false(bool((hud["message_clears_prompt"] as Dictionary).get("enabled", true)), "the prompt clear ships OFF")

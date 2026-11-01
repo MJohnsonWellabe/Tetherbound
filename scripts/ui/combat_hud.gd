@@ -1220,6 +1220,12 @@ func _draw_grid() -> void:
 		# bottom-centre, clear of the grid; both show.
 		_aim_row.visible = true
 		_aim_row.text = "[center]%s[/center]" % _miss_text
+		# P2-059 (GPU batch 1): the message and the "Aim · N orbs" prompt share
+		# the bottom-centre strip and drew over each other. hud.json
+		# `message_clears_prompt` (OFF by default) hides the prompt while a
+		# message holds the strip; it returns with the next plain frame.
+		if _message_clears_prompt():
+			_orbs_panel.visible = false
 		_grid_panel.visible = true
 		_draw_cells(orbs)
 		return
@@ -1958,6 +1964,17 @@ func _raise_message_rows() -> void:
 	for row: Control in [_aim_row, _catch_row]:
 		row.offset_top = top
 		row.offset_bottom = top + 56.0
+
+
+var _message_clears_prompt_cfg: Variant = null
+
+
+func _message_clears_prompt() -> bool:
+	if _message_clears_prompt_cfg == null:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+		var cfg: Variant = parsed.get("message_clears_prompt", {}) if parsed is Dictionary else {}
+		_message_clears_prompt_cfg = cfg is Dictionary and bool((cfg as Dictionary).get("enabled", false))
+	return bool(_message_clears_prompt_cfg)
 
 
 func _catch_card_config() -> Dictionary:
