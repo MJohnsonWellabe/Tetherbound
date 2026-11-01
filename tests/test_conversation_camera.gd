@@ -737,3 +737,65 @@ func test_a_conversation_shot_swings_off_a_creature_the_arm_passes_through() -> 
 	var look_end := swung_lens + (head - swung_lens).normalized() * ((head - swung_lens).length() - 0.3)
 	assert_false(_flank_blocks(swung_lens, look_end), "the swung lens sees the speaker past the creature")
 	assert_true(swung_lens.distance_to(lens) > 0.3, "the camera moved off the blocked line")
+
+
+## --- twoshot_v2 (GPU DLG-2, P2-073/P2-074/P2-076/P2-083) ----------------------
+
+func _twoshot_v2_on() -> Dictionary:
+	var base := CONVERSATION.config().duplicate(true)
+	var variant: Dictionary = (base.get("twoshot_v2", {}) as Dictionary).duplicate(true)
+	variant["enabled"] = true
+	base["twoshot_v2"] = variant
+	return CONVERSATION.with_twoshot_v2(base)
+
+
+func test_twoshot_v2_off_leaves_the_push_in_unchanged() -> void:
+	var base := CONVERSATION.config().duplicate(true)
+	var variant: Dictionary = (base.get("twoshot_v2", {}) as Dictionary).duplicate(true)
+	assert_true(variant.has("distance"), "camera.json must declare the twoshot_v2 candidate")
+	variant["enabled"] = false
+	base["twoshot_v2"] = variant
+	var off := CONVERSATION.with_twoshot_v2(base)
+	assert_eq(off["distance"], base["distance"], "an OFF candidate must not touch the shot")
+	assert_eq(off["speaker_bias"], base["speaker_bias"], "an OFF candidate must not touch the shot")
+
+
+func test_twoshot_v2_frames_the_speaker_closer_with_the_trainer_behind_the_lens() -> void:
+	var trainer_anchor := TRAINER_AT + Vector3.UP * 1.45
+	var speaker_anchor := SPEAKER_AT + Vector3.UP * SPEAKER_HEIGHT * 0.78
+	var base := CONVERSATION.config().duplicate(true)
+	base["twoshot_v2"] = {"enabled": false}
+	var on := _twoshot_v2_on()
+	assert_false(on.has("enabled"), "the candidate's own switch must not leak into the shot")
+	var old_shot := CONVERSATION.solve(trainer_anchor, speaker_anchor, Vector3.FORWARD, base)
+	var new_shot := CONVERSATION.solve(trainer_anchor, speaker_anchor, Vector3.FORWARD, on)
+	var old_lens: Vector3 = old_shot["pivot"] + Vector3(old_shot["dir"]) * float(old_shot["distance"])
+	var new_lens: Vector3 = new_shot["pivot"] + Vector3(new_shot["dir"]) * float(new_shot["distance"])
+	assert_true(new_lens.distance_to(speaker_anchor) < old_lens.distance_to(speaker_anchor) - 0.3,
+		"the candidate must stand the lens nearer the speaker so they read larger")
+	var axis := speaker_anchor - trainer_anchor
+	axis.y = 0.0
+	axis = axis.normalized()
+	assert_true((new_lens - trainer_anchor).dot(axis) < 0.0,
+		"the lens must still stand behind the trainer")
+	assert_true(CONVERSATION.trainer_clearance_of(new_shot, trainer_anchor) >= 0.99,
+		"the closer shot must keep the lens out of the trainer's head")
+	var sideways := Vector3(axis.z, 0.0, -axis.x)
+	assert_true(absf((new_lens - trainer_anchor).dot(sideways))
+			> absf((old_lens - trainer_anchor).dot(sideways)),
+		"the wider swing must move the trainer toward the frame edge")
+
+
+func test_speaker_light_candidate_ships_off_and_places_key_front_rim_behind() -> void:
+	var cfg := CONVERSATION.config()
+	var lights: Dictionary = cfg.get("speaker_light_candidate", {})
+	assert_true(lights.has("key") and lights.has("rim"), "camera.json must declare the candidate")
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONVERSATION.CONFIG_PATH))
+	var shipped: Dictionary = ((raw as Dictionary)["conversation"] as Dictionary)["speaker_light_candidate"]
+	assert_false(bool(shipped.get("enabled", true)), "the candidate ships OFF")
+	var anchor := Vector3(0.0, 1.4, 0.0)
+	var toward_lens := Vector3(0.0, 0.1, 1.0)
+	var at := CONVERSATION.speaker_light_positions(anchor, toward_lens, lights)
+	assert_true((at["key"] as Vector3).z > anchor.z, "the key must sit on the lens side")
+	assert_true((at["rim"] as Vector3).z < anchor.z, "the rim must sit behind the speaker")
+	assert_true((at["rim"] as Vector3).y > anchor.y, "the rim must come from above")

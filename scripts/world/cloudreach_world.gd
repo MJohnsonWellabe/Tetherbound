@@ -3170,7 +3170,14 @@ func _build_authored_route_details() -> void:
 	add_child(root)
 	var detail: Dictionary = _visual_config.get("route_details", {})
 	var bounds_tool := BUILDING_PREFABS.new()
-	for raw: Dictionary in detail.get("pockets", []):
+	var pockets: Array = (detail.get("pockets", []) as Array).duplicate()
+	# P2-076 (GPU DLG-2): Kelm's and Veyra's conversations stand on bare flat
+	# dirt. `plaza_paving_candidate` (OFF by default) adds authored paving and
+	# stone pockets around those dialogue spots through this same placer.
+	var plaza: Variant = detail.get("plaza_paving_candidate", {})
+	if plaza is Dictionary and bool((plaza as Dictionary).get("enabled", false)):
+		pockets.append_array((plaza as Dictionary).get("pockets", []) as Array)
+	for raw: Dictionary in pockets:
 		await _build_breathe()
 		var pocket := Node3D.new()
 		pocket.name = str(raw.get("id", "Pocket"))

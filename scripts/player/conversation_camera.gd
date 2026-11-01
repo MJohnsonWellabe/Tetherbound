@@ -138,7 +138,10 @@ func begin(speaker: Node3D = null, profile: String = "") -> bool:
 	var who := speaker if speaker != null else current_speaker()
 	if who == null:
 		return false
-	_active = bool(rig.call("enter_conversation", who, profile_config(profile)))
+	var cfg := profile_config(profile)
+	_active = bool(rig.call("enter_conversation", who, cfg))
+	if _active:
+		_light_speaker(who, rig, cfg)
 	return _active
 
 
@@ -173,6 +176,7 @@ static func profile_config(profile: String) -> Dictionary:
 ## The conversation came down. Safe to call when nothing pushed in.
 func end() -> void:
 	_active = false
+	_clear_speaker_lights()
 	var rig := _rig()
 	if rig != null and rig.has_method("exit_conversation"):
 		rig.call("exit_conversation")
@@ -219,6 +223,63 @@ func current_speaker() -> Node3D:
 		_last_provider = null
 		return null
 	return resolve_speaker(_last_provider)
+
+
+## P2-074 / P2-087 / P2-083 (GPU DLG-2: "add key, rim and fog depth to the
+## dim chamber"; speakers dark-on-dark against walls). `camera.json`
+## conversation.speaker_light_candidate, OFF by default: while a push-in is
+## up, a soft key from the lens side and a cool rim from behind light the
+## speaker, placed once from the solved shot and freed when the box closes.
+## Client presentation only: no shadows, no state, nothing networked.
+var _speaker_lights: Array[OmniLight3D] = []
+
+
+static func speaker_light_positions(anchor: Vector3, toward_lens: Vector3, cfg: Dictionary) -> Dictionary:
+	var flat := Vector3(toward_lens.x, 0.0, toward_lens.z)
+	flat = flat.normalized() if flat.length() > 0.001 else Vector3.BACK
+	var right := Vector3.UP.cross(flat).normalized()
+	var out := {}
+	for name: String in ["key", "rim"]:
+		var spec: Variant = cfg.get(name, {})
+		if not spec is Dictionary:
+			continue
+		var o: Array = (spec as Dictionary).get("offset", [0.0, 0.0, 0.0])
+		# offset = [toward the lens, right of the lens axis, up], metres.
+		out[name] = anchor + flat * float(o[0]) + right * float(o[1]) + Vector3.UP * float(o[2])
+	return out
+
+
+func _light_speaker(who: Node3D, rig: Node, cfg: Dictionary) -> void:
+	_clear_speaker_lights()
+	var light_cfg: Variant = cfg.get("speaker_light_candidate", {})
+	if not light_cfg is Dictionary or not bool((light_cfg as Dictionary).get("enabled", false)):
+		return
+	if not is_inside_tree() or not rig.has_method("conversation_shot"):
+		return
+	var shot: Dictionary = rig.call("conversation_shot")
+	var dir: Vector3 = shot.get("dir", Vector3.BACK)
+	var anchor := speaker_anchor(who, cfg)
+	var at := speaker_light_positions(anchor, dir, light_cfg as Dictionary)
+	for name: String in at:
+		var spec: Dictionary = (light_cfg as Dictionary)[name]
+		var light := OmniLight3D.new()
+		light.name = "ConversationSpeaker_" + name
+		light.light_color = Color(str(spec.get("colour", "#ffffff")))
+		light.light_energy = float(spec.get("energy", 1.0))
+		light.omni_range = float(spec.get("range", 4.0))
+		light.omni_attenuation = float(spec.get("attenuation", 1.0))
+		light.shadow_enabled = false
+		light.top_level = true
+		add_child(light)
+		light.global_position = at[name]
+		_speaker_lights.append(light)
+
+
+func _clear_speaker_lights() -> void:
+	for light: OmniLight3D in _speaker_lights:
+		if is_instance_valid(light):
+			light.queue_free()
+	_speaker_lights.clear()
 
 
 func is_pushed_in() -> bool:
@@ -513,7 +574,34 @@ static func config() -> Dictionary:
 				_cached_config["fallback"] = merged
 			continue
 		_cached_config[key] = (block as Dictionary)[key]
+	_cached_config = with_twoshot_v2(_cached_config)
 	return _cached_config
+
+
+## P2-073 / P2-074 / P2-076 / P2-083 (GPU DLG-2, 1 Nov: "frame the speaker
+## medium-close beside the panel; the player's back takes about a third of the
+## frame"). `camera.json` conversation.twoshot_v2, OFF by default: when its
+## `enabled` is true its keys replace the villager push-in's own, so the lens
+## stands closer, leans further onto the speaker and swings wider, leaving the
+## trainer as a shoulder at the frame edge. Profiles (`aftermath`) still merge
+## over the result key by key. Keys starting with `_` and `enabled` are skipped.
+static func with_twoshot_v2(cfg: Dictionary) -> Dictionary:
+	var variant: Variant = cfg.get("twoshot_v2", {})
+	if not variant is Dictionary or not bool((variant as Dictionary).get("enabled", false)):
+		return cfg
+	var merged := cfg.duplicate(true)
+	for key: String in (variant as Dictionary):
+		if key == "enabled" or key.begins_with("_"):
+			continue
+		if key == "fallback" and (variant as Dictionary)[key] is Dictionary:
+			var inner: Dictionary = (merged.get("fallback", {}) as Dictionary).duplicate()
+			for k: String in ((variant as Dictionary)[key] as Dictionary):
+				if not k.begins_with("_"):
+					inner[k] = ((variant as Dictionary)[key] as Dictionary)[k]
+			merged["fallback"] = inner
+			continue
+		merged[key] = (variant as Dictionary)[key]
+	return merged
 
 
 ## The swings the cramped shot is allowed to try, as extra degrees added to the
