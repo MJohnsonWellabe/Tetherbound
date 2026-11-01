@@ -91,7 +91,7 @@ Both are now removed or flag-gated. A High versus Medium boot on the rig with an
 - **Verified:** Cloudreach, 11 jobs in one Forward+ boot:
   - 8 complete, each with both frames (`…__<post>.jpg`, `…__<post>__dialogue.jpg`).
   - **Healer Iven, Bridgekeeper Orrin and Courier Neri fail with "debug travel failed" on all 28 stand candidates.** This is not batching: Iven failed the same way as job 0 of a 2-job run, and a headless probe shows `ground_height_at(-318, 539)` is NaN at Iven's stand on this tree. These three posts may be failing on the GPU too ("capture about 0 s").
-- **Build systems** jobs could not be run here (see limits). The parse paths are covered by the unit test.
+- **Verified:** Cloudreach build_systems, 2 jobs (`plain` and `--gamepad`) in one Forward+ boot with a cache hit (build 60.2 s). Both jobs got 4/4 frames. The plain craft frame shows keyboard glyphs and the `--gamepad` one shows pad glyphs. The second job's camp frame starts from the same clean stand.
 
 ## 3. Ground-cover cache
 
@@ -105,6 +105,8 @@ Both are now removed or flag-gated. A High versus Medium boot on the rig with an
 
 - **Meadows Forward+ cannot run in this container.** It segfaults in Terrain3D data loading on lavapipe on unchanged code too (control run with cheap frames off). Meadows was measured headless with the Forward+ slicing path forced by a local, uncommitted hack.
 - **Meadows yields only ~240 times**, so fix #1 gains little there. On the GPU its 140 s build is mostly upload-frame rendering, which is what #3 targets, and settlement is 17.5 s of CPU here.
+- **Stormwood:** headless, the whole build takes 9.9 s and vegetation `build_batches` takes 1.4 s, against 87 s on the rig. That gap is per-yield frame overhead: GameMenu walk plus rendered upload frames, because Stormwood also mounts its combat runtime after vegetation. Fixes #1 and #3 target exactly this. Stormwood Forward+ was not run here; it uses Terrain3D, like Meadows.
+- **If a GPU boot misbehaves with #3** (for example Terrain3D not streaming until the first real frame), set `forward_build_cheap_frames` to false in `data/config/performance.json`. That keeps fixes #1, #2 and #4.
 - **Remaining Cloudreach CPU cost** with a cache hit: routes about 25–30 s, and mount about 24 s, of which one 22 s slice is indivisible.
 - **Tests run:**
   - `run_tests.gd --only=cloudreach_cover,grass_roles,capture_jobs,shell_build`: 23 tests, 3,717 assertions, 0 failed.
