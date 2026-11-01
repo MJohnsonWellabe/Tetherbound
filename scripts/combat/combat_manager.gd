@@ -33,6 +33,7 @@ const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
 const CAMFX := preload("res://scripts/vfx/camfx.gd")
+const CAMFX_IMPACT := preload("res://scripts/vfx/camfx_impact.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 ## W09-VFX (CL-A2): the hit spark, body flash, KO puff, catch sparkle and
 ## level-up flourish. One door; see scripts/vfx/combat_vfx.gd.
@@ -5929,13 +5930,17 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	var drop := clampf(float(cfg.get("flash_drop", 0.0)), 0.0, 1.0)
 	if drop > 0.0 and is_instance_valid(struck):
 		flash_at = where.lerp(Vector3(where.x, struck.global_position.y + 0.15, where.z), drop)
+	# camfx.json `impact_fx` (OFF = 1.0): physical chips, crack and arcs carry
+	# the hit, so the flat flash disc shrinks.
+	var impact_fx := CAMFX.block("impact_fx")
+	var disc_scale := float(impact_fx.get("flash_scale", 1.0)) if not impact_fx.is_empty() else 1.0
 	FLASH.burst(
 		host,
 		flash_at,
 		colour,
-		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
+		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)) * disc_scale,
 		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
-		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)),
+		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)) * disc_scale,
 		# N14: the attack path reads the same opt-in key from `combat.json`'s own
 		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
 		# in the game draws exactly the spike it always has.
@@ -5953,6 +5958,8 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	if ground is Dictionary and (ground as Dictionary).get("enabled") == true \
 			and (charged or (ground as Dictionary).get("quick") == true) and is_instance_valid(struck):
 		PATTERN_CUE.contact_burst(host, struck.global_position, ground)
+	if not impact_fx.is_empty():
+		CAMFX_IMPACT.spawn(host, struck, tint, charged)
 
 
 func _nudge_camera_on_landing(charged: bool) -> void:

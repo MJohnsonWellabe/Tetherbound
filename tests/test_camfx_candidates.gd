@@ -112,3 +112,50 @@ func test_fight_fade_off_is_inert_and_options_keep_the_base_filters() -> void:
 	var on := CAMFX.block("fight_fade")
 	assert_true(bool(on["include_shadowless"]), "ON fades shadowless canopy cards")
 	assert_true(float(on["shadowless_min_height_m"]) >= 2.0, "grass and effect cards stay under the shadowless floor")
+
+
+func _impact(element: String, charged: bool) -> Node3D:
+	var node := (load("res://scripts/vfx/camfx_impact.gd") as Script).new() as Node3D
+	node.set("_cfg", _with("impact_fx")["impact_fx"])
+	node.set("_element", element)
+	node.set("_charged", charged)
+	node.set("_height", 2.0)
+	node.call("_ready")
+	return node
+
+
+func test_impact_fx_ships_off_and_spawns_nothing() -> void:
+	var cfg := _json(CAMFX.CONFIG_PATH)
+	assert_false(bool((cfg["impact_fx"] as Dictionary).get("enabled", true)), "impact_fx ships OFF")
+	var impact := load("res://scripts/vfx/camfx_impact.gd")
+	assert_true(impact.spawn(null, null, null, true) == null, "OFF (and no host) spawns nothing")
+	var manager := FileAccess.get_file_as_string("res://scripts/combat/combat_manager.gd")
+	assert_true(manager.contains("if not impact_fx.is_empty():\n\t\tCAMFX_IMPACT.spawn("),
+		"the combat path spawns only when the block is on")
+
+
+func test_impact_fx_reads_the_element_from_the_move_tint() -> void:
+	var impact := load("res://scripts/vfx/camfx_impact.gd")
+	var vfx := _json("res://data/config/vfx.json")
+	for type: String in ["electric", "ground", "water", "fire"]:
+		assert_eq(impact.element_for_tint(Color(str(vfx["type_colours"][type]))), type, "tint names %s" % type)
+	assert_eq(impact.element_for_tint(null), "", "no tint, no element")
+	assert_eq(impact.element_for_tint(Color(0.1, 0.9, 0.1)), "", "an unknown colour names nothing")
+
+
+func test_impact_fx_builds_chips_crack_and_arcs_by_element() -> void:
+	var cfg: Dictionary = _with("impact_fx")["impact_fx"]
+	var heavy_ground := _impact("ground", true)
+	assert_eq((heavy_ground.get("_chips") as Array).size(), int(cfg["chips_charged"]), "a heavy ground blow throws chips")
+	assert_true(heavy_ground.get("_crack") != null, "a heavy ground blow cracks the ground")
+	assert_true(heavy_ground.get("_arcs") == null, "no arcs without electric")
+	heavy_ground.free()
+	var quick_electric := _impact("electric", false)
+	assert_eq((quick_electric.get("_chips") as Array).size(), int(cfg["chips_quick"]), "a quick blow throws fewer chips")
+	assert_true(quick_electric.get("_crack") == null, "a quick blow leaves no crack")
+	assert_true(quick_electric.get("_arcs") != null, "an electric blow arcs")
+	quick_electric.free()
+	var water := _impact("water", true)
+	assert_eq((water.get("_chips") as Array).size(), 0, "water throws no stone")
+	assert_true(water.get("_crack") == null, "water leaves no crack")
+	water.free()

@@ -33,6 +33,26 @@
     "drop_halo": true
   },
 
+  "impact_fx": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "Judges 1 Nov: 'flat magenta telegraph rings and slabs' and P2-063 'bright impact effects obscure creatures': a landed blow reads as a flat additive disc over the struck body. When enabled every landed blow (quick and charged) also leaves physical objects at the struck creature's feet: lit stone chips thrown up that tumble, bounce once and settle (none for water and air blows); on a charged blow a jagged ground crack (not for water, air or ice) that glows briefly for electric and fire; and on an electric blow three jagged lightning arcs from the body to the ground for a third of a second. The flat flash disc shrinks to flash_scale. Meshes and one shader on the physics clock; no particles, no shadows. scripts/vfx/camfx_impact.gd, combat_manager.gd _flash_host_impact.",
+    "chips_quick": 4,
+    "chips_charged": 8,
+    "chip_size_m": 0.11,
+    "chip_speed": 3.2,
+    "chip_colour": "#7c6c58",
+    "crack_radius_m": 1.0,
+    "electric_glow": "#fff1b8",
+    "fire_glow": "#ffb05a",
+    "arcs": 3,
+    "arc_seconds": 0.32,
+    "arc_width_m": 0.05,
+    "arc_colour": "#fff6d0",
+    "seconds": 1.4,
+    "flash_scale": 0.6
+  },
+
   "fight_fade": {
     "enabled": false,
     "scope": "client_presentation",
