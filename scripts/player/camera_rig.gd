@@ -1112,7 +1112,14 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 	var world := get_world_3d()
 	if world == null:
 		return false
+	var check_multimesh := bool(_talk_cfg.get("speaker_sight_multimesh", false))
 	for id: int in RenderingServer.instances_cull_ray(lens, end, world.scenario):
+		if check_multimesh:
+			var scatter := instance_from_id(id) as MultiMeshInstance3D
+			if scatter != null:
+				if _multimesh_blocks(scatter, lens, end):
+					return true
+				continue
 		var mesh_node := instance_from_id(id) as MeshInstance3D
 		if mesh_node == null or mesh_node.mesh == null or not mesh_node.is_visible_in_tree():
 			continue
@@ -1138,6 +1145,48 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 			continue
 		var to_local := mesh_node.global_transform.affine_inverse()
 		if not tris.intersect_segment(to_local * lens, to_local * end).is_empty():
+			return true
+	return false
+
+
+## twoshot_v2 `speaker_sight_multimesh` (CPU r1, Fenn: the push-in stood behind
+## a scattered Stormwood trunk and framed bark). Scatter is MultiMesh, which
+## the per-mesh test above never sees. Tall, shadow-casting scatter only (trees
+## and boulders, not grass or flowers); each instance near the segment is
+## tested against its mesh's triangles.
+static var _scatter_tris: Dictionary = {}
+
+
+func _multimesh_blocks(scatter: MultiMeshInstance3D, lens: Vector3, end: Vector3) -> bool:
+	var mm := scatter.multimesh
+	if mm == null or mm.mesh == null or not scatter.is_visible_in_tree() \
+			or scatter.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF \
+			or scatter.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY:
+		return false
+	var box := mm.mesh.get_aabb()
+	if box.size.y < float(_talk_cfg.get("speaker_sight_multimesh_min_height_m", 2.5)):
+		return false
+	var key := mm.mesh.get_instance_id()
+	if not _scatter_tris.has(key):
+		_scatter_tris[key] = mm.mesh.generate_triangle_mesh()
+	var tris: TriangleMesh = _scatter_tris[key]
+	if tris == null:
+		return false
+	var to_local := scatter.global_transform.affine_inverse()
+	var a := to_local * lens
+	var b := to_local * end
+	var reach := box.size.length() * 0.5
+	var seg := b - a
+	var length_sq := maxf(seg.length_squared(), 0.0001)
+	var count := mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count
+	for i in mini(count, 20000):
+		var xf := mm.get_instance_transform(i)
+		var scale := xf.basis.get_scale().length() / sqrt(3.0)
+		var t := clampf((xf.origin - a).dot(seg) / length_sq, 0.0, 1.0)
+		if (a + seg * t).distance_to(xf.origin + xf.basis * box.get_center()) > reach * scale:
+			continue
+		var inv := xf.affine_inverse()
+		if not tris.intersect_segment(inv * a, inv * b).is_empty():
 			return true
 	return false
 
