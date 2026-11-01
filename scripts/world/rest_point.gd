@@ -160,6 +160,7 @@ func _build_creature_bed(raw: Variant) -> void:
 	add_child(_bed)
 	_bed.call("build_real", false)
 	_bed.call("set_build_index", index)
+	preload("res://scripts/world/meshy_camp_props.gd").apply_bed(_bed)
 
 
 func _on_rest() -> void:

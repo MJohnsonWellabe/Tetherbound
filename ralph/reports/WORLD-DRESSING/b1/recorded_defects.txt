@@ -1,0 +1,12 @@
+Ow: "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+Bs: "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+Xv: "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+Hu: none
+Bp: "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+Aw: "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item"
+Qp: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vj: "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+Qf: "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+Xn: none
+Ex: "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+Of: "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"

@@ -38,6 +38,7 @@ const LUMP_MODELS: Array[String] = [
 	"res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
 ]
 
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 var config: Dictionary = {}
 var _world: Node3D
 var _origin_xz := Vector2.ZERO
@@ -98,6 +99,13 @@ func _build_cluster(spec: Dictionary) -> void:
 	_add_crystals(root, centre, float(spec.height_m), str(spec.id).hash())
 	var count := int(spec.shards)
 	var spread := float(config.shard_spread_m)
+	# World dressing P2-043 (meshy_spikes, OFF until GPU judged): the
+	# coordinator's Meshy glass spike clusters (meshy-1031) replace the
+	# primitive blades, varied in scale and yaw and seated inside the cleared
+	# scar so no grass passes through them.
+	var meshy: Dictionary = config.get("meshy_spikes", {}) as Dictionary
+	if bool(meshy.get("enabled", false)) and _add_meshy_spikes(root, centre, spec, scar_radius, meshy):
+		count = 0
 	for index in count:
 		var angle := TAU * float(index) / float(count) + float(str(spec.id).hash() % 19) * 0.07
 		var radius := spread * (0.38 + 0.58 * float((index * 7) % count) / maxf(1.0, float(count - 1)))
@@ -117,6 +125,34 @@ func _build_cluster(spec: Dictionary) -> void:
 		light.omni_range = 17.8
 		light.shadow_enabled = false
 		root.add_child(light)
+
+
+func _add_meshy_spikes(parent: Node3D, centre: Vector2, spec: Dictionary, scar_radius: float, cfg: Dictionary) -> bool:
+	var seed_value := absi(str(spec.id).hash())
+	var count := maxi(1, int(cfg.get("per_cluster", 4)))
+	var main_fraction := float(cfg.get("main_height_fraction", 0.75))
+	var satellite: Array = cfg.get("satellite_height_fraction", [0.25, 0.5])
+	var reach := scar_radius * float(cfg.get("spread_fraction", 0.5))
+	var placed := false
+	for index in count:
+		var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+		if model == null:
+			return placed
+		var t := float((seed_value / (index + 1)) % 97) / 96.0
+		var height := float(spec.height_m) * (main_fraction if index == 0 else lerpf(float(satellite[0]), float(satellite[1]), t))
+		HERO_PROP.fit_height(model, height, height * float(cfg.get("sink_fraction", 0.06)))
+		if cfg.has("glow_colour"):
+			HERO_PROP.glow(model, Color(str(cfg.glow_colour)), float(cfg.get("glow_energy", 1.0)))
+		var angle := TAU * float(index) / float(maxi(1, count - 1)) + float(seed_value % 360) * PI / 180.0
+		var offset := Vector2.ZERO if index == 0 else Vector2(cos(angle), sin(angle)) * reach * (0.55 + 0.45 * t)
+		var seat := Node3D.new()
+		seat.name = "MeshyGlassSpikes%02d" % index
+		seat.position = _local_grounded(centre + offset, 0.0)
+		seat.rotation.y = float((seed_value + index * 131) % 360) * PI / 180.0
+		seat.add_child(model)
+		parent.add_child(seat)
+		placed = true
+	return placed
 
 
 func _add_shard(parent: Node3D, suffix: String, local: Vector2, height: float, angle: float) -> void:
