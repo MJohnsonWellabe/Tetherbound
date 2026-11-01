@@ -49,7 +49,7 @@
     },
     "remake_owner1101_trailpup": {
       "_why": "Owner-picked remake 1 Nov 2026: nearly real coyote, glowing amber paws and eyes (Meshy 01a197b8-0e09-73e5-8c15-f5b00dfeb32b). Ground patch stripped, dog3 rig recipe at the established 3.10 m, dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/trailpup/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "trailpup": {
           "model": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101.glb",
@@ -182,7 +182,7 @@
     },
     "remake_owner1101_burrowback": {
       "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Burrowback, a stocky badger with a black and white striped face and grey-brown coat, a believable lean adul (Meshy 01a197e3-66ee-7478-8ce3-ceaca4485602). dog3 quadruped rig at the installed 2.95 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing amber eyes. Provenance: assets/creatures/tetherbound/burrowback/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "burrowback": {
           "model": "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101.glb",
@@ -228,7 +228,7 @@
     },
     "remake_owner1101_ashtusk": {
       "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Ashtusk, a heavy armoured wild boar with big tusks, dark brown bristly coat, a believable lean adult creatu (Meshy 01a197e1-7a29-767d-b42c-ff85425fc55a). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ember eyes and ember cracks. Provenance: assets/creatures/tetherbound/ashtusk/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "ashtusk": {
           "model": "res://assets/creatures/tetherbound/ashtusk/candidate_owner1101/models/creature_ashtusk_owner1101.glb",
@@ -356,7 +356,7 @@
     },
     "remake_owner1101_frostclaw": {
       "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Frostclaw, a snow leopard with pale grey spotted fur, a believable lean adult creature in its natural stanc (Meshy 01a197e7-6f6c-70d0-8c02-c5ed5c3de22a). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ice-blue eyes and thin frost-blue veins. Provenance: assets/creatures/tetherbound/frostclaw/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "frostclaw": {
           "model": "res://assets/creatures/tetherbound/frostclaw/candidate_owner1101/models/creature_frostclaw_owner1101.glb",
@@ -586,7 +586,7 @@
     },
     "remake_owner1101_paddlenewt": {
       "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Paddlenewt, a big newt with a paddle tail and frilled cheeks, teal skin with cream belly, a believable lean (Meshy 01a197ea-004c-7252-aa57-ef9ac793ae83). dog3 quadruped rig at the installed 2.15 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua accents and eyes. Provenance: assets/creatures/tetherbound/paddlenewt/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "paddlenewt": {
           "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101.glb",
@@ -1026,7 +1026,7 @@
     },
     "remake_owner1101_tuskroot": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tuskroot, a big grown wild boar with heavy tusks, brown bristly coat, the adult form of a young root boar (Meshy 01a197f5-2f19-7013-a06a-67e1f70089e6). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.6 m; no glow painted in the albedo (the reference has natural amber eyes); no emission added. Provenance: assets/creatures/tetherbound/tuskroot/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "tuskroot": {
           "model": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101.glb",

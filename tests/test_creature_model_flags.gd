@@ -16,6 +16,12 @@ var installed: Dictionary
 const HELD := {
 	"remake_owner1101_torrentoad": "the remake carries the faint clip role and attack_contact_phase the installed Torrentoad has",
 	"remake_owner1101_meadowhart": "the remake keeps the complete skinned bare body the riding visual needs",
+	"remake_owner1101_burrowback": "its aspect variant Nightburrow reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
+	"remake_owner1101_trailpup": "its aspect variant Stormtrail reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
+	"remake_owner1101_paddlenewt": "its aspect variant Riftfrill reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
+	"remake_owner1101_tuskroot": "its aspect variant Ashtusk reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
+	"remake_owner1101_ashtusk": "it is an aspect variant of Tuskroot and must reuse Tuskroot's mesh, not its own (aspect textures / pose rig follow from tb/cause-remakes)",
+	"remake_owner1101_frostclaw": "the F36 pose candidate library is measured on Frostclaw's installed rig carries over to the remake rig",
 }
 
 
