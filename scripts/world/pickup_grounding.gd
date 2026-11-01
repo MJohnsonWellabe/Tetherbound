@@ -114,7 +114,10 @@ static func _tier_cluster(pickup: Node3D, visual: Node3D, tier: Dictionary) -> v
 	var copy_scale := float(tier.get("copy_scale", 0.85))
 	visual.position.x -= spread * 0.25
 	for i in mini(count - 1, _CLUSTER.size()):
-		var copy := visual.duplicate() as Node3D
+		# Not DUPLICATE_USE_INSTANTIATION: a glTF child would be re-instanced
+		# from file and lose the tier tint and fit scale applied at runtime
+		# (CPU r1: Great's copy came back as an oversized green sweet).
+		var copy := visual.duplicate(Node.DUPLICATE_SIGNALS | Node.DUPLICATE_GROUPS | Node.DUPLICATE_SCRIPTS) as Node3D
 		if copy == null:
 			continue
 		copy.name = "%sTierCopy%d" % [visual.name, i + 1]
