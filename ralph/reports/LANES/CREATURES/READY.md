@@ -2,7 +2,21 @@
 
 **Manifest format (coordinator, 1 Nov):** creatures use camera_set "F36" (capture_f36_poses --whole-body --context), species names as stands, with each stand's mode (`--candidate` for enabled_species, otherwise plain). NPCs use the character-cast frame ids (`tools/_capture_character_cast.gd`). Group 1 is the material, height and hit batch plus the NPC bodies; group 2 is the pose flags (Galewisp, Mirejaw tail).
 
-## Summary (1 Nov 2026)
+## Summary (1 Nov 2026, latest first)
+
+**Status.** Zero criteria closed. Nothing here is judged yet. Branch `tb/vis-creatures`; every change is behind a flag that ships OFF. `MANIFEST.json` holds 62 entries in six groups. Groups 1–4 are in the coordinator's GPU batch-3.
+
+**Groups:**
+1. Coat grades, Mirejaw height, grounded hits, NPC body grades.
+2. Pose flags: Galewisp's faint falls away from the trainer; Mirejaw's tail curls clear of him.
+3. One natural-magic trait per species (moss, weed, gold lightning rims, crest bioluminescence, sky wing tips).
+4. Glowing eyes and elemental veins.
+5. Human characters, 32 look flags: contrast, catchlights, daylight rim, relaxed idle.
+6. Dialogue key and rim light.
+
+**Redirect.** The coordinator moved this lane from creatures (now remade from Meshy models in two other lanes) to human characters at 17:32 UTC.
+
+**Open conflict for the owner.** Groups 3 and 4 glow veins and markings per the newer owner rule relayed by the coordinator. CLAUDE.md (25 Oct) says glow never appears as seams on fur or hide. Both stay OFF until judged.
 
 ## Group 6 (1 Nov, pushed): key and rim light in dialogue close-ups
 
