@@ -123,4 +123,4 @@ The owner's style direction (via the coordinator): a believable animal plus ONE 
 - **Terrapup:** 7.35 at High, already over 7.
 - **NPC faces:** the grade is subtle on CPU (warmer skin, crisper features). The judges' low-resolution baked eyes stay, so expect a small gain.
 
-**Contact sheet.** `_sheet_vis1.png` (CPU, sanity only) shows three rows: the material arms, the pose flags, and the NPC faces off and on.
+**Contact sheets.** `_sheet_vis2.jpg` covers groups 3–5 (traits and glow, then characters off and on). `_sheet_vis1.png` (CPU, sanity only) shows three rows: the material arms, the pose flags, and the NPC faces off and on.
