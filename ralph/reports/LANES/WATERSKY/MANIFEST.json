@@ -1,0 +1,88 @@
+[
+  {
+    "item": "OWNER-1031 Cloudreach floating cylinders/drums (P2-023)",
+    "flag": "data/config/cloudreach_grounding.json:enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=zzznomatch --spot=<id>@x,z@heading (stand list: ralph/reports/CLOUDREACH-LOOK/grounding_proof.json view= fields)",
+    "stands": [
+      "ownerdrum@16.5,4313.2@56",
+      "vegetatedgeolog12_1@16.5,4313.2@56"
+    ]
+  },
+  {
+    "item": "OWNER-1031 Cloudreach floating cylinders/drums: shelf hanging over meadow (P2-023)",
+    "flag": "data/config/cloudreach_grounding.json:skip_floating_shelves",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=zzznomatch --spot=ownerdrum@16.5,4313.2@56",
+    "stands": [
+      "ownerdrum@16.5,4313.2@56"
+    ]
+  },
+  {
+    "item": "OWNER-1031 Cloudreach floating drums: cloud-ring cards standing on meadows (P2-023, P2-021)",
+    "flag": "data/config/cloudreach_grounding.json:skip_grounded_cloud_cards",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=zzznomatch --spot=ownerdrum@16.5,4313.2@56 (plus the F40 matrix stands; 45 cards hidden realm-wide)",
+    "stands": [
+      "ownerdrum@16.5,4313.2@56",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+      "cloudreach__landmark__realm_gate_crag"
+    ]
+  },
+  {
+    "item": "OWNER-1031 Cloudreach cliff wall bulge over recess (P2-023)",
+    "flag": "data/config/cloudreach_grounding.json:monotonic_walls",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=high_roost_sky_shrine__07__sky_shrine --subset=landmark__three_bells_bridge",
+    "stands": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+      "cloudreach__landmark__three_bells_bridge",
+      "ownerdrum@16.5,4313.2@56"
+    ]
+  },
+  {
+    "item": "P2-025",
+    "flag": "data/config/cloudreach_grounding.json:clear_paved_grass",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --subset=cloudreach__landmark__sky_shrine_heartstone --views=close ; --subset=cloudreach__high_roost_sky_shrine__08__the_high_perches --views=approach",
+    "stands": [
+      "cloudreach__landmark__sky_shrine_heartstone__day__close",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach"
+    ]
+  },
+  {
+    "item": "P2-066",
+    "flag": "data/config/tidewake_look.json:watersky_sections_on",
+    "camera_set": "tools/phase2_capture_current_states.gd -- --seed=2042",
+    "stands": [
+      "tidewake__current_states__S1_live_t0",
+      "tidewake__current_states__S1_live_t1",
+      "tidewake__current_states__S2_live_t0"
+    ]
+  },
+  {
+    "item": "P2-067",
+    "flag": "data/config/tidewake_look.json:watersky_sections_on",
+    "camera_set": "tools/phase2_capture_current_states.gd -- --seed=2042",
+    "stands": [
+      "tidewake__current_states__S1_live_t0",
+      "tidewake__current_states__S1_restored_t0",
+      "tidewake__current_states__S2_live_t0"
+    ]
+  },
+  {
+    "item": "P2-026",
+    "flag": "data/config/tidewake_look.json:watersky_sections_on",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=water --seed=2042 --subset=water__drowned_garden__21__drowned_garden_terraces ; --subset=water__sluice_isle__14__sluice_channel_bridge",
+    "stands": [
+      "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+      "tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+      "tidewake__sluice_isle__14__sluice_channel_bridge__route_day"
+    ]
+  },
+  {
+    "item": "P2-008",
+    "flag": "data/config/water_ground_cover.json:built_feather_enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=water --seed=2042 --times=day --views=close --subset=water__first_shore__01__first_shore_welcome_beacon ; tools/phase2_capture_routes.gd -- --biome=water --seed=2042 --subset=water__first_shore__02__first_shore_horizon_stones",
+    "stands": [
+      "tidewake__first_shore__01__first_shore_welcome_beacon__day__close",
+      "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
+      "tidewake__brine_steps__06__brine_steps_east_beach__walk_03_day"
+    ]
+  }
+]

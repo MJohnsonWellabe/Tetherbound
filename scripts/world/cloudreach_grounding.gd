@@ -23,6 +23,7 @@ const CONFIG_PATH := "res://data/config/cloudreach_grounding.json"
 const PREVIEW_ARG := "--cloudreach-grounding-candidate"
 const REPORT_ARG := "--cloudreach-grounding-report"
 const CLOUD_CARD_ARG := "--cloudreach-cloudcards-candidate"
+const SHELF_ARG := "--cloudreach-shelves-candidate"
 const CLOUD_CARD_TEXTURE := "res://assets/environment/cloudreach/cloud_bank_v1.png"
 const ROCKS: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf"),
@@ -54,6 +55,10 @@ func build(world: Node3D) -> void:
 	_world = world
 	_cfg = read_config()
 	_report = OS.get_cmdline_user_args().has(REPORT_ARG)
+	if bool(_cfg.get("skip_floating_shelves", false)) or OS.get_cmdline_user_args().has(SHELF_ARG):
+		var shelves := hide_floating_shoulder_pieces(world, float(_cfg.get("shelf_float_clear_m", 45.0)))
+		if _report:
+			print("[cloudreach_grounding] floating_shoulder_pieces_hidden=", shelves)
 	if bool(_cfg.get("skip_grounded_cloud_cards", false)) or OS.get_cmdline_user_args().has(CLOUD_CARD_ARG):
 		var hidden := hide_grounded_cloud_cards(world, float(_cfg.get("cloud_card_clear_m", 40.0)))
 		if _report:
@@ -634,4 +639,95 @@ static func card_meets_ground(world: Node3D, at: Vector3, width: float, clear_m:
 		var ground: float = world.call("ground_height_at", at.x + offset.x * width, at.z + offset.y * width)
 		if is_finite(ground) and ground >= bottom - clear_m and ground <= at.y + width * 0.25 + clear_m:
 			return true
+	return false
+
+
+## Owner 31 Oct 2026 floating drums, flag "skip_floating_shelves": where a
+## meadow road passes inside a rock shoulder's footprint below its crown, the
+## shoulder's wall shelves (`VegetatedGeologicalShelf*`) and installed rock
+## outcrops stick out over the grass and read from the road as rock drums
+## hanging overhead (ray probe at the owner's stand, 16.5, 4313.2: a 36 m
+## shelf 8 m up and a 39 m outcrop 17 m up). Runs after every builder, so
+## the roads are registered. Each such piece whose underside hangs between
+## walker headroom and `clear_m` above walkable ground is hidden with its
+## colliders disabled (it stands out of reach in mid-air) and the tree
+## planted on its top.
+func hide_floating_shoulder_pieces(world: Node3D, clear_m: float) -> int:
+	var headroom := 3.2
+	var hidden := 0
+	var stack: Array[Node] = [world]
+	var shoulders: Array[Node3D] = []
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node == self:
+			continue
+		if node is Node3D and str(node.name).contains("RockShoulder"):
+			shoulders.append(node)
+		for child: Node in node.get_children():
+			stack.append(child)
+	for shoulder: Node3D in shoulders:
+		for piece: Node in shoulder.get_children():
+			var piece_3d := piece as Node3D
+			if piece_3d == null or not piece_3d.visible or str(piece.name) == "StratifiedCliffBody":
+				continue
+			var named := str(piece.name)
+			var is_shelf := named.begins_with("VegetatedGeologicalShelf")
+			var box := _visual_aabb(piece_3d)
+			if box.size == Vector3.ZERO:
+				continue
+			# Only big pieces read as drums: shelves, and rock outcrops 12 m+.
+			if not is_shelf and (not _has_rock_mesh(piece_3d) or maxf(box.size.x, box.size.z) < 12.0):
+				continue
+			if not _hangs_over_ground(world, box, headroom, clear_m):
+				continue
+			piece_3d.visible = false
+			for shape: CollisionShape3D in piece_3d.find_children("*", "CollisionShape3D", true, false):
+				shape.disabled = true
+			for tree: Node in shoulder.get_children():
+				var tree_3d := tree as Node3D
+				if tree_3d == null or tree_3d == piece_3d or not str(tree.name).contains("Tree"):
+					continue
+				var at := tree_3d.global_position
+				if at.x >= box.position.x and at.x <= box.end.x and at.z >= box.position.z and at.z <= box.end.z \
+						and absf(at.y - box.end.y) < 3.0:
+					tree_3d.visible = false
+			hidden += 1
+	return hidden
+
+
+func _visual_aabb(node: Node3D) -> AABB:
+	var result := AABB()
+	var first := true
+	for mesh: MeshInstance3D in node.find_children("*", "MeshInstance3D", true, false):
+		if mesh.mesh == null:
+			continue
+		var box := mesh.global_transform * mesh.get_aabb()
+		result = box if first else result.merge(box)
+		first = false
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		var own := node.global_transform * (node as MeshInstance3D).get_aabb()
+		result = own if first else result.merge(own)
+	return result
+
+
+func _has_rock_mesh(node: Node3D) -> bool:
+	for mesh: MeshInstance3D in node.find_children("*", "MeshInstance3D", true, false):
+		if str(mesh.name).begins_with("Rock_") or str(mesh.get_parent().name).begins_with("Rock_"):
+			return true
+	return str(node.name).begins_with("Rock_")
+
+
+func _hangs_over_ground(world: Node3D, box: AABB, headroom: float, clear_m: float) -> bool:
+	if not world.has_method("ground_height_at"):
+		return false
+	var bottom := box.position.y
+	var centre := box.get_center()
+	for offset: Vector2 in [Vector2.ZERO, Vector2(0.3, 0.0), Vector2(-0.3, 0.0), Vector2(0.0, 0.3), Vector2(0.0, -0.3)]:
+		var x := centre.x + offset.x * box.size.x
+		var z := centre.z + offset.y * box.size.z
+		var ground: float = world.call("ground_height_at", x, z, bottom - clear_m * 0.5)
+		if is_finite(ground):
+			var gap := bottom - ground
+			if gap >= headroom and gap <= clear_m:
+				return true
 	return false
