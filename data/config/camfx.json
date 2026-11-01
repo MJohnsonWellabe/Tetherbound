@@ -47,7 +47,7 @@
     "fire_glow": "#ffb05a",
     "arcs": 3,
     "arc_seconds": 0.32,
-    "arc_width_m": 0.05,
+    "arc_width_m": 0.022,
     "arc_colour": "#fff6d0",
     "seconds": 1.4,
     "flash_scale": 0.6

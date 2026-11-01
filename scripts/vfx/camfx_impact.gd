@@ -137,7 +137,6 @@ func _ready() -> void:
 		var arc_material := StandardMaterial3D.new()
 		arc_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		arc_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		arc_material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 		arc_material.cull_mode = BaseMaterial3D.CULL_DISABLED
 		arc_material.vertex_color_use_as_albedo = true
 		_arcs.material_override = arc_material
@@ -201,19 +200,35 @@ func _draw_arcs(delta: float) -> void:
 	var alpha := 1.0 - _life / seconds
 	var core := Color(str(_cfg.get("arc_colour", "#fff6d0")))
 	_arc_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	var scale_value := clampf(_height / 2.0, 0.6, 2.0)
 	for end: Vector3 in _arc_ends:
-		var steps := 7
-		var prev := _arc_top
+		var steps := 8
+		var points: Array[Vector3] = [_arc_top]
 		for s in range(1, steps + 1):
 			var t := float(s) / float(steps)
 			var point := _arc_top.lerp(end, t)
 			if s < steps:
-				point += Vector3(_rng.randf_range(-1, 1), _rng.randf_range(-0.5, 0.5), _rng.randf_range(-1, 1)) \
-					* 0.18 * clampf(_height / 2.0, 0.6, 2.0)
-			var side := (point - prev).cross(view).normalized() * width
-			var c := Color(core.r, core.g, core.b, alpha)
-			for v: Vector3 in [prev - side, prev + side, point + side, prev - side, point + side, point - side]:
-				_arc_mesh.surface_set_color(c)
-				_arc_mesh.surface_add_vertex(v)
-			prev = point
+				point += Vector3(_rng.randf_range(-1, 1), _rng.randf_range(-0.4, 0.4), _rng.randf_range(-1, 1)) \
+					* 0.16 * scale_value
+			points.append(point)
+		# A faint wide glow, then the hot thin core, each one joined ribbon.
+		_arc_ribbon(points, view, width * 3.0, Color(core.r, core.g * 0.95, core.b * 0.8, alpha * 0.28))
+		_arc_ribbon(points, view, width, Color(core.r, core.g, core.b, alpha))
 	_arc_mesh.surface_end()
+
+
+## One joined camera-facing ribbon through `points` (shared corners at each
+## joint, so the bolt has no gaps where it bends).
+func _arc_ribbon(points: Array[Vector3], view: Vector3, width: float, colour: Color) -> void:
+	var sides: Array[Vector3] = []
+	for i in points.size():
+		var along := points[mini(i + 1, points.size() - 1)] - points[maxi(i - 1, 0)]
+		var side := along.cross(view)
+		sides.append(side.normalized() * width * (1.0 - 0.6 * float(i) / float(points.size() - 1)) \
+			if side.length() > 0.0001 else Vector3.ZERO)
+	for i in points.size() - 1:
+		var a := points[i]
+		var b := points[i + 1]
+		for v: Vector3 in [a - sides[i], a + sides[i], b + sides[i + 1], a - sides[i], b + sides[i + 1], b - sides[i + 1]]:
+			_arc_mesh.surface_set_color(colour)
+			_arc_mesh.surface_add_vertex(v)
