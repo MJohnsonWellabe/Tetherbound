@@ -49,8 +49,7 @@ static func spec_for(item_id: String, realm: String) -> Dictionary:
 	return {}
 
 
-static func apply(pickup: Node3D, visual: Node3D, item_id: String, realm: String, placement_id: String = "",
-		make_visual: Callable = Callable()) -> void:
+static func apply(pickup: Node3D, visual: Node3D, item_id: String, realm: String, placement_id: String = "") -> void:
 	if pickup == null or visual == null or pickup.has_meta(APPLIED):
 		return
 	var spec := spec_for(item_id, realm)
@@ -67,7 +66,7 @@ static func apply(pickup: Node3D, visual: Node3D, item_id: String, realm: String
 	var root := Node3D.new()
 	root.name = "PickupGrounding"
 	pickup.add_child(root)
-	_tier_cluster(pickup, visual, tier, make_visual)
+	# Tier copies are made by `tier_cluster_dressed`, after the candy tint.
 	var stone_cfg: Dictionary = spec.get("stone", {})
 	var stone_top := 0.0
 	if not stone_cfg.is_empty():
@@ -138,6 +137,21 @@ static func _tier_cluster(pickup: Node3D, visual: Node3D, tier: Dictionary,
 		copy.rotation.y = visual.rotation.y + float(row[1])
 		copy.scale = (copy.scale if make_visual.is_valid() else visual.scale) * copy_scale
 		pickup.add_child(copy)
+
+
+## Candy tiers are tinted and ringed by candy_pickup_presentation.gd after
+## `apply` runs, so their copies are made there, from the dressed visual; the
+## tier ring stays on the original only. No-op while the candidate is off.
+static func tier_cluster_dressed(pickup: Node3D, visual: Node3D, item_id: String) -> void:
+	var tier := tier_spec(item_id)
+	if int(tier.get("count", 1)) <= 1 or pickup.has_meta(&"pickup_grounding_tier_copies"):
+		return
+	pickup.set_meta(&"pickup_grounding_tier_copies", true)
+	_tier_cluster(pickup, visual, tier)
+	for child: Node in pickup.get_children():
+		if str(child.name).contains("TierCopy"):
+			for ring: Node in child.find_children("TierRing", "", true, false):
+				ring.queue_free()
 
 
 ## Horizontal size of `visual` in its parent's space, from its meshes' local

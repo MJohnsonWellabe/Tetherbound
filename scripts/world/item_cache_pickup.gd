@@ -221,8 +221,7 @@ func _build_visual() -> void:
 	add_child(_visual)
 	MUSHROOM_PRESENTATION.apply(self, _item_id)
 	# World dressing (pickup_grounding.json, OFF until GPU judged).
-	PICKUP_GROUNDING.apply(self, _visual, _item_id, _realm_id, _placement_id,
-		_tier_copy.bind(definition))
+	PICKUP_GROUNDING.apply(self, _visual, _item_id, _realm_id, _placement_id)
 
 	# OP-0830-3. This used to carry an `OmniLight3D` of its own -- the
 	# "short-range presence cue" tm_pickup.gd's header argues for, and the
@@ -245,14 +244,6 @@ func _build_visual() -> void:
 ## owns a fresh, unparented subtree, centred in X/Z and resting at Y=0, in
 ## metres. No Game lookup, claim, restore, highlight or harvest dependency.
 ## Missing installed art and unsupported records return null to the caller.
-## A fresh copy of this find's visual for pickup_grounding.gd's tier
-## candidate, built the way `_build_visual` builds it (Meshy art, else the
-## identity visual). Null for an authored-model find: it gets no copies.
-func _tier_copy(definition: Dictionary) -> Node3D:
-	var copy := MESHY_ITEM_VISUALS.visual_for(_item_id, _realm_id)
-	return copy if copy != null else create_identity_visual(_item_id, definition)
-
-
 static func create_identity_visual(item_id: String, definition: Dictionary) -> Node3D:
 	var authored := _authored_identity(item_id)
 	if authored != null:
