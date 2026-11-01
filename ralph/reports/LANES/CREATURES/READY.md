@@ -2,7 +2,7 @@
 
 ## Summary (1 Nov 2026)
 
-**Status.** Zero criteria closed. Nothing here is judged yet, and no CPU score is claimed. Every change is behind a flag that ships OFF, on `tb/vis-creatures`. `MANIFEST.json` lists each item, its flag and its capture. Per the coordinator's update, there are no single-candidate READY lines.
+**Status.** Zero criteria closed. Nothing here is judged yet, and no CPU score is claimed. Every change is behind a flag that ships OFF, on `tb/vis-creatures`. `MANIFEST.json` (17 flags, 14 items) lists each item, its flag and its capture. Per the coordinator's update, there are no single-candidate READY lines.
 
 **Game changes waiting on the batch GPU run:**
 - **Coat grades.** Script: `tools/art_pipeline/grade_vis_creatures.py`. Each is a graded albedo `<stem>_vis1.png` behind `creature_coat_flags.json: creatures_vis_coat_<species>`:
@@ -18,6 +18,9 @@
 - **Grounded hits** (`creature_clip_flags.json`):
   - bramblebun: rotation ×1.35, position ×0.25 (its hit "looks airborne");
   - water_cannonback: rotation ×1.6, position ×0.5.
+- **Pose role flags** (`f36_pose_candidates.json: candidate_role_flags`, checked by rendering in candidate mode):
+  - `creatures_vis_galewisp_faint_away`: the faint is mirrored in yaw, so Galewisp falls onto its side away from the trainer instead of across him ("faint wing over the trainer").
+  - `creatures_vis_mirejaw_tail_clear` (mirejaw and water_mirejaw, hit and faint): the tail curls clear of the trainer ruler. Without it, the ×1.35 height would hide him behind the tail fan. Pair it with `creatures_vis_taller_mirejaw`.
 - **NPC bodies** (#25 wandering trainer, #27 young trainer, #28 trader, #29 innkeeper):
   - Script: `tools/art_pipeline/grade_vis_npcs.py`. Skin loses its chalk and blotches, eyes, brows and mouths gain local contrast, and the darkest cloth lifts a step. Atlas and identity are unchanged, and reserved-red texels go down.
   - Flags: `character_body_flags.json: npc_vis_body_<character>`, through the new `character_model.gd::with_body_flags` hook.
@@ -44,8 +47,13 @@
 - I don't have a confirmed cause for the GPU's identical frames.
 
 **Not changed (parked, with reasons):**
-- **Galewisp:** carry-frame and faint-wing staging.
-- **Riverdrake:** erect faint crest, plank faint.
-- **Solmane's faint**, and **Terrapup** (7.35 at High on ROSTER-1, already over 7).
+- **Solmane's faint:** parked after two failed approaches (renders in `capture_f36_poses.gd --candidate`).
+  - A side roll swings its rigid wings vertical, and the negative roll floats.
+  - A sphinx collapse reads as sitting upright.
+  - Its wings are skinned to the spine, with no wing bones, so the "wings up" crouch needs new rig work.
+- **Riverdrake:** its faint end is a rolled plank, and a tail curl barely changes it. It is already 7.23 at High.
+- **Galewisp's carrying frame:** it carries nothing, which is a staging issue.
+- **Terrapup:** 7.35 at High, already over 7.
+- **NPC faces:** the grade is subtle on CPU (warmer skin, crisper features). The judges' low-resolution baked eyes stay, so expect a small gain.
 
-These defects are poses or staging. Hand-authoring faint frames without a render risks the CO-F36-1 float, and this container can't import the whole project to render them.
+**Contact sheet.** `_sheet_vis1.png` (CPU, sanity only) shows three rows: the material arms, the pose flags, and the NPC faces off and on.
