@@ -287,6 +287,191 @@
       }
     }
   },
+  "hall_2": {
+    "_why": "HALL-2 (vis-meadows, 1 Nov, OFF until GPU-judged): the HALL-1 r2b judges' follow-ups (ralph/reports/GPU-PASS/Q31/HALL1-crossing-hall/VERDICT.md, Path to 7.5), layered over hall_1 by crossing_hall.gd apply_hall_layer. (1) the stone arch piers read as near-field posts: arch_facades.depth_scale 0.45 thins the surrounds' depth into the nave, width and opening unchanged; (2) plaster blows out in the shrine: day ambient 0.65 -> 0.52, window daylight 2.6 -> 2.0, plaster backdrop one step darker; (3) night reads close to day: night ambient 0.22 -> 0.12 with lantern night scale 1.8 -> 2.1 so the warm pools carry the room; (4) the altar blooms toward white: its emissive mask 1.6 -> 0.85, halo 1.5 -> 0.9 at strength 0.4, ShrineGlow 1.5 -> 1.0. Presentation only: no collision, portal, route, save or network change.",
+    "enabled": false,
+    "merge": {
+      "arch_facades": {
+        "depth_scale": 0.45
+      },
+      "interior_ambient": {
+        "day_ambient": 0.52,
+        "night_ambient": 0.12
+      },
+      "light": {
+        "night_energy_scale": 2.1
+      },
+      "daylight_windows": {
+        "energy": 2.0
+      },
+      "hall_waymark": {
+        "materials": {
+          "backdrop": {
+            "color": "#c9bfa8"
+          }
+        }
+      }
+    },
+    "remove": {
+      "hall_great_hall": {
+        "pieces": [
+          "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb"
+        ]
+      },
+      "hall_dressing": {
+        "pieces": [
+          "ShrineGlow"
+        ]
+      }
+    },
+    "append": {
+      "hall_great_hall": {
+        "pieces": [
+          {
+            "model": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
+            "size_m": [
+              2.4,
+              1.4,
+              2.4
+            ],
+            "at": [
+              12,
+              0.37,
+              5.6
+            ],
+            "yaw_deg": 0,
+            "collider_radius_m": 1.3,
+            "collider_height_m": 1.2,
+            "halo": {
+              "at": [
+                0,
+                1.15,
+                0
+              ],
+              "radius_m": 0.7,
+              "colour": "#ffa848",
+              "strength": 0.4,
+              "range_m": 6.5,
+              "energy": 0.9
+            },
+            "emission_mask": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_emissive_mask.png",
+            "emission_colour": "#ffb45e",
+            "emission_energy": 0.85
+          }
+        ]
+      },
+      "hall_dressing": {
+        "pieces": [
+          {
+            "name": "ShrineGlow",
+            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+            "at": [
+              15.6,
+              0.06,
+              -3.0
+            ],
+            "light": {
+              "colour": "#ffb45e",
+              "energy": 1.0,
+              "range": 6.0,
+              "height": 1.6
+            }
+          }
+        ]
+      }
+    }
+  },
+  "hall_3": {
+    "_why": "HALL-3 (vis-meadows, 1 Nov, OFF until GPU-judged), from the HALL-2 verdict (day 6.65 -> 6.85, night 6.36 -> 6.51; HALL-2 stays OFF). All three judges, in their order. (1) 'The interior is lit the same day and night': the Meadows night look raises exposure to 1.2 (day 0.6) for the exterior, and hall_lantern_lighting keeps full albedo at night, so the room brightens with it. Night now halves the Hall's albedo (night_albedo_scale 1.0 -> 0.5), drops ambient to 0.10 and the end-bay fills to under half, and pushes the lanterns harder over a shorter reach (night scale 1.8 -> 2.6, range 10 -> 6.5) for warm pools with falloff and dark corners; the four window spots stay on at night as cool moonlight (#9fb4dc, energy 0.9; crossing_hall.gd night_energy). By day those spots are tighter and stronger (42 -> 32 deg, 2.6 -> 3.4, already shadowed) so the windows throw shaped sun pools. (2) 'Plaster over-exposed and flat': MI_Plaster albedo x0.72 day and night (interior_ambient.material_albedo_scale), day ambient 0.65 -> 0.55. (3) 'Near-field stone arch piers fill the nave frame edges': cameras unchanged; every arch surround is set back into the wall (z_m 0.1 -> -0.35 with depth x0.6, so it stands about 0.33 m proud instead of 1.2 m) and reads as a carved relief, not a post. (4) 'The royal-blue runner is loud': runner and shrine rug muted to warm dark wool. Presentation only: no collision, portal, route, save or network change.",
+    "enabled": false,
+    "merge": {
+      "interior_ambient": {
+        "night_ambient": 0.1,
+        "night_albedo_scale": 0.5,
+        "day_ambient": 0.55,
+        "material_albedo_scale": {
+          "MI_Plaster": 0.72
+        }
+      },
+      "light": {
+        "night_energy_scale": 2.6,
+        "night_range_m": 6.5
+      },
+      "night_fill_lights": [
+        {
+          "at": [
+            0,
+            6.5,
+            10
+          ],
+          "range_m": 12,
+          "energy": 0.2,
+          "colour": "#c8b28c"
+        },
+        {
+          "at": [
+            0,
+            8.5,
+            13
+          ],
+          "range_m": 10,
+          "energy": 0.12,
+          "colour": "#c8b28c"
+        }
+      ],
+      "daylight_windows": {
+        "energy": 3.4,
+        "angle_deg": 32.0,
+        "night_energy": 0.9,
+        "night_colour": "#9fb4dc"
+      },
+      "arch_facades": {
+        "depth_scale": 0.6,
+        "pieces": {
+          "tidewake": {
+            "z_m": -0.35
+          },
+          "cloudreach": {
+            "z_m": -0.35
+          },
+          "biome5": {
+            "z_m": -0.35
+          },
+          "stormwood": {
+            "z_m": -0.35
+          },
+          "biome6": {
+            "z_m": -0.35
+          },
+          "biome7": {
+            "z_m": -0.35
+          },
+          "biome8": {
+            "z_m": -0.35
+          }
+        }
+      },
+      "hall_great_hall": {
+        "runner": {
+          "colour": "#3f3d38",
+          "border_colour": "#7d6b4f"
+        },
+        "rugs": [
+          {
+            "at": [
+              12,
+              0.075,
+              -0.3
+            ],
+            "width_m": 3.6,
+            "length_m": 7.4,
+            "colour": "#4a453e",
+            "border_colour": "#8a7550"
+          }
+        ]
+      }
+    }
+  },
   "hall_hero_assets": {
     "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
     "enabled": true,

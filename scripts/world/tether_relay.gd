@@ -527,7 +527,7 @@ func _retrofit_timber_material() -> StandardMaterial3D:
 func _ground_pad_material() -> StandardMaterial3D:
 	if _ground_pad_material_cache != null:
 		return _ground_pad_material_cache
-	var config: Dictionary = _config.get("ground_pad", {})
+	var config: Dictionary = ground_pad_config(_config)
 	# F38 band3_the_river_lock_0 (close-1024, OFF until judged): GPU judges read
 	# the yard as flat featureless earth (5.29). `surface_candidate` swaps the
 	# whole pad, seamlessly and feathered as before, for worn stone flags.
@@ -560,8 +560,27 @@ func _ground_pad_material() -> StandardMaterial3D:
 ## darkens a band either side of t=0 -- the road/gantry axis every person and
 ## conduit run on this site already treats as its spine -- for the "visible
 ## boot/tyre wear" the defect report asks for, all procedural (no new asset).
+## P2-013 (vis-meadows, OFF until GPU-judged): `ground_pad.p2_013_candidate`
+## merges its keys over the pad, and its `surface` keys over the pad's
+## `surface_candidate`, so the stone flags tile larger with a stronger worn
+## track. Off: the shipped pad exactly.
+static func ground_pad_config(config: Dictionary) -> Dictionary:
+	var pad: Dictionary = (config.get("ground_pad", {}) as Dictionary).duplicate(true)
+	var candidate: Dictionary = pad.get("p2_013_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return pad
+	for key: Variant in candidate:
+		if key == "surface":
+			var surface: Dictionary = pad.get("surface_candidate", {})
+			surface.merge(candidate["surface"] as Dictionary, true)
+			pad["surface_candidate"] = surface
+		elif key != "enabled" and not str(key).begins_with("_"):
+			pad[key] = candidate[key]
+	return pad
+
+
 func _build_ground_pad() -> void:
-	var config: Dictionary = _config.get("ground_pad", {})
+	var config: Dictionary = ground_pad_config(_config)
 	if not bool(config.get("enabled", true)):
 		return
 	var s_min := float(config.get("s_min", -27.0))

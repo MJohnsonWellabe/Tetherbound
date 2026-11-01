@@ -59,3 +59,48 @@ func test_shipping_candidate_only_names_existing_sections_and_rows() -> void:
 			for row: Dictionary in hall_1.append[section][list_key]:
 				if row.has("model"):
 					assert_true(ResourceLoader.exists(str(row.model)), "appended model is installed: " + str(row.model))
+
+
+func test_hall_2_ships_off_and_off_leaves_hall_1_result_unchanged() -> void:
+	var cfg := _shipping()
+	assert_false(bool(cfg.get("hall_2", {}).get("enabled", true)), "HALL-2 ships OFF until GPU-judged")
+	var with_off := cfg.duplicate(true)
+	HALL.apply_hall_1(with_off)
+	var hall_1_only := cfg.duplicate(true)
+	hall_1_only.erase("hall_2")
+	HALL.apply_hall_1(hall_1_only)
+	with_off.erase("hall_2")
+	assert_eq(JSON.stringify(with_off), JSON.stringify(hall_1_only), "OFF changes nothing beyond hall_1")
+
+
+func test_hall_2_on_layers_after_hall_1_and_caps_the_altar() -> void:
+	var cfg := _shipping()
+	cfg.hall_2.enabled = true
+	HALL.apply_hall_1(cfg)
+	assert_eq(float(cfg.interior_ambient.night_ambient), 0.12, "hall_2 wins over hall_1's night ambient")
+	assert_eq(float(cfg.arch_facades.depth_scale), 0.45)
+	var altars := (cfg.hall_great_hall.pieces as Array).filter(func(r: Variant) -> bool:
+		return r is Dictionary and str(r.get("model", "")).ends_with("hall_shrine_altar.glb"))
+	assert_eq(altars.size(), 1, "one altar after hall_1 and hall_2 swap it")
+	assert_true(float(altars[0].emission_energy) < 1.0, "altar mask capped below white bloom")
+	var glows := (cfg.hall_dressing.pieces as Array).filter(func(r: Variant) -> bool:
+		return r is Dictionary and str(r.get("name", "")) == "ShrineGlow")
+	assert_eq(glows.size(), 1)
+	assert_eq(float(glows[0].light.energy), 1.0)
+
+
+func test_hall_3_ships_off_and_on_sets_night_moonlight_plaster_and_piers() -> void:
+	var cfg := _shipping()
+	assert_false(bool(cfg.get("hall_3", {}).get("enabled", true)), "HALL-3 ships OFF until GPU-judged")
+	var off := cfg.duplicate(true)
+	HALL.apply_hall_1(off)
+	cfg.hall_3.enabled = true
+	HALL.apply_hall_1(cfg)
+	assert_true(float(cfg.interior_ambient.night_albedo_scale) < 1.0, "night darkens the Hall's albedo")
+	assert_true(float(cfg.daylight_windows.night_energy) > 0.0, "windows carry moonlight at night")
+	assert_true(cfg.interior_ambient.material_albedo_scale.has("MI_Plaster"))
+	for id: String in cfg.arch_facades.pieces:
+		assert_true(float(cfg.arch_facades.pieces[id].z_m) < 0.0, "surround set back: " + id)
+		assert_true(str(cfg.arch_facades.pieces[id].path).ends_with(".glb"), "surround path kept: " + id)
+	assert_ne(str(cfg.hall_great_hall.runner.colour), str(off.hall_great_hall.runner.colour))
+	assert_eq(float(cfg.hall_great_hall.runner.length_m), float(off.hall_great_hall.runner.length_m), "runner size kept")
