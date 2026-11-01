@@ -1,0 +1,35 @@
+From 5b0a540cc7424a48848e1498cac6753884cc3019 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 1 Nov 2026 00:18:50 -0500
+Subject: [PATCH 5/5] HALL-1 r2b (OFF): darker night ambient (0.35 -> 0.22)
+ with lantern night scale 1.5 -> 1.8
+
+Judged at High in its own batch: main 5.40 -> r2b 6.18 (+0.78; approach-nave
++0.60, nave-sides +0.80, shrine +0.94), the strongest of three arms. This is
+the candidate as judged, OFF.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ data/config/crossing_hall.json | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/data/config/crossing_hall.json b/data/config/crossing_hall.json
+index 2a379a21aa37..dcc282cb0c8e 100644
+--- a/data/config/crossing_hall.json
++++ b/data/config/crossing_hall.json
+@@ -17,6 +17,12 @@
+             "border_colour": "#b08a52"
+           }
+         ]
++      },
++      "interior_ambient": {
++        "night_ambient": 0.22
++      },
++      "light": {
++        "night_energy_scale": 1.8
+       }
+     },
+     "remove": {
+-- 
+2.55.0.windows.5
+

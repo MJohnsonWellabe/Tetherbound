@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Db": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with a clear face, readable silhouette and an earthy green/brown palette that fits the key art's settlers; the sides look identical, and the large cartoon eyes sit a little apart from the naturalistic creature style."
+  },
+  "Ng": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, plank cap and stone footing read as a built wall, but it is still a thin lone panel with a flat cream infill; B is a blown-out white card with no cap or footing that looks like a placeholder."
+  },
+  "Sj": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a strong bulky silhouette, but the near-black brown-on-charcoal material has almost no rim light or value range; A's faint end crushes to a black blob, and B's glowing magma seams carry the identity."
+  },
+  "Uo": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The village approach is charming, but the interior is evenly lit and sparse, with no light shafts or haze, night barely differs from day, and in B diagonal timber posts cut across the near field of every nave frame."
+  },
+  "Nl": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model matches the owner's style bar, with a clear white fleece and dark curled horns against the stage; B's faint mid and faint end stretch the horns into long black tubes that break the read."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's added benches, beds, shelving and glowing hearths begin to make the side arches lived-in, but both sides are flat-lit long corridors framed by dark stone piers in the near field, with no atmosphere or night mood."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's open cobblestone floor with evenly scattered pedestals and a small cool-blue fountain reads as a courtyard with hot, blown walls; B's blue runner leading to a white-lit shrine and a far hearth gives a focus, but night frames look the same as day."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give the Crossing Hall a real interior light and mood pass: a warm fire or brazier glow at the shrine end, hearths and lanterns as pools of light with darker gaps between them, light shafts through the windows with a little haze, and a distinctly darker, candle-lit night grade (Uo, Kr, Yi).",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-frame the Hall cameras, or move or thin the near-field timber posts and stone piers, so the nave and arches read as one great hall rather than corridors seen past occluders; furnish the floor with grouped benches, tables, rugs and clutter instead of an even pedestal scatter (Uo B, Kr, Yi A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship the homestead wall as a thick timber-framed panel with a cap, a stone footing and a textured, shaded daub or plank infill (side A of Ng as the base, with more depth and less flat cream), never the blown-out white card.",
+   "kind": "new_art"
+  }
+ ]
+}

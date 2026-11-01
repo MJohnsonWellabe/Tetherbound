@@ -1,0 +1,392 @@
+From b66a168db2ce1a0700804b9c837ef70d546ae98a Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 31 Oct 2026 22:26:20 -0500
+Subject: [PATCH 2/5] HALL-1 candidate (OFF): open the nave, warm hearths and
+ shrine, rug on the shrine cobbles
+
+Main's F17-6 baseline at High maps 6.18 (approach-nave 6.43, nave-sides 6.19,
+shrine 5.92); judges: near-field posts PRESENT, bare hall PARTIAL, cool-blue
+shrine focal PARTIAL. Behind hall_1.enabled (false):
+- remove the z=+/-6 nave posts, braces, ties and their two post lanterns;
+- installed ranger_hearth with a lit camp flame on the west wall (replaces
+  WallBenchL3) and on the Shrine Room north wall, stools and logs beside;
+- the shrine altar halo warm gold instead of #4aa8ff; ShrineGlow 2.6 -> 1.5
+  (the east plaster wall blew out);
+- a woven rug (runner shader, new `rugs` list) over the Shrine Room cobbles;
+- a dressed table in the east aisle where the post stood.
+Great hall pieces take an optional ignite_energy (campfire glow on a flame
+sculpt); hall_1.remove also matches unnamed rows by model path.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ data/config/crossing_hall.json            | 242 +++++++++++++++++++++-
+ scripts/world/crossing_hall.gd            |   8 +-
+ scripts/world/crossing_hall_great_hall.gd |  14 +-
+ tests/test_crossing_hall_hall_1.gd        |   9 +-
+ 4 files changed, 262 insertions(+), 11 deletions(-)
+
+diff --git a/data/config/crossing_hall.json b/data/config/crossing_hall.json
+index cbc44f5d5067..43d99afda966 100644
+--- a/data/config/crossing_hall.json
++++ b/data/config/crossing_hall.json
+@@ -1,10 +1,244 @@
+ {
+   "hall_1": {
+-    "_why": "HALL-1 (F17#6 GPU swing, coordinator queue 31 Oct): one flag layers a candidate over the shipped Hall (crossing_hall.gd apply_hall_1). merge = nested overrides, append = extra list rows, remove = list rows dropped by name. OFF until a Medium/High GPU judgement against main; 7.5 on both closes F17#6.",
++    "_why": "HALL-1 (F17#6 GPU swing, coordinator queue 31 Oct): one flag layers a candidate over the shipped Hall (crossing_hall.gd apply_hall_1). merge = nested overrides, append = extra list rows, remove = list rows dropped by name (unnamed rows by model path). OFF until a Medium/High GPU judgement against main; 7.5 on both closes F17#6.",
+     "enabled": false,
+-    "merge": {},
+-    "append": {},
+-    "remove": {}
++    "merge": {
++      "hall_great_hall": {
++        "rugs": [
++          {
++            "at": [
++              12,
++              0.075,
++              -0.3
++            ],
++            "width_m": 3.6,
++            "length_m": 7.4,
++            "colour": "#2f4a66",
++            "border_colour": "#b08a52"
++          }
++        ]
++      }
++    },
++    "remove": {
++      "hall_timber_frame": {
++        "pieces": [
++          "NavePost_-6_-1",
++          "NavePost_-6_1",
++          "UpperBrace_-6_-1",
++          "UpperBrace_-6_1",
++          "NavePost_6_-1",
++          "NavePost_6_1",
++          "UpperBrace_6_-1",
++          "UpperBrace_6_1",
++          "NaveTie_-6",
++          "NaveTie_6"
++        ]
++      },
++      "hall_dressing": {
++        "pieces": [
++          "PostLanternW1",
++          "PostLanternE2",
++          "ShrineGlow"
++        ]
++      },
++      "hall_furnishing": {
++        "pieces": [
++          "WallBenchL3"
++        ]
++      },
++      "hall_great_hall": {
++        "pieces": [
++          "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb"
++        ]
++      }
++    },
++    "append": {
++      "hall_great_hall": {
++        "pieces": [
++          {
++            "model": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
++            "size_m": [
++              2.4,
++              1.4,
++              2.4
++            ],
++            "at": [
++              12,
++              0.37,
++              5.6
++            ],
++            "yaw_deg": 0,
++            "collider_radius_m": 1.3,
++            "collider_height_m": 1.2,
++            "halo": {
++              "at": [
++                0,
++                1.15,
++                0
++              ],
++              "radius_m": 0.7,
++              "colour": "#ffb45e",
++              "strength": 0.7,
++              "range_m": 6.5,
++              "energy": 1.5
++            }
++          },
++          {
++            "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
++            "height_m": 2.0,
++            "at": [
++              -6.45,
++              0.06,
++              6.0
++            ],
++            "yaw_deg": 90,
++            "collider_radius_m": 0.8,
++            "collider_height_m": 2.0,
++            "halo": {
++              "at": [
++                0,
++                0.5,
++                0.3
++              ],
++              "radius_m": 0.55,
++              "colour": "#ffa24a",
++              "strength": 0.6,
++              "range_m": 6.5,
++              "energy": 2.2
++            }
++          },
++          {
++            "model": "res://assets/props/generated_camp/camp_flame.glb",
++            "height_m": 0.42,
++            "at": [
++              -6.2,
++              0.16,
++              6.0
++            ],
++            "ignite_energy": 3.5
++          },
++          {
++            "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
++            "height_m": 2.0,
++            "at": [
++              12.0,
++              0.07,
++              -6.45
++            ],
++            "yaw_deg": 0,
++            "collider_radius_m": 0.8,
++            "collider_height_m": 2.0,
++            "halo": {
++              "at": [
++                0,
++                0.5,
++                0.3
++              ],
++              "radius_m": 0.55,
++              "colour": "#ffa24a",
++              "strength": 0.6,
++              "range_m": 6.5,
++              "energy": 2.2
++            }
++          },
++          {
++            "model": "res://assets/props/generated_camp/camp_flame.glb",
++            "height_m": 0.42,
++            "at": [
++              12.0,
++              0.17,
++              -6.2
++            ],
++            "ignite_energy": 3.5
++          }
++        ]
++      },
++      "hall_dressing": {
++        "pieces": [
++          {
++            "name": "ShrineGlow",
++            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
++            "at": [
++              15.6,
++              0.06,
++              -3.0
++            ],
++            "light": {
++              "colour": "#ffb45e",
++              "energy": 1.5,
++              "range": 6.0,
++              "height": 1.6
++            }
++          }
++        ]
++      },
++      "hall_furnishing": {
++        "pieces": [
++          {
++            "name": "AisleTableR",
++            "model": "res://assets/props/quaternius_fantasy/Table_Large.gltf",
++            "at": [
++              4.35,
++              0.06,
++              6.3
++            ],
++            "yaw_deg": 90
++          },
++          {
++            "name": "AisleTablePot",
++            "model": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
++            "at": [
++              4.35,
++              0.87,
++              5.7
++            ],
++            "yaw_deg": 0,
++            "collide": false
++          },
++          {
++            "name": "AisleTableBooks",
++            "model": "res://assets/props/quaternius_fantasy/BookGroup_Medium_1.gltf",
++            "at": [
++              4.3,
++              0.87,
++              6.6
++            ],
++            "yaw_deg": 70,
++            "collide": false
++          },
++          {
++            "name": "HearthStoolL1",
++            "model": "res://assets/props/quaternius_fantasy/Stool.gltf",
++            "at": [
++              -5.3,
++              0.06,
++              5.0
++            ],
++            "yaw_deg": 15
++          },
++          {
++            "name": "HearthStoolL2",
++            "model": "res://assets/props/quaternius_fantasy/Stool.gltf",
++            "at": [
++              -5.3,
++              0.06,
++              7.0
++            ],
++            "yaw_deg": -20
++          },
++          {
++            "name": "ShrineHearthLogs",
++            "model": "res://assets/props/quaternius_fantasy/Anvil_Log.gltf",
++            "at": [
++              13.4,
++              0.07,
++              -6.3
++            ],
++            "yaw_deg": 10
++          }
++        ]
++      }
++    }
+   },
+   "hall_hero_assets": {
+     "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
+diff --git a/scripts/world/crossing_hall.gd b/scripts/world/crossing_hall.gd
+index 9ce19ad07405..e07f5dc79171 100644
+--- a/scripts/world/crossing_hall.gd
++++ b/scripts/world/crossing_hall.gd
+@@ -114,9 +114,9 @@ func build(config: Dictionary) -> bool:
+ ## over the shipped Hall. `merge` deep-merges into existing sections (nested
+ ## dictionaries merge key by key, anything else replaces); `append` adds rows
+ ## to a section's list, e.g. {"hall_furnishing": {"pieces": [...]}}; `remove`
+-## drops a section's list rows by name, e.g. {"hall_timber_frame": {"pieces":
+-## ["NavePost_-12_-1"]}}. Applied before any node is built, so the builders
+-## see one ordinary config.
++## drops a section's list rows by name (or, for unnamed rows, by model path),
++## e.g. {"hall_timber_frame": {"pieces": ["NavePost_-12_-1"]}}. Applied before
++## any node is built, so the builders see one ordinary config.
+ static func apply_hall_1(config: Dictionary) -> void:
+ 	var hall_1: Dictionary = config.get("hall_1", {})
+ 	if not bool(hall_1.get("enabled", false)):
+@@ -128,7 +128,7 @@ static func apply_hall_1(config: Dictionary) -> void:
+ 		for key: String in remove[section]:
+ 			var names: Array = remove[section][key]
+ 			target[key] = (target.get(key, []) as Array).filter(func(row: Variant) -> bool:
+-				return not (row is Dictionary and str(row.get("name", "")) in names))
++				return not (row is Dictionary and str(row.get("name", row.get("model", ""))) in names))
+ 	var append: Dictionary = hall_1.get("append", {})
+ 	for section: String in append:
+ 		var target: Dictionary = config.get(section, {})
+diff --git a/scripts/world/crossing_hall_great_hall.gd b/scripts/world/crossing_hall_great_hall.gd
+index fe849c5a103e..ff0b643d9af9 100644
+--- a/scripts/world/crossing_hall_great_hall.gd
++++ b/scripts/world/crossing_hall_great_hall.gd
+@@ -13,6 +13,7 @@ extends RefCounted
+ const WOOD_TEXTURE := "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
+ const STONE_TEXTURE := "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
+ const GLOW := preload("res://scripts/world/crossing_hall_claude.gd")
++const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
+ 
+ 
+ static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary = {}) -> Dictionary:
+@@ -28,6 +29,10 @@ static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary = {}) -> Dic
+ 	hall.add_child(root)
+ 	if cfg.has("runner"):
+ 		_runner(root, cfg.runner)
++	# HALL-1: further woven rugs (same shader) on bare floors, e.g. the
++	# Shrine Room cobbles the GPU judges read as a courtyard.
++	for row: Dictionary in cfg.get("rugs", []):
++		_runner(root, row, "HallRug")
+ 	if cfg.has("hangings"):
+ 		_hangings(root, cfg.hangings)
+ 	if cfg.has("facade_hangings"):
+@@ -146,7 +151,7 @@ static func _quiet(mesh: MeshInstance3D) -> MeshInstance3D:
+ 
+ ## Woven runner: one plane whose shader draws the field, a cream border with
+ ## a thin inner stripe, a repeated diamond and a soft weave.
+-static func _runner(root: Node3D, cfg: Dictionary) -> void:
++static func _runner(root: Node3D, cfg: Dictionary, node_name: String = "NaveRunner") -> void:
+ 	var shader := Shader.new()
+ 	shader.code = """shader_type spatial;
+ render_mode cull_back;
+@@ -179,10 +184,11 @@ void fragment() {
+ 	var plane := PlaneMesh.new()
+ 	plane.size = size
+ 	var mesh := MeshInstance3D.new()
+-	mesh.name = "NaveRunner"
++	mesh.name = node_name
+ 	mesh.mesh = plane
+ 	mesh.material_override = material
+ 	mesh.position = _v(cfg.at)
++	mesh.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0)))
+ 	root.add_child(_quiet(mesh))
+ 
+ 
+@@ -666,6 +672,10 @@ static func _piece(root: Node3D, row: Dictionary) -> Node3D:
+ 	model.position = -Vector3(box.get_center().x * scale.x, box.position.y * scale.y, box.get_center().z * scale.z)
+ 	if row.has("clip_box"):
+ 		_clip(model, row.clip_box)
++	# HALL-1: a flame sculpt (e.g. the camp flame in a hearth's firebox)
++	# burns with the campfire glow instead of reading as a dull mesh.
++	if row.has("ignite_energy"):
++		CAMPFIRE_GLOW.ignite_mesh(model, float(row.ignite_energy), true)
+ 	if row.has("emission_mask"):
+ 		var mask := load(str(row.emission_mask)) as Texture2D
+ 		for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+diff --git a/tests/test_crossing_hall_hall_1.gd b/tests/test_crossing_hall_hall_1.gd
+index 0fb47510e078..f3afa4acb523 100644
+--- a/tests/test_crossing_hall_hall_1.gd
++++ b/tests/test_crossing_hall_hall_1.gd
+@@ -36,6 +36,13 @@ func test_on_merges_nested_sections_appends_rows_and_removes_by_name() -> void:
+ 	assert_eq((cfg.hall_timber_frame.pieces as Array).map(func(r: Dictionary) -> String: return r.name), ["NavePost_b"])
+ 
+ 
++func test_remove_matches_unnamed_rows_by_model() -> void:
++	var cfg := {"hall_great_hall": {"pieces": [{"model": "res://a.glb"}, {"model": "res://b.glb"}]},
++		"hall_1": {"enabled": true, "remove": {"hall_great_hall": {"pieces": ["res://a.glb"]}}}}
++	HALL.apply_hall_1(cfg)
++	assert_eq(cfg.hall_great_hall.pieces, [{"model": "res://b.glb"}])
++
++
+ func test_shipping_candidate_only_names_existing_sections_and_rows() -> void:
+ 	var cfg := _shipping()
+ 	var hall_1: Dictionary = cfg.get("hall_1", {})
+@@ -44,7 +51,7 @@ func test_shipping_candidate_only_names_existing_sections_and_rows() -> void:
+ 			assert_true(cfg.has(section), "%s targets existing section %s" % [key, section])
+ 	for section: String in hall_1.get("remove", {}):
+ 		for list_key: String in hall_1.remove[section]:
+-			var names: Array = (cfg[section].get(list_key, []) as Array).map(func(r: Variant) -> String: return str(r.get("name", "")) if r is Dictionary else "")
++			var names: Array = (cfg[section].get(list_key, []) as Array).map(func(r: Variant) -> String: return str(r.get("name", r.get("model", ""))) if r is Dictionary else "")
+ 			for name: String in hall_1.remove[section][list_key]:
+ 				assert_true(name in names, "remove names a real %s row: %s" % [section, name])
+ 	for section: String in hall_1.get("append", {}):
+-- 
+2.55.0.windows.5
+

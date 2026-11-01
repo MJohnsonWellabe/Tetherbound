@@ -1,0 +1,153 @@
+From 09ef781c33b5717cec042bc6c61c941fedb0f286 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 31 Oct 2026 22:10:17 -0500
+Subject: [PATCH 1/5] HALL-1: hall_1 flag (OFF) layers a candidate over the
+ shipped Crossing Hall config
+
+One flag-off section in crossing_hall.json; crossing_hall.gd apply_hall_1 deep-merges
+its overrides, appends list rows and removes rows by name before the Hall is built.
+OFF leaves every section as shipped (test_crossing_hall_hall_1).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ data/config/crossing_hall.json     |  7 ++++
+ scripts/world/crossing_hall.gd     | 38 +++++++++++++++++++++
+ tests/test_crossing_hall_hall_1.gd | 54 ++++++++++++++++++++++++++++++
+ 3 files changed, 99 insertions(+)
+ create mode 100644 tests/test_crossing_hall_hall_1.gd
+
+diff --git a/data/config/crossing_hall.json b/data/config/crossing_hall.json
+index f7e53ecbfb58..cbc44f5d5067 100644
+--- a/data/config/crossing_hall.json
++++ b/data/config/crossing_hall.json
+@@ -1,4 +1,11 @@
+ {
++  "hall_1": {
++    "_why": "HALL-1 (F17#6 GPU swing, coordinator queue 31 Oct): one flag layers a candidate over the shipped Hall (crossing_hall.gd apply_hall_1). merge = nested overrides, append = extra list rows, remove = list rows dropped by name. OFF until a Medium/High GPU judgement against main; 7.5 on both closes F17#6.",
++    "enabled": false,
++    "merge": {},
++    "append": {},
++    "remove": {}
++  },
+   "hall_hero_assets": {
+     "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
+     "enabled": true,
+diff --git a/scripts/world/crossing_hall.gd b/scripts/world/crossing_hall.gd
+index 6d77f7b33e03..9ce19ad07405 100644
+--- a/scripts/world/crossing_hall.gd
++++ b/scripts/world/crossing_hall.gd
+@@ -61,6 +61,7 @@ func build(config: Dictionary) -> bool:
+ 		_config["interior_ambient"] = ambient
+ 		if waymark.has("daylight_windows"):
+ 			_config["daylight_windows"] = waymark["daylight_windows"].duplicate(true)
++	apply_hall_1(_config)
+ 	add_to_group("crossing_halls")
+ 	for entry: Dictionary in _config.arches:
+ 		_build_arch(entry)
+@@ -109,6 +110,43 @@ func build(config: Dictionary) -> bool:
+ 	return true
+ 
+ 
++## HALL-1 (F17#6 GPU swing, OFF until judged): one flag layers a candidate
++## over the shipped Hall. `merge` deep-merges into existing sections (nested
++## dictionaries merge key by key, anything else replaces); `append` adds rows
++## to a section's list, e.g. {"hall_furnishing": {"pieces": [...]}}; `remove`
++## drops a section's list rows by name, e.g. {"hall_timber_frame": {"pieces":
++## ["NavePost_-12_-1"]}}. Applied before any node is built, so the builders
++## see one ordinary config.
++static func apply_hall_1(config: Dictionary) -> void:
++	var hall_1: Dictionary = config.get("hall_1", {})
++	if not bool(hall_1.get("enabled", false)):
++		return
++	_deep_merge(config, hall_1.get("merge", {}))
++	var remove: Dictionary = hall_1.get("remove", {})
++	for section: String in remove:
++		var target: Dictionary = config.get(section, {})
++		for key: String in remove[section]:
++			var names: Array = remove[section][key]
++			target[key] = (target.get(key, []) as Array).filter(func(row: Variant) -> bool:
++				return not (row is Dictionary and str(row.get("name", "")) in names))
++	var append: Dictionary = hall_1.get("append", {})
++	for section: String in append:
++		var target: Dictionary = config.get(section, {})
++		for key: String in append[section]:
++			var rows: Array = target.get(key, []).duplicate(true)
++			rows.append_array((append[section][key] as Array).duplicate(true))
++			target[key] = rows
++		config[section] = target
++
++
++static func _deep_merge(into: Dictionary, from: Dictionary) -> void:
++	for key: Variant in from:
++		if into.get(key) is Dictionary and from[key] is Dictionary:
++			_deep_merge(into[key], from[key])
++		else:
++			into[key] = from[key].duplicate(true) if from[key] is Dictionary or from[key] is Array else from[key]
++
++
+ static func validate_layout(config: Dictionary) -> bool:
+ 	var arches: Variant = config.get("arches")
+ 	var pedestals: Variant = config.get("pedestals")
+diff --git a/tests/test_crossing_hall_hall_1.gd b/tests/test_crossing_hall_hall_1.gd
+new file mode 100644
+index 000000000000..0fb47510e078
+--- /dev/null
++++ b/tests/test_crossing_hall_hall_1.gd
+@@ -0,0 +1,54 @@
++extends "res://tests/test_case.gd"
++
++## HALL-1 (F17#6 GPU swing): one `hall_1` flag layers a candidate over the
++## shipped Hall config before anything is built. OFF ships main unchanged.
++
++const HALL := preload("res://scripts/world/crossing_hall.gd")
++const CONFIG := "res://data/config/crossing_hall.json"
++
++
++func _shipping() -> Dictionary:
++	return JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) as Dictionary
++
++
++func test_shipping_config_keeps_hall_1_off_and_unchanged() -> void:
++	var cfg := _shipping()
++	assert_false(bool(cfg.get("hall_1", {}).get("enabled", true)), "HALL-1 ships OFF until judged")
++	var applied := cfg.duplicate(true)
++	HALL.apply_hall_1(applied)
++	assert_eq(JSON.stringify(applied), JSON.stringify(cfg), "OFF leaves every section as shipped")
++
++
++func test_on_merges_nested_sections_appends_rows_and_removes_by_name() -> void:
++	var cfg := {
++		"hall_great_hall": {"arch_trim": {"colour": "#2f86e8", "band_m": 0.13}, "rain_ambient": 0.35},
++		"hall_furnishing": {"pieces": [{"name": "FeastTable"}]},
++		"hall_timber_frame": {"pieces": [{"name": "NavePost_a"}, {"name": "NavePost_b"}]},
++		"hall_1": {"enabled": true,
++			"merge": {"hall_great_hall": {"arch_trim": {"colour": "#d9a55a"}}},
++			"append": {"hall_furnishing": {"pieces": [{"name": "Hearth"}]}},
++			"remove": {"hall_timber_frame": {"pieces": ["NavePost_a"]}}}}
++	HALL.apply_hall_1(cfg)
++	assert_eq(cfg.hall_great_hall.arch_trim.colour, "#d9a55a")
++	assert_eq(cfg.hall_great_hall.arch_trim.band_m, 0.13, "unmentioned nested keys stay")
++	assert_eq(cfg.hall_great_hall.rain_ambient, 0.35)
++	assert_eq((cfg.hall_furnishing.pieces as Array).map(func(r: Dictionary) -> String: return r.name), ["FeastTable", "Hearth"])
++	assert_eq((cfg.hall_timber_frame.pieces as Array).map(func(r: Dictionary) -> String: return r.name), ["NavePost_b"])
++
++
++func test_shipping_candidate_only_names_existing_sections_and_rows() -> void:
++	var cfg := _shipping()
++	var hall_1: Dictionary = cfg.get("hall_1", {})
++	for key: String in ["merge", "append", "remove"]:
++		for section: String in hall_1.get(key, {}):
++			assert_true(cfg.has(section), "%s targets existing section %s" % [key, section])
++	for section: String in hall_1.get("remove", {}):
++		for list_key: String in hall_1.remove[section]:
++			var names: Array = (cfg[section].get(list_key, []) as Array).map(func(r: Variant) -> String: return str(r.get("name", "")) if r is Dictionary else "")
++			for name: String in hall_1.remove[section][list_key]:
++				assert_true(name in names, "remove names a real %s row: %s" % [section, name])
++	for section: String in hall_1.get("append", {}):
++		for list_key: String in hall_1.append[section]:
++			for row: Dictionary in hall_1.append[section][list_key]:
++				if row.has("model"):
++					assert_true(ResourceLoader.exists(str(row.model)), "appended model is installed: " + str(row.model))
+-- 
+2.55.0.windows.5
+

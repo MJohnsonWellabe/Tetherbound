@@ -1,0 +1,21 @@
+From 0cc2514de5eae3a4b6a9d478802f4d620ca97cb7 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 31 Oct 2026 23:45:09 -0500
+Subject: [PATCH 3/5] HALL-1: test script uid
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ tests/test_crossing_hall_hall_1.gd.uid | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tests/test_crossing_hall_hall_1.gd.uid
+
+diff --git a/tests/test_crossing_hall_hall_1.gd.uid b/tests/test_crossing_hall_hall_1.gd.uid
+new file mode 100644
+index 000000000000..71a8eae149f8
+--- /dev/null
++++ b/tests/test_crossing_hall_hall_1.gd.uid
+@@ -0,0 +1 @@
++uid://bt1ojwkxhqyg
+-- 
+2.55.0.windows.5
+

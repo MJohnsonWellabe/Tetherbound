@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Dp": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grade is warm now, but a wide bare cobble floor with a few lecterns, night frames that barely differ from day, and a cool blue shrine glow read as an empty plaza rather than a lit, lived-in Valheim-style great hall; B's gold-trimmed runner and the hearth in the reverse view help but do not close the gap."
+  },
+  "Ar": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A's indigo-and-white wolf matches the owner's Tanglevolt bar for silhouette, face read and scale, with readable rear-up hit and grounded faint; B sinks on a hit react identical to standing and faint frames whose fur material collapses to flat white with black blotches."
+  },
+  "Rk": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing finally read as built, but the untextured flat tan infill and thin profile (plus the faceted grey placeholder boulder beside it in both sides) still look below Palworld base-building finish; A is a blank white card."
+  },
+  "Xp": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with clear eyes, white hair and beard, and a moss-green vest and scarf in the Meadows palette carries it at shipping finish, though the face is a touch rounder and more animated-film than the key art's trainer."
+  },
+  "Ig": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A sinks on a glossy plastic black-and-yellow skin, a hit react identical to standing, and faint frames where the snake floats well above its detached shadow and washes out to pale yellow; B's naturalistic mottled gold scales and fanged red mouth are close, but its low-contrast pattern loses the silhouette at small size."
+  },
+  "Sa": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm timber ceiling, chandeliers and the blue runner help, but huge dark stone pier masses (and in B extra tall timber posts) wall off both frame edges, the floor is mostly empty planks, and day and night differ only slightly."
+  },
+  "Rx": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The village approach with lit windows and a convincing blue night is close to the key art's settlement, but inside, near-field stone piers (and in B big wide-angle-skewed timber posts) crowd the nave, and the rain frame has no weather mood at all."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Crossing Hall: pull the cameras clear of (or thin) the near-field stone piers and timber posts, put a warm hearth or brazier glow at the shrine end on the runner's axis, dress the empty floor with long tables, benches, rugs, crates and hanging cloth, and give night a darker grade with warm pools of firelight instead of day-level fill.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature hurt/faint passes: fix the faint-frame material loss (Ar B fur turns flat white and black), ground the Ig A faint so the snake meets its shadow and keeps its skin colour, and author a hit react that differs visibly from standing (Ar B, Ig A and B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Homestead wall: give the panel real thickness and textured wattle-and-daub or plank infill matching the village timber-framing, and replace the faceted grey placeholder boulder beside it.",
+   "kind": "new_art"
+  }
+ ]
+}

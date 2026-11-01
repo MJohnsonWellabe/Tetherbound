@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Dp": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm amber grade helps, but flat even interior light with no window shafts or haze and a sparsely propped stone floor (bare cobbles on A, a single runner on B) read short of Palworld density and Valheim-class atmosphere."
+  },
+  "Ar": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's naturalistic storm-wolf with blue-violet fur, a clear head and a large silhouette over the trainer matches the owner's style bar, though side B's faint frames turn into a blown-out white-and-black blotched slab that would sink it."
+  },
+  "Rk": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, cap rail and stone footing finally read as built, but the flat untextured tan infill, thin depth and a lone wall on open grass still look like a placeholder next to Palworld's base pieces."
+  },
+  "Xp": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager with expressive eyes, soft white hair and a green-brown Meadows palette carries it, though the face leans more toward animated-film cartoon than the key art's stylised realism."
+  },
+  "Ig": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's bold yellow-black serpent reads at a glance, but its faint poses float well above the floor with detached shadows and wash out pale; B is grounded with a readable faint roll yet its mottled dark-gold surface is noisy and low in value separation."
+  },
+  "Sa": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm wood floor and chandeliers help, but giant cold blue-grey stone blocks (and on B extra timber posts) fill the frame edges, and flat interior light with few furnishings leaves the nave looking empty and staged."
+  },
+  "Rx": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The village approach with lit windows and a bannered hall tower is close to the key art, but inside the hall the views are thinly furnished and flat-lit, and on B big diagonal timber posts block the nave view."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Clear the fixed hall cameras' near field: move or slim the dark stone monolith blocks and the added timber posts and braces so the nave, arches and shrine end read without framing obstructions.",
+   "kind": "scene"
+  },
+  {
+   "change": "Furnish and light the Crossing Hall as a lived-in great hall: long tables and benches, hearth fire and braziers at the shrine end as a warm focal point, rugs, hangings and clutter, plus warm window light shafts and light haze instead of flat even fill.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the creature fail states: ground the Ig serpent's faint poses with floor contact and attached shadows, and fix the Ar faint-state material that blows out to white with black blotches (also give hit react a distinct pose).",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Oc": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The exterior approach (cottages, lit windows, grass, tower facade) is close to Palworld's village finish, but the nave frames are flat-lit wide floors of wood and blue runner with no light shafts, haze or hearth glow, and the rain frame inside looks the same as dry day."
+  },
+  "Dw": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows meadow, mountains and sky hold up, but the wall is a single free-standing panel next to a faceted low-poly grey boulder; B's timber frame, brace, plank cap and stone footing help, while its flat untextured tan infill still reads as a placeholder."
+  },
+  "Uk": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model (white fleece, dark curled horns, blue accent, clearly taller than the trainer) matches the owner style bar and Palworld creature finish; only the faint poses let it down, A's more so (body twists, legs splay upward and the horns tangle in faint mid and faint end) than B's (lies down grounded, though the horns flatten into stretched dark tubes in faint end)."
+  },
+  "Pj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grade in the shrine room is warm now, but the plaster walls blow out to near white, the cobbled floor is an empty plaza with a few evenly spaced pedestals and lecterns, the only focal point is a small cool-blue basin, and a dark beam cuts down the frame edge."
+  },
+  "Uq": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A has a strong graphic yellow-on-black band read but a plastic finish, a hit react identical to standing, and faint mid and faint end where the snake rises off the ground with a detached shadow; B stays grounded and coiled with a visible fanged mouth, but its blotchy gold-black mottling turns to mush at small size and the head lacks a clear eye read."
+  },
+  "Cw": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm wood, chandeliers and teal banners point the right way, but massive dark stone piers and timber posts fill both frame edges in every arches view, the floor is empty apart from the runner, and the night frames are just a dimmer version of day with no pools of firelight."
+  },
+  "Ei": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elder villager's clear face and eyes, white hair and beard, and moss-green vest, scarf and brown boots sit in the Meadows palette with no oxblood, at Palworld-class NPC finish; the soft cartoon face leans a little more cartoon than the stylised-realism target."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Furnish and light the Crossing Hall as a lived-in great hall: a hearth or brazier as a warm focal point at the shrine end (replacing or warming the cool-blue basin), long tables, benches, rugs, barrels and hanging cloth to break up the empty floors, warm window shafts and pools of firelight at night, and plaster exposure brought down so the walls do not blow out (Oc, Pj, Cw, both sides).",
+   "kind": "scene"
+  },
+  {
+   "change": "Clear the near field of the fixed Hall cameras by moving the cameras inside the posts or culling or thinning the dark posts and stone piers that frame every nave and arches view (Oc nave-forward, Cw arches, Pj shrine).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rework the creature hurt and faint animations so they stay grounded and keep the mesh intact (Uq A rises off the ground in faint mid and faint end, Uk A twists and tangles, Uk B's horns stretch) and give the Uq B serpent a cleaner pattern and a readable eye; fill Dw B's homestead wall frame with textured wattle or plank infill that has depth.",
+   "kind": "new_art"
+  }
+ ]
+}

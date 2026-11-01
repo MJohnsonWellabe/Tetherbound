@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Db": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with readable face, big expressive eyes, white hair/beard silhouette and a warm green/brown palette that sits in the key art's cozy village; sides are visually indistinguishable, and the finish leans slightly more animated-film than stylised realism."
+  },
+  "Ng": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame, stone footing and cap read as a built wall but it is still a thin lone panel with flat cream infill, and B's blown-out white card with no cap or footing looks like a placeholder; the flat painted-backdrop mountains and even grass carpet keep both below Palworld base-building finish."
+  },
+  "Sj": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The rock-plated boar has a strong grounded silhouette, real plate and fur detail and clearly out-scales the trainer, but A's faint-end frame crushes to near-solid black and B's orange-red magma glow between plates and reddened tusks drift the ground creature toward fire-type language and lose the white-tusk read."
+  },
+  "Uo": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The village approach by day and night is warm and readable with lit windows, but the nave interior is a warm-graded yet sparse box with a bare plank floor, no haze or light shafts and a cool arched doorway at the far end, and B's diagonal timber posts slash across the near field of every nave frame."
+  },
+  "Nl": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Standing Stormcapra matches the owner style bar (white fleece, dark legs, curled horns, blue accent, taller than the trainer), but A's faint frames twist into a hard-to-read upturned tangle and B's faint frames stretch the horns into long black tubes lying on the floor with the legs swallowed by the fleece."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's side alcoves gain benches, tables and glowing hearths that start to make the nave lived-in while A is a near-empty floor with a runner, but in both the dark stone pillar masses fill the frame edges, the far ends are purple doors rather than a warm focal point, and there is no atmospheric haze or shafting."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue runner leading to a warm glowing altar and a lit hearth in the reverse view gives the shrine end a real focal point, whereas A's cold blue-white fountain on an over-bright cobbled floor reads as a courtyard, but both have blown-out day walls and floors, evenly scattered pedestals and candle stands, and no Valheim-class haze or light shafts."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Furnish and light the Crossing Hall as a great hall: long tables, benches, hearth and hanging props filling the empty plank and cobble floor, a warm glowing shrine/altar at the end of the runner (as in Yi B), warm volumetric haze and window light shafts, and exposure pulled down so day walls and floors stop blowing out.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-place the fixed hall cameras (or remove or thin the near-field geometry) so stone pillar masses and diagonal timber posts no longer fill frame edges or cross the view, framing the trainer and the nave's depth instead.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature faint poses and materials: skin weights on Stormcapra horns and legs so faint frames do not stretch or swallow them, a grounded readable faint pose, and lift the crushed-black faint-end shading on the rock boar while keeping its white tusks and ground palette.",
+   "kind": "new_art"
+  }
+ ]
+}

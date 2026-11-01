@@ -1,0 +1,98 @@
+From 7f7c66e714e391476e334748d4ee82f1d633d558 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 31 Oct 2026 23:47:51 -0500
+Subject: [PATCH 4/5] HALL-1 r2 (OFF): clear the z=12 posts, warm the altar,
+ candle stands at the altar
+
+Round 1 (candidate 6.33 vs main 5.70 at High, every set > +0.5): judges still
+call the near-field posts PRESENT and the shrine views face a cool-blue altar
+with the hearth behind the camera. r2 removes the z=12 nave posts, braces, tie
+and their lantern; lights the altar's own emissive mask warm gold; adds two lit
+candle stands either side of it.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ data/config/crossing_hall.json | 47 +++++++++++++++++++++++++++++++---
+ 1 file changed, 44 insertions(+), 3 deletions(-)
+
+diff --git a/data/config/crossing_hall.json b/data/config/crossing_hall.json
+index 43d99afda966..2a379a21aa37 100644
+--- a/data/config/crossing_hall.json
++++ b/data/config/crossing_hall.json
+@@ -31,14 +31,20 @@
+           "UpperBrace_6_-1",
+           "UpperBrace_6_1",
+           "NaveTie_-6",
+-          "NaveTie_6"
++          "NaveTie_6",
++          "NavePost_12_-1",
++          "NavePost_12_1",
++          "UpperBrace_12_-1",
++          "UpperBrace_12_1",
++          "NaveTie_12"
+         ]
+       },
+       "hall_dressing": {
+         "pieces": [
+           "PostLanternW1",
+           "PostLanternE2",
+-          "ShrineGlow"
++          "ShrineGlow",
++          "PostLanternW3"
+         ]
+       },
+       "hall_furnishing": {
+@@ -81,7 +87,10 @@
+               "strength": 0.7,
+               "range_m": 6.5,
+               "energy": 1.5
+-            }
++            },
++            "emission_mask": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_emissive_mask.png",
++            "emission_colour": "#ffb45e",
++            "emission_energy": 1.6
+           },
+           {
+             "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
+@@ -235,6 +244,38 @@
+               -6.3
+             ],
+             "yaw_deg": 10
++          },
++          {
++            "name": "AltarCandleW",
++            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
++            "at": [
++              10.5,
++              0.07,
++              6.0
++            ],
++            "yaw_deg": 0,
++            "light": {
++              "height": 1.6,
++              "colour": "#ffb45e",
++              "energy": 1.8,
++              "range": 5.0
++            }
++          },
++          {
++            "name": "AltarCandleE",
++            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
++            "at": [
++              13.5,
++              0.07,
++              6.0
++            ],
++            "yaw_deg": 0,
++            "light": {
++              "height": 1.6,
++              "colour": "#ffb45e",
++              "energy": 1.8,
++              "range": 5.0
++            }
+           }
+         ]
+       }
+-- 
+2.55.0.windows.5
+
