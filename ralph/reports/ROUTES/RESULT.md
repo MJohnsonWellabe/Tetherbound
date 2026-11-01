@@ -1,4 +1,6 @@
-# Routes lane (tb/routes-f49): PAUSED by coordinator, 1 Nov 13:10Z, awaiting the owner's satchel-size decision
+READY Cloudreach (1 Nov 14:20Z, tb/routes-f49 bbcaf260): f49_tw_09 -> f49_cr_01 .. f49_cr_07 all seams MATCH (ralph/reports/ROUTES/f49-1031/seams/); f49_cr_07 re-earned on aca00f08 with the owner-approved surplus drop + Storage Chest deposit (disclosed), Stormwood entered with 12 free slots. Stormwood chain running from it.
+
+# Routes lane (tb/routes-f49): RESUMED 1 Nov 13:30Z (owner: keep 24 slots, drop surplus, deposit); earlier pause record below
 
 ## State at pause
 - Landed on main in #790: Tidewake 01→09 and Cloudreach 01→07 seams (saves `f49_tw_*`, `f49_cr_01..07`), the two boss hand-off game fixes (8ab84f7e, 7d485aa1) and the harness fixes.
