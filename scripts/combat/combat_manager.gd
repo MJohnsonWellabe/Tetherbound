@@ -32,6 +32,7 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+const CAMFX := preload("res://scripts/vfx/camfx.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 ## W09-VFX (CL-A2): the hit spark, body flash, KO puff, catch sparkle and
 ## level-up flourish. One door; see scripts/vfx/combat_vfx.gd.
@@ -6462,13 +6463,17 @@ func _catch_flash(key: String, at: Vector3) -> void:
 	if spec.is_empty():
 		return
 	var host: Node = _arena if _arena != null else _player.get_parent()
+	# camfx.json `catch_orb` (OFF = 1.0): smaller verdict flashes so the seal
+	# no longer veils the physical orb.
+	var orb_r2 := CAMFX.block("catch_orb")
+	var flash_scale := float(orb_r2.get("verdict_flash_scale", 1.0)) if not orb_r2.is_empty() else 1.0
 	FLASH.burst(
 		host,
 		at,
 		Color(str(spec.get("colour", "#ffd27a"))),
-		float(spec.get("radius", 1.2)),
+		float(spec.get("radius", 1.2)) * flash_scale,
 		float(spec.get("duration", 0.35)),
-		float(spec.get("strength", 1.0)),
+		float(spec.get("strength", 1.0)) * flash_scale,
 		# N14: opt-in, from the spec's own data. 0.0 (absent) is the flat spike
 		# every attack has always drawn -- see impact_flash.gd's `_spike_softness`.
 		float(spec.get("spike_softness", 0.0))

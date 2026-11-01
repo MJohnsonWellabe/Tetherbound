@@ -1,0 +1,114 @@
+extends "res://tests/test_case.gd"
+
+## Cameras-and-effects cause lane (owner 1 Nov): data/config/camfx.json. Every
+## block ships OFF and is inert; ON applies only its own keys. Presentation
+## only, so these pin the switch and the shape of what is built, not the look.
+
+const CAMFX := preload("res://scripts/vfx/camfx.gd")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
+const OCCLUSION := preload("res://scripts/player/camera_occlusion.gd")
+
+
+func _json(path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return parsed if parsed is Dictionary else {}
+
+
+func _with(block: String) -> Dictionary:
+	var cfg := _json(CAMFX.CONFIG_PATH).duplicate(true)
+	var on: Dictionary = (cfg[block] as Dictionary).duplicate(true)
+	on["enabled"] = true
+	cfg[block] = on
+	return cfg
+
+
+func after_each() -> void:
+	CAMFX.set_config_for_tests({})
+
+
+## A log pile with a cone named "Fire", like Bonfire_Fire.obj imports.
+func _bonfire() -> MeshInstance3D:
+	var mesh := ArrayMesh.new()
+	var logs := PackedVector3Array([Vector3(-1, 0, -1), Vector3(1, 0, -1), Vector3(0, 0.4, 1)])
+	var cone := PackedVector3Array([Vector3(-0.4, 0.3, -0.4), Vector3(0.4, 0.3, -0.4), Vector3(0.0, 1.9, 0.4)])
+	for verts: PackedVector3Array in [logs, cone]:
+		var arrays := []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = verts
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	mesh.surface_set_name(0, "Wood")
+	mesh.surface_set_name(1, "Fire")
+	var instance := MeshInstance3D.new()
+	instance.mesh = mesh
+	return instance
+
+
+func test_every_camfx_block_ships_off() -> void:
+	var cfg := _json(CAMFX.CONFIG_PATH)
+	for block: String in ["catch_orb", "flame", "fight_fade"]:
+		assert_true(cfg.has(block), "camfx.json must declare %s" % block)
+		assert_false(bool((cfg[block] as Dictionary).get("enabled", true)), "%s ships OFF" % block)
+		assert_eq((cfg[block] as Dictionary).get("scope"), "client_presentation", "%s declares its scope" % block)
+		assert_true(CAMFX.block(block).is_empty(), "OFF reads as empty: %s" % block)
+
+
+func test_flame_off_keeps_the_lit_cone() -> void:
+	var fire := _bonfire()
+	assert_eq(CAMPFIRE_GLOW.ignite(fire), 1, "OFF still lights the Fire surface")
+	var material := fire.get_surface_override_material(1) as StandardMaterial3D
+	assert_true(material != null and material.emission_enabled, "OFF keeps the emissive cone")
+	assert_true(fire.get_node_or_null(^"CamfxFlame") == null, "OFF adds no flame")
+	assert_false(CAMPFIRE_GLOW.camfx_flame_drops_halo(), "OFF keeps the halo card")
+	fire.free()
+
+
+func test_flame_on_replaces_the_cone_in_its_footprint() -> void:
+	CAMFX.set_config_for_tests(_with("flame"))
+	var fire := _bonfire()
+	var box := CAMPFIRE_GLOW.surface_aabb(fire.mesh, 1)
+	assert_true(box.size.y > 1.5, "the Fire surface's own bounds are read (got %s)" % str(box))
+	assert_eq(CAMPFIRE_GLOW.ignite(fire), 1, "ON still reports the fire as lit (no missing-surface warning)")
+	var hidden := fire.get_surface_override_material(1) as StandardMaterial3D
+	assert_true(hidden != null and is_zero_approx(hidden.albedo_color.a), "ON hides the flat cone")
+	var flame := fire.get_node_or_null(^"CamfxFlame") as Node3D
+	assert_true(flame != null, "ON stands a flame in the cone's place")
+	if flame != null:
+		assert_eq(flame.get_child_count(), 2, "two flame cards")
+		assert_true(absf(flame.position.y - box.position.y) < 0.001, "the flame stands on the cone's base")
+		var outer := (flame.get_child(0) as MeshInstance3D).mesh as QuadMesh
+		assert_true(absf(outer.size.y - box.size.y) < 0.001, "the outer card is as tall as the cone")
+		assert_true(((flame.get_child(0) as MeshInstance3D).material_override as ShaderMaterial).shader
+			== CAMFX.FLAME_SHADER, "the cards use the procedural flame shader")
+	assert_eq(fire.get_surface_override_material(0), null, "the logs are untouched")
+	assert_true(CAMPFIRE_GLOW.camfx_flame_drops_halo(), "a replaced cone drops the halo card")
+	fire.free()
+
+
+func test_catch_orb_block_names_an_installed_model_and_hides_the_rest_disc() -> void:
+	var orb: Dictionary = _json(CAMFX.CONFIG_PATH)["catch_orb"]
+	assert_true(ResourceLoader.exists(str(orb["model"])), "the authored capture orb is in the repo")
+	assert_false(bool(orb.get("rest_halo", true)), "no disc at rest")
+	assert_true(float(orb["flight_halo_scale"]) < 5.5, "a smaller flight glow than the shipped 5.5x")
+	assert_true(float(orb["verdict_flash_scale"]) < 1.0, "the verdict flashes shrink")
+	assert_true(CAMFX.block("catch_orb").is_empty(), "OFF reads as empty")
+	CAMFX.set_config_for_tests(_with("catch_orb"))
+	assert_false(CAMFX.block("catch_orb").is_empty(), "ON reads its keys")
+
+
+func test_orb_off_paths_are_the_shipped_ones() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/combat/orb.gd")
+	assert_true(source.contains("_r2 = CAMFX.block(\"catch_orb\")"), "the orb reads its own camfx block")
+	assert_true(source.contains("if _r2.is_empty() or _r2.get(\"shake_flash\", false) == true:"),
+		"OFF keeps the shake flash")
+	var manager := FileAccess.get_file_as_string("res://scripts/combat/combat_manager.gd")
+	assert_true(manager.contains("else 1.0"), "OFF keeps the verdict flash at full size")
+
+
+func test_fight_fade_off_is_inert_and_options_keep_the_base_filters() -> void:
+	assert_true(CAMFX.block("fight_fade").is_empty(), "OFF reads as empty")
+	assert_true(OCCLUSION.occluders(null, Vector3.ZERO, Vector3.ONE * 3.0, [],
+		{"include_shadowless": true}).is_empty(), "no world, no occluders, with or without options")
+	CAMFX.set_config_for_tests(_with("fight_fade"))
+	var on := CAMFX.block("fight_fade")
+	assert_true(bool(on["include_shadowless"]), "ON fades shadowless canopy cards")
+	assert_true(float(on["shadowless_min_height_m"]) >= 2.0, "grass and effect cards stay under the shadowless floor")

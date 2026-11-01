@@ -78,32 +78,40 @@ static func first_hit(world: World3D, from: Vector3, to: Vector3, ignore: Array)
 ## Every rendered occluder on the segment: {"node": GeometryInstance3D,
 ## "index": -1 for a mesh or the MultiMesh instance index}. Same filters as
 ## `first_hit`.
-static func occluders(world: World3D, from: Vector3, to: Vector3, ignore: Array) -> Array:
+## `options` (camfx.json `fight_fade`): `include_shadowless` also takes
+## geometry that casts no shadow (canopy leaf cards) when it is at least
+## `shadowless_min_height_m` tall, so grass and effect cards still stay.
+static func occluders(world: World3D, from: Vector3, to: Vector3, ignore: Array, options: Dictionary = {}) -> Array:
 	var out: Array = []
 	if world == null or from.distance_to(to) < 0.05:
 		return out
 	var min_height := float(config().get("min_height_m", 1.2))
+	var shadowless: bool = options.get("include_shadowless", false) == true
+	var shadowless_min := float(options.get("shadowless_min_height_m", 2.5))
 	for id: int in RenderingServer.instances_cull_ray(from, to, world.scenario):
 		var node := instance_from_id(id)
 		if node == null or not (node is GeometryInstance3D):
 			continue
 		var geometry := node as GeometryInstance3D
 		if not geometry.is_visible_in_tree() \
-				or geometry.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF \
 				or geometry.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY:
 			continue
+		var no_shadow := geometry.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if no_shadow and not shadowless:
+			continue
+		var needed := maxf(min_height, shadowless_min) if no_shadow else min_height
 		if _ignored(geometry, ignore):
 			continue
 		if geometry is MeshInstance3D:
 			var mesh_node := geometry as MeshInstance3D
 			if mesh_node.mesh == null or not mesh_node.skeleton.is_empty():
 				continue
-			if mesh_node.mesh.get_aabb().size.y * absf(mesh_node.global_basis.get_scale().y) < min_height:
+			if mesh_node.mesh.get_aabb().size.y * absf(mesh_node.global_basis.get_scale().y) < needed:
 				continue
 			if _mesh_hit(mesh_node.mesh, mesh_node.global_transform, from, to) < INF:
 				out.append({"node": mesh_node, "index": -1})
 		elif geometry is MultiMeshInstance3D:
-			for index: int in _multimesh_hits(geometry as MultiMeshInstance3D, from, to, min_height):
+			for index: int in _multimesh_hits(geometry as MultiMeshInstance3D, from, to, needed):
 				out.append({"node": geometry, "index": index})
 	return out
 

@@ -839,12 +839,19 @@ func _follow(delta: float) -> void:
 ## way goes `fade_transparency` see-through, a scatter instance (a tree) is
 ## hidden, until it no longer blocks. Re-measured `rate_hz` times a second.
 const OCCLUSION := preload("res://scripts/player/camera_occlusion.gd")
+const CAMFX := preload("res://scripts/vfx/camfx.gd")
 var _occlusion_wait := 0.0
 var _faded: Dictionary = {}
 
 
 func _fade_occluders(delta: float, ignore: Array) -> void:
-	if not OCCLUSION.enabled() or not is_inside_tree():
+	if not is_inside_tree():
+		return
+	# camfx.json `fight_fade` (OFF = empty): the same fade for fight and
+	# conversation cameras, along the opponent's or speaker's line as well.
+	var second := _fight_fade_subject()
+	var fight_fade: Dictionary = CAMFX.block("fight_fade") if second != null else {}
+	if not OCCLUSION.enabled() and fight_fade.is_empty():
 		return
 	_occlusion_wait -= delta
 	if _occlusion_wait > 0.0:
@@ -856,8 +863,20 @@ func _fade_occluders(delta: float, ignore: Array) -> void:
 	var from := global_position
 	if _target != null and is_instance_valid(_target) and _target is Node3D:
 		from = (_target as Node3D).global_position + Vector3.UP * float(cfg.get("subject_height_m", 1.3))
+	var hits: Array = []
+	var options := {}
+	if not fight_fade.is_empty():
+		options = {"include_shadowless": fight_fade.get("include_shadowless", false) == true,
+			"shadowless_min_height_m": float(fight_fade.get("shadowless_min_height_m", 2.5))}
+		var also := ignore.duplicate()
+		also.append(second)
+		hits.append_array(OCCLUSION.occluders(get_world_3d(), from, lens, also, options))
+		var chest := second.global_position + Vector3.UP * float(fight_fade.get("subject_height_m", 1.2))
+		hits.append_array(OCCLUSION.occluders(get_world_3d(), chest, lens, also, options))
+	else:
+		hits = OCCLUSION.occluders(get_world_3d(), from, lens, ignore)
 	var now := {}
-	for hit: Dictionary in OCCLUSION.occluders(get_world_3d(), from, lens, ignore):
+	for hit: Dictionary in hits:
 		var node: GeometryInstance3D = hit["node"]
 		var key := "%d:%d" % [node.get_instance_id(), int(hit["index"])]
 		now[key] = hit
@@ -880,6 +899,16 @@ func _fade_occluders(delta: float, ignore: Array) -> void:
 			else:
 				OCCLUSION.show_instance(node as MultiMeshInstance3D, int(entry["index"]))
 		_faded.erase(key)
+
+
+## The opponent a fight camera tracks, or the person a conversation is with;
+## null on the exploration orbit (camfx.json `fight_fade` applies to neither).
+func _fight_fade_subject() -> Node3D:
+	if _talk_active and _talk_speaker != null and is_instance_valid(_talk_speaker):
+		return _talk_speaker
+	if _tracking_target != null and is_instance_valid(_tracking_target) and _tracking_target.is_inside_tree():
+		return _tracking_target
+	return null
 
 
 ## F10#2 C3: cap the arm short of a body's render mesh (INF clears it).
