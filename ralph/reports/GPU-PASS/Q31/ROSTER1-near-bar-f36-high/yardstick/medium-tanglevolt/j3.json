@@ -1,0 +1,92 @@
+{
+ "sets": {
+  "Ro": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large, wrapped recipe text and white Craft/Leave labels read at a glance, but neither side has Palworld's clear button-glyph hierarchy or teal interaction accents, and B's tiny truncated rows and grey 'Craft: A / Enter' footer text sink it."
+  },
+  "Px": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's bristly naturalistic boar fur is close to the owner's style bar while A's smooth terracotta clay with moss decals reads as a toy, but on both sides the boar is only about trainer height (not taller) and B's faint mid hovers over its shadow."
+  },
+  "So": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's wolf matches the Tanglevolt bar with clear standing, flinch and knocked-out poses, but B's faint mid and faint end switch to a broken white body with black blobs, and its hit react is almost the same as standing."
+  },
+  "Ho": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white-haired villager has a clear face, warm eyes and a palette that fits the key art (green vest, sage scarf, brown boots), but his soft cartoon look is a step away from the naturalistic creature bar and the flat dark stage gives no world finish."
+  },
+  "Ar": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The poses read and stay grounded, but the near-black purple wolf has almost no value separation or rim light against the dark stage, and no travel-role frame is shown."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ship side A's craft panel layout (large wrapped recipe text, no truncation) with controller-first button glyphs in teal for Craft/Leave and a visible scroll cue for the recipe list; drop side B's tiny footer hint text",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the boar (Px) to the owner's naturalistic style bar: real bristle fur and tusks instead of smooth clay, scaled taller than the 1.80 m trainer, with a grounded faint",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the faint-state material swap on the So wolf (side B) and give the dark Ar wolf a stronger rim light and a lighter belly/face value so it separates from the ground; add its travel-role frame",
+   "kind": "scene"
+  }
+ ]
+}

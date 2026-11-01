@@ -1,12 +1,17 @@
 # ROSTER-1: near-bar F36 roster re-judged on main d4d5b262f at High (31 Oct 2026)
 
+> **Update (31 Oct, Medium follow-up): Tanglevolt is MET.** Medium maps to **7.57** (judges 7.71 / 7.80 / 7.21; fit r 0.89, RMSE 0.49), and High was 7.70. Pose calls at Medium: floating faint FIXED 3/3, hit react FIXED 3/3, faint end FIXED 2 / PARTIAL 1. There is no pose PRESENT at either preset.
+> - This closes Tanglevolt's F36 (1) pose row and its model row.
+> - Capture: `capture_f36_poses.gd --candidate --whole-body --context --species=tanglevolt` on main d4d5b262f at Medium, one-sided, three code-blind judges, high anchors.
+> - Files: `yardstick/medium-tanglevolt/`.
+
 **Verdict: only Tanglevolt reaches 7.5 at High (7.70, no pose PRESENT), so it gets a Medium run next (queued) for its MET line. The other 19 species, plus Thundertunnel from CO12, sit at 6.50–7.43 at High and do not close.**
 
 High only (owner, 31 Oct: judge High first and add Medium only where High ≥ 7.5). Medium is therefore "not run" for every species except Tanglevolt, whose Medium run is queued.
 
 | Species | High (judges) | 24 Oct baseline, High | Pose calls: float / hit / upright (P = PARTIAL, F = FIXED) | Status |
 |---|---|---|---|---|
-| **tanglevolt** | **7.70** (7.61 / 7.80 / 7.67) | — (not in baseline) | FFF / FFP / FFF | **High met; Medium queued** |
+| **tanglevolt** | **7.70** (7.61 / 7.80 / 7.67); Medium **7.57** | — (not in baseline) | FFF / FFP / FFF (Medium FFF / FFF / FFP) | **MET (7.70 / 7.57)** |
 | water_tidecoil | 7.43 (7.51 / 7.27 / 7.51) | 7.88 | FFF / FFF / FFF | not met |
 | terrapup (dog) | 7.35 (7.51 / 7.39 / 7.15) | 7.61 (badger) | FFF / FFF / FFF | not met |
 | aquaryn | 7.34 (7.04 / 7.49 / 7.49) | — | FFF / FFF / FFP | not met |
