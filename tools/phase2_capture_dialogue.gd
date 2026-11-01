@@ -181,7 +181,8 @@ func _settle_dialogue_capture() -> bool:
 ## match wins. Null when this state has not placed them.
 func _speaker_body(row: Dictionary) -> Node3D:
 	var keys: Dictionary = {}
-	for value: Variant in [row.get("authored_id", ""), row.get("subject", ""), row.get("slug", "")]:
+	for value: Variant in [row.get("authored_id", ""), row.get("destination_display_name", ""),
+			row.get("subject", ""), row.get("slug", "")]:
 		var key := str(value).to_lower().strip_edges()
 		if not key.is_empty():
 			keys[key] = true
