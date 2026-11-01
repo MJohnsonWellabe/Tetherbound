@@ -196,5 +196,15 @@
       "water__inventory__character__water_nalia__dialogue"
     ],
     "group": 3
+  },
+  {
+    "item": "P2-073 (dialogue framing: trainer Rune)",
+    "flag": "data/config/water_npc_posts_candidate.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=water --seed=2042 --subset=water__inventory__trainer__water_trainer_rune",
+    "stands": [
+      "water__inventory__trainer__water_trainer_rune",
+      "water__inventory__trainer__water_trainer_rune__dialogue"
+    ],
+    "group": 3
   }
 ]

@@ -4,7 +4,8 @@
 
 A sweep of all 39 Tidewake dialogue posts on CPU (with the posts candidate) shows two-shot push-ins at almost every post. The two failures were NPCs standing on terrain slopes, out of reach of the stand-beside logic:
 - **Resident Nalia (P2-074, GPU 3.54):** her authored post sits about 13 m up Shellwatch's dune-passage wall. Reposted onto the measured passage floor (16.5 m, flat). Now she is in the post view and gets a full push-in in dialogue (CPU before/after checked).
-- **Trainer Rune:** stood about 5 m down the Gull Rest plateau edge. Reposted onto the flat plateau (29.1–29.4 m); CPU check pending.
+- **Trainer Rune:** stood about 5 m down the Gull Rest plateau edge. Reposted onto the flat plateau (29.1–29.4 m). Dialogue now gets a full push-in two-shot (CPU before/after checked).
+- Cloudreach dialogue sweep: every speaker already gets a push-in on main (P2-076's Kelm and Veyra frames show the speaker); no change needed. Three posts (healer_iven, bridgekeeper_orrin, courier_neri) find no capture stand; they are not in the judged set.
 - Not fixed: Evi, Morra and Fennel read, but against dark Veilfall rock. Nerissa's post frame (the catalogue plan stands outside her interior) is a capture-plan issue, not a game one.
 
 ## Group 2 (1 Nov, rolling batches; coordinator: shared fixes first). All flags OFF; entries in MANIFEST.json with "group": 2
