@@ -1,4 +1,16 @@
-# Routes lane (tb/routes-f49): Cloudreach result 1 Nov 2026, STOPPED at Cloudreach 06 -> 07 (fourth attempt, game ordering fix, also failed)
+# Routes lane (tb/routes-f49): result 1 Nov 2026, Cloudreach complete; STOPPED on two failures at Cloudreach 07 -> Stormwood arrival_prefix
+
+## Cloudreach 06 -> 07 MATCH (34e55df3) with two game fixes (coordinator-approved, for full-ci landing)
+- 8ab84f7e `foundation_retry_order.gd`: master_win/boss_relic schedule ahead of round rewards/wild shares (test_combat_round_reward::test_boss_hand_off_schedules_ahead_of_held_round_reward; 34 tests 0 failed).
+- 7d485aa1 `ledger_rpc._process_reward_delivery` + `reward_delivery.yields_to_hand_off`: a held item grant that would take the slot a held boss hand-off needs stays held and retries (test_reward_delivery_rpc::test_held_boss_hand_off_keeps_its_satchel_slot_from_item_grants fails before/passes after; 12 net/ledger suites, 119 tests, 0 failed).
+- `07_stormward_handoff` from `f49_cr_06` then PASS 489 s: relic hung, Stormwood arch entered (`f49_cr_07`).
+
+## Blocker: Cloudreach 07 -> Stormwood arrival_prefix (failed twice; stopped)
+- Attempt 1 (34e55df3): "ordinary charged-node interaction did not set first_stormglass_gathered". `f49_cr_07` Satchel is 24/24 (the earned chain carries Meadows/Tidewake kit, consumables, 3 orb stacks, 2 coin/revive/potion stacks, plus Veyra's rare_candy and skyplume), so the Stormglass node could not pay.
+- Attempt 2 (ab783a6b, runner drops leftover gathered materials before the piece; here skyplume x18): Stormglass gather now passes, then "stormwood_harvest_glowmoss_hollows_036 did not settle its exact receipt/yield/wear (gained=0)": the arrival route gathers several new Stormwood stacks and only one slot could be freed from leftover materials.
+- Root cause for the whole earned chain: a full-route Satchel arrives at Stormwood with ~24 stacks of kit/consumables and no leftover materials to drop. Decision needed: (a) approve a homestead Storage Chest deposit on the Cloudreach→Stormwood Home Key trip (the 07 piece already passes through home) for consumables/extra orb/potion/revive stacks; or (b) approve dropping named surplus consumables; or (c) review satchel size vs. a four-chapter route (game design). With (a) or (b) the arrival piece reruns from the committed `f49_cr_07`; nothing earlier needs rerunning.
+
+## Earlier Cloudreach record (06 -> 07 attempts 1-4, resolved above)
 
 ## Cloudreach seams matched and pushed (saves `f49_cr_01..06`, seams `ralph/reports/ROUTES/f49-1031/seams/`)
 - **C1** Tidewake 09 → Cloudreach 01 (replaces `cloudreach_arrival_generated`), then 01 → 02 → 03 → 04.
