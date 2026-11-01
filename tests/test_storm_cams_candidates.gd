@@ -117,3 +117,10 @@ func test_stormwood_character_rim_ships_off_and_dresses_only_shadowed_meshes() -
 	assert_eq(card.material_overlay, null, "effect cards are left alone")
 	assert_eq(rim.dress(body, material), 0, "dressing twice changes nothing")
 	body.free()
+
+
+func test_road_puddles_ship_off() -> void:
+	var cfg := _json("res://data/config/stormwood_road_current.json")
+	var puddles: Dictionary = cfg.get("puddle_candidate", {})
+	assert_true(puddles.has("spacing_m"), "the P2-040 candidate must be declared")
+	assert_false(bool(puddles.get("enabled", true)), "the candidate ships OFF")
