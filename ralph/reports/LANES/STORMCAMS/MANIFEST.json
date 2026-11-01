@@ -228,6 +228,16 @@
   ]
  },
  {
+  "item": "P2-074",
+  "flag": "data/config/water_npc_placement_candidate.json:enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+  "stands": [
+   "tidewake__inventory__character__water_nalia__dialogue",
+   "tidewake__inventory__character__water_nerissa__dialogue",
+   "tidewake__inventory__trainer__water_trainer_nerissa__dialogue"
+  ]
+ },
+ {
   "item": "P2-070",
   "flag": "data/config/stormwood_glass_sink.json:dark_pool_candidate.enabled",
   "camera_set": "tools/phase2_capture_stormwood_glass_sink.gd (job.json repro per stand)",
