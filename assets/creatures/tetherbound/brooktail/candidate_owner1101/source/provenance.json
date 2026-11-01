@@ -1,0 +1,17 @@
+{
+ "species": "brooktail",
+ "owner_direction": "1 Nov 2026 creature brainstorm pick (rule: believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Pick C: lean four-legged deep-river otter, black fur, glowing aqua bioluminescent spots, small cheek fins, aqua eyes",
+ "reference": "ref_c.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected by the coordinator and picked by the owner",
+ "meshy_image_to_3d_task": "01a197bc-fe55-76c2-8485-fd85b35bd180",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+}

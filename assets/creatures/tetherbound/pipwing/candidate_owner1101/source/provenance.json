@@ -1,0 +1,17 @@
+{
+ "species": "pipwing",
+ "owner_direction": "1 Nov 2026 creature brainstorm pick (rule: believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Pick A: lean adult owl-like bird, white and pale-blue feathers, ear tufts, glowing ice-blue eyes and wing-feather edge lines",
+ "reference": "ref_a.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected by the coordinator and picked by the owner",
+ "meshy_image_to_3d_task": "01a197bf-d61a-702c-b8a8-f82dfb3f9d58",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+}
