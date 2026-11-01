@@ -4,7 +4,7 @@
 	"payload": {
 		"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 		"chosen_character": "trainer",
-		"created_at": "2026-11-01T08:15:11",
+		"created_at": "2026-11-01T13:55:28",
 		"display_name": "",
 		"equipment": {
 			"backpack": "",
@@ -57,7 +57,10 @@
 				"water_swim_stone_earned",
 				"water_swim_saddle_recipe_learned",
 				"water_capture_receipt:38202cdc8946278093e086cf7a913795a013d67ea16083e62d5b2de801f6a869",
-				"water:legendary_refused"
+				"water:legendary_refused",
+				"opening:lesson:masters",
+				"opening:lesson:portals",
+				"opening:lesson:shrines"
 			]
 		},
 		"hotbar": [
@@ -72,10 +75,7 @@
 				"id": "home_key",
 				"n": 1
 			},
-			{
-				"id": "orb_basic",
-				"n": 20
-			},
+			null,
 			{
 				"id": "orb_basic",
 				"n": 20
@@ -84,20 +84,14 @@
 				"id": "coin",
 				"n": 999
 			},
+			null,
+			null,
 			{
 				"id": "revive",
 				"n": 10
 			},
 			{
-				"id": "potion_small",
-				"n": 2
-			},
-			{
-				"id": "revive",
-				"n": 10
-			},
-			{
-				"durability": 30,
+				"durability": 28,
 				"id": "axe",
 				"n": 1
 			},
@@ -107,7 +101,7 @@
 				"n": 1
 			},
 			{
-				"durability": 33,
+				"durability": 32,
 				"id": "knife",
 				"n": 1
 			},
@@ -127,48 +121,21 @@
 				"id": "potion_large",
 				"n": 9
 			},
-			{
-				"id": "orb_basic",
-				"n": 4
-			},
-			{
-				"id": "rare_candy",
-				"n": 1
-			},
-			{
-				"id": "orb_greater",
-				"n": 7
-			},
+			null,
+			null,
+			null,
 			{
 				"id": "hide_vest",
 				"n": 1
 			},
-			{
-				"id": "essence_air",
-				"n": 52
-			},
-			{
-				"id": "elixir_vigour",
-				"n": 1
-			},
-			{
-				"id": "skyplume",
-				"n": 18
-			},
-			{
-				"id": "potion_small",
-				"n": 10
-			},
-			{
-				"id": "tm_earth_fist",
-				"n": 1
-			},
-			{
-				"id": "elixir_guard",
-				"n": 1
-			}
+			null,
+			null,
+			null,
+			null,
+			null,
+			null
 		],
-		"last_played": "2026-11-01T08:15:11",
+		"last_played": "2026-11-01T13:55:28",
 		"last_world_id": "slot-0",
 		"last_world_instance_id": "d3374d50ed084f0da03f42a78232f36b",
 		"migrated_from": "",
@@ -198,7 +165,7 @@
 				},
 				"display_name": "Terrapup",
 				"distance_m_together": {
-					"$tb_float64": "d5839558a215e340"
+					"$tb_float64": "d577d776a740e340"
 				},
 				"energy": {
 					"$tb_float64": "0000000000000000"
@@ -206,7 +173,7 @@
 				"fainted": true,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "98049d36d0d15440"
+					"$tb_float64": "2b5af28b25945440"
 				},
 				"hp": {
 					"$tb_float64": "0000000000000000"
@@ -700,7 +667,7 @@
 				},
 				"display_name": "Bramblebun",
 				"distance_m_together": {
-					"$tb_float64": "d55f9f923c0ce340"
+					"$tb_float64": "d553e1b04137e340"
 				},
 				"energy": {
 					"$tb_float64": "0000000000005940"
@@ -708,7 +675,7 @@
 				"fainted": true,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "ac98eb51b8f24f40"
+					"$tb_float64": "d24396fc62774f40"
 				},
 				"hp": {
 					"$tb_float64": "0000000000000000"
@@ -1162,7 +1129,7 @@
 				},
 				"display_name": "Bramblebun",
 				"distance_m_together": {
-					"$tb_float64": "454c449550d1e240"
+					"$tb_float64": "454086b355fce240"
 				},
 				"energy": {
 					"$tb_float64": "0000000000805340"
@@ -1170,7 +1137,7 @@
 				"fainted": true,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "f441a70d74e65440"
+					"$tb_float64": "8797fc62c9a85440"
 				},
 				"hp": {
 					"$tb_float64": "0000000000000000"
@@ -1393,7 +1360,7 @@
 				},
 				"display_name": "Mudsnout",
 				"distance_m_together": {
-					"$tb_float64": "454c3118bdd0e240"
+					"$tb_float64": "45407336c2fbe240"
 				},
 				"energy": {
 					"$tb_float64": "0000000000004a40"
@@ -1401,7 +1368,7 @@
 				"fainted": true,
 				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "ce9125bf58e45340"
+					"$tb_float64": "61e77a14aea65340"
 				},
 				"hp": {
 					"$tb_float64": "0000000000000000"
@@ -1627,15 +1594,15 @@
 				},
 				"display_name": "Bramblebun",
 				"distance_m_together": {
-					"$tb_float64": "454c03b9b0cde240"
+					"$tb_float64": "454045d7b5f8e240"
 				},
 				"energy": {
 					"$tb_float64": "0000000000004a40"
 				},
 				"fainted": false,
-				"feeds_together": 4,
+				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "ef67666666fd5840"
+					"$tb_float64": "6a0bd7a370d35740"
 				},
 				"hp": {
 					"$tb_float64": "aa77183831276240"
@@ -2026,7 +1993,7 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "c1eeeeeeeeec5840"
+					"$tb_float64": "0000000000000000"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 0,
@@ -5627,11 +5594,16 @@
 				"craft:combat_mastery_4ad613c982f1f41cf8ab51a63042cac56f177db7732f9637d93d9e2512f6df19:character-cb1b88c682cd3219e5c3d8d63558473d",
 				"craft:combat_mastery_6c0b439127b3dc7f35317a0b1c8608ea5586b43ad65c4f13ed2a94e94924e197:character-cb1b88c682cd3219e5c3d8d63558473d",
 				"craft:combat_mastery_921fa0d7dc91a88f1f28c2a01ce71f0d3a09e5bf454b0235f2463b16a3caa274:character-cb1b88c682cd3219e5c3d8d63558473d",
-				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-1:character-cb1b88c682cd3219e5c3d8d63558473d",
-				"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-1:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-1:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-1:character-cb1b88c682cd3219e5c3d8d63558473d",
 				"relic_hang:cloudreach:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-2:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-2:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:6040fa6562549b2cb7d34066088d18ffed1ee27c9bf97cda89756a58e2d0450f",
+				"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:cc310e803de926c8d02ac715afb8f9ad84073cc73780beec93e834e108b5034d",
+				"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:c770a886eb9ce90a21bcae3797b91edc8a9c138ac55dda200a97cf28c375e336",
 				"portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485",
-				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-3:character-cb1b88c682cd3219e5c3d8d63558473d"
+				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-4:character-cb1b88c682cd3219e5c3d8d63558473d"
 			],
 			"waystones_activated": {
 				"cloudreach": [
@@ -5895,7 +5867,7 @@
 				"biome": "stormwood",
 				"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 				"item": "stormwood_portal_key",
-				"key_slot": 15,
+				"key_slot": 20,
 				"kind": "portal_unlock",
 				"receipt": "portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485",
 				"status": "settled",

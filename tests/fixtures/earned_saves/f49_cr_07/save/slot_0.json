@@ -5,7 +5,7 @@
 		"alpha_pins": [],
 		"chosen_character": "trainer",
 		"clock_elapsed_seconds": {
-			"$tb_float64": "7039dddddd5d4e40"
+			"$tb_float64": "3dc7eeeeee366240"
 		},
 		"current_realm": "stormwood",
 		"day": 30,
@@ -37,10 +37,7 @@
 				"id": "home_key",
 				"n": 1
 			},
-			{
-				"id": "orb_basic",
-				"n": 20
-			},
+			null,
 			{
 				"id": "orb_basic",
 				"n": 20
@@ -49,20 +46,14 @@
 				"id": "coin",
 				"n": 999
 			},
+			null,
+			null,
 			{
 				"id": "revive",
 				"n": 10
 			},
 			{
-				"id": "potion_small",
-				"n": 2
-			},
-			{
-				"id": "revive",
-				"n": 10
-			},
-			{
-				"durability": 30,
+				"durability": 28,
 				"id": "axe",
 				"n": 1
 			},
@@ -72,7 +63,7 @@
 				"n": 1
 			},
 			{
-				"durability": 33,
+				"durability": 32,
 				"id": "knife",
 				"n": 1
 			},
@@ -92,46 +83,19 @@
 				"id": "potion_large",
 				"n": 9
 			},
-			{
-				"id": "orb_basic",
-				"n": 4
-			},
-			{
-				"id": "rare_candy",
-				"n": 1
-			},
-			{
-				"id": "orb_greater",
-				"n": 7
-			},
+			null,
+			null,
+			null,
 			{
 				"id": "hide_vest",
 				"n": 1
 			},
-			{
-				"id": "essence_air",
-				"n": 52
-			},
-			{
-				"id": "elixir_vigour",
-				"n": 1
-			},
-			{
-				"id": "skyplume",
-				"n": 18
-			},
-			{
-				"id": "potion_small",
-				"n": 10
-			},
-			{
-				"id": "tm_earth_fist",
-				"n": 1
-			},
-			{
-				"id": "elixir_guard",
-				"n": 1
-			}
+			null,
+			null,
+			null,
+			null,
+			null,
+			null
 		],
 		"map": {
 			"alpha_pins": [],
@@ -180,7 +144,7 @@
 				},
 				"display_name": "Terrapup",
 				"distance_m_together": {
-					"$tb_float64": "d5839558a215e340"
+					"$tb_float64": "d577d776a740e340"
 				},
 				"energy": {
 					"$tb_float64": "0000000000000000"
@@ -188,7 +152,7 @@
 				"fainted": true,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "98049d36d0d15440"
+					"$tb_float64": "2b5af28b25945440"
 				},
 				"hp": {
 					"$tb_float64": "0000000000000000"
@@ -682,7 +646,7 @@
 				},
 				"display_name": "Bramblebun",
 				"distance_m_together": {
-					"$tb_float64": "d55f9f923c0ce340"
+					"$tb_float64": "d553e1b04137e340"
 				},
 				"energy": {
 					"$tb_float64": "0000000000005940"
@@ -690,7 +654,7 @@
 				"fainted": true,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "ac98eb51b8f24f40"
+					"$tb_float64": "d24396fc62774f40"
 				},
 				"hp": {
 					"$tb_float64": "0000000000000000"
@@ -1144,7 +1108,7 @@
 				},
 				"display_name": "Bramblebun",
 				"distance_m_together": {
-					"$tb_float64": "454c449550d1e240"
+					"$tb_float64": "454086b355fce240"
 				},
 				"energy": {
 					"$tb_float64": "0000000000805340"
@@ -1152,7 +1116,7 @@
 				"fainted": true,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "f441a70d74e65440"
+					"$tb_float64": "8797fc62c9a85440"
 				},
 				"hp": {
 					"$tb_float64": "0000000000000000"
@@ -1375,7 +1339,7 @@
 				},
 				"display_name": "Mudsnout",
 				"distance_m_together": {
-					"$tb_float64": "454c3118bdd0e240"
+					"$tb_float64": "45407336c2fbe240"
 				},
 				"energy": {
 					"$tb_float64": "0000000000004a40"
@@ -1383,7 +1347,7 @@
 				"fainted": true,
 				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "ce9125bf58e45340"
+					"$tb_float64": "61e77a14aea65340"
 				},
 				"hp": {
 					"$tb_float64": "0000000000000000"
@@ -1609,15 +1573,15 @@
 				},
 				"display_name": "Bramblebun",
 				"distance_m_together": {
-					"$tb_float64": "454c03b9b0cde240"
+					"$tb_float64": "454045d7b5f8e240"
 				},
 				"energy": {
 					"$tb_float64": "0000000000004a40"
 				},
 				"fainted": false,
-				"feeds_together": 4,
+				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "ef67666666fd5840"
+					"$tb_float64": "6a0bd7a370d35740"
 				},
 				"hp": {
 					"$tb_float64": "aa77183831276240"
@@ -2008,7 +1972,7 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "c1eeeeeeeeec5840"
+					"$tb_float64": "0000000000000000"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 0,
@@ -2147,6 +2111,64 @@
 				],
 				"realm": "meadows",
 				"uid": "b6",
+				"yaw_deg": {
+					"$tb_float64": "0000000000000000"
+				}
+			},
+			{
+				"id": "storage",
+				"paid": true,
+				"position": [
+					{
+						"$tb_float64": "00000000000028c0"
+					},
+					{
+						"$tb_float64": "000000c08a13ed3f"
+					},
+					{
+						"$tb_float64": "0000000000003440"
+					}
+				],
+				"realm": "meadows",
+				"state": [
+					{
+						"id": "essence_air",
+						"n": 52
+					},
+					{
+						"id": "rare_candy",
+						"n": 1
+					},
+					{
+						"id": "skyplume",
+						"n": 18
+					},
+					{
+						"id": "tm_earth_fist",
+						"n": 1
+					},
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				"uid": "b7",
 				"yaw_deg": {
 					"$tb_float64": "0000000000000000"
 				}
@@ -2351,7 +2373,10 @@
 				"water_swim_stone_earned",
 				"water_swim_saddle_recipe_learned",
 				"water_capture_receipt:38202cdc8946278093e086cf7a913795a013d67ea16083e62d5b2de801f6a869",
-				"water:legendary_refused"
+				"water:legendary_refused",
+				"opening:lesson:masters",
+				"opening:lesson:portals",
+				"opening:lesson:shrines"
 			]
 		},
 		"realm_environment": {
@@ -5904,11 +5929,16 @@
 				"craft:combat_mastery_4ad613c982f1f41cf8ab51a63042cac56f177db7732f9637d93d9e2512f6df19:character-cb1b88c682cd3219e5c3d8d63558473d",
 				"craft:combat_mastery_6c0b439127b3dc7f35317a0b1c8608ea5586b43ad65c4f13ed2a94e94924e197:character-cb1b88c682cd3219e5c3d8d63558473d",
 				"craft:combat_mastery_921fa0d7dc91a88f1f28c2a01ce71f0d3a09e5bf454b0235f2463b16a3caa274:character-cb1b88c682cd3219e5c3d8d63558473d",
-				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-1:character-cb1b88c682cd3219e5c3d8d63558473d",
-				"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-1:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-1:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-1:character-cb1b88c682cd3219e5c3d8d63558473d",
 				"relic_hang:cloudreach:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-2:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-2:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:6040fa6562549b2cb7d34066088d18ffed1ee27c9bf97cda89756a58e2d0450f",
+				"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:cc310e803de926c8d02ac715afb8f9ad84073cc73780beec93e834e108b5034d",
+				"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:c770a886eb9ce90a21bcae3797b91edc8a9c138ac55dda200a97cf28c375e336",
 				"portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485",
-				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-3:character-cb1b88c682cd3219e5c3d8d63558473d"
+				"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-4:character-cb1b88c682cd3219e5c3d8d63558473d"
 			],
 			"waystones_activated": {
 				"cloudreach": [
@@ -5929,9 +5959,9 @@
 								"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 							},
 							"rolled_traits": [
-								"ferocious",
-								"soaring",
-								"nimble"
+								"composed",
+								"keen",
+								"renewing"
 							],
 							"taught_traits": {},
 							"traits_initialized": true
@@ -5948,7 +5978,7 @@
 								"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 							},
 							"rolled_traits": [
-								"tide_dancer"
+								"inventive"
 							],
 							"taught_traits": {},
 							"traits_initialized": true
@@ -5965,9 +5995,8 @@
 								"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 							},
 							"rolled_traits": [
-								"resolute",
-								"renewing",
-								"unyielding"
+								"curious",
+								"gentle"
 							],
 							"taught_traits": {},
 							"traits_initialized": true
@@ -6021,9 +6050,9 @@
 								"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 							},
 							"rolled_traits": [
-								"vigilant",
-								"inventive",
-								"composed"
+								"surefoot",
+								"composed",
+								"soaring"
 							],
 							"taught_traits": {},
 							"traits_initialized": true
@@ -6393,14 +6422,14 @@
 						"revision": 1
 					},
 					"meadows:order:1022": {
-						"generation": 2,
-						"next_ready_day": 3,
-						"revision": 1
+						"generation": 3,
+						"next_ready_day": 32,
+						"revision": 2
 					},
 					"meadows:order:1026": {
-						"generation": 2,
-						"next_ready_day": 3,
-						"revision": 1
+						"generation": 3,
+						"next_ready_day": 32,
+						"revision": 2
 					},
 					"meadows:order:1027": {
 						"generation": 2,
@@ -6453,9 +6482,9 @@
 						"revision": 1
 					},
 					"meadows:order:3": {
-						"generation": 2,
-						"next_ready_day": 3,
-						"revision": 1
+						"generation": 3,
+						"next_ready_day": 32,
+						"revision": 2
 					},
 					"meadows:order:4": {
 						"generation": 2,
@@ -6768,7 +6797,7 @@
 			},
 			"creature_training:25bb4cc1133cd18d80e77f4064de2ff1a5bc3545777a05521eba6ed2e8782c9b": {
 				"action": "portal_arrival",
-				"action_id": "c631ffaeeff11eebbc6d943f65523c85c6329e6e8b28bfa9f3300706605c1f33",
+				"action_id": "17c9e1614fab1f6a9425d686255caaca2d4b587c1ecd3d16cb42c2e9691809b3",
 				"after": {
 					"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 					"equipment": {
@@ -6783,10 +6812,7 @@
 							"id": "home_key",
 							"n": 1
 						},
-						{
-							"id": "orb_basic",
-							"n": 20
-						},
+						null,
 						{
 							"id": "orb_basic",
 							"n": 20
@@ -6795,20 +6821,14 @@
 							"id": "coin",
 							"n": 999
 						},
+						null,
+						null,
 						{
 							"id": "revive",
 							"n": 10
 						},
 						{
-							"id": "potion_small",
-							"n": 2
-						},
-						{
-							"id": "revive",
-							"n": 10
-						},
-						{
-							"durability": 30,
+							"durability": 28,
 							"id": "axe",
 							"n": 1
 						},
@@ -6818,7 +6838,7 @@
 							"n": 1
 						},
 						{
-							"durability": 33,
+							"durability": 32,
 							"id": "knife",
 							"n": 1
 						},
@@ -6838,46 +6858,19 @@
 							"id": "potion_large",
 							"n": 9
 						},
-						{
-							"id": "orb_basic",
-							"n": 4
-						},
-						{
-							"id": "rare_candy",
-							"n": 1
-						},
-						{
-							"id": "orb_greater",
-							"n": 7
-						},
+						null,
+						null,
+						null,
 						{
 							"id": "hide_vest",
 							"n": 1
 						},
-						{
-							"id": "essence_air",
-							"n": 52
-						},
-						{
-							"id": "elixir_vigour",
-							"n": 1
-						},
-						{
-							"id": "skyplume",
-							"n": 18
-						},
-						{
-							"id": "potion_small",
-							"n": 10
-						},
-						{
-							"id": "tm_earth_fist",
-							"n": 1
-						},
-						{
-							"id": "elixir_guard",
-							"n": 1
-						}
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
 					],
 					"party": [
 						{
@@ -6905,12 +6898,12 @@
 							},
 							"display_name": "Terrapup",
 							"distance_m_together": {
-								"$tb_float64": "d5839558a215e340"
+								"$tb_float64": "d577d776a740e340"
 							},
 							"fainted": true,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "60d169039dd65440"
+								"$tb_float64": "f326bf58f2985440"
 							},
 							"hp": {
 								"$tb_float64": "0000000000000000"
@@ -7404,12 +7397,12 @@
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "d55f9f923c0ce340"
+								"$tb_float64": "d553e1b04137e340"
 							},
 							"fainted": true,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "3c3285eb51fc4f40"
+								"$tb_float64": "62dd2f96fc804f40"
 							},
 							"hp": {
 								"$tb_float64": "0000000000000000"
@@ -7863,12 +7856,12 @@
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "454c449550d1e240"
+								"$tb_float64": "454086b355fce240"
 							},
 							"fainted": true,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "bc0e74da40eb5440"
+								"$tb_float64": "4f64c92f96ad5440"
 							},
 							"hp": {
 								"$tb_float64": "0000000000000000"
@@ -8091,12 +8084,12 @@
 							},
 							"display_name": "Mudsnout",
 							"distance_m_together": {
-								"$tb_float64": "454c3118bdd0e240"
+								"$tb_float64": "45407336c2fbe240"
 							},
 							"fainted": true,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "965ef28b25e95340"
+								"$tb_float64": "29b447e17aab5340"
 							},
 							"hp": {
 								"$tb_float64": "0000000000000000"
@@ -8322,12 +8315,12 @@
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "454c03b9b0cde240"
+								"$tb_float64": "454045d7b5f8e240"
 							},
 							"fainted": false,
-							"feeds_together": 4,
+							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "87c3f5285cfe5840"
+								"$tb_float64": "32d8a3703dd85740"
 							},
 							"hp": {
 								"$tb_float64": "aa77183831276240"
@@ -8718,7 +8711,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "a9925f2cf9f35840"
+								"$tb_float64": "0000000000000000"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -8754,7 +8747,7 @@
 							"biome": "stormwood",
 							"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 							"item": "stormwood_portal_key",
-							"key_slot": 15,
+							"key_slot": 20,
 							"kind": "portal_unlock",
 							"receipt": "portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485",
 							"status": "settled",
@@ -11725,11 +11718,16 @@
 							"craft:combat_mastery_4ad613c982f1f41cf8ab51a63042cac56f177db7732f9637d93d9e2512f6df19:character-cb1b88c682cd3219e5c3d8d63558473d",
 							"craft:combat_mastery_6c0b439127b3dc7f35317a0b1c8608ea5586b43ad65c4f13ed2a94e94924e197:character-cb1b88c682cd3219e5c3d8d63558473d",
 							"craft:combat_mastery_921fa0d7dc91a88f1f28c2a01ce71f0d3a09e5bf454b0235f2463b16a3caa274:character-cb1b88c682cd3219e5c3d8d63558473d",
-							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-1:character-cb1b88c682cd3219e5c3d8d63558473d",
-							"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-1:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-1:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-1:character-cb1b88c682cd3219e5c3d8d63558473d",
 							"relic_hang:cloudreach:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-2:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-2:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:6040fa6562549b2cb7d34066088d18ffed1ee27c9bf97cda89756a58e2d0450f",
+							"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:cc310e803de926c8d02ac715afb8f9ad84073cc73780beec93e834e108b5034d",
+							"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:c770a886eb9ce90a21bcae3797b91edc8a9c138ac55dda200a97cf28c375e336",
 							"portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485",
-							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-3:character-cb1b88c682cd3219e5c3d8d63558473d"
+							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-4:character-cb1b88c682cd3219e5c3d8d63558473d"
 						],
 						"waystones_activated": {
 							"cloudreach": [
@@ -11847,10 +11845,7 @@
 							"id": "home_key",
 							"n": 1
 						},
-						{
-							"id": "orb_basic",
-							"n": 20
-						},
+						null,
 						{
 							"id": "orb_basic",
 							"n": 20
@@ -11859,20 +11854,14 @@
 							"id": "coin",
 							"n": 999
 						},
+						null,
+						null,
 						{
 							"id": "revive",
 							"n": 10
 						},
 						{
-							"id": "potion_small",
-							"n": 2
-						},
-						{
-							"id": "revive",
-							"n": 10
-						},
-						{
-							"durability": 30,
+							"durability": 28,
 							"id": "axe",
 							"n": 1
 						},
@@ -11882,7 +11871,7 @@
 							"n": 1
 						},
 						{
-							"durability": 33,
+							"durability": 32,
 							"id": "knife",
 							"n": 1
 						},
@@ -11902,46 +11891,19 @@
 							"id": "potion_large",
 							"n": 9
 						},
-						{
-							"id": "orb_basic",
-							"n": 4
-						},
-						{
-							"id": "rare_candy",
-							"n": 1
-						},
-						{
-							"id": "orb_greater",
-							"n": 7
-						},
+						null,
+						null,
+						null,
 						{
 							"id": "hide_vest",
 							"n": 1
 						},
-						{
-							"id": "essence_air",
-							"n": 52
-						},
-						{
-							"id": "elixir_vigour",
-							"n": 1
-						},
-						{
-							"id": "skyplume",
-							"n": 18
-						},
-						{
-							"id": "potion_small",
-							"n": 10
-						},
-						{
-							"id": "tm_earth_fist",
-							"n": 1
-						},
-						{
-							"id": "elixir_guard",
-							"n": 1
-						}
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
 					],
 					"party": [
 						{
@@ -11969,12 +11931,12 @@
 							},
 							"display_name": "Terrapup",
 							"distance_m_together": {
-								"$tb_float64": "d5839558a215e340"
+								"$tb_float64": "d577d776a740e340"
 							},
 							"fainted": true,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "60d169039dd65440"
+								"$tb_float64": "f326bf58f2985440"
 							},
 							"hp": {
 								"$tb_float64": "0000000000000000"
@@ -12468,12 +12430,12 @@
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "d55f9f923c0ce340"
+								"$tb_float64": "d553e1b04137e340"
 							},
 							"fainted": true,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "3c3285eb51fc4f40"
+								"$tb_float64": "62dd2f96fc804f40"
 							},
 							"hp": {
 								"$tb_float64": "0000000000000000"
@@ -12927,12 +12889,12 @@
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "454c449550d1e240"
+								"$tb_float64": "454086b355fce240"
 							},
 							"fainted": true,
 							"feeds_together": 1,
 							"happiness": {
-								"$tb_float64": "bc0e74da40eb5440"
+								"$tb_float64": "4f64c92f96ad5440"
 							},
 							"hp": {
 								"$tb_float64": "0000000000000000"
@@ -13155,12 +13117,12 @@
 							},
 							"display_name": "Mudsnout",
 							"distance_m_together": {
-								"$tb_float64": "454c3118bdd0e240"
+								"$tb_float64": "45407336c2fbe240"
 							},
 							"fainted": true,
 							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "965ef28b25e95340"
+								"$tb_float64": "29b447e17aab5340"
 							},
 							"hp": {
 								"$tb_float64": "0000000000000000"
@@ -13386,12 +13348,12 @@
 							},
 							"display_name": "Bramblebun",
 							"distance_m_together": {
-								"$tb_float64": "454c03b9b0cde240"
+								"$tb_float64": "454045d7b5f8e240"
 							},
 							"fainted": false,
-							"feeds_together": 4,
+							"feeds_together": 0,
 							"happiness": {
-								"$tb_float64": "87c3f5285cfe5840"
+								"$tb_float64": "32d8a3703dd85740"
 							},
 							"hp": {
 								"$tb_float64": "aa77183831276240"
@@ -13782,7 +13744,7 @@
 							"move_utility": "",
 							"nickname": "",
 							"nourishment": {
-								"$tb_float64": "a9925f2cf9f35840"
+								"$tb_float64": "0000000000000000"
 							},
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
@@ -13818,7 +13780,7 @@
 							"biome": "stormwood",
 							"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 							"item": "stormwood_portal_key",
-							"key_slot": 15,
+							"key_slot": 20,
 							"kind": "portal_unlock",
 							"receipt": "portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485",
 							"status": "settled",
@@ -16789,9 +16751,14 @@
 							"craft:combat_mastery_4ad613c982f1f41cf8ab51a63042cac56f177db7732f9637d93d9e2512f6df19:character-cb1b88c682cd3219e5c3d8d63558473d",
 							"craft:combat_mastery_6c0b439127b3dc7f35317a0b1c8608ea5586b43ad65c4f13ed2a94e94924e197:character-cb1b88c682cd3219e5c3d8d63558473d",
 							"craft:combat_mastery_921fa0d7dc91a88f1f28c2a01ce71f0d3a09e5bf454b0235f2463b16a3caa274:character-cb1b88c682cd3219e5c3d8d63558473d",
-							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-1:character-cb1b88c682cd3219e5c3d8d63558473d",
-							"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-1:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-1:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-1:character-cb1b88c682cd3219e5c3d8d63558473d",
 							"relic_hang:cloudreach:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-2:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:home_return_d3374d50ed084f0da03f42a78232f36b_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-2:character-cb1b88c682cd3219e5c3d8d63558473d",
+							"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:6040fa6562549b2cb7d34066088d18ffed1ee27c9bf97cda89756a58e2d0450f",
+							"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:cc310e803de926c8d02ac715afb8f9ad84073cc73780beec93e834e108b5034d",
+							"craft:character-cb1b88c682cd3219e5c3d8d63558473d:f32:c770a886eb9ce90a21bcae3797b91edc8a9c138ac55dda200a97cf28c375e336",
 							"portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485"
 						],
 						"waystones_activated": {
@@ -16897,31 +16864,31 @@
 					}
 				},
 				"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
-				"character_revision": 15427,
+				"character_revision": 15496,
 				"delivery_id": "creature_training:25bb4cc1133cd18d80e77f4064de2ff1a5bc3545777a05521eba6ed2e8782c9b",
 				"host_context": {
 					"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 					"entry_id": "stormwood_arrival_from_cloudreach",
-					"expected_revision": 15426,
+					"expected_revision": 15495,
 					"foundation_runtime_authorized": true,
 					"grounded_arrival": true,
 					"in_combat": false,
 					"in_range": true,
-					"permit_id": "travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-3",
+					"permit_id": "travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-4",
 					"realm": "stormwood",
-					"source_key": "arrival:travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-3",
+					"source_key": "arrival:travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-4",
 					"world_namespace": "d3374d50ed084f0da03f42a78232f36b"
 				},
 				"intent": {
 					"entry_id": "stormwood_arrival_from_cloudreach",
-					"permit_id": "travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-3",
+					"permit_id": "travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-4",
 					"realm": "stormwood"
 				},
-				"journal_revision": 1561,
+				"journal_revision": 1565,
 				"kind": "creature_training",
-				"receipt": "craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-3:character-cb1b88c682cd3219e5c3d8d63558473d",
-				"session_id": "6ddc72fc6888d4fca43d1c1b08561880",
-				"source_key": "arrival:travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:b4f761158275-3",
+				"receipt": "craft:portal_arrival_travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-4:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"session_id": "631a3869005ac3d1e5d79560f8c20397",
+				"source_key": "arrival:travel:d3374d50ed084f0da03f42a78232f36b:character-cb1b88c682cd3219e5c3d8d63558473d:4ebade40b5b1-4",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "slot-0",
@@ -17138,7 +17105,7 @@
 				"biome": "stormwood",
 				"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 				"item": "stormwood_portal_key",
-				"key_slot": 15,
+				"key_slot": 20,
 				"kind": "portal_unlock",
 				"receipt": "portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485",
 				"status": "accepted",
@@ -17428,7 +17395,7 @@
 				"biome": "stormwood",
 				"character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
 				"item": "stormwood_portal_key",
-				"key_slot": 15,
+				"key_slot": 20,
 				"kind": "portal_unlock",
 				"receipt": "portal_unlock:ae143dbc9dd55a6d0baecce332713d8d3e76538a0697794908af2f664e80a485",
 				"status": "settled",

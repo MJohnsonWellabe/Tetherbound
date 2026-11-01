@@ -1,7 +1,7 @@
 {
   "accelerated": false,
   "after": {
-    "clock_seconds": 54.7,
+    "clock_seconds": 139.68,
     "day": 30,
     "flags": [
       "alpha_pin_intro_seen",
@@ -76,6 +76,9 @@
       "opening:beat:wake",
       "opening:beat:walk_out",
       "opening:lesson:home_key",
+      "opening:lesson:masters",
+      "opening:lesson:portals",
+      "opening:lesson:shrines",
       "opening:lesson:trigger:home_return",
       "opening:mira_visited",
       "opening:starter_granted",
@@ -152,22 +155,14 @@
     "inventory": {
       "axe": 1,
       "coin": 1880,
-      "elixir_guard": 1,
-      "elixir_vigour": 1,
-      "essence_air": 52,
       "hammer": 1,
       "hide_vest": 1,
       "home_key": 1,
       "knife": 1,
-      "orb_basic": 44,
-      "orb_greater": 7,
+      "orb_basic": 20,
       "pickaxe": 1,
       "potion_large": 9,
-      "potion_small": 12,
-      "rare_candy": 1,
-      "revive": 20,
-      "skyplume": 18,
-      "tm_earth_fist": 1,
+      "revive": 10,
       "torch": 1
     },
     "party": [
@@ -589,18 +584,29 @@
     ]
   },
   "chapter": "cloudreach",
-  "commit": "7d485aa13a29bf775f40ae9ed03eda455bfcea79",
+  "commit": "aca00f0870e7259f0e87adf4e0afccbe0d7ce3ca",
   "criterion": "F19#5",
   "disclosures": [
     "Runner Piece overrides the helper's _arrival_gather only to re-read the resource prompt after the walk (cloudreach_resource_patch.gd rebuilds DailyHarvest on each Game.day roll; the helper's pre-walk reference was freed). Input and checks unchanged.",
-    "Piece 07: fed a carried cloudberry to party row 4 through the Satchel to make room for the held cloudreach hand-off",
-    "Piece 07: fed a carried cloudberry to party row 4 through the Satchel to make room for the held cloudreach hand-off",
-    "Piece 07: fed a carried cloudberry to party row 4 through the Satchel to make room for the held cloudreach hand-off",
-    "Piece 07: fed a carried cloudberry to party row 4 through the Satchel to make room for the held cloudreach hand-off",
-    "Piece 07: DROPPED gale_fiber x2 through the Satchel to make room for the held cloudreach hand-off"
+    "Piece 07: DROPPED surplus gale_fiber x2 (slot 20) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: Drop of cloudberry x4 confirmed by count; the freed slot was refilled by a held reward",
+    "Piece 07: DROPPED surplus cloudberry x4 (slot 15) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: DROPPED surplus potion_small x2 (slot 5) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: DROPPED surplus potion_small x10 (slot 21) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: DROPPED surplus revive x10 (slot 4) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: DROPPED surplus orb_basic x4 (slot 14) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: DROPPED surplus orb_basic x20 (slot 1) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: DROPPED surplus orb_greater x7 (slot 16) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: DROPPED surplus elixir_guard x1 (slot 23) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: DROPPED surplus elixir_vigour x1 (slot 19) through the Satchel before the home trip (owner decision: 24 slots kept)",
+    "Piece 07: Storage Chest deposit before Stormwood (stored [\"essence_air\", \"rare_candy\", \"skyplume\", \"tm_earth_fist\"]; kept [\"potion_large\", \"revive\", \"orb_basic\", \"coin\", \"hide_vest\", \"torch\", \"axe\", \"pickaxe\", \"knife\", \"hammer\", \"home_key\", \"stormwood_portal_key\"]; free slots 11)"
   ],
   "failures": [],
-  "flags_gained": [],
+  "flags_gained": [
+    "opening:lesson:masters",
+    "opening:lesson:portals",
+    "opening:lesson:shrines"
+  ],
   "from": "/home/user/rb/cr_06",
   "handoff_check": {
     "checked": true,
@@ -632,9 +638,15 @@
   "input_mode": "generated_ancestry",
   "inventory_delta": {
     "cloudberry": -4,
+    "elixir_guard": -1,
+    "elixir_vigour": -1,
+    "essence_air": -52,
     "gale_fiber": -2,
-    "rare_candy": 1,
-    "skyplume": 18
+    "orb_basic": -24,
+    "orb_greater": -7,
+    "potion_small": -12,
+    "revive": -10,
+    "tm_earth_fist": -1
   },
   "lineage": {
     "continuous_fresh_save": false,
@@ -648,5 +660,5 @@
   },
   "passed": true,
   "segment": "07_stormward_handoff",
-  "wall_seconds": 475.889
+  "wall_seconds": 1496.722
 }
