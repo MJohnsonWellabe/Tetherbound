@@ -169,6 +169,19 @@
    "blur_px": 8.0,
    "soften_px": 1.5,
    "gain": 2.5
+  },
+  "sirenseal_owner1101": {
+   "_why": "Owner remake 1 Nov (coordinator pick under the owner rule, flag-off candidate): aqua frill lines and eyes (water creature: bioluminescence is natural). Albedo-derived mask, as the first remake lane's rules.",
+   "model": "assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101.glb",
+   "hue": [
+    160,
+    200
+   ],
+   "sat_min": 0.4,
+   "lift": 0.08,
+   "blur_px": 8.0,
+   "soften_px": 1.0,
+   "gain": 1.8
   }
  }
 }
