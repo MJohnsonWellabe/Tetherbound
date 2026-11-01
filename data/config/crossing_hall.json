@@ -31,14 +31,20 @@
           "UpperBrace_6_-1",
           "UpperBrace_6_1",
           "NaveTie_-6",
-          "NaveTie_6"
+          "NaveTie_6",
+          "NavePost_12_-1",
+          "NavePost_12_1",
+          "UpperBrace_12_-1",
+          "UpperBrace_12_1",
+          "NaveTie_12"
         ]
       },
       "hall_dressing": {
         "pieces": [
           "PostLanternW1",
           "PostLanternE2",
-          "ShrineGlow"
+          "ShrineGlow",
+          "PostLanternW3"
         ]
       },
       "hall_furnishing": {
@@ -81,7 +87,10 @@
               "strength": 0.7,
               "range_m": 6.5,
               "energy": 1.5
-            }
+            },
+            "emission_mask": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_emissive_mask.png",
+            "emission_colour": "#ffb45e",
+            "emission_energy": 1.6
           },
           {
             "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
@@ -235,6 +244,38 @@
               -6.3
             ],
             "yaw_deg": 10
+          },
+          {
+            "name": "AltarCandleW",
+            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+            "at": [
+              10.5,
+              0.07,
+              6.0
+            ],
+            "yaw_deg": 0,
+            "light": {
+              "height": 1.6,
+              "colour": "#ffb45e",
+              "energy": 1.8,
+              "range": 5.0
+            }
+          },
+          {
+            "name": "AltarCandleE",
+            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+            "at": [
+              13.5,
+              0.07,
+              6.0
+            ],
+            "yaw_deg": 0,
+            "light": {
+              "height": 1.6,
+              "colour": "#ffb45e",
+              "energy": 1.8,
+              "range": 5.0
+            }
           }
         ]
       }
