@@ -1,0 +1,528 @@
+{
+ "_comment": "Finish plan (owner 31 Oct 2026: 'Give me your plan for finishing all the outstanding work ... Just do it'). Membership is fixed per workstream; met/open is read live from criteria.json. Published plan page: https://claude.ai/artifact/XNDPUdtXSbdGtDCk3WumCy",
+ "today": "2026-11-01",
+ "target": "30 Nov 2026",
+ "phases": [
+  {
+   "id": "P1",
+   "name": "Judge what is built, take the near-bar closes",
+   "start": "2026-11-01",
+   "end": "2026-11-07",
+   "dates": "1–7 Nov"
+  },
+  {
+   "id": "P2",
+   "name": "The bigger swings: Meshy art, atmosphere per biome, poses",
+   "start": "2026-11-08",
+   "end": "2026-11-16",
+   "dates": "8–16 Nov"
+  },
+  {
+   "id": "P3",
+   "name": "Second rounds and the biome gates",
+   "start": "2026-11-17",
+   "end": "2026-11-23",
+   "dates": "17–23 Nov"
+  },
+  {
+   "id": "P4",
+   "name": "Integrated run, Ally test, your play pass, release",
+   "start": "2026-11-24",
+   "end": "2026-11-30",
+   "dates": "24–30 Nov"
+  }
+ ],
+ "workstreams": [
+  {
+   "name": "Creature models at 7.0+",
+   "phase": "P1",
+   "who": "GPU",
+   "fix": "Close-out arms",
+   "sels": [
+    "F36#1",
+    "F36#12",
+    "F36#15",
+    "F36#26"
+   ]
+  },
+  {
+   "name": "Creature poses at 7.0+",
+   "phase": "P1",
+   "who": "GPU",
+   "fix": "Close-out arms (flinch, faint, value lifts)",
+   "sels": [
+    "F36#32",
+    "F36#34",
+    "F36#36",
+    "F36#37",
+    "F36#39",
+    "F36#44",
+    "F36#63",
+    "F36#65",
+    "F36#67",
+    "F36#79",
+    "F36#80",
+    "F36#81",
+    "F36#82",
+    "F36#83",
+    "F36#89",
+    "F36#90",
+    "F36#95",
+    "F36#96",
+    "F36#97"
+   ]
+  },
+  {
+   "name": "Dialogue, catch and fight cameras",
+   "phase": "P1",
+   "who": "Coordinator + GPU",
+   "fix": "Camera fix built and tested; GPU arm DLG-1",
+   "sels": [
+    "F41#15",
+    "F39#29",
+    "F39#18",
+    "F39#26",
+    "F38#37",
+    "F38#36",
+    "F38#17",
+    "F38#16",
+    "F40#12",
+    "F40#10",
+    "F41#7",
+    "F41#20",
+    "F41#11",
+    "F39#9",
+    "F38#13",
+    "F39#22",
+    "F40#5",
+    "F38#3",
+    "F39#7",
+    "F41#3"
+   ]
+  },
+  {
+   "name": "UI, HUD and result panels",
+   "phase": "P1",
+   "who": "Coordinator + GPU",
+   "fix": "Catch-label plate (UI-1), controller glyphs (UI-PAD), menu text",
+   "sels": [
+    "F38#9",
+    "F38#4",
+    "F38#19",
+    "F38#10",
+    "F38#27",
+    "F39#25",
+    "F38#18",
+    "F38#38",
+    "F39#23",
+    "F39#19",
+    "F39#28",
+    "F40#14",
+    "F38#33",
+    "F38#7",
+    "F40#13",
+    "F38#14",
+    "F41#16",
+    "F41#21"
+   ]
+  },
+  {
+   "name": "Creature models below 7.0",
+   "phase": "P2",
+   "who": "Coordinator (Meshy) + GPU",
+   "fix": "Meshy remakes in the owner style bar",
+   "sels": [
+    "F36#0",
+    "F36#2",
+    "F36#3",
+    "F36#4",
+    "F36#8",
+    "F36#9",
+    "F36#13",
+    "F36#16",
+    "F36#19",
+    "F36#20",
+    "F36#21",
+    "F36#22",
+    "F36#25",
+    "F36#27",
+    "F36#28",
+    "F36#29"
+   ]
+  },
+  {
+   "name": "Creature poses below 7.0",
+   "phase": "P2",
+   "who": "GPU hands-on",
+   "fix": "Per-species pose work",
+   "sels": [
+    "F36#30",
+    "F36#33",
+    "F36#35",
+    "F36#38",
+    "F36#40",
+    "F36#42",
+    "F36#46",
+    "F36#48",
+    "F36#49",
+    "F36#50",
+    "F36#52",
+    "F36#53",
+    "F36#54",
+    "F36#55",
+    "F36#56",
+    "F36#57",
+    "F36#58",
+    "F36#59",
+    "F36#60",
+    "F36#61",
+    "F36#62",
+    "F36#66",
+    "F36#68",
+    "F36#69",
+    "F36#70",
+    "F36#72",
+    "F36#74",
+    "F36#75",
+    "F36#78",
+    "F36#85",
+    "F36#86",
+    "F36#87",
+    "F36#88",
+    "F36#91",
+    "F36#92",
+    "F36#93",
+    "F36#94"
+   ]
+  },
+  {
+   "name": "Creatures and characters in the world",
+   "phase": "P2",
+   "who": "GPU hands-on",
+   "fix": "Ground contact, faint/rest, swim and mount (POSE-1)",
+   "sels": [
+    "F38#1",
+    "F38#2",
+    "F38#5",
+    "F38#31",
+    "F38#26",
+    "F39#6",
+    "F39#24",
+    "F38#15",
+    "F39#5",
+    "F39#14",
+    "F39#20",
+    "F39#8",
+    "F38#8",
+    "F38#35",
+    "F39#4",
+    "F38#25",
+    "F41#13",
+    "F39#27",
+    "F41#8",
+    "F41#18",
+    "F40#9"
+   ]
+  },
+  {
+   "name": "Landmarks, buildings and props",
+   "phase": "P2",
+   "who": "Coordinator (Meshy) + GPU",
+   "fix": "Meshy hero art from the boards (HERO-1..3 first)",
+   "sels": [
+    "F38#20",
+    "F39#2",
+    "F39#3",
+    "F40#2",
+    "F40#3",
+    "F39#15",
+    "F41#1",
+    "F41#4",
+    "F41#17",
+    "F41#19",
+    "F41#10",
+    "F39#12",
+    "F39#13",
+    "F38#34",
+    "F38#32",
+    "F38#6",
+    "F38#12",
+    "F41#14",
+    "F41#9",
+    "F40#16",
+    "F40#17",
+    "F38#28"
+   ]
+  },
+  {
+   "name": "Biome atmosphere, ground, water and sky",
+   "phase": "P2",
+   "who": "GPU hands-on",
+   "fix": "One bigger look pass per biome",
+   "sels": [
+    "F38#21",
+    "F38#22",
+    "F38#30",
+    "F38#23",
+    "F38#24",
+    "F41#5",
+    "F41#12",
+    "F41#2",
+    "F39#1",
+    "F39#10",
+    "F39#16",
+    "F39#17",
+    "F40#1",
+    "F40#4",
+    "F40#7",
+    "F40#15",
+    "F40#8",
+    "F40#6",
+    "F40#11"
+   ]
+  },
+  {
+   "name": "Fight effects and presentation",
+   "phase": "P2",
+   "who": "GPU",
+   "fix": "Defeated poses, hit effects; magenta cues need the owner's call",
+   "sels": [
+    "F38#11",
+    "F38#29",
+    "F41#6"
+   ]
+  },
+  {
+   "name": "Biome gates and unscored rows",
+   "phase": "P3",
+   "who": "GPU",
+   "fix": "Matrix re-captures, placeholder sweep, Veilfall hero",
+   "sels": [
+    "F38#0",
+    "F38#39",
+    "F38#41",
+    "F39#11",
+    "F39#21",
+    "F39#30",
+    "F39#31",
+    "F39#32",
+    "F40#0",
+    "F40#18",
+    "F40#19",
+    "F40#21",
+    "F41#22",
+    "F41#24"
+   ]
+  }
+ ],
+ "other": [
+  {
+   "name": "Village and Hall frames",
+   "sels": [
+    "F17#6"
+   ],
+   "phase": "P1",
+   "how": "Renderer-aware hall shafts and arch rims, GPU re-judge"
+  },
+  {
+   "name": "Distinct aftermaths",
+   "sels": [
+    "F04#6"
+   ],
+   "phase": "P3",
+   "how": "Rides the Meadows look pass, GPU confirm"
+  },
+  {
+   "name": "Cloudreach settlements and cliffs",
+   "sels": [
+    "F08#3"
+   ],
+   "phase": "P3",
+   "how": "Cloudreach terraces and clouds pass"
+  },
+  {
+   "name": "Stormwood named fights",
+   "sels": [
+    "F10#2"
+   ],
+   "phase": "P3",
+   "how": "Stormwood atmosphere pass, GPU confirm"
+  },
+  {
+   "name": "Currents, docks, Veilfall",
+   "sels": [
+    "F13#5"
+   ],
+   "phase": "P3",
+   "how": "Flow foam, Veilfall hero (HERO-3), water depth"
+  },
+  {
+   "name": "Named fight patterns",
+   "sels": [
+    "F22#4"
+   ],
+   "phase": "P3",
+   "how": "Fight look passes plus the isolated Riverwatch fix"
+  },
+  {
+   "name": "Biome matrices High and Medium",
+   "sels": [
+    "F26#3"
+   ],
+   "phase": "P3",
+   "how": "Matrix judge per biome after its look pass"
+  },
+  {
+   "name": "One save, new game to credits",
+   "sels": [
+    "F49#0"
+   ],
+   "phase": "P4",
+   "how": "Route lane: chained pieces with matched manifests"
+  },
+  {
+   "name": "Earned checkpoint saves",
+   "sels": [
+    "F19#5"
+   ],
+   "phase": "P4",
+   "how": "Route lane, same pieces"
+  },
+  {
+   "name": "ROG Ally test",
+   "sels": [
+    "F26#5",
+    "F49#2"
+   ],
+   "phase": "P4",
+   "how": "Owner runs the Medium handheld route"
+  },
+  {
+   "name": "Owner play pass",
+   "sels": [
+    "F49#1"
+   ],
+   "phase": "P4",
+   "how": "Owner plays the passing build"
+  },
+  {
+   "name": "15–25 hour clear",
+   "sels": [
+    "F47#0"
+   ],
+   "phase": "P4",
+   "how": "Owner play pass decides; content if short"
+  },
+  {
+   "name": "Rolling download",
+   "sels": [
+    "F49#3"
+   ],
+   "phase": "P4",
+   "how": "release.yml publishes from the passing commit"
+  }
+ ],
+ "in_flight": [
+  {
+   "what": "Cindercub coat lift Medium",
+   "where": "main",
+   "state": "landed",
+   "detail": "MET 7.51 High / 7.58 Medium; F36#39 closed"
+  },
+  {
+   "what": "TW-LOOK-1 Tidewake declutter with Meshy beach pieces",
+   "where": "tb/tidewake-1-on",
+   "state": "landed",
+   "detail": "GPU: six islands +0.67 to +0.98 (mean 5.34 -> 6.19)"
+  },
+  {
+   "what": "ROSTER-1 near-bar F36 re-judge on current main",
+   "where": "main",
+   "state": "queued",
+   "detail": "About 22 species at 7.0-7.42 on the 24 Oct baseline; runs after UI-PAD"
+  },
+  {
+   "what": "SW-P2-041 Crown Arch arm",
+   "where": "tb/sw-crownarch-on",
+   "state": "failed",
+   "detail": "GPU 31 Oct: 4.23 -> 4.56 (+0.33), not met; judges asked for new art. A Meshy hero arch is now with the world lane"
+  },
+  {
+   "what": "CO12 four near-bar creatures",
+   "where": "tb/co12-main-on",
+   "state": "landed",
+   "detail": "GPU 31 Oct: all four gain (+0.44 to +0.98), floating faints fixed, none at 7.5 yet; landed"
+  },
+  {
+   "what": "P2-095 craft recipe text close-out",
+   "where": "main",
+   "state": "queued",
+   "detail": "GPU job 3: 7.53 on Compatibility; Medium and High closes F38#18"
+  },
+  {
+   "what": "DLG-1 dialogue camera fix",
+   "where": "tb/dialogue-cam-on",
+   "state": "failed",
+   "detail": "GPU: net zero; the push-in never fires in 14 of 34 frames; code lane finding why"
+  },
+  {
+   "what": "UI-1 catch-label backing plate",
+   "where": "tb/ui-near-bar-on",
+   "state": "landed",
+   "detail": "GPU: P2-114 +0.57, P2-058 +0.47; landed"
+  },
+  {
+   "what": "UI-PAD menus with controller glyphs",
+   "where": "main",
+   "state": "queued",
+   "detail": "GPU job 7"
+  },
+  {
+   "what": "POSE-1 creature ground contact",
+   "where": "GPU hands-on",
+   "state": "queued",
+   "detail": "GPU job 8: Riptusk, Veridian, Terrapup, Aquaryn, flying landing"
+  },
+  {
+   "what": "HERO-1 Stormheart tree round 2",
+   "where": "tb/hero-landmarks-r2",
+   "state": "built",
+   "detail": "Two Meshy candidates from board-a; GPU job 9 places and judges"
+  },
+  {
+   "what": "HERO-2 Sky Aviary",
+   "where": "tb/hero-landmarks-r2",
+   "state": "built",
+   "detail": "Two Meshy candidates from the aviary board; GPU job 10"
+  },
+  {
+   "what": "HERO-3 Veilfall",
+   "where": "tb/hero-landmarks-r2",
+   "state": "built",
+   "detail": "Two Meshy candidates from the Veilfall board; GPU job 11"
+  },
+  {
+   "what": "Route lane F49#0 / F19#5",
+   "where": "tb/routes-f49",
+   "state": "running",
+   "detail": "Cloud session started 31 Oct; working the open seams in CHAIN_MANIFEST.md"
+  },
+  {
+   "what": "Creatures lane F36 close-out arms",
+   "where": "tb/creatures-f36",
+   "state": "landed",
+   "detail": "GPU CO16: 7 of 9 arms gain and land (cindercub 7.51 High, Medium queued; mudsnout 7.40); side-lie faints and matte did not"
+  },
+  {
+   "what": "World lane dressing and Meshy props",
+   "where": "tb/world-dressing",
+   "state": "landed",
+   "detail": "GPU WD2: all 10 items gain (9 above +0.5; harvest +2.44, Glass Sink +1.74); landed"
+  }
+ ],
+ "asks": [
+  "Keep the GPU session running as many hours as you can: every visual verdict runs there.",
+  "Magenta lightning cues (P2-093, P2-063): left as they are under your telegraph rule unless you say otherwise.",
+  "Phase 4: the ROG Ally test and your play pass."
+ ]
+}

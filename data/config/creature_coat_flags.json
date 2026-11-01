@@ -1,0 +1,54 @@
+{
+ "_comment": "Candidate creature coats, OFF by default (scripts/creatures/creature_body.gd _apply_coat_flags). An enabled flag maps an ordinary coat's live albedo path to a graded file; an emission slot carrying the same image follows it; shiny bodies are untouched. The GPU judges an arm by flipping enabled; the graded files need an import like any new texture.",
+ "flags": {
+  "creatures_f36_coat_lift": {
+   "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): cindercub 7.13, duskhush 6.77 and ashtusk 6.68 want a value lift and rim; GPU CO12 (31 Oct): thundertunnel 6.49 / 6.50 is still 'a dark mound with no readable face' after its first lift. Grades from tools/art_pipeline/grade_coat_value.py.",
+   "enabled": true,
+   "coats": {
+    "res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0_base_color_vivid.png": "res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0_base_color_vivid_coat_lift.png",
+    "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0.jpg": "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0_coat_lift.png",
+    "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk.png": "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk_coat_lift.png",
+    "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid_coat_lift.png"
+   }
+  },
+  "creatures_f36_coat_lift_2": {
+   "_why": "CREATURES-F36 batch 2 (31 Oct). GPU roster 24 Oct: shadelet 6.29 'near-black, no rim light; silhouette dissolves', stormtrail 5.98 'flat black placeholder dog'; CO12 31 Oct: nightburrow 6.67 'coat noisy and speckled'. Same grade as creatures_f36_coat_lift (tools/art_pipeline/grade_coat_value.py), gentler on the night and storm variants.",
+   "enabled": true,
+   "coats": {
+    "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0_base_color.jpg": "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0_base_color_coat_lift.png",
+    "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail.png": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail_coat_lift.png",
+    "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_coat_lift.png"
+   }
+  },
+  "creatures_f36_matte_finish": {
+   "_why": "CREATURES-F36 (31 Oct). GPU roster 24 Oct off-style materials (R4): skyrill 6.33 'chrome-mirror skin', voltarach 6.87 'chrome-gold statue shader', sparkit 6.28 'flat mustard material', reedwing 6.78 'decal-like', cragclaw 6.40 'plasticky salmon skin'. Probed live materials: skyrill, sparkit and reedwing render metallic 1.0 over their metallic maps; voltarach takes its gloss from its roughness map. Matte: metallic off, a constant fur/hide roughness, lower specular.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/skyrill/models/skyrill_extracted_base_color_vivid.png": {
+     "metallic": 0.0,
+     "roughness": 0.85,
+     "specular": 0.35
+    },
+    "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
+     "metallic": 0.0,
+     "roughness": 0.8,
+     "specular": 0.35
+    },
+    "res://assets/creatures/tetherbound/sparkit/models/creature_sparkit_lod0_base_color.jpg": {
+     "metallic": 0.0,
+     "roughness": 0.85,
+     "specular": 0.35
+    },
+    "res://assets/creatures/tetherbound/reedwing/models/creature_reedwing_lod0_base_color_vivid.png": {
+     "metallic": 0.0,
+     "roughness": 0.85,
+     "specular": 0.35
+    },
+    "res://assets/creatures/tetherbound/cragclaw/models/cragclaw_extracted_base_color_vivid.png": {
+     "roughness": 0.92,
+     "specular": 0.25
+    }
+   }
+  }
+ }
+}

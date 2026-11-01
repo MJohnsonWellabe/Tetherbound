@@ -8,6 +8,7 @@ extends Node3D
 ## inside that footprint. No interaction, route, encounter or durable state.
 
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 
 
 func build(water_world: Node3D) -> void:
@@ -25,10 +26,13 @@ func build(water_world: Node3D) -> void:
 	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
 		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
 		+ (look.get("veilfall_mountain_candidate", []) as Array) + (look.get("veilfall_buttress_candidate", []) as Array) \
-		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array)
+		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array) \
+		+ (look.get("beach_scene_candidate", []) as Array)
+	specs = _destination_read(specs)
 	_cladding(water_world, look.get("veilfall_cladding_candidate", {}))
 	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
-	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
+	var dropped: Array = ((look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", []) as Array) \
+		+ ((look.get("beach_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", []) as Array)
 	for raw: Variant in specs:
 		var spec := raw as Dictionary
 		if dropped.has(str(spec.get("id", ""))):
@@ -43,6 +47,16 @@ func build(water_world: Node3D) -> void:
 			continue
 		var offset: Array = spec.get("offset_xz_m", [0.0, 0.0])
 		var at := Vector2(float(at_raw[0]) + float(offset[0]), float(at_raw[2]) + float(offset[1]))
+		# A model-less entry is a clearing only: clean sand where the camera looks.
+		if str(spec.get("model", "")).is_empty() and float(spec.get("grass_clear_m", 0.0)) > 0.0:
+			var clearing := Node3D.new()
+			clearing.name = "Clearing_%s" % str(spec.get("id", "site"))
+			clearing.position = Vector3(at.x, 0.0, at.y)
+			clearing.add_to_group("grass_clear")
+			clearing.set_meta("grass_clear_radius", float(spec.grass_clear_m))
+			add_child(clearing)
+			GRASS_FIELD.clearings_dirty = true
+			continue
 		var model := _instantiate(str(spec.get("model", "")))
 		if model == null:
 			push_error("landmark model missing: %s" % spec.get("model", ""))
@@ -54,7 +68,7 @@ func build(water_world: Node3D) -> void:
 			continue
 		var factor := float(spec.get("height_m", 5.0)) / bounds.size.y
 		var holder := Node3D.new()
-		holder.name = "Landmark_%s" % str(spec.get("landmark_id", "prop"))
+		holder.name = "Landmark_%s" % str(spec.get("landmark_id", spec.get("id", "prop")))
 		# Optional `stretch_xz` widens a fitted model without changing its height
 		# (close-1024: the generated Veilfall crown is narrower than the cone).
 		var stretch: Array = spec.get("stretch_xz", [1.0, 1.0])
@@ -74,6 +88,13 @@ func build(water_world: Node3D) -> void:
 		if spec.has("float_y_m"):
 			holder.position.y = float(spec.float_y_m)
 		add_child(holder)
+		# `grass_clear_m` (beach_scene_candidate): the field's grass and loose
+		# stones step back from a placed building, so it stands on clean sand
+		# instead of a pebble-and-tuft carpet (grass_field.gd CLEAR_GROUP).
+		if float(spec.get("grass_clear_m", 0.0)) > 0.0:
+			holder.add_to_group("grass_clear")
+			holder.set_meta("grass_clear_radius", float(spec.grass_clear_m))
+			GRASS_FIELD.clearings_dirty = true
 		var box: Array = spec.get("collider_fraction", [])
 		if box.size() == 3:
 			var body := StaticBody3D.new()
@@ -89,6 +110,30 @@ func build(water_world: Node3D) -> void:
 		# flyer or glider can reach (close-1024: the generated Veilfall crown).
 		if bool(spec.get("trimesh_collider", false)):
 			add_trimesh_collision(model)
+
+
+## World dressing P2-011 (tidewake_destination_read.json, OFF until GPU
+## judged): GPU 4.85, "the signal spire is a small brown box on a grass hill,
+## the drift arch a tiny distant hoop and the terraces the flat disc chain".
+## Adds installed-Meshy specs and raises matched specs' height. Same fitting,
+## grounding and collider rules as every landmark model.
+static func _destination_read(specs: Array) -> Array:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_destination_read.json"))
+	if not parsed is Dictionary or not bool((parsed as Dictionary).get("enabled", false)):
+		return specs
+	var cfg := parsed as Dictionary
+	var out: Array = []
+	for raw: Variant in specs:
+		var spec := (raw as Dictionary)
+		for rule: Dictionary in cfg.get("height_overrides", []):
+			if str(spec.get("landmark_id", "")) == str(rule.get("landmark_id", "")) \
+					and str(spec.get("model", "")).ends_with(str(rule.get("model_suffix", "~"))) \
+					and (not rule.has("offset_xz_m") or spec.get("offset_xz_m", []) == rule.offset_xz_m):
+				spec = spec.duplicate(true)
+				spec["height_m"] = float(rule.height_m)
+		out.append(spec)
+	out.append_array(cfg.get("add", []) as Array)
+	return out
 
 
 ## `veilfall_cladding_candidate` (OFF in play; Stormwood lane 26 Oct, after the

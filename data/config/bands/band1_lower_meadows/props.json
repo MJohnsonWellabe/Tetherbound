@@ -321,6 +321,7 @@
     {
       "order": 1000,
       "name": "trail_camp",
+      "camp_floor": {"enabled": true, "_candidate": "World dressing P2-035 (OFF until GPU judged; tb/world-dressing). GPU 5.85: crates, barrels, chest and bed sit among grass with no cleared footprint, and the fire is an orange speck. A terrain-following trodden-earth floor under the camp with the grass cleared, and a larger fire in a larger stone ring. Camp bed and workbench untouched (Meshy pending).", "at": [343.2, 936.4], "radius_m": 5.2, "feather": 0.3, "lift_m": 0.03, "colour": "#9a8466", "texture": "res://assets/environment/terrain/Ground030_Color.jpg", "uv_per_m": 0.4, "clear_grass_m": 4.8, "prop_scale": {"Bonfire_Fire": 0.6, "campfire_stone_ring": 1.15}},
       "roadside_threshold": {
         "at": [346.3, 926.3],
         "yaw_deg": 45.0,

@@ -1,0 +1,83 @@
+[
+ {
+  "label": "P2-046",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-046_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-046_cand.jpg",
+  "brief": "Stormwood harvest resource nodes (stormglass, stormglass crown, glowmoss) at gameplay camera distance",
+  "defects": [
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+  ]
+ },
+ {
+  "label": "P2-045",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-045_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-045_cand.jpg",
+  "brief": "Stormwood candy pickups: good, great and rare tiers on the ground",
+  "defects": [
+   "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+  ]
+ },
+ {
+  "label": "P2-041",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-041_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-041_cand.jpg",
+  "brief": "Stormwood Crown Arch landmark, close view",
+  "defects": [
+   "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+  ]
+ },
+ {
+  "label": "P2-070",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-070_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-070_cand.jpg",
+  "brief": "Stormwood Glass Sink landmark from the reachable rim, approach and close views",
+  "defects": [
+   "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+  ]
+ },
+ {
+  "label": "P2-043",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-043_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-043_cand.jpg",
+  "brief": "Stormwood Glass Field spike clusters along the route",
+  "defects": [
+   "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+  ]
+ },
+ {
+  "label": "P2-033",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-033_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-033_cand.jpg",
+  "brief": "Meadows ground pickups (good candy, rare candy, small potion) at gameplay camera distance",
+  "defects": [
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+  ]
+ },
+ {
+  "label": "P2-034",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-034_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-034_cand.jpg",
+  "brief": "Meadows harvest reward nodes (orb, travel pack, attack tonic)",
+  "defects": [
+   "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item"
+  ]
+ },
+ {
+  "label": "P2-035",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-035_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-035_cand.jpg",
+  "brief": "Meadows trail camp props: tent, bed and bonfire",
+  "defects": [
+   "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+  ]
+ },
+ {
+  "label": "P2-094",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-094_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-094_cand.jpg",
+  "brief": "A placed homestead wall segment in the Meadows",
+  "defects": [
+   "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+  ]
+ }
+]

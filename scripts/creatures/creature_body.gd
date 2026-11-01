@@ -866,6 +866,7 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 		return
 	var player := players[0] as AnimationPlayer
 	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {})).duplicate(true)
+	_apply_clip_flags(player, clips)
 	# This preview rig's keyed paw strike can wind up through the real tell.
 	# Ordinary Brooktail keeps its installed impact-time attack playback.
 	if not art_model_override.is_empty() and art_model_attack_contact_phase > 0.0 and art_model_attack_contact_phase < 1.0:
@@ -884,6 +885,81 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 	if bool(get_meta("f36_pose_candidate_installed", false)):
 		_animator.call("bind_candidate_pivot", _model)
 	_animator.call("set_traversal_role", _traversal_pose_role)
+
+
+## GPU arms (owner, 31 Oct): a species that plays its own authored clips can
+## take a candidate amplitude change as a named flag in
+## data/config/creature_clip_flags.json, OFF by default. An enabled flag blends
+## each named role's keys relative to that clip's first (standing) key by its
+## factors: rotation and position apart, so a hop can be grounded while the
+## recoil stays, or a recoil that barely reads can be exaggerated. The clip is replaced under its own name in a
+## per-body copy of the library, so the shared imported resource is untouched.
+const CLIP_FLAGS_PATH := "res://data/config/creature_clip_flags.json"
+static var _clip_map: Dictionary = {}
+static var _clip_map_loaded := false
+
+
+static func _clip_flag_map() -> Dictionary:
+	if _clip_map_loaded:
+		return _clip_map
+	_clip_map_loaded = true
+	if not FileAccess.file_exists(CLIP_FLAGS_PATH):
+		return _clip_map
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CLIP_FLAGS_PATH))
+	if not parsed is Dictionary:
+		push_error("creature_clip_flags.json is not an object")
+		return _clip_map
+	var flags: Dictionary = (parsed as Dictionary).get("flags", {})
+	for flag: String in flags:
+		var entry: Variant = flags[flag]
+		if not entry is Dictionary or not bool(entry.get("enabled", false)):
+			continue
+		var species: Dictionary = entry.get("species", {})
+		for id: String in species:
+			var roles: Dictionary = _clip_map.get(id, {})
+			roles.merge(species[id], true)
+			_clip_map[id] = roles
+	return _clip_map
+
+
+func _apply_clip_flags(player: AnimationPlayer, clips: Dictionary) -> void:
+	var roles: Dictionary = _clip_flag_map().get(species_id, {})
+	if roles.is_empty() or not player.has_animation_library(&""):
+		return
+	var library := player.get_animation_library(&"").duplicate() as AnimationLibrary
+	var changed := false
+	for role: String in roles:
+		var clip := str(clips.get(role, ""))
+		if clip.is_empty() or clip.contains("/") or not library.has_animation(StringName(clip)):
+			continue
+		# A number scales rotation and position alike; a {rotation, position}
+		# pair scales them apart (keep a recoil, drop a hop). Factors above 1
+		# exaggerate a recoil that barely differs from standing.
+		var spec: Variant = roles[role]
+		var turn := clampf(float(spec.get("rotation", 1.0) if spec is Dictionary else spec), 0.0, 2.0)
+		var shift := clampf(float(spec.get("position", 1.0) if spec is Dictionary else spec), 0.0, 2.0)
+		var damped := library.get_animation(StringName(clip)).duplicate(true) as Animation
+		for track in damped.get_track_count():
+			var keys := damped.track_get_key_count(track)
+			if keys < 2:
+				continue
+			var kind := damped.track_get_type(track)
+			var first: Variant = damped.track_get_key_value(track, 0)
+			for key in range(1, keys):
+				var value: Variant = damped.track_get_key_value(track, key)
+				if kind == Animation.TYPE_ROTATION_3D:
+					var from := first as Quaternion
+					var delta := from.inverse() * (value as Quaternion)
+					var scaled := Quaternion(delta.get_axis().normalized(), delta.get_angle() * turn) if delta.get_angle() > 0.0001 else Quaternion.IDENTITY
+					damped.track_set_key_value(track, key, (from * scaled).normalized())
+				elif kind == Animation.TYPE_POSITION_3D:
+					damped.track_set_key_value(track, key, (first as Vector3).lerp(value as Vector3, shift))
+		library.remove_animation(StringName(clip))
+		library.add_animation(StringName(clip), damped)
+		changed = true
+	if changed:
+		player.remove_animation_library(&"")
+		player.add_animation_library(&"", library)
 
 
 ## Scale and centre an imported model so it stands on the node's origin at the
@@ -1009,6 +1085,7 @@ func _refresh_shiny_tint() -> void:
 	if _visual_suspended:
 		return  # flags remain current; restore dresses the new model before show
 	_refresh_base_colourway()
+	_apply_coat_flags()
 	_apply_art_model_emission()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
@@ -1039,6 +1116,87 @@ func _apply_art_model_emission() -> void:
 					lit.emission_energy_multiplier = art_model_emission_scale
 					instance.set_surface_override_material(surface, lit)
 		pending.append_array(node.get_children())
+
+
+## GPU arms (owner, 31 Oct): a candidate coat ships as a graded texture plus a
+## named flag in data/config/creature_coat_flags.json, OFF by default, so the
+## GPU judges it by flipping `enabled`. An enabled flag maps an ordinary coat's
+## albedo path to its graded file (an emission slot that carried the same
+## painted image follows it) and/or to material values (metallic, roughness,
+## specular) for a matte finish. Shiny bodies keep their own colourway.
+const COAT_FLAGS_PATH := "res://data/config/creature_coat_flags.json"
+static var _coat_map: Dictionary = {}
+static var _coat_map_loaded := false
+static var _coat_materials: Dictionary = {}
+
+
+static func _coat_flag_map() -> Dictionary:
+	if _coat_map_loaded:
+		return _coat_map
+	_coat_map_loaded = true
+	if not FileAccess.file_exists(COAT_FLAGS_PATH):
+		return _coat_map
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(COAT_FLAGS_PATH))
+	if not parsed is Dictionary:
+		push_error("creature_coat_flags.json is not an object")
+		return _coat_map
+	var flags: Dictionary = (parsed as Dictionary).get("flags", {})
+	for flag: String in flags:
+		var entry: Variant = flags[flag]
+		if not entry is Dictionary or not bool(entry.get("enabled", false)):
+			continue
+		var coats: Dictionary = entry.get("coats", {})
+		for from_path: String in coats:
+			# A string is a graded albedo path; a dictionary may also carry
+			# material values ({"albedo"?, "metallic"?, "roughness"?,
+			# "specular"?}), where a roughness value replaces the roughness map.
+			var spec: Variant = coats[from_path]
+			var resolved: Dictionary = spec.duplicate() if spec is Dictionary else {"albedo": str(spec)}
+			var to_path := str(resolved.get("albedo", ""))
+			if not to_path.is_empty() and not ResourceLoader.exists(to_path):
+				push_error("coat flag %s: %s is missing" % [flag, to_path])
+				continue
+			var merged: Dictionary = _coat_map.get(from_path, {})
+			merged.merge(resolved, true)
+			_coat_map[from_path] = merged
+	return _coat_map
+
+
+func _apply_coat_flags() -> void:
+	if not _has_model or shiny or _model == null:
+		return
+	var coats := _coat_flag_map()
+	if coats.is_empty():
+		return
+	for instance: MeshInstance3D in _model.find_children("*", "MeshInstance3D", true, false):
+		if instance.mesh == null:
+			continue
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.get_active_material(surface) as BaseMaterial3D
+			if source == null or source.albedo_texture == null:
+				continue
+			var from_path := source.albedo_texture.resource_path
+			if not coats.has(from_path):
+				continue
+			var key := source.get_instance_id()
+			if not _coat_materials.has(key):
+				var copy := source.duplicate() as BaseMaterial3D
+				var spec: Dictionary = coats[from_path]
+				var to_path := str(spec.get("albedo", ""))
+				if not to_path.is_empty():
+					var graded := load(to_path) as Texture2D
+					copy.albedo_texture = graded
+					if copy.emission_texture != null and copy.emission_texture.resource_path == from_path:
+						copy.emission_texture = graded
+				if spec.has("metallic"):
+					copy.metallic = clampf(float(spec.metallic), 0.0, 1.0)
+				if spec.has("roughness"):
+					copy.roughness_texture = null
+					copy.roughness = clampf(float(spec.roughness), 0.0, 1.0)
+				if spec.has("specular"):
+					copy.metallic_specular = clampf(float(spec.specular), 0.0, 1.0)
+				_coat_materials[key] = copy
+			instance.set_surface_override_material(surface, _coat_materials[key])
 
 
 func _refresh_base_colourway() -> void:
@@ -1172,6 +1330,21 @@ func _apply_aspect_vfx() -> void:
 	if aspect_variant == "" or not _has_model:
 		return
 	_aspect_vfx = ASPECT_VFX.attach(self, aspect_variant, _radius, _height)
+	if _aspect_vfx != null and _aspect_vfx_suspended:
+		_aspect_vfx.visible = false
+
+
+## GPU F36#0 (24 Oct, 3/3 judges): Nightburrow's flame motes climb a fixed
+## column sized to the STANDING body, so over a fainted body they stood up as
+## a stray vertical line, with the eye glows hanging in the air. A knocked-out
+## creature's aspect flame goes out; it comes back on revive.
+var _aspect_vfx_suspended := false
+
+
+func set_aspect_vfx_suspended(suspended: bool) -> void:
+	_aspect_vfx_suspended = suspended
+	if _aspect_vfx != null:
+		_aspect_vfx.visible = not suspended
 
 
 ## OWNER DIRECTIVE 2026-08-28 §2b: "creatures need to stand out in the grass.
@@ -2587,6 +2760,7 @@ func play_faint() -> void:
 		presence.call("_suspend", "faint_pose")
 	# A hit-recoil tween must not overwrite the collapse's grounded pivot.
 	_clear_combat_flinch()
+	set_aspect_vfx_suspended(true)
 	if _animator != null:
 		_animator.call("play_faint")
 
@@ -3158,6 +3332,7 @@ func rest_pose_receipt() -> Dictionary:
 
 func revive_animation() -> void:
 	ensure_visual_resident()
+	set_aspect_vfx_suspended(false)
 	if _animator != null:
 		_animator.call("revive")
 

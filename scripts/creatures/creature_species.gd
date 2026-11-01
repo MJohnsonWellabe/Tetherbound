@@ -9,6 +9,11 @@ extends RefCounted
 const SPECIES_PATH := "res://data/creatures/species.json"
 const INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const WATER_CATALOGUE := preload("res://scripts/creatures/water_species_catalog.gd")
+## GPU arms (owner, 31 Oct): candidate creature scale-ups ship as named flags,
+## OFF by default, so the GPU judges them on an imported tree by flipping
+## `enabled`. An enabled flag multiplies a species' placeholder height and
+## collider radius by the same factor (grow the smaller side, never shrink).
+const SCALE_FLAGS_PATH := "res://data/config/creature_scale_flags.json"
 
 static var _table: Dictionary = {}
 static var _fly_capabilities: Dictionary = {}
@@ -29,7 +34,33 @@ static func table() -> Dictionary:
 			_table = water.catalogue
 		else:
 			push_error("Water species registration failed: %s" % water.errors)
+		_apply_scale_flags(_table)
 	return _table
+
+
+static func _apply_scale_flags(rows: Dictionary) -> void:
+	if not FileAccess.file_exists(SCALE_FLAGS_PATH):
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SCALE_FLAGS_PATH))
+	if not parsed is Dictionary:
+		push_error("creature_scale_flags.json is not an object")
+		return
+	var flags: Dictionary = (parsed as Dictionary).get("flags", {})
+	for flag: String in flags:
+		var entry: Variant = flags[flag]
+		if not entry is Dictionary or not bool(entry.get("enabled", false)):
+			continue
+		var factors: Dictionary = entry.get("species", {})
+		for id: String in factors:
+			var factor := float(factors[id])
+			if not rows.has(id) or not is_finite(factor) or factor < 1.0:
+				push_error("scale flag %s: %s needs a known species and a factor >= 1" % [flag, id])
+				continue
+			var row: Dictionary = rows[id]
+			var look: Dictionary = (row.get("placeholder", {}) as Dictionary).duplicate()
+			look["height"] = float(look.get("height", 1.0)) * factor
+			look["radius"] = float(look.get("radius", 0.4)) * factor
+			row["placeholder"] = look
 
 
 static func has(species_id: String) -> bool:

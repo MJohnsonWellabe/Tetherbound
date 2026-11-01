@@ -181,6 +181,32 @@ func test_a_speaker_is_a_character_and_a_fence_post_is_not() -> void:
 	post.free()
 
 
+## Cloudreach's topic prompts ("Ask Kelm about cliff materials") stand 1.8 m
+## beside their person under a shared ConversationTopics node, so the parent
+## walk found a plain Node3D and the push-in never engaged (or framed the last
+## person spoken to). A provider that names its speaker resolves to them; a
+## named non-character or a freed body still resolves to nobody.
+func test_a_prompt_beside_its_speaker_resolves_through_the_speaker_meta() -> void:
+	var villager := Villager.new()
+	var topics := Node3D.new()
+	var prompt := Node3D.new()
+	topics.add_child(prompt)
+	assert_eq(CONVERSATION.resolve_speaker(prompt), null,
+		"an unnamed topic prompt under a plain node has nobody to frame")
+	prompt.set_meta(CONVERSATION.SPEAKER_META, villager)
+	assert_eq(CONVERSATION.resolve_speaker(prompt), villager,
+		"a topic prompt beside its person must frame that person")
+	var post := Node3D.new()
+	prompt.set_meta(CONVERSATION.SPEAKER_META, post)
+	assert_eq(CONVERSATION.resolve_speaker(prompt), null,
+		"naming a fence post must not move the camera")
+	post.free()
+	assert_eq(CONVERSATION.resolve_speaker(prompt), null,
+		"a freed named body must not be framed")
+	villager.free()
+	topics.free()
+
+
 ## --- a real open/close cycle on the rig -------------------------------------
 
 func test_opening_a_conversation_moves_the_rig_to_the_two_shot() -> void:

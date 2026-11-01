@@ -13,6 +13,7 @@ extends RefCounted
 const WOOD_TEXTURE := "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
 const STONE_TEXTURE := "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
 const GLOW := preload("res://scripts/world/crossing_hall_claude.gd")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 
 
 static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary = {}) -> Dictionary:
@@ -28,6 +29,10 @@ static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary = {}) -> Dic
 	hall.add_child(root)
 	if cfg.has("runner"):
 		_runner(root, cfg.runner)
+	# HALL-1: further woven rugs (same shader) on bare floors, e.g. the
+	# Shrine Room cobbles the GPU judges read as a courtyard.
+	for row: Dictionary in cfg.get("rugs", []):
+		_runner(root, row, "HallRug")
 	if cfg.has("hangings"):
 		_hangings(root, cfg.hangings)
 	if cfg.has("facade_hangings"):
@@ -146,7 +151,7 @@ static func _quiet(mesh: MeshInstance3D) -> MeshInstance3D:
 
 ## Woven runner: one plane whose shader draws the field, a cream border with
 ## a thin inner stripe, a repeated diamond and a soft weave.
-static func _runner(root: Node3D, cfg: Dictionary) -> void:
+static func _runner(root: Node3D, cfg: Dictionary, node_name: String = "NaveRunner") -> void:
 	var shader := Shader.new()
 	shader.code = """shader_type spatial;
 render_mode cull_back;
@@ -179,10 +184,11 @@ void fragment() {
 	var plane := PlaneMesh.new()
 	plane.size = size
 	var mesh := MeshInstance3D.new()
-	mesh.name = "NaveRunner"
+	mesh.name = node_name
 	mesh.mesh = plane
 	mesh.material_override = material
 	mesh.position = _v(cfg.at)
+	mesh.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0)))
 	root.add_child(_quiet(mesh))
 
 
@@ -666,6 +672,10 @@ static func _piece(root: Node3D, row: Dictionary) -> Node3D:
 	model.position = -Vector3(box.get_center().x * scale.x, box.position.y * scale.y, box.get_center().z * scale.z)
 	if row.has("clip_box"):
 		_clip(model, row.clip_box)
+	# HALL-1: a flame sculpt (e.g. the camp flame in a hearth's firebox)
+	# burns with the campfire glow instead of reading as a dull mesh.
+	if row.has("ignite_energy"):
+		CAMPFIRE_GLOW.ignite_mesh(model, float(row.ignite_energy), true)
 	if row.has("emission_mask"):
 		var mask := load(str(row.emission_mask)) as Texture2D
 		for raw: Node in model.find_children("*", "MeshInstance3D", true, false):

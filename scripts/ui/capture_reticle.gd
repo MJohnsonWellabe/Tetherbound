@@ -291,6 +291,13 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 	var pct_pos := center + Vector2(-pct_dims.x * 0.5, radius + READOUT_GAP)
 	var outlined := bool(_readout_visual.get("outline_enabled", false))
 	var outline_size := maxi(0, int(_readout_visual.get("outline_size", UITokens.OUTLINE_SIZE)))
+	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
+	var caption_dims: Vector2 = font.get_string_size(
+		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
+	)
+	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
+	if bool(_readout_visual.get("backing_enabled", false)):
+		_draw_readout_backing(font, pct_pos, pct_dims, pct_size, caption_pos, caption_dims, alpha)
 	if outlined:
 		var pct_outline := UITokens.OUTLINE
 		pct_outline.a *= tier_colour.a
@@ -298,19 +305,34 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 			pct_size, outline_size, pct_outline)
 	draw_string(font, pct_pos, pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size, tier_colour)
 
-	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
 	var caption_colour := UITokens.TEXT_SECONDARY
 	caption_colour.a *= alpha
-	var caption_dims: Vector2 = font.get_string_size(
-		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
-	)
-	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
 	if outlined:
 		var caption_outline := UITokens.OUTLINE
 		caption_outline.a *= caption_colour.a
 		draw_string_outline(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1,
 			CAPTION_FONT_SIZE, outline_size, caption_outline)
 	draw_string(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE, caption_colour)
+
+
+## P2-114 (GPU item scores, 28 Oct): outlined text still read "dark, unbacked
+## and lost against pale sand and the creatures". One rounded panel-coloured
+## plate behind the percentage and caption, the same BG_PANEL the HUD's own
+## boxes use, so the readout holds over sand, snow and sky alike.
+func _draw_readout_backing(font: Font, pct_pos: Vector2, pct_dims: Vector2, pct_size: int,
+		caption_pos: Vector2, caption_dims: Vector2, alpha: float) -> void:
+	var pad := float(_readout_visual.get("backing_padding", 12.0))
+	var top := pct_pos.y - font.get_ascent(pct_size)
+	var bottom := caption_pos.y + font.get_descent(CAPTION_FONT_SIZE)
+	var left := minf(pct_pos.x, caption_pos.x)
+	var right := maxf(pct_pos.x + pct_dims.x, caption_pos.x + caption_dims.x)
+	var plate := StyleBoxFlat.new()
+	var fill := UITokens.BG_PANEL
+	fill.a *= float(_readout_visual.get("backing_opacity", 0.85)) * alpha
+	plate.bg_color = fill
+	plate.set_corner_radius_all(UITokens.RADIUS)
+	draw_style_box(plate, Rect2(Vector2(left - pad, top - pad * 0.5),
+		Vector2(right - left + pad * 2.0, bottom - top + pad)))
 
 
 ## A single expanding, fading ring — the visible half of an orb shake.

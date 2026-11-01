@@ -1,0 +1,27 @@
+{
+ "asset": "P2-070 Glass Sink landmark rim (Stormwood 3.19)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a192ad-d096-72da-8c62-c58132f7bf0e",
+  "prompt": "the rim of a circular sunken basin seen from above at an angle: a ring of tall translucent blue-violet glass shards around a black mirror-still pool, a weathered stone and copper-banded rim with two copper lightning-rod posts, moss on the stones, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter view from slightly above, centered, whole object visible, plain light grey background, soft even daylight, no text, no people, no creatures",
+  "inspected_before_submission": true
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a192af-3967-75d6-baa2-f917390f861e",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 40000,
+   "symmetry_mode": "auto"
+  },
+  "file": "glass_sink.glb",
+  "sha256": "207456b8c1023a6c8636a6b3d6a15f6f289591fb3f61003f2ec6f89e01808d03"
+ }
+}

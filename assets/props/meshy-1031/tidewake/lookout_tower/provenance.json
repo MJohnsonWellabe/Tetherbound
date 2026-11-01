@@ -1,0 +1,27 @@
+{
+ "asset": "Tidewake beach focal piece: lookout_tower (owner 31 Oct: declutter the Tidewake locations, Meshy beach huts and a beach bar as their focus)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a1937f-09b2-70a6-b5ff-8b26e7000477",
+  "prompt": "a tall driftwood lookout tower on four splayed legs with cross bracing and a ladder, a small thatched platform hut on top with a railing and a brass bell, flags of teal cloth, for a tropical island fishing village in a creature-collecting adventure game, weathered pale driftwood, palm thatch, sun-bleached canvas in sand, teal and turquoise accents, rope and shells, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter view from slightly above, centered, whole object visible, plain light grey background, soft even daylight, no red, no text, no people, no creatures",
+  "inspected_before_submission": true
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a1937f-97f2-77a6-a20c-8e50c226b87f",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 30000,
+   "symmetry_mode": "auto"
+  },
+  "file": "lookout_tower.glb",
+  "sha256": "d261288567362f339290ad4c9a325669f245728c9f629d1d42b7f47a23072d09"
+ }
+}

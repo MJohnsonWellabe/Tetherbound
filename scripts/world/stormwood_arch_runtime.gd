@@ -1,5 +1,6 @@
 extends Node3D
 
+const CROWN_HERO := preload("res://scripts/world/stormwood_crown_arch_hero.gd")
 const RULES := preload("res://scripts/world/stormwood_arch_rules.gd")
 const BUILT := preload("res://scripts/world/stormwood_arch_build_rules.gd")
 const PIECE := preload("res://scripts/build/stormwood_arch_piece.gd")
@@ -132,6 +133,9 @@ func _build(spec: Dictionary) -> void:
 		var crown_candidate: Script = preload("res://assets/environment/stormwood/crown_arch/crown_arch_candidate.gd")
 		var candidate_applied: bool = crown_candidate.apply(piece, slab, clearance)
 		if candidate_applied:
+			GRASS_FIELD.clearings_dirty = true
+		# World dressing P2-041 (crown_arch_hero.json, OFF until GPU judged).
+		if CROWN_HERO.apply(arch, piece, slab, clearance):
 			GRASS_FIELD.clearings_dirty = true
 	row["piece"] = piece
 	var prompt := INTERACTABLE.new()

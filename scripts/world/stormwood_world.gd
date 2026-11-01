@@ -478,4 +478,5 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 	material.set("auto_shader",true)
 	if not simulation_only:
 		GLASS_SINK.install(_terrain, _field.config.glass_sink)
+		GLASS_SINK.dress(self, _field.config.glass_sink)
 		GROUND_ZONES.install(_terrain)

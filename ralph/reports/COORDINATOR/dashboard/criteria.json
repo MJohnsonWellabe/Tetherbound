@@ -1,6 +1,6 @@
 {
- "generated_at": "1:25 AM CT Wed 28 Oct 2026",
- "main_sha": "433df7aa4",
+ "generated_at": "1 Nov 2026",
+ "main_sha": "d4d5b262f",
  "batch4_sha": "wound down 27 Oct (owner: usage); no lanes running",
  "rows": [
   {
@@ -1159,8 +1159,8 @@
     {
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE \u00a74: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
      "status": "in_progress",
-     "evidence": "REOPENED on GPU 24 Oct 2026 (tb/gpu-pass d4ded67f4, ralph/reports/GPU-PASS/F17-6/VERDICT.md): main r9 maps to 5.83 vs control 4.98 at Medium and High (GTX 1060, Forward+). r9's hall_great_hall.shafts (additive quads) render on Forward+ as hard white bars in 6 of 10 day views, plus neon arch rims; the CPU sheet shows no shafts. Needs a renderer-aware shaft fix and a GPU re-judge. | Earlier: CPU-provisional met (24 Oct 2026, tb/meadows-land 6cb3e6c0b): Crossing Hall r9 mapped Bar A 6.84 vs shipping 5.82, three fresh code-blind judges, standard yardstick prompt, three anchor pairs, confirming batch, linear calibration r 0.89 RMSE 0.55 (ralph/reports/MEADOWS/close-1024/F17-6.md). A GPU pass must confirm 7.5. | Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners). | Pair02 2f04551faf: three blind judges prefer frame-lantern-lit candidate; BarA6.033333/BarB5.5 vs concurrent original4.5/3.633333. ART_DIRECTION supplied; portable proof: ralph/reports/EVIDENCE/takeover-native/hall-lantern-2f/proof.md.",
-     "gap": "Make the Hall shafts and arch rims renderer-aware (as the F22#4 boss aura), re-judge F17-6 on GPU at Medium and High; 7.5 closes it.",
+     "evidence": "GPU 1 Nov 2026 HALL-1 (F17-6 camera set, High, yardstick; ralph/reports/GPU-PASS/Q31/HALL1-crossing-hall/VERDICT.md, tb/gpu-pass 317489944): main 6.18, candidate r2b +0.78 on every set (approach-nave +0.60, nave-sides +0.80, shrine +0.94), landed ON in #789. REOPENED on GPU 24 Oct 2026 (tb/gpu-pass d4ded67f4, ralph/reports/GPU-PASS/F17-6/VERDICT.md): main r9 maps to 5.83 vs control 4.98 at Medium and High (GTX 1060, Forward+). r9's hall_great_hall.shafts (additive quads) render on Forward+ as hard white bars in 6 of 10 day views, plus neon arch rims; the CPU sheet shows no shafts. Needs a renderer-aware shaft fix and a GPU re-judge. | Earlier: CPU-provisional met (24 Oct 2026, tb/meadows-land 6cb3e6c0b): Crossing Hall r9 mapped Bar A 6.84 vs shipping 5.82, three fresh code-blind judges, standard yardstick prompt, three anchor pairs, confirming batch, linear calibration r 0.89 RMSE 0.55 (ralph/reports/MEADOWS/close-1024/F17-6.md). A GPU pass must confirm 7.5. | Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners). | Pair02 2f04551faf: three blind judges prefer frame-lantern-lit candidate; BarA6.033333/BarB5.5 vs concurrent original4.5/3.633333. ART_DIRECTION supplied; portable proof: ralph/reports/EVIDENCE/takeover-native/hall-lantern-2f/proof.md.",
+     "gap": "About 1.0 to 7.5 at High on the Hall set: arch piers still read as near-field posts in the nave views, grouped furnishing with villagers, lower plaster exposure, Forward+-safe window shafts, a clearly darker night, cap the altar bloom.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture. | Pair02 is not directly comparable to prior reference-only4.067. Original historical scores/approach dispositions remain in their evidence; no closure or fresh full-matrix trend.",
      "audit_index": 6
     }
@@ -2425,10 +2425,10 @@
     },
     {
      "text": "F36 (0) priority asset #13: Tanglevolt regenerated or confirmed with drafted reference and provenance, and passing the bar.",
-     "status": "in_progress",
-     "evidence": "Ledger close-1020 row 13: ON. Native candidate 7.17 vs installed 6.77 (3/3 prefer; CPU-provisional). Not an F36 pose-enabled species, so no recipe changes.",
+     "status": "met",
+     "evidence": "GPU Q31 ROSTER-1 31 Oct, judge of record (tb/gpu-pass 75e243799 High, 21d35e233 Medium; ralph/reports/GPU-PASS/Q31/ROSTER1-near-bar-f36-high/ incl. yardstick/medium-tanglevolt/; main d4d5b262f, one-sided, three code-blind judges, high anchors): tanglevolt mapped 7.70 at High (7.61/7.80/7.67) and 7.57 at Medium (7.71/7.80/7.21; fit r 0.89); no pose PRESENT at either preset (float FIXED 3/3, hit FIXED 3/3, faint end FIXED 2 / PARTIAL 1 at Medium). MET. Earlier: Ledger close-1020 row 13: ON. Native candidate 7.17 vs installed 6.77 (3/3 prefer; CPU-provisional). Not an F36 pose-enabled species, so no recipe changes.",
      "gap": "GPU yardstick capture at Medium and High; mapped >= 7.5 closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Landed: closed 1 Nov 2026 on the GPU yardstick at High and Medium (owner High-first rule).",
      "parent": "F36#0",
      "subject": "Tanglevolt",
      "audit_index": 0
@@ -2636,7 +2636,7 @@
     {
      "text": "F36 (1) ashtusk: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): ashtusk mapped 6.36 (tier 6-7). CPU whole-roster round r3: mapped 6.68 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 5.97 -> 6.96, dark coat FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): ashtusk mapped 6.36 (tier 6-7). CPU whole-roster round r3: mapped 6.68 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2666,7 +2666,7 @@
     {
      "text": "F36 (1) brooktail: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): brooktail mapped 7.13 (tier 7-7.5). CPU whole-roster round r2: mapped 7.17 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 6.39 -> 6.63, height FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): brooktail mapped 7.13 (tier 7-7.5). CPU whole-roster round r2: mapped 7.17 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2695,10 +2695,10 @@
     },
     {
      "text": "F36 (1) cindercub: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
-     "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): cindercub mapped 7.18 (tier 7-7.5). CPU whole-roster round r3: mapped 7.51 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "status": "met",
+     "evidence": "GPU Q31 CO16 creatures one-tree, judge of record (tb/gpu-pass e173f5346 High, 7a2fa4147 Medium; ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/ incl. yardstick/medium-cindercub/): with the CO-F36-4 coat lift (landed #784) cindercub maps 7.51 at High and 7.58 at Medium (7.53/7.53/7.70, fit r 0.91); float FIXED 3/3, coat PARTIAL/FIXED, no pose PRESENT (CO-F36-6 hit: PARTIAL 1 / FIXED 2). MET. Earlier: GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.89 -> 7.51 (Medium queued), dark coat FIXED 3/3; stronger hit 6.50 -> 6.82. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): cindercub mapped 7.18 (tier 7-7.5). CPU whole-roster round r3: mapped 7.51 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Landed: closed 1 Nov 2026 on the GPU yardstick at High and Medium (owner High-first rule); thin margin, next: paler face and underside, rim light.",
      "parent": "F36#1",
      "subject": "cindercub",
      "audit_index": 1
@@ -2706,7 +2706,7 @@
     {
      "text": "F36 (1) cliffspike: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "CPU whole-roster round r6: mapped 6.86 (ralph/reports/CREATURES/close-1024/roster/r6/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO12 31 Oct, judge of record (tb/gpu-pass d3f930b94, ralph/reports/GPU-PASS/Q31/CO12-near-bar-creatures-e5fcc1c47/VERDICT.md; main d4d5b262f vs tb/co12-main-on e5fcc1c47, Medium and High, yardstick): 6.19 -> 6.72 (+0.53) at Medium and High; hit react PRESENT -> PARTIAL; floating faint FIXED. Next: the faint reads as a crouch, not a collapse; the face is lost in the quills. Landed. Earlier: CPU whole-roster round r6: mapped 6.86 (ralph/reports/CREATURES/close-1024/roster/r6/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2746,7 +2746,7 @@
     {
      "text": "F36 (1) duskhush: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): duskhush mapped 7.07 (tier 7-7.5). CPU whole-roster round r2: mapped 6.62 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.06 -> 6.85; taller 6.49 -> 6.84, height FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): duskhush mapped 7.07 (tier 7-7.5). CPU whole-roster round r2: mapped 6.62 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2856,7 +2856,7 @@
     {
      "text": "F36 (1) mudsnout: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): mudsnout mapped 6.96 (tier 6-7). CPU whole-roster round r1: mapped 7.76 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 7.11 -> 7.40. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): mudsnout mapped 6.96 (tier 6-7). CPU whole-roster round r1: mapped 7.76 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2866,7 +2866,7 @@
     {
      "text": "F36 (1) nightburrow: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): nightburrow mapped 6.59 (tier 6-7). CPU whole-roster round r2: mapped 7.44 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 5.66 -> 5.80. Landed. Earlier: GPU Q31 CO12 31 Oct, judge of record (tb/gpu-pass d3f930b94, ralph/reports/GPU-PASS/Q31/CO12-near-bar-creatures-e5fcc1c47/VERDICT.md; main d4d5b262f vs tb/co12-main-on e5fcc1c47, Medium and High, yardstick): 6.23 -> 6.67 (+0.44) at Medium and High; flame-on-faint PRESENT -> FIXED 3/3. Next: noisy speckled coat; the faint ends in a crouch, not on its side. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): nightburrow mapped 6.59 (tier 6-7). CPU whole-roster round r2: mapped 7.44 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2876,7 +2876,7 @@
     {
      "text": "F36 (1) paddlenewt: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): paddlenewt mapped 6.75 (tier 6-7). CPU whole-roster round r2: mapped 6.8 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 6.49 -> 6.85. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): paddlenewt mapped 6.75 (tier 6-7). CPU whole-roster round r2: mapped 6.8 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2896,7 +2896,7 @@
     {
      "text": "F36 (1) pipwing: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): pipwing mapped 6.66 (tier 6-7). CPU whole-roster round r2: mapped 6.84 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 6.71 -> 7.19, height FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): pipwing mapped 6.66 (tier 6-7). CPU whole-roster round r2: mapped 6.84 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2926,7 +2926,7 @@
     {
      "text": "F36 (1) riftfrill: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): riftfrill mapped 6.51 (tier 6-7). CPU whole-roster round r3: mapped 5.9 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 6.04 -> 6.68. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): riftfrill mapped 6.51 (tier 6-7). CPU whole-roster round r3: mapped 5.9 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2966,7 +2966,7 @@
     {
      "text": "F36 (1) shadelet: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): shadelet mapped 6.29 (tier 6-7). CPU whole-roster round r3: mapped 6.73 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.06 -> 6.58. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): shadelet mapped 6.29 (tier 6-7). CPU whole-roster round r3: mapped 6.73 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2976,7 +2976,7 @@
     {
      "text": "F36 (1) sirenseal: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): sirenseal mapped 7.2 (tier 7-7.5). CPU whole-roster round r4: mapped 6.89 (ralph/reports/CREATURES/close-1024/roster/r4/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): grounded hit 6.17 -> 7.07, airborne PRESENT -> PARTIAL. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): sirenseal mapped 7.2 (tier 7-7.5). CPU whole-roster round r4: mapped 6.89 (ralph/reports/CREATURES/close-1024/roster/r4/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3006,7 +3006,7 @@
     {
      "text": "F36 (1) sparkit: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): sparkit mapped 6.28 (tier 6-7). CPU whole-roster round r3: mapped 6.36 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 5.41 -> 5.83. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): sparkit mapped 6.28 (tier 6-7). CPU whole-roster round r3: mapped 6.36 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3056,7 +3056,7 @@
     {
      "text": "F36 (1) stormtrail: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): stormtrail mapped 5.98 (tier below 6). CPU whole-roster round r2: mapped 6.66 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.18 -> 6.82, FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): stormtrail mapped 5.98 (tier below 6). CPU whole-roster round r2: mapped 6.66 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3106,7 +3106,7 @@
     {
      "text": "F36 (1) thundertunnel: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "CPU whole-roster round r5: mapped 7.16 (ralph/reports/CREATURES/close-1024/roster/r5/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.47 -> 6.82. Landed. Earlier: GPU Q31 CO12 31 Oct, judge of record (tb/gpu-pass d3f930b94, ralph/reports/GPU-PASS/Q31/CO12-near-bar-creatures-e5fcc1c47/VERDICT.md; main d4d5b262f vs tb/co12-main-on e5fcc1c47, Medium and High, yardstick): Medium 5.73 -> 6.49 (+0.76), High 5.52 -> 6.50 (+0.98); near-black fur PRESENT -> PARTIAL; floating faint FIXED. Next: lift values further and add rim light; the faint barely differs from standing. Landed. Earlier: CPU whole-roster round r5: mapped 7.16 (ralph/reports/CREATURES/close-1024/roster/r5/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3136,7 +3136,7 @@
     {
      "text": "F36 (1) trailpup: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): trailpup mapped 7.34 (tier 7-7.5). CPU whole-roster round r1: mapped 7.95 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): stronger hit 6.64 -> 6.92. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): trailpup mapped 7.34 (tier 7-7.5). CPU whole-roster round r1: mapped 7.95 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3176,7 +3176,7 @@
     {
      "text": "F36 (1) voltwig: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "CPU whole-roster round r4: mapped 6.44 (ralph/reports/CREATURES/close-1024/roster/r4/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO12 31 Oct, judge of record (tb/gpu-pass d3f930b94, ralph/reports/GPU-PASS/Q31/CO12-near-bar-creatures-e5fcc1c47/VERDICT.md; main d4d5b262f vs tb/co12-main-on e5fcc1c47, Medium and High, yardstick): Medium 6.75 -> 6.79, High 6.40 -> 6.98 (+0.58); High hit react FIXED, Medium PARTIAL. Next: lower the flinch peak so the hind feet stay planted; the brassy skin is all one mid-tone. Landed. Earlier: CPU whole-roster round r4: mapped 6.44 (ralph/reports/CREATURES/close-1024/roster/r4/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3561,7 +3561,7 @@
     {
      "text": "F38 (1) top-20 item P2-033 ground pickup identity: Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal came \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. Code-blind ground-level review across four biomes. Meadows candies/potions are small colored glows; Tidewake repeats a crate family; Cloudreach potion/revive can read as flowers; five progression-gate",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 5.37 -> 6.34 (+0.97). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. Code-blind ground-level review across four biomes. Meadows candies/potions are small colored glows; Tidewake repeats a crate family; Cloudreach potion/revive can read as flowers; five progression-gate",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
@@ -3593,7 +3593,7 @@
     {
      "text": "F38 (1) top-20 item P2-058 catch aim readability: The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. The numeric chance changes are present but small; the aim view does not expose the target health as a clear visual cause. Judged from full-resolution stills.",
+     "evidence": "GPU Q31 UI-1 31 Oct (tb/gpu-pass 20bc9054b, High): backing plate 5.77 -> 6.24 (+0.47) with UI-1; readout still sits on the creature (PARTIAL 3). Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. The numeric chance changes are present but small; the aim view does not expose the target health as a clear visual cause. Judged from full-resolution stills.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
@@ -3900,9 +3900,9 @@
     },
     {
      "text": "F38 (1) top-20 item P2-087 named trainer dialogue subject visibility: Several named trainer dialogue views show only the player and terrain with no speaker visible \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-meadows. Direct-start post fixture; an alternate camera stand or normal interaction is needed. Text and portrait legible. Three stronghold direct-start posts and dialogue panels also lack the named body, inclu",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "in_progress",
+     "evidence": "GPU 1 Nov 2026 DLG-2, High, yardstick (dialogue opened at the speaker's own body, capture fixture landed in this PR): mapped 6.94 (DLG-1 old fixture 5.12). ralph/reports/GPU-PASS/Q31/DLG2-honest-dialogue/VERDICT.md (tb/gpu-pass 5ea813bb9). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-meadows. Direct-start post fixture; an alternate camera stand or normal interaction is needed. Text and portrait legible. Three stronghold direct-start posts and dialogue panels also lack the named body, inclu",
+     "gap": "Break the single orange-brown grade on the stronghold frames (0.56 to 7.5).",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-087",
@@ -4198,9 +4198,9 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-031 settings and binding instructions: Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Shared menu presentation in two biomes; [Minus] and [Equal] labels are visible in map instructions.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "in_progress",
+     "evidence": "GPU 1 Nov 2026 MENU-1, High, yardstick: menu text floors ON 5.62 to 6.12 (+0.50, defect PRESENT to PARTIAL), landed ON with this PR; ralph/reports/GPU-PASS/Q31/MENU1-menu-text-floors/VERDICT.md (tb/gpu-pass 7ae95003e). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Shared menu presentation in two biomes; [Minus] and [Equal] labels are visible in map instructions.",
+     "gap": "1.38 to 7.5: the remaining dense instruction blocks and literal key labels in the map and settings views.",
      "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-031",
@@ -4350,7 +4350,7 @@
     {
      "text": "F38 (2) impact>12 item P2-035 camp and workshop prop legibility: Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 27, lane tb/x04-meadows. The CAMP sign and workshop camera stands contribute to occlusion; reshoot side views before assigning every prop as a scene issue.",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 5.44 -> 5.68 (+0.24). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 27, lane tb/x04-meadows. The CAMP sign and workshop camera stands contribute to occlusion; reshoot side views before assigning every prop as a scene issue.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
@@ -4609,7 +4609,7 @@
     {
      "text": "F39 (1) top-20 item P2-008 shore landforms: Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 100, lane tb/x04-tidewake. Owner-directed Lake Michigan dune candidate remains off. Historical weathering review PARTIAL and dunes-01 FAIL included invalid optional Salt Crown walk02/03 comparisons; dunes-02 was a four-view dia",
+     "evidence": "GPU Q31 TW-LOOK-1 1 Nov (tb/gpu-pass fb76d9e55, High): Tidewake declutter with the Meshy beach focal set, six islands mean 5.34 -> 6.19 (+0.85): gull_rest 5.33 -> 6.31, tidal_cradle 5.03 -> 5.96, first_shore 5.32 -> 6.19, salt_crown 5.00 -> 5.86, drowned_garden 5.68 -> 6.46, lantern_cove 5.69 -> 6.36; focal-building defect PRESENT -> PARTIAL 6/6. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 100, lane tb/x04-tidewake. Owner-directed Lake Michigan dune candidate remains off. Historical weathering review PARTIAL and dunes-01 FAIL included invalid optional Salt Crown walk02/03 comparisons; dunes-02 was a four-view dia",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
@@ -4667,7 +4667,7 @@
     {
      "text": "F39 (1) top-20 item P2-011 named destination read: Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 80, lane tb/x04-tidewake. Seeded route proxy corroborates generic location stands; reshoot true authored route before assigning site work. The Gull Rest tower itself remains a visible local marker.",
+     "evidence": "GPU Q31 TW-LOOK-1 1 Nov (tb/gpu-pass fb76d9e55, High): Tidewake declutter with the Meshy beach focal set, six islands mean 5.34 -> 6.19 (+0.85): gull_rest 5.33 -> 6.31, tidal_cradle 5.03 -> 5.96, first_shore 5.32 -> 6.19, salt_crown 5.00 -> 5.86, drowned_garden 5.68 -> 6.46, lantern_cove 5.69 -> 6.36; focal-building defect PRESENT -> PARTIAL 6/6. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 80, lane tb/x04-tidewake. Seeded route proxy corroborates generic location stands; reshoot true authored route before assigning site work. The Gull Rest tower itself remains a visible local marker.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
@@ -4916,7 +4916,7 @@
     {
      "text": "F39 (2) impact>12 item P2-115 authored camp creature bed silhouette: The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape  \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 48, lane tb/x04-tidewake. Code-blind review of three authored camp fixtures from the normal player camera. Camp tent and fire are clearly identifiable; no sleep interaction was performed. Salt Crown is most edge-on, so confirm",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 4.62 -> 5.23 (+0.61); reads as a pit. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 48, lane tb/x04-tidewake. Code-blind review of three authored camp fixtures from the normal player camera. Camp tent and fire are clearly identifiable; no sleep interaction was performed. Salt Crown is most edge-on, so confirm",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
@@ -4945,7 +4945,7 @@
     {
      "text": "F39 (2) impact>12 item P2-116 authored camp workbench identity: The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidd \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-tidewake. Code-blind normal-camera review at three authored camps. This is the world station, distinct from CraftPanel text issues P2-095 and P2-096. At First Shore the fixture player appears to stand on the be",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 5.20 -> 6.08 (+0.88). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-tidewake. Code-blind normal-camera review at three authored camps. This is the world station, distinct from CraftPanel text issues P2-095 and P2-096. At First Shore the fixture player appears to stand on the be",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
@@ -5089,9 +5089,9 @@
     },
     {
      "text": "F39 (2) impact>12 item P2-073 dialogue camera framing: At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speak \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 36, lane tb/x04-tidewake. Code-blind panel review. Direct-start fixture shows the production panel but does not prove the normal interaction camera would frame the same way; reshoot by normal interaction where reachable.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "in_progress",
+     "evidence": "GPU 1 Nov 2026 DLG-2, High, yardstick (dialogue opened at the speaker's own body, capture fixture landed in this PR): mapped 6.83 (DLG-1 old fixture 5.05). ralph/reports/GPU-PASS/Q31/DLG2-honest-dialogue/VERDICT.md (tb/gpu-pass 5ea813bb9). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 36, lane tb/x04-tidewake. Code-blind panel review. Direct-start fixture shows the production panel but does not prove the normal interaction camera would frame the same way; reshoot by normal interaction where reachable.",
+     "gap": "Frame the speaker medium-close beside the panel; the player's back takes about a third of the frame at Bex and Irva (0.67 to 7.5).",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-073",
@@ -5221,7 +5221,7 @@
     {
      "text": "F39 (2) impact>12 item P2-114 catch chance HUD contrast: The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan w \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. The 4% to 41% values are visible on inspection, while the CAPTURE CHANCE label nearly disappears into the background. Assess on the actual 1920x1080 display before choosing a panel or text treatment. ",
+     "evidence": "GPU Q31 UI-1 31 Oct (tb/gpu-pass 20bc9054b, High): capture readout backing plate 5.55 -> 6.12 (+0.57), defect PRESENT -> PARTIAL 1 / FIXED 2; landed. Next: move the readout off the target. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. The 4% to 41% values are visible on inspection, while the CAPTURE CHANCE label nearly disappears into the background. Assess on the actual 1920x1080 display before choosing a panel or text treatment. ",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Counted once (owner 24 Oct board math): touches tidewake, cloudreach; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
@@ -5397,9 +5397,9 @@
     },
     {
      "text": "F39 (2) impact>12 item P2-074 dialogue speaker visibility: Several named conversations show no identifiable speaker near the dialogue panel \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 18, lane tb/x04-tidewake. Direct-start initial and post-win visual fixtures: Nerissa, Rune, Venn out of frame at steep grassy/rocky edges. Needs normal interaction/alternate stand; no missing runtime body claim. Odan opposite-",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "in_progress",
+     "evidence": "GPU 1 Nov 2026 DLG-2, High, yardstick (dialogue opened at the speaker's own body, capture fixture landed in this PR): mapped 5.78 (DLG-1 old fixture 3.79). ralph/reports/GPU-PASS/Q31/DLG2-honest-dialogue/VERDICT.md (tb/gpu-pass 5ea813bb9). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 18, lane tb/x04-tidewake. Direct-start initial and post-win visual fixtures: Nerissa, Rune, Venn out of frame at steep grassy/rocky edges. Needs normal interaction/alternate stand; no missing runtime body claim. Odan opposite-",
+     "gap": "Place Nalia with a stand beside her body; push in at Nerissa and add key, rim and fog depth to the dim chamber (1.72 to 7.5).",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-074",
@@ -5794,9 +5794,9 @@
     },
     {
      "text": "F40 (2) impact>12 item P2-076 dialogue speaker visibility: Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 24, lane tb/x04-cloudreach. Deferred to Cloudreach gameplay/Claude dialogue-camera owner: direct-start initial/post-win fixtures do not establish ordinary speaker visibility. A normal interaction repro is required before changin",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "in_progress",
+     "evidence": "GPU 1 Nov 2026 DLG-2, High, yardstick (dialogue opened at the speaker's own body, capture fixture landed in this PR): mapped 6.92 (DLG-1 old fixture 4.39). ralph/reports/GPU-PASS/Q31/DLG2-honest-dialogue/VERDICT.md (tb/gpu-pass 5ea813bb9). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 24, lane tb/x04-cloudreach. Deferred to Cloudreach gameplay/Claude dialogue-camera owner: direct-start initial/post-win fixtures do not establish ordinary speaker visibility. A normal interaction repro is required before changin",
+     "gap": "Give the bare flat-dirt Cloudreach plaza stone and props (0.58 to 7.5).",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-076",
@@ -5911,7 +5911,7 @@
     {
      "text": "F40 (2) impact>12 item P2-054 mushroom pickup variants: Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 18, lane tb/x04-cloudreach. Deferred: Source audit finds inconsistent mushroom dressing between BandPickups and ItemCachePickup. A shared, texture-preserving variant treatment still needs matched production-camera proof; changin",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 6.33 -> 6.92 (+0.59), FIXED 3. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 18, lane tb/x04-cloudreach. Deferred: Source audit finds inconsistent mushroom dressing between BandPickups and ItemCachePickup. A shared, texture-preserving variant treatment still needs matched production-camera proof; changin",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
@@ -6204,9 +6204,9 @@
     },
     {
      "text": "F41 (1) top-20 item P2-081 named trainer dialogue identity: Every captured named trainer conversation repeats the same generic line and shows no portrait \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-stormwood. All26 trainer challenge/defeated text candidates remain disabled and unaccepted. Existing recipe audit finds19 exact portrait recipes and seven trainers across four raw Team Tether profiles needing ma",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "in_progress",
+     "evidence": "GPU 1 Nov 2026 DLG-2, High, yardstick (dialogue opened at the speaker's own body, capture fixture landed in this PR): mapped 6.62 (DLG-1 old fixture 6.38). ralph/reports/GPU-PASS/Q31/DLG2-honest-dialogue/VERDICT.md (tb/gpu-pass 5ea813bb9). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-stormwood. All26 trainer challenge/defeated text candidates remain disabled and unaccepted. Existing recipe audit finds19 exact portrait recipes and seven trainers across four raw Team Tether profiles needing ma",
+     "gap": "Fix the Captain Marrow frames under the overhead deck; Wen and Senn already read (0.88 to 7.5).",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-081",
@@ -6265,7 +6265,7 @@
     {
      "text": "F41 (1) top-20 item P2-046 harvest resource identity: Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 48, lane tb/x04-stormwood. Voltcap is a stronger glowing node; the pictured stormglass rocks lack a glass read.",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 4.13 -> 6.57 (+2.44), FIXED 3. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 48, lane tb/x04-stormwood. Voltcap is a stronger glowing node; the pictured stormglass rocks lack a glass read.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
@@ -6294,7 +6294,7 @@
     {
      "text": "F41 (2) impact>12 item P2-070 Glass Sink landmark: The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do n \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-stormwood. Three camera passes from walkable rims failed to reveal a recognizable sink. The authored marker is inside nonwalkable terrain and both day and golden views show a sheer edge. Confirm intended landmar",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 2.89 -> 4.63 (+1.74). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-stormwood. Three camera passes from walkable rims failed to reveal a recognizable sink. The authored marker is inside nonwalkable terrain and both day and golden views show a sheer edge. Confirm intended landmar",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
@@ -6410,7 +6410,7 @@
     {
      "text": "F41 (2) impact>12 item P2-045 candy pickup tiers: Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-stormwood. The Tidewake skill candy I and II labels are tiny. Skill candy III was not isolated in its frame and needs a reshoot.",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 4.84 -> 5.92 (+1.08). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-stormwood. The Tidewake skill candy I and II labels are tiny. Skill candy III was not isolated in its frame and needs a reshoot.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Counted once (owner 24 Oct board math): touches tidewake, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
@@ -6439,9 +6439,9 @@
     },
     {
      "text": "F41 (2) impact>12 item P2-083 dialogue foreground obstruction: Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 36, lane tb/x04-stormwood. Code-blind direct-start fixture; normal interaction camera needs reproduction. Text remains readable.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "in_progress",
+     "evidence": "GPU 1 Nov 2026 DLG-2, High, yardstick (dialogue opened at the speaker's own body, capture fixture landed in this PR): mapped 5.52 (DLG-1 old fixture 4.45). ralph/reports/GPU-PASS/Q31/DLG2-honest-dialogue/VERDICT.md (tb/gpu-pass 5ea813bb9). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 36, lane tb/x04-stormwood. Code-blind direct-start fixture; normal interaction camera needs reproduction. Text remains readable.",
+     "gap": "Dialogue camera line-of-sight so the overhead deck never hides Captain Marrow; a stand beside his body (1.98 to 7.5).",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-083",
@@ -6498,7 +6498,7 @@
     {
      "text": "F41 (2) impact>12 item P2-041 Crown Arch: The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-stormwood. The generic approach is tree-obstructed; close shot supports slab and silhouette concerns. Current native 1920x1080 baseline at 04ca924248 confirms the original close sighting: independent judge ident",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 3.96 -> 4.78 (+0.82); still reads as a pillar on a slab. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-stormwood. The generic approach is tree-obstructed; close shot supports slab and silhouette concerns. Current native 1920x1080 baseline at 04ca924248 confirms the original close sighting: independent judge ident",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
@@ -6556,7 +6556,7 @@
     {
      "text": "F41 (2) impact>12 item P2-043 Glass Field spike bases: Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 18, lane tb/x04-stormwood. Five native route pairs have exact camera-position parity and orientation within tolerance, including the original Walk 03 sighting. Fresh blind review finds partial improvement: cones/crossbar remove",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 4.75 -> 5.75 (+1.00). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 18, lane tb/x04-stormwood. Five native route pairs have exact camera-position parity and orientation within tolerance, including the original Walk 03 sighting. Fresh blind review finds partial improvement: cones/crossbar remove",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
