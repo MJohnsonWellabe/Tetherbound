@@ -1,6 +1,6 @@
 {
  "_comment": "Finish plan (owner 31 Oct 2026: 'Give me your plan for finishing all the outstanding work ... Just do it'). Membership is fixed per workstream; met/open is read live from criteria.json. Published plan page: https://claude.ai/artifact/XNDPUdtXSbdGtDCk3WumCy",
- "today": "2026-10-31",
+ "today": "2026-11-01",
  "target": "30 Nov 2026",
  "phases": [
   {
@@ -450,14 +450,14 @@
   {
    "what": "DLG-1 dialogue camera fix",
    "where": "tb/dialogue-cam-on",
-   "state": "built",
-   "detail": "Unit-tested (29 tests); GPU job 4 with its diagnosis"
+   "state": "failed",
+   "detail": "GPU: net zero; the push-in never fires in 14 of 34 frames; code lane finding why"
   },
   {
    "what": "UI-1 catch-label backing plate",
    "where": "tb/ui-near-bar-on",
-   "state": "built",
-   "detail": "GPU job 6"
+   "state": "landed",
+   "detail": "GPU: P2-114 +0.57, P2-058 +0.47; landed"
   },
   {
    "what": "UI-PAD menus with controller glyphs",
