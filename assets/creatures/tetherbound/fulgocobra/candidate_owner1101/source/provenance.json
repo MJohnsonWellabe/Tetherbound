@@ -13,5 +13,47 @@
   "target_polycount": 30000,
   "symmetry_mode": "auto"
  },
- "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_fulgocobra (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes",
+  "steps": [
+   "tools/art_pipeline/blender/rig_serpent.py (measured raised-column chain, coil on root, six clips)",
+   "tools/art_pipeline/arc_emission.py",
+   "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/rig_serpent.py -- assets/creatures/tetherbound/fulgocobra/candidate_owner1101/source/fulgocobra_b.glb assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101.glb prepare-report.json '{\"species\":\"fulgocobra\",\"height\":5.2}' ; python3 tools/art_pipeline/arc_emission.py fulgocobra_owner1101",
+  "report": "assets/creatures/tetherbound/fulgocobra/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "serpent root + spine_1-4 + head",
+   "height_m": 5.1999,
+   "triangles": 27990,
+   "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+     "disc": false,
+     "base_over_leg_band_area": 1.036
+    }
+   },
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+   ]
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.fulgocobra_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_fulgocobra",
+ "test": "tests/test_creature_model_flags.gd"
 }

@@ -110,6 +110,376 @@
      }
     }
    }
+  },
+  "remake_owner1101_galewisp": {
+   "_why": "Remake 1 Nov 2026: Owner pick A: fox-eared feathered bird, cream/sky-blue/gold, glowing wing-edge lines and eyes (Meshy 01a197c1-ad73-75bf-8ec7-8b92bbcffd5e). rig_bird measured bird rig at the installed 3.25 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing wing-edge lines and eyes (sky-blue). Provenance: assets/creatures/tetherbound/galewisp/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "galewisp": {
+     "model": "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101.glb",
+     "colourway_source_species": "galewisp_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_mirejaw": {
+   "_why": "Remake 1 Nov 2026: Owner pick B: long low axolotl-like swamp predator, glowing aqua spots, amber gill frills (Meshy 01a197c3-ce85-73b9-b972-626d6c3ad871). dog3 quadruped rig at the installed 2.8 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua spots and eyes. Provenance: assets/creatures/tetherbound/mirejaw/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "mirejaw": {
+     "model": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101.glb",
+     "colourway_source_species": "mirejaw_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_mudsnout": {
+   "_why": "Remake 1 Nov 2026: Owner pick A: young wild boar, glowing green root lines, green eyes (Meshy 01a197c2-74b0-76de-b727-b805bc577662). dog3 quadruped rig at the installed 2.0 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing green root lines and green eyes. Provenance: assets/creatures/tetherbound/mudsnout/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "mudsnout": {
+     "model": "res://assets/creatures/tetherbound/mudsnout/candidate_owner1101/models/creature_mudsnout_owner1101.glb",
+     "colourway_source_species": "mudsnout_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_burrowback": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Burrowback, a stocky badger with a black and white striped face and grey-brown coat, a believable lean adul (Meshy 01a197e3-66ee-7478-8ce3-ceaca4485602). dog3 quadruped rig at the installed 2.95 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing amber eyes. Provenance: assets/creatures/tetherbound/burrowback/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "burrowback": {
+     "model": "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101.glb",
+     "colourway_source_species": "burrowback_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_breezetail": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Breezetail, a lean fennec fox with very large ears and a long bushy tail, pale sand and sky-blue fur, a bel (Meshy 01a197e2-ab80-74cf-b782-9ff758b623c9). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: ice-blue accents and eyes. Provenance: assets/creatures/tetherbound/breezetail/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "breezetail": {
+     "model": "res://assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101.glb",
+     "colourway_source_species": "breezetail_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_ashtusk": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Ashtusk, a heavy armoured wild boar with big tusks, dark brown bristly coat, a believable lean adult creatu (Meshy 01a197e1-7a29-767d-b42c-ff85425fc55a). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ember eyes and ember cracks. Provenance: assets/creatures/tetherbound/ashtusk/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "ashtusk": {
+     "model": "res://assets/creatures/tetherbound/ashtusk/candidate_owner1101/models/creature_ashtusk_owner1101.glb",
+     "colourway_source_species": "ashtusk_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint",
+      "swim": "swim",
+      "ride": "ride",
+      "fly_grip": "fly_grip"
+     }
+    }
+   }
+  },
+  "remake_owner1101_cannonback": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Cannonback, a large sea turtle whose shell carries cannon-like rock barrels, blue-grey shell with sandy pla (Meshy 01a197e3-72aa-7526-8369-8a20a1b61438). dog3 quadruped rig at the installed 3.7 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: aqua accents and eyes. Provenance: assets/creatures/tetherbound/cannonback/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "cannonback": {
+     "model": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101.glb",
+     "colourway_source_species": "cannonback_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_fulgocobra": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Fulgocobra, a giant king cobra legendary with a wide hood, black scales with gold bands, a believable lean  (Meshy 01a197e7-b67e-718f-af53-61e89f57edb9). rig_serpent column chain at the installed 5.2 m, clips idle, walk, run, attack, hit, faint; emission: glowing electric-blue eyes and hood lines. Provenance: assets/creatures/tetherbound/fulgocobra/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "fulgocobra": {
+     "model": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101.glb",
+     "colourway_source_species": "fulgocobra_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_cloudfang": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Cloudfang, a large white wolf whose fur is layered like soft feathers, white with pale blue tips, a believa (Meshy 01a197e5-30ad-734e-943a-34ddeaac8642). dog3 quadruped rig at the installed 3.85 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: ice-blue eyes and accents. Provenance: assets/creatures/tetherbound/cloudfang/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "cloudfang": {
+     "model": "res://assets/creatures/tetherbound/cloudfang/candidate_owner1101/models/creature_cloudfang_owner1101.glb",
+     "colourway_source_species": "cloudfang_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_craghorn": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Craghorn, a mountain goat-ram with long curving horns, shaggy cream-white coat, a believable lean adult cre (Meshy 01a197e5-82ba-7355-a7b2-f34d4cb1c2e4). dog3 quadruped rig at the installed 3.5 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing amber eyes. Provenance: assets/creatures/tetherbound/craghorn/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "craghorn": {
+     "model": "res://assets/creatures/tetherbound/craghorn/candidate_owner1101/models/creature_craghorn_owner1101.glb",
+     "colourway_source_species": "craghorn_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_aquaryn": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Aquaryn, a sleek serpentine water dragon with fin-like frills, deep blue with gold fin edges, a believable  (Meshy 01a197e1-6e77-76e6-998e-58443e8cbabd). rig_serpent column chain at the installed 3.4 m, clips idle, walk, run, attack, hit, faint; emission: glowing aqua fin edges and eyes. Provenance: assets/creatures/tetherbound/aquaryn/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "aquaryn": {
+     "model": "res://assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101.glb",
+     "colourway_source_species": "aquaryn_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_frostclaw": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Frostclaw, a snow leopard with pale grey spotted fur, a believable lean adult creature in its natural stanc (Meshy 01a197e7-6f6c-70d0-8c02-c5ed5c3de22a). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ice-blue eyes and thin frost-blue veins. Provenance: assets/creatures/tetherbound/frostclaw/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "frostclaw": {
+     "model": "res://assets/creatures/tetherbound/frostclaw/candidate_owner1101/models/creature_frostclaw_owner1101.glb",
+     "colourway_source_species": "frostclaw_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_cragclaw": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cragclaw, a large hermit-crab creature with a mossy stone shell, sand and slate coloured claws, a believabl (Meshy 01a197e5-7717-7455-a7ea-e42eaacc55bc). dog3 quadruped rig at the installed 2.95 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing blue lines on the claws and shell. Provenance: assets/creatures/tetherbound/cragclaw/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "cragclaw": {
+     "model": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101.glb",
+     "colourway_source_species": "cragclaw_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_cindercub": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cindercub, a young wolf-like canine with dark charcoal fur and ember-orange markings, a believable lean adu (Meshy 01a197e3-7e7d-7342-8a32-1b9ef10b7273). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: none. Provenance: assets/creatures/tetherbound/cindercub/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "cindercub": {
+     "model": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101.glb",
+     "colourway_source_species": "cindercub_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_cliffspike": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cliffspike, a large porcupine-hedgehog creature with long pale quills, sandy grey, a believable lean adult  (Meshy 01a197e4-74b2-74b3-8afc-875b54b6ad0f). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: none. Provenance: assets/creatures/tetherbound/cliffspike/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "cliffspike": {
+     "model": "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101.glb",
+     "colourway_source_species": "cliffspike_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_duskhush": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Duskhush, a large grey-brown owl with ear tufts and dusky barred feathers, a believable lean adult creature (Meshy 01a197e6-ee6c-7729-9cf2-fc6627a32647). rig_bird measured bird rig at the installed 2.3 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing violet eyes. Provenance: assets/creatures/tetherbound/duskhush/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "duskhush": {
+     "model": "res://assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101.glb",
+     "colourway_source_species": "duskhush_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_glimmermoth": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Glimmermoth, a large moth creature with broad blue and violet patterned wings and a fluffy cream body, a be (Meshy 01a197e7-c144-7700-b497-23a77911c83f). dog3 quadruped rig at the installed 3.1 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ice-blue eyes. Provenance: assets/creatures/tetherbound/glimmermoth/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "glimmermoth": {
+     "model": "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101.glb",
+     "colourway_source_species": "glimmermoth_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_mangrove_monitor": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mangrove Monitor, a big monitor lizard with green and olive scales, a believable lean adult creature in its (Meshy 01a197e8-b7ad-72ae-b6e7-27cabf69cdbb). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua eyes and thin aqua lines. Provenance: assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "mangrove_monitor": {
+     "model": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101.glb",
+     "colourway_source_species": "mangrove_monitor_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  },
+  "remake_owner1101_aeriex": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Aeriex, a large elegant long-necked crane-like sky bird with long sweeping tail plumes, sky-blue and soft o (Meshy 01a197e1-62de-74bb-9370-885c467b9b6f). rig_bird measured bird rig at the installed 4.0 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing sky-blue eyes. Provenance: assets/creatures/tetherbound/aeriex/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "aeriex": {
+     "model": "res://assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101.glb",
+     "colourway_source_species": "aeriex_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }

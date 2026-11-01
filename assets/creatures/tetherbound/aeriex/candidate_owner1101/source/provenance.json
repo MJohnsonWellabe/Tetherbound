@@ -13,5 +13,48 @@
   "target_polycount": 30000,
   "symmetry_mode": "auto"
  },
- "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_aeriex (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes",
+  "steps": [
+   "assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py (rig_bird.py with the shell-aware torso measurement; species-agnostic)",
+   "tools/art_pipeline/arc_emission.py",
+   "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
+  ],
+  "commands": "BIRD_FALLBACK_LEG_FRACTION=0.40 blender --background --python assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py -- assets/creatures/tetherbound/aeriex/candidate_owner1101/source/aeriex_a.glb --out assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101.glb --report prepare-report.json ; python3 tools/art_pipeline/arc_emission.py aeriex_owner1101",
+  "report": "assets/creatures/tetherbound/aeriex/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "rig_bird 19 bones",
+   "proportions": {
+    "height_m": 1.7713,
+    "leg_fraction": 0.4,
+    "leg_length_m": 0.7085,
+    "crotch_measured": false,
+    "neck_measured": true,
+    "torso_half_width_m": 0.1229,
+    "wingspan_over_torso": 2.03,
+    "wings_folded": true,
+    "waddle_deg": 3.0
+   },
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint",
+    "charged",
+    "fly_grip",
+    "rest",
+    "swim",
+    "ride"
+   ],
+   "leg_fraction_note": "crotch scan unresolved (tail plumes reach the ground between the legs); leg length 0.40 of height read off ref_a.png"
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.aeriex_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_aeriex",
+ "test": "tests/test_creature_model_flags.gd"
 }

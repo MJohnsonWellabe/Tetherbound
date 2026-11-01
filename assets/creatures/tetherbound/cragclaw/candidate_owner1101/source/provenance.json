@@ -13,5 +13,53 @@
   "target_polycount": 30000,
   "symmetry_mode": "auto"
  },
- "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_cragclaw (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (dog3 rig and skin recipe; strip_ground_patch.auto)",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, unchanged)",
+   "tools/art_pipeline/arc_emission.py",
+   "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/cragclaw/candidate_owner1101/source/cragclaw_a.glb rigged.glb prepare-report.json '{\"species\":\"cragclaw\",\"height\":2.95}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101.glb ; python3 tools/art_pipeline/arc_emission.py cragclaw_owner1101",
+  "report": "assets/creatures/tetherbound/cragclaw/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped",
+   "height_m": 2.95,
+   "triangles": 28000,
+   "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+     "disc": false,
+     "base_over_leg_band_area": 0.55
+    }
+   },
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ]
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.cragclaw_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_cragclaw",
+ "test": "tests/test_creature_model_flags.gd"
 }

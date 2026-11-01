@@ -11,8 +11,8 @@ standing creature, in Blender, before rigging.
 outside a dilated footprint of those columns is patch or grass and goes. Inside
 a footprint, vertices below the patch's own top surface (the 70th percentile of
 the removed band) go too, so a paw keeps its sides but not the fused disc under
-it. Loose islands left behind (grass blades beside a paw) are dropped, keeping
-the largest connected part, and the body is re-grounded on z=0.
+it. Loose islands left behind below 15% of the height (grass blades beside a
+paw) are dropped; higher islands (quills, horns) stay, and the body is re-grounded on z=0.
 `toe` stretches each footprint forward (-Y) so paws and long hind feet stay.
 """
 import bmesh
@@ -86,7 +86,11 @@ def strip(body, band=0.10, probe=(0.13, 0.22), grow=1.6, toe=2.2, heel=1.3, n_co
                     seen.add(o); stack.append(o)
         parts.append(part)
     parts.sort(key=len, reverse=True)
-    loose = [v for part in parts[1:] for v in part]
+    # Only low islands are grass or patch debris; a quill or horn modelled as
+    # its own shell stands higher and stays.
+    low_cut = max(band, 0.15) * H
+    dropped = [part for part in parts[1:] if max(v.co.z for v in part) < low_cut]
+    loose = [v for part in dropped for v in part]
     if loose:
         bmesh.ops.delete(bm, geom=loose, context='VERTS')
     low = min(v.co.z for v in bm.verts)
@@ -95,5 +99,30 @@ def strip(body, band=0.10, probe=(0.13, 0.22), grow=1.6, toe=2.2, heel=1.3, n_co
     bm.to_mesh(me); bm.free(); me.update()
     return {'patch_band_m_normalised': round(band, 3), 'patch_surface_z': round(surface / H, 4),
             'islands_only': islands_only, 'columns': [[round(c.x / H, 3), round(c.y / H, 3), round(r / H, 3)] for c, r in cols],
-            'removed_vertices': len(doomed), 'removed_islands': len(parts) - 1,
+            'removed_vertices': len(doomed), 'removed_islands': len(dropped),
             'removed_island_vertices': len(loose), 'regrounded_by': round(low / H, 4)}
+
+
+def detect(body, ratio=1.6):
+    """True when the lowest 4% of the height spreads far wider than the leg band
+    above it (a baked disc), measured as xy bounding area."""
+    me = body.data
+    H = max(v.co.z for v in me.vertices)
+
+    def area(a, b):
+        pts = [v.co for v in me.vertices if a * H <= v.co.z < b * H]
+        if len(pts) < 8:
+            return 0.0, len(pts)
+        return (max(p.x for p in pts) - min(p.x for p in pts)) * (max(p.y for p in pts) - min(p.y for p in pts)), len(pts)
+
+    base, n_base = area(0.0, 0.04)
+    legs, _ = area(0.12, 0.20)
+    return legs > 0 and base / legs > ratio and n_base > 200, round(base / legs, 3) if legs else None
+
+
+def auto(body):
+    """strip() with defaults when a disc is detected, else only low loose islands."""
+    found, r = detect(body)
+    report = strip(body) if found else strip(body, islands_only=True)
+    report['auto_detect'] = {'disc': found, 'base_over_leg_band_area': r}
+    return report

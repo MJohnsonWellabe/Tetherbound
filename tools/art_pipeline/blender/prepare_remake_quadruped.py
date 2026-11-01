@@ -15,7 +15,8 @@ legs are measured. The bone set matches dog3 exactly, so its clip author
 Parameters (defaults in brackets): species, height (m, never smaller than the
 installed placeholder), tris [28000], spine_fraction [.62], head_rise [1.05],
 ear_z [9.0, i.e. no ear bones], patch {band, probe, grow, toe, heel} for
-strip_ground_patch.strip, or false when the candidate has no baked patch.
+strip_ground_patch.strip, false when the candidate has no baked patch, or
+"auto" (default: strip_ground_patch.auto detects a disc).
 """
 import bpy, sys, math, json
 from pathlib import Path
@@ -37,7 +38,12 @@ HEAD_RISE = float(P.get('head_rise', 1.05))
 
 quad.load(Path(args[0]))
 body = quad.join_and_normalise()          # one mesh, welded, centred, on z=0, facing -Y
-patch_report = patch.strip(body, **P['patch']) if P.get('patch', {}) is not False else 'none: no baked ground patch'
+if P.get('patch', 'auto') == 'auto':
+    patch_report = patch.auto(body)
+elif P['patch'] is False:
+    patch_report = 'none: no baked ground patch'
+else:
+    patch_report = patch.strip(body, **P['patch'])
 lo0, hi0 = quad.bounds(body)
 body.location = Vector((-(lo0.x + hi0.x) / 2, -(lo0.y + hi0.y) / 2, 0))
 bpy.context.view_layer.objects.active = body

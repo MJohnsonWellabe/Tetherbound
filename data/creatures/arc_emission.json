@@ -78,6 +78,279 @@
    "blur_px": 8.0,
    "soften_px": 1.5,
    "gain": 2.5
+  },
+  "galewisp_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing wing-edge lines and eyes (sky-blue). Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.011%).",
+   "model": "assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101.glb",
+   "hue": [
+    185.0,
+    215.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "mirejaw_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing aqua spots and eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.761%).",
+   "model": "assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101.glb",
+   "hue": [
+    160.0,
+    200.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "mudsnout_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing green root lines and green eyes. The root lines are yellow-green (hue 55-110), so the band is set from the albedo, not the word 'green'.",
+   "model": "assets/creatures/tetherbound/mudsnout/candidate_owner1101/models/creature_mudsnout_owner1101.glb",
+   "hue": [
+    55,
+    110
+   ],
+   "sat_min": 0.35,
+   "lift": 0.08,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "burrowback_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing amber eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.019%).",
+   "model": "assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101.glb",
+   "hue": [
+    25.0,
+    50.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "breezetail_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: ice-blue accents and eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.032%).",
+   "model": "assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101.glb",
+   "hue": [
+    180.0,
+    215.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "ashtusk_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing ember eyes and ember cracks. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (1.511%). Lower hue bound 18 keeps the ember orange clear of Team Tether red.",
+   "model": "assets/creatures/tetherbound/ashtusk/candidate_owner1101/models/creature_ashtusk_owner1101.glb",
+   "hue": [
+    18,
+    45
+   ],
+   "sat_min": 0.75,
+   "lift": 0.18,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "cannonback_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: aqua accents and eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.728%).",
+   "model": "assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101.glb",
+   "hue": [
+    170.0,
+    210.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "fulgocobra_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing electric-blue eyes and hood lines. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (1.906%).",
+   "model": "assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101.glb",
+   "hue": [
+    190.0,
+    235.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "cloudfang_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: ice-blue eyes and accents. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.007%).",
+   "model": "assets/creatures/tetherbound/cloudfang/candidate_owner1101/models/creature_cloudfang_owner1101.glb",
+   "hue": [
+    175.0,
+    210.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "craghorn_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing amber eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.017%).",
+   "model": "assets/creatures/tetherbound/craghorn/candidate_owner1101/models/creature_craghorn_owner1101.glb",
+   "hue": [
+    25.0,
+    50.0
+   ],
+   "sat_min": 0.35,
+   "lift": 0.04,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "aquaryn_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing aqua fin edges and eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.701%).",
+   "model": "assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101.glb",
+   "hue": [
+    175.0,
+    205.0
+   ],
+   "sat_min": 0.65,
+   "lift": 0.12,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "frostclaw_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing ice-blue eyes and thin frost-blue veins. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.029%).",
+   "model": "assets/creatures/tetherbound/frostclaw/candidate_owner1101/models/creature_frostclaw_owner1101.glb",
+   "hue": [
+    180.0,
+    215.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "cragclaw_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing blue lines on the claws and shell. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.016%).",
+   "model": "assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101.glb",
+   "hue": [
+    180.0,
+    215.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "duskhush_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing violet eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.112%).",
+   "model": "assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101.glb",
+   "hue": [
+    255.0,
+    300.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "glimmermoth_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing ice-blue eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.947%).",
+   "model": "assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101.glb",
+   "hue": [
+    185.0,
+    215.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "mangrove_monitor_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing aqua eyes and thin aqua lines. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.111%).",
+   "model": "assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101.glb",
+   "hue": [
+    160.0,
+    200.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "meadowhart_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing amber eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.419%).",
+   "model": "assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101.glb",
+   "hue": [
+    25.0,
+    50.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "mosshock_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing electric-blue eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.011%).",
+   "model": "assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101.glb",
+   "hue": [
+    195.0,
+    235.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "paddlenewt_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing aqua accents and eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.558%).",
+   "model": "assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101.glb",
+   "hue": [
+    160.0,
+    200.0
+   ],
+   "sat_min": 0.65,
+   "lift": 0.12,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "abyssal_guardian_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing blue eyes and accents. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (2.534%).",
+   "model": "assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101.glb",
+   "hue": [
+    175.0,
+    215.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "aeriex_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing sky-blue eyes. Hue band from the concept; saturation/lift chosen as the first step that keeps the mask between 0.004% and 3% of the albedo (0.099%).",
+   "model": "assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101.glb",
+   "hue": [
+    175.0,
+    210.0
+   ],
+   "sat_min": 0.45,
+   "lift": 0.05,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
   }
  }
 }

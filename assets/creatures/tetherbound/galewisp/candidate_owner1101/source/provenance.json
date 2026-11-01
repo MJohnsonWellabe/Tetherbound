@@ -13,5 +13,47 @@
   "target_polycount": 30000,
   "symmetry_mode": "auto"
  },
- "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_galewisp (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes",
+  "steps": [
+   "assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py (rig_bird.py with the shell-aware torso measurement; species-agnostic)",
+   "tools/art_pipeline/arc_emission.py",
+   "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
+  ],
+  "commands": "blender --background --python assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py -- assets/creatures/tetherbound/galewisp/candidate_owner1101/source/galewisp_a.glb --out assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101.glb --report prepare-report.json ; python3 tools/art_pipeline/arc_emission.py galewisp_owner1101",
+  "report": "assets/creatures/tetherbound/galewisp/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "rig_bird 19 bones",
+   "proportions": {
+    "height_m": 1.6481,
+    "leg_fraction": 0.175,
+    "leg_length_m": 0.2884,
+    "crotch_measured": true,
+    "neck_measured": true,
+    "torso_half_width_m": 0.3597,
+    "wingspan_over_torso": 1.068,
+    "wings_folded": true,
+    "waddle_deg": 9.0
+   },
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint",
+    "charged",
+    "fly_grip",
+    "rest",
+    "swim",
+    "ride"
+   ]
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.galewisp_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_galewisp",
+ "test": "tests/test_creature_model_flags.gd"
 }
