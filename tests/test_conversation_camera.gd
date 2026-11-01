@@ -799,3 +799,14 @@ func test_speaker_light_candidate_ships_off_and_places_key_front_rim_behind() ->
 	assert_true((at["key"] as Vector3).z > anchor.z, "the key must sit on the lens side")
 	assert_true((at["rim"] as Vector3).z < anchor.z, "the rim must sit behind the speaker")
 	assert_true((at["rim"] as Vector3).y > anchor.y, "the rim must come from above")
+
+
+func test_twoshot_v2_swings_further_for_a_close_pair_only() -> void:
+	var on := _twoshot_v2_on()
+	var base := float(on["shoulder_yaw_deg"])
+	assert_almost_eq(CONVERSATION.shoulder_yaw_for(3.5, on), base, 0.001, "a normal gap keeps the swing")
+	assert_true(CONVERSATION.shoulder_yaw_for(1.6, on) > base + 10.0, "a close pair swings further")
+	var plain := CONVERSATION.config().duplicate(true)
+	plain.erase("close_shoulder_extra_deg")
+	assert_almost_eq(CONVERSATION.shoulder_yaw_for(1.6, plain), float(plain["shoulder_yaw_deg"]), 0.001,
+		"without the candidate the swing is unchanged")

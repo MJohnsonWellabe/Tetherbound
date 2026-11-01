@@ -151,12 +151,16 @@ func begin(speaker: Node3D = null, profile: String = "") -> bool:
 ## trainer's post-fight lines, frames wider and higher. Unknown or empty name:
 ## the ordinary push-in. `fallback` merges key by key, as in `config()`.
 static func profile_config(profile: String) -> Dictionary:
-	var base := config()
-	if profile == "":
-		return base
+	var profiles_now: Variant = config().get("profiles", {})
+	if profile == "" or not profiles_now is Dictionary or not (profiles_now as Dictionary).has(profile):
+		return config()
+	# A named shot (`aftermath`) starts from the push-in WITHOUT twoshot_v2:
+	# that candidate retunes the villager conversation only, and its keys
+	# must not leak into a victory shot it was never judged on.
+	var base := _plain_config()
 	var profiles: Variant = base.get("profiles", {})
 	if not profiles is Dictionary or not (profiles as Dictionary).has(profile):
-		return base
+		return config()
 	var merged := base.duplicate(true)
 	var overrides: Dictionary = (profiles as Dictionary)[profile] as Dictionary
 	for key: String in overrides:
@@ -415,7 +419,7 @@ static func solve(trainer_anchor: Vector3, speaker_anchor_point: Vector3,
 		var fallback_planar := Vector3(fallback_forward.x, 0.0, fallback_forward.z)
 		axis = fallback_planar.normalized() if fallback_planar.length() > 0.001 else Vector3.FORWARD
 
-	var swing := deg_to_rad(float(cfg.get("shoulder_yaw_deg", DEFAULTS["shoulder_yaw_deg"])))
+	var swing := deg_to_rad(shoulder_yaw_for(planar.length(), cfg))
 	var elevation := deg_to_rad(float(cfg.get("elevation_deg", DEFAULTS["elevation_deg"])))
 	var back := (-axis).rotated(Vector3.UP, swing)
 	var dir := (back * cos(elevation) + Vector3.UP * sin(elevation)).normalized()
@@ -506,6 +510,24 @@ static func solve(trainer_anchor: Vector3, speaker_anchor_point: Vector3,
 	}
 
 
+## The swing for a pair `separation` metres apart. With twoshot_v2's
+## `close_shoulder_extra_deg` and `close_gap_m` [near, far], a close pair
+## swings that much further (the trainer stands near the lens axis and their
+## head otherwise crowds the speaker: P2-075/P2-077), easing to no extra by
+## `far`. Additive, so the rig's swing search (which rewrites
+## `shoulder_yaw_deg`) keeps working. Without the key: `shoulder_yaw_deg`.
+static func shoulder_yaw_for(separation: float, cfg: Dictionary) -> float:
+	var base := float(cfg.get("shoulder_yaw_deg", DEFAULTS["shoulder_yaw_deg"]))
+	if not cfg.has("close_shoulder_extra_deg"):
+		return base
+	var gaps: Variant = cfg.get("close_gap_m", [1.8, 2.8])
+	if not gaps is Array or (gaps as Array).size() != 2:
+		return base
+	var near := float(gaps[0])
+	var far := maxf(float(gaps[1]), near + 0.01)
+	return base + float(cfg["close_shoulder_extra_deg"]) * (1.0 - smoothstep(near, far, separation))
+
+
 ## The tighter shot used when the two-shot has no room. Indoors — Mira's cottage,
 ## Bram's inn — there is frequently under two metres of floor behind the trainer,
 ## and a 3.5m arm the engine then clamps to 1.4m is a camera looking at a wall
@@ -574,8 +596,17 @@ static func config() -> Dictionary:
 				_cached_config["fallback"] = merged
 			continue
 		_cached_config[key] = (block as Dictionary)[key]
+	_cached_plain = _cached_config.duplicate(true)
 	_cached_config = with_twoshot_v2(_cached_config)
 	return _cached_config
+
+
+static var _cached_plain: Dictionary = {}
+
+
+static func _plain_config() -> Dictionary:
+	config()
+	return _cached_plain if not _cached_plain.is_empty() else config()
 
 
 ## P2-073 / P2-074 / P2-076 / P2-083 (GPU DLG-2, 1 Nov: "frame the speaker

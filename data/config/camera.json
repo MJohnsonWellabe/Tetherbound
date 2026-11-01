@@ -42,6 +42,9 @@
       "speaker_bias": 0.86,
       "shoulder_yaw_deg": 22.0,
       "elevation_deg": 6.0,
+      "close_shoulder_extra_deg": 16.0,
+      "close_gap_m": [1.8, 2.8],
+      "_why_close": "CPU r1 (Dace, Nalia at about 2 m): with the pair close the trainer stands near the lens axis and their head filled a fifth of the frame. Under 2.8 m the swing grows, up to +16 deg at 1.8 m, so the trainer moves to the frame edge (conversation_camera.gd shoulder_yaw_for).",
       "speaker_frame_candidate_enabled": true
     },
     "require_speaker_sight": true,
