@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 6344,
+    "spine": 6725,
+    "neck": 3390,
+    "head": 6282,
+    "front_upper_l": 2074,
+    "front_lower_l": 1452,
+    "front_upper_r": 201,
+    "front_lower_r": 103,
+    "tail_1": 268,
+    "tail_2": 676,
+    "rear_upper_l": 1732,
+    "rear_lower_l": 1038,
+    "rear_upper_r": 687,
+    "rear_lower_r": 1013
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14017,
+  "height_m": 5.5,
+  "length_m": 6.4282,
+  "width_m": 5.1378,
+  "triangles": 27993,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2081,
+      -0.2805,
+      0.1442
+    ],
+    "front_r": [
+      0.2801,
+      -0.2565,
+      0.1458
+    ],
+    "rear_l": [
+      -0.2094,
+      0.3046,
+      0.136
+    ],
+    "rear_r": [
+      0.2178,
+      0.3986,
+      0.071
+    ]
+  },
+  "back_top_normalised": 0.3317,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "tidecoil",
+    "height": 5.5,
+    "patch": false
+  }
+}

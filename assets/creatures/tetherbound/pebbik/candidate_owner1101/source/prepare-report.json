@@ -1,0 +1,89 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 7404,
+    "spine": 7490,
+    "neck": 4109,
+    "head": 7281,
+    "front_upper_l": 429,
+    "front_lower_l": 314,
+    "front_upper_r": 391,
+    "front_lower_r": 439,
+    "tail_1": 148,
+    "tail_2": 113,
+    "rear_upper_l": 371,
+    "rear_lower_l": 455,
+    "rear_upper_r": 551,
+    "rear_lower_r": 589
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13993,
+  "height_m": 3.25,
+  "length_m": 3.8975,
+  "width_m": 2.361,
+  "triangles": 28000,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.1623,
+      -0.2148,
+      0.0701
+    ],
+    "front_r": [
+      0.0246,
+      -0.2509,
+      0.0654
+    ],
+    "rear_l": [
+      -0.1197,
+      0.2391,
+      0.1083
+    ],
+    "rear_r": [
+      0.203,
+      0.4069,
+      0.1547
+    ]
+  },
+  "back_top_normalised": 0.5878,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.1,
+    "patch_surface_z": 0.0,
+    "islands_only": false,
+    "columns": [
+      [
+        -0.105,
+        -0.18,
+        0.149
+      ],
+      [
+        0.13,
+        0.397,
+        0.109
+      ],
+      [
+        -0.016,
+        0.224,
+        0.168
+      ],
+      [
+        0.292,
+        0.528,
+        0.091
+      ]
+    ],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0
+  },
+  "params": {
+    "species": "pebbik",
+    "height": 3.25,
+    "patch": {}
+  }
+}

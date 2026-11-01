@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 9468,
+    "spine": 10291,
+    "neck": 4278,
+    "head": 5651,
+    "front_upper_l": 644,
+    "front_lower_l": 448,
+    "front_upper_r": 641,
+    "front_lower_r": 434,
+    "tail_1": 166,
+    "tail_2": 241,
+    "rear_upper_l": 401,
+    "rear_lower_l": 438,
+    "rear_upper_r": 469,
+    "rear_lower_r": 575
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13890,
+  "height_m": 4.15,
+  "length_m": 4.5839,
+  "width_m": 4.5275,
+  "triangles": 27998,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.091,
+      -0.2572,
+      0.1314
+    ],
+    "front_r": [
+      0.0909,
+      -0.2576,
+      0.1306
+    ],
+    "rear_l": [
+      -0.1097,
+      0.2332,
+      0.1229
+    ],
+    "rear_r": [
+      0.125,
+      0.1346,
+      0.0991
+    ]
+  },
+  "back_top_normalised": 0.4418,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "tempestwing",
+    "height": 4.15,
+    "patch": false
+  }
+}

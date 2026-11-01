@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 7510,
+    "spine": 9717,
+    "neck": 6105,
+    "head": 9321,
+    "front_upper_l": 276,
+    "front_lower_l": 117,
+    "front_upper_r": 271,
+    "front_lower_r": 122,
+    "tail_1": 60,
+    "tail_2": 422,
+    "rear_upper_l": 0,
+    "rear_lower_l": 0,
+    "rear_upper_r": 4,
+    "rear_lower_r": 0
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13892,
+  "height_m": 6.7,
+  "length_m": 9.6082,
+  "width_m": 6.9188,
+  "triangles": 27992,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.0631,
+      -0.3441,
+      0.1424
+    ],
+    "front_r": [
+      0.0623,
+      -0.3468,
+      0.1428
+    ],
+    "rear_l": [
+      -0.0783,
+      0.3764,
+      0.1287
+    ],
+    "rear_r": [
+      0.0749,
+      0.3837,
+      0.1307
+    ]
+  },
+  "back_top_normalised": 0.5038,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "solmane",
+    "height": 6.7,
+    "patch": false
+  }
+}

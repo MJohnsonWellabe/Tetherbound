@@ -1,0 +1,191 @@
+[
+ {
+  "item": "F36 Pebbik remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_pebbik.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "pebbik"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Reedwing remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_reedwing.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "reedwing"
+  ],
+  "group": 2
+ },
+ {
+  "item": "F36 Ribbonray remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_ribbonray.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ribbonray"
+  ],
+  "group": 3
+ },
+ {
+  "item": "F36 Ripplet remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_ripplet.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ripplet"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 Riptusk remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_riptusk.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riptusk"
+  ],
+  "group": 5
+ },
+ {
+  "item": "F36 Riverdrake remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_riverdrake.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riverdrake"
+  ],
+  "group": 6
+ },
+ {
+  "item": "F36 Shadelet remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_shadelet.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "shadelet"
+  ],
+  "group": 7
+ },
+ {
+  "item": "F36 Sirenseal remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_sirenseal.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sirenseal"
+  ],
+  "group": 8
+ },
+ {
+  "item": "F36 Skyrill remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_skyrill.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "skyrill"
+  ],
+  "group": 9
+ },
+ {
+  "item": "F36 Solmane remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_solmane.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "solmane"
+  ],
+  "group": 10
+ },
+ {
+  "item": "F36 Sparkit remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_sparkit.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sparkit"
+  ],
+  "group": 11
+ },
+ {
+  "item": "F36 Staticub remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_staticub.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "staticub"
+  ],
+  "group": 12
+ },
+ {
+  "item": "F36 Stormbrush remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_stormbrush.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormbrush"
+  ],
+  "group": 13
+ },
+ {
+  "item": "F36 Stormraven remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_stormraven.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormraven"
+  ],
+  "group": 14
+ },
+ {
+  "item": "F36 Tempestwing remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_tempestwing.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tempestwing"
+  ],
+  "group": 15
+ },
+ {
+  "item": "F36 Thundertunnel remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_thundertunnel.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "thundertunnel"
+  ],
+  "group": 16
+ },
+ {
+  "item": "F36 Tidecoil remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_tidecoil.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tidecoil"
+  ],
+  "group": 17
+ },
+ {
+  "item": "F36 Torrentoad remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_torrentoad.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "torrentoad"
+  ],
+  "group": 18
+ },
+ {
+  "item": "F36 Tuskroot remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_tuskroot.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tuskroot"
+  ],
+  "group": 19
+ },
+ {
+  "item": "F36 Voltarach remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_voltarach.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltarach"
+  ],
+  "group": 20
+ },
+ {
+  "item": "F36 Voltwig remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_voltwig.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltwig"
+  ],
+  "group": 21
+ }
+]

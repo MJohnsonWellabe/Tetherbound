@@ -68,5 +68,9 @@ func test_an_enabled_flag_swaps_the_model_and_keeps_every_clip() -> void:
 			wanted.merge(after.get("animations", {}), true)
 			assert_true(not wanted.is_empty(), "%s declares its clips" % id)
 			for role: String in wanted:
+				# Metadata beside the clip map (Torrentoad's attack_contact_phase and
+				# its _comment) names no clip; every clip role is still checked.
+				if role.begins_with("_") or not wanted[role] is String:
+					continue
 				assert_true(clips.has(str(after.animations.get(role, wanted[role]))),
 						"%s: %s plays its %s clip (has %s)" % [flag, id, role, clips])

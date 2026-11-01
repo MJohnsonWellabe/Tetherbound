@@ -45,8 +45,10 @@ def _columns(points, n_cols):
 
 
 def strip(body, band=0.10, probe=(0.13, 0.22), grow=1.6, toe=2.2, heel=1.3, n_cols=4, surface_q=0.7,
-          islands_only=False):
-    """islands_only: no disc, only loose tufts (separate islands) to drop."""
+          islands_only=False, low_islands=None):
+    """islands_only: no disc, only loose tufts (separate islands) to drop.
+    low_islands: explicit height fraction below which a loose island is dropped
+    (tb/creature-remakes-2); default keeps the 15% rule."""
     me = body.data
     H = max(v.co.z for v in me.vertices)
     if islands_only:
@@ -88,7 +90,7 @@ def strip(body, band=0.10, probe=(0.13, 0.22), grow=1.6, toe=2.2, heel=1.3, n_co
     parts.sort(key=len, reverse=True)
     # Only low islands are grass or patch debris; a quill or horn modelled as
     # its own shell stands higher and stays.
-    low_cut = max(band, 0.15) * H
+    low_cut = (low_islands if low_islands is not None else max(band, 0.15)) * H
     dropped = [part for part in parts[1:] if max(v.co.z for v in part) < low_cut]
     loose = [v for part in dropped for v in part]
     if loose:
