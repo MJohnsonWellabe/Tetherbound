@@ -84,5 +84,107 @@
       "water__brine_steps__06__brine_steps_east_beach__walk_03_day"
     ],
     "group": 1
+  },
+  {
+    "item": "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items)",
+    "flag": "data/config/tidewake_look.json:watersky_light_candidate.enabled",
+    "camera_set": "per-frame repro commands in ralph/reports/VISUAL/item-scores/job.json (phase2_capture_locations / phase2_capture_routes / phase2_capture_dialogue, --seed=2042); day and night",
+    "stands": [
+      "water__first_shore__01__first_shore_welcome_beacon__day__close",
+      "water__landmark__lastlight__day__close",
+      "water__landmark__sluice_channel_bridge__day__close",
+      "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+      "water__drowned_garden__21__drowned_garden_terraces__route_day",
+      "water__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+      "water__first_shore__02__first_shore_horizon_stones__route_day",
+      "water__gull_rest__19__gull_rest_signal_spire__route_day",
+      "water__lantern_cove__17__lantern_cove_drift_arch__route_day",
+      "water__sluice_isle__14__sluice_channel_bridge__route_day",
+      "water__inventory__character__water_adair",
+      "water__inventory__character__water_adair__dialogue",
+      "water__inventory__character__water_bren",
+      "water__inventory__character__water_corin",
+      "water__inventory__character__water_iona__dialogue",
+      "water__inventory__character__water_nalia__dialogue",
+      "water__inventory__character__water_nerissa__dialogue",
+      "water__inventory__character__water_rowan__dialogue",
+      "water__inventory__trainer__water_trainer_bex__dialogue",
+      "water__inventory__trainer__water_trainer_daro__dialogue",
+      "water__inventory__trainer__water_trainer_irva__dialogue",
+      "water__inventory__trainer__water_trainer_nerissa__dialogue"
+    ],
+    "group": 2
+  },
+  {
+    "item": "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items)",
+    "flag": "data/config/cloudreach_light_candidate.json:enabled",
+    "camera_set": "per-frame repro commands in ralph/reports/VISUAL/item-scores/job.json (phase2_capture_locations / phase2_capture_routes / phase2_capture_dialogue, --seed=2042); day and night",
+    "stands": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach",
+      "cloudreach__landmark__broken_skyroad_arch__day__approach",
+      "cloudreach__landmark__realm_gate_crag__day__approach",
+      "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+      "cloudreach__landmark__sky_shrine_heartstone__day__close",
+      "cloudreach__landmark__three_bells_bridge__day__approach",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach",
+      "cloudreach__windscar_ravine__05__windscar_beacon__day__approach",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk",
+      "cloudreach__inventory__character__captain_veyra__dialogue",
+      "cloudreach__inventory__character__defector_rusk__dialogue",
+      "cloudreach__inventory__character__keeper_maela",
+      "cloudreach__inventory__character__naturalist_sora",
+      "cloudreach__inventory__character__naturalist_sora__dialogue",
+      "cloudreach__inventory__character__trader_kelm__dialogue",
+      "cloudreach__inventory__character__young_trainer_tavi",
+      "cloudreach__inventory__character__young_trainer_tavi__dialogue"
+    ],
+    "group": 2
+  },
+  {
+    "item": "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish)",
+    "flag": "data/config/cloudreach_ground_cluster.json:enabled",
+    "camera_set": "per-frame repro commands in ralph/reports/VISUAL/item-scores/job.json (phase2_capture_locations / phase2_capture_routes / phase2_capture_dialogue, --seed=2042)",
+    "stands": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach",
+      "cloudreach__landmark__broken_skyroad_arch__day__approach",
+      "cloudreach__landmark__realm_gate_crag__day__approach",
+      "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+      "cloudreach__landmark__sky_shrine_heartstone__day__close",
+      "cloudreach__landmark__three_bells_bridge__day__approach",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach",
+      "cloudreach__windscar_ravine__05__windscar_beacon__day__approach",
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk"
+    ],
+    "group": 2
+  },
+  {
+    "item": "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters)",
+    "flag": "data/config/water_ground_cover.json:watersky_cluster_candidate.enabled",
+    "camera_set": "per-frame repro commands in ralph/reports/VISUAL/item-scores/job.json (phase2_capture_locations / phase2_capture_routes / phase2_capture_dialogue, --seed=2042)",
+    "stands": [
+      "water__first_shore__01__first_shore_welcome_beacon__day__close",
+      "water__landmark__lastlight__day__close",
+      "water__landmark__sluice_channel_bridge__day__close",
+      "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+      "water__drowned_garden__21__drowned_garden_terraces__route_day",
+      "water__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+      "water__first_shore__02__first_shore_horizon_stones__route_day",
+      "water__gull_rest__19__gull_rest_signal_spire__route_day",
+      "water__lantern_cove__17__lantern_cove_drift_arch__route_day",
+      "water__sluice_isle__14__sluice_channel_bridge__route_day"
+    ],
+    "group": 2
   }
 ]

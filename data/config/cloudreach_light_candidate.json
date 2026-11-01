@@ -1,5 +1,5 @@
 {
-  "_comment": "tb/vis-water-sky group 2 (coordinator 1 Nov: shared fix before item work; judges across Cloudreach read flat midday light and crushed night frames). ART_DIRECTION Cloudreach: bright sky, pale stratified stone, warm/cool separation. cloudreach_world.gd lays `time_overrides` over this realm's own copy of art.json's times after cloudreach_visual.json's own (same apply_time_overrides). Day: warmer, lower key (-44 -> -32 deg, 1.4 -> 1.75, #fff1d8 -> #ffe2b2); cooler, lower ambient (1.9 -> 1.45, #9db3c6 -> #93add0) so sunlit stone reads warm against cool shade with a wider value range; contrast 1.1, saturation 1.06; aerial fog for depth (base 0.00055 -> 0.0007 before the realm's -0.00015 delta, aerial 0.7 -> 0.9, fog_sky_affect 0.25); soft character rim 0.35. Night: moon 0.55 -> 0.75, shadow opacity 0.68 -> 0.55, exposure 0.6 -> 0.72 on top of the realm's raised night ambient, so slopes and bodies read. Presentation only. Preview --cloudreach-light-candidate.",
+  "_comment": "tb/vis-water-sky group 2 (coordinator 1 Nov: shared fix before item work; judges across Cloudreach read flat midday light and crushed night frames). ART_DIRECTION Cloudreach: bright sky, pale stratified stone, warm/cool separation. cloudreach_world.gd lays `time_overrides` over this realm's own copy of art.json's times after cloudreach_visual.json's own (same apply_time_overrides). Day: warmer, lower key (-44 -> -32 deg, 1.4 -> 1.75, #fff1d8 -> #ffe2b2); cooler, lower ambient (1.9 -> 1.6, #9db3c6 -> #93add0) so sunlit stone reads warm against cool shade with a wider value range; contrast 1.1, saturation 1.06; aerial fog for depth (base 0.00055 -> 0.0007 before the realm's -0.00015 delta, aerial 0.7 -> 0.9, fog_sky_affect 0.25); soft character rim 0.35. Night: unchanged (CPU r1's night block, moon 0.75 / shadow 0.55 / exposure 0.72, rendered the night lawn darker, so it was dropped). Presentation only. Preview --cloudreach-light-candidate.",
   "enabled": false,
   "time_overrides": {
     "day": {
@@ -9,7 +9,7 @@
         "colour": "#ffe2b2"
       },
       "environment": {
-        "ambient_energy": 1.45,
+        "ambient_energy": 1.6,
         "ambient_colour": "#93add0",
         "fog_density": 0.0007,
         "aerial_perspective": 0.9,
@@ -17,16 +17,6 @@
         "adjustment_enabled": true,
         "adjustment_contrast": 1.1,
         "adjustment_saturation": 1.06,
-        "player_character_rim_scale": 0.35
-      }
-    },
-    "night": {
-      "sun": {
-        "energy": 0.75,
-        "shadow_opacity": 0.55
-      },
-      "environment": {
-        "exposure": 0.72,
         "player_character_rim_scale": 0.35
       }
     }
