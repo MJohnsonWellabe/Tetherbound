@@ -122,6 +122,9 @@ static func apply_hall_1(config: Dictionary) -> void:
 	# HALL-2 (vis-meadows, 1 Nov, OFF until GPU-judged): the HALL-1 judges'
 	# follow-ups, layered the same way on top of hall_1.
 	apply_hall_layer(config, "hall_2")
+	# HALL-3 (vis-meadows, OFF until GPU-judged): interior time-of-day light,
+	# darker plaster, recessed near piers and muted rugs, over hall_1.
+	apply_hall_layer(config, "hall_3")
 
 
 static func apply_hall_layer(config: Dictionary, layer: String) -> void:
@@ -1026,6 +1029,13 @@ func _night_material(source: BaseMaterial3D, occlusion: Texture2D, seen: Diction
 	if seen.has(source):
 		return seen[source]
 	var copy := source.duplicate() as BaseMaterial3D
+	# HALL-3: `interior_ambient.material_albedo_scale` darkens named Hall
+	# materials (e.g. MI_Plaster) day and night, before the night pass reads
+	# their day colour.
+	var albedo_scale: Dictionary = _config.get("interior_ambient", {}).get("material_albedo_scale", {})
+	if albedo_scale.has(source.resource_name):
+		var k := float(albedo_scale[source.resource_name])
+		copy.albedo_color = Color(copy.albedo_color.r * k, copy.albedo_color.g * k, copy.albedo_color.b * k, copy.albedo_color.a)
 	copy.ao_texture = occlusion
 	copy.ao_light_affect = 0.0
 	copy.ao_enabled = false
@@ -1067,8 +1077,13 @@ func _refresh_interior_ambient() -> void:
 		material.ao_texture = _night_occlusion if dark or _day_occlusion == null else _day_occlusion
 	var daylight: Dictionary = _config.get("daylight_windows", {})
 	for window: SpotLight3D in _daylight_windows:
-		window.light_energy = 0.0 if dark else float(daylight.get("energy", 2.0))
-		window.visible = not dark
+		# HALL-3: `night_energy` keeps the window spots on at night as cool
+		# moonlight (`night_colour`); without it a window is dark at night.
+		var moonlit := dark and float(daylight.get("night_energy", 0.0)) > 0.0
+		window.light_energy = float(daylight.get("night_energy", 0.0)) if moonlit \
+			else (0.0 if dark else float(daylight.get("energy", 2.0)))
+		window.light_color = Color(str(daylight.get("night_colour" if moonlit else "colour", "#fff0d8")))
+		window.visible = moonlit or not dark
 	var cfg: Dictionary = _config.get("interior_ambient", {})
 	var scale := float(cfg.get("night_albedo_scale", 1.0))
 	var floor_colour := Color(str(cfg.get("night_floor_colour", "#000000")))

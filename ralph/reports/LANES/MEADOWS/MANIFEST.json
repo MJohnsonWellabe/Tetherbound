@@ -208,5 +208,82 @@
     ],
     "group": 3,
     "note": "r2 over the landed group-1 conduits"
+  },
+  {
+    "item": "F17#6",
+    "flag": "data/config/crossing_hall.json:hall_3.enabled",
+    "camera_set": "F17-6",
+    "stands": [
+      "hall-approach_day_clear",
+      "hall-approach_night_clear",
+      "nave-forward_day_clear",
+      "nave-forward_night_clear",
+      "nave-forward_day_rain",
+      "nave-arches-left_day_clear",
+      "nave-arches-left_night_clear",
+      "nave-arches-right_day_clear",
+      "nave-arches-right_night_clear",
+      "nave-reverse_day_clear",
+      "nave-reverse_night_clear",
+      "shrine-pedestals_day_clear",
+      "shrine-pedestals_night_clear",
+      "shrine-pedestals-reverse_day_clear",
+      "shrine-pedestals-reverse_night_clear"
+    ],
+    "group": 4,
+    "note": "HALL-3 replaces HALL-2 (keep hall_2 OFF); layers over hall_1"
+  },
+  {
+    "item": "P2-013",
+    "flag": "data/config/bands/band3_the_river_lock/props.json:clusters[relay_station].candidate_props.enabled",
+    "also_on": [
+      "data/config/tether_relay.json:ground_pad.p2_013_candidate.enabled"
+    ],
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band3_the_river_lock__05__the_tether_relay__day__approach",
+      "meadows__band3_the_river_lock__05__the_tether_relay__day__close",
+      "meadows__band3_the_river_lock__05__the_tether_relay__night__approach",
+      "meadows__band3_the_river_lock__05__the_tether_relay__night__close",
+      "meadows__band3_the_river_lock__05__the_tether_relay__route_day"
+    ],
+    "group": 5
+  },
+  {
+    "item": "P2-065",
+    "flag": "data/config/art.json:grunt_a.clip_candidate.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd",
+    "stands": [
+      "meadows__inventory__trainer__south_bridge_grunt__defeated",
+      "meadows__inventory__trainer__south_bridge_grunt__defeated__dialogue",
+      "meadows__fights__south_bridge_grunt-99-after"
+    ],
+    "group": 5,
+    "note": "the slump plays only when the defeat lands live (trainer_npc.gd does not replay it for a trainer already beaten at load); capture the defeat transition, not a pre-beaten load"
+  },
+  {
+    "item": "P2-061",
+    "flag": "data/config/hud.json:catch_card.enabled",
+    "camera_set": "tools/phase2_capture_catch.gd",
+    "stands": [
+      "meadows__catching__08-caught-verdict",
+      "meadows__catching__09-caught-banner",
+      "meadows__catching__06-breakout"
+    ],
+    "group": 5,
+    "note": "existing UI-lane candidate (21 Oct), never GPU-judged; it matches today's notes"
+  },
+  {
+    "item": "P2-020/P2-017",
+    "flag": "data/config/creature_scale_flags.json:flags.creatures_f36_taller_than_trainer_4.enabled",
+    "also_on": [
+      "data/config/creature_grass_clear.json:p2_020_candidate.enabled"
+    ],
+    "camera_set": "F36",
+    "stands": [
+      "bramblebun",
+      "duskhush"
+    ],
+    "group": 5
   }
 ]

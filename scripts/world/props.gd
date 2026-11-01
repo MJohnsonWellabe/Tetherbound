@@ -74,6 +74,16 @@ func build() -> void:
 					prop_spec = prop_spec.duplicate(true)
 					prop_spec["scale"] = float(floor_overrides[str(prop_spec.get("model", ""))])
 				place(group, prop_spec)
+		# P2-013 (vis-meadows, OFF until GPU-judged): a cluster may carry
+		# `candidate_props` {enabled, props}; each is placed visual-only (no
+		# collider), so no walkable route, encounter or smoke path changes.
+		var extra: Variant = (cluster as Dictionary).get("candidate_props", {})
+		if extra is Dictionary and bool((extra as Dictionary).get("enabled", false)):
+			for raw_extra: Variant in (extra as Dictionary).get("props", []):
+				if raw_extra is Dictionary:
+					var extra_spec: Dictionary = (raw_extra as Dictionary).duplicate(true)
+					extra_spec["visual_only"] = true
+					place(group, extra_spec)
 		# The individual terrace boxes remain the proven collision substrate, but
 		# their visible end faces read as overlapping blockout slabs in production.
 		# The Rise gets one continuous, softly feathered tread over those colliders.
