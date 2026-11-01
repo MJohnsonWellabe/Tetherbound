@@ -70,7 +70,7 @@ func build(world: Node3D) -> Dictionary:
 			push_error("Water NPC has unknown island: " + id)
 			continue
 		var centre: Array = centres[str(spec.island_id)]
-		var offset: Array = preload("res://scripts/world/water_npc_placement.gd").offset(spec)
+		var offset: Array = post_offset(id, preload("res://scripts/world/water_npc_placement.gd").offset(spec))
 		var position := Vector3(float(centre[0]) + float(offset[0]), 0, float(centre[1]) + float(offset[2]))
 		position.y = world.call("ground_height_at", position.x, position.z)
 		if not is_finite(position.y) or position.y < 0.0:
@@ -111,6 +111,20 @@ func build(world: Node3D) -> Dictionary:
 		_specs[id] = presentation_spec
 		_bodies[id] = body
 	return _bodies.duplicate()
+
+## tb/vis-water-sky (flag-off, data/config/water_npc_posts_candidate.json):
+## an NPC whose authored post stands on a dune wall is posted at the measured
+## offset listed there instead. Off: the authored offset, unchanged.
+static func post_offset(id: String, authored: Array) -> Array:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_npc_posts_candidate.json"))
+	if not parsed is Dictionary:
+		return authored
+	var cfg: Dictionary = parsed
+	if not bool(cfg.get("enabled", false)) and not OS.get_cmdline_user_args().has("--watersky-posts-candidate"):
+		return authored
+	var moved: Variant = (cfg.get("offsets", {}) as Dictionary).get(id)
+	return moved if moved is Array and (moved as Array).size() == 3 else authored
+
 
 ## Trainers have their own bodies and named battle conversations. Resolve the
 ## same complete pair as WaterEncounterDirector; a disabled/missing pair leaves

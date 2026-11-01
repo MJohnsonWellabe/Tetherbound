@@ -23,6 +23,7 @@ const ATMOSPHERE_CONFIG_PATH := "res://data/config/cloudreach_atmosphere.json"
 const GRASS_FIELD_SCRIPT := preload("res://scripts/world/grass_field.gd")
 const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
 const GRASS_ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
+const ENVIRONMENT_MATERIALS_FOR_CLUSTER := preload("res://scripts/world/cloudreach_environment_materials.gd")
 const COVER_BUFFER := preload("res://scripts/world/cloudreach_cover_buffer.gd")
 const ROUTE_VERGES := preload("res://scripts/world/cloudreach_route_verges.gd")
 const LANDMARK_LIGHTING := preload("res://scripts/world/cloudreach_landmark_lighting.gd")
@@ -219,6 +220,22 @@ func dress(world: Node3D) -> void:
 	add_child(landmark_lighting)
 	landmark_lighting.build(world)
 	_dress_fog()
+	# Owner 31 Oct 2026: seat floating cylinders on the ground (switch in
+	# data/config/cloudreach_grounding.json). Last, so it sees every builder.
+	var grounding := preload("res://scripts/world/cloudreach_grounding.gd").new()
+	grounding.name = "CloudreachGrounding"
+	add_child(grounding)
+	grounding.build(world)
+	# P2-025 (flag-off): no grass tufts through paved masonry tops.
+	var paved := preload("res://scripts/world/cloudreach_paved_grass.gd")
+	var grounding_cfg := preload("res://scripts/world/cloudreach_grounding.gd").read_config()
+	if paved.enabled(grounding_cfg) and world.get("_materials") is Dictionary:
+		var mats: Dictionary = world.get("_materials")
+		var paving: Array = []
+		for key: String in ["masonry", "masonry_trim", "path"]:
+			if mats.has(key):
+				paving.append(mats[key])
+		print("[cloudreach_paved_grass] cleared=", paved.clear(world, paving, grounding_cfg))
 
 
 func _dress_route_verges(config_data: Dictionary) -> void:
@@ -440,6 +457,28 @@ func _compile_exclusions() -> void:
 				var bucket: PackedInt32Array = _ex_grid.get(key, PackedInt32Array())
 				bucket.append(index)
 				_ex_grid[key] = bucket
+
+
+## tb/vis-water-sky group 2 (flag-off, data/config/cloudreach_ground_cluster.json):
+## true for a tuft on a dry turf patch that the cluster pass leaves bare. A
+## positional hash, not the placement RNG, so every other tuft is unchanged.
+var _cluster_cfg: Variant = null
+
+
+func _cluster_thins(at: Vector3) -> bool:
+	if _cluster_cfg == null:
+		_cluster_cfg = ENVIRONMENT_MATERIALS_FOR_CLUSTER.ground_cluster()
+	var cfg: Dictionary = _cluster_cfg
+	if cfg.is_empty():
+		return false
+	var field := ENVIRONMENT_MATERIALS_FOR_CLUSTER.turf_patch_field(at.x, at.z, float(cfg.get("frequency", 0.035)))
+	var band: Array = cfg.get("dry_band", [0.35, 0.6])
+	var dry := smoothstep(float(band[0]), float(band[1]), field)
+	if dry <= 0.0:
+		return false
+	var keep := lerpf(1.0, float(cfg.get("keep_dry", 0.3)), dry)
+	var h := fposmod(sin(at.x * 12.9898 + at.z * 78.233) * 43758.5453, 1.0)
+	return h >= keep
 
 
 func _excluded(at: Vector3) -> bool:
@@ -1285,7 +1324,7 @@ func _collect_mesh_instances(node: Node, out: Array) -> void:
 ## geometry instead of gridding.
 func _fill_tuft_at(point: Vector3, extra_clear: float, rng: RandomNumberGenerator,
 		scale_min: float, scale_max: float, buried_tolerance: float = 0.25) -> Variant:
-	if _excluded(point) or _near_route(point, extra_clear):
+	if _excluded(point) or _near_route(point, extra_clear) or _cluster_thins(point):
 		return null
 	if _inside_settlement(point):
 		return null
@@ -1356,7 +1395,7 @@ func _plant_tufts(parent: Node3D, label: String, centre: Vector3, half: Vector2,
 		var x := centre.x + cos(angle) * half.x * radius
 		var z := centre.z + sin(angle) * half.y * radius
 		var probe := Vector3(x, centre.y, z)
-		if _excluded(probe) or _near_route(probe, extra_clear):
+		if _excluded(probe) or _near_route(probe, extra_clear) or _cluster_thins(probe):
 			continue
 		if _inside_settlement(probe):
 			continue
