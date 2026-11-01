@@ -1,0 +1,137 @@
+{
+  "_comment": "P2-095 (GPU 7.31 with readable_r3; judges asked for real item icons in the craft panel). Each craft output and ingredient gets an icon rendered from an INSTALLED mesh by tools/bake_item_icons.gd into output_dir/<id>.png. `mesh` defaults to the item's own world_model or held_model in data/items/items.json; the entries below name a stand-in from an installed pack where the item has none, a tint where several items share one mesh, and a view. No new meshes, no Meshy. Read by craft_panel.gd only when craft_presentation.json rendered_item_icons is true; any item without a rendered PNG keeps its existing icon.",
+  "output_dir": "res://assets/ui/icons/items_rendered",
+  "size_px": 192,
+  "default_view": {
+    "yaw_deg": 35.0,
+    "pitch_deg": -22.0,
+    "fov_deg": 28.0,
+    "fill": 0.84
+  },
+  "items": {
+    "axe": {
+      "view": {
+        "yaw_deg": 20.0,
+        "pitch_deg": -10.0,
+        "roll_deg": 35.0,
+        "fill": 1.12
+      }
+    },
+    "pickaxe": {
+      "view": {
+        "yaw_deg": 20.0,
+        "pitch_deg": -10.0,
+        "roll_deg": 35.0,
+        "fill": 1.12
+      }
+    },
+    "hoe": {
+      "view": {
+        "yaw_deg": 200.0,
+        "pitch_deg": -10.0,
+        "roll_deg": 35.0,
+        "fill": 1.12
+      },
+      "tint": "#8a6a3f"
+    },
+    "knife": {
+      "view": {
+        "yaw_deg": 20.0,
+        "pitch_deg": -10.0,
+        "roll_deg": 40.0,
+        "fill": 1.12
+      }
+    },
+    "orb_basic": {},
+    "orb_greater": {
+      "tint": "#c9932e"
+    },
+    "orb_prime": {
+      "tint": "#b4703a"
+    },
+    "potion_small": {},
+    "potion_large": {
+      "tint": "#3f8f6a"
+    },
+    "glowmoss_tonic": {},
+    "wood": {
+      "mesh": "res://assets/environment/nature/log.glb"
+    },
+    "fiber": {
+      "mesh": "res://assets/props/quaternius_fantasy/Rope_1.gltf",
+      "tint": "#9aa64a"
+    },
+    "berry_seeds": {
+      "mesh": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "tint": "#7d6a44"
+    },
+    "cloudreach_trail_preserve": {
+      "mesh": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "tint": "#dd9e55"
+    },
+    "voltcap_stew": {
+      "mesh": "res://assets/props/quaternius_fantasy/Cauldron.gltf"
+    },
+    "saddle": {
+      "mesh": "res://assets/props/riding_saddle/riding_saddle.glb"
+    },
+    "saddle_frame": {
+      "mesh": "res://assets/props/riding_saddle/riding_saddle.glb",
+      "tint": "#7a5a3d"
+    },
+    "stormglass_lining": {
+      "mesh": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb",
+      "tint": "#88cae2"
+    },
+    "stormglass_plate": {
+      "mesh": "res://assets/props/quaternius_fantasy/Shield_Wooden.gltf",
+      "tint": "#b6add2",
+      "metallic": 0.4
+    },
+    "stone": {
+      "mesh": "res://assets/environment/nature/rock_smallD.glb",
+      "tint": "#8e8d86"
+    },
+    "rootstone": {
+      "mesh": "res://assets/environment/nature/rock_smallD.glb",
+      "tint": "#6f7f6a"
+    },
+    "reef_stone": {
+      "mesh": "res://assets/environment/nature/rock_smallA.glb",
+      "tint": "#9fb7b0"
+    },
+    "ironwood": {
+      "mesh": "res://assets/environment/nature/log.glb",
+      "tint": "#4a3a2c"
+    },
+    "thunderwood": {
+      "mesh": "res://assets/environment/nature/log.glb",
+      "tint": "#5b4638"
+    },
+    "windworn_heartwood": {
+      "mesh": "res://assets/environment/nature/log.glb",
+      "tint": "#9c7953"
+    },
+    "cliffglass_ore": {
+      "mesh": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb",
+      "tint": "#88b5bd"
+    },
+    "stormglass": {
+      "mesh": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb",
+      "tint": "#78c9df"
+    },
+    "gale_fiber": {
+      "mesh": "res://assets/props/quaternius_fantasy/Rope_1.gltf",
+      "tint": "#bdbe77"
+    },
+    "conductor_vine": {
+      "mesh": "res://assets/props/quaternius_fantasy/Rope_1.gltf",
+      "tint": "#a6b96a"
+    },
+    "glowmoss": {
+      "mesh": "res://assets/environment/nature/plant_bushSmall.glb",
+      "tint": "#8dcc77"
+    }
+  },
+  "_skipped": "Ingots (only stand-in was a whetstone wheel) and insulated helm/vest (their world model is a pouch) keep their existing icons."
+}

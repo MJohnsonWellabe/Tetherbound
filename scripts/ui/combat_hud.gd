@@ -672,10 +672,14 @@ func _process(delta: float) -> void:
 	_update_subject_fade(delta)
 	if _catch_focus_left > 0.0:
 		# P2-061: the caught result owns the screen until its card expires.
-		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
-			panel.visible = false
-		if is_instance_valid(_system_overlay): _system_overlay.hide()
-		if _strip_fader != null: _strip_fader.visible = false
+		_step_back_for_catch_focus()
+
+
+func _step_back_for_catch_focus() -> void:
+	for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
+		if panel != null: panel.visible = false
+	if is_instance_valid(_system_overlay): _system_overlay.hide()
+	if _strip_fader != null: _strip_fader.visible = false
 
 
 func _layout_system_hints() -> void:
@@ -2031,6 +2035,9 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	if success:
 		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
 		_catch_focus_left = _outcome_left
+		# The verdict frame itself must already be clear: waiting for the next
+		# _process left the cards and action bar up on the card's first frame.
+		_step_back_for_catch_focus()
 	else:
 		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
 

@@ -13,6 +13,15 @@ var _instance: RefCounted
 var _rules: Dictionary
 var _species: Dictionary
 var _last_position := Vector3.ZERO
+## P2-108 (UIPOSES, flag-off): water_mount_presentation.json. The mounted
+## Aquaryn stood tall and static on the water casting a hard shadow, "walking
+## on glass". When on, a listed mount sits deeper while swimming (the rider
+## stays above the surface), bobs gently, and stops casting its shadow on the
+## water. Presentation of the existing swim follow; no stamina, collision,
+## network or save change.
+const MOUNT_PRESENTATION := preload("res://scripts/world/water_mount_presentation.gd")
+var _swim_time := 0.0
+var _shadow_body: Node3D = null
 
 func setup(owner_world: Node3D, riding_controller: Node, encounter: Node) -> void:
 	world = owner_world
@@ -27,6 +36,7 @@ func _physics_process(_delta: float) -> void:
 	if current == body and is_instance_valid(body):
 		return
 	if is_instance_valid(body):
+		MOUNT_PRESENTATION.set_shadows(body, true)
 		body.clear_environment_velocity_modifier(&"water_buoyancy")
 		body.remove_meta("water_aquatic")
 		body.set_traversal_pose("")
@@ -52,6 +62,7 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 	var human: Node = player.swim_controller
 	var fighting: bool = world.get_node("CombatManager").is_fighting() or director.trainer_battle_active()
 	if depth <= float(_rules.human.exit_depth_m):
+		MOUNT_PRESENTATION.set_shadows(actor, true)
 		actor.set_traversal_pose("ride" if mounted else "")
 		if state.mode != STATE.Mode.LAND:
 			state.leave_water()
@@ -90,6 +101,13 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 	var diving: bool = mounted and str(actor.species_id) == "ripplet" and bool(riding.diving)
 	if diving:
 		origin -= float(preload("res://scripts/player/ripplet_traversal.gd").config().dive_depth_m)
+	var look := MOUNT_PRESENTATION.row(str(actor.species_id)) if mounted and not fighting else {}
+	if not look.is_empty():
+		_swim_time += delta
+		origin += MOUNT_PRESENTATION.origin_delta(look, _swim_time)
+		MOUNT_PRESENTATION.set_shadows(actor, not bool(look.get("shadows_off", true)))
+	else:
+		MOUNT_PRESENTATION.set_shadows(actor, true)
 	actor.velocity.y = (world.field.water_level() + origin - actor.global_position.y) * float(_rules.human.vertical_follow_rate)
 	if mounted:
 		if human.state.mode != STATE.Mode.MOUNTED and not fighting:

@@ -1,5 +1,7 @@
 {
   "pose_enabled": true,
+  "uiposes_stroke_candidates": false,
+  "_why_uiposes_stroke_candidates": "P2-071 (UIPOSES lane, 1 Nov 2026). GPU item score 28 Oct 5.20: the trainer stays vertical with both arms thrown up and legs visible, reading as wading or flailing. Tidewake's close-1024 swim_candidate (chest 0.14 m under the surface, 76 deg body) and swim_stroke_candidate (forward crawl reach under the surface, 84 deg body, head lifted to breathe) were never GPU-judged because they only load with the whole Tidewake look profile. When on, their swim_pose keys apply alone (trainer_model.gd load_human_swim_visual). Pose keys only; OFF until GPU judging.",
   "_comment": "P2-071 production human swim pose, default on under the owner's Phase 1 instruction. Poses installed art from existing local/remote aquatic snapshots, restoring art and bones on exit. No physics, wake, save or P2-072 change. Phase 2 stills and motion review remains required for all four playable bodies.",
   "body_pitch_deg": 68.0,
   "chest_above_surface_m": 0.10,

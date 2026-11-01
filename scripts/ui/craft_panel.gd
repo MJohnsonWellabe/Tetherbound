@@ -689,6 +689,14 @@ var _readable_action_hints := false
 ## ingredients are missing. Presentation only; OFF until judged.
 var _compact_rows := false
 var _craft_button_on := false
+## P2-095 GPU close-out (31 Oct, 7.43 vs 7.5): the compact rows' cost preview
+## and Ready/Missing tag one step up, and a greyed Craft button whose
+## "Missing materials" label and border read on the dark panel.
+var _readable_r3 := false
+## P2-095 round 4 (UIPOSES, judges on readable_r3 + rendered icons, 7.36):
+## controller face-button glyphs in a footer, 5+ visible rows, and higher
+## contrast Missing tags and button. craft_presentation.json `readable_r4`.
+var _readable_r4 := false
 var _craft_button: Button
 var _craft_button_label: RichTextLabel
 var _row_tags: Array[Label] = []
@@ -707,6 +715,8 @@ func _ready() -> void:
 	_readable_action_hints = bool(_presentation.get("readable_action_hints", false))
 	_compact_rows = _readable_recipe_rows and bool(_presentation.get("compact_rows", false))
 	_craft_button_on = bool(_presentation.get("craft_button", false))
+	_readable_r3 = bool(_presentation.get("readable_r3", false))
+	_readable_r4 = bool(_presentation.get("readable_r4", false))
 	_build()
 	visible = false
 	# RG4: `input_owner.gd`'s own header has claimed since OW10 that this
@@ -897,7 +907,10 @@ func _build() -> void:
 	outer.add_child(hint)
 	if _presentation.get("glyph_hints") == true:
 		hint.visible = false
-		outer.add_child(_glyph_hint("cancel", "Leave"))
+		if _readable_r4:
+			outer.add_child(_build_glyph_footer())
+		else:
+			outer.add_child(_glyph_hint("cancel", "Leave"))
 
 	UITokens.make_text_legible(_root)
 	_describe(0)
@@ -927,6 +940,8 @@ func _build_list_zone() -> Control:
 	var list_height := float(LIST_VISIBLE_HEIGHT)
 	if _readable_recipe_rows:
 		var visible_rows := maxi(1, int(_presentation.get("compact_visible_rows" if _compact_rows else "visible_rows", 3)))
+		if _compact_rows and _readable_r4:
+			visible_rows = maxi(visible_rows, int(_presentation.get("r4_visible_rows", 6)))
 		list_height = visible_rows * _row_height() + (visible_rows - 1) * 8.0
 	if is_instance_valid(_station):
 		# Leave room for the single upgrade line and actual station controls.
@@ -1012,6 +1027,9 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	icon.custom_minimum_size = Vector2(ROW_ICON_PX, ROW_ICON_PX)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = _icon_texture(str(output.get("id", "")))
+	if bool(_presentation.get("rendered_item_icons", false)):
+		# Rendered icons are baked large; draw them at the row's own size.
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	if _compact_rows:
 		var icon_px := float(_presentation.get("compact_icon_px", 56))
 		icon.custom_minimum_size = Vector2(icon_px, icon_px)
@@ -1071,7 +1089,12 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 		name.max_lines_visible = 1
 		cost_label.max_lines_visible = 2
 		cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		cost_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		cost_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY if _readable_r3 else UITokens.FONT_LABEL)
+		if _readable_r4:
+			# One cost line per row, so six rows fit; the full list stays in
+			# the detail column.
+			cost_label.max_lines_visible = 1
+			cost_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 		text_col.alignment = BoxContainer.ALIGNMENT_CENTER
 	text_col.add_child(cost_label)
 	_cost_labels.append(cost_label)
@@ -1087,7 +1110,7 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 		var tag := Label.new()
 		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		tag.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		tag.add_theme_font_size_override("font_size", UITokens.FONT_BODY if _readable_r3 else UITokens.FONT_LABEL)
 		name_row.add_child(tag)
 		text_col.add_child(name_row)
 		text_col.move_child(name_row, 0)
@@ -1117,7 +1140,24 @@ func _build_center_zone() -> Control:
 	_center_icon.custom_minimum_size = Vector2(CENTER_ICON_PX, CENTER_ICON_PX)
 	_center_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_center_icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	side.add_child(_center_icon)
+	if _readable_r3:
+		# GPU CRAFT-R3 (31 Oct): the centre column read empty around a small
+		# flat glyph. The focused item's preview fills it, on its own plate.
+		var px := float(_presentation.get("center_preview_px", 200))
+		_center_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_center_icon.custom_minimum_size = Vector2(px, px)
+		var plate := PanelContainer.new()
+		var box := UITokens.fill_box(Color(UITokens.BG_PANEL_ALT, 0.9))
+		box.set_corner_radius_all(UITokens.RADIUS)
+		box.set_border_width_all(2)
+		box.border_color = UITokens.BORDER
+		box.set_content_margin_all(18)
+		plate.add_theme_stylebox_override("panel", box)
+		plate.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		plate.add_child(_center_icon)
+		side.add_child(plate)
+	else:
+		side.add_child(_center_icon)
 
 	_center_name = Label.new()
 	_center_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1176,7 +1216,46 @@ func _build_right_zone() -> Control:
 
 
 func _row_height() -> float:
+	if _compact_rows and _readable_r4:
+		return float(_presentation.get("r4_row_height", 92))
 	return float(_presentation.get("compact_row_height", 112)) if _compact_rows else float(_presentation.get("row_height", 208))
+
+
+## readable_r4: one footer bar of the panel's face-button prompts, glyph plus
+## verb, separated from the list by a thin rule (judges: "controller
+## face-button glyphs in a footer").
+func _build_glyph_footer() -> Control:
+	var bar := PanelContainer.new()
+	var box := UITokens.fill_box(Color(UITokens.BG_DEEP, 0.85))
+	box.set_corner_radius_all(UITokens.RADIUS)
+	box.border_width_top = 2
+	box.border_color = UITokens.BORDER
+	box.content_margin_left = 20
+	box.content_margin_right = 20
+	box.content_margin_top = 8
+	box.content_margin_bottom = 8
+	bar.add_theme_stylebox_override("panel", box)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 36)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	for pair: Array in [["confirm", "Craft"], ["cancel", "Leave"]]:
+		var line := _glyph_hint(str(pair[0]), str(pair[1]))
+		line.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
+		row.add_child(line)
+	bar.add_child(row)
+	return bar
+
+
+## readable_r4: the Ready/Missing tag as a filled chip with dark text.
+static func r4_tag_box(affordable: bool) -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = UITokens.SUCCESS if affordable else UITokens.DANGER
+	box.set_corner_radius_all(8)
+	box.content_margin_left = 12
+	box.content_margin_right = 12
+	box.content_margin_top = 2
+	box.content_margin_bottom = 2
+	return box
 
 
 ## Primary action for the focused recipe: confirm glyph plus "Craft" on a teal
@@ -1194,6 +1273,13 @@ func _make_craft_button() -> Button:
 		box.set_corner_radius_all(10)
 		box.set_border_width_all(2)
 	on.border_color = UITokens.TEAL_SOFT
+	if _readable_r3:
+		off.border_color = UITokens.TEXT_SECONDARY
+		off.set_border_width_all(3)
+	if _readable_r4:
+		off.bg_color = Color(UITokens.BG_DEEP, 0.98)
+		off.border_color = UITokens.DANGER
+		off.set_border_width_all(3)
 	for state: String in ["normal", "hover", "pressed", "focus"]:
 		_craft_button.add_theme_stylebox_override(state, on)
 	_craft_button.add_theme_stylebox_override("disabled", off)
@@ -1221,7 +1307,14 @@ func _refresh_craft_button(affordable: bool) -> void:
 	if affordable:
 		_craft_button_label.text = "%s  [color=#10191E]Craft[/color]" % INPUT_GLYPH.icon("confirm", px)
 	else:
-		_craft_button_label.text = "%s  [color=#B8C5C4]Missing materials[/color]" % INPUT_GLYPH.icon("confirm", px, Color(1, 1, 1, 0.35))
+		if _readable_r4:
+			_craft_button_label.text = "%s  [color=#%s]Missing materials[/color]" % [
+				INPUT_GLYPH.icon("confirm", px, Color(1, 1, 1, 0.85)), UITokens.DANGER.lerp(Color.WHITE, 0.35).to_html(false)]
+		elif _readable_r3:
+			_craft_button_label.text = "%s  [color=#%s]Missing materials[/color]" % [
+				INPUT_GLYPH.icon("confirm", px, Color(1, 1, 1, 0.6)), UITokens.TEXT_PRIMARY.to_html(false)]
+		else:
+			_craft_button_label.text = "%s  [color=#B8C5C4]Missing materials[/color]" % INPUT_GLYPH.icon("confirm", px, Color(1, 1, 1, 0.35))
 
 
 ## P2-096: an action hint as the bound button's prompt glyph plus its verb in
@@ -1350,6 +1443,11 @@ func _poll() -> void:
 		if i < _row_tags.size():
 			_row_tags[i].text = "Ready" if affordable else "Missing"
 			_row_tags[i].add_theme_color_override("font_color", colour)
+			if _readable_r4:
+				_row_tags[i].add_theme_stylebox_override("normal", r4_tag_box(affordable))
+				_row_tags[i].add_theme_color_override("font_color", UITokens.BG_DEEP.lerp(Color.BLACK, 0.2))
+				_row_tags[i].remove_theme_color_override("font_outline_color")
+				_row_tags[i].add_theme_constant_override("outline_size", 0)
 		if i < _cost_labels.size():
 			_cost_labels[i].add_theme_color_override("font_color", colour)
 			if _readable_recipe_rows:
@@ -1411,6 +1509,13 @@ func _make_ingredient_row(item_id: String, need: int, have: int, enough: bool) -
 	icon.custom_minimum_size = Vector2(INGREDIENT_ICON_PX, INGREDIENT_ICON_PX)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = _icon_texture(item_id)
+	if bool(_presentation.get("rendered_item_icons", false)):
+		# Baked at 192 px: hold the ingredient line's icon slot, a step larger
+		# than the flat glyph so the rendered object reads.
+		var px := float(_presentation.get("rendered_ingredient_icon_px", 40))
+		icon.custom_minimum_size = Vector2(px, px)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(icon)
 
 	var db := _items()
@@ -1451,10 +1556,27 @@ func _icon_texture(id: String) -> Texture2D:
 	var db := _items()
 	if db == null or id.is_empty():
 		return null
-	var path := str(db.call("definition", id).get("icon", ""))
+	var path := icon_path_for(id, db.call("definition", id) as Dictionary,
+		bool(_presentation.get("rendered_item_icons", false)))
 	if path.is_empty() or not ResourceLoader.exists(path):
 		return null
 	return load(path) as Texture2D
+
+
+## P2-095 (GPU 7.31; judges asked for real item icons): with
+## craft_presentation.json `rendered_item_icons` on, an item with a PNG
+## rendered from its installed mesh by tools/bake_item_icons.gd
+## (data/config/craft_item_icons.json) shows that; every other item, and every
+## item with the flag off, keeps items.json's own `icon`.
+const RENDERED_ICON_DIR := "res://assets/ui/icons/items_rendered"
+
+static func icon_path_for(id: String, definition: Dictionary, rendered_on: bool,
+		rendered_dir: String = RENDERED_ICON_DIR) -> String:
+	if rendered_on and not id.is_empty():
+		var rendered := "%s/%s.png" % [rendered_dir, id]
+		if ResourceLoader.exists(rendered):
+			return rendered
+	return str(definition.get("icon", ""))
 
 
 func _items() -> RefCounted:

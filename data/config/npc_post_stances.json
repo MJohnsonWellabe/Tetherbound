@@ -1,0 +1,12 @@
+{
+  "_comment": "P2-050 (UIPOSES lane, 1 Nov 2026). GPU item score 28 Oct 5.88: Oskar, Halda and Lark all stand in the same arms-down idle with no role gesture, so the posts read as placeholder spawns. When enabled, each named villager's stance layers bone-local euler offsets (degrees) over the playing idle (scripts/characters/post_stance.gd, a SkeletonModifier3D attached by village_npcs.gd), so breathing still shows. Signs measured on the installed humanoid rig with an isolated render: ForeArm -X bends the elbow forward; Arm Y turns the forearm across the body. Presentation only; no collider, prompt, dialogue or save change. OFF until GPU judging.",
+  "enabled": false,
+  "beaten_trainer_stance": {"_why": "P2-065 (GPU 6.12): the bridge grunt and the Warden stand in the same neutral pose before and after defeat while the banner carries the change. When enabled, a beaten trainer keeps the dejected stance (head bowed, back rounded) once the defeat reaction hands off to the stand-down (trainer_npc.gd). +X bows Spine/neck/Head on this rig (isolated render). OFF until GPU judging.", "enabled": false, "stance": "dejected"},
+  "npcs": {"oskar": "arms_folded", "halda": "hands_clasped", "lark": "strap_hold"},
+  "stances": {
+    "arms_folded": [["LeftArm", -15, 55, 0], ["LeftForeArm", -95, 0, 0], ["RightArm", -15, -55, 0], ["RightForeArm", -95, 0, 0], ["Spine", 4, 0, 0]],
+    "hands_clasped": [["LeftArm", -5, 60, -8], ["LeftForeArm", -85, 0, 0], ["RightArm", -5, -60, 8], ["RightForeArm", -85, 0, 0], ["Spine", 6, 0, 0], ["Head", -5, 0, 0]],
+    "dejected": [["Spine", 12, 0, 0], ["neck", 10, 0, 0], ["Head", 18, 0, 0]],
+    "strap_hold": [["LeftArm", -40, 0, 0], ["LeftForeArm", -90, 0, 0], ["Head", 0, 12, 0]]
+  }
+}
