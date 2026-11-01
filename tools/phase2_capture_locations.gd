@@ -1008,31 +1008,38 @@ func _run_jobs(jobs: Array[Dictionary]) -> void:
 		quit(1)
 		return
 	# Validate and open every job exactly as its single launch would, before
-	# the world boots: plan, fresh output, initial manifest.
+	# the world boots: plan, fresh output, initial manifest. A job that its
+	# single launch would refuse is logged and skipped; the rest still run.
 	var prepared: Array[Dictionary] = []
+	var skipped: Array[String] = []
 	for job: Dictionary in jobs:
+		var refusal := ""
 		if not _enter_job(job):
-			quit(1)
-			return
-		seed(_seed)
-		if not _load_plan():
-			push_error("capture jobs: no plan rows for job %s" % _output_dir)
-			quit(1)
-			return
-		# Look-dev presets require an absent output directory per launch
-		# (lookdev_capture_bootstrap.gd); a batch applies that to every job.
-		if _has_user_flag_prefix("--preset=") \
-				and DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output_dir)):
-			push_error("capture jobs: preset capture requires a fresh output directory: %s" % _output_dir)
-			quit(1)
-			return
-		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
-		if not _output_is_fresh():
-			quit(1)
-			return
+			refusal = "arguments refused"
+		else:
+			seed(_seed)
+			if not _load_plan():
+				refusal = "no plan rows"
+			# Look-dev presets require an absent output directory per launch
+			# (lookdev_capture_bootstrap.gd); a batch applies that to every job.
+			elif _has_user_flag_prefix("--preset=") \
+					and DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output_dir)):
+				refusal = "preset capture requires a fresh output directory"
+			else:
+				DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
+				if not _output_is_fresh():
+					refusal = "output already holds a manifest or frames"
+		if not refusal.is_empty():
+			push_error("capture jobs: skipping job %s (%s): %s" % [str(job.output), " ".join(job.args), refusal])
+			skipped.append(str(job.output))
+			continue
 		_begin_manifest()
 		_write_manifest()
 		prepared.append({"job": job, "planned": _planned.duplicate(true), "manifest": _manifest})
+	if prepared.is_empty():
+		push_error("capture jobs: no runnable job")
+		quit(1)
+		return
 	print("CAPTURE JOBS %d on one boot" % prepared.size())
 	# Boot once. The mount/prepare steps add the camera/character records each
 	# single launch's manifest carries; copy them into every job's manifest.
@@ -1044,6 +1051,7 @@ func _run_jobs(jobs: Array[Dictionary]) -> void:
 	var shell_manifest := _manifest.duplicate(true)
 	var boot_failures := _failures.duplicate()
 	var all_complete := booted
+	var failed: Array[String] = []
 	for job_index in prepared.size():
 		var entry: Dictionary = prepared[job_index]
 		_enter_job(entry.job)
@@ -1057,11 +1065,20 @@ func _run_jobs(jobs: Array[Dictionary]) -> void:
 		if not booted:
 			_failures.append_array(boot_failures)
 			_close_manifest(false)
+			failed.append(_output_dir)
 			continue
 		for row: Dictionary in _planned:
 			await _capture_row(row)
 		var complete := _job_complete()
 		_close_manifest(complete)
+		if not complete:
+			failed.append(_output_dir)
 		all_complete = all_complete and complete
-	print("CAPTURE JOBS %s: %d jobs" % ["OK" if all_complete else "FAILED", prepared.size()])
+	# One failing post never stops the others; the exit code and this summary
+	# report every job that did not complete.
+	all_complete = all_complete and skipped.is_empty()
+	print("CAPTURE JOBS %s: %d/%d jobs complete; failed: %s; skipped before boot: %s" % [
+		"OK" if all_complete else "FAILED", prepared.size() - failed.size(), jobs.size(),
+		", ".join(failed) if not failed.is_empty() else "none",
+		", ".join(skipped) if not skipped.is_empty() else "none"])
 	quit(0 if all_complete else 1)

@@ -57,6 +57,12 @@ godot … --script res://tools/phase2_capture_build_systems.gd -- --biome=meadow
 - A headless boot and a Forward+ boot produced the same key here, so a cache can be shared between them.
 - Old keys are never reused, so delete the folder whenever you like.
 
+## Follow-ups from the coordinator (GPU lane)
+
+- **Fixed-frame shell waits replaced (realm flight and five more).** `phase2_capture_realm_flight.gd` gave up after 600 physics frames (~26 s at High) while the Meadows shell needs about 140 s. It and `phase2_capture_catch`, `current_states`, `swimming`, `tidewake_camps` and `tidewake_mounted_swim` now wait on the world's own ready flag (`shell_build_complete()`, which reads `_shell_ready`) with a 900 s time cap. That cap matches the base tool's `BUILD_TIMEOUT_MSEC`. Their existing "did not build" failure still fires if the cap is reached.
+- **One failing speaker never stops a batch.** Row failures were already logged and the next row ran. In batch mode, a job that its single launch would refuse (no plan rows, output not fresh) is now logged and skipped instead of refusing the whole batch. The last line names every failed and skipped job: `CAPTURE JOBS FAILED: 1/3 jobs complete; failed: …/iven; skipped before boot: …/bogus`. The exit code is 1 if any job failed. Verified in one Cloudreach boot: bogus subset skipped, Iven failed, Kelm captured.
+- **The 14-speaker grouped Meadows launch** (one launch, many `--subset`) already continued past failed rows; its manifest `failures` lists each one. Moving to one job per speaker gives each speaker its own manifest and a per-job pass/fail line.
+
 ## 1. Boot-time regression
 
 **Where the time goes.** The fix is to change what yield frames cost, not what renders.

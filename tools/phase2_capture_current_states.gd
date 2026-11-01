@@ -185,10 +185,13 @@ func _run() -> void:
 	world = WORLD.instantiate()
 	root.add_child(world)
 	current_scene = world
-	for _frame in 1500:
+	# Wait on the world's own ready flag with a time cap, not a frame
+	# count: GPU shells take minutes (Meadows ~140 s at High), far past
+	# any fixed frame budget (capture-speed lane, 1 Nov 2026).
+	var shell_deadline_ms := Time.get_ticks_msec() + 900000
+	await process_frame
+	while not world.shell_build_complete() and Time.get_ticks_msec() < shell_deadline_ms:
 		await process_frame
-		if world.shell_build_complete():
-			break
 	if not world.shell_build_complete():
 		_fail("water world shell did not build")
 		quit(1)
