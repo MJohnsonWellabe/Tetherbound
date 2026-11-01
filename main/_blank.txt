@@ -1,0 +1,5 @@
+﻿BLANK   3.2 meadows-dialogue\meadows__inventory__character__corin.jpg
+BLANK   6.5 meadows-locations\meadows__landmark__old_mill_crossing__day__approach.jpg
+SET meadows-dialogue: 1/16 blank
+SET meadows-locations: 1/44 blank
+blank frames 2 of 1001
