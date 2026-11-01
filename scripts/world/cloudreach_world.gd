@@ -123,6 +123,11 @@ const MAP_STATE := preload("res://scripts/world/cloudreach_map_state.gd")
 
 var _config: Dictionary = {}
 var _visual_config: Dictionary = {}
+## Owner 31 Oct 2026 (floating drums): when on, every _mesa wall widens or
+## stays plumb going down, so a bulge never overhangs a recessed band that a
+## lower meadow crown cuts across, and never tucks under the crown. Flag: cloudreach_grounding.json
+## "monotonic_walls" (default off); preview --cloudreach-walls-candidate.
+var _monotonic_walls := false
 var _surfaces: Array[Dictionary] = []
 var _cover_patches: Array[Dictionary] = []
 var _materials: Dictionary = {}
@@ -384,6 +389,8 @@ func _ready() -> void:
 
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
+	_monotonic_walls = bool(preload("res://scripts/world/cloudreach_grounding.gd").read_config().get(
+		"monotonic_walls", false)) or OS.get_cmdline_user_args().has("--cloudreach-walls-candidate")
 	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
 	_visual_config = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(_visual_config)
 	_visual_config = preload("res://scripts/world/cloudreach_settlement_life.gd").apply(_visual_config, "visual")
@@ -402,6 +409,11 @@ func _ready() -> void:
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
+		# tb/vis-water-sky group 2 (OFF until GPU-judged): warm key, rim,
+		# aerial fog and night fill (data/config/cloudreach_light_candidate.json).
+		var light_candidate := _read_json("res://data/config/cloudreach_light_candidate.json")
+		if bool(light_candidate.get("enabled", false)) or OS.get_cmdline_user_args().has("--cloudreach-light-candidate"):
+			apply_time_overrides(local_look.get("times", {}), light_candidate.get("time_overrides", {}))
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
 		var biome_profile: Dictionary = biome_look.config()
@@ -5558,6 +5570,17 @@ func _disc(parent: Node, label: String, centre: Vector3, radius: float, height: 
 	return root
 
 
+## Wall ring pushes for a cliff that never overhangs going down (owner 31 Oct
+## 2026, "big cylinders that don't touch the ground"): top (1.0) <= upper <=
+## lower <= bottom. A ring wider than the one below it is pulled in to it, and
+## an upper ring tucked under the crown (push < 1) is brought out to the crown
+## edge, so a meadow that cuts a mass just under its crown never stands under
+## a rock roof. Returns Vector2(upper, lower).
+static func monotonic_wall_pushes(upper_push: float, lower_push: float, bottom_push: float) -> Vector2:
+	var lower := clampf(lower_push, 1.0, maxf(bottom_push, 1.0))
+	return Vector2(clampf(upper_push, 1.0, lower), lower)
+
+
 func _mesa(
 		parent: Node,
 		label: String,
@@ -5684,6 +5707,12 @@ func _mesa(
 			sin(angle) * size.z * 0.32))
 		var upper_push := 1.04 + 0.18 * sin(angle * 4.0 + seed_value)
 		var lower_push := 1.24 + 0.27 * cos(angle * 3.0 - seed_value * 0.7)
+		var bottom_push_x := 1.55 + 0.22 * sin(angle * 3.0 + seed_value)
+		var bottom_push_z := 1.55 + 0.20 * cos(angle * 5.0 - seed_value)
+		if _monotonic_walls:
+			var pushes := monotonic_wall_pushes(upper_push, lower_push, minf(bottom_push_x, bottom_push_z))
+			upper_push = pushes.x
+			lower_push = pushes.y
 		# A constant Y per ring made every kilometre-scale face read as a clean
 		# geological cutaway. Offset the strata independently around the perimeter
 		# so the material transitions follow an eroded, rising/falling shelf line.
@@ -5695,8 +5724,7 @@ func _mesa(
 			top_point.z * upper_push))
 		lower_ring.append(Vector3(top_point.x * lower_push, top_point.y - size.y * 0.65 + lower_jitter,
 			top_point.z * lower_push))
-		bottom_ring.append(Vector3(top_point.x * (1.55 + 0.22 * sin(angle * 3.0 + seed_value)),
-			-size.y * 0.5, top_point.z * (1.55 + 0.20 * cos(angle * 5.0 - seed_value))))
+		bottom_ring.append(Vector3(top_point.x * bottom_push_x, -size.y * 0.5, top_point.z * bottom_push_z))
 
 	# Only the flat transition ledges opt in. Their old fan put every triangle
 	# at the arrival centre, saturating native capsule contacts with duplicates.

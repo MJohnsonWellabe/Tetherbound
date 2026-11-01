@@ -21,6 +21,11 @@ static func settings() -> Dictionary:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--tidewake-look-sections="):
 			restore = arg.trim_prefix("--tidewake-look-sections=").split(",", false)
+	# tb/vis-water-sky (flag-off): lane batch switch that brings named
+	# sections_off candidates into play together for the GPU batch judge.
+	if bool(parsed.get("watersky_sections_on", false)):
+		for section: Variant in parsed.get("watersky_sections", []):
+			restore.append(str(section))
 	for section: Variant in parsed.get("sections_off", []):
 		if not restore.has(str(section)):
 			parsed.erase(str(section))

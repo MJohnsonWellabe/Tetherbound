@@ -76,6 +76,26 @@ static func banner(size: Vector2, phase: float) -> ShaderMaterial:
 	material.set_shader_parameter("phase",phase)
 	return material
 
+## data/config/cloudreach_ground_cluster.json when enabled (or previewed with
+## --cloudreach-cluster-candidate), else {}.
+static func ground_cluster() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_ground_cluster.json"))
+	if not parsed is Dictionary:
+		return {}
+	if not bool((parsed as Dictionary).get("enabled", false)) and not OS.get_cmdline_user_args().has("--cloudreach-cluster-candidate"):
+		return {}
+	return parsed
+
+
+## The same field as cloudreach_turf.gdshaderinc's cloudreach_turf_patch.
+static func turf_patch_field(x: float, z: float, frequency: float) -> float:
+	var px := x * frequency
+	var pz := z * frequency
+	var a := sin(px + sin(pz * 1.37) * 1.7) * sin(pz * 0.91 + sin(px * 1.13) * 1.3)
+	var b := sin(px * 2.31 + 1.9 + sin(pz * 2.7) * 1.1) * sin(pz * 2.07 + 0.7 + sin(px * 1.9) * 1.2)
+	return a * 0.72 + b * 0.28
+
+
 static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
 	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(material, "turf")
 	material.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/verge_grass_Color.png") if dry else preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
@@ -84,6 +104,17 @@ static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
 	material.set_shader_parameter("grass_tint",Color(str(turf.get("dry_grass_tint", "#a2ad78"))) if dry \
 		else Color(str(turf.get("grass_tint", "#8ca867"))))
 	material.set_shader_parameter("grass_scale",0.65)
+	# tb/vis-water-sky group 2 (flag-off): dry/lush turf patches.
+	var cluster := ground_cluster()
+	if not cluster.is_empty():
+		material.set_shader_parameter("turf_patch_strength", float(cluster.get("strength", 0.75)))
+		material.set_shader_parameter("turf_patch_freq", float(cluster.get("frequency", 0.035)))
+		material.set_shader_parameter("turf_dry_tint", Color(str(cluster.get("dry_tint", "#c9bd7c"))))
+		material.set_shader_parameter("turf_lush_tint", Color(str(cluster.get("lush_tint", "#5f8343"))))
+		var dry_band: Array = cluster.get("dry_band", [0.35, 0.6])
+		var lush_band: Array = cluster.get("lush_band", [0.3, 0.55])
+		material.set_shader_parameter("turf_dry_band", Vector2(float(dry_band[0]), float(dry_band[1])))
+		material.set_shader_parameter("turf_lush_band", Vector2(float(lush_band[0]), float(lush_band[1])))
 
 static func ground_cover_parameters(material: ShaderMaterial, dry: bool, config: Dictionary) -> void:
 	turf_parameters(material, dry)
