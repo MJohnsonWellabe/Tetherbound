@@ -29,7 +29,36 @@ static func read_config() -> Dictionary:
 		parsed["enabled"] = true
 	if test_disabled:
 		parsed["enabled"] = false
-	return parsed
+	return with_light_pass(parsed)
+
+
+## Owner priority 1 Nov ("flat light, crushed nights" on almost every
+## Stormwood frame). `light_pass_1101`, OFF by default: one switch for the
+## Stormwood light and atmosphere pass. Its `rig` sections and `materials`
+## merge over the look's own; its `rim` becomes the storm rim light (a cool
+## key from opposite the sun that edges creatures, trunks and the trainer)
+## and its `fill` adds a soft shadowless fill so storm-dark subjects read.
+static func with_light_pass(parsed: Dictionary) -> Dictionary:
+	var pass_cfg: Variant = parsed.get("light_pass_1101", {})
+	if not pass_cfg is Dictionary or not bool((pass_cfg as Dictionary).get("enabled", false)):
+		return parsed
+	var out := parsed.duplicate(true)
+	var rig: Dictionary = out.get("rig", {})
+	for section: String in ((pass_cfg as Dictionary).get("rig", {}) as Dictionary):
+		var values: Dictionary = (rig.get(section, {}) as Dictionary).duplicate(true)
+		values.merge((pass_cfg as Dictionary).rig[section], true)
+		rig[section] = values
+	out["rig"] = rig
+	var materials: Dictionary = (out.get("materials", {}) as Dictionary).duplicate(true)
+	materials.merge((pass_cfg as Dictionary).get("materials", {}), true)
+	out["materials"] = materials
+	if (pass_cfg as Dictionary).get("rim") is Dictionary:
+		var rim: Dictionary = ((pass_cfg as Dictionary).rim as Dictionary).duplicate(true)
+		rim["enabled"] = true
+		out["storm_light"] = rim
+	if (pass_cfg as Dictionary).get("fill") is Dictionary:
+		out["storm_fill"] = (pass_cfg as Dictionary).fill
+	return out
 
 
 static func rig_overrides(base: Dictionary, profile: Dictionary) -> Dictionary:
@@ -61,6 +90,7 @@ func _ready() -> void:
 		return
 	_build_detail_textures()
 	_add_storm_rim.call_deferred()
+	_add_storm_fill.call_deferred()
 
 
 ## r26 (GPU R verdict, path item 2: "lift the single dark mid-tone with
@@ -80,6 +110,23 @@ func _add_storm_rim() -> void:
 	var angle: Array = storm.get("rim_rotation_deg", [-14.0, 320.0])
 	rim.rotation_degrees = Vector3(float(angle[0]), float(angle[1]), 0.0)
 	get_parent().add_child(rim)
+
+
+## light_pass_1101 fill: a soft, shadowless, low-specular light from above
+## the camera's usual side so storm-dark subjects keep their form.
+func _add_storm_fill() -> void:
+	var fill: Variant = config.get("storm_fill", {})
+	if not fill is Dictionary or (fill as Dictionary).is_empty() or get_parent() == null:
+		return
+	var light := DirectionalLight3D.new()
+	light.name = "StormFillLight"
+	light.light_color = Color(str((fill as Dictionary).get("colour", "#c8d6ff")))
+	light.light_energy = float((fill as Dictionary).get("energy", 0.35))
+	light.light_specular = float((fill as Dictionary).get("specular", 0.1))
+	light.shadow_enabled = false
+	var angle: Array = (fill as Dictionary).get("rotation_deg", [-55.0, 200.0])
+	light.rotation_degrees = Vector3(float(angle[0]), float(angle[1]), 0.0)
+	get_parent().add_child(light)
 
 
 func begin_world_walk() -> void:

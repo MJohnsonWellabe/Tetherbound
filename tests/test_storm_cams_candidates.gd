@@ -133,3 +133,20 @@ func test_camera_occlusion_fade_ships_off_and_is_inert_off_tree() -> void:
 	assert_false(bool(fade.get("enabled", true)), "the candidate ships OFF")
 	var occ := preload("res://scripts/player/camera_occlusion.gd")
 	assert_true(occ.occluders(null, Vector3.ZERO, Vector3.ONE, []).is_empty(), "no world, no occluders")
+
+
+func test_stormwood_light_pass_ships_off_and_merges_when_on() -> void:
+	var look := preload("res://scripts/world/stormwood_look.gd")
+	var cfg := _json("res://data/config/stormwood_look.json")
+	var pass_cfg: Dictionary = cfg["light_pass_1101"]
+	assert_false(bool(pass_cfg.get("enabled", true)), "the light pass ships OFF")
+	assert_eq(look.with_light_pass(cfg)["rig"], cfg["rig"], "OFF leaves the rig alone")
+	pass_cfg = pass_cfg.duplicate(true)
+	pass_cfg["enabled"] = true
+	cfg["light_pass_1101"] = pass_cfg
+	var on := look.with_light_pass(cfg)
+	assert_true(float(on["rig"]["environment"]["fog_density"]) > float(cfg["rig"]["environment"]["fog_density"]),
+		"the pass adds depth fog")
+	assert_true(bool(on["storm_light"]["enabled"]), "the pass turns the rim light on")
+	assert_true(on.has("storm_fill"), "the pass adds the fill light")
+	assert_eq(on["rig"]["sun"]["pitch_deg"], cfg["rig"]["sun"]["pitch_deg"], "unlisted rig keys keep their values")
