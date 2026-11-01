@@ -101,5 +101,25 @@
       "meadows__fights__warden_aldis-a04"
     ],
     "group": 1
+  },
+  {
+    "item": "P2-087",
+    "flag": "data/config/stronghold.json:p2_087_grade_candidate.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd",
+    "stands": [
+      "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+      "meadows__inventory__trainer__stronghold_elite__dialogue",
+      "meadows__inventory__trainer__stronghold_courtyard"
+    ],
+    "group": 2
+  },
+  {
+    "item": "P2-034",
+    "flag": "data/config/meadows_orb_reward_presentation.json:enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd",
+    "stands": [
+      "meadows__inventory__harvest__orb_basic"
+    ],
+    "group": 2
   }
 ]

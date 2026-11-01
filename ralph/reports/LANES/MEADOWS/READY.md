@@ -11,6 +11,15 @@
 | P2-005 | `grass_field.json:meadows_ground_candidate.enabled` | grass shader ground zones at Meadows scale (short clearings, shorter dry-olive patches, ~22 m), flower tiers in tighter, denser drifts; runtime only, no bake |
 | P2-003 | `stronghold.json:p2_003_candidate.enabled` | lit keep 120→150 m wide with front face held (spire 45.7→57 m); courtyard wall-foot bricks 24/21→10, smaller, darker, pressed to the wall |
 
+**Group 2 (15:20 UTC):**
+
+| Item | Flag (set true) | Change |
+|---|---|---|
+| P2-087 | `stronghold.json:p2_087_grade_candidate.enabled` | DLG-2's one ask (6.94): break the single orange-brown stronghold grade. The courtyard's broad daylight fill becomes a cool sky bounce (#d6e2f2); the two courtyard-joint fires are a little less orange; the night moonlight is unchanged |
+| P2-034 | `meadows_orb_reward_presentation.json:enabled` | the Basic Orb harvest node (the only one, order 1029) skips the Meshy orb-cache basket (judged as "eggs") and shows the lone mounted capture orb with navy seams, 0.5 m |
+
+Checked and parked in group 2: P2-059/P2-113 (the trainer-share catch camera was judged worse in CPU r2, so it stays parked at r1); P2-094 (parked by the gain rule after r5–r8); P2-035 (the trail-camp props carry the rest, craft and creature-bed radii, so they can't be moved blind); P2-019 (alpha aura and presence already exist; no named, fixable defect); P2-078/P2-079/P2-086 (only ever judged on the old direct-start dialogue fixture; they need a capture with the DLG-2 fixture before any fix).
+
 **Not verified on this lane:** no CPU capture was possible. The container has 3.3 GB free and the project has no `.godot` import (a full import would not fit), so Godot can't compile the project here and the new unit tests are unrun. Each change is config-gated and reviewed by hand; the batch build's GPU capture is the first render.
 
 **Composition:** each flag lives in its own new key; shared files get appended blocks only (no reformatting). `hall_2` layers after `hall_1` (needs `hall_1` on, as on main).
