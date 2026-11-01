@@ -1040,6 +1040,11 @@ var _daytime_label: Label = null
 ## badges, no QUICK ITEMS caption, dimmed empty slots, meter values on the bar
 ## without the dark chip, and a soft plate behind the day/time line.
 var _clarity: Dictionary = {}
+## P2-103/P2-111 (UIPOSES, 1 Nov 2026): hud.json `victory_focus` (OFF unless
+## enabled). While a Moment banner (victory receipt, level-up) is up, the
+## persistent quickbar, legend, roster, creature card and prompt step back so
+## the payoff owns the frame. Presentation only.
+var _victory_focus: Dictionary = {}
 ## P2-004 round 7 (hud.json `hud_lean`, empty = off): fewer boxes, not
 ## smaller text. The quick bar and legend lose their backing panels (slots
 ## keep their own frames, legend text keeps its outline), the day/time line
@@ -2741,6 +2746,8 @@ func _clarity_value_outline(label: Label) -> void:
 
 
 func _apply_hud_config(config: Dictionary) -> void:
+	var victory_focus: Variant = config.get("victory_focus", {})
+	_victory_focus = victory_focus if victory_focus is Dictionary and victory_focus.get("enabled") == true else {}
 	var clarity: Variant = config.get("clarity_pass", {})
 	_clarity = clarity if clarity is Dictionary and clarity.get("enabled") == true else {}
 	var lean: Variant = config.get("hud_lean", {})
@@ -4016,6 +4023,9 @@ func _apply_presentation_priority() -> void:
 	# business; while a story modal (dialogue, name prompt, starter picker) is
 	# open it stands down so the speaker owns the frame. Other menus keep it.
 	var party_shown: bool = mode.party and not _story_modal_is_open()
+	if moment and not _victory_focus.is_empty():
+		mode = victory_focus_mode(mode, _victory_focus)
+		party_shown = party_shown and bool(mode.party)
 	# This final pass owns visibility after all legacy polling/cache writers.
 	for entry: Array in [[_region_banner,mode.location],[_daytime_label,mode.location],
 		[_objective_block,mode.task],[_hotbar_panel,mode.hotbar],[_exploration_legend,mode.exploration],
@@ -4025,6 +4035,18 @@ func _apply_presentation_priority() -> void:
 	# During combat, enemy plate and telegraphs own the top. In the post-combat
 	# mechanic, one instruction replaces the task card/legend/hotbar cluster.
 	_presentation_allow(_objective_hint_card, (mode.instruction or (mode.exploration and not moment)) and not held)
+
+
+## hud.json `victory_focus.hide`: which persistent HUD tiers yield while a
+## Moment banner is up. Pure; returns a copy of the policy's mode.
+static func victory_focus_mode(mode: Dictionary, cfg: Dictionary) -> Dictionary:
+	var out := mode.duplicate()
+	var hide: Variant = cfg.get("hide", ["hotbar", "exploration", "party", "prompt"])
+	if hide is Array:
+		for key: Variant in hide as Array:
+			if out.has(str(key)):
+				out[str(key)] = false
+	return out
 
 
 func _presentation_allow(widget: CanvasItem, allowed: bool) -> void:
