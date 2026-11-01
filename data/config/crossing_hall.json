@@ -1,7 +1,7 @@
 {
   "hall_1": {
-    "_why": "HALL-1 (F17#6 GPU swing, coordinator queue 31 Oct): one flag layers a candidate over the shipped Hall (crossing_hall.gd apply_hall_1). merge = nested overrides, append = extra list rows, remove = list rows dropped by name (unnamed rows by model path). OFF until a Medium/High GPU judgement against main; 7.5 on both closes F17#6.",
-    "enabled": false,
+    "_why": "HALL-1 (F17#6 GPU swing, coordinator queue 31 Oct): one flag layers a candidate over the shipped Hall (crossing_hall.gd apply_hall_1). merge = nested overrides, append = extra list rows, remove = list rows dropped by name (unnamed rows by model path). ON since GPU Q31 HALL-1 r2b (+0.78 at High against main on every set); 7.5 on Medium and High closes F17#6.",
+    "enabled": true,
     "merge": {
       "hall_great_hall": {
         "rugs": [

@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
 ## HALL-1 (F17#6 GPU swing): one `hall_1` flag layers a candidate over the
-## shipped Hall config before anything is built. OFF ships main unchanged.
+## shipped Hall config before anything is built. ON since the GPU judged it; OFF ships the earlier Hall.
 
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const CONFIG := "res://data/config/crossing_hall.json"
@@ -11,12 +11,12 @@ func _shipping() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) as Dictionary
 
 
-func test_shipping_config_keeps_hall_1_off_and_unchanged() -> void:
+func test_shipping_config_ships_hall_1_on_and_layers_the_candidate() -> void:
 	var cfg := _shipping()
-	assert_false(bool(cfg.get("hall_1", {}).get("enabled", true)), "HALL-1 ships OFF until judged")
+	assert_true(bool(cfg.get("hall_1", {}).get("enabled", false)), "HALL-1 ships ON: GPU Q31 r2b gained +0.78 at High against main")
 	var applied := cfg.duplicate(true)
 	HALL.apply_hall_1(applied)
-	assert_eq(JSON.stringify(applied), JSON.stringify(cfg), "OFF leaves every section as shipped")
+	assert_ne(JSON.stringify(applied), JSON.stringify(cfg), "ON layers the candidate over the shipped sections")
 
 
 func test_on_merges_nested_sections_appends_rows_and_removes_by_name() -> void:
