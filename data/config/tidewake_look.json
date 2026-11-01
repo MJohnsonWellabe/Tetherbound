@@ -37,9 +37,9 @@
       }
     },
     "dunes": {
-      "_comment": "Judges 1 Nov: sheet-like vertical dune walls; bare sand discs. Steep sand gets wind-scoured runnels (coastal_rock_material flank; strata stays 0: CPU r2 read it as contour lines on gentle slopes), level sand gets sparse low scrub and wrack stains (scrub), and the existing unjudged dressing candidates come into play: random-keep dune grass with wider bare gaps, pebbles grouped at the tide line, and the swim-lesson dune clusters.",
+      "_comment": "Judges 1 Nov: sheet-like vertical dune walls; bare sand discs. Steep sand gets wind-scoured runnels (coastal_rock_material flank; strata stays 0: CPU r2 read it as contour lines on gentle slopes), level sand gets sparse low scrub and wrack stains (scrub), and the swim-lesson dune clusters come into play. CPU r4: restoring dune_grass_candidate and stones_candidate stripped grass and pebbles at First Shore (barer sand, the opposite of the ask), so they stay off.",
       "enabled": false,
-      "restore": ["dune_grass_candidate", "stones_candidate", "lesson_clusters_candidate"],
+      "restore": ["lesson_clusters_candidate"],
       "merge": {
         "dunes": {"flank_strength": 0.4, "flank_scale": 0.3, "strata_strength": 0.0, "scrub_strength": 0.55, "scrub_scale": 0.06, "scrub_colour": "#7d7a5a", "face_shade_strength": 0.2}
       }

@@ -52,9 +52,10 @@ func test_light_part_fills_only_the_day_grade() -> void:
 func test_dunes_part_restores_dressing_and_sets_dune_form() -> void:
 	var off := PROFILE.resolve(_raw())
 	var on := _with(["dunes"])
-	for section: String in ["dune_grass_candidate", "stones_candidate", "lesson_clusters_candidate"]:
-		assert_false(off.has(section), "%s is out of play while dunes is off" % section)
-		assert_true(on.has(section), "%s comes into play with dunes" % section)
+	assert_false(off.has("lesson_clusters_candidate"), "lesson clusters are out of play while dunes is off")
+	assert_true(on.has("lesson_clusters_candidate"), "lesson clusters come into play with dunes")
+	for section: String in ["dune_grass_candidate", "stones_candidate"]:
+		assert_false(on.has(section), "%s thins the dressing and stays off" % section)
 	assert_eq(float(on.dunes.flank_strength), 0.4)
 	assert_eq(on.dunes.sand_colour, off.dunes.sand_colour, "sand colour is kept")
 	assert_false(on.has("surfaces_candidate"), "unlisted sections stay off")
@@ -63,5 +64,5 @@ func test_dunes_part_restores_dressing_and_sets_dune_form() -> void:
 func test_parts_compose() -> void:
 	var on := _with(["sea", "light", "dunes"])
 	assert_true(on.has("cause_light_look"))
-	assert_true(on.has("dune_grass_candidate"))
+	assert_true(on.has("lesson_clusters_candidate"))
 	assert_eq(float(on.surfaces.water.haze_strength), 0.3)
