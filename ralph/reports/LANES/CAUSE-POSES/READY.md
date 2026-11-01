@@ -1,5 +1,7 @@
 # CAUSE-POSES lane (creature hurt and faint poses, roster-wide) — READY
 
+> **Parked (two attempts):** Fulgocobra's raised hood at faint end. `faint.legless_head_drop` lowers the head through the three joints below it, by up to 90° in total, but the hood still stands part-way (CPU, remakes ON). It needs a different idea, such as re-authoring the snake's faint clip so the whole coil collapses. The partial drop stays in the arm.
+
 ## Round 3 (1 Nov 2026, ~23:00 UTC): remakes are the shipping models
 
 **Use MANIFEST group 3.** It supersedes groups 1 and 2: 75 entries, each with a `baseline` field. Every entry is judged with all 49 `remake_owner1101_*` flags ON, as the coordinator directed (1 Nov). Each F36 row's `note` names its stage form:
@@ -23,7 +25,7 @@ The flag is unchanged: `data/config/creature_pose_settle.json:enabled`.
   - So "barely differs" (Voltarach) and "airborne" (Bramblebun) are not a motion-amount problem the arm can fix blind. The long stage shadow makes grounded bodies look lifted.
 - **Remakes with the arm ON (CPU):** Terrapup, Bramblebun, Riverdrake, Mirejaw and Tanglevolt (recipe) lie low and grounded on their side. Abyssal Guardian lies low with one fin sunk.
 - **Still weak:**
-  - Fulgocobra's own faint keeps the hood raised (it needs a snake head-drop, not built).
+  - Fulgocobra's hood: parked (see the note at the top).
   - Ribbonray is diagonal.
   - Glimmermoth's wings stay up.
   - Galewisp ends as a puffed bird with its tail up.

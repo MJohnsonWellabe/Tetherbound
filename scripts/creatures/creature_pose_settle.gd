@@ -74,7 +74,7 @@ static func _section(cfg: Dictionary, role: String, part: String) -> Dictionary:
 static func any_enabled(cfg: Dictionary) -> bool:
 	if not bool(cfg.get("enabled", false)):
 		return false
-	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "upright_splay"], ["faint", "level_trunk"],
+	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "upright_splay"], ["faint", "level_trunk"], ["faint", "legless_head_drop"],
 			["hit", "recoil"], ["hit", "grounded"]]:
 		if not _section(cfg, pair[0], pair[1]).is_empty():
 			return true
@@ -297,10 +297,24 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 		settings["_inverted"] = after is Vector3 and (after as Vector3).y > 0.0 \
 			and not _listed(((cfg.get("faint", {}) as Dictionary).get("side_lie", {}) as Dictionary).get("exclude_species", []), rig.species_id)
 		rig.splay_limbs(animation, end, rotations[-1], positions[-1], settings)
-	# Only limbed bodies lift the head; a snake's lifted head reads as a raised
-	# hood, not a faint.
-	if not lift.is_empty() and rig.limb_direction(animation, end, rotations[-1], positions[-1]) is Vector3:
+	# Only limbed bodies lift the head; a legless body (a snake) whose head
+	# ends raised lowers it instead: a raised hood does not read as a faint.
+	var limbed := rig.limb_direction(animation, end, rotations[-1], positions[-1]) is Vector3
+	if not lift.is_empty() and limbed:
 		rig.lift_head(animation, end, rotations[-1], positions[-1], lift)
+	var drop := _section(cfg, "faint", "legless_head_drop")
+	if not drop.is_empty() and not limbed:
+		# The three joints below the head share the drop (the lowest first),
+		# so the raised neck curves down rather than kinking at the head.
+		var head_bone := rig.skeleton.find_bone("head")
+		var parent := rig.skeleton.get_bone_parent(head_bone) if head_bone >= 0 else -1
+		var grand := rig.skeleton.get_bone_parent(parent) if parent >= 0 else -1
+		var great := rig.skeleton.get_bone_parent(grand) if grand >= 0 else -1
+		var half := drop.duplicate()
+		half["max_drop_deg"] = float(drop.get("max_drop_deg", 90.0)) / 3.0
+		for joint: int in [great, grand, parent]:
+			if joint >= 0:
+				rig.lift_head(animation, end, rotations[-1], positions[-1], half, str(rig.skeleton.get_bone_name(joint)), true)
 	if not grounded.is_empty() or not side.is_empty():
 		var sink := rig.standing_height * float(grounded.get("sink_frac", 0.015)) if not grounded.is_empty() else 0.0
 		var centre := grounded.is_empty() or bool(grounded.get("recentre", true))
@@ -768,9 +782,10 @@ class Rig:
 
 	## Lift the neck so the head at the clip's end sits at least
 	## `min_elevation_deg` above level, ramped in over the clip's end.
-	func lift_head(animation: Animation, t_end: float, rotation: Quaternion, position: Vector3, cfg: Dictionary) -> void:
-		var neck := skeleton.find_bone("neck")
+	func lift_head(animation: Animation, t_end: float, rotation: Quaternion, position: Vector3, cfg: Dictionary,
+			joint := "neck", drop := false) -> void:
 		var head := skeleton.find_bone("head")
+		var neck := skeleton.find_bone(joint) if not joint.is_empty() else (skeleton.get_bone_parent(head) if head >= 0 else -1)
 		if neck < 0 or head < 0:
 			return
 		var track: int = (_bone_tracks(animation).get(neck, {}) as Dictionary).get(Animation.TYPE_ROTATION_3D, -1)
@@ -783,7 +798,10 @@ class Rig:
 			return
 		var elevation := rad_to_deg(asin(clampf(d.normalized().y, -1.0, 1.0)))
 		var angle := clampf(float(cfg.get("min_elevation_deg", 10.0)) - elevation, 0.0, float(cfg.get("max_lift_deg", 35.0)))
-		if angle < 1.0:
+		if drop:
+			# Lower a raised head (a snake's hood) to `max_elevation_deg`.
+			angle = -clampf(elevation - float(cfg.get("max_elevation_deg", -15.0)), 0.0, float(cfg.get("max_drop_deg", 60.0)))
+		if absf(angle) < 1.0:
 			return
 		var axis_body := d.cross(Vector3.UP)
 		if axis_body.length() < 0.001:

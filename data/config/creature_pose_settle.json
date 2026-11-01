@@ -56,6 +56,13 @@
    "splay_deg": 32.0,
    "ramp_start": 0.3
   },
+  "legless_head_drop": {
+   "enabled": true,
+   "_why": "GPU (remakes, and the 24 Oct baseline): Fulgocobra's hood stays up in its faint. A legless rig whose head ends above max_elevation_deg (relative to the joint below it) lowers it through that joint, ramped in over the clip's second half.",
+   "max_elevation_deg": -15.0,
+   "max_drop_deg": 90.0,
+   "ramp_start": 0.5
+  },
   "face_camera": {
    "enabled": true,
    "max_turn_deg": 110.0,
