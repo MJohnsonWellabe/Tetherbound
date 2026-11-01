@@ -49,6 +49,8 @@ var _material: ShaderMaterial
 var _cell := Vector2i(2147483647, 2147483647)
 var _time := 0.0
 var _strength := 0.0
+## Fixed shafts (place_fixed) skip the camera grid entirely.
+var _fixed := false
 
 
 func setup(config: Dictionary) -> void:
@@ -82,6 +84,20 @@ func setup(config: Dictionary) -> void:
 
 
 ## Phase strength (the Surge row's `shafts`, cross-faded with the rest).
+## Static shafts at given positions (e.g. the Stormheart crown opening);
+## each entry {position: Vector3 (column centre), width, height, alpha, seed}.
+## Positions are in this node's parent space (top_level is cleared).
+func place_fixed(columns: Array) -> void:
+	_fixed = true
+	top_level = false
+	multimesh.instance_count = columns.size()
+	for i in columns.size():
+		var c: Dictionary = columns[i]
+		var basis := Basis.from_scale(Vector3(float(c.get("width", 12.0)), float(c.get("height", 100.0)), 1.0))
+		multimesh.set_instance_transform(i, Transform3D(basis, c.get("position", Vector3.ZERO)))
+		multimesh.set_instance_custom_data(i, Color(float(c.get("seed", 0.5)), float(c.get("alpha", 1.0)), 0.0, 0.0))
+
+
 func set_strength(value: float) -> void:
 	_strength = maxf(0.0, value) * float(cfg.get("intensity", 0.14))
 	if _material != null:
@@ -94,6 +110,8 @@ func _process(delta: float) -> void:
 		return
 	_time = fposmod(_time + delta, 10000.0)
 	_material.set_shader_parameter("time", _time)
+	if _fixed:
+		return
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return

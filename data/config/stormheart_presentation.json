@@ -68,8 +68,8 @@
     "scope": "client_presentation",
     "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'untextured giant trunk walls and a bare plank deck', 'murky dark brown frames, little value range'). OFF until GPU judged. Warm lantern pools along the OuterWorks lip and the DynamoCore deck (Captain Marrow's dialogue area) and one cool storm light falling through the crown opening give the bark its relief and the decks a warm/cool value range; cut-wood planks gain board-to-board tone. Shadowless omni/spot lights (Compatibility-safe, within the per-object light cap) and one shader parameter; no floor, rail, collider, ascent or save change.",
     "lantern_colour": "#ffb874",
-    "lantern_energy": 2.4,
-    "lantern_range_m": 22.0,
+    "lantern_energy": 3.2,
+    "lantern_range_m": 26.0,
     "lantern_attenuation": 1.2,
     "rings": [
       {
@@ -87,6 +87,19 @@
         "phase_deg": 15.0
       }
     ],
+    "crown_shaft": {
+      "enabled": true,
+      "_why": "A visible column of storm light under the crown opening, falling past the DynamoCore deck into the hollow (same additive Y-billboard shader as storm_sky_1101 shafts, two fixed columns, no grid walk).",
+      "colour": "#d0cdf6",
+      "intensity": 0.22,
+      "slant": 0.08,
+      "near_fade_m": [6.0, 20.0],
+      "far_fade_m": [400.0, 600.0],
+      "columns": [
+        {"at": [4.0, 190.0, -3.0], "width_m": 16.0, "height_m": 130.0, "alpha": 1.0, "seed": 0.31},
+        {"at": [-6.0, 175.0, 5.0], "width_m": 9.0, "height_m": 110.0, "alpha": 0.7, "seed": 0.77}
+      ]
+    },
     "crown_light": {
       "enabled": true,
       "height_m": 240.0,

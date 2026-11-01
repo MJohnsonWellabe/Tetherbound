@@ -762,6 +762,20 @@ func _deck_light(settings: Dictionary) -> void:
 		spot.light_specular = 0.5
 		spot.shadow_enabled = false
 		holder.add_child(spot)
+	var shaft_cfg: Dictionary = settings.get("crown_shaft", {})
+	if bool(shaft_cfg.get("enabled", false)):
+		var shaft := preload("res://scripts/world/stormwood_storm_shafts.gd").new()
+		shaft.setup(shaft_cfg)
+		holder.add_child(shaft)
+		var columns: Array = []
+		for column: Dictionary in shaft_cfg.get("columns", []):
+			var at: Array = column.get("at", [0.0, 200.0, 0.0])
+			columns.append({"position": Vector3(float(at[0]), float(at[1]), float(at[2])),
+				"width": float(column.get("width_m", 14.0)), "height": float(column.get("height_m", 100.0)),
+				"alpha": float(column.get("alpha", 1.0)), "seed": float(column.get("seed", 0.4))})
+		shaft.place_fixed(columns)
+		shaft.custom_aabb = AABB(Vector3(-60.0, 0.0, -60.0), Vector3(120.0, 300.0, 120.0))
+		shaft.set_strength(1.0)
 	if _cut_wood != null and settings.has("board_variation"):
 		_cut_wood.set_shader_parameter("board_variation", float(settings.board_variation))
 

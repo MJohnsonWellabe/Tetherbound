@@ -134,3 +134,20 @@ func test_deck_light_ships_off_and_lays_out_its_rings() -> void:
 	for pose: Dictionary in poses:
 		var at: Vector3 = pose.position
 		assert_true(Vector2(at.x, at.z).length() < 46.0, "lanterns stay inside the hollow's inner clearance")
+
+
+func test_crown_shaft_places_fixed_columns_without_the_camera_grid() -> void:
+	var cfg: Dictionary = _json(PRESENTATION_PATH).deck_light_1101.crown_shaft
+	var shaft: MultiMeshInstance3D = SHAFTS.new()
+	shaft.setup(cfg)
+	shaft.place_fixed([{"position": Vector3(0, 190, 0), "width": 16.0, "height": 130.0},
+		{"position": Vector3(-6, 175, 5), "width": 9.0, "height": 110.0, "alpha": 0.7}])
+	assert_eq(shaft.multimesh.instance_count, 2, "one instance per authored column")
+	assert_false(shaft.top_level, "fixed columns follow the tree, not the camera")
+	# (The headless dummy renderer keeps no MultiMesh buffer, so transforms
+	# are not read back here.)
+	shaft.set_strength(0.0)
+	assert_false(shaft.visible, "zero strength hides the layer")
+	shaft.set_strength(1.0)
+	assert_true(shaft.visible, "positive strength shows it")
+	shaft.free()
