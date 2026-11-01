@@ -3,7 +3,7 @@
   "flags": {
     "remake_owner1101_terrapup": {
       "_why": "Owner-picked remake 1 Nov 2026: lean rottweiler-like large dog, mossy stone plates on spine and head, jade eyes (Meshy 01a197b4-5a12-7537-a376-2d571177853a). Ground patch stripped, dog3 rig recipe at the established 3.20 m, dog3 clip author (every gameplay role), jade-eye emission. Provenance: assets/creatures/tetherbound/terrapup/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "terrapup": {
           "model": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101.glb",
@@ -714,7 +714,7 @@
     },
     "remake_owner1101_riptusk": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riptusk, a large walrus-like armoured sea beast with long tusks, blue-grey hide with sandy plates (Meshy 01a197ed-364b-733d-8048-2e07c93b064f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the thin aqua lines on the hide and eyes. Provenance: assets/creatures/tetherbound/riptusk/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "riptusk": {
           "model": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101.glb",
