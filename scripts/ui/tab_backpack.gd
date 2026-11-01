@@ -33,6 +33,7 @@ extends "res://scripts/ui/menu_tab.gd"
 ## `teaching.gd::can_learn` instead of by HP, and confirming SPENDS the disc.
 
 const CONFIG_PATH := "res://data/config/menu.json"
+const MENU_TEXT := preload("res://scripts/ui/menu_text_floors.gd")
 const PARTY := preload("res://autoload/party.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
@@ -719,6 +720,29 @@ func _build_preview() -> VBoxContainer:
 	navigation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	panel.add_child(navigation)
 	var equipment := _equipment()
+	# UI-R2 (menu.json `menu_text_floors`): the worn rows sat in the centred
+	# preview column with nothing to absorb overflow, so the fifth row
+	# ("Backpack: Empty") was half-cut at 720p and pushed out entirely by larger
+	# secondary text. On: the rows live in their own scroll box that takes the
+	# column's remaining height and follows focus, so every row is reachable and
+	# none is drawn cut by the panel edge; the column starts at the top so the
+	# preview cannot push the list off.
+	var worn_parent: Container = panel
+	if MENU_TEXT.on():
+		panel.alignment = BoxContainer.ALIGNMENT_BEGIN
+		_preview_icon.custom_minimum_size = Vector2(88, 88)
+		panel.add_theme_constant_override("separation", 10)
+		var worn_scroll := ScrollContainer.new()
+		worn_scroll.name = "WornScroll"
+		worn_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		worn_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		worn_scroll.follow_focus = true
+		panel.add_child(worn_scroll)
+		var worn_list := VBoxContainer.new()
+		worn_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		worn_list.add_theme_constant_override("separation", 6)
+		worn_scroll.add_child(worn_list)
+		worn_parent = worn_list
 	if equipment != null:
 		for slot: String in equipment.get("SLOTS"):
 			var button := Button.new()
@@ -726,7 +750,7 @@ func _build_preview() -> VBoxContainer:
 			button.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 			button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 			button.pressed.connect(_unequip.bind(slot))
-			panel.add_child(button)
+			worn_parent.add_child(button)
 			_equipment_buttons[slot] = button
 
 	return panel
@@ -785,7 +809,7 @@ func _build_target_panel() -> VBoxContainer:
 	panel.add_theme_constant_override("separation", 8)
 
 	_target_header = Label.new()
-	_target_header.add_theme_font_size_override("font_size", 24)
+	_target_header.add_theme_font_size_override("font_size", MENU_TEXT.read_px(24))
 	panel.add_child(_target_header)
 
 	# PARTY.MAX_CREATURES creature rows, then ONE more: the trainer.
@@ -903,7 +927,7 @@ func _build_confirm_panel() -> VBoxContainer:
 	panel.add_theme_constant_override("separation", 8)
 
 	_confirm_header = Label.new()
-	_confirm_header.add_theme_font_size_override("font_size", 24)
+	_confirm_header.add_theme_font_size_override("font_size", MENU_TEXT.read_px(24))
 	_confirm_header.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_confirm_header.custom_minimum_size = Vector2(500, 0)
 	panel.add_child(_confirm_header)

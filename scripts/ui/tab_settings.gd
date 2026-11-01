@@ -1,5 +1,7 @@
 extends "res://scripts/ui/menu_tab.gd"
 
+const MENU_TEXT := preload("res://scripts/ui/menu_text_floors.gd")
+
 ## Settings: a temporary Gameplay toggle, then Controls.
 ##
 ## The owner's ask was "I should be able to map controls to whatever buttons I
@@ -148,6 +150,8 @@ func build() -> void:
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(_scroll)
+	if MENU_TEXT.on():
+		_add_more_below_cue()
 
 	var list := VBoxContainer.new()
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -247,8 +251,9 @@ func _build_gameplay(list: VBoxContainer, section: Dictionary, gameplay: Diction
 	list.add_child(_free_build_button)
 
 	var note := Label.new()
-	note.add_theme_font_size_override("font_size", 22)
-	note.add_theme_color_override("font_color", COLOUR_QUIET)
+	MENU_TEXT.secondary(note, 22)
+	if not MENU_TEXT.on():
+		note.add_theme_color_override("font_color", COLOUR_QUIET)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.custom_minimum_size = Vector2(1100, 0)
 	note.text = str(gameplay.get("free_build_note", ""))
@@ -269,8 +274,9 @@ func _build_gameplay(list: VBoxContainer, section: Dictionary, gameplay: Diction
 	list.add_child(_debug_teleport_button)
 
 	var teleport_note := Label.new()
-	teleport_note.add_theme_font_size_override("font_size", 22)
-	teleport_note.add_theme_color_override("font_color", COLOUR_QUIET)
+	MENU_TEXT.secondary(teleport_note, 22)
+	if not MENU_TEXT.on():
+		teleport_note.add_theme_color_override("font_color", COLOUR_QUIET)
 	teleport_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	teleport_note.custom_minimum_size = Vector2(1100, 0)
 	teleport_note.text = str(gameplay.get("debug_teleport_note", ""))
@@ -578,8 +584,9 @@ func _build_audio(list: VBoxContainer, section: Dictionary, audio: Dictionary) -
 	list.add_child(heading)
 
 	var note := Label.new()
-	note.add_theme_font_size_override("font_size", 22)
-	note.add_theme_color_override("font_color", COLOUR_QUIET)
+	MENU_TEXT.secondary(note, 22)
+	if not MENU_TEXT.on():
+		note.add_theme_color_override("font_color", COLOUR_QUIET)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.custom_minimum_size = Vector2(1100, 0)
 	note.text = str(audio.get("note", ""))
@@ -684,6 +691,63 @@ func _save_volumes() -> void:
 	bindings.call("save")
 
 
+# --- UI-R2: "more below" cue ------------------------------------------------
+
+## A slim row under the scroll box that says the page continues, so a group
+## the viewport edge cuts reads as "scroll for more" rather than as text
+## clipped by the panel. Its own row (never drawn over the list); shown only
+## while there is more below. menu.json `menu_text_floors`.
+var _more_cue: Label = null
+
+
+func _add_more_below_cue() -> void:
+	_more_cue = Label.new()
+	_more_cue.name = "MoreBelowCue"
+	_more_cue.text = str(MENU_TEXT.config().get("more_below_text", "More below  \u25BC"))
+	_more_cue.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_more_cue.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	MENU_TEXT.secondary(_more_cue, UITokens.FONT_READ)
+	# A fade drawn up over the scroll's bottom edge (the cue is a later
+	# sibling, so it draws on top): whatever the viewport edge cuts reads as
+	# continuing below instead of as a sliced line of text.
+	var fade_px := float(MENU_TEXT.config().get("fade_px", 96))
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(UITokens.BG_DEEP, 0.0))
+	gradient.set_color(1, Color(UITokens.BG_DEEP, 1.0))
+	gradient.set_offset(1, 0.62)
+	gradient.add_point(1.0, Color(UITokens.BG_DEEP, 1.0))
+	var texture := GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.fill_from = Vector2(0.5, 0.0)
+	texture.fill_to = Vector2(0.5, 1.0)
+	texture.width = 8
+	texture.height = 64
+	var fade := TextureRect.new()
+	fade.name = "BottomFade"
+	fade.texture = texture
+	fade.stretch_mode = TextureRect.STRETCH_SCALE
+	fade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fade.anchor_right = 1.0
+	fade.offset_top = -fade_px
+	fade.offset_bottom = 0.0
+	fade.offset_right = -18.0
+	_more_cue.add_child(fade)
+	add_child(_more_cue)
+	var bar := _scroll.get_v_scroll_bar()
+	bar.value_changed.connect(func(_v: float) -> void: _refresh_more_cue())
+	bar.changed.connect(_refresh_more_cue)
+	_refresh_more_cue()
+
+
+func _refresh_more_cue() -> void:
+	if _more_cue == null or not is_instance_valid(_more_cue) or _scroll == null:
+		return
+	var bar := _scroll.get_v_scroll_bar()
+	var more := bar.value + bar.page < bar.max_value - 4.0
+	_more_cue.modulate.a = 1.0 if more else 0.0
+
+
 # --- the Controls section ---------------------------------------------------
 
 
@@ -720,14 +784,16 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 		# read as keyboard-first and were too small to read).
 		var glyph := int(_controls_scan.get("legend_glyph_px", 48))
 		var pad := str(_controls_scan.get("legend_device", "gamepad"))
-		line.text = "%s Change     |     %s Leave it     |     Hold %s + %s (or F10) for a second and a half: reset every control" % [
+		var reset_keys := " (or F10)" if not (MENU_TEXT.on() and pad == "gamepad") else ""
+		line.text = ("%s Change     |     %s Leave it     |     Hold %s + %s" + reset_keys + " for a second and a half: reset every control") % [
 			INPUT_GLYPH.icon("confirm", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("cancel", glyph, Color.WHITE, pad),
 			INPUT_GLYPH.icon("game_menu", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("map", glyph, Color.WHITE, pad)]
 		list.add_child(line)
 	else:
 		var hint := Label.new()
-		hint.add_theme_font_size_override("font_size", 22)
-		hint.add_theme_color_override("font_color", COLOUR_QUIET)
+		MENU_TEXT.secondary(hint, 22)
+		if not MENU_TEXT.on():
+			hint.add_theme_color_override("font_color", COLOUR_QUIET)
 		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		# Said on the screen as well as in the footer, because a player who has
 		# rebound their way out of the menu cannot read the footer.
@@ -765,11 +831,11 @@ func _column_header() -> Control:
 	for pair in columns:
 		var cell := Label.new()
 		cell.custom_minimum_size = Vector2(float(pair[1]), 0)
-		cell.add_theme_font_size_override("font_size", 22)
+		cell.add_theme_font_size_override("font_size", MENU_TEXT.read_px(22))
 		if _controls_scan.get("stripes") == true and not str(pair[0]).is_empty():
 			# Centred over the buttons they name (round 1 judges).
 			cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			cell.add_theme_font_size_override("font_size", 24)
+			cell.add_theme_font_size_override("font_size", MENU_TEXT.read_px(24))
 		cell.add_theme_color_override("font_color", COLOUR_QUIET)
 		cell.text = str(pair[0])
 		row.add_child(cell)
@@ -787,10 +853,16 @@ func _build_group(list: VBoxContainer, group: Dictionary, labels: Dictionary) ->
 		heading.text = str(group.get("name", ""))
 
 	var note := str(group.get("note", ""))
+	# UI-R2 / P2-031: a group's long paragraph (Fighting's ran to five lines)
+	# made the next group spill past the panel's bottom edge as a cut wall of
+	# text. On, a group may carry a short `note_compact`.
+	if MENU_TEXT.on() and not str(group.get("note_compact", "")).is_empty():
+		note = str(group.get("note_compact"))
 	if not note.is_empty():
 		var note_label := Label.new()
-		note_label.add_theme_font_size_override("font_size", 20)
-		note_label.add_theme_color_override("font_color", COLOUR_QUIET)
+		MENU_TEXT.secondary(note_label, 20)
+		if not MENU_TEXT.on():
+			note_label.add_theme_color_override("font_color", COLOUR_QUIET)
 		note_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		note_label.custom_minimum_size = Vector2(1100, 0)
 		note_label.text = note
@@ -821,7 +893,7 @@ func _build_row(action: String, label_text: String) -> Control:
 
 	var name_label := Label.new()
 	name_label.custom_minimum_size = Vector2(LABEL_WIDTH, 0)
-	name_label.add_theme_font_size_override("font_size", int(_controls_scan.get("row_font_px", 24)))
+	name_label.add_theme_font_size_override("font_size", MENU_TEXT.read_px(int(_controls_scan.get("row_font_px", 24))))
 	name_label.text = label_text
 	row.add_child(name_label)
 
@@ -860,7 +932,7 @@ func _build_row(action: String, label_text: String) -> Control:
 		# the bindings, and alternate rows sit on a faint band so the eye
 		# tracks a label across to its buttons.
 		reset.add_theme_color_override("font_color", COLOUR_QUIET)
-		reset.add_theme_font_size_override("font_size", 22)
+		reset.add_theme_font_size_override("font_size", MENU_TEXT.prompt_px(22))
 		var band := PanelContainer.new()
 		var box := StyleBoxFlat.new()
 		box.bg_color = Color(UITokens.BG_PANEL_ALT, float(_controls_scan.get("stripe_alpha", 0.5)) if _rows.size() % 2 == 1 else 0.0)
@@ -1461,8 +1533,9 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	list.add_child(_reduced_motion_button)
 
 	var note := Label.new()
-	note.add_theme_font_size_override("font_size", 22)
-	note.add_theme_color_override("font_color", COLOUR_QUIET)
+	MENU_TEXT.secondary(note, 22)
+	if not MENU_TEXT.on():
+		note.add_theme_color_override("font_color", COLOUR_QUIET)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.custom_minimum_size = Vector2(1100, 0)
 	note.text = str(access.get("reduced_motion_note", ""))
@@ -1503,8 +1576,9 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	_dialogue_bg_button = _settings_row(list)
 
 	var look_note := Label.new()
-	look_note.add_theme_font_size_override("font_size", 22)
-	look_note.add_theme_color_override("font_color", COLOUR_QUIET)
+	MENU_TEXT.secondary(look_note, 22)
+	if not MENU_TEXT.on():
+		look_note.add_theme_color_override("font_color", COLOUR_QUIET)
 	look_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	look_note.custom_minimum_size = Vector2(1100, 0)
 	look_note.text = str(access.get("look_note", ""))
