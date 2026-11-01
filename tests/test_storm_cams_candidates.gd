@@ -51,3 +51,23 @@ func test_candy_tiers_differ_in_count_and_size_when_declared() -> void:
 		and int(great.get("count", 1)) < int(rare.get("count", 1)), "each tier needs its own count")
 	assert_true(float(good["scale_mult"]) < float(great["scale_mult"])
 		and float(great["scale_mult"]) < float(rare["scale_mult"]), "each tier needs its own size step")
+
+
+func test_harvest_hero2_is_off_and_gives_crown_its_own_silhouette() -> void:
+	var cfg := _json("res://data/config/stormwood_harvest_hero2.json")
+	assert_false(bool(cfg.get("enabled", true)), "the P2-046 round-2 candidate ships OFF")
+	assert_true(preload("res://scripts/world/stormwood_harvest_runtime.gd").hero2_for("stormglass").is_empty(),
+		"OFF must leave the landed hero in charge")
+	var items: Dictionary = cfg["items"]
+	var plain: Dictionary = (items["stormglass"]["models"] as Array)[0]
+	var crown: Dictionary = (items["stormglass_crown"]["models"] as Array)[0]
+	assert_ne(str(plain["model"]), str(crown["model"]), "stormglass and its crown need different silhouettes")
+	assert_true(float((crown["height_m"] as Array)[0]) > float((plain["height_m"] as Array)[0]),
+		"the crown grade must stand taller")
+
+
+func test_glass_field_rock_collar_ships_off() -> void:
+	var cfg := _json("res://data/config/stormwood_glass_field.json")
+	var collar: Dictionary = cfg.get("rock_collar_candidate", {})
+	assert_true(collar.has("stones"), "the P2-043 candidate must be declared")
+	assert_false(bool(collar.get("enabled", true)), "the candidate ships OFF")

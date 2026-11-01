@@ -233,12 +233,35 @@ static func apply_scatter_leaf_policy(visual: Node3D, model: String) -> int:
 ## P2-046: a visual-only cue so a node reads as its named material (a plain
 ## rock read as stone, not Stormglass). A child of the node, so it hides with
 ## it once harvested. No collider, stock, reward or placement change.
+const HERO2_PATH := "res://data/config/stormwood_harvest_hero2.json"
+static var _hero2: Variant = null
+
+
+## The round-2 hero for `item`, or {} while the candidate is off or absent.
+static func hero2_for(item: String) -> Dictionary:
+	if _hero2 == null:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(HERO2_PATH)) \
+			if FileAccess.file_exists(HERO2_PATH) else {}
+		_hero2 = parsed if parsed is Dictionary else {}
+	var cfg: Dictionary = _hero2
+	if not bool(cfg.get("enabled", false)):
+		return {}
+	var row: Variant = (cfg.get("items", {}) as Dictionary).get(item, {})
+	return (row as Dictionary).duplicate(true) if row is Dictionary else {}
+
+
 static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
 		ground_height: Callable = Callable()) -> Node3D:
 	var cue: Variant = cues.get(item, null)
 	if not cue is Dictionary or node.get_node_or_null(^"MaterialCue") != null:
 		return null
 	var spec := (cue as Dictionary).duplicate(true)
+	# P2-046 round 2 (stormwood_harvest_hero2.json, OFF by default; kept out
+	# of stormwood_harvests.json, a scatter bake input): its per-item hero
+	# replaces this item's hero, and `clear_radius_m` opens the moss carpet.
+	var hero2 := hero2_for(item)
+	if not hero2.is_empty():
+		spec["hero"] = hero2
 	# World dressing (P2-046, OFF until GPU judged): `hero.enabled` swaps the
 	# primitive cue for installed Meshy art and may override cue keys.
 	var hero: Dictionary = spec.get("hero", {}) as Dictionary
@@ -249,6 +272,12 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
 	var root := Node3D.new()
 	root.name = "MaterialCue"
 	node.add_child(root)
+	if hero_on and float(hero.get("clear_radius_m", 0.0)) > 0.0:
+		var clearing := Node3D.new()
+		clearing.name = "HarvestGrassClearance"
+		clearing.set_meta("grass_clear_radius", float(hero.clear_radius_m))
+		root.add_child(clearing)
+		clearing.add_to_group("grass_clear")
 	if hero_on and _hero_models(node, root, hero, ground_height) and bool(hero.get("replace_model", false)):
 		spec["kind"] = ""
 		spec["replace_model"] = true
