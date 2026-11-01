@@ -1,0 +1,84 @@
+{
+ "species": "brooktail",
+ "owner_direction": "1 Nov 2026 creature brainstorm pick (rule: believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Pick C: lean four-legged deep-river otter, black fur, glowing aqua bioluminescent spots, small cheek fins, aqua eyes",
+ "reference": "ref_c.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected by the coordinator and picked by the owner",
+ "meshy_image_to_3d_task": "01a197bc-fe55-76c2-8485-fd85b35bd180",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_brooktail (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes (creature-remake lane)",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (wraps rig_quadruped.join_and_normalise/find_legs, cleanup_mesh.decimate_to; dog3 rig and skin recipe)",
+   "tools/art_pipeline/blender/strip_ground_patch.py",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, run unchanged)",
+   "tools/art_pipeline/arc_emission.py (emissive map; rule in data/creatures/arc_emission.json)",
+   "tools/art_pipeline/texture_import_policy.py --apply (VRAM compressed, mode 2)"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/brooktail/candidate_owner1101/source/brooktail_c.glb rigged.glb prepare-report.json '{\"species\":\"brooktail\",\"height\":2.1,\"patch\":{\"band\":0.06,\"probe\":[0.09,0.14],\"grow\":1.8,\"toe\":2.4}}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101.glb ; python3 tools/art_pipeline/arc_emission.py brooktail_owner1101",
+  "report": "assets/creatures/tetherbound/brooktail/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped (root, pelvis, spine, neck, head, tail_1-2, front/rear upper/lower x2)",
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ],
+   "clips_match_installed": "superset of the installed model's clip roles",
+   "height_m": 2.1,
+   "triangles": 8042,
+   "ground_patch": {
+    "patch_band_m_normalised": 0.06,
+    "patch_surface_z": 0.034,
+    "islands_only": false,
+    "columns": [
+     [
+      -0.177,
+      -0.633,
+      0.082
+     ],
+     [
+      0.117,
+      -0.724,
+      0.08
+     ],
+     [
+      -0.141,
+      0.155,
+      0.313
+     ],
+     [
+      0.277,
+      -0.071,
+      0.343
+     ]
+    ],
+    "removed_vertices": 7448,
+    "removed_islands": 435,
+    "removed_island_vertices": 2920,
+    "regrounded_by": 0.0341
+   }
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.brooktail_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_brooktail",
+ "test": "tests/test_creature_model_flags.gd"
+}

@@ -1,0 +1,71 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 5588,
+    "spine": 8283,
+    "neck": 4082,
+    "head": 6704,
+    "front_upper_l": 350,
+    "front_lower_l": 95,
+    "front_upper_r": 327,
+    "front_lower_r": 88,
+    "tail_1": 129,
+    "tail_2": 415,
+    "rear_upper_l": 258,
+    "rear_lower_l": 0,
+    "rear_upper_r": 538,
+    "rear_lower_r": 398
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14005,
+  "height_m": 3.4,
+  "length_m": 6.98,
+  "width_m": 2.5393,
+  "triangles": 28000,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2367,
+      -0.3201,
+      0.0873
+    ],
+    "front_r": [
+      0.2381,
+      -0.3172,
+      0.0859
+    ],
+    "rear_l": [
+      -0.1506,
+      0.2107,
+      0.1729
+    ],
+    "rear_r": [
+      0.1445,
+      0.0719,
+      0.1542
+    ]
+  },
+  "back_top_normalised": 0.5487,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+      "disc": false,
+      "base_over_leg_band_area": 0.799
+    }
+  },
+  "params": {
+    "species": "mangrove_monitor",
+    "height": 3.4
+  }
+}
