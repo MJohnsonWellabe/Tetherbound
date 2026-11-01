@@ -19,6 +19,10 @@ func _load() -> Dictionary:
 	# tb/vis-water-sky group 2 (OFF until GPU-judged): warm key, rim, aerial
 	# fog and night fill (`watersky_light_candidate`).
 	loaded = watersky_light(loaded, TIDEWAKE_PROFILE.settings())
+	# tb/cause-tidewake light part (OFF unless `cause_tidewake.light.enabled`):
+	# its merge fills `cause_light_look`, applied last so it composes over the
+	# watersky light candidate whether that lands ON or OFF.
+	loaded = TIDEWAKE_PROFILE.overlay(loaded, "cause_light_look")
 	# Night creature emission floor (white-ghost creatures, F39#0 GPU pass):
 	# its own section so it can stay OFF until a night round judges it.
 	var floor_cfg: Dictionary = TIDEWAKE_PROFILE.overlay({}, "night_creature_floor")
