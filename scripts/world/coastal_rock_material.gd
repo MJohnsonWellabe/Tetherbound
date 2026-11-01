@@ -52,6 +52,16 @@ uniform float coast_dune_bluff_start_y = 0.72;
 uniform float coast_dune_bluff_full_y = 0.38;
 uniform float coast_dune_painted_bluff_start_y = 0.90;
 uniform float coast_dune_painted_bluff_full_y = 0.70;
+// tb/cause-tidewake dunes (flag-off; 0 keeps the shipping sand exactly):
+// wind-scoured runnels and faint cross-bedding on steep sand faces, and sparse
+// low scrub/wrack stains on level sand, so dune walls read as formed sand and
+// open sand stops reading as bare discs.
+uniform float coast_dune_flank_strength = 0.0;
+uniform float coast_dune_flank_scale = 0.35;
+uniform float coast_dune_strata_strength = 0.0;
+uniform float coast_dune_scrub_strength = 0.0;
+uniform float coast_dune_scrub_scale = 0.07;
+uniform vec3 coast_dune_scrub_colour : source_color = vec3(0.47, 0.46, 0.33);
 
 float coast_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -187,6 +197,23 @@ const MATERIAL := """
 		float face_shade = 1.0 - smoothstep(coast_dune_face_shade_full_y,
 			coast_dune_face_shade_start_y, abs(dune_normal.y) + (patch - 0.5) * 0.06);
 		sand *= 1.0 - face_shade * coast_dune_face_shade_strength;
+		if (coast_dune_flank_strength > 0.0 || coast_dune_strata_strength > 0.0) {
+			float steep = 1.0 - smoothstep(0.5, 0.93, abs(dune_normal.y));
+			vec2 across_dir = normalize(vec2(-dune_normal.z, dune_normal.x) + vec2(0.0001));
+			float across = dot(v_vertex.xz, across_dir);
+			float runnel = coast_noise(vec2(across * coast_dune_flank_scale, v_vertex.y * 0.05)) * 0.65
+				+ coast_noise(vec2(across * coast_dune_flank_scale * 3.1, v_vertex.y * 0.16 + 3.7)) * 0.35;
+			sand *= 1.0 + (runnel - 0.5) * 2.0 * coast_dune_flank_strength * steep;
+			float bed_warp = coast_noise(vec2(across * 0.05, v_vertex.y * 0.02)) * 3.0;
+			float strata = smoothstep(0.55, 0.95, sin(v_vertex.y * 1.4 + bed_warp * 2.0) * 0.5 + 0.5);
+			sand *= 1.0 - strata * coast_dune_strata_strength * steep;
+		}
+		if (coast_dune_scrub_strength > 0.0) {
+			float level = smoothstep(0.82, 0.95, abs(dune_normal.y));
+			float scrub = coast_noise(v_vertex.xz * coast_dune_scrub_scale) * coast_noise(v_vertex.xz * coast_dune_scrub_scale * 3.3 + vec2(7.1));
+			scrub = smoothstep(0.30, 0.46, scrub + (grain - 0.5) * 0.12) * level;
+			sand = mix(sand, coast_dune_scrub_colour * mix(0.82, 1.08, grain), scrub * coast_dune_scrub_strength);
+		}
 		// Sand caps the gentle ground; required steep banks expose the
 		// installed mineral material beneath it. This keeps those fixed
 		// landforms from reading as vertical piles of uniformly pale sand.
@@ -285,7 +312,8 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 		dune = preload("res://scripts/world/tidewake_look_profile.gd").overlay(dune, "dunes")
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
 		material.call("set_shader_param", "coast_dune_albedo", load("res://assets/environment/terrain/tidewake_dune_sand_v1.png"))
-		for key: String in ["sand_colour", "wet_colour", "wet_height_m", "wet_strength", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "normal_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
+		for key: String in ["sand_colour", "wet_colour", "wet_height_m", "wet_strength", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "normal_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y",
+				"flank_strength", "flank_scale", "strata_strength", "scrub_strength", "scrub_scale", "scrub_colour"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
