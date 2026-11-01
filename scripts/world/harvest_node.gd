@@ -441,7 +441,11 @@ func _is_meadows_orb_reward_candidate_enabled(config: Dictionary) -> bool:
 		return false
 	if _item_id != str(config.get("target_item", "orb_basic")):
 		return false
-	return _node_id == str(config.get("target_node_id", "order:1029"))
+	# JSON numbers parse as floats, so an authored order builds the id
+	# "order:1029.0"; the target is written "order:1029". Compare both forms
+	# (the id itself is a save-flag key and stays as it is).
+	var target := str(config.get("target_node_id", "order:1029"))
+	return _node_id == target or _node_id == target + ".0"
 
 
 static var _meadows_orb_reward_presentation: Dictionary = {}
