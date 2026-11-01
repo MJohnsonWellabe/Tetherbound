@@ -4,6 +4,8 @@
 
 ## Summary (1 Nov 2026, latest first)
 
+**PAUSED (coordinator, owner direction, 18:32 UTC).** Pushed head: the commit that adds this line on tb/vis-creatures (on top of 8660616d8). The batch-7 asks were done before the pause arrived (speaker_lights dropped, character_model merges cleanly). No new work until the queued GPU batches are judged. A direct reply to the coordinator session was refused (untrusted device), so this note is the reply.
+
 **Status.** Zero criteria closed. Nothing here is judged yet. Branch `tb/vis-creatures`; every change is behind a flag that ships OFF. `MANIFEST.json` holds 61 entries in groups 1–5 (group 6 was withdrawn in favour of storm-cams' speaker lights). Groups 1–4 are in the coordinator's GPU batch-3.
 
 **Groups:**
