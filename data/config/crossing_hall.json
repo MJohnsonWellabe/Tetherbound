@@ -1,4 +1,292 @@
 {
+  "hall_1": {
+    "_why": "HALL-1 (F17#6 GPU swing, coordinator queue 31 Oct): one flag layers a candidate over the shipped Hall (crossing_hall.gd apply_hall_1). merge = nested overrides, append = extra list rows, remove = list rows dropped by name (unnamed rows by model path). ON since GPU Q31 HALL-1 r2b (+0.78 at High against main on every set); 7.5 on Medium and High closes F17#6.",
+    "enabled": true,
+    "merge": {
+      "hall_great_hall": {
+        "rugs": [
+          {
+            "at": [
+              12,
+              0.075,
+              -0.3
+            ],
+            "width_m": 3.6,
+            "length_m": 7.4,
+            "colour": "#2f4a66",
+            "border_colour": "#b08a52"
+          }
+        ]
+      },
+      "interior_ambient": {
+        "night_ambient": 0.22
+      },
+      "light": {
+        "night_energy_scale": 1.8
+      }
+    },
+    "remove": {
+      "hall_timber_frame": {
+        "pieces": [
+          "NavePost_-6_-1",
+          "NavePost_-6_1",
+          "UpperBrace_-6_-1",
+          "UpperBrace_-6_1",
+          "NavePost_6_-1",
+          "NavePost_6_1",
+          "UpperBrace_6_-1",
+          "UpperBrace_6_1",
+          "NaveTie_-6",
+          "NaveTie_6",
+          "NavePost_12_-1",
+          "NavePost_12_1",
+          "UpperBrace_12_-1",
+          "UpperBrace_12_1",
+          "NaveTie_12"
+        ]
+      },
+      "hall_dressing": {
+        "pieces": [
+          "PostLanternW1",
+          "PostLanternE2",
+          "ShrineGlow",
+          "PostLanternW3"
+        ]
+      },
+      "hall_furnishing": {
+        "pieces": [
+          "WallBenchL3"
+        ]
+      },
+      "hall_great_hall": {
+        "pieces": [
+          "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb"
+        ]
+      }
+    },
+    "append": {
+      "hall_great_hall": {
+        "pieces": [
+          {
+            "model": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
+            "size_m": [
+              2.4,
+              1.4,
+              2.4
+            ],
+            "at": [
+              12,
+              0.37,
+              5.6
+            ],
+            "yaw_deg": 0,
+            "collider_radius_m": 1.3,
+            "collider_height_m": 1.2,
+            "halo": {
+              "at": [
+                0,
+                1.15,
+                0
+              ],
+              "radius_m": 0.7,
+              "colour": "#ffb45e",
+              "strength": 0.7,
+              "range_m": 6.5,
+              "energy": 1.5
+            },
+            "emission_mask": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_emissive_mask.png",
+            "emission_colour": "#ffb45e",
+            "emission_energy": 1.6
+          },
+          {
+            "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
+            "height_m": 2.0,
+            "at": [
+              -6.45,
+              0.06,
+              6.0
+            ],
+            "yaw_deg": 90,
+            "collider_radius_m": 0.8,
+            "collider_height_m": 2.0,
+            "halo": {
+              "at": [
+                0,
+                0.5,
+                0.3
+              ],
+              "radius_m": 0.55,
+              "colour": "#ffa24a",
+              "strength": 0.6,
+              "range_m": 6.5,
+              "energy": 2.2
+            }
+          },
+          {
+            "model": "res://assets/props/generated_camp/camp_flame.glb",
+            "height_m": 0.42,
+            "at": [
+              -6.2,
+              0.16,
+              6.0
+            ],
+            "ignite_energy": 3.5
+          },
+          {
+            "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
+            "height_m": 2.0,
+            "at": [
+              12.0,
+              0.07,
+              -6.45
+            ],
+            "yaw_deg": 0,
+            "collider_radius_m": 0.8,
+            "collider_height_m": 2.0,
+            "halo": {
+              "at": [
+                0,
+                0.5,
+                0.3
+              ],
+              "radius_m": 0.55,
+              "colour": "#ffa24a",
+              "strength": 0.6,
+              "range_m": 6.5,
+              "energy": 2.2
+            }
+          },
+          {
+            "model": "res://assets/props/generated_camp/camp_flame.glb",
+            "height_m": 0.42,
+            "at": [
+              12.0,
+              0.17,
+              -6.2
+            ],
+            "ignite_energy": 3.5
+          }
+        ]
+      },
+      "hall_dressing": {
+        "pieces": [
+          {
+            "name": "ShrineGlow",
+            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+            "at": [
+              15.6,
+              0.06,
+              -3.0
+            ],
+            "light": {
+              "colour": "#ffb45e",
+              "energy": 1.5,
+              "range": 6.0,
+              "height": 1.6
+            }
+          }
+        ]
+      },
+      "hall_furnishing": {
+        "pieces": [
+          {
+            "name": "AisleTableR",
+            "model": "res://assets/props/quaternius_fantasy/Table_Large.gltf",
+            "at": [
+              4.35,
+              0.06,
+              6.3
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "name": "AisleTablePot",
+            "model": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+            "at": [
+              4.35,
+              0.87,
+              5.7
+            ],
+            "yaw_deg": 0,
+            "collide": false
+          },
+          {
+            "name": "AisleTableBooks",
+            "model": "res://assets/props/quaternius_fantasy/BookGroup_Medium_1.gltf",
+            "at": [
+              4.3,
+              0.87,
+              6.6
+            ],
+            "yaw_deg": 70,
+            "collide": false
+          },
+          {
+            "name": "HearthStoolL1",
+            "model": "res://assets/props/quaternius_fantasy/Stool.gltf",
+            "at": [
+              -5.3,
+              0.06,
+              5.0
+            ],
+            "yaw_deg": 15
+          },
+          {
+            "name": "HearthStoolL2",
+            "model": "res://assets/props/quaternius_fantasy/Stool.gltf",
+            "at": [
+              -5.3,
+              0.06,
+              7.0
+            ],
+            "yaw_deg": -20
+          },
+          {
+            "name": "ShrineHearthLogs",
+            "model": "res://assets/props/quaternius_fantasy/Anvil_Log.gltf",
+            "at": [
+              13.4,
+              0.07,
+              -6.3
+            ],
+            "yaw_deg": 10
+          },
+          {
+            "name": "AltarCandleW",
+            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+            "at": [
+              10.5,
+              0.07,
+              6.0
+            ],
+            "yaw_deg": 0,
+            "light": {
+              "height": 1.6,
+              "colour": "#ffb45e",
+              "energy": 1.8,
+              "range": 5.0
+            }
+          },
+          {
+            "name": "AltarCandleE",
+            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+            "at": [
+              13.5,
+              0.07,
+              6.0
+            ],
+            "yaw_deg": 0,
+            "light": {
+              "height": 1.6,
+              "colour": "#ffb45e",
+              "energy": 1.8,
+              "range": 5.0
+            }
+          }
+        ]
+      }
+    }
+  },
   "hall_hero_assets": {
     "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
     "enabled": true,
