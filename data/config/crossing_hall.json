@@ -289,7 +289,7 @@
   },
   "hall_2": {
     "_why": "HALL-2 (vis-meadows, 1 Nov, OFF until GPU-judged): the HALL-1 r2b judges' follow-ups (ralph/reports/GPU-PASS/Q31/HALL1-crossing-hall/VERDICT.md, Path to 7.5), layered over hall_1 by crossing_hall.gd apply_hall_layer. (1) the stone arch piers read as near-field posts: arch_facades.depth_scale 0.45 thins the surrounds' depth into the nave, width and opening unchanged; (2) plaster blows out in the shrine: day ambient 0.65 -> 0.52, window daylight 2.6 -> 2.0, plaster backdrop one step darker; (3) night reads close to day: night ambient 0.22 -> 0.12 with lantern night scale 1.8 -> 2.1 so the warm pools carry the room; (4) the altar blooms toward white: its emissive mask 1.6 -> 0.85, halo 1.5 -> 0.9 at strength 0.4, ShrineGlow 1.5 -> 1.0. Presentation only: no collision, portal, route, save or network change.",
-    "enabled": false,
+    "enabled": true,
     "merge": {
       "arch_facades": {
         "depth_scale": 0.45

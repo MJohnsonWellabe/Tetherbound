@@ -1,0 +1,361 @@
+{
+ "batch": 1,
+ "base": "066d236276ce17b24d2ae34c203f59a022af8a4a",
+ "items": [
+  {
+   "item": "F17#6",
+   "camera_set": "F17-6",
+   "stands": [
+    "hall-approach_day_clear",
+    "hall-approach_night_clear",
+    "nave-forward_day_clear",
+    "nave-forward_night_clear",
+    "nave-forward_day_rain",
+    "nave-arches-left_day_clear",
+    "nave-arches-left_night_clear",
+    "nave-arches-right_day_clear",
+    "nave-arches-right_night_clear",
+    "nave-reverse_day_clear",
+    "nave-reverse_night_clear",
+    "shrine-pedestals_day_clear",
+    "shrine-pedestals_night_clear",
+    "shrine-pedestals-reverse_day_clear",
+    "shrine-pedestals-reverse_night_clear"
+   ]
+  },
+  {
+   "item": "P2-003",
+   "camera_set": "tools/phase2_capture_locations.gd",
+   "stands": [
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day__close",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__night__close",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk",
+    "meadows__band5_stronghold_approach__10__meadows_hall__day__approach",
+    "meadows__band5_stronghold_approach__10__meadows_hall__day__close",
+    "meadows__band5_stronghold_approach__10__meadows_hall__night__approach",
+    "meadows__band5_stronghold_approach__10__meadows_hall__night__close"
+   ]
+  },
+  {
+   "item": "P2-005",
+   "camera_set": "tools/phase2_capture_locations.gd",
+   "stands": [
+    "meadows__band1_lower_meadows__01__grandpas_village__route_day",
+    "meadows__band1_lower_meadows__02__the_south_bridge__route_day",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+    "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+    "meadows__band3_the_river_lock__06__old_mill_crossing__route_day",
+    "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__route_day",
+    "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__route_day",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+    "meadows__band1_lower_meadows__01__grandpas_village__walk_01_day",
+    "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__walk_01_day",
+    "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__walk_01_day",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach"
+   ]
+  },
+  {
+   "item": "P2-006",
+   "camera_set": "tools/phase2_capture_locations.gd",
+   "stands": [
+    "meadows__band3_the_river_lock__06__old_mill_crossing__day__approach",
+    "meadows__band3_the_river_lock__06__old_mill_crossing__day__close",
+    "meadows__band3_the_river_lock__06__old_mill_crossing__night__approach",
+    "meadows__band3_the_river_lock__06__old_mill_crossing__night__close",
+    "meadows__band3_the_river_lock__06__old_mill_crossing__route_day",
+    "meadows__band3_the_river_lock__06__old_mill_crossing__vista_dusk"
+   ]
+  },
+  {
+   "item": "P2-012",
+   "camera_set": "tools/phase2_capture_locations.gd",
+   "stands": [
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__day__close",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__night__close",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk"
+   ]
+  },
+  {
+   "item": "P2-064",
+   "camera_set": "tools/capture_f38_fight.gd --trainer=warden_aldis",
+   "stands": [
+    "meadows__fights__warden_aldis-00-before",
+    "meadows__fights__warden_aldis-02",
+    "meadows__fights__warden_aldis-04",
+    "meadows__fights__warden_aldis-06",
+    "meadows__fights__warden_aldis-a02",
+    "meadows__fights__warden_aldis-a04"
+   ]
+  },
+  {
+   "item": "P2-083",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__inventory__character__captain_marrow__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+    "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+   ]
+  },
+  {
+   "item": "P2-083",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__inventory__character__captain_marrow__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+    "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+   ]
+  },
+  {
+   "item": "P2-074",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "tidewake__inventory__character__water_nalia__dialogue",
+    "tidewake__inventory__character__water_nerissa__dialogue",
+    "tidewake__inventory__trainer__water_trainer_nerissa__dialogue"
+   ]
+  },
+  {
+   "item": "P2-074",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "tidewake__inventory__character__water_nalia__dialogue",
+    "tidewake__inventory__character__water_nerissa__dialogue",
+    "tidewake__inventory__trainer__water_trainer_nerissa__dialogue"
+   ]
+  },
+  {
+   "item": "P2-081",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+    "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+   ]
+  },
+  {
+   "item": "P2-081",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+    "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+   ]
+  },
+  {
+   "item": "P2-073",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "tidewake__inventory__trainer__water_trainer_bex__dialogue",
+    "tidewake__inventory__trainer__water_trainer_daro__dialogue",
+    "tidewake__inventory__trainer__water_trainer_irva__dialogue"
+   ]
+  },
+  {
+   "item": "P2-073",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "tidewake__inventory__trainer__water_trainer_bex__dialogue",
+    "tidewake__inventory__trainer__water_trainer_daro__dialogue",
+    "tidewake__inventory__trainer__water_trainer_irva__dialogue"
+   ]
+  },
+  {
+   "item": "P2-076",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "cloudreach__inventory__character__captain_veyra__defeated__dialogue",
+    "cloudreach__inventory__character__captain_veyra__dialogue",
+    "cloudreach__inventory__character__trader_kelm__dialogue"
+   ]
+  },
+  {
+   "item": "P2-076",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "cloudreach__inventory__character__captain_veyra__defeated__dialogue",
+    "cloudreach__inventory__character__captain_veyra__dialogue",
+    "cloudreach__inventory__character__trader_kelm__dialogue"
+   ]
+  },
+  {
+   "item": "P2-087",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__inventory__trainer__old_champion_bram__dialogue",
+    "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+    "meadows__inventory__trainer__stronghold_elite__dialogue"
+   ]
+  },
+  {
+   "item": "P2-087",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__inventory__trainer__old_champion_bram__dialogue",
+    "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+    "meadows__inventory__trainer__stronghold_elite__dialogue"
+   ]
+  },
+  {
+   "item": "P2-075",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "tidewake__inventory__character__water_adair__dialogue",
+    "tidewake__inventory__character__water_iona__dialogue",
+    "tidewake__inventory__character__water_rowan__dialogue"
+   ]
+  },
+  {
+   "item": "P2-075",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "tidewake__inventory__character__water_adair__dialogue",
+    "tidewake__inventory__character__water_iona__dialogue",
+    "tidewake__inventory__character__water_rowan__dialogue"
+   ]
+  },
+  {
+   "item": "P2-077",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "cloudreach__inventory__character__defector_rusk__dialogue",
+    "cloudreach__inventory__character__naturalist_sora__dialogue",
+    "cloudreach__inventory__character__young_trainer_tavi__dialogue"
+   ]
+  },
+  {
+   "item": "P2-077",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "cloudreach__inventory__character__defector_rusk__dialogue",
+    "cloudreach__inventory__character__naturalist_sora__dialogue",
+    "cloudreach__inventory__character__young_trainer_tavi__dialogue"
+   ]
+  },
+  {
+   "item": "P2-078",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__inventory__character__corin__dialogue",
+    "meadows__inventory__character__kell__dialogue",
+    "meadows__inventory__trainer__captain_field__dialogue"
+   ]
+  },
+  {
+   "item": "P2-078",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__inventory__character__corin__dialogue",
+    "meadows__inventory__character__kell__dialogue",
+    "meadows__inventory__trainer__captain_field__dialogue"
+   ]
+  },
+  {
+   "item": "P2-079",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__inventory__character__garrick__dialogue",
+    "meadows__inventory__character__quarry_foreman__dialogue"
+   ]
+  },
+  {
+   "item": "P2-079",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__inventory__character__garrick__dialogue",
+    "meadows__inventory__character__quarry_foreman__dialogue"
+   ]
+  },
+  {
+   "item": "P2-086",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__inventory__trainer__tournament_final_oskar__dialogue",
+    "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+    "meadows__inventory__trainer__tournament_semi_tam__dialogue"
+   ]
+  },
+  {
+   "item": "P2-086",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__inventory__trainer__tournament_final_oskar__dialogue",
+    "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+    "meadows__inventory__trainer__tournament_semi_tam__dialogue"
+   ]
+  },
+  {
+   "item": "P2-076",
+   "camera_set": "tools/phase2_capture_dialogue.gd (job.json repro per stand)",
+   "stands": [
+    "cloudreach__inventory__character__captain_veyra__defeated__dialogue",
+    "cloudreach__inventory__character__captain_veyra__dialogue",
+    "cloudreach__inventory__character__trader_kelm__dialogue"
+   ]
+  },
+  {
+   "item": "P2-070",
+   "camera_set": "tools/phase2_capture_stormwood_glass_sink.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ]
+  },
+  {
+   "item": "P2-041",
+   "camera_set": "tools/phase2_capture_locations.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__landmark__crown_arch__day__close"
+   ]
+  },
+  {
+   "item": "P2-043",
+   "camera_set": "tools/phase2_capture_routes.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__dynamo__11__the_glass_field__walk_03_day"
+   ]
+  },
+  {
+   "item": "P2-045",
+   "camera_set": "tools/phase2_capture_world_inventory.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__inventory__pickup__good_candy",
+    "stormwood__inventory__pickup__great_candy",
+    "stormwood__inventory__pickup__rare_candy"
+   ]
+  },
+  {
+   "item": "P2-046",
+   "camera_set": "tools/phase2_capture_world_inventory.gd (job.json repro per stand)",
+   "stands": [
+    "stormwood__inventory__harvest__glowmoss",
+    "stormwood__inventory__harvest__stormglass",
+    "stormwood__inventory__harvest__stormglass_crown"
+   ]
+  },
+  {
+   "item": "P2-113",
+   "camera_set": "tools/phase2_capture_catch.gd (job.json repro per stand)",
+   "stands": [
+    "tidewake__catching__02-orb-in-flight",
+    "tidewake__catching__03-absorbing",
+    "tidewake__catching__03-strike"
+   ]
+  },
+  {
+   "item": "P2-059",
+   "camera_set": "tools/phase2_capture_catch.gd (job.json repro per stand)",
+   "stands": [
+    "meadows__catching__03-absorbing",
+    "meadows__catching__03-strike",
+    "meadows__catching__04-orb-resting"
+   ]
+  }
+ ]
+}
