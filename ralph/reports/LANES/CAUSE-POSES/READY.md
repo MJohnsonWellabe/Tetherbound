@@ -1,5 +1,26 @@
 # CAUSE-POSES lane (creature hurt and faint poses, roster-wide) — READY
 
+## Lane close-out (1 Nov 2026, ~22:40 UTC)
+
+- **State:** `tb/cause-poses` at its pushed head, with `origin/main` merged in after #792. **One GPU arm:** `data/config/creature_pose_settle.json:enabled`, shipped OFF. Use `MANIFEST.json` **group 2** (83 entries); it supersedes group 1.
+  - 70 F36 (1) species rows, run as `capture_f36_poses.gd --whole-body --context`, with `--candidate` for recipe species.
+  - P2-015, P2-016, P2-020, P2-028 and P2-063.
+  - 8 remake pairings, each with `also_enable` naming its `remake_owner1101_*` flag.
+- **What worked:** a single clip-level pass for every rig, using the shared bone names and the posed-vertex sampler:
+  - grounded dense keys re-centred over the shadow;
+  - a side-lie decided by limb direction, keeping the side the faint fell to;
+  - a head lift, and an upright splay for shelled and many-legged bodies;
+  - a held recoil when a hit barely moves, and planted hits;
+  - a `play_faint` turn so the body lies across the camera with its back toward it.
+- **Open candidates, waiting on GPU verdicts:**
+  - If the arm loses on a species, add it to `exclude_species`, or to `faint.side_lie.exclude_species` for roll only, rather than turning the arm off.
+  - Still weak: Glimmermoth (a wing-only rig, so no leg axis) and Burrowback (small splay).
+  - The faint-texture blotches are not reproduced on CPU. If GPU judges still name them with the arm ON, take a frame.
+- **Runbook:** TECHNICAL §8.1 CPU setup.
+  - This disk needed sparse-checkout to drop `assets/props/meshy-10{20,22,24,31}`, `crossing_hall_hero`, `assets_raw`, `tests/fixtures` and `archive`, plus local `.gdignore` files in `ralph`, `docs` and `site`, to fit the import.
+  - F36 stage: `capture_f36_poses.gd -- --species=… --whole-body --context [--candidate] --out=res://.artifacts/…`.
+  - Toggle only the master `enabled` line between runs, never mid-run.
+
 ## Summary (rolling; updated 1 Nov 2026, round 2)
 
 - **Branch:** `tb/cause-poses`, from `origin/tb/land-vis-2`. The flag ships OFF. `MANIFEST.json` lists every entry.
