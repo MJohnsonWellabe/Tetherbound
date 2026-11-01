@@ -1,21 +1,30 @@
 # UIPOSES lane (UI + creature/trainer pose rows) — READY
 
-## Final summary before the 18:00 UTC cutoff (1 Nov 2026, written ~16:40 UTC)
+## Lane summary (rolling batches; updated ~18:30 UTC, 1 Nov 2026)
 
-- **Head:** `2a151563cdd5f179eeb00200765bb134d810a01c` on `tb/vis-ui-poses`. It merges cleanly with origin/main and with tb/vis-creatures, tb/craft-r3, tb/vis-meadows, tb/vis-storm-cams, tb/vis-water-sky and tb/world-craft-icons (checked with `git merge-tree`).
-- **Seven flags, all OFF on the branch, listed in `MANIFEST.json`:**
-  - `readout_side_enabled`
-  - `catch_card` (with `calm_seal`)
-  - `lane_role_flags.uiposes_riptusk_side_faint_prone_rest`
-  - `victory_focus`
-  - `hang_pose.body`
-  - `satchel_focus`
-- **Items covered:** P2-001, P2-028, P2-029, P2-058, P2-061, P2-103, P2-111, P2-114, P2-117, P2-119.
-- **Criteria closed: zero.** These are game changes awaiting GPU verdicts. No CPU scores are claimed.
-- **Shared-file touches:** small, flag-gated hunks in `playground_hud.gd`, `combat_hud.gd`, `capture_reticle.gd`, `tab_backpack.gd`, `trainer_model.gd`, `orb.gd`, `creature_pose_candidates.gd` and `trainer_reward_delivery.gd`. Config is only new keys: hud.json `victory_focus`/`catch_card`, menu.json `satchel_focus`, `fly_traversal.json` `hang_pose.body`, `capture_readout_visual.json` side keys, and `f36_pose_candidates.json` `lane_role_flags` at the end of the file.
-- **After the cutoff:** available for one fix round on returned items.
+- **Head:** `0810bd6dc` on `tb/vis-ui-poses`. Every flag is OFF on the branch. `MANIFEST.json` lists every entry with its `group`.
+- **Groups pushed:**
 
-Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
+  | Group | Items | Flags |
+  |---|---|---|
+  | 1 | P2-001, P2-028, P2-029, P2-058, P2-061, P2-103, P2-111, P2-114, P2-117, P2-119 | `readout_side_enabled`, `catch_card` (+ `calm_seal`), `lane_role_flags.uiposes_riptusk_side_faint_prone_rest`, `victory_focus`, `hang_pose.body`, `satchel_focus` |
+  | 2 | P2-095, P2-096 | `craft_presentation` `readable_r4`, on top of tb/world-craft-icons; with `readable_r3` and `rendered_item_icons` |
+  | 3 | P2-108 | `water_mount_presentation.enabled` |
+  | 4 | P2-050 | `npc_post_stances.enabled` |
+  | 5 | P2-069 | `landing_presentation.wing_fold_enabled` |
+  | 6 | P2-065 | `npc_post_stances.beaten_trainer_stance.enabled` |
+  | 7 | P2-048 | `menu.json map_region_header.enabled` |
+  | 8 | P2-071 | `human_swim_visual.uiposes_stroke_candidates` |
+  | 9 | P2-004 | `hud.json quiet_empty_slots.enabled` |
+
+- **Criteria closed: zero.** These are game changes awaiting GPU verdicts. No CPU scores are claimed; each group had one CPU sanity capture except where noted.
+- **Not built:**
+  - **Parked:** P2-016 and P2-063 (two GPU failures each).
+  - **Other lanes:** dialogue staging (P2-081, P2-082, P2-084).
+  - **Not UI/pose-fixable here:** P2-105 (cloud floor geometry), P2-091 (arena slab; no current frame).
+  - **Blocked or unscored:** P2-118 (Cloudreach catch fixture blocked).
+  - **Too risky for the gain:** P2-031 (changes the rebinding focus graph).
+- **Local only, never committed:** `tests/fixtures/earned_saves` was removed to free disk in this container.
 
 ## Group 9: P2-004 exploration HUD, pad path (6.45 to 6.75)
 
