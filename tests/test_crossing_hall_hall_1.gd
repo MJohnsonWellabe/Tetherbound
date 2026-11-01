@@ -87,3 +87,20 @@ func test_hall_2_on_layers_after_hall_1_and_caps_the_altar() -> void:
 		return r is Dictionary and str(r.get("name", "")) == "ShrineGlow")
 	assert_eq(glows.size(), 1)
 	assert_eq(float(glows[0].light.energy), 1.0)
+
+
+func test_hall_3_ships_off_and_on_sets_night_moonlight_plaster_and_piers() -> void:
+	var cfg := _shipping()
+	assert_false(bool(cfg.get("hall_3", {}).get("enabled", true)), "HALL-3 ships OFF until GPU-judged")
+	var off := cfg.duplicate(true)
+	HALL.apply_hall_1(off)
+	cfg.hall_3.enabled = true
+	HALL.apply_hall_1(cfg)
+	assert_true(float(cfg.interior_ambient.night_albedo_scale) < 1.0, "night darkens the Hall's albedo")
+	assert_true(float(cfg.daylight_windows.night_energy) > 0.0, "windows carry moonlight at night")
+	assert_true(cfg.interior_ambient.material_albedo_scale.has("MI_Plaster"))
+	for id: String in cfg.arch_facades.pieces:
+		assert_true(float(cfg.arch_facades.pieces[id].z_m) < 0.0, "surround set back: " + id)
+		assert_true(str(cfg.arch_facades.pieces[id].path).ends_with(".glb"), "surround path kept: " + id)
+	assert_ne(str(cfg.hall_great_hall.runner.colour), str(off.hall_great_hall.runner.colour))
+	assert_eq(float(cfg.hall_great_hall.runner.length_m), float(off.hall_great_hall.runner.length_m), "runner size kept")
