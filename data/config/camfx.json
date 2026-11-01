@@ -26,7 +26,7 @@
     "_why": "Judges 1 Nov: 'flat yellow cone flame' (P2-035 bonfire_fire, every authored camp fire through props.gd glow:\"campfire\"). Earlier rounds that made the same cone translucent or added uniform-alpha cards were judged 'hard-edged ... cut from cardboard': a uniform alpha never softens a polygon edge. When enabled, ignite() hides the Bonfire's Fire cone and stands a procedural flame in its footprint instead: two camera-facing (Y-locked) quads with a feathered, noise-licked teardrop mask that sways and flickers (shaders/camfx_flame.gdshader), orange edges to a pale-gold core, no texture, no particles, so it reads the same on Compatibility and Forward+ and costs two quads per fire. The CampfireGlow halo card is dropped (the flame carries its own soft edge); light, embers and smoke unchanged. scripts/world/campfire_glow.gd ignite(), scripts/vfx/camfx.gd add_flame().",
     "height_scale": 1.0,
     "width_scale": 1.15,
-    "energy": 1.5,
+    "energy": 1.15,
     "alpha": 1.0,
     "speed": 1.0,
     "inner_scale": 0.62,

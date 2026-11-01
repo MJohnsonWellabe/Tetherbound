@@ -61,11 +61,11 @@ static func add_flame(parent: Node3D, footprint: AABB) -> Node3D:
 		card.position = Vector3(0.0, height * scale_value * 0.5, 0.0)
 		var material := ShaderMaterial.new()
 		material.shader = FLAME_SHADER
-		material.set_shader_parameter("energy", float(cfg.get("energy", 1.5)) * (1.0 if layer == 0 else 1.15))
-		material.set_shader_parameter("alpha_scale", float(cfg.get("alpha", 1.0)))
+		material.set_shader_parameter("energy", float(cfg.get("energy", 1.15)) * (1.0 if layer == 0 else 0.92))
+		material.set_shader_parameter("alpha_scale", float(cfg.get("alpha", 1.0)) * (1.0 if layer == 0 else 0.8))
 		material.set_shader_parameter("speed", float(cfg.get("speed", 1.0)) * (1.0 if layer == 0 else 1.3))
 		material.set_shader_parameter("seed", 0.37 + 1.91 * float(layer))
-		material.set_shader_parameter("core_bias", 0.0 if layer == 0 else 0.35)
+		material.set_shader_parameter("core_bias", 0.0 if layer == 0 else 0.12)
 		# The inner card draws after the outer so the core sits in front.
 		material.render_priority = layer
 		card.material_override = material

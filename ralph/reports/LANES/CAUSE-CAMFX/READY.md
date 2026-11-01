@@ -5,6 +5,8 @@
 - **No CPU capture was possible in this container.** The writable disk allowance left ~0.9 GB beside a 21 GB pack, and a Godot import needs several GB. So the candidates are unverified on screen. Each was parse-checked and unit-tested with stubbed asset preloads (TECHNICAL §8.1 disk-tight route). The GPU arm is the first render; please capture before judging.
 - `MANIFEST.json`: group 1 (catch_orb, flame, fight_fade) and group 2 (impact_fx), group 3 (dialogue_open). Camera sets are the job.json repro commands without `--out`.
 
+- **Shader probe (CPU, Compatibility, llvmpipe):** `_sheet_cpu_shader_probe.jpg` shows both new shaders compiled and rendered in a throwaway minimal project (no game assets). Left: the flame on a log stand-in, and a crack at glow 0.8 (the electric flash). Right: the tuned flame (core energy lowered so it no longer clips white) and the settled dark crack. It reads as licked, feathered fire and jagged fissures. The orb model, stone chips and arcs need the imported game and are not shown.
+
 ## Candidates (all OFF)
 | Sub-cause | Flag | What it changes | Items |
 |---|---|---|---|

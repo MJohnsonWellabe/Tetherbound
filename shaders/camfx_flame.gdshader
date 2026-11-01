@@ -6,7 +6,7 @@ shader_type spatial;
 // reserved for Team Tether).
 render_mode unshaded, blend_mix, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
 
-uniform vec4 core_colour : source_color = vec4(1.0, 0.94, 0.70, 1.0);
+uniform vec4 core_colour : source_color = vec4(1.0, 0.87, 0.48, 1.0);
 uniform vec4 mid_colour : source_color = vec4(1.0, 0.66, 0.20, 1.0);
 uniform vec4 edge_colour : source_color = vec4(0.93, 0.40, 0.07, 1.0);
 uniform float energy = 1.5;
