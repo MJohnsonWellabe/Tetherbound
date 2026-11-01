@@ -36,6 +36,7 @@ const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_reada
 const PERSONAL_REWARD := preload("res://scripts/world/cloudreach_personal_reward.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const NPCS := preload("res://scripts/world/village_npcs.gd")
+const CONVERSATION_CAMERA := preload("res://scripts/player/conversation_camera.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const PROGRESSION_CONFIG := preload("res://scripts/creatures/progression.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
@@ -831,14 +832,24 @@ func _sync_npcs() -> void:
 			prompt.global_position = RULES.vec(spec["position"]) + RULES.vec(topic.get("offset", [0, 0, 0])) + Vector3.UP * 0.8
 			prompt.configure(topic["label"], 3.2, true)
 			prompt.set_meta("requires_flags", topic.get("requires_flags", []))
-			prompt.activated.connect(_show_topic.bind(topic))
+			prompt.activated.connect(_show_topic.bind(topic, prompt, str(spec.get("name", ""))))
 
 
-func _show_topic(topic: Dictionary) -> void:
+func _show_topic(topic: Dictionary, prompt: Node3D = null, speaker_name: String = "") -> void:
 	if not RULES.holds(_flags, topic.get("requires_flags", [])):
 		return
 	var panel := get_tree().get_first_node_in_group("dialogue_panel")
 	if panel != null and not panel.call("is_open"):
+		# The topic prompt hangs beside its person under ConversationTopics, so
+		# the conversation camera cannot find the speaker as the prompt's parent.
+		# Name the body that is standing now (placements can respawn it).
+		var body: Node = _people.get_node_or_null(NodePath(speaker_name)) \
+			if is_instance_valid(_people) and not speaker_name.is_empty() else null
+		if is_instance_valid(prompt):
+			if body is Node3D:
+				prompt.set_meta(CONVERSATION_CAMERA.SPEAKER_META, body)
+			elif prompt.has_meta(CONVERSATION_CAMERA.SPEAKER_META):
+				prompt.remove_meta(CONVERSATION_CAMERA.SPEAKER_META)
 		panel.call("start", topic["conversation"])
 
 
