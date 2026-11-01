@@ -66,21 +66,22 @@ func test_harvest_hero2_is_off_and_gives_crown_its_own_silhouette() -> void:
 		"the crown grade must stand taller")
 
 
-func test_glass_field_rock_collar_ships_off() -> void:
+func test_glass_field_rock_collar_ships_on() -> void:
 	var cfg := _json("res://data/config/stormwood_glass_field.json")
 	var collar: Dictionary = cfg.get("rock_collar_candidate", {})
 	assert_true(collar.has("stones"), "the P2-043 candidate must be declared")
-	assert_false(bool(collar.get("enabled", true)), "the candidate ships OFF")
+	assert_true(bool(collar.get("enabled", false)), "the candidate ships ON: cloud yardstick 1 Nov batch-1, P2-043 5.51 -> 5.68")
 
 
-func test_crown_arch_round2_ships_off_and_raises_the_arch_when_on() -> void:
+func test_crown_arch_round2_ships_on_and_raises_the_arch() -> void:
 	var hero := preload("res://scripts/world/stormwood_crown_arch_hero.gd")
 	var cfg := _json("res://data/config/crown_arch_hero.json")
-	assert_false(bool((cfg["round2_candidate"] as Dictionary).get("enabled", true)), "ships OFF")
-	assert_eq(hero.with_round2(cfg)["height_m"], cfg["height_m"], "OFF leaves the landed arch")
-	var cand: Dictionary = (cfg["round2_candidate"] as Dictionary).duplicate(true)
-	cand["enabled"] = true
-	cfg["round2_candidate"] = cand
+	assert_true(bool((cfg["round2_candidate"] as Dictionary).get("enabled", false)), "ships ON: cloud yardstick 1 Nov batch-1, P2-041 4.93 -> 5.31")
+	var off := cfg.duplicate(true)
+	var off_cand: Dictionary = (off["round2_candidate"] as Dictionary).duplicate(true)
+	off_cand["enabled"] = false
+	off["round2_candidate"] = off_cand
+	assert_eq(hero.with_round2(off)["height_m"], off["height_m"], "OFF leaves the landed arch")
 	var on := hero.with_round2(cfg)
 	assert_true(float(on["height_m"]) > 5.5, "round 2 stands the arch taller")
 	assert_true(on.has("edge_dressing"), "round 2 dresses the slab edge")
@@ -117,3 +118,55 @@ func test_stormwood_character_rim_ships_off_and_dresses_only_shadowed_meshes() -
 	assert_eq(card.material_overlay, null, "effect cards are left alone")
 	assert_eq(rim.dress(body, material), 0, "dressing twice changes nothing")
 	body.free()
+
+
+func test_road_puddles_ship_off() -> void:
+	var cfg := _json("res://data/config/stormwood_road_current.json")
+	var puddles: Dictionary = cfg.get("puddle_candidate", {})
+	assert_true(puddles.has("spacing_m"), "the P2-040 candidate must be declared")
+	assert_false(bool(puddles.get("enabled", true)), "the candidate ships OFF")
+
+
+func test_camera_occlusion_fade_ships_off_and_is_inert_off_tree() -> void:
+	var cfg := _json("res://data/config/camera.json")
+	var fade: Dictionary = cfg.get("occlusion_fade", {})
+	assert_true(fade.has("fade_transparency"), "the occlusion candidate must be declared")
+	assert_false(bool(fade.get("enabled", true)), "the candidate ships OFF")
+	var occ := preload("res://scripts/player/camera_occlusion.gd")
+	assert_true(occ.occluders(null, Vector3.ZERO, Vector3.ONE, []).is_empty(), "no world, no occluders")
+
+
+func test_stormwood_light_pass_ships_off_and_merges_when_on() -> void:
+	var look := preload("res://scripts/world/stormwood_look.gd")
+	var cfg := _json("res://data/config/stormwood_look.json")
+	var pass_cfg: Dictionary = cfg["light_pass_1101"]
+	assert_false(bool(pass_cfg.get("enabled", true)), "the light pass ships OFF")
+	assert_eq(look.with_light_pass(cfg)["rig"], cfg["rig"], "OFF leaves the rig alone")
+	pass_cfg = pass_cfg.duplicate(true)
+	pass_cfg["enabled"] = true
+	cfg["light_pass_1101"] = pass_cfg
+	var on := look.with_light_pass(cfg)
+	assert_true(float(on["rig"]["environment"]["fog_density"]) > float(cfg["rig"]["environment"]["fog_density"]),
+		"the pass adds depth fog")
+	assert_true(bool(on["storm_light"]["enabled"]), "the pass turns the rim light on")
+	assert_true(on.has("storm_fill"), "the pass adds the fill light")
+	assert_eq(on["rig"]["sun"]["pitch_deg"], cfg["rig"]["sun"]["pitch_deg"], "unlisted rig keys keep their values")
+
+
+func test_catch_framed_r2_and_hud_prompt_clear_ship_off() -> void:
+	var catching := _json("res://data/config/catching.json")
+	var r2: Dictionary = (catching["framed_camera"] as Dictionary)["r2"]
+	assert_false(bool(r2.get("enabled", true)), "the P2-059 round-2 framing ships OFF")
+	assert_true(float((r2["resolve_camera"] as Dictionary)["pitch_start_deg"])
+			> float((catching["framed_camera"]["resolve_camera"] as Dictionary)["pitch_start_deg"]),
+		"round 2 is a shallower resolve shot")
+	var hud := _json("res://data/config/hud.json")
+	assert_false(bool((hud["message_clears_prompt"] as Dictionary).get("enabled", true)), "the prompt clear ships OFF")
+
+
+func test_stormwood_value_lift_ships_off_and_lifts_when_on() -> void:
+	var zones := preload("res://scripts/world/stormwood_ground_zones.gd")
+	var raw := _json("res://data/config/stormwood_ground_finish.json")
+	assert_false(bool((raw["value_lift_candidate"] as Dictionary).get("enabled", true)), "ships OFF")
+	var off := zones.finish()
+	assert_eq(off["grass"]["tint_base"], raw["grass"]["tint_base"], "OFF leaves the tints")

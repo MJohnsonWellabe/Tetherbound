@@ -3,7 +3,7 @@
  "from_piece": "06_veyra_relay",
  "from_commit": "1479767e3338eb7737c24eee76350b599770edd7",
  "to_piece": "07_stormward_handoff",
- "to_commit": "7d485aa13a29bf775f40ae9ed03eda455bfcea79",
+ "to_commit": "aca00f0870e7259f0e87adf4e0afccbe0d7ce3ca",
  "to_loaded_from": "/home/user/rb/cr_06",
  "end_state": {
   "realm": "cloudreach",

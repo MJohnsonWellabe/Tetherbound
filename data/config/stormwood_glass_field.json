@@ -26,7 +26,7 @@
   "_why_scorched_scars": "F10#4 scene-art pass (owner 5860380772): strike scars as terrain-following burnt glass-fused patches with the grass cleared, blackened rock-family lumps and low smoked-glass blades. Enabled for Phase 1b; the old spire clusters remain only as a legacy fallback.",
   "scorched_scars": true,
   "rock_collar_candidate": {
-  "enabled": false,
+  "enabled": true,
   "_why": "P2-043 (GPU WD2 1 Nov, 5.75): the spike base is still a flat dark slab, not rooted in rock. On: five installed rock-family stones in cracked basalt grey ring each Meshy spike cluster's foot, half sunk (ring 0.16 and stone height 0.11 of the spike height), and the flat fused scar patch is hidden so the spikes break out of rock on cleared ground. Visual only, colliders removed (stormwood_glass_field.gd _add_rock_collar). OFF until GPU judged.",
   "stones": 5,
   "ring_fraction": 0.16,

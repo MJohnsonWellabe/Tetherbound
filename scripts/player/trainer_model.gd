@@ -701,12 +701,43 @@ func _apply_fly_hang() -> void:
 	var rig := skeleton()
 	if rig == null:
 		return
+	# P2-119 (UIPOSES, flag-off): fly_traversal.json hang_pose.body. The
+	# trainer read as hanging rigidly upright with dangling legs; when on, the
+	# legs trail back with bent knees and the torso leans into the flight.
+	# Rest-relative local-X flexion with the RIDE_POSE signs measured on this
+	# rig. Applied before the arms, which aim in skeleton space and so still
+	# reach the grip points.
+	var body: Variant = _fly_pose.get("body", {})
+	if body is Dictionary and bool((body as Dictionary).get("enabled", false)):
+		for entry: Array in fly_hang_body_rotations(body as Dictionary):
+			var index := rig.find_bone(str(entry[0]))
+			if index >= 0:
+				var rest: Quaternion = rig.get_bone_rest(index).basis.get_rotation_quaternion()
+				rig.set_bone_pose_rotation(index, rest * Quaternion.from_euler(Vector3(deg_to_rad(float(entry[1])), 0.0, deg_to_rad(float(entry[2])))))
 	# Aim each arm chain toward the creature's grip points. Bone rest axes are
 	# read from the actual installed rig, not assumed to be Mixamo or KayKit.
 	for side: String in ["Left", "Right"]:
 		var side_sign := 1.0 if side == "Left" else -1.0
 		_aim_hang_bone(rig, side + "Arm", side + "ForeArm", Vector3(side_sign * float(_fly_pose.get("upper_lateral", 0.8)), 1.0, 0.08))
 		_aim_hang_bone(rig, side + "ForeArm", side + "Hand", Vector3(side_sign * float(_fly_pose.get("forearm_lateral", 0.65)), 1.0, 0.0))
+
+
+## [bone, local X degrees, local Z degrees] for the flag-off trailing hang.
+## Signs follow RIDE_POSE on this rig: thigh flexion forward is -X, so a thigh
+## trailing back is +X; knee flexion is +X; forward trunk lean is -X.
+static func fly_hang_body_rotations(body: Dictionary) -> Array:
+	var hip := float(body.get("hip_extension_deg", 22.0))
+	var knee := float(body.get("knee_flexion_deg", 50.0))
+	var trail := float(body.get("knee_offset_deg", 12.0))
+	var lean := float(body.get("torso_lean_deg", 12.0))
+	var ankle := float(body.get("ankle_point_deg", 25.0))
+	var spread := float(body.get("leg_spread_deg", 4.0))
+	return [
+		["LeftUpLeg", hip, spread], ["RightUpLeg", hip + trail, -spread],
+		["LeftLeg", knee, 0.0], ["RightLeg", knee + trail, 0.0],
+		["LeftFoot", -ankle, 0.0], ["RightFoot", -ankle, 0.0],
+		["Spine", -lean, 0.0],
+	]
 
 
 func _aim_hang_bone(rig: Skeleton3D, bone_name: String, child_name: String, direction: Vector3) -> void:
@@ -741,6 +772,18 @@ static func load_human_swim_visual() -> Dictionary:
 	if stroke.has("swim_pose"):
 		loaded = loaded.duplicate()
 		loaded.merge(stroke.swim_pose, true)
+	# P2-071 (UIPOSES, human_swim_visual.json `uiposes_stroke_candidates`, OFF):
+	# the two unjudged Tidewake swim-pose candidates (half-submerged flatter
+	# body, forward crawl reach), as pose keys only, without enabling the rest
+	# of the Tidewake look profile's unjudged sections.
+	if bool(loaded.get("uiposes_stroke_candidates", false)):
+		var tidewake: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_look.json"))
+		if tidewake is Dictionary:
+			loaded = loaded.duplicate()
+			for section: String in ["swim_candidate", "swim_stroke_candidate"]:
+				var pose: Variant = ((tidewake as Dictionary).get(section, {}) as Dictionary).get("swim_pose", {})
+				if pose is Dictionary:
+					loaded.merge(pose as Dictionary, true)
 	return loaded
 
 

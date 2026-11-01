@@ -80,9 +80,38 @@ const TAIL := """
 """
 
 
+## The whole ground-finish config with `value_lift_candidate` applied: owner
+## priority 1 Nov (batch-1 judges: "crushed near-black uniform carpet; lift
+## values, add grove/clearing variation"). OFF by default; when on, its keys
+## merge one level deep over the file's own (grass, tiers.<name>,
+## terrain_materials.textures.<slot>, ground_zones), so tints rise out of
+## near-black and the authored loam/moss/pool zones switch on.
+static func finish() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var out: Dictionary = parsed if parsed is Dictionary else {}
+	var lift: Variant = out.get("value_lift_candidate", {})
+	if not lift is Dictionary or not bool((lift as Dictionary).get("enabled", false)):
+		return out
+	out = out.duplicate(true)
+	for section: String in (lift as Dictionary):
+		if section == "enabled" or section.begins_with("_") or section == "scope":
+			continue
+		_merge_into(out, section, (lift as Dictionary)[section])
+	return out
+
+
+static func _merge_into(target: Dictionary, key: String, value: Variant) -> void:
+	if value is Dictionary and target.get(key) is Dictionary:
+		var inner: Dictionary = target[key]
+		for k: String in (value as Dictionary):
+			_merge_into(inner, k, (value as Dictionary)[k])
+		return
+	target[key] = value
+
+
 ## `stormwood_ground_finish.json ground_zones`, or {} when it is off.
 static func config() -> Dictionary:
-	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var finish: Dictionary = finish()
 	var zones: Dictionary = finish.get("ground_zones", {})
 	return zones if bool(finish.get("enabled", false)) and bool(zones.get("enabled", false)) else {}
 

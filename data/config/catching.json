@@ -117,7 +117,12 @@
     "_comment": "P2-113 (visual-claude lane, 2026-10-12). The catalogue found the aim frame crowded the trainer between a cropped ally and the target, and that the strike and breakout close-up (resolve_camera: 3.4 m at fov 36, about 1.1 m of half-width at the orb) cropped bodies and was filled by the creature that pops out on a breakout. With this enabled, catch_math.gd::camera_profile merges these overrides onto `aim` and `resolve_camera`. The aim pulls back and widens so the trainer, ally and target separate. The resolve shot stands off so the orb and the full body around it share the frame (6.0 m x tan(22) = 2.4 m half-width). Glide speeds, pitch limits and aim sensitivity are unchanged. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
     "enabled": true,
     "aim": {"distance": 4.9, "height": 2.05, "fov": 58.0, "shoulder_offset": 1.25},
-    "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0}
+    "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0},
+    "r2": {
+      "enabled": false,
+      "_why": "P2-059 (GPU batch 1, 1 Nov: framed_camera 4.96 -> 5.92; judges: still a steep downward crop, asked for an oblique behind-the-trainer framing that keeps trainer, companion and target together). When enabled (with framed_camera), these resolve values merge over the framed ones (catch_math.gd camera_profile): a shallower pitch from further back and a little higher, with a wider lens. Aim unchanged. PRESENTATION ONLY. OFF until GPU judged.",
+      "resolve_camera": {"distance": 7.2, "height": 1.5, "fov": 50.0, "pitch_start_deg": -16.0}
+    }
   },
   "resolve_camera": {
     "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the creature on a breakout and to the trainer when a catch ends the fight.",

@@ -22,10 +22,12 @@
     },
     "glowmoss": {
       "enabled": true,
-      "clear_radius_m": 1.6,
-      "overrides": {"colour": "#3f8a68", "emission": 0.9, "radius_m": 0.95},
+      "replace_model": true,
+      "clear_radius_m": 1.8,
+      "_why_r3": "Batch-1 GPU (5.40 -> 5.34): the glowmoss node still read as a mushroom on a flat mint decal disc. replace_model drops the disc; a squat moss-tinted rock mound carries the fungi.",
       "models": [
-        {"model": "res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb", "count": 5, "ring_m": 0.7, "height_m": [1.3, 2.0], "sink_m": 0.04, "glow_colour": "#5ad8a6", "glow_energy": 1.3, "shadow": false}
+        {"model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "height_m": [1.1, 1.1], "squash_y": 0.55, "sink_m": 0.25, "tint": "#3f6b47", "roughness": 0.95},
+        {"model": "res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb", "count": 4, "ring_m": 0.55, "height_m": [0.9, 1.5], "sink_m": 0.04, "glow_colour": "#5ad8a6", "glow_energy": 1.2, "shadow": false}
       ]
     }
   }

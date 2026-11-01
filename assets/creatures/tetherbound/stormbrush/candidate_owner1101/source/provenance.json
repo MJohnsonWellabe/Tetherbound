@@ -1,0 +1,56 @@
+{
+ "species": "stormbrush",
+ "owner_direction": "1 Nov 2026 creature redesign under the owner's rule (believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Coordinator pick a from two rule-following concepts: Stormbrush, a large badger-porcupine with long dark quills and a black and white face, a believable lean adult creature in its natural stance, mostly realistic fur, feathers or scales, glowing electri",
+ "reference": "ref_a.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected and picked by the coordinator under the owner's delegated rule",
+ "meshy_image_to_3d_task": "01a197f1-edfd-71e2-9dd8-6d3133671854",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_stormbrush (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes-2 (second creature-remake lane)",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (wraps rig_quadruped.join_and_normalise/find_legs, cleanup_mesh.decimate_to; dog3 rig and skin recipe)",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, run unchanged)",
+   "texture re-encode: embedded PNG and oversized JPEG maps re-encoded to JPEG quality 88 at 2048 px (shift_reserved_red._read_glb/_write_glb), the size class of the first lane's models",
+   "tools/art_pipeline/arc_emission.py (emissive map; rule in data/creatures/arc_emission.json)",
+   "tools/art_pipeline/texture_import_policy.py --apply (VRAM compressed, mode 2)"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/stormbrush/candidate_owner1101/source/stormbrush_a.glb rigged.glb assets/creatures/tetherbound/stormbrush/candidate_owner1101/source/prepare-report.json '{\"species\": \"stormbrush\", \"height\": 3.25, \"patch\": false}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101.glb ; (JPEG re-encode of the embedded maps) ; python3 tools/art_pipeline/arc_emission.py stormbrush_owner1101",
+  "report": "assets/creatures/tetherbound/stormbrush/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped (root, pelvis, spine, neck, head, tail_1-2, front/rear upper/lower x2)",
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ],
+   "clips_match_installed": "superset of the installed model's clip roles",
+   "height_m": 3.25,
+   "unweighted_vertices": 0,
+   "vertices": 14000,
+   "triangles": 27998
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.stormbrush_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_stormbrush",
+ "test": "tests/test_creature_model_flags.gd",
+ "cpu_capture": "ralph/reports/LANES/REMAKES2/_sheet_owner1101_f36_cpu.png (capture_f36_poses.gd --whole-body --context, flag ON locally, Low/Compatibility; local import used a 1024 px texture size limit for disk, sidecars ship at full size)"
+}

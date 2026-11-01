@@ -1,0 +1,1097 @@
+{
+  "_comment": "Candidate creature models, OFF by default (scripts/creatures/creature_species.gd _apply_model_flags). An enabled flag merges its per-species placeholder overrides (model, colourway_source_species, animations, ...) over species.json; keys starting with _ are notes. The GPU judges an arm by flipping enabled. Owner-picked remakes 1 Nov 2026: one flag per species so each closes on its own verdict.",
+  "flags": {
+    "remake_owner1101_terrapup": {
+      "_why": "Owner-picked remake 1 Nov 2026: lean rottweiler-like large dog, mossy stone plates on spine and head, jade eyes (Meshy 01a197b4-5a12-7537-a376-2d571177853a). Ground patch stripped, dog3 rig recipe at the established 3.20 m, dog3 clip author (every gameplay role), jade-eye emission. Provenance: assets/creatures/tetherbound/terrapup/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "terrapup": {
+          "model": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101.glb",
+          "colourway_source_species": "terrapup_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_bramblebun": {
+      "_why": "Owner-picked remake 1 Nov 2026: four-legged hare, bark plates, glowing green veins and eyes (Meshy 01a197b7-3167-76f8-9c57-1ea6639fb9fc). No baked ground patch, dog3 rig recipe at the established 3.00 m, dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/bramblebun/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "bramblebun": {
+          "model": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb",
+          "colourway_source_species": "bramblebun_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_trailpup": {
+      "_why": "Owner-picked remake 1 Nov 2026: nearly real coyote, glowing amber paws and eyes (Meshy 01a197b8-0e09-73e5-8c15-f5b00dfeb32b). Ground patch stripped, dog3 rig recipe at the established 3.10 m, dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/trailpup/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "trailpup": {
+          "model": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101.glb",
+          "colourway_source_species": "trailpup_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_brooktail": {
+      "_why": "Owner-picked remake 1 Nov 2026: deep-river otter with glowing aqua spots (pick C) (Meshy 01a197bc-fe55-76c2-8485-fd85b35bd180). Grass tufts and patch stripped, dog3 rig recipe at the installed 2.10 m (creatures_f36_taller_than_trainer x1.4 still applies: 2.94 m in game), dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/brooktail/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "brooktail": {
+          "model": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101.glb",
+          "colourway_source_species": "brooktail_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_pipwing": {
+      "_why": "Owner-picked remake 1 Nov 2026: lean adult owl, white and pale-blue feathers, ear tufts, glowing ice-blue eyes (Meshy 01a197bf-d61a-702c-b8a8-f82dfb3f9d58). No ground patch; rig_bird.py measured bird rig and its six clips with a shell-aware torso measurement (candidate_owner1101/source/prepare_pipwing_owner1101.py), folded wings, at the installed 1.90 m (creatures_f36_taller_than_trainer_2 x1.6 still applies: 3.04 m in game); eye emission. Provenance: assets/creatures/tetherbound/pipwing/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "pipwing": {
+          "model": "res://assets/creatures/tetherbound/pipwing/candidate_owner1101/models/creature_pipwing_owner1101.glb",
+          "colourway_source_species": "pipwing_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint"
+          }
+        }
+      }
+    },
+    "remake_owner1101_galewisp": {
+      "_why": "Remake 1 Nov 2026: Owner pick A: fox-eared feathered bird, cream/sky-blue/gold, glowing wing-edge lines and eyes (Meshy 01a197c1-ad73-75bf-8ec7-8b92bbcffd5e). rig_bird measured bird rig at the installed 3.25 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing wing-edge lines and eyes (sky-blue). Provenance: assets/creatures/tetherbound/galewisp/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "galewisp": {
+          "model": "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101.glb",
+          "colourway_source_species": "galewisp_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "fly_grip": "fly_grip",
+            "rest": "rest",
+            "swim": "swim",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_mirejaw": {
+      "_why": "Remake 1 Nov 2026: Owner pick B: long low axolotl-like swamp predator, glowing aqua spots, amber gill frills (Meshy 01a197c3-ce85-73b9-b972-626d6c3ad871). dog3 quadruped rig at the installed 2.8 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua spots and eyes. Provenance: assets/creatures/tetherbound/mirejaw/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "mirejaw": {
+          "model": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101.glb",
+          "colourway_source_species": "mirejaw_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_mudsnout": {
+      "_why": "Remake 1 Nov 2026: Owner pick A: young wild boar, glowing green root lines, green eyes (Meshy 01a197c2-74b0-76de-b727-b805bc577662). dog3 quadruped rig at the installed 2.0 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing green root lines and green eyes. Provenance: assets/creatures/tetherbound/mudsnout/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "mudsnout": {
+          "model": "res://assets/creatures/tetherbound/mudsnout/candidate_owner1101/models/creature_mudsnout_owner1101.glb",
+          "colourway_source_species": "mudsnout_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_burrowback": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Burrowback, a stocky badger with a black and white striped face and grey-brown coat, a believable lean adul (Meshy 01a197e3-66ee-7478-8ce3-ceaca4485602). dog3 quadruped rig at the installed 2.95 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing amber eyes. Provenance: assets/creatures/tetherbound/burrowback/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "burrowback": {
+          "model": "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101.glb",
+          "colourway_source_species": "burrowback_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_breezetail": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Breezetail, a lean fennec fox with very large ears and a long bushy tail, pale sand and sky-blue fur, a bel (Meshy 01a197e2-ab80-74cf-b782-9ff758b623c9). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: ice-blue accents and eyes. Provenance: assets/creatures/tetherbound/breezetail/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "breezetail": {
+          "model": "res://assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101.glb",
+          "colourway_source_species": "breezetail_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_ashtusk": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Ashtusk, a heavy armoured wild boar with big tusks, dark brown bristly coat, a believable lean adult creatu (Meshy 01a197e1-7a29-767d-b42c-ff85425fc55a). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ember eyes and ember cracks. Provenance: assets/creatures/tetherbound/ashtusk/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "ashtusk": {
+          "model": "res://assets/creatures/tetherbound/ashtusk/candidate_owner1101/models/creature_ashtusk_owner1101.glb",
+          "colourway_source_species": "ashtusk_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "swim": "swim",
+            "ride": "ride",
+            "fly_grip": "fly_grip",
+            "charged": "charged",
+            "rest": "rest"
+          }
+        }
+      }
+    },
+    "remake_owner1101_cannonback": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Cannonback, a large sea turtle whose shell carries cannon-like rock barrels, blue-grey shell with sandy pla (Meshy 01a197e3-72aa-7526-8369-8a20a1b61438). dog3 quadruped rig at the installed 3.7 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: aqua accents and eyes. Provenance: assets/creatures/tetherbound/cannonback/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "cannonback": {
+          "model": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101.glb",
+          "colourway_source_species": "cannonback_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_fulgocobra": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Fulgocobra, a giant king cobra legendary with a wide hood, black scales with gold bands, a believable lean  (Meshy 01a197e7-b67e-718f-af53-61e89f57edb9). rig_serpent column chain at the installed 5.2 m, clips idle, walk, run, attack, hit, faint; emission: glowing electric-blue eyes and hood lines. Provenance: assets/creatures/tetherbound/fulgocobra/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "fulgocobra": {
+          "model": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101.glb",
+          "colourway_source_species": "fulgocobra_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint"
+          }
+        }
+      }
+    },
+    "remake_owner1101_cloudfang": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick b from two rule-following concepts: Cloudfang, a large white wolf whose fur is layered like soft feathers, white with pale blue tips, a believa (Meshy 01a197e5-30ad-734e-943a-34ddeaac8642). dog3 quadruped rig at the installed 3.85 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: ice-blue eyes and accents. Provenance: assets/creatures/tetherbound/cloudfang/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "cloudfang": {
+          "model": "res://assets/creatures/tetherbound/cloudfang/candidate_owner1101/models/creature_cloudfang_owner1101.glb",
+          "colourway_source_species": "cloudfang_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_craghorn": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Craghorn, a mountain goat-ram with long curving horns, shaggy cream-white coat, a believable lean adult cre (Meshy 01a197e5-82ba-7355-a7b2-f34d4cb1c2e4). dog3 quadruped rig at the installed 3.5 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing amber eyes. Provenance: assets/creatures/tetherbound/craghorn/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "craghorn": {
+          "model": "res://assets/creatures/tetherbound/craghorn/candidate_owner1101/models/creature_craghorn_owner1101.glb",
+          "colourway_source_species": "craghorn_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_aquaryn": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Aquaryn, a sleek serpentine water dragon with fin-like frills, deep blue with gold fin edges, a believable  (Meshy 01a197e1-6e77-76e6-998e-58443e8cbabd). rig_serpent column chain at the installed 3.4 m, clips idle, walk, run, attack, hit, faint; emission: glowing aqua fin edges and eyes. Provenance: assets/creatures/tetherbound/aquaryn/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "aquaryn": {
+          "model": "res://assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101.glb",
+          "colourway_source_species": "aquaryn_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint"
+          }
+        }
+      }
+    },
+    "remake_owner1101_frostclaw": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Frostclaw, a snow leopard with pale grey spotted fur, a believable lean adult creature in its natural stanc (Meshy 01a197e7-6f6c-70d0-8c02-c5ed5c3de22a). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ice-blue eyes and thin frost-blue veins. Provenance: assets/creatures/tetherbound/frostclaw/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "frostclaw": {
+          "model": "res://assets/creatures/tetherbound/frostclaw/candidate_owner1101/models/creature_frostclaw_owner1101.glb",
+          "colourway_source_species": "frostclaw_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_cragclaw": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cragclaw, a large hermit-crab creature with a mossy stone shell, sand and slate coloured claws, a believabl (Meshy 01a197e5-7717-7455-a7ea-e42eaacc55bc). dog3 quadruped rig at the installed 2.95 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing blue lines on the claws and shell. Provenance: assets/creatures/tetherbound/cragclaw/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "cragclaw": {
+          "model": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101.glb",
+          "colourway_source_species": "cragclaw_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_cindercub": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cindercub, a young wolf-like canine with dark charcoal fur and ember-orange markings, a believable lean adu (Meshy 01a197e3-7e7d-7342-8a32-1b9ef10b7273). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: ember eyes and the brightest ember lines. Provenance: assets/creatures/tetherbound/cindercub/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "cindercub": {
+          "model": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101.glb",
+          "colourway_source_species": "cindercub_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_cliffspike": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cliffspike, a large porcupine-hedgehog creature with long pale quills, sandy grey, a believable lean adult  (Meshy 01a197e4-74b2-74b3-8afc-875b54b6ad0f). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: sky-blue eyes. Provenance: assets/creatures/tetherbound/cliffspike/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "cliffspike": {
+          "model": "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101.glb",
+          "colourway_source_species": "cliffspike_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_duskhush": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Duskhush, a large grey-brown owl with ear tufts and dusky barred feathers, a believable lean adult creature (Meshy 01a197e6-ee6c-7729-9cf2-fc6627a32647). rig_bird measured bird rig at the installed 2.3 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing violet eyes. Provenance: assets/creatures/tetherbound/duskhush/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "duskhush": {
+          "model": "res://assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101.glb",
+          "colourway_source_species": "duskhush_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "fly_grip": "fly_grip",
+            "rest": "rest",
+            "swim": "swim",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_glimmermoth": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Glimmermoth, a large moth creature with broad blue and violet patterned wings and a fluffy cream body, a be (Meshy 01a197e7-c144-7700-b497-23a77911c83f). dog3 quadruped rig at the installed 3.1 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ice-blue eyes. Provenance: assets/creatures/tetherbound/glimmermoth/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "glimmermoth": {
+          "model": "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101.glb",
+          "colourway_source_species": "glimmermoth_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_mangrove_monitor": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mangrove Monitor, a big monitor lizard with green and olive scales, a believable lean adult creature in its (Meshy 01a197e8-b7ad-72ae-b6e7-27cabf69cdbb). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua eyes and thin aqua lines. Provenance: assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "mangrove_monitor": {
+          "model": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101.glb",
+          "colourway_source_species": "mangrove_monitor_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_aeriex": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Aeriex, a large elegant long-necked crane-like sky bird with long sweeping tail plumes, sky-blue and soft o (Meshy 01a197e1-62de-74bb-9370-885c467b9b6f). rig_bird measured bird rig at the installed 4.0 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing sky-blue eyes. Provenance: assets/creatures/tetherbound/aeriex/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "aeriex": {
+          "model": "res://assets/creatures/tetherbound/aeriex/candidate_owner1101/models/creature_aeriex_owner1101.glb",
+          "colourway_source_species": "aeriex_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_meadowhart": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Meadowhart, a young deer with small antlers and a warm brown coat with cream belly, a believable lean adult (Meshy 01a197e9-39aa-7115-b628-0552e820bc04). dog3 quadruped rig at the installed 3.45 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing amber eyes. Provenance: assets/creatures/tetherbound/meadowhart/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "meadowhart": {
+          "model": "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101.glb",
+          "colourway_source_species": "meadowhart_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_mosshock": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mosshock, a big toad with spiny back ridges, mossy green and yellow skin, a believable lean adult creature  (Meshy 01a197e9-f4b0-7398-9fd5-3147497e0f55). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing electric-blue eyes. Provenance: assets/creatures/tetherbound/mosshock/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "mosshock": {
+          "model": "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101.glb",
+          "colourway_source_species": "mosshock_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_paddlenewt": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Paddlenewt, a big newt with a paddle tail and frilled cheeks, teal skin with cream belly, a believable lean (Meshy 01a197ea-004c-7252-aa57-ef9ac793ae83). dog3 quadruped rig at the installed 2.15 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua accents and eyes. Provenance: assets/creatures/tetherbound/paddlenewt/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "paddlenewt": {
+          "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101.glb",
+          "colourway_source_species": "paddlenewt_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_abyssal_guardian": {
+      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Abyssal Guardian, a colossal long-necked plesiosaur-like sea guardian with four large flippers, deep blue a (Meshy 01a197e1-57f8-726e-8c91-db106f77a9e6). dog3 quadruped rig at the installed 7.2 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing blue eyes and accents. Provenance: assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "abyssal_guardian": {
+          "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101.glb",
+          "colourway_source_species": "abyssal_guardian_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint",
+            "charged": "charged",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_pebbik": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Pebbik, a small sturdy desert fox-like creature with big ears, sandy fur (Meshy 01a197ea-bc18-71e5-9ce1-9a9018362f13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the thin green-gold lines and amber eyes. Provenance: assets/creatures/tetherbound/pebbik/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "pebbik": {
+          "model": "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101.glb",
+          "colourway_source_species": "pebbik_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_reedwing": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Reedwing, a large teal-headed duck-like waterbird with cream breast and teal wings (Meshy 01a197eb-77a3-77db-bf12-e82900d4a52c). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips, folded wings at the established 2.65 m; emission on the aqua eyes and thin aqua lines on the teal head and wings. Provenance: assets/creatures/tetherbound/reedwing/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "reedwing": {
+          "model": "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101.glb",
+          "colourway_source_species": "reedwing_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint"
+          }
+        }
+      }
+    },
+    "remake_owner1101_ribbonray": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Ribbonray, a large flying manta ray with long ribbon tail, lilac and pink-violet skin (Meshy 01a197eb-8359-76c8-9c5e-1e58ef8cf73e). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips (it stands on two legs; the ray wings rig as spread wings) at the established 3.7 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/ribbonray/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "ribbonray": {
+          "model": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101.glb",
+          "colourway_source_species": "ribbonray_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint"
+          }
+        }
+      }
+    },
+    "remake_owner1101_ripplet": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Ripplet, a water starter creature: a lean otter-like creature with fin-shaped ears, sky-teal fur and cream belly (Meshy 01a197ec-b437-740d-9194-1dae04f16d5c). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.6 m; emission on the bright aqua markings and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/ripplet/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "ripplet": {
+          "model": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101.glb",
+          "colourway_source_species": "ripplet_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_riptusk": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riptusk, a large walrus-like armoured sea beast with long tusks, blue-grey hide with sandy plates (Meshy 01a197ed-364b-733d-8048-2e07c93b064f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the thin aqua lines on the hide and eyes. Provenance: assets/creatures/tetherbound/riptusk/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "riptusk": {
+          "model": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101.glb",
+          "colourway_source_species": "riptusk_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_riverdrake": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riverdrake, a lean river drake lizard with a crest along its head and spine, blue scales and amber crest (Meshy 01a197ed-424e-7645-aabb-b223008f0477). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.0 m; emission on the thin aqua lines between the blue scales and eyes. Provenance: assets/creatures/tetherbound/riverdrake/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "riverdrake": {
+          "model": "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101.glb",
+          "colourway_source_species": "riverdrake_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_shadelet": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Shadelet, a lean dark lizard-drake with dusky navy-black scales and small spines (Meshy 01a197ee-4c70-725d-9d60-6eca27aa6f86). Baked grass disc stripped (fragmented-shell mode, low_islands). dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 2.8 m; emission on the violet eyes. Provenance: assets/creatures/tetherbound/shadelet/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "shadelet": {
+          "model": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101.glb",
+          "colourway_source_species": "shadelet_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_sirenseal": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sirenseal, a large seal with long fin-like frills on its head and neck, pale grey-blue with darker blue spots (Meshy 01a197ee-4383-70ad-9243-f2f8c3e6feff). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua frill lines and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/sirenseal/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "sirenseal": {
+          "model": "res://assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101.glb",
+          "colourway_source_species": "sirenseal_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_skyrill": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Skyrill, a flying-squirrel glider with wide gliding membranes, sandy brown fur (Meshy 01a197ee-c4be-77b8-b29c-e2f42ec62ab5). No baked ground patch. rig_glider.py biped-glider rig (15 bones) and animate_quadruped.py glider clips (six) at the established 3.25 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/skyrill/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "skyrill": {
+          "model": "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101.glb",
+          "colourway_source_species": "skyrill_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint"
+          }
+        }
+      }
+    },
+    "remake_owner1101_solmane": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Solmane, a legendary winged lion with a great mane, warm gold and cream coat with feathered wings (Meshy 01a197ef-0b4c-7024-a8e4-e3f9cda621ae). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 6.7 m; no glow pixel found in the albedo for the reference's pale-blue eyes and wisps; no emission added. Provenance: assets/creatures/tetherbound/solmane/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "solmane": {
+          "model": "res://assets/creatures/tetherbound/solmane/candidate_owner1101/models/creature_solmane_owner1101.glb",
+          "colourway_source_species": "solmane_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_sparkit": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sparkit, a lean fennec fox with huge ears, yellow and black fur with a zig-zag tail (Meshy 01a197ef-c6ca-707e-a25f-84f3434e6678). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 1.95 m; emission on the electric-blue eyes and blue-white lightning on the legs (storm creature). Provenance: assets/creatures/tetherbound/sparkit/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "sparkit": {
+          "model": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101.glb",
+          "colourway_source_species": "sparkit_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_staticub": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Staticub, a young brown bear cub, the cub of the storm bear, warm brown fur (Meshy 01a197f0-825a-7574-825c-18eae9afbb13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/staticub/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "staticub": {
+          "model": "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101.glb",
+          "colourway_source_species": "staticub_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_stormbrush": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Stormbrush, a large badger-porcupine with long dark quills and a black and white face (Meshy 01a197f1-edfd-71e2-9dd8-6d3133671854). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the blue-white lightning lines in the quills and eyes (storm creature). Provenance: assets/creatures/tetherbound/stormbrush/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "stormbrush": {
+          "model": "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101.glb",
+          "colourway_source_species": "stormbrush_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_stormraven": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Stormraven, a large dark blue-black raven (Meshy 01a197f2-6f21-7387-aa40-010c6cabd694). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips with the Pipwing shell-aware torso measurement (candidate_owner1101/source/prepare_stormraven_owner1101.py), folded wings at the established 3.4 m; emission on the blue-white lightning veins and eyes (storm creature). Provenance: assets/creatures/tetherbound/stormraven/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "stormraven": {
+          "model": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101.glb",
+          "colourway_source_species": "stormraven_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "hit": "hit",
+            "faint": "faint"
+          }
+        }
+      }
+    },
+    "remake_owner1101_tempestwing": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tempestwing, a large dragonfly creature with long translucent wings, pale gold and grey body (Meshy 01a197f3-2ad5-763e-85f5-a210bf02e8cf). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.15 m; emission on the cyan eyes and wisp lines. Provenance: assets/creatures/tetherbound/tempestwing/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "tempestwing": {
+          "model": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101.glb",
+          "colourway_source_species": "tempestwing_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_thundertunnel": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Thundertunnel, a large mole with big digging claws and dark brown velvet fur (Meshy 01a197f3-38d1-72d6-9286-2f389cf6305a). Baked plinth stripped. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 2.8 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/thundertunnel/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "thundertunnel": {
+          "model": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101.glb",
+          "colourway_source_species": "thundertunnel_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_tidecoil": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tidecoil, a great sea serpent with frilled fins, teal-blue scales and pale violet fin frills (Meshy 01a197f4-a320-77c9-9475-98800042782b). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 5.5 m; emission on the aqua specks and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/tidecoil/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "tidecoil": {
+          "model": "res://assets/creatures/tetherbound/tidecoil/candidate_owner1101/models/creature_tidecoil_owner1101.glb",
+          "colourway_source_species": "tidecoil_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_torrentoad": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Torrentoad, a large powerful toad with long jumping legs, olive-green and teal skin (Meshy 01a197f4-adb9-70a9-9a79-98ac4e375ade). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua lines and eyes. Provenance: assets/creatures/tetherbound/torrentoad/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "torrentoad": {
+          "model": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101.glb",
+          "colourway_source_species": "torrentoad_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_tuskroot": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tuskroot, a big grown wild boar with heavy tusks, brown bristly coat, the adult form of a young root boar (Meshy 01a197f5-2f19-7013-a06a-67e1f70089e6). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.6 m; no glow painted in the albedo (the reference has natural amber eyes); no emission added. Provenance: assets/creatures/tetherbound/tuskroot/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "tuskroot": {
+          "model": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101.glb",
+          "colourway_source_species": "tuskroot_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_voltarach": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Voltarach, a large spider creature with long armoured legs, black and gold carapace (Meshy 01a197f5-3ad0-777d-865a-baedfe11982f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the electric-blue sparks and eyes (storm creature). Provenance: assets/creatures/tetherbound/voltarach/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "voltarach": {
+          "model": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101.glb",
+          "colourway_source_species": "voltarach_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    },
+    "remake_owner1101_voltwig": {
+      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Voltwig, a lean chameleon-like lizard with twig-like spines, leaf-green and yellow skin (Meshy 01a197f7-1be6-707e-827a-286aeca1ac50). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue eyes and spark points (storm creature). Provenance: assets/creatures/tetherbound/voltwig/candidate_owner1101/source/provenance.json.",
+      "enabled": false,
+      "species": {
+        "voltwig": {
+          "model": "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101.glb",
+          "colourway_source_species": "voltwig_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        }
+      }
+    }
+  }
+}

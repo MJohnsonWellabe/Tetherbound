@@ -672,10 +672,14 @@ func _process(delta: float) -> void:
 	_update_subject_fade(delta)
 	if _catch_focus_left > 0.0:
 		# P2-061: the caught result owns the screen until its card expires.
-		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
-			panel.visible = false
-		if is_instance_valid(_system_overlay): _system_overlay.hide()
-		if _strip_fader != null: _strip_fader.visible = false
+		_step_back_for_catch_focus()
+
+
+func _step_back_for_catch_focus() -> void:
+	for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
+		if panel != null: panel.visible = false
+	if is_instance_valid(_system_overlay): _system_overlay.hide()
+	if _strip_fader != null: _strip_fader.visible = false
 
 
 func _layout_system_hints() -> void:
@@ -1220,6 +1224,12 @@ func _draw_grid() -> void:
 		# bottom-centre, clear of the grid; both show.
 		_aim_row.visible = true
 		_aim_row.text = "[center]%s[/center]" % _miss_text
+		# P2-059 (GPU batch 1): the message and the "Aim · N orbs" prompt share
+		# the bottom-centre strip and drew over each other. hud.json
+		# `message_clears_prompt` (OFF by default) hides the prompt while a
+		# message holds the strip; it returns with the next plain frame.
+		if _message_clears_prompt():
+			_orbs_panel.visible = false
 		_grid_panel.visible = true
 		_draw_cells(orbs)
 		return
@@ -1960,6 +1970,17 @@ func _raise_message_rows() -> void:
 		row.offset_bottom = top + 56.0
 
 
+var _message_clears_prompt_cfg: Variant = null
+
+
+func _message_clears_prompt() -> bool:
+	if _message_clears_prompt_cfg == null:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+		var cfg: Variant = parsed.get("message_clears_prompt", {}) if parsed is Dictionary else {}
+		_message_clears_prompt_cfg = cfg is Dictionary and bool((cfg as Dictionary).get("enabled", false))
+	return bool(_message_clears_prompt_cfg)
+
+
 func _catch_card_config() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
 	var cfg: Variant = parsed.get("catch_card", {}) if parsed is Dictionary else {}
@@ -2014,6 +2035,9 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	if success:
 		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
 		_catch_focus_left = _outcome_left
+		# The verdict frame itself must already be clear: waiting for the next
+		# _process left the cards and action bar up on the card's first frame.
+		_step_back_for_catch_focus()
 	else:
 		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
 

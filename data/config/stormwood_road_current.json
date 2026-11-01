@@ -1,6 +1,19 @@
 {
   "_comment": "Owner direction on WO-F09-04: \"Can you make the path and roads electrified with yellow electricity flowing through them somehow in the ground.\" Every Stormwood road (not the pocket spurs; see excluded_kinds) carries yellow-gold current in its painted dirt lane: broken glowing veins like charge in cracks of the dirt, with pulses travelling along them toward the Dynamo. Built by scripts/world/stormwood_road_current.gd as terrain-conforming ribbon chunks (client presentation only; no colliders; no per-frame script) drawn by shaders/stormwood_road_current.gdshader, additive and unshaded. Kept apart from stormwood_road_surface.json so tuning the look never stales the terrain bake. Yellow/gold only: magenta #ff40e6 is the lightning strike telegraph and oxblood/red is reserved for Team Tether.",
   "schema_version": 1,
+  "puddle_candidate": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "P2-040 (GPU 5.63; judges: the charge reads as a gold decal on a flat brown path with no edge wear, puddles or wet glints). When enabled, stormwood_road_current.gd _build_puddles scatters soft-edged dark glossy puddles along every road (about one per spacing_m, offset across the lane, skipped where the ground under one is not level), so the rain-soaked road catches the sky and the gold current shows through. One MultiMesh per route; no collider; no bake input. Owner yellow current unchanged. CPU r1 at lift 0.04 m showed nothing (buried under the coarser terrain mesh, like the ribbons before their 0.14 m lift); 0.13 m and a 0.25 m level check. OFF until GPU judged.",
+    "spacing_m": 9.0,
+    "radius_m": [0.7, 1.5],
+    "max_relief_m": 0.25,
+    "colour": "#161922",
+    "roughness": 0.06,
+    "specular": 0.9,
+    "alpha": 0.88,
+    "lift_m": 0.13
+  },
   "finish_candidate": {
     "enabled": true,
     "scope": "client_presentation",

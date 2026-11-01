@@ -16,6 +16,9 @@ func _load() -> Dictionary:
 	# close-1024 GPU asks (OFF until the GPU lane judges it): `_forward_plus`
 	# keys that only Forward+/Mobile read, for the night shadow and noon seam.
 	loaded = TIDEWAKE_PROFILE.overlay(loaded, "forward_plus_candidate")
+	# tb/vis-water-sky group 2 (OFF until GPU-judged): warm key, rim, aerial
+	# fog and night fill (`watersky_light_candidate`).
+	loaded = watersky_light(loaded, TIDEWAKE_PROFILE.settings())
 	# Night creature emission floor (white-ghost creatures, F39#0 GPU pass):
 	# its own section so it can stay OFF until a night round judges it.
 	var floor_cfg: Dictionary = TIDEWAKE_PROFILE.overlay({}, "night_creature_floor")
@@ -25,6 +28,15 @@ func _load() -> Dictionary:
 		env["creature_emission_floor"] = float(floor_cfg.creature_emission_floor)
 		night["environment"] = env
 	return loaded
+
+
+## `watersky_light_candidate.look` merged over the loaded look when enabled
+## (or previewed with --watersky-light-candidate). Off: `loaded` unchanged.
+static func watersky_light(loaded: Dictionary, profile: Dictionary) -> Dictionary:
+	var candidate: Dictionary = profile.get("watersky_light_candidate", {})
+	if not bool(candidate.get("enabled", false)) and not OS.get_cmdline_user_args().has("--watersky-light-candidate"):
+		return loaded
+	return TIDEWAKE_PROFILE.merge(loaded, candidate.get("look", {}))
 
 
 ## close-1024 `rain_fog_candidate` (OFF in play): Tidewake's sightlines run to

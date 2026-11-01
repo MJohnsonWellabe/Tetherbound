@@ -129,15 +129,17 @@ func _run() -> void:
 	root.add_child(_world)
 	for i in SETTLE_FRAMES:
 		await physics_frame
-	if _biome in ["tidewake", "stormwood", "cloudreach"]:
+	if _world.has_method("shell_build_complete"):
 		# Wait on the world's own ready flag with a time cap, not a frame
 		# count: GPU shells take minutes (Meadows ~140 s at High), far past
-		# any fixed frame budget (capture-speed lane, 1 Nov 2026).
+		# any fixed frame budget (capture-speed lane, 1 Nov 2026). Every
+		# biome waits: Forward+ cheap build frames skip the 3D pass until
+		# the build completes, so an early Meadows catch shot was HUD only.
 		var shell_deadline_ms := Time.get_ticks_msec() + 900000
 		while not bool(_world.call("shell_build_complete")) and Time.get_ticks_msec() < shell_deadline_ms:
 			await physics_frame
 		if not bool(_world.call("shell_build_complete")):
-			_failures.append("Tidewake shell did not build")
+			_failures.append("%s shell did not build" % _biome)
 			_finish()
 			return
 	_log("settled")

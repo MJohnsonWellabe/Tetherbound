@@ -829,6 +829,57 @@ func _follow(delta: float) -> void:
 	spring_length = move_toward(spring_length, _distance, _recover_speed * delta)
 	# A render-mesh limit clamps at once, like the arm's own collision does.
 	spring_length = minf(spring_length, _body_limit)
+	_fade_occluders(delta, [_target])
+
+
+## camera.json `occlusion_fade` (OFF by default; scripts/player/
+## camera_occlusion.gd). Rendered geometry between the pivot and the lens
+## (canopies, visual-only walls, props) is faded rather than the arm being
+## shortened: the arm length and stand are the game's own, and a mesh in the
+## way goes `fade_transparency` see-through, a scatter instance (a tree) is
+## hidden, until it no longer blocks. Re-measured `rate_hz` times a second.
+const OCCLUSION := preload("res://scripts/player/camera_occlusion.gd")
+var _occlusion_wait := 0.0
+var _faded: Dictionary = {}
+
+
+func _fade_occluders(delta: float, ignore: Array) -> void:
+	if not OCCLUSION.enabled() or not is_inside_tree():
+		return
+	_occlusion_wait -= delta
+	if _occlusion_wait > 0.0:
+		return
+	var cfg := OCCLUSION.config()
+	_occlusion_wait = 1.0 / maxf(float(cfg.get("rate_hz", 8.0)), 1.0)
+	var lens := global_position + global_transform.basis.z.normalized() \
+		* (spring_length + float(cfg.get("lens_margin_m", 0.35)))
+	var from := global_position
+	if _target != null and is_instance_valid(_target) and _target is Node3D:
+		from = (_target as Node3D).global_position + Vector3.UP * float(cfg.get("subject_height_m", 1.3))
+	var now := {}
+	for hit: Dictionary in OCCLUSION.occluders(get_world_3d(), from, lens, ignore):
+		var node: GeometryInstance3D = hit["node"]
+		var key := "%d:%d" % [node.get_instance_id(), int(hit["index"])]
+		now[key] = hit
+		if _faded.has(key):
+			continue
+		if int(hit["index"]) < 0:
+			_faded[key] = {"node": node, "index": -1, "was": node.transparency}
+			node.transparency = maxf(node.transparency, float(cfg.get("fade_transparency", 0.8)))
+		else:
+			_faded[key] = {"node": node, "index": int(hit["index"])}
+			OCCLUSION.hide_instance(node as MultiMeshInstance3D, int(hit["index"]))
+	for key: String in _faded.keys():
+		if now.has(key):
+			continue
+		var entry: Dictionary = _faded[key]
+		var node: Variant = entry["node"]
+		if is_instance_valid(node):
+			if int(entry["index"]) < 0:
+				(node as GeometryInstance3D).transparency = float(entry["was"])
+			else:
+				OCCLUSION.show_instance(node as MultiMeshInstance3D, int(entry["index"]))
+		_faded.erase(key)
 
 
 ## F10#2 C3: cap the arm short of a body's render mesh (INF clears it).
@@ -982,6 +1033,7 @@ func _conversation_follow(delta: float) -> void:
 	pitch = lerpf(_talk_saved_pitch, shot_pitch, weight)
 	rotation = Vector3(pitch, yaw, 0.0)
 	spring_length = lerpf(_talk_saved_distance, shot_distance, weight)
+	_fade_occluders(delta, [_target, _talk_speaker])
 	if _camera != null:
 		_camera.fov = lerpf(_talk_saved_fov, shot_fov, weight)
 

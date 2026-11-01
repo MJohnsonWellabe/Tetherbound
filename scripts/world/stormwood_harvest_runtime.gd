@@ -404,6 +404,24 @@ static func _hero_models(node: Node3D, root: Node3D, hero: Dictionary, ground_he
 				break
 			var t := float((index * 7 + seed_value) % 11) / 10.0
 			HERO_PROP.fit_height(model, lerpf(float(heights[0]), float(heights[1]), t), float(entry.get("sink_m", 0.05)))
+			# P2-046 round 3 (stormwood_harvest_hero2.json): `squash_y` flattens
+			# a rock into a mound and `tint` recolours it (a moss mound in
+			# place of the glowmoss decal disc). Absent keys change nothing.
+			if entry.has("squash_y"):
+				model.scale.y *= float(entry.squash_y)
+				model.position.y *= float(entry.squash_y)
+			if entry.has("tint"):
+				var tint := Color(str(entry.tint))
+				for mesh_node: Node in model.find_children("*", "MeshInstance3D", true, false):
+					var visual := mesh_node as MeshInstance3D
+					for surface in visual.mesh.get_surface_count():
+						var source := visual.get_active_material(surface) as StandardMaterial3D
+						var tinted := source.duplicate() as StandardMaterial3D if source != null else StandardMaterial3D.new()
+						tinted.albedo_color = tint
+						tinted.roughness = float(entry.get("roughness", 0.95))
+						visual.set_surface_override_material(surface, tinted)
+				for body: Node in model.find_children("*", "CollisionObject3D", true, false):
+					body.queue_free()
 			if entry.has("glow_colour"):
 				HERO_PROP.glow(model, Color(str(entry.glow_colour)), float(entry.get("glow_energy", 1.0)))
 			var seat := Node3D.new()

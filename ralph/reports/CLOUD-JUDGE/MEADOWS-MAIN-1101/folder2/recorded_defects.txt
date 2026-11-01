@@ -1,0 +1,10 @@
+Cc: "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp"
+Tw: "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view"
+Fg: none
+Qb: none
+Sb: "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world"
+Od: none
+He: "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+Qh: "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename"
+Ay: "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish"
+Fb: "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item"

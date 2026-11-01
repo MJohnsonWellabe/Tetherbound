@@ -56,6 +56,7 @@ const TRAINER_CLEARANCE := 0.4
 var _biome_id := ""
 var _output_dir := ""
 var _subsets: Array[String] = []
+var _extra_spots: Array[Dictionary] = []
 var _times: Array[String] = []
 var _views: Array[String] = []
 var _character_id := "trainer"
@@ -136,6 +137,15 @@ func _parse_args() -> bool:
 			_character_id = arg.trim_prefix("--character=").strip_edges().to_lower()
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg.begins_with("--spot="):
+			# Ad-hoc stand: --spot=<id>@<x>,<z>@<heading_deg> (repeatable).
+			var parts := arg.trim_prefix("--spot=").split("@")
+			var xz := parts[1].split(",") if parts.size() == 3 else PackedStringArray()
+			if xz.size() != 2:
+				push_error("phase2 locations: --spot expects id@x,z@heading_deg")
+				return false
+			_extra_spots.append({"id": _slug(parts[0]), "x": float(xz[0]), "z": float(xz[1]),
+				"heading": float(parts[2])})
 	if not SCENES.has(_biome_id):
 		push_error("catalogue survey: --biome must be meadows, cloudreach, stormwood, or water")
 		return false
@@ -263,6 +273,21 @@ func _load_plan() -> bool:
 					"band_display_name": "", "destination_index": destination_index,
 					"spot_index_in_band": 0, "destination_display_name": display_name,
 					"position_xz": [x, z], "view_heading_deg": null,
+					"time": time_name, "view": view_name, "identity": identity})
+	for spot: Dictionary in _extra_spots:
+		destination_index += 1
+		var identity := "%s__spot__%s" % [_biome_id, str(spot.id)]
+		_all_destinations.append({"destination_index": destination_index, "identity": identity,
+			"position_xz": [spot.x, spot.z], "view_heading_deg": spot.heading})
+		for time_name: String in _times:
+			for view_name: String in _views:
+				var frame_id := "%s__%s__%s" % [identity, time_name, view_name]
+				frame_ids[frame_id] = true
+				_planned.append({"frame_id": frame_id, "biome_id": _biome_id,
+					"biome_display_name": str(selected_biome.get("display_name", _biome_id)),
+					"band_id": "spot", "band_display_name": "", "destination_index": destination_index,
+					"spot_index_in_band": 0, "destination_display_name": str(spot.id),
+					"position_xz": [spot.x, spot.z], "view_heading_deg": spot.heading,
 					"time": time_name, "view": view_name, "identity": identity})
 	if _planned.is_empty():
 		push_error("catalogue survey: selection yielded no frames")

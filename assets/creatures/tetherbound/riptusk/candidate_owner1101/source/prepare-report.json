@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 6818,
+    "spine": 9216,
+    "neck": 3673,
+    "head": 5486,
+    "front_upper_l": 809,
+    "front_lower_l": 1073,
+    "front_upper_r": 925,
+    "front_lower_r": 1126,
+    "tail_1": 3,
+    "tail_2": 0,
+    "rear_upper_l": 477,
+    "rear_lower_l": 616,
+    "rear_upper_r": 491,
+    "rear_lower_r": 828
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13990,
+  "height_m": 4.25,
+  "length_m": 6.6499,
+  "width_m": 4.1744,
+  "triangles": 27997,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2783,
+      -0.3001,
+      0.1024
+    ],
+    "front_r": [
+      0.2723,
+      -0.2696,
+      0.0999
+    ],
+    "rear_l": [
+      -0.1471,
+      0.2621,
+      0.1034
+    ],
+    "rear_r": [
+      0.1587,
+      0.3064,
+      0.1015
+    ]
+  },
+  "back_top_normalised": 0.7159,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "riptusk",
+    "height": 4.25,
+    "patch": false
+  }
+}

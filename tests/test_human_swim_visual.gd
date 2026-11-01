@@ -178,3 +178,10 @@ func test_disabling_candidate_while_swimming_restores_visuals_immediately() -> v
 	assert_false(bool(model.get("_human_swim_active")))
 	assert_eq(int(player.get_node("SwimController").snapshot().mode), SWIM.Mode.HUMAN)
 	player.free()
+
+
+func test_uiposes_stroke_candidates_ship_off_and_layer_the_tidewake_pose() -> void:
+	var loaded := preload("res://scripts/player/trainer_model.gd").load_human_swim_visual()
+	assert_false(bool(loaded.get("uiposes_stroke_candidates", true)), "uiposes_stroke_candidates defaults OFF")
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_look.json"))
+	assert_true(raw.swim_stroke_candidate.swim_pose.has("body_pitch_deg"), "the stroke candidate still authors a body pitch")

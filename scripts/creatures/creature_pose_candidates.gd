@@ -7,6 +7,7 @@ extends RefCounted
 const PATH := "res://data/creatures/f36_pose_candidates.json"
 const LIBRARY := &"f36_candidate"
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const ROSTER_R1 := preload("res://scripts/creatures/roster_pose_r1.gd")
 static var _data: Dictionary = {}
 static var _hashes: Dictionary = {}
 static var _contact_heights: Dictionary = {}
@@ -143,18 +144,34 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	# flipping `enabled` alone. An enabled flag replaces whole roles for the
 	# presentations it names, after the presentation overrides above.
 	var flagged: Array[String] = []
-	var flags: Dictionary = _data.get("candidate_role_flags", {})
+	var flags: Dictionary = (_data.get("candidate_role_flags", {}) as Dictionary).duplicate()
+	# Lane-owned flags live on their own key so parallel lanes merge cleanly.
+	flags.merge(_data.get("lane_role_flags", {}) as Dictionary)
 	for flag: String in flags:
 		var entry: Variant = flags[flag]
 		if not entry is Dictionary or not bool(entry.get("enabled", false)):
 			continue
 		var flag_roles: Dictionary = entry.get("presentations", {}).get(presentation_id, {})
+		# `adds_roles` lets a flag author a role the profile lacks (UIPOSES:
+		# Riptusk's prone rest); every other role must already exist.
+		var addable: Array = entry.get("adds_roles", [])
 		for role: String in flag_roles:
-			if not roles.has(role) or not flag_roles[role] is Dictionary:
+			if (not roles.has(role) and role not in addable) or not flag_roles[role] is Dictionary:
 				return original
 			roles[role] = flag_roles[role]
 		if not flag_roles.is_empty():
 			flagged.append(flag)
+	# Roster-wide faint/hit candidate (UIPOSES, `roster_pose_r1`, OFF):
+	# rewrites the final faint and hit roles once for every installed recipe
+	# not claimed by a remake lane. See roster_pose_r1.gd.
+	var roster_r1 := ROSTER_R1.enabled(_data) and not ROSTER_R1.remake_owned(presentation_id)
+	if roster_r1:
+		var r1 := ROSTER_R1.settings(_data)
+		if roles.has("faint") and roles["faint"] is Dictionary:
+			roles["faint"] = ROSTER_R1.faint_side_lie(roles["faint"], r1)
+		if roles.has("hit") and roles["hit"] is Dictionary:
+			roles["hit"] = ROSTER_R1.hit_recoil(roles["hit"], r1)
+		flagged.append("roster_pose_r1")
 	var profile_scope := str(recipe.profile)
 	if not overrides.is_empty():
 		profile_scope += ":" + presentation_id
@@ -237,6 +254,14 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 							(Transform3D(rolled, Vector3.ZERO) * box).position.y
 						pose_contacts.append({"inputs": inputs, "minimum": contacts[sample]})
 				position.y = -float(contacts[sample])
+				if roster_r1 and bool(spec.get("side_lie", false)):
+					# Keep the rolled body over its contact shadow (the shadow
+					# sits at the body origin): re-centre the rolled rest box on
+					# the standing one in the plane.
+					var standing := (pivot_before * box).get_center()
+					var rolled_centre := (Transform3D(rolled, pivot_before.origin) * box).get_center()
+					position.x += standing.x - rolled_centre.x
+					position.z += standing.z - rolled_centre.z
 			var time := float(frame.phase) * animation.length
 			animation.rotation_track_insert_key(rotation_track, time, rolled.get_rotation_quaternion())
 			animation.position_track_insert_key(position_track, time, position)

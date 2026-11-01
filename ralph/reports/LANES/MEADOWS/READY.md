@@ -1,5 +1,26 @@
 # Meadows visual lane (tb/vis-meadows), 1 Nov 2026
 
+**18:35 UTC, PAUSED (owner direction via coordinator).** Pushed head before this note: c6f07b95e (includes the test_harvest_orb_reward_candidate.gd `%d` fix and the matching game-side id fix). No edit was in progress. My 20:00 scheduled check-in is cancelled. The lane is idle until the coordinator sends scores. MANIFEST groups 1–5 are unchanged.
+
+**18:30 UTC, P2-034 fix:** the coordinator's CI catch was real. The test now uses `"order:%d" % int(...)`, the same line as tb/land-vis-1 3261a8e35. It is also a game bug: `harvest_node.gd` builds `_node_id` with `str()` of a JSON float, so the Basic Orb node's id is `order:1029.0`, and `meadows_orb_reward_presentation.json`'s `order:1029` target never matched (verified in Godot 4.7: `str(1029.0)` gives `1029.0`). `_is_meadows_orb_reward_candidate_enabled` now accepts both forms. `_node_id` is unchanged, because it keys the save flag. Without this, P2-034 ON would have rendered exactly as OFF.
+
+**18:25 UTC, group 5 (from the coordinator's 18:12 re-score, in its order):**
+1. **P2-014 (4.42), not built, and here is why.** The two failing frames are route-walk stands beside the Burrow Warrens. Their recorded positions in the Warrens' own frame (site (-357, 2610), yaw 315): walk_02 player (27, -12), walk_03 camera (21.4, 10). That is 2–15 m from the hall and mouth walls, on the earth bank's outer slope. The bank has a trimesh collider, so a player in play stands on it. The routes capture places the player at terrain height (`resolve_capture_ground`), so the camera ends up under the bank. The "floating faceted slabs with dark undersides" are the bank seen from inside plus the chambers' cap ceilings. This is a capture-stand fault, not distant mountains or game geometry; removing the Warrens' chambers or bank would break the dungeon. The fix belongs to whoever owns `tools/phase2_capture_routes.gd` stands (reject or re-seat walk stands inside the Warrens' bank footprint, or raycast onto the bank). Please score P2-014 on stands that actually show the backdrop.
+2. **P2-065** (`art.json:grunt_a.clip_candidate.enabled`): the south bridge grunt wears `grunt_a`, which has no `defeated` clip, so he idles after losing. The `grunt` rig's slump is merged in (identical 24-joint skeleton, same joint names). Note: the slump plays when the defeat lands live; a world loaded already-beaten does not replay it (existing trainer_npc.gd rule). The Warden's rig already has the clip.
+3. **P2-013** (props `relay_station.candidate_props` + `tether_relay.json ground_pad.p2_013_candidate`): visual-only (no collider) crate stacks, a cart, barrels, chain and pipe stock at both yard walls, 9+ m off the road axis; larger stone flags with a darker worn track.
+4. **P2-061** (`hud.json:catch_card.enabled`): the UI lane's existing, never-judged result card. A large framed headline naming the individual; the fight's cards and action grid step back while it holds.
+5. **P2-020/P2-017** (`creature_scale_flags.json` batch 4 + `creature_grass_clear.json p2_020_candidate`): bramblebun ×1.3, duskhush a further ×1.15 (grow, never shrink). Grass also clears round a creature ambling under 0.7 m/s, over a wider disc (radius ×2.1).
+
+Checks: every touched script, or its new functions in isolation, passes `--check-only`. New unit tests are added but unrun here.
+
+**17:55 UTC, group 4: F17#6 HALL-3** (`crossing_hall.json:hall_3.enabled`; keep `hall_2` OFF). Built from the HALL-2 verdict's four asks, in its order:
+1. **Day/night interior light.** Root cause: the Meadows night exposure (1.2 vs 0.6 by day) brightened the room, because `hall_lantern_lighting` keeps full albedo at night. Night now halves the Hall's albedo, cuts ambient to 0.10 and the fills to under half, and gives the lanterns warm pools with falloff (×2.6 over 6.5 m). The four window spots stay on at night as cool moonlight; by day they're tighter and stronger for shaped sun pools.
+2. **Plaster:** MI_Plaster ×0.72 day and night, day ambient 0.55.
+3. **Piers:** cameras unchanged; every arch surround is set back into the wall (about 0.33 m proud instead of 1.2 m).
+4. **Rugs:** the runner and shrine rug are muted to warm dark wool.
+
+`crossing_hall.gd` passes `--check-only`.
+
 **16:50 UTC, group 3 (from the batch-1 verdicts):** five entries in MANIFEST.json, `group: 3`. Entries marked `also_on` need those flags on too (landed or companion flags).
 - **Meadows light** (`meadows_look.json:light_candidate.enabled`): the judges' common ask. A warmer, lower key sun, a character rim and about double the aerial fog with sky haze; at night, more ambient fill and exposure, a brighter moon, softer shadows and a tighter moon glow (the banded halo).
 - **P2-003 r2:** keep 150 → 170 m (front face still fixed), darker stone, hotter fire-orange windows (`stronghold_hero_gatehouse.gd emission_colour`); judge with the existing `approach_pylons.p2_003_unlit_candidate_enabled` so the pylon lamps stop carrying the eye.

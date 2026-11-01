@@ -1,4 +1,31 @@
-# Routes lane (tb/routes-f49): result 1 Nov 2026, Cloudreach complete; STOPPED on two failures at Cloudreach 07 -> Stormwood arrival_prefix
+READY Cloudreach (1 Nov 14:20Z, tb/routes-f49 bbcaf260): f49_tw_09 -> f49_cr_01 .. f49_cr_07 all seams MATCH (ralph/reports/ROUTES/f49-1031/seams/); f49_cr_07 re-earned on aca00f08 with the owner-approved surplus drop + Storage Chest deposit (disclosed), Stormwood entered with 12 free slots. Stormwood chain running from it.
+
+# Routes lane (tb/routes-f49): RESUMED 1 Nov 13:30Z (owner: keep 24 slots, drop surplus, deposit); earlier pause record below
+
+## State at pause
+- Landed on main in #790: Tidewake 01→09 and Cloudreach 01→07 seams (saves `f49_tw_*`, `f49_cr_01..07`), the two boss hand-off game fixes (8ab84f7e, 7d485aa1) and the harness fixes.
+- Committed after #790 on tb/routes-f49 (not landed): the 07 Storage Chest deposit step (3b611e2a, 6c7418ad) and its records. Its rerun is not a valid output (failed); the landed `f49_cr_07` (no deposit, 24/24 Satchel) is the current Cloudreach end.
+- Next piece: Stormwood `arrival_prefix` from a Cloudreach 07 output with Satchel room. No run in progress.
+
+## Held rewards and Satchel numbers
+- Held item rewards at `f49_cr_06` (character satchel_escrow, grant_due): `skyplume` x18 (source `trainer:keeper_maela_trial:owed:item:skyplume`, owed since Cloudreach 03) and `rare_candy` x1 (`trainer:captain_veyra_storm_anchor:owed:item:rare_candy`). No pending world reward_delivery item rows. One held `boss_relic` duty (Veyra hand-off), delivered in 07 by the fixes.
+- In the 6c7418ad 07 attempt both held items delivered as soon as slots freed, so none remain pending; the Satchel ended 24/24 again.
+- Slots needed: 2 free to fund the first Storage Chest (wood x8 + fiber x4 are new stacks), plus the held items still owed at that point (2 from `f49_cr_06`: skyplume, rare_candy) = 4 free before the chest steps; then the deposit frees about 12 (keeping tools, Home Key/keys, potion_large, one revive stack, coin, hide_vest, torch). Stormwood arrival needs at least 2–3 new stacks (Stormglass, glowmoss, and later Crown materials); the coordinator target is about 6 free.
+- Base pressure: the earned four-chapter Satchel carries about 20 stacks of kit and consumables (3 orb_basic, orb_greater, 2 potion_small, potion_large, 2 revive, 2 coin, 2 elixirs, essence_air, TM, hide_vest, 5 tools, Home Key) out of 24 slots.
+
+## Record: Cloudreach complete; Stormwood arrival_prefix blocked on a full Satchel
+
+## TO COORDINATOR (1 Nov 11:30Z; send_message refused here: "elevated_session_untrusted_device")
+Landing check: tb/routes-f49 merges cleanly into origin/main (git merge-tree). Files outside tests/fixtures, ralph/reports, tools/earned_saves:
+- scripts/net/foundation_retry_order.gd (8ab84f7e), scripts/net/ledger_rpc.gd + scripts/net/reward_delivery.gd (7d485aa1): the two hand-off game fixes.
+- tests/test_combat_round_reward.gd, tests/test_reward_delivery_rpc.gd: their new tests (fail before / pass after).
+- tests/test_water_earned_late_segment.gd: watchdog pin 240000 → 1200000, matching the helper.
+- tests/helpers/water_human_late_segment.gd (07c route + death-satchel exit check, 20/60 min wall watchdogs), tests/helpers/water_reedhaven_segment.gd (approved Satchel Drop).
+- scripts/world/cottage_window_patch.gdshader.uid (Godot-generated uid from a fresh import).
+Inside tools/earned_saves: cloudreach_chain_runner.gd, stormwood_chain_runner.gd, tidewake_piece_runner.gd (room-making and the 07 Storage Chest deposit, disclosed in receipts).
+Only targeted suites ran (12 net/ledger suites 119/0 failed; late segment 10/0). Please land with full-ci: the net fixes touch MULTIPLAYER transaction scheduling. Storage-deposit 07 rerun (3b611e2a) FAILED, stopped per rule: the lineage has no Storage Chest yet; `storage_trip` funds one (cost wood x8 + fiber x4, two new Satchel stacks) and its wood gather credited nothing ("wood action produced no visible inventory gain") because the Satchel is 24/24 (stormwood_portal_key now held too). Chicken-and-egg: the chest that would free room needs two free slots to build. Proposed next step (needs your OK, since the decision said "no drops"): before funding, free two slots by the already-approved leftover-material drop (skyplume x18) plus one consumable use or drop (e.g. use elixir_vigour/elixir_guard through the Satchel, or drop orb_basic x4, the partial orb stack); then build the chest and deposit as specified. Only 07 reruns from f49_cr_06; the committed f49_cr_07 (no deposit) stays valid evidence for 06 -> 07.
+- Coordinator approved (b) then (a). Rerun on 6c7418ad FAILED, stopped per rule: potion_small x2 dropped fine, then the revive drop really happened (revive 20 → 10) but `_drop_slot` failed its own check "Confirmed Drop did not empty the satchel slot": Veyra's still-held rare_candy reward (it waits while the hand-off is held, then resumes once the relic lands, by the 7d485aa1 design) took the freed slot in the same frames. End Satchel: rare_candy and skyplume both delivered, still 24/24.
+- Next (proposed): count the remaining held item rewards for this character (pending reward_delivery rows / satchel_escrow grant_due) and free that many extra slots first, or wait for them to settle before the chest steps; and verify a drop by the dropped stack's count delta rather than the slot being empty (the slot can be refilled by an ordinary held delivery). Needs your OK because it adds drops beyond the two approved stacks.
 
 ## Cloudreach 06 -> 07 MATCH (34e55df3) with two game fixes (coordinator-approved, for full-ci landing)
 - 8ab84f7e `foundation_retry_order.gd`: master_win/boss_relic schedule ahead of round rewards/wild shares (test_combat_round_reward::test_boss_hand_off_schedules_ahead_of_held_round_reward; 34 tests 0 failed).

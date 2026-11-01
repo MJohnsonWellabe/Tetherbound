@@ -1,24 +1,39 @@
 # STORMCAMS lane (tb/vis-storm-cams): status
 
-## Summary (1 Nov, 16:15 UTC; rolling batches, coordinator sweeps every ~45 min)
-- **Criteria closed: zero.** Nothing here is judged; every candidate is flag-OFF on this branch and listed in `MANIFEST.json` (32 rows, one per item x flag x tool/biome; `group` 1 = dialogue camera + Nalia + plaza paving, `group` 2 = Stormwood scene + catch camera).
-- **Stand names** are the capture tools' own frame names: Tidewake dialogue frames are `water__...` (the tool's prefix; the catalogue says `tidewake__`), catch frames are the tool's file names (`03-strike`) under a per-biome camera set.
-- **Biggest swings (CPU sanity only, no scores):**
-  - Dialogue camera (11 items): `twoshot_v2` + `speaker_light_candidate`. Every dialogue frame captured on CPU now frames its speaker medium-close beside the panel (Marrow, Nysa, Nerissa, Nalia, Bex, Irva, Kelm, Veyra, Solene, Hald, Quarry Foreman).
-  - P2-083/P2-081 Marrow: fixed in the dialogue capture fixture (always on): it stood the player on the forest floor 150 m under Marrow's Dynamo deck. **Both GPU arms must use this branch's `tools/phase2_capture_dialogue.gd`** or the Marrow frames are not comparable.
-  - P2-074 Nalia: authored spot is up a sand wall with no stand; placement candidate moves her to the flat below.
-  - P2-041 Crown Arch: the catalogue camera (and the road) saw the Meshy arch edge-on; round 2 turns it to face the road and it reads as an arch.
-  - P2-076 plaza paving around Kelm and Veyra (anchored on their runtime bodies; Veyra's on the measured summit floor).
-  - P2-046 bigger harvest heroes, distinct crown silhouette; P2-043 rock collars at the spike feet.
-  - P2-113/P2-059: existing never-judged `catching.json framed_camera` (no change here).
-- **Parked:** P2-070 Glass Sink material (fog sets the floor colour at that depth; needs basin geometry).
-- **Composability:** flag keys are new blocks inside existing configs; code hunks are local (`conversation_camera.gd`, `cloudreach_world.gd` route-detail loop, Water NPC placement reads via one helper). No overlap found with tb/vis-water-sky's `cloudreach_world.gd` hunks.
-- **Landing note (twoshot_v2 ON):** `test_conversation_camera_aftermath_profile.gd::test_aftermath_lens_stays_near_a_far_speaker` asserts the ordinary push-in's lens stays more than 6 m from an 18 m speaker; twoshot_v2 frames closer by design, so that assertion fails with the flag on. It is left untouched here; landing the flag ON needs it re-stated, not skipped. My own 'ships OFF' assertions also flip at landing.
-- **Checks:** 328 focused unit tests (every test file touching a changed script, incl. flag scopes) pass, 0 failed, with all flags OFF.
-- **Not in scope / not attempted:** P2-087's stronghold orange grade itself (only the push-in and speaker light reach it), P2-056, P2-044 (creature lane), P2-038, P2-092, P2-040.
+## Summary (1 Nov, 17:50 UTC; rolling batches)
+- **Criteria closed: zero.** Nothing here is judged yet. Every candidate is flag-OFF on this branch; `MANIFEST.json` has 42 rows (item x flag x tool/biome) in four groups:
+  - **Group 1** (dialogue camera, 11 items + Nalia + plaza paving): `twoshot_v2`, `speaker_light_candidate`, `water_npc_placement_candidate`, `plaza_paving_candidate`.
+  - **Group 2** (Stormwood scene + catch camera): Crown Arch round 2, Glass Field rock collars, harvest heroes round 2, `catching.json framed_camera`.
+  - **Group 3**: candy tiers (P2-045, working after a new approach), P2-082/P2-084 dialogue, Lantern Pools flags (P2-038), Stormwood character rim (P2-056, P2-055).
+  - **Group 4**: road puddles (P2-040).
+- **Both GPU arms need this branch's `tools/phase2_capture_dialogue.gd`**: it stands the player on Captain Marrow's Dynamo deck (it used to shoot him from the forest floor 150 m below), which the P2-083/P2-081 frames depend on.
+- **Stand names** are the capture tools' own frame names: Tidewake dialogue frames are `water__...`; catch frames are the tool's file names (`03-strike`) under a per-biome camera set.
+- **Parked:** P2-070 Glass Sink material (fog sets the floor colour; needs basin geometry); Fenn's frame in P2-084 (he stands against a giant trunk; a scatter-aware sight check made it worse and is off).
+- **Landing note (twoshot_v2 ON):** `test_conversation_camera_aftermath_profile.gd::test_aftermath_lens_stays_near_a_far_speaker` asserts the ordinary push-in's lens stays more than 6 m from an 18 m speaker; twoshot_v2 frames closer by design, so that one assertion fails with the flag on. Left untouched; landing the flag ON needs it re-stated, not skipped. The "ships OFF" assertions in `test_storm_cams_candidates.gd` and `test_conversation_camera.gd` also flip at landing.
+- **Composability:** flags are new keys or blocks inside existing configs, plus new files (`stormwood_harvest_hero2.json`, `water_npc_placement_candidate.json`, `stormwood_character_rim.json`); code hunks are local. No overlap with tb/vis-water-sky's `cloudreach_world.gd` hunks.
+- **Checks:** every test file touching a changed script passes with all flags OFF (328 tests at 16:10, plus the later focused reruns, 0 failed).
+- **Not attempted (other lanes or new art):** P2-087's stronghold grade itself, P2-044 (creatures), P2-092 (fight spacing), P2-109/P2-112/P2-089/P2-062 (mount and fight cameras).
 
-Lane scope: Stormwood (F41) scene/material/placement items and every dialogue-camera item; camera-class items.
-Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` with its flag (all default OFF on this branch) for the 18:00 UTC `tb/vis-batch1` build.
+## Group 5 (owner priority 1 Nov: shared fixes first)
+| Item(s) | Flag | What it changes |
+|---|---|---|
+| SHARED-CAM-OCCLUSION (every biome) | `data/config/camera.json` `occlusion_fade.enabled` | Gameplay, fight and dialogue cameras fade rendered geometry between the subject's chest and the lens: meshes go 80% see-through, tall scatter instances (trees, canopies) hide, restored once they stop blocking. Arm length and stands unchanged, so the capture tools' stands are not moved. CPU: on the Old Mill approach the trunk that hid the trainer in main's GPU frame is gone. |
+| SHARED-STORMWOOD-LIGHT (all Stormwood stands) | `data/config/stormwood_look.json` `light_pass_1101.enabled` | One switch for the Stormwood light and atmosphere pass: cooler stronger key, fixed purple storm sky, depth fog and aerial perspective, ambient lift for storm fill, contrast, copper/glass specular, a cool rim light opposite the sun, a soft fill. CPU (Compatibility): renders cleanly, slightly brighter and cooler with no breakage; the fog and rim are expected to show more on Forward+. In the manifest for every Stormwood stand in job.json. |
+| P2-059, P2-113 round 2 | `data/config/catching.json` `framed_camera.r2.enabled`, `data/config/hud.json` `message_clears_prompt.enabled` | Oblique catch resolve shot (pitch -30 -> -16, 7.2 m, fov 50); the verdict message hides the "Aim - N orbs" prompt instead of drawing over it. The judges' cyan ribbon reads as a real Meadows stream and the white blob as the orb's resting ring; neither is a camera fix, left. |
+
+## Group 6 (batch-1 verdict follow-ups, 18:40)
+| Item(s) | Flag | What it changes |
+|---|---|---|
+| SHARED-STORMWOOD-GROUND (all Stormwood stands) | `data/config/stormwood_ground_finish.json` `value_lift_candidate.enabled` | Grass, moss-bush and terrain tints rise out of near-black and the authored ground zones (loam, moss, still pools) switch on. CPU: ground clearly lighter with clearing/grove variation; the pools read dark. |
+| P2-045 | `data/config/pickup_grounding.json` `tier_candidate.enabled` | Batch 1 (5.70 -> 5.31) judged the old duplicate bug (oversized green copies). Copies are now made after the tier tint, smaller (0.72 / 0.66) and close. CPU: Great a blue pair, Rare a gold trio, no green copies. |
+| P2-046 | `data/config/stormwood_harvest_hero2.json` `enabled` | Glowmoss drops the flat decal disc for a squat moss-tinted rock mound carrying the fungi (round 3). |
+
+Batch-1 notes I could not fix in this lane:
+- **Kell (P2-078):** not placed in the captured world state: `village_npcs.json` places Kell only after `legendary_freed`, so the frame needs a post-game save, not a camera change.
+- **Quarry Foreman (P2-079):** framed and readable on CPU; what boxes him in is the quarry's own stretched rock faces and an overhang above the lens (scene art).
+- **Captain Marrow under the deck:** both Marrow rows stand on the Dynamo deck on CPU with this branch's capture fixture; a GPU run with main's copy of `tools/phase2_capture_dialogue.gd` still shoots him from below.
+- **Stormwood fight telegraphs:** the named-fight wind-ups come from per-pattern `cue_*` presentation in `combat.json` (fights lane). The canopy and trunk blackouts are covered by the shared occlusion fade, which runs on the fight camera too.
+- **Player head at close range:** fixed after batch 1 (key light moved off the trainer; wider swing for close pairs).
 
 ## Candidates on this branch (all flags OFF)
 | Item(s) | Flag | What it changes |
@@ -32,8 +47,10 @@ Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every 
 | P2-041 | `data/config/crown_arch_hero.json` `round2_candidate.enabled` | Arch visual turned 90 deg to face the road (the catalogue camera and every road approach saw it edge-on as a single pillar), 7.0 m tall; small rock dressing breaks the square slab edge. |
 | P2-043 | `data/config/stormwood_glass_field.json` `rock_collar_candidate.enabled` | Rock collar at each Meshy spike foot; flat scar patch hidden. |
 | P2-045 (group 3) | `data/config/pickup_grounding.json` `tier_candidate.enabled` | Candy tiers as one / two / three sweets with a size step. Un-parked with a new idea: `candy_pickup_presentation.gd` tints and rings the candy after the pickup builds it, so copies are now made at the end of that dress. CPU r4: Good one green sweet, Great a blue pair, Rare a gold trio. |
-| P2-082, P2-084 (group 3) | dialogue flags above | Stormwood dialogue items with the same fixture. Fenn's push-in framed a scattered trunk: twoshot_v2 now also makes the sight test see tall MultiMesh scatter (`speaker_sight_multimesh`). |
+| P2-082, P2-084 (group 3) | dialogue flags above | Stormwood dialogue items with the same fixture. Fenn stands against a giant trunk and his push-in frames bark; a scatter-aware sight check (`speaker_sight_multimesh`) made it worse (fully black) on CPU r2/r3, so it is parked (false) and Fenn's frame is expected to stay weak. Rook and Elder Maud frame well. |
 | P2-056 (group 3) | `data/config/stormwood_character_rim.json` `enabled` | Cool fresnel backlight edge on every Stormwood person and trainer (material overlay). CPU r1 at 0.45 read only up close; r2 at 0.75 / power 2.4 gives Varga and Dace a visible edge against the dark ground in the post views. |
+| P2-055 (group 3, Stormwood stands only) | `data/config/stormwood_character_rim.json` `enabled` | Same rim on Hesk, Maud and Bryn's post views (judges: 'tiny, near-identical figures'); separation only, it does not change their silhouettes. Secondary candidate. |
+| P2-040 (group 4) | `data/config/stormwood_road_current.json` `puddle_candidate.enabled` | Soft-edged dark glossy puddles along every Stormwood road (2,723 placed; one MultiMesh per route), skipped on uneven ground. CPU r3: wet sky-catching patches on the Lantern Hollow road beside the gold current (r1 buried under the coarse terrain mesh, r2 culled by a visibility range; both fixed). |
 | P2-038 (group 3) | `data/config/stormwood_lantern_pools.json` `lantern_model.enabled` and `arrival_pools.enabled` | Two existing, never GPU-judged flags (Meshy lantern posts, +0.75 on CPU 26 Oct; two pools inside the arrival view). CPU: three pools with glowing lips now read in the Lantern Pools frame. |
 | P2-046 | `data/config/stormwood_harvest_hero2.json` `enabled` | Bigger harvest heroes; crown uses the tall glass-spike silhouette; grass clearings. Separate file so the scatter bake stays fresh. |
 | P2-113, P2-059 | `data/config/catching.json` `framed_camera.enabled` | Existing, never GPU-judged catch camera candidate (wider aim, stand-off resolve shot). No change on this branch. |
@@ -43,6 +60,8 @@ Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every 
 - Tidewake dialogue, twoshot_v2 + speaker light: Nerissa pushed in medium-close and lit (GPU had her small in a dim wide shot); Bex and Irva read as over-the-shoulder two-shots with the trainer's shoulder at the left edge. Nalia: authored body refused by every stand (on the wall); with the placement candidate she is framed; moved 3.6 m out after r1 framed her against the wall.
 - Cloudreach dialogue: Kelm and Veyra framed medium-close; plaza paving anchors corrected to their runtime bodies (re-check queued).
 - Stormwood locations: Crown Arch seen edge-on by the catalogue camera (cause of "single tall pillar"); with round 2 turned to face the road, r2 reads clearly as an arch with its crown keystone (slab edge still hard; six stones per side after r2). Glass Field spikes sit on rock collars (lightened after r1).
+- Tidewake P2-075 with the close-pair swing: Adair and Iona framed with the trainer at the left edge in profile, no overlap on the speaker.
+- Stormwood P2-056 rim r2 (0.75 / 2.4): Varga and Dace show a cool edge against the ground in the post views. P2-082 Rook framed well with the corrected key light (r1's key blew the trainer's face white in close pairs).
 - Tidewake Nalia r2 (placement 3.6 m out): framed against a valley view to the shore instead of the sand wall.
 - Meadows: Quarry Foreman visible among the rock faces (P2-079); Warder Solene medium-close and lit in the courtyard (the stronghold's warm grade remains; P2-087 relies on the push-in and speaker light).
 - Stormwood inventory: harvest heroes larger, crown grade a tall spike cluster distinct from plain stormglass; candy tier copies failed three ways (see P2-045 row); parked.

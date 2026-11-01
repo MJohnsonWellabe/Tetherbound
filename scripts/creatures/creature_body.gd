@@ -1140,26 +1140,90 @@ static func _coat_flag_map() -> Dictionary:
 	if not parsed is Dictionary:
 		push_error("creature_coat_flags.json is not an object")
 		return _coat_map
-	var flags: Dictionary = (parsed as Dictionary).get("flags", {})
+	_coat_map = parse_coat_flags(parsed as Dictionary)
+	return _coat_map
+
+
+## Resolve the enabled coat flags into {live albedo path: spec}. Public so the
+## flag shape is unit-tested without a model (tests/test_creature_coat_flags.gd).
+## A flag's `coats` must be a dictionary keyed by the live albedo path; any
+## other shape is an authoring error and says so instead of silently applying
+## nothing (CO-F36-7 was judged identical on the GPU and nothing was logged).
+static func parse_coat_flags(parsed: Dictionary) -> Dictionary:
+	var resolved_map: Dictionary = {}
+	var flags: Variant = parsed.get("flags", {})
+	if not flags is Dictionary:
+		push_error("creature_coat_flags.json: flags is not an object")
+		return resolved_map
 	for flag: String in flags:
 		var entry: Variant = flags[flag]
 		if not entry is Dictionary or not bool(entry.get("enabled", false)):
 			continue
-		var coats: Dictionary = entry.get("coats", {})
+		var coats_value: Variant = entry.get("coats", {})
+		if not coats_value is Dictionary:
+			push_error("coat flag %s: coats must map a live albedo path to a graded path or material values" % flag)
+			continue
+		var coats: Dictionary = coats_value
 		for from_path: String in coats:
 			# A string is a graded albedo path; a dictionary may also carry
 			# material values ({"albedo"?, "metallic"?, "roughness"?,
-			# "specular"?}), where a roughness value replaces the roughness map.
+			# "specular"?, "emission_scale"?, "emission"?, "emission_energy"?}),
+			# where a roughness value replaces the roughness map, emission_scale
+			# multiplies a self-lit body's emission energy (so its form reads
+			# under the stage light) and emission names a trait glow map.
 			var spec: Variant = coats[from_path]
-			var resolved: Dictionary = spec.duplicate() if spec is Dictionary else {"albedo": str(spec)}
+			if not (spec is Dictionary or spec is String):
+				push_error("coat flag %s: %s has neither a path nor material values" % [flag, from_path])
+				continue
+			var resolved: Dictionary = (spec as Dictionary).duplicate() if spec is Dictionary else {"albedo": str(spec)}
 			var to_path := str(resolved.get("albedo", ""))
 			if not to_path.is_empty() and not ResourceLoader.exists(to_path):
 				push_error("coat flag %s: %s is missing" % [flag, to_path])
 				continue
-			var merged: Dictionary = _coat_map.get(from_path, {})
+			var glow_path := str(resolved.get("emission", ""))
+			if not glow_path.is_empty() and not ResourceLoader.exists(glow_path):
+				push_error("coat flag %s: glow %s is missing" % [flag, glow_path])
+				continue
+			var merged: Dictionary = resolved_map.get(from_path, {})
 			merged.merge(resolved, true)
-			_coat_map[from_path] = merged
-	return _coat_map
+			resolved_map[from_path] = merged
+	return resolved_map
+
+
+## The coated copy of one live material. It keeps the source's resource_name:
+## the field-brightness pass skips names ending "_field_bright", so a renamed
+## copy of a brightened coat would be brightened twice.
+static func coat_material(source: BaseMaterial3D, spec: Dictionary) -> BaseMaterial3D:
+	var copy := source.duplicate() as BaseMaterial3D
+	var from_path := source.albedo_texture.resource_path if source.albedo_texture != null else ""
+	var to_path := str(spec.get("albedo", ""))
+	if not to_path.is_empty():
+		var graded := load(to_path) as Texture2D
+		copy.albedo_texture = graded
+		if copy.emission_texture != null and copy.emission_texture.resource_path == from_path:
+			copy.emission_texture = graded
+	if spec.has("metallic"):
+		copy.metallic = clampf(float(spec.metallic), 0.0, 1.0)
+	if spec.has("roughness"):
+		copy.roughness_texture = null
+		copy.roughness = clampf(float(spec.roughness), 0.0, 1.0)
+	if spec.has("specular"):
+		copy.metallic_specular = clampf(float(spec.specular), 0.0, 1.0)
+	if spec.has("emission_scale"):
+		copy.emission_energy_multiplier *= clampf(float(spec.emission_scale), 0.0, 1.0)
+	# A trait glow map (a mostly-black mask: veins, fin edges, a stripe) lit the
+	# same way the aspect variants' synthesised glow is (multiply operator,
+	# white emission). It replaces a self-lit albedo copy in the emission slot.
+	var glow_path := str(spec.get("emission", ""))
+	if not glow_path.is_empty():
+		var glow := load(glow_path) as Texture2D
+		if glow != null:
+			copy.emission_enabled = true
+			copy.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+			copy.emission = Color.WHITE
+			copy.emission_texture = glow
+			copy.emission_energy_multiplier = clampf(float(spec.get("emission_energy", 1.0)), 0.0, 4.0)
+	return copy
 
 
 func _apply_coat_flags() -> void:
@@ -1180,22 +1244,7 @@ func _apply_coat_flags() -> void:
 				continue
 			var key := source.get_instance_id()
 			if not _coat_materials.has(key):
-				var copy := source.duplicate() as BaseMaterial3D
-				var spec: Dictionary = coats[from_path]
-				var to_path := str(spec.get("albedo", ""))
-				if not to_path.is_empty():
-					var graded := load(to_path) as Texture2D
-					copy.albedo_texture = graded
-					if copy.emission_texture != null and copy.emission_texture.resource_path == from_path:
-						copy.emission_texture = graded
-				if spec.has("metallic"):
-					copy.metallic = clampf(float(spec.metallic), 0.0, 1.0)
-				if spec.has("roughness"):
-					copy.roughness_texture = null
-					copy.roughness = clampf(float(spec.roughness), 0.0, 1.0)
-				if spec.has("specular"):
-					copy.metallic_specular = clampf(float(spec.specular), 0.0, 1.0)
-				_coat_materials[key] = copy
+				_coat_materials[key] = coat_material(source, coats[from_path])
 			instance.set_surface_override_material(surface, _coat_materials[key])
 
 
@@ -2567,8 +2616,21 @@ func _physics_process(delta: float) -> void:
 static func grass_clear_config() -> Dictionary:
 	if _grass_clear_cache.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(GRASS_CLEAR_PATH))
-		_grass_clear_cache = parsed if parsed is Dictionary else {"enabled": false}
+		_grass_clear_cache = with_grass_clear_candidate(parsed if parsed is Dictionary else {"enabled": false})
 	return _grass_clear_cache
+
+
+## P2-020 (vis-meadows, OFF until GPU-judged): `p2_020_candidate`'s keys
+## replace the shipped ones when enabled. Off: the shipped block exactly.
+static func with_grass_clear_candidate(cfg: Dictionary) -> Dictionary:
+	var candidate: Variant = cfg.get("p2_020_candidate", {})
+	if not candidate is Dictionary or not bool((candidate as Dictionary).get("enabled", false)):
+		return cfg
+	var out := cfg.duplicate(true)
+	for key: Variant in candidate:
+		if key != "enabled" and not str(key).begins_with("_"):
+			out[key] = (candidate as Dictionary)[key]
+	return out
 
 
 ## Join the grass clearing once settled on the floor for `settle_s`; leave on
