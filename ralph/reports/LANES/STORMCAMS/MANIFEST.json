@@ -238,16 +238,6 @@
   ]
  },
  {
-  "item": "P2-070",
-  "flag": "data/config/stormwood_glass_sink.json:dark_pool_candidate.enabled",
-  "camera_set": "tools/phase2_capture_stormwood_glass_sink.gd (job.json repro per stand)",
-  "stands": [
-   "stormwood__landmark__glass_sink__day__approach",
-   "stormwood__landmark__glass_sink__day__close",
-   "stormwood__landmark__glass_sink__golden__approach"
-  ]
- },
- {
   "item": "P2-041",
   "flag": "data/config/crown_arch_hero.json:round2_candidate.enabled",
   "camera_set": "tools/phase2_capture_locations.gd (job.json repro per stand)",
