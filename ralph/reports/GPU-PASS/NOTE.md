@@ -366,6 +366,16 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
     - **Capture:** P2-095's frames, `--gamepad` on both arms, High first.
     - **Why:** the owner directs controller-first, so the pad path is the score that matters. The keyboard path's Esc keycap is a known keyboard-only defect.
 
+19. **DLG-2: honest dialogue scores. No arm, a re-capture on main with the corrected dialogue fixture.**
+    - **Why:** the code lane found that the old fixture opened conversations at catalogue posts where play never opens them, so 14 frames never pushed in. The game's real Cloudreach topic-prompt bug is fixed separately in PR #785. Tool: `tb/world-fix-dialogue-capture` c718cf325, a `tools/phase2_capture_dialogue.gd` change; the game is unchanged.
+    - **Capture:** main with that one tool file, the dialogue frames of P2-073, P2-074, P2-076, P2-083, P2-081 and P2-087, High, one boot per biome.
+    - **Expected:** CPU shows Daro, Bex, Irva, Nerissa x2, Kelm and Veyra now pushed in. Nalia, Marrow and Kell still won't push in (no stand beside the body, or the NPC isn't placed yet); report them as captured.
+    - **Report:** the per-item mapped score as the new score of record.
+20. **MENU-1: menu text floors (UI-R2 follow-up). One flag flip, no re-import.** `tb/world-fix-menu-text` 305ac709c.
+    - **Flip:** `menu.json` `menu_text_floors.enabled`.
+    - **What it does:** settings, skills and backpack tabs move onto the token floors; the Satchel worn list scrolls; the bindings get a bottom-edge fade.
+    - **Capture:** the UI-PAD frames (P2-001, P2-004, P2-007, P2-031, P2-032), `--gamepad`, High. Report scores and any clipping.
+
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
 All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
