@@ -49,6 +49,65 @@
      "specular": 0.25
     }
    }
+  },
+  "creatures_vis_coat_fulgocobra": {
+   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct (F36-1/roster-base-1e83cafa0): fulgocobra 6.38, 'dark brown on stage' (R2 value and rim). Value lift as the landed coat lifts (CO16: +0.5 to +1.0 on dark coats). Grade: tools/art_pipeline/grade_vis_creatures.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_vis1.png"
+   }
+  },
+  "creatures_vis_coat_mirejaw": {
+   "_why": "VIS-CREATURES (1 Nov). GPU CO9 27 Oct: mirejaw 6.39 / 6.23, water_mirejaw 6.28; roster 24 Oct 'dark faint blob; stretched dark bar on the tail'. Gentle lift of the darkest hide; rides with creatures_vis_taller_mirejaw. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_vis1.png"
+   }
+  },
+  "creatures_vis_coat_cannonback": {
+   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: cannonback 6.92, 'brass-gear machinery shell reads as kitbash' (R4 off-style material); water_cannonback 6.72 (ROSTER-1). The brass/olive plating loses most of its saturation toward weathered horn; blue plates and face keep their pixels. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_vis1.png"
+   }
+  },
+  "creatures_vis_coat_abyssal_guardian": {
+   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: abyssal_guardian 6.91, 'glossy vinyl-blue skin with regular dots; toy-like' (R4); water form 6.63. Cyan dots blend most of the way into the hide, the blue is a little deeper, and the self-lit emission drops to 0.6 so the stage light models the form. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6.png": {
+     "albedo": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6_vis1.png",
+     "emission_scale": 0.6
+    }
+   }
+  },
+  "creatures_vis_coat_veridian": {
+   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: veridian 6.63, 'moss noise'; GPU 1024: 'bone-white bands read as a skeleton'. White bands drop to warm ivory; moss smoothed (median) so it reads as growth. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_Image_0.jpg": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_Image_0_vis1.png"
+   }
+  },
+  "creatures_vis_coat_voltarach": {
+   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: voltarach 6.87 'chrome-gold statue shader; face lost'; CO34: 'a dark bronze/black base with thin gold arcs and readable blue eyes. Today the gold covers most of the body.' The gold halo darkens to bronze (arc cores keep their value), the black base lifts to dark bronze, the blue eyes brighten. Probed: its maps are already matte (metallic 0, roughness map mean 0.67), so the gold look is in the albedo, not the material values. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_vis1.png"
+   }
+  },
+  "creatures_vis_coat_mudsnout": {
+   "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: mudsnout 6.96 'single tan value flattens the face'; CO16 7.40 with its height (0.10 short; faint reads alert). Local value contrast so muzzle, eyes and bristle blocks separate. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_vis1.png"
+   }
+  },
+  "creatures_vis_coat_solmane": {
+   "_why": "VIS-CREATURES (1 Nov). GPU CO11 27 Oct: solmane 6.55 / 6.68. Pale washed tan at small size: modest local contrast and slightly darker highlights so the head reads; its faint pose is not touched here. Grade: tools/art_pipeline/grade_vis_creatures.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_vis1.png"
+   }
   }
  }
 }
