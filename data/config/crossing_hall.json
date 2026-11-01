@@ -17,6 +17,12 @@
             "border_colour": "#b08a52"
           }
         ]
+      },
+      "interior_ambient": {
+        "night_ambient": 0.22
+      },
+      "light": {
+        "night_energy_scale": 1.8
       }
     },
     "remove": {
