@@ -4,6 +4,28 @@
 
 ## Summary (1 Nov 2026)
 
+## Group 4 (1 Nov, pushed): glowing eyes and elemental vein markings
+
+This follows the owner's settled creature rule, via the coordinator: a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element.
+- **Flags:** `creatures_vis_glow_<species>` in `creature_coat_flags.json`, all OFF. Each flag's albedo is the group-3 trait (or the group-1 grade), so it supersedes both when on.
+- **Script:** `tools/art_pipeline/grade_vis_glow.py`.
+  - Eyes are the few most locally-dark pinpoints in a per-species head zone, grown into a thin iris ring.
+  - Veins are a ridged model-space noise network, continuous across UV seams, kept to the back and shoulders.
+
+**Per species:**
+- mudsnout: amber (ground) eyes and veins;
+- mirejaw and cannonback: cyan (water) eyes, markings and veins;
+- fulgocobra: gold eyes, keeping its group-3 lightning rims;
+- riverdrake: cyan eyes, keeping its crest rims;
+- solmane: pale-sky eyes and wing veins (barely visible on CPU);
+- voltarach: its board's blue eyes lit.
+
+**CPU check.** Mudsnout's amber eye and Riverdrake's cyan eye read clearly. On Mirejaw and Cannonback the glow lands as small cyan head markings. The first eye pass flooded whole heads with glow, so it was replaced by a fixed small texel budget before the push.
+
+**Conflict to rule on.** CLAUDE.md (owner, 25 Oct, delegated) says glow appears only where natural to the element and never as glowing seams on fur or hide. The newer owner rule, relayed by the coordinator, asks for glowing veins and markings. Both groups stay OFF until judged; the judging decides.
+
+**Removed from the manifest:** the Bramblebun and Trailpup flags (`creatures_vis_coat_bramblebun` does not exist; `creatures_vis_grounded_hit_bramblebun` and `creatures_vis_trait_bramblebun/trailpup` were removed). Both get Meshy remakes from the coordinator. The flags stay in the files, OFF.
+
 ## Group 3 (1 Nov, pushed): one natural-magic trait per plain species
 
 The owner's style direction (via the coordinator): a believable animal plus ONE bold natural-magic trait grown into the body. Flags `creatures_vis_trait_<species>` in `creature_coat_flags.json`, all OFF. Each is built over the group-1 grade, so it supersedes `creatures_vis_coat_<species>` when both are on. Script: `tools/art_pipeline/grade_vis_traits.py`. It places every trait by anatomy with the existing `creature_anatomy_maps` / `creature_overlays` tools, using the LIVE GLB's own UVs.

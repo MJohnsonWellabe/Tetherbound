@@ -37,18 +37,18 @@ C = "assets/creatures/tetherbound/"
 AMBER, CYAN, GOLD, VOLT_BLUE, SKY = "#ffb24a", "#6fe8ff", "#ffe07a", "#7fb8ff", "#cfeeff"
 
 SPECIES = {
-    "mudsnout": {"src": "mudsnout", "eyes": {"where": {"z_min": 0.6, "y_min": 0.5}, "color": AMBER},
+    "mudsnout": {"src": "mudsnout", "eyes": {"where": {"z_min": 0.82, "y_min": 0.55}, "color": AMBER},
                  "veins": {"where": {"y_min": 0.6, "up_min": 0.2, "z_max": 0.7}, "color": AMBER}},
-    "mirejaw": {"src": "mirejaw", "eyes": {"where": {"z_min": 0.75, "y_min": 0.45}, "color": CYAN},
+    "mirejaw": {"src": "mirejaw", "eyes": {"where": {"z_min": 0.85, "y_min": 0.6}, "color": CYAN},
                 "veins": {"where": {"y_min": 0.5, "up_min": 0.3, "z_max": 0.8}, "color": CYAN}},
-    "cannonback": {"src": "cannonback", "eyes": {"where": {"z_min": 0.75, "y_min": 0.3}, "color": CYAN},
+    "cannonback": {"src": "cannonback", "eyes": {"where": {"z_min": 0.85, "y_min": 0.45}, "color": CYAN},
                    "veins": {"where": {"y_min": 0.6, "up_min": 0.35}, "color": CYAN}},
     "fulgocobra": {"src": "fulgocobra", "eyes": {"where": {"z_min": 0.75, "y_min": 0.7}, "color": GOLD},
                    "keep_glow": True},
-    "riverdrake": {"src": "riverdrake", "eyes": {"where": {"z_min": 0.8, "y_min": 0.6}, "color": CYAN},
+    "riverdrake": {"src": "riverdrake", "eyes": {"where": {"z_min": 0.88, "y_min": 0.65}, "color": CYAN},
                    "veins": {"where": {"y_min": 0.45, "up_min": 0.25, "z_max": 0.85}, "color": CYAN},
                    "keep_glow": True},
-    "solmane": {"src": "solmane", "eyes": {"where": {"z_min": 0.8, "y_min": 0.5}, "color": SKY},
+    "solmane": {"src": "solmane", "eyes": {"where": {"z_min": 0.85, "y_min": 0.55, "radial_max": 0.6}, "color": SKY},
                 "veins": {"where": {"y_min": 0.75, "radial_min": 0.45}, "color": SKY}},
     "voltarach": {"glb": C + "voltarach/candidate/models/creature_voltarach_native.glb",
                   "albedo": C + "voltarach/candidate/models/creature_voltarach_native_Image_0.jpg",
@@ -75,13 +75,18 @@ def eye_mask(rgb, anatomy, spec, size):
         pupils = (hue & anatomy["valid"]).astype(np.float64)
         return _blur(_filter(pupils, ImageFilter.MaxFilter(2 * k + 1)), k)
     local = _blur(v, 6 * k)
-    dark = ((v < local - 0.16) & (v < 0.28) & region & anatomy["valid"]).astype(np.float64)
-    # Keep pinpoints only: anything that survives an erode-then-grow is a seam
-    # or a patch, not a pupil.
-    big = _filter(_filter(dark, ImageFilter.MinFilter(4 * k + 1)), ImageFilter.MaxFilter(6 * k + 1))
-    pupils = np.clip(dark - big, 0, 1)
-    ring = _filter(pupils, ImageFilter.MaxFilter(4 * k + 1))
-    return _blur(np.clip(ring - 0.6 * pupils, 0, 1), k)
+    score = np.where(region & anatomy["valid"] & (v < 0.3), local - v, -1.0)
+    # The eyes are the few most locally-dark pinpoints in the head zone: take a
+    # fixed small budget of texels (about two 20-texel pupils at 2048) instead
+    # of a threshold, so a dark mane, bristles or scale seams cannot flood in.
+    budget = max(40, int(size * size * float(spec.get("budget", 0.00012))))
+    flat = score.ravel()
+    if (flat > 0.12).sum() == 0:
+        return np.zeros(v.shape)
+    cut = max(0.12, float(np.partition(flat, -budget)[-budget]))
+    pupils = (score >= cut).astype(np.float64)
+    ring = _filter(pupils, ImageFilter.MaxFilter(2 * k + 1))
+    return _blur(np.clip(ring - 0.5 * pupils, 0, 1), k) * float(spec.get("intensity", 0.8))
 
 
 def vein_mask(anatomy, spec, name):
