@@ -37,6 +37,8 @@ const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const META := "pose_settle_installed"
 const ORIGINALS := &"pose_settle_original"
 
+const CACHE_LIMIT := 96
+static var _cache: Dictionary = {}
 static var _config: Dictionary = {}
 static var _config_loaded := false
 
@@ -52,6 +54,7 @@ static func config() -> Dictionary:
 
 ## Tests swap the configuration in and out.
 static func set_config_for_test(value: Variant) -> void:
+	_cache.clear()
 	_config_loaded = value != null
 	_config = value if value is Dictionary else {}
 
@@ -95,30 +98,40 @@ static func apply(body: Node3D, model: Node3D, player: AnimationPlayer, clips: D
 	var animation_root := player.get_node_or_null(player.root_node)
 	if animation_root == null:
 		return clips
-	var rig := Rig.new(model, skeleton, animation_root, int(settings.get("sample_vertices", 2400)))
-	rig.species_id = species_id
-	if rig.empty():
-		return clips
-	var idle := _animation(player, str(clips.get("idle", "")))
-	rig.measure_standing(idle)
-	if rig.standing_height <= 0.01:
-		return clips
+	# One bake per species, model, clips and fit per session; later bodies
+	# take duplicates (play_faint re-keys a body's own faint copy).
+	var sources := {}
+	for role: String in ["faint", "hit"]:
+		sources[role] = _animation(player, str(clips.get(role, "")))
+	var key := _cache_key(model, skeleton, clips, sources, species_id, settings)
+	var baked: Dictionary = _cache.get(key, {})
+	if baked.is_empty():
+		var rig := Rig.new(model, skeleton, animation_root, int(settings.get("sample_vertices", 1500)))
+		rig.species_id = species_id
+		if rig.empty():
+			return clips
+		rig.measure_standing(_animation(player, str(clips.get("idle", ""))))
+		if rig.standing_height <= 0.01:
+			return clips
+		for role: String in ["faint", "hit"]:
+			var source: Animation = sources[role]
+			if source == null:
+				continue
+			var edited: Animation = settle_faint(rig, source, settings) if role == "faint" else settle_hit(rig, source, settings)
+			if edited != null:
+				baked[role] = edited
+		if _cache.size() >= CACHE_LIMIT:
+			_cache.clear()
+		_cache[key] = baked
 	var changed := false
 	for role: String in ["faint", "hit"]:
+		if not baked.has(role):
+			continue
 		var name := str(clips.get(role, ""))
-		var source := _animation(player, name)
-		if source == null:
-			continue
-		var edited: Animation = null
-		if role == "faint":
-			edited = settle_faint(rig, source, settings)
-		else:
-			edited = settle_hit(rig, source, settings)
-		if edited == null:
-			continue
+		var edited := (baked[role] as Animation).duplicate(true) as Animation
 		if role == "faint" and str(clips.get("rest_faint", "")) == name:
 			# Bed rests finish the installed faint; keep them on the original.
-			_keep_original(player, source)
+			_keep_original(player, sources[role])
 			clips["rest_faint"] = "%s/faint" % ORIGINALS
 		_replace(player, name, edited)
 		changed = true
@@ -130,6 +143,27 @@ static func apply(body: Node3D, model: Node3D, player: AnimationPlayer, clips: D
 				settled.append(str(clips.get(role, "")))
 		clips["pivot_clips"] = settled
 	return clips
+
+
+static func _cache_key(model: Node3D, skeleton: Skeleton3D, clips: Dictionary, sources: Dictionary,
+		species_id: String, settings: Dictionary) -> String:
+	var parts: Array = [species_id, model.transform, BOUNDS._chain(skeleton, model), hash(settings)]
+	for role: String in ["idle", "faint", "hit"]:
+		var name := str(clips.get(role, ""))
+		parts.append(name)
+		var source: Variant = sources.get(role, null)
+		# Imported clips are shared resources; recipe clips are rebuilt per
+		# body from the same static recipe data, so their name identifies them.
+		if source is Animation and not name.contains("/"):
+			parts.append((source as Animation).resource_path if not (source as Animation).resource_path.is_empty() \
+				else str((source as Animation).get_instance_id()))
+	for child in model.get_children():
+		parts.append(child.scene_file_path)
+	return str(parts)
+
+
+static func clear_cache() -> void:
+	_cache.clear()
 
 
 static func _animation(player: AnimationPlayer, name: String) -> Animation:
@@ -395,14 +429,20 @@ class Rig:
 
 	func _prepare(budget: int) -> void:
 		var meshes: Array[MeshInstance3D] = []
+		var arrays_by_mesh: Array = []
 		var total := 0
 		for mesh: MeshInstance3D in BOUNDS._mesh_instances(model):
 			if mesh.skin != null and BOUNDS._skeleton_for(mesh) == skeleton:
 				meshes.append(mesh)
+				var per_surface: Array = []
 				for surface in mesh.mesh.get_surface_count():
-					total += (mesh.mesh.surface_get_arrays(surface)[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+					var arrays := mesh.mesh.surface_get_arrays(surface)
+					per_surface.append(arrays)
+					total += (arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+				arrays_by_mesh.append(per_surface)
 		var stride := maxi(1, ceili(float(total) / float(budget)))
-		for mesh: MeshInstance3D in meshes:
+		for mesh_index in meshes.size():
+			var mesh := meshes[mesh_index]
 			var skin := mesh.skin
 			var bind_bones := PackedInt32Array()
 			var bind_poses: Array[Transform3D] = []
@@ -413,8 +453,7 @@ class Rig:
 				var valid := bone >= 0 and bone < skeleton.get_bone_count()
 				bind_bones.append(bone if valid else -1)
 				bind_poses.append(skin.get_bind_pose(bind) if valid else Transform3D.IDENTITY)
-			for surface in mesh.mesh.get_surface_count():
-				var arrays := mesh.mesh.surface_get_arrays(surface)
+			for arrays: Array in arrays_by_mesh[mesh_index]:
 				var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
 				var bones: Variant = arrays[Mesh.ARRAY_BONES]
 				var weights: Variant = arrays[Mesh.ARRAY_WEIGHTS]

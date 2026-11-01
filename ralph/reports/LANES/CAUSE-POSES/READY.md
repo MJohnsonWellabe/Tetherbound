@@ -54,6 +54,14 @@ The pass samples a bounded subset of skinned vertices (2,400) under the clip and
   - `creature_clip_flags.json`;
   - remake flags. The pass reads whatever clip those leave.
 
+## Cost (CPU container, headless)
+
+- **One bake per species, model, clip set and fit per session,** cached (`creature_pose_settle.gd` `_cache`). Each body gets duplicates, so `play_faint`'s camera turn never touches another body.
+- **Spawn time, flag OFF → ON:**
+  - first body of a species: 6–15 ms → 39–65 ms;
+  - later bodies: 6–15 ms → 6–15 ms (+0–4 ms).
+- **Sampling:** a 1,500-vertex subset. There is no per-frame cost.
+
 ## CPU checks (llvmpipe, Compatibility; sanity only, not scored)
 
 - **F36 stage with the flag ON:**

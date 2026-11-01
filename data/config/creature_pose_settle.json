@@ -2,7 +2,7 @@
  "_comment": "CAUSE-POSES (1 Nov 2026): roster-wide hurt/faint settle for every rig (F36 recipes and own-clip/remake species), scripts/creatures/creature_pose_settle.gd. The master `enabled` (OFF) is the GPU arm; each section keeps its own switch (ON inside the arm) so an arm can drop one. faint.grounded: dense pivot keys plant every faint sample on the standing ground line and re-centre the posed body over its contact shadow. faint.side_lie: rolls about the body's forward axis until the legs lie out to the side; a standing or crouched faint takes roll_sign (+1 rolls the back toward the body's right), a faint already on a side or legs-up keeps its side. faint.head_lift: the neck lifts a buried or downward head at faint end. faint.upright_splay: shelled and many-legged species splay their upper limbs so the body settles flat. faint.face_camera: at play_faint the settled collapse turns (ramped, about its standing centre) so the body lies across the camera's view with its back toward the camera (no end-on blob, belly away). hit.recoil: a hit that barely moves gains a held pivot recoil. hit.grounded: every hit sample is planted (no hop). Composes with f36_pose_candidates.json flags (including roster_pose_r1) and creature_clip_flags.json: it reads whatever clip those leave.",
  "enabled": false,
  "samples": 11,
- "sample_vertices": 2400,
+ "sample_vertices": 1500,
  "exclude_species": [],
  "faint": {
   "grounded": {

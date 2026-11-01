@@ -85,7 +85,7 @@ func _case(species: String, recipe: bool) -> void:
 	# Measure the settled faint end with the same sampler.
 	var model: Node3D = on.get("_model")
 	var skeleton := model.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
-	var rig = SETTLE.Rig.new(model, skeleton, player.get_node(player.root_node), 2400)
+	var rig = SETTLE.Rig.new(model, skeleton, player.get_node(player.root_node), 1500)
 	rig.measure_standing(player.get_animation(StringName(str(clips.get("idle", "")))))
 	var right: Vector3 = rig.forward.cross(Vector3.UP)
 	_check(absf(rig.leg_angle(Vector3.DOWN)) < 0.001, "%s: legs straight down read 0 deg" % species)
@@ -116,6 +116,18 @@ func _case(species: String, recipe: bool) -> void:
 	var peak: PackedVector3Array = rig.posed(hit, peak_t, rig.pivot_rotation(hit, peak_t), rig.pivot_position(hit, peak_t))
 	_check(SETTLE.Rig.mean_shift(first, peak) >= 0.03 * rig.standing_height, "%s ON: hit visibly leaves the first frame" % species)
 	_check(absf(SETTLE.Rig.min_y(peak) - rig.ground_y) < 0.03 * rig.standing_height, "%s ON: hit stays planted" % species)
+	# A second body takes the cached bake as its own copy.
+	var again := _spawn(species)
+	var again_player := _player(again)
+	var again_faint := again_player.get_animation(StringName(_clip(again, "faint")))
+	_check(bool(again.get_meta(SETTLE.META, false)) and _pivot_tracks(again, faint) == 2, "%s ON: cached bake installs on a second body" % species)
+	_check(again_faint != animation, "%s ON: each body owns its faint copy" % species)
+	# play_faint's camera turn: a camera off the body's right turns the collapse.
+	var turn := SETTLE.face_camera(again.get("_model"), again_player, _clip(again, "faint"), again.global_position + Vector3(0.0, 2.0, 8.0))
+	_check(absf(turn) > 1.0, "%s ON: face_camera turns a collapse toward a camera ahead (%.0f deg)" % [species, turn])
+	_check(animation.track_get_key_value(rig.pivot_track(animation, Animation.TYPE_ROTATION_3D), animation.track_get_key_count(rig.pivot_track(animation, Animation.TYPE_ROTATION_3D)) - 1) \
+		== animation.get_meta("settle_faint").rotations[-1], "%s ON: turning one body's faint leaves another's untouched" % species)
+	again.free()
 	on.free()
 
 
@@ -136,7 +148,7 @@ func _upright_case() -> void:
 	var faint := player.get_animation(StringName(str(clips.get("faint", ""))))
 	var model: Node3D = body.get("_model")
 	var skeleton := model.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
-	var rig = SETTLE.Rig.new(model, skeleton, player.get_node(player.root_node), 2400)
+	var rig = SETTLE.Rig.new(model, skeleton, player.get_node(player.root_node), 1500)
 	rig.measure_standing(player.get_animation(StringName(str(clips.get("idle", "")))))
 	var end := faint.length
 	var meta: Dictionary = faint.get_meta("settle_faint", {})
