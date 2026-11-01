@@ -219,7 +219,7 @@ func dress(world: Node3D) -> void:
 	add_child(landmark_lighting)
 	landmark_lighting.build(world)
 	_dress_fog()
-	# Owner 31 Oct 2026: seat floating cylinders on the ground (flag-off;
+	# Owner 31 Oct 2026: seat floating cylinders on the ground (switch in
 	# data/config/cloudreach_grounding.json). Last, so it sees every builder.
 	var grounding := preload("res://scripts/world/cloudreach_grounding.gd").new()
 	grounding.name = "CloudreachGrounding"

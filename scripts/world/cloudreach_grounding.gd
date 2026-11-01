@@ -8,11 +8,14 @@ extends Node3D
 ## CylinderMesh pieces whose base does not meet the walkable ground under its
 ## footprint, and seats each one: a flared skirt in the cylinder's own material
 ## runs from its base down past the lowest ground point under the rim, and big
-## drums also get a ring of installed rocks banked against the foot. Nothing
+## drums also get a ring of installed rocks banked against the foot. It also
+## extrudes every procedural rock drum (`cloudreach_world.gd::_mesa`, whose
+## flared bottom ring is open) down to the lowest ground under its outline when
+## enough of that outline has ground beneath it and no road runs below. Nothing
 ## moves, shrinks or hides; no collider, route or surface is added or changed.
 ## No RPC, durable field or receipt: every peer rebuilds the same dressing.
 ##
-## Flag-off: `data/config/cloudreach_grounding.json` "enabled" (false on main).
+## Switch: `data/config/cloudreach_grounding.json` "enabled" (on: owner 1 Nov defect fix).
 ## A capture may preview it with --cloudreach-grounding-candidate, and
 ## --cloudreach-grounding-report prints every candidate it measured.
 
@@ -68,13 +71,15 @@ func build(world: Node3D) -> void:
 				" at=", result.base.snapped(Vector3.ONE * 0.1), " action=", result.action)
 		if apply and str(result.action) == "seat":
 			_seat(mesh_instance, result)
+	var started := Time.get_ticks_msec()
 	if bool(_cfg.get("ground_rock_drums", true)):
 		var drums: Array = []
 		_collect_drums(world, drums)
 		for mass: MeshInstance3D in drums:
 			_ground_drum(mass, apply)
 	if _report:
-		print("[cloudreach_grounding] seated=", _seated.size(), " applied=", apply)
+		print("[cloudreach_grounding] seated=", _seated.size(), " applied=", apply,
+			" drum_ms=", Time.get_ticks_msec() - started)
 		_prove()
 		if OS.get_cmdline_user_args().has("--cloudreach-grounding-survey"):
 			_survey_columns(world)
@@ -89,7 +94,8 @@ func _collect_drums(node: Node, out: Array) -> void:
 		return
 	if node is MeshInstance3D and str(node.name) == "StratifiedCliffBody":
 		var parent := node.get_parent()
-		if parent != null and parent.get_node_or_null(^"IslandMist") == null:
+		if parent != null and (parent.get_node_or_null(^"IslandMist") == null \
+				or bool(_cfg.get("ground_airborne_drums", false)) or _report):
 			out.append(node)
 	for child: Node in node.get_children():
 		_collect_drums(child, out)
@@ -179,6 +185,7 @@ func _ground_drum(mass: MeshInstance3D, apply: bool) -> void:
 		lowest = minf(lowest, ground)
 		max_gap = maxf(max_gap, point.y - ground)
 		min_gap = minf(min_gap, point.y - ground)
+	var airborne := mass.get_parent().get_node_or_null(^"IslandMist") != null
 	var action := "grounded"
 	if not is_finite(max_gap):
 		action = "void"
@@ -197,6 +204,8 @@ func _ground_drum(mass: MeshInstance3D, apply: bool) -> void:
 	if action == "seat" and _world.has_method("_shelf_in_route_headroom") \
 			and bool(_world.call("_shelf_in_route_headroom", Vector3(probes[0].x, base_y, probes[0].z), radius, depth)):
 		action = "route_below"
+	if airborne and not bool(_cfg.get("ground_airborne_drums", false)):
+		action = "airborne_" + action
 	if _report:
 		var near := _nearest_route(probes[0])
 		print("[cloudreach_grounding:drum] ", mass.get_parent().get_path(), " base_y=", snappedf(base_y, 0.1),
@@ -238,6 +247,11 @@ func _build_drum_foot(mass: MeshInstance3D, ring: Array[Vector3], centre: Vector
 	foot.mesh = tool.commit()
 	var material: Material = (_world.get("_materials") as Dictionary).get("cliff") if _world.get("_materials") is Dictionary else null
 	foot.material_override = material if material != null else _material_of(mass)
+	if OS.get_cmdline_user_args().has("--cloudreach-grounding-debug-colour"):
+		var debug := StandardMaterial3D.new()
+		debug.albedo_color = Color.MAGENTA
+		debug.cull_mode = BaseMaterial3D.CULL_BACK
+		foot.material_override = debug
 	foot.visibility_range_end = mass.visibility_range_end
 	foot.visibility_range_end_margin = mass.visibility_range_end_margin
 	add_child(foot)
