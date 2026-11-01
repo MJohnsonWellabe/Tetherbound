@@ -16,6 +16,7 @@
   | 7 | P2-048 | `menu.json map_region_header.enabled` |
   | 8 | P2-071 | `human_swim_visual.uiposes_stroke_candidates` |
   | 9 | P2-004 | `hud.json quiet_empty_slots.enabled` |
+  | 10 | F36 (1) roster: faint and hit | `f36_pose_candidates.json roster_pose_r1.enabled` |
 
 - **Criteria closed: zero.** These are game changes awaiting GPU verdicts. No CPU scores are claimed; each group had one CPU sanity capture except where noted.
 - **Not built:**
@@ -25,6 +26,18 @@
   - **Blocked or unscored:** P2-118 (Cloudreach catch fixture blocked).
   - **Too risky for the gain:** P2-031 (changes the rebinding focus graph).
 - **Local only, never committed:** `tests/fixtures/earned_saves` was removed to free disk in this container.
+
+## Group 10 (coordinator priority): roster-wide F36 faint/hit, `roster_pose_r1`
+
+- **Flag:** `f36_pose_candidates.json:roster_pose_r1.enabled`.
+- **Scope:** every enabled F36 species, listed in MANIFEST under camera_set "F36". Species flagged `remake_owner1101_<species>` in `creature_model_flags.json` are skipped at install. That file is not on main yet; when it lands, the skip applies automatically.
+- **faint:** keeps the authored limb collapse. The nose-down pitch and S-curve are removed and the body rolls into an 84° side-lie between phases 0.2 and 0.85. Each frame is grounded on posed vertices, and the rolled body is re-centred over the contact shadow, so the shadow stays attached.
+- **hit:** an early-peaking grounded pivot recoil, nose up 5° and leaning 4°, layered on the authored hit.
+- **CPU F36 stage (cloudfang, stormcapra, cannonback):**
+  - faint ends flat on its side on the ground for all three;
+  - the first hit tune (−11°) reared bodies up, so it was cut to −5°/4° before pushing.
+- **Not addressed:** the faint-frame material swap the judges named. Nothing in the pose path swaps materials. The only faint-specific visual change is `set_aspect_vfx_suspended` (the aspect flame goes out), so it needs a frame to diagnose.
+- **Tests:** `test_uiposes_roster_pose_r1` (every profile's faint ends side-lying with no pitch; hit returns to rest; remake skip). `test_f36_pose_candidates` passes.
 
 ## Group 9: P2-004 exploration HUD, pad path (6.45 to 6.75)
 
