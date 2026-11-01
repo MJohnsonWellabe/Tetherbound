@@ -19,7 +19,7 @@
   "collision_radius_m": 0.7,
   "camera_distance": 7.5,
   "camera_height": 2.0,
-  "hang_pose": {"upper_lateral": 0.8, "forearm_lateral": 0.65, "body": {"_why": "P2-119 (UIPOSES lane, 1 Nov 2026). GPU item scores 28 Oct: 6.12, the trainer hangs rigidly upright beneath Galecrest with dangling legs, reading as a ladder hang. When enabled the legs trail back with bent knees (one trailing further) and the torso leans into the flight (trainer_model.gd fly_hang_body_rotations); the arms still aim at the grip points. Presentation only; no collider, camera, stamina or network change. OFF until GPU judging.", "enabled": false, "hip_extension_deg": 22.0, "knee_flexion_deg": 50.0, "knee_offset_deg": 12.0, "torso_lean_deg": 12.0, "ankle_point_deg": 25.0, "leg_spread_deg": 4.0}},
+  "hang_pose": {"upper_lateral": 0.8, "forearm_lateral": 0.65, "body": {"_why": "P2-119 (UIPOSES lane, 1 Nov 2026). GPU item scores 28 Oct: 6.12, the trainer hangs rigidly upright beneath Galecrest with dangling legs, reading as a ladder hang. When enabled the legs trail back with bent knees (one trailing further) and the torso leans into the flight (trainer_model.gd fly_hang_body_rotations); the arms still aim at the grip points. Presentation only; no collider, camera, stamina or network change. OFF until GPU judging.", "enabled": true, "hip_extension_deg": 22.0, "knee_flexion_deg": 50.0, "knee_offset_deg": 12.0, "torso_lean_deg": 12.0, "ankle_point_deg": 25.0, "leg_spread_deg": 4.0}},
   "landing_presentation": {
     "duration_s": 0.85,
     "settle_fraction": 0.7,

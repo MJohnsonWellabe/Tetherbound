@@ -14,7 +14,7 @@
   },
   "satchel_focus": {
     "_why": "P2-001 (UIPOSES lane, 1 Nov 2026). GPU UI-PAD High 6.84: the Satchel body is still a charcoal box with small grey text; judges ask for one emphasised element per panel with larger, brighter type. When on, the focused item's icon grows 112 -> 150 px on its own lit round plate, the detail name takes the warm heading accent at FONT_SECTION, and the description reads in TEXT_PRIMARY at the reading floor (tab_backpack.gd satchel_focus). PRESENTATION ONLY. OFF until GPU judging.",
-    "enabled": false,
+    "enabled": true,
     "preview_icon_px": 150,
     "plate_border_alpha": 0.55,
     "name_px": 36,

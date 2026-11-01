@@ -1,6 +1,6 @@
 {
   "_comment": "P2-108 (UIPOSES lane, 1 Nov 2026). GPU item score 28 Oct 4.97: the mounted Aquaryn stands upright on the water in an identical pose with no splash and a long hard shadow on the water, reading as walking on glass. When enabled, a listed mount swimming with a rider sits extra_sink_m deeper (its 5 m body was 4 m above the surface; the seated rider stays above sea level), bobs bob_amplitude_m over bob_period_s, and casts no shadow on the water (scripts/world/water_mount_presentation.gd via water_mounted_swim.gd). Presentation of the existing swim follow only; no stamina, collision, network or save change. OFF until GPU judging.",
-  "enabled": false,
+  "enabled": true,
   "mounts": {
     "water_aquaryn": {"extra_sink_m": 0.9, "bob_amplitude_m": 0.12, "bob_period_s": 1.8, "shadows_off": true}
   }

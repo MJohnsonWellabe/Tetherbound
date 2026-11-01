@@ -17,7 +17,7 @@
   "light_colour": "#ffc77a",
   "light_energy": 1.6,
   "light_range_m": 9.0,
-  "arrival_pools": {"enabled": false, "_candidate": "World dressing P2-038 (OFF until GPU judged; tb/world-dressing). GPU 4.54: the Lantern Pools frame is a dirt path through grass with no pool or lantern. Two more pools beside the destination point, inside the arrival view (screened on the CPU close frame: camera at -386.9,1392.6 facing 43 deg), and the installed Meshy lantern posts in place of the black box posts. Pools on ground steeper than max_relief_m are still skipped.", "with_lantern_model": true, "_why_relief": "r2: both arrival pools were skipped by the 0.36 m flatness limit on CPU; each carries its own max_relief_m and still levels at mid-relief.", "pools": [{"at": [-376.1, 1397.6], "radius_m": 2.6, "stones": 4, "lantern_angle_deg": 210, "max_relief_m": 1.2}, {"at": [-379.3, 1406.0], "radius_m": 2.8, "stones": 4, "lantern_angle_deg": 250, "max_relief_m": 1.2}]},
+  "arrival_pools": {"enabled": true, "_candidate": "World dressing P2-038 (OFF until GPU judged; tb/world-dressing). GPU 4.54: the Lantern Pools frame is a dirt path through grass with no pool or lantern. Two more pools beside the destination point, inside the arrival view (screened on the CPU close frame: camera at -386.9,1392.6 facing 43 deg), and the installed Meshy lantern posts in place of the black box posts. Pools on ground steeper than max_relief_m are still skipped.", "with_lantern_model": true, "_why_relief": "r2: both arrival pools were skipped by the 0.36 m flatness limit on CPU; each carries its own max_relief_m and still levels at mid-relief.", "pools": [{"at": [-376.1, 1397.6], "radius_m": 2.6, "stones": 4, "lantern_angle_deg": 210, "max_relief_m": 1.2}, {"at": [-379.3, 1406.0], "radius_m": 2.8, "stones": 4, "lantern_angle_deg": 250, "max_relief_m": 1.2}]},
   "pools": [
     {
       "at": [
@@ -101,7 +101,7 @@
     "max_lift_m": 0.25
   },
   "lantern_model": {
-    "enabled": false,
+    "enabled": true,
     "_candidate": "r33 (OFF until judged). r30b/r31/r32 judges x3: the posts read as 'flat black bars'; asked for real lanterns with lit glass and copper. The Meshy stormwood_lantern_post (tb/meshy-1024 a24b25f7a, concept c1_1: aged timber post, carved bracket, hanging aged-copper lantern with patina and lit square panes, mossy stone footing) replaces the box post at each pool. Lit panes glow (warm flame light only), one warm light at the lantern.",
     "model": "res://assets/props/meshy-1024/stormwood_lantern_post/stormwood_lantern_post.glb",
     "height_m": 2.6,

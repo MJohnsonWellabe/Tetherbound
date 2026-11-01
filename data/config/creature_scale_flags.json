@@ -28,7 +28,7 @@
   },
   "creatures_vis_taller_mirejaw": {
    "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: mirejaw 6.52 'Low, at trainer height' (R3, listed as config-only); not in the three landed height flags. Hard rule: creatures taller than the 1.80 m trainer; grow the smaller side. x1.35 (2.8 -> 3.78 m placeholder height); the CO16 height arms gained +0.24 to +0.64 at x1.35-1.8.",
-   "enabled": false,
+   "enabled": true,
    "species": {
     "mirejaw": 1.35
    }

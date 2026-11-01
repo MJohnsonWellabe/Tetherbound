@@ -382,7 +382,7 @@
     "_comment": "Individually authored roadside pockets. Offsets are [sideways, forward] metres from each anchor; dimensions are actual final mesh bounds. Keep the route centre free and never bridge a missing surface with dressing.",
     "visibility_range_m": 320.0,
     "plaza_paving_candidate": {
-      "enabled": false,
+      "enabled": true,
       "_why": "P2-076 (GPU DLG-2 1 Nov, mapped 6.92; judges: 'the ground is a flat brown dirt plane instead of pale stratified stone'). When enabled, cloudreach_world.gd _build_authored_route_details also places these pockets: a worn stone-paving apron (installed RockPath_Round_Wide, stone palette) around where Kelm actually stands at Cliffhold (CPU r1: his runtime body is about 14 m east of the authored post, so the apron is anchored on his body) and where Captain Veyra actually stands on the summit (her runtime body is about 100 m north of the authored post), with low rocks at the edges. Visual only, no collision; route centre and speaker stands unchanged. OFF until GPU judged.",
       "pockets": [
         {

@@ -1,0 +1,404 @@
+{
+ "batch": 4,
+ "items": [
+  {
+   "item": "F38 light (all exterior)",
+   "camera_set": "tools/phase2_capture_locations.gd",
+   "stands": [
+    "meadows__band1_lower_meadows__01__grandpas_village__day__approach",
+    "meadows__band1_lower_meadows__01__grandpas_village__night__approach",
+    "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day__approach",
+    "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__night__approach",
+    "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day__approach",
+    "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__night__approach",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach",
+    "meadows__band1_lower_meadows__01__grandpas_village__vista_dusk"
+   ]
+  },
+  {
+   "item": "P2-003",
+   "camera_set": "tools/phase2_capture_locations.gd",
+   "stands": [
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day__close",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__night__close",
+    "meadows__band5_stronghold_approach__10__meadows_hall__day__approach",
+    "meadows__band5_stronghold_approach__10__meadows_hall__night__approach"
+   ]
+  },
+  {
+   "item": "P2-006",
+   "camera_set": "tools/phase2_capture_locations.gd",
+   "stands": [
+    "meadows__band3_the_river_lock__06__old_mill_crossing__day__close",
+    "meadows__band3_the_river_lock__06__old_mill_crossing__night__close",
+    "meadows__landmark__old_mill_crossing__day__approach",
+    "meadows__landmark__old_mill_crossing__day__close",
+    "meadows__landmark__old_mill_crossing__night__close"
+   ]
+  },
+  {
+   "item": "P2-012",
+   "camera_set": "tools/phase2_capture_locations.gd",
+   "stands": [
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__day__close",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__night__close",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day"
+   ]
+  },
+  {
+   "item": "OWNER-1031 floating drums: rock-shoulder shelves/outcrops over meadows (P2-023)",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --ground-cover-cache --subset=zzznomatch --times=day --views=approach,close --spot=ownerdrum@16.5,4313.2@56",
+   "stands": [
+    "cloudreach__spot__ownerdrum__day__approach",
+    "cloudreach__spot__ownerdrum__day__close"
+   ]
+  },
+  {
+   "item": "OWNER-1031 floating drums: drum bottoms and beacon plinths (P2-023)",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --ground-cover-cache --times=day --views=approach --subset=landmark__realm_gate_crag --subset=high_roost_sky_shrine__07__sky_shrine --subset=landmark__three_bells_bridge",
+   "stands": [
+    "cloudreach__landmark__realm_gate_crag__day__approach",
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+    "cloudreach__landmark__three_bells_bridge__day__approach"
+   ]
+  },
+  {
+   "item": "OWNER-1031 floating drums: cliff wall profile (P2-023)",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --ground-cover-cache --times=day --views=approach --subset=landmark__sky_shrine_heartstone --subset=high_roost_sky_shrine__07__sky_shrine --subset=landmark__three_bells_bridge",
+   "stands": [
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+    "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+    "cloudreach__landmark__three_bells_bridge__day__approach"
+   ]
+  },
+  {
+   "item": "P2-066",
+   "camera_set": "tools/phase2_capture_current_states.gd -- --seed=2042",
+   "stands": [
+    "S1_live_t0",
+    "S1_live_t1",
+    "S2_live_t0"
+   ]
+  },
+  {
+   "item": "P2-067",
+   "camera_set": "tools/phase2_capture_current_states.gd -- --seed=2042",
+   "stands": [
+    "S1_live_t0",
+    "S1_restored_t0",
+    "S2_live_t0"
+   ]
+  },
+  {
+   "item": "P2-026",
+   "camera_set": "tools/phase2_capture_routes.gd -- --biome=water --seed=2042 --subset=water__drowned_garden__21__drowned_garden_terraces --subset=water__sluice_isle__14__sluice_channel_bridge",
+   "stands": [
+    "water__drowned_garden__21__drowned_garden_terraces__route_day",
+    "water__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+    "water__sluice_isle__14__sluice_channel_bridge__route_day"
+   ]
+  },
+  {
+   "item": "P2-008",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=water --seed=2042 --times=day --views=close --subset=water__first_shore__01__first_shore_welcome_beacon ; tools/phase2_capture_routes.gd -- --biome=water --seed=2042 --subset=water__first_shore__02__first_shore_horizon_stones --subset=water__brine_steps__06__brine_steps_east_beach",
+   "stands": [
+    "water__first_shore__01__first_shore_welcome_beacon__day__close",
+    "water__first_shore__02__first_shore_horizon_stones__route_day",
+    "water__brine_steps__06__brine_steps_east_beach__walk_03_day"
+   ]
+  },
+  {
+   "item": "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items)",
+   "camera_set": "per-frame repro commands in ralph/reports/VISUAL/item-scores/job.json (phase2_capture_locations / phase2_capture_routes / phase2_capture_dialogue, --seed=2042); day and night",
+   "stands": [
+    "water__first_shore__01__first_shore_welcome_beacon__day__close",
+    "water__landmark__lastlight__day__close",
+    "water__landmark__sluice_channel_bridge__day__close",
+    "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+    "water__drowned_garden__21__drowned_garden_terraces__route_day",
+    "water__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+    "water__first_shore__02__first_shore_horizon_stones__route_day",
+    "water__gull_rest__19__gull_rest_signal_spire__route_day",
+    "water__lantern_cove__17__lantern_cove_drift_arch__route_day",
+    "water__sluice_isle__14__sluice_channel_bridge__route_day",
+    "water__inventory__character__water_adair",
+    "water__inventory__character__water_adair__dialogue",
+    "water__inventory__character__water_bren",
+    "water__inventory__character__water_corin",
+    "water__inventory__character__water_iona__dialogue",
+    "water__inventory__character__water_nalia__dialogue",
+    "water__inventory__character__water_nerissa__dialogue",
+    "water__inventory__character__water_rowan__dialogue",
+    "water__inventory__trainer__water_trainer_bex__dialogue",
+    "water__inventory__trainer__water_trainer_daro__dialogue",
+    "water__inventory__trainer__water_trainer_irva__dialogue",
+    "water__inventory__trainer__water_trainer_nerissa__dialogue"
+   ]
+  },
+  {
+   "item": "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items)",
+   "camera_set": "per-frame repro commands in ralph/reports/VISUAL/item-scores/job.json (phase2_capture_locations / phase2_capture_routes / phase2_capture_dialogue, --seed=2042); day and night",
+   "stands": [
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+    "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach",
+    "cloudreach__landmark__broken_skyroad_arch__day__approach",
+    "cloudreach__landmark__realm_gate_crag__day__approach",
+    "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+    "cloudreach__landmark__sky_shrine_heartstone__day__close",
+    "cloudreach__landmark__three_bells_bridge__day__approach",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+    "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach",
+    "cloudreach__windscar_ravine__05__windscar_beacon__day__approach",
+    "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day",
+    "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk",
+    "cloudreach__inventory__character__captain_veyra__dialogue",
+    "cloudreach__inventory__character__defector_rusk__dialogue",
+    "cloudreach__inventory__character__keeper_maela",
+    "cloudreach__inventory__character__naturalist_sora",
+    "cloudreach__inventory__character__naturalist_sora__dialogue",
+    "cloudreach__inventory__character__trader_kelm__dialogue",
+    "cloudreach__inventory__character__young_trainer_tavi",
+    "cloudreach__inventory__character__young_trainer_tavi__dialogue"
+   ]
+  },
+  {
+   "item": "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish)",
+   "camera_set": "per-frame repro commands in ralph/reports/VISUAL/item-scores/job.json (phase2_capture_locations / phase2_capture_routes / phase2_capture_dialogue, --seed=2042)",
+   "stands": [
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+    "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach",
+    "cloudreach__landmark__broken_skyroad_arch__day__approach",
+    "cloudreach__landmark__realm_gate_crag__day__approach",
+    "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+    "cloudreach__landmark__sky_shrine_heartstone__day__close",
+    "cloudreach__landmark__three_bells_bridge__day__approach",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+    "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach",
+    "cloudreach__windscar_ravine__05__windscar_beacon__day__approach",
+    "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day",
+    "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk"
+   ]
+  },
+  {
+   "item": "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters)",
+   "camera_set": "per-frame repro commands in ralph/reports/VISUAL/item-scores/job.json (phase2_capture_locations / phase2_capture_routes / phase2_capture_dialogue, --seed=2042)",
+   "stands": [
+    "water__first_shore__01__first_shore_welcome_beacon__day__close",
+    "water__landmark__lastlight__day__close",
+    "water__landmark__sluice_channel_bridge__day__close",
+    "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+    "water__drowned_garden__21__drowned_garden_terraces__route_day",
+    "water__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+    "water__first_shore__02__first_shore_horizon_stones__route_day",
+    "water__gull_rest__19__gull_rest_signal_spire__route_day",
+    "water__lantern_cove__17__lantern_cove_drift_arch__route_day",
+    "water__sluice_isle__14__sluice_channel_bridge__route_day"
+   ]
+  },
+  {
+   "item": "P2-038",
+   "camera_set": "tools/phase2_capture_locations.gd --biome=stormwood (job.json repro)",
+   "stands": [
+    "stormwood__deepwood__10__the_fallen_giant__day__close",
+    "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+    "stormwood__glowmoss_hollows__04__crown_overlook__day__close"
+   ]
+  },
+  {
+   "item": "P2-056",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+   "stands": [
+    "stormwood__inventory__character__defector_sable",
+    "stormwood__inventory__character__grunt_lieutenant_dace",
+    "stormwood__inventory__character__tether_lieutenant_varga"
+   ]
+  },
+  {
+   "item": "P2-055",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+   "stands": [
+    "stormwood__inventory__character__elder_maud",
+    "stormwood__inventory__character__rodkeeper_hesk",
+    "stormwood__inventory__character__warden_elect_bryn"
+   ]
+  },
+  {
+   "item": "P2-095",
+   "camera_set": "pad",
+   "stands": [
+    "meadows__system__crafting"
+   ]
+  },
+  {
+   "item": "P2-096",
+   "camera_set": "pad",
+   "stands": [
+    "meadows__system__crafting"
+   ]
+  },
+  {
+   "item": "P2-108",
+   "camera_set": "tools/phase2_capture_tidewake_mounted_swim.gd --seed=2042",
+   "stands": [
+    "tidewake__system__mounted-swim-03-mounted",
+    "tidewake__system__mounted-swim-04-mounted",
+    "tidewake__system__mounted-swim-05-mounted"
+   ]
+  },
+  {
+   "item": "P2-050",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json P2-050 subsets)",
+   "stands": [
+    "meadows__inventory__character__oskar",
+    "meadows__inventory__character__halda",
+    "meadows__inventory__character__lark"
+   ]
+  },
+  {
+   "item": "F36 (0) #3 Galewisp",
+   "camera_set": "F36",
+   "stands": [
+    "galewisp"
+   ]
+  },
+  {
+   "item": "F36 (0) #4 Mudsnout",
+   "camera_set": "F36",
+   "stands": [
+    "mudsnout"
+   ]
+  },
+  {
+   "item": "F36 (0) #9 Mirejaw",
+   "camera_set": "F36",
+   "stands": [
+    "mirejaw"
+   ]
+  },
+  {
+   "item": "F36 (0) #12 Aeriex",
+   "camera_set": "F36",
+   "stands": [
+    "aeriex"
+   ]
+  },
+  {
+   "item": "F36 (1) Aquaryn",
+   "camera_set": "F36",
+   "stands": [
+    "aquaryn"
+   ]
+  },
+  {
+   "item": "F36 (0) #16 Ashtusk",
+   "camera_set": "F36",
+   "stands": [
+    "ashtusk"
+   ]
+  },
+  {
+   "item": "F36 (1) Breezetail",
+   "camera_set": "F36",
+   "stands": [
+    "breezetail"
+   ]
+  },
+  {
+   "item": "F36 (0) #6 Burrowback",
+   "camera_set": "F36",
+   "stands": [
+    "burrowback"
+   ]
+  },
+  {
+   "item": "F36 (0) #17 Cannonback",
+   "camera_set": "F36",
+   "stands": [
+    "cannonback"
+   ]
+  },
+  {
+   "item": "F36 (1) Cindercub",
+   "camera_set": "F36",
+   "stands": [
+    "cindercub"
+   ]
+  },
+  {
+   "item": "F36 (1) Cliffspike",
+   "camera_set": "F36",
+   "stands": [
+    "cliffspike"
+   ]
+  },
+  {
+   "item": "F36 (0) #11 Cloudfang",
+   "camera_set": "F36",
+   "stands": [
+    "cloudfang"
+   ]
+  },
+  {
+   "item": "F36 (1) Cragclaw",
+   "camera_set": "F36",
+   "stands": [
+    "cragclaw"
+   ]
+  },
+  {
+   "item": "F36 (1) Craghorn",
+   "camera_set": "F36",
+   "stands": [
+    "craghorn"
+   ]
+  },
+  {
+   "item": "F36 (1) Duskhush",
+   "camera_set": "F36",
+   "stands": [
+    "duskhush"
+   ]
+  },
+  {
+   "item": "F36 (1) Frostclaw",
+   "camera_set": "F36",
+   "stands": [
+    "frostclaw"
+   ]
+  },
+  {
+   "item": "F36 (0) #14 Fulgocobra",
+   "camera_set": "F36",
+   "stands": [
+    "fulgocobra"
+   ]
+  },
+  {
+   "item": "F36 (1) Glimmermoth",
+   "camera_set": "F36",
+   "stands": [
+    "glimmermoth"
+   ]
+  },
+  {
+   "item": "F36 (1) Mangrove Monitor",
+   "camera_set": "F36",
+   "stands": [
+    "mangrove_monitor"
+   ]
+  }
+ ]
+}
