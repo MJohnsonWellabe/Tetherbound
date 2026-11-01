@@ -450,6 +450,9 @@ func _stand_up_ground_cover() -> void:
 		return
 	var dunes := preload("res://scripts/world/water_dune_cover.gd")
 	profile = dunes.ground_profile(profile as Dictionary, dunes.config())
+	# P2-008 preview of the flag-off clearing feather (built_feather_enabled).
+	if OS.get_cmdline_user_args().has("--grass-feather-candidate"):
+		(profile as Dictionary)["built_feather_enabled"] = true
 	# close-1024 `stones_candidate` (OFF in play): grouped pebbles and a tide band.
 	var stones_candidate: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("stones_candidate", {})
 	if not stones_candidate.is_empty():
