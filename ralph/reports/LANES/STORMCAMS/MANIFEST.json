@@ -434,5 +434,16 @@
    "stormwood__inventory__character__trader_oswin__dialogue"
   ],
   "group": 3
+ },
+ {
+  "item": "P2-040",
+  "flag": "data/config/stormwood_road_current.json:puddle_candidate.enabled",
+  "camera_set": "tools/phase2_capture_locations.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__deepwood__09__lantern_hollow__day__close",
+   "stormwood__landmark__glass_field__day__close",
+   "stormwood__landmark__lantern_hollow__night__close"
+  ],
+  "group": 4
  }
 ]
