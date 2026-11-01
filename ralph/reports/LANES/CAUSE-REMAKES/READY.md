@@ -1,5 +1,35 @@
 # Cause lane: owner-rule remakes finish (tb/cause-remakes)
 
+## Lane stopped (owner, 1 Nov ~23:45 UTC): summary for the creature lane that picks this up
+
+**All flags ship OFF.** All 48 `remake_owner1101_*` model flags, the 3 coat flags and the 2
+scale flags are OFF. The code changes act only when a remake model is live:
+- `creature_pose_candidates.recipe_for`;
+- the remake paths in `water_rest_pose_visual.gd`.
+With flags OFF the game is unchanged. The last edit reverted my aspect-variant skip in
+`creature_body._apply_coat_flags`, which would have dropped the enabled Stormtrail and
+Nightburrow coat lifts.
+
+**Not run locally.** None of the named tests ran. The container has 0.74 GB of disk free, too
+little for a Godot import, and replacing the git store to free space was refused. Every "fixed"
+below is waiting on CI or a lane with disk.
+
+| Held remake (PR #793 CI) | State | Where |
+|---|---|---|
+| Torrentoad | Fixed, not run: attack retimed to the installed contact (15/23), rest binding | group 6 |
+| Meadowhart | Fixed, not run: skin node renamed MeadowhartBareBody | group 7 |
+| Burrowback, Trailpup, Paddlenewt, Tuskroot (variants) | Fixed, not run: Nightburrow, Stormtrail, Riftfrill and Ashtusk ride the base flags with aspect textures repainted for the remake UVs | groups 8–11 |
+| Ashtusk | Fixed: own-mesh remake flag removed; it is now the Tuskroot variant | group 11 |
+| Frostclaw | Fixed, not run: F36 recipe and the judged profile converted to the remake rig | group 12 |
+| Terrapup | Fixed, not run: re-proportioned to the installed dog3 footprint (x 0.83, z 1.05, height kept) for the Warrens admission | group 13 |
+| Riptusk | Fixed, not run: water rest binding | group 14 |
+| Bramblebun | Fixed, not run: alpha and shiny colourways repainted on the remake | group 15 |
+| Ripplet | **Remains: parked** (smoke_combat camera anchor; analysis below) | — |
+
+Visual arms, all OFF, were never GPU-judged (groups 1–5): glow that reads (46 species), plate
+blend (Terrapup, Bramblebun), dark lift (Brooktail, Voltarach), body-line heights (7 species),
+judged-short heights (Terrapup, Pipwing).
+
 ## Status at 23:45 UTC 1 Nov: nothing has run locally. Bramblebun fixed but not run; Ripplet parked
 
 **No species in groups 6–15 has been run locally against the coordinator's named tests**
@@ -100,9 +130,10 @@ the changed scripts.
   - **Stormtrail keeps its look.** Same rules: storm-grey coat, lighter muzzle and chest, blue
     storm veins (2.8% of the surface, 1.8% before). Its spine-line glow layer selects nothing on
     the remake; the veins carry the glow.
-  - **Coat flags skip aspect variants** (`creature_body._apply_coat_flags`), as they already
-    skip shinies. Otherwise `remake_owner1101_glow_read`, keyed by the shared remake albedo,
-    would reach the variant and break its swap.
+  - **Coat flags** need no change. They run after the colourway swap (`_refresh_shiny_tint`),
+    so a variant's albedo is already its own `_<variant>.png` and the base remake's glow key
+    does not match it. An earlier skip for aspect variants was reverted: it would have turned
+    off the enabled Stormtrail and Nightburrow coat lifts.
 - **Ashtusk.** Its own-mesh flag `remake_owner1101_ashtusk` is removed, along with its
   glow-pass entry. Its old remake files stay on disk unreferenced. As a Tuskroot variant it
   rides `remake_owner1101_tuskroot`. That flag sets `aspect_source_species: "tuskroot"`, because

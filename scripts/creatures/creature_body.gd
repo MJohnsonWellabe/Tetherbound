@@ -1227,10 +1227,7 @@ static func coat_material(source: BaseMaterial3D, spec: Dictionary) -> BaseMater
 
 
 func _apply_coat_flags() -> void:
-	# An aspect variant, like a shiny, wears its own colourway: a base coat's
-	# glow or regrade (keyed by the shared remake albedo) would otherwise reach
-	# the variant and its swap would self-light the whole albedo.
-	if not _has_model or shiny or aspect_variant != "" or _model == null:
+	if not _has_model or shiny or _model == null:
 		return
 	var coats := _coat_flag_map()
 	if coats.is_empty():
