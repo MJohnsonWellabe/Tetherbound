@@ -1,0 +1,1280 @@
+[
+  {
+    "item": "P2-015",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=terrapup --seed=2042",
+    "stands": [
+      "meadows__terrapup__fainted",
+      "meadows__terrapup__resting"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-015",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=veridian --seed=2042",
+    "stands": [
+      "meadows__veridian__fainted"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-015",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=terrapup --seed=2042",
+    "stands": [
+      "meadows__terrapup__fainted",
+      "meadows__terrapup__resting"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-015",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=veridian --seed=2042",
+    "stands": [
+      "meadows__veridian__fainted"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-016",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=terrapup --seed=2042",
+    "stands": [
+      "meadows__terrapup__hurt"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-016",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=nightburrow --seed=2042",
+    "stands": [
+      "meadows__nightburrow__hurt",
+      "meadows__nightburrow__moving"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-016",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=terrapup --seed=2042",
+    "stands": [
+      "meadows__terrapup__hurt"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-016",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=nightburrow --seed=2042",
+    "stands": [
+      "meadows__nightburrow__hurt",
+      "meadows__nightburrow__moving"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-062",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-01",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-01"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-062",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-02",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-02"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-062",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-03",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-03"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-062",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-01",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-01"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-062",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-02",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-02"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-062",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-03",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-03"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-017",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=brooktail --seed=2042",
+    "stands": [
+      "meadows__brooktail__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-017",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=pipwing --seed=2042",
+    "stands": [
+      "meadows__pipwing__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-017",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=bramblebun --seed=2042",
+    "stands": [
+      "meadows__bramblebun__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-017",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=brooktail --seed=2042",
+    "stands": [
+      "meadows__brooktail__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-017",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=pipwing --seed=2042",
+    "stands": [
+      "meadows__pipwing__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-017",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=bramblebun --seed=2042",
+    "stands": [
+      "meadows__bramblebun__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-033",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__pickup__good_candy --seed=2042",
+    "stands": [
+      "meadows__inventory__pickup__good_candy"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-033",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__pickup__rare_candy --seed=2042",
+    "stands": [
+      "meadows__inventory__pickup__rare_candy"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-033",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__pickup__potion_small --seed=2042",
+    "stands": [
+      "meadows__inventory__pickup__potion_small"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-033",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__pickup__good_candy --seed=2042",
+    "stands": [
+      "meadows__inventory__pickup__good_candy"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-033",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__pickup__rare_candy --seed=2042",
+    "stands": [
+      "meadows__inventory__pickup__rare_candy"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-033",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__pickup__potion_small --seed=2042",
+    "stands": [
+      "meadows__inventory__pickup__potion_small"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-058",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_catch.gd -- --seed=2042",
+    "stands": [
+      "meadows__catching__01-aiming-full-health",
+      "meadows__catching__catch_low",
+      "meadows__catching__catch_high"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-058",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_catch.gd -- --seed=2042",
+    "stands": [
+      "meadows__catching__01-aiming-full-health",
+      "meadows__catching__catch_low",
+      "meadows__catching__catch_high"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-119",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_realm_flight.gd -- --biome=meadows --seed=2042",
+    "stands": [
+      "meadows__flying__launch",
+      "meadows__flying__glide"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-119",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_realm_flight.gd -- --biome=meadows --seed=2042",
+    "stands": [
+      "meadows__flying__launch",
+      "meadows__flying__glide"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-063",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-02",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-02"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-063",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-03",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-03"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-063",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-05",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-05"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-063",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-02",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-02"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-063",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-03",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-03"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-063",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-05",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-05"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-034",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__harvest__orb_basic --seed=2042",
+    "stands": [
+      "meadows__inventory__harvest__orb_basic"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-034",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__harvest__travel_pack --seed=2042",
+    "stands": [
+      "meadows__inventory__harvest__travel_pack"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-034",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__harvest__attack_tonic --seed=2042",
+    "stands": [
+      "meadows__inventory__harvest__attack_tonic"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-034",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__harvest__orb_basic --seed=2042",
+    "stands": [
+      "meadows__inventory__harvest__orb_basic"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-034",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__harvest__travel_pack --seed=2042",
+    "stands": [
+      "meadows__inventory__harvest__travel_pack"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-034",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__harvest__attack_tonic --seed=2042",
+    "stands": [
+      "meadows__inventory__harvest__attack_tonic"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-059",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_catch.gd -- --seed=2042",
+    "stands": [
+      "meadows__catching__03-strike",
+      "meadows__catching__03-absorbing",
+      "meadows__catching__04-orb-resting"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-059",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_catch.gd -- --seed=2042",
+    "stands": [
+      "meadows__catching__03-strike",
+      "meadows__catching__03-absorbing",
+      "meadows__catching__04-orb-resting"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-060",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_catch.gd -- --seed=2042",
+    "stands": [
+      "meadows__catching__02-orb-in-flight",
+      "meadows__catching__03-strike",
+      "meadows__catching__03-absorbing"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-060",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_catch.gd -- --seed=2042",
+    "stands": [
+      "meadows__catching__02-orb-in-flight",
+      "meadows__catching__03-strike",
+      "meadows__catching__03-absorbing"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-069",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_realm_flight.gd -- --biome=meadows --seed=2042",
+    "stands": [
+      "meadows__flying__glide",
+      "meadows__flying__landed"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-069",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_realm_flight.gd -- --biome=meadows --seed=2042",
+    "stands": [
+      "meadows__flying__glide",
+      "meadows__flying__landed"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-086",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__tournament_quarter_mira --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__tournament_quarter_mira__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-086",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__tournament_semi_tam --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__tournament_semi_tam__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-086",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__tournament_final_oskar --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__tournament_final_oskar__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-086",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__tournament_quarter_mira --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__tournament_quarter_mira__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-086",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__tournament_semi_tam --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__tournament_semi_tam__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-086",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__tournament_final_oskar --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__tournament_final_oskar__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-087",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__old_champion_bram --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__old_champion_bram__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-087",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__stronghold_courtyard --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__stronghold_courtyard__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-087",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__stronghold_elite --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__stronghold_elite__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-087",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__old_champion_bram --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__old_champion_bram__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-087",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__stronghold_courtyard --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__stronghold_courtyard__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-087",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__stronghold_elite --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__stronghold_elite__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-004",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_ui.gd -- --biome=meadows --seed=2042",
+    "stands": [
+      "meadows__exploration_hud"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-003",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --times=day --views=approach --seed=2042",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-003",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --times=night --views=approach --seed=2042",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-003",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__landmark__stronghold --times=day --views=approach --seed=2042",
+    "stands": [
+      "meadows__landmark__stronghold__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-003",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --times=day --views=approach --seed=2042",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-003",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --times=night --views=approach --seed=2042",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-003",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__landmark__stronghold --times=day --views=approach --seed=2042",
+    "stands": [
+      "meadows__landmark__stronghold__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-005",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --times=day --views=approach --seed=2042",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-005",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --times=day --views=approach --seed=2042",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-005",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band3_the_river_lock__06__old_mill_crossing --times=day --views=close --seed=2042",
+    "stands": [
+      "meadows__band3_the_river_lock__06__old_mill_crossing__day__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-005",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --times=day --views=approach --seed=2042",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-005",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --times=day --views=approach --seed=2042",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-005",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band3_the_river_lock__06__old_mill_crossing --times=day --views=close --seed=2042",
+    "stands": [
+      "meadows__band3_the_river_lock__06__old_mill_crossing__day__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-006",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band3_the_river_lock__06__old_mill_crossing --times=day --views=close --seed=2042",
+    "stands": [
+      "meadows__band3_the_river_lock__06__old_mill_crossing__day__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-006",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__landmark__village --times=day --views=close --seed=2042",
+    "stands": [
+      "meadows__landmark__village__day__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-006",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__landmark__band1_trail_camp --times=day --views=close --seed=2042",
+    "stands": [
+      "meadows__landmark__band1_trail_camp__day__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-006",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__band3_the_river_lock__06__old_mill_crossing --times=day --views=close --seed=2042",
+    "stands": [
+      "meadows__band3_the_river_lock__06__old_mill_crossing__day__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-006",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__landmark__village --times=day --views=close --seed=2042",
+    "stands": [
+      "meadows__landmark__village__day__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-006",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=meadows --subset=meadows__landmark__band1_trail_camp --times=day --views=close --seed=2042",
+    "stands": [
+      "meadows__landmark__band1_trail_camp__day__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-013",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band3_the_river_lock__05__the_tether_relay --seed=2042",
+    "stands": [
+      "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+      "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-013",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band3_the_river_lock__05__the_tether_relay --seed=2042",
+    "stands": [
+      "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+      "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-014",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-014",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --seed=2042",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__route_day"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-014",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-014",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --seed=2042",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__route_day"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-018",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=nightburrow --seed=2042",
+    "stands": [
+      "meadows__nightburrow__shiny_idle",
+      "meadows__nightburrow__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-018",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=stormtrail --seed=2042",
+    "stands": [
+      "meadows__stormtrail__shiny_idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-018",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=nightburrow --seed=2042",
+    "stands": [
+      "meadows__nightburrow__shiny_idle",
+      "meadows__nightburrow__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-018",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=stormtrail --seed=2042",
+    "stands": [
+      "meadows__stormtrail__shiny_idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-020",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=bramblebun --seed=2042",
+    "stands": [
+      "meadows__bramblebun__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-020",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=pipwing --seed=2042",
+    "stands": [
+      "meadows__pipwing__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-020",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=mosshell --seed=2042",
+    "stands": [
+      "meadows__mosshell__fainted"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-020",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=bramblebun --seed=2042",
+    "stands": [
+      "meadows__bramblebun__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-020",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=pipwing --seed=2042",
+    "stands": [
+      "meadows__pipwing__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-020",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=mosshell --seed=2042",
+    "stands": [
+      "meadows__mosshell__fainted"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-064",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_warden_aldis-03",
+    "stands": [
+      "meadows__fights__warden_aldis-03"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-064",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_warden_aldis-05",
+    "stands": [
+      "meadows__fights__warden_aldis-05"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-064",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_warden_aldis-08",
+    "stands": [
+      "meadows__fights__warden_aldis-08"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-064",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_warden_aldis-03",
+    "stands": [
+      "meadows__fights__warden_aldis-03"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-064",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_warden_aldis-05",
+    "stands": [
+      "meadows__fights__warden_aldis-05"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-064",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_warden_aldis-08",
+    "stands": [
+      "meadows__fights__warden_aldis-08"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-065",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-00-before",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-00-before"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-065",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-a01",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-a01"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-065",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-99-after",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-99-after"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-065",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-00-before",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-00-before"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-065",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-a01",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-a01"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-065",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_fights.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=8 --interval=0.35 --resolve=won --after-frames=6 --attack --tell-frames --keep-alive --seed=2042 --out=res://ralph/reports/VISUAL/phase2/meadows/repro_fights_south_bridge_grunt-99-after",
+    "stands": [
+      "meadows__fights__south_bridge_grunt-99-after"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-012",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-012",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-019",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=trailpup --seed=2042",
+    "stands": [
+      "meadows__trailpup__alpha_idle",
+      "meadows__trailpup__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-019",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=brooktail --seed=2042",
+    "stands": [
+      "meadows__brooktail__alpha_idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-019",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=trailpup --seed=2042",
+    "stands": [
+      "meadows__trailpup__alpha_idle",
+      "meadows__trailpup__idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-019",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_creatures.gd -- --biome=meadows --only=brooktail --seed=2042",
+    "stands": [
+      "meadows__brooktail__alpha_idle"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-035",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__prop__camp_tent --seed=2042",
+    "stands": [
+      "meadows__inventory__prop__camp_tent"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-035",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__prop__camp_bed --seed=2042",
+    "stands": [
+      "meadows__inventory__prop__camp_bed"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-035",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__prop__bonfire_fire --seed=2042",
+    "stands": [
+      "meadows__inventory__prop__bonfire_fire"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-035",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__prop__camp_tent --seed=2042",
+    "stands": [
+      "meadows__inventory__prop__camp_tent"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-035",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__prop__camp_bed --seed=2042",
+    "stands": [
+      "meadows__inventory__prop__camp_bed"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-035",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=meadows --subset=meadows__inventory__prop__bonfire_fire --seed=2042",
+    "stands": [
+      "meadows__inventory__prop__bonfire_fire"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-094",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_build_systems.gd -- --biome=meadows --seed=2042",
+    "stands": [
+      "meadows__system__building"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-094",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_build_systems.gd -- --biome=meadows --seed=2042",
+    "stands": [
+      "meadows__system__building"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-050",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__oskar --seed=2042",
+    "stands": [
+      "meadows__inventory__character__oskar"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-050",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__halda --seed=2042",
+    "stands": [
+      "meadows__inventory__character__halda"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-050",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__lark --seed=2042",
+    "stands": [
+      "meadows__inventory__character__lark"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-050",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__oskar --seed=2042",
+    "stands": [
+      "meadows__inventory__character__oskar"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-050",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__halda --seed=2042",
+    "stands": [
+      "meadows__inventory__character__halda"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-050",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__lark --seed=2042",
+    "stands": [
+      "meadows__inventory__character__lark"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-078",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__kell --seed=2042",
+    "stands": [
+      "meadows__inventory__character__kell__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-078",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__corin --seed=2042",
+    "stands": [
+      "meadows__inventory__character__corin__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-078",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__captain_field --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__captain_field__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-078",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__kell --seed=2042",
+    "stands": [
+      "meadows__inventory__character__kell__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-078",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__corin --seed=2042",
+    "stands": [
+      "meadows__inventory__character__corin__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-078",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__trainer__captain_field --seed=2042",
+    "stands": [
+      "meadows__inventory__trainer__captain_field__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-079",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__quarry_foreman --seed=2042",
+    "stands": [
+      "meadows__inventory__character__quarry_foreman__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-079",
+    "flag": "data/config/meadows_look.json:cause_light.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__garrick --seed=2042",
+    "stands": [
+      "meadows__inventory__character__garrick__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-079",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__quarry_foreman --seed=2042",
+    "stands": [
+      "meadows__inventory__character__quarry_foreman__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-079",
+    "flag": "data/config/meadows_look.json:cause_ground.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=meadows --subset=meadows__inventory__character__garrick --seed=2042",
+    "stands": [
+      "meadows__inventory__character__garrick__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-014",
+    "flag": "data/config/capture_stands.json:buried_stand_guard.enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day"
+    ],
+    "group": 1,
+    "note": "capture-stand fix, not a look change: OFF arm reproduces the buried walk_02/walk_03 stands; ON re-seats them. Judge with cause_light/cause_ground OFF for a clean read, or with both ON as also_on.",
+    "also_on_optional": [
+      "data/config/meadows_look.json:cause_light.enabled",
+      "data/config/meadows_look.json:cause_ground.enabled"
+    ]
+  }
+]

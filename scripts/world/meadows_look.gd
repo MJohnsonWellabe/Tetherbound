@@ -5,10 +5,16 @@ extends "res://scripts/world/world_look.gd"
 const MEADOWS_SURFACES := preload("res://scripts/world/meadows_surface_finish.gd")
 const MEADOWS_GRADE := preload("res://scripts/world/meadows_colour_grade.gd")
 var _meadows_candidate: Dictionary = {}
+## Viewport values `cause_ground.viewport` replaced, restored on exit.
+var _cause_viewport_restore: Dictionary = {}
+## `cause_ground.viewport`, read once at load (the environment re-applies on
+## the clock; no file read per apply).
+var _cause_viewport: Dictionary = {}
 
 
 func _load() -> Dictionary:
-	var base := light_candidate_look(super._load())
+	var base := cause_light_look(light_candidate_look(super._load()), MEADOWS_SURFACES.CONFIG)
+	_cause_viewport = cause_ground_viewport(MEADOWS_SURFACES.CONFIG)
 	_meadows_candidate = MEADOWS_SURFACES.settings()
 	if not bool(_meadows_candidate.get("enabled", false)):
 		return base
@@ -28,6 +34,64 @@ static func light_candidate_look(base: Dictionary) -> Dictionary:
 	return merged_look(base, candidate.get("look", {}))
 
 
+## Cause lane tb/cause-meadows (OFF until GPU-judged): meadows_look.json
+## `cause_light.look` merged over the loaded look, after light_candidate, so
+## the two compose. Off: `base` unchanged. `look_path` is a parameter so a
+## unit test can point it at a fixture.
+static func cause_light_look(base: Dictionary, look_path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(look_path))
+	if not parsed is Dictionary:
+		return base
+	var cause: Dictionary = (parsed as Dictionary).get("cause_light", {})
+	if not bool(cause.get("enabled", false)):
+		return base
+	return merged_look(base, cause.get("look", {}))
+
+
+## `cause_ground.viewport` while `cause_ground.enabled`, else empty. Only the
+## two texture-clarity keys are honoured.
+static func cause_ground_viewport(look_path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(look_path))
+	if not parsed is Dictionary:
+		return {}
+	var cause: Dictionary = (parsed as Dictionary).get("cause_ground", {})
+	if not bool(cause.get("enabled", false)):
+		return {}
+	var viewport: Dictionary = cause.get("viewport", {})
+	var out: Dictionary = {}
+	for key: String in ["anisotropic_filtering_level", "texture_mipmap_bias"]:
+		if viewport.has(key):
+			out[key] = viewport[key]
+	return out
+
+
+func _apply_cause_viewport() -> void:
+	var wanted := _cause_viewport
+	var viewport := get_viewport()
+	if wanted.is_empty() or viewport == null:
+		return
+	if _cause_viewport_restore.is_empty():
+		_cause_viewport_restore = {
+			"anisotropic_filtering_level": viewport.anisotropic_filtering_level,
+			"texture_mipmap_bias": viewport.texture_mipmap_bias,
+		}
+	if wanted.has("anisotropic_filtering_level"):
+		viewport.anisotropic_filtering_level = clampi(int(wanted.anisotropic_filtering_level), 0, 4) \
+			as Viewport.AnisotropicFiltering
+	if wanted.has("texture_mipmap_bias"):
+		viewport.texture_mipmap_bias = clampf(float(wanted.texture_mipmap_bias), -2.0, 0.0)
+
+
+func _exit_tree() -> void:
+	# The Meadows' texture clarity must not follow the player into another realm.
+	var viewport := get_viewport()
+	if _cause_viewport_restore.is_empty() or viewport == null:
+		return
+	viewport.anisotropic_filtering_level = _cause_viewport_restore.anisotropic_filtering_level
+	viewport.texture_mipmap_bias = float(_cause_viewport_restore.texture_mipmap_bias)
+	_cause_viewport_restore = {}
+
+
 func _ready() -> void:
 	super._ready()
 	if not bool(_meadows_candidate.get("enabled", false)):
@@ -40,6 +104,9 @@ func _ready() -> void:
 
 func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	super._apply_environment(cfg, sky_cfg)
+	# After super: GRAPHICS_PREFS.apply_viewport runs there and would otherwise
+	# put its own (absent by default) values back over these.
+	_apply_cause_viewport()
 	if not bool(_meadows_candidate.get("enabled", false)):
 		return
 	var holder := get_node_or_null(environment_path) as WorldEnvironment
