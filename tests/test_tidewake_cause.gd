@@ -79,3 +79,12 @@ func test_currents_part_strips_restored_paint() -> void:
 	assert_eq(on.current_flow.state_shader.live, _raw().current_flow.state_shader.live)
 	if not off.has("current_flow"):
 		assert_false(_with(["sea"]).has("current_flow"), "only currents restores current_flow")
+
+
+func test_horizon_part_adds_props_only_when_on() -> void:
+	assert_false(PROFILE.resolve(_raw()).has("cause_horizon_props"))
+	var props: Array = _with(["horizon"]).cause_horizon_props
+	assert_true(props.size() >= 10)
+	for spec: Dictionary in props:
+		assert_true(spec.has("float_y_m"), "%s sits on the sea, not the seabed" % spec.id)
+		assert_false(spec.has("collider_fraction"), "%s has no collider" % spec.id)
