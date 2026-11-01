@@ -1,4 +1,6 @@
-# VIS-CREATURES lane: READY for tb/vis-batch1
+# VIS-CREATURES lane: READY (rolling groups)
+
+**Manifest format (coordinator, 1 Nov):** creatures use camera_set "F36" (capture_f36_poses --whole-body --context), species names as stands, with each stand's mode (`--candidate` for enabled_species, otherwise plain). NPCs use the character-cast frame ids (`tools/_capture_character_cast.gd`). Group 1 is the material, height and hit batch plus the NPC bodies; group 2 is the pose flags (Galewisp, Mirejaw tail).
 
 ## Summary (1 Nov 2026)
 
