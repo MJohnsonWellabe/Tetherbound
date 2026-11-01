@@ -206,5 +206,14 @@
    "meadows__fights__south_bridge_grunt-99-after"
   ],
   "group": 6
+ },
+ {
+  "item": "P2-048",
+  "flag": "data/config/menu.json:map_region_header.enabled",
+  "camera_set": "tools/phase2_capture_ui.gd --biome=cloudreach --seed=2042",
+  "stands": [
+   "cloudreach__menu_map"
+  ],
+  "group": 7
  }
 ]

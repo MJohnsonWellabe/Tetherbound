@@ -17,6 +17,18 @@
 
 Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
 
+## Group 7: P2-048 Cloudreach map region label (5.87)
+
+- **Flag:** `menu.json:map_region_header.enabled`.
+- **Change:** a "You are here: <region>" line under the realm title on the map tab, in the warm accent. It wraps instead of truncating, and reads the map state's own current region (`tab_map.gd here_text`). This addresses the old cut-off-after-LOWER defect and the newer "no region label at all on a fogged map" note.
+- **Checks:** unit test only. A Cloudreach UI CPU boot was not run, for time and disk.
+
+## Group 6: P2-065 beaten trainer bearing (6.12)
+
+- **Flag:** `npc_post_stances.json:beaten_trainer_stance.enabled`.
+- **Change:** once a beaten trainer's defeat reaction hands off to the stand-down, they keep a bowed head and rounded back (+X on Spine/neck/Head, measured in an isolated grunt render).
+- **CPU Meadows grunt fight:** the after-frames show the grunt hunched rather than upright, but small in frame.
+
 ## Group 5: P2-069 flight landing (5.88, catalogued in all four biomes)
 
 - **Flag:** `fly_traversal.json` `landing_presentation.wing_fold_enabled`, plus Galecrest's `landing_fold_offsets`.

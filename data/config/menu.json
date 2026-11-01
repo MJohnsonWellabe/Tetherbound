@@ -12,6 +12,10 @@
     "card_margin": 6,
     "status_near_top": true
   },
+  "map_region_header": {
+    "_why": "P2-048 (UIPOSES lane, 1 Nov 2026). GPU item score 28 Oct 5.87: the Cloudreach map showed no region label at all (an almost fully fogged first map), so where the player is could not be read; the old defect was the region label cut after LOWER. When on, the map header names the current region ('You are here: <region>') under the realm title in the warm accent, wrapping rather than truncating (tab_map.gd here_text). PRESENTATION ONLY. OFF until GPU judging.",
+    "enabled": false
+  },
   "satchel_focus": {
     "_why": "P2-001 (UIPOSES lane, 1 Nov 2026). GPU UI-PAD High 6.84: the Satchel body is still a charcoal box with small grey text; judges ask for one emphasised element per panel with larger, brighter type. When on, the focused item's icon grows 112 -> 150 px on its own lit round plate, the detail name takes the warm heading accent at FONT_SECTION, and the description reads in TEXT_PRIMARY at the reading floor (tab_backpack.gd satchel_focus). PRESENTATION ONLY. OFF until GPU judging.",
     "enabled": false,
