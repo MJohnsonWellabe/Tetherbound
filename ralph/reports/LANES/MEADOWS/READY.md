@@ -1,5 +1,11 @@
 # Meadows visual lane (tb/vis-meadows), 1 Nov 2026
 
+**15:25 UTC, compile fix:** 36c838031 renames `crossing_hall.gd apply_hall_layer`'s parameter `key` to `layer` (it was shadowed by the function's own `for key` loops, a parse error that broke every Meadows capture). This is the same fix as on the batch branch. Every script this branch touches now passes a Godot `--check-only` parse (method in TECHNICAL §8.1, since there is no import here):
+- clean outright: `crossing_hall.gd`, `crossing_hall_arch_facades.gd`, `grass_field.gd`;
+- clean with its one texture preload stubbed: `water.gd`;
+- new functions checked in isolation with stubs, because dependency scripts' asset preloads block a whole-file check: `stronghold.gd`, `harvest_node.gd`.
+`run_tests.gd` itself still can't run here (autoloads need imported assets), so the new unit tests remain unrun.
+
 **Status (rolling batches, coordinator 13:49/13:54 UTC):** group 1 = six candidates, all flags OFF on this branch, in `MANIFEST.json` with `group: 1` and catalogue frame ids as stands (meadows/manifest.csv ids; F17-6 view ids for the Hall). No single-candidate READY lines.
 
 | Item | Flag (set true) | Change |
