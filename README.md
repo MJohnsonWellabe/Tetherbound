@@ -12,3 +12,5 @@ grass/flower/bush counts) and Cloudreach launches pass --ground-cover-cache. mai
 main/'s remaining biomes and extras are shot on local 9ba38c96b = 2f2901db0 + tb/capture-speed. Batch trees: <batch sha> + tb/capture-speed.
 
 Dialogue fixture (coordinator 1 Nov): main/'s frames for batch-1's dialogue stands were shot with batch-1's tools/phase2_capture_dialogue.gd byte-copied from 73a5d9f65 (tool-only; game = main 2f2901db0), so main/ and batch1/ dialogue frames use the same fixture. Realm-flight stands (meadows c016/c017/c026) are skipped on main until the shell-wait fix lands.
+
+Spot stands (1 Nov): main/'s frames for batch-3's --spot stands (OWNER-1031 Cloudreach drums) were shot with tools/phase2_capture_locations.gd byte-copied from e1eb499f4 (batch-3 + capture-speed; tool-only, game = main 9ba38c96b): main's own locations tool has no --spot.
