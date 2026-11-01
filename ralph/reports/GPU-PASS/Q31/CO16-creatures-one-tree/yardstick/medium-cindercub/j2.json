@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Yl": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A naturalistic brown canine that stands taller than the trainer and lies grounded in faint, but the single mid-brown coat with no rim light or lighter face/underside leaves the head and form muddy at small size, below the Palworld creature pop."
+  },
+  "Md": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's violet storm wolf with its rearing hit react and grounded faint is close to the owner's Tanglevolt bar, but side A's hit react is identical to standing and its faint mid/end swap the coat for a white body with black blotches, which sinks the set."
+  },
+  "Ts": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground and wall textures, flat noon light and props that simply vanish between before and after read as a prototype beside Palworld's dense, crisp fields, though A's opened cage, freed villager and smoking ruin carry some site-specific story."
+  },
+  "Ba": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, clean stylised elder with an expressive face, readable eyes and an olive/leather costume that fits the key art's palette sits at Palworld-class character finish, held back only by a slightly short, stiff full-body proportion."
+  },
+  "Xr": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight is crushed into a dark brown-green murk with no purple storm sky, lightning or shafts, telegraphs are flat magenta outlines, the player's creature is barely visible and the HUD panels cover the left and bottom of every frame, nothing like Palworld's bright readable boss fights."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Xr: rebuild the Stormwood fight presentation - lift exposure and add the purple storm sky, white-violet lightning and rim light so both fighters separate from the ground, give the combat camera collision/occlusion fading so trunks and canopy never fill the frame (A i11, i13, i15), replace the flat magenta ground rings/slabs with real lightning or ground-crack telegraphs with impacts, and slim the HUD side and bottom panels.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ts: raise ground and stronghold wall material resolution and break the blurred tiling with authored grass/path edges and a warmer time-of-day grade; make every after frame a site-specific aftermath (banner torn down, enemy gone, props left as wreckage rather than vanishing - B rows 2-5 keep banners or delete the cage outright).",
+   "kind": "scene"
+  },
+  {
+   "change": "Md A / Yl: fix the faint-state material swap that turns Md A's coat white with black blotches and give its hit react a distinct pose; lighten Yl's coat with a paler face, muzzle and underside plus a rim light so the head reads at 30%.",
+   "kind": "scene"
+  }
+ ]
+}

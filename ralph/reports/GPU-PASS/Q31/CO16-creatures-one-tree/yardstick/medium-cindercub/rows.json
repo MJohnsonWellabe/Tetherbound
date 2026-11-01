@@ -1,0 +1,54 @@
+[
+ {
+  "batch": 1,
+  "code": "Yl",
+  "label": "CO16 f4coat-cindercub Medium one-sided",
+  "side": "CO16-f4coat-cindercub-Medium",
+  "mapped": 7.58,
+  "judges": [
+   7.53,
+   7.53,
+   7.7
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Yl",
+  "label": "CO16 f4coat-cindercub Medium one-sided",
+  "side": "CO16-f4coat-cindercub-Medium",
+  "mapped": 7.58,
+  "judges": [
+   7.53,
+   7.53,
+   7.7
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ }
+]

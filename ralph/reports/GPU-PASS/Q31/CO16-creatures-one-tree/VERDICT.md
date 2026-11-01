@@ -9,7 +9,7 @@
 - **Don't land:**
   - **CO-F36-1** (side-lie faints): Cragclaw −0.65 and water Cragclaw −0.61, and the rolled body now floats.
   - **CO-F36-7** (matte finish): it had **no visible effect**, so it can't be judged as built.
-- **Cindercub with the coat lift maps to 7.51 at High**, so it gets a Medium run (queued) for its MET line.
+- **MET: Cindercub with the CO-F36-4 coat lift: 7.51 at High and 7.58 at Medium** (Medium added 31 Oct, see below). Both clear 7.5, by thin margins.
 - Nothing else reaches 7.5.
 
 High, control (tree A, every flag off) → candidate (one flag on):
@@ -65,6 +65,13 @@ High, control (tree A, every flag off) → candidate (one flag on):
   - Each arm flips exactly one flag, receipts in `CO16-flips.txt`.
   - CO-F36-1 and CO-F36-2 copy a pose JSON built on tree A's own `f36_pose_candidates.json`: the Sirenseal flag set to true, or co-f36-1 e5667aecd's Cragclaw and Skyrill profile lines.
 - **Command:** `capture_f36_poses.gd --whole-body --context`, High, standard crop. One launch per arm per mode (`--candidate` for recipe species, plain for own-clip species, as in the lane's table). No species dropped out of a group run.
+
+**Cindercub Medium (queue 61, added 31 Oct 22:20):**
+- **Capture:** tree A c4806f1ab with `flags.creatures_f36_coat_lift.enabled` flipped to true (receipt in `CO16-flips.txt`). Plain mode, the same `capture_f36_poses.gd --whole-body --context` command as at High, Medium preset (isolated APPDATA), standard crop. Four poses: standing, hit react, faint mid, faint end.
+- **Judging:** one-sided set (the same strip on both sides), as for Tanglevolt Medium. 4 anchor pairs, three code-blind judges, high anchors. Fit r 0.91, RMSE 0.48, confirming.
+- **Result:** mapped **7.58**, from per-judge 7.53 / 7.53 / 7.70. **MET** (7.51 High, 7.58 Medium).
+- **Defects at Medium:** float FIXED 3. The coat defect is **PARTIAL 3**, against FIXED 3 at High. The judges read the coat as one mid-brown with no lighter face or underside and no rim light, so the head softens at small size.
+- **To widen the margin:** a paler muzzle, face and underside, and a rim light so the head reads at small size. Files: `yardstick/medium-cindercub/`.
 
 **Method:**
 - 26 two-sided sets in 3 batches, each with 4 anchor pairs, three code-blind judges per batch, high anchors.
