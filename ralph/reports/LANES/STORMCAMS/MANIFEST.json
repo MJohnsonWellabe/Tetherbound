@@ -370,6 +370,17 @@
   "group": 3
  },
  {
+  "item": "P2-056",
+  "flag": "data/config/stormwood_character_rim.json:enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__defector_sable",
+   "stormwood__inventory__character__grunt_lieutenant_dace",
+   "stormwood__inventory__character__tether_lieutenant_varga"
+  ],
+  "group": 3
+ },
+ {
   "item": "P2-082",
   "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
   "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
