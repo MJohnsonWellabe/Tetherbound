@@ -25,4 +25,21 @@ Two likely causes:
 
 Per the stop rule, I'm parking this until there is a new idea. The next idea would be to place slabs by raycast onto the actual crown collider, instead of using `ground_height_at`, and to log the placed and rejected tile counts.
 
-**Not READY.**
+## Attempt 3 (coordinator-approved, final)
+
+**Change:**
+- Slabs and props are placed by a ray cast down onto the real static ground collider, skipping characters and creatures.
+- The ray cast waits two physics frames so the colliders the realm just built can be queried.
+- Placed and rejected counts are logged.
+- Veyra's props moved nearer (27–29 m) and scaled to 1.25–1.3.
+
+**Log:** `Backdrop_kelm paving placed=40 rejected=0`, `Backdrop_veyra paving placed=162 rejected=0`.
+
+**CPU capture:** the paving is still not visible behind either speaker. Veyra's props now read a little better at the wall, and Kelm's props are unchanged.
+
+Every tile was placed, so placement is no longer the problem. What remains is how the slab renders here. Possible causes:
+- The Floor_UnevenBrick material or colour blends into the plaza ground at this distance.
+- The slab draws under the realm's crown surface.
+- The mesh is culled from this view angle.
+
+**Stopped as agreed; no further attempts. Not READY.**

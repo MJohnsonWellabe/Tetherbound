@@ -17,9 +17,40 @@ var _cache: Dictionary = {}
 
 func build(world: Node3D, cfg: Dictionary) -> void:
 	_world = world
+	_raycast = bool(cfg.get("raycast_ground", true))
+	# Colliders the realm built this frame are only queryable after a physics
+	# step; wait two before casting down onto them.
+	if _raycast and is_inside_tree():
+		for _frame in 2:
+			await get_tree().physics_frame
 	for raw: Variant in cfg.get("sites", []):
 		if raw is Dictionary:
 			_build_site(raw as Dictionary, cfg)
+
+
+var _raycast := true
+
+
+## The walkable surface under (x, z): a ray cast down onto the realm's real
+## static colliders (crowns, terraces, floors), skipping characters and
+## creatures. Falls back to the analytic ground_height_at with no collider.
+func _surface(x: float, z: float, hint: float) -> float:
+	if _raycast and is_inside_tree() and get_world_3d() != null:
+		var space := get_world_3d().direct_space_state
+		var query := PhysicsRayQueryParameters3D.create(Vector3(x, hint + 12.0, z), Vector3(x, hint - 12.0, z))
+		query.collide_with_areas = false
+		var exclude: Array[RID] = []
+		for _try in 4:
+			query.exclude = exclude
+			var hit := space.intersect_ray(query)
+			if hit.is_empty():
+				break
+			var collider: Object = hit.get("collider")
+			if collider is CharacterBody3D or collider is RigidBody3D:
+				exclude.append(hit.get("rid"))
+				continue
+			return float((hit.position as Vector3).y)
+	return _ground(x, z, hint)
 
 
 func _build_site(site: Dictionary, cfg: Dictionary) -> void:
@@ -60,6 +91,7 @@ func _lay_paving(root: Node3D, centre: Vector3, paving: Dictionary, cfg: Diction
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(paving.get("seed", 76))
 	var placed := 0
+	var rejected := 0
 	var nx := int(ceil(half.x / step))
 	var nz := int(ceil(half.y / step))
 	for ix in range(-nx, nx + 1):
@@ -79,17 +111,19 @@ func _lay_paving(root: Node3D, centre: Vector3, paving: Dictionary, cfg: Diction
 					blocked = true
 			if blocked:
 				continue
-			var y := _ground(at.x, at.y, centre.y)
+			var y := _surface(at.x, at.y, centre.y)
 			if is_nan(y) or absf(y - centre.y) > float(paving.get("height_tolerance_m", 2.0)):
+				rejected += 1
 				continue
 			var h := step * 0.45
 			var flat := true
 			for d: Vector2 in [Vector2(h, h), Vector2(-h, h), Vector2(h, -h), Vector2(-h, -h)]:
-				var yy := _ground(at.x + d.x, at.y + d.y, y)
+				var yy := _surface(at.x + d.x, at.y + d.y, y)
 				if is_nan(yy) or absf(yy - y) > flat_tol:
 					flat = false
 					break
 			if not flat:
+				rejected += 1
 				continue
 			var slab := scene.instantiate() as Node3D
 			_strip_collision(slab)
@@ -99,6 +133,7 @@ func _lay_paving(root: Node3D, centre: Vector3, paving: Dictionary, cfg: Diction
 			slab.global_position = Vector3(at.x, y - sink, at.y)
 			placed += 1
 	root.set_meta("paving_tiles", placed)
+	print("[cloudreach_backdrops] %s paving placed=%d rejected=%d step=%.2f" % [root.name, placed, rejected, step])
 
 
 func _place_prop(root: Node3D, centre: Vector3, prop: Dictionary) -> void:
@@ -108,8 +143,9 @@ func _place_prop(root: Node3D, centre: Vector3, prop: Dictionary) -> void:
 	var off: Array = prop.get("offset", [0.0, 0.0])
 	var x := centre.x + float(off[0])
 	var z := centre.z + float(off[1])
-	var y := _ground(x, z, centre.y)
+	var y := _surface(x, z, centre.y)
 	if is_nan(y) or absf(y - centre.y) > float(prop.get("height_tolerance_m", 2.5)):
+		print("[cloudreach_backdrops] prop rejected %s" % str(prop.get("model", "")))
 		return
 	var node := scene.instantiate() as Node3D
 	_strip_collision(node)
