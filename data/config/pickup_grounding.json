@@ -3,11 +3,11 @@
   "enabled": true,
   "tier_candidate": {
   "enabled": false,
-  "_why": "P2-045 (GPU WD2 1 Nov, 5.92): Good and Great candy still share one form and scale and read only by glow colour. On: each tier its own silhouette from the installed model (scripts/world/pickup_grounding.gd tier_spec/_tier_cluster): Good one sweet at 0.85x, Great a leaning pair at 1.0x, Rare a stacked trio at 1.15x. Visual copies only; claim, collider and save unchanged. OFF until GPU judged.",
+  "_why": "P2-045 (GPU WD2 1 Nov, 5.92): Good and Great candy still share one form and scale and read only by glow colour. On: each tier its own silhouette from the installed model (scripts/world/pickup_grounding.gd tier_spec/_tier_cluster): Good one sweet at 0.85x, Great a pair at 0.9x, Rare a trio at 0.95x, copies smaller (0.72x / 0.66x) and close so nothing clips. Batch-1 GPU (5.70 -> 5.31) judged the old duplicate bug (oversized green copies); copies are now built after the tier tint. Visual copies only; claim, collider and save unchanged. OFF until GPU judged.",
   "items": {
    "good_candy": {"scale_mult": 0.85, "count": 1},
-   "great_candy": {"scale_mult": 1.0, "count": 2, "spread": 0.75, "copy_scale": 0.9},
-   "rare_candy": {"scale_mult": 1.15, "count": 3, "spread": 0.8, "copy_scale": 0.85}
+   "great_candy": {"scale_mult": 0.9, "count": 2, "spread": 0.7, "copy_scale": 0.72},
+   "rare_candy": {"scale_mult": 0.95, "count": 3, "spread": 0.72, "copy_scale": 0.66}
   }
  },
  "families": {
