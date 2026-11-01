@@ -1,5 +1,9 @@
 # Cause lane: Cloudreach cliffs, clouds, light and meadow (tb/cause-cloudreach)
 
+## Stopped (1 Nov 2026, coordinator stop on owner direction)
+
+Lane stopped and archived. Branch head carries one round. Every part is OFF: the master `enabled` and all four `<part>.enabled` keys in `data/config/cloudreach_cause.json` are false, and with them off nothing changes (unit-tested). It is safe to land flag-off. The one GPU arm to judge is `data/config/cloudreach_cause.json:enabled`, with the items in `MANIFEST.json`. Not CPU-captured (no disk for an import); tests 11/11 headless with the asset loads stubbed.
+
 ## Status (1 Nov 2026, round 1, group 1)
 
 **For the GPU queue:** one arm, `data/config/cloudreach_cause.json:enabled` (the master switch turns on all four parts). `MANIFEST.json` lists every F40 world-view item whose frames it changes: 15 items, 23 camera entries. Each part also has its own `<part>.enabled` key, for a per-part arm if the combined arm gains and attribution is wanted.
