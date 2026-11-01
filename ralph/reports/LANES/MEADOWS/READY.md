@@ -14,3 +14,11 @@
 **Not verified on this lane:** no CPU capture was possible. The container has 3.3 GB free and the project has no `.godot` import (a full import would not fit), so Godot can't compile the project here and the new unit tests are unrun. Each change is config-gated and reviewed by hand; the batch build's GPU capture is the first render.
 
 **Composition:** each flag lives in its own new key; shared files get appended blocks only (no reformatting). `hall_2` layers after `hall_1` (needs `hall_1` on, as on main).
+
+**Scope items not built, and why:**
+- P2-013 relay yard and P2-020 creature ground contact: their fixes are already ON on main (`tether_relay.json ground_pad.grass_clear`; every grass, flower and bush tier honours those discs. `creature_grass_clear.json`). They only need a GPU judge, which the batch run against main can't show (no diff).
+- P2-014 (faceted planes at band2_stone_and_root_1): I couldn't identify the source from the 24 Oct sheet (horizon ranges or quarry/terrain cliff), and I had no capture to check. Parked until there's a frame.
+- Hall grouped furnishing / villagers (HALL-1 path item 2): furniture pieces collide, so adding them blind risks the portal routes. Not built.
+- P2-018, and the animation, UI and dialogue-camera rows: out of this lane's scene/material scope, or Cloudreach-only rows.
+
+**Next round:** once the batch judging lands, I fix the regressions and the items still under 7 that it names.
