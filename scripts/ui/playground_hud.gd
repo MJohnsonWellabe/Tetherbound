@@ -1045,6 +1045,7 @@ var _clarity: Dictionary = {}
 ## persistent quickbar, legend, roster, creature card and prompt step back so
 ## the payoff owns the frame. Presentation only.
 var _victory_focus: Dictionary = {}
+var _quiet_empty_slots: Dictionary = {}
 ## P2-004 round 7 (hud.json `hud_lean`, empty = off): fewer boxes, not
 ## smaller text. The quick bar and legend lose their backing panels (slots
 ## keep their own frames, legend text keeps its outline), the day/time line
@@ -2748,6 +2749,8 @@ func _clarity_value_outline(label: Label) -> void:
 func _apply_hud_config(config: Dictionary) -> void:
 	var victory_focus: Variant = config.get("victory_focus", {})
 	_victory_focus = victory_focus if victory_focus is Dictionary and victory_focus.get("enabled") == true else {}
+	var quiet: Variant = config.get("quiet_empty_slots", {})
+	_quiet_empty_slots = quiet if quiet is Dictionary and quiet.get("enabled") == true else {}
 	var clarity: Variant = config.get("clarity_pass", {})
 	_clarity = clarity if clarity is Dictionary and clarity.get("enabled") == true else {}
 	var lean: Variant = config.get("hud_lean", {})
@@ -4584,6 +4587,13 @@ func _update_hotbar(inventory: RefCounted) -> void:
 				# A thin spacer line so the chip's background cannot ride up
 				# over the item icon above it (round 4 judge: slot 1's flask).
 				glyph = "[font_size=%d] [/font_size]\n%s" % [int(_clarity.get("key_chip_gap_px", 6)), glyph]
+		if id.is_empty() and not _quiet_empty_slots.is_empty() and INPUT_GLYPH.using_gamepad():
+			# P2-004 (UIPOSES, hud.json `quiet_empty_slots`, OFF): an empty
+			# slot keeps its binding glyph (five visible bindings) but drawn
+			# smaller and muted, so the unassigned slots stop reading as five
+			# bright placeholder badges.
+			glyph = INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i],
+				int(_quiet_empty_slots.get("glyph_px", 28)), Color(1, 1, 1, float(_quiet_empty_slots.get("glyph_alpha", 0.4))))
 		var text: String
 		if id.is_empty():
 			# Blank second line, not a "-" glyph: a blind critic read the old

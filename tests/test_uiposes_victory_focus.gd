@@ -22,3 +22,9 @@ func test_focus_hides_listed_tiers_only() -> void:
 		assert_false(bool(focused[key]), "%s yields to the victory moment" % key)
 	assert_eq(focused.mode, mode.mode, "presentation mode itself is unchanged")
 	assert_true(bool(mode.hotbar), "the policy's own result is not mutated")
+
+
+func test_quiet_empty_slots_ships_off() -> void:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	assert_false(bool(parsed.quiet_empty_slots.enabled), "quiet_empty_slots defaults OFF")
+	assert_true(float(parsed.quiet_empty_slots.glyph_alpha) > 0.0, "empty bindings stay visible")
