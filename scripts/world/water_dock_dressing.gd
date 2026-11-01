@@ -34,6 +34,14 @@ func build(water_world: Node3D) -> void:
 		# Unjudged pier additions (the Meshy sloop) ride their own section, so
 		# they ship in the file but stay OFF in play until a round passes them.
 		cfg = preload("res://scripts/world/tidewake_look_profile.gd").merge(cfg, look.get("dock_dressing_candidate", {}))
+		# `beach_declutter_candidate` (OFF in play; owner 31 Oct "too cluttered"):
+		# the hamlet keeps two Meshy beach huts and a few working props, the pier
+		# deck keeps bollards, one crate stack and its lantern.
+		var declutter: Dictionary = look.get("beach_declutter_candidate", {})
+		if not declutter.is_empty():
+			cfg["village_candidate"] = preload("res://scripts/world/tidewake_look_profile.gd").merge(
+				cfg["village_candidate"], declutter.get("dock_village", {}))
+			cfg = preload("res://scripts/world/tidewake_look_profile.gd").merge(cfg, declutter.get("dock_dressing", {}))
 	var world_cfg: Dictionary = water_world.get("config")
 	var anchors := {}
 	for anchor: Variant in world_cfg.get("anchors", []):

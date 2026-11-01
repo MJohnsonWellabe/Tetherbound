@@ -1,0 +1,27 @@
+{
+ "asset": "Tidewake beach focal piece: beach_hut (owner 31 Oct: declutter the Tidewake locations, Meshy beach huts and a beach bar as their focus)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a1937f-049a-7334-8a33-602876f45912",
+  "prompt": "a small beach hut raised on driftwood stilts over the sand, steep palm-thatch roof with deep overhang, plank walls, a little porch with a ladder, woven shutters, a hanging glass-float lantern, for a tropical island fishing village in a creature-collecting adventure game, weathered pale driftwood, palm thatch, sun-bleached canvas in sand, teal and turquoise accents, rope and shells, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter view from slightly above, centered, whole object visible, plain light grey background, soft even daylight, no red, no text, no people, no creatures",
+  "inspected_before_submission": true
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a1937f-8242-7665-885f-62b5a1536441",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 30000,
+   "symmetry_mode": "auto"
+  },
+  "file": "beach_hut.glb",
+  "sha256": "c0b373675d655a3736d43c875114b8decfee888b0b4db8a1e761768071fd78b3"
+ }
+}

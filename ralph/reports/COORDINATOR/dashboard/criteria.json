@@ -2695,10 +2695,10 @@
     },
     {
      "text": "F36 (1) cindercub: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
-     "status": "in_progress",
-     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.89 -> 7.51 (Medium queued), dark coat FIXED 3/3; stronger hit 6.50 -> 6.82. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): cindercub mapped 7.18 (tier 7-7.5). CPU whole-roster round r3: mapped 7.51 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "status": "met",
+     "evidence": "GPU Q31 CO16 creatures one-tree, judge of record (tb/gpu-pass e173f5346 High, 7a2fa4147 Medium; ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/ incl. yardstick/medium-cindercub/): with the CO-F36-4 coat lift (landed #784) cindercub maps 7.51 at High and 7.58 at Medium (7.53/7.53/7.70, fit r 0.91); float FIXED 3/3, coat PARTIAL/FIXED, no pose PRESENT (CO-F36-6 hit: PARTIAL 1 / FIXED 2). MET. Earlier: GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.89 -> 7.51 (Medium queued), dark coat FIXED 3/3; stronger hit 6.50 -> 6.82. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): cindercub mapped 7.18 (tier 7-7.5). CPU whole-roster round r3: mapped 7.51 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Landed: closed 1 Nov 2026 on the GPU yardstick at High and Medium (owner High-first rule); thin margin, next: paler face and underside, rim light.",
      "parent": "F36#1",
      "subject": "cindercub",
      "audit_index": 1
@@ -4609,7 +4609,7 @@
     {
      "text": "F39 (1) top-20 item P2-008 shore landforms: Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 100, lane tb/x04-tidewake. Owner-directed Lake Michigan dune candidate remains off. Historical weathering review PARTIAL and dunes-01 FAIL included invalid optional Salt Crown walk02/03 comparisons; dunes-02 was a four-view dia",
+     "evidence": "GPU Q31 TW-LOOK-1 1 Nov (tb/gpu-pass fb76d9e55, High): Tidewake declutter with the Meshy beach focal set, six islands mean 5.34 -> 6.19 (+0.85): gull_rest 5.33 -> 6.31, tidal_cradle 5.03 -> 5.96, first_shore 5.32 -> 6.19, salt_crown 5.00 -> 5.86, drowned_garden 5.68 -> 6.46, lantern_cove 5.69 -> 6.36; focal-building defect PRESENT -> PARTIAL 6/6. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 100, lane tb/x04-tidewake. Owner-directed Lake Michigan dune candidate remains off. Historical weathering review PARTIAL and dunes-01 FAIL included invalid optional Salt Crown walk02/03 comparisons; dunes-02 was a four-view dia",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
@@ -4667,7 +4667,7 @@
     {
      "text": "F39 (1) top-20 item P2-011 named destination read: Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 80, lane tb/x04-tidewake. Seeded route proxy corroborates generic location stands; reshoot true authored route before assigning site work. The Gull Rest tower itself remains a visible local marker.",
+     "evidence": "GPU Q31 TW-LOOK-1 1 Nov (tb/gpu-pass fb76d9e55, High): Tidewake declutter with the Meshy beach focal set, six islands mean 5.34 -> 6.19 (+0.85): gull_rest 5.33 -> 6.31, tidal_cradle 5.03 -> 5.96, first_shore 5.32 -> 6.19, salt_crown 5.00 -> 5.86, drowned_garden 5.68 -> 6.46, lantern_cove 5.69 -> 6.36; focal-building defect PRESENT -> PARTIAL 6/6. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 80, lane tb/x04-tidewake. Seeded route proxy corroborates generic location stands; reshoot true authored route before assigning site work. The Gull Rest tower itself remains a visible local marker.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
