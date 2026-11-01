@@ -133,6 +133,24 @@
      }
     }
    }
+  },
+  "remake_owner1101_reedwing": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Reedwing, a large teal-headed duck-like waterbird with cream breast and teal wings (Meshy 01a197eb-77a3-77db-bf12-e82900d4a52c). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips, folded wings at the established 2.65 m; emission on the aqua eyes and thin aqua lines on the teal head and wings. Provenance: assets/creatures/tetherbound/reedwing/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "reedwing": {
+     "model": "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101.glb",
+     "colourway_source_species": "reedwing_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
   }
  }
 }

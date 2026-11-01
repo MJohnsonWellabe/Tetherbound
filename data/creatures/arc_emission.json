@@ -91,6 +91,19 @@
    "blur_px": 8.0,
    "soften_px": 1.0,
    "gain": 2.0
+  },
+  "reedwing_owner1101": {
+   "_why": "Owner remake 1 Nov (coordinator pick under the owner rule, flag-off candidate): aqua eyes and thin aqua lines on the teal head and wings. Albedo-derived mask, as the first remake lane's rules.",
+   "model": "assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101.glb",
+   "hue": [
+    165,
+    200
+   ],
+   "sat_min": 0.4,
+   "lift": 0.1,
+   "blur_px": 8.0,
+   "soften_px": 1.0,
+   "gain": 2.0
   }
  }
 }
