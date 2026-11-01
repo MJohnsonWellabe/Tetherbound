@@ -87,6 +87,9 @@ func _case(species: String, recipe: bool) -> void:
 	var skeleton := model.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
 	var rig = SETTLE.Rig.new(model, skeleton, player.get_node(player.root_node), 2400)
 	rig.measure_standing(player.get_animation(StringName(str(clips.get("idle", "")))))
+	var right: Vector3 = rig.forward.cross(Vector3.UP)
+	_check(absf(rig.leg_angle(Vector3.DOWN)) < 0.001, "%s: legs straight down read 0 deg" % species)
+	_check(absf(rad_to_deg(rig.leg_angle(-right)) - 90.0) < 0.5, "%s: legs to the body's left read +90 (a +roll swings them there)" % species)
 	var animation := player.get_animation(StringName(faint))
 	var end := animation.length
 	var points: PackedVector3Array = rig.posed(animation, end, rig.pivot_rotation(animation, end), rig.pivot_position(animation, end))
@@ -116,6 +119,15 @@ func _case(species: String, recipe: bool) -> void:
 	on.free()
 
 
+func _width(points: PackedVector3Array) -> float:
+	var lo := INF
+	var hi := -INF
+	for p in points:
+		lo = minf(lo, p.x)
+		hi = maxf(hi, p.x)
+	return hi - lo
+
+
 func _upright_case() -> void:
 	SETTLE.set_config_for_test(_all_on())
 	var body := _spawn("mosshell")
@@ -127,9 +139,14 @@ func _upright_case() -> void:
 	var rig = SETTLE.Rig.new(model, skeleton, player.get_node(player.root_node), 2400)
 	rig.measure_standing(player.get_animation(StringName(str(clips.get("idle", "")))))
 	var end := faint.length
-	var legs: Variant = rig.limb_direction(faint, end, rig.pivot_rotation(faint, end), rig.pivot_position(faint, end))
-	var from_down := rad_to_deg((legs as Vector3).angle_to(Vector3.DOWN)) if legs is Vector3 else 180.0
-	_check(from_down < 45.0, "mosshell ON (upright species): faint ends shell-up on its legs (%.0f deg from down)" % from_down)
+	var meta: Dictionary = faint.get_meta("settle_faint", {})
+	_check(absf(float(meta.get("roll_deg", 999.0))) < 0.001, "mosshell ON (upright species): never spun through a full turn (roll %s)" % str(meta.get("roll_deg")))
+	var settled := rig.posed(faint, end, rig.pivot_rotation(faint, end), rig.pivot_position(faint, end))
+	_check(absf(SETTLE.Rig.min_y(settled) - (rig.ground_y - rig.standing_height * 0.015)) < 0.03 * rig.standing_height,
+		"mosshell ON: faint end grounded")
+	var original := player.get_animation(StringName(str(clips.get("rest_faint", ""))))
+	var installed := rig.posed(original, end, rig.pivot_rotation(original, end), rig.pivot_position(original, end))
+	_check(_width(settled) > _width(installed) * 1.03, "mosshell ON: limbs splay wider than the installed faint (%.2f vs %.2f m)" % [_width(settled), _width(installed)])
 	body.free()
 
 

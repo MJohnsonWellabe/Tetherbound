@@ -66,7 +66,7 @@ static func _section(cfg: Dictionary, role: String, part: String) -> Dictionary:
 static func any_enabled(cfg: Dictionary) -> bool:
 	if not bool(cfg.get("enabled", false)):
 		return false
-	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"],
+	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "upright_splay"],
 			["hit", "recoil"], ["hit", "grounded"]]:
 		if not _section(cfg, pair[0], pair[1]).is_empty():
 			return true
@@ -189,7 +189,7 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	var grounded := _section(cfg, "faint", "grounded")
 	var side := _section(cfg, "faint", "side_lie")
 	var lift := _section(cfg, "faint", "head_lift")
-	if grounded.is_empty() and side.is_empty() and lift.is_empty():
+	if grounded.is_empty() and side.is_empty() and lift.is_empty() and _section(cfg, "faint", "upright_splay").is_empty():
 		return null
 	var animation := source.duplicate(true) as Animation
 	var times := _times(animation, rig, int(cfg.get("samples", 11)))
@@ -202,22 +202,34 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	var final := rig.posed(animation, end, rotations[-1], positions[-1])
 	var final_height := Rig.height(final)
 	var roll := 0.0
+	var side_sign := 1.0
 	if not side.is_empty():
 		var legs: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
-		var target := deg_to_rad(float(side.get("roll_deg", 78.0)) * signf(float(side.get("roll_sign", 1.0))))
+		var reach := deg_to_rad(float(side.get("roll_deg", 78.0)))
+		side_sign = signf(float(side.get("roll_sign", 1.0)))
 		# Shelled and many-legged bodies collapse flat on their own legs: their
 		# target is legs-down, which also rights a belly-up turtle.
 		var upright := _listed(side.get("upright_species", []), rig.species_id)
-		if upright:
-			target = 0.0
+		if _listed(side.get("exclude_species", []), rig.species_id):
+			legs = null
+			upright = true
 		if legs is Vector3:
-			# Roll about the forward axis until the legs lie out to the side:
-			# a standing or crouched faint (legs down) and a legs-up faint both
-			# end side-lying; a faint already on its side is left alone.
-			roll = rig.roll_to_side(legs as Vector3, target)
+			# Roll about the forward axis until the legs lie out to the side.
+			# A standing or crouched faint (legs down) takes `roll_sign`; a
+			# faint already on a side, or legs-up, keeps the side it fell to
+			# (never flipped over through upright); a near-side-lying faint is
+			# left alone.
+			var angle := rig.leg_angle(legs as Vector3)
+			if absf(angle) > deg_to_rad(float(side.get("keep_side_deg", 25.0))):
+				side_sign = signf(angle)
+			var target := 0.0 if upright else side_sign * reach
+			roll = wrapf(target - angle, -PI, PI)
 		elif not upright and final_height > rig.standing_height * float(side.get("collapse_ratio", 0.62)):
-			roll = target
-		if absf(roll) < deg_to_rad(float(side.get("min_roll_deg", 10.0))):
+			roll = side_sign * reach
+		# Tiny corrections are noise; huge ones spin the body through a full
+		# turn mid-clip (a belly-up turtle righting itself), so keep those.
+		if absf(roll) < deg_to_rad(float(side.get("min_roll_deg", 10.0))) \
+				or absf(roll) > deg_to_rad(float(side.get("max_roll_deg", 120.0))):
 			roll = 0.0
 	if roll != 0.0:
 		var start := float(side.get("roll_start", 0.2))
@@ -225,6 +237,16 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 		for i in times.size():
 			var r := _smooth((times[i] / end - start) / (finish - start))
 			rotations[i] = (Quaternion(rig.forward, roll * r) * rotations[i]).normalized()
+	var splay := _section(cfg, "faint", "upright_splay")
+	var upright_list: Variant = ((cfg.get("faint", {}) as Dictionary).get("side_lie", {}) as Dictionary).get("upright_species", [])
+	if not splay.is_empty() and _listed(upright_list, rig.species_id):
+		# An inverted body (legs above the trunk: a belly-up turtle) splays the
+		# other way; species without a reliable leg axis never count as one.
+		var after: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
+		var settings := splay.duplicate()
+		settings["_inverted"] = after is Vector3 and (after as Vector3).y > 0.0 \
+			and not _listed(((cfg.get("faint", {}) as Dictionary).get("side_lie", {}) as Dictionary).get("exclude_species", []), rig.species_id)
+		rig.splay_limbs(animation, end, rotations[-1], positions[-1], settings)
 	if not lift.is_empty():
 		rig.lift_head(animation, end, rotations[-1], positions[-1], lift)
 	if not grounded.is_empty() or not side.is_empty():
@@ -245,7 +267,7 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	animation.set_meta("settle_faint", {"forward": rig.forward,
 		"centre": Vector3(rig.standing_centre.x, 0.0, rig.standing_centre.y),
 		"rotations": rotations.duplicate(), "positions": positions.duplicate(), "times": times,
-		"roll_deg": rad_to_deg(roll)})
+		"roll_deg": rad_to_deg(roll), "side": side_sign})
 	return animation
 
 
@@ -273,9 +295,10 @@ static func face_camera(model: Node3D, player: AnimationPlayer, clip: String, ca
 	to_camera.y = 0.0
 	if to_camera.length() < 0.01:
 		return 0.0
-	# side_lie rolls the back toward the body's right (forward x up), so that
-	# right should point at the camera: forward = up x right.
-	var target := Vector3.UP.cross(to_camera.normalized())
+	# The baked side says where the back ended: +1 toward the body's right
+	# (forward x up), -1 toward its left. That side should face the camera:
+	# forward = up x right, with right = side * to_camera.
+	var target := Vector3.UP.cross(to_camera.normalized()) * float(baked.get("side", 1.0))
 	var forward: Vector3 = baked.forward
 	var yaw := atan2(forward.cross(target).y, forward.dot(target))
 	var limit := deg_to_rad(float(section.get("max_turn_deg", 110.0)))
@@ -534,16 +557,10 @@ class Rig:
 		standing_height = Rig.height(points)
 		ground_y = Rig.min_y(points)
 		standing_centre = Rig.centre_xz(points)
-		var head: Variant = bone_point(idle, 0.0, "head", base.basis.get_rotation_quaternion(), base.origin)
-		var pelvis: Variant = bone_point(idle, 0.0, "pelvis", base.basis.get_rotation_quaternion(), base.origin)
-		var axis := Vector3.BACK
-		if head is Vector3 and pelvis is Vector3:
-			axis = (head as Vector3) - (pelvis as Vector3)
-			axis.y = 0.0
-		if axis.length() < 0.001:
-			axis = base.basis.z
-			axis.y = 0.0
-		forward = axis.normalized() if axis.length() > 0.001 else Vector3.BACK
+		# Combat faces every creature along +Z in the pivot's parent space
+		# (creature_body.gd applies the per-species model_yaw so the art does);
+		# a head-to-pelvis axis misreads curled necks (Galecrest).
+		forward = Vector3.BACK
 
 	## Mean direction from the trunk (pelvis, spine) to the lower limbs (legs,
 	## not wings), in body space; null when the rig names no lower limbs.
@@ -552,7 +569,7 @@ class Rig:
 		var globals := global_poses(animation, t)
 		var trunk := Vector3.ZERO
 		var trunk_count := 0
-		for name: String in ["pelvis", "spine"]:
+		for name: String in ["pelvis", "spine", "thorax", "abdomen"]:
 			var bone := skeleton.find_bone(name)
 			if bone >= 0:
 				trunk += (to_body * globals[bone]).origin
@@ -564,7 +581,8 @@ class Rig:
 		var count := 0
 		for bone in skeleton.get_bone_count():
 			var name := str(skeleton.get_bone_name(bone)).to_lower()
-			if name.contains("wing") or not (name.contains("lower") or name.contains("foot") or name.contains("paw")):
+			if name.contains("wing") or not (name.contains("lower") or name.contains("foot") or name.contains("paw") \
+					or (name.begins_with("leg_") and name.ends_with("_3"))):
 				continue
 			sum += (to_body * globals[bone]).origin - trunk
 			count += 1
@@ -572,14 +590,65 @@ class Rig:
 			return null
 		return sum / float(count)
 
-	## Signed roll about `forward` that turns the legs' direction (projected
-	## across the body) onto `target` radians from straight down.
-	func roll_to_side(legs: Vector3, target: float) -> float:
+	## Signed angle about `forward` from straight down to the legs' direction
+	## (projected across the body). A +roll about forward swings down toward
+	## the body's left, the back toward its right.
+	func leg_angle(legs: Vector3) -> float:
 		var across := legs - forward * legs.dot(forward)
 		if across.length() < 0.001:
 			return 0.0
-		var goal := Quaternion(forward, target) * Vector3.DOWN
-		return atan2(forward.dot(across.cross(goal)), across.dot(goal))
+		return atan2(forward.dot(Vector3.DOWN.cross(across)), Vector3.DOWN.dot(across))
+
+	## Upright collapse for shelled and many-legged bodies: each upper limb
+	## (a lower-limb bone's parent chain below the trunk) swings outward about
+	## the body's forward axis, away from the trunk's side it sits on, so the
+	## body settles flat onto splayed legs once grounded.
+	func splay_limbs(animation: Animation, t_end: float, rotation: Quaternion, position: Vector3, cfg: Dictionary) -> void:
+		var to_body := _pivot(rotation, position) * to_model
+		var globals := global_poses(animation, t_end)
+		var trunk_bone := skeleton.find_bone("pelvis")
+		if trunk_bone < 0:
+			trunk_bone = skeleton.find_bone("thorax")
+		if trunk_bone < 0:
+			return
+		var trunk := (to_body * globals[trunk_bone]).origin
+		var right := forward.cross(Vector3.UP).normalized()
+		var inverted := bool(cfg.get("_inverted", false))
+		var angle := deg_to_rad(float(cfg.get("splay_deg", 32.0)))
+		var start := float(cfg.get("ramp_start", 0.3))
+		var tracks := _bone_tracks(animation)
+		var done := {}
+		for bone in skeleton.get_bone_count():
+			var name := str(skeleton.get_bone_name(bone)).to_lower()
+			if name.contains("wing") or not (name.contains("upper") or (name.begins_with("leg_") and name.ends_with("_1"))):
+				continue
+			var parent := skeleton.get_bone_parent(bone)
+			var side := ((to_body * globals[bone]).origin - trunk).dot(right)
+			if absf(side) < 0.001 or done.has(bone):
+				continue
+			done[bone] = true
+			var track: int = (tracks.get(bone, {}) as Dictionary).get(Animation.TYPE_ROTATION_3D, -1)
+			if track < 0 or animation.track_get_key_count(track) == 0:
+				continue
+			# +angle about forward swings "down" toward the body's left, so a
+			# left limb (side < 0) splays with +angle on an upright body; an
+			# inverted body (legs above the trunk, a belly-up turtle) flips it.
+			var outward := (angle if side < 0.0 else -angle) * (-1.0 if inverted else 1.0)
+			var axis_skeleton := (to_body.basis.inverse() * forward).normalized()
+			var swing := Quaternion(axis_skeleton, outward)
+			var parent_rotation := globals[parent].basis.get_rotation_quaternion() if parent >= 0 else Quaternion.IDENTITY
+			var local_swing := (parent_rotation.inverse() * swing * parent_rotation).normalized()
+			for phase: float in [start, (start + 1.0) * 0.5, 1.0]:
+				var t := phase * animation.length
+				if animation.track_find_key(track, t, Animation.FIND_MODE_APPROX) < 0:
+					animation.rotation_track_insert_key(track, t, animation.rotation_track_interpolate(track, t))
+			for key in animation.track_get_key_count(track):
+				var r := _smooth((animation.track_get_key_time(track, key) / animation.length - start) / maxf(1.0 - start, 0.05))
+				if r <= 0.0:
+					continue
+				var value: Quaternion = animation.track_get_key_value(track, key)
+				animation.track_set_key_value(track, key, (Quaternion.IDENTITY.slerp(local_swing, r) * value).normalized())
+		bone_tracks.erase(animation.get_instance_id())
 
 	## Lift the neck so the head at the clip's end sits at least
 	## `min_elevation_deg` above level, ramped in over the clip's end.

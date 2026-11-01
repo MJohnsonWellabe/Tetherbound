@@ -1,6 +1,6 @@
 # CAUSE-POSES lane (creature hurt and faint poses, roster-wide) — READY
 
-## Summary (rolling; updated 1 Nov 2026, ~23:00 UTC)
+## Summary (rolling; updated 1 Nov 2026, round 2)
 
 - **Branch:** `tb/cause-poses`, from `origin/tb/land-vis-2`. The flag ships OFF. `MANIFEST.json` lists every entry.
 - **GPU arm (one flip):** `data/config/creature_pose_settle.json:enabled`. Each section inside it keeps its own switch (ON inside the arm), so an arm can drop one section.
@@ -9,6 +9,25 @@
 | Group | Items | Flag |
 |---|---|---|
 | 1 | F36 (1) rows, one per species (70: 48 recipe species with `--candidate`, 22 own-clip species without it), P2-015, P2-016, P2-020, P2-028, P2-063 | `creature_pose_settle.json:enabled` |
+| 2 | Supersedes group 1: the same 75 entries, rebuilt, plus 8 remake pairings. Each pairing adds `also_enable` with its `remake_owner1101_<species>` flag (terrapup, bramblebun, trailpup, brooktail, pipwing, galewisp, mudsnout, mirejaw) and is judged against the remake flag alone. | `creature_pose_settle.json:enabled` |
+
+## Round 2 changes (from CPU OFF/ON comparisons)
+
+- **Keep the side a faint fell to.** A faint that already lies on a side, or lies legs-up, keeps its own side (`keep_side_deg` 25°). `roll_sign` only orients standing or crouched faints.
+  - Round 1's fixed `roll_sign` flipped Mudsnout, Stormursa and Galecrest over, through upright, onto the other side.
+  - `face_camera` now uses the baked side, so either side ends with its back to the camera.
+- **No large spins.** Rolls above `max_roll_deg` (120°) are kept as authored. Mosshell's own belly-up faint stays belly-up rather than spinning a full turn mid-clip.
+- **`exclude_species` (no roll):**
+  - Voltarach: its curled faint has no reliable leg axis.
+  - Galecrest: its own wing-collapse already lies on its side.
+- **`faint.upright_splay`:** for the upright species, the upper limbs swing outward about the forward axis, so the grounded body settles flat onto splayed legs (Cragclaw, Cannonback and Voltarach on CPU). The swing flips for an inverted body, such as the belly-up turtle.
+- **Forward axis is +Z,** the combat facing that `model_yaw` guarantees. Round 1's head-to-pelvis axis misread Galecrest's curled neck.
+- **Remakes, OFF vs ON (F36 stage):**
+  - The remake clips' own faints land belly-up with legs in the air: Terrapup, Bramblebun and Trailpup.
+  - With the arm ON they end side-lying, back to the camera, head up.
+  - Remake hits are left as authored, because they already move more than 4% of height.
+  - Galewisp's remake faint frames rendered black with the arm OFF (an existing capture problem, not this flag).
+- **Near-bar species, OFF vs ON (Tanglevolt, Stormcapra, Stormursa, Riverdrake, Nightburrow, Mudsnout):** the faints stay close to their authored poses, re-grounded and seen from the back. No species flips. See `_sheet_cause_poses_cpu_r2.png`.
 
 ## What the fix does (`scripts/creatures/creature_pose_settle.gd`)
 
@@ -48,7 +67,9 @@ The pass samples a bounded subset of skinned vertices (2,400) under the clip and
 
 ## Not covered or open
 
-- **Many-legged and shelled bodies** (Cragclaw, Cannonback, Voltarach, Burrowback): grounded and righted, but no leg splay, so the faint can still read close to standing.
+- **Shelled and many-legged bodies:**
+  - Burrowback's splay is small, so it still reads close to standing.
+  - Mosshell's own faint stays belly-up, splayed and grounded.
 - **Glimmermoth** (moth) folds small and upright. The wing-only rig has no lower limbs, so the height fallback is used.
 - **Material blotches in the faint:**
   - Nothing in the pose path changes materials; the only faint-time visual change is the aspect-flame hide.
