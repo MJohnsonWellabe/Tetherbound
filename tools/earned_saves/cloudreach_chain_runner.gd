@@ -749,15 +749,23 @@ func _make_handoff_room(biome: String, key_item: String) -> bool:
 		return n
 	for _bite in 12:
 		if free.call() >= 2 or int(inventory.call("count", "cloudberry")) <= 0: break
+		# Food can only target a standing companion: a fainted row is disabled in
+		# the Satchel's care picker (attempt 2 picked fainted row 0 and the refusal
+		# left the picker open, so the following Drop could not focus a slot).
 		var party: RefCounted = game.get("party")
-		var hungriest := 0
+		var hungriest := -1
 		for index in int(party.call("size")):
-			if float(party.call("at", index).get("nourishment")) < float(party.call("at", hungriest).get("nourishment")): hungriest = index
+			var member: RefCounted = party.call("at", index)
+			if bool(member.get("fainted")) or float(member.get("hp")) <= 0.0: continue
+			if hungriest < 0 or float(member.get("nourishment")) < float(party.call("at", hungriest).get("nourishment")): hungriest = index
+		if hungriest < 0: break
 		var care: Dictionary = await team.new().care_existing(self, world, game, "cloudberry", hungriest)
+		await _release_world_input()
 		if not bool(care.get("passed", false)): break
 		disclosures.append("Piece 07: fed a carried cloudberry to party row %d through the Satchel to make room for the held %s hand-off" % [hungriest, biome])
 	for id: String in ["gale_fiber", "cloudberry", "driftwood", "fiber", "wood", "rootstone", "berries"]:
 		while free.call() < 2 and int(inventory.call("count", id)) > 0:
+			await _release_world_input()
 			var room: RefCounted = team.new()
 			room._tree = self
 			room._world = world
@@ -774,3 +782,14 @@ func _make_handoff_room(biome: String, key_item: String) -> bool:
 		await physics_frame
 	failures.append("Piece 07: held %s hand-off did not deliver after making Satchel room (free=%d)" % [biome, int(free.call())])
 	return false
+
+
+## Closes whatever menu or picker a care/drop step left open, with ordinary
+## menu_cancel presses, and waits until world input is free again.
+func _release_world_input() -> void:
+	var portal := PORTAL.new(self, game)
+	for _press in 6:
+		if INPUT_OWNER.current(self) == null: break
+		await portal.tap("menu_cancel")
+		for _i in 20: await process_frame
+	for _i in 30: await process_frame
