@@ -38,6 +38,10 @@ const GROUP := "conversation_camera"
 ## the whole interaction stack to boot.
 const ARBITER_GROUP := "interaction_arbiter"
 
+## Meta key on an interaction provider naming the character it speaks for,
+## when the provider is not that character or its child. See resolve_speaker().
+const SPEAKER_META := &"conversation_speaker"
+
 ## Seconds between attempts to find the arbiter. The rig exists in scenes that
 ## have no arbiter at all (the title screen, a capture fixture), and a per-frame
 ## group lookup that never succeeds is a per-frame cost for nothing.
@@ -246,6 +250,15 @@ func _rig() -> Node:
 static func resolve_speaker(provider: Node3D) -> Node3D:
 	if provider == null or not is_instance_valid(provider):
 		return null
+	# A prompt that stands beside its person rather than on them (Cloudreach's
+	# `topic_interactions`, hung under a shared ConversationTopics node) names
+	# that person through SPEAKER_META. Without it the parent walk below found
+	# a plain Node3D, so asking Kelm about cliff materials opened his lines with
+	# no push-in, or framed whoever was spoken to before.
+	if provider.has_meta(SPEAKER_META):
+		var named: Variant = provider.get_meta(SPEAKER_META)
+		if is_instance_valid(named) and named is Node3D and _is_character(named as Node):
+			return named as Node3D
 	if _is_character(provider):
 		return provider
 	var parent := provider.get_parent() as Node3D
