@@ -1,5 +1,49 @@
 # Cause lane: owner-rule remakes finish (tb/cause-remakes)
 
+## Aspect variants, Ashtusk and Frostclaw: ready to turn ON (1 Nov, second coordinator request)
+
+No test was edited. The remake flags below are MANIFEST groups 8–12. The proof gap is the
+same as for groups 6–7: the named tests have not run here, only `godot --check-only` on
+the changed scripts.
+
+- **Aspect variants** (`tests/test_dual_type.gd`: a variant reuses its base's mesh). Each base
+  flag now also carries its variant onto the remake mesh:
+  - `remake_owner1101_burrowback` carries Nightburrow.
+  - `remake_owner1101_trailpup` carries Stormtrail.
+  - `remake_owner1101_paddlenewt` carries Riftfrill.
+  - `remake_owner1101_tuskroot` carries Ashtusk.
+  - **New textures.** The aspect textures are repainted for the remake UVs by
+    `tools/generate_aspect_variant_textures.py --remake`, which uses the same rules, glow
+    layers and anatomy masks; the old candidates' files are untouched. For each remake there is
+    an `<albedo>_<variant>.png`, plus a glow map:
+    - The three remakes that already ship an emission map get it as
+      `<arc_emission>_<variant>.png`, the name `creature_body._swapped_material` reads. Without
+      it the swap would self-light the whole albedo.
+    - Tuskroot, which has no emission map, gets it as `<albedo>_emissive_<variant>.png`.
+  - **Stormtrail keeps its look.** Same rules: storm-grey coat, lighter muzzle and chest, blue
+    storm veins (2.8% of the surface, 1.8% before). Its spine-line glow layer selects nothing on
+    the remake; the veins carry the glow.
+  - **Coat flags skip aspect variants** (`creature_body._apply_coat_flags`), as they already
+    skip shinies. Otherwise `remake_owner1101_glow_read`, keyed by the shared remake albedo,
+    would reach the variant and break its swap.
+- **Ashtusk.** Its own-mesh flag `remake_owner1101_ashtusk` is removed, along with its
+  glow-pass entry. Its old remake files stay on disk unreferenced. As a Tuskroot variant it
+  rides `remake_owner1101_tuskroot`. That flag sets `aspect_source_species: "tuskroot"`, because
+  the `ashtusk_native` branch would put the native Tuskroot's normal and roughness maps (old
+  UVs) on the remake.
+- **Frostclaw** (`tests/test_f36_pose_candidates.gd`, "installs on the measured rig").
+  - `f36_pose_candidates.json` gains `species.frostclaw.model_alternates[0]`, a recipe measured
+    on the remake: file hash, uid, rig and bind contract, and 15 bones.
+  - It also gains the profile `frostclaw_owner1101_quadruped_anatomical`, which is the judged
+    Frostclaw profile converted onto the remake rig. Each bone's rotation is re-expressed in
+    the remake's rest frame (`C⁻¹·delta·C`), so every bone moves the same way in world space;
+    the largest conversion error is 1.5e-6.
+  - `creature_pose_candidates.gd` now picks the recipe whose model matches the live one
+    (`recipe_for`). Script: `frostclaw/candidate_owner1101/source/author_f36_recipe.py`.
+  - **Note for tb/cause-poses:** with this, the remake Frostclaw plays the F36 hit, faint,
+    swim, fly_grip and ride poses (Frostclaw is owner-enabled) instead of its own dog3 clips,
+    as the installed one does.
+
 ## Torrentoad and Meadowhart remakes: ready to turn ON (1 Nov, coordinator request after PR #793 CI)
 
 Both fixes are on this branch. No test was edited. They are MANIFEST groups 6 and 7.
@@ -40,7 +84,7 @@ flags are on; turn on the remake model flags (`remake_owner1101_*`) first.
 
 | Group | Flag | Species | What it changes |
 |---|---|---|---|
-| 1 | `creature_coat_flags.json:flags.remake_owner1101_glow_read` | 47 (every remake that has a glow mask) | Glow that reads at gameplay distance: the existing mask is lit fully; eye-only and thin-line masks get a small halo inside their UV island; hue pushed toward the element colour so Compatibility's LDR clip keeps it; emission energy 2.6 / 2.0 / 1.4 by coverage. Bramblebun's veins are rebuilt from its crevice greens (0.85% → 3.0% coverage, energy 2.0). |
+| 1 | `creature_coat_flags.json:flags.remake_owner1101_glow_read` | 46 (every remake that has a glow mask; Ashtusk's own remake was dropped) | Glow that reads at gameplay distance: the existing mask is lit fully; eye-only and thin-line masks get a small halo inside their UV island; hue pushed toward the element colour so Compatibility's LDR clip keeps it; emission energy 2.6 / 2.0 / 1.4 by coverage. Bramblebun's veins are rebuilt from its crevice greens (0.85% → 3.0% coverage, energy 2.0). |
 | 2 | `creature_coat_flags.json:flags.remake_owner1101_plate_blend` | terrapup, bramblebun | Terrapup: pale tile bevels flattened, stone tone varies between warm stone and moss, moss in the crevices, plate edges blend into the coat through moss and dirt. Bramblebun: the plaster-white bark becomes warm brown bark with its grain kept, moss creeps in from the veins; the white belly and inner-ear fur are left alone. |
 | 3 | `creature_coat_flags.json:flags.remake_owner1101_dark_lift` | brooktail, voltarach | Gentle value lift on dark, low-saturation fur (same grade as `creatures_f36_coat_lift`); eyes, spots and sparks keep their pixels. |
 | 4 | `creature_scale_flags.json:flags.remake_owner1101_body_line` | sparkit ×1.47, glimmermoth ×1.35, galewisp ×1.15, craghorn ×1.09, bramblebun ×1.1, shadelet ×1.08, cliffspike ×1.05 | Grows the body line (the top of the middle of the body, ears and tails excluded) to about 2.4 m. |

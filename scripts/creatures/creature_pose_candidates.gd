@@ -21,8 +21,8 @@ static func configured_for_species(id: String, model_path: String, required_role
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 		if parsed is Dictionary: _data = parsed
 	if not ResourceLoader.exists(model_path): return false
-	var recipe: Dictionary = _data.get("species", {}).get(id, {})
-	if recipe.get("model", "") != model_path: return false
+	var recipe := recipe_for(_data.get("species", {}).get(id, {}), model_path)
+	if recipe.is_empty(): return false
 	if FileAccess.file_exists(model_path):
 		if not _hashes.has(model_path): _hashes[model_path] = FileAccess.get_sha256(model_path)
 		if _hashes[model_path] != recipe.get("source_sha256", ""): return false
@@ -61,6 +61,20 @@ static func configured_for_species(id: String, model_path: String, required_role
 	return _installed_scene_matches(model_path, recipe)
 
 
+## The recipe measured on `model_path`: the species row itself, or one of its
+## `model_alternates` (a remake behind a model flag carries the same judged
+## profile converted onto its own rig). Empty when no recipe matches the model.
+static func recipe_for(row: Dictionary, model_path: String) -> Dictionary:
+	if row.is_empty():
+		return {}
+	if str(row.get("model", "")) == model_path:
+		return row
+	for alternate: Variant in row.get("model_alternates", []):
+		if alternate is Dictionary and str((alternate as Dictionary).get("model", "")) == model_path:
+			return alternate
+	return {}
+
+
 static func _installed_scene_matches(model_path: String, recipe: Dictionary) -> bool:
 	var scene := ResourceLoader.load(model_path) as PackedScene
 	if scene == null: return false
@@ -96,9 +110,9 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		return original
 	var id := presentation_id.trim_prefix("water_")
 	var rows: Dictionary = _data.get("species", {})
-	var recipe: Dictionary = rows.get(id, {})
 	var model_path := str(look.get("model", ""))
-	if recipe.is_empty() or model_path != str(recipe.get("model", "")):
+	var recipe := recipe_for(rows.get(id, {}), model_path)
+	if recipe.is_empty():
 		return original
 	# Exported GLBs are imported PackedScenes, and their raw source bytes need
 	# not exist in the PCK. Keep the source hash check where bytes are present;

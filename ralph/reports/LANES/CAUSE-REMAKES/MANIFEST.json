@@ -27,15 +27,6 @@
   "group": 1
  },
  {
-  "item": "F36 Ashtusk remake",
-  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "ashtusk"
-  ],
-  "group": 1
- },
- {
   "item": "F36 Bramblebun remake",
   "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
   "camera_set": "F36",
@@ -556,5 +547,54 @@
    "meadowhart"
   ],
   "group": 7
+ },
+ {
+  "item": "F36 Burrowback remake (variant Nightburrow on the remake)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_burrowback.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "burrowback",
+   "nightburrow"
+  ],
+  "group": 8
+ },
+ {
+  "item": "F36 Trailpup remake (variant Stormtrail on the remake)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_trailpup.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "trailpup",
+   "stormtrail"
+  ],
+  "group": 9
+ },
+ {
+  "item": "F36 Paddlenewt remake (variant Riftfrill on the remake)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_paddlenewt.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "paddlenewt",
+   "riftfrill"
+  ],
+  "group": 10
+ },
+ {
+  "item": "F36 Tuskroot remake (variant Ashtusk on the remake; own-mesh Ashtusk remake dropped)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_tuskroot.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tuskroot",
+   "ashtusk"
+  ],
+  "group": 11
+ },
+ {
+  "item": "F36 Frostclaw remake (F36 pose recipe on the remake rig)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_frostclaw.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "frostclaw"
+  ],
+  "group": 12
  }
 ]

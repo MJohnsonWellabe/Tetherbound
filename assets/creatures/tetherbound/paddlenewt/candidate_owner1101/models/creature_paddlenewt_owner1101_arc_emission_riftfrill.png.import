@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ekyycicos3f52"
-path.s3tc="res://.godot/imported/creature_ashtusk_owner1101_glow_read.png-2d66008c703e52364cb254a37956b855.s3tc.ctex"
+uid="uid://csxg36opjqleg"
+path.s3tc="res://.godot/imported/creature_paddlenewt_owner1101_arc_emission_riftfrill.png-deb1eec2a03b1085372f6b2c99ca06b2.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/ashtusk/candidate_owner1101/models/creature_ashtusk_owner1101_glow_read.png"
-dest_files=["res://.godot/imported/creature_ashtusk_owner1101_glow_read.png-2d66008c703e52364cb254a37956b855.s3tc.ctex"]
+source_file="res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_arc_emission_riftfrill.png"
+dest_files=["res://.godot/imported/creature_paddlenewt_owner1101_arc_emission_riftfrill.png-deb1eec2a03b1085372f6b2c99ca06b2.s3tc.ctex"]
 
 [params]
 
