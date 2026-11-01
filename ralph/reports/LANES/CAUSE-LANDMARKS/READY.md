@@ -1,5 +1,7 @@
 # CAUSE-LANDMARKS — ready for GPU
 
+**Stopped 1 Nov (coordinator, owner direction).** All three candidates are OFF and the branch is pushed. The 7 tests in `tests/test_hero_landmarks_1101.gd` pass in a scratch project that holds only these assets and scripts; CI runs them in the full project. Nothing is in progress. Open: GPU capture and judging of the three flags in `MANIFEST.json`.
+
 Branch `tb/cause-landmarks` (from `origin/tb/land-vis-2` + `origin/tb/meshy-landmarks-1101` 5a44380c9). The contract is `MANIFEST.json`.
 
 ## Summary (1 Nov)
