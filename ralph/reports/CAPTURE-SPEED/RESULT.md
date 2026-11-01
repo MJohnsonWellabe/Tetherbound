@@ -111,3 +111,4 @@ Both are now removed or flag-gated. A High versus Medium boot on the rig with an
 - **Tests run:**
   - `run_tests.gd --only=cloudreach_cover,grass_roles,capture_jobs,shell_build`: 23 tests, 3,717 assertions, 0 failed.
   - `smoke_menu.gd`: passed.
+  - `run_tests.gd --only=test_controls,test_world_verb_input_owner_enforcement,test_menu_data,test_motion_prefs,test_audio_cues`: 63 tests, 1,273 assertions, 0 failed.
