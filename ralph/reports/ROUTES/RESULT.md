@@ -1,4 +1,16 @@
-# Routes lane (tb/routes-f49), F49#0 Tidewake: result at owner STOP, 31 Oct 2026
+# Routes lane (tb/routes-f49), F49#0 Tidewake: result 1 Nov 2026 (resume), STOPPED on two failures at 08 -> 09
+
+## 1 Nov resume: seams matched and pushed
+- **07b → 07c MATCH** (02e8f4cb; a79aa8f7): fixed the 07c trainer death. Diagnosis (health/position trace): 07c climbed the Veilfall exterior spine and then walked straight to Venn's stance at the landing camp, stepping off the plateau near (320,142,3881) (vy −90 m/s, health 100 → 0 at (346,17,3819)), leaving the whole Satchel in a death satchel. 07c now takes spine point 1 only (07d walks points 2..4 to the cave) and fails if a death satchel is left. Venn beaten in 1651 s with every stack kept.
+- **07c → 07d MATCH** (84972b98, Nerissa beaten) and **07d → 08 MATCH** (829ef377, Tidewake ending), Satchel kept. `f49_tw_07c/07d/08` replaced; the earlier dead-trainer versions are superseded.
+
+## Blocker: 08 → 09 (failed twice; stopped per coordinator rule)
+- Attempt 1 (02e8f4cb): `09_cloudreach_handoff` FAIL "F49 relic hanging produced no actual portable relics_hung state". Cause: with the Satchel carried full, the Nerissa hand-off `boss_relic` duty is refused on every retry with `boss_handoff_make_satchel_room` (`scripts/net/foundation_actions.gd:305-307`: `give_stack(bag, cloudreach_portal_key)` on `death_satchel_rules.inventory_from(current.inventory)`), so neither the relic (`relics_held`) nor the Cloudreach portal key arrives. (The earlier dead-trainer 08 got both only because its Satchel was empty.)
+- Attempt 2 (1b8dea2f): the piece first freed a slot through the approved Satchel Drop (`free_slots_for`; log: `satchel_room_dropped fiber x3 slot 10`), then waited 1800 frames. The duty kept logging `held: boss_handoff_make_satchel_room` after the drop, so the hand-off still did not deliver. **Open question for Systems:** which inventory does the boss_relic host context read as `current.inventory` (the last saved/journaled owner snapshot rather than the live Satchel?), and does a held hand-off re-read it after a Satchel Drop? Either a save after the drop or the grant reading the live Satchel is needed. A real player who fills the Satchel before Nerissa hits the same stall: the relic and portal key never arrive.
+- Evidence: `/home/user/rb/tw_09.log`, `fail_tw_09.log` (container-local). Input `f49_tw_08` is committed.
+- Cloudreach 01 load check was not reached.
+
+## Earlier: result at owner STOP, 31 Oct 2026 (item 1 below is fixed by 02e8f4cb)
 
 Scope was narrowed to Tidewake by the coordinator (31 Oct). Stopped on the owner usage STOP. Godot 4.7 on CPU (xvfb-free headless), one process at a time.
 
