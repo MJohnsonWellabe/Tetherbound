@@ -115,5 +115,14 @@
    "stormbrush"
   ],
   "group": 13
+ },
+ {
+  "item": "F36 Stormraven remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_stormraven.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormraven"
+  ],
+  "group": 14
  }
 ]

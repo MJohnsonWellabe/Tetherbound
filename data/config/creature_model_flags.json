@@ -394,6 +394,24 @@
      }
     }
    }
+  },
+  "remake_owner1101_stormraven": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Stormraven, a large dark blue-black raven (Meshy 01a197f2-6f21-7387-aa40-010c6cabd694). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips with the Pipwing shell-aware torso measurement (candidate_owner1101/source/prepare_stormraven_owner1101.py), folded wings at the established 3.4 m; emission on the blue-white lightning veins and eyes (storm creature). Provenance: assets/creatures/tetherbound/stormraven/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "stormraven": {
+     "model": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101.glb",
+     "colourway_source_species": "stormraven_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
   }
  }
 }
