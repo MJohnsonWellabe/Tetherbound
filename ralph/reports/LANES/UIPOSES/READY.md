@@ -17,6 +17,18 @@
 
 Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
 
+## Group 8: P2-071 surface swimming trainer (5.20)
+
+- **Flag:** `human_swim_visual.json:uiposes_stroke_candidates`.
+- **Change:** applies the Tidewake lane's never-judged close-1024 `swim_candidate` and `swim_stroke_candidate` swim-pose keys on their own:
+  - chest 0.14 m under the surface;
+  - an 84° flat body with the head lifted to breathe;
+  - a forward crawl reach under the surface.
+
+  The rest of the Tidewake look profile's unjudged sections stay off.
+- **CPU Tidewake swim frames** (entry, surface_west, surface_mid): the trainer lies flat and half-submerged, legs trailing under the surface, instead of upright with arms raised.
+- **Fix during the work:** a variable clash in `trainer_model.gd` was caught by the test before any push.
+
 ## Group 7: P2-048 Cloudreach map region label (5.87)
 
 - **Flag:** `menu.json:map_region_header.enabled`.
