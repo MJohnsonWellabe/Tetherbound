@@ -84,3 +84,16 @@ func test_crown_arch_round2_ships_off_and_raises_the_arch_when_on() -> void:
 	var on := hero.with_round2(cfg)
 	assert_true(float(on["height_m"]) > 5.5, "round 2 stands the arch taller")
 	assert_true(on.has("edge_dressing"), "round 2 dresses the slab edge")
+
+
+func test_water_npc_placement_ships_off_and_moves_only_named_npcs() -> void:
+	var placement := preload("res://scripts/world/water_npc_placement.gd")
+	var cfg := _json("res://data/config/water_npc_placement_candidate.json")
+	assert_false(bool(cfg.get("enabled", true)), "the P2-074 candidate ships OFF")
+	var nalia := {"id": "water_nalia", "island_local_offset": [0.0, 0.0, 23.0]}
+	var bren := {"id": "water_bren", "island_local_offset": [9.0, 0.0, 12.0]}
+	assert_eq(placement.offset(nalia, cfg), [0.0, 0.0, 23.0], "OFF keeps the authored offset")
+	var on := cfg.duplicate(true)
+	on["enabled"] = true
+	assert_eq(placement.offset(nalia, on), on["offsets"]["water_nalia"], "ON moves Nalia")
+	assert_eq(placement.offset(bren, on), [9.0, 0.0, 12.0], "ON leaves everyone else alone")

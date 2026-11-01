@@ -1,0 +1,7 @@
+{
+  "_comment": "P2-074 (GPU DLG-2 1 Nov, mapped 5.78: 'Resident Nalia: the camera faces a bare slope with no NPC in frame'; path 'place Nalia with a stand beside her body'). CPU probe (STORMCAMS, 1 Nov): her authored offset (0, 0, 23) at Shellwatch puts the body about 12 m up the steep sand wall above the post stand (316, 16.0, 1148); every fixture stand around her was more than 2.5 m off her height. When enabled, scripts/world/water_npc_placement.gd moves her to the flat ground at the foot of that wall, about 2 m from the post stand; the body, the host's speech step and the grass clearance all read the same offset. Dialogue, flags and rewards unchanged. OFF until GPU judged.",
+  "enabled": false,
+  "offsets": {
+    "water_nalia": [-6.0, 0.0, 29.0]
+  }
+}
