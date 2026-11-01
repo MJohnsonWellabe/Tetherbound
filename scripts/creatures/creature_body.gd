@@ -23,6 +23,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
 const POSE_CANDIDATES := preload("res://scripts/creatures/creature_pose_candidates.gd")
+const POSE_SETTLE := preload("res://scripts/creatures/creature_pose_settle.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
@@ -881,8 +882,14 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 		clips["hit_start_phase"] = float((impact as Dictionary).get("start_phase", 0.0))
 		clips["hit_release_phase"] = float((impact as Dictionary).get("release_phase",
 			(impact as Dictionary).get("start_phase", 0.0)))
+	if has_meta(POSE_SETTLE.META):
+		remove_meta(POSE_SETTLE.META)
+	# CAUSE-POSES (creature_pose_settle.json, OFF): grounded, side-lying faint
+	# and a visible planted hit for every rig, recipe or own clips. Bed rests
+	# keep finishing the unsettled installed faint.
+	clips = POSE_SETTLE.apply(self, _model, player, clips, species_id)
 	_animator = ANIMATOR.new(player, clips)
-	if bool(get_meta("f36_pose_candidate_installed", false)):
+	if bool(get_meta("f36_pose_candidate_installed", false)) or bool(get_meta(POSE_SETTLE.META, false)):
 		_animator.call("bind_candidate_pivot", _model)
 	_animator.call("set_traversal_role", _traversal_pose_role)
 
@@ -2772,7 +2779,8 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	if _model == null or not is_inside_tree():
 		return
 	_combat_flinch_target = _combat_flinch_art \
-		if bool(get_meta("f36_pose_candidate_installed", false)) and is_instance_valid(_combat_flinch_art) else _model
+		if (bool(get_meta("f36_pose_candidate_installed", false)) or bool(get_meta(POSE_SETTLE.META, false))) \
+			and is_instance_valid(_combat_flinch_art) else _model
 	_combat_flinch_rest_position = _combat_flinch_target.position
 	_combat_flinch_rest_rotation = _combat_flinch_target.rotation
 	var recoil_parent := _combat_flinch_target.get_parent() as Node3D
@@ -2841,6 +2849,12 @@ func play_faint() -> void:
 	# A hit-recoil tween must not overwrite the collapse's grounded pivot.
 	_clear_combat_flinch()
 	set_aspect_vfx_suspended(true)
+	if _animator != null and bool(get_meta(POSE_SETTLE.META, false)) and is_inside_tree():
+		var camera := get_viewport().get_camera_3d()
+		var player: AnimationPlayer = _animator.call("animation_player")
+		if camera != null and player != null:
+			POSE_SETTLE.face_camera(_model, player, str((_animator.get("_clips") as Dictionary).get("faint", "")),
+				camera.global_position)
 	if _animator != null:
 		_animator.call("play_faint")
 
