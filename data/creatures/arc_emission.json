@@ -143,6 +143,19 @@
    "blur_px": 8.0,
    "soften_px": 1.0,
    "gain": 2.0
+  },
+  "riverdrake_owner1101": {
+   "_why": "Owner remake 1 Nov (coordinator pick under the owner rule, flag-off candidate): thin aqua lines between the blue scales and eyes. Albedo-derived mask, as the first remake lane's rules.",
+   "model": "assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101.glb",
+   "hue": [
+    175,
+    200
+   ],
+   "sat_min": 0.35,
+   "lift": 0.12,
+   "blur_px": 8.0,
+   "soften_px": 1.0,
+   "gain": 2.0
   }
  }
 }

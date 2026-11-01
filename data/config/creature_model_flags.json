@@ -215,6 +215,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_riverdrake": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riverdrake, a lean river drake lizard with a crest along its head and spine, blue scales and amber crest (Meshy 01a197ed-424e-7645-aabb-b223008f0477). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.0 m; emission on the thin aqua lines between the blue scales and eyes. Provenance: assets/creatures/tetherbound/riverdrake/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "riverdrake": {
+     "model": "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101.glb",
+     "colourway_source_species": "riverdrake_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }
