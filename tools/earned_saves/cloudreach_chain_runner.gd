@@ -807,6 +807,12 @@ const STORMWOOD_KEEP := ["potion_large", "revive", "coin", "hide_vest", "torch"]
 
 func _stormwood_deposit() -> bool:
 	var world := current_scene as Node3D
+	# Coordinator-approved (b) then (a), 1 Nov: the chest that frees room costs
+	# wood x8 + fiber x4 (two new stacks) and the Satchel is full, so first drop
+	# the smaller duplicate potion_small and revive stacks (approved Satchel Drop).
+	for id: String in ["potion_small", "revive"]:
+		if not await _drop_smaller_duplicate(world, id):
+			return false
 	var result: Dictionary = await load("res://tools/earned_saves/wip_fights/storage_trip.gd").new().run(
 		self, world, game, {"keep": STORMWOOD_KEEP, "return": false})
 	for row: Variant in result.get("receipts", result.get("transcript", [])):
@@ -816,4 +822,29 @@ func _stormwood_deposit() -> bool:
 	if not bool(result.get("passed", false)):
 		failures.append("Piece 07: Storage Chest deposit failed: " + str(result.get("failures", [])))
 		return false
+	return true
+
+
+func _drop_smaller_duplicate(world: Node3D, id: String) -> bool:
+	var inventory: RefCounted = game.get("inventory")
+	var slots: Array[int] = []
+	for i in int(inventory.call("slot_count")):
+		if str((inventory.call("stack_at", i) as Dictionary).get("id", "")) == id: slots.append(i)
+	if slots.size() < 2:
+		return true
+	var smallest := slots[0]
+	for i: int in slots:
+		if int((inventory.call("stack_at", i) as Dictionary).get("n", 0)) <= int((inventory.call("stack_at", smallest) as Dictionary).get("n", 0)):
+			smallest = i
+	var n := int((inventory.call("stack_at", smallest) as Dictionary).get("n", 0))
+	await _release_world_input()
+	var room: RefCounted = load("res://tests/helpers/meadows_earned_team_segment.gd").new()
+	room._tree = self
+	room._world = world
+	room._game = game
+	room._menu = game.call("menu")
+	if not await room._drop_slot(smallest):
+		failures.append("Piece 07: Satchel Drop of the smaller %s stack failed: %s" % [id, str(room.result().failures)])
+		return false
+	disclosures.append("Piece 07: DROPPED the smaller duplicate %s stack (x%d, slot %d) through the Satchel to make room to build the Storage Chest" % [id, n, smallest])
 	return true
