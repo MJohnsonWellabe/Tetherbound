@@ -1,0 +1,47 @@
+[
+    {
+        "label":  "WD2 P2-054 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-054-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-054-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: mushroom pickup variants. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+                    ]
+    },
+    {
+        "label":  "WD2 P2-070 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-070-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-070-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Glass Sink landmark. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+                    ]
+    },
+    {
+        "label":  "WD2 P2-046 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-046-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-046-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: harvest resource identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+                    ]
+    },
+    {
+        "label":  "WD2 P2-035 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-035-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-035-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: camp and workshop prop legibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+                    ]
+    },
+    {
+        "label":  "WD2 P2-043 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-043-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-043-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Glass Field spike bases. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+                    ]
+    }
+]

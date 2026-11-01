@@ -1,0 +1,52 @@
+{
+ "Ah": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Mh": {
+  "anchor": false,
+  "label": "WD2 P2-033 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-033-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-033-cand-High.png"
+ },
+ "Vx": {
+  "anchor": false,
+  "label": "WD2 P2-116 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-116-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-116-cand-High.png"
+ },
+ "Ua": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Uf": {
+  "anchor": false,
+  "label": "WD2 P2-041 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-041-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-041-cand-High.png"
+ },
+ "Gp": {
+  "anchor": false,
+  "label": "WD2 P2-045 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-045-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-045-cand-High.png"
+ },
+ "Ja": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ },
+ "En": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Rv": {
+  "anchor": false,
+  "label": "WD2 P2-115 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-115-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-115-ctl-High.png"
+ }
+}

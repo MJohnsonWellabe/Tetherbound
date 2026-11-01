@@ -1,0 +1,54 @@
+# Yardstick sets for an arm job (coordinator GPU queue, 31 Oct). One set per catalogue item per preset, from that item's re-shot frames
+# (up to 3) in D:\tb-gpu-runs\arms\<Job>\<arm>-<preset>\..., resolved by arm_resolve.py.
+#   Two arms (-Cand cand -Ctl ctl): A = candidate, B = control; the label records it ("<Job> <item> <preset> cand|ctl").
+#   One arm  (-One main):           one-sided, the same image on both sides.
+# Brief = the item subject; defects = the catalogue defect. Writes yard\<Job>\b<k>\candidates.json, items.json, missing.json.
+param([Parameter(Mandatory)] [string] $Job, [string] $Cand = "", [string] $Ctl = "", [string] $One = "", [string[]] $Presets = @("High"),
+      [int] $PerBatch = 8, [string] $Note = "")
+$jr = "D:\tb-gpu-runs\arms\$Job"; $od = "D:\tb-gpu-runs\yard\$Job\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = $files.Count; thumb_w = 560; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_arm.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_arm.json" | Out-Null; return $out
+}
+& "C:\Users\mattj\AppData\Local\Programs\Python\Python312\python.exe" "D:\tb-gpu-runs\tools\arm_resolve.py" $Job
+$res = Get-Content "$jr\resolved.json" -Raw | ConvertFrom-Json
+# PS 5.1 ConvertFrom-Json emits a JSON array as ONE object: enumerate it, or .item resolves to IList.Item.
+$rows = @((Get-Content "$jr\items.json" -Raw | ConvertFrom-Json) | ForEach-Object { $_ })
+$items = $rows | Group-Object item
+$sets = @(); $index = @(); $missing = @()
+foreach ($pr in $Presets) {
+    foreach ($g in $items) {
+        $it = $g.Group[0]
+        # Wrap the whole if: a one-element @() returned from an if-expression unrolls to a bare string, and "main"[0] is 'm'.
+        $arms = @(if ($One) { $One } else { $Cand; $Ctl })
+        $files = @{}; $caps = @(); $used = @()
+        foreach ($a in $arms) { $files[$a] = @() }
+        foreach ($r in $g.Group) {
+            if ($used -contains $r.frame) { continue }
+            $hits = @($arms | ForEach-Object { $res."$_-$pr".($r.frame) })
+            if (@($hits | Where-Object { $_ }).Count -ne $arms.Count) {
+                foreach ($a in $arms) { if (-not $res."$a-$pr".($r.frame)) { $missing += [ordered]@{ item = $it.item; preset = $pr; arm = $a; frame = $r.frame; cmd = $r.cmd } } }
+                continue
+            }
+            for ($i = 0; $i -lt $arms.Count; $i++) { $files[$arms[$i]] += $hits[$i] }
+            $caps += (($r.frame -replace "^$($it.biome)__", '') -replace '__', ' '); $used += $r.frame
+        }
+        if ($used.Count -eq 0) { continue }
+        $brief = "Fixed captures from the game of one catalogue subject in the $($it.biome) biome: $($it.subject). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.$Note"
+        if ($One) {
+            $s = Side $files[$One] $caps "$od\$($it.item)-$One-$pr.png"
+            $sets += [ordered]@{ label = "$Job $($it.item) $pr one-sided"; a = $s; b = $s; brief = $brief; defects = @($it.defect) }
+        } else {
+            $sa = Side $files[$Cand] $caps "$od\$($it.item)-$Cand-$pr.png"; $sb = Side $files[$Ctl] $caps "$od\$($it.item)-$Ctl-$pr.png"
+            $sets += [ordered]@{ label = "$Job $($it.item) $pr $Cand|$Ctl"; a = $sa; b = $sb; brief = $brief; defects = @($it.defect) }
+        }
+        $index += [ordered]@{ item = $it.item; preset = $pr; biome = $it.biome; board_row = $it.board_row; subject = $it.subject; defect = $it.defect; frames = $used }
+    }
+}
+$rng = New-Object System.Random 3101; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = [math]::Max(1, [math]::Ceiling($sets.Count / $PerBatch)); $buckets = @(for ($k = 0; $k -lt $nb; $k++) { , @() })
+for ($i = 0; $i -lt $sets.Count; $i++) { $buckets[$i % $nb] += , $sets[$i] }
+for ($k = 0; $k -lt $nb; $k++) { New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\$Job\b$($k+1)" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\$Job\b$($k+1)\candidates.json", (ConvertTo-Json -InputObject @($buckets[$k]) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\$Job\items.json", (ConvertTo-Json -InputObject @($index) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\$Job\missing.json", (ConvertTo-Json -InputObject @($missing) -Depth 4))
+"$Job sets: $($sets.Count) in $nb batches; missing frame-sides: $($missing.Count)"

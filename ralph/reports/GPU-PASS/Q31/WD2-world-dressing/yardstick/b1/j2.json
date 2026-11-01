@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Ah": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, stone footing and cap give it a built read, but the lone narrow panel with flat tan infill reads as an outhouse door on a flat-lit field, well short of Palworld base pieces."
+  },
+  "Mh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped candy, rare-candy bundle on cloth and pink flask now read as distinct items, but they still sit as small saturated props on an even grass carpet without contact shadow or rim light."
+  },
+  "Vx": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's bigger station with a rack and lantern post reads more as a workplace, but it is still small and partly behind the trainer in the first two views, on bright, shadowless dunes."
+  },
+  "Ua": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder with readable eyes, beard and a green-and-olive outfit that fits the palette, but the soft toy-like cartoon finish sits closer to an animated film than the naturalistic Palworld/Valheim finish."
+  },
+  "Uf": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky and rain carry the mood, but neither side shows an arch: A is a small dark block and B a single blue pillar, each on a bare square slab dropped onto the moss."
+  },
+  "Gp": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's green, blue and gold tiers with a gold ring on Rare separate better than A's tiny glows, but Good and Great still share one blob form and scale, and all three read as glows rather than wrapped candy."
+  },
+  "Ja": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's indigo crystal-furred wolf holds the owner style bar through rearing hit and grounded faint, but B's hit react matches its standing pose and its faint frames go white with black blotches, which sinks it."
+  },
+  "En": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's banded black-and-yellow serpent has the crisper silhouette, but its faint frames rear upright and float above their shadow, while A's mottled body stays grounded but turns murky at small size."
+  },
+  "Rv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both beds lack bedding volume: A's dark-rimmed ring reads as a fire pit or well, and B's pale stone ring holds only sand and shrinks to a thin curb edge-on, all under flat, atmosphere-free beach light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the placeholder hero props (Crown Arch, camp workbench, creature bed, homestead wall) with authored meshes that have a real silhouette: a true arch with a grounded plinth blended into moss, a wide bench with tools and a work surface, a raised nest with straw and cloth, and a wall section with thickness, cap and footing.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give pickups tier- and item-specific silhouettes at 1.5-2x scale with contact shadows, rim light and a soft ground decal so each one reads at gameplay distance, and stage camp props so the trainer does not cover them.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the creature hurt/faint states: restore the material in Ja side B's faint frames (white with black blotches), give it a distinct hit react, and keep En side B's faint grounded instead of rearing and floating above its shadow.",
+   "kind": "scene"
+  }
+ ]
+}
