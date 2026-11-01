@@ -124,8 +124,8 @@ static func apply_hall_1(config: Dictionary) -> void:
 	apply_hall_layer(config, "hall_2")
 
 
-static func apply_hall_layer(config: Dictionary, key: String) -> void:
-	var hall_1: Dictionary = config.get(key, {})
+static func apply_hall_layer(config: Dictionary, layer: String) -> void:
+	var hall_1: Dictionary = config.get(layer, {})
 	if not bool(hall_1.get("enabled", false)):
 		return
 	_deep_merge(config, hall_1.get("merge", {}))
