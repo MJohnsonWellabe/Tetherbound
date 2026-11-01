@@ -20,7 +20,7 @@
 
 ## Group 6: withdrawn (coordinator, 1 Nov)
 
-The dialogue speaker key and rim lights collided with tb/vis-storm-cams' `speaker_light_candidate`, which judged as a gain and is landing ON. Group 6 is removed from this branch: code, the camera.json key and the test are back to main, and its manifest entry is gone. If the NPC faces need more light, that will be a follow-up key under `speaker_light_candidate`. `character_model.gd` now composes `with_clip_candidate(with_appearance_variant(with_body_flags(...)))`, with tb/vis-meadows' `with_clip_candidate` included verbatim.
+The dialogue speaker key and rim lights collided with tb/vis-storm-cams' `speaker_light_candidate`, which judged as a gain and is landing ON. Group 6 is removed from this branch: code, the camera.json key and the test are back to main, and its manifest entry is gone. If the NPC faces need more light, that will be a follow-up key under `speaker_light_candidate`. In `character_model.gd`, `config_for` is now byte-identical to tb/vis-meadows' (`with_clip_candidate(with_appearance_variant(...))`, with its `with_clip_candidate` included verbatim). The body flags apply inside `with_appearance_variant`, so the effective order is clip candidate ∘ appearance variant ∘ body flags. This also reaches NPCs built through `village_npcs` and `trainer_npc`. `git merge-tree` against tb/vis-meadows and tb/vis-storm-cams is clean.
 
 ## Group 5 (1 Nov, pushed): human characters, one look flag each
 
