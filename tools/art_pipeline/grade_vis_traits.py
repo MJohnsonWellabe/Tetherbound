@@ -39,7 +39,7 @@ SPECIES = {
         "glb": C + "bramblebun/candidate_nat1022/models/creature_bramblebun_nat1022.glb",
         "albedo": C + "bramblebun/candidate_nat1022/models/creature_bramblebun_nat1022_Image_0.jpg",
         "overlays": [
-            {"id": "bramble_back", "where": {"y_min": 0.5, "up_min": 0.15}, "mode": "grow",
+            {"id": "bramble_back", "where": {"y_min": 0.5, "up_min": 0.15, "z_max": 0.66}, "mode": "grow",
              "color": "#5b7d33", "shade": "#263f17", "coverage": 0.85, "grain": 6.0, "softness": 0.12},
         ],
     },
@@ -55,7 +55,7 @@ SPECIES = {
              "sample": "albedo", "hue": [22, 48], "sat_min": 0.3, "val_min": 0.3,
              "color": "#f0a850", "intensity": 1.0, "clump_coverage": 0.6, "blur_px": 3.0},
         ],
-        "emission_energy": 0.8,
+        "emission_energy": 1.2,
     },
     "mudsnout": {
         "glb": C + "mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t.glb",

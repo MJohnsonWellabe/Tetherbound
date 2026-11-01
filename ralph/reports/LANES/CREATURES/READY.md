@@ -4,6 +4,27 @@
 
 ## Summary (1 Nov 2026)
 
+## Group 3 (1 Nov, pushed): one natural-magic trait per plain species
+
+The owner's style direction (via the coordinator): a believable animal plus ONE bold natural-magic trait grown into the body. Flags `creatures_vis_trait_<species>` in `creature_coat_flags.json`, all OFF. Each is built over the group-1 grade, so it supersedes `creatures_vis_coat_<species>` when both are on. Script: `tools/art_pipeline/grade_vis_traits.py`. It places every trait by anatomy with the existing `creature_anatomy_maps` / `creature_overlays` tools, using the LIVE GLB's own UVs.
+- **Bramblebun:** denser bramble and leaf growth over the back, with the face kept clear.
+- **Trailpup:** an earth-ochre spine stripe with a warm glow at energy 1.2. Earth is not a glowing element; if the judges call it unnatural, this is the first thing to drop.
+- **Mudsnout:** a moss carpet over the shoulders and back.
+- **Mirejaw:** swamp moss along the back.
+- **Cannonback:** water-weed over the shell top.
+- **Fulgocobra:** gold lightning lit as a thin rim along its pattern edges, never across the hide.
+- **Riverdrake:** bioluminescent cyan on the crest and frill rims.
+- **Solmane:** sky-blue tips on the upper wing feathers (tint only).
+
+**Code.** The coat hook gains an `emission` glow-map key (multiply operator, as the aspect variants' glow), with a unit test.
+
+**CPU check (candidate mode where the GPU uses it):**
+- reads clearly: Mudsnout, Solmane, Cannonback, Bramblebun;
+- subtle but visible: Trailpup, Mirejaw, the Fulgocobra and Riverdrake glow rims.
+- First-pass fixes: Bramblebun's leaf-ear overlay was dropped because it read as a decal, and the growth was kept off its face. Trailpup, Mirejaw and the glow rims were strengthened after the first pass read invisible.
+
+**Not done:** Terrapup (left out; the coordinator is remaking it in Meshy). Pipwing and Brooktail ("cute rounded") are outside this lane's F36 (0) scope.
+
 **Status.** Zero criteria closed. Nothing here is judged yet, and no CPU score is claimed. Every change is behind a flag that ships OFF, on `tb/vis-creatures`. `MANIFEST.json` (17 flags, 14 items) lists each item, its flag and its capture. Per the coordinator's update, there are no single-candidate READY lines.
 
 **Game changes waiting on the batch GPU run:**

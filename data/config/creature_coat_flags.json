@@ -125,7 +125,7 @@
     "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0.jpg": {
      "albedo": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_trait1.png",
      "emission": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_trait1_glow.png",
-     "emission_energy": 0.8
+     "emission_energy": 1.2
     }
    }
   },
