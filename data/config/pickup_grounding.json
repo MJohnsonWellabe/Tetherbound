@@ -1,7 +1,16 @@
 {
   "_comment": "World dressing (P2-033 Meadows ground pickups, P2-045 Stormwood candy tiers, P2-054 Cloudreach mushrooms; tb/world-dressing). OFF until a GPU pass judges it. GPU item notes (31 Oct): finds are 'pinhead-sized', 'small, weakly grounded props on flat grass', 'unreadable at gameplay distance'. Per realm and family: a size step, a soft contact shadow, a half-sunk flat find-stone from the installed rock-path family (set-down finds only, never mushrooms) and a few installed pebbles. Visual children of the pickup only (scripts/world/pickup_grounding.gd): no collider, claim, glow, flag or save change.",
   "enabled": true,
-  "families": {
+  "tier_candidate": {
+  "enabled": false,
+  "_why": "P2-045 (GPU WD2 1 Nov, 5.92): Good and Great candy still share one form and scale and read only by glow colour. On: each tier its own silhouette from the installed model (scripts/world/pickup_grounding.gd tier_spec/_tier_cluster): Good one sweet at 0.85x, Great a pair at 0.9x, Rare a trio at 0.95x, copies smaller (0.72x / 0.66x) and close so nothing clips. Batch-1 GPU (5.70 -> 5.31) judged the old duplicate bug (oversized green copies); copies are now built after the tier tint. Visual copies only; claim, collider and save unchanged. OFF until GPU judged.",
+  "items": {
+   "good_candy": {"scale_mult": 0.85, "count": 1},
+   "great_candy": {"scale_mult": 0.9, "count": 2, "spread": 0.7, "copy_scale": 0.72},
+   "rare_candy": {"scale_mult": 0.95, "count": 3, "spread": 0.72, "copy_scale": 0.66}
+  }
+ },
+ "families": {
     "candy": {
       "items": ["good_candy", "great_candy", "rare_candy"],
       "scale": 1.35,

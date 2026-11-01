@@ -829,6 +829,57 @@ func _follow(delta: float) -> void:
 	spring_length = move_toward(spring_length, _distance, _recover_speed * delta)
 	# A render-mesh limit clamps at once, like the arm's own collision does.
 	spring_length = minf(spring_length, _body_limit)
+	_fade_occluders(delta, [_target])
+
+
+## camera.json `occlusion_fade` (OFF by default; scripts/player/
+## camera_occlusion.gd). Rendered geometry between the pivot and the lens
+## (canopies, visual-only walls, props) is faded rather than the arm being
+## shortened: the arm length and stand are the game's own, and a mesh in the
+## way goes `fade_transparency` see-through, a scatter instance (a tree) is
+## hidden, until it no longer blocks. Re-measured `rate_hz` times a second.
+const OCCLUSION := preload("res://scripts/player/camera_occlusion.gd")
+var _occlusion_wait := 0.0
+var _faded: Dictionary = {}
+
+
+func _fade_occluders(delta: float, ignore: Array) -> void:
+	if not OCCLUSION.enabled() or not is_inside_tree():
+		return
+	_occlusion_wait -= delta
+	if _occlusion_wait > 0.0:
+		return
+	var cfg := OCCLUSION.config()
+	_occlusion_wait = 1.0 / maxf(float(cfg.get("rate_hz", 8.0)), 1.0)
+	var lens := global_position + global_transform.basis.z.normalized() \
+		* (spring_length + float(cfg.get("lens_margin_m", 0.35)))
+	var from := global_position
+	if _target != null and is_instance_valid(_target) and _target is Node3D:
+		from = (_target as Node3D).global_position + Vector3.UP * float(cfg.get("subject_height_m", 1.3))
+	var now := {}
+	for hit: Dictionary in OCCLUSION.occluders(get_world_3d(), from, lens, ignore):
+		var node: GeometryInstance3D = hit["node"]
+		var key := "%d:%d" % [node.get_instance_id(), int(hit["index"])]
+		now[key] = hit
+		if _faded.has(key):
+			continue
+		if int(hit["index"]) < 0:
+			_faded[key] = {"node": node, "index": -1, "was": node.transparency}
+			node.transparency = maxf(node.transparency, float(cfg.get("fade_transparency", 0.8)))
+		else:
+			_faded[key] = {"node": node, "index": int(hit["index"])}
+			OCCLUSION.hide_instance(node as MultiMeshInstance3D, int(hit["index"]))
+	for key: String in _faded.keys():
+		if now.has(key):
+			continue
+		var entry: Dictionary = _faded[key]
+		var node: Variant = entry["node"]
+		if is_instance_valid(node):
+			if int(entry["index"]) < 0:
+				(node as GeometryInstance3D).transparency = float(entry["was"])
+			else:
+				OCCLUSION.show_instance(node as MultiMeshInstance3D, int(entry["index"]))
+		_faded.erase(key)
 
 
 ## F10#2 C3: cap the arm short of a body's render mesh (INF clears it).
@@ -982,6 +1033,7 @@ func _conversation_follow(delta: float) -> void:
 	pitch = lerpf(_talk_saved_pitch, shot_pitch, weight)
 	rotation = Vector3(pitch, yaw, 0.0)
 	spring_length = lerpf(_talk_saved_distance, shot_distance, weight)
+	_fade_occluders(delta, [_target, _talk_speaker])
 	if _camera != null:
 		_camera.fov = lerpf(_talk_saved_fov, shot_fov, weight)
 
@@ -1112,7 +1164,14 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 	var world := get_world_3d()
 	if world == null:
 		return false
+	var check_multimesh := bool(_talk_cfg.get("speaker_sight_multimesh", false))
 	for id: int in RenderingServer.instances_cull_ray(lens, end, world.scenario):
+		if check_multimesh:
+			var scatter := instance_from_id(id) as MultiMeshInstance3D
+			if scatter != null:
+				if _multimesh_blocks(scatter, lens, end):
+					return true
+				continue
 		var mesh_node := instance_from_id(id) as MeshInstance3D
 		if mesh_node == null or mesh_node.mesh == null or not mesh_node.is_visible_in_tree():
 			continue
@@ -1138,6 +1197,48 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 			continue
 		var to_local := mesh_node.global_transform.affine_inverse()
 		if not tris.intersect_segment(to_local * lens, to_local * end).is_empty():
+			return true
+	return false
+
+
+## twoshot_v2 `speaker_sight_multimesh` (CPU r1, Fenn: the push-in stood behind
+## a scattered Stormwood trunk and framed bark). Scatter is MultiMesh, which
+## the per-mesh test above never sees. Tall, shadow-casting scatter only (trees
+## and boulders, not grass or flowers); each instance near the segment is
+## tested against its mesh's triangles.
+static var _scatter_tris: Dictionary = {}
+
+
+func _multimesh_blocks(scatter: MultiMeshInstance3D, lens: Vector3, end: Vector3) -> bool:
+	var mm := scatter.multimesh
+	if mm == null or mm.mesh == null or not scatter.is_visible_in_tree() \
+			or scatter.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF \
+			or scatter.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY:
+		return false
+	var box := mm.mesh.get_aabb()
+	if box.size.y < float(_talk_cfg.get("speaker_sight_multimesh_min_height_m", 2.5)):
+		return false
+	var key := mm.mesh.get_instance_id()
+	if not _scatter_tris.has(key):
+		_scatter_tris[key] = mm.mesh.generate_triangle_mesh()
+	var tris: TriangleMesh = _scatter_tris[key]
+	if tris == null:
+		return false
+	var to_local := scatter.global_transform.affine_inverse()
+	var a := to_local * lens
+	var b := to_local * end
+	var reach := box.size.length() * 0.5
+	var seg := b - a
+	var length_sq := maxf(seg.length_squared(), 0.0001)
+	var count := mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count
+	for i in mini(count, 20000):
+		var xf := mm.get_instance_transform(i)
+		var scale := xf.basis.get_scale().length() / sqrt(3.0)
+		var t := clampf((xf.origin - a).dot(seg) / length_sq, 0.0, 1.0)
+		if (a + seg * t).distance_to(xf.origin + xf.basis * box.get_center()) > reach * scale:
+			continue
+		var inv := xf.affine_inverse()
+		if not tris.intersect_segment(inv * a, inv * b).is_empty():
 			return true
 	return false
 
@@ -1203,20 +1304,28 @@ func _swing_for_sight(shot: Dictionary, cfg: Dictionary, room: float,
 		trainer_anchor: Vector3, speaker_anchor: Vector3, forward: Vector3,
 		require_sight: bool = true, require_frame: bool = false) -> Dictionary:
 	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
-	for extra: float in CONVERSATION.swing_search(cfg):
-		if is_zero_approx(extra):
-			continue
-		var candidate := cfg.duplicate()
-		candidate["shoulder_yaw_deg"] = base_swing + extra
-		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
-		var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
-		if probe_room < float(probe["distance"]) - 0.01:
-			continue
-		var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
-			and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
-		if _camera_is_reachable(trainer_anchor, probe) and visible:
-			probe["fallback"] = bool(shot.get("fallback", false))
-			return probe
+	# twoshot_v2 `speaker_sight_multimesh` (CPU r2, Fenn beside a giant trunk):
+	# when no swing at the full arm sees the speaker, try shorter arms too,
+	# nearest-first, before giving up on the blocked shot.
+	var scales: Array = [1.0]
+	if bool(cfg.get("speaker_sight_multimesh", false)):
+		scales = cfg.get("speaker_sight_arm_scales", [1.0, 0.72, 0.5])
+	for arm_scale: Variant in scales:
+		for extra: float in CONVERSATION.swing_search(cfg):
+			if is_zero_approx(extra) and is_equal_approx(float(arm_scale), 1.0):
+				continue
+			var candidate := cfg.duplicate()
+			candidate["shoulder_yaw_deg"] = base_swing + extra
+			candidate["distance"] = float(cfg.get("distance", 3.5)) * float(arm_scale)
+			var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
+			var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
+			if probe_room < float(probe["distance"]) - 0.01:
+				continue
+			var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
+				and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
+			if _camera_is_reachable(trainer_anchor, probe) and visible:
+				probe["fallback"] = bool(shot.get("fallback", false))
+				return probe
 	return shot
 
 

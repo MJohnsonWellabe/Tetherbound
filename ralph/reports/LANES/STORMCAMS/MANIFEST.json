@@ -1,0 +1,842 @@
+[
+ {
+  "item": "P2-083",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__captain_marrow__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-083",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__captain_marrow__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-074",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+  "stands": [
+   "water__inventory__character__water_nalia__dialogue",
+   "water__inventory__character__water_nerissa__dialogue",
+   "water__inventory__trainer__water_trainer_nerissa__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-074",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+  "stands": [
+   "water__inventory__character__water_nalia__dialogue",
+   "water__inventory__character__water_nerissa__dialogue",
+   "water__inventory__trainer__water_trainer_nerissa__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-081",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+   "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-081",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+   "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-073",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+  "stands": [
+   "water__inventory__trainer__water_trainer_bex__dialogue",
+   "water__inventory__trainer__water_trainer_daro__dialogue",
+   "water__inventory__trainer__water_trainer_irva__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-073",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+  "stands": [
+   "water__inventory__trainer__water_trainer_bex__dialogue",
+   "water__inventory__trainer__water_trainer_daro__dialogue",
+   "water__inventory__trainer__water_trainer_irva__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-076",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__captain_veyra__dialogue",
+   "cloudreach__inventory__character__trader_kelm__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-076",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_defeated_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__captain_veyra__defeated__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-076",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__captain_veyra__dialogue",
+   "cloudreach__inventory__character__trader_kelm__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-076",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_defeated_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__captain_veyra__defeated__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-087",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__trainer__old_champion_bram__dialogue",
+   "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+   "meadows__inventory__trainer__stronghold_elite__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-087",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__trainer__old_champion_bram__dialogue",
+   "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+   "meadows__inventory__trainer__stronghold_elite__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-075",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+  "stands": [
+   "water__inventory__character__water_adair__dialogue",
+   "water__inventory__character__water_iona__dialogue",
+   "water__inventory__character__water_rowan__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-075",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+  "stands": [
+   "water__inventory__character__water_adair__dialogue",
+   "water__inventory__character__water_iona__dialogue",
+   "water__inventory__character__water_rowan__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-077",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__defector_rusk__dialogue",
+   "cloudreach__inventory__character__naturalist_sora__dialogue",
+   "cloudreach__inventory__character__young_trainer_tavi__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-077",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__defector_rusk__dialogue",
+   "cloudreach__inventory__character__naturalist_sora__dialogue",
+   "cloudreach__inventory__character__young_trainer_tavi__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-078",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__character__corin__dialogue",
+   "meadows__inventory__character__kell__dialogue",
+   "meadows__inventory__trainer__captain_field__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-078",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__character__corin__dialogue",
+   "meadows__inventory__character__kell__dialogue",
+   "meadows__inventory__trainer__captain_field__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-079",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__character__garrick__dialogue",
+   "meadows__inventory__character__quarry_foreman__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-079",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__character__garrick__dialogue",
+   "meadows__inventory__character__quarry_foreman__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-086",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__trainer__tournament_final_oskar__dialogue",
+   "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+   "meadows__inventory__trainer__tournament_semi_tam__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-086",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__trainer__tournament_final_oskar__dialogue",
+   "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+   "meadows__inventory__trainer__tournament_semi_tam__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-076",
+  "flag": "data/config/cloudreach_visual.json:route_details.plaza_paving_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__captain_veyra__dialogue",
+   "cloudreach__inventory__character__trader_kelm__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-076",
+  "flag": "data/config/cloudreach_visual.json:route_details.plaza_paving_candidate.enabled",
+  "camera_set": "tools/phase2_capture_defeated_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__captain_veyra__defeated__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-074",
+  "flag": "data/config/water_npc_placement_candidate.json:enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+  "stands": [
+   "water__inventory__character__water_nalia__dialogue",
+   "water__inventory__character__water_nerissa__dialogue",
+   "water__inventory__trainer__water_trainer_nerissa__dialogue"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-041",
+  "flag": "data/config/crown_arch_hero.json:round2_candidate.enabled",
+  "camera_set": "tools/phase2_capture_locations.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__landmark__crown_arch__day__close"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-043",
+  "flag": "data/config/stormwood_glass_field.json:rock_collar_candidate.enabled",
+  "camera_set": "tools/phase2_capture_routes.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__dynamo__11__the_glass_field__walk_03_day"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-046",
+  "flag": "data/config/stormwood_harvest_hero2.json:enabled",
+  "camera_set": "tools/phase2_capture_world_inventory.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__harvest__glowmoss",
+   "stormwood__inventory__harvest__stormglass",
+   "stormwood__inventory__harvest__stormglass_crown"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-113",
+  "flag": "data/config/catching.json:framed_camera.enabled",
+  "camera_set": "tools/phase2_capture_catch.gd --biome=tidewake (job.json repro)",
+  "stands": [
+   "02-orb-in-flight",
+   "03-absorbing",
+   "03-strike"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-059",
+  "flag": "data/config/catching.json:framed_camera.enabled",
+  "camera_set": "tools/phase2_capture_catch.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "03-absorbing",
+   "03-strike",
+   "04-orb-resting"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-045",
+  "flag": "data/config/pickup_grounding.json:tier_candidate.enabled",
+  "camera_set": "tools/phase2_capture_world_inventory.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__pickup__good_candy",
+   "stormwood__inventory__pickup__great_candy",
+   "stormwood__inventory__pickup__rare_candy"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-038",
+  "flag": "data/config/stormwood_lantern_pools.json:lantern_model.enabled",
+  "camera_set": "tools/phase2_capture_locations.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__deepwood__10__the_fallen_giant__day__close",
+   "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+   "stormwood__glowmoss_hollows__04__crown_overlook__day__close"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-038",
+  "flag": "data/config/stormwood_lantern_pools.json:arrival_pools.enabled",
+  "camera_set": "tools/phase2_capture_locations.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__deepwood__10__the_fallen_giant__day__close",
+   "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+   "stormwood__glowmoss_hollows__04__crown_overlook__day__close"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-056",
+  "flag": "data/config/stormwood_character_rim.json:enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__defector_sable",
+   "stormwood__inventory__character__grunt_lieutenant_dace",
+   "stormwood__inventory__character__tether_lieutenant_varga"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-055",
+  "flag": "data/config/stormwood_character_rim.json:enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__elder_maud",
+   "stormwood__inventory__character__rodkeeper_hesk",
+   "stormwood__inventory__character__warden_elect_bryn"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-082",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue",
+   "stormwood__inventory__character__caretaker_lio__dialogue",
+   "stormwood__inventory__character__elder_maud__dialogue"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-082",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue",
+   "stormwood__inventory__character__caretaker_lio__dialogue",
+   "stormwood__inventory__character__elder_maud__dialogue"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-084",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__elder_maud__dialogue",
+   "stormwood__inventory__character__trader_fenn__dialogue",
+   "stormwood__inventory__character__trader_oswin__dialogue"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-084",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__elder_maud__dialogue",
+   "stormwood__inventory__character__trader_fenn__dialogue",
+   "stormwood__inventory__character__trader_oswin__dialogue"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-040",
+  "flag": "data/config/stormwood_road_current.json:puddle_candidate.enabled",
+  "camera_set": "tools/phase2_capture_locations.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__deepwood__09__lantern_hollow__day__close",
+   "stormwood__landmark__glass_field__day__close",
+   "stormwood__landmark__lantern_hollow__night__close"
+  ],
+  "group": 4
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "meadows-locations (GPU frame set on tb/gpu-frames-1101)",
+  "stands": [
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__day__close",
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach",
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__night__close",
+   "meadows__band3_the_river_lock__06__old_mill_crossing__day__approach",
+   "meadows__band3_the_river_lock__06__old_mill_crossing__day__close",
+   "meadows__band3_the_river_lock__06__old_mill_crossing__night__approach",
+   "meadows__band3_the_river_lock__06__old_mill_crossing__night__close",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__day__close",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__night__close",
+   "meadows__landmark__band1_trail_camp__day__approach",
+   "meadows__landmark__band1_trail_camp__day__close",
+   "meadows__landmark__band1_trail_camp__night__approach",
+   "meadows__landmark__band1_trail_camp__night__close",
+   "meadows__landmark__stronghold__day__approach",
+   "meadows__landmark__stronghold__day__close",
+   "meadows__landmark__stronghold__night__approach",
+   "meadows__landmark__stronghold__night__close",
+   "meadows__landmark__village__day__approach",
+   "meadows__landmark__village__day__close",
+   "meadows__landmark__village__night__approach",
+   "meadows__landmark__village__night__close"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "meadows-routes (GPU frame set on tb/gpu-frames-1101)",
+  "stands": [
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk",
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day",
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+   "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+   "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk",
+   "meadows__band3_the_river_lock__05__the_tether_relay__walk_01_day",
+   "meadows__band3_the_river_lock__05__the_tether_relay__walk_02_day",
+   "meadows__band3_the_river_lock__05__the_tether_relay__walk_03_day",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "meadows-fights-f312a5 (GPU frame set on tb/gpu-frames-1101)",
+  "stands": [
+   "south_bridge_grunt-00-before",
+   "south_bridge_grunt-01",
+   "south_bridge_grunt-02",
+   "south_bridge_grunt-03",
+   "south_bridge_grunt-04",
+   "south_bridge_grunt-05",
+   "south_bridge_grunt-06",
+   "south_bridge_grunt-07",
+   "south_bridge_grunt-08",
+   "south_bridge_grunt-99-after",
+   "south_bridge_grunt-a01",
+   "south_bridge_grunt-a02",
+   "south_bridge_grunt-a03",
+   "south_bridge_grunt-a04",
+   "south_bridge_grunt-a05",
+   "south_bridge_grunt-a06",
+   "south_bridge_grunt-r01",
+   "south_bridge_grunt-r02",
+   "south_bridge_grunt-r03",
+   "south_bridge_grunt-r04",
+   "south_bridge_grunt-r05",
+   "south_bridge_grunt-r06",
+   "south_bridge_grunt-r07",
+   "south_bridge_grunt-t01-stand-mid",
+   "south_bridge_grunt-t01-stand-start",
+   "south_bridge_grunt-t01-stand-strike",
+   "south_bridge_grunt-t02-stand-mid",
+   "south_bridge_grunt-t02-stand-start",
+   "south_bridge_grunt-t02-stand-strike",
+   "warden_aldis-00-before",
+   "warden_aldis-01",
+   "warden_aldis-02",
+   "warden_aldis-03",
+   "warden_aldis-04",
+   "warden_aldis-05",
+   "warden_aldis-06",
+   "warden_aldis-07",
+   "warden_aldis-08",
+   "warden_aldis-99-after",
+   "warden_aldis-a01",
+   "warden_aldis-a02",
+   "warden_aldis-a03",
+   "warden_aldis-a04",
+   "warden_aldis-a05",
+   "warden_aldis-a06",
+   "warden_aldis-r01",
+   "warden_aldis-r02",
+   "warden_aldis-r03",
+   "warden_aldis-r04",
+   "warden_aldis-r05",
+   "warden_aldis-r06",
+   "warden_aldis-r07",
+   "warden_aldis-r08",
+   "warden_aldis-r09",
+   "warden_aldis-r10",
+   "warden_aldis-r11",
+   "warden_aldis-r12",
+   "warden_aldis-r13",
+   "warden_aldis-r14",
+   "warden_aldis-r15",
+   "warden_aldis-r16",
+   "warden_aldis-r17",
+   "warden_aldis-r18",
+   "warden_aldis-r19",
+   "warden_aldis-r20",
+   "warden_aldis-r21",
+   "warden_aldis-t01-stand-mid",
+   "warden_aldis-t01-stand-start",
+   "warden_aldis-t01-stand-strike",
+   "warden_aldis-t02-stand-mid",
+   "warden_aldis-t02-stand-start",
+   "warden_aldis-t02-stand-strike"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "meadows-dialogue (GPU frame set on tb/gpu-frames-1101)",
+  "stands": [
+   "meadows__inventory__character__corin",
+   "meadows__inventory__character__corin__dialogue",
+   "meadows__inventory__character__halda",
+   "meadows__inventory__character__halda__dialogue",
+   "meadows__inventory__character__kell",
+   "meadows__inventory__character__kell__dialogue",
+   "meadows__inventory__character__oskar",
+   "meadows__inventory__character__oskar__dialogue",
+   "meadows__inventory__character__quarry_foreman",
+   "meadows__inventory__character__quarry_foreman__dialogue"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "meadows-world_inventory (GPU frame set on tb/gpu-frames-1101)",
+  "stands": [
+   "meadows__inventory__harvest__attack_tonic",
+   "meadows__inventory__harvest__orb_basic",
+   "meadows__inventory__harvest__travel_pack",
+   "meadows__inventory__prop__bonfire_fire",
+   "meadows__inventory__prop__camp_bed",
+   "meadows__inventory__prop__camp_tent"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "meadows-build_systems-07f6f8 (GPU frame set on tb/gpu-frames-1101)",
+  "stands": [
+   "meadows__system__bed",
+   "meadows__system__building",
+   "meadows__system__camp",
+   "meadows__system__crafting"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue",
+   "stormwood__inventory__character__captain_marrow__dialogue",
+   "stormwood__inventory__character__caretaker_lio__dialogue",
+   "stormwood__inventory__character__defector_sable",
+   "stormwood__inventory__character__elder_maud",
+   "stormwood__inventory__character__elder_maud__dialogue",
+   "stormwood__inventory__character__grunt_lieutenant_dace",
+   "stormwood__inventory__character__rodkeeper_hesk",
+   "stormwood__inventory__character__tether_lieutenant_varga",
+   "stormwood__inventory__character__trader_fenn__dialogue",
+   "stormwood__inventory__character__trader_oswin__dialogue",
+   "stormwood__inventory__character__warden_elect_bryn",
+   "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+   "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+  "stands": [
+   "water__inventory__character__water_adair__dialogue",
+   "water__inventory__character__water_iona__dialogue",
+   "water__inventory__character__water_nalia__dialogue",
+   "water__inventory__character__water_nerissa__dialogue",
+   "water__inventory__character__water_rowan__dialogue",
+   "water__inventory__trainer__water_trainer_bex__dialogue",
+   "water__inventory__trainer__water_trainer_daro__dialogue",
+   "water__inventory__trainer__water_trainer_irva__dialogue",
+   "water__inventory__trainer__water_trainer_nerissa__dialogue"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=cloudreach (job.json repro)",
+  "stands": [
+   "cloudreach__inventory__character__captain_veyra__dialogue",
+   "cloudreach__inventory__character__defector_rusk__dialogue",
+   "cloudreach__inventory__character__naturalist_sora__dialogue",
+   "cloudreach__inventory__character__trader_kelm__dialogue",
+   "cloudreach__inventory__character__young_trainer_tavi__dialogue"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-CAM-OCCLUSION",
+  "flag": "data/config/camera.json:occlusion_fade.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "meadows__inventory__character__corin__dialogue",
+   "meadows__inventory__character__garrick__dialogue",
+   "meadows__inventory__character__kell__dialogue",
+   "meadows__inventory__character__quarry_foreman__dialogue",
+   "meadows__inventory__trainer__captain_field__dialogue",
+   "meadows__inventory__trainer__old_champion_bram__dialogue",
+   "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+   "meadows__inventory__trainer__stronghold_elite__dialogue",
+   "meadows__inventory__trainer__tournament_final_oskar__dialogue",
+   "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+   "meadows__inventory__trainer__tournament_semi_tam__dialogue"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-STORMWOOD-LIGHT",
+  "flag": "data/config/stormwood_look.json:light_pass_1101.enabled",
+  "camera_set": "tools/phase2_capture_locations.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+   "stormwood__deepwood__09__lantern_hollow__day__close",
+   "stormwood__deepwood__10__the_fallen_giant__day__close",
+   "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+   "stormwood__dynamo__12__the_stormheart_tree__day__close",
+   "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+   "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+   "stormwood__landmark__crown_arch__day__close",
+   "stormwood__landmark__crown_heartstone__day__close",
+   "stormwood__landmark__dynamo_core__day__close",
+   "stormwood__landmark__glass_field__day__close",
+   "stormwood__landmark__lantern_hollow__night__close"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-STORMWOOD-LIGHT",
+  "flag": "data/config/stormwood_look.json:light_pass_1101.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_fights.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__fight__capacitor_alpha-i01",
+   "stormwood__fight__capacitor_alpha-tell1-a-start",
+   "stormwood__fight__capacitor_alpha-tell1-d-strike",
+   "stormwood__fight__capacitor_alpha-tell1-e-impact",
+   "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath",
+   "stormwood__fight__hollows_alpha-tell1-e-impact",
+   "stormwood__fight__hollows_long__hollows_alpha-99-after",
+   "stormwood__fight__hollows_long__hollows_alpha-i13",
+   "stormwood__fight__hollows_win__hollows_alpha-99-after"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-STORMWOOD-LIGHT",
+  "flag": "data/config/stormwood_look.json:light_pass_1101.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue",
+   "stormwood__inventory__character__captain_marrow__dialogue",
+   "stormwood__inventory__character__caretaker_lio__dialogue",
+   "stormwood__inventory__character__defector_sable",
+   "stormwood__inventory__character__elder_maud",
+   "stormwood__inventory__character__elder_maud__dialogue",
+   "stormwood__inventory__character__grunt_lieutenant_dace",
+   "stormwood__inventory__character__rodkeeper_hesk",
+   "stormwood__inventory__character__tether_lieutenant_varga",
+   "stormwood__inventory__character__trader_fenn__dialogue",
+   "stormwood__inventory__character__trader_oswin__dialogue",
+   "stormwood__inventory__character__warden_elect_bryn",
+   "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+   "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-STORMWOOD-LIGHT",
+  "flag": "data/config/stormwood_look.json:light_pass_1101.enabled",
+  "camera_set": "tools/phase2_capture_world_inventory.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__harvest__glowmoss",
+   "stormwood__inventory__harvest__stormglass",
+   "stormwood__inventory__harvest__stormglass_crown",
+   "stormwood__inventory__pickup__good_candy",
+   "stormwood__inventory__pickup__great_candy",
+   "stormwood__inventory__pickup__rare_candy"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-STORMWOOD-LIGHT",
+  "flag": "data/config/stormwood_look.json:light_pass_1101.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_glass_sink.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__landmark__glass_sink__day__approach",
+   "stormwood__landmark__glass_sink__day__close",
+   "stormwood__landmark__glass_sink__golden__approach"
+  ],
+  "group": 5
+ },
+ {
+  "item": "SHARED-STORMWOOD-LIGHT",
+  "flag": "data/config/stormwood_look.json:light_pass_1101.enabled",
+  "camera_set": "tools/phase2_capture_routes.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__dynamo__11__the_glass_field__walk_03_day"
+  ],
+  "group": 5
+ },
+ {
+  "item": "P2-059",
+  "flag": "data/config/catching.json:framed_camera.r2.enabled",
+  "camera_set": "tools/phase2_capture_catch.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "03-absorbing",
+   "03-strike",
+   "04-orb-resting"
+  ],
+  "group": 5
+ },
+ {
+  "item": "P2-059",
+  "flag": "data/config/hud.json:message_clears_prompt.enabled",
+  "camera_set": "tools/phase2_capture_catch.gd --biome=meadows (job.json repro)",
+  "stands": [
+   "03-absorbing",
+   "03-strike",
+   "04-orb-resting"
+  ],
+  "group": 5
+ },
+ {
+  "item": "P2-113",
+  "flag": "data/config/catching.json:framed_camera.r2.enabled",
+  "camera_set": "tools/phase2_capture_catch.gd --biome=tidewake (job.json repro)",
+  "stands": [
+   "02-orb-in-flight",
+   "03-absorbing",
+   "03-strike",
+   "04-orb-resting"
+  ],
+  "group": 5
+ },
+ {
+  "item": "P2-113",
+  "flag": "data/config/hud.json:message_clears_prompt.enabled",
+  "camera_set": "tools/phase2_capture_catch.gd --biome=tidewake (job.json repro)",
+  "stands": [
+   "02-orb-in-flight",
+   "03-absorbing",
+   "03-strike",
+   "04-orb-resting"
+  ],
+  "group": 5
+ }
+]

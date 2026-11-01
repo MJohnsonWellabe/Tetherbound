@@ -70,7 +70,7 @@ func build(world: Node3D) -> Dictionary:
 			push_error("Water NPC has unknown island: " + id)
 			continue
 		var centre: Array = centres[str(spec.island_id)]
-		var offset: Array = spec.island_local_offset
+		var offset: Array = preload("res://scripts/world/water_npc_placement.gd").offset(spec)
 		var position := Vector3(float(centre[0]) + float(offset[0]), 0, float(centre[1]) + float(offset[2]))
 		position.y = world.call("ground_height_at", position.x, position.z)
 		if not is_finite(position.y) or position.y < 0.0:

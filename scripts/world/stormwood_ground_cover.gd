@@ -11,7 +11,7 @@ var _forest_enabled := false
 
 
 func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
-	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
+	var finish: Dictionary = preload("res://scripts/world/stormwood_ground_zones.gd").finish()
 	_forest_enabled = bool(finish.get("enabled", false))
 	if not _forest_enabled:
 		super._build_cover_tiers(cfg, radius)
