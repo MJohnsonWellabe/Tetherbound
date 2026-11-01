@@ -409,6 +409,11 @@ func _ready() -> void:
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
+		# tb/vis-water-sky group 2 (OFF until GPU-judged): warm key, rim,
+		# aerial fog and night fill (data/config/cloudreach_light_candidate.json).
+		var light_candidate := _read_json("res://data/config/cloudreach_light_candidate.json")
+		if bool(light_candidate.get("enabled", false)) or OS.get_cmdline_user_args().has("--cloudreach-light-candidate"):
+			apply_time_overrides(local_look.get("times", {}), light_candidate.get("time_overrides", {}))
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
 		var biome_profile: Dictionary = biome_look.config()
