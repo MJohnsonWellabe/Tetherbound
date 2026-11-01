@@ -1,5 +1,14 @@
 # Meadows visual lane (tb/vis-meadows), 1 Nov 2026
 
+**16:50 UTC, group 3 (from the batch-1 verdicts):** five entries in MANIFEST.json, `group: 3`. Entries marked `also_on` need those flags on too (landed or companion flags).
+- **Meadows light** (`meadows_look.json:light_candidate.enabled`): the judges' common ask. A warmer, lower key sun, a character rim and about double the aerial fog with sky haze; at night, more ambient fill and exposure, a brighter moon, softer shadows and a tighter moon glow (the banded halo).
+- **P2-003 r2:** keep 150 → 170 m (front face still fixed), darker stone, hotter fire-orange windows (`stronghold_hero_gatehouse.gd emission_colour`); judge with the existing `approach_pylons.p2_003_unlit_candidate_enabled` so the pylon lamps stop carrying the eye.
+- **P2-006 r2:** bank rocks at the waterline (`bank_rocks` in the river candidate); judge on the close and landmark stands, not the canopy-blocked approach views.
+- **P2-012 r2** (`bank.hill_shell.r2.enabled`): triplanar grass grain on the shell, the floating `MoundGrowth` hidden with the bank, and the interior clip moved behind the door beam (z 1.4 → 3.2) for the night dark band.
+- **P2-064 r2:** the six Warden-arena wall torches pool at the wall (energy 12 → 7.5, attenuation 1 → 1.8, softer flame colour) for the over-lit orange Terrapup; the Warden-only boundary ring is softer (`combat.json arena.boundary_per_trainer_candidate`, alpha 0.3 → 0.12, height 0.8 → 0.45).
+
+Checks: every touched script parses (`--check-only`, method in TECHNICAL §8.1); the shell shader compiles in a one-file Compatibility project. Unit tests are added but unrun here.
+
 **15:25 UTC, compile fix:** 36c838031 renames `crossing_hall.gd apply_hall_layer`'s parameter `key` to `layer` (it was shadowed by the function's own `for key` loops, a parse error that broke every Meadows capture). This is the same fix as on the batch branch. Every script this branch touches now passes a Godot `--check-only` parse (method in TECHNICAL §8.1, since there is no import here):
 - clean outright: `crossing_hall.gd`, `crossing_hall_arch_facades.gd`, `grass_field.gd`;
 - clean with its one texture preload stubbed: `water.gd`;
