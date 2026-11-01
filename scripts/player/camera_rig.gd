@@ -1252,20 +1252,28 @@ func _swing_for_sight(shot: Dictionary, cfg: Dictionary, room: float,
 		trainer_anchor: Vector3, speaker_anchor: Vector3, forward: Vector3,
 		require_sight: bool = true, require_frame: bool = false) -> Dictionary:
 	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
-	for extra: float in CONVERSATION.swing_search(cfg):
-		if is_zero_approx(extra):
-			continue
-		var candidate := cfg.duplicate()
-		candidate["shoulder_yaw_deg"] = base_swing + extra
-		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
-		var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
-		if probe_room < float(probe["distance"]) - 0.01:
-			continue
-		var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
-			and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
-		if _camera_is_reachable(trainer_anchor, probe) and visible:
-			probe["fallback"] = bool(shot.get("fallback", false))
-			return probe
+	# twoshot_v2 `speaker_sight_multimesh` (CPU r2, Fenn beside a giant trunk):
+	# when no swing at the full arm sees the speaker, try shorter arms too,
+	# nearest-first, before giving up on the blocked shot.
+	var scales: Array = [1.0]
+	if bool(cfg.get("speaker_sight_multimesh", false)):
+		scales = cfg.get("speaker_sight_arm_scales", [1.0, 0.72, 0.5])
+	for arm_scale: Variant in scales:
+		for extra: float in CONVERSATION.swing_search(cfg):
+			if is_zero_approx(extra) and is_equal_approx(float(arm_scale), 1.0):
+				continue
+			var candidate := cfg.duplicate()
+			candidate["shoulder_yaw_deg"] = base_swing + extra
+			candidate["distance"] = float(cfg.get("distance", 3.5)) * float(arm_scale)
+			var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
+			var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
+			if probe_room < float(probe["distance"]) - 0.01:
+				continue
+			var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
+				and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
+			if _camera_is_reachable(trainer_anchor, probe) and visible:
+				probe["fallback"] = bool(shot.get("fallback", false))
+				return probe
 	return shot
 
 
