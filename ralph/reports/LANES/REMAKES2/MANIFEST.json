@@ -160,5 +160,14 @@
    "torrentoad"
   ],
   "group": 18
+ },
+ {
+  "item": "F36 Tuskroot remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_tuskroot.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tuskroot"
+  ],
+  "group": 19
  }
 ]
