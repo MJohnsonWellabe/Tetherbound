@@ -8,7 +8,7 @@
    "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
    "tidewake__landmark__lastlight__day__close"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -20,7 +20,7 @@
    "tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day",
    "tidewake__sluice_isle__14__sluice_channel_bridge__route_day"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -32,7 +32,7 @@
    "tidewake__current_states__S1_live_t1",
    "tidewake__current_states__S2_live_t0"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -44,7 +44,7 @@
    "tidewake__current_states__S1_restored_t0",
    "tidewake__current_states__S2_live_t0"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -56,7 +56,7 @@
    "tidewake__first_shore__01__first_shore_welcome_beacon__day__close",
    "tidewake__first_shore__02__first_shore_horizon_stones__route_day"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -68,7 +68,7 @@
    "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
    "tidewake__landmark__sluice_channel_bridge__day__close"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -80,7 +80,7 @@
    "tidewake__gull_rest__19__gull_rest_signal_spire__route_day",
    "tidewake__lantern_cove__17__lantern_cove_drift_arch__route_day"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -92,7 +92,7 @@
    "tidewake__swimming__surface_west",
    "tidewake__swimming__surface_mid"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -104,7 +104,7 @@
    "tidewake__swimming__surface_west",
    "tidewake__swimming__surface_mid"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -116,7 +116,7 @@
    "tidewake__system__mounted-swim-04-mounted",
    "tidewake__system__mounted-swim-05-mounted"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -128,7 +128,7 @@
    "tidewake__system__mounted-swim-12-land",
    "tidewake__system__mounted-swim-13-land"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -140,7 +140,7 @@
    "tidewake__cannonback__shiny_idle",
    "tidewake__riptusk__shiny_idle"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -152,7 +152,7 @@
    "tidewake__riptusk__fainted",
    "tidewake__aquaryn__fainted"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -164,7 +164,7 @@
    "tidewake__catching__03-strike",
    "tidewake__catching__03-absorbing"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -176,7 +176,7 @@
    "tidewake__catching__catch_high",
    "tidewake__catching__01-aiming-full-health"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -188,7 +188,7 @@
    "tidewake__fight__venn__t-024_02",
    "tidewake__fight__venn__t-025_02"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -200,7 +200,7 @@
    "tidewake__fight__venn__tell-start-000_48",
    "tidewake__fight__venn__t-003_02"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -212,7 +212,7 @@
    "tidewake__fight__venn__tell-start-001_65",
    "tidewake__fight__venn__t-016_00"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -224,7 +224,7 @@
    "tidewake__fight__venn__tell-start-000_48",
    "tidewake__fight__nerissa__t-000_00"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -236,7 +236,7 @@
    "tidewake__inventory__trainer__water_trainer_bex__dialogue",
    "tidewake__inventory__trainer__water_trainer_irva__dialogue"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -248,7 +248,7 @@
    "tidewake__inventory__character__water_iona__dialogue",
    "tidewake__inventory__character__water_rowan__dialogue"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -260,7 +260,7 @@
    "tidewake__inventory__character__water_bren",
    "tidewake__inventory__character__water_corin"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -272,7 +272,7 @@
    "tidewake__bed__water_camp_brine_steps__bed",
    "tidewake__bed__water_camp_salt_crown__bed"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -284,7 +284,7 @@
    "tidewake__crafting__water_camp_brine_steps__crafting",
    "tidewake__crafting__water_camp_salt_crown__crafting"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -295,7 +295,7 @@
    "tidewake__riptusk__resting",
    "tidewake__torrentoad__resting"
   ],
-  "group": 1,
+  "group": 2,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
  },
  {
@@ -847,5 +847,41 @@
   ],
   "group": 1,
   "on_arm": "set the flag true, or append --tidewake-cause=json:cause_tidewake to each command"
+ },
+ {
+  "item": "P2-066",
+  "flag": "data/config/tidewake_look.json:cause_tidewake.currents.enabled",
+  "camera_set": "tools/phase2_capture_current_states.gd -- --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/repro_current_states_S1_live_t0 ;; tools/phase2_capture_current_states.gd -- --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/repro_current_states_S1_live_t1 ;; tools/phase2_capture_current_states.gd -- --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/repro_current_states_S2_live_t0",
+  "stands": [
+   "tidewake__current_states__S1_live_t0",
+   "tidewake__current_states__S1_live_t1",
+   "tidewake__current_states__S2_live_t0"
+  ],
+  "group": 2,
+  "on_arm": "set the flag true, or append --tidewake-cause=currents to each command"
+ },
+ {
+  "item": "P2-067",
+  "flag": "data/config/tidewake_look.json:cause_tidewake.currents.enabled",
+  "camera_set": "tools/phase2_capture_current_states.gd -- --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/repro_current_states_S1_live_t0 ;; tools/phase2_capture_current_states.gd -- --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/repro_current_states_S1_restored_t0 ;; tools/phase2_capture_current_states.gd -- --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/repro_current_states_S2_live_t0",
+  "stands": [
+   "tidewake__current_states__S1_live_t0",
+   "tidewake__current_states__S1_restored_t0",
+   "tidewake__current_states__S2_live_t0"
+  ],
+  "group": 2,
+  "on_arm": "set the flag true, or append --tidewake-cause=currents to each command"
+ },
+ {
+  "item": "P2-026",
+  "flag": "data/config/tidewake_look.json:cause_tidewake.currents.enabled",
+  "camera_set": "tools/phase2_capture_routes.gd -- --biome=water --subset=water__drowned_garden__21__drowned_garden_terraces --seed=2042 --output=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__drowned_garden__21__drowned_garden_terraces__route_day ;; tools/phase2_capture_routes.gd -- --biome=water --subset=water__drowned_garden__21__drowned_garden_terraces --seed=2042 --output=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day ;; tools/phase2_capture_routes.gd -- --biome=water --subset=water__sluice_isle__14__sluice_channel_bridge --seed=2042 --output=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__sluice_isle__14__sluice_channel_bridge__route_day",
+  "stands": [
+   "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+   "tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+   "tidewake__sluice_isle__14__sluice_channel_bridge__route_day"
+  ],
+  "group": 2,
+  "on_arm": "set the flag true, or append --tidewake-cause=currents to each command"
  }
 ]

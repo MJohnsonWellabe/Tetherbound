@@ -8,7 +8,20 @@
   - Light: a paler haze horizon; the far islands and the Veilfall recede.
   - Dunes: the steep faces carry wind runnels.
 - CPU rounds: r1 haze 0.6 washed the sea milky and caps blotched; r2 cross-bedding drew contour lines; r3 runnels swirled on flat ground; r4 OK, but restoring dune grass and stones made sand barer, so those two stay off.
-- Manifest: `MANIFEST.json` (group 1: one entry per item per part).
+- Manifest: `MANIFEST.json`.
+  - Group 1: light and dunes.
+  - Group 2: sea (retuned after an elevated-view check) and the new currents part.
+
+## Group 2 (1 Nov, 23:20 UTC)
+
+- **New part, `currents`:** `cause_tidewake.currents.enabled`, for P2-066, P2-067 and P2-026.
+  - CPU current-state frames with `current_flow` on show that the restored state still draws white dashes, chevron outlines and dashed channel edges. current_flow's restored override inherits them from water_veilfall.json.
+  - The part zeroes them in the restored state and keeps soft seams, gentle wavelets and a faint clear channel. It brings current_flow into play itself, so it works whether or not `watersky_sections_on` lands.
+  - CPU: the dashes are gone from S1 and S2 restored.
+- **Sea retune:** the elevated current-state view showed the r4 sea losing all deep value (light cyan everywhere) and slicks reading as radial rays.
+  - Deep is now #0f3f5a at full strength by 18 m (shipping navy #0a2c46 by 12 m).
+  - Slicks are 0.16 (were 0.35) and caps 0.22 (were 0.45).
+  - CPU: from above, the sea grades from turquoise shallows to a blue-teal deep with soft wind streaks; from the beach the r4 read is kept.
 
 ## Group 1 (1 Nov): three parts under `data/config/tidewake_look.json:cause_tidewake`
 
