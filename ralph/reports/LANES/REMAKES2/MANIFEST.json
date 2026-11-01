@@ -25,5 +25,14 @@
    "ribbonray"
   ],
   "group": 3
+ },
+ {
+  "item": "F36 Ripplet remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_ripplet.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ripplet"
+  ],
+  "group": 4
  }
 ]
