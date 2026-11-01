@@ -26,7 +26,7 @@
     },
     "remake_owner1101_bramblebun": {
       "_why": "Owner-picked remake 1 Nov 2026: four-legged hare, bark plates, glowing green veins and eyes (Meshy 01a197b7-3167-76f8-9c57-1ea6639fb9fc). No baked ground patch, dog3 rig recipe at the established 3.00 m, dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/bramblebun/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "bramblebun": {
           "model": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb",
@@ -691,7 +691,7 @@
     },
     "remake_owner1101_ripplet": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Ripplet, a water starter creature: a lean otter-like creature with fin-shaped ears, sky-teal fur and cream belly (Meshy 01a197ec-b437-740d-9194-1dae04f16d5c). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.6 m; emission on the bright aqua markings and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/ripplet/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "ripplet": {
           "model": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101.glb",

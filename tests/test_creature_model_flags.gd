@@ -16,6 +16,8 @@ var installed: Dictionary
 const HELD := {
 	"remake_owner1101_torrentoad": "the remake carries the faint clip role and attack_contact_phase the installed Torrentoad has",
 	"remake_owner1101_meadowhart": "the remake keeps the complete skinned bare body the riding visual needs",
+	"remake_owner1101_bramblebun": "the remake carries its own alpha and shiny colourway textures (smoke_bramblebun_colourway_binding: all three variants resolve the same texture)",
+	"remake_owner1101_ripplet": "the remake keeps the combat camera following the starter, not the trainer (smoke_combat: followed anchor 2.5 m from trainer vs 2.8 m from creature)",
 	"remake_owner1101_terrapup": "the remake's longer rendered body (2.48 m half-extent) fits the Burrow Warrens chamber formation (smoke_arena_contain: wild engagement refused)",
 	"remake_owner1101_riptusk": "the remake carries the water rest/faint candidate the installed Riptusk has (test_creature_rest_pose water candidates)",
 	"remake_owner1101_burrowback": "its aspect variant Nightburrow reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
