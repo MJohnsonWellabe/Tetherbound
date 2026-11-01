@@ -1,5 +1,15 @@
 # Routes lane (tb/routes-f49): result 1 Nov 2026, Cloudreach complete; STOPPED on two failures at Cloudreach 07 -> Stormwood arrival_prefix
 
+## TO COORDINATOR (1 Nov 11:30Z; send_message refused here: "elevated_session_untrusted_device")
+Landing check: tb/routes-f49 merges cleanly into origin/main (git merge-tree). Files outside tests/fixtures, ralph/reports, tools/earned_saves:
+- scripts/net/foundation_retry_order.gd (8ab84f7e), scripts/net/ledger_rpc.gd + scripts/net/reward_delivery.gd (7d485aa1): the two hand-off game fixes.
+- tests/test_combat_round_reward.gd, tests/test_reward_delivery_rpc.gd: their new tests (fail before / pass after).
+- tests/test_water_earned_late_segment.gd: watchdog pin 240000 → 1200000, matching the helper.
+- tests/helpers/water_human_late_segment.gd (07c route + death-satchel exit check, 20/60 min wall watchdogs), tests/helpers/water_reedhaven_segment.gd (approved Satchel Drop).
+- scripts/world/cottage_window_patch.gdshader.uid (Godot-generated uid from a fresh import).
+Inside tools/earned_saves: cloudreach_chain_runner.gd, stormwood_chain_runner.gd, tidewake_piece_runner.gd (room-making and the 07 Storage Chest deposit, disclosed in receipts).
+Only targeted suites ran (12 net/ledger suites 119/0 failed; late segment 10/0). Please land with full-ci: the net fixes touch MULTIPLAYER transaction scheduling. Storage-deposit 07 rerun (3b611e2a) in progress; its result follows below when it lands.
+
 ## Cloudreach 06 -> 07 MATCH (34e55df3) with two game fixes (coordinator-approved, for full-ci landing)
 - 8ab84f7e `foundation_retry_order.gd`: master_win/boss_relic schedule ahead of round rewards/wild shares (test_combat_round_reward::test_boss_hand_off_schedules_ahead_of_held_round_reward; 34 tests 0 failed).
 - 7d485aa1 `ledger_rpc._process_reward_delivery` + `reward_delivery.yields_to_hand_off`: a held item grant that would take the slot a held boss hand-off needs stays held and retries (test_reward_delivery_rpc::test_held_boss_hand_off_keeps_its_satchel_slot_from_item_grants fails before/passes after; 12 net/ledger suites, 119 tests, 0 failed).
