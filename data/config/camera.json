@@ -44,9 +44,9 @@
       "elevation_deg": 6.0,
       "close_shoulder_extra_deg": 16.0,
       "close_gap_m": [1.8, 2.8],
-      "speaker_sight_multimesh": true,
+      "speaker_sight_multimesh": false,
       "speaker_sight_multimesh_min_height_m": 2.5,
-      "_why_multimesh": "CPU r1 (Fenn, P2-084): the push-in stood behind a scattered Stormwood trunk and framed bark. Scatter is MultiMesh, which the mesh sight test skips; with this the sight test also checks tall shadow-casting scatter (camera_rig.gd _multimesh_blocks) and the existing swing search finds a clear angle.",
+      "_why_multimesh": "CPU r1 (Fenn, P2-084): the push-in stood behind a scattered Stormwood trunk and framed bark. Scatter is MultiMesh, which the mesh sight test skips; with this the sight test also checks tall shadow-casting scatter (camera_rig.gd _multimesh_blocks) and the existing swing search finds a clear angle. PARKED false: CPU r2/r3 put Fenn's lens inside a trunk (fully black frame); unverified elsewhere.",
       "_why_close": "CPU r1 (Dace, Nalia at about 2 m): with the pair close the trainer stands near the lens axis and their head filled a fifth of the frame. Under 2.8 m the swing grows, up to +16 deg at 1.8 m, so the trainer moves to the frame edge (conversation_camera.gd shoulder_yaw_for).",
       "speaker_frame_candidate_enabled": true
     },
