@@ -1,0 +1,92 @@
+[
+    {
+        "label":  "CO16 f7matte-cragclaw High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-cragclaw-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-cragclaw-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO16 f3tall-brooktail High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f3tall-brooktail-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f3tall-brooktail-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the creature stands no taller than the 1.80 m trainer",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO16 f1crag-water_cragclaw High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-water_cragclaw-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-water_cragclaw-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO16 f8tall2-pipwing High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f8tall2-pipwing-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f8tall2-pipwing-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the creature stands no taller than the 1.80 m trainer",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO16 f9tall3-mudsnout High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f9tall3-mudsnout-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f9tall3-mudsnout-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the creature stands no taller than the 1.80 m trainer",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO16 f3tall-duskhush High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f3tall-duskhush-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f3tall-duskhush-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the creature stands no taller than the 1.80 m trainer",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO16 f4coat-cindercub High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f4coat-cindercub-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f4coat-cindercub-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the coat reads near-black or muddy, so form and face are lost against the stage",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO16 f1crag-skyrill High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-skyrill-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-skyrill-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO16 f7matte-voltarach High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-voltarach-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-voltarach-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    }
+]
