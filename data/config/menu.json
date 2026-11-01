@@ -12,6 +12,11 @@
     "card_margin": 6,
     "status_near_top": true
   },
+  "menu_text_floors": {
+    "_comment": "UI-R2 follow-up (GPU UI-R2 31 Oct 2026): settings/skills/satchel secondary text on the UITokens FONT_READ/FONT_PROMPT floors in TEXT_SECONDARY, the Satchel worn-equipment rows in their own focus-following scroll box, a short note_compact for long control-group notes and a 'More below' cue under the settings scroll. scripts/ui/menu_text_floors.gd. OFF until its GPU judging passes.",
+    "enabled": false,
+    "more_below_text": "More below  \u25bc"
+  },
   "controls_scan": {
     "_scope": "device_local_presentation",
     "_why": "P2-031 (coordinator code-blind re-score): binding cells were literal names only (slot 1's bare 'B' read like Back), the instructions were a two-line paragraph, and the column headers sat about 150px above the first rows. With this enabled, tab_settings.gd shows each bound button's prompt glyph or keycap beside its name, turns the instructions into one glyph line, and repeats the column headers directly under each group heading. Stays OFF until a code-blind PASS.",
@@ -262,6 +267,7 @@
         },
         {
           "name": "Fighting",
+          "note_compact": "X quick, Y charged, B utility, A burst. RB then X/Y/B fires an Ultimate. LT aims an orb. RT flees wild fights; LB switches.",
           "note": "X quick, Y charged, B utility, A burst. Tap and release RB, then tap X/Y/B to fire a full Ultimate; A dodges and cancels it. LT aims an orb; X releases and B cancels. RT flees wild fights; LB switches. During combat ordinary quick-item slot1 uses L3; slots2-5 keep the d-pad. World B item, L3 sprint, X interact, Y Satchel and RB recall are unchanged. Tether Commands are separate and are not enabled by this map.",
           "actions": [
             "combat_quick",
