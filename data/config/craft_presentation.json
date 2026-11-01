@@ -18,12 +18,6 @@
   "_why_craft_button": "P2-095/096 GPU pass (22 Oct): Craft as a primary button (confirm glyph for the active device) that greys to 'Missing materials' when the focused recipe can't be made; ingredient lines name the shortfall. Presentation only; OFF until judged.",
   "craft_button": true,
   "_why_enabled_r2": "Yardstick round 2 (ralph/reports/UI/close-1022/r2): CPU llvmpipe Low mapped 7.66 (7.79/7.40/7.79) vs control 6.25, meets the bar CPU-provisionally; defects FIXED 3/3 each; confirming batch (anchors to 7.53). GPU confirmation pending.",
-  "readable_r3": true,
-  "center_preview_px": 200,
-  "rendered_item_icons": true,
-  "rendered_ingredient_icon_px": 40,
-  "_why_rendered_item_icons": "P2-095 (GPU 7.31 with readable_r3; judges asked for real item icons). When on, recipe rows, ingredient lines and the centre preview show icons rendered from each item's installed mesh (tools/bake_item_icons.gd, data/config/craft_item_icons.json, assets/ui/icons/items_rendered); items without one keep their existing icon. Presentation only; OFF until GPU judging.",
-  "_why_readable_r3": "P2-095 GPU close-out (31 Oct, tb/gpu-pass d3fef8b3a): 7.43 at Medium and High, 0.07 short, clipping FIXED. Judges asked for the small sub-lines and Missing tags a step larger and a readable label and border on the greyed Missing materials button. When on: compact cost preview and Ready/Missing tag at FONT_BODY (was FONT_LABEL); the disabled button takes a TEXT_SECONDARY 3 px border and TEXT_PRIMARY label with a 0.6-alpha glyph; round 2 (GPU 7.17 -> 7.32): the centre column shows the focused item at center_preview_px on its own plate. Presentation only; OFF until the GPU close-out passes.",
   "craft_button_width": 420,
   "craft_button_height": 72,
   "_why_station_refusals": "Coordinator 2026-10-11: the Den panel showed raw host refusal codes (already_groomed, daily_care_cap). Player text for the station refusals a player can actually reach; any other code reads as the generic line, never the raw code. Presentation only.",
@@ -47,5 +41,15 @@
     "stale_plot": "Things changed while you were choosing. Try again.",
     "stale_stock": "Things changed while you were choosing. Try again."
   },
-  "station_refusal_fallback": "The host couldn't complete that. Try again."
+  "station_refusal_fallback": "The host couldn't complete that. Try again.",
+  "readable_r3": true,
+  "center_preview_px": 200,
+  "rendered_item_icons": true,
+  "rendered_ingredient_icon_px": 40,
+  "_why_rendered_item_icons": "P2-095 (GPU 7.31 with readable_r3; judges asked for real item icons). When on, recipe rows, ingredient lines and the centre preview show icons rendered from each item's installed mesh (tools/bake_item_icons.gd, data/config/craft_item_icons.json, assets/ui/icons/items_rendered); items without one keep their existing icon. Presentation only; OFF until GPU judging.",
+  "_why_readable_r3": "P2-095 GPU close-out (31 Oct, tb/gpu-pass d3fef8b3a): 7.43 at Medium and High, 0.07 short, clipping FIXED. Judges asked for the small sub-lines and Missing tags a step larger and a readable label and border on the greyed Missing materials button. When on: compact cost preview and Ready/Missing tag at FONT_BODY (was FONT_LABEL); the disabled button takes a TEXT_SECONDARY 3 px border and TEXT_PRIMARY label with a 0.6-alpha glyph; round 2 (GPU 7.17 -> 7.32): the centre column shows the focused item at center_preview_px on its own plate. Presentation only; OFF until the GPU close-out passes.",
+  "readable_r4": false,
+  "r4_row_height": 92,
+  "r4_visible_rows": 6,
+  "_why_readable_r4": "P2-095 round 4 (UIPOSES lane, 1 Nov 2026). GPU craft judged 7.36 with readable_r3 + rendered_item_icons vs main 6.80; next asks: controller face-button glyphs in a footer, 5+ visible rows, higher-contrast Missing tags and button. When on (with readable_r3 and rendered_item_icons): a footer bar with the Craft and Leave face-button prompts; compact rows at 92 px with 6 visible; Ready/Missing tags as filled chips (SUCCESS/DANGER fill, dark text); the greyed Missing materials button on a deep fill with a DANGER border and light-orange label. Presentation only; OFF until GPU judging."
 }
