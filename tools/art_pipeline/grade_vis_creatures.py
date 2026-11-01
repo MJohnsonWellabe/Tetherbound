@@ -50,7 +50,9 @@ def _hue_w(h, lo, hi, feather=8.0):
 def fulgocobra(rgb):
     # GPU roster: "dark brown on stage" (R2 value and rim). Same lift as the
     # landed coat lifts, so the scales and hood separate from the ground.
-    return G.grade(rgb, (0.32, 0.46), (0.55, 0.70), 1.45, 0.03, 1.0)[0]
+    # CPU check (1 Nov): x1.45 at full saturation turned the brown coat lemon
+    # yellow; a gentler, desaturating lift keeps it earthy.
+    return G.grade(rgb, (0.30, 0.42), (0.45, 0.60), 1.25, 0.025, 0.8)[0]
 
 
 def mirejaw(rgb):
