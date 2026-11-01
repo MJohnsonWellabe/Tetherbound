@@ -3577,7 +3577,7 @@ func _bank_cache_key(bank: Dictionary, min_x: float, min_z: float, max_x: float,
 ## the mouth and all interiors stay. The shell's own tunnel is clipped past
 ## its framing so it never shows inside the real mouth chamber.
 func _build_hill_shell() -> void:
-	var cfg: Dictionary = (_config.get("bank", {}) as Dictionary).get("hill_shell", {})
+	var cfg: Dictionary = hill_shell_config(_config)
 	if not bool(cfg.get("enabled", false)):
 		return
 	var packed := load(str(cfg.get("model", ""))) as PackedScene
@@ -3657,11 +3657,35 @@ uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
 uniform vec3 clip_min;
 uniform vec3 clip_max;
 uniform vec4 tint : source_color = vec4(1.0);
+uniform sampler2D detail_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform float detail_uv_per_m = 0.5;
+uniform float detail_mix = 0.0;
+uniform vec4 detail_tint : source_color = vec4(1.0);
 varying vec3 model_pos;
-void vertex() { model_pos = VERTEX; }
+varying vec3 world_pos;
+varying vec3 world_normal;
+void vertex() {
+	model_pos = VERTEX;
+	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
+}
 void fragment() {
 	if (all(greaterThan(model_pos, clip_min)) && all(lessThan(model_pos, clip_max))) discard;
-	ALBEDO = texture(albedo_tex, UV).rgb * tint.rgb;
+	vec3 base = texture(albedo_tex, UV).rgb * tint.rgb;
+	if (detail_mix > 0.0) {
+		// Triplanar grass at ground texel density, so the mound reads at the
+		// same grain as the meadow round it (HALL shell r2, P2-012).
+		vec3 w = pow(abs(world_normal), vec3(4.0));
+		w /= max(w.x + w.y + w.z, 0.0001);
+		vec3 p = world_pos * detail_uv_per_m;
+		vec3 d = texture(detail_tex, p.zy).rgb * w.x + texture(detail_tex, p.xz).rgb * w.y
+			+ texture(detail_tex, p.xy).rgb * w.z;
+		// Keep the shell's own value and hue variation; take the grain.
+		float luma = dot(d, vec3(0.299, 0.587, 0.114));
+		vec3 detailed = base * (0.55 + 0.9 * luma) * mix(vec3(1.0), d / max(luma, 0.001), 0.35) * detail_tint.rgb;
+		base = mix(base, detailed, detail_mix * w.y + detail_mix * 0.6 * (1.0 - w.y));
+	}
+	ALBEDO = base;
 	ROUGHNESS = 0.95;
 }
 """
@@ -3686,9 +3710,33 @@ void fragment() {
 				if source != null:
 					material.set_shader_parameter("albedo_tex", source.albedo_texture)
 				material.set_shader_parameter("tint", Color(str(cfg.get("tint", "#ffffff"))))
+				if cfg.has("detail_texture") and ResourceLoader.exists(str(cfg["detail_texture"])):
+					material.set_shader_parameter("detail_tex", load(str(cfg["detail_texture"])) as Texture2D)
+					material.set_shader_parameter("detail_uv_per_m", float(cfg.get("detail_uv_per_m", 0.5)))
+					material.set_shader_parameter("detail_mix", float(cfg.get("detail_mix", 0.0)))
+					material.set_shader_parameter("detail_tint", Color(str(cfg.get("detail_tint", "#ffffff"))))
 				material.set_shader_parameter("clip_min", Vector3(minf(a.x, b.x), minf(a.y, b.y), minf(a.z, b.z)))
 				material.set_shader_parameter("clip_max", Vector3(maxf(a.x, b.x), maxf(a.y, b.y), maxf(a.z, b.z)))
 				mesh.set_surface_override_material(i, material)
+
+
+## P2-012 r2 (vis-meadows, OFF until GPU-judged): `bank.hill_shell.r2`, when
+## enabled, merges over the shipped hill shell (its `hide_nodes` adds to the
+## shell's own list rather than replacing it). Off: the shipped shell exactly.
+static func hill_shell_config(config: Dictionary) -> Dictionary:
+	var cfg: Dictionary = ((config.get("bank", {}) as Dictionary).get("hill_shell", {}) as Dictionary).duplicate(true)
+	var r2: Dictionary = cfg.get("r2", {})
+	if not bool(r2.get("enabled", false)):
+		return cfg
+	var hidden: Array = (cfg.get("hide_nodes", ["Bank", "BankCap"]) as Array).duplicate()
+	for node_name: Variant in r2.get("hide_nodes_add", []):
+		if not node_name in hidden:
+			hidden.append(node_name)
+	for key: Variant in r2:
+		if key != "enabled" and key != "hide_nodes_add":
+			cfg[key] = r2[key]
+	cfg["hide_nodes"] = hidden
+	return cfg
 
 
 ## `node`'s transform relative to this warrens node, through every parent.
