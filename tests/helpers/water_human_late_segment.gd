@@ -228,9 +228,14 @@ func _venn() -> bool:
 	var veilfall := _land_route("veilfall_exploration_spine")
 	if veilfall.size() < 3:
 		return _fail("Veilfall exploration spine is incomplete")
-	for index in range(1, veilfall.size() - 1):
-		if not await _walk_to(veilfall[index], "Veilfall exterior waypoint %d" % index):
-			return false
+	# Venn stands by the landing camp. Climbing the exterior spine first and then
+	# walking straight back down to Venn's stance walked off the plateau edge near
+	# (320,142,3881): a ~125 m fall killed the trainer and left the whole Satchel
+	# (knife included) in a death satchel, so 09 could not feed Cloudreach (F49#0
+	# routes, 1 Nov; same loss in the close-1020 07c receipt). The climb is walked
+	# by 07d (spine points 2..4 up to the cave), so 07c takes point 1 only.
+	if not await _walk_to(veilfall[1], "Veilfall exterior waypoint 1"):
+		return false
 	if not await _defeat_trainer("water_trainer_venn", "defeated_water_trainer_venn"):
 		return false
 	# Venn stands by the landing camp, not at the far end of the spine: walk
@@ -244,7 +249,18 @@ func _venn() -> bool:
 			return false
 	if not await _recover_at_camp("after Venn", "water_camp_veilfall"):
 		return false
+	if _dropped_satchel():
+		return _fail("Trainer died during Venn and left a death satchel")
 	return _same_party() and not _expired()
+
+
+## True when this world holds an openable death satchel: the trainer died and
+## its Satchel is lying in the world instead of being carried forward.
+func _dropped_satchel() -> bool:
+	for node: Node in _tree.get_nodes_in_group(&"death_satchel"):
+		if _world.is_ancestor_of(node) and node.has_method("can_open") and bool(node.call("can_open")):
+			return true
+	return false
 
 
 func _nerissa() -> bool:
