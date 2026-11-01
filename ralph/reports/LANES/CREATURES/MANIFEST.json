@@ -1,5 +1,13 @@
 [
  {
+  "item": "F36 (0) #2 Galewisp",
+  "flag": "data/creatures/f36_pose_candidates.json:candidate_role_flags.creatures_vis_galewisp_faint_away.enabled",
+  "camera_set": "capture_f36_poses.gd --whole-body --context, standard roster crop (CO16 set), High",
+  "stands": [
+   "galewisp (--candidate)"
+  ]
+ },
+ {
   "item": "F36 (0) #3 Mudsnout",
   "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_mudsnout.enabled",
   "camera_set": "capture_f36_poses.gd --whole-body --context, standard roster crop (CO16 set), High",
