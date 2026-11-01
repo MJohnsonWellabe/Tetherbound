@@ -1,4 +1,17 @@
-# Routes lane (tb/routes-f49): result 1 Nov 2026, Cloudreach complete; STOPPED on two failures at Cloudreach 07 -> Stormwood arrival_prefix
+# Routes lane (tb/routes-f49): PAUSED by coordinator, 1 Nov 13:10Z, awaiting the owner's satchel-size decision
+
+## State at pause
+- Landed on main in #790: Tidewake 01→09 and Cloudreach 01→07 seams (saves `f49_tw_*`, `f49_cr_01..07`), the two boss hand-off game fixes (8ab84f7e, 7d485aa1) and the harness fixes.
+- Committed after #790 on tb/routes-f49 (not landed): the 07 Storage Chest deposit step (3b611e2a, 6c7418ad) and its records. Its rerun is not a valid output (failed); the landed `f49_cr_07` (no deposit, 24/24 Satchel) is the current Cloudreach end.
+- Next piece: Stormwood `arrival_prefix` from a Cloudreach 07 output with Satchel room. No run in progress.
+
+## Held rewards and Satchel numbers
+- Held item rewards at `f49_cr_06` (character satchel_escrow, grant_due): `skyplume` x18 (source `trainer:keeper_maela_trial:owed:item:skyplume`, owed since Cloudreach 03) and `rare_candy` x1 (`trainer:captain_veyra_storm_anchor:owed:item:rare_candy`). No pending world reward_delivery item rows. One held `boss_relic` duty (Veyra hand-off), delivered in 07 by the fixes.
+- In the 6c7418ad 07 attempt both held items delivered as soon as slots freed, so none remain pending; the Satchel ended 24/24 again.
+- Slots needed: 2 free to fund the first Storage Chest (wood x8 + fiber x4 are new stacks), plus the held items still owed at that point (2 from `f49_cr_06`: skyplume, rare_candy) = 4 free before the chest steps; then the deposit frees about 12 (keeping tools, Home Key/keys, potion_large, one revive stack, coin, hide_vest, torch). Stormwood arrival needs at least 2–3 new stacks (Stormglass, glowmoss, and later Crown materials); the coordinator target is about 6 free.
+- Base pressure: the earned four-chapter Satchel carries about 20 stacks of kit and consumables (3 orb_basic, orb_greater, 2 potion_small, potion_large, 2 revive, 2 coin, 2 elixirs, essence_air, TM, hide_vest, 5 tools, Home Key) out of 24 slots.
+
+## Record: Cloudreach complete; Stormwood arrival_prefix blocked on a full Satchel
 
 ## TO COORDINATOR (1 Nov 11:30Z; send_message refused here: "elevated_session_untrusted_device")
 Landing check: tb/routes-f49 merges cleanly into origin/main (git merge-tree). Files outside tests/fixtures, ralph/reports, tools/earned_saves:
