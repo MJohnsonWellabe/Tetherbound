@@ -175,5 +175,16 @@
    "tidewake__system__mounted-swim-05-mounted"
   ],
   "group": 3
+ },
+ {
+  "item": "P2-050",
+  "flag": "data/config/npc_post_stances.json:enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=meadows (job.json P2-050 subsets)",
+  "stands": [
+   "meadows__inventory__character__oskar",
+   "meadows__inventory__character__halda",
+   "meadows__inventory__character__lark"
+  ],
+  "group": 4
  }
 ]

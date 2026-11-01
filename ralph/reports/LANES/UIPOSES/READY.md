@@ -17,6 +17,14 @@
 
 Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
 
+## Group 4: P2-050 villager post stances (5.88)
+
+- **Flag:** `data/config/npc_post_stances.json:enabled`, new.
+- **Stances:** Oskar folds his arms, Halda clasps her hands at the waist, and Lark (courier) holds one hand up at the satchel strap.
+- **How it works:** `scripts/characters/post_stance.gd` is a `SkeletonModifier3D` that layers bone offsets over the playing idle, so breathing still shows. `village_npcs.gd` attaches it only to the named posts.
+- **Bone signs:** measured on the rig in an isolated render. Hands-on-hips was tried and dropped: the forearms flared out on this rig.
+- **CPU dialogue frames:** Oskar and Halda both read as their stance, with no clipping. Lark was not captured.
+
 ## Group 3: P2-108 Aquaryn mounted swim (4.97)
 
 - **Flag:** `data/config/water_mount_presentation.json:enabled`, new file.
