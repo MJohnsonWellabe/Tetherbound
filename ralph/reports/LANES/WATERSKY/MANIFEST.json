@@ -17,16 +17,6 @@
     ]
   },
   {
-    "item": "OWNER-1031 Cloudreach floating drums: cloud-ring cards standing on meadows (P2-023, P2-021)",
-    "flag": "data/config/cloudreach_grounding.json:skip_grounded_cloud_cards",
-    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=zzznomatch --spot=ownerdrum@16.5,4313.2@56 (plus the F40 matrix stands; 45 cards hidden realm-wide)",
-    "stands": [
-      "ownerdrum@16.5,4313.2@56",
-      "cloudreach__high_roost_sky_shrine__07__sky_shrine",
-      "cloudreach__landmark__realm_gate_crag"
-    ]
-  },
-  {
     "item": "OWNER-1031 Cloudreach cliff wall bulge over recess (P2-023)",
     "flag": "data/config/cloudreach_grounding.json:monotonic_walls",
     "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=high_roost_sky_shrine__07__sky_shrine --subset=landmark__three_bells_bridge",

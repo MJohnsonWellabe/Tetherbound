@@ -16,7 +16,6 @@ tb/cloudreach-look's grounding pass is merged in as-is.
 | Item(s) | Flag (set true) | CPU check (Low, llvmpipe), `_sheet_cpu_before_after.jpg` |
 |---|---|---|
 | Owner 31 Oct floating drums (P2-023): pieces sticking out of rock shoulders over meadows | `cloudreach_grounding.json:skip_floating_shelves` | **Row 1: the overhead "drum" at the owner stand is gone.** The shoulder wall now rises straight from the meadow. 102 pieces hidden realm-wide (wall shelves and rock outcrops 12 m or larger, hanging 3.2–45 m over walkable ground). |
-| Owner floating drums: settlement cloud-ring cards standing on meadows | `cloudreach_grounding.json:skip_grounded_cloud_cards` | 45 cards hidden (150–300 m cumulus quads whose footprint meets walkable ground). Not visible at the owner stand. **Check the settlement and summit cloud-ring views (P2-021/P2-022) for thinning.** |
 | Owner floating drums: drum bottoms and beacon plinths (from tb/cloudreach-look) | `cloudreach_grounding.json:enabled` | 277 seated, re-probe proof 0 failures. Costs about 6.6 s of CPU load. |
 | Owner floating drums: cliff wall profile | `cloudreach_grounding.json:monotonic_walls` | Walls go top ≤ upper ≤ lower ≤ bottom (no bulge over a recess, no tuck under the crown). No visible change at the owner stand. Ride-along. |
 | P2-025 grass through shrine paving | `cloudreach_grounding.json:clear_paved_grass` | **Row 4: all blades gone from the Sky Shrine dais.** 974 tufts cleared on level masonry/path box tops; the lawn is untouched. |
@@ -29,8 +28,11 @@ How the owner stand was diagnosed: ray probes from `ownerdrum@16.5,4313.2@56`.
 - The grounding pass skipped them because a road runs below, and a build-time skip could not see the road yet (routes register later). So the hide runs in the post-build grounding pass.
 
 Tried and not included:
+- `cloudreach_grounding.json:skip_grounded_cloud_cards` (stays OFF, **not in the batch**). It hides 45 cloud-ring cards, but the regression check (sky_shrine and realm_gate approach, before/after) loses the good cumulus banks behind the plateaus. Also, the owner-stand card it targeted is transparent where the roof showed; the roof was the shoulder shelf.
 - `dune_grass_candidate`: strips the dune grass to bare sand, which is the P2-057 judges' complaint.
 - `shore_surf_candidate`: no visible change at First Shore.
+
+Regression check (sky_shrine 07, realm_gate_crag, three_bells_bridge approach, every manifest Cloudreach flag on): no visible change from the shelf, wall, grounding or paving passes at those stands.
 
 Tests (headless, `tests/run_tests.gd --only=test_cloudreach_monotonic_walls,test_cloudreach_paved_grass`): 4 tests, 0 failed.
 
