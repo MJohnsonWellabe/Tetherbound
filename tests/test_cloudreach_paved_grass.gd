@@ -32,7 +32,6 @@ func test_clears_only_tufts_on_the_paved_top() -> void:
 		multimesh.set_instance_transform(i, Transform3D(Basis(), points[i]))
 	tufts.multimesh = multimesh
 	world.add_child(tufts)
-	(Engine.get_main_loop() as SceneTree).root.add_child(world)
 	var cleared: int = PAVED.clear(world, [paving], {})
 	assert_eq(cleared, 2, "the tuft on the top and the one poking up from under it")
 	assert_true(multimesh.get_instance_transform(0).basis.get_scale().is_zero_approx())

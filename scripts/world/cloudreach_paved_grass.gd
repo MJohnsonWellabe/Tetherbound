@@ -29,12 +29,12 @@ static func paved_boxes(world: Node, paving_materials: Array, min_side_m: float)
 		for child: Node in node.get_children():
 			stack.append(child)
 		var mesh := node as MeshInstance3D
-		if mesh == null or not (mesh.mesh is BoxMesh) or not mesh.is_visible_in_tree():
+		if mesh == null or not (mesh.mesh is BoxMesh) or not _visible(mesh):
 			continue
 		if not paving_materials.has(mesh.material_override):
 			continue
 		var size: Vector3 = (mesh.mesh as BoxMesh).size
-		var xform := mesh.global_transform
+		var xform := _xform(mesh)
 		var scaled := Vector3(size.x * xform.basis.x.length(), size.y * xform.basis.y.length(),
 			size.z * xform.basis.z.length())
 		if minf(scaled.x, scaled.z) < min_side_m:
@@ -76,7 +76,7 @@ static func clear(world: Node, paving_materials: Array, cfg: Dictionary) -> int:
 		var multimesh := instances.multimesh
 		if multimesh.transform_format != MultiMesh.TRANSFORM_3D or multimesh.instance_count == 0:
 			continue
-		var xform := instances.global_transform
+		var xform := _xform(instances)
 		var bounds := (xform * multimesh.get_aabb()).grow(1.0)
 		var grid := {}
 		for box: Dictionary in boxes:
@@ -105,3 +105,27 @@ static func clear(world: Node, paving_materials: Array, cfg: Dictionary) -> int:
 					cleared += 1
 					break
 	return cleared
+
+
+## Works in and out of a SceneTree (the headless test runner has none).
+static func _xform(node: Node3D) -> Transform3D:
+	if node.is_inside_tree():
+		return node.global_transform
+	var result := node.transform
+	var parent := node.get_parent()
+	while parent != null:
+		if parent is Node3D:
+			result = (parent as Node3D).transform * result
+		parent = parent.get_parent()
+	return result
+
+
+static func _visible(node: Node3D) -> bool:
+	if node.is_inside_tree():
+		return node.is_visible_in_tree()
+	var current: Node = node
+	while current != null:
+		if current is Node3D and not (current as Node3D).visible:
+			return false
+		current = current.get_parent()
+	return true
