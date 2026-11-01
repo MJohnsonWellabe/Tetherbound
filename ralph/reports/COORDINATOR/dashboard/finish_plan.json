@@ -498,8 +498,8 @@
   {
    "what": "Creatures lane F36 close-out arms",
    "where": "tb/creatures-f36",
-   "state": "running",
-   "detail": "CPU prep; arm 1: Ripplet belly, Aquaryn grounded hit, Breezetail harness"
+   "state": "landed",
+   "detail": "GPU CO16: 7 of 9 arms gain and land (cindercub 7.51 High, Medium queued; mudsnout 7.40); side-lie faints and matte did not"
   },
   {
    "what": "World lane dressing and Meshy props",
