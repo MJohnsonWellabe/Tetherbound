@@ -198,7 +198,7 @@ const MATERIAL := """
 			coast_dune_face_shade_start_y, abs(dune_normal.y) + (patch - 0.5) * 0.06);
 		sand *= 1.0 - face_shade * coast_dune_face_shade_strength;
 		if (coast_dune_flank_strength > 0.0 || coast_dune_strata_strength > 0.0) {
-			float steep = 1.0 - smoothstep(0.72, 0.985, abs(dune_normal.y));
+			float steep = 1.0 - smoothstep(0.6, 0.9, abs(dune_normal.y));
 			vec2 across_dir = normalize(vec2(-dune_normal.z, dune_normal.x) + vec2(0.0001));
 			float across = dot(v_vertex.xz, across_dir);
 			float runnel = coast_noise(vec2(across * coast_dune_flank_scale, v_vertex.y * 0.05)) * 0.65
