@@ -1,0 +1,17 @@
+{
+  "_comment": "tb/vis-water-sky group 2 (coordinator 1 Nov: shared fix; judges across Cloudreach read 'a flat uniform lawn' / evenly scattered ground cover). On: the turf shader (cloudreach_turf.gdshaderinc) mixes broad dry (straw-olive) and lush (deep green) patches roughly 30-45 m across (r2: 0.035 made one patch fill a frame) from one smooth world-space field, and cloudreach_look.gd thins the grass tufts to keep_dry on the dry patches by the same field, so tall blades cluster on the lush ground with open sunlit grass between. Visual only: no collider, route, scatter bake or save change. Preview --cloudreach-cluster-candidate.",
+  "enabled": false,
+  "strength": 0.85,
+  "frequency": 0.07,
+  "dry_tint": "#c9bd7c",
+  "lush_tint": "#5f8343",
+  "dry_band": [
+    0.35,
+    0.6
+  ],
+  "lush_band": [
+    0.3,
+    0.55
+  ],
+  "keep_dry": 0.3
+}

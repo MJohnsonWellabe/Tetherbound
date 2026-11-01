@@ -427,6 +427,10 @@ vec2 lattice_yaw(vec2 v, float yaw) {
 uniform vec3 built[24];
 uniform int built_count = 0;
 uniform vec3 built_bounds = vec3(0.0);
+// P2-008 (flag-off): outward feather of every built-ground clearing, in metres.
+// 0 keeps the original hard cut; above 0 blades thin out over that band
+// beyond each clearing's radius instead of stopping on a ruled circle.
+uniform float built_feather_m = 0.0;
 
 // ---------------------------------------------------------------------------
 // DRAINED GROUND (F05, coordinator ruling on the heal's before-state). Up to
@@ -460,6 +464,31 @@ float drain_at(vec2 world_xz) {
 		}
 	}
 	return clamp(d, 0.0, 1.0) * drain_amount;
+}
+
+// Fraction of grass kept by the built-ground clearings at this point: 0 inside
+// a clearing, rising to 1 across `built_feather_m` outside it.
+float built_keep(vec2 world_xz) {
+	if (built_count <= 0) {
+		return 1.0;
+	}
+	vec2 to_bounds = world_xz - built_bounds.xy;
+	float reach = built_bounds.z + built_feather_m;
+	if (dot(to_bounds, to_bounds) > reach * reach) {
+		return 1.0;
+	}
+	float keep = 1.0;
+	for (int i = 0; i < built_count; i++) {
+		float dist = length(world_xz - built[i].xy);
+		float r = built[i].z;
+		if (dist < r) {
+			return 0.0;
+		}
+		if (built_feather_m > 0.0) {
+			keep = min(keep, smoothstep(r, r + built_feather_m, dist));
+		}
+	}
+	return keep;
 }
 
 bool on_built_ground(vec2 world_xz) {
@@ -636,7 +665,8 @@ void vertex() {
 	v_drain = drain_at(world_xz);
 	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
 			|| item_presence <= 0.002
-			|| on_built_ground(world_xz)
+			|| (built_feather_m > 0.0 ? hash12(world_xz * 5.13 + vec2(3.7, 1.9)) >= built_keep(world_xz)
+				: on_built_ground(world_xz))
 			|| (dune_shape_active && keep <= 0.0)
 			|| hash12(world_xz * 7.31) > keep
 			|| hash12(world_xz * 3.97) < v_drain * drain_thin;
