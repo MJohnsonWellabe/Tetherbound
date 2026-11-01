@@ -527,6 +527,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_voltarach": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Voltarach, a large spider creature with long armoured legs, black and gold carapace (Meshy 01a197f5-3ad0-777d-865a-baedfe11982f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the electric-blue sparks and eyes (storm creature). Provenance: assets/creatures/tetherbound/voltarach/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "voltarach": {
+     "model": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101.glb",
+     "colourway_source_species": "voltarach_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }
