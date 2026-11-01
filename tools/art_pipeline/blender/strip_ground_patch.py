@@ -45,8 +45,11 @@ def _columns(points, n_cols):
 
 
 def strip(body, band=0.10, probe=(0.13, 0.22), grow=1.6, toe=2.2, heel=1.3, n_cols=4, surface_q=0.7,
-          islands_only=False):
-    """islands_only: no disc, only loose tufts (separate islands) to drop."""
+          islands_only=False, low_islands=None):
+    """islands_only: no disc, only loose tufts (separate islands) to drop.
+    low_islands: for a fragmented Meshy shell (body in many islands that only the
+    patch joined), drop only the loose islands lying wholly below this fraction
+    of the height (grass tufts) instead of keeping just the largest part."""
     me = body.data
     H = max(v.co.z for v in me.vertices)
     if islands_only:
@@ -86,7 +89,10 @@ def strip(body, band=0.10, probe=(0.13, 0.22), grow=1.6, toe=2.2, heel=1.3, n_co
                     seen.add(o); stack.append(o)
         parts.append(part)
     parts.sort(key=len, reverse=True)
-    loose = [v for part in parts[1:] for v in part]
+    if low_islands is None:
+        loose = [v for part in parts[1:] for v in part]
+    else:
+        loose = [v for part in parts[1:] if max(x.co.z for x in part) < low_islands * H for v in part]
     if loose:
         bmesh.ops.delete(bm, geom=loose, context='VERTS')
     low = min(v.co.z for v in bm.verts)

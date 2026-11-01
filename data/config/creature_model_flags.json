@@ -110,6 +110,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_pebbik": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Pebbik, a small sturdy desert fox-like creature with big ears, sandy fur (Meshy 01a197ea-bc18-71e5-9ce1-9a9018362f13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the thin green-gold lines and amber eyes. Provenance: assets/creatures/tetherbound/pebbik/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "pebbik": {
+     "model": "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101.glb",
+     "colourway_source_species": "pebbik_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }
