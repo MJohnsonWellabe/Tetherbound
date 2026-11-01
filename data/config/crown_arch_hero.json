@@ -6,8 +6,8 @@
     "height_m": 7.0,
     "yaw_deg": 90.0,
     "edge_dressing": {
-      "per_side": 4,
-      "height_m": [0.3, 0.6],
+      "per_side": 6,
+      "height_m": [0.35, 0.75],
       "keep_passage_clear_m": 2.0,
       "models": [
         "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
