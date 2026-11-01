@@ -126,8 +126,12 @@ func refresh_graphics() -> void:
 ## crown banks, so an exposed bank cannot acquire a different stone language.
 ## Never edits meshes, collision, placement, creature scale or durable state.
 func _apply_cliff_surface_candidate() -> void:
-	var cfg: Dictionary = _config.get("cloudreach_rock_surface", {})
-	var enabled := bool(GRAPHICS_PREFS.values().get("cloudreach_rock_candidate", false))
+	# Cause lane pale_strata (flag-off, data/config/cloudreach_cause.json) also
+	# turns the course surface on, with its own knobs over art.json's.
+	var cfg: Dictionary = preload("res://scripts/world/cloudreach_cause.gd").rock_surface(
+		_config.get("cloudreach_rock_surface", {}),
+		bool(GRAPHICS_PREFS.values().get("cloudreach_rock_candidate", false)))
+	var enabled := bool(cfg.get("enabled", false))
 	RenderingServer.global_shader_parameter_set("cloudreach_rock_courses", Vector4(
 		1.0 if enabled else 0.0,
 		maxf(float(cfg.get("texture_scale", 0.36)), 0.01),

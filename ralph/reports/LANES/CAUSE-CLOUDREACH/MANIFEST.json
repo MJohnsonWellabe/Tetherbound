@@ -1,0 +1,228 @@
+[
+  {
+    "item": "P2-021",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --ground-cover-cache --times=day --views=close,approach --subset=cloudreach__high_roost_sky_shrine__07__sky_shrine --subset=cloudreach__landmark__realm_gate_crag --subset=cloudreach__landmark__sky_shrine_heartstone",
+    "stands": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+      "cloudreach__landmark__realm_gate_crag__day__approach",
+      "cloudreach__landmark__sky_shrine_heartstone__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-022",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --ground-cover-cache --times=day,night --views=approach,close --subset=cloudreach__summit_final_stronghold__11__summit_eyrie",
+    "stands": [
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-024",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --ground-cover-cache --times=day --views=approach --subset=cloudreach__windscar_ravine__05__windscar_beacon --subset=cloudreach__landmark__broken_skyroad_arch --subset=cloudreach__upper_cloudreach__10__old_wind_observatory",
+    "stands": [
+      "cloudreach__windscar_ravine__05__windscar_beacon__day__approach",
+      "cloudreach__landmark__broken_skyroad_arch__day__approach",
+      "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-023",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --ground-cover-cache --times=day --views=approach --subset=cloudreach__high_roost_sky_shrine__07__sky_shrine --subset=cloudreach__landmark__sky_shrine_heartstone --subset=cloudreach__landmark__three_bells_bridge",
+    "stands": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+      "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+      "cloudreach__landmark__three_bells_bridge__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-112",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_cloudreach_live_fight.gd -- --seed=2042",
+    "stands": [
+      "cloudreach__fight__veyra_live__live-2430",
+      "cloudreach__fight__veyra_live__live-3510",
+      "cloudreach__fight__veyra_live__live-3870"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-105",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_cloudreach_ride.gd -- --tag=phase2 --seed=2042",
+    "stands": [
+      "cloudreach__riding__phase2_17_terrace_01.0s",
+      "cloudreach__riding__phase2_18_terrace_02.0s",
+      "cloudreach__riding__phase2_19_terrace_03.0s"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-025",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --ground-cover-cache --times=day --views=close,approach --subset=cloudreach__landmark__sky_shrine_heartstone --subset=cloudreach__high_roost_sky_shrine__08__the_high_perches --subset=cloudreach__landmark__broken_skyroad_arch",
+    "stands": [
+      "cloudreach__landmark__sky_shrine_heartstone__day__close",
+      "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach",
+      "cloudreach__landmark__broken_skyroad_arch__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-053",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_cloudreach_gaps.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__broken_causeways__03__three_bells_bridge --times=day,golden,night --views=close",
+    "stands": [
+      "cloudreach__broken_causeways__03__three_bells_bridge__day__close",
+      "cloudreach__broken_causeways__03__three_bells_bridge__golden__close",
+      "cloudreach__broken_causeways__03__three_bells_bridge__night__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-068",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__young_trainer_tavi",
+    "stands": [
+      "cloudreach__inventory__character__young_trainer_tavi"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-068",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__naturalist_sora",
+    "stands": [
+      "cloudreach__inventory__character__naturalist_sora"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-068",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__keeper_maela",
+    "stands": [
+      "cloudreach__inventory__character__keeper_maela"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-077",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__young_trainer_tavi",
+    "stands": [
+      "cloudreach__inventory__character__young_trainer_tavi__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-077",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__naturalist_sora",
+    "stands": [
+      "cloudreach__inventory__character__naturalist_sora__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-077",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__defector_rusk",
+    "stands": [
+      "cloudreach__inventory__character__defector_rusk__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-106",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_cloudreach_ride.gd -- --tag=phase2 --seed=2042",
+    "stands": [
+      "cloudreach__riding__phase2_16_terrace_mounted_at_edge",
+      "cloudreach__riding__phase2_17_terrace_01.0s",
+      "cloudreach__riding__phase2_18_terrace_02.0s"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-076",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__trader_kelm",
+    "stands": [
+      "cloudreach__inventory__character__trader_kelm__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-076",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__captain_veyra",
+    "stands": [
+      "cloudreach__inventory__character__captain_veyra__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-076",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_defeated_dialogue.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__character__captain_veyra",
+    "stands": [
+      "cloudreach__inventory__character__captain_veyra__defeated__dialogue"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-049",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__summit_final_stronghold__12__stormward_overlook",
+    "stands": [
+      "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-049",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_routes.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__windscar_ravine__06__windscar_flight_aerie",
+    "stands": [
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-054",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__pickup__speed_mushroom",
+    "stands": [
+      "cloudreach__inventory__pickup__speed_mushroom"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-054",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd -- --biome=cloudreach --seed=2042 --subset=cloudreach__inventory__pickup__wild_mushroom",
+    "stands": [
+      "cloudreach__inventory__pickup__wild_mushroom"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-102",
+    "flag": "data/config/cloudreach_cause.json:enabled",
+    "camera_set": "tools/phase2_capture_cloudreach_high_perch.gd -- --seed=2042",
+    "stands": [
+      "cloudreach__flying__high-perches-crown-rim-out-day",
+      "cloudreach__flying__high-perches-crown-rim-out-night"
+    ],
+    "group": 1
+  }
+]
