@@ -4,6 +4,20 @@
 
 ## Summary (1 Nov 2026)
 
+## Group 5 (1 Nov, pushed): human characters, one look flag each
+
+The coordinator moved this lane to human characters: the creature species are now being remade from Meshy models by the two remake lanes. The judges' notes on the villager and grunt anchors (about 5.8–6.6) were: soft, flat faces with dot eyes and no catchlight; no rim or key light; a stiff A-pose; muddy, low-contrast materials.
+- **Flags:** `npc_vis_look_<character>` in `data/config/character_body_flags.json`, all OFF, for 32 characters. That is every art.json character except Grandpa (already met) and the player trainer.
+- **Albedo grade** (`tools/art_pipeline/grade_vis_npcs.py`):
+  - the chalky skin and blotches are evened, and eyes, brows and mouths get local contrast;
+  - the darkest cloth lifts a step, with saturated red excluded so red stays Team Tether's (reserved-red texels go down or hold on every texture);
+  - small eye catchlights are painted at the pupils, found in the forward-facing head of each GLB's own anatomy.
+- **Daylight rim of 0.25.** I tried 0.45 first, but it washed the bodies out from the cast camera. Kael, Sera and Lyra keep their own night rim instead.
+- **Relaxed idle:** the upper arms are lowered 22° and the elbows bent 8°. This is a per-character copy of the idle clip. The axis was found by render: X is the arm's lowering axis on this rig, with the same sign on both sides.
+- **Code:** `character_model.gd` gains the `day_rim` and `idle_relax` flag keys. `tests/test_character_body_flags.gd` builds a real rig to cover them, and it passes. The existing character tests fail identically on origin/main in the scratch project (missing assets).
+- **Camera set:** the cast tool frames (`tools/_capture_character_cast.gd`). villager_smith, villager_quarryman and villager_ranger are not in the cast, but they share the villager-female and villager-male textures.
+- **CPU check:** the casts read brighter and higher-contrast, the arms hang naturally, and catchlights show on the villager and grunt eyes. Officer A's skin reads warmer (orange) than before.
+
 ## Group 4 (1 Nov, pushed): glowing eyes and elemental vein markings
 
 This follows the owner's settled creature rule, via the coordinator: a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element.
