@@ -1,0 +1,56 @@
+[
+ {
+  "item": "P2-041",
+  "flag": "data/config/hero_landmarks_1101.json:crown_arch.enabled",
+  "camera_set": "tools/phase2_capture_locations.gd -- --biome=stormwood --subset=stormwood__landmark__crown_arch --times=day --views=close --seed=2042 (job.json repro)",
+  "stands": [
+   "stormwood__landmark__crown_arch__day__close"
+  ],
+  "group": 1
+ },
+ {
+  "item": "P2-070",
+  "flag": "data/config/hero_landmarks_1101.json:glass_sink.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_glass_sink.gd -- --biome=stormwood --subset=stormwood__landmark__glass_sink --times=day,golden --views=approach,close --seed=2042 (job.json repro)",
+  "stands": [
+   "stormwood__landmark__glass_sink__day__approach",
+   "stormwood__landmark__glass_sink__day__close",
+   "stormwood__landmark__glass_sink__golden__approach"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-010",
+  "flag": "data/config/hero_landmarks_1101.json:veilfall.enabled",
+  "camera_set": "tools/phase2_capture_routes.gd / tools/phase2_capture_locations.gd -- --biome=water --seed=2042 (job.json repro per stand)",
+  "stands": [
+   "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+   "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
+   "tidewake__landmark__sluice_channel_bridge__day__close"
+  ],
+  "group": 3
+ },
+ {
+  "item": "F39#4",
+  "flag": "data/config/hero_landmarks_1101.json:veilfall.enabled",
+  "camera_set": "tools/capture_tidewake_f13_5.gd -- --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --views=shore-day,shore-golden,shore-rain,veilfall-vista",
+  "stands": [
+   "shore-day",
+   "shore-golden",
+   "shore-rain",
+   "veilfall-vista"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-026",
+  "flag": "data/config/hero_landmarks_1101.json:veilfall.enabled",
+  "camera_set": "tools/phase2_capture_routes.gd -- --biome=water --seed=2042 (job.json repro per stand)",
+  "stands": [
+   "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+   "tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+   "tidewake__sluice_isle__14__sluice_channel_bridge__route_day"
+  ],
+  "group": 3
+ }
+]
