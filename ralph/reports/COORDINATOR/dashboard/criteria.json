@@ -1,5 +1,5 @@
 {
- "generated_at": "12:40 PM CT Sat 31 Oct 2026",
+ "generated_at": "1 Nov 2026",
  "main_sha": "d4d5b262f",
  "batch4_sha": "wound down 27 Oct (owner: usage); no lanes running",
  "rows": [
@@ -2425,10 +2425,10 @@
     },
     {
      "text": "F36 (0) priority asset #13: Tanglevolt regenerated or confirmed with drafted reference and provenance, and passing the bar.",
-     "status": "in_progress",
-     "evidence": "Ledger close-1020 row 13: ON. Native candidate 7.17 vs installed 6.77 (3/3 prefer; CPU-provisional). Not an F36 pose-enabled species, so no recipe changes.",
+     "status": "met",
+     "evidence": "GPU Q31 ROSTER-1 31 Oct, judge of record (tb/gpu-pass 75e243799 High, 21d35e233 Medium; ralph/reports/GPU-PASS/Q31/ROSTER1-near-bar-f36-high/ incl. yardstick/medium-tanglevolt/; main d4d5b262f, one-sided, three code-blind judges, high anchors): tanglevolt mapped 7.70 at High (7.61/7.80/7.67) and 7.57 at Medium (7.71/7.80/7.21; fit r 0.89); no pose PRESENT at either preset (float FIXED 3/3, hit FIXED 3/3, faint end FIXED 2 / PARTIAL 1 at Medium). MET. Earlier: Ledger close-1020 row 13: ON. Native candidate 7.17 vs installed 6.77 (3/3 prefer; CPU-provisional). Not an F36 pose-enabled species, so no recipe changes.",
      "gap": "GPU yardstick capture at Medium and High; mapped >= 7.5 closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Landed: closed 1 Nov 2026 on the GPU yardstick at High and Medium (owner High-first rule).",
      "parent": "F36#0",
      "subject": "Tanglevolt",
      "audit_index": 0
@@ -3593,7 +3593,7 @@
     {
      "text": "F38 (1) top-20 item P2-058 catch aim readability: The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. The numeric chance changes are present but small; the aim view does not expose the target health as a clear visual cause. Judged from full-resolution stills.",
+     "evidence": "GPU Q31 UI-1 31 Oct (tb/gpu-pass 20bc9054b, High): backing plate 5.77 -> 6.24 (+0.47) with UI-1; readout still sits on the creature (PARTIAL 3). Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. The numeric chance changes are present but small; the aim view does not expose the target health as a clear visual cause. Judged from full-resolution stills.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
@@ -5221,7 +5221,7 @@
     {
      "text": "F39 (2) impact>12 item P2-114 catch chance HUD contrast: The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan w \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. The 4% to 41% values are visible on inspection, while the CAPTURE CHANCE label nearly disappears into the background. Assess on the actual 1920x1080 display before choosing a panel or text treatment. ",
+     "evidence": "GPU Q31 UI-1 31 Oct (tb/gpu-pass 20bc9054b, High): capture readout backing plate 5.55 -> 6.12 (+0.57), defect PRESENT -> PARTIAL 1 / FIXED 2; landed. Next: move the readout off the target. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. The 4% to 41% values are visible on inspection, while the CAPTURE CHANCE label nearly disappears into the background. Assess on the actual 1920x1080 display before choosing a panel or text treatment. ",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Counted once (owner 24 Oct board math): touches tidewake, cloudreach; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
