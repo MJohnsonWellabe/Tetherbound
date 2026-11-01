@@ -112,21 +112,36 @@
       "wild_once_3103"
     ],
     "items": {
-      "coin": 456,
+      "axe": 1,
+      "coin": 1455,
+      "driftwood": 2,
+      "elixir_guard": 1,
+      "elixir_vigour": 1,
+      "essence_air": 52,
+      "hammer": 1,
+      "hide_vest": 1,
       "home_key": 1,
-      "revive": 3
+      "knife": 1,
+      "orb_basic": 44,
+      "orb_greater": 7,
+      "pickaxe": 1,
+      "potion_large": 7,
+      "potion_small": 12,
+      "revive": 17,
+      "tm_earth_fist": 1,
+      "torch": 1
     },
     "party": [
       {
-        "fainted": true,
-        "hp": 0,
+        "fainted": false,
+        "hp": 256,
         "level": 20,
         "species": "terrapup",
         "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
       },
       {
-        "fainted": true,
-        "hp": 0,
+        "fainted": false,
+        "hp": 52,
         "level": 20,
         "species": "bramblebun",
         "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
@@ -342,22 +357,38 @@
       "wild_once_3103"
     ],
     "items": {
-      "cloudreach_portal_key": 1,
-      "coin": 456,
+      "axe": 1,
+      "coin": 999,
+      "driftwood": 2,
+      "elixir_guard": 1,
+      "elixir_vigour": 1,
+      "essence_air": 52,
+      "fiber": 3,
+      "hammer": 1,
+      "hide_vest": 1,
       "home_key": 1,
-      "revive": 3
+      "knife": 1,
+      "orb_basic": 44,
+      "orb_greater": 7,
+      "pickaxe": 1,
+      "potion_large": 7,
+      "potion_small": 12,
+      "revive": 17,
+      "rootstone": 19,
+      "tm_earth_fist": 1,
+      "torch": 1
     },
     "party": [
       {
-        "fainted": true,
-        "hp": 0,
+        "fainted": false,
+        "hp": 256,
         "level": 20,
         "species": "terrapup",
         "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
       },
       {
-        "fainted": true,
-        "hp": 0,
+        "fainted": false,
+        "hp": 52,
         "level": 20,
         "species": "bramblebun",
         "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
@@ -460,8 +491,10 @@
       "creature-c576f15db4b7f3ecf487a80de0169177"
     ]
   },
-  "commit": "9846e94c54b6b4f98540029125818241c0f83798",
+  "commit": "06453beff51d184507fd90f181960e35001e4749",
   "disclosures": [
+    "cloudreach_handoff: DROPPED fiber x3 through the Satchel to make room for the held hand-off",
+    "cloudreach_handoff: DROPPED rootstone x19 through the Satchel to make room for the held hand-off",
     "Pending owner deliveries settled after 2 save(s) before export"
   ],
   "failures": [],
@@ -527,5 +560,5 @@
   "passed": true,
   "segment": "09_cloudreach_handoff",
   "swimmer_uid": "",
-  "wall_seconds": 370.026
+  "wall_seconds": 396.881
 }

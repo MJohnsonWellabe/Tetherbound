@@ -1,0 +1,16 @@
+{
+ "kind": "f49_load_check_not_a_seam",
+ "producer": "tests/fixtures/earned_saves/f49_tw_09 (09_cloudreach_handoff PASS, 06453bef)",
+ "consumer": "cloudreach_chain_runner 01_arrival_gate --from=f49_tw_09 at 06453bef",
+ "loaded": true,
+ "knife_check_passed": true,
+ "piece_result": {
+  "passed": false,
+  "failures": [
+   "01_arrival_gate: Optional arrival gather produced gale_fiber"
+  ],
+  "distance_m": 703.5,
+  "stage": "arrival_to_aila",
+  "note": "cloudberry gathered; gale_fiber node activated but paid nothing; Satchel likely full (24/24 after the two Nerissa rewards). Cloudreach piece is tb/routes-sky-storm scope."
+ }
+}

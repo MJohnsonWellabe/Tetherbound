@@ -1,10 +1,14 @@
-# Routes lane (tb/routes-f49), F49#0 Tidewake: result 1 Nov 2026 (resume), STOPPED on two failures at 08 -> 09
+# Routes lane (tb/routes-f49), F49#0 Tidewake: result 1 Nov 2026 (resume), 08 -> 09 MATCHED; Tidewake late chain complete
 
 ## 1 Nov resume: seams matched and pushed
 - **07b → 07c MATCH** (02e8f4cb; a79aa8f7): fixed the 07c trainer death. Diagnosis (health/position trace): 07c climbed the Veilfall exterior spine and then walked straight to Venn's stance at the landing camp, stepping off the plateau near (320,142,3881) (vy −90 m/s, health 100 → 0 at (346,17,3819)), leaving the whole Satchel in a death satchel. 07c now takes spine point 1 only (07d walks points 2..4 to the cave) and fails if a death satchel is left. Venn beaten in 1651 s with every stack kept.
 - **07c → 07d MATCH** (84972b98, Nerissa beaten) and **07d → 08 MATCH** (829ef377, Tidewake ending), Satchel kept. `f49_tw_07c/07d/08` replaced; the earlier dead-trainer versions are superseded.
 
-## Blocker: 08 → 09 (failed twice; stopped per coordinator rule)
+## 08 → 09 MATCH (06453bef)
+- Diagnosis (local traces, not pushed): the held boss_relic hand-off does re-read the live Satchel (record and live both 24/24, no lock). The slot freed by the Satchel Drop was taken at once by Nerissa's held coin payout (coin x456 as a second stack; the carried stack is at the 999 cap). Not a game bug: two free slots deliver both. 09 now frees room for coin + portal key (fiber x3, rootstone x19 dropped, disclosed) and passes in 397 s; seam `tw_08__tw_09.json` matches.
+- Cloudreach 01 load check (`tw_09__cr_01_loadcheck.json`): loads `f49_tw_09`, passes the carried-knife gate, walks 703 m, then fails "Optional arrival gather produced gale_fiber" (Satchel full). That piece is tb/routes-sky-storm scope; the likely fix is the same approved Satchel Drop before Cloudreach gathers.
+
+## Earlier blocker record (resolved above)
 - Attempt 1 (02e8f4cb): `09_cloudreach_handoff` FAIL "F49 relic hanging produced no actual portable relics_hung state". Cause: with the Satchel carried full, the Nerissa hand-off `boss_relic` duty is refused on every retry with `boss_handoff_make_satchel_room` (`scripts/net/foundation_actions.gd:305-307`: `give_stack(bag, cloudreach_portal_key)` on `death_satchel_rules.inventory_from(current.inventory)`), so neither the relic (`relics_held`) nor the Cloudreach portal key arrives. (The earlier dead-trainer 08 got both only because its Satchel was empty.)
 - Attempt 2 (1b8dea2f): the piece first freed a slot through the approved Satchel Drop (`free_slots_for`; log: `satchel_room_dropped fiber x3 slot 10`), then waited 1800 frames. The duty kept logging `held: boss_handoff_make_satchel_room` after the drop, so the hand-off still did not deliver. **Open question for Systems:** which inventory does the boss_relic host context read as `current.inventory` (the last saved/journaled owner snapshot rather than the live Satchel?), and does a held hand-off re-read it after a Satchel Drop? Either a save after the drop or the grant reading the live Satchel is needed. A real player who fills the Satchel before Nerissa hits the same stall: the relic and portal key never arrive.
 - Evidence: `/home/user/rb/tw_09.log`, `fail_tw_09.log` (container-local). Input `f49_tw_08` is committed.
