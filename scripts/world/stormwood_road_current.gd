@@ -348,6 +348,7 @@ func _build_puddles(routes: Array, surface: Dictionary, height_at: Callable) -> 
 		node.name = "Puddles_%s" % str(route.id)
 		node.multimesh = mm
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		node.visibility_range_end = float(_config.draw_distance_m)
+		# No visibility range: the node sits at the origin with a route-long
+		# AABB, so a range measured from it hid every puddle (CPU r2).
 		add_child(node)
 	print("[road_puddles] placed %d" % placed)
