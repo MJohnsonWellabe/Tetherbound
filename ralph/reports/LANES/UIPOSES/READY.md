@@ -17,6 +17,15 @@
 
 Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
 
+## Group 5: P2-069 flight landing (5.88, catalogued in all four biomes)
+
+- **Flag:** `fly_traversal.json` `landing_presentation.wing_fold_enabled`, plus Galecrest's `landing_fold_offsets`.
+- **Change:** during the 0.85 s landing presentation, Galecrest's wings fold along its body, blended in with the settle.
+  - Only the landing visual changes, and it hides when the presentation ends.
+  - Galecrest's idle everywhere else is unchanged; it is on the owner's style bar.
+- **Offsets:** measured in an isolated render.
+- **CPU Meadows landed frame:** a compact folded silhouette beside the trainer, no longer the wings-up flight shape.
+
 ## Group 4: P2-050 villager post stances (5.88)
 
 - **Flag:** `data/config/npc_post_stances.json:enabled`, new.

@@ -29,7 +29,7 @@
     "probe_up_m": 0.6,
     "probe_down_m": 1.0,
     "foot_clearance_m": 0.08,
-    "cancel_distance_m": 8.0
+    "cancel_distance_m": 8.0, "wing_fold_enabled": false, "_why_wing_fold": "P2-069 (UIPOSES lane, 1 Nov 2026). GPU item score 28 Oct 5.88: the bird lands still wings-up in its flight silhouette, so the descent-to-rest change reads as a cut. When enabled, a capability with landing_fold_offsets folds its wings along the body over the landing settle (fly_landing_presentation.gd, post_stance.gd). Offsets measured on the Galecrest rig in an isolated render. Presentation only; OFF until GPU judging."
   },
   "mentor_loaner": {
     "species_id": "galecrest",
@@ -63,7 +63,7 @@
     "pending_timeout_s": 5.0
   },
   "capabilities": {
-    "galecrest": {
+    "galecrest": {"landing_fold_offsets": [["wing_upper_l", 0, 0, -55], ["wing_upper_r", 0, 0, 55], ["wing_fore_l", 0, 0, -100], ["wing_fore_r", 0, 0, 100], ["wing_tip_l", 0, 0, -40], ["wing_tip_r", 0, 0, 40]], 
       "can_carry": true,
       "model": "res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb",
       "height_m": 2.1,

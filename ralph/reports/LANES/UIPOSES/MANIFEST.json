@@ -186,5 +186,14 @@
    "meadows__inventory__character__lark"
   ],
   "group": 4
+ },
+ {
+  "item": "P2-069",
+  "flag": "data/config/fly_traversal.json:landing_presentation.wing_fold_enabled",
+  "camera_set": "tools/phase2_capture_realm_flight.gd --biome=meadows --seed=2042",
+  "stands": [
+   "meadows__flying__landed"
+  ],
+  "group": 5
  }
 ]
