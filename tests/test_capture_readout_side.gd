@@ -33,3 +33,8 @@ func test_side_readout_stays_inside_safe_area() -> void:
 func test_side_readout_ships_off() -> void:
 	var cfg: Dictionary = RETICLE.load_readout_visual()
 	assert_false(bool(cfg.get("readout_side_enabled", true)), "candidate flag defaults OFF")
+
+
+func test_calm_seal_off_while_catch_card_off() -> void:
+	var orb := preload("res://scripts/combat/orb.gd")
+	assert_true(orb.calm_seal_config().is_empty(), "calm seal glow is read only while hud.json catch_card is enabled (OFF by default)")

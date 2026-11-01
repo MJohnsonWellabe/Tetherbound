@@ -13,6 +13,7 @@
     "_why_uiposes": "UIPOSES lane (1 Nov 2026): GPU UI-1 (31 Oct) P2-061 5.68 asks to hide the cards and action list during the result and show one large outcome banner. Headline 40 -> 52 px, card 380 -> 440 half width; the success card now clears the cards on its own first frame (combat_hud.gd _step_back_for_catch_focus).",
     "plate_alpha": 0.94,
     "accent_px": 8,
+    "calm_seal": {"_why": "P2-061 judges (GPU UI-1): tone down the orb bloom under the result. Sealed orb emission 1.1-2.0 -> 0.6-0.9 and halo 3.0-5.2x at full alpha -> 2.4-3.0x at 0.55 (orb.gd calm_seal_config). Read only while catch_card is enabled.", "enabled": true, "emission": 0.6, "emission_bloom": 0.3, "halo_extra": 0.2, "halo_bloom": 0.6, "halo_alpha": 0.55},
     "card_half_width": 440.0,
     "card_top": -380.0,
     "breakout_seconds": 1.8

@@ -514,12 +514,17 @@ func _tick_rest(delta: float) -> void:
 		# Bloom fast, then settle into a calm, brighter-than-before glow: the
 		# orb has decided, and it should look pleased about it.
 		var bloom: float = exp(-_seal_time * 3.0)
-		halo_scale = REST_HALO_SCALE + 0.8 + bloom * 2.2
-		halo_alpha = 1.0
+		var calm := calm_seal_config()
+		if calm.is_empty():
+			halo_scale = REST_HALO_SCALE + 0.8 + bloom * 2.2
+		else:
+			halo_scale = REST_HALO_SCALE + float(calm.get("halo_extra", 0.2)) + bloom * float(calm.get("halo_bloom", 0.6))
+		halo_alpha = 1.0 if calm.is_empty() else float(calm.get("halo_alpha", 0.55))
 		if _orb_material != null:
 			# Warm, not white: past ~2.5 the sphere clips to a featureless blob
 			# and the seal stops reading as the gold orb it is.
-			_orb_material.emission_energy_multiplier = 1.1 + bloom * 0.9
+			_orb_material.emission_energy_multiplier = 1.1 + bloom * 0.9 if calm.is_empty() \
+				else float(calm.get("emission", 0.6)) + bloom * float(calm.get("emission_bloom", 0.3))
 
 	_draw_halo(halo_scale, halo_alpha)
 
@@ -545,6 +550,22 @@ func _across_the_view() -> Vector3:
 	var right: Vector3 = camera.global_transform.basis.x
 	right.y = 0.0
 	return Vector3.RIGHT if right.length() < 0.01 else right.normalized()
+
+
+## P2-061 (UIPOSES, GPU UI-1 31 Oct: "tone down the orb bloom"): hud.json
+## `catch_card.calm_seal`, read only while the catch card is enabled. The
+## sealed orb keeps its gold albedo readable under the result card instead of
+## blooming to a white blob with a wide halo. Presentation only.
+static var _calm_seal: Variant = null
+
+
+static func calm_seal_config() -> Dictionary:
+	if _calm_seal == null:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+		var card: Variant = parsed.get("catch_card", {}) if parsed is Dictionary else {}
+		var calm: Variant = card.get("calm_seal", {}) if card is Dictionary and card.get("enabled") == true else {}
+		_calm_seal = calm if calm is Dictionary and calm.get("enabled") == true else {}
+	return _calm_seal
 
 
 ## The catch succeeded: hold a warm, settled glow until the fight cleans up.
