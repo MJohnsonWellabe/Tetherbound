@@ -539,7 +539,8 @@ func _run() -> void:
 		# The handoff is the F49 portal leg tests/helpers/f49_campaign_journey.gd
 		# plays: Home Key -> hang the held Cloudreach relic -> Stormwood arch.
 		var travel := PORTAL.new(self, game)
-		var ok: bool = await travel.home_key()
+		var ok: bool = await _make_handoff_room("cloudreach", "stormwood_portal_key")
+		if ok: ok = await travel.home_key()
 		if ok: ok = await travel.hang_relic("cloudreach")
 		if ok:
 			# A successful hang opens the relic-power choice (crossing_hall.gd
@@ -724,3 +725,52 @@ func _finish(passed: bool) -> void:
 		"failures": failures, "flags_gained": gained, "position": after.get("position", []),
 		"realm": after.get("realm", ""), "helper": helper_summary}))
 	quit(0 if receipt.passed else 1)
+
+
+## A carried-full Satchel holds the chapter boss's coin payout and hand-off
+## (portal key + relic) as boss_handoff_make_satchel_room (Tidewake 09, 1 Nov:
+## the first freed slot goes to the coin payout). The player makes two slots
+## first: carried cloudberries are fed to the hungriest companion (nothing
+## lost), then leftover gathered materials go by the approved Satchel Drop.
+## Every step is disclosed; the held duty then delivers.
+func _make_handoff_room(biome: String, key_item: String) -> bool:
+	var world := current_scene as Node3D
+	var inventory: RefCounted = game.get("inventory")
+	var delivered := func() -> bool:
+		var now: Dictionary = game.local.get("redesign_character")
+		return ((now.get("relics_held", []) as Array).has(biome) or (now.get("relics_hung", []) as Array).has(biome)) \
+			and int(inventory.call("count", key_item)) > 0
+	if delivered.call(): return true
+	var team := load("res://tests/helpers/meadows_earned_team_segment.gd")
+	var free := func() -> int:
+		var n := 0
+		for i in int(inventory.call("slot_count")):
+			if (inventory.call("stack_at", i) as Dictionary).is_empty(): n += 1
+		return n
+	for _bite in 12:
+		if free.call() >= 2 or int(inventory.call("count", "cloudberry")) <= 0: break
+		var party: RefCounted = game.get("party")
+		var hungriest := 0
+		for index in int(party.call("size")):
+			if float(party.call("at", index).get("nourishment")) < float(party.call("at", hungriest).get("nourishment")): hungriest = index
+		var care: Dictionary = await team.new().care_existing(self, world, game, "cloudberry", hungriest)
+		if not bool(care.get("passed", false)): break
+		disclosures.append("Piece 07: fed a carried cloudberry to party row %d through the Satchel to make room for the held %s hand-off" % [hungriest, biome])
+	for id: String in ["gale_fiber", "cloudberry", "driftwood", "fiber", "wood", "rootstone", "berries"]:
+		while free.call() < 2 and int(inventory.call("count", id)) > 0:
+			var room: RefCounted = team.new()
+			room._tree = self
+			room._world = world
+			room._game = game
+			room._menu = game.call("menu")
+			var slot := int(inventory.call("find_slot", id))
+			var n := int((inventory.call("stack_at", slot) as Dictionary).get("n", 0))
+			if not await room._drop_slot(slot):
+				failures.append("Piece 07: Satchel Drop of %s failed: %s" % [id, str(room.result().failures)])
+				return false
+			disclosures.append("Piece 07: DROPPED %s x%d through the Satchel to make room for the held %s hand-off" % [id, n, biome])
+	for _frame in 1800:
+		if delivered.call(): return true
+		await physics_frame
+	failures.append("Piece 07: held %s hand-off did not deliver after making Satchel room (free=%d)" % [biome, int(free.call())])
+	return false
