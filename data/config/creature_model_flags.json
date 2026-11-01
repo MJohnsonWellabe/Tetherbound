@@ -238,6 +238,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_shadelet": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Shadelet, a lean dark lizard-drake with dusky navy-black scales and small spines (Meshy 01a197ee-4c70-725d-9d60-6eca27aa6f86). Baked grass disc stripped (fragmented-shell mode, low_islands). dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 2.8 m; emission on the violet eyes. Provenance: assets/creatures/tetherbound/shadelet/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "shadelet": {
+     "model": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101.glb",
+     "colourway_source_species": "shadelet_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }

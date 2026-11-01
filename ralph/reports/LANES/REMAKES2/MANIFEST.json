@@ -52,5 +52,14 @@
    "riverdrake"
   ],
   "group": 6
+ },
+ {
+  "item": "F36 Shadelet remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_shadelet.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "shadelet"
+  ],
+  "group": 7
  }
 ]

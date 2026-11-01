@@ -156,6 +156,19 @@
    "blur_px": 8.0,
    "soften_px": 1.0,
    "gain": 2.0
+  },
+  "shadelet_owner1101": {
+   "_why": "Owner remake 1 Nov (coordinator pick under the owner rule, flag-off candidate): violet eyes. Albedo-derived mask, as the first remake lane's rules.",
+   "model": "assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101.glb",
+   "hue": [
+    255,
+    295
+   ],
+   "sat_min": 0.35,
+   "lift": 0.1,
+   "blur_px": 8.0,
+   "soften_px": 1.5,
+   "gain": 2.5
   }
  }
 }
