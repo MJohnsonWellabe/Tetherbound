@@ -65,3 +65,17 @@ func test_p2_087_grade_candidate_matches_lights_by_at() -> void:
 	assert_almost_eq(float(on.energy), 10.0)
 	var torch: Dictionary = {"at": [0.0, 60.0], "colour": "#7d8cab"}
 	assert_eq(STRONGHOLD.p2_087_light(cfg, torch), torch, "unmatched lights unchanged")
+
+
+## P2-064 r2 (vis-meadows, OFF until GPU-judged): the six Warden-arena wall
+## torches pool at the wall; other torches are untouched.
+func test_p2_064_r2_candidate_softens_only_the_arena_torches() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
+	assert_false(bool(cfg.p2_064_r2_candidate.get("enabled", true)), "P2-064 r2 ships OFF")
+	var arena_torch: Dictionary = {"mount": "wall", "at": [11.4, 90.2], "energy": 12.0}
+	var approach_torch: Dictionary = {"mount": "wall", "at": [7.4, 60.6], "energy": 12.0}
+	cfg.p2_064_r2_candidate.enabled = true
+	var on := STRONGHOLD.candidate_light(cfg, "p2_064_r2_candidate", arena_torch)
+	assert_true(float(on.energy) < 12.0)
+	assert_true(float(on.attenuation) > 1.0)
+	assert_eq(STRONGHOLD.candidate_light(cfg, "p2_064_r2_candidate", approach_torch), approach_torch)

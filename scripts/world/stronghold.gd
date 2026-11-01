@@ -3595,12 +3595,16 @@ func _build_hall_fire() -> void:
 	var index := 0
 	for entry: Variant in (_occupation().get("braziers", []) as Array):
 		var spec: Dictionary = entry as Dictionary
+		# P2-064 r2 (vis-meadows, OFF until GPU-judged): the Warden arena's
+		# wall torches, matched by `at`, pool at the wall instead of washing
+		# the fight floor orange.
+		spec = candidate_light(_config, "p2_064_r2_candidate", spec)
 		var node := _brazier(holder, spec, index)
 		if node == null:
 			continue
 		var light := OmniLight3D.new()
 		light.name = "Fire"
-		light.light_color = FIRE_COLOUR
+		light.light_color = Color(str(spec["colour"])) if spec.has("colour") else FIRE_COLOUR
 		light.omni_range = float(spec.get("range", 15.0))
 		# T1-HALL-4, JUDGE-6 defect 12. Godot's default attenuation of 1.0 falls
 		# off nearly linearly across the whole range, which spreads a fire's
@@ -4697,7 +4701,13 @@ func _build_conduits() -> void:
 ## enabled, each `lights` row whose `at` matches a light's own `at` merges its
 ## `set` keys over that light (after the courtyard daylight merge).
 static func p2_087_light(config: Dictionary, spec: Dictionary) -> Dictionary:
-	var candidate: Dictionary = config.get("p2_087_grade_candidate", {})
+	return candidate_light(config, "p2_087_grade_candidate", spec)
+
+
+## Shared by the light candidates: when `config[flag]` is enabled, the first
+## row of its `lights` whose `at` equals `spec.at` merges its `set` over spec.
+static func candidate_light(config: Dictionary, flag: String, spec: Dictionary) -> Dictionary:
+	var candidate: Dictionary = config.get(flag, {})
 	if not bool(candidate.get("enabled", false)):
 		return spec
 	for row: Variant in candidate.get("lights", []):

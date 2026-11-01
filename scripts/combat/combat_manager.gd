@@ -1070,7 +1070,7 @@ func _disconnect_opponent_callbacks(body: Node3D) -> void:
 func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bool:
 	_admitted_spatial_provider.clear()
 	var spatial_provider: Dictionary = {}
-	var cfg: Dictionary = (MATH.config().get("arena", {}) as Dictionary).duplicate()
+	var cfg: Dictionary = arena_boundary_for((MATH.config().get("arena", {}) as Dictionary).duplicate(), trainer_id_of(_wild))
 	# Gameplay radii size the ring; rendered art independently decides fit.
 	var ally_radius := float(_ally_body.call("body_radius"))
 	var foe_radius := float(_wild.call("body_radius"))
@@ -2420,6 +2420,23 @@ static func named_fight_camera_cap(opponent: Node, candidate_on: bool) -> float:
 
 ## The trainer id of a trainer's send-out (named TrainerCreature_<id>_<n>), or
 ## "" for a wild opponent.
+## P2-064 r2 (vis-meadows, OFF until GPU-judged): combat.json
+## `arena.boundary_per_trainer_candidate` softens the boundary ring's look for
+## the named trainers it lists. Only `boundary_alpha` and `boundary_height`
+## are taken, so the ring's radius, staging and every rule stay as they were.
+static func arena_boundary_for(cfg: Dictionary, trainer_id: String) -> Dictionary:
+	var candidate: Variant = cfg.get("boundary_per_trainer_candidate", {})
+	if not candidate is Dictionary or not bool((candidate as Dictionary).get("enabled", false)) or trainer_id.is_empty():
+		return cfg
+	var row: Variant = (candidate as Dictionary).get(trainer_id, {})
+	if not row is Dictionary:
+		return cfg
+	for key: String in ["boundary_alpha", "boundary_height"]:
+		if (row as Dictionary).has(key):
+			cfg[key] = float((row as Dictionary)[key])
+	return cfg
+
+
 static func trainer_id_of(opponent: Node) -> String:
 	if opponent == null or not is_instance_valid(opponent):
 		return ""
