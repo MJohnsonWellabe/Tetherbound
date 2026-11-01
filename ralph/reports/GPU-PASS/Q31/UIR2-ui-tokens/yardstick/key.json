@@ -1,0 +1,58 @@
+{
+ "Ad": {
+  "anchor": false,
+  "label": "UIR2 P2-004 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-004-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-004-cand-High.png"
+ },
+ "Yt": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Rz": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Hx": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ss": {
+  "anchor": false,
+  "label": "UIR2 P2-007 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-007-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-007-cand-High.png"
+ },
+ "Ax": {
+  "anchor": false,
+  "label": "UIR2 P2-031 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-031-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-031-ctl-High.png"
+ },
+ "Ex": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Yd": {
+  "anchor": false,
+  "label": "UIR2 P2-096 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-096-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-096-ctl-High.png"
+ },
+ "Wz": {
+  "anchor": false,
+  "label": "UIR2 P2-032 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-032-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-032-ctl-High.png"
+ },
+ "Zd": {
+  "anchor": false,
+  "label": "UIR2 P2-001 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-001-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIR2\\sides\\P2-001-ctl-High.png"
+ }
+}
