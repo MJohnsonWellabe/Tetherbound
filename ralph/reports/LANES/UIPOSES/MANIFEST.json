@@ -215,5 +215,16 @@
    "cloudreach__menu_map"
   ],
   "group": 7
+ },
+ {
+  "item": "P2-071",
+  "flag": "data/config/human_swim_visual.json:uiposes_stroke_candidates",
+  "camera_set": "tools/phase2_capture_swimming.gd --seed=2042",
+  "stands": [
+   "tidewake__swimming__entry",
+   "tidewake__swimming__surface_west",
+   "tidewake__swimming__surface_mid"
+  ],
+  "group": 8
  }
 ]

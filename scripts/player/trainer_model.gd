@@ -772,6 +772,18 @@ static func load_human_swim_visual() -> Dictionary:
 	if stroke.has("swim_pose"):
 		loaded = loaded.duplicate()
 		loaded.merge(stroke.swim_pose, true)
+	# P2-071 (UIPOSES, human_swim_visual.json `uiposes_stroke_candidates`, OFF):
+	# the two unjudged Tidewake swim-pose candidates (half-submerged flatter
+	# body, forward crawl reach), as pose keys only, without enabling the rest
+	# of the Tidewake look profile's unjudged sections.
+	if bool(loaded.get("uiposes_stroke_candidates", false)):
+		var tidewake: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_look.json"))
+		if tidewake is Dictionary:
+			loaded = loaded.duplicate()
+			for section: String in ["swim_candidate", "swim_stroke_candidate"]:
+				var pose: Variant = ((tidewake as Dictionary).get(section, {}) as Dictionary).get("swim_pose", {})
+				if pose is Dictionary:
+					loaded.merge(pose as Dictionary, true)
 	return loaded
 
 
