@@ -540,7 +540,7 @@
     },
     "remake_owner1101_meadowhart": {
       "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Meadowhart, a young deer with small antlers and a warm brown coat with cream belly, a believable lean adult (Meshy 01a197e9-39aa-7115-b628-0552e820bc04). dog3 quadruped rig at the installed 3.45 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing amber eyes. Provenance: assets/creatures/tetherbound/meadowhart/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "meadowhart": {
           "model": "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101.glb",
@@ -1003,7 +1003,7 @@
     },
     "remake_owner1101_torrentoad": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Torrentoad, a large powerful toad with long jumping legs, olive-green and teal skin (Meshy 01a197f4-adb9-70a9-9a79-98ac4e375ade). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua lines and eyes. Provenance: assets/creatures/tetherbound/torrentoad/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "torrentoad": {
           "model": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101.glb",

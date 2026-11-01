@@ -11,6 +11,13 @@ const TRAINER_HEIGHT := 1.80
 
 var installed: Dictionary
 
+## Held OFF while their remake breaks a gameplay contract the rest of the suite
+## checks; each comes back ON once its rig carries the missing data.
+const HELD := {
+	"remake_owner1101_torrentoad": "the remake carries the faint clip role and attack_contact_phase the installed Torrentoad has",
+	"remake_owner1101_meadowhart": "the remake keeps the complete skinned bare body the riding visual needs",
+}
+
 
 func before_each() -> void:
 	installed = SPECIES.table().duplicate(true)
@@ -44,6 +51,9 @@ func test_every_owner_remake_ships_on_and_is_the_live_model() -> void:
 	var flags := _flags()
 	assert_true(not flags.is_empty(), "at least one model flag")
 	for flag: String in flags:
+		if flag in HELD:
+			assert_false(bool(flags[flag].get("enabled", true)), "%s stays OFF until %s" % [flag, HELD[flag]])
+			continue
 		assert_true(bool(flags[flag].get("enabled", false)), "%s ships ON (owner, 1 Nov 2026)" % flag)
 		for id: String in flags[flag].species:
 			var live := str(SPECIES.placeholder(id).get("model", ""))
