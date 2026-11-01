@@ -13,5 +13,39 @@
   "target_polycount": 30000,
   "symmetry_mode": "auto"
  },
- "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_skyrill (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes-2 (second creature-remake lane)",
+  "steps": [
+   "tools/art_pipeline/blender/rig_glider.py (biped-glider rig and skin, unchanged)",
+   "tools/art_pipeline/blender/animate_quadruped.py (glider clips, unchanged)",
+   "texture re-encode: embedded PNG and oversized JPEG maps re-encoded to JPEG quality 88 at 2048 px (shift_reserved_red._read_glb/_write_glb), the size class of the first lane's models",
+   "tools/art_pipeline/arc_emission.py (emissive map; rule in data/creatures/arc_emission.json)",
+   "tools/art_pipeline/texture_import_policy.py --apply (VRAM compressed, mode 2)"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/rig_glider.py -- assets/creatures/tetherbound/skyrill/candidate_owner1101/source/skyrill_b.glb --out rigged.glb --report assets/creatures/tetherbound/skyrill/candidate_owner1101/source/prepare-report.json ; blender --background --python tools/art_pipeline/blender/animate_quadruped.py -- rigged.glb --out assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101.glb ; (JPEG re-encode of the embedded maps) ; python3 tools/art_pipeline/arc_emission.py skyrill_owner1101",
+  "report": "assets/creatures/tetherbound/skyrill/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "rig_glider 15-bone biped glider (two legs, two-bone wings, tail)",
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+   ],
+   "clips_match_installed": "the installed model's six clip roles",
+   "height_m": 3.25,
+   "unweighted_vertices": 0,
+   "vertices": 15574,
+   "scale_note": "rig_bird/rig_glider keep the source scale; creature_body._fit() fits the model to the species height at load (CPU capture measured the standing height)"
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.skyrill_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_skyrill",
+ "test": "tests/test_creature_model_flags.gd",
+ "cpu_capture": "ralph/reports/LANES/REMAKES2/_sheet_owner1101_f36_cpu.png (capture_f36_poses.gd --whole-body --context, flag ON locally, Low/Compatibility; local import used a 1024 px texture size limit for disk, sidecars ship at full size)"
 }
