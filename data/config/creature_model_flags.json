@@ -435,6 +435,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_thundertunnel": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Thundertunnel, a large mole with big digging claws and dark brown velvet fur (Meshy 01a197f3-38d1-72d6-9286-2f389cf6305a). Baked plinth stripped. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 2.8 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/thundertunnel/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "thundertunnel": {
+     "model": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101.glb",
+     "colourway_source_species": "thundertunnel_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }

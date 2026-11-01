@@ -260,6 +260,19 @@
    "blur_px": 8.0,
    "soften_px": 1.0,
    "gain": 2.5
+  },
+  "thundertunnel_owner1101": {
+   "_why": "Owner remake 1 Nov (coordinator pick under the owner rule, flag-off candidate): electric-blue lightning lines and eyes (storm creature). Albedo-derived mask, as the first remake lane's rules.",
+   "model": "assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101.glb",
+   "hue": [
+    175,
+    215
+   ],
+   "sat_min": 0.2,
+   "lift": 0.08,
+   "blur_px": 8.0,
+   "soften_px": 1.0,
+   "gain": 2.0
   }
  }
 }
