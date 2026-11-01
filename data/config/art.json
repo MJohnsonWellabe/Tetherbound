@@ -700,7 +700,8 @@
       "walk": 5.0,
       "sprint": 8.6
     },
-    "animation_libraries": []
+    "animation_libraries": [],
+    "clip_candidate": {"_why": "P2-065 (vis-meadows, 1 Nov, OFF until GPU-judged): today's re-score (5.51) - after victory the south bridge grunt stays upright and neutral. That grunt wears grunt_a, whose glb has no `defeated` clip, so trainer_npc.gd::_play_defeat_reaction falls back to idle; the `grunt` rig ships the one-shot slump (animate_humanoid.py) on an identical 24-joint skeleton (same joint names, checked in both glb files). character_model.gd::with_clip_candidate merges grunt_lod0.glb as an animation library and maps `defeated` to it, so the grunt slumps where he stands and then stands down as before.", "enabled": false, "animation_libraries": ["res://assets/characters/grunt/grunt_lod0.glb"], "clips": {"defeated": "defeated"}}
   },
   "grunt_b": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
