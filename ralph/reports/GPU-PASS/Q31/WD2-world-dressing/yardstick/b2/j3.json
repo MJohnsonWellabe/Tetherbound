@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Nk": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm meadow light and lush grass carry it, but barrels, crates, fire, wolf, rabbit and villagers pile into one cluster on a flat pale clearing (A) or dark muddy mat (B camp_bed), so no single prop reads at Palworld base-building clarity."
+  },
+  "Wq": {
+   "A": {
+    "bar_a": 2.5,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky and rain set a Valheim-like mood, but the landmark is a cliff edge over a flat featureless plane (A) or a small stone planter of blue shards perched on that edge (B), with no sunken basin, black pool or glass floor to read as a place."
+  },
+  "Io": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Storm grade, rain and glowing mushrooms carry the mood, but the glass reads as flat pale triangles on a purple cloth-like slab (A) or a pale crystal cluster stood behind the mushrooms without rooting into the rock (B), short of shipped-game finish."
+  },
+  "Sd": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's banded black-and-yellow hooded serpent has a strong standing silhouette but floats off the floor in an upright S-curve in faint mid/end, while A's noisy mottled gold texture turns the coils into a muddy lump, so neither holds the owner's creature bar."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with a readable face, big expressive eyes, white hair, green vest and scarf in the natural palette sits at Palworld character finish, though it is a little more cartoon than the naturalistic creatures."
+  },
+  "Ww": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram's standing model matches the owner's Stormcapra bar, but A's faint collapses into a faceless fleece sack and B's hit react barely moves and its faint mid/end stretch into a smeared, half-lifted black-and-white mess, which breaks the finish."
+  },
+  "Yo": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame with diagonal brace, plank cap and stone footing finally reads as built, but the flat untextured tan infill and the thin, isolated, outhouse-door proportions still fall short of Palworld base pieces, and A is a blown-out white card."
+  },
+  "Xk": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's blue crystal clusters and cyan glowmoss read as Stormwood glass and moss, but they are small, alike in silhouette (crown is just a larger stormglass) and sit on a uniform dark moss carpet under flat light; B's brown boulders with paper-flat shards and a green blob read as generic placeholders."
+  },
+  "Eo": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's tall yellow speed cap and broad orange wild cluster separate clearly and sit in the grass, but the brown blocky rocks and plain green slope read more as a generic meadow than Cloudreach's bright sky and pale stratified stone, and A's pickups are small and look alike apart from colour."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author faint and hurt poses so creatures stay grounded and intact: no floating serpent (Sd B faint mid/end), no smeared or stretched skinning (Ww B faint), and the face stays visible in collapse (Ww A).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Build the Stormwood glass landmarks into the terrain: a sunken Glass Sink basin with a black pool and glass floor instead of a cliff edge over a flat plane, and spike clusters rooted in the rock with glass-tinted bases.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give pickups, harvest nodes and camp props clear material cues and staging: emissive glass and copper on Stormwood nodes, a different silhouette for each variant, contact shadows and ground decals, and space between camp props, creatures and NPCs so each one reads at 30%.",
+   "kind": "scene"
+  }
+ ]
+}

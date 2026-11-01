@@ -1,0 +1,216 @@
+{
+ "sets": {
+  "Hf": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's naturalistic lichen-spotted boar is close to the owner bar but its faint-mid body visibly floats over a detached shadow, B's smooth clay-orange hide reads toy-like, and a flat grey stage gives no Valheim-class light or Palworld world to sit in."
+  },
+  "Rb": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the hit react barely differs from the standing pose": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A well-furred, grounded coyote that clears the trainer, but it reads as a generic stock animal with no Tetherbound identity, shown on a lightless neutral stage."
+  },
+  "Um": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the hit react barely differs from the standing pose": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The big wolf has good scale and fur, but its near-black coat swallows the face and form against the dark backdrop, and with no rim light it is far from Palworld-class readability."
+  },
+  "Rj": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bear has strong bulk and scale, but its muddy dark-brown coat with busy yellow/blue speckle gives a noisy one-value mass with no readable face, the opposite of Palworld's clean creature read."
+  },
+  "Do": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's Tanglevolt matches the owner style bar with a readable rearing hit react, while A's faint-mid and faint-end frames switch to a broken white/black blotched material; even B sits on a lightless stage with no world finish."
+  },
+  "Iu": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A cute big-eared yellow fennec with a clear silhouette, but it is trainer-sized or smaller, its 'faint end' is an upright sit facing camera that does not read as fainted, and the stage has no light or world."
+  },
+  "Dv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger, fully wrapped recipe text on a blue-grey translucent panel fits the UI direction, but the world behind is a murky dark grey-purple night with no grade or atmosphere, and the hints still lack teal controller-glyph emphasis."
+  },
+  "Gw": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The yellow fennec reads clearly but its smooth, flat-shaded toy-like surface, trainer-or-smaller scale and upright-sitting faint end fall short of the owner's naturalistic bar, on a lightless stage."
+  },
+  "Xy": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cyan-to-purple finned newt is the most on-board creature in the batch, with a readable rearing hit react, but its low body barely clears (A) or fails to clear (B) the trainer, and the neutral stage gives no world finish."
+  },
+  "Vr": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, appealing elder villager with expressive eyes and a moss/leather palette that fits the cozy key art, but the soft cartoon face sits apart from the naturalistic creatures, and a black void backdrop gives no world finish."
+  },
+  "Iw": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's mid-grey coat with blue glow accents reads form and face well while B's charcoal coat sinks into the backdrop; neither has the world light or atmosphere to pass for Palworld finish."
+  },
+  "Wm": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's warmer mid-brown plated boar-bear reads its plates, tusks and face with a strong rearing hit react, while A's near-black coat loses them, and both sit on a lightless stage."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Lift the dark creature coats (Um, Rj, Wm A, Iw B) to readable mid values with warm albedo and a cool rim light, so face, eyes and form separate from the ground as Wm B and Iw A already do; also fix Do A's broken white/black blotched material in the faint frames.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rescale the small creatures (the yellow fennec in Iu/Gw, the newt in Xy) so that every creature stands clearly taller than the 1.80 m trainer, and give the fennec a matte fur material in place of its smooth toy-like shading.",
+   "kind": "scene"
+  },
+  {
+   "change": "Author real hurt and faint animations: distinct flinch hit reacts for Rb and Um, and a collapsed, grounded faint end for the fennec (Iu/Gw), which currently sits upright facing camera.",
+   "kind": "new_art"
+  }
+ ]
+}

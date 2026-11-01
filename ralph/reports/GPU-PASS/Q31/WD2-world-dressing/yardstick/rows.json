@@ -1,0 +1,462 @@
+[
+ {
+  "batch": 1,
+  "code": "Mh",
+  "label": "WD2 P2-033 High cand|ctl",
+  "side": "P2-033-ctl-High",
+  "mapped": 5.37,
+  "judges": [
+   5.5,
+   5.5,
+   5.1
+  ],
+  "defects": [
+   {
+    "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+   },
+   {
+    "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PRESENT"
+   },
+   {
+    "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Mh",
+  "label": "WD2 P2-033 High cand|ctl",
+  "side": "P2-033-cand-High",
+  "mapped": 6.34,
+  "judges": [
+   6.28,
+   6.57,
+   6.18
+  ],
+  "defects": [
+   {
+    "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+   },
+   {
+    "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+   },
+   {
+    "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vx",
+  "label": "WD2 P2-116 High cand|ctl",
+  "side": "P2-116-ctl-High",
+  "mapped": 5.2,
+  "judges": [
+   4.91,
+   5.69,
+   5.01
+  ],
+  "defects": [
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vx",
+  "label": "WD2 P2-116 High cand|ctl",
+  "side": "P2-116-cand-High",
+  "mapped": 6.08,
+  "judges": [
+   5.69,
+   6.47,
+   6.08
+  ],
+  "defects": [
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uf",
+  "label": "WD2 P2-041 High cand|ctl",
+  "side": "P2-041-ctl-High",
+  "mapped": 3.96,
+  "judges": [
+   3.74,
+   4.22,
+   3.93
+  ],
+  "defects": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PRESENT"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PRESENT"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uf",
+  "label": "WD2 P2-041 High cand|ctl",
+  "side": "P2-041-cand-High",
+  "mapped": 4.78,
+  "judges": [
+   5.1,
+   5.01,
+   4.22
+  ],
+  "defects": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Gp",
+  "label": "WD2 P2-045 High cand|ctl",
+  "side": "P2-045-ctl-High",
+  "mapped": 4.84,
+  "judges": [
+   4.71,
+   5.3,
+   4.52
+  ],
+  "defects": [
+   {
+    "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+   },
+   {
+    "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+   },
+   {
+    "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Gp",
+  "label": "WD2 P2-045 High cand|ctl",
+  "side": "P2-045-cand-High",
+  "mapped": 5.92,
+  "judges": [
+   5.89,
+   6.18,
+   5.69
+  ],
+  "defects": [
+   {
+    "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "FIXED"
+   },
+   {
+    "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+   },
+   {
+    "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Rv",
+  "label": "WD2 P2-115 High cand|ctl",
+  "side": "P2-115-cand-High",
+  "mapped": 5.23,
+  "judges": [
+   4.91,
+   5.69,
+   5.1
+  ],
+  "defects": [
+   {
+    "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PARTIAL"
+   },
+   {
+    "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PARTIAL"
+   },
+   {
+    "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Rv",
+  "label": "WD2 P2-115 High cand|ctl",
+  "side": "P2-115-ctl-High",
+  "mapped": 4.62,
+  "judges": [
+   4.32,
+   5.1,
+   4.42
+  ],
+  "defects": [
+   {
+    "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PRESENT"
+   },
+   {
+    "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PRESENT"
+   },
+   {
+    "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Nk",
+  "label": "WD2 P2-035 High cand|ctl",
+  "side": "P2-035-cand-High",
+  "mapped": 5.68,
+  "judges": [
+   5.87,
+   5.52,
+   5.64
+  ],
+  "defects": [
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PARTIAL"
+   },
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+   },
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Nk",
+  "label": "WD2 P2-035 High cand|ctl",
+  "side": "P2-035-ctl-High",
+  "mapped": 5.44,
+  "judges": [
+   5.17,
+   5.75,
+   5.41
+  ],
+  "defects": [
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+   },
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+   },
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wq",
+  "label": "WD2 P2-070 High cand|ctl",
+  "side": "P2-070-ctl-High",
+  "mapped": 2.89,
+  "judges": [
+   3.32,
+   2.62,
+   2.73
+  ],
+  "defects": [
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PRESENT"
+   },
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PRESENT"
+   },
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wq",
+  "label": "WD2 P2-070 High cand|ctl",
+  "side": "P2-070-cand-High",
+  "mapped": 4.63,
+  "judges": [
+   5.17,
+   4.24,
+   4.48
+  ],
+  "defects": [
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   },
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   },
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Io",
+  "label": "WD2 P2-043 High cand|ctl",
+  "side": "P2-043-ctl-High",
+  "mapped": 4.75,
+  "judges": [
+   5.41,
+   4.36,
+   4.48
+  ],
+  "defects": [
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "FIXED"
+   },
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PRESENT"
+   },
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Io",
+  "label": "WD2 P2-043 High cand|ctl",
+  "side": "P2-043-cand-High",
+  "mapped": 5.75,
+  "judges": [
+   6.33,
+   5.29,
+   5.64
+  ],
+  "defects": [
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+   },
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+   },
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xk",
+  "label": "WD2 P2-046 High cand|ctl",
+  "side": "P2-046-cand-High",
+  "mapped": 6.57,
+  "judges": [
+   7.26,
+   6.1,
+   6.33
+  ],
+  "defects": [
+   {
+    "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "FIXED"
+   },
+   {
+    "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "FIXED"
+   },
+   {
+    "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xk",
+  "label": "WD2 P2-046 High cand|ctl",
+  "side": "P2-046-ctl-High",
+  "mapped": 4.13,
+  "judges": [
+   4.71,
+   3.78,
+   3.9
+  ],
+  "defects": [
+   {
+    "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PRESENT"
+   },
+   {
+    "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PRESENT"
+   },
+   {
+    "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Eo",
+  "label": "WD2 P2-054 High cand|ctl",
+  "side": "P2-054-ctl-High",
+  "mapped": 6.33,
+  "judges": [
+   7.15,
+   5.87,
+   5.99
+  ],
+  "defects": [
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   },
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   },
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Eo",
+  "label": "WD2 P2-054 High cand|ctl",
+  "side": "P2-054-cand-High",
+  "mapped": 6.92,
+  "judges": [
+   7.5,
+   6.45,
+   6.8
+  ],
+  "defects": [
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   },
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   },
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   }
+  ]
+ }
+]

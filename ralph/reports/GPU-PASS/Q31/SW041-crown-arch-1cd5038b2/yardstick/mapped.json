@@ -1,0 +1,120 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9029,
+  "least_squares_slope": 0.8992,
+  "method": "linear",
+  "slope": 0.8992,
+  "intercept": 1.6244,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.522,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "p2_094_r4:X_before": {
+   "measured": 3.0,
+   "reference": 3.5,
+   "mapped": 4.322,
+   "residual": -0.822
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.267,
+   "reference": 6.73,
+   "mapped": 6.36,
+   "residual": 0.37
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.7,
+   "reference": 7.47,
+   "mapped": 7.649,
+   "residual": -0.179
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.7,
+   "reference": 7.53,
+   "mapped": 7.649,
+   "residual": -0.119
+  },
+  "f36_0_gap:C2B": {
+   "measured": 4.9,
+   "reference": 6.9,
+   "mapped": 6.03,
+   "residual": 0.87
+  },
+  "f36_0_gap:C2A": {
+   "measured": 6.5,
+   "reference": 6.83,
+   "mapped": 7.469,
+   "residual": -0.639
+  },
+  "f04_6_r22:control": {
+   "measured": 4.267,
+   "reference": 5.83,
+   "mapped": 5.461,
+   "residual": 0.369
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.533,
+   "reference": 6.75,
+   "mapped": 6.6,
+   "residual": 0.15
+  }
+ },
+ "candidates": {
+  "SW041 P2-041 Medium cand|ctl | P2-041-ctl-Medium": {
+   "measured_mean": 2.9,
+   "mapped_mean": 4.23,
+   "mapped_judges": [
+    4.23,
+    4.14,
+    4.32
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW041 P2-041 Medium cand|ctl | P2-041-cand-Medium": {
+   "measured_mean": 3.267,
+   "mapped_mean": 4.56,
+   "mapped_judges": [
+    4.68,
+    4.41,
+    4.59
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW041 P2-041 High cand|ctl | P2-041-ctl-High": {
+   "measured_mean": 2.9,
+   "mapped_mean": 4.23,
+   "mapped_judges": [
+    4.23,
+    4.14,
+    4.32
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW041 P2-041 High cand|ctl | P2-041-cand-High": {
+   "measured_mean": 3.267,
+   "mapped_mean": 4.56,
+   "mapped_judges": [
+    4.68,
+    4.41,
+    4.59
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

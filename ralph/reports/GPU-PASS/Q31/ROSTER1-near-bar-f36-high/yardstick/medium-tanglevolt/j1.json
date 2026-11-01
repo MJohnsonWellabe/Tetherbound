@@ -1,0 +1,92 @@
+{
+ "sets": {
+  "Ro": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The panel style is close to the deep blue-grey direction, but the murky, near-black rainy world behind it has no light, sky or depth and the panel has no teal or gold accents, so it does not read as Palworld-class finish."
+  },
+  "Px": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A is a smooth clay-toy boar far below the naturalistic style bar and B's furred boar is closer but floats in its faint frames, and neither stands taller than the trainer."
+  },
+  "So": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's wolf matches the owner style bar, but side B loses its fur material in both faint frames (white with black blobs), which breaks the finish outright."
+  },
+  "Ho": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with an earthy Meadows palette and readable face, at the finish of Palworld's human characters, though his cartoon face sits apart from the naturalistic creatures."
+  },
+  "Ar": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A furred wolf with lightning streaks, at style-bar quality, large against the trainer, with grounded faint poses that read without a label; the neutral stage is the only thing holding it back."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the material that drops out on the So side-B wolf in its faint frames (white with black blobs) so the fur shader holds through every pose.",
+   "kind": "scene"
+  },
+  {
+   "change": "Craft panel: keep side A's text scale but show the full recipe list without truncating it, and replace the small keycap hints with high-contrast teal controller-glyph prompts (A Craft / B Leave), with gold for progress.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the Px clay boar with the naturalistic furred boar, scale it clearly taller than the 1.80 m trainer and keep its faint-mid and faint-end bodies on the stage.",
+   "kind": "new_art"
+  }
+ ]
+}

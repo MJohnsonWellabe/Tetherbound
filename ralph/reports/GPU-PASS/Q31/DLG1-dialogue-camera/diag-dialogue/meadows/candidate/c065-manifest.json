@@ -1,0 +1,603 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "meadows",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 453655922898,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 3.50011038780212
+	},
+	"capture_camera": {
+		"far": 2000.0,
+		"fov": 65.0,
+		"instance_id": 453672700115,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T22:02:23",
+	"capture_started_utc": "2026-10-31T22:00:10",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "Kell",
+			"authored_source": "data/config/village_npcs.json",
+			"band_display_name": "",
+			"band_id": "meadows",
+			"biome_display_name": "Meadows",
+			"biome_id": "meadows",
+			"bytes": 696915,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.7673921585083,
+			"camera_position": [
+				187.008972167969,
+				2.75695323944092,
+				59.2195281982422
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.965925514698029,
+					0.0,
+					-0.258818924427032
+				],
+				"basis_y": [
+					-0.0449434258043766,
+					0.984807252883911,
+					-0.167731165885925
+				],
+				"basis_z": [
+					0.254886716604233,
+					0.173647999763489,
+					0.951250314712524
+				],
+				"origin": [
+					185.683563232422,
+					1.85398316383362,
+					54.2730293273926
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.965925872325897,
+					-0.000000034099368662055,
+					-0.258819013834
+				],
+				"basis_y": [
+					-0.0449435077607632,
+					0.984807670116425,
+					-0.167731612920761
+				],
+				"basis_z": [
+					0.254886955022812,
+					0.173648551106453,
+					0.951251268386841
+				],
+				"origin": [
+					187.008972167969,
+					2.75695323944092,
+					59.2195281982422
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Kell",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/gpu-arms/DLG1F-cand-High-c065/meadows__inventory__character__kell.jpg",
+			"frame_id": "meadows__inventory__character__kell",
+			"identity": "meadows__inventory__character__kell",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1922_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						55.993350982666,
+						-3.72860264778137,
+						83.0408477783203
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1922_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						62.9662551879883,
+						-3.64513421058655,
+						80.7446517944336
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1922_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						48.1419372558594,
+						-3.68596363067627,
+						78.0363693237305
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1922_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						60.6624755859375,
+						-3.55105876922607,
+						84.6012420654297
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1050_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						56.7351226806641,
+						-2.41152048110962,
+						38.7153854370117
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_10_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						30.7599105834961,
+						-5.07870101928711,
+						91.3459548950195
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1007_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						38.9811325073242,
+						-5.21570682525635,
+						102.029991149902
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1007_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						44.5721702575684,
+						-4.75972843170166,
+						103.93278503418
+					],
+					"species_id": "trailpup"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 200.207947501683,
+				"hour": 8.00831790006734,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				185.683563232422,
+				0.10398331284523,
+				54.2730293273926
+			],
+			"position_xz": [
+				184.2,
+				52.6
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 0.100175805389881,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				185.683563232422,
+				54.2730293273926
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.991053521633148,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				184.199996948242,
+				52.5999984741211
+			],
+			"terrain_ground_y": 0.100175805389881,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 195.0,
+			"view_heading_xz": [
+				-0.258819043636322,
+				-0.965925812721252
+			],
+			"water_surface_y": null
+		},
+		{
+			"authored_id": "Kell",
+			"authored_source": "data/config/village_npcs.json",
+			"band_display_name": "",
+			"band_id": "meadows",
+			"biome_display_name": "Meadows",
+			"biome_id": "meadows",
+			"bytes": 630467,
+			"camera_fov_degrees": 70.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.7673921585083,
+			"camera_position": [
+				187.008972167969,
+				2.75695323944092,
+				59.2195281982422
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.965925514698029,
+					0.0,
+					-0.258818924427032
+				],
+				"basis_y": [
+					-0.0449434258043766,
+					0.984807252883911,
+					-0.167731165885925
+				],
+				"basis_z": [
+					0.254886716604233,
+					0.173647999763489,
+					0.951250314712524
+				],
+				"origin": [
+					185.683563232422,
+					1.85398328304291,
+					54.2730293273926
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.965925872325897,
+					-0.000000034099368662055,
+					-0.258819013834
+				],
+				"basis_y": [
+					-0.0449435077607632,
+					0.984807670116425,
+					-0.167731612920761
+				],
+				"basis_z": [
+					0.254886955022812,
+					0.173648551106453,
+					0.951251268386841
+				],
+				"origin": [
+					187.008972167969,
+					2.75695323944092,
+					59.2195281982422
+				]
+			},
+			"conversation_camera_active": false,
+			"conversation_camera_blend": 0.0,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {},
+			"debug_travel": true,
+			"destination_display_name": "Kell",
+			"destination_index": 1,
+			"dialogue_id": "spoke_traveller_storm_road",
+			"dialogue_portrait": "res://assets/ui/portraits/kell.png",
+			"dialogue_speaker": "Kell",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/gpu-arms/DLG1F-cand-High-c065/meadows__inventory__character__kell__dialogue.jpg",
+			"frame_id": "meadows__inventory__character__kell__dialogue",
+			"identity": "meadows__inventory__character__kell__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1922_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						55.993350982666,
+						-3.72860264778137,
+						83.0408477783203
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1922_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						62.9662551879883,
+						-3.64513421058655,
+						80.7446517944336
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1922_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						48.1419372558594,
+						-3.68596363067627,
+						78.0363693237305
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1922_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						60.6624755859375,
+						-3.55105876922607,
+						84.6012420654297
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1050_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						56.7351226806641,
+						-2.41152048110962,
+						38.7153854370117
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_10_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						30.7599105834961,
+						-5.07870101928711,
+						91.3459548950195
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1007_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						38.9811325073242,
+						-5.21570682525635,
+						102.029991149902
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1007_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						44.5721702575684,
+						-4.75972843170166,
+						103.93278503418
+					],
+					"species_id": "trailpup"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 200.207947501683,
+				"hour": 8.00831790006734,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				185.683563232422,
+				0.10398331284523,
+				54.2730293273926
+			],
+			"position_xz": [
+				184.2,
+				52.6
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 0.100175805389881,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				185.683563232422,
+				54.2730293273926
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.991053521633148,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				184.199996948242,
+				52.5999984741211
+			],
+			"terrain_ground_y": 0.100175805389881,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 195.0,
+			"view_heading_xz": [
+				-0.258819043636322,
+				-0.965925812721252
+			],
+			"water_surface_y": null
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"meadows__inventory__character__kell"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 2000.0,
+		"fov": 65.0,
+		"instance_id": 453672700115,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/meadows_playground.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"meadows__inventory__character__kell"
+	]
+}

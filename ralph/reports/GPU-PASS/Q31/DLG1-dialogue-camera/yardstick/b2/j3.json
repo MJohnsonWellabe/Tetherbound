@@ -1,0 +1,168 @@
+{
+ "sets": {
+  "Rr": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "All three frames on both sides show only the player's back on flat, evenly lit grass with no Kelm or Captain Veyra in view, and the castle wall carries smeared gold blob windows; the bright sky helps but there is no atmosphere and no subject to carry it."
+  },
+  "Lh": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped recipe text and labelled Craft/Leave prompts on a blue-grey translucent panel fit the UI direction, but the hint glyphs are still small and dim, only three recipes fit, and the world behind is a murky purple-brown with no light."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "On both sides the Nalia frame shows only the player on a pale slope, and both Nerissa frames point the camera into a dark noisy rock wall, so there is no speaker and no Tidewake water or falls in view."
+  },
+  "Wi": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Mira (brown hair), Tam (grey hair) and Oskar (dark hair) each match their portraits and face the camera in a warm village, but the flat midday light, thin shadows and toy-like houses fall short of Palworld/Valheim finish."
+  },
+  "Ox": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The open cyan water and pale dunes read as Tidewake, but on both sides Daro, Bex and Irva are tiny figures in a wide third-person shot, with no light, fog or depth grade to carry the scene."
+  },
+  "Qb": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "On both sides both Captain Marrow frames are filled by a flat blue banner with a gold lightning bolt and Marrow is not visible; only the Nysa frame shows its speaker under the purple storm canopy, and a child's head is cut off at the left edge there."
+  },
+  "Lf": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Oswin and Elder Maud over-the-shoulder frames have a purple storm sky, rain and readable speakers, but the Fenn frame is almost black with no speaker visible, and the moss and trunks are flat and low-detail."
+  },
+  "Gm": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's indigo wolf keeps its fur and lightning material through every pose, in line with the owner's Tanglevolt bar; A loses its material in faint mid and faint end, turning into a flat white body with black blotches, and B's faint end still squashes into the floor."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The grey-haired elder's expressive face, clear eyes and earthy green and brown outfit are at a shipping stylised-character finish that would sit beside Palworld's humans, though the empty dark stage shows nothing of the lighting."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider boss reads in most frames, but on both sides it is buried under a heavy multi-panel HUD, the telegraphs are flat magenta rings and wedges, the player's creature is barely visible, and on side A canopy or trunks black out i11, i13 and i15."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Frame every named dialogue on the speaker: a medium two-shot or over-the-shoulder within a few metres, with a line-of-sight check that pulls the camera in past banners, walls, creatures and canopy. This fixes Rr, Xd, Ox and Qb and the Fenn frame in Lf.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat magenta telegraph rings and wedges with grounded effects (dust, cracking earth, lightning arcs that end in an impact), cut the combat HUD down to a compact controller-first layout, and keep the camera out of foliage so the wild boss and the player's creature both stay visible in Uv.",
+   "kind": "scene"
+  },
+  {
+   "change": "Grade the scenes with Valheim-class light: directional key light with real shadows, atmospheric fog for depth and a storm or time-of-day grade, plus a fix for the smeared Cloudreach wall windows, so dialogue scenes stop looking flat and evenly lit.",
+   "kind": "scene"
+  }
+ ]
+}

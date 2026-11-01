@@ -1,0 +1,46 @@
+{
+ "Jx": {
+  "anchor": false,
+  "label": "CO12 nightburrow Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-nightburrow-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-nightburrow-cand-Medium.png"
+ },
+ "Le": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Qd": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Cj": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Hs": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Hf": {
+  "anchor": false,
+  "label": "CO12 nightburrow High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-nightburrow-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-nightburrow-ship-High.png"
+ },
+ "Wp": {
+  "anchor": false,
+  "label": "CO12 voltwig High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-voltwig-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-voltwig-ship-High.png"
+ },
+ "Rw": {
+  "anchor": false,
+  "label": "CO12 thundertunnel High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-thundertunnel-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-thundertunnel-cand-High.png"
+ }
+}

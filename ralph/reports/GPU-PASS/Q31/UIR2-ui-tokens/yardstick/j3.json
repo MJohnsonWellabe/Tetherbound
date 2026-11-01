@@ -1,0 +1,168 @@
+{
+ "sets": {
+  "Ad": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The HUD pieces are compact and on-palette, but seven separate boxes (team, quest, minimap, five-slot quick bar, hint row, prompt, vitals) frame a flat orange-lit interior with no Valheim-class light shafts or grade, so it reads below Palworld's HUD-over-world finish."
+  },
+  "Yt": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The clean, appealing grandpa face, readable eyes and earthy olive/cream outfit carry it as a finished stylised villager, though the soft toon face leans more cartoon than the naturalistic creature bar."
+  },
+  "Rz": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's fur boar is near the naturalistic bar but has noisy yellow blotches and floats in faint mid, and B's smooth terracotta clay pig with pasted moss reads as a toy; both stand below the 1.80 m trainer's head, which breaks the art direction's scale rule."
+  },
+  "Hx": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large headings and white Craft/Leave hints are close to a shipping panel, but its salmon recipe sublines are still small and B's truncated recipe lines and tiny grey 'Craft: A / Enter' text sink it, all over a dim rainy murk."
+  },
+  "Ss": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The illustrated chapter banner and filled Build cards help, but the Players and Quest Log panels are still mostly empty navy with tiny grey lines, below Palworld's dense, iconised menu finish."
+  },
+  "Ax": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Small grey-on-navy rows, bare W/S/A/D and 1-5 key labels, and a Fighting section cut off at the panel bottom make it read as a debug settings sheet rather than a finished game menu."
+  },
+  "Ex": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing Stormcapra matches the owner bar, but A's faint mid crumples into a twisted mesh and B's faint frames stretch the horns into black hoses over a legless white blob, so the poses break the read."
+  },
+  "Yd": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bold orange ingredient counts and a teal Leave hint read well, but the craft action is a grey 'Missing materials' slab and the panel sits over a flat, underlit meadow, short of Palworld's punchy finish."
+  },
+  "Wz": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The tab state is now correct and the Tidewake banner is scenic, but the map itself is a blurry blue field with one fuzzy green island and bare gold lines, with no landmarks, so it does not feel like a shipping map."
+  },
+  "Zd": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted chapter banner, visible world edges and the Terrapup preview add scenic connection, but the body is still thin-bordered navy boxes of small grey text with weak hierarchy."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Do a menu-wide type and density pass: raise body and recipe text about 1.3x, put primary hints in pale or teal text with controller glyphs instead of grey or literal key labels, stop truncation and clipped sections, and fill empty Players/Quests areas with icons, portraits or illustrated cards (Hx, Ax, Ss, Zd, Yd).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature faint and hurt deformation and scale: no horn or limb stretching in faint frames (Ex B, Ex A faint mid), keep faint poses on the ground (Rz A), and scale creatures to stand taller than the 1.80 m trainer (Rz).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the clay-toy boar (Rz B) with a naturalistic fur-and-moss model at the owner creature bar, and replace the blurry map blob (Wz) with an illustrated region map with landmarks.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+[
+    {
+        "label":  "CRAFTR3B P2-095 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\CRAFTR3B\\sides\\P2-095-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CRAFTR3B\\sides\\P2-095-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: craft recipe text. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Long recipe names and material preview lines are clipped in the crafting list"
+                    ]
+    }
+]

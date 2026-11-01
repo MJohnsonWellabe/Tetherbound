@@ -1,0 +1,21 @@
+{
+ "dlg2-High": {
+  "meadows__inventory__trainer__old_champion_bram__dialogue": "exact",
+  "meadows__inventory__trainer__stronghold_courtyard__dialogue": "exact",
+  "meadows__inventory__trainer__stronghold_elite__dialogue": "exact",
+  "tidewake__inventory__trainer__water_trainer_daro__dialogue": "biome-alias",
+  "tidewake__inventory__trainer__water_trainer_bex__dialogue": "biome-alias",
+  "tidewake__inventory__trainer__water_trainer_irva__dialogue": "biome-alias",
+  "tidewake__inventory__character__water_nalia__dialogue": "biome-alias",
+  "tidewake__inventory__character__water_nerissa__dialogue": "biome-alias",
+  "tidewake__inventory__trainer__water_trainer_nerissa__dialogue": "biome-alias",
+  "cloudreach__inventory__character__trader_kelm__dialogue": "exact",
+  "cloudreach__inventory__character__captain_veyra__dialogue": "exact",
+  "cloudreach__inventory__character__captain_veyra__defeated__dialogue": "exact",
+  "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue": "exact",
+  "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue": "exact",
+  "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue": "exact",
+  "stormwood__inventory__character__captain_marrow__dialogue": "exact",
+  "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue": "exact"
+ }
+}

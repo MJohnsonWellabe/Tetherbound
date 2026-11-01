@@ -1,0 +1,286 @@
+{
+ "sets": {
+  "Jn": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic dark wolf has convincing fur and a good silhouette, but its near-black value melts into the dark stage with no rim light, and a flat grey stage gives no Valheim-class light to judge."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat magenta ground rings for telegraphs, a muddy brown floor with no purple storm sky, a player creature you can't find at thumbnail size, and HUD panels covering a third of each frame sank it; side A also has the camera buried in canopy in i11, i13 and i15."
+  },
+  "Gp": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The mossy hare reads instantly, with a clear ear silhouette and believable fur-plus-moss material that would sit next to a Palworld creature; only the hopping hit react looks off."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue spotted water dragon has a strong long silhouette and clear scale over the trainer, but the material is a flat, evenly lit blue with no rim, and in faint end the crest stays erect and the head level, so it reads as lying in wait rather than knocked out."
+  },
+  "Iu": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal otter mount is the right scale and the ridden pose works, but its smooth, almost untextured dark teal skin falls short of the fur detail on the owner bar, and in hit react the front half rears clear of the floor."
+  },
+  "Fq": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Tanglevolt is at the owner bar, with a wolf silhouette, violet storm fur and a clear knocked-out faint end; the hit react, a full rear onto the hind legs, is oversized for a flinch."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ornate blue-and-copper seahorse-dragon has a memorable, upright silhouette, but in A's faint end the fins stay spiked into a tangled heap, and the busy fin detail turns to noise at 30%."
+  },
+  "Mg": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The grandpa villager has a warm, readable face and eyes and an earthy moss-green and brown outfit that fits the Meadows palette, though his soft animated-film styling is a notch more cartoon than the naturalistic creatures."
+  },
+  "Vw": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is a near-photoreal plain coyote with no creature identity (no leaf, moss or elemental accent like the colour board), and its hit react is the standing pose with the head barely dipped."
+  },
+  "Dy": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry, smeared ground textures, flat featureless distant hills and a stone wall with stretched texture (row 1) sank both sides; B's site-specific aftermaths (broken cart, opened cage, toppled fence, smoke plume, fallen banner) read far better than A's, where the Team Tether banners stay up after the win."
+  },
+  "Cy": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same blue water dragon: strong silhouette and scale, but evenly lit flat blue material, an erect crest in faint end, and a rider so small on the back in the ridden frame that the travel role barely reads."
+  },
+  "Ok": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Stormcapra's fleece and horns are at the owner bar in standing, but on B the faint mid and faint end bodies float well above their shadows, the faint end flips upside down in mid-air, and on A the hit react is identical to standing and the faint end crumples the horns into the body."
+  },
+  "Xb": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-violet finned serpent has an appealing flowing silhouette, but its hit react launches the whole body into the air, and its height barely clears the trainer."
+  },
+  "Pr": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spotted blue toad is a good naturalistic model with a clear face, eye and scale, but all four frames are nearly the same crouch, and in faint end the head is still up and the body still on its legs."
+  },
+  "Lz": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The black-violet raven is a near-black mass with no rim light, so face, beak and eye are lost at 30%, it stands only about trainer height, and the hit react is a small lean."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fights (Kv): pull the combat camera out of the canopy (A i11/i13/i15) or fade occluding trunks and leaves, replace the flat magenta ground rings with a real-object telegraph (crackling lightning or webbing on the ground with an impact burst), shrink and lower the HUD's opacity so it stops covering the fight, and add the purple storm sky and rim light so both fighters separate from the brown floor.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature hurt and faint poses across the roster: keep hit reacts grounded and visible (Xb, Iu, Gp lift off the floor; Vw, Ok A, Lz barely move), make faint ends slump with head down and crests relaxed (Pr, Vv/Cy, Hd A), snap fainted bodies to their shadow (Ok B), and add a rim light so dark creatures (Jn, Lz) separate from the backdrop.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows trainer sites (Dy): use B's site-specific aftermath set (struck banners, broken props, smoke, freed captives) everywhere, and replace the smeared low-resolution ground and wall textures with sharper grass, dirt and stone materials with clumped ground cover.",
+   "kind": "scene"
+  }
+ ]
+}

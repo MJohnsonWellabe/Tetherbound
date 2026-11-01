@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Mx": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Muddy brown-black forest floor, no purple storm sky or lightning grade, flat magenta ground rings for telegraphs and heavy HUD panels sink it; on A canopy/trunks black out i11, i13 and i15 entirely, while B keeps the spider in view but the player's creature never reads."
+  },
+  "Gt": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Distinct lines and portraits plus purple sky and glowing mushrooms help, but the Captain Marrow frame is filled by a flat blue lightning-bolt banner with no speaker visible and the characters read toylike against coarse terrain."
+  },
+  "Lg": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Camera jammed against blurry untextured rock slabs (Garrick frame: half the view is a grey wall and Garrick is absent, worse on B with the player closer) sinks it despite a pleasant meadow sky behind."
+  },
+  "Bt": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra standing model matches the owner style bar with real fleece and horn mass and good scale over the trainer; faint poses on both sides distort (A faint mid splayed and twisted, B faint mid/end collapse into a legless fleece blob with stretched flat horns)."
+  },
+  "Qa": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Speakers Tavi and Rusk now stand clear of the player, but the brown lumpy rock and a huge dark trunk filling the Rusk frame lack Cloudreach's pale stratified stone and bright-sky light, so the finish reads below Palworld."
+  },
+  "Pv": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Open cyan sea and pale dunes carry the Tidewake palette, but a flat featureless sand-coloured wall fills the Iona frame and the player's shoulder still cuts into Rowan (and into Adair's legs on A), with flat unshaded lighting."
+  },
+  "Jg": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's magma-glow seams give the plated boar a clear identity and good scale, but on both sides the material darkens to near-black in faint mid/end (A faint end goes almost pure black), killing surface read below the style bar."
+  },
+  "Jf": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Old Bram reads well in a sunny meadow, but Warder Solene and Keeper Hald frames show only a tiny distant player, bare dirt and a blurred dark foreground mass with no speaker, so the dialogue staging fails."
+  },
+  "Tw": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elderly villager has an appealing readable face, clear eyes and a meadows-green/brown palette that fits the key art, though the soft cartoon face is a step more stylised than the naturalistic bar."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A large white feathered creature and foliage fill the Corin frame, Kell is only a tiny distant figure, and Captain Halder is hidden behind the player beside an oxblood banner on a friendly post (B adds a dark creature mass at the right edge)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera solver: frame the named speaker over the player's shoulder with occlusion tests that pull in or swing the camera when rocks, trunks, banners or creatures sit between lens and speaker (fixes Lg, Jf, Uv, Pv, Gt frame 3).",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight readability: fade/cull canopy and trunks between camera and fighters, add the purple storm sky grade and rim light, and replace flat magenta ground rings with real stone/lightning telegraph effects (Mx).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix faint-pose skinning and material darkening on creatures (Stormcapra horn/leg collapse, stone boar going black) so hurt/faint poses stay grounded and lit (Bt, Jg).",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+[
+    {
+        "item":  "P2-041",
+        "preset":  "Medium",
+        "biome":  "stormwood",
+        "board_row":  "F41#17",
+        "subject":  "Crown Arch",
+        "defect":  "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it",
+        "frames":  [
+                       "stormwood__landmark__crown_arch__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-041",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#17",
+        "subject":  "Crown Arch",
+        "defect":  "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it",
+        "frames":  [
+                       "stormwood__landmark__crown_arch__day__close"
+                   ]
+    }
+]

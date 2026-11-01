@@ -1,0 +1,185 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.7461,
+  "least_squares_slope": 0.5894,
+  "method": "linear",
+  "slope": 0.5894,
+  "intercept": 3.3801,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.702,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1A": {
+   "measured": 6.933,
+   "reference": 7.53,
+   "mapped": 7.466,
+   "residual": 0.064
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.933,
+   "reference": 7.47,
+   "mapped": 7.466,
+   "residual": 0.004
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.333,
+   "reference": 6.75,
+   "mapped": 6.523,
+   "residual": 0.227
+  },
+  "f04_6_r22:control": {
+   "measured": 4.6,
+   "reference": 5.83,
+   "mapped": 6.091,
+   "residual": -0.261
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.0,
+   "reference": 6.53,
+   "mapped": 5.738,
+   "residual": 0.792
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.2,
+   "reference": 4.0,
+   "mapped": 5.266,
+   "residual": -1.266
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.333,
+   "reference": 6.47,
+   "mapped": 7.113,
+   "residual": -0.643
+  },
+  "f36_0_gap:C6B": {
+   "measured": 4.133,
+   "reference": 6.9,
+   "mapped": 5.816,
+   "residual": 1.084
+  }
+ },
+ "candidates": {
+  "R1 water_tidecoil High one-sided | water_tidecoil-High": {
+   "measured_mean": 6.867,
+   "mapped_mean": 7.43,
+   "mapped_judges": [
+    7.51,
+    7.27,
+    7.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R1 ashtusk High one-sided | ashtusk-High": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.68,
+   "mapped_judges": [
+    6.68,
+    6.68,
+    6.68
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R1 water_riptusk High one-sided | water_riptusk-High": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.72,
+   "mapped_judges": [
+    6.8,
+    6.68,
+    6.68
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R1 water_cannonback High one-sided | water_cannonback-High": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.72,
+   "mapped_judges": [
+    6.68,
+    6.56,
+    6.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R1 water_sirenseal High one-sided | water_sirenseal-High": {
+   "measured_mean": 6.6,
+   "mapped_mean": 7.27,
+   "mapped_judges": [
+    7.27,
+    7.15,
+    7.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R1 terrapup High one-sided | terrapup-High": {
+   "measured_mean": 6.733,
+   "mapped_mean": 7.35,
+   "mapped_judges": [
+    7.51,
+    7.39,
+    7.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R1 water_aquaryn High one-sided | water_aquaryn-High": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.31,
+   "mapped_judges": [
+    7.39,
+    7.15,
+    7.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R1 burrowback High one-sided | burrowback-High": {
+   "measured_mean": 6.433,
+   "mapped_mean": 7.17,
+   "mapped_judges": [
+    7.27,
+    7.21,
+    7.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R1 brooktail High one-sided | brooktail-High": {
+   "measured_mean": 5.867,
+   "mapped_mean": 6.84,
+   "mapped_judges": [
+    6.56,
+    7.03,
+    6.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

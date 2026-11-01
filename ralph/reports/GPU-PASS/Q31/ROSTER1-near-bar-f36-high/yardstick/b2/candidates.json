@@ -1,0 +1,101 @@
+[
+    {
+        "label":  "R1 water_riptusk High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_riptusk-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_riptusk-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    },
+    {
+        "label":  "R1 water_tidecoil High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_tidecoil-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_tidecoil-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    },
+    {
+        "label":  "R1 water_sirenseal High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_sirenseal-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_sirenseal-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    },
+    {
+        "label":  "R1 burrowback High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\burrowback-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\burrowback-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    },
+    {
+        "label":  "R1 ashtusk High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\ashtusk-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\ashtusk-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    },
+    {
+        "label":  "R1 water_aquaryn High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_aquaryn-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_aquaryn-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    },
+    {
+        "label":  "R1 water_cannonback High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_cannonback-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_cannonback-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    },
+    {
+        "label":  "R1 brooktail High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\brooktail-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\brooktail-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    },
+    {
+        "label":  "R1 terrapup High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\terrapup-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1\\sides\\terrapup-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    }
+]

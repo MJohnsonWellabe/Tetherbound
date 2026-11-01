@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "An": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Over-the-shoulder framing now puts Daro, Bex and Irva beside the panel and the cyan water and pale dunes fit the chapter, but flat midday light, sparse props and toy-like character finish sit below Palworld density and Valheim atmosphere."
+  },
+  "Tq": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram's wool, horn and blue-crystal identity and its height above the ruler are on the owner's style bar, but faint poses (B collapsing into a flattened, splayed shape; A's head lost under the horn) sink the finish."
+  },
+  "Yv": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Distinct portraits and lines plus the purple storm sky and glowing blue mushrooms carry Wen and Senn, but the Captain Marrow frame shows only a tiny player under a flat brown overhead slab, with no speaker and no atmosphere."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a strong grounded silhouette and stands above the trainer, but hit react barely differs from standing, the faint-mid body hovers above a detached shadow, and the faint-end material goes nearly black in both sides."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat brown overhead slab fills the top half of both Captain Marrow frames and he isn't visible at all, so only the Officer Nysa frame reads as a staged conversation."
+  },
+  "Sz": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Old Bram in the warm meadow reads as the key art's world, but the stronghold frames sink under a heavy single orange-brown grade that flattens Warder Solene and Keeper Hald into the walls."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Kelm and Captain Veyra with the winged lion behind are clearly staged under a bright Cloudreach sky, but the bare, flat brown dirt plaza and plain midday light read as a blockout next to Palworld."
+  },
+  "Wp": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Captain Nerissa is visible in the lantern-lit stone chamber, but the Resident Nalia frame shows only the player on a featureless green slope with a wedge of sky and no speaker, and the chamber is dim and empty."
+  },
+  "Zi": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The old villager's expressive eyes, white hair and green-moss-brown outfit are appealing and fit the palette, but the glossy, toy-like stylised finish is a notch apart from the naturalistic world and creatures."
+  },
+  "Wi": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The golden spider reads against the dark floor, but flat magenta ring and chevron telegraphs, an invisible player creature, a muddy single value, a large HUD and (in B) trunk and canopy filling frames i12-i15 sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera rule: always frame the named speaker inside the view by placing the camera over the shoulder and clearing overhead or foreground geometry (Kr Marrow slab, Yv Marrow, Wp Nalia). Apply the same occlusion fade/pull-in to combat cameras so trunks and canopy never fill the frame (Wi B i12-i15).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace flat magenta ring and slab telegraphs with real ground-crack, dust and lightning effects that land with an impact, and make the player's creature readable in Stormwood fights with a rim light and a value lift.",
+   "kind": "scene"
+  },
+  {
+   "change": "Lighting and grade pass on dialogue locations: break the single orange stronghold grade and dim Tidewake chamber with key, rim and fog depth, and dress the bare Cloudreach plaza and Tidewake slope with authored props and ground cover.",
+   "kind": "scene"
+  }
+ ]
+}

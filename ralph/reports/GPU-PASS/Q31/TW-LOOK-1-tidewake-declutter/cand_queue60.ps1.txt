@@ -1,0 +1,115 @@
+# Queue 60 (coordinator LANE ARMS, updated 31 Oct): jobs 16, 17, 18 after queue 59, before the hands-on jobs. High first.
+# Local commits (not pushed), all on main a41e1b30e:
+#   tree A  c4806f1ab = tb/world-2-on 1bfc5d095 (WD2) + tb/co-f36-9-on e8da58fe1 (creatures one-tree), EVERY lane flag OFF
+#           (WD2's seven config files from 432cfc429; creature flags ship off). One import serves jobs 16 and 17.
+#   C1      21a2b9c61 = the same merge with WD2's flags ON (source of the WD2 candidate files).
+#   TW ctl  894bbc39b = tb/tidewake-1-on 29ca0d23b with beach_scene_candidate + beach_declutter_candidate back in sections_off.
+# TW-LOOK conflicts with WD2 in scripts/world/water_landmark_models.gd, so job 18 has its own tree (29ca0d23b) and import.
+#  16 CREATURES ONE-TREE: capture_f36_poses --whole-body --context, one run per species, mode (--candidate or plain) per the lane's table.
+#     ctl = tree A; each arm flips ONE flag (two files are prepared copies of the pose JSON built on this tree's version).
+#  17 WD2: job.json frames of 10 items, the identical command (same --subset list) on both arms. ctl = tree A, cand = WD2 files from C1.
+#  18 TW-LOOK-1: phase2_capture_locations, 12 stands, day approach + close, one boot per arm. ctl = TW ctl file, cand = 29ca0d23b as-is.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $crA = "D:\tb-gpu-wt-crA"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+$arm = "D:\tb-gpu-runs\tools\arm_run.ps1"
+$py = "C:\Users\mattj\AppData\Local\Programs\Python\Python312\python.exe"
+$treeA = "c4806f1ab93f36cc6099f140fdbb84ab3924037d"
+$c1 = "21a2b9c61e515344b22f178dd26f8ab48ae5a0eb"
+$tw = "29ca0d23b45159a09ffb4ffa9e82716f9c61112b"
+$twctl = "894bbc39b6ef226f5a250b9db0e1f5114866ad1e"
+$mark = "D:\tb-gpu-runs\crA_imported_sha.txt"
+function EnsureImported($sha, $tag) {
+    CheckoutCrA $sha
+    if ((Test-Path $mark) -and ((Get-Content $mark -Raw).Trim() -eq $sha)) { "  crA already imported at $($sha.Substring(0,9))" }
+    else { Import $crA $tag; Set-Content -Path $mark -Value $sha -Encoding ascii }
+}
+"== queue60 start $(Get-Date -Format 'dd MMM HH:mm')"
+
+# ---- 16 CREATURES ONE-TREE ----
+$cand = @("sirenseal", "water_sirenseal", "ashtusk", "thundertunnel", "shadelet", "skyrill", "voltarach", "cragclaw", "water_cragclaw")
+function Mode($sp) { if ($cand -contains $sp) { , @("--candidate") } else { , @() } }
+$scale = "data/config/creature_scale_flags.json"; $coat = "data/config/creature_coat_flags.json"; $clip = "data/config/creature_clip_flags.json"
+$co16 = @(
+    @("ctl", "", "", @("sirenseal", "water_sirenseal", "duskhush", "brooktail", "cindercub", "ashtusk", "thundertunnel", "shadelet", "stormtrail", "nightburrow", "trailpup", "skyrill", "voltarach", "cragclaw", "water_cragclaw", "sparkit", "reedwing", "pipwing", "mudsnout", "paddlenewt", "riftfrill")),
+    @("f1crag", "file", "D:\tb-gpu-runs\flipfiles\co16_crag.json", @("cragclaw", "water_cragclaw", "skyrill")),
+    @("f2siren", "file", "D:\tb-gpu-runs\flipfiles\co16_siren.json", @("sirenseal", "water_sirenseal")),
+    @("f3tall", "key", "$scale|flags.creatures_f36_taller_than_trainer.enabled", @("duskhush", "brooktail")),
+    @("f4coat", "key", "$coat|flags.creatures_f36_coat_lift.enabled", @("cindercub", "duskhush", "ashtusk", "thundertunnel")),
+    @("f5coat2", "key", "$coat|flags.creatures_f36_coat_lift_2.enabled", @("shadelet", "stormtrail", "nightburrow")),
+    @("f6hit", "key", "$clip|flags.creatures_f36_grounded_hit_remakes.enabled", @("cindercub", "trailpup")),
+    @("f7matte", "key", "$coat|flags.creatures_f36_matte_finish.enabled", @("skyrill", "voltarach", "cragclaw", "sparkit", "reedwing")),
+    @("f8tall2", "key", "$scale|flags.creatures_f36_taller_than_trainer_2.enabled", @("pipwing", "sparkit")),
+    @("f9tall3", "key", "$scale|flags.creatures_f36_taller_than_trainer_3.enabled", @("mudsnout", "paddlenewt", "riftfrill")))
+if (-not (Test-Path "$out\CO16.done")) {
+    Gate "CO16"
+    EnsureImported $treeA "crA-q60A"
+    foreach ($a in $co16) {
+        Gate "CO16 $($a[0])"
+        CleanCrA $treeA
+        if ($a[1] -eq "file") {
+            Copy-Item $a[2] (Join-Path $crA "data\creatures\f36_pose_candidates.json") -Force
+            $h = (Get-FileHash (Join-Path $crA "data\creatures\f36_pose_candidates.json") -Algorithm SHA256).Hash.Substring(0, 12).ToLower()
+            "  $($a[0]): f36 json <- $($a[2]) (sha256 $h)"; "$($a[0]) file $($a[2]) sha256 $h" | Add-Content "$out\CO16-flips.txt"
+        } elseif ($a[1] -eq "key") {
+            $f, $k = $a[2].Split("|")
+            $o = & $py "D:\tb-gpu-runs\tools\json_flip.py" (Join-Path $crA ($f -replace '/', '\')) $k "true"
+            "  $($a[0]): $o"; "$($a[0]) $o" | Add-Content "$out\CO16-flips.txt"
+            if ($LASTEXITCODE -ne 0) { "FLIP FAILED for $($a[0]); skipping this arm"; continue }
+        }
+        # One boot per mode (coordinator throughput note): all --candidate species in one launch, all plain species in another; each
+        # species' frames are copied to its own folder, and any species missing from a group run is re-shot on its own.
+        $todo = @($a[3] | Where-Object { -not (Test-Path "$out\CO16-$($a[0])-High-$_\frames\$_-faint-100.png") })
+        foreach ($grp in @(@("cand", @($todo | Where-Object { $cand -contains $_ })), @("plain", @($todo | Where-Object { $cand -notcontains $_ })))) {
+            $mode, $list = $grp[0], @($grp[1]); if ($list.Count -eq 0) { continue }
+            $gdir = "CO16-$($a[0])-High-_$mode"
+            Pose $gdir "High" ($list -join ",") $(if ($mode -eq "cand") { , @("--candidate") } else { , @() }) $treeA
+            foreach ($sp in $list) {
+                $files = @(Get-ChildItem "$out\$gdir\frames" -File -Filter "$sp-*" -ErrorAction SilentlyContinue | Where-Object { $_.Name -match "^$([regex]::Escape($sp))-(hit|faint|ride|swim|fly_grip)-\d+\.png$|^$([regex]::Escape($sp))-receipt\.json$" })
+                if ($files.Count -gt 0) { New-Item -ItemType Directory -Force "$out\CO16-$($a[0])-High-$sp\frames" | Out-Null; $files | Copy-Item -Destination "$out\CO16-$($a[0])-High-$sp\frames\" -Force }
+                if (-not (Test-Path "$out\CO16-$($a[0])-High-$sp\frames\$sp-faint-100.png")) { "  $($a[0]) $sp missing from the group run; shooting alone"; Pose "CO16-$($a[0])-High-$sp" "High" $sp (Mode $sp) $treeA }
+            }
+        }
+    }
+    New-Item -ItemType File -Force "$out\CO16.done" | Out-Null
+    "CO16 done $(Get-Date -Format HH:mm)"
+}
+
+# ---- 17 WD2 ----
+if (-not (Test-Path "D:\tb-gpu-runs\arms\WD2\_done")) {
+    $onFiles = @("data/config/bands/band1_lower_meadows/props.json", "data/config/crown_arch_hero.json", "data/config/meshy_camp_props.json",
+        "data/config/pickup_grounding.json", "data/config/stormwood_glass_field.json", "data/config/stormwood_glass_sink.json",
+        "data/config/stormwood_harvests.json") | ForEach-Object { "@$($c1):$_" }
+    & $arm -Job WD2 -Items "P2-041", "P2-070", "P2-043", "P2-046", "P2-045", "P2-033", "P2-035", "P2-115", "P2-116", "P2-054" `
+        -Arms "ctl=$treeA", ("cand=$treeA|" + ($onFiles -join "|"))
+}
+
+# ---- 18 TW-LOOK-1 ----
+if (-not (Test-Path "$out\TWLOOK.done")) {
+    Gate "TWLOOK"
+    EnsureImported $tw "crA-q60TW"
+    $subs = @("water__gull_rest__19", "water__gull_rest__20", "water__salt_crown__11", "water__salt_crown__12", "water__tidal_cradle__09", "water__tidal_cradle__10",
+        "water__drowned_garden__21", "water__drowned_garden__22", "water__lantern_cove__17", "water__lantern_cove__18", "water__first_shore__01", "water__first_shore__02")
+    foreach ($a in @(@("ctl", "@$($twctl):data/config/tidewake_look.json"), @("cand", ""))) {
+        $tag = $a[0]; $dest = "$out\TWLOOK-$tag-High"
+        if (Test-Path "$dest\_done") { continue }
+        for ($try = 1; $try -le 2; $try++) {
+            Gate "TWLOOK $tag"
+            CleanCrA $tw
+            if ($a[1]) { $src, $rp = $a[1].Substring(1).Split(":", 2); $o = & $py "D:\tb-gpu-runs\tools\json_flip.py" --from $src $rp $crA; "  $tag : $o" }
+            $rel = "ralph/reports/VISUAL/phase2/tidewake/gpu-arms/TWLOOK-$tag-High"; $abs = Join-Path $crA ($rel -replace '/', '\')
+            if (Test-Path $abs) { cmd /c "rmdir /s /q `"$abs`"" }
+            if (Test-Path $dest) { if ($try -gt 1) { Move-Item $dest "$dest.try$($try - 1)" -Force -ErrorAction SilentlyContinue } else { Remove-Item $dest -Recurse -Force } }
+            $ua = @("--biome=water", "--preset=High", "--source-commit=$tw", "--times=day", "--views=approach,close", "--seed=2042", "--output=res://$rel") + @($subs | ForEach-Object { "--subset=$_" })
+            $r = & $run -Preset "High" -Script "res://tools/phase2_capture_locations.gd" -OutDir $dest -Resolution "1920x1080" -ProjectPath $crA -GodotArgs @("--fullscreen") -UserArgs $ua
+            if (Test-Path $abs) { New-Item -ItemType Directory -Force "$dest\frames" | Out-Null; Move-Item "$abs\*" "$dest\frames\" -Force; cmd /c "rmdir /s /q `"$abs`"" }
+            $n = @(Get-ChildItem "$dest\frames" -File -Include *.jpg, *.png -Recurse -ErrorAction SilentlyContinue).Count
+            "  TWLOOK $tag try=$try $r images=$n"
+            if ($n -gt 0) { New-Item -ItemType File -Force "$dest\_done" | Out-Null; break }
+        }
+    }
+    New-Item -ItemType File -Force "$out\TWLOOK.done" | Out-Null
+    "TWLOOK done $(Get-Date -Format HH:mm)"
+}
+"queue60 done $(Get-Date -Format 'dd MMM HH:mm')"

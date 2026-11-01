@@ -1,0 +1,104 @@
+{
+ "sets": {
+  "Dp": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing Stormcapra-style ram matches the owner style bar with readable fleece, horns and blue accents, but on a flat grey stage with no world light it cannot carry Palworld/Valheim finish; A's faint frames twist into an unreadable knot (body appears rolled with legs and horns crossed), while B's faint reads as a collapse but the legs vanish into a fleece blob with horns lying off the body."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped recipe lines and gold ingredient rows fix legibility, but only three oversized list rows fit, the Craft/Leave hints are small white text with tiny keyboard-style glyphs rather than teal controller prompts, and the dark rainy world behind is murky and flat; A's tiny truncated sub-lines ('3 St...') and grey 'Craft: A / Enter' hint sink it."
+  },
+  "It": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's boar has naturalistic mottled fur close to the style bar but a noisy gold-speckle pattern and a faint-mid frame where the body floats above its shadow; B reads as a smooth terracotta piggy-bank with pasted green moss blobs, off the naturalistic style bar; both stand only about trainer height, not taller."
+  },
+  "Dh": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The craft panel is clean and on-direction (blue-grey translucent panel, pale borders, gold/orange ingredient rows, teal Leave hint) with every recipe and material line fitting, but list sub-text is small for a 7-inch screen, the greyed 'Missing materials' button is low-contrast, and the meadow behind is dim and blocky."
+  },
+  "Fc": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same result as Dh: the panel is legible, with no clipped recipe or material lines and good gold/teal hierarchy, but the small list sub-text, the low-contrast disabled craft button and the murky, low-detail meadow backdrop keep it below shipping finish."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Grandpa Elias villager matches the dialogue-board identity (white hair and beard, green vest and scarf, warm earthy palette) with a readable face and clear full-body silhouette, but he is rendered in a soft cartoon-film style with oversized eyes, a step away from the naturalistic stylised-realism direction, and is lit flat against a black void with no world atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Bring creature faint/hit animations to grounded, readable poses: keep legs and horns attached and visible, keep the body on its contact shadow (It A faint mid floats), and avoid the rolled or knotted end frames seen in Dp A; also scale creatures so they clearly stand taller than the 1.80 m trainer (It).",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-texture the boar (It B) with naturalistic fur and moss material in place of the smooth clay-and-blob shader, aiming for the owner style bar's fur/plate detail.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Finish the craft UI pass: use compact rows so 5-6 recipes fit with wrapped sub-lines (B's text size, A's density), add teal controller-first Craft/Leave prompts with a strong primary button, and raise list sub-text size and the contrast of the disabled button.",
+   "kind": "scene"
+  }
+ ]
+}

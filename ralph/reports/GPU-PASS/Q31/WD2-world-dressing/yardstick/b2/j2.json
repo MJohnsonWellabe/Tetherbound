@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Nk": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm grass, oak canopy and blue distance carry the Meadows mood, but the camp props sit in a jumble of barrels, crates, fox, rabbit and a clipping shell-rock with flat noon light and no grouping, so nothing reads as an authored Palworld-style base."
+  },
+  "Wq": {
+   "A": {
+    "bar_a": 2.4,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky and rain set the Stormwood mood, but the landmark is still a hard terrain lip over a flat featureless plane; B's stone ring of glass spikes marks the spot yet reads as a placed planter, not a sunken glass basin."
+  },
+  "Io": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {
+     "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Glowing mushrooms, black pool and big trunks give atmosphere, but the glass spikes (barely present in A, taller in B) still sit on a flat dark slab with no cracked or rooted base, and the frame is murky with little rim light."
+  },
+  "Sd": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's mottled black-gold scales are naturalistic but noisy at small size and the ruler is hidden in three frames; B's bold yellow bands read instantly but look plasticky, and its faint-mid and faint-end poses float the body upright in the air above its shadow."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder with a clear face, eyes and earthy green-brown palette that fits the villager family, but the soft big-eyed animated-film face leans more cartoon than the stylised-realism key art and creature bar."
+  },
+  "Ww": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Close to the owner's Stormcapra bar with real wool, curled horns and good scale over the trainer, and A's hit-react rear reads well; B's faint frames smear and flatten the mesh into a distorted white-black slab, and both sides fall below Palworld finish on stage lighting."
+  },
+  "Yo": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing finally read as a built wall, but the infill is still a flat bright plaster card with no weathering, and a lone panel on open grass beside a low-poly rock does not feel like a lived-in homestead."
+  },
+  "Xk": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's blue crystal clusters and glowing teal moss carry Stormwood glass and glow cues, but they sit small on an endless uniform moss carpet; B's plain brown boulders with stray shards and a flat green moss blob read as generic stone and foliage."
+  },
+  "Eo": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Yellow single-cap speed mushroom versus orange paired wild mushroom now separate clearly (bigger and clearer in B), but the Cloudreach setting is flat mid-green grass and blocky brown rock with no pale stratified stone or sky depth."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give the Stormwood glass subjects real authored geometry: a sunken, rim-marked Glass Sink basin with visible glass floor instead of a terrain lip over a flat plane, glass spikes rooted in cracked rock bases, and crystal-rich harvest nodes instead of boulders with stray shards.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix creature faint and hurt animations so bodies stay grounded and skinned (Sd B snake floating upright, Ww B Stormcapra mesh smearing), and keep the 1.80 m ruler visible in every frame.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Lighting and staging pass: stronger key and rim light with grounding shadows, broken-up ground cover instead of uniform moss and grass carpets, and grouped, spaced camp props with weathered materials on walls and props.",
+   "kind": "scene"
+  }
+ ]
+}

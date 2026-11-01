@@ -1,0 +1,76 @@
+{
+ "Pc": {
+  "anchor": false,
+  "label": "CO16 f1crag-water_cragclaw High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-water_cragclaw-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-water_cragclaw-ship-High.png"
+ },
+ "Rw": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Nf": {
+  "anchor": false,
+  "label": "CO16 f9tall3-mudsnout High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f9tall3-mudsnout-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f9tall3-mudsnout-ship-High.png"
+ },
+ "Ai": {
+  "anchor": false,
+  "label": "CO16 f7matte-cragclaw High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-cragclaw-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-cragclaw-ship-High.png"
+ },
+ "Cl": {
+  "anchor": false,
+  "label": "CO16 f3tall-brooktail High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f3tall-brooktail-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f3tall-brooktail-ship-High.png"
+ },
+ "Bm": {
+  "anchor": false,
+  "label": "CO16 f4coat-cindercub High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f4coat-cindercub-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f4coat-cindercub-cand-High.png"
+ },
+ "Rd": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Pw": {
+  "anchor": false,
+  "label": "CO16 f1crag-skyrill High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-skyrill-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-skyrill-cand-High.png"
+ },
+ "Xw": {
+  "anchor": false,
+  "label": "CO16 f7matte-voltarach High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-voltarach-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-voltarach-cand-High.png"
+ },
+ "Af": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ },
+ "Cw": {
+  "anchor": false,
+  "label": "CO16 f8tall2-pipwing High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f8tall2-pipwing-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f8tall2-pipwing-ship-High.png"
+ },
+ "Dm": {
+  "anchor": false,
+  "label": "CO16 f3tall-duskhush High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f3tall-duskhush-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f3tall-duskhush-ship-High.png"
+ },
+ "Le": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}

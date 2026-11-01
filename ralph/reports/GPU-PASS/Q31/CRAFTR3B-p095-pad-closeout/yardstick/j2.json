@@ -1,0 +1,86 @@
+{
+ "sets": {
+  "Aq": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing finally read as construction, but the wall is still a lone thin panel with flat tan infill beside a pale faceted placeholder rock on blurry terrain, far from Palworld's base-building finish."
+  },
+  "Ra": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing wolf matches the owner's Tanglevolt bar in silhouette and fur, but B's faint frames flip to a white-and-black blotched material with splayed limbs and its hit react barely reads, while A's faint end flattens into a low blob, so neither reaches shipping finish."
+  },
+  "Sb": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel, teal selection and orange shortfall text are on-brief and B's framed preview tile and bordered button add hierarchy, but the item preview is a flat white glyph and the list's material lines are too small for a 7-inch screen."
+  },
+  "Wv": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder with large readable eyes, soft beard and green-and-brown layered clothing carries Palworld-class character appeal, though the dark neutral stage gives no world light to judge against."
+  },
+  "Bz": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are site-specific (toppled banners, opened cage with a freed villager, smoke column, cleared crates) where A mostly swaps a waystone emblem and leaves enemy banners standing, but both sit on low-res muddy wall and ground textures under flat light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the blurry ground and tunnel-wall textures and the pale faceted rock with the key art's warm grass, path and stone materials, and add a warm directional grade with cool blue distance and grove edges so Aq and Bz frames have form and depth.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build a proper homestead wall piece: thick log or plank infill with real depth, a projecting cap, a distinct footing, and joins to neighbouring pieces so a placed wall reads as part of a building rather than a free-standing panel.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the faint-pose material swap and splayed limbs on the wolf (Ra B), make the hit react read clearly, and make every Bz aftermath strike the enemy banner plus leave one site-specific story prop.",
+   "kind": "scene"
+  }
+ ]
+}

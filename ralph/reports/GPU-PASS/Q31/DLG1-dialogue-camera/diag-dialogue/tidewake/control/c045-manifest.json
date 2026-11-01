@@ -1,0 +1,553 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 499843598571,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T20:11:18",
+	"capture_started_utc": "2026-10-31T20:10:45",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "water_rowan",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "reedhaven",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 290602,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76740217208862,
+			"camera_position": [
+				-12.3400001525879,
+				23.0551567077637,
+				475.680999755859
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460635382238
+				],
+				"basis_y": [
+					0.000000000000000021265025184254,
+					0.984805822372437,
+					-0.173647835850716
+				],
+				"basis_z": [
+					-0.000000000000000120599942225136,
+					0.173647835850716,
+					0.984805822372437
+				],
+				"origin": [
+					-12.3400001525879,
+					22.1521816253662,
+					470.559997558594
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000000296719538,
+					0.000000000000000122460608912458
+				],
+				"basis_y": [
+					0.0000000000000000212651244459275,
+					0.984807729721069,
+					-0.173648670315742
+				],
+				"basis_z": [
+					-0.000000000000000120600153983373,
+					0.173648670315742,
+					0.984807729721069
+				],
+				"origin": [
+					-12.3400001525879,
+					23.0551567077637,
+					475.680999755859
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Pierwright Rowan",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-ctl-High-c045/water__inventory__character__water_rowan.jpg",
+			"frame_id": "water__inventory__character__water_rowan",
+			"identity": "water__inventory__character__water_rowan",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-34.0369987487793,
+						22.2731685638428,
+						440.324005126953
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_009_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-21.6679992675781,
+						7.508629322052,
+						556.982971191406
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_010_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						63.4850006103516,
+						16.566219329834,
+						476.885986328125
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_014_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-110.972999572754,
+						10.6836090087891,
+						476.847991943359
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_017_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						43.9679985046387,
+						21.3555946350098,
+						412.276000976563
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 5,
+			"observed_clock": {
+				"elapsed_seconds": 200.207617666667,
+				"hour": 8.00830470666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-12.3400001525879,
+				20.4021835327148,
+				470.559997558594
+			],
+			"position_xz": [
+				-13.34,
+				468.56
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 20.4011421203613,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-12.3400001525879,
+				470.559997558594
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.999397993087769,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-13.3400001525879,
+				468.559997558594
+			],
+			"terrain_ground_y": 20.4011421203613,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water_rowan",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "reedhaven",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 369999,
+			"camera_fov_degrees": 45.0038108825684,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 3.12955665588379,
+			"camera_position": [
+				-10.6801748275757,
+				22.3957366943359,
+				472.310668945313
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 3.78354930877686,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.797247886657715,
+					0.0,
+					-0.603651523590088
+				],
+				"basis_y": [
+					-0.0787961333990097,
+					0.991441369056702,
+					-0.104066744446754
+				],
+				"basis_z": [
+					0.59848564863205,
+					0.130532518029213,
+					0.7904252409935
+				],
+				"origin": [
+					-12.9899005889893,
+					21.8919792175293,
+					469.260192871094
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.797248184680939,
+					-0.0000000147736276545629,
+					-0.603651762008667
+				],
+				"basis_y": [
+					-0.0787965804338455,
+					0.991443932056427,
+					-0.104067355394363
+				],
+				"basis_z": [
+					0.598486840724945,
+					0.130533203482628,
+					0.790426790714264
+				],
+				"origin": [
+					-10.6801748275757,
+					22.3957366943359,
+					472.310668945313
+				]
+			},
+			"conversation_camera_active": true,
+			"conversation_camera_blend": 0.74074074074074,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {
+				"dir": [
+					0.69648814201355,
+					0.121869340538979,
+					0.707143723964691
+				],
+				"distance": 3.5,
+				"fallback": false,
+				"fov": 40.0,
+				"pitch": -0.12217304475191,
+				"pivot": [
+					-13.1199998855591,
+					21.8398914337158,
+					469.0
+				],
+				"yaw": 0.777806872886671
+			},
+			"debug_travel": true,
+			"destination_display_name": "Pierwright Rowan",
+			"destination_index": 1,
+			"dialogue_id": "water_rowan_pre",
+			"dialogue_portrait": "res://assets/ui/portraits/corin.png",
+			"dialogue_speaker": "Pierwright Rowan",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-ctl-High-c045/water__inventory__character__water_rowan__dialogue.jpg",
+			"frame_id": "water__inventory__character__water_rowan__dialogue",
+			"identity": "water__inventory__character__water_rowan__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-34.0369987487793,
+						22.2731685638428,
+						440.324005126953
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_009_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-21.6679992675781,
+						7.508629322052,
+						556.982971191406
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_010_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						63.4850006103516,
+						16.566219329834,
+						476.885986328125
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_014_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-110.972999572754,
+						10.6836090087891,
+						476.847991943359
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_017_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						43.9679985046387,
+						21.3555946350098,
+						412.276000976563
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 5,
+			"observed_clock": {
+				"elapsed_seconds": 200.207617666667,
+				"hour": 8.00830470666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-12.3400001525879,
+				20.4021835327148,
+				470.559997558594
+			],
+			"position_xz": [
+				-13.34,
+				468.56
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 20.4011421203613,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-12.3400001525879,
+				470.559997558594
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.999397993087769,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-13.3400001525879,
+				468.559997558594
+			],
+			"terrain_ground_y": 20.4011421203613,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"water__inventory__character__water_rowan"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"water__inventory__character__water_rowan"
+	]
+}

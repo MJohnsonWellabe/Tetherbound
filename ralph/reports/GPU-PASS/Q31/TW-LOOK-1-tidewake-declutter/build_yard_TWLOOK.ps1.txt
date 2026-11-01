@@ -1,0 +1,35 @@
+# TW-LOOK-1 (queue 60, job 18): one two-sided set per island, candidate (tidewake-1-on 29ca0d23b as is) vs control (the same tree with
+# beach_scene_candidate + beach_declutter_candidate back in sections_off, from 894bbc39b), High, day, two stands x approach/close (2x2).
+# Frames: out\TWLOOK-<cand|ctl>-High\frames (phase2_capture_locations, one boot per arm).
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\TWLOOK\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 2; thumb_w = 760; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_twlook.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_twlook.json" | Out-Null; return $out
+}
+$brief = "A named Tidewake island location at day, from two camera stands, each with an approach view and a close view. Judge the location as the game's real look - whether it reads as a named place with a clear focal building or landmark, composition and clutter, materials, lighting and palette."
+$def = @("Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+    "Named location reads as a generic slope with no clear focal building or landmark")
+$islands = [ordered]@{ gull_rest = @("19", "20"); salt_crown = @("11", "12"); tidal_cradle = @("09", "10"); drowned_garden = @("21", "22"); lantern_cove = @("17", "18"); first_shore = @("01", "02") }
+function Pick($dir, $isl, $nums) {
+    $f = @(); $c = @()
+    foreach ($n in $nums) {
+        foreach ($v in @("approach", "close")) {
+            $m = @(Get-ChildItem $dir -Recurse -File -Include *.jpg, *.png -ErrorAction SilentlyContinue | Where-Object { $_.BaseName -like "water__$($isl)__$($n)__*" -and $_.BaseName -match "(^|_)$($v)(_|$)" } | Sort-Object Name)
+            if ($m.Count -ge 1) { $f += $m[0].FullName; $c += "stand $n $v" }
+        }
+    }
+    return , @($f, $c)
+}
+$sets = @(); $cover = @()
+foreach ($isl in $islands.Keys) {
+    $a = Pick "$o\TWLOOK-cand-High\frames" $isl $islands[$isl]; $b = Pick "$o\TWLOOK-ctl-High\frames" $isl $islands[$isl]
+    if ($a[0].Count -eq 0 -or ($a[1] -join "|") -ne ($b[1] -join "|")) { "MISSING/UNEVEN $isl cand=$($a[1] -join ',') ctl=$($b[1] -join ',')"; continue }
+    $sa = Side $a[0] $a[1] "$od\TWLOOK-$isl-cand-High.png"; $sb = Side $b[0] $b[1] "$od\TWLOOK-$isl-ship-High.png"
+    $sets += [ordered]@{ label = "TWLOOK $isl High cand|ship"; a = $sa; b = $sb; brief = $brief; defects = $def }
+    $cover += [ordered]@{ island = $isl; views = $a[1] }
+}
+$rng = New-Object System.Random 3118; $sets = @($sets | Sort-Object { $rng.Next() })
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\TWLOOK\b1" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\TWLOOK\b1\candidates.json", (ConvertTo-Json -InputObject @($sets) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\TWLOOK\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"TWLOOK sets: $($sets.Count) in 1 batch"

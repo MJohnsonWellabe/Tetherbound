@@ -1,0 +1,1354 @@
+[
+ {
+  "batch": 1,
+  "code": "Pc",
+  "label": "CO16 f1crag-water_cragclaw High cand|ship",
+  "side": "CO16-f1crag-water_cragclaw-cand-High",
+  "mapped": 6.68,
+  "judges": [
+   6.95,
+   6.55,
+   6.55
+  ],
+  "defects": [
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pc",
+  "label": "CO16 f1crag-water_cragclaw High cand|ship",
+  "side": "CO16-f1crag-water_cragclaw-ship-High",
+  "mapped": 7.29,
+  "judges": [
+   7.51,
+   7.35,
+   7.03
+  ],
+  "defects": [
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Nf",
+  "label": "CO16 f9tall3-mudsnout High cand|ship",
+  "side": "CO16-f9tall3-mudsnout-cand-High",
+  "mapped": 7.4,
+  "judges": [
+   7.51,
+   7.19,
+   7.51
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Nf",
+  "label": "CO16 f9tall3-mudsnout High cand|ship",
+  "side": "CO16-f9tall3-mudsnout-ship-High",
+  "mapped": 7.11,
+  "judges": [
+   7.19,
+   6.95,
+   7.19
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ai",
+  "label": "CO16 f7matte-cragclaw High cand|ship",
+  "side": "CO16-f7matte-cragclaw-cand-High",
+  "mapped": 6.65,
+  "judges": [
+   7.03,
+   6.39,
+   6.55
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ai",
+  "label": "CO16 f7matte-cragclaw High cand|ship",
+  "side": "CO16-f7matte-cragclaw-ship-High",
+  "mapped": 6.65,
+  "judges": [
+   6.95,
+   6.39,
+   6.63
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Cl",
+  "label": "CO16 f3tall-brooktail High cand|ship",
+  "side": "CO16-f3tall-brooktail-cand-High",
+  "mapped": 6.63,
+  "judges": [
+   7.11,
+   6.55,
+   6.23
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Cl",
+  "label": "CO16 f3tall-brooktail High cand|ship",
+  "side": "CO16-f3tall-brooktail-ship-High",
+  "mapped": 6.39,
+  "judges": [
+   6.79,
+   6.31,
+   6.07
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Bm",
+  "label": "CO16 f4coat-cindercub High cand|ship",
+  "side": "CO16-f4coat-cindercub-ship-High",
+  "mapped": 6.89,
+  "judges": [
+   7.03,
+   7.03,
+   6.63
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Bm",
+  "label": "CO16 f4coat-cindercub High cand|ship",
+  "side": "CO16-f4coat-cindercub-cand-High",
+  "mapped": 7.51,
+  "judges": [
+   7.51,
+   7.51,
+   7.51
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pw",
+  "label": "CO16 f1crag-skyrill High cand|ship",
+  "side": "CO16-f1crag-skyrill-ship-High",
+  "mapped": 5.96,
+  "judges": [
+   6.23,
+   5.91,
+   5.75
+  ],
+  "defects": [
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pw",
+  "label": "CO16 f1crag-skyrill High cand|ship",
+  "side": "CO16-f1crag-skyrill-cand-High",
+  "mapped": 6.15,
+  "judges": [
+   6.39,
+   6.15,
+   5.91
+  ],
+  "defects": [
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Xw",
+  "label": "CO16 f7matte-voltarach High cand|ship",
+  "side": "CO16-f7matte-voltarach-ship-High",
+  "mapped": 5.53,
+  "judges": [
+   5.59,
+   5.59,
+   5.43
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Xw",
+  "label": "CO16 f7matte-voltarach High cand|ship",
+  "side": "CO16-f7matte-voltarach-cand-High",
+  "mapped": 5.53,
+  "judges": [
+   5.59,
+   5.59,
+   5.43
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Cw",
+  "label": "CO16 f8tall2-pipwing High cand|ship",
+  "side": "CO16-f8tall2-pipwing-cand-High",
+  "mapped": 7.19,
+  "judges": [
+   7.43,
+   6.95,
+   7.19
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Cw",
+  "label": "CO16 f8tall2-pipwing High cand|ship",
+  "side": "CO16-f8tall2-pipwing-ship-High",
+  "mapped": 6.71,
+  "judges": [
+   7.03,
+   6.71,
+   6.39
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Dm",
+  "label": "CO16 f3tall-duskhush High cand|ship",
+  "side": "CO16-f3tall-duskhush-cand-High",
+  "mapped": 6.84,
+  "judges": [
+   7.03,
+   6.63,
+   6.87
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Dm",
+  "label": "CO16 f3tall-duskhush High cand|ship",
+  "side": "CO16-f3tall-duskhush-ship-High",
+  "mapped": 6.49,
+  "judges": [
+   6.71,
+   6.39,
+   6.39
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Av",
+  "label": "CO16 f4coat-thundertunnel High cand|ship",
+  "side": "CO16-f4coat-thundertunnel-ship-High",
+  "mapped": 6.47,
+  "judges": [
+   6.63,
+   6.3,
+   6.47
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Av",
+  "label": "CO16 f4coat-thundertunnel High cand|ship",
+  "side": "CO16-f4coat-thundertunnel-cand-High",
+  "mapped": 6.82,
+  "judges": [
+   6.96,
+   6.71,
+   6.79
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Jp",
+  "label": "CO16 f2siren-water_sirenseal High cand|ship",
+  "side": "CO16-f2siren-water_sirenseal-ship-High",
+  "mapped": 7.12,
+  "judges": [
+   7.12,
+   7.12,
+   7.12
+  ],
+  "defects": [
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Jp",
+  "label": "CO16 f2siren-water_sirenseal High cand|ship",
+  "side": "CO16-f2siren-water_sirenseal-cand-High",
+  "mapped": 7.17,
+  "judges": [
+   7.2,
+   7.12,
+   7.2
+  ],
+  "defects": [
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yc",
+  "label": "CO16 f9tall3-paddlenewt High cand|ship",
+  "side": "CO16-f9tall3-paddlenewt-cand-High",
+  "mapped": 6.85,
+  "judges": [
+   6.79,
+   7.12,
+   6.63
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yc",
+  "label": "CO16 f9tall3-paddlenewt High cand|ship",
+  "side": "CO16-f9tall3-paddlenewt-ship-High",
+  "mapped": 6.49,
+  "judges": [
+   6.47,
+   6.71,
+   6.3
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ef",
+  "label": "CO16 f1crag-cragclaw High cand|ship",
+  "side": "CO16-f1crag-cragclaw-cand-High",
+  "mapped": 6.06,
+  "judges": [
+   6.3,
+   5.9,
+   5.98
+  ],
+  "defects": [
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ef",
+  "label": "CO16 f1crag-cragclaw High cand|ship",
+  "side": "CO16-f1crag-cragclaw-ship-High",
+  "mapped": 6.71,
+  "judges": [
+   6.79,
+   6.71,
+   6.63
+  ],
+  "defects": [
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wi",
+  "label": "CO16 f7matte-reedwing High cand|ship",
+  "side": "CO16-f7matte-reedwing-cand-High",
+  "mapped": 6.6,
+  "judges": [
+   6.79,
+   6.71,
+   6.3
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wi",
+  "label": "CO16 f7matte-reedwing High cand|ship",
+  "side": "CO16-f7matte-reedwing-ship-High",
+  "mapped": 6.6,
+  "judges": [
+   6.79,
+   6.71,
+   6.3
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Tv",
+  "label": "CO16 f5coat2-shadelet High cand|ship",
+  "side": "CO16-f5coat2-shadelet-cand-High",
+  "mapped": 6.58,
+  "judges": [
+   6.79,
+   6.3,
+   6.63
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Tv",
+  "label": "CO16 f5coat2-shadelet High cand|ship",
+  "side": "CO16-f5coat2-shadelet-ship-High",
+  "mapped": 6.06,
+  "judges": [
+   6.3,
+   5.9,
+   5.98
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Un",
+  "label": "CO16 f4coat-duskhush High cand|ship",
+  "side": "CO16-f4coat-duskhush-ship-High",
+  "mapped": 6.06,
+  "judges": [
+   6.3,
+   5.9,
+   5.98
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Un",
+  "label": "CO16 f4coat-duskhush High cand|ship",
+  "side": "CO16-f4coat-duskhush-cand-High",
+  "mapped": 6.85,
+  "judges": [
+   7.04,
+   6.71,
+   6.79
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kt",
+  "label": "CO16 f7matte-skyrill High cand|ship",
+  "side": "CO16-f7matte-skyrill-ship-High",
+  "mapped": 5.92,
+  "judges": [
+   6.14,
+   5.49,
+   6.14
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kt",
+  "label": "CO16 f7matte-skyrill High cand|ship",
+  "side": "CO16-f7matte-skyrill-cand-High",
+  "mapped": 5.92,
+  "judges": [
+   6.14,
+   5.49,
+   6.14
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ox",
+  "label": "CO16 f2siren-sirenseal High cand|ship",
+  "side": "CO16-f2siren-sirenseal-cand-High",
+  "mapped": 7.07,
+  "judges": [
+   7.12,
+   7.12,
+   6.96
+  ],
+  "defects": [
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ox",
+  "label": "CO16 f2siren-sirenseal High cand|ship",
+  "side": "CO16-f2siren-sirenseal-ship-High",
+  "mapped": 6.17,
+  "judges": [
+   6.3,
+   5.9,
+   6.3
+  ],
+  "defects": [
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react lifts the whole body off the floor instead of a grounded flinch": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Rb",
+  "label": "CO16 f6hit-trailpup High cand|ship",
+  "side": "CO16-f6hit-trailpup-ship-High",
+  "mapped": 6.64,
+  "judges": [
+   6.68,
+   6.47,
+   6.78
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Rb",
+  "label": "CO16 f6hit-trailpup High cand|ship",
+  "side": "CO16-f6hit-trailpup-cand-High",
+  "mapped": 6.92,
+  "judges": [
+   6.99,
+   6.68,
+   7.1
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Um",
+  "label": "CO16 f6hit-cindercub High cand|ship",
+  "side": "CO16-f6hit-cindercub-ship-High",
+  "mapped": 6.5,
+  "judges": [
+   6.25,
+   6.47,
+   6.78
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Um",
+  "label": "CO16 f6hit-cindercub High cand|ship",
+  "side": "CO16-f6hit-cindercub-cand-High",
+  "mapped": 6.82,
+  "judges": [
+   6.57,
+   6.78,
+   7.1
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Rj",
+  "label": "CO16 f5coat2-nightburrow High cand|ship",
+  "side": "CO16-f5coat2-nightburrow-ship-High",
+  "mapped": 5.66,
+  "judges": [
+   5.83,
+   5.73,
+   5.41
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Rj",
+  "label": "CO16 f5coat2-nightburrow High cand|ship",
+  "side": "CO16-f5coat2-nightburrow-cand-High",
+  "mapped": 5.8,
+  "judges": [
+   6.04,
+   5.94,
+   5.41
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Iu",
+  "label": "CO16 f8tall2-sparkit High cand|ship",
+  "side": "CO16-f8tall2-sparkit-cand-High",
+  "mapped": 5.83,
+  "judges": [
+   5.94,
+   5.62,
+   5.94
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Iu",
+  "label": "CO16 f8tall2-sparkit High cand|ship",
+  "side": "CO16-f8tall2-sparkit-ship-High",
+  "mapped": 5.41,
+  "judges": [
+   5.62,
+   4.99,
+   5.62
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Gw",
+  "label": "CO16 f7matte-sparkit High cand|ship",
+  "side": "CO16-f7matte-sparkit-cand-High",
+  "mapped": 5.41,
+  "judges": [
+   5.62,
+   4.99,
+   5.62
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Gw",
+  "label": "CO16 f7matte-sparkit High cand|ship",
+  "side": "CO16-f7matte-sparkit-ship-High",
+  "mapped": 5.41,
+  "judges": [
+   5.62,
+   4.99,
+   5.62
+  ],
+  "defects": [
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Xy",
+  "label": "CO16 f9tall3-riftfrill High cand|ship",
+  "side": "CO16-f9tall3-riftfrill-cand-High",
+  "mapped": 6.68,
+  "judges": [
+   7.1,
+   6.47,
+   6.47
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Xy",
+  "label": "CO16 f9tall3-riftfrill High cand|ship",
+  "side": "CO16-f9tall3-riftfrill-ship-High",
+  "mapped": 6.04,
+  "judges": [
+   6.68,
+   5.41,
+   6.04
+  ],
+  "defects": [
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Iw",
+  "label": "CO16 f5coat2-stormtrail High cand|ship",
+  "side": "CO16-f5coat2-stormtrail-cand-High",
+  "mapped": 6.82,
+  "judges": [
+   6.89,
+   6.25,
+   7.31
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Iw",
+  "label": "CO16 f5coat2-stormtrail High cand|ship",
+  "side": "CO16-f5coat2-stormtrail-ship-High",
+  "mapped": 6.18,
+  "judges": [
+   6.36,
+   5.41,
+   6.78
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Wm",
+  "label": "CO16 f4coat-ashtusk High cand|ship",
+  "side": "CO16-f4coat-ashtusk-ship-High",
+  "mapped": 5.97,
+  "judges": [
+   6.04,
+   5.62,
+   6.25
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Wm",
+  "label": "CO16 f4coat-ashtusk High cand|ship",
+  "side": "CO16-f4coat-ashtusk-cand-High",
+  "mapped": 6.96,
+  "judges": [
+   7.1,
+   6.68,
+   7.1
+  ],
+  "defects": [
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ }
+]

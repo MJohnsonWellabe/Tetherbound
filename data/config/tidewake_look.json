@@ -36,8 +36,8 @@
     "current_tint_candidate",
     "veilfall_cladding_candidate",
     "veilfall_buttress_candidate",
-    "swim_stroke_candidate"
-  ],
+    "swim_stroke_candidate",
+    "beach_groups_candidate"],
   "_why_stones_candidate": "close-1024 (p1/p2 judges, all six: pebbles sprinkled evenly across the whole beach rather than grouped at the tide line or around rocks). Tidewake beach stones: a finer clump noise with a patch threshold cuts bare gaps between groups, and a tide band gathers stone 0.2-1.4 m above the sea. Same count, sizes and tint. Unjudged; OFF in play.",
   "stones_candidate": {
     "clump_scale": 0.09,
