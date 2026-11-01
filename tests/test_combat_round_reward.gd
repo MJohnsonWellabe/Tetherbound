@@ -530,3 +530,37 @@ func test_interleaved_real_care_typed_HP_disk_retry_ACK_and_round_checkpoint_pre
 	session.free()
 	game.free()
 	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
+
+
+## F49#0 (Cloudreach 07, 1 Nov): with a full Satchel the boss's held round
+## reward and drops took every freed slot ahead of the progression hand-off,
+## so the relic and portal key never arrived. The hand-off now schedules ahead
+## of the round reward; both keep their own events, receipts and order of
+## delivery otherwise, and nothing is rewritten.
+func test_boss_hand_off_schedules_ahead_of_held_round_reward() -> void:
+	var before := RECORD.portable_projection(_player().save_data())
+	var world: RefCounted = DATA.new()._world()
+	var round_duty := _duty(before, "completion")
+	var reward := _event(round_duty)
+	assert_false(reward.is_empty())
+	world.reward_deliveries[reward.delivery_id] = reward
+	var hand_off := EVENT.make(world, "resource-epoch", "boss:warden_aldis:actual-trainer-fight", [{
+		"character_id": DATA.CHARACTER, "action": "boss_relic",
+		"intent": {"trainer_id": "warden_aldis", "biome": "meadows", "encounter_id": "actual-trainer-fight"},
+		"context": {"source_key": "boss:warden_aldis", "realm": "meadows", "validated_host_outcome": "win",
+			"encounter_id": "actual-trainer-fight", "participants": [DATA.CHARACTER]}}])
+	assert_false(hand_off.is_empty())
+	world.reward_deliveries[hand_off.delivery_id] = hand_off
+	var row := _row(before, _duty(before))
+	if row.is_empty(): return
+	row.status = "accepted"
+	world.reward_deliveries[row.delivery_id] = row
+	var original := var_to_bytes(world.reward_deliveries)
+	var work := ORDER.ordered(world.reward_deliveries, "resource-namespace", "resource-slot")
+	assert_eq(work.size(), 2, "each held obligation is scheduled exactly once")
+	if work.size() == 2:
+		assert_eq(work[0].duty.action, "boss_relic", "relic and portal key are offered the first free Satchel slot")
+		assert_true(is_same(work[0].event, hand_off))
+		assert_eq(work[1].duty.action, "combat_round_reward", "the round reward stays held behind it, not dropped")
+		assert_true(is_same(work[1].event, reward))
+	assert_eq(var_to_bytes(world.reward_deliveries), original, "scheduling rewrites no reward or receipt")
