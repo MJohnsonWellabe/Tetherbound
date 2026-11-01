@@ -935,6 +935,7 @@ func enter_conversation(speaker: Node3D, cfg: Dictionary) -> bool:
 		return false
 	if _talk_active:
 		return false
+	_open_last_extra = null
 
 	var anchor := CONVERSATION.speaker_anchor(speaker, cfg)
 	# A conversation opened from across a field is not the shot this is for —
@@ -1152,8 +1153,107 @@ func _solve_conversation_shot() -> Dictionary:
 			or (require_frame and not _speaker_in_frame(shot, speaker_anchor)):
 		shot = _swing_for_sight(shot, used_cfg, used_room, trainer_anchor,
 			speaker_anchor, forward, require_sight, require_frame)
+	# camfx.json `dialogue_open` (OFF = empty): a frame filled by rock or wall
+	# beside the speaker swings to the most open angle that still sees them.
+	var open_cfg := CAMFX.block("dialogue_open")
+	if not open_cfg.is_empty():
+		shot = _open_view_shot(shot, used_cfg, used_room, trainer_anchor, speaker_anchor, forward, open_cfg)
 	_talk_used_fallback = bool(shot.get("fallback", false))
 	return shot
+
+
+## camfx.json `dialogue_open` (judges 1 Nov: "rock faces fill 70% of the
+## frame", the Quarry Foreman and Garrick). How much of `shot`'s view is filled
+## by something nearer than the speaker: a fan of rays across the frame (the
+## centre column, which holds the speaker, is left out) from the lens out to
+## the speaker's own depth, returning the blocked fraction 0..1.
+var _view_probe: Callable = Callable()
+var _open_last_extra: Variant = null
+
+
+func set_view_probe_for_tests(probe: Callable) -> void:
+	_view_probe = probe
+
+
+func _view_blocked(shot: Dictionary, speaker_anchor: Vector3, cfg: Dictionary) -> float:
+	var lens: Vector3 = shot["pivot"] + Vector3(shot["dir"]) * float(shot["distance"])
+	var look := -Vector3(shot["dir"]).normalized()
+	var right := look.cross(Vector3.UP)
+	if right.length() < 0.01:
+		return 0.0
+	right = right.normalized()
+	var up := right.cross(look).normalized()
+	var fov := deg_to_rad(float(shot.get("fov", _talk_cfg.get("fov", 40.0))))
+	var half_h := tan(fov * 0.5)
+	var half_w := half_h * 16.0 / 9.0
+	var reach := minf(lens.distance_to(speaker_anchor) * float(cfg.get("reach_fraction", 1.0)),
+		float(cfg.get("max_reach_m", 8.0)))
+	var space: PhysicsDirectSpaceState3D = null
+	if not _view_probe.is_valid():
+		if not is_inside_tree() or get_world_3d() == null:
+			return 0.0
+		space = get_world_3d().direct_space_state
+		if space == null:
+			return 0.0
+	var excluded: Array[RID] = _talk_excluded.duplicate()
+	if _target is CollisionObject3D:
+		excluded.append((_target as CollisionObject3D).get_rid())
+	var total := 0
+	var hits := 0
+	for u: float in cfg.get("columns", [-0.85, -0.5, 0.5, 0.85]):
+		for v: float in cfg.get("rows", [-0.6, 0.0, 0.6]):
+			var dir := (look + right * half_w * u + up * half_h * v).normalized()
+			var end := lens + dir * reach
+			total += 1
+			var blocked := false
+			if _view_probe.is_valid():
+				blocked = bool(_view_probe.call(lens, end))
+			else:
+				var query := PhysicsRayQueryParameters3D.create(lens, end, collision_mask, excluded)
+				blocked = not space.intersect_ray(query).is_empty()
+			if blocked:
+				hits += 1
+	return float(hits) / float(maxi(total, 1))
+
+
+func _open_view_shot(shot: Dictionary, cfg: Dictionary, room: float, trainer_anchor: Vector3,
+		speaker_anchor: Vector3, forward: Vector3, open_cfg: Dictionary) -> Dictionary:
+	var blocked := _view_blocked(shot, speaker_anchor, open_cfg)
+	if blocked <= float(open_cfg.get("blocked_threshold", 0.34)):
+		_open_last_extra = null
+		return shot
+	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
+	var gain := float(open_cfg.get("min_gain", 0.17))
+	var best := shot
+	var best_blocked := blocked
+	var best_extra: Variant = null
+	var extras: Array = []
+	# Last frame's choice is tried first and must be beaten by `min_gain`, so
+	# the shot does not flick between two near-equal angles as the speaker turns.
+	if _open_last_extra != null:
+		extras.append(float(_open_last_extra))
+	for extra: float in CONVERSATION.swing_search(cfg):
+		if not is_zero_approx(extra) and not extras.has(extra):
+			extras.append(extra)
+	for extra: float in extras:
+		var candidate := cfg.duplicate()
+		candidate["shoulder_yaw_deg"] = base_swing + extra
+		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
+		if _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"])) \
+				< float(probe["distance"]) - 0.01:
+			continue
+		if not _camera_is_reachable(trainer_anchor, probe) or not _speaker_in_sight(probe, speaker_anchor) \
+				or not _speaker_in_frame(probe, speaker_anchor):
+			continue
+		var b := _view_blocked(probe, speaker_anchor, open_cfg)
+		var needed := 0.0 if (_open_last_extra != null and is_equal_approx(extra, float(_open_last_extra))) else gain
+		if b < best_blocked - needed:
+			probe["fallback"] = bool(shot.get("fallback", false))
+			best = probe
+			best_blocked = b
+			best_extra = extra
+	_open_last_extra = best_extra
+	return best
 
 
 ## F04#6 (aftermath render af2 03e7486c): Vess's post is the start of the

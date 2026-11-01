@@ -53,6 +53,18 @@
     "flash_scale": 0.6
   },
 
+  "dialogue_open": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "Judges 1 Nov: 'rock faces fill 70% of the frame' (P2-079 Quarry Foreman, 4.64, and Garrick: a black rock face fills the right third), 'speaker boxed in by rock'. The push-in only asks whether the speaker is visible, not what fills the rest of the frame. When enabled, the solved shot casts a fan of rays across the frame (12, the speaker's centre column left out) from the lens out to the speaker's depth; if more than blocked_threshold of them hit something, the push-in tries its existing swing angles (conversation swing_search) and takes the most open one that is reachable, has room, still sees the speaker and keeps them in frame, if it is at least min_gain more open. Last frame's choice is kept unless beaten, so the shot does not flick. Collider geometry only; collider-less walls are fight_fade's job. scripts/player/camera_rig.gd _open_view_shot.",
+    "blocked_threshold": 0.34,
+    "min_gain": 0.17,
+    "reach_fraction": 1.0,
+    "max_reach_m": 8.0,
+    "columns": [-0.85, -0.5, 0.5, 0.85],
+    "rows": [-0.6, 0.0, 0.6]
+  },
+
   "fight_fade": {
     "enabled": false,
     "scope": "client_presentation",

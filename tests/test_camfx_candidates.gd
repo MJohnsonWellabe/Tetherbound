@@ -159,3 +159,59 @@ func test_impact_fx_builds_chips_crack_and_arcs_by_element() -> void:
 	assert_eq((water.get("_chips") as Array).size(), 0, "water throws no stone")
 	assert_true(water.get("_crack") == null, "water leaves no crack")
 	water.free()
+
+
+## --- dialogue_open: rig driven by hand, as test_conversation_camera.gd does --
+
+const RIG := preload("res://scripts/player/camera_rig.gd")
+const CONVERSATION := preload("res://scripts/player/conversation_camera.gd")
+const TRAINER_AT := Vector3(10.0, 0.0, 10.0)
+const SPEAKER_AT := Vector3(10.0, 0.0, 7.4)
+
+
+func _rig() -> SpringArm3D:
+	var rig := SpringArm3D.new()
+	rig.set_script(RIG)
+	var camera := Camera3D.new()
+	camera.name = "Camera3D"
+	camera.fov = 70.0
+	rig.add_child(camera)
+	rig.notification(Node.NOTIFICATION_READY)
+	rig.call("set_occlusion_probe_for_tests", func(_pivot: Vector3, _dir: Vector3, limit: float) -> float: return limit)
+	return rig
+
+
+func test_dialogue_open_ships_off() -> void:
+	var cfg := _json(CAMFX.CONFIG_PATH)
+	assert_false(bool((cfg["dialogue_open"] as Dictionary).get("enabled", true)), "dialogue_open ships OFF")
+	var rig := FileAccess.get_file_as_string("res://scripts/player/camera_rig.gd")
+	assert_true(rig.contains("var open_cfg := CAMFX.block(\"dialogue_open\")\n\tif not open_cfg.is_empty():"),
+		"the push-in only searches when the block is on")
+
+
+func test_dialogue_open_swings_away_from_a_wall_filling_the_frame() -> void:
+	var rig := _rig()
+	var open_cfg: Dictionary = _with("dialogue_open")["dialogue_open"]
+	var cfg := CONVERSATION.config()
+	var trainer_anchor := TRAINER_AT + Vector3.UP * 1.45
+	var speaker_anchor := SPEAKER_AT + Vector3.UP * 1.9 * 0.78
+	var shot := CONVERSATION.solve(trainer_anchor, speaker_anchor, Vector3.FORWARD, cfg)
+	# A rock face standing beside the pair: anything reaching past x = 10.4 hits it.
+	rig.call("set_view_probe_for_tests", func(_lens: Vector3, end: Vector3) -> bool: return end.x > 10.4)
+	var before := float(rig.call("_view_blocked", shot, speaker_anchor, open_cfg))
+	assert_true(before > float(open_cfg["blocked_threshold"]), "the fixture wall fills the frame (%.2f)" % before)
+	var opened: Dictionary = rig.call("_open_view_shot", shot, cfg, INF, trainer_anchor, speaker_anchor,
+		Vector3.FORWARD, open_cfg)
+	var after := float(rig.call("_view_blocked", opened, speaker_anchor, open_cfg))
+	assert_true(after <= before - float(open_cfg["min_gain"]), "the swing opens the frame (%.2f -> %.2f)" % [before, after])
+	assert_true(bool(rig.call("_speaker_in_frame", opened, speaker_anchor)), "the speaker stays in frame")
+	# The same solve again keeps the same angle (no flicking between frames).
+	var again: Dictionary = rig.call("_open_view_shot", shot, cfg, INF, trainer_anchor, speaker_anchor,
+		Vector3.FORWARD, open_cfg)
+	assert_true(Vector3(again["dir"]).distance_to(Vector3(opened["dir"])) < 0.001, "the chosen angle holds")
+	# An open frame is left exactly as solved.
+	rig.call("set_view_probe_for_tests", func(_lens: Vector3, _end: Vector3) -> bool: return false)
+	var clear: Dictionary = rig.call("_open_view_shot", shot, cfg, INF, trainer_anchor, speaker_anchor,
+		Vector3.FORWARD, open_cfg)
+	assert_true(Vector3(clear["dir"]).distance_to(Vector3(shot["dir"])) < 0.0001, "an open frame is untouched")
+	rig.free()
