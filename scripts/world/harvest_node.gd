@@ -308,6 +308,8 @@ func _build_visual(spec: Dictionary = {}) -> void:
 	if hero != null:
 		_visual = hero
 		add_child(_visual)
+		# World dressing P2-034 (pickup_grounding.json, OFF until GPU judged).
+		preload("res://scripts/world/pickup_grounding.gd").apply(self, _visual, _item_id, _realm_id, str(name))
 		PICKUP_GLOW.attach(_visual, _item_colour(), -1.0, 1.0, _item_kind())
 		return
 	if _model_path != "" and ResourceLoader.exists(_model_path):

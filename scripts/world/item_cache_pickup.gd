@@ -28,6 +28,7 @@ const MESHY_ITEM_VISUALS := preload("res://scripts/world/meshy_item_visuals.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const MUSHROOM_PRESENTATION := preload("res://scripts/world/mushroom_pickup_presentation.gd")
+const PICKUP_GROUNDING := preload("res://scripts/world/pickup_grounding.gd")
 ## D103 / Stage B lane 3.B. See `_on_picked_up()`: this find is claimed through
 ## the world ledger now, not written here. OP-0905-18's catalyst-discoverability
 ## announcement moved with the grant to `ledger_rpc.gd::_apply_player_ops()`,
@@ -219,6 +220,8 @@ func _build_visual() -> void:
 		push_warning("item_cache_pickup: '%s' did not load as a Mesh or PackedScene" % _model_path)
 	add_child(_visual)
 	MUSHROOM_PRESENTATION.apply(self, _item_id)
+	# World dressing (pickup_grounding.json, OFF until GPU judged).
+	PICKUP_GROUNDING.apply(self, _visual, _item_id, _realm_id, _placement_id)
 
 	# OP-0830-3. This used to carry an `OmniLight3D` of its own -- the
 	# "short-range presence cue" tm_pickup.gd's header argues for, and the

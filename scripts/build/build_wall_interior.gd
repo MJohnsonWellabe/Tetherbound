@@ -38,7 +38,7 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 	# A judged round's overrides ride in `meshy_wall.r5`, `.r6`... and apply
 	# only when their own `enabled` is set (candidate OFF until its scene
 	# passes); a later round wins.
-	for round_key: String in ["r5", "r6", "r7"]:
+	for round_key: String in ["r5", "r6", "r7", "r8"]:
 		var overrides: Dictionary = hero.get(round_key, {}) as Dictionary
 		if bool(overrides.get("enabled", false)):
 			for key: String in overrides:
@@ -146,6 +146,9 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 		model.add_child(top)
 	_add_end_posts(model, bounds, hero_cfg.get("end_posts", {}) as Dictionary)
 	_add_footing(model, bounds, hero_cfg.get("footing", {}) as Dictionary)
+	_add_plinth(model, bounds, hero_cfg.get("plinth", {}) as Dictionary)
+	_add_grime(model, bounds, hero_cfg.get("grime", {}) as Dictionary)
+	_add_base_tufts(model, bounds, hero_cfg.get("base_tufts", {}) as Dictionary)
 	wall.visible = false
 	return true
 
@@ -198,6 +201,161 @@ static func _add_footing(model: Node3D, bounds: AABB, cfg: Dictionary) -> void:
 		bounds.get_center().z)
 	foot.set_meta(&"presentation_only", true)
 	model.add_child(foot)
+
+
+## r8 (world dressing; GPU 6.65: "a clean flat freestanding slab with no
+## weathering, ground contact or footing"): a half-sunk fieldstone course along
+## both faces from the installed nature rocks, flattened into a plinth. Meshes
+## are flattened directly under the model and stay presentation_only.
+static func _add_plinth(model: Node3D, bounds: AABB, cfg: Dictionary) -> void:
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var models: Array = cfg.get("models", [])
+	if models.is_empty():
+		return
+	var count := maxi(2, int(cfg.get("stones_per_face", 5)))
+	var stone_len := bounds.size.x / float(count) * float(cfg.get("overlap", 1.25))
+	var height := float(cfg.get("height_m", 0.34))
+	var depth := float(cfg.get("depth_m", 0.3))
+	var sink := float(cfg.get("sink_fraction", 0.45))
+	var tint := Color(str(cfg.get("tint", "#ffffff")))
+	var index := 0
+	for side: float in [-1.0, 1.0]:
+		for i in count:
+			var path := str(models[(index * 7 + i) % models.size()])
+			index += 1
+			var stone := _flat_meshes(path)
+			if stone.is_empty():
+				continue
+			# Deterministic per-stone variation so every peer builds the same wall.
+			var jitter := 0.85 + 0.3 * float((i * 5 + int(side > 0.0) * 3) % 7) / 6.0
+			var size := Vector3(stone_len * jitter, height * (0.8 + 0.4 * float((i * 3) % 5) / 4.0), depth)
+			var x := bounds.position.x + (float(i) + 0.5) * bounds.size.x / float(count)
+			var z := bounds.get_center().z + side * (bounds.size.z * 0.5 + depth * 0.35)
+			var y := bounds.position.y - size.y * sink
+			var yaw := float((i * 37 + index * 11) % 21 - 10) * 0.02
+			for entry: Dictionary in stone:
+				var mesh := entry.mesh as Mesh
+				var src: AABB = entry.aabb
+				var fit := Basis.from_scale(Vector3(size.x / maxf(src.size.x, 0.001),
+					size.y / maxf(src.size.y, 0.001), size.z / maxf(src.size.z, 0.001)))
+				var placed := MeshInstance3D.new()
+				placed.name = PREFIX + "HeroPlinth%d_%d" % [index, i]
+				placed.mesh = mesh
+				var basis := Basis(Vector3.UP, yaw) * fit
+				placed.transform = Transform3D(basis, Vector3(x, y, z) - basis * Vector3(src.get_center().x, src.position.y, src.get_center().z)) * (entry.local as Transform3D)
+				placed.set_meta(&"presentation_only", true)
+				if tint != Color.WHITE:
+					for surface in mesh.get_surface_count():
+						var source := mesh.surface_get_material(surface) as BaseMaterial3D
+						if source != null:
+							var tinted := source.duplicate() as BaseMaterial3D
+							tinted.albedo_color = source.albedo_color * tint
+							placed.set_surface_override_material(surface, tinted)
+				model.add_child(placed)
+
+
+## r8: damp, mud-splashed weathering on the lower wall: a thin shell just
+## proud of each face whose alpha fades upward from a dark earth colour.
+static func _add_grime(model: Node3D, bounds: AABB, cfg: Dictionary) -> void:
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var height := float(cfg.get("height_m", 0.7))
+	var gradient := Gradient.new()
+	var colour := Color(str(cfg.get("colour", "#3b2e22")))
+	var bottom := colour
+	bottom.a = float(cfg.get("bottom_alpha", 0.8))
+	var top := colour
+	top.a = 0.0
+	gradient.set_color(0, bottom)
+	gradient.set_color(1, top)
+	gradient.set_offset(1, 1.0)
+	var texture := GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.fill_from = Vector2(0.5, 1.0)
+	texture.fill_to = Vector2(0.5, 0.0)
+	texture.width = 8
+	texture.height = 64
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = texture
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.roughness = 1.0
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var proud := float(cfg.get("proud_m", 0.012))
+	for side: float in [-1.0, 1.0]:
+		var quad := QuadMesh.new()
+		quad.size = Vector2(bounds.size.x, height)
+		quad.material = material
+		var shell := MeshInstance3D.new()
+		shell.name = PREFIX + ("HeroGrimeFront" if side > 0.0 else "HeroGrimeBack")
+		shell.mesh = quad
+		shell.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		shell.position = Vector3(bounds.get_center().x, bounds.position.y + height * 0.5,
+			bounds.get_center().z + side * (bounds.size.z * 0.5 + proud))
+		if side < 0.0:
+			shell.rotation.y = PI
+		shell.set_meta(&"presentation_only", true)
+		model.add_child(shell)
+
+
+## r8: installed grass tufts grow against the base on both faces, so the
+## wall meets the meadow instead of a ruled line.
+static func _add_base_tufts(model: Node3D, bounds: AABB, cfg: Dictionary) -> void:
+	if cfg.is_empty() or not bool(cfg.get("enabled", true)):
+		return
+	var models: Array = cfg.get("models", [])
+	var per_face := int(cfg.get("per_face", 4))
+	var tuft_h := float(cfg.get("height_m", 0.45))
+	if models.is_empty() or per_face <= 0:
+		return
+	var index := 0
+	for side: float in [-1.0, 1.0]:
+		for i in per_face:
+			var parts := _flat_meshes(str(models[(i + index) % models.size()]))
+			index += 1
+			var x := bounds.position.x + bounds.size.x * (0.08 + 0.84 * (float(i) + 0.5 * float((i * 3) % 2)) / float(per_face))
+			var z := bounds.get_center().z + side * (bounds.size.z * 0.5 + float(cfg.get("out_m", 0.42)))
+			for entry: Dictionary in parts:
+				var src: AABB = entry.aabb
+				var k := tuft_h * (0.8 + 0.4 * float((i * 7) % 5) / 4.0) / maxf(src.size.y, 0.001)
+				var basis := Basis(Vector3.UP, float(i) * 1.7 + side) * Basis.from_scale(Vector3.ONE * k)
+				var placed := MeshInstance3D.new()
+				placed.name = PREFIX + "HeroTuft%d" % index
+				placed.mesh = entry.mesh
+				placed.transform = Transform3D(basis, Vector3(x, bounds.position.y - 0.03, z) - basis * Vector3(src.get_center().x, src.position.y, src.get_center().z)) * (entry.local as Transform3D)
+				placed.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				placed.set_meta(&"presentation_only", true)
+				model.add_child(placed)
+
+
+## Every MeshInstance3D in an installed scene, with its transform relative to
+## the scene root and the scene's combined bounds in that root's space.
+static func _flat_meshes(path: String) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	if not ResourceLoader.exists(path):
+		return out
+	var scene := load(path) as PackedScene
+	if scene == null:
+		return out
+	var root := scene.instantiate() as Node3D
+	var meshes: Array[Node] = root.find_children("*", "MeshInstance3D", true, false)
+	if root is MeshInstance3D:
+		meshes.append(root)
+	var combined := AABB()
+	var first := true
+	for node: Node in meshes:
+		var mesh_node := node as MeshInstance3D
+		if mesh_node.mesh == null:
+			continue
+		var local := _chain(mesh_node, root) if mesh_node != root else Transform3D()
+		var box: AABB = local * mesh_node.mesh.get_aabb()
+		combined = box if first else combined.merge(box)
+		first = false
+		out.append({"mesh": mesh_node.mesh, "local": local})
+	for entry: Dictionary in out:
+		entry["aabb"] = combined
+	root.free()
+	return out
 
 
 static func _chain(node: Node3D, ancestor: Node3D) -> Transform3D:

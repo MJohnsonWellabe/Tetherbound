@@ -1,0 +1,28 @@
+{
+ "asset": "P2-115 authored camp creature bed (Tidewake 4.59; every forward camp)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a192ad-cc74-76db-8225-65eb8598e60b",
+  "prompt": "a raised round creature nest bed for a large animal companion at a wilderness camp: a low ring of lashed driftwood logs filled with a thick plump mound of golden straw, soft blankets and a folded wool rug, a few kelp ropes tying it, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter view from slightly above, centered, whole object visible, plain light grey background, soft even daylight, no text, no people, no creatures",
+  "inspected_before_submission": true,
+  "edit": "red rug pattern shifted to teal before submission (red reserved for Team Tether)"
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a192af-2a00-7000-83a1-da2a318c7623",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 20000,
+   "symmetry_mode": "auto"
+  },
+  "file": "camp_bed.glb",
+  "sha256": "e62d796d63b1ba256b40dfca454ca8121b5035f60db163ab65ce941613f27467"
+ }
+}
