@@ -1,0 +1,5 @@
+{"job":"UI1F","arm":"ctl","preset":"High","biome":"meadows","key":"c013","try":1,"exit":0,"images":12,"sec":76}
+{"job":"UI1F","arm":"ctl","preset":"High","biome":"tidewake","key":"c038","try":1,"exit":-1,"images":0,"sec":739}
+{"job":"UI1F","arm":"ctl","preset":"High","biome":"tidewake","key":"c038","try":2,"exit":0,"images":12,"sec":98}
+{"job":"UI1F","arm":"cand","preset":"High","biome":"meadows","key":"c013","try":1,"exit":0,"images":12,"sec":68}
+{"job":"UI1F","arm":"cand","preset":"High","biome":"tidewake","key":"c038","try":1,"exit":0,"images":12,"sec":81}
