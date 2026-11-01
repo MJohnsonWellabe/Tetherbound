@@ -1,6 +1,6 @@
 # Meadows visual lane (tb/vis-meadows), 1 Nov 2026
 
-**Status (batch hand-off, per coordinator update):** six candidates, all flags OFF on this branch, listed in `MANIFEST.json` for the 18:00 UTC tb/vis-batch1 merge. No single-candidate READY lines.
+**Status (rolling batches, coordinator 13:49/13:54 UTC):** group 1 = six candidates, all flags OFF on this branch, in `MANIFEST.json` with `group: 1` and catalogue frame ids as stands (meadows/manifest.csv ids; F17-6 view ids for the Hall). No single-candidate READY lines.
 
 | Item | Flag (set true) | Change |
 |---|---|---|
