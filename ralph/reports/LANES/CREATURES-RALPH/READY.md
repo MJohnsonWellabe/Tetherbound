@@ -41,7 +41,12 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 
 ## Next
 
-- Task 3: work up from the lowest-scoring creatures that need no new art.
+- **Task 3 (started 2 Nov, ~03:40 UTC).** The batch-4 creature table is not in the repo, so I used the last board scores on the coordinator dashboard (pre-1 Nov remakes). I baselined the shipped remakes of Sparkit, Mosshock, Pebbik and Shadelet on CPU.
+  - **Shadelet:** the tail and leg geometry stands up about 2.7 m in the faint frames. It is skinned to the pelvis, head and rear_lower_r, not the tail chain. The rig joints sit off-centre and asymmetric across a mesh 3.4 m wide. It needs a Blender re-rig.
+  - **Pebbik:** the faint end reads belly-up, but the shipped clip already keeps the feet lowest, so a root or pelvis roll does not help. It needs an authored faint (Blender).
+  - **Mosshock:** the faint is a moss lump. Its worst clip stretch is 0.46 m (the weight relax brings it to 0.27 m), but r2 showed a relax alone does not move scores unless the artefact is visible.
+  - **Sparkit:** reads cleanly; no defect obvious at the stage camera.
+  - Without the current GPU table, Blender, or the rigged r9 models, further Task 3 rounds are guesswork. **Please push the batch-4 creature table (or the current board scores) to this branch.** I will then work up from the lowest score where grading or weights can help.
 
 ## Local checks
 
