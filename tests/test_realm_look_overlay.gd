@@ -46,7 +46,11 @@ func test_disabled_meadows_candidate_keeps_the_shipping_look() -> void:
 	var look := MEADOWS_LOOK.new()
 	look.realm_look_path = "res://data/config/meadows_look.json"
 	var resolved: Dictionary = look.call("_load")
-	var expected := WORLD_LOOK.merged_look(base, overlay)
+	# Shipping lighting = art.json + the realm overlay + the GPU-judged light_candidate
+	# (ON since CLOUD-JUDGE/MEADOWS-AB-1102); cause_light is still unjudged and OFF.
+	assert_true(bool(overlay.light_candidate.enabled), "judged light candidate ships ON")
+	assert_false(bool(overlay.cause_light.enabled), "unjudged cause_light must ship OFF")
+	var expected := WORLD_LOOK.merged_look(WORLD_LOOK.merged_look(base, overlay), overlay.light_candidate.look)
 	assert_eq(resolved, expected, "disabled subclass must retain exact shipping lighting")
 	look.free()
 
