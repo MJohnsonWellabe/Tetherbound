@@ -13,8 +13,9 @@ class FakeMap:
 		return [{"id": "gate", "display_name": "Cloudreach Gate"}, {"id": "lower_cliffs", "display_name": "Cloudreach Gate / Lower Cliffs"}]
 
 
-func test_ships_off() -> void:
-	assert_false(TAB.map_region_header_enabled())
+func test_ships_on() -> void:
+	# GPU batch 5 (2 Nov, three code-blind judges): P2-048 7.01 -> 7.52 mapped.
+	assert_true(TAB.map_region_header_enabled())
 
 
 func test_here_text_names_current_region() -> void:

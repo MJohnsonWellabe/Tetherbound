@@ -1,0 +1,83 @@
+[
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue stormwood] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_stormwood__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_stormwood__0_cand.jpg",
+  "brief": "Game frames of Stormwood named-character conversations: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue stormwood] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_stormwood__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_stormwood__1_cand.jpg",
+  "brief": "Game frames of Stormwood named-character conversations: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue stormwood] #3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_stormwood__2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_stormwood__2_cand.jpg",
+  "brief": "Game frames of Stormwood named-character conversations: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue stormwood] #4",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_stormwood__3_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_stormwood__3_cand.jpg",
+  "brief": "Game frames of Stormwood named-character conversations: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue water] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_water__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_water__0_cand.jpg",
+  "brief": "Game frames of Tidewake named-character conversations: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue water] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_water__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_water__1_cand.jpg",
+  "brief": "Game frames of Tidewake named-character conversations: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue water] #3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_water__2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_water__2_cand.jpg",
+  "brief": "Game frames of Tidewake named-character conversations: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue cloudreach] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_cloudreach__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_cloudreach__0_cand.jpg",
+  "brief": "Game frames of Cloudreach named-character conversations: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue cloudreach] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_cloudreach__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/DIALOGUE/img/SHARED_CAM_OCCLUSION__dialogue_cloudreach__1_cand.jpg",
+  "brief": "Game frames of Cloudreach named-character conversations: 2 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+  ]
+ }
+]

@@ -1,0 +1,83 @@
+[
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__0_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__1_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__2_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #4",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__3_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__3_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #5",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__4_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__4_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #6",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__5_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__5_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #7",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__6_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__6_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #8",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__7_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__7_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #9",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__8_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-1/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__8_cand.jpg",
+  "brief": "Game frames of Meadows trainer fights (bridge grunt and Warden): 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ }
+]

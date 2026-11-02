@@ -1,0 +1,89 @@
+{
+ "Gs": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Yd": {
+  "anchor": false,
+  "label": "P2-013 #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_013_1_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_013_1_main.jpg"
+ },
+ "Ep": {
+  "anchor": false,
+  "label": "P2-065 [fights]",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_065__fights__0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_065__fights__0_cand.jpg"
+ },
+ "Ie": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-routes] #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__0_cand.jpg"
+ },
+ "Sz": {
+  "anchor": false,
+  "label": "P2-065 [world_inventory]",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_065__world_inventory__0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_065__world_inventory__0_cand.jpg"
+ },
+ "Xb": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-world_inventory] #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_world_inventory__0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_world_inventory__0_cand.jpg"
+ },
+ "Gy": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-world_inventory] #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_world_inventory__1_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_world_inventory__1_main.jpg"
+ },
+ "Ak": {
+  "anchor": false,
+  "label": "P2-013 #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_013_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_013_0_cand.jpg"
+ },
+ "Mo": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-routes] #4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__3_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__3_main.jpg"
+ },
+ "Zt": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-routes] #3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__2_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__2_cand.jpg"
+ },
+ "Fn": {
+  "anchor": true,
+  "A": "f36_0_npc:C8B",
+  "B": "f36_0_npc:C8A"
+ },
+ "Mx": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-build_systems-07f6f8]",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_build_systems_07f6_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_build_systems_07f6_0_cand.jpg"
+ },
+ "Ct": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-routes] #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__1_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__1_main.jpg"
+ },
+ "Pr": {
+  "anchor": false,
+  "label": "P2-069",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_069_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_069_0_cand.jpg"
+ },
+ "Mf": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ }
+}

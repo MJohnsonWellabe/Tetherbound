@@ -1,0 +1,61 @@
+He: none
+Zb: none
+Pn: none
+Vz: none
+Mw: none
+Zv: none
+Vo: none
+En: none
+Yt: none
+Nh: none
+Qy: none
+Ku: none
+By: none
+
+# judge 1 defect calls and Bar B
+He: A {} | B {} | bar_b no: A's dark salamander with cyan glowing spots carries one clear elemental trait, but it's a long, low body that barely clears the trainer's height; B's pale spotted body flips belly-up in the faint frames and reads as a toy.
+Zb: A {} | B {} | bar_b yes: B's black wolf with orange lava cracks matches the Tanglevolt bar in silhouette and trait; A is a plain brown animal with no element, and its faint frames turn to brown mush.
+Pn: A {} | B {} | bar_b no: A is a chibi fennec in a scarf with mascot proportions, which is off-style; B's lean pale-blue fox is closer to the bar but thin and low in value contrast against the grey stage.
+Vz: A {} | B {} | bar_b yes: A's dark boar with faint green veins is a believable animal with one restrained trait at the bar's level; B's orange boar has lumpy, clumped fur and no elemental read.
+Mw: A {} | B {} | bar_b no: A's stone-patch texture is noisy camouflage that dissolves the silhouette and hides the face; B's armoured boar with glowing tusks reads better but looks rubbery, and its faint end goes stiff and flipped.
+Zv: A {} | B {} | bar_b no: B's cyan sea dragon has an appealing silhouette with fins and crest but leans stylised; A's navy serpent coil is dark, mid-value and barely changes between poses.
+Vo: A {} | B {} | bar_b no: B's tall blue-peach peafowl is elegant and grounded; A is a cartoon phoenix with mascot proportions and orange-tipped toy feathers.
+En: A {} | B {} | bar_b no: The dark, murky forest, a HUD covering much of each frame, flat magenta ground rings as telegraphs and (in A, i13/i15) canopy blocking the camera sink it; there is no purple storm sky or lightning mood.
+Yt: A {} | B {} | bar_b no: A's blue-white crested bird has naturalistic feathering, though its face is small; B is a big-eyed chibi mascot, which is off the owner's style.
+Nh: A {} | B {} | bar_b no: A's rock-shelled blue turtle is busy and dark, with a hard-to-find face; B's tank-like cartoon turtle with cannon studs reads as toy styling.
+Qy: A {} | B {} | bar_b yes: Both badgers are believable animals with natural plates and a clear face stripe; A's mossy plates sit more naturally, while B's brown stone plates look uniform and tiled.
+Ku: A {} | B {} | bar_b no: B's spined blue drake has a good silhouette but cel-like styling; A is cartoon-flat, and in its faint end the material turns brown and grey with broken shading.
+By: A {} | B {} | bar_b no: The chibi boy has blurry, low-resolution face textures, flat black slit eyes and toy proportions, so he doesn't match the key art's grounded humans.
+top_changes: [{"change": "Regenerate the chibi/mascot creatures (Pn A, Yt B, Vo A, Ku A, Nh B, He B) as naturalistic adult animals with one elemental trait, matching the Galecrest/Tanglevolt/Stormursa bar", "kind": "new_art"}, {"change": "Stormwood fight readability: replace flat magenta telegraph rings with real lightning/impact effects, pull the camera clear of trunks and canopy, lift the subject with rim light and shrink the HUD footprint", "kind": "scene"}, {"change": "Add rim light and a darker-to-lighter value split on mid-tone creatures (Mw A, Zv A, Nh A) so silhouettes and faces separate from the ground", "kind": "scene"}]
+
+# judge 2 defect calls and Bar B
+He: A {} | B {} | bar_b no: Low, dark or pale lizard silhouettes with tiny faces fall well short of Palworld creature appeal.
+Zb: A {} | B {} | bar_b yes: Naturalistic wolves sit close to the Tanglevolt bar; B's lava element carries it, and A lacks an element.
+Pn: A {} | B {} | bar_b no: A's mascot styling and B's spindly low-value body both miss the naturalistic bar.
+Vz: A {} | B {} | bar_b yes: A believable boar with glowing veins matches the owner bar; B's plain coat has no element.
+Mw: A {} | B {} | bar_b no: A's gravel-noise surface sinks it; B is close but the hit react does not read.
+Zv: A {} | B {} | bar_b no: Neither faint reads, and the serpent is too small and static.
+Vo: A {} | B {} | bar_b no: B's elegant bird is close, but the slender mid-value body lacks Palworld punch.
+En: A {} | B {} | bar_b no: A dark murky stage, flat magenta telegraphs and a heavy HUD bury a tiny player creature.
+Yt: A {} | B {} | bar_b no: A's naturalistic bird is near the bar; B's chibi mascot and standing faint sink it.
+Nh: A {} | B {} | bar_b no: A's busy, dark plating and B's toy-like stylisation both miss the naturalistic finish.
+Qy: A {} | B {} | bar_b yes: Grounded badger anatomy with natural plates fits the owner style bar.
+Ku: A {} | B {} | bar_b no: Cartoon shading and A's faint material swap keep it below the naturalistic bar.
+By: A {} | B {} | bar_b no: A blurry face texture and flat painted eyes read below shipping character finish.
+top_changes: [{"change": "Remake the off-style mascot and cartoon creatures (Pn A, Yt B, Zv, He, Nh B, Ku A) as naturalistic adult animals with one elemental trait, in the Galecrest/Tanglevolt manner", "kind": "new_art"}, {"change": "Author distinct hit-react and grounded faint poses where frames are identical or the creature ends upright (He B, Mw B, Zv, Yt B, Pn A)", "kind": "scene"}, {"change": "Replace the En flat magenta telegraph rings with real ground-impact effects, lift the forest exposure and rim light, and fade the canopy that occludes the camera", "kind": "scene"}]
+
+# judge 3 defect calls and Bar B
+He: A {} | B {} | bar_b no: A's glowing spots read, but a low, flat body on a grey stage, with B's pale mid value and static hit react, falls short of Palworld creature finish.
+Zb: A {} | B {} | bar_b yes: B's lava-crack wolf matches the owner bar's naturalistic animal-plus-element finish; A lacks the element.
+Pn: A {} | B {} | bar_b no: A's mascot fox and unreadable faint sink it; B is closer, but its pale thin build lacks presence.
+Vz: A {} | B {} | bar_b yes: A's dark boar with glowing lines carries the target finish; B's noisy fur and lack of element drop it.
+Mw: A {} | B {} | bar_b no: B's clear tusked silhouette is close, but A's mottled collage surface reads as generator output.
+Zv: A {} | B {} | bar_b no: B's sea dragon is appealing, but neither side has a faint that reads, and A barely animates.
+Vo: A {} | B {} | bar_b no: B's elegant heron nearly gets there, but its pale value and thin legs underdeliver presence; A is toy-like.
+En: A {} | B {} | bar_b no: Murky brown-black grade, flat magenta telegraphs, a tiny unreadable player creature and canopy occlusion in A sink it.
+Yt: A {} | B {} | bar_b no: A's naturalistic bird is near the bar; B's chibi mascot is off style and its faint does not read.
+Nh: A {} | B {} | bar_b no: A's noisy plate clutter and B's toy-like cannon shell both miss the grounded animal-plus-element finish.
+Qy: A {} | B {} | bar_b yes: A believable badger with natural stone plates and readable hurt poses matches the owner bar.
+Ku: A {} | B {} | bar_b no: B's scale detail is strong, but the odd curled faint, and in A the floating faint and untextured underside, break the finish.
+By: A {} | B {} | bar_b no: The blurry low-res face with blank black eyes reads well below shipping finish.
+top_changes: [{"change": "Rebuild the remaining stylised or mascot creatures (Pn A, Yt B, Vo A, Nh, Mw A, He B) as naturalistic adult animals with one clear elemental trait, matching the owner style bar", "kind": "new_art"}, {"change": "Author distinct hit-react and grounded lying faint poses for creatures whose faint stays upright or static (Zv, Pn A, Yt B, He B, Ku B), and fix the floating faint and untextured underside on Ku A", "kind": "scene"}, {"change": "Stormwood fight: replace flat magenta telegraph rings with real lightning/ground-crack effects, keep the camera out of canopy, and lift the grade toward a purple storm sky with rim light on both fighters", "kind": "scene"}]

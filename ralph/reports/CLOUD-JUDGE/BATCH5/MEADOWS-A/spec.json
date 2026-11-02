@@ -1,0 +1,100 @@
+[
+ {
+  "label": "P2-013 #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_013_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_013_0_cand.jpg",
+  "brief": "Game frames of Tether Relay yard: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp"
+  ]
+ },
+ {
+  "label": "P2-013 #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_013_1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_013_1_cand.jpg",
+  "brief": "Game frames of Tether Relay yard: 2 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp"
+  ]
+ },
+ {
+  "label": "P2-065 [world_inventory]",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_065__world_inventory__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_065__world_inventory__0_cand.jpg",
+  "brief": "Game frames of trainer defeated presentation: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change"
+  ]
+ },
+ {
+  "label": "P2-065 [fights]",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_065__fights__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_065__fights__0_cand.jpg",
+  "brief": "Game frames of trainer defeated presentation: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change"
+  ]
+ },
+ {
+  "label": "P2-069",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_069_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/P2_069_0_cand.jpg",
+  "brief": "Game frames of flight and landing pose read: 1 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-world_inventory] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_world_inventory__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_world_inventory__0_cand.jpg",
+  "brief": "Game frames of Meadows harvest pickups and camp props: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-world_inventory] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_world_inventory__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_world_inventory__1_cand.jpg",
+  "brief": "Game frames of Meadows harvest pickups and camp props: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-build_systems-07f6f8]",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_build_systems_07f6_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_build_systems_07f6_0_cand.jpg",
+  "brief": "Game frames of Meadows bed, building, camp and crafting views: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-routes] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__0_cand.jpg",
+  "brief": "Game frames of Meadows route walks and vistas: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-routes] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__1_cand.jpg",
+  "brief": "Game frames of Meadows route walks and vistas: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-routes] #3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__2_cand.jpg",
+  "brief": "Game frames of Meadows route walks and vistas: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-routes] #4",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__3_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-A/img/SHARED_CAM_OCCLUSION__meadows_routes__3_cand.jpg",
+  "brief": "Game frames of Meadows route walks and vistas: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ }
+]

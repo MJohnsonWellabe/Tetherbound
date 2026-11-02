@@ -1,0 +1,57 @@
+Gu: none
+Zq: none
+Rr: none
+Kj: none
+Xi: none
+Gv: none
+Bu: none
+Jq: none
+Ic: none
+Cl: none
+Ll: none
+Dl: none
+
+# judge 1 defect calls and Bar B
+Gu: A {} | B {} | bar_b no: Characterful model, but dark, rim-less staging keeps it below Palworld-finish character presentation.
+Zq: A {} | B {} | bar_b no: Clean village costume but chibi-leaning proportions and flat lighting sink the finish.
+Rr: A {} | B {} | bar_b no: Appealing silhouette and palette carry it; low value separation from the backdrop holds it back.
+Kj: A {} | B {} | bar_b no: Readable faction uniform on A, but the ghosted rank frame and muddy darks sink both.
+Xi: A {} | B {} | bar_b no: Smeared ground textures, sparse low-poly trees and flat walls are far from Palworld density and Valheim light.
+Gv: A {} | B {} | bar_b no: A's naturalistic bristle boar is on-style but undersized against the ruler; B's clay mascot pig is off-target.
+Bu: A {} | B {} | bar_b no: Coherent village costume, but B's discoloured leg patch and flat staging sink it.
+Jq: A {} | B {} | bar_b no: Strong Warden identity and gold trim carry it; staff clipping and dark values hold it back.
+Ic: A {} | B {} | bar_b no: Near-black outfit with weak faction colour and grimy texture reads as unfinished.
+Cl: A {} | B {} | bar_b no: Appealing adventurer silhouette carries it; flat, rim-less lighting keeps it below shipping finish.
+Ll: A {} | B {} | bar_b no: Warm, readable face and palette carry it, but it leans more cartoon than the rest of the cast.
+Dl: A {} | B {} | bar_b no: Black uniform with almost no oxblood and murky values gives a weak faction read.
+top_changes: [{"change": "Add a key/rim light and lift exposure on character and creature stages so dark costumes separate from the backdrop, and push Team Tether uniforms to a consistent readable oxblood instead of near-black", "kind": "scene"}, {"change": "Replace the smeared Meadows ground texture and sparse low-poly trees around the Tether sites with dense grass/wildflower groves and proper wall materials, and make each aftermath remove or topple the red banner", "kind": "scene"}, {"change": "Rebuild the cartoon/undersized creatures (such as the clay boar) as naturalistic adult animals clearly taller than the 1.80 m trainer, and fix texture artefacts (villager leg patch, ghosted rank variant, staff clipping)", "kind": "new_art"}]
+
+# judge 2 defect calls and Bar B
+Gu: A {} | B {} | bar_b yes: Richly detailed fur-trimmed costume carries it to shipping-game character finish, held back slightly by flat stage lighting.
+Zq: A {} | B {} | bar_b no: Clean but plain, slightly chibi villager; B's grey trousers and pink arms break costume cohesion.
+Rr: A {} | B {} | bar_b yes: Distinct robe-and-braid silhouette with a fitting palette reads as a shipping NPC, though the face washes out at small size.
+Kj: A {} | B {} | bar_b no: Faction identity is clear but the dark oxblood outfit muddies, and the rank variant nearly disappears, especially on B.
+Xi: A {} | B {} | bar_b no: Blurry repetitive ground, flat fortress texture and a uniform tree wall sink it; B also leaves Tether banners up after the win.
+Gv: A {} | B {} | bar_b no: A's naturalistic spotted boar approaches the style bar but sits only about trainer height; B's clay mascot pig is off-style.
+Bu: A {} | B {} | bar_b no: Pleasant field outfit on A, but B's shin texture stain and arm blotches read as a broken material.
+Jq: A {} | B {} | bar_b yes: Strong longcoat silhouette with gold trim reads as a hero NPC; B's lifted trim keeps it from collapsing into a dark mass.
+Ic: A {} | B {} | bar_b no: Near-black outfit with almost no faction colour leaves a weak silhouette and no Team Tether read.
+Cl: A {} | B {} | bar_b yes: Teal scarf and adventurer gear give an appealing, readable silhouette at shipping finish.
+Ll: A {} | B {} | bar_b yes: Expressive, appealing elder face with clear eyes; slightly more cartoon than the realistic cast members.
+Dl: A {} | B {} | bar_b no: Dark generic outfit with little faction colour; A's ashen face hurts it, B's warmer skin helps a little.
+top_changes: [{"change": "Lift character stage/rim lighting and raise albedo on dark grunt outfits, adding a clear oxblood faction accent (cap, armband, sash) to grunts A and B so Team Tether reads at small size", "kind": "scene"}, {"change": "Make Meadows aftermaths authored: remove Tether banners after every win, replace deleted props with wreckage/freed-creature dressing, and break up the uniform tree wall and blurry repeated ground texture", "kind": "scene"}, {"change": "Keep the naturalistic boar (side A) over the clay pig and scale it up so it stands clearly taller than the 1.80 m trainer, refining fur detail toward the owner style bar", "kind": "new_art"}]
+
+# judge 3 defect calls and Bar B
+Gu: A {} | B {} | bar_b no: A well-built fur-and-leather Valheim-style chieftain with a strong silhouette, but the material is flat and muddy under neutral light and B is slightly greyer and less alive than A.
+Zq: A {} | B {} | bar_b no: A clean but generic villager whose oversized head and child proportions read younger than his 1.78 m height; all-brown costume gives little value range (A trousers warm brown, B cooler grey-brown with pinker skin).
+Rr: A {} | B {} | bar_b no: The white-and-lavender robe and braid give the best costume identity in the batch, but the face is small and soft at distance; B is a touch paler and flatter than A.
+Kj: A {} | B {} | bar_b no: A clear oxblood Team Tether grunt with readable cap, mask and crossed straps; B crushes the uniform toward black-brown, and the rank variant frame (row 3) looks washed out and almost translucent on both sides, worst on B.
+Xi: A {} | B {} | bar_b no: Blurry ground textures, lollipop trees and flat sky sink both sides. A's aftermaths are site-specific (banner and crates gone, cage opened with the captive freed, collapsed tent smoking); B leaves the red Tether banner standing after the win in rows 1, 3 and 5 and makes row 2's cage vanish, which leaves the site empty.
+Gv: A {} | B {} | bar_b no: A is a naturalistic bristled boar with glowing gold spots, on-style with the owner bar but no taller than the 1.80 m ruler, with hit react identical to standing and a floating faint-mid shadow. B is a clay-smooth mascot pig with pasted moss, off-style, shorter than the ruler and with an odd head-up faint end.
+Bu: A {} | B {} | bar_b no: A tidy green-and-cream villager that fits the village palette. B shows an olive discoloured patch on the left thigh and knee in both views, plus blotchy skin, which reads as a texture fault.
+Jq: A {} | B {} | bar_b no: The fur-collared green coat with gold trim is a strong silhouette and B's brighter grade lets the trim read; on both sides the staff runs diagonally through the legs and is not gripped properly, and the translucent cape looks thin.
+Ic: A {} | B {} | bar_b no: An almost all-black outfit with only the hair carrying Tether red, so faction identity and silhouette collapse at 30%; B lifts the values slightly but adds blotchy olive leggings.
+Cl: A {} | B {} | bar_b no: An appealing adventurer with a teal scarf accent and good costume layering; B's stiffer arms-out pose and flatter scarf read slightly worse.
+Ll: A {} | B {} | bar_b no: A warm, readable elder whose face and eyes carry well in close-up and whose olive vest fits the village family; the slightly cartoon-wide eyes and small full-body frame keep it below the bar, and B is marginally less saturated.
+Dl: A {} | B {} | bar_b no: A near-black uniform with no faction colour and, on A, a grey, sickly face; B warms the skin, which helps, but the outfit is still one dark mass.
+top_changes: [{"change": "Give character stages and NPC materials a proper key, fill and rim setup with more albedo lift, so dark uniforms (Ic, Dl, Kj B) and brown costumes separate into a real value range and faces read", "kind": "scene"}, {"change": "Rebuild the off-style mascot creature in Gv side B (and match side A's size) as a naturalistic boar taller than the 1.80 m ruler, with distinct hit and faint poses, to the owner creature style bar", "kind": "new_art"}, {"change": "Repaint Team Tether grunt variants (Ic, Dl) with readable oxblood panels and emblems so faction identity survives at small size; fix the Bu B thigh texture and the Jq staff clipping and grip", "kind": "new_art"}]

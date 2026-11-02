@@ -1,0 +1,78 @@
+[
+ {
+  "label": "P2-040",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/P2_040_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/P2_040_0_cand.jpg",
+  "brief": "Game frames of charged road surface: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern"
+  ]
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [locations stormwood] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__locations_stormwood__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__locations_stormwood__0_cand.jpg",
+  "brief": "Game frames of Stormwood landmarks and sites, storm light: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [locations stormwood] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__locations_stormwood__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__locations_stormwood__1_cand.jpg",
+  "brief": "Game frames of Stormwood landmarks and sites, storm light: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [locations stormwood] #3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__locations_stormwood__2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__locations_stormwood__2_cand.jpg",
+  "brief": "Game frames of Stormwood landmarks and sites, storm light: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [stormwood_fights stormwood] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__stormwood_fights_stormwo_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__stormwood_fights_stormwo_0_cand.jpg",
+  "brief": "Game frames of Stormwood alpha fights: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [stormwood_fights stormwood] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__stormwood_fights_stormwo_1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__stormwood_fights_stormwo_1_cand.jpg",
+  "brief": "Game frames of Stormwood alpha fights: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [world_inventory stormwood] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__world_inventory_stormwoo_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__world_inventory_stormwoo_0_cand.jpg",
+  "brief": "Game frames of Stormwood harvest and candy pickups: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+  ]
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [world_inventory stormwood] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__world_inventory_stormwoo_1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__world_inventory_stormwoo_1_cand.jpg",
+  "brief": "Game frames of Stormwood harvest and candy pickups: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+  ]
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [stormwood_glass_sink stormwood]",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__stormwood_glass_sink_sto_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__stormwood_glass_sink_sto_0_cand.jpg",
+  "brief": "Game frames of Stormwood Glass Sink landmark: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-STORMWOOD-LIGHT [routes stormwood]",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__routes_stormwood__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/STORMWOOD/img/SHARED_STORMWOOD_LIGHT__routes_stormwood__0_cand.jpg",
+  "brief": "Game frames of Stormwood Glass Field route walk: 1 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ }
+]

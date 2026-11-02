@@ -1,0 +1,57 @@
+Ul: none
+Qd: none
+Ws: none
+To: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Fp: none
+It: none
+Oc: none
+Fy: none
+Hy: none
+Uf: none
+Yc: none
+Sz: none
+
+# judge 1 defect calls and Bar B
+Ul: A {} | B {} | bar_b no: A's pale wolf-moth body with glowing blue wings is closest to the naturalistic bar but reads tiny on the stage and its wings swallow the body in the faint frames; B's big-eyed chibi moth is mascot styling, off target.
+Qd: A {} | B {} | bar_b no: B's banded black-and-copper cobra is a believable, imposing silhouette beside the ruler; A pulls the camera so far back that the ruler is missing or invisible in three frames, and the cream hood is the only value break.
+Ws: A {} | B {} | bar_b no: B's purple-feathered owl has a readable face and feather detail near the style bar; A's grey-violet bird is one mid-tone with no visible eyes, and its faint-end heap is shapeless.
+To: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | bar_b no: A's larger type and iconed Craft/Leave hints read on a handheld, though the orange recipe sublines are still small and only three recipes fit; B's tiny type, truncated recipe lines ('3 St...') and hairline 'Craft: A / Enter' hint are unreadable at 720p.
+Fp: A {} | B {} | bar_b no: A's frosted white wolf with ice-crystal growths is close to the style bar and its faint poses read; B's pinkish wolf with flat blue patches is weaker, its hit react is identical to standing, and the faint end is a seated pose that does not read as faint.
+It: A {} | B {} | bar_b no: A's coral hermit crab with a mossy barnacled shell is believable and well textured, but it barely changes across the four poses; B's moss-shelled turtle-beast is a muddled dark mass whose body hides under the shell, and its face does not read.
+Oc: A {} | B {} | bar_b no: A's dense white fur reads naturalistic, though its faint end is an awkward seated pose facing the camera; B's smoother wolf with a blue gradient floats above its shadow in faint mid, and its fur is flatter.
+Fy: A {} | B {} | bar_b no: A's crisp black-rosette snow leopard with clear hurt and faint reads is at the style bar; B's bluish-grey coat is softer and lower in contrast, and its faint end is a sit that does not read as faint. On both sides the tail overlaps the ruler.
+Hy: A {} | B {} | bar_b no: A's green lizard with a tan spined crest carries identity but sits low and small, and its faint end is an upright sit; B is a plain, smooth, rubbery green monitor with little surface detail, and its tail passes through the ruler.
+Uf: A {} | B {} | bar_b no: The hooded villager's palette and outfit fit the key art, but on both near-identical sides the face texture is soft and low-resolution, with eyes that barely register in close-up.
+Yc: A {} | B {} | bar_b no: A's shaggy ram with heavy curled horns is grounded and readable, but its faint end props the horns bolt upright; B's naturalistic white goat has spindly, overlong horns that double or stretch in the hit-react frame and pierce the faint-mid pose.
+Sz: A {} | B {} | bar_b no: A's tan-and-indigo hedgehog is appealing and readable but leans cute, and its faint poses barely change; B's grey porcupine hides its face under the quills and shows a flat white sheet artefact in the hit-react frame.
+top_changes: [{"change": "Author distinct hit-react and faint-end poses (lying on the side, grounded, eyes closed) for every creature; several sides sit upright, float or barely change, so the hurt and faint reads fail.", "kind": "scene"}, {"change": "Add a rim light and lift the value of the dark and mid-tone creatures (Ws A, It B, Qd A), and keep the stage camera framing the 1.80 m ruler, so silhouettes and faces separate from the grey ground at small size.", "kind": "scene"}, {"change": "Remake the off-style or low-detail creatures (Ul B chibi moth, Hy B rubbery monitor, Sz B porcupine with sheet artefact, Yc B spindly horns) to the Galecrest/Stormursa naturalistic fur-and-scale standard, and rebuild the villager face texture at higher resolution.", "kind": "new_art"}]
+
+# judge 2 defect calls and Bar B
+Ul: A {} | B {} | bar_b no: A's pale wolf body with glowing blue moth wings is on-style but small and its wings clip the floor in faint end; B is a chibi pink mascot moth barely trainer height, off the naturalistic target.
+Qd: A {} | B {} | bar_b no: B's large banded cobra has good scale and silhouette but its near-black body sinks into the dark backdrop with no rim light; A is small, low to the ground and its scale against the ruler only reads in the last frame.
+Ws: A {} | B {} | bar_b no: B's purple owl has visible face and feather detail and readable faint poses; A's dull grey-violet bird is a low-contrast mid-tone with an unclear face.
+To: A {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | bar_b no: A's large wrapped recipe text and labelled Craft/Leave prompts read on a handheld, though the orange-on-teal cost text is soft; B's tiny truncated rows ('3 St...') and faint 'Craft: A / Enter' text fail at a glance.
+Fp: A {} | B {} | bar_b yes: A's ice-crystal white wolf has a strong silhouette, natural fur and clear hurt/faint reads; B's pinkish flat-shaded wolf ends its faint sitting upright, which breaks the read.
+It: A {} | B {} | bar_b no: A's coral hermit crab with a mossy shell is readable and large but its hit and faint poses barely change; B's dark shelled brute reads its faint by curling but its face and limbs are lost in shadow.
+Oc: A {} | B {} | bar_b yes: B's white wolf with blue tail glow and dark points has stronger value structure and a clear faint; A's all-white fluff is a soft blob and its faint end turns into an unreadable lump.
+Fy: A {} | B {} | bar_b yes: A's snow leopard has crisp rosettes, a good silhouette and a grounded faint; B's softer grey version ends the faint sitting up, so the knockout does not read.
+Hy: A {} | B {} | bar_b no: A's frilled lizard has an identity but is low and small, and its faint end is a sitting pose; B's plain green monitor has a flat, featureless surface and little appeal.
+Uf: A {} | B {} | bar_b no: The hooded villager fits the world's palette, but the flat, smeared face and tiny eyes hold it below the finish of the key art.
+Yc: A {} | B {} | bar_b no: A's woolly ram with dark horns is close to the style bar, but its faint end props the horns up oddly; B's realistic goat has a duplicated or splayed horn artefact in hit react and a thin silhouette.
+Sz: A {} | B {} | bar_b no: A's peach hedgehog with blue-tipped quills is readable and tall but its faint poses hardly differ; B's white porcupine is a noisy quill mass with a flat white sheet artefact in hit react.
+top_changes: [{"change": "Bring the remaining off-bar creatures (Ul B mascot moth, Hy lizards, Sz porcupine) to the Galecrest/Stormursa naturalistic standard with one clear elemental trait", "kind": "new_art"}, {"change": "Add a rim/back light and lift the stage value so dark creatures (Qd B, It B, Ws A) separate from the backdrop", "kind": "scene"}, {"change": "Fix faint-end animations that sit up or barely change (Fp B, Fy B, Hy A, It A, Sz A) so the knockout lies grounded and readable", "kind": "scene"}]
+
+# judge 3 defect calls and Bar B
+Ul: A {} | B {} | bar_b no: A's furred white body with lit blue wings is close to the naturalistic bar but small and busy at 30%; B's big-eyed chibi moth is mascot styling, off target.
+Qd: A {} | B {} | bar_b no: B's banded cobra reads well and towers over the ruler, but A's framing drops the ruler from three frames and its pink gaping mouth reads as a toy; neutral stage gives no Valheim-class light.
+Ws: A {} | B {} | bar_b no: B's feathered purple owl has believable plumage and a clear face; A's grey-violet raven goes mid-tone against the stage and the faint end collapses into a flat lump.
+To: A {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | bar_b no: A's large readable recipe text on the blue-grey panel fits the UI direction, but its Craft/Leave glyphs are tiny; B truncates recipe lines and hides 'Craft: A / Enter' in small grey text.
+Fp: A {} | B {} | bar_b yes: A's frost wolf with ice-crystal mane is naturalistic and its hurt/faint poses read clearly; B's pinkish-white flat fur and a sitting 'faint end' sink it.
+It: A {} | B {} | bar_b no: A's coral crab under a mossy shell is a strong readable silhouette with a visible face; B is mostly a dark green shell whose head and limbs vanish in the faint frames.
+Oc: A {} | B {} | bar_b no: A's shaggy white wolf is on-style but nearly pure white with little value structure, and its faint end reads as sitting; B's flat blue gradient looks more stylised, though its faint reads.
+Fy: A {} | B {} | bar_b yes: A's crisp rosetted snow leopard is readable at small size with a grounded faint; B's softer fur is naturalistic but its faint end is a crouch, and in both the trainer stands inside the tail.
+Hy: A {} | B {} | bar_b no: A's spined lizard is lively but leans cartoon and sits upright for the faint end; B's monitor is believable but a dull single-tone green with no elemental trait, and its tail clips the trainer.
+Uf: A {} | B {} | bar_b no: The hooded traveller's palette fits the key art, but the painted flat face with blank, unreadable eyes looks a step below the creatures in finish.
+Yc: A {} | B {} | bar_b no: A's fluffy ram with heavy dark horns echoes the Stormcapra bar but sits up oddly in the faint end; B's ibex has spindly over-long horns that splay into duplicates in the hit-react frame.
+Sz: A {} | B {} | bar_b no: A's hedgehog has a visible face and two-tone spines but a cute, slightly mascot read; B's white porcupine hides its face, and a flat paper-like quill sheet breaks the hit-react frame.
+top_changes: [{"change": "Fix the faint-end poses that read as sitting or crouching (Fp B, Oc A, Fy B, Hy A, Yc A) so every creature ends lying on its side, and keep the trainer ruler clear of tails and inside the frame (Qd A)", "kind": "scene"}, {"change": "Add rim light and a stronger dark/light value split on near-monotone creatures (white wolves, grey raven, green monitor), plus one readable elemental accent per creature", "kind": "scene"}, {"change": "Rebuild the off-style or broken creatures (chibi moth Ul B, porcupine Sz B with quill artefact, ibex horn duplication Yc B) to the naturalistic owner style bar", "kind": "new_art"}]

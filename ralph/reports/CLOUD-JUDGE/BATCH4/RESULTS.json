@@ -1,0 +1,833 @@
+{
+ "F38 light (all exterior)": {
+  "main": 6.0,
+  "batch4": 6.42,
+  "delta": 0.42,
+  "pairs_used": 11,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F38 light (all exterior) #1",
+   "F38 light (all exterior) #2",
+   "F38 light (all exterior) #3"
+  ],
+  "set_scores": {
+   "F38 light (all exterior) #1": [
+    6.66,
+    6.31
+   ],
+   "F38 light (all exterior) #2": [
+    5.91,
+    6.39
+   ],
+   "F38 light (all exterior) #3": [
+    5.42,
+    6.57
+   ]
+  },
+  "folder": "MEADOWS"
+ },
+ "P2-003": {
+  "main": 5.86,
+  "batch4": 5.71,
+  "delta": -0.15,
+  "pairs_used": 6,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-003 #1",
+   "P2-003 #2"
+  ],
+  "set_scores": {
+   "P2-003 #1": [
+    6.08,
+    5.6
+   ],
+   "P2-003 #2": [
+    5.64,
+    5.82
+   ]
+  },
+  "folder": "MEADOWS"
+ },
+ "P2-006": {
+  "main": 5.69,
+  "batch4": 6.22,
+  "delta": 0.53,
+  "pairs_used": 4,
+  "excluded": [
+   "meadows-locations/meadows__landmark__old_mill_crossing__day__approach.jpg"
+  ],
+  "missing": [],
+  "sets": [
+   "P2-006"
+  ],
+  "set_scores": {
+   "P2-006": [
+    5.69,
+    6.22
+   ]
+  },
+  "folder": "MEADOWS"
+ },
+ "P2-012": {
+  "main": 4.97,
+  "batch4": 6.44,
+  "delta": 1.47,
+  "pairs_used": 5,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-012 #1",
+   "P2-012 #2"
+  ],
+  "set_scores": {
+   "P2-012 #1": [
+    5.02,
+    6.53
+   ],
+   "P2-012 #2": [
+    4.93,
+    6.35
+   ]
+  },
+  "folder": "MEADOWS"
+ },
+ "OWNER-1031 floating drums: rock-shoulder shelves/outcrops over meadows (P2-023)": {
+  "main": 5.52,
+  "batch4": 5.75,
+  "delta": 0.23,
+  "pairs_used": 2,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "OWNER-1031 floating drums: rock-shoulder shelves/outcrops over meadows (P2-023)"
+  ],
+  "set_scores": {
+   "OWNER-1031 floating drums: rock-shoulder shelves/outcrops over meadows (P2-023)": [
+    5.52,
+    5.75
+   ]
+  },
+  "folder": "CLOUDREACH-A"
+ },
+ "OWNER-1031 floating drums: drum bottoms and beacon plinths (P2-023)": {
+  "main": 6.47,
+  "batch4": 6.41,
+  "delta": -0.06,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "OWNER-1031 floating drums: drum bottoms and beacon plinths (P2-023)"
+  ],
+  "set_scores": {
+   "OWNER-1031 floating drums: drum bottoms and beacon plinths (P2-023)": [
+    6.47,
+    6.41
+   ]
+  },
+  "folder": "CLOUDREACH-A"
+ },
+ "OWNER-1031 floating drums: cliff wall profile (P2-023)": {
+  "main": 6.56,
+  "batch4": 6.2,
+  "delta": -0.36,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "OWNER-1031 floating drums: cliff wall profile (P2-023)"
+  ],
+  "set_scores": {
+   "OWNER-1031 floating drums: cliff wall profile (P2-023)": [
+    6.56,
+    6.2
+   ]
+  },
+  "folder": "CLOUDREACH-A"
+ },
+ "P2-066": {
+  "main": 3.56,
+  "batch4": 5.19,
+  "delta": 1.63,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-066"
+  ],
+  "set_scores": {
+   "P2-066": [
+    3.56,
+    5.19
+   ]
+  },
+  "folder": "TIDEWAKE-A"
+ },
+ "P2-067": {
+  "main": 3.65,
+  "batch4": 4.87,
+  "delta": 1.22,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-067"
+  ],
+  "set_scores": {
+   "P2-067": [
+    3.65,
+    4.87
+   ]
+  },
+  "folder": "TIDEWAKE-A"
+ },
+ "P2-026": {
+  "main": 4.96,
+  "batch4": 5.43,
+  "delta": 0.47,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-026"
+  ],
+  "set_scores": {
+   "P2-026": [
+    4.96,
+    5.43
+   ]
+  },
+  "folder": "TIDEWAKE-A"
+ },
+ "P2-008": {
+  "main": 5.47,
+  "batch4": 5.8,
+  "delta": 0.33,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-008"
+  ],
+  "set_scores": {
+   "P2-008": [
+    5.47,
+    5.8
+   ]
+  },
+  "folder": "TIDEWAKE-A"
+ },
+ "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items)": {
+  "main": 6.08,
+  "batch4": 6.31,
+  "delta": 0.23,
+  "pairs_used": 22,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #1",
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #2",
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #3",
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #4",
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #5",
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #6"
+  ],
+  "set_scores": {
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #1": [
+    5.97,
+    6.3
+   ],
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #2": [
+    6.03,
+    6.4
+   ],
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #3": [
+    6.07,
+    6.3
+   ],
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #4": [
+    5.67,
+    6.17
+   ],
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #5": [
+    6.2,
+    6.53
+   ],
+   "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #6": [
+    6.53,
+    6.17
+   ]
+  },
+  "folder": "TIDEWAKE-STORMWOOD"
+ },
+ "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items)": {
+  "main": 7.11,
+  "batch4": 6.42,
+  "delta": -0.69,
+  "pairs_used": 22,
+  "excluded": [],
+  "missing": [
+   "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach"
+  ],
+  "sets": [
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #1",
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #2",
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #3",
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #4",
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #5",
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #6"
+  ],
+  "set_scores": {
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #1": [
+    6.68,
+    6.78
+   ],
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #2": [
+    7.48,
+    7.0
+   ],
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #3": [
+    7.48,
+    5.03
+   ],
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #4": [
+    6.47,
+    5.56
+   ],
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #5": [
+    6.94,
+    6.52
+   ],
+   "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #6": [
+    7.58,
+    7.64
+   ]
+  },
+  "folder": "CLOUDREACH-B"
+ },
+ "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish)": {
+  "main": 6.08,
+  "batch4": 5.77,
+  "delta": -0.31,
+  "pairs_used": 14,
+  "excluded": [],
+  "missing": [
+   "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach"
+  ],
+  "sets": [
+   "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish) #1",
+   "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish) #2",
+   "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish) #3",
+   "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish) #4"
+  ],
+  "set_scores": {
+   "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish) #1": [
+    6.08,
+    6.29
+   ],
+   "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish) #2": [
+    6.32,
+    6.44
+   ],
+   "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish) #3": [
+    6.62,
+    5.01
+   ],
+   "F40 ground-cover clustering (P2-021 open terrain, P2-025 grass and stone finish) #4": [
+    5.31,
+    5.34
+   ]
+  },
+  "folder": "CLOUDREACH-A"
+ },
+ "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters)": {
+  "main": 5.37,
+  "batch4": 5.82,
+  "delta": 0.45,
+  "pairs_used": 10,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters) #1",
+   "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters) #2",
+   "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters) #3"
+  ],
+  "set_scores": {
+   "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters) #1": [
+    5.52,
+    5.85
+   ],
+   "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters) #2": [
+    5.15,
+    5.71
+   ],
+   "F39 ground-cover clustering (P2-008 shore landforms, P2-057 grass around named characters) #3": [
+    5.43,
+    5.89
+   ]
+  },
+  "folder": "TIDEWAKE-A"
+ },
+ "P2-038": {
+  "main": 5.33,
+  "batch4": 5.67,
+  "delta": 0.34,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-038"
+  ],
+  "set_scores": {
+   "P2-038": [
+    5.33,
+    5.67
+   ]
+  },
+  "folder": "TIDEWAKE-STORMWOOD"
+ },
+ "P2-056": {
+  "main": 5.27,
+  "batch4": 5.53,
+  "delta": 0.26,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-056"
+  ],
+  "set_scores": {
+   "P2-056": [
+    5.27,
+    5.53
+   ]
+  },
+  "folder": "TIDEWAKE-STORMWOOD"
+ },
+ "P2-055": {
+  "main": 5.27,
+  "batch4": 5.27,
+  "delta": 0.0,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-055"
+  ],
+  "set_scores": {
+   "P2-055": [
+    5.27,
+    5.27
+   ]
+  },
+  "folder": "TIDEWAKE-STORMWOOD"
+ },
+ "P2-095": {
+  "main": 7.28,
+  "batch4": 6.7,
+  "delta": -0.58,
+  "pairs_used": 1,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-095"
+  ],
+  "set_scores": {
+   "P2-095": [
+    7.28,
+    6.7
+   ]
+  },
+  "folder": "MEADOWS"
+ },
+ "P2-096": {
+  "main": 7.28,
+  "batch4": 6.7,
+  "delta": -0.58,
+  "pairs_used": 1,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-095"
+  ],
+  "set_scores": {
+   "P2-095": [
+    7.28,
+    6.7
+   ]
+  },
+  "folder": "MEADOWS",
+  "note": "shares the P2-095 crafting frame and set (both catalog defects recorded on it)"
+ },
+ "P2-108": {
+  "main": null,
+  "batch4": null,
+  "delta": null,
+  "pairs_used": 0,
+  "excluded": [],
+  "missing": [],
+  "note": "no control frames on main for these stands"
+ },
+ "P2-050": {
+  "main": 6.17,
+  "batch4": 6.31,
+  "delta": 0.14,
+  "pairs_used": 3,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "P2-050"
+  ],
+  "set_scores": {
+   "P2-050": [
+    6.17,
+    6.31
+   ]
+  },
+  "folder": "MEADOWS"
+ },
+ "F36 (0) #3 Galewisp": {
+  "main": 5.43,
+  "batch4": 7.59,
+  "delta": 2.16,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #3 Galewisp"
+  ],
+  "set_scores": {
+   "F36 (0) #3 Galewisp": [
+    5.43,
+    7.59
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (0) #4 Mudsnout": {
+  "main": 7.21,
+  "batch4": 7.93,
+  "delta": 0.72,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #4 Mudsnout"
+  ],
+  "set_scores": {
+   "F36 (0) #4 Mudsnout": [
+    7.21,
+    7.93
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (0) #9 Mirejaw": {
+  "main": 6.18,
+  "batch4": 6.94,
+  "delta": 0.76,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #9 Mirejaw"
+  ],
+  "set_scores": {
+   "F36 (0) #9 Mirejaw": [
+    6.18,
+    6.94
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (0) #12 Aeriex": {
+  "main": 6.6,
+  "batch4": 7.55,
+  "delta": 0.95,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #12 Aeriex"
+  ],
+  "set_scores": {
+   "F36 (0) #12 Aeriex": [
+    6.6,
+    7.55
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (1) Aquaryn": {
+  "main": 7.32,
+  "batch4": 6.3,
+  "delta": -1.02,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Aquaryn"
+  ],
+  "set_scores": {
+   "F36 (1) Aquaryn": [
+    7.32,
+    6.3
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (0) #16 Ashtusk": {
+  "main": 7.4,
+  "batch4": 6.0,
+  "delta": -1.4,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #16 Ashtusk"
+  ],
+  "set_scores": {
+   "F36 (0) #16 Ashtusk": [
+    7.4,
+    6.0
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (1) Breezetail": {
+  "main": 5.65,
+  "batch4": 7.09,
+  "delta": 1.44,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Breezetail"
+  ],
+  "set_scores": {
+   "F36 (1) Breezetail": [
+    5.65,
+    7.09
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (0) #6 Burrowback": {
+  "main": 7.66,
+  "batch4": 7.78,
+  "delta": 0.12,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #6 Burrowback"
+  ],
+  "set_scores": {
+   "F36 (0) #6 Burrowback": [
+    7.66,
+    7.78
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (0) #17 Cannonback": {
+  "main": 6.68,
+  "batch4": 6.34,
+  "delta": -0.34,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #17 Cannonback"
+  ],
+  "set_scores": {
+   "F36 (0) #17 Cannonback": [
+    6.68,
+    6.34
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (1) Cindercub": {
+  "main": 7.4,
+  "batch4": 8.08,
+  "delta": 0.68,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Cindercub"
+  ],
+  "set_scores": {
+   "F36 (1) Cindercub": [
+    7.4,
+    8.08
+   ]
+  },
+  "folder": "CREATURES-1"
+ },
+ "F36 (1) Cliffspike": {
+  "main": 6.6,
+  "batch4": 5.58,
+  "delta": -1.02,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Cliffspike"
+  ],
+  "set_scores": {
+   "F36 (1) Cliffspike": [
+    6.6,
+    5.58
+   ]
+  },
+  "folder": "CREATURES-2"
+ },
+ "F36 (0) #11 Cloudfang": {
+  "main": 6.01,
+  "batch4": 7.5,
+  "delta": 1.49,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #11 Cloudfang"
+  ],
+  "set_scores": {
+   "F36 (0) #11 Cloudfang": [
+    6.01,
+    7.5
+   ]
+  },
+  "folder": "CREATURES-2"
+ },
+ "F36 (1) Cragclaw": {
+  "main": 6.7,
+  "batch4": 5.9,
+  "delta": -0.8,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Cragclaw"
+  ],
+  "set_scores": {
+   "F36 (1) Cragclaw": [
+    6.7,
+    5.9
+   ]
+  },
+  "folder": "CREATURES-2"
+ },
+ "F36 (1) Craghorn": {
+  "main": 6.92,
+  "batch4": 6.17,
+  "delta": -0.75,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Craghorn"
+  ],
+  "set_scores": {
+   "F36 (1) Craghorn": [
+    6.92,
+    6.17
+   ]
+  },
+  "folder": "CREATURES-2"
+ },
+ "F36 (1) Duskhush": {
+  "main": 7.08,
+  "batch4": 6.28,
+  "delta": -0.8,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Duskhush"
+  ],
+  "set_scores": {
+   "F36 (1) Duskhush": [
+    7.08,
+    6.28
+   ]
+  },
+  "folder": "CREATURES-2"
+ },
+ "F36 (1) Frostclaw": {
+  "main": 6.76,
+  "batch4": 7.45,
+  "delta": 0.69,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Frostclaw"
+  ],
+  "set_scores": {
+   "F36 (1) Frostclaw": [
+    6.76,
+    7.45
+   ]
+  },
+  "folder": "CREATURES-2"
+ },
+ "F36 (0) #14 Fulgocobra": {
+  "main": 5.26,
+  "batch4": 6.86,
+  "delta": 1.6,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (0) #14 Fulgocobra"
+  ],
+  "set_scores": {
+   "F36 (0) #14 Fulgocobra": [
+    5.26,
+    6.86
+   ]
+  },
+  "folder": "CREATURES-2"
+ },
+ "F36 (1) Glimmermoth": {
+  "main": 4.51,
+  "batch4": 6.49,
+  "delta": 1.98,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Glimmermoth"
+  ],
+  "set_scores": {
+   "F36 (1) Glimmermoth": [
+    4.51,
+    6.49
+   ]
+  },
+  "folder": "CREATURES-2"
+ },
+ "F36 (1) Mangrove Monitor": {
+  "main": 6.17,
+  "batch4": 5.53,
+  "delta": -0.64,
+  "pairs_used": 4,
+  "excluded": [],
+  "missing": [],
+  "sets": [
+   "F36 (1) Mangrove Monitor"
+  ],
+  "set_scores": {
+   "F36 (1) Mangrove Monitor": [
+    6.17,
+    5.53
+   ]
+  },
+  "folder": "CREATURES-2"
+ }
+}
