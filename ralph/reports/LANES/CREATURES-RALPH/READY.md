@@ -12,6 +12,28 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - My cross-session messages to the coordinator are refused (`elevated_session_untrusted_device`), so this file is the channel.
 - **Wake-ups.** I did not arm `send_later` wake-ups on a peer session's request alone. The user has to ask for those.
 
+## Bramblebun + Ripplet: smoke_combat camera anchor (coordinator request, 2 Nov ~03:25 UTC)
+
+Analysis only. `smoke_combat` needs the Meadows world imported, which does not fit this container's disk, so I could not run it.
+
+- **The check.** `smoke_combat.gd::_check_the_fight_opened` takes the rig position minus height and shoulder, and fails when that is nearer the trainer than the ally.
+- **What sets that position.**
+  - `combat_manager.gd` calls `set_framing_pivot_offset(solution.pivot − ally)` and then `apply_fight_camera_pose`.
+  - `fight_camera.gd::pivot()` lerps between the ally's and foe's **rendered** AABB centres (`camera.json midpoint_bias` 0.5). Those centres are `RENDER_BOUNDS.measure(model)`.
+  - The arena spacing also grows with the **rendered** footprint (`_fighter_render_footprint` → `_admission_render_radius`, the xz reach of the render box corners).
+- **Measured with CPU skinning, rest/idle pose.**
+  - Both remakes are centred on their origins, the same as the installed models. Nothing is offset.
+  - Bramblebun is longer: remake 1.59 × 3.00 × 3.53 m against installed 1.44 × 3.00 × 2.99 m. Its admission radius is 1.94 m against 1.66 m (hit pose: 2.30 m).
+  - The extra length is in both ends: the head reaches +1.77 m and the leafy tail −1.77 m. Rotating the tail (±25–40°) does not shorten it, because the head end is just as long.
+  - Ripplet: remake 1.94 × 3.60 × 5.87 m against installed 2.86 × 3.60 × 5.73 m (hit pose 6.22 m long).
+- **What this means.**
+  - The longer rendered bodies widen the formation and move the framing midpoint away from the ally, so the anchor ends up as near the trainer (2.6 m) as the creature (2.8 m).
+  - Without shrinking, nothing in the remake mesh or rig moves it back. There is no stray island or offset to remove; the identity-defining head and leafy tail set the length.
+- **Options (need a decision; I have not made any of these changes).**
+  1. **Re-proportion the remake to the installed footprint.** This is how CAUSE-REMAKES fixed Terrapup (x 0.83, z 1.05, height kept, `terrapup/candidate_owner1101/source/fit_installed_footprint.py`). For Bramblebun that means z 0.85. It shortens the body, so it conflicts with "never shrink" unless the owner rule allows a height-kept re-proportion. **Owner/coordinator call.**
+  2. **Bias the fight-camera midpoint toward the ally** for these pair classes (`camera.json` `midpoint_bias` below 0.5, or per `size_matrix` profile). This is a config change in the camera system, so it affects every fight's framing; CI and a GPU look would decide.
+  3. **Leave both HELD** until one of the above is chosen.
+
 ## Done (CPU-provisional; batch these into the GPU confirmation pass)
 
 - **Cliffspike** r1: 5.53 → 6.49 mapped (+0.96; target ≥ 5.80). GLB weight relax plus the coat flag `creatures_ralph_cliffspike_bands`. Ships as is.
