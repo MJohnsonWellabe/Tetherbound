@@ -21,7 +21,13 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 
 ## Queue additions (coordinator, GPU batch 5)
 
-- **Meadowhart remake (live): 7.67 → 6.91 on GPU.** It joins Task 1 with a CPU target ≥ 6.9. I need the batch-5 judge notes (`ralph/reports/CLOUD-JUDGE/BATCH5/CREATURES-UI/recorded_defects.txt`, after #797 lands) to diagnose.
+- **Meadowhart remake (live): 7.67 → 6.91 on GPU.** It joins Task 1 with a CPU target ≥ 6.9.
+  - **CPU baseline (2 Nov, ~07:05 UTC).** The installed stag has a full-body moss mantle. The remake is a leaner deer with green vine lines wrapping the body, thinner legs, and a faint that ends as a low lump.
+  - **Skinning is clean:** worst clip stretch is 0.25 m, so this is a look loss, not an artefact.
+  - **Waiting on notes.** I need the batch-5 judge notes (`ralph/reports/CLOUD-JUDGE/BATCH5/CREATURES-UI/recorded_defects.txt`, not on main yet; #797) before choosing the fix. Candidate fixes, depending on the notes:
+    - soften the vine contrast so it reads as markings, not ropes;
+    - a value lift on the coat;
+    - the faint pose (Blender).
 - **Mosshock remake (live): 6.55 → 6.45 on GPU.** A mild regression, at the end of Task 1.
 
 ## Bramblebun + Ripplet: smoke_combat camera anchor (coordinator request, 2 Nov ~03:25 UTC)
