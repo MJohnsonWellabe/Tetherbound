@@ -523,7 +523,7 @@
       }
     },
     "creatures_ralph_cragclaw_body_mid": {
-      "_why": "Creatures-ralph (2 Nov 2026), Cragclaw attempt 3 (batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'; r6: a pale lift read 'unpainted clay'). Body below the shell in a mid-value slate-olive of the shell's hue family, face a step lighter (data/creatures/remake_grades.json cragclaw), blue lines lit through glow_read at 2.4. Pairs with the scale flag creatures_ralph_cragclaw_presence.",
+      "_why": "Creatures-ralph (2 Nov 2026), Cragclaw attempt 3 (batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'; r6: a pale lift read 'unpainted clay'). Body below the shell in a mid-value slate-olive of the shell's hue family, face a step lighter (data/creatures/remake_grades.json cragclaw), blue lines lit through glow_read at 2.4. Pairs with the scale flag creatures_ralph_cragclaw_presence. r7 CPU three-judge A/B: 5.39 -> 6.34 mapped (target 5.90), ON.",
       "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0.jpg": {
