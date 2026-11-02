@@ -19,7 +19,8 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - **Tuskroot remake ON** r4 (takes Ashtusk live). Installed → remake mapped: Tuskroot 6.85 → 7.06; Ashtusk 5.36 → 7.27. The Tuskroot GLB weights are relaxed. Commit "r4".
 - **Craghorn** r2: 5.75 → 6.45 mapped (+0.70; target ≥ 6.12). Weight relax in the GLB (horn stretch 1.38 m → 0.17 m). Ships as is.
 - **Cannonback** r6: 5.33 → 6.22 mapped (+0.89; target ≥ 5.88). Coat flag `creatures_ralph_cannonback_moss` (ON).
-- GPU form: `capture_f36_poses.gd -- --species=cliffspike,ashtusk,craghorn,cannonback,tuskroot --whole-body --context` with `remake_owner1101_tuskroot` enabled for Ashtusk; Forward+ 1920x1080, High first.
+- **Cragclaw** r7: 5.39 → 6.34 mapped (+0.95; target ≥ 5.90). Coat flag `creatures_ralph_cragclaw_body_mid` plus scale flag `creatures_ralph_cragclaw_presence` (×1.2). Landing needs the scale gameplay checks (arena containment) in CI.
+- GPU form: `capture_f36_poses.gd -- --species=cliffspike,ashtusk,craghorn,cannonback,tuskroot,cragclaw --whole-body --context` with `remake_owner1101_tuskroot` enabled for Ashtusk; Forward+ 1920x1080, High first.
 
 ## Task 2 unholds that need CI (separate commit, "Task 2: turn ON ... CI to verify")
 
@@ -35,12 +36,12 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 
 - **Aquaryn and Duskhush:** two approaches each with no gain (r1, r3). The judges ask for new models, which means Meshy, and the key is not in this container.
 - **Mangrove Monitor:** two failed approaches (r2, r6). It needs new art via Meshy.
-- **Cragclaw:** +0.47 in r6, short of its target. Next: a mid-value body in the shell's hue family plus a scale-up (`r6/VERDICT.md`).
-- **Burrowback, Trailpup and Paddlenewt remakes** (r5): each scores below its installed model, so they stay HELD. The next approach for each is in `r5/VERDICT.md`.
+- **Burrowback and Trailpup remakes:** two approaches each (r5, r7) and still below their installed models. They stay HELD and are parked; they need new art or a re-rig (Blender).
+- **Paddlenewt remake:** the hunched bipedal mesh needs new art (r5).
 
 ## Next
 
-- Cragclaw attempt 3; Burrowback/Nightburrow plate grade (gap −0.09); Trailpup/Stormtrail regrade.
+- Task 3: work up from the lowest-scoring creatures that need no new art.
 
 ## Local checks
 
