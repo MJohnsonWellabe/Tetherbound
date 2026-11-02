@@ -598,7 +598,7 @@
     },
     "remake_owner1101_paddlenewt": {
       "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Paddlenewt, a big newt with a paddle tail and frilled cheeks, teal skin with cream belly, a believable lean (Meshy 01a197ea-004c-7252-aa57-ef9ac793ae83). dog3 quadruped rig at the installed 2.15 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua accents and eyes. Provenance: assets/creatures/tetherbound/paddlenewt/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "paddlenewt": {
           "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101.glb",

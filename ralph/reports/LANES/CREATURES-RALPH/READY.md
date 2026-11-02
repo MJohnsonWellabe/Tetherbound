@@ -12,6 +12,18 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - My cross-session messages to the coordinator are refused (`elevated_session_untrusted_device`), so this file is the channel.
 - **Wake-ups.** I did not arm `send_later` wake-ups on a peer session's request alone. The user has to ask for those.
 
+## Paddlenewt remake ON (2 Nov ~06:55 UTC, coordinator GPU batch 5: installed 6.50 → remake 7.16)
+
+- **Contract.** The HELD reason was "aspect variant Riftfrill uses textures painted for the old model". That is met: r5 shows Riftfrill's repaint resolving on the remake mesh.
+- **Change.** The flag is ON and removed from HELD.
+- **Caveat for the GPU.** On CPU r5, Riftfrill on the remake scored 5.70 against 6.49 installed. The judges called it "galaxy noise", the hunched stance came from the Paddlenewt mesh, and the GPU rates Paddlenewt higher. Riftfrill has not been GPU-judged on the remake yet, so please include it in the next GPU batch.
+- **CI.** `test_dual_type` and `test_creature_model_flags` run in CI only.
+
+## Queue additions (coordinator, GPU batch 5)
+
+- **Meadowhart remake (live): 7.67 → 6.91 on GPU.** It joins Task 1 with a CPU target ≥ 6.9. I need the batch-5 judge notes (`ralph/reports/CLOUD-JUDGE/BATCH5/CREATURES-UI/recorded_defects.txt`, after #797 lands) to diagnose.
+- **Mosshock remake (live): 6.55 → 6.45 on GPU.** A mild regression, at the end of Task 1.
+
 ## Bramblebun + Ripplet: smoke_combat camera anchor (coordinator request, 2 Nov ~03:25 UTC)
 
 Analysis only. `smoke_combat` needs the Meadows world imported, which does not fit this container's disk, so I could not run it.
