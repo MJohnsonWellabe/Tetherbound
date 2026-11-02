@@ -1,0 +1,4 @@
+Ad: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vk: "near-black mass, value sinks into the dark stage"; "face and anatomy do not read"; "faint does not read"
+Ho: none
+Ao: none

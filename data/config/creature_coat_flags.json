@@ -268,6 +268,30 @@
       "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage (1 Nov, three judges): the owner rule's fantasy element (glowing eyes plus element lines, veins or spots) does not read at gameplay distance on the remakes; only Brooktail's aqua spots showed (its map covers 2.8% of the texture at mean 0.76; Terrapup's 0.02%, eye dots only; Bramblebun's veins mean 0.52). One shared pass for all 46 remakes with a glow mask: the existing arc_emission mask (same hue choices) lit fully, a small halo inside the UV island for eye-only and thin-line masks (none above 2% coverage, so spots never become a body glow), purer element hue so Compatibility's LDR clip keeps the colour (warm glows held at hue 28+), emission energy 2.6 / 2.0 / 1.4 by coverage under 0.15% / under 2% / above. Bramblebun's core is rebuilt from its crevice veins (hue 112-155, about 3%; leaves stay unlit) at 2.0. Solmane and Tuskroot have no glow map (none in the concept / natural amber eyes). Real emission, not bloom: it reads with glow off. Script tools/art_pipeline/remake_owner1101_finish.py glow.",
       "enabled": false,
       "coats": {
+        "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/duskhush/candidate_r9/models/creature_duskhush_r9_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/duskhush/candidate_r9/models/creature_duskhush_r9_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_glow_read.png",
+          "emission_energy": 1.4
+        },
+        "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_glow_read.png",
+          "emission_energy": 2.0
+        },
         "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_Image_0.jpg": {
           "emission": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_glow_read.png",
           "emission_energy": 1.4
@@ -622,6 +646,15 @@
           "albedo": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_Image_0_otter.jpg",
           "roughness": 0.85,
           "specular": 0.3
+        }
+      }
+    },
+    "creatures_ralph_thundertunnel_velvet": {
+      "_why": "Creatures-ralph (2 Nov 2026), Thundertunnel remake (GPU roster 2 Nov 4.72, lowest; r10 remodel blocked on Meshy credits). Velvet mole coat: warm mid-brown body, tan belly and muzzle, pale horn claws (data/creatures/remake_grades.json thundertunnel); lightning lines and eyes kept. r17 CPU three-judge A/B (with the hit and faint fixes in the GLB): 2.93 -> 5.36 mapped (target 3.92), ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_velvet.jpg"
         }
       }
     }

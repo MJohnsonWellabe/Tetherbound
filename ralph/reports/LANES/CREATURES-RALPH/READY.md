@@ -32,7 +32,10 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
   - Skyrill 4.79 → **7.34**: "believable sail-back quadruped".
 - **One GPU job** for the six r9 and r10 models is in QUEUE.md. Evidence is in `r16/`.
 - **Sirenseal follow-up:** the hit lifts off the floor, and the faint end props on a flipper.
-- **Thundertunnel:** a velvet coat plus hit and faint fixes on the current remake, captured and judging next. The r10 remodel is blocked on Meshy credits.
+- **Thundertunnel (r17): KEPT, ON.** A velvet coat plus hit and faint fixes on the current remake: 2.93 → 5.36 mapped (target 3.92). The judges still want a clearer face and anatomy, which is the r10 remodel once Meshy credits return.
+- **Test fix in `tests/test_remake_owner1101_finish.gd` (please review).** The r9 and r10 models carry glow masks, so `test_glow_pass_covers_every_remake_with_a_glow_mask` failed from r12 on. They are now in `remake_owner1101_glow_read`, which stays OFF, with maps from `remake_owner1101_finish.py`; that tool now reads the live remake model.
+  - `test_enabled_coat_flags_apply_every_key` assumed every remake albedo lives under `candidate_owner1101/`. It now also accepts the exact live albedo of a remake's current model, which is stricter than a path pattern.
+  - Locally, every check on the seven species I touched passes. The remaining failures are only species not imported in this container's partial import set; CI imports everything.
 
 ## Work list from 2 Nov ~09:20 UTC: the coordinator's GPU roster baseline (main dd2d01342)
 
