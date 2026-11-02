@@ -1,3 +1,11 @@
+READY Stormwood + homecoming (2 Nov 15:40Z, tb/routes-f49 50dc34d0): F49#0 / F19#5 home_credits MATCH. One earned save line, every seam matched with receipts (ralph/reports/ROUTES/f49-1031/seams/):
+- Meadows `f49_ms_relay` (from the disclosed generated `relay` profile) → sigils → hall → warden → `f49_ms_tidewake_handoff`
+- Tidewake `f49_tw_01..05` → 07a1..07a6 → 07b..07d → 08 → `f49_tw_09`
+- Cloudreach `f49_cr_01..06` → `f49_cr_06s` (06s_solmane: Solmane freed, refused, five kept) → `f49_cr_07s` (surplus drop + Storage Chest deposit, disclosed)
+- Stormwood `f49_swb_01..07` (arrival → crown wood/glass/arch → rootgate → dynamo → marrow_settlement, Stormheart declined) → home_key `f49_swb_08` → home_relic `f49_swb_09` → home_credits `f49_swb_10` (Grandpa homecoming with all four chapter answers; credits closed with the ordinary Skip, disclosed).
+Game fixes in this chain: 8ab84f7e + 7d485aa1 (full-Satchel boss hand-off; landed #790). Harness pieces/fixes disclosed in each commit. Main merge NOT done: fetching origin/main twice filled the session disk allowance (13 GB of failed tmp packs, cleaned); merge before landing on a machine with room.
+Still OPEN for full F49#0 acceptance (not proven by this line): (1) the chain starts at the generated Meadows `relay` boundary (Meadows opening→bridge→warrens earned separately: f49_mt_bridge on tb/routes-meadows lineage; no seam joins them); (2) this line has no per-chapter Master/Kitchen/feast loop (training loops are proven only on their own generated starts: f49_m2_*, close-1020 T3, f49_c4_*, f49_s3_*); party stays L20/cap20. The earlier `f49_sw_*` (no Solmane) line is superseded by `f49_swb_*`.
+
 STOPPED (2 Nov 02:10Z) at Stormwood home_relic -> home_credits; everything before it MATCH and pushed.
 
 ## Stormwood chain (earned, from f49_cr_07): seams MATCH, saves f49_sw_01..09
