@@ -15,6 +15,78 @@
   "target_polycount": 30000,
   "symmetry_mode": "auto"
  },
- "status": "raw Meshy candidate, not wired to any flag; creature lane rigs it and judges it against the shipped remake before any flag change",
- "scale_note": "rig to the species' installed height (taller than the 1.80 m trainer); never shrink"
+ "status": "rigged candidate, not wired to any flag (.gdignore kept); creature lane removes .gdignore, runs texture_import_policy.py --apply, wires a flag and judges it against the shipped remake",
+ "scale_note": "rig to the species' installed height (taller than the 1.80 m trainer); never shrink",
+ "prepared_model": "assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9.glb",
+ "preparation": {
+  "date": "2026-11-02",
+  "lane": "tb/meshy-r9",
+  "script": "assets/creatures/tetherbound/mangrove_monitor/candidate_r9/source/prepare_mangrove_monitor_r9.py",
+  "commands": "BLENDER=<blender 4.2> python3 assets/creatures/tetherbound/mangrove_monitor/candidate_r9/source/prepare_mangrove_monitor_r9.py",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (dog3 rig and skin recipe; strip_ground_patch auto: no disc found) with rig_quadruped.find_legs replaced by the prep script's find_legs_by_feet (feet-only band, 2-means front/rear split): the 8.2 m-long mesh's bounding-box midline sat behind both leg pairs and the stock rear columns landed on the tail. The tail is now weighted to tail_1/tail_2 behind the hips",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, unchanged)",
+   "embedded textures re-encoded JPEG q88 (normal included)",
+   "tools/art_pipeline/arc_emission.py build() with the mangrove_monitor_owner1101 rule (hue 160-200, sat 0.45, lift 0.05) pointed at this model: 0.58% of the albedo (eyes and aqua veins)"
+  ],
+  "report": "assets/creatures/tetherbound/mangrove_monitor/candidate_r9/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped",
+   "height_m": 3.4,
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ],
+   "arc_emission_coverage_pct": 0.58,
+   "checks": "Blender 4.2.9 re-import: one armature, all clips present, height within 0.01% of target, 0 zero-weight vertices",
+   "triangles": 27999,
+   "legs_found_at_normalised": {
+    "front_l": [
+     -0.2284,
+     -0.6375,
+     0.0298
+    ],
+    "front_r": [
+     0.2275,
+     -0.6417,
+     0.0289
+    ],
+    "rear_l": [
+     -0.2606,
+     -0.1577,
+     0.032
+    ],
+    "rear_r": [
+     0.2614,
+     -0.1565,
+     0.0324
+    ]
+   },
+   "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+     "disc": false,
+     "base_over_leg_band_area": 0.645
+    }
+   },
+   "islands": "one connected body"
+  },
+  "not_run": "tools/art_pipeline/texture_import_policy.py --apply: it edits Godot .import sidecars, which do not exist under .gdignore"
+ }
 }
