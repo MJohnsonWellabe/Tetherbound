@@ -545,10 +545,16 @@ func _play() -> void:
 			# Meadows T2 from the disclosed meadows_t2_independent boundary:
 			# Mira's duel and recipe chest (storage trip home and back if the
 			# kit needs room), then the shared homestead Kitchen/feed pieces.
+			# Also from the earned F49 line's post-credits home (coordinator, 2 Nov:
+			# a training loop on the earned line): a passing home_credits receipt.
 			var provenance: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("PROVENANCE.json")))
-			if not provenance is Dictionary or provenance.get("kind") != "generated_boundary_save" \
+			var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
+			var earned_home: bool = prior is Dictionary and prior.get("segment") == "home_credits" and prior.get("passed") == true
+			if earned_home:
+				disclosures.append("training_t2_master from the earned F49 line's post-credits home (home_credits receipt), not a generated boundary")
+			elif not provenance is Dictionary or provenance.get("kind") != "generated_boundary_save" \
 					or provenance.get("profile") != "meadows_t2_independent":
-				failures.append("training_t2_master starts only from the generated meadows_t2_independent boundary save")
+				failures.append("training_t2_master starts only from the generated meadows_t2_independent boundary save or the earned post-credits home")
 				return
 			_take(await MEADOWS_TRAINING.new().run(self, world, game, {"tier": 2, "phase": "master",
 				"previous_training": before.get("training", {})}), "passed", segment)
