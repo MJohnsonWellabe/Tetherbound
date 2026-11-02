@@ -231,6 +231,14 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 
 	func _solmane() -> void:
 		stage = "solmane"
+		# The machine stands on the finale arena deck. Reverse the authored
+		# aftermath exit (06_veyra_relay: arena origin -30/-50 m, then
+		# (100,1160,5350), then the overlook): a straight walk from the overlook
+		# stalled at the summit bivouac (attempt 1, 2 Nov).
+		var finale_origin := _vec(runtime.finale.config.get("arena_origin", [100.0, 1160.0, 5450.0]))
+		if not await _navigate(Vector3(100.0, 1160.0, 5350.0)): return
+		for point: Vector3 in [finale_origin - Vector3(0.0, 0.0, 50.0), finale_origin - Vector3(0.0, 0.0, 30.0)]:
+			if not await _walk(point): return
 		var travel := PORTAL.new(_tree, game)
 		if await travel.solmane_choice():
 			body_finished = true
