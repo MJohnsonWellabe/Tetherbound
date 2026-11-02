@@ -1,0 +1,353 @@
+{
+ "kind": "f49_piece_seam",
+ "from_piece": "04_high_roost",
+ "from_commit": "2c1d38f092c9fa5c4d8739bdff3704e24d9d2db9",
+ "to_piece": "05_stronghold",
+ "to_commit": "d7a12a2ef7673682641d4fa50970ddfafe540936",
+ "to_loaded_from": "/home/user/rb/cr04",
+ "end_state": {
+  "realm": "cloudreach",
+  "position": [
+   400.9,
+   610.13,
+   3249.96
+  ],
+  "flags": [
+   "alpha_pin_intro_seen",
+   "cache:cloudreach:cr_pickup_lower_good_candy",
+   "camp_hammer_given",
+   "captive_rescued",
+   "causeway_survivors_reconnected",
+   "cloudreach_act_i_complete",
+   "cloudreach_chapter_started",
+   "cloudreach_crisis_learned",
+   "cloudreach_lower_anchors_investigated",
+   "cloudreach_shrine_vane_crown_aligned",
+   "cloudreach_shrine_vane_east_aligned",
+   "cloudreach_shrine_vane_west_aligned",
+   "cloudreach_upper_route_unlocked",
+   "completed_cloudreach_maela_trial_battle",
+   "creature_bed_built",
+   "creature_bed_built_2",
+   "creature_bed_built_3",
+   "defeated_captain_field",
+   "defeated_captain_ridge",
+   "defeated_captain_riverwatch",
+   "defeated_cloudreach_senn",
+   "defeated_south_bridge_grunt",
+   "defeated_stronghold_courtyard",
+   "defeated_stronghold_elite",
+   "defeated_stronghold_patrol",
+   "defeated_warden",
+   "defeated_water_trainer_bex",
+   "defeated_water_trainer_calder",
+   "defeated_water_trainer_irva",
+   "defeated_water_trainer_solm",
+   "defeated_water_trainer_tovin",
+   "defeated_water_trainer_venn",
+   "fly_traversal_unlocked",
+   "fly_tutorial_completed",
+   "hall_approach_open",
+   "harvest_node:order:14.0",
+   "harvest_node:order:cloudreach:cr_node_cloudberry_waycamp:day:13",
+   "harvest_node:order:cloudreach:cr_node_gale_fiber_gate:day:13",
+   "home_built",
+   "home_key_given",
+   "home_materials_gathered",
+   "learned_legendary_is_the_source",
+   "legendary_freed",
+   "legendary_refused",
+   "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d",
+   "legendary_settled",
+   "mill_crossing_restored",
+   "mira_shop_open",
+   "opening:beat:choose",
+   "opening:beat:encounter",
+   "opening:beat:free_play",
+   "opening:beat:house",
+   "opening:beat:name",
+   "opening:beat:qualification",
+   "opening:beat:return_mira",
+   "opening:beat:return_starter",
+   "opening:beat:road",
+   "opening:beat:tournament_signup",
+   "opening:beat:visit_mira",
+   "opening:beat:wake",
+   "opening:beat:walk_out",
+   "opening:lesson:home_key",
+   "opening:lesson:trigger:home_return",
+   "opening:mira_visited",
+   "opening:starter_granted",
+   "opening:tournament_registered",
+   "oskar_trade_open",
+   "pickup:castle_gate_key",
+   "player_slept_at_home",
+   "realm_heart_meadows_earned",
+   "realm_key_cloudreach",
+   "realm_relic_water_earned",
+   "recipe_orb_basic",
+   "recipe_saddle",
+   "relay_captain_defeated",
+   "relay_disabled",
+   "reward:trainer:warrens_cleared:xp:1",
+   "road_gate_open",
+   "sky_shrine_reached",
+   "south_bridge_open",
+   "storm_anchor_engine_truth_learned",
+   "storm_anchor_lower_east_mapped",
+   "storm_anchor_lower_west_mapped",
+   "tam_tools_given",
+   "tournament_entered",
+   "tournament_final_at_ring",
+   "tournament_quarter_at_ring",
+   "tournament_quarter_won",
+   "tournament_semi_at_ring",
+   "tournament_semi_won",
+   "tournament_team_fed",
+   "tournament_team_ready",
+   "tournament_training_ready",
+   "tournament_won",
+   "warrens_cleared",
+   "water:legendary_refused",
+   "water_aquaryn_resolved",
+   "water_captain_nerissa_defeated",
+   "water_chapter_started",
+   "water_civilian_departure_complete",
+   "water_cordage_recipe_gated",
+   "water_currents_restored",
+   "water_dock_brine_steps_trial_won",
+   "water_dock_reedhaven_repaired",
+   "water_dock_salt_crown_landing_charted",
+   "water_dock_shellwatch_residents_freed_and_pump_disabled",
+   "water_dock_sluice_isle_both_controls_disabled",
+   "water_guardian_freed",
+   "water_guardian_settled",
+   "water_shellwatch_pump_disabled",
+   "water_shellwatch_residents_freed",
+   "water_sluice_east_disabled",
+   "water_sluice_west_disabled",
+   "water_swim_lesson_briefed",
+   "water_swim_lesson_complete",
+   "water_swim_stone_earned",
+   "water_tether_disabled",
+   "water_veilfall_intake_stopped",
+   "water_veilfall_return_opened",
+   "windscar_aerie_prepared"
+  ],
+  "inventory": {
+   "axe": 1,
+   "berries": 2,
+   "cloudberry": 4,
+   "coin": 355,
+   "fiber": 3,
+   "gale_fiber": 2,
+   "good_candy": 1,
+   "hammer": 1,
+   "hide_vest": 1,
+   "home_key": 1,
+   "knife": 1,
+   "orb_basic": 41,
+   "orb_greater": 2,
+   "pickaxe": 1,
+   "potion_large": 2,
+   "potion_small": 3,
+   "revive": 10,
+   "rootstone": 19,
+   "skyplume": 2,
+   "torch": 1,
+   "wood": 2
+  },
+  "party": [
+   {
+    "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+    "species": "terrapup",
+    "level": 31
+   },
+   {
+    "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+    "species": "bramblebun",
+    "level": 31
+   },
+   {
+    "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+    "species": "bramblebun",
+    "level": 31
+   },
+   {
+    "uid": "creature-afbd0d982b14221393f70c29863586a1",
+    "species": "mudsnout",
+    "level": 31
+   },
+   {
+    "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+    "species": "bramblebun",
+    "level": 31
+   }
+  ],
+  "master_wins": [],
+  "feast_recipes": []
+ },
+ "differences": [
+  {
+   "field": "party",
+   "saved": [
+    {
+     "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+     "species": "terrapup",
+     "level": 31
+    },
+    {
+     "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+     "species": "bramblebun",
+     "level": 31
+    },
+    {
+     "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+     "species": "bramblebun",
+     "level": 31
+    },
+    {
+     "uid": "creature-afbd0d982b14221393f70c29863586a1",
+     "species": "mudsnout",
+     "level": 31
+    },
+    {
+     "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+     "species": "bramblebun",
+     "level": 31
+    }
+   ],
+   "loaded": [
+    {
+     "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+     "species": "terrapup",
+     "level": 31,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+     "species": "bramblebun",
+     "level": 31,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+     "species": "bramblebun",
+     "level": 31,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "uid": "creature-afbd0d982b14221393f70c29863586a1",
+     "species": "mudsnout",
+     "level": 31,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+     "species": "bramblebun",
+     "level": 31,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    }
+   ],
+   "reason": "EXPLAINED (receipt shape, not state): the legacy 04 receipt (commit 2c1d38f0) predates training snapshots, so its 'after' lists uid/species/level only. Its committed save records cap_level 40 and breakthroughs [1,2,3] for all five (read from the save tree with crosscut.py), equal to the loaded values; uid, species and level match exactly. The 05 runner's own handoff check passed (handoff_check.matches=true, differs=[]; training handoff disclosed as 'legacy input has no training snapshot')."
+  }
+ ],
+ "matches": true,
+ "producer_saved_party_from_save": [
+  {
+   "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+   "species": "terrapup",
+   "level": 31,
+   "cap_level": 40,
+   "breakthroughs": [
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+   "species": "bramblebun",
+   "level": 31,
+   "cap_level": 40,
+   "breakthroughs": [
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+   "species": "bramblebun",
+   "level": 31,
+   "cap_level": 40,
+   "breakthroughs": [
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "uid": "creature-afbd0d982b14221393f70c29863586a1",
+   "species": "mudsnout",
+   "level": 31,
+   "cap_level": 40,
+   "breakthroughs": [
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+   "species": "bramblebun",
+   "level": 31,
+   "cap_level": 40,
+   "breakthroughs": [
+    1,
+    2,
+    3
+   ]
+  }
+ ],
+ "unexplained": [],
+ "producer_fixture": "tests/fixtures/earned_saves/cloudreach_04_high_roost",
+ "producer_save_sha256": {
+  "save/characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "42bbdb1d61a11c5a6e5d3bba9e114bba3343b2752309091e7bd2362ba3479230",
+  "save/slot_0.json": "01d4439f4ad6159aa72deda922d4becbd885105ba89fbef53b831b3da1e4ec73",
+  "save/worlds/slot-0/world.json": "d5dd41960240cb855328626bbffb4252baef3816ee7d22620bac16aecc319e68"
+ },
+ "consumer_loaded_dir_save_sha256": {
+  "save/characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "42bbdb1d61a11c5a6e5d3bba9e114bba3343b2752309091e7bd2362ba3479230",
+  "save/slot_0.json": "01d4439f4ad6159aa72deda922d4becbd885105ba89fbef53b831b3da1e4ec73",
+  "save/worlds/slot-0/world.json": "d5dd41960240cb855328626bbffb4252baef3816ee7d22620bac16aecc319e68"
+ },
+ "save_byte_identical": true,
+ "consumer_from": "/home/user/rb/cr04 (byte copy of the committed fixture)",
+ "generated_ancestry": "cloudreach_04 is earned on cloudreach_arrival_generated (L31, disclosed generated boundary; allowed by the lane brief)"
+}

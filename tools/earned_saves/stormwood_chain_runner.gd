@@ -89,12 +89,13 @@ const PIECES := {
 	"homecoming": "res://tests/helpers/f49_portal_travel.gd",
 	"home_relic": "res://tests/helpers/f49_portal_travel.gd",
 	"home_credits": "res://tests/helpers/f49_portal_travel.gd",
+	"06s_solmane": "res://tests/helpers/f49_portal_travel.gd",
 }
 ## The Home Key follows the Stormheart answer: accepted (marrow_aftermath) or,
 ## for the F49 retained five, declined (settlement).
 const HOME_PREDECESSORS := {"homecoming": ["marrow_aftermath", "settlement", "marrow_settlement"],
 	"home_key": ["marrow_aftermath", "settlement", "marrow_settlement"],
-	"home_relic": ["home_key"], "home_credits": ["home_relic"]}
+	"home_relic": ["home_key"], "06s_solmane": ["home_relic"], "home_credits": ["home_relic", "06s_solmane"]}
 const NAMED_IDS := ["capacitor_alpha", "hollows_alpha", "blackwater_elder",
 	"old_rodfolk_hall_guardian", "glass_field_alpha"]
 
@@ -410,6 +411,16 @@ func _play() -> void:
 			if passed: passed = await travel.call("walk_continuation")
 			if passed:
 				disclosures.append("Credits closed with the ordinary Skip (menu_cancel) after they opened")
+			helper_result = {"passed": passed, "failures": travel.get("failures"),
+				"transcript": [], "realm_after": str(game.get("current_realm"))}
+		"06s_solmane":
+			# Coordinator-approved return trip (2 Nov): Cloudreach's post-Veyra
+			# Solmane answer, which no earlier piece walked; refused to keep the five.
+			var travel: RefCounted = script.new(self, game)
+			var passed := str(game.get("current_realm")) == "meadows"
+			if not passed: failures.append("Solmane return trip must load the actual Meadows return")
+			if passed: passed = await travel.call("solmane_return_trip")
+			if passed: disclosures.append("06s_solmane: return trip through the open Cloudreach arch to the summit tether chamber; Solmane's volunteer offer refused (five kept); Home Key home")
 			helper_result = {"passed": passed, "failures": travel.get("failures"),
 				"transcript": [], "realm_after": str(game.get("current_realm"))}
 		"home_relic", "home_credits":

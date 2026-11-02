@@ -1,0 +1,791 @@
+{
+  "accelerated": false,
+  "after": {
+    "clock_seconds": 200.0,
+    "day": 22,
+    "flags": [
+      "alpha_pin_intro_seen",
+      "cache:cloudreach:cr_pickup_lower_good_candy",
+      "camp_hammer_given",
+      "captive_rescued",
+      "causeway_survivors_reconnected",
+      "cloudreach_act_i_complete",
+      "cloudreach_act_ii_complete",
+      "cloudreach_chapter_started",
+      "cloudreach_crisis_learned",
+      "cloudreach_lower_anchors_investigated",
+      "cloudreach_shrine_vane_crown_aligned",
+      "cloudreach_shrine_vane_east_aligned",
+      "cloudreach_shrine_vane_west_aligned",
+      "cloudreach_upper_anchors_disabled",
+      "cloudreach_upper_route_unlocked",
+      "completed_cloudreach_maela_trial_battle",
+      "creature_bed_built",
+      "creature_bed_built_2",
+      "creature_bed_built_3",
+      "defeated_captain_field",
+      "defeated_captain_ridge",
+      "defeated_captain_riverwatch",
+      "defeated_cloudreach_senn",
+      "defeated_cloudreach_voss",
+      "defeated_south_bridge_grunt",
+      "defeated_stronghold_courtyard",
+      "defeated_stronghold_elite",
+      "defeated_stronghold_patrol",
+      "defeated_warden",
+      "defeated_water_trainer_bex",
+      "defeated_water_trainer_calder",
+      "defeated_water_trainer_irva",
+      "defeated_water_trainer_solm",
+      "defeated_water_trainer_tovin",
+      "defeated_water_trainer_venn",
+      "fly_traversal_unlocked",
+      "fly_tutorial_completed",
+      "hall_approach_open",
+      "harvest_node:order:14.0",
+      "harvest_node:order:cloudreach:cr_node_cloudberry_waycamp:day:13",
+      "harvest_node:order:cloudreach:cr_node_gale_fiber_gate:day:13",
+      "home_built",
+      "home_key_given",
+      "home_materials_gathered",
+      "learned_legendary_is_the_source",
+      "legendary_freed",
+      "legendary_refused",
+      "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d",
+      "legendary_settled",
+      "mill_crossing_restored",
+      "mira_shop_open",
+      "opening:beat:choose",
+      "opening:beat:encounter",
+      "opening:beat:free_play",
+      "opening:beat:house",
+      "opening:beat:name",
+      "opening:beat:qualification",
+      "opening:beat:return_mira",
+      "opening:beat:return_starter",
+      "opening:beat:road",
+      "opening:beat:tournament_signup",
+      "opening:beat:visit_mira",
+      "opening:beat:wake",
+      "opening:beat:walk_out",
+      "opening:lesson:home_key",
+      "opening:lesson:trigger:home_return",
+      "opening:mira_visited",
+      "opening:starter_granted",
+      "opening:tournament_registered",
+      "oskar_trade_open",
+      "pickup:castle_gate_key",
+      "player_slept_at_home",
+      "realm_heart_meadows_earned",
+      "realm_key_cloudreach",
+      "realm_relic_water_earned",
+      "recipe_orb_basic",
+      "recipe_saddle",
+      "relay_captain_defeated",
+      "relay_disabled",
+      "reward:trainer:warrens_cleared:xp:1",
+      "road_gate_open",
+      "sky_shrine_reached",
+      "south_bridge_open",
+      "storm_anchor_engine_truth_learned",
+      "storm_anchor_lower_east_mapped",
+      "storm_anchor_lower_west_mapped",
+      "storm_anchor_summit_feed_disabled",
+      "storm_anchor_upper_east_disabled",
+      "storm_anchor_upper_west_disabled",
+      "summit_extraction_engine_reached",
+      "tam_tools_given",
+      "tournament_entered",
+      "tournament_final_at_ring",
+      "tournament_quarter_at_ring",
+      "tournament_quarter_won",
+      "tournament_semi_at_ring",
+      "tournament_semi_won",
+      "tournament_team_fed",
+      "tournament_team_ready",
+      "tournament_training_ready",
+      "tournament_won",
+      "warrens_cleared",
+      "water:legendary_refused",
+      "water_aquaryn_resolved",
+      "water_captain_nerissa_defeated",
+      "water_chapter_started",
+      "water_civilian_departure_complete",
+      "water_cordage_recipe_gated",
+      "water_currents_restored",
+      "water_dock_brine_steps_trial_won",
+      "water_dock_reedhaven_repaired",
+      "water_dock_salt_crown_landing_charted",
+      "water_dock_shellwatch_residents_freed_and_pump_disabled",
+      "water_dock_sluice_isle_both_controls_disabled",
+      "water_guardian_freed",
+      "water_guardian_settled",
+      "water_shellwatch_pump_disabled",
+      "water_shellwatch_residents_freed",
+      "water_sluice_east_disabled",
+      "water_sluice_west_disabled",
+      "water_swim_lesson_briefed",
+      "water_swim_lesson_complete",
+      "water_swim_stone_earned",
+      "water_tether_disabled",
+      "water_veilfall_intake_stopped",
+      "water_veilfall_return_opened",
+      "windscar_aerie_prepared"
+    ],
+    "inventory": {
+      "axe": 1,
+      "berries": 2,
+      "cloudberry": 4,
+      "coin": 475,
+      "fiber": 3,
+      "gale_fiber": 2,
+      "good_candy": 1,
+      "hammer": 1,
+      "hide_vest": 1,
+      "home_key": 1,
+      "knife": 1,
+      "orb_basic": 41,
+      "orb_greater": 2,
+      "pickaxe": 1,
+      "potion_large": 2,
+      "potion_small": 3,
+      "revive": 12,
+      "rootstone": 19,
+      "skyplume": 2,
+      "torch": 1,
+      "wood": 2
+    },
+    "party": [
+      {
+        "fainted": false,
+        "hp": 343.2,
+        "level": 32,
+        "max_hp": 343,
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+        "xp": 1824
+      },
+      {
+        "fainted": false,
+        "hp": 285.9,
+        "level": 32,
+        "max_hp": 285,
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+        "xp": 1755
+      },
+      {
+        "fainted": false,
+        "hp": 274.1,
+        "level": 32,
+        "max_hp": 274,
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+        "xp": 2082
+      },
+      {
+        "fainted": false,
+        "hp": 297.8,
+        "level": 32,
+        "max_hp": 297,
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1",
+        "xp": 514
+      },
+      {
+        "fainted": false,
+        "hp": 286.4,
+        "level": 32,
+        "max_hp": 286,
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+        "xp": 1149
+      }
+    ],
+    "position": [
+      100.24,
+      1160.13,
+      5349.74
+    ],
+    "realm": "cloudreach",
+    "scene": "CloudreachCliffs",
+    "training": {
+      "feast_recipes": [],
+      "master_wins": [],
+      "party": [
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "terrapup",
+          "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "xp": 1824
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "bramblebun",
+          "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "xp": 1755
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "bramblebun",
+          "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "xp": 2082
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "mudsnout",
+          "uid": "creature-afbd0d982b14221393f70c29863586a1",
+          "xp": 514
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "bramblebun",
+          "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+          "xp": 1149
+        }
+      ],
+      "version": 1
+    },
+    "uids": [
+      "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "creature-afbd0d982b14221393f70c29863586a1",
+      "creature-c576f15db4b7f3ecf487a80de0169177"
+    ]
+  },
+  "before": {
+    "clock_seconds": 366.86,
+    "day": 18,
+    "flags": [
+      "alpha_pin_intro_seen",
+      "cache:cloudreach:cr_pickup_lower_good_candy",
+      "camp_hammer_given",
+      "captive_rescued",
+      "causeway_survivors_reconnected",
+      "cloudreach_act_i_complete",
+      "cloudreach_chapter_started",
+      "cloudreach_crisis_learned",
+      "cloudreach_lower_anchors_investigated",
+      "cloudreach_shrine_vane_crown_aligned",
+      "cloudreach_shrine_vane_east_aligned",
+      "cloudreach_shrine_vane_west_aligned",
+      "cloudreach_upper_route_unlocked",
+      "completed_cloudreach_maela_trial_battle",
+      "creature_bed_built",
+      "creature_bed_built_2",
+      "creature_bed_built_3",
+      "defeated_captain_field",
+      "defeated_captain_ridge",
+      "defeated_captain_riverwatch",
+      "defeated_cloudreach_senn",
+      "defeated_south_bridge_grunt",
+      "defeated_stronghold_courtyard",
+      "defeated_stronghold_elite",
+      "defeated_stronghold_patrol",
+      "defeated_warden",
+      "defeated_water_trainer_bex",
+      "defeated_water_trainer_calder",
+      "defeated_water_trainer_irva",
+      "defeated_water_trainer_solm",
+      "defeated_water_trainer_tovin",
+      "defeated_water_trainer_venn",
+      "fly_traversal_unlocked",
+      "fly_tutorial_completed",
+      "hall_approach_open",
+      "harvest_node:order:14.0",
+      "harvest_node:order:cloudreach:cr_node_cloudberry_waycamp:day:13",
+      "harvest_node:order:cloudreach:cr_node_gale_fiber_gate:day:13",
+      "home_built",
+      "home_key_given",
+      "home_materials_gathered",
+      "learned_legendary_is_the_source",
+      "legendary_freed",
+      "legendary_refused",
+      "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d",
+      "legendary_settled",
+      "mill_crossing_restored",
+      "mira_shop_open",
+      "opening:beat:choose",
+      "opening:beat:encounter",
+      "opening:beat:free_play",
+      "opening:beat:house",
+      "opening:beat:name",
+      "opening:beat:qualification",
+      "opening:beat:return_mira",
+      "opening:beat:return_starter",
+      "opening:beat:road",
+      "opening:beat:tournament_signup",
+      "opening:beat:visit_mira",
+      "opening:beat:wake",
+      "opening:beat:walk_out",
+      "opening:lesson:home_key",
+      "opening:lesson:trigger:home_return",
+      "opening:mira_visited",
+      "opening:starter_granted",
+      "opening:tournament_registered",
+      "oskar_trade_open",
+      "pickup:castle_gate_key",
+      "player_slept_at_home",
+      "realm_heart_meadows_earned",
+      "realm_key_cloudreach",
+      "realm_relic_water_earned",
+      "recipe_orb_basic",
+      "recipe_saddle",
+      "relay_captain_defeated",
+      "relay_disabled",
+      "reward:trainer:warrens_cleared:xp:1",
+      "road_gate_open",
+      "sky_shrine_reached",
+      "south_bridge_open",
+      "storm_anchor_engine_truth_learned",
+      "storm_anchor_lower_east_mapped",
+      "storm_anchor_lower_west_mapped",
+      "tam_tools_given",
+      "tournament_entered",
+      "tournament_final_at_ring",
+      "tournament_quarter_at_ring",
+      "tournament_quarter_won",
+      "tournament_semi_at_ring",
+      "tournament_semi_won",
+      "tournament_team_fed",
+      "tournament_team_ready",
+      "tournament_training_ready",
+      "tournament_won",
+      "warrens_cleared",
+      "water:legendary_refused",
+      "water_aquaryn_resolved",
+      "water_captain_nerissa_defeated",
+      "water_chapter_started",
+      "water_civilian_departure_complete",
+      "water_cordage_recipe_gated",
+      "water_currents_restored",
+      "water_dock_brine_steps_trial_won",
+      "water_dock_reedhaven_repaired",
+      "water_dock_salt_crown_landing_charted",
+      "water_dock_shellwatch_residents_freed_and_pump_disabled",
+      "water_dock_sluice_isle_both_controls_disabled",
+      "water_guardian_freed",
+      "water_guardian_settled",
+      "water_shellwatch_pump_disabled",
+      "water_shellwatch_residents_freed",
+      "water_sluice_east_disabled",
+      "water_sluice_west_disabled",
+      "water_swim_lesson_briefed",
+      "water_swim_lesson_complete",
+      "water_swim_stone_earned",
+      "water_tether_disabled",
+      "water_veilfall_intake_stopped",
+      "water_veilfall_return_opened",
+      "windscar_aerie_prepared"
+    ],
+    "inventory": {
+      "axe": 1,
+      "berries": 2,
+      "cloudberry": 4,
+      "coin": 355,
+      "fiber": 3,
+      "gale_fiber": 2,
+      "good_candy": 1,
+      "hammer": 1,
+      "hide_vest": 1,
+      "home_key": 1,
+      "knife": 1,
+      "orb_basic": 41,
+      "orb_greater": 2,
+      "pickaxe": 1,
+      "potion_large": 2,
+      "potion_small": 3,
+      "revive": 10,
+      "rootstone": 19,
+      "skyplume": 2,
+      "torch": 1,
+      "wood": 2
+    },
+    "party": [
+      {
+        "fainted": false,
+        "hp": 336.0,
+        "level": 31,
+        "max_hp": 336,
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+        "xp": 898
+      },
+      {
+        "fainted": false,
+        "hp": 279.9,
+        "level": 31,
+        "max_hp": 279,
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+        "xp": 1185
+      },
+      {
+        "fainted": false,
+        "hp": 268.3,
+        "level": 31,
+        "max_hp": 268,
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+        "xp": 1512
+      },
+      {
+        "fainted": false,
+        "hp": 291.5,
+        "level": 31,
+        "max_hp": 291,
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1",
+        "xp": 1196
+      },
+      {
+        "fainted": false,
+        "hp": 280.4,
+        "level": 31,
+        "max_hp": 280,
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+        "xp": 579
+      }
+    ],
+    "position": [
+      400.9,
+      610.13,
+      3249.96
+    ],
+    "realm": "cloudreach",
+    "scene": "CloudreachCliffs",
+    "training": {
+      "feast_recipes": [],
+      "master_wins": [],
+      "party": [
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 31,
+          "species": "terrapup",
+          "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "xp": 898
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 31,
+          "species": "bramblebun",
+          "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "xp": 1185
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 31,
+          "species": "bramblebun",
+          "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "xp": 1512
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 31,
+          "species": "mudsnout",
+          "uid": "creature-afbd0d982b14221393f70c29863586a1",
+          "xp": 1196
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 31,
+          "species": "bramblebun",
+          "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+          "xp": 579
+        }
+      ],
+      "version": 1
+    },
+    "uids": [
+      "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "creature-afbd0d982b14221393f70c29863586a1",
+      "creature-c576f15db4b7f3ecf487a80de0169177"
+    ]
+  },
+  "chapter": "cloudreach",
+  "commit": "d7a12a2ef7673682641d4fa50970ddfafe540936",
+  "criterion": "F19#5",
+  "disclosures": [
+    "Training handoff not proven: legacy input has no training snapshot",
+    "Runner Piece overrides the helper's _arrival_gather only to re-read the resource prompt after the walk (cloudreach_resource_patch.gd rebuilds DailyHarvest on each Game.day roll; the helper's pre-walk reference was freed). Input and checks unchanged."
+  ],
+  "failures": [],
+  "flags_gained": [
+    "cloudreach_act_ii_complete",
+    "cloudreach_upper_anchors_disabled",
+    "defeated_cloudreach_voss",
+    "storm_anchor_summit_feed_disabled",
+    "storm_anchor_upper_east_disabled",
+    "storm_anchor_upper_west_disabled",
+    "summit_extraction_engine_reached"
+  ],
+  "from": "/home/user/rb/cr04",
+  "handoff_check": {
+    "checked": true,
+    "differs": [],
+    "matches": true,
+    "training": {
+      "checked": false,
+      "matches": false,
+      "reason": "legacy input has no training snapshot"
+    }
+  },
+  "helper": {
+    "battle_losses": [],
+    "battle_starts": [
+      "officer_voss_summit_approach"
+    ],
+    "battle_wins": [
+      "officer_voss_summit_approach"
+    ],
+    "distance_m": 5732.8,
+    "events": 190,
+    "ok": true,
+    "recovery_choices": [
+      {
+        "camp": "summit_bivouac",
+        "day_after": 21,
+        "day_before": 20,
+        "party_index": 0,
+        "species_id": "terrapup",
+        "team_after": [
+          {
+            "hp": 343.2,
+            "label": "Bud",
+            "level": 32,
+            "species_id": "terrapup",
+            "xp": 1824
+          },
+          {
+            "hp": 285.868617754459,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 1755
+          },
+          {
+            "hp": 274.05590746212,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 2082
+          },
+          {
+            "hp": 0.0,
+            "label": "Mudsnout",
+            "level": 32,
+            "species_id": "mudsnout",
+            "xp": 509
+          },
+          {
+            "hp": 286.434583414555,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 1149
+          }
+        ],
+        "team_before": [
+          {
+            "hp": 109.312973604365,
+            "label": "Bud",
+            "level": 32,
+            "species_id": "terrapup",
+            "xp": 1819
+          },
+          {
+            "hp": 285.868617754459,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 1755
+          },
+          {
+            "hp": 274.05590746212,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 2082
+          },
+          {
+            "hp": 0.0,
+            "label": "Mudsnout",
+            "level": 32,
+            "species_id": "mudsnout",
+            "xp": 509
+          },
+          {
+            "hp": 286.434583414555,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 1149
+          }
+        ]
+      },
+      {
+        "camp": "summit_bivouac",
+        "day_after": 22,
+        "day_before": 21,
+        "party_index": 3,
+        "species_id": "mudsnout",
+        "team_after": [
+          {
+            "hp": 343.2,
+            "label": "Bud",
+            "level": 32,
+            "species_id": "terrapup",
+            "xp": 1824
+          },
+          {
+            "hp": 285.868617754459,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 1755
+          },
+          {
+            "hp": 274.05590746212,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 2082
+          },
+          {
+            "hp": 297.775971775055,
+            "label": "Mudsnout",
+            "level": 32,
+            "species_id": "mudsnout",
+            "xp": 514
+          },
+          {
+            "hp": 286.434583414555,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 1149
+          }
+        ],
+        "team_before": [
+          {
+            "hp": 343.2,
+            "label": "Bud",
+            "level": 32,
+            "species_id": "terrapup",
+            "xp": 1824
+          },
+          {
+            "hp": 285.868617754459,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 1755
+          },
+          {
+            "hp": 274.05590746212,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 2082
+          },
+          {
+            "hp": 0.0,
+            "label": "Mudsnout",
+            "level": 32,
+            "species_id": "mudsnout",
+            "xp": 509
+          },
+          {
+            "hp": 286.434583414555,
+            "label": "Bramblebun",
+            "level": 32,
+            "species_id": "bramblebun",
+            "xp": 1149
+          }
+        ]
+      }
+    ],
+    "simulated_seconds": 1240.38,
+    "stage": "rest_summit_bivouac",
+    "static_sidesteps": []
+  },
+  "injections": "none: production title Load, unchanged helper movement/combat/interaction by ordinary input, Game.save_game",
+  "input_mode": "unproven_ancestry",
+  "inventory_delta": {
+    "coin": 120,
+    "revive": 2
+  },
+  "lineage": {},
+  "passed": true,
+  "segment": "05_stronghold",
+  "wall_seconds": 2255.255
+}

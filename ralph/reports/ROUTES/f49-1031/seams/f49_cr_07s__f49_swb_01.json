@@ -1,0 +1,32 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "07_stormward_handoff",
+ "from_commit": "2792bdd397a430075141b6daafb23c5240ece715",
+ "to_piece": "arrival_prefix",
+ "to_commit": "2792bdd397a430075141b6daafb23c5240ece715",
+ "to_loaded_from": "/home/user/rb/cr_07b",
+ "consumer_handoff_check": {
+  "checked": true,
+  "cross_runner": true,
+  "ending_matches": true,
+  "ending_required": false,
+  "keys": [
+   "uids",
+   "species",
+   "realm",
+   "items",
+   "world_flags"
+  ],
+  "mismatched": [],
+  "passed": true,
+  "previous": "cr_07b",
+  "training": {
+   "checked": true,
+   "matches": true,
+   "reason": ""
+  }
+ },
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}
