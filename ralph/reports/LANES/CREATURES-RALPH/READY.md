@@ -2,6 +2,16 @@
 
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
 
+
+## ANSWER FOR THE CREATURE LANDING PR (2 Nov ~14:15 UTC)
+
+- **Landing-ready head:** `7c7de66c9`, which is `9b1e168f6` plus a clean merge of origin/main (#798), or any later head of this branch.
+- **Nothing must not land.** Every OFF flag changes nothing while off: tuskroot_brown, aquaryn_r9_scales, the grounded-hit roster flag, and the unkept r14/r15 coats.
+- **Coordinator messages:** my replies to the coordinator's session are refused (`elevated_session_untrusted_device`), so this file is the reply.
+- **GPU cr1102c** (tree 9b1e168f6 vs main1102b): **Staticub 6.43 → 7.98** (+1.55, above 7.5) and **Skyrill 5.97 → 7.43** (+1.46). Both are GPU-confirmed.
+  - **Skyrill next step:** rim light and value separation.
+  - **`SCORES.md`:** it does not exist, and the live-doc rule bars new status files, so the GPU records live in this file.
+
 ## BLOCKED: needs the coordinator (2 Nov, ~03:00 UTC)
 
 - **The r9 Meshy models (Aquaryn, Duskhush, Mangrove Monitor) cannot be rigged in this container.**
