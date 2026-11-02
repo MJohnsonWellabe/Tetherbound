@@ -820,12 +820,12 @@
       }
     },
     "remake_owner1101_sirenseal": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sirenseal, a large seal with long fin-like frills on its head and neck, pale grey-blue with darker blue spots (Meshy 01a197ee-4383-70ad-9243-f2f8c3e6feff). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua frill lines and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/sirenseal/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r16 (2 Nov 2026): the live model is the coordinator r10 Meshy sea lion (candidate_r10, dog3 four-flipper; faint root roll x0.85 grounded per key, hit root and spine x0.5 with neck and head eased, weights relaxed). CPU three-judge A/B 4.35 -> 6.95 mapped against the owner1101 seal-dragon (target 4.31). Judges still name a faint end propped on a flipper and a hit that lifts off the floor. Earlier: Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sirenseal, a large seal with long fin-like frills on its head and neck, pale grey-blue with darker blue spots (Meshy 01a197ee-4383-70ad-9243-f2f8c3e6feff). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua frill lines and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/sirenseal/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "sirenseal": {
-          "model": "res://assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101.glb",
-          "colourway_source_species": "sirenseal_owner1101",
+          "model": "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10.glb",
+          "colourway_source_species": "sirenseal_r10",
           "animations": {
             "idle": "idle",
             "walk": "walk",
@@ -843,19 +843,24 @@
       }
     },
     "remake_owner1101_skyrill": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Skyrill, a flying-squirrel glider with wide gliding membranes, sandy brown fur (Meshy 01a197ee-c4be-77b8-b29c-e2f42ec62ab5). No baked ground patch. rig_glider.py biped-glider rig (15 bones) and animate_quadruped.py glider clips (six) at the established 3.25 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/skyrill/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r16 (2 Nov 2026): the live model is the coordinator r10 Meshy sail-back lizard (candidate_r10, dog3; faint root roll x0.85 grounded per key, hit neck and head eased, walk and run leg swing x1.3, weights relaxed; all 11 clips). CPU three-judge A/B 4.79 -> 7.34 mapped against the owner1101 upright lizard (target 4.68). Earlier: Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Skyrill, a flying-squirrel glider with wide gliding membranes, sandy brown fur (Meshy 01a197ee-c4be-77b8-b29c-e2f42ec62ab5). No baked ground patch. rig_glider.py biped-glider rig (15 bones) and animate_quadruped.py glider clips (six) at the established 3.25 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/skyrill/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "skyrill": {
-          "model": "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101.glb",
-          "colourway_source_species": "skyrill_owner1101",
+          "model": "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10.glb",
+          "colourway_source_species": "skyrill_r10",
           "animations": {
             "idle": "idle",
             "walk": "walk",
             "run": "run",
             "attack": "attack",
+            "charged": "charged",
             "hit": "hit",
-            "faint": "faint"
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
           }
         }
       }
@@ -907,12 +912,12 @@
       }
     },
     "remake_owner1101_staticub": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Staticub, a young brown bear cub, the cub of the storm bear, warm brown fur (Meshy 01a197f0-825a-7574-825c-18eae9afbb13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/staticub/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r16 (2 Nov 2026): the live model is the coordinator r10 Meshy bear (candidate_r10, dog3; faint root roll x0.85 grounded per key on the 2nd percentile, legs tucked; hit neck, head and tail eased; weights relaxed; violet lightning veins lit by arc_emission.json staticub_r10). CPU three-judge A/B 5.34 -> 8.55 mapped against the owner1101 armoured bear (target 5.18). Earlier: Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Staticub, a young brown bear cub, the cub of the storm bear, warm brown fur (Meshy 01a197f0-825a-7574-825c-18eae9afbb13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/staticub/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "staticub": {
-          "model": "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101.glb",
-          "colourway_source_species": "staticub_owner1101",
+          "model": "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10.glb",
+          "colourway_source_species": "staticub_r10",
           "animations": {
             "idle": "idle",
             "walk": "walk",

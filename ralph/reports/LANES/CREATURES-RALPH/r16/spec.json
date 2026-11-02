@@ -1,0 +1,32 @@
+[
+ {
+  "label": "staticub",
+  "a": "sides/staticub-base.png",
+  "b": "sides/staticub-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "armoured toy-like bear, plates read as fittings",
+   "faint ends belly-up"
+  ]
+ },
+ {
+  "label": "sirenseal",
+  "a": "sides/sirenseal-base.png",
+  "b": "sides/sirenseal-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "stylised upright seal-dragon, does not read as a believable animal",
+   "faint does not settle"
+  ]
+ },
+ {
+  "label": "skyrill",
+  "a": "sides/skyrill-base.png",
+  "b": "sides/skyrill-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "chrome-mirror skin",
+   "upright lizard pose, faint does not read"
+  ]
+ }
+]

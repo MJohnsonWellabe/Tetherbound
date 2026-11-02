@@ -24,6 +24,16 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
   - Duskhush's wings eased ×0.5 in attack and fly_grip;
   - weights relaxed on all three.
 
+## r10 Meshy models wired (r16, 2 Nov ~11:00 UTC): Staticub, Sirenseal and Skyrill ON, queued for GPU with r9
+
+- **Scores (mapped):**
+  - Staticub 5.34 → **8.55**: "naturalistic bear, Stormursa bar".
+  - Sirenseal 4.35 → **6.95**: "believable sea lion".
+  - Skyrill 4.79 → **7.34**: "believable sail-back quadruped".
+- **One GPU job** for the six r9 and r10 models is in QUEUE.md. Evidence is in `r16/`.
+- **Sirenseal follow-up:** the hit lifts off the floor, and the faint end props on a flipper.
+- **Thundertunnel:** a velvet coat plus hit and faint fixes on the current remake, captured and judging next. The r10 remodel is blocked on Meshy credits.
+
 ## Work list from 2 Nov ~09:20 UTC: the coordinator's GPU roster baseline (main dd2d01342)
 
 16 of 70 creatures are at 7.0 or above. The full table lands as `ralph/reports/CLOUD-JUDGE/ROSTER-1102/`. Order of work:
