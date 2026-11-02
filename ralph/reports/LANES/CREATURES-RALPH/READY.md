@@ -3,6 +3,10 @@
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
 
 
+## PR #799 needs one test fix (2 Nov ~15:00 UTC)
+
+`tb/land-creatures-2` (from 93606fafe) registers `creatures_ralph_skyrill_r10_lift` in `JUDGED_ON` (r19). `test_judged_creature_coat_flags_ship_on_with_their_scores` then fails "grades a remake texture", because it only accepted `candidate_owner1101/` paths. The fix is commit `7a5951fbf` on this branch (test only, stricter exact-live-albedo rule). Please cherry-pick it onto the land branch, or land a later head of this branch.
+
 ## ANSWER FOR THE CREATURE LANDING PR (2 Nov ~14:15 UTC)
 
 - **Landing-ready head:** `7c7de66c9`, which is `9b1e168f6` plus a clean merge of origin/main (#798), or any later head of this branch.
