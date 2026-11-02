@@ -1,3 +1,3 @@
 ﻿BLANK   4.5 meadows-dialogue\meadows__inventory__character__corin.jpg
 SET meadows-dialogue: 1/6 blank
-blank frames 1 of 104
+blank frames 1 of 120
