@@ -84,7 +84,23 @@ def grade(name, entry):
     def vec(hue):
         r = np.radians(hue)
         return np.cos(r), np.sin(r)
-    if "base" not in entry:
+    if "base" not in entry and not entry.get("detail_only"):
+        return _glow(name, entry, models, stem, size, anatomy, valid)
+    if entry.get("detail_only"):
+        # Keep the source colour; only sharpen its local value contrast
+        # (v' = local * (v / local) ** strength) with an optional value scale.
+        blur = float(entry.get("detail_blur_px", 6))
+        local = np.asarray(Image.fromarray((v * 255).astype(np.uint8)).filter(
+            ImageFilter.GaussianBlur(blur))).astype(np.float64) / 255.0
+        ratio = np.clip(v / np.maximum(local, 0.04), 0.3, 3.0)
+        v2 = np.clip(local * ratio ** float(entry.get("detail_strength", 1.5)) * float(entry.get("value_scale", 1.0)), 0, 1)
+        out = np.clip(rgb * (v2 / np.maximum(v, 0.02))[..., None], 0, 1)
+        keep = ~valid
+        out[keep] = rgb[keep]
+        suffix = entry.get("suffix", "graded")
+        dst = os.path.join(models, "%s_Image_0_%s.jpg" % (stem, suffix))
+        Image.fromarray((out * 255).round().astype(np.uint8)).save(dst, quality=90)
+        print("%s: detail -> %s" % (name, os.path.relpath(dst, ROOT)))
         return _glow(name, entry, models, stem, size, anatomy, valid)
     bh, bs, bv = entry["base"]
     cx, sx = [np.full(h.shape, c) for c in vec(bh)]

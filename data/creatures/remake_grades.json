@@ -1,3 +1,38 @@
 {
-  "_comment": "Creatures-ralph (2 Nov 2026): regional coat grades for owner remakes, read by tools/art_pipeline/grade_regions.py. Each species: folder (its remake folder under assets/creatures/tetherbound), base [hue, sat, val], regions (soft anatomy masks, later over earlier, each with a target [hue, sat, val]), keep (element pixels kept exactly, optionally limited by where), suffix of the written texture. The texel's local value ratio carries the fine detail. A coat flag in data/config/creature_coat_flags.json selects the written file. Hues stay clear of Team Tether red (0-15, 345-360)."
+  "_comment": "Creatures-ralph (2 Nov 2026): regional coat grades for owner remakes, read by tools/art_pipeline/grade_regions.py. Each species: folder (its remake folder under assets/creatures/tetherbound), base [hue, sat, val], regions (soft anatomy masks, later over earlier, each with a target [hue, sat, val]), keep (element pixels kept exactly, optionally limited by where), suffix of the written texture. The texel's local value ratio carries the fine detail. A coat flag in data/config/creature_coat_flags.json selects the written file. Hues stay clear of Team Tether red (0-15, 345-360).",
+  "mangrove_monitor": {
+    "_why": "Batch-4 GPU: 'plain, smooth, rubbery green monitor with little surface detail'. r2 showed a lighter countershaded regrade reads more rubbery, and the judges prefer the shipped darker olive. This keeps the source colour and only sharpens scale-pattern contrast (x1.6) a step darker (value x0.92); the coat flag adds a matte finish and lights the aqua lines.",
+    "folder": "mangrove_monitor/candidate_owner1101",
+    "suffix": "scales",
+    "detail_only": true,
+    "detail_strength": 1.6,
+    "detail_blur_px": 5,
+    "value_scale": 0.92
+  },
+  "cragclaw": {
+    "_why": "Batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'; r2 judges (x3): the body and face under the shell must lift in value. Legs, claws, underside and face go to a lighter sand-slate below the shell line; the mossy shell keeps its own colour (mix 70 percent source); the blue lines keep their pixels.",
+    "folder": "cragclaw/candidate_owner1101",
+    "suffix": "body_lift",
+    "base": [38, 0.24, 0.62],
+    "regions": [
+      {"where": {"y_min": 0.5, "up_min": -0.1}, "hsv": [80, 0.3, 0.4], "mix": 0.0, "softness": 0.08}
+    ],
+    "shell_where": {"y_min": 0.5},
+    "mix_source": 0.0,
+    "detail_strength": 1.2,
+    "keep": [{"hue": [180, 225], "sat_min": 0.35, "val_min": 0.5}, {"where": {"y_min": 0.52, "up_min": -0.2}}]
+  },
+  "cannonback": {
+    "_why": "Batch-4 GPU: 'tank-like cartoon turtle with cannon studs reads as toy styling'. r2: a lighter tan shell made the barrels pop more; the muted moss-teal side read closer to the world. The barrels and the top of the shell go to the same dark mossy basalt as the scutes around them (so they read as rock knobs, not fittings), scutes darker moss-brown, skin olive-grey; source grain kept at 30 percent; the aqua cracks keep their pixels and glow low.",
+    "folder": "cannonback/candidate_owner1101",
+    "suffix": "moss",
+    "base": [68, 0.16, 0.4],
+    "regions": [
+      {"where": {"y_min": 0.5}, "hsv": [62, 0.26, 0.33], "softness": 0.1},
+      {"where": {"y_min": 0.7}, "hsv": [80, 0.24, 0.27], "softness": 0.08}
+    ],
+    "detail_strength": 1.3,
+    "mix_source": 0.3,
+    "keep": [{"hue": [165, 200], "sat_min": 0.35, "val_min": 0.55}]
+  }
 }
