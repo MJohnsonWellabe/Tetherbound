@@ -321,13 +321,14 @@ func _activation(provider: Object) -> void:
 ## "Leave Solmane free" to refuse this character's volunteer offer and keep the
 ## five, then take the Home Key home. Ordinary input only; the offer comes from
 ## the world's own Veyra participant journal.
-func solmane_return_trip() -> bool:
-	if not _bind() or str(game.current_realm) != "meadows":
-		return _fail("F49 Solmane return trip must start at home")
-	var before := _uids()
-	if not await reenter("cloudreach", "cloudreach"): return false
-	for frame in 300: await tree.physics_frame
+## The summit part on its own (fallback (a), 2 Nov: the arch's Cloudreach
+## arrival is the chapter's start gate when no Cloudreach waystone was touched,
+## so the return trip cannot reach the summit; this runs from the saved
+## post-Veyra summit instead). Walk to the tether-chamber machine, read the
+## beats, refuse the offer, keep the five.
+func solmane_choice() -> bool:
 	if not _bind(): return false
+	var before := _uids()
 	var climax: Node = tree.current_scene.find_child("CloudreachSolmaneClimax", true, false)
 	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
 	if climax == null or panel == null: return _fail("F49 missing producer: Cloudreach has no Solmane climax or dialogue panel")
@@ -362,6 +363,16 @@ func solmane_return_trip() -> bool:
 			await tree.physics_frame
 	if not answered: return _fail("F49 refusing Solmane did not record cloudreach:legendary_refused")
 	if _uids() != before or game.pending_catch != null: return _fail("F49 the Solmane answer changed the five")
+	return true
+
+
+func solmane_return_trip() -> bool:
+	if not _bind() or str(game.current_realm) != "meadows":
+		return _fail("F49 Solmane return trip must start at home")
+	if not await reenter("cloudreach", "cloudreach"): return false
+	for frame in 300: await tree.physics_frame
+	if not _bind(): return false
+	if not await solmane_choice(): return false
 	for frame in 300: await tree.physics_frame
 	return await home_key()
 
