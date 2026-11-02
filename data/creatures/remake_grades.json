@@ -10,16 +10,15 @@
     "value_scale": 0.92
   },
   "cragclaw": {
-    "_why": "Batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'; r2 judges (x3): the body and face under the shell must lift in value. Legs, claws, underside and face go to a lighter sand-slate below the shell line; the mossy shell keeps its own colour (mix 70 percent source); the blue lines keep their pixels.",
+    "_why": "Batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'. r2: the shipped dark body hides. r6: a pale sand lift reads 'unpainted clay', apart from the mossy shell. Attempt 3: the body below the shell line goes to a mid-value warm slate-olive in the shell's own hue family (one animal), the face a step lighter, the shell keeps its pixels, the blue lines keep theirs.",
     "folder": "cragclaw/candidate_owner1101",
-    "suffix": "body_lift",
-    "base": [38, 0.24, 0.62],
+    "suffix": "body_mid",
+    "base": [52, 0.26, 0.47],
     "regions": [
-      {"where": {"y_min": 0.5, "up_min": -0.1}, "hsv": [80, 0.3, 0.4], "mix": 0.0, "softness": 0.08}
+      {"where": {"z_min": 0.78, "y_max": 0.55}, "hsv": [45, 0.22, 0.54], "softness": 0.06}
     ],
-    "shell_where": {"y_min": 0.5},
-    "mix_source": 0.0,
-    "detail_strength": 1.2,
+    "detail_strength": 1.25,
+    "mix_source": 0.25,
     "keep": [{"hue": [180, 225], "sat_min": 0.35, "val_min": 0.5}, {"where": {"y_min": 0.52, "up_min": -0.2}}]
   },
   "cannonback": {
@@ -34,5 +33,31 @@
     "detail_strength": 1.3,
     "mix_source": 0.3,
     "keep": [{"hue": [165, 200], "sat_min": 0.35, "val_min": 0.55}]
+  },
+  "burrowback": {
+    "_why": "r5: the Burrowback remake (6.71) trails the installed model (6.80); judges: the back plates tile like a turtle shell in the faint frames. The spine plates get a model-space value jitter (+/-28 percent, coarse grain) in warm stone-moss so neighbouring plates differ, the coat keeps its source colour (mix 85 percent) with a little more fur contrast.",
+    "folder": "burrowback/candidate_owner1101",
+    "suffix": "plates",
+    "base": [30, 0.4, 0.4],
+    "regions": [
+      {"where": {"y_min": 0.55, "up_min": 0.25}, "hsv": [70, 0.22, 0.46], "softness": 0.1, "value_jitter": 0.28, "jitter_grain": 5.0, "mix": 0.7}
+    ],
+    "detail_strength": 1.15,
+    "mix_source": 0.55,
+    "keep": [{"sat_max": 0.12, "val_min": 0.7}]
+  },
+  "trailpup": {
+    "_why": "r5: the Trailpup remake (6.11) reads as a darker brown wolf against the installed near-real coyote (6.93); the owner pick is 'nearly real coyote'. Coyote palette by region: tawny flanks and legs, a grizzled grey-brown saddle, cream throat, belly and inner legs; source fur grain kept (mix 30 percent); the amber eyes and paws keep their pixels.",
+    "folder": "trailpup/candidate_owner1101",
+    "suffix": "coyote",
+    "base": [32, 0.46, 0.62],
+    "regions": [
+      {"where": {"up_min": 0.45, "y_min": 0.55}, "hsv": [30, 0.24, 0.48], "softness": 0.15},
+      {"where": {"up_max": -0.25}, "hsv": [38, 0.18, 0.82], "softness": 0.15},
+      {"where": {"z_min": 0.8, "up_max": 0.0, "y_max": 0.75}, "hsv": [38, 0.16, 0.84], "softness": 0.06}
+    ],
+    "detail_strength": 1.2,
+    "mix_source": 0.3,
+    "keep": [{"hue": [25, 50], "sat_min": 0.6, "val_min": 0.75}]
   }
 }

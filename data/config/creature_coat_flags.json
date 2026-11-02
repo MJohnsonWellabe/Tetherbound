@@ -521,6 +521,35 @@
           "emission_energy": 1.2
         }
       }
+    },
+    "creatures_ralph_cragclaw_body_mid": {
+      "_why": "Creatures-ralph (2 Nov 2026), Cragclaw attempt 3 (batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'; r6: a pale lift read 'unpainted clay'). Body below the shell in a mid-value slate-olive of the shell's hue family, face a step lighter (data/creatures/remake_grades.json cragclaw), blue lines lit through glow_read at 2.4. Pairs with the scale flag creatures_ralph_cragclaw_presence.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0_body_mid.jpg",
+          "emission": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_glow_read.png",
+          "emission_energy": 2.4
+        }
+      }
+    },
+    "creatures_ralph_burrowback_plates": {
+      "_why": "Creatures-ralph (2 Nov 2026), Burrowback remake (r5: 6.71 against the installed 6.80; judges: the back plates tile like a turtle shell). Spine plates get a model-space value jitter in warm stone-moss so neighbouring plates differ; the coat keeps its source colour (data/creatures/remake_grades.json burrowback). Applies only while remake_owner1101_burrowback is ON.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_Image_0_plates.jpg"
+        }
+      }
+    },
+    "creatures_ralph_trailpup_coyote": {
+      "_why": "Creatures-ralph (2 Nov 2026), Trailpup remake (r5: 6.11 against the installed near-real coyote 6.93). Coyote palette by region: tawny flanks, grizzled saddle, cream throat and belly, source fur grain kept (data/creatures/remake_grades.json trailpup). Applies only while remake_owner1101_trailpup is ON.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_Image_0_coyote.jpg"
+        }
+      }
     }
   }
 }

@@ -30,6 +30,7 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 from creature_anatomy_maps import build  # noqa: E402
 from repaint_creature_textures import rgb_to_hsv  # noqa: E402
+from creature_overlays import _value_noise_3d  # noqa: E402
 
 SPEC = os.path.join(ROOT, "data", "creatures", "remake_grades.json")
 
@@ -110,6 +111,13 @@ def grade(name, entry):
         m = region_mask(region.get("where", {}), anatomy, float(region.get("softness", soft)))
         m *= float(region.get("mix", 1.0))
         rh, rs, rv = region["hsv"]
+        # value_jitter: model-space noise varies the region's target value
+        # (+/- amplitude), so neighbouring plates or scutes stop reading as
+        # one repeated tile.
+        if region.get("value_jitter"):
+            n = _value_noise_3d(anatomy["unit"], float(region.get("jitter_grain", 6.0)),
+                                int(region.get("jitter_seed", 7)))
+            rv = rv * (1.0 + float(region["value_jitter"]) * (n * 2.0 - 1.0))
         c, si = vec(rh)
         cx, sx = cx * (1 - m) + c * m, sx * (1 - m) + si * m
         ts, tv = ts * (1 - m) + rs * m, tv * (1 - m) + rv * m
