@@ -326,7 +326,9 @@ func grandpa_and_credits() -> bool:
 	if panel == null: return _fail("F49 homecoming has no actual dialogue panel")
 	# Grandpa is indoors: enter by the east door, as a player does.
 	var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
-	var via: Array[Vector3] = []
+	# From the Shrine Room the player first leaves the Crossing Hall by its
+	# entrance (a straight line to the door ran into the Hall wall, F49#0 1 Nov).
+	var via: Array[Vector3] = _hall_exit_via()
 	if house != null and house.has_method("marker"):
 		via.append(house.call("marker", "door") as Vector3)
 	if not await activate(prompt, via): return false
@@ -430,6 +432,31 @@ func _lessons_read_by_caller() -> bool:
 ## From outside the Hall, walk in through its authored entrance, as a player
 ## does: outside the doorway, the doorway, the home arrival inside, then the
 ## arch's own Approach marker. A trainer already inside gets no waypoints.
+## The reverse of _hall_entry_via: from inside the Crossing Hall, walk to the
+## home arrival point, the entrance, then just outside it (same authored
+## crossing_hall.json anchors). Outside the Hall it returns no waypoints.
+func _hall_exit_via() -> Array[Vector3]:
+	var via: Array[Vector3] = []
+	var arch: Node3D = null
+	for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+		arch = candidate as Node3D
+		break
+	var slot := arch.get_parent() as Node3D if arch != null else null
+	var hall := slot.get_parent() as Node3D if slot != null else null
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+	if hall == null or not config is Dictionary or not config.get("entrance") is Array or not config.get("home_arrival") is Array:
+		return via
+	var local := hall.to_local(_player.global_position)
+	var inside := (absf(local.x) < 7.0 and absf(local.z) < 15.0) or (local.x >= 7.0 and local.x < 17.0 and absf(local.z) < 7.0)
+	if not inside: return via
+	var entrance := Vector3(float(config.entrance[0]), float(config.entrance[1]), float(config.entrance[2]))
+	var arrival := Vector3(float(config.home_arrival[0]), float(config.home_arrival[1]), float(config.home_arrival[2]))
+	via.append(hall.to_global(arrival))
+	via.append(hall.to_global(entrance))
+	via.append(hall.to_global(entrance + Vector3(0, 0, -2.5)))
+	return via
+
+
 func _hall_entry_via(arch: Node3D) -> Array[Vector3]:
 	var via: Array[Vector3] = []
 	var slot := arch.get_parent() as Node3D
