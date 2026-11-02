@@ -1,0 +1,4 @@
+Qt: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Me: none
+Fs: "pale, thin vine-wrapped deer loses value contrast"; "mottled root-veined hide muddies the read"; "hit-react hunch reads as a broken stoop with the head collapsed"
+Fj: none

@@ -1,0 +1,26 @@
+[
+ {
+  "label": "cragclaw",
+  "a": "sides/cragclaw-base.png",
+  "b": "sides/cragclaw-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "muddled dark mass whose body hides under the shell, face does not read",
+   "head and limbs vanish in the faint frames"
+  ]
+ },
+ {
+  "label": "burrowback",
+  "a": "sides/burrowback-base.png",
+  "b": "sides/burrowback-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "trailpup",
+  "a": "sides/trailpup-base.png",
+  "b": "sides/trailpup-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ }
+]

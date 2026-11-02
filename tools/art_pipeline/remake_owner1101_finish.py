@@ -53,6 +53,13 @@ OVERRIDES = {
 
 
 def model_stem(species):
+    """The live remake model's stem: the owner1101 remake, or the newer Meshy
+    model (candidate_r9, candidate_r10) its remake flag now points at."""
+    flags = json.load(open(os.path.join(ROOT, "data/config/creature_model_flags.json")))["flags"]
+    entry = flags.get("remake_owner1101_" + species, {}).get("species", {}).get(species, {})
+    model = str(entry.get("model", ""))
+    if model.endswith(".glb"):
+        return os.path.join(ROOT, model.replace("res://", "")[: -len(".glb")] + "_")
     return os.path.join(ROOT, C % (species, species))
 
 

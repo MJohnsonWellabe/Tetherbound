@@ -14,11 +14,8 @@ var installed: Dictionary
 ## Held OFF while their remake breaks a gameplay contract the rest of the suite
 ## checks; each comes back ON once its rig carries the missing data.
 const HELD := {
-	"remake_owner1101_bramblebun": "the remake as the practice-cluster wild keeps the combat camera on the starter (smoke_combat on #796: followed anchor 2.6 m from the trainer vs 2.8 m from the creature with the Bramblebun remake as the wild foe)",
-	"remake_owner1101_ripplet": "the remake keeps the combat camera following the starter, not the trainer (smoke_combat: followed anchor 2.5 m from trainer vs 2.8 m from creature)",
 	"remake_owner1101_burrowback": "its aspect variant Nightburrow reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_trailpup": "its aspect variant Stormtrail reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
-	"remake_owner1101_paddlenewt": "its aspect variant Riftfrill reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_ashtusk": "it is an aspect variant of Tuskroot and must reuse Tuskroot's mesh, not its own (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_mudsnout": "the Burrow Warrens mouth fight seats the companion beside the remake (smoke_arena_contain: with the remake as the wild Warrens Mudsnout, the clear-seat search for the Terrapup companion was exhausted and the engagement refused)",
 	"remake_owner1101_frostclaw": "the F36 pose candidate library is measured on Frostclaw's installed rig carries over to the remake rig",

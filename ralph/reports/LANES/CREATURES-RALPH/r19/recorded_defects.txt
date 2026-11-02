@@ -1,0 +1,7 @@
+Ds: "uniform glossy turquoise finish looks toy-like"; "little scale detail"
+Np: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Zo: "faint barely changes pose"
+Yl: none
+Ni: "faint never lies down"; "plain monitor with little surface detail"
+Pg: "dark material sinks into the stage"; "glassy sheen"
+Pc: none

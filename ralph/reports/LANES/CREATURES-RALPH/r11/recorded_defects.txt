@@ -1,0 +1,5 @@
+Mo: none
+Rr: "dark green upright frog-man / gaunt biped is murky, low-value, alien silhouette"; "faint end grows odd dorsal spikes"
+Dp: none
+Pk: "faint end flattens to a strip"
+Cu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

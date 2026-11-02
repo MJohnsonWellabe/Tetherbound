@@ -1,0 +1,41 @@
+[
+ {
+  "label": "aquaryn",
+  "a": "sides/aquaryn-base.png",
+  "b": "sides/aquaryn-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "uniform glossy turquoise finish looks toy-like",
+   "little scale detail"
+  ]
+ },
+ {
+  "label": "skyrill",
+  "a": "sides/skyrill-base.png",
+  "b": "sides/skyrill-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "dark material sinks into the stage",
+   "glassy sheen"
+  ]
+ },
+ {
+  "label": "staticub",
+  "a": "sides/staticub-base.png",
+  "b": "sides/staticub-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "faint barely changes pose"
+  ]
+ },
+ {
+  "label": "mangrove_monitor",
+  "a": "sides/mangrove_monitor-base.png",
+  "b": "sides/mangrove_monitor-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "faint never lies down",
+   "plain monitor with little surface detail"
+  ]
+ }
+]

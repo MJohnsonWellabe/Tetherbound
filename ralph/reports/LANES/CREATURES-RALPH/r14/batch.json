@@ -1,0 +1,18 @@
+{
+ "anchors": {
+  "craft:before": [5.0, 5.0, 4.8],
+  "craft:after": [6.8, 6.8, 6.4],
+  "f36_0_npc:C4A": [6.4, 6.3, 6.0],
+  "f36_0_npc:C4B": [6.4, 6.3, 6.0],
+  "f36_0_gap:C5A": [4.5, 4.0, 4.4],
+  "f36_0_gap:C5B": [6.6, 6.6, 6.3]
+ },
+ "candidates": {
+  "sparkit shipped": [5.8, 5.4, 5.3],
+  "sparkit fennec coat + grounded faint": [5.4, 5.6, 5.6],
+  "tempestwing shipped": [6.0, 6.0, 6.0],
+  "tempestwing gold coat + grounded faint": [5.2, 5.4, 5.2],
+  "ribbonray shipped": [5.0, 5.0, 5.0],
+  "ribbonray lift + grounded faint + eased hit": [4.8, 4.8, 4.8]
+ }
+}

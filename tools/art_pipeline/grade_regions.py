@@ -15,6 +15,7 @@ data/config/creature_coat_flags.json selects it.
 
 Region `where` keys: x/y/z_min/max (0..1 box units), up_min/up_max (normal Y),
 fwd_min/fwd_max (normal Z), lateral_min (|x-0.5|*2), radial_min/max.
+detail_only entries take detail_strength, detail_blur_px, value_scale and sat_scale.
 
     python3 tools/art_pipeline/grade_regions.py duskhush [species ...]
 """
@@ -30,6 +31,7 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 from creature_anatomy_maps import build  # noqa: E402
 from repaint_creature_textures import rgb_to_hsv  # noqa: E402
+from creature_overlays import _value_noise_3d  # noqa: E402
 
 SPEC = os.path.join(ROOT, "data", "creatures", "remake_grades.json")
 
@@ -72,7 +74,9 @@ def grade(name, entry):
     folder = entry["folder"]
     models = os.path.join(ROOT, "assets", "creatures", "tetherbound", folder, "models")
     stem = sorted(f for f in os.listdir(models) if f.endswith(".glb"))[0][:-4]
-    img = Image.open(os.path.join(models, stem + "_Image_0.jpg")).convert("RGB")
+    # `source` grades another live texture beside the remake albedo (an
+    # aspect variant's repaint, e.g. "Image_0_ashtusk.png"); default Image_0.jpg.
+    img = Image.open(os.path.join(models, "%s_%s" % (stem, entry.get("source", "Image_0.jpg")))).convert("RGB")
     size = img.width
     anatomy, _ = build(folder, size=size)
     if int(anatomy["size"]) != size:
@@ -95,6 +99,11 @@ def grade(name, entry):
         ratio = np.clip(v / np.maximum(local, 0.04), 0.3, 3.0)
         v2 = np.clip(local * ratio ** float(entry.get("detail_strength", 1.5)) * float(entry.get("value_scale", 1.0)), 0, 1)
         out = np.clip(rgb * (v2 / np.maximum(v, 0.02))[..., None], 0, 1)
+        # Optional saturation scale about each texel's value (max channel).
+        sat_scale = float(entry.get("sat_scale", 1.0))
+        if sat_scale != 1.0:
+            top = out.max(axis=-1, keepdims=True)
+            out = np.clip(top - (top - out) * sat_scale, 0, 1)
         keep = ~valid
         out[keep] = rgb[keep]
         suffix = entry.get("suffix", "graded")
@@ -110,6 +119,13 @@ def grade(name, entry):
         m = region_mask(region.get("where", {}), anatomy, float(region.get("softness", soft)))
         m *= float(region.get("mix", 1.0))
         rh, rs, rv = region["hsv"]
+        # value_jitter: model-space noise varies the region's target value
+        # (+/- amplitude), so neighbouring plates or scutes stop reading as
+        # one repeated tile.
+        if region.get("value_jitter"):
+            n = _value_noise_3d(anatomy["unit"], float(region.get("jitter_grain", 6.0)),
+                                int(region.get("jitter_seed", 7)))
+            rv = rv * (1.0 + float(region["value_jitter"]) * (n * 2.0 - 1.0))
         c, si = vec(rh)
         cx, sx = cx * (1 - m) + c * m, sx * (1 - m) + si * m
         ts, tv = ts * (1 - m) + rs * m, tv * (1 - m) + rv * m
