@@ -9,3 +9,12 @@ Each entry gives the species, the commit and the capture. All entries use `captu
 - **r10 Staticub** (r16, CPU 5.34 → 8.55), **r10 Sirenseal** (4.35 → 6.95) and **r10 Skyrill** (4.79 → 7.34). Each remake flag points at `candidate_r10/models/creature_<species>_r10.glb`; A is main, which points at owner1101.
 - **Thundertunnel** (r17, CPU 2.93 → 5.36): the GLB carries the hit and faint fixes, and `creatures_ralph_thundertunnel_velvet` is ON. A is main.
 - **One GPU job for all seven:** `--species=aquaryn,duskhush,mangrove_monitor,staticub,sirenseal,skyrill,thundertunnel`.
+
+## Next (r19, capturing on CPU from GPU cr1102 notes)
+
+- **Staticub r10:** the faint end floated 0.18 m (the leg tuck ran after grounding). Settled on the 3rd percentile.
+- **Mangrove Monitor r9:** the faint end floated 0.41 m. Settled.
+- **Aquaryn r9:** scale detail and less gloss (`creatures_ralph_aquaryn_r9_scales`).
+- **Skyrill r10:** value lift and a less glassy finish (`creatures_ralph_skyrill_r10_lift`).
+
+What passes the CPU A/B joins the next GPU job.
