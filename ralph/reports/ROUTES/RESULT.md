@@ -1,3 +1,6 @@
+OWNER DECISION (2 Nov): "Park the opening join, just finish the training loop. We shouldn't need to do the opening join. Take that out of the requirements. If we prove everything out I don't need it all to be rerun again." Open item (1) below (Meadows opening → relay join) is dropped from F49#0; the line from the disclosed generated `relay` boundary is accepted, the opening proven by its own pieces (f49_mt_bridge lineage). Only open item (2), the earned-line training loop, remains; it is the run in progress.
+- 2 Nov 21:51Z and 22:33Z: the container was reclaimed twice while the session sat idle, killing mw_3 both times (mw_1, mw_2 seams kept). Restarted 22:33Z with a session-held waiter.
+
 RUNNING (2 Nov 20:55Z): earned-line Meadows T2 (Mira) loop, option (b) per coordinator: `meadows_walk_to_mira` now walks ≤100 m sub-legs with a 20 min budget, so each piece saves inside the 45 min watchdog (63e57873). Chain from `f49_swb_10`: `mw_1..mw_N` → `training_t2_master` → `training_t2_home` → `training_t2_kitchen_1` → `training_t2_feed`, run at 96462164 (same route runner/helpers as the branch head). Seams will be committed as each piece matches.
 - Main merged (no rebase): 70d93f80 brings in #801 and #802; no conflicts. Fetched blob-less (`--filter=blob:none`) because full fetches of main filled the disk allowance.
 

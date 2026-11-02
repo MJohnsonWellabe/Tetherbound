@@ -20,6 +20,8 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 **Owner, 16 Oct 2026:** Codex shut down; all lane heads merged in PR #690 with new Meshy assets flag-off.
 
+**Owner, 2 Nov 2026 (F49#0 scope):** "Park the opening join, just finish the training loop. We shouldn't need to do the opening join. Take that out of the requirements. If we prove everything out I don't need it all to be rerun again." F49#0 no longer requires a seam joining the Meadows opening to the generated `relay` boundary: the earned line from `relay` is accepted, with the opening proven by its own pieces (f49_mt_bridge lineage), and nothing is re-earned. Remaining F49#0 work is only the earned-line training loop (meadows_walk_to_mira pieces → training_t2_master → home → kitchen → feed, each seam matched; tb/routes-f49).
+
 **Owner, 15 Oct 2026 (standing directions, CLAUDE.md top block):** (0) visual bar lowered to 7.5 Bar A (was 8.5; gain/stop rule unchanged); (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves; never full runs. These supersede RD-26's 30-per-night cap, the "only where a scene change can't fix it" limit, ACCEPTANCE F49#0's 4 Oct one-save wording and the 13 Oct coordinator decision requiring earned, matched seams.
 
 **Owner direct-run override (14 Oct 8:42 PM CT):** native/GPU proofs run directly from the lane's own pushed checkout (CLAUDE.md standing direction 4); its 14 Oct GPU queue and root turn order were superseded by the 17 Oct restart.
