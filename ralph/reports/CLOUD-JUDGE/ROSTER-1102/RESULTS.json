@@ -1,0 +1,1476 @@
+{
+ "ref": "894ce969b",
+ "skips": [],
+ "results": {
+  "F36 Abyssal Guardian": {
+   "species": "abyssal_guardian",
+   "folder": "CREATURES-01",
+   "installed_1nov": 5.15,
+   "current_main": 5.27,
+   "delta": 0.12,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "abyssal_guardian-hit-000.jpg",
+    "abyssal_guardian-hit-050.jpg",
+    "abyssal_guardian-faint-050.jpg",
+    "abyssal_guardian-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "abyssal_guardian-hit-000.jpg",
+    "abyssal_guardian-hit-050.jpg",
+    "abyssal_guardian-faint-050.jpg",
+    "abyssal_guardian-faint-100.jpg"
+   ]
+  },
+  "F36 Aeriex": {
+   "species": "aeriex",
+   "folder": "CREATURES-01",
+   "installed_1nov": 5.69,
+   "current_main": 6.92,
+   "delta": 1.23,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "aeriex-hit-000.jpg",
+    "aeriex-hit-050.jpg",
+    "aeriex-faint-050.jpg",
+    "aeriex-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "aeriex-hit-000.jpg",
+    "aeriex-hit-050.jpg",
+    "aeriex-faint-050.jpg",
+    "aeriex-faint-100.jpg"
+   ]
+  },
+  "F36 Aquaryn": {
+   "species": "aquaryn",
+   "folder": "CREATURES-01",
+   "installed_1nov": 6.75,
+   "current_main": 5.45,
+   "delta": -1.3,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "aquaryn-hit-000.jpg",
+    "aquaryn-hit-050.jpg",
+    "aquaryn-faint-050.jpg",
+    "aquaryn-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "aquaryn-hit-000.jpg",
+    "aquaryn-hit-050.jpg",
+    "aquaryn-faint-050.jpg",
+    "aquaryn-faint-100.jpg"
+   ]
+  },
+  "F36 Ashtusk": {
+   "species": "ashtusk",
+   "folder": "CREATURES-01",
+   "installed_1nov": 5.98,
+   "current_main": 7.16,
+   "delta": 1.18,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "ashtusk-hit-000.jpg",
+    "ashtusk-hit-050.jpg",
+    "ashtusk-faint-050.jpg",
+    "ashtusk-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "ashtusk-hit-000.jpg",
+    "ashtusk-hit-050.jpg",
+    "ashtusk-faint-050.jpg",
+    "ashtusk-faint-100.jpg"
+   ]
+  },
+  "F36 Bramblebun": {
+   "species": "bramblebun",
+   "folder": "CREATURES-01",
+   "installed_1nov": 7.52,
+   "current_main": 7.52,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "bramblebun-hit-000.jpg",
+    "bramblebun-hit-050.jpg",
+    "bramblebun-faint-050.jpg",
+    "bramblebun-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "bramblebun-hit-000.jpg",
+    "bramblebun-hit-050.jpg",
+    "bramblebun-faint-050.jpg",
+    "bramblebun-faint-100.jpg"
+   ]
+  },
+  "F36 Breezetail": {
+   "species": "breezetail",
+   "folder": "CREATURES-01",
+   "installed_1nov": 5.33,
+   "current_main": 6.51,
+   "delta": 1.18,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "breezetail-hit-000.jpg",
+    "breezetail-hit-050.jpg",
+    "breezetail-faint-050.jpg",
+    "breezetail-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "breezetail-hit-000.jpg",
+    "breezetail-hit-050.jpg",
+    "breezetail-faint-050.jpg",
+    "breezetail-faint-100.jpg"
+   ]
+  },
+  "F36 Brooktail": {
+   "species": "brooktail",
+   "folder": "CREATURES-01",
+   "installed_1nov": 4.56,
+   "current_main": 7.04,
+   "delta": 2.48,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "brooktail-hit-000.jpg",
+    "brooktail-hit-050.jpg",
+    "brooktail-faint-050.jpg",
+    "brooktail-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "brooktail-hit-000.jpg",
+    "brooktail-hit-050.jpg",
+    "brooktail-faint-050.jpg",
+    "brooktail-faint-100.jpg"
+   ]
+  },
+  "F36 Burrowback": {
+   "species": "burrowback",
+   "folder": "CREATURES-02",
+   "installed_1nov": 6.61,
+   "current_main": 6.64,
+   "delta": 0.03,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "burrowback-hit-000.jpg",
+    "burrowback-hit-050.jpg",
+    "burrowback-faint-050.jpg",
+    "burrowback-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "burrowback-hit-000.jpg",
+    "burrowback-hit-050.jpg",
+    "burrowback-faint-050.jpg",
+    "burrowback-faint-100.jpg"
+   ]
+  },
+  "F36 Cannonback": {
+   "species": "cannonback",
+   "folder": "CREATURES-02",
+   "installed_1nov": 5.88,
+   "current_main": 6.05,
+   "delta": 0.17,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "cannonback-hit-000.jpg",
+    "cannonback-hit-050.jpg",
+    "cannonback-faint-050.jpg",
+    "cannonback-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "cannonback-hit-000.jpg",
+    "cannonback-hit-050.jpg",
+    "cannonback-faint-050.jpg",
+    "cannonback-faint-100.jpg"
+   ]
+  },
+  "F36 Cindercub": {
+   "species": "cindercub",
+   "folder": "CREATURES-02",
+   "installed_1nov": 6.29,
+   "current_main": 6.85,
+   "delta": 0.56,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "cindercub-hit-000.jpg",
+    "cindercub-hit-050.jpg",
+    "cindercub-faint-050.jpg",
+    "cindercub-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "cindercub-hit-000.jpg",
+    "cindercub-hit-050.jpg",
+    "cindercub-faint-050.jpg",
+    "cindercub-faint-100.jpg"
+   ]
+  },
+  "F36 Cliffspike": {
+   "species": "cliffspike",
+   "folder": "CREATURES-02",
+   "installed_1nov": 6.05,
+   "current_main": 6.44,
+   "delta": 0.39,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "cliffspike-hit-000.jpg",
+    "cliffspike-hit-050.jpg",
+    "cliffspike-faint-050.jpg",
+    "cliffspike-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "cliffspike-hit-000.jpg",
+    "cliffspike-hit-050.jpg",
+    "cliffspike-faint-050.jpg",
+    "cliffspike-faint-100.jpg"
+   ]
+  },
+  "F36 Cloudfang": {
+   "species": "cloudfang",
+   "folder": "CREATURES-02",
+   "installed_1nov": 5.96,
+   "current_main": 6.61,
+   "delta": 0.65,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "cloudfang-hit-000.jpg",
+    "cloudfang-hit-050.jpg",
+    "cloudfang-faint-050.jpg",
+    "cloudfang-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "cloudfang-hit-000.jpg",
+    "cloudfang-hit-050.jpg",
+    "cloudfang-faint-050.jpg",
+    "cloudfang-faint-100.jpg"
+   ]
+  },
+  "F36 Cragclaw": {
+   "species": "cragclaw",
+   "folder": "CREATURES-02",
+   "installed_1nov": 6.17,
+   "current_main": 5.55,
+   "delta": -0.62,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "cragclaw-hit-000.jpg",
+    "cragclaw-hit-050.jpg",
+    "cragclaw-faint-050.jpg",
+    "cragclaw-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "cragclaw-hit-000.jpg",
+    "cragclaw-hit-050.jpg",
+    "cragclaw-faint-050.jpg",
+    "cragclaw-faint-100.jpg"
+   ]
+  },
+  "F36 Craghorn": {
+   "species": "craghorn",
+   "folder": "CREATURES-02",
+   "installed_1nov": 6.29,
+   "current_main": 6.47,
+   "delta": 0.18,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "craghorn-hit-000.jpg",
+    "craghorn-hit-050.jpg",
+    "craghorn-faint-050.jpg",
+    "craghorn-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "craghorn-hit-000.jpg",
+    "craghorn-hit-050.jpg",
+    "craghorn-faint-050.jpg",
+    "craghorn-faint-100.jpg"
+   ]
+  },
+  "F36 Duskhush": {
+   "species": "duskhush",
+   "folder": "CREATURES-03",
+   "installed_1nov": 6.74,
+   "current_main": 6.37,
+   "delta": -0.37,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "duskhush-hit-000.jpg",
+    "duskhush-hit-050.jpg",
+    "duskhush-faint-050.jpg",
+    "duskhush-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "duskhush-hit-000.jpg",
+    "duskhush-hit-050.jpg",
+    "duskhush-faint-050.jpg",
+    "duskhush-faint-100.jpg"
+   ]
+  },
+  "F36 Frostclaw": {
+   "species": "frostclaw",
+   "folder": "CREATURES-03",
+   "installed_1nov": 6.96,
+   "current_main": 7.03,
+   "delta": 0.07,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "frostclaw-hit-000.jpg",
+    "frostclaw-hit-050.jpg",
+    "frostclaw-faint-050.jpg",
+    "frostclaw-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "frostclaw-hit-000.jpg",
+    "frostclaw-hit-050.jpg",
+    "frostclaw-faint-050.jpg",
+    "frostclaw-faint-100.jpg"
+   ]
+  },
+  "F36 Fulgocobra": {
+   "species": "fulgocobra",
+   "folder": "CREATURES-03",
+   "installed_1nov": 6.23,
+   "current_main": 6.12,
+   "delta": -0.11,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "fulgocobra-hit-000.jpg",
+    "fulgocobra-hit-050.jpg",
+    "fulgocobra-faint-050.jpg",
+    "fulgocobra-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "fulgocobra-hit-000.jpg",
+    "fulgocobra-hit-050.jpg",
+    "fulgocobra-faint-050.jpg",
+    "fulgocobra-faint-100.jpg"
+   ]
+  },
+  "F36 Galecrest": {
+   "species": "galecrest",
+   "folder": "CREATURES-03",
+   "installed_1nov": 7.39,
+   "current_main": 7.39,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "galecrest-hit-000.jpg",
+    "galecrest-hit-050.jpg",
+    "galecrest-faint-050.jpg",
+    "galecrest-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "galecrest-hit-000.jpg",
+    "galecrest-hit-050.jpg",
+    "galecrest-faint-050.jpg",
+    "galecrest-faint-100.jpg"
+   ]
+  },
+  "F36 Galewisp": {
+   "species": "galewisp",
+   "folder": "CREATURES-03",
+   "installed_1nov": 4.99,
+   "current_main": 6.96,
+   "delta": 1.97,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "galewisp-hit-000.jpg",
+    "galewisp-hit-050.jpg",
+    "galewisp-faint-050.jpg",
+    "galewisp-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "galewisp-hit-000.jpg",
+    "galewisp-hit-050.jpg",
+    "galewisp-faint-050.jpg",
+    "galewisp-faint-100.jpg"
+   ]
+  },
+  "F36 Glimmermoth": {
+   "species": "glimmermoth",
+   "folder": "CREATURES-03",
+   "installed_1nov": 5.14,
+   "current_main": 6.7,
+   "delta": 1.56,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "glimmermoth-hit-000.jpg",
+    "glimmermoth-hit-050.jpg",
+    "glimmermoth-faint-050.jpg",
+    "glimmermoth-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "glimmermoth-hit-000.jpg",
+    "glimmermoth-hit-050.jpg",
+    "glimmermoth-faint-050.jpg",
+    "glimmermoth-faint-100.jpg"
+   ]
+  },
+  "F36 Mangrove Monitor": {
+   "species": "mangrove_monitor",
+   "folder": "CREATURES-03",
+   "installed_1nov": 5.94,
+   "current_main": 6.63,
+   "delta": 0.69,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "mangrove_monitor-hit-000.jpg",
+    "mangrove_monitor-hit-050.jpg",
+    "mangrove_monitor-faint-050.jpg",
+    "mangrove_monitor-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "mangrove_monitor-hit-000.jpg",
+    "mangrove_monitor-hit-050.jpg",
+    "mangrove_monitor-faint-050.jpg",
+    "mangrove_monitor-faint-100.jpg"
+   ]
+  },
+  "F36 Meadowhart": {
+   "species": "meadowhart",
+   "folder": "CREATURES-04",
+   "installed_1nov": 7.21,
+   "current_main": 7.04,
+   "delta": -0.17,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "meadowhart-hit-000.jpg",
+    "meadowhart-hit-050.jpg",
+    "meadowhart-faint-050.jpg",
+    "meadowhart-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "meadowhart-hit-000.jpg",
+    "meadowhart-hit-050.jpg",
+    "meadowhart-faint-050.jpg",
+    "meadowhart-faint-100.jpg"
+   ]
+  },
+  "F36 Mirejaw": {
+   "species": "mirejaw",
+   "folder": "CREATURES-04",
+   "installed_1nov": 6.17,
+   "current_main": 6.47,
+   "delta": 0.3,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "mirejaw-hit-000.jpg",
+    "mirejaw-hit-050.jpg",
+    "mirejaw-faint-050.jpg",
+    "mirejaw-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "mirejaw-hit-000.jpg",
+    "mirejaw-hit-050.jpg",
+    "mirejaw-faint-050.jpg",
+    "mirejaw-faint-100.jpg"
+   ]
+  },
+  "F36 Mosshell": {
+   "species": "mosshell",
+   "folder": "CREATURES-04",
+   "installed_1nov": 6.92,
+   "current_main": 6.92,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "mosshell-hit-000.jpg",
+    "mosshell-hit-050.jpg",
+    "mosshell-faint-050.jpg",
+    "mosshell-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "mosshell-hit-000.jpg",
+    "mosshell-hit-050.jpg",
+    "mosshell-faint-050.jpg",
+    "mosshell-faint-100.jpg"
+   ]
+  },
+  "F36 Mosshock": {
+   "species": "mosshock",
+   "folder": "CREATURES-04",
+   "installed_1nov": 6.23,
+   "current_main": 6.47,
+   "delta": 0.24,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "mosshock-hit-000.jpg",
+    "mosshock-hit-050.jpg",
+    "mosshock-faint-050.jpg",
+    "mosshock-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "mosshock-hit-000.jpg",
+    "mosshock-hit-050.jpg",
+    "mosshock-faint-050.jpg",
+    "mosshock-faint-100.jpg"
+   ]
+  },
+  "F36 Mudsnout": {
+   "species": "mudsnout",
+   "folder": "CREATURES-04",
+   "installed_1nov": 7.45,
+   "current_main": 7.45,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "mudsnout-hit-000.jpg",
+    "mudsnout-hit-050.jpg",
+    "mudsnout-faint-050.jpg",
+    "mudsnout-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "mudsnout-hit-000.jpg",
+    "mudsnout-hit-050.jpg",
+    "mudsnout-faint-050.jpg",
+    "mudsnout-faint-100.jpg"
+   ]
+  },
+  "F36 Nightburrow": {
+   "species": "nightburrow",
+   "folder": "CREATURES-04",
+   "installed_1nov": 6.8,
+   "current_main": 6.8,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "nightburrow-hit-000.jpg",
+    "nightburrow-hit-050.jpg",
+    "nightburrow-faint-050.jpg",
+    "nightburrow-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "nightburrow-hit-000.jpg",
+    "nightburrow-hit-050.jpg",
+    "nightburrow-faint-050.jpg",
+    "nightburrow-faint-100.jpg"
+   ]
+  },
+  "F36 Paddlenewt": {
+   "species": "paddlenewt",
+   "folder": "CREATURES-04",
+   "installed_1nov": 6.98,
+   "current_main": 6.98,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "paddlenewt-hit-000.jpg",
+    "paddlenewt-hit-050.jpg",
+    "paddlenewt-faint-050.jpg",
+    "paddlenewt-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "paddlenewt-hit-000.jpg",
+    "paddlenewt-hit-050.jpg",
+    "paddlenewt-faint-050.jpg",
+    "paddlenewt-faint-100.jpg"
+   ]
+  },
+  "F36 Pebbik": {
+   "species": "pebbik",
+   "folder": "CREATURES-05",
+   "installed_1nov": 6.04,
+   "current_main": 6.42,
+   "delta": 0.38,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "pebbik-hit-000.jpg",
+    "pebbik-hit-050.jpg",
+    "pebbik-faint-050.jpg",
+    "pebbik-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "pebbik-hit-000.jpg",
+    "pebbik-hit-050.jpg",
+    "pebbik-faint-050.jpg",
+    "pebbik-faint-100.jpg"
+   ]
+  },
+  "F36 Pipwing": {
+   "species": "pipwing",
+   "folder": "CREATURES-05",
+   "installed_1nov": 5.16,
+   "current_main": 6.07,
+   "delta": 0.91,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "pipwing-hit-000.jpg",
+    "pipwing-hit-050.jpg",
+    "pipwing-faint-050.jpg",
+    "pipwing-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "pipwing-hit-000.jpg",
+    "pipwing-hit-050.jpg",
+    "pipwing-faint-050.jpg",
+    "pipwing-faint-100.jpg"
+   ]
+  },
+  "F36 Reedwing": {
+   "species": "reedwing",
+   "folder": "CREATURES-05",
+   "installed_1nov": 5.3,
+   "current_main": 6.49,
+   "delta": 1.19,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "reedwing-hit-000.jpg",
+    "reedwing-hit-050.jpg",
+    "reedwing-faint-050.jpg",
+    "reedwing-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "reedwing-hit-000.jpg",
+    "reedwing-hit-050.jpg",
+    "reedwing-faint-050.jpg",
+    "reedwing-faint-100.jpg"
+   ]
+  },
+  "F36 Ribbonray": {
+   "species": "ribbonray",
+   "folder": "CREATURES-05",
+   "installed_1nov": 5.51,
+   "current_main": 5.23,
+   "delta": -0.28,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "ribbonray-hit-000.jpg",
+    "ribbonray-hit-050.jpg",
+    "ribbonray-faint-050.jpg",
+    "ribbonray-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "ribbonray-hit-000.jpg",
+    "ribbonray-hit-050.jpg",
+    "ribbonray-faint-050.jpg",
+    "ribbonray-faint-100.jpg"
+   ]
+  },
+  "F36 Riftfrill": {
+   "species": "riftfrill",
+   "folder": "CREATURES-05",
+   "installed_1nov": 6.0,
+   "current_main": 6.0,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "riftfrill-hit-000.jpg",
+    "riftfrill-hit-050.jpg",
+    "riftfrill-faint-050.jpg",
+    "riftfrill-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "riftfrill-hit-000.jpg",
+    "riftfrill-hit-050.jpg",
+    "riftfrill-faint-050.jpg",
+    "riftfrill-faint-100.jpg"
+   ]
+  },
+  "F36 Ripplet": {
+   "species": "ripplet",
+   "folder": "CREATURES-05",
+   "installed_1nov": 5.9,
+   "current_main": 5.9,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "ripplet-hit-000.jpg",
+    "ripplet-hit-050.jpg",
+    "ripplet-faint-050.jpg",
+    "ripplet-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "ripplet-hit-000.jpg",
+    "ripplet-hit-050.jpg",
+    "ripplet-faint-050.jpg",
+    "ripplet-faint-100.jpg"
+   ]
+  },
+  "F36 Riptusk": {
+   "species": "riptusk",
+   "folder": "CREATURES-05",
+   "installed_1nov": 6.04,
+   "current_main": 6.52,
+   "delta": 0.48,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "riptusk-hit-000.jpg",
+    "riptusk-hit-050.jpg",
+    "riptusk-faint-050.jpg",
+    "riptusk-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "riptusk-hit-000.jpg",
+    "riptusk-hit-050.jpg",
+    "riptusk-faint-050.jpg",
+    "riptusk-faint-100.jpg"
+   ]
+  },
+  "F36 Riverdrake": {
+   "species": "riverdrake",
+   "folder": "CREATURES-06",
+   "installed_1nov": 5.41,
+   "current_main": 6.45,
+   "delta": 1.04,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "riverdrake-hit-000.jpg",
+    "riverdrake-hit-050.jpg",
+    "riverdrake-faint-050.jpg",
+    "riverdrake-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "riverdrake-hit-000.jpg",
+    "riverdrake-hit-050.jpg",
+    "riverdrake-faint-050.jpg",
+    "riverdrake-faint-100.jpg"
+   ]
+  },
+  "F36 Shadelet": {
+   "species": "shadelet",
+   "folder": "CREATURES-06",
+   "installed_1nov": 5.61,
+   "current_main": 5.95,
+   "delta": 0.34,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "shadelet-hit-000.jpg",
+    "shadelet-hit-050.jpg",
+    "shadelet-faint-050.jpg",
+    "shadelet-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "shadelet-hit-000.jpg",
+    "shadelet-hit-050.jpg",
+    "shadelet-faint-050.jpg",
+    "shadelet-faint-100.jpg"
+   ]
+  },
+  "F36 Sirenseal": {
+   "species": "sirenseal",
+   "folder": "CREATURES-06",
+   "installed_1nov": 5.85,
+   "current_main": 5.11,
+   "delta": -0.74,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "sirenseal-hit-000.jpg",
+    "sirenseal-hit-050.jpg",
+    "sirenseal-faint-050.jpg",
+    "sirenseal-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "sirenseal-hit-000.jpg",
+    "sirenseal-hit-050.jpg",
+    "sirenseal-faint-050.jpg",
+    "sirenseal-faint-100.jpg"
+   ]
+  },
+  "F36 Skyrill": {
+   "species": "skyrill",
+   "folder": "CREATURES-06",
+   "installed_1nov": 5.78,
+   "current_main": 5.48,
+   "delta": -0.3,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "skyrill-hit-000.jpg",
+    "skyrill-hit-050.jpg",
+    "skyrill-faint-050.jpg",
+    "skyrill-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "skyrill-hit-000.jpg",
+    "skyrill-hit-050.jpg",
+    "skyrill-faint-050.jpg",
+    "skyrill-faint-100.jpg"
+   ]
+  },
+  "F36 Solmane": {
+   "species": "solmane",
+   "folder": "CREATURES-06",
+   "installed_1nov": 6.35,
+   "current_main": 7.02,
+   "delta": 0.67,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "solmane-hit-000.jpg",
+    "solmane-hit-050.jpg",
+    "solmane-faint-050.jpg",
+    "solmane-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "solmane-hit-000.jpg",
+    "solmane-hit-050.jpg",
+    "solmane-faint-050.jpg",
+    "solmane-faint-100.jpg"
+   ]
+  },
+  "F36 Sparkit": {
+   "species": "sparkit",
+   "folder": "CREATURES-06",
+   "installed_1nov": 5.61,
+   "current_main": 5.11,
+   "delta": -0.5,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "sparkit-hit-000.jpg",
+    "sparkit-hit-050.jpg",
+    "sparkit-faint-050.jpg",
+    "sparkit-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "sparkit-hit-000.jpg",
+    "sparkit-hit-050.jpg",
+    "sparkit-faint-050.jpg",
+    "sparkit-faint-100.jpg"
+   ]
+  },
+  "F36 Staticub": {
+   "species": "staticub",
+   "folder": "CREATURES-06",
+   "installed_1nov": 7.43,
+   "current_main": 5.98,
+   "delta": -1.45,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "staticub-hit-000.jpg",
+    "staticub-hit-050.jpg",
+    "staticub-faint-050.jpg",
+    "staticub-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "staticub-hit-000.jpg",
+    "staticub-hit-050.jpg",
+    "staticub-faint-050.jpg",
+    "staticub-faint-100.jpg"
+   ]
+  },
+  "F36 Stormbrush": {
+   "species": "stormbrush",
+   "folder": "CREATURES-07",
+   "installed_1nov": 6.38,
+   "current_main": 6.82,
+   "delta": 0.44,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "stormbrush-hit-000.jpg",
+    "stormbrush-hit-050.jpg",
+    "stormbrush-faint-050.jpg",
+    "stormbrush-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "stormbrush-hit-000.jpg",
+    "stormbrush-hit-050.jpg",
+    "stormbrush-faint-050.jpg",
+    "stormbrush-faint-100.jpg"
+   ]
+  },
+  "F36 Stormcapra": {
+   "species": "stormcapra",
+   "folder": "CREATURES-07",
+   "installed_1nov": 8.37,
+   "current_main": 8.37,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "stormcapra-hit-000.jpg",
+    "stormcapra-hit-050.jpg",
+    "stormcapra-faint-050.jpg",
+    "stormcapra-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "stormcapra-hit-000.jpg",
+    "stormcapra-hit-050.jpg",
+    "stormcapra-faint-050.jpg",
+    "stormcapra-faint-100.jpg"
+   ]
+  },
+  "F36 Stormraven": {
+   "species": "stormraven",
+   "folder": "CREATURES-07",
+   "installed_1nov": 6.04,
+   "current_main": 7.64,
+   "delta": 1.6,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "stormraven-hit-000.jpg",
+    "stormraven-hit-050.jpg",
+    "stormraven-faint-050.jpg",
+    "stormraven-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "stormraven-hit-000.jpg",
+    "stormraven-hit-050.jpg",
+    "stormraven-faint-050.jpg",
+    "stormraven-faint-100.jpg"
+   ]
+  },
+  "F36 Stormtrail": {
+   "species": "stormtrail",
+   "folder": "CREATURES-07",
+   "installed_1nov": 7.2,
+   "current_main": 7.2,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "stormtrail-hit-000.jpg",
+    "stormtrail-hit-050.jpg",
+    "stormtrail-faint-050.jpg",
+    "stormtrail-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "stormtrail-hit-000.jpg",
+    "stormtrail-hit-050.jpg",
+    "stormtrail-faint-050.jpg",
+    "stormtrail-faint-100.jpg"
+   ]
+  },
+  "F36 Stormursa": {
+   "species": "stormursa",
+   "folder": "CREATURES-07",
+   "installed_1nov": 8.61,
+   "current_main": 8.61,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "stormursa-hit-000.jpg",
+    "stormursa-hit-050.jpg",
+    "stormursa-faint-050.jpg",
+    "stormursa-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "stormursa-hit-000.jpg",
+    "stormursa-hit-050.jpg",
+    "stormursa-faint-050.jpg",
+    "stormursa-faint-100.jpg"
+   ]
+  },
+  "F36 Tanglevolt": {
+   "species": "tanglevolt",
+   "folder": "CREATURES-07",
+   "installed_1nov": 8.32,
+   "current_main": 8.32,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "tanglevolt-hit-000.jpg",
+    "tanglevolt-hit-050.jpg",
+    "tanglevolt-faint-050.jpg",
+    "tanglevolt-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "tanglevolt-hit-000.jpg",
+    "tanglevolt-hit-050.jpg",
+    "tanglevolt-faint-050.jpg",
+    "tanglevolt-faint-100.jpg"
+   ]
+  },
+  "F36 Tempestwing": {
+   "species": "tempestwing",
+   "folder": "CREATURES-07",
+   "installed_1nov": 6.77,
+   "current_main": 5.89,
+   "delta": -0.88,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "tempestwing-hit-000.jpg",
+    "tempestwing-hit-050.jpg",
+    "tempestwing-faint-050.jpg",
+    "tempestwing-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "tempestwing-hit-000.jpg",
+    "tempestwing-hit-050.jpg",
+    "tempestwing-faint-050.jpg",
+    "tempestwing-faint-100.jpg"
+   ]
+  },
+  "F36 Terrapup": {
+   "species": "terrapup",
+   "folder": "CREATURES-08",
+   "installed_1nov": 7.08,
+   "current_main": 6.26,
+   "delta": -0.82,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "terrapup-hit-000.jpg",
+    "terrapup-hit-050.jpg",
+    "terrapup-faint-050.jpg",
+    "terrapup-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "terrapup-hit-000.jpg",
+    "terrapup-hit-050.jpg",
+    "terrapup-faint-050.jpg",
+    "terrapup-faint-100.jpg"
+   ]
+  },
+  "F36 Thundertunnel": {
+   "species": "thundertunnel",
+   "folder": "CREATURES-08",
+   "installed_1nov": 6.62,
+   "current_main": 4.72,
+   "delta": -1.9,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "thundertunnel-hit-000.jpg",
+    "thundertunnel-hit-050.jpg",
+    "thundertunnel-faint-050.jpg",
+    "thundertunnel-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "thundertunnel-hit-000.jpg",
+    "thundertunnel-hit-050.jpg",
+    "thundertunnel-faint-050.jpg",
+    "thundertunnel-faint-100.jpg"
+   ]
+  },
+  "F36 Tidecoil": {
+   "species": "tidecoil",
+   "folder": "CREATURES-08",
+   "installed_1nov": 6.89,
+   "current_main": 7.35,
+   "delta": 0.46,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "tidecoil-hit-000.jpg",
+    "tidecoil-hit-050.jpg",
+    "tidecoil-faint-050.jpg",
+    "tidecoil-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "tidecoil-hit-000.jpg",
+    "tidecoil-hit-050.jpg",
+    "tidecoil-faint-050.jpg",
+    "tidecoil-faint-100.jpg"
+   ]
+  },
+  "F36 Torrentoad": {
+   "species": "torrentoad",
+   "folder": "CREATURES-08",
+   "installed_1nov": 7.3,
+   "current_main": 5.53,
+   "delta": -1.77,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "torrentoad-hit-000.jpg",
+    "torrentoad-hit-050.jpg",
+    "torrentoad-faint-050.jpg",
+    "torrentoad-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "torrentoad-hit-000.jpg",
+    "torrentoad-hit-050.jpg",
+    "torrentoad-faint-050.jpg",
+    "torrentoad-faint-100.jpg"
+   ]
+  },
+  "F36 Trailpup": {
+   "species": "trailpup",
+   "folder": "CREATURES-08",
+   "installed_1nov": 6.99,
+   "current_main": 6.99,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "trailpup-hit-000.jpg",
+    "trailpup-hit-050.jpg",
+    "trailpup-faint-050.jpg",
+    "trailpup-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "trailpup-hit-000.jpg",
+    "trailpup-hit-050.jpg",
+    "trailpup-faint-050.jpg",
+    "trailpup-faint-100.jpg"
+   ]
+  },
+  "F36 Tuskroot": {
+   "species": "tuskroot",
+   "folder": "CREATURES-08",
+   "installed_1nov": 7.71,
+   "current_main": 6.85,
+   "delta": -0.86,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "tuskroot-hit-000.jpg",
+    "tuskroot-hit-050.jpg",
+    "tuskroot-faint-050.jpg",
+    "tuskroot-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "tuskroot-hit-000.jpg",
+    "tuskroot-hit-050.jpg",
+    "tuskroot-faint-050.jpg",
+    "tuskroot-faint-100.jpg"
+   ]
+  },
+  "F36 Veridian": {
+   "species": "veridian",
+   "folder": "CREATURES-08",
+   "installed_1nov": 6.17,
+   "current_main": 6.17,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "veridian-hit-000.jpg",
+    "veridian-hit-050.jpg",
+    "veridian-faint-050.jpg",
+    "veridian-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "veridian-hit-000.jpg",
+    "veridian-hit-050.jpg",
+    "veridian-faint-050.jpg",
+    "veridian-faint-100.jpg"
+   ]
+  },
+  "F36 Voltarach": {
+   "species": "voltarach",
+   "folder": "CREATURES-09",
+   "installed_1nov": 5.39,
+   "current_main": 5.72,
+   "delta": 0.33,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "voltarach-hit-000.jpg",
+    "voltarach-hit-050.jpg",
+    "voltarach-faint-050.jpg",
+    "voltarach-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "voltarach-hit-000.jpg",
+    "voltarach-hit-050.jpg",
+    "voltarach-faint-050.jpg",
+    "voltarach-faint-100.jpg"
+   ]
+  },
+  "F36 Voltwig": {
+   "species": "voltwig",
+   "folder": "CREATURES-09",
+   "installed_1nov": 5.32,
+   "current_main": 6.41,
+   "delta": 1.09,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "voltwig-hit-000.jpg",
+    "voltwig-hit-050.jpg",
+    "voltwig-faint-050.jpg",
+    "voltwig-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "voltwig-hit-000.jpg",
+    "voltwig-hit-050.jpg",
+    "voltwig-faint-050.jpg",
+    "voltwig-faint-100.jpg"
+   ]
+  },
+  "F36 Water Abyssal Guardian": {
+   "species": "water_abyssal_guardian",
+   "folder": "CREATURES-09",
+   "installed_1nov": 5.47,
+   "current_main": 5.47,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_abyssal_guardian-hit-000.jpg",
+    "water_abyssal_guardian-hit-050.jpg",
+    "water_abyssal_guardian-faint-050.jpg",
+    "water_abyssal_guardian-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_abyssal_guardian-hit-000.jpg",
+    "water_abyssal_guardian-hit-050.jpg",
+    "water_abyssal_guardian-faint-050.jpg",
+    "water_abyssal_guardian-faint-100.jpg"
+   ]
+  },
+  "F36 Water Aquaryn": {
+   "species": "water_aquaryn",
+   "folder": "CREATURES-09",
+   "installed_1nov": 5.97,
+   "current_main": 5.97,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_aquaryn-hit-000.jpg",
+    "water_aquaryn-hit-050.jpg",
+    "water_aquaryn-faint-050.jpg",
+    "water_aquaryn-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_aquaryn-hit-000.jpg",
+    "water_aquaryn-hit-050.jpg",
+    "water_aquaryn-faint-050.jpg",
+    "water_aquaryn-faint-100.jpg"
+   ]
+  },
+  "F36 Water Cannonback": {
+   "species": "water_cannonback",
+   "folder": "CREATURES-09",
+   "installed_1nov": 6.63,
+   "current_main": 6.63,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_cannonback-hit-000.jpg",
+    "water_cannonback-hit-050.jpg",
+    "water_cannonback-faint-050.jpg",
+    "water_cannonback-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_cannonback-hit-000.jpg",
+    "water_cannonback-hit-050.jpg",
+    "water_cannonback-faint-050.jpg",
+    "water_cannonback-faint-100.jpg"
+   ]
+  },
+  "F36 Water Cragclaw": {
+   "species": "water_cragclaw",
+   "folder": "CREATURES-09",
+   "installed_1nov": 6.34,
+   "current_main": 6.34,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_cragclaw-hit-000.jpg",
+    "water_cragclaw-hit-050.jpg",
+    "water_cragclaw-faint-050.jpg",
+    "water_cragclaw-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_cragclaw-hit-000.jpg",
+    "water_cragclaw-hit-050.jpg",
+    "water_cragclaw-faint-050.jpg",
+    "water_cragclaw-faint-100.jpg"
+   ]
+  },
+  "F36 Water Mangrove Monitor": {
+   "species": "water_mangrove_monitor",
+   "folder": "CREATURES-09",
+   "installed_1nov": 5.9,
+   "current_main": 5.9,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_mangrove_monitor-hit-000.jpg",
+    "water_mangrove_monitor-hit-050.jpg",
+    "water_mangrove_monitor-faint-050.jpg",
+    "water_mangrove_monitor-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_mangrove_monitor-hit-000.jpg",
+    "water_mangrove_monitor-hit-050.jpg",
+    "water_mangrove_monitor-faint-050.jpg",
+    "water_mangrove_monitor-faint-100.jpg"
+   ]
+  },
+  "F36 Water Mirejaw": {
+   "species": "water_mirejaw",
+   "folder": "CREATURES-10",
+   "installed_1nov": 6.01,
+   "current_main": 6.01,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_mirejaw-hit-000.jpg",
+    "water_mirejaw-hit-050.jpg",
+    "water_mirejaw-faint-050.jpg",
+    "water_mirejaw-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_mirejaw-hit-000.jpg",
+    "water_mirejaw-hit-050.jpg",
+    "water_mirejaw-faint-050.jpg",
+    "water_mirejaw-faint-100.jpg"
+   ]
+  },
+  "F36 Water Mosshell": {
+   "species": "water_mosshell",
+   "folder": "CREATURES-10",
+   "installed_1nov": 6.95,
+   "current_main": 6.95,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_mosshell-hit-000.jpg",
+    "water_mosshell-hit-050.jpg",
+    "water_mosshell-faint-050.jpg",
+    "water_mosshell-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_mosshell-hit-000.jpg",
+    "water_mosshell-hit-050.jpg",
+    "water_mosshell-faint-050.jpg",
+    "water_mosshell-faint-100.jpg"
+   ]
+  },
+  "F36 Water Riptusk": {
+   "species": "water_riptusk",
+   "folder": "CREATURES-10",
+   "installed_1nov": 6.75,
+   "current_main": 6.75,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_riptusk-hit-000.jpg",
+    "water_riptusk-hit-050.jpg",
+    "water_riptusk-faint-050.jpg",
+    "water_riptusk-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_riptusk-hit-000.jpg",
+    "water_riptusk-hit-050.jpg",
+    "water_riptusk-faint-050.jpg",
+    "water_riptusk-faint-100.jpg"
+   ]
+  },
+  "F36 Water Riverdrake": {
+   "species": "water_riverdrake",
+   "folder": "CREATURES-10",
+   "installed_1nov": 6.65,
+   "current_main": 6.65,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_riverdrake-hit-000.jpg",
+    "water_riverdrake-hit-050.jpg",
+    "water_riverdrake-faint-050.jpg",
+    "water_riverdrake-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_riverdrake-hit-000.jpg",
+    "water_riverdrake-hit-050.jpg",
+    "water_riverdrake-faint-050.jpg",
+    "water_riverdrake-faint-100.jpg"
+   ]
+  },
+  "F36 Water Sirenseal": {
+   "species": "water_sirenseal",
+   "folder": "CREATURES-10",
+   "installed_1nov": 6.35,
+   "current_main": 6.35,
+   "delta": 0.0,
+   "current_ge_7": false,
+   "substitutions": [],
+   "control_frames": [
+    "water_sirenseal-hit-000.jpg",
+    "water_sirenseal-hit-050.jpg",
+    "water_sirenseal-faint-050.jpg",
+    "water_sirenseal-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_sirenseal-hit-000.jpg",
+    "water_sirenseal-hit-050.jpg",
+    "water_sirenseal-faint-050.jpg",
+    "water_sirenseal-faint-100.jpg"
+   ]
+  },
+  "F36 Water Tidecoil": {
+   "species": "water_tidecoil",
+   "folder": "CREATURES-10",
+   "installed_1nov": 7.01,
+   "current_main": 7.01,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "water_tidecoil-hit-000.jpg",
+    "water_tidecoil-hit-050.jpg",
+    "water_tidecoil-faint-050.jpg",
+    "water_tidecoil-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_tidecoil-hit-000.jpg",
+    "water_tidecoil-hit-050.jpg",
+    "water_tidecoil-faint-050.jpg",
+    "water_tidecoil-faint-100.jpg"
+   ]
+  },
+  "F36 Water Torrentoad": {
+   "species": "water_torrentoad",
+   "folder": "CREATURES-10",
+   "installed_1nov": 7.38,
+   "current_main": 7.38,
+   "delta": 0.0,
+   "current_ge_7": true,
+   "substitutions": [],
+   "control_frames": [
+    "water_torrentoad-hit-000.jpg",
+    "water_torrentoad-hit-050.jpg",
+    "water_torrentoad-faint-050.jpg",
+    "water_torrentoad-faint-100.jpg"
+   ],
+   "candidate_frames": [
+    "water_torrentoad-hit-000.jpg",
+    "water_torrentoad-hit-050.jpg",
+    "water_torrentoad-faint-050.jpg",
+    "water_torrentoad-faint-100.jpg"
+   ]
+  }
+ }
+}
