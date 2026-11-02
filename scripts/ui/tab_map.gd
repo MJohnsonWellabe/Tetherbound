@@ -174,6 +174,10 @@ class MapCanvas extends Control:
 
 var _canvas: MapCanvas = null
 var _title_label: Label = null
+## P2-048 (UIPOSES, menu.json `map_region_header`, OFF): the region the player
+## stands in, named under the realm title so a mostly-fogged first map still
+## says where you are; wraps instead of truncating.
+var _here_label: Label = null
 var _surveyed_label: Label = null
 var _legend_row: HBoxContainer = null
 var _controls_label: RichTextLabel = null
@@ -323,7 +327,19 @@ func build() -> void:
 	_title_label = Label.new()
 	_title_label.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
 	_title_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
-	header.add_child(_title_label)
+	if map_region_header_enabled():
+		var titles := VBoxContainer.new()
+		titles.add_theme_constant_override("separation", 2)
+		titles.add_child(_title_label)
+		_here_label = Label.new()
+		_here_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		_here_label.add_theme_color_override("font_color", UITokens.BUILD_ACCENT)
+		_here_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_here_label.custom_minimum_size = Vector2(520, 0)
+		titles.add_child(_here_label)
+		header.add_child(titles)
+	else:
+		header.add_child(_title_label)
 
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -755,12 +771,36 @@ func _clamp_pan() -> void:
 	_pan_world.y = clampf(_pan_world.y, -max_pan.y, max_pan.y)
 
 
+static func map_region_header_enabled() -> bool:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/menu.json"))
+	var entry: Variant = parsed.get("map_region_header", {}) if parsed is Dictionary else {}
+	return entry is Dictionary and entry.get("enabled") == true
+
+
+## "You are here: <region>" for the region the player currently stands in
+## (map_state's own current-region id, the same one that drives the arrival
+## announcement), or "" outside every authored region.
+static func here_text(map_state: Object) -> String:
+	if map_state == null:
+		return ""
+	var id := str(map_state.get("_current_region_id")) if "_current_region_id" in map_state else ""
+	if id.is_empty() or not map_state.has_method("regions"):
+		return ""
+	for region: Dictionary in (map_state.call("regions") as Array):
+		if str(region.get("id", "")) == id:
+			return "You are here: %s" % str(region.get("display_name", id))
+	return ""
+
+
 func _update_header(map_state: RefCounted) -> void:
 	var realm_name := str(map_state.call("map_display_name")) if map_state != null and map_state.has_method("map_display_name") else "Meadows"
 	if _title_label != null:
 		# "THE MEADOWS" reads naturally with the article; "Cloudreach Cliffs"
 		# is already a proper place name and does not want one.
 		_title_label.text = "THE " + realm_name.to_upper() if _display_realm() == "meadows" else realm_name.to_upper()
+	if _here_label != null:
+		_here_label.text = here_text(map_state)
+		_here_label.visible = not _here_label.text.is_empty()
 	if _surveyed_label == null:
 		return
 	if map_state == null:

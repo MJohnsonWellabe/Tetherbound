@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Qz": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blown-out yellow orb bloom and tiny outcome text over an empty, uniform grass carpet with persistent party/action cards sink it; no groves, flowers or depth layering as in the Palworld field shots."
+  },
+  "Dn": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bright sky and pale dunes carry the Tidewake palette, but evenly scattered identical rocks, a ghost-translucent companion overlapping the target and empty sand slopes read as a prototype, not a shipped world."
+  },
+  "Xx": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram matches the owner Stormcapra bar in fleece, horns and scale, but on a flat grey stage with flat lighting it lacks rim light and atmosphere, and B's faint mid/end mesh splays into flattened black-and-white patches."
+  },
+  "Dc": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Strike and absorbing frames are tight top-down shots of a bloomed orb on bare grass with only a cropped companion edge, so neither the place nor the player-target relationship reads at a shipping finish."
+  },
+  "Za": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder's white hair, beard and green-brown vest and scarf are appealing and on-palette, but the soft big-eyed cartoon face leans further from stylised realism than the key art, and it is shown only on a black backdrop."
+  },
+  "Sr": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The distant landmark hill and blue sky help, but the uniform grass carpet with no groves or path and a reticle sitting on the target (plus A's white smoke trail in catch_high) keep it short of Palworld field density and readability."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar has a strong tusked silhouette and good scale against the ruler, but flat stage lighting, A's faint end collapsing to a near-black silhouette and B's pinkish-red tusks keep it below the owner bar finish."
+  },
+  "Hh": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Very dark brown frames with no visible purple storm sky or lightning, flat magenta ring/slab telegraphs, heavy HUD on three sides and (in A i13/i15/i11) the camera buried in canopy sink it against the Palworld forest boss shot."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Catch UI pass: hide persistent creature cards and action bars during catch result, tone down the orb bloom, show one large outcome banner on a deep blue-grey plate, and keep capture chance on a dark plate offset from the target and reticle; keep a wide camera that holds trainer, companion and target during strike/absorb.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight readability: keep the camera out of trunks and canopy, lift exposure with the purple storm sky and white-violet lightning rim light, slim the HUD, and replace the flat magenta telegraph rings/slabs with real ground-crack, dust or lightning tells with an impact.",
+   "kind": "scene"
+  },
+  {
+   "change": "Break the uniform grass carpet in Meadows catch scenes (Qz/Dc/Sr) with oak groves, wildflower patches, paths and rocks for foreground/midground/distance separation, and fix faint-pose material/mesh failures (Xx B splayed mesh, Kv A black faint end).",
+   "kind": "scene"
+  }
+ ]
+}

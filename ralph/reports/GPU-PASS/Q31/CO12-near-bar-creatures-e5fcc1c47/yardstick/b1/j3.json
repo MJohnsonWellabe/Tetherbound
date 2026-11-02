@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Kf": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's lighter violet fur recovers some form, but the coat is still a low-contrast dark mass with no rim light beside Palworld's bright, readable creatures, on a flat grey stage with no atmosphere."
+  },
+  "Ra": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The brown-and-blue quill coat is naturalistic and on-style, but the face is small and lost in the spines, the faint end barely reads as a faint, and B's hit react leaves the ground."
+  },
+  "Ca": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The warm olive vest, green scarf and readable expressive face fit the Meadows villager palette at shipping finish, though the face is more cartoon than the naturalistic creature bar."
+  },
+  "Yb": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's fleece and horns match the owner's Stormcapra bar and read at a glance, but B's faint frames go to a splayed, smeared, off-ground ragdoll and the stage has no world light."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The leaf-crested gold lizard has a clear silhouette, but its brassy, uniform mid-tone skin and hit react that leaves the ground fall short of Palworld's finish."
+  },
+  "Os": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, cap and stone footing now read as built, but the untextured beige infill, single lonely panel, faceted pale boulder and painted-card mountains keep it short of Palworld's base-building finish and Valheim's light."
+  },
+  "Wo": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The quill coat is on-style and B's rear-up stays planted, but the buried face, faint end that barely reads as a faint, and A's airborne flinch keep it below shipping finish."
+  },
+  "Yf": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's bold black-and-yellow banding is the most readable snake look here, but its faint frames float about a body-height above their shadow, while A's muddy mottled coat hides the trainer and its hit react matches its standing pose."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ground every hurt and faint pose: snap faint bodies and ragdolls to the stage and keep hit-react feet planted (Ra B, Wo A, Hd A/B hit react; Yb B and Yf B faint frames).",
+   "kind": "scene"
+  },
+  {
+   "change": "Lift the albedo and add rim light and value contrast on the dark creature coats (Kf A/B, Yf A) so form, markings and face separate from the stage.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the homestead wall textured plank or wattle infill, visible thickness and joined runs of segments, and replace the faceted pale boulder near it with a stone that matches the key art.",
+   "kind": "new_art"
+  }
+ ]
+}

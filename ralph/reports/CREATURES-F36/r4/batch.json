@@ -1,0 +1,56 @@
+{
+ "anchors": {
+  "craft:after": [
+   6.6,
+   6.8,
+   6.8
+  ],
+  "craft:before": [
+   5.1,
+   5.0,
+   5.3
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   7.3,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   7.3,
+   7.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.9,
+   4.4,
+   5.2
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.7,
+   5.4,
+   6.0
+  ]
+ },
+ "candidates": {
+  "sirenseal cand": [
+   6.8,
+   6.6,
+   6.7
+  ],
+  "sirenseal base": [
+   5.9,
+   5.8,
+   5.8
+  ],
+  "torrentoad base": [
+   6.5,
+   6.6,
+   6.6
+  ],
+  "torrentoad cand": [
+   6.5,
+   6.4,
+   6.6
+  ]
+ }
+}

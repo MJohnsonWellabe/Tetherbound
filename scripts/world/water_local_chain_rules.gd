@@ -53,7 +53,7 @@ static func step_xz(row: Dictionary) -> Vector2:
 			return Vector2.INF
 		for spec: Variant in (cast as Dictionary).get("npcs", []):
 			if spec is Dictionary and str(spec.get("id", "")) == str(row.get("npc", "")):
-				return _island_point(str(spec.island_id), spec.island_local_offset)
+				return _island_point(str(spec.island_id), preload("res://scripts/world/water_npc_placement.gd").offset(spec))
 		return Vector2.INF
 	var at: Variant = row.get("at_xz", [])
 	if at is Array and (at as Array).size() == 2:

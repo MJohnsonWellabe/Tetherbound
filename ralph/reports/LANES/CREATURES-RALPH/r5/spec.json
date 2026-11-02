@@ -1,0 +1,44 @@
+[
+ {
+  "label": "burrowback",
+  "a": "sides/burrowback-base.png",
+  "b": "sides/burrowback-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "nightburrow",
+  "a": "sides/nightburrow-base.png",
+  "b": "sides/nightburrow-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "trailpup",
+  "a": "sides/trailpup-base.png",
+  "b": "sides/trailpup-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "stormtrail",
+  "a": "sides/stormtrail-base.png",
+  "b": "sides/stormtrail-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "paddlenewt",
+  "a": "sides/paddlenewt-base.png",
+  "b": "sides/paddlenewt-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "riftfrill",
+  "a": "sides/riftfrill-base.png",
+  "b": "sides/riftfrill-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ }
+]

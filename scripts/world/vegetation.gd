@@ -1153,6 +1153,7 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 	IMPORTED_MATERIALS.apply_thin_foliage_backlight(name, material)
 	# Terrain3D instancer materials do not live under scene mesh nodes.
 	if realm == "meadows":
+		preload("res://scripts/world/meadows_surface_finish.gd").finish_cause_foliage(name, material)
 		material = preload("res://scripts/world/meadows_surface_finish.gd").finish_standard(material) as StandardMaterial3D
 	_tints[cache_key] = material
 	return material

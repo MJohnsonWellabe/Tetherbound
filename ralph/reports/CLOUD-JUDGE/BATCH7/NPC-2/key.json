@@ -1,0 +1,65 @@
+{
+ "Mq": {
+  "anchor": false,
+  "label": "Character look: inn_helper",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__inn_helper_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__inn_helper_cand.jpg"
+ },
+ "Po": {
+  "anchor": false,
+  "label": "Character look: captain_b",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__captain_b_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__captain_b_main.jpg"
+ },
+ "Pw": {
+  "anchor": false,
+  "label": "Character look: officer_a",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__officer_a_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__officer_a_cand.jpg"
+ },
+ "Ts": {
+  "anchor": false,
+  "label": "Character look: creature_caretaker",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__creature_caretaker_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__creature_caretaker_cand.jpg"
+ },
+ "Yq": {
+  "anchor": false,
+  "label": "Character look: officer_b",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__officer_b_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__officer_b_cand.jpg"
+ },
+ "Gr": {
+  "anchor": true,
+  "A": "f36_0_npc:C8B",
+  "B": "f36_0_npc:C8A"
+ },
+ "Vf": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Kb": {
+  "anchor": false,
+  "label": "Character look: craftsperson",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__craftsperson_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__craftsperson_main.jpg"
+ },
+ "Fg": {
+  "anchor": false,
+  "label": "Character look: captain_a",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__captain_a_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__captain_a_cand.jpg"
+ },
+ "Kw": {
+  "anchor": false,
+  "label": "Character look: grunt_c",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__grunt_c_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-2/img/Character_look__grunt_c_cand.jpg"
+ },
+ "Ip": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}

@@ -1,0 +1,86 @@
+[
+ {
+  "label": "F38 light (all exterior) #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__0_cand.jpg",
+  "brief": "Game frames of Meadows exterior light, day, night and dusk: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "F38 light (all exterior) #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__1_cand.jpg",
+  "brief": "Game frames of Meadows exterior light, day, night and dusk: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "F38 light (all exterior) #3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__2_cand.jpg",
+  "brief": "Game frames of Meadows exterior light, day, night and dusk: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "P2-003 #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_003_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_003_0_cand.jpg",
+  "brief": "Game frames of Team Tether stronghold: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ },
+ {
+  "label": "P2-003 #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_003_1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_003_1_cand.jpg",
+  "brief": "Game frames of Team Tether stronghold: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ },
+ {
+  "label": "P2-006",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_006_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_006_0_cand.jpg",
+  "brief": "Game frames of mill and settlements: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+  ]
+ },
+ {
+  "label": "P2-012 #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_012_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_012_0_cand.jpg",
+  "brief": "Game frames of Burrow Warrens hillside: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "P2-012 #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_012_1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_012_1_cand.jpg",
+  "brief": "Game frames of Burrow Warrens hillside: 2 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "P2-050",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_050_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_050_0_cand.jpg",
+  "brief": "Game frames of human post poses: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles"
+  ]
+ },
+ {
+  "label": "P2-095",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_095_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_095_0_cand.jpg",
+  "brief": "Game frames of craft recipe text: 1 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Long recipe names and material preview lines are clipped in the crafting list"
+  ]
+ }
+]

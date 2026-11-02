@@ -1,0 +1,76 @@
+{
+ "Xe": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ },
+ "Av": {
+  "anchor": false,
+  "label": "CO16 f4coat-thundertunnel High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f4coat-thundertunnel-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f4coat-thundertunnel-cand-High.png"
+ },
+ "Jp": {
+  "anchor": false,
+  "label": "CO16 f2siren-water_sirenseal High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f2siren-water_sirenseal-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f2siren-water_sirenseal-cand-High.png"
+ },
+ "Yc": {
+  "anchor": false,
+  "label": "CO16 f9tall3-paddlenewt High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f9tall3-paddlenewt-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f9tall3-paddlenewt-ship-High.png"
+ },
+ "Ef": {
+  "anchor": false,
+  "label": "CO16 f1crag-cragclaw High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-cragclaw-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f1crag-cragclaw-ship-High.png"
+ },
+ "Wi": {
+  "anchor": false,
+  "label": "CO16 f7matte-reedwing High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-reedwing-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-reedwing-ship-High.png"
+ },
+ "Wg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Tv": {
+  "anchor": false,
+  "label": "CO16 f5coat2-shadelet High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f5coat2-shadelet-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f5coat2-shadelet-ship-High.png"
+ },
+ "Un": {
+  "anchor": false,
+  "label": "CO16 f4coat-duskhush High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f4coat-duskhush-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f4coat-duskhush-cand-High.png"
+ },
+ "Kt": {
+  "anchor": false,
+  "label": "CO16 f7matte-skyrill High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-skyrill-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f7matte-skyrill-cand-High.png"
+ },
+ "Ox": {
+  "anchor": false,
+  "label": "CO16 f2siren-sirenseal High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f2siren-sirenseal-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO16\\sides\\CO16-f2siren-sirenseal-ship-High.png"
+ },
+ "Jf": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Bb": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ }
+}

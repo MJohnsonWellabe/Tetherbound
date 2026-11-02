@@ -55,6 +55,11 @@ func build() -> void:
 		if not cluster is Dictionary:
 			continue
 		var cluster_name := str((cluster as Dictionary).get("name", "cluster"))
+		# World dressing: a cluster carrying `candidate` builds only while
+		# `candidate.enabled` is set (OFF until judged).
+		var candidate_flag: Variant = (cluster as Dictionary).get("candidate", null)
+		if candidate_flag is Dictionary and not bool((candidate_flag as Dictionary).get("enabled", false)):
+			continue
 		var group := Node3D.new()
 		group.name = cluster_name
 		add_child(group)
@@ -74,6 +79,16 @@ func build() -> void:
 					prop_spec = prop_spec.duplicate(true)
 					prop_spec["scale"] = float(floor_overrides[str(prop_spec.get("model", ""))])
 				place(group, prop_spec)
+		# P2-013 (vis-meadows, OFF until GPU-judged): a cluster may carry
+		# `candidate_props` {enabled, props}; each is placed visual-only (no
+		# collider), so no walkable route, encounter or smoke path changes.
+		var extra: Variant = (cluster as Dictionary).get("candidate_props", {})
+		if extra is Dictionary and bool((extra as Dictionary).get("enabled", false)):
+			for raw_extra: Variant in (extra as Dictionary).get("props", []):
+				if raw_extra is Dictionary:
+					var extra_spec: Dictionary = (raw_extra as Dictionary).duplicate(true)
+					extra_spec["visual_only"] = true
+					place(group, extra_spec)
 		# The individual terrace boxes remain the proven collision substrate, but
 		# their visible end faces read as overlapping blockout slabs in production.
 		# The Rise gets one continuous, softly feathered tread over those colliders.
@@ -300,6 +315,10 @@ func place(into: Node3D, spec: Dictionary) -> void:
 	var x := float(at[0])
 	var z := float(at[1])
 	var ground := _ground_height(x, z)
+	# `y_world` (optional): a prop standing on built geometry (a courtyard
+	# floor above the terrain) states its floor height instead of sampling.
+	if spec.has("y_world"):
+		ground = float(spec.get("y_world", ground))
 	if is_nan(ground):
 		push_error("no ground under prop '%s' at %.0f, %.0f" % [model, x, z])
 		return
@@ -409,7 +428,9 @@ func place(into: Node3D, spec: Dictionary) -> void:
 		# 1.0 keeps every existing campfire in the chapter pixel-identical;
 		# `ridge_patrol_camp` is the one site that passes anything else.
 		var glow_scale := float(spec.get("glow_scale", 1.0))
-		var overlay: Node3D = CAMPFIRE_GLOW.new(true, 1.0, glow_scale)
+		# camfx.json `flame` (OFF): a replaced cone needs no halo card.
+		var overlay: Node3D = CAMPFIRE_GLOW.new(
+			not (lit > 0 and CAMPFIRE_GLOW.camfx_flame_drops_halo()), 1.0, glow_scale)
 		# `smoke_top_m` / `smoke_alpha` / `smoke_top_size_m` / `smoke_colour` /
 		# `smoke_fade` / `smoke_base_size_m` (optional): a signal fire meant to be
 		# found from a road (F03 lure cue). Absent, the column is unchanged.

@@ -18,6 +18,7 @@ const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_readability.gd")
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
+const CAUSE := preload("res://scripts/world/cloudreach_cause.gd")
 const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const SETTLEMENT_LIFE := preload("res://scripts/world/cloudreach_settlement_life.gd")
@@ -123,6 +124,11 @@ const MAP_STATE := preload("res://scripts/world/cloudreach_map_state.gd")
 
 var _config: Dictionary = {}
 var _visual_config: Dictionary = {}
+## Owner 31 Oct 2026 (floating drums): when on, every _mesa wall widens or
+## stays plumb going down, so a bulge never overhangs a recessed band that a
+## lower meadow crown cuts across, and never tucks under the crown. Flag: cloudreach_grounding.json
+## "monotonic_walls" (default off); preview --cloudreach-walls-candidate.
+var _monotonic_walls := false
 var _surfaces: Array[Dictionary] = []
 var _cover_patches: Array[Dictionary] = []
 var _materials: Dictionary = {}
@@ -384,10 +390,15 @@ func _ready() -> void:
 
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
+	_monotonic_walls = bool(preload("res://scripts/world/cloudreach_grounding.gd").read_config().get(
+		"monotonic_walls", false)) or OS.get_cmdline_user_args().has("--cloudreach-walls-candidate")
 	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
 	_visual_config = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(_visual_config)
 	_visual_config = preload("res://scripts/world/cloudreach_settlement_life.gd").apply(_visual_config, "visual")
 	_visual_config = SETTLEMENT_LIFE.merge(_visual_config, SETTLEMENT_LIFE.items_config().get("visual", {}))
+	# Cause lane (flag-off, data/config/cloudreach_cause.json): pale strata and
+	# the cloud sea merge last, so every other overlay composes underneath.
+	_visual_config = CAUSE.apply_visual(_visual_config)
 	# The draw-distance presets put the far plane at 320-900 m, which clipped the
 	# cloud deck (230-330 m under every stand), the distant shelves and the
 	# Aviary sightline out of every Low frame -- the "grey void" below the rims.
@@ -402,6 +413,13 @@ func _ready() -> void:
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
+		# tb/vis-water-sky group 2 (OFF until GPU-judged): warm key, rim,
+		# aerial fog and night fill (data/config/cloudreach_light_candidate.json).
+		var light_candidate := _read_json("res://data/config/cloudreach_light_candidate.json")
+		if bool(light_candidate.get("enabled", false)) or OS.get_cmdline_user_args().has("--cloudreach-light-candidate"):
+			apply_time_overrides(local_look.get("times", {}), light_candidate.get("time_overrides", {}))
+		# Cause lane light_grade (flag-off): bright sky, warm key, depth haze.
+		apply_time_overrides(local_look.get("times", {}), CAUSE.light_overrides())
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
 		var biome_profile: Dictionary = biome_look.config()
@@ -439,6 +457,7 @@ func _ready() -> void:
 		if held_transition_player and is_instance_valid(_player):
 			_player.velocity = Vector3.ZERO
 			_player.process_mode = held_player_mode
+		_shell_build.call("end")
 		return
 	_shell_build.call("mark", "materials:begin")
 	_build_materials()
@@ -926,6 +945,8 @@ func _build_materials() -> void:
 	_materials["trail_dry"]=trail_dry
 	_materials["upland"]=ENVIRONMENT_MATERIALS.ground(false, geology, _visual_config.get("ground_rock_transition", {}))
 	_materials["upland_dry"]=ENVIRONMENT_MATERIALS.ground(true, geology, _visual_config.get("ground_rock_transition", {}))
+	# Cause lane pale_strata (flag-off): pale the rusty plain-stone materials.
+	CAUSE.apply_materials(_materials)
 
 
 func _build_cloud_sea() -> void:
@@ -3170,7 +3191,14 @@ func _build_authored_route_details() -> void:
 	add_child(root)
 	var detail: Dictionary = _visual_config.get("route_details", {})
 	var bounds_tool := BUILDING_PREFABS.new()
-	for raw: Dictionary in detail.get("pockets", []):
+	var pockets: Array = (detail.get("pockets", []) as Array).duplicate()
+	# P2-076 (GPU DLG-2): Kelm's and Veyra's conversations stand on bare flat
+	# dirt. `plaza_paving_candidate` (OFF by default) adds authored paving and
+	# stone pockets around those dialogue spots through this same placer.
+	var plaza: Variant = detail.get("plaza_paving_candidate", {})
+	if plaza is Dictionary and bool((plaza as Dictionary).get("enabled", false)):
+		pockets.append_array((plaza as Dictionary).get("pockets", []) as Array)
+	for raw: Dictionary in pockets:
 		await _build_breathe()
 		var pocket := Node3D.new()
 		pocket.name = str(raw.get("id", "Pocket"))
@@ -3188,7 +3216,9 @@ func _build_authored_route_details() -> void:
 				continue
 			var offset: Array = item.get("offset", [0.0, 0.0])
 			var at := anchor + right * float(offset[0]) + forward * float(offset[1])
-			var ground := _route_detail_ground(at)
+			# A pocket on a built floor (the summit arena) names its measured
+			# floor height instead of sampling the terrain beneath it.
+			var ground := anchor.y if bool(raw.get("ground_from_anchor", false)) else _route_detail_ground(at)
 			if is_nan(ground):
 				push_warning("Cloudreach detail %s/%s has no supporting surface" % [pocket.name, asset])
 				continue
@@ -3267,10 +3297,13 @@ const ROCK_PALETTE_NORMAL := preload("res://assets/environment/terrain/Rock030_N
 
 static func apply_stone_palette(root_node: Node) -> void:
 	var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
-	var use_biome_palette := not biome_look.config().is_empty()
+	# Cause lane pale_strata (flag-off) also routes installed boulders onto the
+	# shared geology, so they wear the same pale stratified stone as the cliffs.
+	var use_biome_palette := not biome_look.config().is_empty() or CAUSE.part_on("pale_strata")
 	if use_biome_palette and _biome_stone_palette == null:
 		var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
 		visual = biome_look.apply_visual(visual)
+		visual = CAUSE.apply_visual(visual)
 		_biome_stone_palette = ENVIRONMENT_MATERIALS.geology(visual.get("geology", {}))
 	for mesh_node: Node in root_node.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := mesh_node as MeshInstance3D
@@ -5558,6 +5591,17 @@ func _disc(parent: Node, label: String, centre: Vector3, radius: float, height: 
 	return root
 
 
+## Wall ring pushes for a cliff that never overhangs going down (owner 31 Oct
+## 2026, "big cylinders that don't touch the ground"): top (1.0) <= upper <=
+## lower <= bottom. A ring wider than the one below it is pulled in to it, and
+## an upper ring tucked under the crown (push < 1) is brought out to the crown
+## edge, so a meadow that cuts a mass just under its crown never stands under
+## a rock roof. Returns Vector2(upper, lower).
+static func monotonic_wall_pushes(upper_push: float, lower_push: float, bottom_push: float) -> Vector2:
+	var lower := clampf(lower_push, 1.0, maxf(bottom_push, 1.0))
+	return Vector2(clampf(upper_push, 1.0, lower), lower)
+
+
 func _mesa(
 		parent: Node,
 		label: String,
@@ -5684,6 +5728,12 @@ func _mesa(
 			sin(angle) * size.z * 0.32))
 		var upper_push := 1.04 + 0.18 * sin(angle * 4.0 + seed_value)
 		var lower_push := 1.24 + 0.27 * cos(angle * 3.0 - seed_value * 0.7)
+		var bottom_push_x := 1.55 + 0.22 * sin(angle * 3.0 + seed_value)
+		var bottom_push_z := 1.55 + 0.20 * cos(angle * 5.0 - seed_value)
+		if _monotonic_walls:
+			var pushes := monotonic_wall_pushes(upper_push, lower_push, minf(bottom_push_x, bottom_push_z))
+			upper_push = pushes.x
+			lower_push = pushes.y
 		# A constant Y per ring made every kilometre-scale face read as a clean
 		# geological cutaway. Offset the strata independently around the perimeter
 		# so the material transitions follow an eroded, rising/falling shelf line.
@@ -5695,8 +5745,7 @@ func _mesa(
 			top_point.z * upper_push))
 		lower_ring.append(Vector3(top_point.x * lower_push, top_point.y - size.y * 0.65 + lower_jitter,
 			top_point.z * lower_push))
-		bottom_ring.append(Vector3(top_point.x * (1.55 + 0.22 * sin(angle * 3.0 + seed_value)),
-			-size.y * 0.5, top_point.z * (1.55 + 0.20 * cos(angle * 5.0 - seed_value))))
+		bottom_ring.append(Vector3(top_point.x * bottom_push_x, -size.y * 0.5, top_point.z * bottom_push_z))
 
 	# Only the flat transition ledges opt in. Their old fan put every triangle
 	# at the arrival centre, saturating native capsule contacts with duplicates.

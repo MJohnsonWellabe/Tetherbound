@@ -1,0 +1,71 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 8464,
+    "spine": 7330,
+    "neck": 1498,
+    "head": 1965,
+    "front_upper_l": 898,
+    "front_lower_l": 760,
+    "front_upper_r": 947,
+    "front_lower_r": 806,
+    "tail_1": 725,
+    "tail_2": 1019,
+    "rear_upper_l": 1258,
+    "rear_lower_l": 931,
+    "rear_upper_r": 1202,
+    "rear_lower_r": 883
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 12803,
+  "height_m": 3.6,
+  "length_m": 3.5028,
+  "width_m": 2.9907,
+  "triangles": 27014,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2632,
+      -0.162,
+      0.1164
+    ],
+    "front_r": [
+      0.2641,
+      -0.1636,
+      0.1154
+    ],
+    "rear_l": [
+      -0.2452,
+      0.2176,
+      0.124
+    ],
+    "rear_r": [
+      0.2481,
+      0.2119,
+      0.1171
+    ]
+  },
+  "back_top_normalised": 0.9377,
+  "raised_head": false,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+      "disc": false,
+      "base_over_leg_band_area": 1.348
+    }
+  },
+  "params": {
+    "species": "mosshock",
+    "height": 3.6
+  }
+}

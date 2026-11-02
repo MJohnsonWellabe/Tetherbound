@@ -1,0 +1,5333 @@
+{
+"source":"tb/cloudreach-look, tools/phase2_capture_locations.gd --cloudreach-grounding-candidate --cloudreach-grounding-report (CPU Compatibility, seed 2042)",
+"proof_summary":"seated=282 failures=0",
+"families":{
+"Realm Gate arrival beacon plinth":2,
+"cliff-face shelf (*/VegetatedGeologicalShelf#)":176,
+"route rooted shelf (*RootedShelf#)":98,
+"route landing pad (*_Ledge#)":6
+},
+"counts":{
+"seat":282,
+"overhang":231,
+"route_below":3,
+"grounded":808,
+"void":983
+},
+"seated":[
+{
+"path":"Landmarks/RealmGateCrag/RealmGateCragPresentation/ArrivalBeaconPlinth01",
+"kind":"cylinder",
+"builder":"scripts/world/cloudreach_realm_gate_crag.gd::_add_beacon",
+"base_y":116.0,
+"radius_m":1.84,
+"gap_before_m":3.44,
+"x":-32.2,
+"z":-167.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.41,
+"probed":16,
+"footing_points":16,
+"verdict":"PASS"
+},
+"family":"Realm Gate arrival beacon plinth"
+},
+{
+"path":"Landmarks/RealmGateCrag/RealmGateCragPresentation/ArrivalBeaconPlinth02",
+"kind":"cylinder",
+"builder":"scripts/world/cloudreach_realm_gate_crag.gd::_add_beacon",
+"base_y":116.0,
+"radius_m":1.84,
+"gap_before_m":3.8,
+"x":-15.8,
+"z":-167.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.41,
+"probed":16,
+"footing_points":16,
+"verdict":"PASS"
+},
+"family":"Realm Gate arrival beacon plinth"
+},
+{
+"path":"CliffRegions/GateLowerCliffs/CliffMass/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":130.0,
+"radius_m":34.1,
+"gap_before_m":16.48,
+"x":242.5,
+"z":319.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":31,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"CliffRegions/HighRoostSkyShrine/CliffMass/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":990.0,
+"radius_m":34.5,
+"gap_before_m":0.36,
+"x":1183.0,
+"z":3030.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"CliffRegions/UpperCloudreach/CliffMass/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":820.0,
+"radius_m":34.0,
+"gap_before_m":17.52,
+"x":-33.3,
+"z":4385.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.5,
+"probed":23,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"CliffRegions/SummitFinalStronghold/CliffMass/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1130.0,
+"radius_m":36.7,
+"gap_before_m":2.51,
+"x":191.9,
+"z":5464.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.4,
+"probed":16,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RockShoulder4/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":112.1,
+"radius_m":15.7,
+"gap_before_m":13.44,
+"x":-136.7,
+"z":59.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-3.64,
+"probed":24,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RockShoulder12/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":119.1,
+"radius_m":14.9,
+"gap_before_m":20.19,
+"x":-229.0,
+"z":126.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.65,
+"probed":11,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":115.0,
+"radius_m":19.7,
+"gap_before_m":14.16,
+"x":-256.9,
+"z":131.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.71,
+"probed":13,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":125.1,
+"radius_m":17.3,
+"gap_before_m":21.22,
+"x":-292.7,
+"z":254.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge002RootedShelf2",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":122.1,
+"radius_m":18.0,
+"gap_before_m":20.67,
+"x":-327.4,
+"z":232.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge002RockShoulder9/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":136.6,
+"radius_m":12.8,
+"gap_before_m":16.27,
+"x":-268.3,
+"z":346.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-8.38,
+"probed":16,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge001RockShoulder4/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":194.6,
+"radius_m":15.7,
+"gap_before_m":16.27,
+"x":-176.1,
+"z":715.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-4.13,
+"probed":31,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge001RootedShelf4",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":189.5,
+"radius_m":18.0,
+"gap_before_m":15.59,
+"x":-186.8,
+"z":707.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-8.61,
+"probed":17,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge002RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":238.0,
+"radius_m":16.1,
+"gap_before_m":8.97,
+"x":-237.1,
+"z":846.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge002RockShoulder9/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":244.6,
+"radius_m":12.8,
+"gap_before_m":16.97,
+"x":-270.8,
+"z":947.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.67,
+"probed":12,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder3/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":191.3,
+"radius_m":17.7,
+"gap_before_m":25.61,
+"x":-54.5,
+"z":699.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-4.23,
+"probed":19,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RootedShelf3",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":184.3,
+"radius_m":19.2,
+"gap_before_m":14.83,
+"x":-68.8,
+"z":719.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RootedShelf6",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":190.6,
+"radius_m":18.0,
+"gap_before_m":18.03,
+"x":-34.7,
+"z":651.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.99,
+"probed":19,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder11/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":207.9,
+"radius_m":17.3,
+"gap_before_m":21.68,
+"x":85.8,
+"z":681.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-19.36,
+"probed":18,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RootedShelf15",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":209.2,
+"radius_m":19.7,
+"gap_before_m":13.04,
+"x":101.4,
+"z":622.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.88,
+"probed":11,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder18/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":218.1,
+"radius_m":13.0,
+"gap_before_m":28.07,
+"x":138.3,
+"z":673.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":22,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RootedShelf18",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":215.4,
+"radius_m":18.3,
+"gap_before_m":13.42,
+"x":159.5,
+"z":671.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.41,
+"probed":27,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder19/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":224.4,
+"radius_m":17.1,
+"gap_before_m":11.9,
+"x":197.5,
+"z":654.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RootedShelf4",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":236.9,
+"radius_m":18.0,
+"gap_before_m":20.33,
+"x":291.6,
+"z":681.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RockShoulder5/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":245.5,
+"radius_m":17.3,
+"gap_before_m":22.28,
+"x":336.4,
+"z":660.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RockShoulder9/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":254.6,
+"radius_m":16.7,
+"gap_before_m":29.55,
+"x":378.4,
+"z":692.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RockShoulder13/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":244.6,
+"radius_m":16.4,
+"gap_before_m":11.4,
+"x":396.5,
+"z":744.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":257.1,
+"radius_m":19.7,
+"gap_before_m":17.29,
+"x":402.3,
+"z":767.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RootedShelf16",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":263.9,
+"radius_m":18.3,
+"gap_before_m":12.23,
+"x":476.0,
+"z":748.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-3.42,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":272.7,
+"radius_m":17.3,
+"gap_before_m":19.08,
+"x":466.9,
+"z":750.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":33,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder1/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":274.4,
+"radius_m":13.2,
+"gap_before_m":20.84,
+"x":476.5,
+"z":776.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":42,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RootedShelf2",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":271.7,
+"radius_m":18.0,
+"gap_before_m":7.51,
+"x":488.1,
+"z":789.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-7.54,
+"probed":11,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder5/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":249.7,
+"radius_m":13.6,
+"gap_before_m":13.62,
+"x":443.5,
+"z":740.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RootedShelf5",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":267.5,
+"radius_m":18.1,
+"gap_before_m":26.73,
+"x":438.0,
+"z":786.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":21,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":272.6,
+"radius_m":16.1,
+"gap_before_m":28.97,
+"x":404.6,
+"z":829.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":31,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":261.3,
+"radius_m":16.2,
+"gap_before_m":16.6,
+"x":291.1,
+"z":822.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":29,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder18/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":255.7,
+"radius_m":16.3,
+"gap_before_m":10.21,
+"x":234.3,
+"z":822.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder21/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":226.9,
+"radius_m":13.0,
+"gap_before_m":3.47,
+"x":199.2,
+"z":744.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":244.4,
+"radius_m":16.2,
+"gap_before_m":14.21,
+"x":91.3,
+"z":815.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":28,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RootedShelf26",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":238.0,
+"radius_m":19.1,
+"gap_before_m":12.33,
+"x":87.1,
+"z":833.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RootedShelf29",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":233.8,
+"radius_m":18.7,
+"gap_before_m":52.09,
+"x":39.8,
+"z":771.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":22,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder30/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":238.7,
+"radius_m":16.1,
+"gap_before_m":50.77,
+"x":38.6,
+"z":698.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder37/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":223.2,
+"radius_m":12.9,
+"gap_before_m":51.82,
+"x":-107.2,
+"z":724.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":208.4,
+"radius_m":16.1,
+"gap_before_m":2.48,
+"x":-112.3,
+"z":783.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RootedShelf38",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":221.1,
+"radius_m":19.3,
+"gap_before_m":20.87,
+"x":-109.7,
+"z":766.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":22,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder41/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":217.5,
+"radius_m":13.4,
+"gap_before_m":0.55,
+"x":-184.1,
+"z":828.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RootedShelf41",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":216.9,
+"radius_m":18.8,
+"gap_before_m":10.68,
+"x":-161.2,
+"z":823.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.95,
+"probed":22,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder42/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":221.7,
+"radius_m":17.0,
+"gap_before_m":17.71,
+"x":-143.4,
+"z":828.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder46/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":216.0,
+"radius_m":15.7,
+"gap_before_m":22.06,
+"x":-202.3,
+"z":718.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.76,
+"probed":12,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/LowerOverlookLoop_Ledge2",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":256.0,
+"radius_m":23.2,
+"gap_before_m":1.62,
+"x":519.7,
+"z":819.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":23,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"route landing pad (*_Ledge#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RockShoulder3/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":284.7,
+"radius_m":17.7,
+"gap_before_m":23.63,
+"x":-388.2,
+"z":983.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":17,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RootedShelf3",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":277.7,
+"radius_m":19.2,
+"gap_before_m":18.95,
+"x":-373.8,
+"z":1054.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":26,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RockShoulder4/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":282.3,
+"radius_m":14.2,
+"gap_before_m":23.53,
+"x":-366.7,
+"z":1046.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":33,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":285.1,
+"radius_m":13.6,
+"gap_before_m":14.36,
+"x":-378.1,
+"z":1143.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RootedShelf6",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":282.2,
+"radius_m":18.0,
+"gap_before_m":17.11,
+"x":-360.7,
+"z":1128.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.38,
+"probed":14,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RockShoulder10/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":272.1,
+"radius_m":13.6,
+"gap_before_m":3.97,
+"x":-433.3,
+"z":1103.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge001RootedShelf10",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":342.8,
+"radius_m":19.7,
+"gap_before_m":19.53,
+"x":-323.4,
+"z":1450.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.39,
+"probed":39,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge001RockShoulder13/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":358.3,
+"radius_m":17.6,
+"gap_before_m":14.46,
+"x":-310.4,
+"z":1454.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":35,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge001RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":351.4,
+"radius_m":18.3,
+"gap_before_m":18.79,
+"x":-291.4,
+"z":1484.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge004RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":412.0,
+"radius_m":13.9,
+"gap_before_m":22.22,
+"x":11.4,
+"z":2020.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":17,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge004RockShoulder22/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":421.3,
+"radius_m":14.1,
+"gap_before_m":22.38,
+"x":-49.4,
+"z":2147.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge005RockShoulder4/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":429.7,
+"radius_m":12.7,
+"gap_before_m":18.7,
+"x":-148.0,
+"z":2274.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge005RootedShelf4",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":429.5,
+"radius_m":18.3,
+"gap_before_m":22.14,
+"x":-100.9,
+"z":2277.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-4.93,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge005RootedShelf7",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":434.0,
+"radius_m":17.9,
+"gap_before_m":19.94,
+"x":-109.1,
+"z":2324.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-5.65,
+"probed":16,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge005RockShoulder8/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":435.9,
+"radius_m":13.0,
+"gap_before_m":18.8,
+"x":-63.5,
+"z":2349.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMain_Ledge7",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":376.0,
+"radius_m":23.0,
+"gap_before_m":2.72,
+"x":109.9,
+"z":1814.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":17,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route landing pad (*_Ledge#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMain_Ledge8",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":376.0,
+"radius_m":23.0,
+"gap_before_m":2.72,
+"x":119.9,
+"z":1829.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":21,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route landing pad (*_Ledge#)"
+},
+{
+"path":"AuthoredRoutes/BrokenCausewayMain_Ledge9",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":406.0,
+"radius_m":23.3,
+"gap_before_m":0.97,
+"x":-60.6,
+"z":2219.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":35,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route landing pad (*_Ledge#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder3/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":264.8,
+"radius_m":17.1,
+"gap_before_m":6.11,
+"x":-364.8,
+"z":1044.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RootedShelf3",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":276.8,
+"radius_m":19.2,
+"gap_before_m":18.11,
+"x":-376.2,
+"z":1030.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":283.1,
+"radius_m":13.6,
+"gap_before_m":14.76,
+"x":-422.8,
+"z":1124.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RootedShelf6",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":280.2,
+"radius_m":18.0,
+"gap_before_m":14.61,
+"x":-397.2,
+"z":1104.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder7/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":288.3,
+"radius_m":17.1,
+"gap_before_m":6.9,
+"x":-383.1,
+"z":1091.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":37,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder8/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":285.5,
+"radius_m":13.5,
+"gap_before_m":14.78,
+"x":-384.0,
+"z":1142.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-13.31,
+"probed":19,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RootedShelf12",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":286.8,
+"radius_m":18.6,
+"gap_before_m":19.36,
+"x":-509.1,
+"z":1085.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":291.8,
+"radius_m":13.7,
+"gap_before_m":14.62,
+"x":-536.8,
+"z":1159.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":30,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder15/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":297.1,
+"radius_m":16.6,
+"gap_before_m":26.03,
+"x":-485.5,
+"z":1152.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RootedShelf15",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":290.1,
+"radius_m":19.7,
+"gap_before_m":18.02,
+"x":-530.9,
+"z":1158.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.48,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder16/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":294.5,
+"radius_m":13.3,
+"gap_before_m":22.72,
+"x":-507.5,
+"z":1205.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":19,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RootedShelf18",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":293.5,
+"radius_m":18.3,
+"gap_before_m":15.8,
+"x":-597.6,
+"z":1122.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder19/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":282.6,
+"radius_m":17.0,
+"gap_before_m":4.11,
+"x":-609.4,
+"z":1148.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-3.54,
+"probed":11,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder20/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":299.0,
+"radius_m":15.2,
+"gap_before_m":22.27,
+"x":-612.6,
+"z":1136.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-4.31,
+"probed":21,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":304.9,
+"radius_m":12.5,
+"gap_before_m":7.47,
+"x":-698.5,
+"z":1218.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":12,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RootedShelf30",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":306.8,
+"radius_m":19.1,
+"gap_before_m":20.95,
+"x":-775.1,
+"z":1195.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.86,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder34/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":313.6,
+"radius_m":12.6,
+"gap_before_m":2.02,
+"x":-802.6,
+"z":1264.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":27,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder36/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":317.0,
+"radius_m":14.1,
+"gap_before_m":15.31,
+"x":-878.7,
+"z":1243.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.88,
+"probed":18,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder39/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":323.7,
+"radius_m":17.6,
+"gap_before_m":6.69,
+"x":-877.2,
+"z":1222.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder42/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":322.3,
+"radius_m":13.1,
+"gap_before_m":15.94,
+"x":-924.9,
+"z":1314.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":30,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder43/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":328.1,
+"radius_m":16.6,
+"gap_before_m":6.74,
+"x":-892.4,
+"z":1368.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RootedShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":325.5,
+"radius_m":19.2,
+"gap_before_m":13.57,
+"x":-1034.2,
+"z":1320.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RockShoulder12/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":359.9,
+"radius_m":14.9,
+"gap_before_m":11.94,
+"x":-1108.0,
+"z":1487.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":357.7,
+"radius_m":19.7,
+"gap_before_m":18.43,
+"x":-1123.1,
+"z":1489.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder5/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":386.0,
+"radius_m":17.9,
+"gap_before_m":11.03,
+"x":-710.4,
+"z":2022.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder11/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":384.8,
+"radius_m":12.2,
+"gap_before_m":11.8,
+"x":-553.1,
+"z":2046.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":387.9,
+"radius_m":18.3,
+"gap_before_m":19.06,
+"x":-555.4,
+"z":2069.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-7.62,
+"probed":14,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RootedShelf22",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":397.9,
+"radius_m":19.2,
+"gap_before_m":12.38,
+"x":-418.0,
+"z":2102.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.61,
+"probed":13,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":406.5,
+"radius_m":14.8,
+"gap_before_m":23.84,
+"x":-355.9,
+"z":2169.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":26,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder34/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":415.5,
+"radius_m":14.6,
+"gap_before_m":23.93,
+"x":-223.3,
+"z":2210.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":12,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge000RockShoulder3/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":428.8,
+"radius_m":17.1,
+"gap_before_m":6.32,
+"x":-150.2,
+"z":2458.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-3.05,
+"probed":12,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge000RootedShelf3",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":440.8,
+"radius_m":19.2,
+"gap_before_m":8.32,
+"x":-156.4,
+"z":2441.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge000RockShoulder4/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":442.5,
+"radius_m":14.2,
+"gap_before_m":20.53,
+"x":-147.6,
+"z":2427.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":24,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge000RootedShelf6",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":436.9,
+"radius_m":18.0,
+"gap_before_m":15.44,
+"x":-162.1,
+"z":2517.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge000RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":413.7,
+"radius_m":12.5,
+"gap_before_m":19.58,
+"x":-426.3,
+"z":2682.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge000RockShoulder28/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":412.0,
+"radius_m":14.7,
+"gap_before_m":4.57,
+"x":-487.2,
+"z":2673.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":19,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder4/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":427.5,
+"radius_m":16.2,
+"gap_before_m":12.46,
+"x":-255.2,
+"z":3090.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RootedShelf12",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":456.3,
+"radius_m":19.7,
+"gap_before_m":4.86,
+"x":-126.5,
+"z":3180.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.96,
+"probed":10,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder18/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":468.0,
+"radius_m":13.0,
+"gap_before_m":18.04,
+"x":-94.1,
+"z":3275.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder20/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":477.7,
+"radius_m":16.2,
+"gap_before_m":23.68,
+"x":-5.5,
+"z":3272.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":26,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder21/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":474.0,
+"radius_m":13.3,
+"gap_before_m":18.29,
+"x":-25.8,
+"z":3250.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RootedShelf21",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":473.7,
+"radius_m":18.8,
+"gap_before_m":19.68,
+"x":-7.7,
+"z":3259.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":17,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder22/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":475.6,
+"radius_m":12.9,
+"gap_before_m":17.95,
+"x":17.3,
+"z":3230.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":483.3,
+"radius_m":13.0,
+"gap_before_m":2.55,
+"x":22.8,
+"z":3346.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":19,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder28/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":493.2,
+"radius_m":16.2,
+"gap_before_m":28.1,
+"x":81.4,
+"z":3338.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":17,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder30/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":491.0,
+"radius_m":13.2,
+"gap_before_m":17.76,
+"x":133.6,
+"z":3305.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RootedShelf30",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":491.1,
+"radius_m":18.7,
+"gap_before_m":21.5,
+"x":110.2,
+"z":3337.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge002RootedShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":496.9,
+"radius_m":18.0,
+"gap_before_m":13.04,
+"x":121.7,
+"z":3346.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":19,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge002RockShoulder2/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":505.9,
+"radius_m":13.8,
+"gap_before_m":3.04,
+"x":121.1,
+"z":3282.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge002RockShoulder5/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":524.9,
+"radius_m":17.9,
+"gap_before_m":51.61,
+"x":124.5,
+"z":3305.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge002RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":527.0,
+"radius_m":15.1,
+"gap_before_m":19.43,
+"x":231.4,
+"z":3354.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge002RootedShelf7",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":528.5,
+"radius_m":18.6,
+"gap_before_m":20.88,
+"x":230.6,
+"z":3361.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder3/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":454.8,
+"radius_m":17.7,
+"gap_before_m":32.26,
+"x":-167.7,
+"z":2401.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":22,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RootedShelf3",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":447.8,
+"radius_m":19.2,
+"gap_before_m":17.08,
+"x":-149.3,
+"z":2465.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":41,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":455.3,
+"radius_m":13.6,
+"gap_before_m":14.35,
+"x":-134.1,
+"z":2546.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":27,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RootedShelf6",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":452.4,
+"radius_m":18.0,
+"gap_before_m":16.38,
+"x":-119.8,
+"z":2535.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.4,
+"probed":17,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RootedShelf30",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":488.7,
+"radius_m":19.1,
+"gap_before_m":15.42,
+"x":-355.6,
+"z":2831.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-4.07,
+"probed":14,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder31/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":497.1,
+"radius_m":17.5,
+"gap_before_m":30.39,
+"x":-247.1,
+"z":2868.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":46,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder31/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":478.1,
+"radius_m":17.2,
+"gap_before_m":39.1,
+"x":-300.1,
+"z":2935.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":19,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder31/VegetatedGeologicalShelf2",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":459.1,
+"radius_m":16.7,
+"gap_before_m":25.43,
+"x":-300.2,
+"z":2841.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":40,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder32/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":495.2,
+"radius_m":14.3,
+"gap_before_m":56.22,
+"x":-294.9,
+"z":2934.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":30,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder12/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":518.1,
+"radius_m":14.9,
+"gap_before_m":24.63,
+"x":-487.1,
+"z":3046.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":514.8,
+"radius_m":19.7,
+"gap_before_m":12.53,
+"x":-506.2,
+"z":3050.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.74,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RootedShelf16",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":519.8,
+"radius_m":18.3,
+"gap_before_m":51.98,
+"x":-485.8,
+"z":3124.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":26,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder20/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":531.3,
+"radius_m":15.3,
+"gap_before_m":8.55,
+"x":-575.4,
+"z":3161.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder24/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":518.9,
+"radius_m":14.7,
+"gap_before_m":23.69,
+"x":-570.5,
+"z":3220.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":23,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder24/VegetatedGeologicalShelf2",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":499.9,
+"radius_m":15.4,
+"gap_before_m":15.1,
+"x":-501.9,
+"z":3236.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":23,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RootedShelf25",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":534.8,
+"radius_m":19.2,
+"gap_before_m":32.02,
+"x":-569.5,
+"z":3239.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":49,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RootedShelf28",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":539.8,
+"radius_m":19.1,
+"gap_before_m":15.29,
+"x":-646.3,
+"z":3243.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge002RockShoulder2/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":536.4,
+"radius_m":15.9,
+"gap_before_m":9.69,
+"x":-674.3,
+"z":3294.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge002RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":568.8,
+"radius_m":16.1,
+"gap_before_m":38.0,
+"x":-684.3,
+"z":3362.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-3.89,
+"probed":22,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge003RootedShelf12",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":664.5,
+"radius_m":18.3,
+"gap_before_m":14.17,
+"x":-761.1,
+"z":3664.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder4/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":667.0,
+"radius_m":13.5,
+"gap_before_m":3.64,
+"x":-695.0,
+"z":3732.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RootedShelf4",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":686.2,
+"radius_m":18.6,
+"gap_before_m":22.85,
+"x":-683.3,
+"z":3739.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":27,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RootedShelf7",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":696.6,
+"radius_m":19.7,
+"gap_before_m":6.82,
+"x":-610.8,
+"z":3716.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.85,
+"probed":10,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder8/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":699.9,
+"radius_m":12.5,
+"gap_before_m":18.23,
+"x":-598.3,
+"z":3731.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-4.46,
+"probed":16,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder9/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":708.9,
+"radius_m":15.7,
+"gap_before_m":31.59,
+"x":-598.0,
+"z":3683.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":717.5,
+"radius_m":17.9,
+"gap_before_m":26.21,
+"x":-562.8,
+"z":3818.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder15/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":725.2,
+"radius_m":13.2,
+"gap_before_m":17.59,
+"x":-477.2,
+"z":3792.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder16/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":727.6,
+"radius_m":12.5,
+"gap_before_m":10.97,
+"x":-501.8,
+"z":3795.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-10.31,
+"probed":23,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder19/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":720.1,
+"radius_m":12.9,
+"gap_before_m":12.53,
+"x":-466.2,
+"z":3791.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RootedShelf19",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":738.3,
+"radius_m":19.2,
+"gap_before_m":14.55,
+"x":-450.1,
+"z":3821.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RootedShelf12",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":747.4,
+"radius_m":18.6,
+"gap_before_m":16.01,
+"x":-584.8,
+"z":3932.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":749.0,
+"radius_m":13.7,
+"gap_before_m":16.3,
+"x":-612.4,
+"z":4006.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":30,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RootedShelf15",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":745.7,
+"radius_m":19.7,
+"gap_before_m":17.47,
+"x":-606.0,
+"z":4004.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.62,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RootedShelf18",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":744.0,
+"radius_m":18.3,
+"gap_before_m":17.18,
+"x":-671.4,
+"z":3967.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder19/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":731.4,
+"radius_m":17.0,
+"gap_before_m":5.05,
+"x":-682.6,
+"z":3993.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-4.46,
+"probed":11,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder20/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":746.2,
+"radius_m":15.2,
+"gap_before_m":21.43,
+"x":-685.5,
+"z":3981.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-6.0,
+"probed":21,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":742.0,
+"radius_m":12.5,
+"gap_before_m":8.59,
+"x":-770.1,
+"z":4061.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder28/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":741.8,
+"radius_m":14.7,
+"gap_before_m":3.13,
+"x":-814.4,
+"z":4036.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":21,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RootedShelf30",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":737.2,
+"radius_m":19.1,
+"gap_before_m":21.35,
+"x":-844.8,
+"z":4037.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.86,
+"probed":12,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder32/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":739.6,
+"radius_m":14.3,
+"gap_before_m":3.27,
+"x":-839.3,
+"z":4161.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":23,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder34/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":737.3,
+"radius_m":12.6,
+"gap_before_m":15.99,
+"x":-871.4,
+"z":4106.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":21,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder8/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":821.0,
+"radius_m":15.2,
+"gap_before_m":10.7,
+"x":-685.3,
+"z":4642.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf9",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":835.5,
+"radius_m":18.6,
+"gap_before_m":15.53,
+"x":-623.4,
+"z":4626.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder12/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":845.4,
+"radius_m":16.2,
+"gap_before_m":24.27,
+"x":-536.2,
+"z":4595.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":25,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf12",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":839.6,
+"radius_m":19.7,
+"gap_before_m":5.01,
+"x":-562.5,
+"z":4581.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.52,
+"probed":10,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder13/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":841.1,
+"radius_m":12.7,
+"gap_before_m":5.01,
+"x":-570.4,
+"z":4568.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":12,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":842.4,
+"radius_m":12.5,
+"gap_before_m":16.8,
+"x":-562.8,
+"z":4644.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder18/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":847.7,
+"radius_m":13.0,
+"gap_before_m":20.94,
+"x":-496.7,
+"z":4659.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-5.59,
+"probed":23,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf18",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":847.7,
+"radius_m":17.9,
+"gap_before_m":18.82,
+"x":-487.8,
+"z":4664.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.68,
+"probed":20,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder20/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":856.3,
+"radius_m":16.2,
+"gap_before_m":15.2,
+"x":-434.6,
+"z":4633.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder22/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":853.1,
+"radius_m":12.9,
+"gap_before_m":16.77,
+"x":-405.1,
+"z":4584.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf24",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":855.7,
+"radius_m":19.2,
+"gap_before_m":17.28,
+"x":-397.8,
+"z":4689.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":12,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":858.4,
+"radius_m":13.0,
+"gap_before_m":12.87,
+"x":-364.9,
+"z":4694.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":19,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder28/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":867.1,
+"radius_m":16.2,
+"gap_before_m":24.25,
+"x":-332.6,
+"z":4663.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":26,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf30",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":863.8,
+"radius_m":18.7,
+"gap_before_m":20.92,
+"x":-292.0,
+"z":4657.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder34/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":869.1,
+"radius_m":12.6,
+"gap_before_m":1.77,
+"x":-246.5,
+"z":4726.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder37/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":873.7,
+"radius_m":13.1,
+"gap_before_m":15.16,
+"x":-205.9,
+"z":4654.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RootedShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":874.3,
+"radius_m":18.0,
+"gap_before_m":13.04,
+"x":-175.0,
+"z":4686.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":880.6,
+"radius_m":15.1,
+"gap_before_m":24.18,
+"x":-68.1,
+"z":4703.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":36,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder7/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":876.4,
+"radius_m":13.2,
+"gap_before_m":19.64,
+"x":-31.4,
+"z":4724.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":29,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RootedShelf7",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":877.3,
+"radius_m":18.6,
+"gap_before_m":20.88,
+"x":-66.1,
+"z":4710.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-17.24,
+"probed":17,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder9/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":885.3,
+"radius_m":15.7,
+"gap_before_m":23.83,
+"x":-68.0,
+"z":4730.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-3.55,
+"probed":24,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder10/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":863.7,
+"radius_m":14.5,
+"gap_before_m":2.3,
+"x":-18.9,
+"z":4633.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.96,
+"probed":17,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RootedShelf10",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":878.9,
+"radius_m":19.7,
+"gap_before_m":21.69,
+"x":-41.8,
+"z":4638.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":26,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder11/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":859.5,
+"radius_m":12.7,
+"gap_before_m":2.3,
+"x":-54.6,
+"z":4628.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder13/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":887.3,
+"radius_m":17.6,
+"gap_before_m":28.77,
+"x":-47.9,
+"z":4585.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":12,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":880.4,
+"radius_m":18.3,
+"gap_before_m":14.15,
+"x":3.1,
+"z":4622.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder18/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":867.9,
+"radius_m":15.2,
+"gap_before_m":15.55,
+"x":126.3,
+"z":4705.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RootedShelf19",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":883.4,
+"radius_m":18.8,
+"gap_before_m":3.79,
+"x":92.7,
+"z":4590.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-9.68,
+"probed":14,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder22/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":870.0,
+"radius_m":13.7,
+"gap_before_m":9.03,
+"x":141.6,
+"z":4584.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RootedShelf22",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":885.0,
+"radius_m":19.2,
+"gap_before_m":10.78,
+"x":137.5,
+"z":4573.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-3.48,
+"probed":16,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RockShoulder16/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":866.3,
+"radius_m":12.5,
+"gap_before_m":5.14,
+"x":171.2,
+"z":4292.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":28,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RockShoulder19/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":846.4,
+"radius_m":16.5,
+"gap_before_m":12.74,
+"x":43.3,
+"z":4331.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":47,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RockShoulder20/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":858.5,
+"radius_m":13.7,
+"gap_before_m":27.9,
+"x":55.5,
+"z":4341.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":47,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RootedShelf20",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":856.6,
+"radius_m":19.2,
+"gap_before_m":12.3,
+"x":85.7,
+"z":4298.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":46,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RockShoulder23/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":857.5,
+"radius_m":16.4,
+"gap_before_m":24.35,
+"x":39.6,
+"z":4332.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":51,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RootedShelf23",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":850.7,
+"radius_m":19.1,
+"gap_before_m":0.65,
+"x":36.0,
+"z":4265.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":47,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RockShoulder24/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":850.6,
+"radius_m":12.2,
+"gap_before_m":0.59,
+"x":42.3,
+"z":4208.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":47,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RootedShelf35",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":827.0,
+"radius_m":19.3,
+"gap_before_m":19.82,
+"x":-126.8,
+"z":4081.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-17.91,
+"probed":16,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder2/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":858.0,
+"radius_m":14.2,
+"gap_before_m":0.86,
+"x":-122.9,
+"z":4742.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder3/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":881.0,
+"radius_m":17.7,
+"gap_before_m":20.33,
+"x":-119.5,
+"z":4725.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":45,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RootedShelf3",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":874.0,
+"radius_m":19.2,
+"gap_before_m":16.9,
+"x":-130.4,
+"z":4745.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RootedShelf6",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":874.0,
+"radius_m":18.0,
+"gap_before_m":17.08,
+"x":-88.1,
+"z":4681.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder7/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":862.0,
+"radius_m":16.9,
+"gap_before_m":5.54,
+"x":-62.6,
+"z":4696.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder11/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":881.0,
+"radius_m":17.3,
+"gap_before_m":23.75,
+"x":25.2,
+"z":4721.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":27,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RootedShelf12",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":874.0,
+"radius_m":18.6,
+"gap_before_m":16.76,
+"x":11.5,
+"z":4731.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RootedShelf15",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":874.0,
+"radius_m":19.7,
+"gap_before_m":13.19,
+"x":52.9,
+"z":4667.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.04,
+"probed":17,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder18/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":876.7,
+"radius_m":13.0,
+"gap_before_m":15.67,
+"x":82.4,
+"z":4724.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RootedShelf18",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":874.0,
+"radius_m":18.3,
+"gap_before_m":16.1,
+"x":106.1,
+"z":4722.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.85,
+"probed":17,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder19/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":881.0,
+"radius_m":17.1,
+"gap_before_m":24.88,
+"x":141.3,
+"z":4707.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":22,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder24/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":877.4,
+"radius_m":13.8,
+"gap_before_m":8.08,
+"x":210.7,
+"z":4660.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.78,
+"probed":20,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RootedShelf24",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":874.0,
+"radius_m":18.8,
+"gap_before_m":13.88,
+"x":195.3,
+"z":4654.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":12,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":876.5,
+"radius_m":12.5,
+"gap_before_m":5.37,
+"x":210.5,
+"z":4600.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder27/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":881.0,
+"radius_m":15.8,
+"gap_before_m":8.89,
+"x":283.5,
+"z":4709.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":17,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder30/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":876.5,
+"radius_m":14.3,
+"gap_before_m":20.65,
+"x":290.7,
+"z":4696.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.72,
+"probed":33,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RootedShelf30",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":874.0,
+"radius_m":19.1,
+"gap_before_m":16.48,
+"x":295.0,
+"z":4704.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder32/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":877.6,
+"radius_m":14.3,
+"gap_before_m":14.44,
+"x":321.6,
+"z":4653.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-11.35,
+"probed":16,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder34/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":857.4,
+"radius_m":13.8,
+"gap_before_m":3.43,
+"x":372.4,
+"z":4641.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.5,
+"probed":12,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge001RockShoulder1/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":864.9,
+"radius_m":16.8,
+"gap_before_m":6.31,
+"x":382.0,
+"z":4649.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.84,
+"probed":10,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge001RootedShelf4",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":895.8,
+"radius_m":18.0,
+"gap_before_m":38.09,
+"x":442.0,
+"z":4729.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":22,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge001RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":950.5,
+"radius_m":19.7,
+"gap_before_m":12.87,
+"x":486.3,
+"z":4864.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RockShoulder1/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":938.6,
+"radius_m":12.3,
+"gap_before_m":15.29,
+"x":486.6,
+"z":4824.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.64,
+"probed":21,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RootedShelf2",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":961.7,
+"radius_m":18.0,
+"gap_before_m":24.04,
+"x":476.7,
+"z":4872.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-30.2,
+"probed":15,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":989.4,
+"radius_m":16.1,
+"gap_before_m":39.94,
+"x":483.2,
+"z":4934.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-3.84,
+"probed":22,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1031.7,
+"radius_m":16.2,
+"gap_before_m":17.65,
+"x":414.4,
+"z":5024.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.31,
+"probed":12,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RootedShelf14",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1025.2,
+"radius_m":18.3,
+"gap_before_m":20.98,
+"x":387.3,
+"z":5051.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.29,
+"probed":17,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003RockShoulder2/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1058.9,
+"radius_m":12.6,
+"gap_before_m":11.62,
+"x":236.9,
+"z":5075.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003RockShoulder3/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1067.2,
+"radius_m":13.6,
+"gap_before_m":12.32,
+"x":264.6,
+"z":5105.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1074.9,
+"radius_m":12.7,
+"gap_before_m":11.68,
+"x":279.2,
+"z":5181.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003RootedShelf6",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1075.9,
+"radius_m":18.6,
+"gap_before_m":20.96,
+"x":265.7,
+"z":5189.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":26,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003RockShoulder8/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1072.0,
+"radius_m":16.5,
+"gap_before_m":16.98,
+"x":243.4,
+"z":5193.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder11/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1159.8,
+"radius_m":17.3,
+"gap_before_m":21.98,
+"x":263.0,
+"z":5428.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":20,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder11/VegetatedGeologicalShelf2",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1121.8,
+"radius_m":16.8,
+"gap_before_m":4.69,
+"x":205.6,
+"z":5438.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1160.9,
+"radius_m":13.7,
+"gap_before_m":11.01,
+"x":292.6,
+"z":5368.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":46,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder14/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1141.9,
+"radius_m":14.0,
+"gap_before_m":13.74,
+"x":355.3,
+"z":5374.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":22,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RootedShelf15",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1159.9,
+"radius_m":19.7,
+"gap_before_m":38.12,
+"x":327.9,
+"z":5410.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.58,
+"probed":21,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder16/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1145.9,
+"radius_m":14.4,
+"gap_before_m":25.57,
+"x":317.1,
+"z":5399.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":32,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder18/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1167.9,
+"radius_m":13.0,
+"gap_before_m":13.89,
+"x":314.9,
+"z":5483.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder19/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1174.0,
+"radius_m":17.1,
+"gap_before_m":28.57,
+"x":369.0,
+"z":5473.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-6.27,
+"probed":30,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RootedShelf24",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1175.9,
+"radius_m":18.8,
+"gap_before_m":15.14,
+"x":458.9,
+"z":5463.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":11,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder1/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1189.8,
+"radius_m":16.2,
+"gap_before_m":21.58,
+"x":463.2,
+"z":5522.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":30,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder4/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1185.0,
+"radius_m":15.7,
+"gap_before_m":16.25,
+"x":462.6,
+"z":5534.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.14,
+"probed":27,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder4/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1166.0,
+"radius_m":14.9,
+"gap_before_m":13.84,
+"x":398.6,
+"z":5501.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RootedShelf4",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1179.9,
+"radius_m":18.0,
+"gap_before_m":13.94,
+"x":451.3,
+"z":5527.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.67,
+"probed":19,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder12/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1175.7,
+"radius_m":14.9,
+"gap_before_m":20.8,
+"x":361.4,
+"z":5594.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.86,
+"probed":11,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder13/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1157.1,
+"radius_m":16.4,
+"gap_before_m":9.15,
+"x":327.4,
+"z":5529.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":12,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RootedShelf13",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1169.6,
+"radius_m":19.7,
+"gap_before_m":19.32,
+"x":330.7,
+"z":5600.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RootedShelf16",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1166.1,
+"radius_m":18.3,
+"gap_before_m":16.61,
+"x":322.0,
+"z":5675.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-5.13,
+"probed":15,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge002RockShoulder6/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1149.7,
+"radius_m":16.1,
+"gap_before_m":17.21,
+"x":43.3,
+"z":5738.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.48,
+"probed":27,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge002RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1134.2,
+"radius_m":16.2,
+"gap_before_m":10.31,
+"x":-62.8,
+"z":5717.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":30,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge002RockShoulder18/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1126.4,
+"radius_m":16.3,
+"gap_before_m":11.28,
+"x":-116.0,
+"z":5709.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge002RockShoulder26/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1110.9,
+"radius_m":16.2,
+"gap_before_m":9.08,
+"x":-251.5,
+"z":5688.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":32,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge002RootedShelf26",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1104.5,
+"radius_m":19.1,
+"gap_before_m":15.78,
+"x":-252.4,
+"z":5706.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.33,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder15/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1067.4,
+"radius_m":13.9,
+"gap_before_m":17.47,
+"x":-502.4,
+"z":5440.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":22,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder18/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1059.2,
+"radius_m":13.4,
+"gap_before_m":4.86,
+"x":-528.4,
+"z":5373.3,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RootedShelf18",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1060.2,
+"radius_m":18.8,
+"gap_before_m":25.24,
+"x":-526.7,
+"z":5384.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":14,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder19/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1061.9,
+"radius_m":14.1,
+"gap_before_m":17.39,
+"x":-419.3,
+"z":5357.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":19,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder20/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1064.5,
+"radius_m":16.3,
+"gap_before_m":3.55,
+"x":-478.7,
+"z":5367.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":12,
+"footing_points":48,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder22/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1053.8,
+"radius_m":12.0,
+"gap_before_m":13.94,
+"x":-449.2,
+"z":5289.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":20,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder4/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1061.3,
+"radius_m":13.1,
+"gap_before_m":0.39,
+"x":-477.5,
+"z":5367.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":20,
+"footing_points":51,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder4/VegetatedGeologicalShelf1",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1042.3,
+"radius_m":13.5,
+"gap_before_m":2.27,
+"x":-462.4,
+"z":5330.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-13.2,
+"probed":15,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RootedShelf4",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1061.5,
+"radius_m":18.6,
+"gap_before_m":21.47,
+"x":-459.1,
+"z":5334.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-6.35,
+"probed":14,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder5/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1069.0,
+"radius_m":15.9,
+"gap_before_m":26.62,
+"x":-479.9,
+"z":5343.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.75,
+"probed":16,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RootedShelf7",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1067.8,
+"radius_m":19.7,
+"gap_before_m":10.46,
+"x":-406.8,
+"z":5279.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder8/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1069.7,
+"radius_m":12.5,
+"gap_before_m":19.21,
+"x":-400.2,
+"z":5283.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":33,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder16/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1086.3,
+"radius_m":12.5,
+"gap_before_m":12.34,
+"x":-283.1,
+"z":5288.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":18,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RootedShelf16",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1086.7,
+"radius_m":18.8,
+"gap_before_m":20.3,
+"x":-263.1,
+"z":5291.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder19/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1093.8,
+"radius_m":12.6,
+"gap_before_m":20.99,
+"x":-203.9,
+"z":5299.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.01,
+"probed":28,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RootedShelf19",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1093.0,
+"radius_m":19.2,
+"gap_before_m":5.39,
+"x":-215.3,
+"z":5294.6,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":24,
+"footing_points":50,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder21/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1102.3,
+"radius_m":15.5,
+"gap_before_m":10.23,
+"x":-196.9,
+"z":5342.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-2.1,
+"probed":29,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RootedShelf28",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1111.8,
+"radius_m":17.9,
+"gap_before_m":7.25,
+"x":-77.2,
+"z":5365.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":16,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoop_Ledge2",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1136.0,
+"radius_m":23.1,
+"gap_before_m":1.9,
+"x":160.0,
+"z":5740.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":26,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route landing pad (*_Ledge#)"
+},
+{
+"path":"AuthoredRoutes/SummitOverlookLoop_Ledge3",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":1066.0,
+"radius_m":23.1,
+"gap_before_m":5.87,
+"x":-420.2,
+"z":5649.7,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":40,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route landing pad (*_Ledge#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RootedShelf3",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":445.1,
+"radius_m":19.2,
+"gap_before_m":21.4,
+"x":-355.6,
+"z":3097.2,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RootedShelf6",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":458.3,
+"radius_m":18.0,
+"gap_before_m":12.74,
+"x":-365.8,
+"z":3172.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-7.01,
+"probed":10,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder7/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":469.7,
+"radius_m":17.1,
+"gap_before_m":18.11,
+"x":-347.0,
+"z":3159.5,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":15,
+"footing_points":45,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RootedShelf12",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":484.6,
+"radius_m":18.6,
+"gap_before_m":25.93,
+"x":-476.6,
+"z":3166.4,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":10,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder14/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":496.1,
+"radius_m":13.7,
+"gap_before_m":11.34,
+"x":-492.3,
+"z":3238.9,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.45,
+"probed":13,
+"footing_points":46,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RootedShelf15",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":497.8,
+"radius_m":19.7,
+"gap_before_m":21.24,
+"x":-487.7,
+"z":3241.1,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.83,
+"probed":16,
+"footing_points":49,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RootedShelf18",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":510.9,
+"radius_m":18.3,
+"gap_before_m":7.6,
+"x":-557.3,
+"z":3212.8,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-1.85,
+"probed":13,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"route rooted shelf (*RootedShelf#)"
+},
+{
+"path":"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder20/VegetatedGeologicalShelf0",
+"kind":"rock_drum",
+"builder":"scripts/world/cloudreach_world.gd::_mesa (StratifiedCliffBody)",
+"base_y":523.1,
+"radius_m":15.2,
+"gap_before_m":27.53,
+"x":-572.3,
+"z":3232.0,
+"action":"seat",
+"proof":{
+"lowest_minus_ground_m":-0.81,
+"probed":36,
+"footing_points":47,
+"verdict":"PASS"
+},
+"family":"cliff-face shelf (*/VegetatedGeologicalShelf#)"
+}
+],
+"left_as_cliff_over_open_sky":[
+"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf1",
+"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RockShoulder5/VegetatedGeologicalShelf1",
+"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RockShoulder8/VegetatedGeologicalShelf0",
+"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RootedShelf1",
+"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge001RootedShelf4",
+"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge002RockShoulder5/VegetatedGeologicalShelf1",
+"AuthoredRoutes/ArrivalGateRoadCliffShoulders/Ridge002RootedShelf5",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RockShoulder2/VegetatedGeologicalShelf1",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RockShoulder3/VegetatedGeologicalShelf1",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RockShoulder7/VegetatedGeologicalShelf0",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge000RockShoulder8/VegetatedGeologicalShelf0",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge001RockShoulder9/VegetatedGeologicalShelf1",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge004RockShoulder10/VegetatedGeologicalShelf0",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge004RockShoulder18/VegetatedGeologicalShelf0",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge004RockShoulder26/VegetatedGeologicalShelf1",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge004RockShoulder6/VegetatedGeologicalShelf0",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge004RootedShelf15",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge004RootedShelf18",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge005RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge005RockShoulder13/VegetatedGeologicalShelf0",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge005RockShoulder7/VegetatedGeologicalShelf1",
+"AuthoredRoutes/BrokenCausewayMainCliffShoulders/Ridge005RootedShelf1",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder11/VegetatedGeologicalShelf1",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder2/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder22/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder30/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder31/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RockShoulder4/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RootedShelf24",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge000RootedShelf42",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf1",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RockShoulder20/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RockShoulder21/VegetatedGeologicalShelf1",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RockShoulder24/VegetatedGeologicalShelf1",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RockShoulder25/VegetatedGeologicalShelf1",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RockShoulder4/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge001RootedShelf4",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder1/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder13/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder18/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder30/VegetatedGeologicalShelf1",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder6/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RockShoulder9/VegetatedGeologicalShelf0",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RootedShelf10",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RootedShelf34",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RootedShelf43",
+"AuthoredRoutes/CausewayWestLoopCliffShoulders/Ridge002RootedShelf7",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge000RootedShelf12",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge000RootedShelf15",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge001RockShoulder1/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge001RockShoulder5/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge001RockShoulder8/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge001RootedShelf1",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge002RockShoulder10/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge002RockShoulder14/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge002RockShoulder2/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge002RootedShelf14",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge002RootedShelf2",
+"AuthoredRoutes/LowerCliffRoadCliffShoulders/Ridge002RootedShelf5",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder15/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder15/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder16/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder4/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder6/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder7/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RockShoulder7/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RootedShelf12",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge000RootedShelf24",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RockShoulder20/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge001RockShoulder8/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder2/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder2/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder22/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder22/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder34/VegetatedGeologicalShelf0",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder37/VegetatedGeologicalShelf1",
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RootedShelf14",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder22/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder23/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder26/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder27/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RockShoulder28/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RootedShelf12",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RootedShelf18",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge000RootedShelf27",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder20/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder25/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder5/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RockShoulder8/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge001RootedShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge002RootedShelf14",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge002RootedShelf2",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge002RootedShelf5",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder11/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder16/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder16/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RockShoulder20/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RootedShelf12",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003RootedShelf15",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder11/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder12/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder13/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder16/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder19/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder20/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder24/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder3/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder5/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder8/VegetatedGeologicalShelf1",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RockShoulder9/VegetatedGeologicalShelf0",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RootedShelf13",
+"AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge004RootedShelf25",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder11/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder11/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder11/VegetatedGeologicalShelf2",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder15/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder16/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder22/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder24/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RockShoulder31/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge000RootedShelf24",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder21/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder24/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder30/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder30/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder32/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder33/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder4/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RockShoulder9/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf21",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf33",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf36",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge001RootedShelf6",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder18/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder19/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder2/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder26/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder26/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder27/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder5/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge002RockShoulder9/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RootedShelf11",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder14/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder15/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder16/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder22/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder31/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder35/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder36/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder4/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RockShoulder7/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge000RootedShelf27",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge001RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge001RockShoulder13/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge001RockShoulder9/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge001RootedShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RockShoulder10/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RockShoulder2/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RockShoulder5/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RockShoulder9/VegetatedGeologicalShelf1",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RootedShelf17",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge002RootedShelf5",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003RockShoulder4/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003RockShoulder7/VegetatedGeologicalShelf0",
+"AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003RootedShelf3",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder2/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder4/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000RockShoulder7/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder16/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder16/VegetatedGeologicalShelf2",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf2",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder24/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder28/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge002RockShoulder10/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge002RockShoulder5/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge002RockShoulder9/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge002RootedShelf14",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge002RootedShelf2",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge002RootedShelf5",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge003RockShoulder12/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge003RootedShelf3",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder1/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder11/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder12/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder13/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder16/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder17/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder5/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder5/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder7/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RockShoulder7/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge004RootedShelf1",
+"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder15/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder19/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder23/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder3/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder6/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RockShoulder8/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightReturnCliffShoulders/Ridge000RootedShelf24",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge000RockShoulder6/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge000RockShoulder8/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder12/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder16/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder17/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder25/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder25/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder29/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder8/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder8/VegetatedGeologicalShelf1",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RootedShelf18",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RootedShelf24",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RootedShelf6",
+"AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RootedShelf9",
+"CliffRegions/SummitFinalStronghold/CliffMass/VegetatedGeologicalShelf1",
+"CloudreachBattleYards/tether_lieutenant_senn_yard/ClearBattleFloor",
+"Landmarks/WindscarBeacon/LandmarkLedge/VegetatedGeologicalShelf0",
+"RealmTransitionLedges/CloudreachReturnFromStormwood"
+],
+"skipped_road_below":[
+"AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf0",
+"AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001RockShoulder16/VegetatedGeologicalShelf0",
+"Landmarks/RealmGateCrag/LandmarkLedge/VegetatedGeologicalShelf4"
+]
+}

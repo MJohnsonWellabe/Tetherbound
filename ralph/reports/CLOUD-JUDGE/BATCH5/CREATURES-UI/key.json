@@ -1,0 +1,65 @@
+{
+ "Ku": {
+  "anchor": false,
+  "label": "P2-048",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_048_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_048_0_cand.jpg"
+ },
+ "Lm": {
+  "anchor": false,
+  "label": "F36 (0) #7 Meadowhart",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__0___7_Meadowhart_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__0___7_Meadowhart_cand.jpg"
+ },
+ "Sg": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Jl": {
+  "anchor": false,
+  "label": "F36 (1) Paddlenewt",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__1__Paddlenewt_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__1__Paddlenewt_main.jpg"
+ },
+ "Ve": {
+  "anchor": false,
+  "label": "F36 (1) Mosshock",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__1__Mosshock_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__1__Mosshock_main.jpg"
+ },
+ "Bf": {
+  "anchor": false,
+  "label": "P2-020/P2-017 duskhush",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_020_P2_017_duskhush_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_020_P2_017_duskhush_cand.jpg"
+ },
+ "Ua": {
+  "anchor": false,
+  "label": "F36 (0) #22 Abyssal Guardian",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__0___22_Abyssal_Guardian_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__0___22_Abyssal_Guardian_main.jpg"
+ },
+ "Vo": {
+  "anchor": false,
+  "label": "P2-020/P2-017 bramblebun",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_020_P2_017_bramblebun_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_020_P2_017_bramblebun_cand.jpg"
+ },
+ "Av": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Pv": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Ga": {
+  "anchor": false,
+  "label": "P2-071",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_071_0_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_071_0_main.jpg"
+ }
+}

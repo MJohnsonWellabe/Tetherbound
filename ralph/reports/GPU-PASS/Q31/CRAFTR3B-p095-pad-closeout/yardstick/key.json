@@ -1,0 +1,28 @@
+{
+ "Aq": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Ra": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ },
+ "Sb": {
+  "anchor": false,
+  "label": "CRAFTR3B P2-095 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\CRAFTR3B\\sides\\P2-095-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CRAFTR3B\\sides\\P2-095-cand-High.png"
+ },
+ "Wv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Bz": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}

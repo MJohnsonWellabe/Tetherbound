@@ -1,0 +1,2985 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 499843598571,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T20:12:06",
+	"capture_started_utc": "2026-10-31T20:11:31",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "water_nalia",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "shellwatch",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 261312,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76736927032471,
+			"camera_position": [
+				316.0,
+				18.6733741760254,
+				1153.12097167969
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460622147348
+				],
+				"basis_y": [
+					0.0000000000000000212650284929765,
+					0.984805881977081,
+					-0.173647880554199
+				],
+				"basis_z": [
+					-0.000000000000000120599942225136,
+					0.173647880554199,
+					0.984805881977081
+				],
+				"origin": [
+					316.0,
+					17.770414352417,
+					1148.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000000334492959,
+					0.000000000000000122460555972899
+				],
+				"basis_y": [
+					0.0000000000000000212651178284826,
+					0.984807729721069,
+					-0.173648685216904
+				],
+				"basis_z": [
+					-0.000000000000000120600101043814,
+					0.173648685216904,
+					0.984807729721069
+				],
+				"origin": [
+					316.0,
+					18.6733741760254,
+					1153.12097167969
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Resident Nalia",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-ctl-High-c050/water__inventory__character__water_nalia.jpg",
+			"frame_id": "water__inventory__character__water_nalia",
+			"identity": "water__inventory__character__water_nalia",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_shellwatch_wild_001_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						358.897003173828,
+						10.8508462905884,
+						1190.31494140625
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_shellwatch_wild_007_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						319.048004150391,
+						38.2510108947754,
+						1058.12194824219
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_shellwatch_wild_012_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						251.503005981445,
+						35.9141998291016,
+						1180.5
+					],
+					"species_id": "water_riptusk"
+				}
+			],
+			"nearby_creatures_160m": 3,
+			"observed_clock": {
+				"elapsed_seconds": 200.205060225108,
+				"hour": 8.00820240900433,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				316.0,
+				16.020414352417,
+				1148.0
+			],
+			"position_xz": [
+				320.0,
+				1143.0
+			],
+			"rejected_stand_candidates": [
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 1.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						321.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -1.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						319.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 2.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						322.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -2.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						318.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 0.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						320.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -4.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						316.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 4.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						324.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 1.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						321.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -1.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						319.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 2.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						322.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -2.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						318.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 0.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						320.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": 16.4910469055176,
+					"lateral_m": -4.0,
+					"offset_m": 3.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "physical land slope exceeds the production player's floor limit",
+					"stage": "preflight",
+					"stand_xz": [
+						316.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 4.0,
+					"offset_m": 3.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						324.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 1.0,
+					"offset_m": 5.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						321.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -1.0,
+					"offset_m": 5.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						319.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 2.0,
+					"offset_m": 5.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						322.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						317.974334716797,
+						19.4440231323242,
+						1153.06311035156
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": 16.1554470062256,
+					"lateral_m": -2.0,
+					"offset_m": 5.0,
+					"player_position": [
+						318.0,
+						16.3234252929688,
+						1148.0
+					],
+					"reason": "physical land slope exceeds the production player's floor limit",
+					"stage": "preflight",
+					"stand_xz": [
+						318.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.704393982887268,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						317.974334716797,
+						19.4440231323242,
+						1153.06311035156
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 0.0,
+					"offset_m": 5.0,
+					"player_position": [
+						318.0,
+						16.3234252929688,
+						1148.0
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						320.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.704393982887268,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				}
+			],
+			"resolved_ground_y": 16.01881980896,
+			"route_class": "main",
+			"selected_stand_lateral_m": -4.0,
+			"selected_stand_offset_m": 5.0,
+			"selected_stand_xz": [
+				316.0,
+				1148.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.996316015720367,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				320.0,
+				1143.0
+			],
+			"terrain_ground_y": 16.01881980896,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water_nalia",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "shellwatch",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 272967,
+			"camera_fov_degrees": 70.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76736927032471,
+			"camera_position": [
+				316.0,
+				18.6733741760254,
+				1153.12097167969
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460635382238
+				],
+				"basis_y": [
+					0.000000000000000021265025184254,
+					0.984805822372437,
+					-0.173647835850716
+				],
+				"basis_z": [
+					-0.000000000000000120599942225136,
+					0.173647835850716,
+					0.984805822372437
+				],
+				"origin": [
+					316.0,
+					17.770414352417,
+					1148.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000000008647809,
+					0.000000000000000122460569207789
+				],
+				"basis_y": [
+					0.0000000000000000212651145197602,
+					0.984807729721069,
+					-0.173648670315742
+				],
+				"basis_z": [
+					-0.000000000000000120600114278704,
+					0.173648670315742,
+					0.984807729721069
+				],
+				"origin": [
+					316.0,
+					18.6733741760254,
+					1153.12097167969
+				]
+			},
+			"conversation_camera_active": false,
+			"conversation_camera_blend": 0.0,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {},
+			"debug_travel": true,
+			"destination_display_name": "Resident Nalia",
+			"destination_index": 1,
+			"dialogue_id": "water_nalia_pre",
+			"dialogue_portrait": "res://assets/ui/portraits/lark.png",
+			"dialogue_speaker": "Resident Nalia",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-ctl-High-c050/water__inventory__character__water_nalia__dialogue.jpg",
+			"frame_id": "water__inventory__character__water_nalia__dialogue",
+			"identity": "water__inventory__character__water_nalia__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_shellwatch_wild_001_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						358.802490234375,
+						10.8233137130737,
+						1190.90588378906
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_shellwatch_wild_007_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						319.048004150391,
+						38.2510108947754,
+						1058.12194824219
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_shellwatch_wild_012_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						251.503005981445,
+						35.9141998291016,
+						1180.5
+					],
+					"species_id": "water_riptusk"
+				}
+			],
+			"nearby_creatures_160m": 3,
+			"observed_clock": {
+				"elapsed_seconds": 200.205060225108,
+				"hour": 8.00820240900433,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				316.0,
+				16.020414352417,
+				1148.0
+			],
+			"position_xz": [
+				320.0,
+				1143.0
+			],
+			"rejected_stand_candidates": [
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 1.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						321.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -1.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						319.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 2.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						322.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -2.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						318.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 0.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						320.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -4.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						316.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 4.0,
+					"offset_m": 2.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						324.0,
+						1145.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 1.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						321.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -1.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						319.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 2.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						322.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -2.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						318.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						0.0,
+						4.71289157867432,
+						167.586364746094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 0.0,
+					"offset_m": 3.0,
+					"player_position": [
+						0.0,
+						1.8776216506958,
+						162.5
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						320.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.994309067726135,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": 16.4910469055176,
+					"lateral_m": -4.0,
+					"offset_m": 3.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "physical land slope exceeds the production player's floor limit",
+					"stage": "preflight",
+					"stand_xz": [
+						316.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 4.0,
+					"offset_m": 3.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						324.0,
+						1146.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 1.0,
+					"offset_m": 5.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						321.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": -1.0,
+					"offset_m": 5.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						319.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						315.91650390625,
+						19.4817657470703,
+						1151.19567871094
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 2.0,
+					"offset_m": 5.0,
+					"player_position": [
+						315.849609375,
+						16.4152488708496,
+						1146.19689941406
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						322.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.8972487449646,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				},
+				{
+					"camera_position": [
+						317.974334716797,
+						19.4440231323242,
+						1153.06311035156
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": 16.1554470062256,
+					"lateral_m": -2.0,
+					"offset_m": 5.0,
+					"player_position": [
+						318.0,
+						16.3234252929688,
+						1148.0
+					],
+					"reason": "physical land slope exceeds the production player's floor limit",
+					"stage": "preflight",
+					"stand_xz": [
+						318.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.704393982887268,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						317.974334716797,
+						19.4440231323242,
+						1153.06311035156
+					],
+					"frame_id": "water__inventory__character__water_nalia",
+					"ground_y": null,
+					"lateral_m": 0.0,
+					"offset_m": 5.0,
+					"player_position": [
+						318.0,
+						16.3234252929688,
+						1148.0
+					],
+					"reason": "debug travel failed",
+					"stage": "travel",
+					"stand_xz": [
+						320.0,
+						1148.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.704393982887268,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": null
+				}
+			],
+			"resolved_ground_y": 16.01881980896,
+			"route_class": "main",
+			"selected_stand_lateral_m": -4.0,
+			"selected_stand_offset_m": 5.0,
+			"selected_stand_xz": [
+				316.0,
+				1148.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.996316015720367,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				320.0,
+				1143.0
+			],
+			"terrain_ground_y": 16.01881980896,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"water__inventory__character__water_nalia"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rejected_stand_candidates": [
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 1.0,
+			"offset_m": 2.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				321.0,
+				1145.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": -1.0,
+			"offset_m": 2.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				319.0,
+				1145.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 2.0,
+			"offset_m": 2.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				322.0,
+				1145.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": -2.0,
+			"offset_m": 2.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				318.0,
+				1145.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 0.0,
+			"offset_m": 2.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				320.0,
+				1145.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": -4.0,
+			"offset_m": 2.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				316.0,
+				1145.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 4.0,
+			"offset_m": 2.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				324.0,
+				1145.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 1.0,
+			"offset_m": 3.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				321.0,
+				1146.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": -1.0,
+			"offset_m": 3.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				319.0,
+				1146.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 2.0,
+			"offset_m": 3.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				322.0,
+				1146.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": -2.0,
+			"offset_m": 3.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				318.0,
+				1146.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				0.0,
+				4.71289157867432,
+				167.586364746094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 0.0,
+			"offset_m": 3.0,
+			"player_position": [
+				0.0,
+				1.8776216506958,
+				162.5
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				320.0,
+				1146.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994309067726135,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				315.91650390625,
+				19.4817657470703,
+				1151.19567871094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": 16.4910469055176,
+			"lateral_m": -4.0,
+			"offset_m": 3.0,
+			"player_position": [
+				315.849609375,
+				16.4152488708496,
+				1146.19689941406
+			],
+			"reason": "physical land slope exceeds the production player's floor limit",
+			"stage": "preflight",
+			"stand_xz": [
+				316.0,
+				1146.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.8972487449646,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				315.91650390625,
+				19.4817657470703,
+				1151.19567871094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 4.0,
+			"offset_m": 3.0,
+			"player_position": [
+				315.849609375,
+				16.4152488708496,
+				1146.19689941406
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				324.0,
+				1146.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.8972487449646,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				315.91650390625,
+				19.4817657470703,
+				1151.19567871094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 1.0,
+			"offset_m": 5.0,
+			"player_position": [
+				315.849609375,
+				16.4152488708496,
+				1146.19689941406
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				321.0,
+				1148.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.8972487449646,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				315.91650390625,
+				19.4817657470703,
+				1151.19567871094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": -1.0,
+			"offset_m": 5.0,
+			"player_position": [
+				315.849609375,
+				16.4152488708496,
+				1146.19689941406
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				319.0,
+				1148.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.8972487449646,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				315.91650390625,
+				19.4817657470703,
+				1151.19567871094
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 2.0,
+			"offset_m": 5.0,
+			"player_position": [
+				315.849609375,
+				16.4152488708496,
+				1146.19689941406
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				322.0,
+				1148.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.8972487449646,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		},
+		{
+			"camera_position": [
+				317.974334716797,
+				19.4440231323242,
+				1153.06311035156
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": 16.1554470062256,
+			"lateral_m": -2.0,
+			"offset_m": 5.0,
+			"player_position": [
+				318.0,
+				16.3234252929688,
+				1148.0
+			],
+			"reason": "physical land slope exceeds the production player's floor limit",
+			"stage": "preflight",
+			"stand_xz": [
+				318.0,
+				1148.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.704393982887268,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				317.974334716797,
+				19.4440231323242,
+				1153.06311035156
+			],
+			"frame_id": "water__inventory__character__water_nalia",
+			"ground_y": null,
+			"lateral_m": 0.0,
+			"offset_m": 5.0,
+			"player_position": [
+				318.0,
+				16.3234252929688,
+				1148.0
+			],
+			"reason": "debug travel failed",
+			"stage": "travel",
+			"stand_xz": [
+				320.0,
+				1148.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.704393982887268,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": null
+		}
+	],
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"water__inventory__character__water_nalia"
+	]
+}

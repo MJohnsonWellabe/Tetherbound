@@ -44,7 +44,7 @@ func _load_plan() -> bool:
 		selected.append(row)
 	var start := 0
 	var count := -1
-	for arg: String in OS.get_cmdline_user_args():
+	for arg: String in _user_args():
 		if arg.begins_with("--defeated-start="):
 			start = maxi(0, int(arg.trim_prefix("--defeated-start=")))
 		elif arg.begins_with("--defeated-count="):

@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Mx": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B keeps the Voltarach readable in every frame but both sides are sunk by flat magenta telegraph rings/slabs, a near-invisible player creature, a heavy HUD covering the left and bottom of every frame, and murky brown-green light with no purple storm sky or lightning; A additionally loses the fight to canopy/foliage in i11, i13, i15, i16, i17 and tell1-f."
+  },
+  "Gt": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Wen and Senn are appealing, well-lit and have distinct lines and portraits, but Captain Marrow is hidden behind a flat blue lightning-bolt banner and the Stormwood purple sky only reads in frame 1, so the light and finish fall short of Palworld/Valheim."
+  },
+  "Lg": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The camera sits inside brown rock faces in the quarry_foreman frame and a dark grey slab covers half the garrick frame with Garrick absent (only the player's back), so the staging reads as a camera collision rather than an authored scene."
+  },
+  "Bt": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra model matches the owner style bar in standing, but A's hit react is indistinguishable from standing and its faint mid/end splay and crumple the limbs, while B's rear-up hit react reads well but its faint frames turn the horns into oversized stretched black loops on a featureless fleece blob."
+  },
+  "Qa": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Tavi and Rusk are both visible and the grass and light are pleasant, but the player's head still crowds the left third, the stone reads as brown lumps rather than Cloudreach pale stratified cliffs, and a big flat brown wall dominates the Rusk frame."
+  },
+  "Pv": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "The player head and back overlap the named speaker in several conversation frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Tidewake's pale dunes, cyan sea and bright sky carry the palette, but the untextured green-grey cliff slab in the iona frame, empty flat sand and the player's head overlapping Rowan (and Adair on A) keep it below shipping finish."
+  },
+  "Jg": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a strong naturalistic silhouette and taller-than-trainer scale, and B's molten seams give it identity, but both sides' faint mid/end collapse the mesh into a crumpled near-black mass (A faint end almost a void) and A's dark-on-dark plates lose surface read."
+  },
+  "Jf": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Old Bram's frame is warm and readable, but the stronghold_courtyard frame shows only a tiny player before hedge walls and the stronghold_elite frame is a dark blurred foreground mass with the player far off, so Warder Solene and Keeper Hald never appear."
+  },
+  "Tw": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager is appealing with clear eyes, a readable silhouette and a palette (moss vest, green scarf, brown boots) that fits the Meadows board, but the soft toy-like face and flat studio light sit closer to a stylised cartoon than the naturalistic finish of the owner bar."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A white feathered creature fills the right third and canopy the top of the corin frame, Kell is a speck in the distance, and in captain_field the player's back blocks Halder beside an oxblood-red banner on a friendly post (B adds a dark creature blob at the right edge)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Speaker-locked dialogue camera: frame the named speaker in the near third at mid shot, with an occlusion pass that fades or hides foreground rocks, slabs, banners, foliage, large creatures and the player's head (fixes Lg, Jf, Uv, Pv, Qa, Gt frame 3).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fight camera: collide with and fade trunks/canopy so both fighters stay visible, push the Stormwood grade to purple sky with white-violet lightning, slim the combat HUD, and replace the flat magenta telegraph rings/slabs with physical effects (stone, lightning) and impacts (Mx).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rework hit-react and faint animations and skinning for Stormcapra and the plated boar so hurt poses read and faint poses stay grounded without crumpled, stretched or blacked-out meshes (Bt, Jg).",
+   "kind": "new_art"
+  }
+ ]
+}

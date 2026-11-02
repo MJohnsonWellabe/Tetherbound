@@ -1,0 +1,342 @@
+[
+ {
+  "species": "tanglevolt",
+  "code": "Fq",
+  "batch": 1,
+  "mapped_high": 7.7,
+  "judges": [
+   7.61,
+   7.8,
+   7.67
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFP",
+   "upright": "FFF"
+  },
+  "base_high": null
+ },
+ {
+  "species": "water_tidecoil",
+  "code": "Da",
+  "batch": 2,
+  "mapped_high": 7.43,
+  "judges": [
+   7.51,
+   7.27,
+   7.51
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFF",
+   "upright": "FFF"
+  },
+  "base_high": 7.88
+ },
+ {
+  "species": "terrapup",
+  "code": "Of",
+  "batch": 2,
+  "mapped_high": 7.35,
+  "judges": [
+   7.51,
+   7.39,
+   7.15
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFF",
+   "upright": "FFF"
+  },
+  "base_high": 7.61
+ },
+ {
+  "species": "aquaryn",
+  "code": "Hd",
+  "batch": 1,
+  "mapped_high": 7.34,
+  "judges": [
+   7.04,
+   7.49,
+   7.49
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFF",
+   "upright": "FFP"
+  },
+  "base_high": null
+ },
+ {
+  "species": "water_aquaryn",
+  "code": "Rk",
+  "batch": 2,
+  "mapped_high": 7.31,
+  "judges": [
+   7.39,
+   7.15,
+   7.39
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFF",
+   "upright": "FFF"
+  },
+  "base_high": 7.33
+ },
+ {
+  "species": "water_sirenseal",
+  "code": "Df",
+  "batch": 2,
+  "mapped_high": 7.27,
+  "judges": [
+   7.27,
+   7.15,
+   7.39
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFF",
+   "upright": "FFF"
+  },
+  "base_high": 7.24
+ },
+ {
+  "species": "water_riverdrake",
+  "code": "Cy",
+  "batch": 1,
+  "mapped_high": 7.23,
+  "judges": [
+   6.86,
+   7.49,
+   7.36
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFP",
+   "upright": "FFP"
+  },
+  "base_high": 7.32
+ },
+ {
+  "species": "riverdrake",
+  "code": "Vv",
+  "batch": 1,
+  "mapped_high": 7.23,
+  "judges": [
+   6.86,
+   7.49,
+   7.36
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFP",
+   "upright": "FFP"
+  },
+  "base_high": 7.2
+ },
+ {
+  "species": "bramblebun",
+  "code": "Gp",
+  "batch": 1,
+  "mapped_high": 7.19,
+  "judges": [
+   6.6,
+   7.49,
+   7.49
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "PPP",
+   "upright": "FFF"
+  },
+  "base_high": 7.37
+ },
+ {
+  "species": "burrowback",
+  "code": "Hc",
+  "batch": 2,
+  "mapped_high": 7.17,
+  "judges": [
+   7.27,
+   7.21,
+   7.03
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FPF",
+   "upright": "FFF"
+  },
+  "base_high": 7.3
+ },
+ {
+  "species": "cindercub",
+  "code": "Jn",
+  "batch": 1,
+  "mapped_high": 7.13,
+  "judges": [
+   6.86,
+   7.17,
+   7.36
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "PPP",
+   "upright": "FFF"
+  },
+  "base_high": 7.18
+ },
+ {
+  "species": "trailpup",
+  "code": "Vw",
+  "batch": 1,
+  "mapped_high": 7.0,
+  "judges": [
+   6.98,
+   7.17,
+   6.86
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "PPP",
+   "upright": "FFF"
+  },
+  "base_high": 7.34
+ },
+ {
+  "species": "brooktail",
+  "code": "Od",
+  "batch": 2,
+  "mapped_high": 6.84,
+  "judges": [
+   6.56,
+   7.03,
+   6.92
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFF",
+   "upright": "PFP"
+  },
+  "base_high": 7.13
+ },
+ {
+  "species": "sirenseal",
+  "code": "Xb",
+  "batch": 1,
+  "mapped_high": 6.81,
+  "judges": [
+   6.48,
+   6.86,
+   7.11
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "PPP",
+   "upright": "PPF"
+  },
+  "base_high": 7.2
+ },
+ {
+  "species": "ripplet",
+  "code": "Iu",
+  "batch": 1,
+  "mapped_high": 6.79,
+  "judges": [
+   6.22,
+   7.17,
+   6.98
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFP",
+   "upright": "FFF"
+  },
+  "base_high": 7.49
+ },
+ {
+  "species": "duskhush",
+  "code": "Lz",
+  "batch": 1,
+  "mapped_high": 6.77,
+  "judges": [
+   6.48,
+   6.86,
+   6.98
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "PPP",
+   "upright": "FFF"
+  },
+  "base_high": 7.07
+ },
+ {
+  "species": "water_riptusk",
+  "code": "Dw",
+  "batch": 2,
+  "mapped_high": 6.72,
+  "judges": [
+   6.8,
+   6.68,
+   6.68
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFF",
+   "upright": "PPP"
+  },
+  "base_high": 7.1
+ },
+ {
+  "species": "water_cannonback",
+  "code": "Mq",
+  "batch": 2,
+  "mapped_high": 6.72,
+  "judges": [
+   6.68,
+   6.56,
+   6.92
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "PPP",
+   "upright": "PPP"
+  },
+  "base_high": 7.42
+ },
+ {
+  "species": "ashtusk",
+  "code": "Aw",
+  "batch": 2,
+  "mapped_high": 6.68,
+  "judges": [
+   6.68,
+   6.68,
+   6.68
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "FFF",
+   "upright": "PPF"
+  },
+  "base_high": 6.36
+ },
+ {
+  "species": "torrentoad",
+  "code": "Pr",
+  "batch": 1,
+  "mapped_high": 6.5,
+  "judges": [
+   6.22,
+   6.22,
+   7.04
+  ],
+  "defects": {
+   "float": "FFF",
+   "hit": "PPP",
+   "upright": "PPP"
+  },
+  "base_high": 7.32
+ }
+]

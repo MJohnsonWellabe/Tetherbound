@@ -1,0 +1,71 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 6935,
+    "spine": 11175,
+    "neck": 3359,
+    "head": 4212,
+    "front_upper_l": 1618,
+    "front_lower_l": 1190,
+    "front_upper_r": 1547,
+    "front_lower_r": 686,
+    "tail_1": 184,
+    "tail_2": 471,
+    "rear_upper_l": 370,
+    "rear_lower_l": 886,
+    "rear_upper_r": 38,
+    "rear_lower_r": 163
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13996,
+  "height_m": 2.95,
+  "length_m": 3.4623,
+  "width_m": 2.7568,
+  "triangles": 28000,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2621,
+      -0.2327,
+      0.1638
+    ],
+    "front_r": [
+      0.2323,
+      -0.2628,
+      0.1519
+    ],
+    "rear_l": [
+      -0.2054,
+      0.1108,
+      0.1189
+    ],
+    "rear_r": [
+      0.0467,
+      0.2819,
+      0.2369
+    ]
+  },
+  "back_top_normalised": 1.0,
+  "raised_head": false,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+      "disc": false,
+      "base_over_leg_band_area": 0.55
+    }
+  },
+  "params": {
+    "species": "cragclaw",
+    "height": 2.95
+  }
+}

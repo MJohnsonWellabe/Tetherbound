@@ -89,6 +89,14 @@ const TAIL := """
 ## the existing Veilfall regional material. No geometry, physics or state.
 static func install(terrain: Object, sink: Dictionary) -> void:
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	# World dressing P2-070 r3 (`dark_glass`, OFF until judged): every b1/b2
+	# judge read the sink floor as "a pale tiled checker void". Darker glass
+	# body and facets, and the r34 far fade on, so it reads as dark glass.
+	var dark: Dictionary = config.get("dark_glass", {}) as Dictionary
+	if bool(dark.get("enabled", false)):
+		for key: String in dark:
+			if key != "enabled" and not key.begins_with("_"):
+				config[key] = dark[key]
 	var material: Object = terrain.get("material")
 	var current: Shader = material.call("get_shader_override")
 	if not bool(material.call("is_shader_override_enabled")) or current == null:
@@ -108,6 +116,7 @@ static func install(terrain: Object, sink: Dictionary) -> void:
 	material.call("set_shader_param", "gs_centre", Vector2(float(sink.centre[0]), float(sink.centre[1])))
 	material.call("set_shader_param", "gs_inner_radius", float(sink.island_radius) - 12.0)
 	material.call("set_shader_param", "gs_outer_radius", float(sink.outer_radius) - 2.0)
+	config = with_dark_pool(config)
 	for key: String in ["glass_colour", "facet_colour", "seam_colour"]:
 		material.call("set_shader_param", "gs_" + key, Color(str(config[key])))
 	for key: String in ["edge_feather_m", "fracture_scale", "seam_width", "roughness", "metallic"]:
@@ -118,6 +127,23 @@ static func install(terrain: Object, sink: Dictionary) -> void:
 	for key: String in ["far_specular", "far_roughness"]:
 		if config.has(key):
 			material.call("set_shader_param", "gs_" + key, float(config[key]))
+
+
+## P2-070 (GPU WD2 1 Nov, 4.63: "the plane below is unchanged ... a real
+## basin: a sunken bowl with a glass floor or black pool"). `dark_pool_candidate`
+## (OFF by default) replaces the glass keys with its own: a near-black
+## obsidian body, paler fracture seams, and the r34 far fade switched on so
+## the floor stops mirroring the pale storm sky into one flat grey slab.
+static func with_dark_pool(config: Dictionary) -> Dictionary:
+	var cand: Variant = config.get("dark_pool_candidate", {})
+	if not cand is Dictionary or not bool((cand as Dictionary).get("enabled", false)):
+		return config
+	var merged := config.duplicate(true)
+	for key: String in (cand as Dictionary):
+		if key == "enabled" or key.begins_with("_"):
+			continue
+		merged[key] = (cand as Dictionary)[key]
+	return merged
 
 
 ## World dressing P2-070 (meshy_rim, OFF until GPU judged; coordinator Meshy

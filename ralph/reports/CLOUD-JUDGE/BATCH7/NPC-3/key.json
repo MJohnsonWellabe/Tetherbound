@@ -1,0 +1,65 @@
+{
+ "Dn": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Xr": {
+  "anchor": false,
+  "label": "Character look: lost_traveler",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__lost_traveler_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__lost_traveler_main.jpg"
+ },
+ "Hv": {
+  "anchor": false,
+  "label": "Character look: alpha_tracker",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__alpha_tracker_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__alpha_tracker_cand.jpg"
+ },
+ "Gz": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ou": {
+  "anchor": false,
+  "label": "Character look: courier",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__courier_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__courier_cand.jpg"
+ },
+ "Fr": {
+  "anchor": true,
+  "A": "f36_0_npc:C8A",
+  "B": "f36_0_npc:C8B"
+ },
+ "Tr": {
+  "anchor": false,
+  "label": "Character look: former_tether_member",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__former_tether_member_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__former_tether_member_cand.jpg"
+ },
+ "Ro": {
+  "anchor": false,
+  "label": "Character look: field_researcher",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__field_researcher_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__field_researcher_main.jpg"
+ },
+ "Yw": {
+  "anchor": false,
+  "label": "Character look: rival_trainer",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__rival_trainer_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__rival_trainer_cand.jpg"
+ },
+ "Kj": {
+  "anchor": false,
+  "label": "Character look: local_historian",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__local_historian_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__local_historian_main.jpg"
+ },
+ "Sa": {
+  "anchor": false,
+  "label": "Character look: farmer",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__farmer_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-3/img/Character_look__farmer_main.jpg"
+ }
+}

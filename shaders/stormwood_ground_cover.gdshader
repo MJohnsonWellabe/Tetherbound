@@ -224,6 +224,23 @@ varying float v_t;
 varying vec3 v_colour;
 varying float v_fade;
 varying float v_wood;
+// moss_variation_1101 (cause lane, owner 1 Nov; judges: "crushed near-black
+// uniform carpet"). All OFF at 0, which leaves every output unchanged. A
+// world-space field re-hues each leaf toward olive, sage or copper-brown moss
+// while keeping its own value structure, lifts the carpet out of near-black,
+// opens sparse clearings to the ground beneath, and scatters rare wet copper
+// and stormglass flecks that catch the storm light.
+uniform float sw_moss_strength = 0.0;
+uniform float sw_moss_scale = 0.045;
+uniform vec3 sw_moss_olive : source_color = vec3(0.42, 0.44, 0.22);
+uniform vec3 sw_moss_sage : source_color = vec3(0.34, 0.42, 0.37);
+uniform vec3 sw_moss_copper : source_color = vec3(0.42, 0.32, 0.2);
+uniform float sw_moss_lift = 1.0;
+uniform float sw_clearing = 0.0;
+uniform float sw_glint = 0.0;
+uniform vec3 sw_glint_copper : source_color = vec3(0.78, 0.52, 0.3);
+uniform vec3 sw_glint_glass : source_color = vec3(0.55, 0.7, 0.95);
+uniform float sw_glass_glow = 0.0;
 
 // COPIED VERBATIM from Terrain3D 1.0.2's generated shader, same as the other
 // two tiers and for the same reason -- see `grass_field.gdshader`'s note.
@@ -645,7 +662,37 @@ void fragment() {
 	if (bool(ground_control >> 2u & 0x1u) || ((allowed_base_mask >> ground_id) & 1) == 0) { discard; }
 	if (wet_surface > 0.95 && value_noise(v_ground_xz * 9.0) > 1.0 - smoothstep(0.64, 1.0, v_wet_edge)) { discard; }
 	vec3 soil = texture(wet_earth, v_ground_xz * 0.48).rgb;
-	ALBEDO = v_colour * shade * mix(vec3(1.0), soil * 1.7, wet_surface);
-	ROUGHNESS = mix(0.74, wet_roughness, wet_surface);
-	SPECULAR = mix(0.16, wet_specular, wet_surface);
+	vec3 leaf = v_colour;
+	float glint = 0.0;
+	float glass = 0.0;
+	if (!anchored_root && v_wood < 0.5) {
+		if (sw_clearing > 0.0) {
+			float open_ground = value_noise(v_ground_xz * sw_moss_scale * 0.6 + vec2(91.0, 13.0));
+			float ragged = (hash12(floor(v_ground_xz * 2.0)) - 0.5) * 0.06;
+			if (open_ground + ragged < sw_clearing) { discard; }
+		}
+		if (sw_moss_strength > 0.0) {
+			float a = value_noise(v_ground_xz * sw_moss_scale);
+			float b = value_noise(v_ground_xz * sw_moss_scale * 2.3 + vec2(17.3, 5.1));
+			float c = value_noise(v_ground_xz * sw_moss_scale * 0.37 + vec2(3.7, 41.0));
+			vec3 tone = mix(sw_moss_sage, sw_moss_olive, smoothstep(0.35, 0.7, a));
+			tone = mix(tone, sw_moss_copper, smoothstep(0.6, 0.85, b) * 0.85);
+			float lum = dot(leaf, vec3(0.299, 0.587, 0.114));
+			vec3 hued = tone * (lum / max(dot(tone, vec3(0.299, 0.587, 0.114)), 0.001));
+			leaf = mix(leaf, hued, sw_moss_strength * (0.45 + 0.55 * c)) * sw_moss_lift;
+		}
+		if (sw_glint > 0.0) {
+			vec2 fleck_cell = floor(v_ground_xz * 1.5);
+			float pick = hash12(fleck_cell + vec2(7.1, 3.3));
+			glint = step(1.0 - sw_glint, pick);
+			glass = glint * step(0.5, hash12(fleck_cell + vec2(1.9, 8.7)));
+			leaf = mix(leaf, mix(sw_glint_copper, sw_glint_glass, glass) * 0.6, glint * 0.65);
+		}
+	}
+	ALBEDO = leaf * shade * mix(vec3(1.0), soil * 1.7, wet_surface);
+	ROUGHNESS = mix(mix(0.74, wet_roughness, wet_surface), 0.16, glint);
+	SPECULAR = mix(mix(0.16, wet_specular, wet_surface), 0.75, glint);
+	if (sw_glass_glow > 0.0) {
+		EMISSION = sw_glint_glass * glass * sw_glass_glow;
+	}
 }

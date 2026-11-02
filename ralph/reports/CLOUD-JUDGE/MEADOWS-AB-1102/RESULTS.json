@@ -1,0 +1,136 @@
+{
+ "RIVER": {
+  "flag": "water.json river surface_candidate.enabled, P2-006 r2 (tree 49ca00126)",
+  "main": 4.94,
+  "cand": 5.29,
+  "delta": 0.35,
+  "sets": {
+   "Meadows old mill crossing #1": [
+    4.68,
+    5.52
+   ],
+   "Meadows old mill crossing #2": [
+    5.19,
+    5.06
+   ]
+  },
+  "stands": {
+   "Meadows old mill crossing #1": [
+    "meadows-locations/meadows__band3_the_river_lock__06__old_mill_crossing__day__approach.jpg",
+    "meadows-locations/meadows__band3_the_river_lock__06__old_mill_crossing__day__close.jpg",
+    "meadows-locations/meadows__band3_the_river_lock__06__old_mill_crossing__night__approach.jpg",
+    "meadows-locations/meadows__band3_the_river_lock__06__old_mill_crossing__night__close.jpg"
+   ],
+   "Meadows old mill crossing #2": [
+    "meadows-locations/meadows__landmark__old_mill_crossing__day__approach.jpg",
+    "meadows-locations/meadows__landmark__old_mill_crossing__day__close.jpg",
+    "meadows-locations/meadows__landmark__old_mill_crossing__night__approach.jpg",
+    "meadows-locations/meadows__landmark__old_mill_crossing__night__close.jpg"
+   ]
+  }
+ },
+ "LIGHT": {
+  "flag": "meadows_look.json light_candidate.enabled (tree 439d2c4c3)",
+  "main": 6.5,
+  "cand": 6.71,
+  "delta": 0.21,
+  "sets": {
+   "Meadows grandpas village": [
+    6.58,
+    7.08
+   ],
+   "Meadows the burrow warrens": [
+    6.88,
+    6.62
+   ],
+   "Meadows the ironwood grove": [
+    5.85,
+    6.38
+   ],
+   "Meadows the ridgeline watch": [
+    6.55,
+    6.08
+   ],
+   "Meadows stronghold approach": [
+    6.12,
+    6.75
+   ],
+   "Meadows grandpas village route walk #1": [
+    6.78,
+    7.02
+   ],
+   "Meadows grandpas village route walk #2": [
+    6.75,
+    7.02
+   ]
+  },
+  "stands": {
+   "Meadows grandpas village": [
+    "meadows-locations/meadows__band1_lower_meadows__01__grandpas_village__day__approach.jpg",
+    "meadows-locations/meadows__band1_lower_meadows__01__grandpas_village__night__approach.jpg"
+   ],
+   "Meadows the burrow warrens": [
+    "meadows-locations/meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach.jpg",
+    "meadows-locations/meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach.jpg"
+   ],
+   "Meadows the ironwood grove": [
+    "meadows-locations/meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day__approach.jpg",
+    "meadows-locations/meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__night__approach.jpg"
+   ],
+   "Meadows the ridgeline watch": [
+    "meadows-locations/meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day__approach.jpg",
+    "meadows-locations/meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__night__approach.jpg"
+   ],
+   "Meadows stronghold approach": [
+    "meadows-locations/meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg",
+    "meadows-locations/meadows__band5_stronghold_approach__09__stronghold_approach__night__approach.jpg"
+   ],
+   "Meadows grandpas village route walk #1": [
+    "meadows-routes/meadows__band1_lower_meadows__01__grandpas_village__route_day.jpg",
+    "meadows-routes/meadows__band1_lower_meadows__01__grandpas_village__vista_dusk.jpg",
+    "meadows-routes/meadows__band1_lower_meadows__01__grandpas_village__walk_01_day.jpg"
+   ],
+   "Meadows grandpas village route walk #2": [
+    "meadows-routes/meadows__band1_lower_meadows__01__grandpas_village__walk_02_day.jpg",
+    "meadows-routes/meadows__band1_lower_meadows__01__grandpas_village__walk_03_day.jpg"
+   ]
+  }
+ },
+ "WARRENS": {
+  "flag": "burrow_warrens.json hill_shell.r2.enabled, P2-012 r2 (tree d92497a04)",
+  "main": 5.32,
+  "cand": 5.32,
+  "delta": 0.0,
+  "sets": {
+   "Meadows the burrow warrens": [
+    6.1,
+    6.0
+   ],
+   "Meadows the burrow warrens route walk #1": [
+    5.91,
+    6.0
+   ],
+   "Meadows the burrow warrens route walk #2": [
+    3.96,
+    3.96
+   ]
+  },
+  "stands": {
+   "Meadows the burrow warrens": [
+    "meadows-locations/meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach.jpg",
+    "meadows-locations/meadows__band2_stone_and_root__04__the_burrow_warrens__day__close.jpg",
+    "meadows-locations/meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach.jpg",
+    "meadows-locations/meadows__band2_stone_and_root__04__the_burrow_warrens__night__close.jpg"
+   ],
+   "Meadows the burrow warrens route walk #1": [
+    "meadows-routes/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+    "meadows-routes/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+    "meadows-routes/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg"
+   ],
+   "Meadows the burrow warrens route walk #2": [
+    "meadows-routes/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+    "meadows-routes/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg"
+   ]
+  }
+ }
+}

@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 8936,
+    "spine": 8758,
+    "neck": 1211,
+    "head": 1213,
+    "front_upper_l": 1420,
+    "front_lower_l": 62,
+    "front_upper_r": 1479,
+    "front_lower_r": 66,
+    "tail_1": 612,
+    "tail_2": 792,
+    "rear_upper_l": 2342,
+    "rear_lower_l": 1895,
+    "rear_upper_r": 2311,
+    "rear_lower_r": 1910
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13977,
+  "height_m": 4.25,
+  "length_m": 4.2517,
+  "width_m": 4.0577,
+  "triangles": 27999,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2748,
+      -0.3834,
+      0.116
+    ],
+    "front_r": [
+      0.2742,
+      -0.3842,
+      0.1191
+    ],
+    "rear_l": [
+      -0.2688,
+      0.1905,
+      0.1225
+    ],
+    "rear_r": [
+      0.2709,
+      0.1891,
+      0.1205
+    ]
+  },
+  "back_top_normalised": 1.0,
+  "raised_head": false,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "voltarach",
+    "height": 4.25,
+    "patch": false
+  }
+}

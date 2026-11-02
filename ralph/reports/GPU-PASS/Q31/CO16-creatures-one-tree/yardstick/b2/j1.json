@@ -1,0 +1,232 @@
+{
+ "sets": {
+  "Xe": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The violet storm-wolf coat on side A comes close to the Tanglevolt bar, but on side B the coat material breaks into a white body with black blotches in faint mid and faint end, and on a neutral stage there is no Valheim-class light to carry it."
+  },
+  "Av": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spiny burrower has a readable naturalistic quill coat (lifted to mauve on B), but its faint end is only a crouch and the flat studio light never gets near Palworld creature finish."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cyan-violet finned serpent is attractive and on-palette for Tidewake, but its rearing hit react and low body height next to the trainer keep it short of the shipping bar."
+  },
+  "Yc": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal crested newt has a clear silhouette and believable scale detail, but it barely clears the trainer's head (not at all on B) and the tail sticks up stiffly in A's faint end, so it reads below Palworld's finish."
+  },
+  "Ef": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The coral crab with its mossy boulder shell has charm, but A's faint balloons and tips up with its legs off the floor while B's faint is just its stance again, and neither reads without a label."
+  },
+  "Wi": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cobalt-and-gold waterbird has a strong graphic pattern and a grounded faint, but the glossy, decal-like plumage and its trainer-height scale sink it."
+  },
+  "Wg": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grandfatherly villager in moss-green vest and scarf has warm, expressive eyes and an earthy palette that suits the Meadows, but the soft animated-film face is more cartoon than the naturalistic creature bar, and it is lit like a studio render."
+  },
+  "Tv": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spined navy raptor has a good predatory silhouette and the amber eyes still read, but its body sinks into the dark stage (worse on B) and its hit react is a full leap into the air."
+  },
+  "Un": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's violet-dusk plumage brings the owl close to the Duskhush board, but it stands only trainer height and A's near-black coat swallows the face."
+  },
+  "Kt": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-and-orange sail is a striking idea, but the mirror-chrome body reads as a toy or robot, and the faint keeps the sail upright, so nothing about it looks like a shipping naturalistic creature."
+  },
+  "Ox": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react lifts the whole body off the floor instead of a grounded flinch": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the hit react lifts the whole body off the floor instead of a grounded flinch": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same appealing finned serpent, but in B's hit react the whole body launches into mid-air with its shadow far below, which instantly breaks the grounded read."
+  },
+  "Jf": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing finally say 'built wall', but the infill is still a flat untextured beige card and the Meadows around it is too sparse and flat-shaded to match Palworld's base-building shots."
+  },
+  "Bb": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's coiled black-and-gold serpent is large, grounded and menacing, while in A's faint mid and faint end the snake rises high above its shadow and its colour washes to a pale cream; even B lacks the world light to match Palworld."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Do a creature material pass toward matte natural hide and fur: remove the chrome/plastic response (Kt, Wi), lift near-black coats into readable mid values with a rim light so faces separate from the stage (Tv, Un, Av), and fix the faint-state material swaps (Xe B white-and-black blotches, Bb A pale cream).",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground every hurt and faint pose: lock the root to the floor so hit reacts are flinches, not leaps (Ox B, Tv, Jp), faints collapse onto the stage instead of floating or swelling (Bb A, Ef A), and faint ends visibly lie down (Ef B, Kt, Av).",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the homestead wall real authored infill (textured plank or wattle-and-daub with depth and wear) on B's frame, cap and footing, and scale up the creatures that stand at or below trainer height (Yc, Wi, Un).",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,62 @@
+[
+    {
+        "label":  "TWLOOK drowned_garden High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-drowned_garden-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-drowned_garden-ship-High.png",
+        "brief":  "A named Tidewake island location at day, from two camera stands, each with an approach view and a close view. Judge the location as the game\u0027s real look - whether it reads as a named place with a clear focal building or landmark, composition and clutter, materials, lighting and palette.",
+        "defects":  [
+                        "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+                        "Named location reads as a generic slope with no clear focal building or landmark"
+                    ]
+    },
+    {
+        "label":  "TWLOOK tidal_cradle High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-tidal_cradle-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-tidal_cradle-ship-High.png",
+        "brief":  "A named Tidewake island location at day, from two camera stands, each with an approach view and a close view. Judge the location as the game\u0027s real look - whether it reads as a named place with a clear focal building or landmark, composition and clutter, materials, lighting and palette.",
+        "defects":  [
+                        "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+                        "Named location reads as a generic slope with no clear focal building or landmark"
+                    ]
+    },
+    {
+        "label":  "TWLOOK first_shore High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-first_shore-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-first_shore-ship-High.png",
+        "brief":  "A named Tidewake island location at day, from two camera stands, each with an approach view and a close view. Judge the location as the game\u0027s real look - whether it reads as a named place with a clear focal building or landmark, composition and clutter, materials, lighting and palette.",
+        "defects":  [
+                        "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+                        "Named location reads as a generic slope with no clear focal building or landmark"
+                    ]
+    },
+    {
+        "label":  "TWLOOK gull_rest High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-gull_rest-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-gull_rest-ship-High.png",
+        "brief":  "A named Tidewake island location at day, from two camera stands, each with an approach view and a close view. Judge the location as the game\u0027s real look - whether it reads as a named place with a clear focal building or landmark, composition and clutter, materials, lighting and palette.",
+        "defects":  [
+                        "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+                        "Named location reads as a generic slope with no clear focal building or landmark"
+                    ]
+    },
+    {
+        "label":  "TWLOOK salt_crown High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-salt_crown-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-salt_crown-ship-High.png",
+        "brief":  "A named Tidewake island location at day, from two camera stands, each with an approach view and a close view. Judge the location as the game\u0027s real look - whether it reads as a named place with a clear focal building or landmark, composition and clutter, materials, lighting and palette.",
+        "defects":  [
+                        "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+                        "Named location reads as a generic slope with no clear focal building or landmark"
+                    ]
+    },
+    {
+        "label":  "TWLOOK lantern_cove High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-lantern_cove-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-lantern_cove-ship-High.png",
+        "brief":  "A named Tidewake island location at day, from two camera stands, each with an approach view and a close view. Judge the location as the game\u0027s real look - whether it reads as a named place with a clear focal building or landmark, composition and clutter, materials, lighting and palette.",
+        "defects":  [
+                        "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+                        "Named location reads as a generic slope with no clear focal building or landmark"
+                    ]
+    }
+]

@@ -1,0 +1,53 @@
+Dn: none
+Xr: none
+Hv: none
+Gz: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ou: none
+Fr: none
+Tr: none
+Ro: none
+Yw: none
+Kj: none
+Sa: none
+
+# judge 1 defect calls and Bar B
+Dn: A {} | B {} | bar_b no: B's grounded, scale-patterned coil approaches the naturalistic bar, but the floating faint in A and B's low-value dark body without rim light keep it off Palworld finish.
+Xr: A {} | B {} | bar_b no: A readable costume is sunk by a soft bake, tiny eyes and a dim grade.
+Hv: A {} | B {} | bar_b no: A strong hat-and-gear silhouette is undercut by a muddy, low-value surface and an unreadable face.
+Gz: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | bar_b no: B's larger wrapped text helps, but the hints lack teal controller-glyph emphasis and the panel feels sparse beside Palworld's dense HUD.
+Ou: A {} | B {} | bar_b no: A clear courier identity, but a blurry bake and dim stage grade.
+Fr: A {} | B {} | bar_b no: A good hood palette, but the close-ups expose blank eyes and a flat, mask-like face.
+Tr: A {} | B {} | bar_b no: The blotchy grey face and near-black outfit read as a stained stand-in.
+Ro: A {} | B {} | bar_b no: The closest to finish: an appealing face and clear props, held back by a soft bake and grade.
+Yw: A {} | B {} | bar_b no: A good hair silhouette and a rival-orange palette, but a smudged face texture.
+Kj: A {} | B {} | bar_b no: An instantly readable elder, but B's darker grade drowns the face, and both bakes are soft.
+Sa: A {} | B {} | bar_b no: An iconic farmer silhouette, but the pitchfork clips the hat and B's dim grade flattens it.
+top_changes: [{"change": "Re-bake or refine the character textures at higher resolution with clean faces (defined eyes with catchlights, no blotches), keeping each identity; the Tr, Fr and Yw faces first", "kind": "new_art"}, {"change": "Brighten the character stage and in-game grade and add a rim or key light so faces and dark costumes separate from the background (B is consistently darker than A)", "kind": "scene"}, {"change": "Keep the Dn faint grounded (B), add a hit-react pose and rim light so the dark serpent separates from the ground; give the craft hints teal controller-button glyphs", "kind": "scene"}]
+
+# judge 2 defect calls and Bar B
+Dn: A {} | B {} | bar_b no: B's grounded naturalistic python approaches the owner bar, but A's floating faint poses and toy-gloss banding sink it, and neither shows a readable elemental trait or face at size.
+Xr: A {} | B {} | bar_b no: A coherent cozy traveller, but blurry painted texture and a dim, under-lit face keep it below Palworld's crisp character finish.
+Hv: A {} | B {} | bar_b no: A strong tracker silhouette with hat and quiver, sunk by muddy smeared gloves/boots texture and a shadowed face.
+Gz: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | bar_b no: B's larger gold ingredient text and blue-grey panel fit the direction, but small grey hint glyphs and sparse three-row recipe cards fall short of a polished controller-first UI.
+Ou: A {} | B {} | bar_b no: A likeable courier with a clear cap silhouette, but an all-brown single-value outfit and soft texture read below shipping finish.
+Fr: A {} | B {} | bar_b no: The hood colour split reads well, but the face close-ups show a flat, blurry painted face and a blocky beard that would not hold up beside Palworld.
+Tr: A {} | B {} | bar_b no: The hooded ex-Tether identity reads, but the dark near-oxblood scarf, grey dirty face and low value range bury the character.
+Ro: A {} | B {} | bar_b no: Glasses, satchel and coat give a clear researcher identity close to the bar, held back by soft texture and B's dimmer grade.
+Yw: A {} | B {} | bar_b no: A clear rival silhouette with spiky hair and a warm shirt, but a dim face and a shirt edging toward reserved red weaken it.
+Kj: A {} | B {} | bar_b no: The strongest identity in the batch (beard, glasses, cane, robe), only short of finish on texture crispness and face light.
+Sa: A {} | B {} | bar_b no: The pitchfork and straw hat give an instant read and A's face is appealing, but B's darker grade and soft texture drop it below shipping finish.
+top_changes: [{"change": "Raise the character stage key/rim and face fill (and drop B's darker grade) so eyes and faces read at 30% and costume values separate from the grey stage.", "kind": "scene"}, {"change": "Fix Dn faint poses to stay grounded (coils collapse onto the floor with the contact shadow) and give the hit react a distinct recoil frame; push the python toward the B naturalistic scale texture with a visible face/eye accent.", "kind": "scene"}, {"change": "Re-texture the NPC cast at higher resolution with crisper painted detail on faces, gloves and boots so they match the owner bar's finish.", "kind": "new_art"}]
+
+# judge 3 defect calls and Bar B
+Dn: A {} | B {} | bar_b no: B's naturalistic python has the right finish but sinks into the stage without rim light, and A's floating faints and toy-like yellow bands are far from Palworld's grounded creatures.
+Xr: A {} | B {} | bar_b no: A clear traveler identity, carried down by blotchy baked texture and a muddy single-value outfit.
+Hv: A {} | B {} | bar_b no: A strong tracker silhouette, but orange speckle noise on gloves and gear reads as generator texture, not authored material.
+Gz: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | bar_b yes: B's large wrapped text and gold counts on a translucent blue-grey panel reach shipping-UI legibility, though its keyboard-style glyphs and sparse list hold it back.
+Ou: A {} | B {} | bar_b no: An appealing courier read, sunk by mottled trousers and a flat key that loses the face.
+Fr: A {} | B {} | bar_b no: The palette fits the world, but in close-up the pasty flat face with tiny dark eyes falls short of Palworld's character finish.
+Tr: A {} | B {} | bar_b no: A grey blotchy face that reads as dirty or corpse-like sinks an otherwise clear hooded silhouette.
+Ro: A {} | B {} | bar_b no: Glasses, hair and satchel give a strong identity, but the mottled legs and boots and the dim key keep it below shipping finish.
+Yw: A {} | B {} | bar_b no: The rival's hair and stance read well, but dark eye smudges and a near-red shirt texture undercut his appeal.
+Kj: A {} | B {} | bar_b no: The best face in the batch, carried, but the robe noise and the darker key on B keep it short.
+Sa: A {} | B {} | bar_b no: A clear, appealing farmer silhouette, but the dark tines and baked texture noise stop it short of Palworld finish.
+top_changes: [{"change": "Brighten the character stage key and add a cool rim light so faces and dark outfits separate from the grey background (affects every Xr/Hv/Ou/Tr/Ro/Yw/Kj/Sa side, especially the darker ones)", "kind": "scene"}, {"change": "Denoise or re-bake character albedo textures to remove mottled speckle and face blotches (worst on Tr, Hv and Fr), with cleaner, separated cloth/skin/leather materials", "kind": "new_art"}, {"change": "Ground the serpent's faint poses (no floating S-curve) and give the naturalistic python a rim light and value lift against the ground; for the craft panel, use controller face-button glyphs and fit more recipes in the list", "kind": "scene"}]

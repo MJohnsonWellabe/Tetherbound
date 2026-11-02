@@ -1,0 +1,345 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 522476062955,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 522492840174,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T23:07:42",
+	"capture_started_utc": "2026-10-31T22:59:38",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "trader_kelm",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 464237,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76739358901978,
+			"camera_position": [
+				-352.878997802734,
+				832.65380859375,
+				3979.0
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113882867379,
+					0.0,
+					-1.0
+				],
+				"basis_y": [
+					-0.173647850751877,
+					0.984805822372437,
+					0.00000000759038876196882
+				],
+				"basis_z": [
+					0.984805822372437,
+					0.173647850751877,
+					-0.0000000430472297807682
+				],
+				"origin": [
+					-358.0,
+					831.750915527344,
+					3979.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.0000000437113882867379,
+					0.000000000000000874683279026233,
+					-1.0
+				],
+				"basis_y": [
+					-0.173648685216904,
+					0.984807729721069,
+					0.00000000759042606546245
+				],
+				"basis_z": [
+					0.984807670116425,
+					0.173648670315742,
+					-0.0000000430473114931829
+				],
+				"origin": [
+					-352.878997802734,
+					832.65380859375,
+					3979.0
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Kelm",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/gpu-arms/DLG1F-cand-High-c023/cloudreach__inventory__character__trader_kelm.jpg",
+			"frame_id": "cloudreach__inventory__character__trader_kelm",
+			"identity": "cloudreach__inventory__character__trader_kelm",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.209869444444,
+				"hour": 8.00839477777778,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-358.0,
+				830.000854492188,
+				3979.0
+			],
+			"position_xz": [
+				-360.0,
+				3980.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 830.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-358.0,
+				3979.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-360.0,
+				3980.0
+			],
+			"terrain_ground_y": 830.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 270.0,
+			"view_heading_xz": [
+				-1.0,
+				-0.000000000000000183690953073357
+			],
+			"water_surface_y": null
+		},
+		{
+			"authored_id": "trader_kelm",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 444177,
+			"camera_fov_degrees": 70.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76736545562744,
+			"camera_position": [
+				-352.878997802734,
+				832.653747558594,
+				3979.0
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113882867379,
+					0.0,
+					-1.0
+				],
+				"basis_y": [
+					-0.173647850751877,
+					0.984805822372437,
+					0.00000000759038876196882
+				],
+				"basis_z": [
+					0.984805822372437,
+					0.173647850751877,
+					-0.0000000430472262280546
+				],
+				"origin": [
+					-358.0,
+					831.750854492188,
+					3979.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.0000000437113882867379,
+					0.000000000000000874683279026233,
+					-1.0
+				],
+				"basis_y": [
+					-0.173648685216904,
+					0.984807729721069,
+					0.00000000759042606546245
+				],
+				"basis_z": [
+					0.984807729721069,
+					0.173648685216904,
+					-0.0000000430473114931829
+				],
+				"origin": [
+					-352.878997802734,
+					832.653747558594,
+					3979.0
+				]
+			},
+			"conversation_camera_active": false,
+			"conversation_camera_blend": 0.0,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {},
+			"debug_travel": true,
+			"destination_display_name": "Kelm",
+			"destination_index": 1,
+			"dialogue_id": "cloudreach_kelm_cliffhold",
+			"dialogue_portrait": "res://assets/ui/portraits/corin.png",
+			"dialogue_speaker": "Kelm",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/gpu-arms/DLG1F-cand-High-c023/cloudreach__inventory__character__trader_kelm__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__trader_kelm__dialogue",
+			"identity": "cloudreach__inventory__character__trader_kelm__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.209869444444,
+				"hour": 8.00839477777778,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-358.0,
+				830.000854492188,
+				3979.0
+			],
+			"position_xz": [
+				-360.0,
+				3980.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 830.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-358.0,
+				3979.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-360.0,
+				3980.0
+			],
+			"terrain_ground_y": 830.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 270.0,
+			"view_heading_xz": [
+				-1.0,
+				-0.000000000000000183690953073357
+			],
+			"water_surface_y": null
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"cloudreach__inventory__character__trader_kelm"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 522492840174,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"cloudreach__inventory__character__trader_kelm"
+	]
+}

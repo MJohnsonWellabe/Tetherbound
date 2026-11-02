@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 4965,
+    "spine": 5869,
+    "neck": 3568,
+    "head": 6429,
+    "front_upper_l": 613,
+    "front_lower_l": 787,
+    "front_upper_r": 633,
+    "front_lower_r": 775,
+    "tail_1": 161,
+    "tail_2": 607,
+    "rear_upper_l": 448,
+    "rear_lower_l": 742,
+    "rear_upper_r": 431,
+    "rear_lower_r": 741
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14009,
+  "height_m": 4.0,
+  "length_m": 6.1005,
+  "width_m": 2.5054,
+  "triangles": 27999,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.1475,
+      -0.3679,
+      0.0827
+    ],
+    "front_r": [
+      0.1484,
+      -0.3679,
+      0.0823
+    ],
+    "rear_l": [
+      -0.2018,
+      0.0705,
+      0.093
+    ],
+    "rear_r": [
+      0.2067,
+      0.058,
+      0.0856
+    ]
+  },
+  "back_top_normalised": 0.6209,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "riverdrake",
+    "height": 4.0,
+    "patch": false
+  }
+}

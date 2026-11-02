@@ -1,0 +1,77 @@
+{
+ "Fo": {
+  "anchor": false,
+  "label": "P2-006",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_006_0_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_006_0_main.jpg"
+ },
+ "Lm": {
+  "anchor": false,
+  "label": "F38 light (all exterior) #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__0_cand.jpg"
+ },
+ "Vi": {
+  "anchor": false,
+  "label": "F38 light (all exterior) #3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__2_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__2_cand.jpg"
+ },
+ "Am": {
+  "anchor": false,
+  "label": "P2-003 #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_003_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_003_0_cand.jpg"
+ },
+ "Et": {
+  "anchor": false,
+  "label": "P2-012 #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_012_0_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_012_0_main.jpg"
+ },
+ "Lz": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Ft": {
+  "anchor": false,
+  "label": "P2-050",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_050_0_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_050_0_main.jpg"
+ },
+ "Dy": {
+  "anchor": false,
+  "label": "P2-095",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_095_0_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_095_0_main.jpg"
+ },
+ "Oh": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ki": {
+  "anchor": false,
+  "label": "F38 light (all exterior) #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__1_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/F38_light__all_exterior__1_main.jpg"
+ },
+ "Jj": {
+  "anchor": true,
+  "A": "f36_0_npc:C4A",
+  "B": "f36_0_npc:C4B"
+ },
+ "Qx": {
+  "anchor": false,
+  "label": "P2-003 #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_003_1_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_003_1_main.jpg"
+ },
+ "Qp": {
+  "anchor": false,
+  "label": "P2-012 #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_012_1_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/MEADOWS/img/P2_012_1_cand.jpg"
+ }
+}

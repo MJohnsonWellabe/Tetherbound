@@ -1,0 +1,254 @@
+[
+ {
+  "item": "F36 (0) #1 Terrapup",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_terrapup",
+  "camera_set": "F36",
+  "stands": [
+   "terrapup"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 (0) #5 Bramblebun",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_bramblebun",
+  "camera_set": "F36",
+  "stands": [
+   "bramblebun"
+  ],
+  "group": 2
+ },
+ {
+  "item": "F36 (1) Trailpup",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_trailpup",
+  "camera_set": "F36",
+  "stands": [
+   "trailpup"
+  ],
+  "group": 3
+ },
+ {
+  "item": "F36 (1) Brooktail",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_brooktail",
+  "camera_set": "F36",
+  "stands": [
+   "brooktail"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 (1) Pipwing",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_pipwing",
+  "camera_set": "F36",
+  "stands": [
+   "pipwing"
+  ],
+  "group": 5
+ },
+ {
+  "item": "F36 (0) #3 Galewisp",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_galewisp",
+  "camera_set": "F36",
+  "stands": [
+   "galewisp"
+  ],
+  "group": 6
+ },
+ {
+  "item": "F36 (0) #4 Mudsnout",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_mudsnout",
+  "camera_set": "F36",
+  "stands": [
+   "mudsnout"
+  ],
+  "group": 7
+ },
+ {
+  "item": "F36 (0) #9 Mirejaw",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_mirejaw",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw"
+  ],
+  "group": 8
+ },
+ {
+  "item": "F36 (0) #22 Abyssal Guardian",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_abyssal_guardian",
+  "camera_set": "F36",
+  "stands": [
+   "abyssal_guardian"
+  ],
+  "group": 9
+ },
+ {
+  "item": "F36 (0) #12 Aeriex",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_aeriex",
+  "camera_set": "F36",
+  "stands": [
+   "aeriex"
+  ],
+  "group": 10
+ },
+ {
+  "item": "F36 (1) Aquaryn",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_aquaryn",
+  "camera_set": "F36",
+  "stands": [
+   "aquaryn"
+  ],
+  "group": 11
+ },
+ {
+  "item": "F36 (0) #16 Ashtusk",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_ashtusk",
+  "camera_set": "F36",
+  "stands": [
+   "ashtusk"
+  ],
+  "group": 12
+ },
+ {
+  "item": "F36 (1) Breezetail",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_breezetail",
+  "camera_set": "F36",
+  "stands": [
+   "breezetail"
+  ],
+  "group": 13
+ },
+ {
+  "item": "F36 (0) #6 Burrowback",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_burrowback",
+  "camera_set": "F36",
+  "stands": [
+   "burrowback"
+  ],
+  "group": 14
+ },
+ {
+  "item": "F36 (0) #17 Cannonback",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_cannonback",
+  "camera_set": "F36",
+  "stands": [
+   "cannonback"
+  ],
+  "group": 15
+ },
+ {
+  "item": "F36 (1) Cindercub",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_cindercub",
+  "camera_set": "F36",
+  "stands": [
+   "cindercub"
+  ],
+  "group": 16
+ },
+ {
+  "item": "F36 (1) Cliffspike",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_cliffspike",
+  "camera_set": "F36",
+  "stands": [
+   "cliffspike"
+  ],
+  "group": 17
+ },
+ {
+  "item": "F36 (0) #11 Cloudfang",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_cloudfang",
+  "camera_set": "F36",
+  "stands": [
+   "cloudfang"
+  ],
+  "group": 18
+ },
+ {
+  "item": "F36 (1) Cragclaw",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_cragclaw",
+  "camera_set": "F36",
+  "stands": [
+   "cragclaw"
+  ],
+  "group": 19
+ },
+ {
+  "item": "F36 (1) Craghorn",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_craghorn",
+  "camera_set": "F36",
+  "stands": [
+   "craghorn"
+  ],
+  "group": 20
+ },
+ {
+  "item": "F36 (1) Duskhush",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_duskhush",
+  "camera_set": "F36",
+  "stands": [
+   "duskhush"
+  ],
+  "group": 21
+ },
+ {
+  "item": "F36 (1) Frostclaw",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_frostclaw",
+  "camera_set": "F36",
+  "stands": [
+   "frostclaw"
+  ],
+  "group": 22
+ },
+ {
+  "item": "F36 (0) #14 Fulgocobra",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_fulgocobra",
+  "camera_set": "F36",
+  "stands": [
+   "fulgocobra"
+  ],
+  "group": 23
+ },
+ {
+  "item": "F36 (1) Glimmermoth",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_glimmermoth",
+  "camera_set": "F36",
+  "stands": [
+   "glimmermoth"
+  ],
+  "group": 24
+ },
+ {
+  "item": "F36 (1) Mangrove Monitor",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_mangrove_monitor",
+  "camera_set": "F36",
+  "stands": [
+   "mangrove_monitor"
+  ],
+  "group": 25
+ },
+ {
+  "item": "F36 (0) #7 Meadowhart",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_meadowhart",
+  "camera_set": "F36",
+  "stands": [
+   "meadowhart"
+  ],
+  "group": 26
+ },
+ {
+  "item": "F36 (1) Mosshock",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_mosshock",
+  "camera_set": "F36",
+  "stands": [
+   "mosshock"
+  ],
+  "group": 27
+ },
+ {
+  "item": "F36 (1) Paddlenewt",
+  "flag": "data/config/creature_model_flags.json:remake_owner1101_paddlenewt",
+  "camera_set": "F36",
+  "stands": [
+   "paddlenewt"
+  ],
+  "group": 28
+ }
+]

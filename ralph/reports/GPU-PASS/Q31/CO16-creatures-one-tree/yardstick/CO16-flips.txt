@@ -1,0 +1,9 @@
+f1crag file D:\tb-gpu-runs\flipfiles\co16_crag.json sha256 990b98b56900
+f2siren file D:\tb-gpu-runs\flipfiles\co16_siren.json sha256 0c8c7d6aaafd
+f3tall flip D:\tb-gpu-wt-crA\data\config\creature_scale_flags.json flags.creatures_f36_taller_than_trainer.enabled: false -> true
+f4coat flip D:\tb-gpu-wt-crA\data\config\creature_coat_flags.json flags.creatures_f36_coat_lift.enabled: false -> true
+f5coat2 flip D:\tb-gpu-wt-crA\data\config\creature_coat_flags.json flags.creatures_f36_coat_lift_2.enabled: false -> true
+f6hit flip D:\tb-gpu-wt-crA\data\config\creature_clip_flags.json flags.creatures_f36_grounded_hit_remakes.enabled: false -> true
+f7matte flip D:\tb-gpu-wt-crA\data\config\creature_coat_flags.json flags.creatures_f36_matte_finish.enabled: false -> true
+f8tall2 flip D:\tb-gpu-wt-crA\data\config\creature_scale_flags.json flags.creatures_f36_taller_than_trainer_2.enabled: false -> true
+f9tall3 flip D:\tb-gpu-wt-crA\data\config\creature_scale_flags.json flags.creatures_f36_taller_than_trainer_3.enabled: false -> true

@@ -1,0 +1,39 @@
+{
+ "asset": "Tidewake Veilfall mountain (P2-010 5.78, F39#31, F13#5)",
+ "status": "CANDIDATES_FLAG_OFF: not wired (.gdignore here); GPU lane places, scale-checks and judges",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "note": "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png EXTERIOR VIEW mountain crop (263,81)-(671,515) 2x and KEY VIEWS APPROACH VIEW (693,106)-(902,264) 4x, Lanczos",
+  "files": [
+   "ref_vf_ext.jpg",
+   "ref_vf_approach.jpg"
+  ],
+  "inspected_before_submission": true
+ },
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "settings": {
+  "mode": "refine",
+  "prompt": "a towering island mountain of pale grey stacked cliff rock with green pines on its ledges, terraced cliffs, a tall arched stone gateway and stone bridges carved into the cliff face, deep vertical channels where waterfalls run",
+  "negative_prompt": "sea, water surface, beach, people, sky, clouds, mist, background, low detail",
+  "should_remesh": true,
+  "should_texture": true,
+  "topology": "triangle",
+  "target_polycount": 100000,
+  "symmetry_mode": "off"
+ },
+ "tasks": [
+  {
+   "candidate": "a",
+   "task_id": "01a19292-5851-74a3-842b-b028524b1bba",
+   "file": "veilfall_a.glb",
+   "sha256": "2b5cfc18ade04aa6d05bca6152817d3d62f4ba192594558e7b1f296ccf49821b"
+  },
+  {
+   "candidate": "b",
+   "task_id": "01a19292-5f06-74aa-b16a-a718450639bd",
+   "file": "veilfall_b.glb",
+   "sha256": "6a9cda32e7f9f179ccb3936d9e34f98e0df3033ff4b5638d775b9c8b5e069ae0"
+  }
+ ]
+}

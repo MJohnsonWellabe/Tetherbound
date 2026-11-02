@@ -304,7 +304,12 @@ func resource_amount() -> int:
 func _build_visual(spec: Dictionary = {}) -> void:
 	# F38 P2-034 (meshy_item_visuals.json `enabled`): the reward's
 	# own Meshy model replaces the generic node look; glow/claims unchanged.
-	var hero := MESHY_ITEM_VISUALS.visual_for(_item_id, _realm_id)
+	# P2-034 (vis-meadows): with meadows_orb_reward_presentation.json enabled,
+	# the targeted Basic Orb node keeps the lone mounted capture orb (the
+	# judges read the Meshy orb-cache basket as "eggs or snowballs").
+	var hero: Node3D = null
+	if not _is_meadows_orb_reward_candidate_enabled(_meadows_orb_reward_presentation_config()):
+		hero = MESHY_ITEM_VISUALS.visual_for(_item_id, _realm_id)
 	if hero != null:
 		_visual = hero
 		add_child(_visual)
@@ -436,7 +441,11 @@ func _is_meadows_orb_reward_candidate_enabled(config: Dictionary) -> bool:
 		return false
 	if _item_id != str(config.get("target_item", "orb_basic")):
 		return false
-	return _node_id == str(config.get("target_node_id", "order:1029"))
+	# JSON numbers parse as floats, so an authored order builds the id
+	# "order:1029.0"; the target is written "order:1029". Compare both forms
+	# (the id itself is a save-flag key and stays as it is).
+	var target := str(config.get("target_node_id", "order:1029"))
+	return _node_id == target or _node_id == target + ".0"
 
 
 static var _meadows_orb_reward_presentation: Dictionary = {}

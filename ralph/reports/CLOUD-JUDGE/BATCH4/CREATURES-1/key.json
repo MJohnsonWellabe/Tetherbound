@@ -1,0 +1,77 @@
+{
+ "He": {
+  "anchor": false,
+  "label": "F36 (0) #9 Mirejaw",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___9_Mirejaw_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___9_Mirejaw_main.jpg"
+ },
+ "Zb": {
+  "anchor": false,
+  "label": "F36 (1) Cindercub",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__1__Cindercub_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__1__Cindercub_cand.jpg"
+ },
+ "Pn": {
+  "anchor": false,
+  "label": "F36 (1) Breezetail",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__1__Breezetail_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__1__Breezetail_cand.jpg"
+ },
+ "Vz": {
+  "anchor": false,
+  "label": "F36 (0) #4 Mudsnout",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___4_Mudsnout_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___4_Mudsnout_main.jpg"
+ },
+ "Mw": {
+  "anchor": false,
+  "label": "F36 (0) #16 Ashtusk",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___16_Ashtusk_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___16_Ashtusk_main.jpg"
+ },
+ "Zv": {
+  "anchor": false,
+  "label": "F36 (1) Aquaryn",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__1__Aquaryn_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__1__Aquaryn_main.jpg"
+ },
+ "Vo": {
+  "anchor": false,
+  "label": "F36 (0) #12 Aeriex",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___12_Aeriex_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___12_Aeriex_cand.jpg"
+ },
+ "En": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Yt": {
+  "anchor": false,
+  "label": "F36 (0) #3 Galewisp",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___3_Galewisp_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___3_Galewisp_main.jpg"
+ },
+ "Nh": {
+  "anchor": false,
+  "label": "F36 (0) #17 Cannonback",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___17_Cannonback_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___17_Cannonback_cand.jpg"
+ },
+ "Qy": {
+  "anchor": false,
+  "label": "F36 (0) #6 Burrowback",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___6_Burrowback_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-1/img/F36__0___6_Burrowback_main.jpg"
+ },
+ "Ku": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "By": {
+  "anchor": true,
+  "A": "f36_0_npc:C7B",
+  "B": "f36_0_npc:C7A"
+ }
+}

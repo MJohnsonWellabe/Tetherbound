@@ -1,0 +1,15 @@
+Zi: none
+Rr: "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+Cz: "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path"
+Qn: none
+Aa: none
+Yr: none
+Ii: "The player head and back overlap the named speaker in several conversation frames"
+Hh: "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+Oy: "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+Pa: "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item"
+Kn: "Several named conversations show no identifiable speaker near the dialogue panel"
+Lu: none
+Ap: none
+Ug: "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+Dl: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

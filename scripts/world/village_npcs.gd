@@ -25,6 +25,7 @@ const NIGHT_LIGHT := preload("res://scripts/world/villager_night_light.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const COMBAT_ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
+const POST_STANCE := preload("res://scripts/characters/post_stance.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const CONFIG_PATH := "res://data/config/village_npcs.json"
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
@@ -231,6 +232,9 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 	if not bool(npc.call("setup_from_config", model_config(spec), player)):
 		push_error("villager '%s' has no model for art key '%s'; nothing will stand there" % [display_name, config_key])
 	_bodies[display_name] = npc
+	# P2-050 (UIPOSES, npc_post_stances.json, OFF by default): a role stance
+	# over the idle for the named posts.
+	POST_STANCE.attach(npc, display_name)
 
 	var at: Array = spec.get("position", [0.0, 0.0])
 	var x := float(at[0]) if at.size() > 0 else 0.0

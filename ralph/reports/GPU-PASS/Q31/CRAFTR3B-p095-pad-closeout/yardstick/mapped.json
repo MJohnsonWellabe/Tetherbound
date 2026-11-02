@@ -1,0 +1,94 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9184,
+  "least_squares_slope": 0.8718,
+  "method": "linear",
+  "slope": 0.8718,
+  "intercept": 1.7635,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.518,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "p2_094_r4:X_before": {
+   "measured": 3.133,
+   "reference": 3.5,
+   "mapped": 4.495,
+   "residual": -0.995
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.133,
+   "reference": 6.73,
+   "mapped": 6.239,
+   "residual": 0.491
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 6.8,
+   "reference": 7.89,
+   "mapped": 7.692,
+   "residual": 0.198
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 4.067,
+   "reference": 6.04,
+   "mapped": 5.309,
+   "residual": 0.731
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.0,
+   "reference": 7.53,
+   "mapped": 7.866,
+   "residual": -0.336
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.0,
+   "reference": 7.47,
+   "mapped": 7.866,
+   "residual": -0.396
+  },
+  "f04_6_r22:control": {
+   "measured": 4.367,
+   "reference": 5.83,
+   "mapped": 5.57,
+   "residual": 0.26
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.667,
+   "reference": 6.75,
+   "mapped": 6.704,
+   "residual": 0.046
+  }
+ },
+ "candidates": {
+  "CRAFTR3B P2-095 High cand|ctl | P2-095-ctl-High": {
+   "measured_mean": 5.867,
+   "mapped_mean": 6.88,
+   "mapped_judges": [
+    6.82,
+    6.82,
+    6.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CRAFTR3B P2-095 High cand|ctl | P2-095-cand-High": {
+   "measured_mean": 6.367,
+   "mapped_mean": 7.31,
+   "mapped_judges": [
+    7.34,
+    7.26,
+    7.34
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

@@ -1,0 +1,52 @@
+{
+ "Nk": {
+  "anchor": false,
+  "label": "WD2 P2-035 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-035-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-035-ctl-High.png"
+ },
+ "Wq": {
+  "anchor": false,
+  "label": "WD2 P2-070 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-070-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-070-cand-High.png"
+ },
+ "Io": {
+  "anchor": false,
+  "label": "WD2 P2-043 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-043-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-043-cand-High.png"
+ },
+ "Sd": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Eb": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ww": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Yo": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Xk": {
+  "anchor": false,
+  "label": "WD2 P2-046 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-046-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-046-ctl-High.png"
+ },
+ "Eo": {
+  "anchor": false,
+  "label": "WD2 P2-054 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-054-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-054-cand-High.png"
+ }
+}

@@ -1,0 +1,168 @@
+{
+ "sets": {
+  "Rr": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "All three frames (Kelm, Captain Veyra, Veyra defeated) show only the trainer's back on flat green lawn before a flat wall with pasted gold doors; no speaker, no atmosphere, so the bright Cloudreach sky alone cannot carry it."
+  },
+  "Lh": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger blue-grey translucent panel with pale border and warm ingredient text is on-direction and readable at both resolutions, but A's clipped tiny rows and the plain tall list cells keep it short of Palworld's dense, iconic HUD finish."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Nalia's frame shows only the trainer on a pale sand slope and both Nerissa frames stare into a dark rock wall with no person at all, which sinks it."
+  },
+  "Wi": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Mira, Tam and Oskar now match their portraits and face camera in front of a warm village, which carries it, but flat midday light, a toy-like finish and an identical stand in every frame stop it short of Palworld/Valheim finish."
+  },
+  "Ox": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake look itself is right (cyan/navy water, pale dunes, bright sky), but Daro, Bex and Irva are tiny figures beside the trainer in a wide shot, so the subject never reads."
+  },
+  "Qb": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both Captain Marrow frames are filled by a flat blue slab with a gold lightning bolt, and the Nysa frame, though well lit with moss and storm violet, has a cropped head intruding at the left edge."
+  },
+  "Lf": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Oswin and Elder Maud read well over the trainer's shoulder under purple storm sky and rain, but Fenn's frame is a black void with only the trainer visible, which sinks it."
+  },
+  "Gm": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's storm wolf holds the style bar's fur and violet streaks through a real rear-up hit react and grounded faint, but A's faint frames swap to a broken white-and-black blob and the flat neutral stage offers no Valheim-class light."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The grey-haired elder has an expressive face, clear eyes, a warm moss-and-leather palette and a clean full-body silhouette at a shipping-character finish, though big-eyed styling sits softer than the naturalistic creatures."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark muddy grade, a HUD covering about a third of each frame, flat magenta ring and square telegraphs, and (side A i11, i13, i15) trunks and canopy filling the camera sink it against Palworld's bright, readable boss fights."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera: always cut to a medium shot that frames the named speaker beside the panel, cull or fade foreground occluders (shields, trunks, other actors) and keep the camera out of rock walls and darkness; this lifts Rr, Xd, Ox, Qb and Lf.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make sure every named speaker is actually placed and lit at the dialogue spot (Kelm, Veyra, Nalia, Nerissa, Fenn, Marrow), rather than leaving only the portrait.",
+   "kind": "scene"
+  },
+  {
+   "change": "Swap the flat magenta ring and square telegraphs for real effects (cracking ground, thrown stones, white-violet lightning) with impacts, and cut the fight HUD down so both fighters read in Stormwood.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -40,6 +40,11 @@ static func camera_profile(key: String) -> Dictionary:
 	var framed: Variant = config().get("framed_camera", {})
 	if framed is Dictionary and framed.get("enabled") == true:
 		profile.merge(framed.get(key, {}), true)
+		# P2-059 round 2 (GPU batch 1: "still a steep downward crop"):
+		# framed_camera.r2, OFF by default, merges over the framed values.
+		var r2: Variant = (framed as Dictionary).get("r2", {})
+		if r2 is Dictionary and (r2 as Dictionary).get("enabled") == true:
+			profile.merge((r2 as Dictionary).get(key, {}), true)
 	return profile
 
 

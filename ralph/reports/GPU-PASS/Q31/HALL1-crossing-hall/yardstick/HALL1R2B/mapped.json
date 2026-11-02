@@ -1,0 +1,146 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9027,
+  "least_squares_slope": 1.2755,
+  "method": "linear",
+  "slope": 1.2755,
+  "intercept": -1.2981,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.55,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1A": {
+   "measured": 6.9,
+   "reference": 7.53,
+   "mapped": 7.503,
+   "residual": 0.027
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.9,
+   "reference": 7.47,
+   "mapped": 7.503,
+   "residual": -0.033
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.033,
+   "reference": 6.73,
+   "mapped": 6.397,
+   "residual": 0.333
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.9,
+   "reference": 3.5,
+   "mapped": 3.676,
+   "residual": -0.176
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.3,
+   "reference": 6.3,
+   "mapped": 6.737,
+   "residual": -0.437
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.433,
+   "reference": 7.03,
+   "mapped": 6.907,
+   "residual": 0.123
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 6.633,
+   "reference": 6.23,
+   "mapped": 7.162,
+   "residual": -0.932
+  },
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 6.267,
+   "reference": 7.79,
+   "mapped": 6.695,
+   "residual": 1.095
+  }
+ },
+ "candidates": {
+  "HALL1 approach-nave High cand|ship | HALL1-approach-nave-r2b-High": {
+   "measured_mean": 5.667,
+   "mapped_mean": 5.93,
+   "mapped_judges": [
+    6.1,
+    5.33,
+    6.35
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "HALL1 approach-nave High cand|ship | HALL1-approach-nave-main-High": {
+   "measured_mean": 5.2,
+   "mapped_mean": 5.33,
+   "mapped_judges": [
+    5.33,
+    4.82,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "HALL1 nave-sides High cand|ship | HALL1-nave-sides-main-High": {
+   "measured_mean": 5.367,
+   "mapped_mean": 5.55,
+   "mapped_judges": [
+    5.84,
+    4.95,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "HALL1 nave-sides High cand|ship | HALL1-nave-sides-r2b-High": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.35,
+   "mapped_judges": [
+    6.61,
+    5.72,
+    6.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "HALL1 shrine High cand|ship | HALL1-shrine-main-High": {
+   "measured_mean": 5.2,
+   "mapped_mean": 5.33,
+   "mapped_judges": [
+    5.46,
+    4.82,
+    5.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "HALL1 shrine High cand|ship | HALL1-shrine-r2b-High": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.27,
+   "mapped_judges": [
+    6.35,
+    5.59,
+    6.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

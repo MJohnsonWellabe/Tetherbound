@@ -1,0 +1,58 @@
+{
+ "Cs": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Ce": {
+  "anchor": false,
+  "label": "TWLOOK tidal_cradle High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-tidal_cradle-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-tidal_cradle-ship-High.png"
+ },
+ "Bg": {
+  "anchor": false,
+  "label": "TWLOOK salt_crown High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-salt_crown-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-salt_crown-ship-High.png"
+ },
+ "Rw": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Wk": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Fx": {
+  "anchor": false,
+  "label": "TWLOOK gull_rest High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-gull_rest-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-gull_rest-ship-High.png"
+ },
+ "Un": {
+  "anchor": false,
+  "label": "TWLOOK first_shore High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-first_shore-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-first_shore-ship-High.png"
+ },
+ "Hx": {
+  "anchor": false,
+  "label": "TWLOOK lantern_cove High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-lantern_cove-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-lantern_cove-ship-High.png"
+ },
+ "Uh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Iw": {
+  "anchor": false,
+  "label": "TWLOOK drowned_garden High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-drowned_garden-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-drowned_garden-ship-High.png"
+ }
+}

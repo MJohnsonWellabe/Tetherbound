@@ -1,0 +1,10 @@
+Pw: "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+In: "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+Uj: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Wp: none
+Ei: "Large rock faces fill the camera and hide the named speaker during dialogue"
+Kc: none
+Nh: "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames"
+Qn: "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+Ec: "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change"
+Ag: "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"

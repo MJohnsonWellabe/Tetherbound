@@ -1,0 +1,168 @@
+{
+ "sets": {
+  "Rr": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Only the player stands on a flat lawn under flat light in all three frames (Kelm, Captain Veyra, Veyra defeated) with smeared gold panels on a blank wall, so there is no speaker, no atmosphere and no Cloudreach sky depth."
+  },
+  "Lh": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's large wrapped recipe text and iconed Craft/Leave hints read at both resolutions on a blue-grey translucent panel, but the selection has no teal accent, the panel is flat and only three recipes fit, so it stays short of Palworld's polished UI finish."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 2.5,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 2.5,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Resident Nalia shows only the player on a pale slope, and both Captain Nerissa frames point the camera into a dark rock wall with no speaker, so nothing of Tidewake's open water or light carries the shot."
+  },
+  "Wi": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Mira, Tam and Oskar are now distinct, match their portraits and are framed mid-shot in front of a warm timber-and-stone village close to the key art, but the light is flat midday with no atmosphere or shafts."
+  },
+  "Ox": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake dunes, cyan/navy lagoon and sky read well, but Daro, Bex and Irva are tiny figures beside the player in a wide over-the-shoulder view, so the conversation has no subject."
+  },
+  "Qb": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A giant blue banner with a gold bolt fills both Captain Marrow frames and hides him; Officer Nysa reads well in a purple Stormwood frame but has a cropped head intruding at the left edge."
+  },
+  "Lf": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Oswin and Elder Maud are well staged over the shoulder under a purple rainy storm sky, but the Fenn frame is a black void with only the player's back in it, which sinks the set."
+  },
+  "Gm": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's storm wolf matches the Tanglevolt style bar, rears on hit and lies flat on faint, but in A's faint mid and faint end the material breaks to white with black blotches and the body turns into a rigid slab."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The grey-haired elder has expressive readable eyes, clean hair and beard forms and an earthy green/olive outfit that sits next to Palworld's human finish, though the full body is plain and slightly stiff."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark mid-tone forest, flat magenta telegraph rings and slabs, a debug HUD over the left and bottom and a near-invisible player creature sink both sides; A also loses i11, i13 and i15 to canopy and trunk occlusion."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera: cut to a medium two-shot that frames the named speaker beside the dialogue panel, with an occlusion check that moves the camera off walls, banners and foreground actors (Rr, Xd, Ox, Qb, Lf)",
+   "kind": "scene"
+  },
+  {
+   "change": "Make sure the named speaker actor is spawned, lit and standing at the conversation spot (no speaker in Rr or Xd; black void in Lf Fenn)",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight readability: replace the flat magenta telegraph rings with physical lightning/stone effects, pull the camera clear of canopy and trunks, hide the debug HUD and add a rim light so the player's creature reads (Uv)",
+   "kind": "scene"
+  }
+ ]
+}

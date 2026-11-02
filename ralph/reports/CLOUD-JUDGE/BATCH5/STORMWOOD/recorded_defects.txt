@@ -1,0 +1,61 @@
+Tp: none
+Ld: none
+Yy: none
+Gq: none
+Zy: none
+Bu: none
+Fo: none
+Cv: "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+Nf: none
+Uz: none
+Hl: "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern"
+Vq: none
+Qw: "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+
+# judge 1 defect calls and Bar B
+Tp: A {} | B {} | bar_b yes: A warm, readable bearded craftsman with clear face, eyes and earthy palette that fits the key-art village; both sides are effectively identical.
+Ld: A {} | B {} | bar_b no: Purple storm sky and lit village windows carry mood, but flat uniform ground carpet, flat lavender puddle ovals (B stands 2 and 4) and an empty open field at stand 1 sink the finish.
+Yy: A {} | B {} | bar_b no: Glass crystals, glow mushrooms and the purple-black pool give a real Stormwood vignette, but the trainer is tiny and half hidden and the foreground fern/trunk framing feels accidental.
+Gq: A {} | B {} | bar_b no: The gold-lit Voltarach is a strong high-contrast subject, but the player's creature is a small blur hidden in dust, and the flat lavender path puddles (A) and grey fog-wash read below Palworld finish.
+Zy: A {} | B {} | bar_b no: The blue storm gate and the hall banners help, but crushed dark paths (A), flat purple puddle decals under the trainer (B stands 2-3) and the bare stone slab under the gate keep it placeholder-like.
+Bu: A {} | B {} | bar_b no: The camera sits inside a creature or foliage (A stand 3, a full-frame teal blur) and behind trunks (A stand 4, B stand 1), so the fight and its reward moment are often not visible.
+Fo: A {} | B {} | bar_b no: Tree-trunk groves and the lit hall have good structure, but A's path crushes to near black and the ground everywhere is one repeating painted carpet; the hall's stretched streaked ceiling (stand 4) also reads as a texture artefact.
+Cv: A {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | B {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | bar_b no: The pickups now differ in colour (green, blue, gold) but keep the same glowing blob on a pad at similar scale; the creatures beside them (frog, fox pair) are readable, but the flat ground and dim grade sink it.
+Nf: A {} | B {} | bar_b no: Flat magenta telegraph rings and slabs (both sides, i06-i10, tell2) are the defect the art direction names, the player's creature is barely visible, and A's camera goes into canopy or trunk (i11, i13, i15).
+Uz: A {} | B {} | bar_b no: The ringed crystal well is a decent landmark, but the Glass Sink is a flat tiled voronoi plane with no depth, reflection or edge, and B's grey wash flattens everything further.
+Hl: A {"Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"} | B {"Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"} | bar_b no: The road charge is now a single thinner glowing line, but it is still a flat painted decal that runs the length of every road, and A's floating lavender puddle ovals read as unlit decals.
+Vq: A {} | B {} | bar_b no: B's scaled blue drake is more naturalistic and keeps its material through the faint, but A's cartoon cream-and-yellow version loses its texture to a washed grey-brown at faint end; both are long but barely taller than the 1.80 m ruler.
+Qw: A {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PRESENT"} | B {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PRESENT"} | bar_b no: A lone node on a uniform empty ground carpet with no grove, edge or landmark, and B's darker grade makes it a mid-tone murk; the candies cannot be told apart here.
+top_changes: [{"change": "Break the uniform painted ground carpet into groves, clearings, moss/stone patches and edge dressing, and lift the crushed path and ground values with a stronger key and rim light against the purple sky", "kind": "scene"}, {"change": "Fix fight and reward cameras so they never sit inside creatures, trunks or canopy, and replace the flat magenta telegraph rings and slabs with grounded lightning/impact effects; frame the player's creature so it stays readable", "kind": "scene"}, {"change": "Give the Glass Sink and the charged road real material (reflective black glass with depth and edges, a varied, intermittent arcing charge instead of a continuous decal line), and replace the flat puddle ovals with lit, reflective puddles", "kind": "new_art"}]
+
+# judge 2 defect calls and Bar B
+Tp: A {} | B {} | bar_b no: Readable, appealing villager, but cartoon proportions and flat neutral staging sit below Palworld's finish.
+Ld: A {} | B {} | bar_b no: Flat lavender sky, one tiled moss carpet and decal puddles sink it; the hall interior lighting is the one strong moment.
+Yy: A {} | B {} | bar_b no: Nice crystal-and-pool vignette, but flat sky and no light shafts or atmosphere keep it short of Valheim-class mood.
+Gq: A {} | B {} | bar_b no: Gold Voltarach reads strongly, but the player's creature disappears in dust and the dim forest lacks storm light.
+Zy: A {} | B {} | bar_b no: Murky values and a uniform ground tile; the gate framing in B helps but the sky and fog are flat.
+Bu: A {} | B {} | bar_b no: Camera inside or behind trunks in several frames and a very dark scene sink it.
+Fo: A {} | B {} | bar_b no: Pylon depth reads, but a stretched radial ceiling, crushed paths and flat sky sink it.
+Cv: A {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | B {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | bar_b no: Strong naturalistic gecko and cosy cottage, but chibi foxes and the carpet ground keep it below Palworld finish.
+Nf: A {} | B {} | bar_b no: Flat magenta telegraph rings, foliage occlusion in A and a muddy dark scene keep the fight from reading as a world event.
+Uz: A {} | B {} | bar_b no: The glass sink reads as a flat tiled Voronoi plane under a flat sky, with no black-pool drama.
+Hl: A {"Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"} | B {"Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"} | bar_b no: Village and great tree help, but a continuous gold line on every road and flat lighting sink it.
+Vq: A {} | B {} | bar_b yes: B's naturalistic scaled dragon with a grounded faint is near the creature bar; A's faint poses lose their material.
+Qw: A {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | B {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | bar_b no: Empty field of one repeated ground tile under a flat sky; the nodes are the only interest.
+top_changes: [{"change": "Replace the flat lavender sky with a structured purple storm sky (cloud layers, lightning flashes, light shafts) and add a stronger value grade so paths and moss stop crushing to black", "kind": "scene"}, {"change": "Break the uniform moss ground tile with groves, clearings, undergrowth clusters and varied ground materials; replace flat violet puddle discs and the continuous gold road line with sparse, embedded wet and charged accents", "kind": "scene"}, {"change": "Replace flat magenta telegraph rings and slabs with real lightning or ground-crack effects, and keep fight and site cameras out of trunks and foliage", "kind": "scene"}]
+
+# judge 3 defect calls and Bar B
+Tp: A {} | B {} | bar_b yes: Warm readable face, clear eyes and coherent palette sit comfortably beside Palworld's cast.
+Ld: A {} | B {} | bar_b no: Purple storm sky carries mood but the uniform ground carpet, crushed values and flat puddle decals sink the finish.
+Yy: A {} | B {} | bar_b yes: Authored glass pool, crystals and mushrooms under massive trunks give a real lived-in storm forest vignette.
+Gq: A {} | B {} | bar_b no: Voltarach silhouette is boss-worthy but the tiny dust-hidden player creature and heavy HUD sink the fight read.
+Zy: A {} | B {} | bar_b no: Purple sky and gate landmark help, but crushed or flat ground values and slab pads read unfinished.
+Bu: A {} | B {} | bar_b no: Moody root forest, but camera-in-trunk frames and hidden subjects break the read.
+Fo: A {} | B {} | bar_b no: Village and pylons are on theme but flat paths, puddle discs and ceiling streak artefact sink it.
+Cv: A {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | B {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | bar_b no: Colour-coded candies help but same form/scale and a mascot-styled creature fall short of the owner bar.
+Nf: A {} | B {} | bar_b no: Flat magenta ring telegraphs and dark small fighters (plus occluded frames on A) do not read as a world event.
+Uz: A {} | B {} | bar_b no: Crystal ring reads but the glass sink is a flat tiled plane with a hard grass cut and no depth.
+Hl: A {"Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PRESENT"} | B {"Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PRESENT"} | bar_b no: The repeated flat gold road stripe reads as a decal rather than charged ground.
+Vq: A {} | B {} | bar_b no: B's naturalistic scales and grounded faint approach the owner bar; A's cartoon finish and broken faint-end material do not.
+Qw: A {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | B {"Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"} | bar_b no: Nodes read but sit on a featureless uniform moss carpet with no grove or clearing structure.
+top_changes: [{"change": "Break the uniform moss-carpet ground into groves, clearings and lit patches, and lift crushed shadow values so paths and creatures separate from the ground (add light shafts and rim light on creatures).", "kind": "scene"}, {"change": "Replace flat magenta ring/chevron telegraphs and the flat gold road stripes/puddle discs with object-based lightning and charged-ground effects with real impacts.", "kind": "scene"}, {"change": "Fix fight and landmark camera stands so trunks and foliage never fill the frame, and frame the player creature larger and clear of dust.", "kind": "scene"}]

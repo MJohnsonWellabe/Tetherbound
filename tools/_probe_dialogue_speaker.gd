@@ -37,3 +37,8 @@ func _settle_dialogue_capture() -> bool:
 	line["near"] = near
 	print("DLG_PROBE ", JSON.stringify(line))
 	return ok
+
+
+## Custom per-launch flow; not validated for batched --jobs launches.
+func _supports_jobs() -> bool:
+	return false

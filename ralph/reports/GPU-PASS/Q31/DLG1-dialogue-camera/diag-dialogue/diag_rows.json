@@ -1,0 +1,1299 @@
+[
+ {
+  "frame": "cloudreach__inventory__character__captain_veyra__defeated__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": 0.38
+ },
+ {
+  "frame": "cloudreach__inventory__character__captain_veyra__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": 0.25
+ },
+ {
+  "frame": "cloudreach__inventory__character__defector_rusk__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 0.85,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.69648814201355,
+     0.121869340538979,
+     -0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     419.779998779297,
+     921.353454589844,
+     4489.56005859375
+    ],
+    "yaw": -2.36378578070312
+   },
+   "dist": 2.78,
+   "fov": 41.8
+  },
+  "cand": {
+   "active": true,
+   "blend": 0.93,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.69648814201355,
+     0.121869340538979,
+     -0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     419.779998779297,
+     921.353454589844,
+     4489.56005859375
+    ],
+    "yaw": -2.36378578070312
+   },
+   "dist": 2.66,
+   "fov": 40.5
+  },
+  "pixel_diff": 17.61
+ },
+ {
+  "frame": "cloudreach__inventory__character__naturalist_sora__dialogue",
+  "ctl": null,
+  "cand": {
+   "active": true,
+   "blend": 0.67,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.707143723964691,
+     0.121869340538979,
+     0.69648814201355
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     1099.56005859375,
+     1051.4833984375,
+     2950.21997070313
+    ],
+    "yaw": -0.792989453908225
+   },
+   "dist": 3.37,
+   "fov": 47.8
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "cloudreach__inventory__character__trader_kelm__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": 1.38
+ },
+ {
+  "frame": "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.69648814201355,
+     0.121869340538979,
+     -0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -180.220001220703,
+     851.261413574219,
+     4099.56005859375
+    ],
+    "yaw": -2.36378578070312
+   },
+   "dist": 2.52,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.69648814201355,
+     0.121869340538979,
+     -0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -180.220001220703,
+     851.261413574219,
+     4099.56005859375
+    ],
+    "yaw": -2.36378578070312
+   },
+   "dist": 2.52,
+   "fov": 40.0
+  },
+  "pixel_diff": 5.66
+ },
+ {
+  "frame": "meadows__inventory__character__corin__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.828342080116272,
+     0.121869325637817,
+     0.546806395053864
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     -149.693328857422,
+     -3.34917855262756,
+     4232.384765625
+    ],
+    "yaw": 0.98733870890745
+   },
+   "dist": 2.44,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.828342080116272,
+     0.121869325637817,
+     0.546806395053864
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     -149.693328857422,
+     -3.34917855262756,
+     4232.384765625
+    ],
+    "yaw": 0.98733870890745
+   },
+   "dist": 2.44,
+   "fov": 40.0
+  },
+  "pixel_diff": 2.16
+ },
+ {
+  "frame": "meadows__inventory__character__garrick__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 0.81,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.196777015924454,
+     0.121869347989559,
+     0.972844660282135
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173052258443,
+    "pivot": [
+     -45.0562438964844,
+     0.584716737270355,
+     185.488708496094
+    ],
+    "yaw": 0.199577026187529
+   },
+   "dist": 2.91,
+   "fov": 42.7
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.196777015924454,
+     0.121869347989559,
+     0.972844660282135
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173052258443,
+    "pivot": [
+     -45.0562438964844,
+     0.584716737270355,
+     185.488708496094
+    ],
+    "yaw": 0.199577026187529
+   },
+   "dist": 2.6,
+   "fov": 40.0
+  },
+  "pixel_diff": 12.28
+ },
+ {
+  "frame": "meadows__inventory__character__kell__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": 3.42
+ },
+ {
+  "frame": "meadows__inventory__character__quarry_foreman__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.854639649391174,
+     0.121869325637817,
+     -0.504716575145721
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     392.390625,
+     1.33965241909027,
+     1792.29907226563
+    ],
+    "yaw": 2.10424624107804
+   },
+   "dist": 3.9,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.854639649391174,
+     0.121869325637817,
+     -0.504716575145721
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     392.390625,
+     1.33965241909027,
+     1792.29907226563
+    ],
+    "yaw": 2.10424624107804
+   },
+   "dist": 3.9,
+   "fov": 40.0
+  },
+  "pixel_diff": 0.42
+ },
+ {
+  "frame": "meadows__inventory__trainer__captain_field__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.0179351139813662,
+     0.121869340538979,
+     0.992384135723114
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     170.051116943359,
+     0.0937140434980392,
+     5590.4892578125
+    ],
+    "yaw": -0.0180707863379922
+   },
+   "dist": 2.46,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.0179351139813662,
+     0.121869340538979,
+     0.992384135723114
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     170.051116943359,
+     0.0937140434980392,
+     5590.4892578125
+    ],
+    "yaw": -0.0180707863379922
+   },
+   "dist": 2.46,
+   "fov": 40.0
+  },
+  "pixel_diff": 2.03
+ },
+ {
+  "frame": "meadows__inventory__trainer__old_champion_bram__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.145593225955963,
+     0.121869340538979,
+     -0.981809854507446
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     300.218994140625,
+     5.02861547470093,
+     982.559509277344
+    ],
+    "yaw": 2.99437485523386
+   },
+   "dist": 2.58,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.145593225955963,
+     0.121869340538979,
+     -0.981809854507446
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     300.218994140625,
+     5.02861547470093,
+     982.559509277344
+    ],
+    "yaw": 2.99437485523386
+   },
+   "dist": 2.58,
+   "fov": 40.0
+  },
+  "pixel_diff": 0.77
+ },
+ {
+  "frame": "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": 0.76
+ },
+ {
+  "frame": "meadows__inventory__trainer__stronghold_elite__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": 2.61
+ },
+ {
+  "frame": "meadows__inventory__trainer__tournament_final_oskar__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.973389208316803,
+     0.121869325637817,
+     -0.194065153598785
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     21.381326675415,
+     2.30215954780579,
+     11.3349857330322
+    ],
+    "yaw": -1.76758658469412
+   },
+   "dist": 2.2,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.973389208316803,
+     0.121869325637817,
+     -0.194065153598785
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     21.381326675415,
+     2.30215954780579,
+     11.3349857330322
+    ],
+    "yaw": -1.76758658469412
+   },
+   "dist": 2.2,
+   "fov": 40.0
+  },
+  "pixel_diff": 2.03
+ },
+ {
+  "frame": "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 0.96,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.973389208316803,
+     0.121869325637817,
+     -0.194065153598785
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     21.381326675415,
+     2.28390741348267,
+     11.3349857330322
+    ],
+    "yaw": -1.76758658469412
+   },
+   "dist": 2.19,
+   "fov": 40.1
+  },
+  "cand": {
+   "active": true,
+   "blend": 0.96,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.973389208316803,
+     0.121869325637817,
+     -0.194065153598785
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     21.381326675415,
+     2.28390741348267,
+     11.3349857330322
+    ],
+    "yaw": -1.76758658469412
+   },
+   "dist": 2.19,
+   "fov": 40.1
+  },
+  "pixel_diff": 2.01
+ },
+ {
+  "frame": "meadows__inventory__trainer__tournament_semi_tam__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.973389208316803,
+     0.121869325637817,
+     -0.194065153598785
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     21.381326675415,
+     2.27173948287964,
+     11.3349857330322
+    ],
+    "yaw": -1.76758658469412
+   },
+   "dist": 2.17,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     -0.973389208316803,
+     0.121869325637817,
+     -0.194065153598785
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.122173029738843,
+    "pivot": [
+     21.381326675415,
+     2.27173948287964,
+     11.3349857330322
+    ],
+    "yaw": -1.76758658469412
+   },
+   "dist": 2.17,
+   "fov": 40.0
+  },
+  "pixel_diff": 2.66
+ },
+ {
+  "frame": "stormwood__inventory__character__captain_marrow__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": 0.31
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -437.779998779297,
+     58.8264846801758,
+     3960.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.42,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -437.779998779297,
+     58.8264846801758,
+     3960.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.42,
+   "fov": 40.0
+  },
+  "pixel_diff": 2.7
+ },
+ {
+  "frame": "stormwood__inventory__character__trader_fenn__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -399.779998779297,
+     62.6655921936035,
+     4000.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.46,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -399.779998779297,
+     62.6655921936035,
+     4000.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.46,
+   "fov": 40.0
+  },
+  "pixel_diff": 0.18
+ },
+ {
+  "frame": "stormwood__inventory__character__trader_oswin__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 0.96,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -679.780029296875,
+     47.8488960266113,
+     2310.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.63,
+   "fov": 40.1
+  },
+  "cand": {
+   "active": true,
+   "blend": 0.96,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -679.780029296875,
+     47.8488960266113,
+     2310.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.63,
+   "fov": 40.1
+  },
+  "pixel_diff": 1.44
+ },
+ {
+  "frame": "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     600.219970703125,
+     75.3534851074219,
+     2820.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.6,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     600.219970703125,
+     75.3534851074219,
+     2820.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.6,
+   "fov": 40.0
+  },
+  "pixel_diff": 2.17
+ },
+ {
+  "frame": "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     485.220001220703,
+     75.446159362793,
+     2700.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.53,
+   "fov": 40.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     485.220001220703,
+     75.446159362793,
+     2700.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.53,
+   "fov": 40.0
+  },
+  "pixel_diff": 0.51
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": 0.31
+ },
+ {
+  "frame": "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": true,
+   "shot": {
+    "dir": [
+     0.884157180786133,
+     0.087155744433403,
+     0.458988040685654
+    ],
+    "distance": 2.1,
+    "fallback": true,
+    "fov": 46.0,
+    "pitch": -0.0872664642919006,
+    "pivot": [
+     -889.700012207031,
+     53.4433746337891,
+     4482.60009765625
+    ],
+    "yaw": 1.09196609061472
+   },
+   "dist": 2.16,
+   "fov": 46.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 1.0,
+   "fallback": true,
+   "shot": {
+    "dir": [
+     0.884157180786133,
+     0.087155744433403,
+     0.458988040685654
+    ],
+    "distance": 2.1,
+    "fallback": true,
+    "fov": 46.0,
+    "pitch": -0.0872664642919006,
+    "pivot": [
+     -889.700012207031,
+     53.4433746337891,
+     4482.60009765625
+    ],
+    "yaw": 1.09196609061472
+   },
+   "dist": 2.17,
+   "fov": 46.0
+  },
+  "pixel_diff": 2.14
+ },
+ {
+  "frame": "water__inventory__character__water_adair__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 0.74,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     411.220001220703,
+     78.353630065918,
+     672.440002441406
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 3.15,
+   "fov": 45.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 0.89,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     411.220001220703,
+     78.353630065918,
+     672.440002441406
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.79,
+   "fov": 41.0
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "water__inventory__character__water_iona__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 0.93,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     711.723999023438,
+     47.6551895141602,
+     1550.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.59,
+   "fov": 40.5
+  },
+  "cand": {
+   "active": true,
+   "blend": 0.89,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     711.723999023438,
+     47.6551895141602,
+     1550.43994140625
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.64,
+   "fov": 41.0
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "water__inventory__character__water_nalia__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "water__inventory__character__water_nerissa__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "water__inventory__character__water_rowan__dialogue",
+  "ctl": {
+   "active": true,
+   "blend": 0.74,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -13.1199998855591,
+     21.8398914337158,
+     469.0
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 3.13,
+   "fov": 45.0
+  },
+  "cand": {
+   "active": true,
+   "blend": 0.85,
+   "fallback": false,
+   "shot": {
+    "dir": [
+     0.69648814201355,
+     0.121869340538979,
+     0.707143723964691
+    ],
+    "distance": 3.5,
+    "fallback": false,
+    "fov": 40.0,
+    "pitch": -0.12217304475191,
+    "pivot": [
+     -13.1199998855591,
+     21.8398914337158,
+     469.0
+    ],
+    "yaw": 0.777806872886671
+   },
+   "dist": 2.83,
+   "fov": 41.8
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "water__inventory__trainer__water_trainer_bex__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "water__inventory__trainer__water_trainer_daro__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "water__inventory__trainer__water_trainer_irva__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": null
+ },
+ {
+  "frame": "water__inventory__trainer__water_trainer_nerissa__dialogue",
+  "ctl": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "cand": {
+   "active": false,
+   "blend": 0,
+   "fallback": false,
+   "shot": {},
+   "dist": 5.77,
+   "fov": 70.0
+  },
+  "pixel_diff": null
+ }
+]

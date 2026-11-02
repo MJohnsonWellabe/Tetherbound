@@ -36,7 +36,11 @@ func test_aftermath_lens_stays_near_a_far_speaker() -> void:
 		var lens: Vector3 = shot["pivot"] + shot["dir"] * float(shot["distance"])
 		assert_true(lens.distance_to(speaker) <= cap + 0.01,
 			"the lens is %.2f m from a speaker %.0f m off (cap %.1f)" % [lens.distance_to(speaker), far, cap])
-	var plain := CAM.solve(trainer, Vector3(0.0, 1.5, -18.0), Vector3.FORWARD, CAM.config())
+	# The villager push-in names no cap. Since 1 Nov it ships with the judged
+	# twoshot_v2 (a closer lens), so the "no cap leak" check runs on the push-in
+	# without that candidate, and the shipped config is checked for the key itself.
+	assert_false(CAM.config().has("max_speaker_distance_m"), "the villager push-in names no cap")
+	var plain := CAM.solve(trainer, Vector3(0.0, 1.5, -18.0), Vector3.FORWARD, CAM._plain_config())
 	var plain_lens: Vector3 = plain["pivot"] + plain["dir"] * float(plain["distance"])
 	assert_true(plain_lens.distance_to(Vector3(0.0, 1.5, -18.0)) > cap,
-		"the villager push-in, which names no cap, is unchanged")
+		"the villager push-in, which names no cap, is unchanged by the aftermath cap")

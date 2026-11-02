@@ -6,7 +6,8 @@
   "target_item": "orb_basic",
   "target_node_id": "order:1029",
   "baseline_reward_height_m": 0.38,
-  "candidate_reward_height_m": 0.38,
+  "candidate_reward_height_m": 0.5,
+  "_why_vis_meadows_1101": "P2-034 (vis-meadows, 1 Nov, OFF until GPU-judged): the close-1022 r4 judges (ralph/reports/LOOK/close-1022/P2-033-034-items.md, harvest 6.63) named the gap: the Meshy orb-cache basket reads as eggs or snowballs at gameplay distance, and a lone capture orb would be the clear prop. With this flag on, harvest_node.gd skips the meshy_item_visuals model for this node only, so it shows the mounted single capture orb on its authored support, with the navy seams, 0.38 -> 0.5 m so it reads in the wide frame.",
   "candidate_add_equatorial_seams": true,
   "candidate_seam_colour": "#123f68"
 }

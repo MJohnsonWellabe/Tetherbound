@@ -1,0 +1,585 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 499843598571,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T22:29:59",
+	"capture_started_utc": "2026-10-31T22:29:25",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "water_iona",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "tidal_cradle",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 381013,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 4.15188550949097,
+			"camera_position": [
+				712.504028320313,
+				48.7652549743652,
+				1555.42065429688
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460635382238
+				],
+				"basis_y": [
+					0.0000000000000000212650268386152,
+					0.984805822372437,
+					-0.173647850751877
+				],
+				"basis_z": [
+					-0.000000000000000120599942225136,
+					0.173647850751877,
+					0.984805822372437
+				],
+				"origin": [
+					712.504028320313,
+					48.162109375,
+					1552.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000000756361571,
+					0.000000000000000122460582442679
+				],
+				"basis_y": [
+					0.00000000000000002126512775465,
+					0.984807729721069,
+					-0.173648685216904
+				],
+				"basis_z": [
+					-0.000000000000000120600127513594,
+					0.173648685216904,
+					0.984807729721069
+				],
+				"origin": [
+					712.504028320313,
+					48.7652549743652,
+					1555.42065429688
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Researcher Iona",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-cand-High-c044/water__inventory__character__water_iona.jpg",
+			"frame_id": "water__inventory__character__water_iona",
+			"identity": "water__inventory__character__water_iona",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_04_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						682.814025878906,
+						42.8267631530762,
+						1503.71301269531
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_04_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						684.935363769531,
+						43.0132217407227,
+						1505.83435058594
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_05_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						726.969970703125,
+						47.8877296447754,
+						1570.26000976563
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_05_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						729.969970703125,
+						47.9972953796387,
+						1570.26000976563
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_tidal_cradle_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						702.309997558594,
+						45.1625061035156,
+						1535.0419921875
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "water_tidal_cradle_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						766.452026367188,
+						52.2520561218262,
+						1626.64697265625
+					],
+					"species_id": "water_mosshell"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.184849666667,
+				"hour": 8.00739398666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				712.504028320313,
+				46.4121131896973,
+				1552.0
+			],
+			"position_xz": [
+				711.504,
+				1550.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 46.4110679626465,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				712.504028320313,
+				1552.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.997996091842651,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				711.504028320313,
+				1550.0
+			],
+			"terrain_ground_y": 46.4110679626465,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water_iona",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "tidal_cradle",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 415443,
+			"camera_fov_degrees": 41.0288047790527,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 2.64033079147339,
+			"camera_position": [
+				714.189453125,
+				48.1178207397461,
+				1553.10510253906
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 3.55829906463623,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.730915784835815,
+					0.0,
+					-0.682467222213745
+				],
+				"basis_y": [
+					-0.084387794137001,
+					0.992322862148285,
+					-0.0903785079717636
+				],
+				"basis_z": [
+					0.677228510379791,
+					0.12365110963583,
+					0.725305259227753
+				],
+				"origin": [
+					711.750732421875,
+					47.6725730895996,
+					1550.49340820313
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.73091596364975,
+					-0.0000000221337419503698,
+					-0.682467520236969
+				],
+				"basis_y": [
+					-0.0843883007764816,
+					0.992325663566589,
+					-0.0903790667653084
+				],
+				"basis_z": [
+					0.677230000495911,
+					0.123651772737503,
+					0.725306689739227
+				],
+				"origin": [
+					714.189453125,
+					48.1178207397461,
+					1553.10510253906
+				]
+			},
+			"conversation_camera_active": true,
+			"conversation_camera_blend": 0.888888888888888,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {
+				"dir": [
+					0.69648814201355,
+					0.121869340538979,
+					0.707143723964691
+				],
+				"distance": 3.5,
+				"fallback": false,
+				"fov": 40.0,
+				"pitch": -0.12217304475191,
+				"pivot": [
+					711.723999023438,
+					47.6551895141602,
+					1550.43994140625
+				],
+				"yaw": 0.777806872886671
+			},
+			"debug_travel": true,
+			"destination_display_name": "Researcher Iona",
+			"destination_index": 1,
+			"dialogue_id": "water_iona_pre",
+			"dialogue_portrait": "res://assets/ui/portraits/maren.png",
+			"dialogue_speaker": "Researcher Iona",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-cand-High-c044/water__inventory__character__water_iona__dialogue.jpg",
+			"frame_id": "water__inventory__character__water_iona__dialogue",
+			"identity": "water__inventory__character__water_iona__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_04_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						682.814025878906,
+						42.8267631530762,
+						1503.71301269531
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_04_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						684.935363769531,
+						43.0132217407227,
+						1505.83435058594
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_05_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						726.969970703125,
+						47.8877296447754,
+						1570.26000976563
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_05_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						729.969970703125,
+						47.9972953796387,
+						1570.26000976563
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_tidal_cradle_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						702.309997558594,
+						45.1625061035156,
+						1535.0419921875
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "water_tidal_cradle_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						766.452026367188,
+						52.2520561218262,
+						1626.64697265625
+					],
+					"species_id": "water_mosshell"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.184849666667,
+				"hour": 8.00739398666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				712.504028320313,
+				46.4121131896973,
+				1552.0
+			],
+			"position_xz": [
+				711.504,
+				1550.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 46.4110679626465,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				712.504028320313,
+				1552.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.997996091842651,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				711.504028320313,
+				1550.0
+			],
+			"terrain_ground_y": 46.4110679626465,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"water__inventory__character__water_iona"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"water__inventory__character__water_iona"
+	]
+}

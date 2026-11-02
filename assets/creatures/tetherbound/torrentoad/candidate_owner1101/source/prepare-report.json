@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 9782,
+    "spine": 7077,
+    "neck": 719,
+    "head": 926,
+    "front_upper_l": 534,
+    "front_lower_l": 1122,
+    "front_upper_r": 536,
+    "front_lower_r": 1042,
+    "tail_1": 1044,
+    "tail_2": 1644,
+    "rear_upper_l": 983,
+    "rear_lower_l": 1320,
+    "rear_upper_r": 984,
+    "rear_lower_r": 1104
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13975,
+  "height_m": 3.25,
+  "length_m": 2.5491,
+  "width_m": 2.7754,
+  "triangles": 27999,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2069,
+      -0.2163,
+      0.0487
+    ],
+    "front_r": [
+      0.2029,
+      -0.2105,
+      0.0494
+    ],
+    "rear_l": [
+      -0.2615,
+      0.1529,
+      0.0395
+    ],
+    "rear_r": [
+      0.2663,
+      0.1523,
+      0.044
+    ]
+  },
+  "back_top_normalised": 0.9643,
+  "raised_head": false,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "torrentoad",
+    "height": 3.25,
+    "patch": false
+  }
+}

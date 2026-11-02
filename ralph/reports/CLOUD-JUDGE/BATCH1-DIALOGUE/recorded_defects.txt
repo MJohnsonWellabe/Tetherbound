@@ -1,0 +1,9 @@
+Id: "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+Hh: "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+Ao: none
+Sm: "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+Ju: none
+Hm: none
+Mx: "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+Qo: "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+Uf: "Large rock faces fill the camera and hide the named speaker during dialogue"

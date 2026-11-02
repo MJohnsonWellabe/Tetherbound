@@ -1,0 +1,45 @@
+Yt: none
+Sy: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Zz: none
+Xn: none
+Oa: none
+Py: none
+Qn: none
+Xh: none
+As: none
+
+# judge 1 defect calls and Bar B
+Yt: A {} | B {} | bar_b no: Lively foliage and NPCs carry it, but crushed black stone walls, flat dirt planes and no atmospheric depth keep it short of Palworld finish.
+Sy: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | bar_b no: A's larger wrapped panel is close to a shipping UI, but dim salmon sub-lines and weak action highlighting fall short; B's tiny truncated text sinks it.
+Zz: A {} | B {} | bar_b no: Soft low-detail face with flat black eyes and a generic silhouette reads as a placeholder next to Palworld characters.
+Xn: A {} | B {} | bar_b no: Stratified pale cliffs and cloud sea read as Cloudreach, but a uniform grass carpet and flat light without atmosphere hold it back.
+Oa: A {} | B {} | bar_b no: The aviary dome landmark carries A, while B's flat untextured white path slab breaks the world immediately.
+Py: A {} | B {} | bar_b no: Wall-filled cameras, billboard backdrops and a plush griffin sink it; B adds magenta emissive patches and black walls.
+Qn: A {} | B {} | bar_b no: Dense tall grass and cliff horizon come closest to Palworld field shots, but blobby brown hill mounds and weak atmosphere hold it back.
+Xh: A {} | B {} | bar_b no: Bridge, bell gate and stratified cliffs give real place and depth, but flat light and sparse grass keep it below Palworld finish.
+As: A {} | B {} | bar_b no: A's naturalistic patterned python is on-style but dark with no rim light; B's floating faint pose and decal-flat yellow break the read.
+top_changes: [{"change": "Replace the flat white path material (Oa/Py B) with the textured dirt/stone path, fix Py B's magenta emissive and blotched wing texture, and re-ground the As B faint poses on the stage.", "kind": "scene"}, {"change": "Add Valheim-class atmosphere and grade: aerial fog/height haze for depth, warmer sun with rim light on characters and creatures, a true night grade, and lifted shadow values so stone walls stop crushing to black.", "kind": "scene"}, {"change": "Rebuild the Team Tether grunt's face (eyes with catchlights, crisp emblem) and remodel blobby hill mounds as stratified Cloudreach rock.", "kind": "new_art"}]
+
+# judge 2 defect calls and Bar B
+Yt: A {} | B {} | bar_b no: Placeholder flat lawn discs and crushed black stone walls with no Valheim-class atmosphere sink it despite good cloud sky.
+Sy: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | bar_b no: The panel family is right, but small low-contrast hint text and truncated recipe lines fall short of a shipping controller-first UI.
+Zz: A {} | B {} | bar_b no: Blurry low-resolution face with smudged eyes and a generic black outfit is well below Palworld character finish.
+Xn: A {} | B {} | bar_b no: Good sky and stratified cliffs, but vast empty sparse-tuft fields read as unfinished rather than lived-in.
+Oa: A {} | B {} | bar_b no: The aviary dome landmark carries it, but flat foliage and a weak night grade (and B's white placeholder path) sink the finish.
+Py: A {} | B {} | bar_b no: Blocky cloud-sea texture, wall-filled cameras and washed peach haze undo the readable winged-lion moment; B adds magenta and wing artefacts.
+Qn: A {} | B {} | bar_b no: Close: dense grass and layered cliff distance approach Palworld, but smooth untextured mounds and flat light keep it short.
+Xh: A {} | B {} | bar_b no: Pale stratified cliffs and the bell bridge read authored, but flat lawn planes and sparse dressing lack Palworld density.
+As: A {} | B {} | bar_b no: A's naturalistic scales approach the owner bar, but low silhouette in A and B's levitating faint poses with plastic yellow keep it below the Galecrest/Stormursa standard.
+top_changes: [{"change": "Replace flat untextured ground planes (lawn discs, white path strip, smooth mounds) with textured, value-varied terrain and denser authored grass groves and edges", "kind": "scene"}, {"change": "Fix capture cameras that sit inside the player backpack or hard against walls, and lift the crushed black stone shading with fill/ambient light and a real night grade", "kind": "scene"}, {"change": "Remake the Team Tether grunt and other low-resolution humanoid faces with sharp eyes and authored outfits matching the key art cast", "kind": "new_art"}]
+
+# judge 3 defect calls and Bar B
+Yt: A {} | B {} | bar_b no: Bright sky and stratified cliffs help, but crushed near-black masonry, flat terrain and plain black dialogue boxes keep it below Palworld finish.
+Sy: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | bar_b no: Panel style is on-direction, but tiny truncated text and glyphless hints on B, and wrapped orange lines on A, fall short of a shipping UI.
+Zz: A {} | B {} | bar_b no: Blurry low-detail face with slit eyes reads as a stand-in grunt, well below Palworld character finish.
+Xn: A {} | B {} | bar_b no: Cloud-sea mesas carry the Cloudreach look, but even grass scatter, flat ground and stretched tower textures sink the finish.
+Oa: A {} | B {} | bar_b no: The aviary landmark and night grade are strong, but B's untextured white path and sparse lollipop trees break it.
+Py: A {} | B {} | bar_b no: Dusk grade and the winged lion carry, but black walls filling frames, banded cloud sea and stray magenta/blue artefacts sink it.
+Qn: A {} | B {} | bar_b no: Lush tall grass and open sky come close, but smooth untextured mud-brown mounds look off-family next to the pale cliffs.
+Xh: A {} | B {} | bar_b no: Layered mesas, ruined gate and bell bridge feel authored, but flat ground and stretched foreground dirt keep it short of Palworld.
+As: A {} | B {} | bar_b no: A has naturalistic scales but loses its silhouette dark-on-dark; B reads clearly but its faint poses float off the ground.
+top_changes: [{"change": "Fix missing/flat ground materials and decals (Oa B white path, Py B grey slab, Yt B white slab) and lift crushed near-black masonry and mud-brown mounds into the pale stratified stone value range", "kind": "scene"}, {"change": "Restyle dialogue and craft panels to the deep blue-grey translucent direction with full-size untruncated recipe text and controller glyph hints", "kind": "scene"}, {"change": "Replace the grunt face and brown mound rocks with higher-detail assets matching the installed cast and Cloudreach stone family", "kind": "new_art"}]

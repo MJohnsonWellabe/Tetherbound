@@ -1,0 +1,58 @@
+{
+ "Pw": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_shipping",
+  "B": "f36_1_gpu:tanglevolt_candidate"
+ },
+ "Fw": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Jl": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Qb": {
+  "anchor": false,
+  "label": "UIPAD P2-096 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-096-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-096-main-High.png"
+ },
+ "Ci": {
+  "anchor": false,
+  "label": "UIPAD P2-001 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-001-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-001-main-High.png"
+ },
+ "Zv": {
+  "anchor": false,
+  "label": "UIPAD P2-031 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-031-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-031-main-High.png"
+ },
+ "Ns": {
+  "anchor": false,
+  "label": "UIPAD P2-032 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-032-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-032-main-High.png"
+ },
+ "Eb": {
+  "anchor": false,
+  "label": "UIPAD P2-007 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-007-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-007-main-High.png"
+ },
+ "Zb": {
+  "anchor": false,
+  "label": "UIPAD P2-004 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-004-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-004-main-High.png"
+ },
+ "Qt": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

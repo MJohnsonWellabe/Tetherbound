@@ -1,0 +1,156 @@
+[
+    {
+        "item":  "P2-086",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#16",
+        "subject":  "tournament dialogue subject identity",
+        "defect":  "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits",
+        "frames":  [
+                       "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+                       "meadows__inventory__trainer__tournament_semi_tam__dialogue",
+                       "meadows__inventory__trainer__tournament_final_oskar__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-087",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#17",
+        "subject":  "named trainer dialogue subject visibility",
+        "defect":  "Several named trainer dialogue views show only the player and terrain with no speaker visible",
+        "frames":  [
+                       "meadows__inventory__trainer__old_champion_bram__dialogue",
+                       "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+                       "meadows__inventory__trainer__stronghold_elite__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-078",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#36",
+        "subject":  "dialogue speaker occlusion",
+        "defect":  "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker",
+        "frames":  [
+                       "meadows__inventory__character__kell__dialogue",
+                       "meadows__inventory__character__corin__dialogue",
+                       "meadows__inventory__trainer__captain_field__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-079",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#37",
+        "subject":  "Meadows dialogue rock obstruction",
+        "defect":  "Large rock faces fill the camera and hide the named speaker during dialogue",
+        "frames":  [
+                       "meadows__inventory__character__quarry_foreman__dialogue",
+                       "meadows__inventory__character__garrick__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-073",
+        "preset":  "High",
+        "biome":  "tidewake",
+        "board_row":  "F39#18",
+        "subject":  "dialogue camera framing",
+        "defect":  "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker",
+        "frames":  [
+                       "tidewake__inventory__trainer__water_trainer_daro__dialogue",
+                       "tidewake__inventory__trainer__water_trainer_bex__dialogue",
+                       "tidewake__inventory__trainer__water_trainer_irva__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-075",
+        "preset":  "High",
+        "biome":  "tidewake",
+        "board_row":  "F39#26",
+        "subject":  "dialogue foreground obstruction",
+        "defect":  "The player head and back overlap the named speaker in several conversation frames",
+        "frames":  [
+                       "tidewake__inventory__character__water_adair__dialogue",
+                       "tidewake__inventory__character__water_iona__dialogue",
+                       "tidewake__inventory__character__water_rowan__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-074",
+        "preset":  "High",
+        "biome":  "tidewake",
+        "board_row":  "F39#29",
+        "subject":  "dialogue speaker visibility",
+        "defect":  "Several named conversations show no identifiable speaker near the dialogue panel",
+        "frames":  [
+                       "tidewake__inventory__character__water_nalia__dialogue",
+                       "tidewake__inventory__character__water_nerissa__dialogue",
+                       "tidewake__inventory__trainer__water_trainer_nerissa__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-077",
+        "preset":  "High",
+        "biome":  "cloudreach",
+        "board_row":  "F40#10",
+        "subject":  "dialogue foreground composition",
+        "defect":  "The foreground player or nearby posts hide much of the named speaker in several conversation frames",
+        "frames":  [
+                       "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+                       "cloudreach__inventory__character__defector_rusk__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-076",
+        "preset":  "High",
+        "biome":  "cloudreach",
+        "board_row":  "F40#12",
+        "subject":  "dialogue speaker visibility",
+        "defect":  "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen",
+        "frames":  [
+                       "cloudreach__inventory__character__trader_kelm__dialogue",
+                       "cloudreach__inventory__character__captain_veyra__dialogue",
+                       "cloudreach__inventory__character__captain_veyra__defeated__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-081",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#7",
+        "subject":  "named trainer dialogue identity",
+        "defect":  "Every captured named trainer conversation repeats the same generic line and shows no portrait",
+        "frames":  [
+                       "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+                       "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+                       "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-083",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#15",
+        "subject":  "dialogue foreground obstruction",
+        "defect":  "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames",
+        "frames":  [
+                       "stormwood__inventory__character__captain_marrow__dialogue",
+                       "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+                       "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-084",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#20",
+        "subject":  "named character dialogue reuse",
+        "defect":  "Distinct named Stormwood characters use identical dialogue lines",
+        "frames":  [
+                       "stormwood__inventory__character__trader_fenn__dialogue",
+                       "stormwood__inventory__character__trader_oswin__dialogue",
+                       "stormwood__inventory__character__elder_maud__dialogue"
+                   ]
+    }
+]

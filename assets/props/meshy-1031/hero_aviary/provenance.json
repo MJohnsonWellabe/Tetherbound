@@ -1,0 +1,40 @@
+{
+ "asset": "Cloudreach summit Sky Aviary (P2-022, 5.81)",
+ "status": "CANDIDATES_FLAG_OFF: not wired (.gdignore here); GPU lane places, scale-checks and judges",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "note": "docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png KEY VIEWS: FRONT GATE (654,106)-(866,287), SIDE VIEW (878,106)-(1099,287), REAR VIEW (654,317)-(866,504), 4x Lanczos",
+  "files": [
+   "ref_av_front.jpg",
+   "ref_av_side.jpg",
+   "ref_av_rear.jpg"
+  ],
+  "inspected_before_submission": true
+ },
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "settings": {
+  "mode": "refine",
+  "prompt": "a grand stone sanctuary castle crowned by a huge glass and gold-ribbed dome, pale weathered limestone walls, slender round towers with blue slate conical roofs, tall arched gateway, arched windows, gardens and trees under the dome, standing on a cliff top",
+  "negative_prompt": "floating islands, clouds, waterfalls, birds, sky, background, ground plane, low detail",
+  "should_remesh": true,
+  "should_texture": true,
+  "topology": "triangle",
+  "target_polycount": 100000,
+  "symmetry_mode": "off"
+ },
+ "tasks": [
+  {
+   "candidate": "a",
+   "task_id": "01a19292-4825-7027-9dc7-4fcbd958c2b7",
+   "file": "aviary_a.glb",
+   "sha256": "85ec510f04eed66099cb46b8d1322f66677a6fd194eccce4b3a24041036a219f"
+  },
+  {
+   "candidate": "b",
+   "task_id": "01a19292-5069-72ed-a9bb-ee7ac710baca",
+   "file": "aviary_b.glb",
+   "sha256": "8b5c71327149e53701c1ed5a745195187d79fe2bfb3c504b81f1984d2b31fba5"
+  }
+ ]
+}

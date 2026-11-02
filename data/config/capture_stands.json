@@ -1,0 +1,9 @@
+{
+  "_comment": "Capture-stand rules read by tools/phase2_capture_locations.gd (and phase2_capture_routes.gd, which extends it). Capture tooling only; the game never reads this file.",
+  "buried_stand_guard": {
+    "_why": "P2-014 (cause lane tb/cause-meadows, 1 Nov, OFF until GPU-judged): the Burrow Warrens walk_02/walk_03 route stands put the player or the camera inside the Warrens' earth-bank shell (a hollow trimesh: the capsule overlap and the floor ray both start inside it and miss it), so the frame showed 'floating faceted brown slabs' (scored 2-4). On: a terrain stand (not a built floor, not swimming) is rejected when a down ray from window_m over the player stand, or over the settled production camera, hits solid geometry; the stand loop then tries its next offset/lateral, and fallback_offsets_m are appended after the row's own offsets. Frames whose first stand was clear are unchanged.",
+    "enabled": false,
+    "window_m": 8.0,
+    "fallback_offsets_m": [18.0, 26.0]
+  }
+}

@@ -1,0 +1,86 @@
+{
+ "species": "glimmermoth",
+ "owner_direction": "1 Nov 2026 creature redesign under the owner's rule (believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Coordinator pick a from two rule-following concepts: Glimmermoth, a large moth creature with broad blue and violet patterned wings and a fluffy cream body, a believable lean adult creature in its natural stance, mostly realistic fur, feathers or scales,",
+ "reference": "ref_a.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected and picked by the coordinator under the owner's delegated rule",
+ "meshy_image_to_3d_task": "01a197e7-c144-7700-b497-23a77911c83f",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_glimmermoth (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (dog3 rig and skin recipe; strip_ground_patch.auto)",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, unchanged)",
+   "tools/art_pipeline/arc_emission.py",
+   "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/glimmermoth/candidate_owner1101/source/glimmermoth_a.glb rigged.glb prepare-report.json '{\"species\":\"glimmermoth\",\"height\":3.1}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101.glb ; python3 tools/art_pipeline/arc_emission.py glimmermoth_owner1101",
+  "report": "assets/creatures/tetherbound/glimmermoth/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped",
+   "height_m": 3.1,
+   "triangles": 6672,
+   "ground_patch": {
+    "patch_band_m_normalised": 0.1,
+    "patch_surface_z": 0.0359,
+    "islands_only": false,
+    "columns": [
+     [
+      -0.118,
+      0.069,
+      0.079
+     ],
+     [
+      0.018,
+      -0.155,
+      0.121
+     ],
+     [
+      -0.033,
+      0.293,
+      0.086
+     ],
+     [
+      0.091,
+      0.086,
+      0.082
+     ]
+    ],
+    "removed_vertices": 8975,
+    "removed_islands": 997,
+    "removed_island_vertices": 1763,
+    "regrounded_by": 0.0362,
+    "auto_detect": {
+     "disc": true,
+     "base_over_leg_band_area": 3.121
+    }
+   },
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ]
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.glimmermoth_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_glimmermoth",
+ "test": "tests/test_creature_model_flags.gd"
+}

@@ -1,0 +1,38 @@
+# Queue 64 (31 Oct, after queue 63): HALL-1 candidate. Local branch tb/hall-1 b66a168db (main ade041d97 + the hall_1 flag and its
+# candidate, OFF) is imported once; its Hall tests run headless; then crossing_hall.json is byte-copied from local gpu-local/hall1-on
+# bbe84f4d2 (only hall_1.enabled flipped to true) and the F17-6 camera set is shot at High. Control = queue 62's main frames
+# (out\HALL1-main-High): with the flag off the branch renders as main.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $crA = "D:\tb-gpu-wt-crA"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+$py = "C:\Users\mattj\AppData\Local\Programs\Python\Python312\python.exe"
+$tree = (git -C D:\tb-gpu-pass rev-parse tb/hall-1).Trim()
+$on = (git -C D:\tb-gpu-pass rev-parse gpu-local/hall1-on).Trim()
+$mark = "D:\tb-gpu-runs\crA_imported_sha.txt"
+"== queue64 start $(Get-Date -Format 'dd MMM HH:mm') tree $($tree.Substring(0,9)) on $($on.Substring(0,9))"
+Gate "HALL1 cand"
+CheckoutCrA $tree
+if ((Test-Path $mark) -and ((Get-Content $mark -Raw).Trim() -eq $tree)) { "  crA already imported at tb/hall-1" }
+else { Import $crA "crA-q64hall"; Set-Content -Path $mark -Value $tree -Encoding ascii }
+# Hall tests, headless (no GPU work): the new hall_1 test, the renderer test and the companion interior test.
+$tlog = "$out\HALL1-tests.log"
+& $godot --headless --path $crA --script res://tests/run_tests.gd -- --only=crossing_hall,f17_companion_interior *> $tlog
+"  tests exit=$LASTEXITCODE; tail:"; Get-Content $tlog -Tail 6
+$uid = Join-Path $crA "tests\test_crossing_hall_hall_1.gd.uid"
+if (Test-Path $uid) { Copy-Item $uid "$out\HALL1-test.gd.uid" -Force; "  uid saved" }
+$dest = "$out\HALL1-cand-High"
+if (-not (Test-Path "$dest\_done")) {
+    for ($try = 1; $try -le 2; $try++) {
+        CleanCrA $tree
+        $o = & $py "D:\tb-gpu-runs\tools\json_flip.py" --from $on "data/config/crossing_hall.json" $crA; "  $o"
+        if (Test-Path $dest) { Move-Item $dest "$dest.try$try" -Force -ErrorAction SilentlyContinue }
+        $r = & $run -Preset "High" -Script "res://tools/visual_judge/capture_camera_set.gd" -OutDir $dest -Resolution "1920x1080" -ProjectPath $crA -GodotArgs @("--fullscreen") `
+            -UserArgs @("--set=res://tools/visual_judge/camera_sets/F17-6.json", "--out={FRAMES}", "--preset=High")
+        $n = @(Get-ChildItem "$dest\frames" -File -Include *.jpg, *.png -Recurse -ErrorAction SilentlyContinue).Count
+        "  HALL1 cand High try=$try $r images=$n"
+        if ($n -ge 15) { New-Item -ItemType File -Force "$dest\_done" | Out-Null; break }
+    }
+    CleanCrA $tree
+}
+"queue64 done $(Get-Date -Format 'dd MMM HH:mm')"

@@ -12,6 +12,14 @@ var _settle_fraction := 0.7
 var _rig: Skeleton3D
 var _feet: Array[int] = []
 var _ground := Vector3.ZERO
+## P2-069 (UIPOSES, flag-off): fly_traversal landing_presentation
+## `wing_fold_enabled` with the capability's `landing_fold_offsets`. The bird
+## landed still wings-up in its flight silhouette; when on, its wings fold
+## along the body as it settles (post_stance.gd over the resting clip, blended
+## in with the settle). Only the landing visual is touched; it hides when the
+## presentation ends.
+const POST_STANCE := preload("res://scripts/characters/post_stance.gd")
+var _fold: SkeletonModifier3D = null
 
 
 static func begin(actor: CharacterBody3D, visual: Node3D, capability: Dictionary,
@@ -77,6 +85,13 @@ static func begin(actor: CharacterBody3D, visual: Node3D, capability: Dictionary
 		landing.queue_free()
 		return null
 	feet /= float(count)
+	var fold_rows: Variant = capability.get("landing_fold_offsets", [])
+	if bool(settings.get("wing_fold_enabled", false)) and fold_rows is Array and not (fold_rows as Array).is_empty():
+		landing._fold = POST_STANCE.new()
+		landing._fold.name = "LandingWingFold"
+		landing._fold.set("offsets", fold_rows)
+		landing._fold.influence = 0.0
+		landing._rig.add_child(landing._fold)
 	landing._to = visual.global_transform
 	landing._ground = (hit["position"] as Vector3) + Vector3.UP * float(settings.get("foot_clearance_m", 0.08))
 	landing._to.origin += landing._ground - feet
@@ -93,6 +108,8 @@ func _process(delta: float) -> void:
 	var phase := clampf(_seconds / (_duration * _settle_fraction), 0.0, 1.0)
 	var eased := phase * phase * (3.0 - 2.0 * phase)
 	_visual.global_transform = _from.interpolate_with(_to, eased)
+	if is_instance_valid(_fold):
+		_fold.influence = eased
 	# The native resting clip continues folding the legs. Seat its current
 	# foot joints, not the transient grip pose sampled when touchdown began.
 	if is_instance_valid(_rig) and not _feet.is_empty():

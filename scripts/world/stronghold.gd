@@ -312,7 +312,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 		_markers["entrance"] = _markers.get("ramp_foot",
 			to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 4.0)))
 	# F38 P2-003 (OFF unless stronghold.json hero_gatehouse.enabled).
-	STRONGHOLD_HERO_GATEHOUSE.build(self, _config.get("hero_gatehouse", {}), _floor_y, _mouth_outer_z())
+	STRONGHOLD_HERO_GATEHOUSE.build(self, p2_003_gatehouse(_config), _floor_y, _mouth_outer_z())
 	set_process(true)
 	_report_light_budget()
 	print("[stronghold] %d spaces on the route (%s), floor y=%.2f, %d gauntlet trainer(s), %d approach pylon(s)%s" % [
@@ -3595,12 +3595,16 @@ func _build_hall_fire() -> void:
 	var index := 0
 	for entry: Variant in (_occupation().get("braziers", []) as Array):
 		var spec: Dictionary = entry as Dictionary
+		# P2-064 r2 (vis-meadows, OFF until GPU-judged): the Warden arena's
+		# wall torches, matched by `at`, pool at the wall instead of washing
+		# the fight floor orange.
+		spec = candidate_light(_config, "p2_064_r2_candidate", spec)
 		var node := _brazier(holder, spec, index)
 		if node == null:
 			continue
 		var light := OmniLight3D.new()
 		light.name = "Fire"
-		light.light_color = FIRE_COLOUR
+		light.light_color = Color(str(spec["colour"])) if spec.has("colour") else FIRE_COLOUR
 		light.omni_range = float(spec.get("range", 15.0))
 		# T1-HALL-4, JUDGE-6 defect 12. Godot's default attenuation of 1.0 falls
 		# off nearly linearly across the whole range, which spreads a fire's
@@ -4665,6 +4669,15 @@ func _build_conduits() -> void:
 		var b := _local_of((_chambers[to] as Dictionary).get("at", []))
 		var offset := float(spec.get("offset", 0.0))
 		var along_x := absf(b.x - a.x) >= absf(b.z - a.z)
+		# P2-064 (vis-meadows, OFF until GPU-judged): the centre-to-centre runs
+		# into the Warden arena cross its fight floor as "thick straight
+		# turquoise rails" through creature silhouettes. With
+		# `site.conduits_stop_at_arena_wall` they end at the arena's wall line.
+		if bool(_config.get("site", {}).get("conduits_stop_at_arena_wall", false)):
+			if from == "warden_arena":
+				a = _clip_to_chamber_wall(a, b, _chambers[from] as Dictionary, along_x)
+			if to == "warden_arena":
+				b = _clip_to_chamber_wall(b, a, _chambers[to] as Dictionary, along_x)
 		var mid := (a + b) * 0.5
 		var length := absf(b.x - a.x) if along_x else absf(b.z - a.z)
 		# VP8: 0.34 x 0.16 was JUDGE-6 defect 9's "hard-edged aliased emissive
@@ -4682,6 +4695,55 @@ func _build_conduits() -> void:
 		# (`_interior_live_material`), for the same three verdicts.
 		_box(size, Vector3(mid.x, _floor_y + 0.06, mid.z),
 			_exterior_live_material() if open_yard else _interior_live_material(), false)
+
+
+## P2-087 (vis-meadows, OFF until GPU-judged): with `p2_087_grade_candidate`
+## enabled, each `lights` row whose `at` matches a light's own `at` merges its
+## `set` keys over that light (after the courtyard daylight merge).
+static func p2_087_light(config: Dictionary, spec: Dictionary) -> Dictionary:
+	return candidate_light(config, "p2_087_grade_candidate", spec)
+
+
+## Shared by the light candidates: when `config[flag]` is enabled, the first
+## row of its `lights` whose `at` equals `spec.at` merges its `set` over spec.
+static func candidate_light(config: Dictionary, flag: String, spec: Dictionary) -> Dictionary:
+	var candidate: Dictionary = config.get(flag, {})
+	if not bool(candidate.get("enabled", false)):
+		return spec
+	for row: Variant in candidate.get("lights", []):
+		if row is Dictionary and (row as Dictionary).get("at", []) == spec.get("at", []):
+			var out := spec.duplicate()
+			out.merge((row as Dictionary).get("set", {}) as Dictionary, true)
+			return out
+	return spec
+
+
+## P2-003 (vis-meadows, OFF until GPU-judged): with `p2_003_candidate`
+## enabled, its `keep` keys override the hero gatehouse's and each `companions`
+## entry (by id) overrides that companion's, before anything is placed.
+static func p2_003_gatehouse(config: Dictionary) -> Dictionary:
+	var gatehouse: Dictionary = (config.get("hero_gatehouse", {}) as Dictionary).duplicate(true)
+	var candidate: Dictionary = config.get("p2_003_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return gatehouse
+	gatehouse.merge(candidate.get("keep", {}) as Dictionary, true)
+	var by_id: Dictionary = candidate.get("companions", {})
+	for companion: Variant in gatehouse.get("companions", []):
+		if companion is Dictionary and by_id.has(str((companion as Dictionary).get("id", ""))):
+			(companion as Dictionary).merge(by_id[str(companion.id)], true)
+	return gatehouse
+
+
+## Moves `inside` (a chamber centre) to that chamber's wall line along the
+## run's axis, on the side facing `toward`, so the run stops at the wall foot.
+func _clip_to_chamber_wall(inside: Vector3, toward: Vector3, chamber: Dictionary, along_x: bool) -> Vector3:
+	var half := _size_of(chamber.get("size", [])) * 0.5
+	var out := inside
+	if along_x:
+		out.x += signf(toward.x - inside.x) * half.x
+	else:
+		out.z += signf(toward.z - inside.z) * half.y
+	return out
 
 
 ## W-4 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sec5.2). CONTENT-0828B measured
@@ -4809,6 +4871,7 @@ func _build_lights() -> void:
 		if not daylight.is_empty() and spec.get("at", []) == daylight.get("light_at", []):
 			spec = spec.duplicate()
 			spec.merge(daylight.get("light", {}) as Dictionary, true)
+		spec = p2_087_light(_config, spec)
 		var at := _local_of(spec.get("at", []))
 		var position := Vector3(at.x, _floor_y + float(spec.get("y", 5.0)), at.z)
 		var light: Light3D
@@ -5678,6 +5741,9 @@ func _build_ruin_reclaim() -> void:
 		if not daylight.is_empty() and float(spec.get("from", 0.0)) == float(daylight.get("rubble_from", INF)):
 			spec = spec.duplicate()
 			spec.merge(daylight.get("rubble", {}) as Dictionary, true)
+			var clear: Dictionary = _config.get("p2_003_candidate", {})
+			if bool(clear.get("enabled", false)):
+				spec.merge(clear.get("rubble", {}) as Dictionary, true)
 		_reclaim_batch(holder, spec, rng, false)
 
 

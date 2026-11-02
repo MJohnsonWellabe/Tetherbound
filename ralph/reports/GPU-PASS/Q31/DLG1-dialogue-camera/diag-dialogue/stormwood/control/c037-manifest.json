@@ -1,0 +1,749 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "stormwood",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 491605985515,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 491622762734,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T21:29:13",
+	"capture_started_utc": "2026-10-31T21:26:47",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "officer_nysa_deepwood_rod",
+			"authored_source": "data/config/stormwood_trainers.json",
+			"band_display_name": "",
+			"band_id": "deepwood",
+			"biome_display_name": "Stormwood",
+			"biome_id": "stormwood",
+			"bytes": 108020,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 2.57141375541687,
+			"camera_position": [
+				-889.0,
+				53.8798713684082,
+				4485.580078125
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460635382238
+				],
+				"basis_y": [
+					0.0000000000000000212650433822275,
+					0.984806537628174,
+					-0.173647984862328
+				],
+				"basis_z": [
+					-0.000000000000000120600034869365,
+					0.173647984862328,
+					0.984806537628174
+				],
+				"origin": [
+					-889.0,
+					53.6011962890625,
+					4484.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000000459642389,
+					0.000000000000000122460608912458
+				],
+				"basis_y": [
+					0.0000000000000000212651261002887,
+					0.984807670116425,
+					-0.173648670315742
+				],
+				"basis_z": [
+					-0.000000000000000120600153983373,
+					0.173648685216904,
+					0.984807670116425
+				],
+				"origin": [
+					-889.0,
+					53.8798713684082,
+					4485.580078125
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Officer Nysa",
+			"destination_index": 1,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/gpu-arms/DLG1F-ctl-High-c037/stormwood__inventory__trainer__officer_nysa_deepwood_rod.jpg",
+			"frame_id": "stormwood__inventory__trainer__officer_nysa_deepwood_rod",
+			"identity": "stormwood__inventory__trainer__officer_nysa_deepwood_rod",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1973552994_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-759.619934082031,
+						54.2921142578125,
+						4542.85498046875
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1973552994_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-765.684692382813,
+						53.0375938415527,
+						4557.0048828125
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985522_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-869.224670410156,
+						52.4398574829102,
+						4475.54638671875
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985522_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-873.227966308594,
+						52.4091339111328,
+						4476.56396484375
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985523_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-873.258728027344,
+						50.6617889404297,
+						4497.7412109375
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985523_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-870.724487304688,
+						51.1603698730469,
+						4493.02197265625
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1973552961_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-808.973693847656,
+						60.4464454650879,
+						4419.86181640625
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1973552961_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-767.314880371094,
+						64.0010604858398,
+						4431.00927734375
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1973552966_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-735.13427734375,
+						59.2406616210938,
+						4488.96337890625
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1973552966_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-770.932312011719,
+						56.4005355834961,
+						4504.388671875
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_43985524_1",
+					"node_scale": [
+						0.999998927116394,
+						1.0,
+						0.999998927116394
+					],
+					"position": [
+						-888.645935058594,
+						51.5529289245605,
+						4486.98193359375
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_43985524_2",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						-886.751159667969,
+						51.6482353210449,
+						4485.50439453125
+					],
+					"species_id": "stormraven"
+				}
+			],
+			"nearby_creatures_160m": 12,
+			"observed_clock": {
+				"elapsed_seconds": 200.221859,
+				"hour": 8.00887436,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"phase": "calm",
+			"player_character": "trainer",
+			"player_position": [
+				-889.0,
+				51.8511962890625,
+				4484.0
+			],
+			"position_xz": [
+				-890.0,
+				4482.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 51.8241126188884,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-889.0,
+				4484.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.99368941783905,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-890.0,
+				4482.0
+			],
+			"terrain_ground_y": 51.8241126188884,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": null
+		},
+		{
+			"authored_id": "officer_nysa_deepwood_rod",
+			"authored_source": "data/config/stormwood_trainers.json",
+			"band_display_name": "",
+			"band_id": "deepwood",
+			"biome_display_name": "Stormwood",
+			"biome_id": "stormwood",
+			"bytes": 449489,
+			"camera_fov_degrees": 46.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 2.16340136528015,
+			"camera_position": [
+				-887.842956542969,
+				53.6264228820801,
+				4483.56396484375
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 2.09999990463257,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.460741221904755,
+					0.0,
+					-0.887534201145172
+				],
+				"basis_y": [
+					-0.0773535519838333,
+					0.996192514896393,
+					-0.0401561670005322
+				],
+				"basis_z": [
+					0.884155511856079,
+					0.0871555805206299,
+					0.458987265825272
+				],
+				"origin": [
+					-889.700012207031,
+					53.4433746337891,
+					4482.60009765625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.460741430521011,
+					-0.0000000196691996023901,
+					-0.887534499168396
+				],
+				"basis_y": [
+					-0.0773539915680885,
+					0.996194660663605,
+					-0.0401564165949821
+				],
+				"basis_z": [
+					0.884157121181488,
+					0.0871560573577881,
+					0.458988159894943
+				],
+				"origin": [
+					-887.842956542969,
+					53.6264228820801,
+					4483.56396484375
+				]
+			},
+			"conversation_camera_active": true,
+			"conversation_camera_blend": 1.0,
+			"conversation_camera_fallback": true,
+			"conversation_camera_shot": {
+				"dir": [
+					0.884157180786133,
+					0.087155744433403,
+					0.458988040685654
+				],
+				"distance": 2.1,
+				"fallback": true,
+				"fov": 46.0,
+				"pitch": -0.0872664642919006,
+				"pivot": [
+					-889.700012207031,
+					53.4433746337891,
+					4482.60009765625
+				],
+				"yaw": 1.09196609061472
+			},
+			"debug_travel": true,
+			"destination_display_name": "Officer Nysa",
+			"destination_index": 1,
+			"dialogue_id": "stormwood_trainer_officer_nysa_deepwood_rod_challenge",
+			"dialogue_portrait": "res://assets/ui/portraits/stormwood_raw_officer_a.png",
+			"dialogue_speaker": "Officer Nysa",
+			"dialogue_visual_only": true,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/gpu-arms/DLG1F-ctl-High-c037/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+			"frame_id": "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue",
+			"identity": "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1973552994_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-759.619934082031,
+						54.2921142578125,
+						4542.85498046875
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1973552994_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-765.684692382813,
+						53.0375938415527,
+						4557.0048828125
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985522_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-869.224670410156,
+						52.4398574829102,
+						4475.54638671875
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985522_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-873.227966308594,
+						52.4091339111328,
+						4476.56396484375
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985523_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-873.258728027344,
+						50.6617889404297,
+						4497.7412109375
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985523_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-870.724487304688,
+						51.1603698730469,
+						4493.02197265625
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1973552961_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-808.973693847656,
+						60.4464454650879,
+						4419.86181640625
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1973552961_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-767.314880371094,
+						64.0010604858398,
+						4431.00927734375
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1973552966_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-735.13427734375,
+						59.2406616210938,
+						4488.96337890625
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1973552966_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-770.932312011719,
+						56.4005355834961,
+						4504.388671875
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_43985524_1",
+					"node_scale": [
+						0.999998927116394,
+						1.0,
+						0.999998927116394
+					],
+					"position": [
+						-888.645935058594,
+						51.5529289245605,
+						4486.98193359375
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_43985524_2",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						-886.751159667969,
+						51.6482353210449,
+						4485.50439453125
+					],
+					"species_id": "stormraven"
+				}
+			],
+			"nearby_creatures_160m": 12,
+			"observed_clock": {
+				"elapsed_seconds": 200.221859,
+				"hour": 8.00887436,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"phase": "calm",
+			"player_character": "trainer",
+			"player_position": [
+				-889.0,
+				51.8511962890625,
+				4484.0
+			],
+			"position_xz": [
+				-890.0,
+				4482.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 51.8241126188884,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-889.0,
+				4484.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.99368941783905,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-890.0,
+				4482.0
+			],
+			"terrain_ground_y": 51.8241126188884,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": null
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"stormwood__inventory__trainer__officer_nysa_deepwood_rod"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 491622762734,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/stormwood.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"stormwood__inventory__trainer__officer_nysa_deepwood_rod"
+	]
+}

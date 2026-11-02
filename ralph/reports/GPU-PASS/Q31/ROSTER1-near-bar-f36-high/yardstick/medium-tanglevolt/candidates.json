@@ -1,0 +1,13 @@
+[
+    {
+        "label":  "R1M tanglevolt Medium one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\R1M\\sides\\tanglevolt-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R1M\\sides\\tanglevolt-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the faint end still reads upright or alert (head raised, body standing) rather than knocked out"
+                    ]
+    }
+]

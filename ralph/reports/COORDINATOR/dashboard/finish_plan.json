@@ -8,28 +8,28 @@
    "name": "Judge what is built, take the near-bar closes",
    "start": "2026-11-01",
    "end": "2026-11-07",
-   "dates": "1–7 Nov"
+   "dates": "1\u20137 Nov"
   },
   {
    "id": "P2",
    "name": "The bigger swings: Meshy art, atmosphere per biome, poses",
    "start": "2026-11-08",
    "end": "2026-11-16",
-   "dates": "8–16 Nov"
+   "dates": "8\u201316 Nov"
   },
   {
    "id": "P3",
    "name": "Second rounds and the biome gates",
    "start": "2026-11-17",
    "end": "2026-11-23",
-   "dates": "17–23 Nov"
+   "dates": "17\u201323 Nov"
   },
   {
    "id": "P4",
    "name": "Integrated run, Ally test, your play pass, release",
    "start": "2026-11-24",
    "end": "2026-11-30",
-   "dates": "24–30 Nov"
+   "dates": "24\u201330 Nov"
   }
  ],
  "workstreams": [
@@ -406,7 +406,7 @@
    "how": "Owner plays the passing build"
   },
   {
-   "name": "15–25 hour clear",
+   "name": "15\u201325 hour clear",
    "sels": [
     "F47#0"
    ],
@@ -423,6 +423,54 @@
   }
  ],
  "in_flight": [
+  {
+   "what": "Cloud judging (owner, 1 Nov)",
+   "where": "cloud",
+   "state": "running",
+   "detail": "GPU captures only; three code-blind agent judges with anchors + calibrate.py run in the cloud"
+  },
+  {
+   "what": "P2-095 craft icons",
+   "where": "tb/world-craft-icons",
+   "state": "passed",
+   "detail": "7.36 vs main 6.80 (+0.56), over 7"
+  },
+  {
+   "what": "Batch-1 Meadows",
+   "where": "tb/vis-batch-1",
+   "state": "passed",
+   "detail": "P2-012 4.59->6.25, P2-064 4.59->6.25, P2-059 4.96->5.92, P2-005 5.42->6.09 ON; P2-003 +0.50 and P2-006 -0.17 back to lane"
+  },
+  {
+   "what": "Batch-1 Tidewake/Stormwood/Cloudreach and dialogue",
+   "where": "tb/vis-batch-1",
+   "state": "running",
+   "detail": "Frames pending main pass; judging follows"
+  },
+  {
+   "what": "Batch-2 UI, poses, 12 creatures, 4 NPC bodies",
+   "where": "tb/vis-batch-2",
+   "state": "queued",
+   "detail": "Captures after batch-1 on capture-speed trees"
+  },
+  {
+   "what": "Capture speed",
+   "where": "tb/capture-speed",
+   "state": "built",
+   "detail": "GameMenu per-frame scene walk fixed (player load time too): Cloudreach boot 415 s -> 62 s with grass cache; dialogue 11 launches -> 1"
+  },
+  {
+   "what": "Creature redesign (owner rule, 1 Nov)",
+   "where": "tb/creature-remakes",
+   "state": "running",
+   "detail": "Owner picked Terrapup, Bramblebun, Trailpup, Brooktail, Pipwing, Galewisp, Mudsnout, Mirejaw; coordinator picked 41 more by the rule; Meshy models generating; rig lane fitting them to existing skeletons, flag-off until judged"
+  },
+  {
+   "what": "Routes F49#0",
+   "where": "tb/routes-f49",
+   "state": "running",
+   "detail": "Tidewake and Cloudreach chains landed (#790); Stormwood in progress"
+  },
   {
    "what": "Cindercub coat lift Medium",
    "where": "main",

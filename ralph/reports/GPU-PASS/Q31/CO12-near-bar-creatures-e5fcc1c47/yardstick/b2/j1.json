@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Jx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A large, well-scaled bear-like silhouette, but the noisy yellow-spot pattern over dark plating flattens the form into mottle and the faint is only a crouch, so it misses the owner-bar finish."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing ram is owner-bar quality (clean fleece, dark horns, readable face), but both faint sequences break the read: A's faint mid tangles legs and horns, B's faint mid/end sinks the legs out of sight and lays the horns out as stretched tubes."
+  },
+  "Qd": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's fur reads naturalistic but is a noisy gold-blob mottle and its faint mid floats well above its shadow; B reads clearly but as a smooth terracotta clay toy with moss decals, off the naturalistic style bar, and barely taller than the trainer on either side."
+  },
+  "Cj": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-direction (blue-grey translucent, pale border), but the world behind is a murky flat-lit night with no atmosphere, and the hints use small keyboard-style glyphs instead of controller-first prompts."
+  },
+  "Hs": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A finished, appealing elder villager with an expressive face and eyes, clear silhouette and an earthy green/brown palette that fits the Meadows key art; the plain dark stage gives no light or atmosphere to judge."
+  },
+  "Hf": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good scale and silhouette, but the yellow-spot mottle makes the surface noisy at small size and the faint end still reads as lying down rather than knocked out."
+  },
+  "Wp": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing gold-and-moss lizard with a readable leafy crest, but it is low-slung (head barely above the 1.80 m trainer) and B's hit react launches the whole body into the air off its shadow."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's lifted purple-blue fur brings back some form, but the body is still a dark, low-contrast mound with no readable face or eyes, and the faint poses barely differ from standing."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ground and clarify the hurt/faint set: turn off the aspect flame on faint, keep hit reacts on the ground (Wp B), stop faint meshes floating (Qd A faint mid) or deforming (Le B horns/legs), and make faint end read as knocked out (on the side), not a crouch (Jx, Hf, Rw).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rework creature surfaces to the owner's naturalistic bar: lift Rw's fur value and add a lit face/eye read, and replace the noisy yellow-blob mottle on the Jx/Hf bear and Qd A boar with real fur and plate structure plus a rim light.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Qd boar as a naturalistic, taller-than-trainer model (B's clay-toy body and A's blob coat are both off the style bar).",
+   "kind": "new_art"
+  }
+ ]
+}
