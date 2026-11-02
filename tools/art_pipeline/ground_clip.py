@@ -7,7 +7,11 @@ skins the mesh on the CPU and, where its lowest vertex is below y = 0, raises
 that key by exactly the overlap (plus a 1 cm margin), so the pose rests on the
 ground without floating. Rotations, other clips and the mesh are untouched.
 
-    python3 tools/art_pipeline/ground_clip.py model.glb faint
+    python3 tools/art_pipeline/ground_clip.py model.glb faint [--percentile=2]
+
+--percentile grounds a low percentile of the vertices instead of the lowest
+one, so a thin wing or fin swinging through the floor does not hold the body
+up in the air (Tempestwing, Ribbonray).
 """
 import os
 import sys
@@ -20,6 +24,10 @@ from relax_stretched_weights import Skin, load, save, view  # noqa: E402
 
 def main():
     path, clip = sys.argv[1], sys.argv[2]
+    pct = 0.0
+    for arg in sys.argv[3:]:
+        if arg.startswith("--percentile="):
+            pct = float(arg.split("=", 1)[1])
     gltf, binary = load(path)
     prim = gltf["meshes"][0]["primitives"][0]
     skin = Skin(gltf, binary, prim)
@@ -35,7 +43,7 @@ def main():
     keys = view(gltf, binary, sampler["output"])
     lifted = 0
     for i, t in enumerate(times):
-        low = float(skin.pose(joints, weights, anim, t)[:, 1].min())
+        low = float(np.percentile(skin.pose(joints, weights, anim, t)[:, 1], pct))
         if low < 0.0:
             keys[i, 1] += -low + 0.01
             lifted += 1
