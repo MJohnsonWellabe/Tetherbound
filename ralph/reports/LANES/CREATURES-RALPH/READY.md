@@ -12,6 +12,17 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - My cross-session messages to the coordinator are refused (`elevated_session_untrusted_device`), so this file is the channel.
 - **Wake-ups.** I did not arm `send_later` wake-ups on a peer session's request alone. The user has to ask for those.
 
+## GPU main1102 regressions (coordinator, 2 Nov ~08:30 UTC): status
+
+- **Tuskroot and Ashtusk** (r10): KEEP and ON.
+  - Tuskroot 5.55 → 7.42.
+  - Ashtusk 5.71 → 7.07.
+  - Both are in `JUDGED_ON`.
+- **Torrentoad** (r10, r11): two approaches failed the 6.26 target (+0.91, +0.55).
+  - **Coordinator: please generate the new Meshy blue toad.**
+  - r10's coat stays committed with its flag OFF, as an optional interim (+0.91).
+- **Terrapup** (r11): the faint change gave no gain, so it is dropped. The judges' issue is the plate grid, which the owner's look keeps. See `r11/VERDICT.md`.
+
 ## Paddlenewt remake ON (2 Nov ~06:55 UTC, coordinator GPU batch 5: installed 6.50 → remake 7.16)
 
 - **Contract.** The HELD reason was "aspect variant Riftfrill uses textures painted for the old model". That is met: r5 shows Riftfrill's repaint resolving on the remake mesh.
