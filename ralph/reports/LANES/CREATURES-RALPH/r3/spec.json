@@ -1,0 +1,24 @@
+[
+ {
+  "label": "aquaryn",
+  "a": "sides/aquaryn-base.png",
+  "b": "sides/aquaryn-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "navy serpent coil is dark, mid-value and barely changes between poses",
+   "too small and static",
+   "barely animates",
+   "neither faint reads"
+  ]
+ },
+ {
+  "label": "duskhush",
+  "a": "sides/duskhush-base.png",
+  "b": "sides/duskhush-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "grey-violet bird is one mid-tone with no visible eyes",
+   "faint end collapses into a flat lump"
+  ]
+ }
+]
