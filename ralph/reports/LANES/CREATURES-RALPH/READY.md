@@ -12,6 +12,18 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - My cross-session messages to the coordinator are refused (`elevated_session_untrusted_device`), so this file is the channel.
 - **Wake-ups.** I did not arm `send_later` wake-ups on a peer session's request alone. The user has to ask for those.
 
+## r9 Meshy models (2 Nov ~10:00 UTC): all three wired to r9, waiting for the GPU (see QUEUE.md)
+
+- **Duskhush** (r12): 4.61 → 6.30.
+- **Aquaryn** (r13): 4.44 → 6.54.
+- **Mangrove Monitor** (r13): 5.02 → 5.69.
+- **What I changed on the r9 rigs:**
+  - hit: neck, head and tail eased;
+  - faint: grounded side-lie (about 77°, the root lifted per key), not belly-up;
+  - the Monitor's hit hop scaled down;
+  - Duskhush's wings eased ×0.5 in attack and fly_grip;
+  - weights relaxed on all three.
+
 ## GPU main1102 regressions (coordinator, 2 Nov ~08:30 UTC): status
 
 - **Tuskroot and Ashtusk** (r10): KEEP and ON.

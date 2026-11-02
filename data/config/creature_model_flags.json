@@ -351,19 +351,24 @@
       }
     },
     "remake_owner1101_aquaryn": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Aquaryn, a sleek serpentine water dragon with fin-like frills, deep blue with gold fin edges, a believable  (Meshy 01a197e1-6e77-76e6-998e-58443e8cbabd). rig_serpent column chain at the installed 3.4 m, clips idle, walk, run, attack, hit, faint; emission: glowing aqua fin edges and eyes. Provenance: assets/creatures/tetherbound/aquaryn/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r12-r13 (2 Nov 2026): the live model is the coordinator r9 Meshy water drake (candidate_r9, dog3; hit neck/head/tail eased, faint root roll about 77 deg with the root lifted per key so it rests on the ground, weights relaxed); CPU three-judge A/B 4.44 -> 6.54 mapped against the owner1101 serpent (target 6.5). Earlier: Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Aquaryn, a sleek serpentine water dragon with fin-like frills, deep blue with gold fin edges, a believable  (Meshy 01a197e1-6e77-76e6-998e-58443e8cbabd). rig_serpent column chain at the installed 3.4 m, clips idle, walk, run, attack, hit, faint; emission: glowing aqua fin edges and eyes. Provenance: assets/creatures/tetherbound/aquaryn/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "aquaryn": {
-          "model": "res://assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101.glb",
-          "colourway_source_species": "aquaryn_owner1101",
+          "model": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9.glb",
+          "colourway_source_species": "aquaryn_r9",
           "animations": {
             "idle": "idle",
             "walk": "walk",
             "run": "run",
             "attack": "attack",
+            "charged": "charged",
             "hit": "hit",
-            "faint": "faint"
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
           }
         }
       }
@@ -507,12 +512,12 @@
       }
     },
     "remake_owner1101_mangrove_monitor": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mangrove Monitor, a big monitor lizard with green and olive scales, a believable lean adult creature in its (Meshy 01a197e8-b7ad-72ae-b6e7-27cabf69cdbb). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua eyes and thin aqua lines. Provenance: assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r12-r13 (2 Nov 2026): the live model is the coordinator r9 Meshy banded monitor (candidate_r9, dog3; hit neck/head/tail eased and its root hop at 30 percent, faint root roll about 77 deg grounded per key, weights relaxed); CPU three-judge A/B 5.02 -> 5.69 mapped against the owner1101 remake (target 5.4). The bark-plate spine is red-brown (hue 15-30; 0.03 percent of texels below hue 15), not the reserved red. Earlier: Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mangrove Monitor, a big monitor lizard with green and olive scales, a believable lean adult creature in its (Meshy 01a197e8-b7ad-72ae-b6e7-27cabf69cdbb). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua eyes and thin aqua lines. Provenance: assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "mangrove_monitor": {
-          "model": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101.glb",
-          "colourway_source_species": "mangrove_monitor_owner1101",
+          "model": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9.glb",
+          "colourway_source_species": "mangrove_monitor_r9",
           "animations": {
             "idle": "idle",
             "walk": "walk",
