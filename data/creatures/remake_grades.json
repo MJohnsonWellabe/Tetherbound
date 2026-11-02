@@ -169,13 +169,13 @@
     "keep": [{"hue": [180, 240], "sat_min": 0.35, "val_min": 0.55}]
   },
   "ribbonray": {
-    "_why": "GPU batch 6 (6.02 -> 5.62): the remake reads dull and dark on the stage. Source colours kept; value x1.2 and saturation x1.25 with fine scale contrast x1.2; violet-magenta hues are unchanged (clear of Team Tether red).",
+    "_why": "GPU batch 6 (6.02 -> 5.62): the remake reads dull and dark on the stage. Source colours kept; value x1.2 and saturation x1.1 with fine scale contrast x1.2; violet-magenta hues are unchanged (clear of Team Tether red).",
     "folder": "ribbonray/candidate_owner1101",
     "suffix": "lift",
     "detail_only": true,
     "detail_strength": 1.2,
     "value_scale": 1.2,
-    "sat_scale": 1.25
+    "sat_scale": 1.1
   },
   "tempestwing": {
     "_why": "GPU batch 6 (6.05 -> 5.68): face and value unclear. The atlas scatters white, grey and black at texel scale. Pale gold and grey by region (the remake's identity): pale gold body, a cooler grey back, a lighter warm head so the cyan eyes read; fur and plate grain kept (mix 30 percent); the cyan eyes and wisp lines keep their pixels.",
