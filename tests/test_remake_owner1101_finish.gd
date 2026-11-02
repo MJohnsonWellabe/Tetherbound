@@ -15,7 +15,7 @@ const SCALE_FLAGS := ["remake_owner1101_body_line", "remake_owner1101_judged_sho
 const REMAKE_DIR := "/candidate_owner1101/models/"
 ## Creatures-ralph coat flags judged on CPU against the shipped remake and kept
 ## ON (2 Nov 2026), with the mapped score each one's _why records.
-const JUDGED_ON := {"creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22", "creatures_ralph_cragclaw_body_mid": "6.34"}
+const JUDGED_ON := {"creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22", "creatures_ralph_cragclaw_body_mid": "6.34", "creatures_ralph_tuskroot_brown": "7.42", "creatures_ralph_ashtusk_lift": "7.07"}
 
 
 func _json(path: String) -> Dictionary:

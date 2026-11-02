@@ -116,5 +116,41 @@
         "val_min": 0.82
       }
     ]
+  },
+  "tuskroot": {
+    "_why": "GPU main1102 (installed 7.17 -> remake 6.31; judges x3): 'near-black boar sinks into the dark stage, no rim, face unreadable' against the installed 'brown boar with mossy stone back and white tusks, good value separation'. Mid-brown bristled coat, a lighter tan muzzle and belly, the dorsal plates as mossy grey-green stone with a model-space value jitter, the source grain kept at 35 percent; the ivory tusks keep their pixels.",
+    "folder": "tuskroot/candidate_owner1101",
+    "suffix": "brown",
+    "base": [26, 0.45, 0.47],
+    "regions": [
+      {"where": {"up_max": -0.2}, "hsv": [30, 0.32, 0.6], "softness": 0.15},
+      {"where": {"z_min": 0.85, "y_max": 0.6}, "hsv": [28, 0.3, 0.58], "softness": 0.05},
+      {"where": {"y_min": 0.62, "up_min": 0.1}, "hsv": [80, 0.18, 0.5], "softness": 0.08, "value_jitter": 0.22, "jitter_grain": 5.0}
+    ],
+    "detail_strength": 1.2,
+    "mix_source": 0.35,
+    "keep": [{"sat_max": 0.3, "val_min": 0.62, "where": {"z_min": 0.86}}]
+  },
+  "ashtusk": {
+    "_why": "GPU main1102 (installed 6.83 -> remake 6.31): the Ashtusk repaint 'sinks into the dark stage'. Its live aspect texture (creature_tuskroot_owner1101_Image_0_ashtusk.png, the r1 recipe) lifted about 1.45x in value with sharper fur and plate detail, ash-brown kept; its ember glow map is unchanged.",
+    "folder": "tuskroot/candidate_owner1101",
+    "source": "Image_0_ashtusk.png",
+    "suffix": "ashtusk_lift",
+    "detail_only": true,
+    "detail_strength": 1.2,
+    "value_scale": 1.45
+  },
+  "torrentoad": {
+    "_why": "GPU main1102 (installed 7.06 -> remake 5.59; judges x3): 'dark green upright frog-man is murky, low-value, alien silhouette' against the installed 'naturalistic speckled blue toad with pale belly'. The remake keeps the installed hue (about 150) at half its value (median 0.24 against 0.51). Teal-blue toad coat at the installed value, a darker speckled back from the source (mix 40 percent), a pale cream belly and throat; the aqua glow pixels keep their values.",
+    "folder": "torrentoad/candidate_owner1101",
+    "suffix": "toad",
+    "base": [168, 0.4, 0.52],
+    "regions": [
+      {"where": {"up_min": 0.45, "y_min": 0.5}, "hsv": [175, 0.42, 0.4], "softness": 0.15},
+      {"where": {"up_max": -0.2}, "hsv": [55, 0.14, 0.84], "softness": 0.15}
+    ],
+    "detail_strength": 1.25,
+    "mix_source": 0.4,
+    "keep": [{"hue": [170, 200], "sat_min": 0.45, "val_min": 0.6}]
   }
 }

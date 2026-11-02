@@ -73,7 +73,9 @@ def grade(name, entry):
     folder = entry["folder"]
     models = os.path.join(ROOT, "assets", "creatures", "tetherbound", folder, "models")
     stem = sorted(f for f in os.listdir(models) if f.endswith(".glb"))[0][:-4]
-    img = Image.open(os.path.join(models, stem + "_Image_0.jpg")).convert("RGB")
+    # `source` grades another live texture beside the remake albedo (an
+    # aspect variant's repaint, e.g. "Image_0_ashtusk.png"); default Image_0.jpg.
+    img = Image.open(os.path.join(models, "%s_%s" % (stem, entry.get("source", "Image_0.jpg")))).convert("RGB")
     size = img.width
     anatomy, _ = build(folder, size=size)
     if int(anatomy["size"]) != size:

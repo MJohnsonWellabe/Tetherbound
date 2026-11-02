@@ -1,0 +1,18 @@
+{
+ "anchors": {
+  "p2_094_r4:Y_after": [5.8, 6.6, 6.3],
+  "p2_094_r4:X_before": [3.8, 4.6, 4.3],
+  "craft:before": [4.8, 5.2, 4.6],
+  "craft:after": [6.6, 6.9, 6.6],
+  "f36_0_gap:C5B": [5.5, 6.2, 5.8],
+  "f36_0_gap:C5A": [4.8, 5.4, 5.0]
+ },
+ "candidates": {
+  "torrentoad fix": [5.0, 5.6, 5.3],
+  "torrentoad shipped": [4.3, 5.0, 4.8],
+  "ashtusk shipped": [5.2, 5.8, 5.2],
+  "ashtusk fix": [6.0, 6.6, 6.3],
+  "tuskroot shipped": [5.0, 5.7, 5.2],
+  "tuskroot fix": [6.4, 6.7, 6.5]
+ }
+}
