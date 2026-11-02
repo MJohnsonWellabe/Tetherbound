@@ -26,13 +26,13 @@ vec3 cloudreach_turf(vec3 at) {
 	// Keep installed texture detail but suppress large lumpy camouflage patches.
 	texture_value=mix(vec3(0.51),texture_value,0.52);
 	float broad=sin(at.x*0.029+sin(at.z*0.041))*0.045;
-	vec3 tint = grass_tint.rgb;
+	vec3 turf_tint = grass_tint.rgb;
 	if (turf_patch_strength > 0.0) {
 		float field = cloudreach_turf_patch(at.xz);
 		float dry = smoothstep(turf_dry_band.x, turf_dry_band.y, field);
 		float lush = smoothstep(turf_lush_band.x, turf_lush_band.y, -field);
-		tint = mix(tint, turf_dry_tint.rgb, dry * turf_patch_strength);
-		tint = mix(tint, turf_lush_tint.rgb, lush * turf_patch_strength);
+		turf_tint = mix(turf_tint, turf_dry_tint.rgb, dry * turf_patch_strength);
+		turf_tint = mix(turf_tint, turf_lush_tint.rgb, lush * turf_patch_strength);
 	}
-	return texture_value*tint*(1.0+broad);
+	return texture_value*turf_tint*(1.0+broad);
 }
