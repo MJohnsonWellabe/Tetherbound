@@ -461,12 +461,12 @@
       }
     },
     "remake_owner1101_duskhush": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Duskhush, a large grey-brown owl with ear tufts and dusky barred feathers, a believable lean adult creature (Meshy 01a197e6-ee6c-7729-9cf2-fc6627a32647). rig_bird measured bird rig at the installed 2.3 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing violet eyes. Provenance: assets/creatures/tetherbound/duskhush/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r12 (2 Nov 2026): the live model is the coordinator r9 Meshy eagle owl (candidate_r9, rig_bird; wings eased x0.5 in attack and fly_grip, weights relaxed); CPU three-judge A/B 4.61 -> 6.30 mapped against the owner1101 remake (target 6.3). Earlier: Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Duskhush, a large grey-brown owl with ear tufts and dusky barred feathers, a believable lean adult creature (Meshy 01a197e6-ee6c-7729-9cf2-fc6627a32647). rig_bird measured bird rig at the installed 2.3 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing violet eyes. Provenance: assets/creatures/tetherbound/duskhush/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "duskhush": {
-          "model": "res://assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101.glb",
-          "colourway_source_species": "duskhush_owner1101",
+          "model": "res://assets/creatures/tetherbound/duskhush/candidate_r9/models/creature_duskhush_r9.glb",
+          "colourway_source_species": "duskhush_r9",
           "animations": {
             "idle": "idle",
             "walk": "walk",
