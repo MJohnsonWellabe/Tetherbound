@@ -8,7 +8,8 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - **Ashtusk** r1: 5.94 → 6.71 mapped (+0.77; target ≥ 6.60). Remake aspect textures plus rigid tusks in the Tuskroot GLB.
 - **Tuskroot remake ON** r4 (takes Ashtusk live). Installed → remake mapped: Tuskroot 6.85 → 7.06; Ashtusk 5.36 → 7.27. The Tuskroot GLB weights are relaxed. Commit "r4".
 - **Craghorn** r2: 5.75 → 6.45 mapped (+0.70; target ≥ 6.12). Weight relax in the GLB (horn stretch 1.38 m → 0.17 m). Ships as is.
-- GPU form: `capture_f36_poses.gd -- --species=cliffspike,ashtusk,craghorn --whole-body --context` with `remake_owner1101_tuskroot` enabled for Ashtusk; Forward+ 1920x1080, High first.
+- **Cannonback** r6: 5.33 → 6.22 mapped (+0.89; target ≥ 5.88). Coat flag `creatures_ralph_cannonback_moss` (ON).
+- GPU form: `capture_f36_poses.gd -- --species=cliffspike,ashtusk,craghorn,cannonback,tuskroot --whole-body --context` with `remake_owner1101_tuskroot` enabled for Ashtusk; Forward+ 1920x1080, High first.
 
 ## Task 2 unholds that need CI (separate commit, "Task 2: turn ON ... CI to verify")
 
@@ -23,12 +24,13 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 ## Parked / needs the coordinator
 
 - **Aquaryn and Duskhush:** two approaches each with no gain (r1, r3). The judges ask for new models, which means Meshy, and the key is not in this container.
-- **Cannonback, Cragclaw and Mangrove Monitor:** attempt 1 failed (r2). The next approach for each is in `r2/VERDICT.md`.
+- **Mangrove Monitor:** two failed approaches (r2, r6). It needs new art via Meshy.
+- **Cragclaw:** +0.47 in r6, short of its target. Next: a mid-value body in the shell's hue family plus a scale-up (`r6/VERDICT.md`).
+- **Burrowback, Trailpup and Paddlenewt remakes** (r5): each scores below its installed model, so they stay HELD. The next approach for each is in `r5/VERDICT.md`.
 
 ## Next
 
-- Task 2: repaint the Nightburrow, Stormtrail and Riftfrill aspect textures for their base remakes, using `generate_aspect_variant_textures.py --remake`, as done for Ashtusk.
-- Task 1 attempt 2: Cannonback, Cragclaw and Monitor.
+- Cragclaw attempt 3; Burrowback/Nightburrow plate grade (gap −0.09); Trailpup/Stormtrail regrade.
 
 ## Local checks
 
