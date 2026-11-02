@@ -217,5 +217,23 @@
     "detail_strength": 1.3,
     "mix_source": 0.25,
     "keep": [{"hue": [180, 235], "sat_min": 0.35, "val_min": 0.5}]
+  },
+  "aquaryn_r9": {
+    "_why": "GPU cr1102 (r9 Aquaryn 6.64): 'the uniform glossy turquoise finish looks toy-like, not naturalistic; needs scale detail and less gloss'. Source colour kept; scale contrast sharpened x1.6 at a 5 px scale, saturation x0.85 (less candy turquoise), value x0.95; the coat flag adds a matte scale finish.",
+    "folder": "aquaryn/candidate_r9",
+    "suffix": "scales",
+    "detail_only": true,
+    "detail_strength": 1.6,
+    "detail_blur_px": 5,
+    "value_scale": 0.95,
+    "sat_scale": 0.85
+  },
+  "skyrill_r10": {
+    "_why": "GPU cr1102 (r10 Skyrill 6.87): 'dark material against the stage; needs rim light/value lift'. Source colour kept; value x1.3 with scale contrast x1.25; the coat flag takes the glassy sheen down.",
+    "folder": "skyrill/candidate_r10",
+    "suffix": "lift",
+    "detail_only": true,
+    "detail_strength": 1.25,
+    "value_scale": 1.3
   }
 }
