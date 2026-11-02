@@ -7,4 +7,4 @@ BLANK   6.5 meadows-locations\meadows__landmark__old_mill_crossing__day__approac
 SET meadows-dialogue: 1/16 blank
 SET meadows-fights-f312a5: 4/73 blank
 SET meadows-locations: 1/48 blank
-blank frames 6 of 1129
+blank frames 6 of 1285
