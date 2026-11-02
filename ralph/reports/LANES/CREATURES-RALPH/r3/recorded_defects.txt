@@ -1,0 +1,5 @@
+Dr: none
+Lb: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ga: "navy serpent coil is dark, mid-value and barely changes between poses"; "too small and static"; "barely animates"; "neither faint reads"
+Yf: none
+Sh: "grey-violet bird is one mid-tone with no visible eyes"; "faint end collapses into a flat lump"

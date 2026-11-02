@@ -1,0 +1,7 @@
+Dt: none
+Sx: "tank-like cartoon turtle with cannon studs reads as toy styling"
+Xo: "spindly, overlong horns that double or stretch in the hit-react frame and pierce the faint-mid pose"; "thin silhouette"
+Au: none
+Kz: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ai: "muddled dark mass whose body hides under the shell, face does not read"; "head and limbs vanish in the faint frames"
+Bl: "plain, smooth, rubbery green monitor with little surface detail"; "no elemental trait"; "tail passes through the ruler / clips the trainer"

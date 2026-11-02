@@ -304,6 +304,10 @@ def main():
             print("skip %s: not in %s" % (variant, SPEC_PATH))
             continue
         entry = spec[variant]
+        # A variant may carry a `remake` block (rules/glow/finish/overlays)
+        # that replaces the old-model recipe when painting the remake mesh.
+        if remake_mode and isinstance(entry.get("remake"), dict):
+            entry = dict(entry, **entry["remake"])
         source = entry["source_species"]
         # Close-1024: a base on a naturalistic remake names its folder
         # (`<species>/candidate_nat1024`). The remake's albedo is the glTF's
