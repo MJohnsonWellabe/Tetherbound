@@ -203,5 +203,19 @@
     "detail_strength": 1.4,
     "mix_source": 0.25,
     "keep": [{"hue": [165, 200], "sat_min": 0.6, "val_min": 0.7}]
+  },
+  "thundertunnel": {
+    "_why": "Coordinator GPU roster 2 Nov (4.72, lowest; the r10 Meshy remodel is blocked on credits): rescue on the current remake with a value lift and a readable face. Its atlas is near-black brown (mean value 0.22) with stray lime and grey Meshy patches. Velvet mole by region: warm mid-brown body, a lighter tan belly, pale horn digging claws and lower legs, a tan muzzle a step lighter so the eyes read; fur grain kept (mix 25 percent); the electric-blue lightning lines and eyes keep their pixels.",
+    "folder": "thundertunnel/candidate_owner1101",
+    "suffix": "velvet",
+    "base": [24, 0.4, 0.46],
+    "regions": [
+      {"where": {"up_max": -0.25}, "hsv": [28, 0.3, 0.58], "softness": 0.15},
+      {"where": {"y_max": 0.18}, "hsv": [38, 0.16, 0.66], "softness": 0.06},
+      {"where": {"z_min": 0.84, "y_max": 0.75}, "hsv": [26, 0.3, 0.6], "softness": 0.05}
+    ],
+    "detail_strength": 1.3,
+    "mix_source": 0.25,
+    "keep": [{"hue": [180, 235], "sat_min": 0.35, "val_min": 0.5}]
   }
 }
