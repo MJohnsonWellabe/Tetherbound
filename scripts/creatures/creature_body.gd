@@ -1174,7 +1174,8 @@ static func parse_coat_flags(parsed: Dictionary) -> Dictionary:
 		for from_path: String in coats:
 			# A string is a graded albedo path; a dictionary may also carry
 			# material values ({"albedo"?, "metallic"?, "roughness"?,
-			# "specular"?, "emission_scale"?, "emission"?, "emission_energy"?}),
+			# "specular"?, "emission_scale"?, "emission"?, "emission_energy"?,
+			# "rim"?, "rim_tint"?}),
 			# where a roughness value replaces the roughness map, emission_scale
 			# multiplies a self-lit body's emission energy (so its form reads
 			# under the stage light) and emission names a trait glow map.
@@ -1218,6 +1219,13 @@ static func coat_material(source: BaseMaterial3D, spec: Dictionary) -> BaseMater
 		copy.metallic_specular = clampf(float(spec.specular), 0.0, 1.0)
 	if spec.has("emission_scale"):
 		copy.emission_energy_multiplier *= clampf(float(spec.emission_scale), 0.0, 1.0)
+	# An edge rim that lifts a dark body off the stage, capped under the field
+	# rim's ceiling (FIELD_RIM_MAX) so an alpha's 0.65 rim stays its own tell.
+	# Renders on Forward+ (Medium/High); Compatibility draws no rim.
+	if spec.has("rim"):
+		copy.rim_enabled = true
+		copy.rim = clampf(float(spec.rim), 0.0, FIELD_RIM_MAX)
+		copy.rim_tint = clampf(float(spec.get("rim_tint", ALPHA_RIM_TINT)), 0.0, 1.0)
 	# A trait glow map (a mostly-black mask: veins, fin edges, a stripe) lit the
 	# same way the aspect variants' synthesised glow is (multiply operator,
 	# white emission). It replaces a self-lit albedo copy in the emission slot.

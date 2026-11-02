@@ -679,6 +679,24 @@
           "specular": 0.25
         }
       }
+    },
+    "creatures_ralph_skyrill_r10_rim": {
+      "_why": "Creatures-ralph (2 Nov 2026), r10 Skyrill (GPU cr1102c 7.43: 'reads small and unlit on the stage; a little rim light / value separation should push it over 7.5'). An edge rim of 0.15 on the live coat (stacks with creatures_ralph_skyrill_r10_lift). Compatibility draws no rim, so this is a GPU-only arm (Medium/High). OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_Image_0.jpg": {
+          "rim": 0.15
+        }
+      }
+    },
+    "creatures_ralph_tuskroot_rim": {
+      "_why": "Creatures-ralph (2 Nov 2026), Tuskroot on main's dark coat (GPU cr1102b: main 7.65 reads best, short on rim light; the lighter hide regressed to 7.01). An edge rim of 0.15 only; the albedo is unchanged. Pairs with the scale flag creatures_ralph_tuskroot_presence (x1.1). GPU-only arm (Compatibility draws no rim). OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0.jpg": {
+          "rim": 0.15
+        }
+      }
     }
   }
 }

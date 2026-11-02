@@ -25,3 +25,13 @@ Each entry gives the species, the commit and the capture. All entries use `captu
 3. **Duskhush r9:** one clear elemental trait and a cleaner faint.
 4. **Torrentoad:** a grounded, squat toad pose and a less glossy skin.
 5. **Tuskroot:** keep main's value, add rim light and a slightly larger read against the ruler. Don't lighten the hide.
+
+## READY GPU jobs (2 Nov ~14:40 UTC): rim arms (GPU-only; Compatibility draws no rim, so the CPU stage cannot judge them)
+
+**Job:** `--species=skyrill,tuskroot`. Arm B turns the flags below ON; A is the branch as is.
+
+- **Skyrill r10** (GPU 7.43): `creatures_ralph_skyrill_r10_rim` (coat rim 0.15). It stacks with the ON lift.
+- **Tuskroot** on main's dark coat (GPU 7.65):
+  - `creatures_ralph_tuskroot_rim` (coat rim 0.15, albedo unchanged);
+  - `creatures_ralph_tuskroot_presence` (scale ×1.1, 3.6 → 3.96 m; the CPU stage receipt confirms 3.96 m).
+- **Code:** `coat_material` takes `rim` / `rim_tint`, capped at FIELD_RIM_MAX (0.30) under the alpha's 0.65. `tests/test_creature_coat_flags.gd` passes.

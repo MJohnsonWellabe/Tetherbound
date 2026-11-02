@@ -37,7 +37,7 @@ func test_every_flag_resolves_when_enabled() -> void:
 			if spec.has("emission"):
 				assert_true(ResourceLoader.exists(str(spec.emission)), "%s glow map %s exists" % [flag, spec.emission])
 			for key: String in spec:
-				assert_true(key in ["albedo", "metallic", "roughness", "specular", "emission_scale", "emission", "emission_energy"],
+				assert_true(key in ["albedo", "metallic", "roughness", "specular", "emission_scale", "emission", "emission_energy", "rim", "rim_tint"],
 					"%s %s uses a known key (%s)" % [flag, from_path, key])
 
 
@@ -78,6 +78,18 @@ func test_material_values_and_emission_scale_apply() -> void:
 	# Emission is only ever dimmed, never pushed past the source.
 	var bright: BaseMaterial3D = BODY.coat_material(source, {"emission_scale": 3.0})
 	assert_almost_eq(bright.emission_energy_multiplier, 2.0)
+
+
+func test_rim_lights_the_copy_under_the_field_ceiling() -> void:
+	var source := StandardMaterial3D.new()
+	var copy: BaseMaterial3D = BODY.coat_material(source, {"rim": 0.15})
+	assert_true(copy.rim_enabled, "a rim value enables the edge rim")
+	assert_almost_eq(copy.rim, 0.15)
+	assert_false(source.rim_enabled, "the source material is untouched")
+	# Capped under the field rim's ceiling, so an alpha's rim stays its own tell.
+	var capped: BaseMaterial3D = BODY.coat_material(source, {"rim": 0.9})
+	assert_almost_eq(capped.rim, BODY.FIELD_RIM_MAX)
+	assert_true(capped.rim < BODY.ALPHA_RIM_STRENGTH, "a coat rim stays under the alpha rim")
 
 
 func test_trait_glow_map_lights_the_copy() -> void:

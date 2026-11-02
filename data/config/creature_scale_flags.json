@@ -68,6 +68,13 @@
       "species": {
         "cragclaw": 1.2
       }
+    },
+    "creatures_ralph_tuskroot_presence": {
+      "_why": "Creatures-ralph r20 arm (GPU cr1102b: Tuskroot short on rim light and 'a slightly larger read against the ruler'). x1.1 (3.6 -> 3.96 m); nothing evolves from Tuskroot. Landing needs the usual gameplay checks (arena containment, spawn clearance). OFF until GPU-judged with creatures_ralph_tuskroot_rim (CPU stage confirms 3.96 m).",
+      "enabled": false,
+      "species": {
+        "tuskroot": 1.1
+      }
     }
   }
 }
