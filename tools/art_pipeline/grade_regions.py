@@ -15,7 +15,7 @@ data/config/creature_coat_flags.json selects it.
 
 Region `where` keys: x/y/z_min/max (0..1 box units), up_min/up_max (normal Y),
 fwd_min/fwd_max (normal Z), lateral_min (|x-0.5|*2), radial_min/max.
-detail_only entries take detail_strength, detail_blur_px, value_scale and sat_scale.
+detail_only entries take detail_strength, detail_blur_px, value_scale, sat_scale and hue_shift.
 
     python3 tools/art_pipeline/grade_regions.py duskhush [species ...]
 """
@@ -104,6 +104,17 @@ def grade(name, entry):
         if sat_scale != 1.0:
             top = out.max(axis=-1, keepdims=True)
             out = np.clip(top - (top - out) * sat_scale, 0, 1)
+        # Optional hue moves (e.g. a red-brown stripe off Team Tether red):
+        # each {"hue": [lo, hi] (signed degrees), "min_sat", "to_hue",
+        # "sat_scale"} moves matching texels to to_hue, keeping their value.
+        for move in entry.get("hue_shift", []):
+            oh, os_, ov = rgb_to_hsv(out)
+            signed = np.where(oh > 180.0, oh - 360.0, oh)
+            lo, hi = move["hue"]
+            m = (signed >= lo) & (signed <= hi) & (os_ >= float(move.get("min_sat", 0.3)))
+            moved = hsv_to_rgb(np.full(oh.shape, float(move["to_hue"])),
+                               np.clip(os_ * float(move.get("sat_scale", 1.0)), 0, 1), ov)
+            out = np.where(m[..., None], moved, out)
         keep = ~valid
         out[keep] = rgb[keep]
         suffix = entry.get("suffix", "graded")

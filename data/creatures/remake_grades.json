@@ -235,5 +235,27 @@
     "detail_only": true,
     "detail_strength": 1.25,
     "value_scale": 1.3
+  },
+  "mangrove_monitor_r9": {
+    "_why": "GPU cr1102 and r19 (all three CPU judges): the red-brown dorsal stripe (10.6 percent of texels at hue 15-30, saturation about 0.48) reads oxblood-adjacent, and the body is 'plain with little surface detail'. Hues -15 to 34 at saturation 0.2 or more move to olive-tan (hue 46, saturation x0.75), keeping value; scale contrast x1.4.",
+    "folder": "mangrove_monitor/candidate_r9",
+    "suffix": "olive",
+    "detail_only": true,
+    "detail_strength": 1.4,
+    "detail_blur_px": 5,
+    "hue_shift": [{"hue": [-15, 34], "min_sat": 0.2, "to_hue": 46, "sat_scale": 0.75}]
+  },
+  "aquaryn_r9_ramp": {
+    "_why": "GPU cr1102 and r19 (all three CPU judges): 'one glossy turquoise with no value structure from back to belly'; r19's fine scale contrast (-0.05) did not read at the stage camera. Countershaded water drake in its turquoise identity: deep teal back, mid turquoise flanks, pale aqua belly and throat; the source speckle and grain are kept (mix 40 percent); the white crest, aqua markings and eyes keep their pixels. The coat flag adds a matte finish.",
+    "folder": "aquaryn/candidate_r9",
+    "suffix": "ramp",
+    "base": [184, 0.55, 0.56],
+    "regions": [
+      {"where": {"up_min": 0.4, "y_min": 0.45}, "hsv": [190, 0.62, 0.34], "softness": 0.15},
+      {"where": {"up_max": -0.25}, "hsv": [176, 0.22, 0.8], "softness": 0.15}
+    ],
+    "detail_strength": 1.3,
+    "mix_source": 0.4,
+    "keep": [{"sat_max": 0.12, "val_min": 0.75}, {"hue": [170, 200], "sat_min": 0.6, "val_min": 0.85}]
   }
 }
