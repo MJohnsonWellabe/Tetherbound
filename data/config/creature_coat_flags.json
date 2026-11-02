@@ -477,6 +477,15 @@
           "albedo": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101_Image_0_coat_lift.jpg"
         }
       }
+    },
+    "creatures_ralph_cliffspike_bands": {
+      "_why": "Creatures-ralph (2 Nov 2026), batch-4 GPU judges on the Cliffspike remake: 'grey porcupine hides its face under the quills', one pale value over body and quills. Banded quills as on a real porcupine: dark warm base tone on the body and quill roots grading to pale cream tips by 3D distance from the body centre, a lighter warm-grey face below the quill line, glowing eyes and lines kept (tools/art_pipeline/grade_quill_bands.py cliffspike/candidate_owner1101). Mesh weight fix for the hit-react sheet ships in the GLB itself (tools/art_pipeline/relax_stretched_weights.py).",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101_Image_0_bands.jpg"
+        }
+      }
     }
   }
 }
