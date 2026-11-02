@@ -30,6 +30,12 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 
 1. **The 6.8–7.0 band** (aeriex 6.92, mosshell 6.92, galewisp 6.96, paddlenewt 6.98, trailpup 6.99, tuskroot 6.85, cindercub 6.85, stormbrush 6.82, nightburrow 6.80, water_mosshell 6.95): look first for a shared lift (faints, value against the dark stage, rim). Started: a CPU baseline of mosshell, galewisp and aeriex.
 2. **Water variants:** do they inherit the base model's look fixes, and are their swim and ride clips missing?
+   - **Band audit (2 Nov ~09:50 UTC).**
+     - Faint end-roll: every live dog3 remake ends its faint on a 90° root side-lie (the bird recipe at 70°; fulgocobra and skyrill at 0°). There is no roster-wide over-roll to fix in one place.
+     - CPU baseline of mosshell, galewisp and aeriex:
+       - mosshell (an installed model, not a remake) flips fully belly-up in its own faint;
+       - galewisp and aeriex read cleanly, with grounded side-lies.
+     - Nothing shared stands out at the stage camera. **Needed from the coordinator: the ROSTER-1102 per-species judge notes** (defects per frame) for the band and the water_* rows. Without them every band arm is a guess. The water_* rows are separate species with their own clips and pose overrides (`creature_clip_flags.json`, `f36_pose_candidates.json`), so they do not inherit the base model's look fixes.
 3. **The bottom, worst first.**
    - Thundertunnel, Sirenseal, Skyrill and Staticub get coordinator r10 Meshy models.
    - Sparkit, Ribbonray, Tempestwing and Ripplet are already tried (r14, r15) and need new art.
