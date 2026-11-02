@@ -24,6 +24,10 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
   - Duskhush's wings eased ×0.5 in attack and fly_grip;
   - weights relaxed on all three.
 
+## Main merge held (coordinator, 2 Nov ~12:30 UTC)
+
+#798 turned Meadows light and river candidates ON in main, and the F36 creature stage reads production `meadows_look.json`. This branch does **not** merge `origin/main` until cr1102b is judged and the creature landing PR is open, so the A/B lighting keeps matching the main1102b control. The first QUEUE job after that merge is marked "needs fresh main control (main1102c)".
+
 ## GPU-confirmed: cr1102 (2 Nov ~12:10 UTC; three code-blind judges, anchors, calibrated; tree 29518c111 vs main1102b)
 
 | Species | main | lane | Δ |
