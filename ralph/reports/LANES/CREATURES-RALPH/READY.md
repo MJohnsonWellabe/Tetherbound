@@ -3,9 +3,15 @@
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
 
 
-## PR #799 needs one test fix (2 Nov ~15:00 UTC)
+## PR #799: both CI failures fixed on this branch (2 Nov ~15:40 UTC). Bring in head `f89846eb5` or later.
 
-`tb/land-creatures-2` (from 93606fafe) registers `creatures_ralph_skyrill_r10_lift` in `JUDGED_ON` (r19). `test_judged_creature_coat_flags_ship_on_with_their_scores` then fails "grades a remake texture", because it only accepted `candidate_owner1101/` paths. The fix is commit `7a5951fbf` on this branch (test only, stricter exact-live-albedo rule). Please cherry-pick it onto the land branch, or land a later head of this branch.
+1. **`test_every_runtime_3d_texture_uses_vram_compression`:** fixed in `f89846eb5`.
+   - The 33 sidecars are on mode 2, via `texture_import_policy.py --apply` and a headless reimport.
+   - `--check` PASS (1434). `test_texture_import_policy.gd` passes locally.
+2. **`test_judged_creature_coat_flags_ship_on_with_their_scores`:** fixed in `7a5951fbf`.
+   - A judged coat must grade a `candidate_owner1101/` texture, or the exact live albedo of a remake's current model (r9 or r10). It never grades an installed model.
+   - The same exact-live-albedo rule backs the "keys the remake's live albedo" check at `test_enabled_coat_flags_apply_every_key`.
+   - `test_remake_owner1101_finish.gd`: every test passes locally except `apply_every_key` for species outside this container's partial import set (textures not imported here; CI imports all).
 
 ## ANSWER FOR THE CREATURE LANDING PR (2 Nov ~14:15 UTC)
 
