@@ -697,6 +697,28 @@
           "rim": 0.15
         }
       }
+    },
+    "creatures_ralph_mangrove_monitor_r9_olive": {
+      "_why": "Creatures-ralph (2 Nov 2026), r9 Mangrove Monitor (GPU cr1102 6.44; judges: a red-brown dorsal stripe reads oxblood-adjacent, the surface is plain). The stripe moves to olive-tan with sharper scale detail (data/creatures/remake_grades.json mangrove_monitor_r9) and a matte finish. r21 CPU three-judge A/B (with the folded, settled faint in the GLB): 5.28 -> 6.05 mapped; stripe and faint FIXED for all three judges. ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9_Image_0_olive.jpg",
+          "roughness": 0.8,
+          "specular": 0.3
+        }
+      }
+    },
+    "creatures_ralph_aquaryn_r9_ramp": {
+      "_why": "Creatures-ralph (2 Nov 2026), r9 Aquaryn (GPU cr1102 6.64; judges: one glossy turquoise with no back-to-belly value). Countershaded turquoise, deep teal back to pale aqua belly (data/creatures/remake_grades.json aquaryn_r9_ramp), with a matte finish. r21 CPU three-judge A/B: 5.70 -> 5.28 mapped (judges: lighter and flatter, still one glossy turquoise). OFF; the second failed approach after r19, so Aquaryn needs new art.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0_ramp.jpg",
+          "roughness": 0.85,
+          "specular": 0.25
+        }
+      }
     }
   }
 }

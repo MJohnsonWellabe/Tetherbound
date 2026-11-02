@@ -1,0 +1,16 @@
+{
+ "anchors": {
+  "f36_0_gap:C5A": [4.5, 3.9, 4.8],
+  "f36_0_gap:C5B": [6.4, 6.3, 6.2],
+  "craft:before": [4.9, 5.0, 5.2],
+  "craft:after": [6.7, 6.6, 6.6],
+  "f36_0_npc:C5A": [4.8, 5.3, 5.3],
+  "f36_0_npc:C5B": [4.9, 5.3, 5.3]
+ },
+ "candidates": {
+  "mangrove_monitor r9 live": [5.0, 4.8, 5.0],
+  "mangrove_monitor r9 olive + folded faint": [5.8, 5.6, 5.6],
+  "aquaryn r9 live": [5.6, 5.0, 5.4],
+  "aquaryn r9 countershaded ramp": [5.1, 4.7, 5.0]
+ }
+}

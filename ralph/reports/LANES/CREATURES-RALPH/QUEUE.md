@@ -35,3 +35,8 @@ Each entry gives the species, the commit and the capture. All entries use `captu
   - `creatures_ralph_tuskroot_rim` (coat rim 0.15, albedo unchanged);
   - `creatures_ralph_tuskroot_presence` (scale ×1.1, 3.6 → 3.96 m; the CPU stage receipt confirms 3.96 m).
 - **Code:** `coat_material` takes `rim` / `rim_tint`, capped at FIELD_RIM_MAX (0.30) under the alpha's 0.65. `tests/test_creature_coat_flags.gd` passes.
+
+## READY GPU job (r21 keep): `--species=mangrove_monitor`
+
+- **Mangrove Monitor r9:** the GLB lies flat in its faint and `creatures_ralph_mangrove_monitor_r9_olive` is ON. CPU 5.28 → 6.05.
+- **Aquaryn:** parked for new art after two failed coat approaches (r19, r21).
