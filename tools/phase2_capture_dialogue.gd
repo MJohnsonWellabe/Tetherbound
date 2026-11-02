@@ -89,7 +89,63 @@ func _dialogue_for(row: Dictionary) -> String:
 		return a.length() < b.length() if a.length() != b.length() else a < b)
 	return candidates[0] if not candidates.is_empty() else ""
 
+## Cause lane CAMFX (judges 1 Nov: "Kell is off-screen", P2-078): a speaker
+## authored with a `place_when` flag (Kell after `legendary_freed`, Sela after
+## `captive_rescued`) is not standing anywhere in a fresh capture state, so the
+## post and dialogue frames showed only the player. The row's own placement
+## flag is raised for that row and cleared afterwards, which is the world her
+## line is written for. Capture fixture only; the game is unchanged.
 func _capture_row(row: Dictionary) -> void:
+	var raised := _raise_placement_flags(row)
+	if not raised.is_empty():
+		# village_npcs.gd places on the next frame the flag store's revision moves.
+		for _frame in POPULATE_FRAMES:
+			await physics_frame
+	await _capture_row_with_dialogue(row)
+	if not raised.is_empty():
+		var progression: Variant = _progression_store()
+		for flag: String in raised:
+			progression.call("set_flag", flag, false)
+		for _frame in POPULATE_FRAMES:
+			await physics_frame
+
+
+func _progression_store() -> Variant:
+	var game := root.get_node_or_null(^"Game")
+	return game.get("progression") if game != null else null
+
+
+## The `if_flag`s of the first `place_when` branch of this row's villager spec
+## that are not already set, now set. Empty when the speaker needs none.
+func _raise_placement_flags(row: Dictionary) -> Array[String]:
+	var raised: Array[String] = []
+	var source := str(row.get("authored_source", row.get("source", "")))
+	if not source.ends_with("village_npcs.json"):
+		return raised
+	var progression: Variant = _progression_store()
+	if progression == null:
+		return raised
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://" + source))
+	if not parsed is Dictionary:
+		return raised
+	for raw: Variant in (parsed as Dictionary).get("villagers", []):
+		if not raw is Dictionary or str((raw as Dictionary).get("name", "")) != str(row.get("authored_id", "")):
+			continue
+		var branches: Variant = (raw as Dictionary).get("place_when", [])
+		if not branches is Array or (branches as Array).is_empty() or not (branches as Array)[0] is Dictionary:
+			return raised
+		var flags: Variant = ((branches as Array)[0] as Dictionary).get("if_flag", [])
+		for flag: Variant in (flags if flags is Array else [flags]):
+			var id := str(flag)
+			if id.is_empty() or bool(progression.call("has", id)):
+				continue
+			progression.call("set_flag", id, true)
+			raised.append(id)
+			print("DLG_SPEAKER %s placement flag raised: %s" % [str(row.get("frame_id", "")), id])
+	return raised
+
+
+func _capture_row_with_dialogue(row: Dictionary) -> void:
 	var before := _records.size()
 	await super._capture_row(row)
 	if _records.size() == before:

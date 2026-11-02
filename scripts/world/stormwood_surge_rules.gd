@@ -9,7 +9,44 @@ var sink: Dictionary
 
 func _init(authored: Dictionary = {}) -> void:
 	config = authored.duplicate(true) if not authored.is_empty() else JSON.parse_string(FileAccess.get_file_as_string(PATH))
+	config = with_presentation_candidates(config)
 	sink = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_stormwood.json")).glass_sink
+
+## Cause-lane candidates (owner 1 Nov, Stormwood storm light and ground), each
+## OFF by default: `presentation.<key>.enabled` deep-merges that block's
+## `overlay` into `presentation` before anything reads it, so every phase row,
+## ceiling, fog and rain key it names changes and nothing else. Presentation
+## only: strike, phase timing, shelter and save rules never read `presentation`.
+const PRESENTATION_CANDIDATES := ["storm_sky_1101", "soft_rain_1101"]
+
+
+static func with_presentation_candidates(source: Dictionary) -> Dictionary:
+	var presentation: Variant = source.get("presentation", {})
+	if not presentation is Dictionary:
+		return source
+	var on: Array[Dictionary] = []
+	for key: String in PRESENTATION_CANDIDATES:
+		var block: Variant = (presentation as Dictionary).get(key, {})
+		if block is Dictionary and bool((block as Dictionary).get("enabled", false)) \
+				and (block as Dictionary).get("overlay") is Dictionary:
+			on.append((block as Dictionary).overlay)
+	if on.is_empty():
+		return source
+	var out := source.duplicate(true)
+	var merged: Dictionary = out.presentation
+	for overlay: Dictionary in on:
+		deep_merge(merged, overlay)
+	return out
+
+
+static func deep_merge(target: Dictionary, overlay: Dictionary) -> void:
+	for key: Variant in overlay:
+		var value: Variant = overlay[key]
+		if value is Dictionary and target.get(key) is Dictionary:
+			deep_merge(target[key], value)
+		else:
+			target[key] = value.duplicate(true) if (value is Dictionary or value is Array) else value
+
 
 func in_glass_sink(at: Vector3) -> bool:
 	var distance := Vector2(at.x, at.z).distance_to(Vector2(float(sink.centre[0]), float(sink.centre[1])))

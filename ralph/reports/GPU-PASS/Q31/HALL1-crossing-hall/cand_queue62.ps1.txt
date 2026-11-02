@@ -1,0 +1,27 @@
+# Queue 62 (31 Oct, after queue 61): HALL-1 baseline. Main has changed since the 24 Oct F17-6 GPU pass (Forward+ shafts off,
+# arch facades ON, nave furnishing), so shoot current main's F17-6 camera set at High first; the HALL-1 candidate is then judged
+# against it on the same imported tree (the candidate uses installed model families only, so no re-import).
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $crA = "D:\tb-gpu-wt-crA"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+$main = "ade041d97fa2"
+$mark = "D:\tb-gpu-runs\crA_imported_sha.txt"
+"== queue62 start $(Get-Date -Format 'dd MMM HH:mm')"
+$main = (git -C D:\tb-gpu-pass rev-parse $main).Trim()
+$dest = "$out\HALL1-main-High"
+if (-not (Test-Path "$dest\_done")) {
+    Gate "HALL1 main High"
+    CheckoutCrA $main
+    if ((Test-Path $mark) -and ((Get-Content $mark -Raw).Trim() -eq $main)) { "  crA already imported at main" }
+    else { Import $crA "crA-q62main"; Set-Content -Path $mark -Value $main -Encoding ascii }
+    for ($try = 1; $try -le 2; $try++) {
+        CleanCrA $main
+        if (Test-Path $dest) { Move-Item $dest "$dest.try$try" -Force -ErrorAction SilentlyContinue }
+        $r = & $run -Preset "High" -Script "res://tools/visual_judge/capture_camera_set.gd" -OutDir $dest -Resolution "1920x1080" -ProjectPath $crA -GodotArgs @("--fullscreen") `
+            -UserArgs @("--set=res://tools/visual_judge/camera_sets/F17-6.json", "--out={FRAMES}", "--preset=High")
+        $n = @(Get-ChildItem "$dest\frames" -File -Include *.jpg, *.png -Recurse -ErrorAction SilentlyContinue).Count
+        "  HALL1 main High try=$try $r images=$n"
+        if ($n -ge 15) { New-Item -ItemType File -Force "$dest\_done" | Out-Null; break }
+    }
+}
+"queue62 done $(Get-Date -Format 'dd MMM HH:mm')"

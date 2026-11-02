@@ -1,0 +1,146 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9564,
+  "least_squares_slope": 0.8943,
+  "method": "linear",
+  "slope": 0.8943,
+  "intercept": 1.2928,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.254,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 5.367,
+   "reference": 6.04,
+   "mapped": 6.092,
+   "residual": -0.052
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 7.033,
+   "reference": 7.89,
+   "mapped": 7.583,
+   "residual": 0.307
+  },
+  "f04_6_r22:control": {
+   "measured": 4.667,
+   "reference": 5.83,
+   "mapped": 5.466,
+   "residual": 0.364
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.833,
+   "reference": 6.75,
+   "mapped": 6.509,
+   "residual": 0.241
+  },
+  "f36_0_gap:C1A": {
+   "measured": 5.767,
+   "reference": 6.1,
+   "mapped": 6.45,
+   "residual": -0.35
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.833,
+   "reference": 5.33,
+   "mapped": 5.615,
+   "residual": -0.285
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.067,
+   "reference": 7.53,
+   "mapped": 7.612,
+   "residual": -0.082
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.067,
+   "reference": 7.47,
+   "mapped": 7.612,
+   "residual": -0.142
+  }
+ },
+ "candidates": {
+  "UIPAD P2-096 High one-sided | P2-096-main-High": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.66,
+   "mapped_judges": [
+    6.66,
+    6.66,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "UIPAD P2-001 High one-sided | P2-001-main-High": {
+   "measured_mean": 6.2,
+   "mapped_mean": 6.84,
+   "mapped_judges": [
+    6.75,
+    6.93,
+    6.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "UIPAD P2-031 High one-sided | P2-031-main-High": {
+   "measured_mean": 5.4,
+   "mapped_mean": 6.12,
+   "mapped_judges": [
+    6.12,
+    6.21,
+    6.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "UIPAD P2-032 High one-sided | P2-032-main-High": {
+   "measured_mean": 5.8,
+   "mapped_mean": 6.48,
+   "mapped_judges": [
+    6.66,
+    6.12,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "UIPAD P2-007 High one-sided | P2-007-main-High": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.24,
+   "mapped_judges": [
+    6.21,
+    6.21,
+    6.3
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "UIPAD P2-004 High one-sided | P2-004-main-High": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.45,
+   "mapped_judges": [
+    6.66,
+    6.03,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

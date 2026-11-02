@@ -85,6 +85,28 @@ uniform float roughness_value = 0.12;
 // along the flow axis by flow_stretch (< 1 elongates), which is most of
 // what visually separates running water from a breeze-rippled pond.
 // The pond plane never sets UV2 and never enables this.
+// tb/cause-tidewake (F39 sea): three cheap, flag-off sea treatments. All
+// strengths default to 0, which keeps every existing water surface exactly.
+// Distance haze: open water fades toward a pale sky-family colour with range,
+// so the far sea reads as air and depth instead of one flat navy value.
+uniform vec4 haze_colour: source_color = vec4(0.66, 0.78, 0.82, 1.0);
+uniform float haze_strength = 0.0;
+uniform float haze_start_m = 60.0;
+uniform float haze_full_m = 700.0;
+// Wind slicks: long, soft, smoother streaks drifting with the wind over deep
+// water (one stretched noise sample), so the sea shows flow and glints along
+// streaks instead of a uniform field. Never a lane, dash or band.
+uniform vec4 slick_colour: source_color = vec4(0.36, 0.62, 0.70, 1.0);
+uniform float slick_strength = 0.0;
+uniform float slick_scale = 0.006;
+uniform vec2 slick_dir = vec2(0.63, 0.77);
+uniform float slick_calm = 0.7;
+// Whitecaps: rare small broken foam flecks on deeper water, faded with range.
+uniform float cap_strength = 0.0;
+uniform float cap_scale = 0.05;
+uniform float cap_threshold = 0.42;
+uniform float cap_far_m = 160.0;
+
 uniform bool flow_enabled = false;
 // Metres of course per second the ripple pattern travels. TUNABLE (water.json).
 uniform float flow_speed = 1.1;
@@ -163,6 +185,19 @@ void fragment() {
 	float facing = clamp(dot(normalize(NORMAL), normalize(VIEW)), 0.0, 1.0);
 	float fresnel = pow(1.0 - facing, fresnel_power) * fresnel_strength;
 	colour = mix(colour, fresnel_colour.rgb, fresnel);
+	float view_dist = length(world_pos - CAMERA_POSITION_WORLD);
+	float slick = 0.0;
+	if (slick_strength > 0.0) {
+		vec2 sd = normalize(slick_dir);
+		vec2 sp = vec2(dot(uv, sd), dot(uv, vec2(-sd.y, sd.x)));
+		float s_long = texture(foam_noise, vec2(sp.x * slick_scale * 0.16 - TIME * 0.002, sp.y * slick_scale)).r;
+		float s_patch = texture(foam_noise, uv * slick_scale * 0.37 + vec2(0.37, 0.11)).r;
+		slick = smoothstep(0.5, 0.68, s_long * 0.72 + s_patch * 0.28) * smoothstep(1.5, 4.5, depth);
+		colour = mix(colour, slick_colour.rgb, slick * slick_strength);
+	}
+	if (haze_strength > 0.0) {
+		colour = mix(colour, haze_colour.rgb, smoothstep(haze_start_m, haze_full_m, view_dist) * haze_strength);
+	}
 
 	// Foam only where the water actually touches something: the depth band
 	// hugging the shoreline (and any rock shallow enough to enter it),
@@ -193,6 +228,13 @@ void fragment() {
 		float surf_noise = n2 * 0.6 + n1 * 0.4;
 		foam = max(foam, surf_band * smoothstep(surf_breakup, surf_breakup + 0.12, surf_noise) * surf_strength);
 	}
+	if (cap_strength > 0.0) {
+		float c1 = texture(foam_noise, uv * cap_scale + vec2(TIME * 0.011, TIME * 0.006)).r;
+		float c2 = texture(foam_noise, uv * cap_scale * 0.41 + vec2(0.53, 0.19) - vec2(TIME * 0.004)).r;
+		float cap = smoothstep(cap_threshold, cap_threshold + 0.05, c1 * c2)
+			* smoothstep(2.5, 7.0, depth) * (1.0 - smoothstep(cap_far_m * 0.4, cap_far_m, view_dist));
+		foam = max(foam, cap * cap_strength);
+	}
 	colour = mix(colour, foam_colour.rgb, foam);
 
 	float alpha = mix(alpha_deep, alpha_shallow, shallowness);
@@ -208,8 +250,8 @@ void fragment() {
 	// whole surface, which a blind critic read as "flat cyan fill" — the
 	// glint has to stay a glint, and far water should read calm anyway.
 	float calm = 1.0 - smoothstep(15.0, 70.0, length(world_pos - CAMERA_POSITION_WORLD));
-	NORMAL_MAP_DEPTH = mix(wave_strength * mix(0.15, 1.0, calm), 0.05, foam);
-	ROUGHNESS = mix(roughness_value, 0.6, foam);
+	NORMAL_MAP_DEPTH = mix(wave_strength * mix(0.15, 1.0, calm) * (1.0 - slick * slick_calm), 0.05, foam);
+	ROUGHNESS = mix(roughness_value * (1.0 - slick * slick_calm * 0.5), 0.6, foam);
 	// 0.5 restored (round 1 cut it to 0.35 chasing a milky wash whose real
 	// cause was the near-white fresnel colour): blind round 1 called the
 	// missing sun response directly — "a stylised pond without a sparkle

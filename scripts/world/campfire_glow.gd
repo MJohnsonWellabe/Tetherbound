@@ -37,6 +37,8 @@ extends Node3D
 ## of those is a library this belongs importing from and the whole formula is
 ## four lines.
 
+const CAMFX := preload("res://scripts/vfx/camfx.gd")
+
 const FLAME_COLOUR := Color(1.0, 0.5, 0.1)
 const SMOKE_COLOUR := Color(0.58, 0.56, 0.53, 0.30)
 
@@ -201,6 +203,7 @@ func _daylight_scale() -> float:
 ## that happens to reuse this asset.
 static func ignite(prop: Node) -> int:
 	var lit := 0
+	var flame_on := not CAMFX.block("flame").is_empty()
 	for instance in _meshes(prop):
 		var mesh: Mesh = instance.mesh
 		if mesh == null:
@@ -208,6 +211,15 @@ static func ignite(prop: Node) -> int:
 		for i in mesh.get_surface_count():
 			if mesh.surface_get_name(i) != FIRE_SURFACE_NAME:
 				continue
+			# camfx.json `flame` (OFF by default): the flat cone goes and a
+			# procedural flame stands in its footprint (scripts/vfx/camfx.gd).
+			if flame_on:
+				var footprint := surface_aabb(mesh, i)
+				if footprint.size.y > 0.01:
+					instance.set_surface_override_material(i, _hidden_material())
+					CAMFX.add_flame(instance, footprint)
+					lit += 1
+					continue
 			var source := mesh.surface_get_material(i) as StandardMaterial3D
 			var material := source.duplicate() as StandardMaterial3D if source != null else StandardMaterial3D.new()
 			material.emission_enabled = true
@@ -241,11 +253,37 @@ static func hide_fire_surface(prop: Node) -> void:
 		for i in mesh.get_surface_count():
 			if mesh.surface_get_name(i) != FIRE_SURFACE_NAME:
 				continue
-			var material := StandardMaterial3D.new()
-			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-			material.albedo_color = Color(0.0, 0.0, 0.0, 0.0)
-			material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-			instance.set_surface_override_material(i, material)
+			instance.set_surface_override_material(i, _hidden_material())
+
+
+static func _hidden_material() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_color = Color(0.0, 0.0, 0.0, 0.0)
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	return material
+
+
+## The bounds of one surface in the mesh's own space (the Fire cone's
+## footprint for camfx.json `flame`). Empty when the surface has no vertices.
+static func surface_aabb(mesh: Mesh, surface: int) -> AABB:
+	var arrays := mesh.surface_get_arrays(surface)
+	if arrays.size() <= Mesh.ARRAY_VERTEX or not (arrays[Mesh.ARRAY_VERTEX] is PackedVector3Array):
+		return AABB()
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	if vertices.is_empty():
+		return AABB()
+	var box := AABB(vertices[0], Vector3.ZERO)
+	for v: Vector3 in vertices:
+		box = box.expand(v)
+	return box
+
+
+## camfx.json `flame`: the procedural flame carries its own soft edge, so a
+## fire whose cone it replaced is built without the billboard halo.
+static func camfx_flame_drops_halo() -> bool:
+	var cfg := CAMFX.block("flame")
+	return not cfg.is_empty() and cfg.get("drop_halo", true) == true
 
 
 ## T1-CAST (§17). `Bonfire_Fire.obj`'s `Wood`/`LightWood` surfaces are

@@ -1,0 +1,83 @@
+{
+ "Mf": {
+  "anchor": false,
+  "label": "tidal_cradle",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/tidal_cradle_b.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/tidal_cradle_a.png"
+ },
+ "Ig": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ue": {
+  "anchor": false,
+  "label": "drowned_garden",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/drowned_garden_a.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/drowned_garden_b.png"
+ },
+ "Jg": {
+  "anchor": false,
+  "label": "salt_crown",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/salt_crown_a.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/salt_crown_b.png"
+ },
+ "Oy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Bu": {
+  "anchor": false,
+  "label": "brine_steps",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/brine_steps_a.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/brine_steps_b.png"
+ },
+ "Zh": {
+  "anchor": false,
+  "label": "shellwatch",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/shellwatch_b.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/shellwatch_a.png"
+ },
+ "Md": {
+  "anchor": false,
+  "label": "gull_rest",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/gull_rest_b.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/gull_rest_a.png"
+ },
+ "Sv": {
+  "anchor": false,
+  "label": "first_shore",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/first_shore_a.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/first_shore_b.png"
+ },
+ "Av": {
+  "anchor": false,
+  "label": "reedhaven",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/reedhaven_a.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/reedhaven_b.png"
+ },
+ "Vm": {
+  "anchor": false,
+  "label": "sluice_isle",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/sluice_isle_a.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/sluice_isle_b.png"
+ },
+ "Ir": {
+  "anchor": false,
+  "label": "deep_watch",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/deep_watch_a.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/deep_watch_b.png"
+ },
+ "Tn": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Nd": {
+  "anchor": false,
+  "label": "lantern_cove",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/lantern_cove_b.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7669c54a-535a-5ada-be9c-fbcb9a664745/scratchpad/judge_src/r1/lantern_cove_a.png"
+ }
+}

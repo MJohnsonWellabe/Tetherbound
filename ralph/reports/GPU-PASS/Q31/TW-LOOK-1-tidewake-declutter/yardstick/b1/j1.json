@@ -1,0 +1,174 @@
+{
+ "sets": {
+  "Cs": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sunk by a muddy brown one-mid-tone forest floor with no purple storm sky or rim light, flat magenta telegraph rings (A i06/i07/i09/i10/i15/i16, tell2-a/b; B i10/i16/i17) instead of real lightning or stone impacts, a HUD covering the left third and bottom of every frame, and in B the camera inside canopy or behind trunks (i12-i15)."
+  },
+  "Ce": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Clean sky and cyan/navy water with the waterfall sea stack help, but huge untextured-reading beige dune slopes with no atmosphere, haze or grade dominate every frame, and B loses the watchtower (stand 09 close) and hut (stand 10 close) entirely."
+  },
+  "Bg": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sunk by bare tilted dune planes, flat faceted green low-poly boulders that read as placeholder, and tiny ridge-top buildings; B removes the hut (stand 11 close) and watchtower (stand 12 close) and carpets stand 12 in even grass."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's aftermaths are distinct (banner torn down, cage opened with a freed villager, tent gone with a smoke plume) but every frame sits on smeared, blurry low-res ground texture with a tiled wall in row 1 and flat grey-green light, and B leaves the faction banner standing in rows 1, 3 and 5 so the win barely reads."
+  },
+  "Wk": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's fluffy white-blue fur approaches the Tanglevolt bar but faint end curls into a resting ball that does not read as fainted; A's smoother, plasticky white body shows black stub feet and a grey patch in faint mid/end that break the read."
+  },
+  "Fx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's flagged watchtower, gate shrine, huts and the big crab creature give life, but the empty stand 19 approach dune and no atmospheric depth sink it; B drops the tower (stand 19 close) and huts (stand 20 close) and spreads a uniform grass carpet."
+  },
+  "Un": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good water palette and distant waterfall stack, but the focal huts are small and sit on featureless dune humps; in B the gazebo hut (stand 01 approach/close) and thatched hut (stand 02 close) are gone, leaving only sand and grass."
+  },
+  "Hx": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Trees, the stone arch, the blue-banner camp and the frog creature make this the most lived-in Tidewake set, but flat midday light with no haze and grass spread evenly over stand 17 (very dense in B) keep it below Palworld finish; B also loses the stand 18 hut."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing white-haired elder with readable eyes and a fitting green-brown outfit, but the soft toy-like stylised face sits closer to a mobile cartoon than to the grounded Palworld/Valheim finish, and the dark void stage gives no light or rim to sell it."
+  },
+  "Iw": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The waterfall sea stack is a strong landmark and A's huts plus blue banner give a place, but empty beige foreground slopes and no atmosphere sink it; B removes the huts (stand 21 close, stand 22 approach/close)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Keep every focal building present at all named Tidewake stands (B sides lose huts/towers) and build each into a composed cluster - 3-5 buildings, dock, path, fences, banners - sized and placed so it dominates the approach and close frames instead of sitting tiny on a ridge.",
+   "kind": "scene"
+  },
+  {
+   "change": "Break the beige dune monotony: replace the even grass carpet and pebble scatter with authored grass clumps at dune crests and edges, add driftwood, palms/shrub groves and wet-sand/tideline variation, and add warm grade plus distance haze so foreground, midground and distance separate.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: replace flat magenta telegraph rings with physical lightning/stone telegraphs and impacts, add the purple storm sky and rim light on both fighters, add camera collision so the view never enters canopy or trunks, and shrink the HUD off the left third.",
+   "kind": "scene"
+  }
+ ]
+}

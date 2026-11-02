@@ -1,0 +1,626 @@
+[
+ {
+  "batch": 1,
+  "code": "Ce",
+  "label": "TWLOOK tidal_cradle High cand|ship",
+  "side": "TWLOOK-tidal_cradle-cand-High",
+  "mapped": 6.35,
+  "judges": [
+   6.65,
+   6.02,
+   6.37
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ce",
+  "label": "TWLOOK tidal_cradle High cand|ship",
+  "side": "TWLOOK-tidal_cradle-ship-High",
+  "mapped": 5.51,
+  "judges": [
+   5.67,
+   5.32,
+   5.53
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Bg",
+  "label": "TWLOOK salt_crown High cand|ship",
+  "side": "TWLOOK-salt_crown-cand-High",
+  "mapped": 6.25,
+  "judges": [
+   6.37,
+   6.02,
+   6.37
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Bg",
+  "label": "TWLOOK salt_crown High cand|ship",
+  "side": "TWLOOK-salt_crown-ship-High",
+  "mapped": 5.46,
+  "judges": [
+   5.53,
+   5.32,
+   5.53
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Fx",
+  "label": "TWLOOK gull_rest High cand|ship",
+  "side": "TWLOOK-gull_rest-cand-High",
+  "mapped": 6.58,
+  "judges": [
+   6.79,
+   6.3,
+   6.65
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Fx",
+  "label": "TWLOOK gull_rest High cand|ship",
+  "side": "TWLOOK-gull_rest-ship-High",
+  "mapped": 5.7,
+  "judges": [
+   5.81,
+   5.46,
+   5.81
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Un",
+  "label": "TWLOOK first_shore High cand|ship",
+  "side": "TWLOOK-first_shore-cand-High",
+  "mapped": 6.51,
+  "judges": [
+   6.58,
+   6.44,
+   6.51
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Un",
+  "label": "TWLOOK first_shore High cand|ship",
+  "side": "TWLOOK-first_shore-ship-High",
+  "mapped": 5.65,
+  "judges": [
+   5.67,
+   5.6,
+   5.67
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Hx",
+  "label": "TWLOOK lantern_cove High cand|ship",
+  "side": "TWLOOK-lantern_cove-cand-High",
+  "mapped": 6.74,
+  "judges": [
+   6.86,
+   6.58,
+   6.79
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Hx",
+  "label": "TWLOOK lantern_cove High cand|ship",
+  "side": "TWLOOK-lantern_cove-ship-High",
+  "mapped": 6.09,
+  "judges": [
+   6.23,
+   5.95,
+   6.09
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Iw",
+  "label": "TWLOOK drowned_garden High cand|ship",
+  "side": "TWLOOK-drowned_garden-cand-High",
+  "mapped": 6.67,
+  "judges": [
+   6.79,
+   6.51,
+   6.72
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Iw",
+  "label": "TWLOOK drowned_garden High cand|ship",
+  "side": "TWLOOK-drowned_garden-ship-High",
+  "mapped": 5.95,
+  "judges": [
+   6.09,
+   5.74,
+   6.02
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ym",
+  "label": "TWLOOK first_shore High cand|ship",
+  "side": "TWLOOK-first_shore-ship-High",
+  "mapped": 4.99,
+  "judges": [
+   5.02,
+   5.13,
+   4.82
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ym",
+  "label": "TWLOOK first_shore High cand|ship",
+  "side": "TWLOOK-first_shore-cand-High",
+  "mapped": 5.87,
+  "judges": [
+   5.94,
+   5.84,
+   5.84
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kg",
+  "label": "TWLOOK lantern_cove High cand|ship",
+  "side": "TWLOOK-lantern_cove-ship-High",
+  "mapped": 5.29,
+  "judges": [
+   5.33,
+   5.33,
+   5.23
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kg",
+  "label": "TWLOOK lantern_cove High cand|ship",
+  "side": "TWLOOK-lantern_cove-cand-High",
+  "mapped": 5.97,
+  "judges": [
+   6.04,
+   5.84,
+   6.04
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Gk",
+  "label": "TWLOOK tidal_cradle High cand|ship",
+  "side": "TWLOOK-tidal_cradle-ship-High",
+  "mapped": 4.55,
+  "judges": [
+   4.41,
+   4.62,
+   4.62
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Gk",
+  "label": "TWLOOK tidal_cradle High cand|ship",
+  "side": "TWLOOK-tidal_cradle-cand-High",
+  "mapped": 5.57,
+  "judges": [
+   5.43,
+   5.43,
+   5.84
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Gx",
+  "label": "TWLOOK salt_crown High cand|ship",
+  "side": "TWLOOK-salt_crown-ship-High",
+  "mapped": 4.55,
+  "judges": [
+   4.62,
+   4.62,
+   4.41
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Gx",
+  "label": "TWLOOK salt_crown High cand|ship",
+  "side": "TWLOOK-salt_crown-cand-High",
+  "mapped": 5.46,
+  "judges": [
+   5.63,
+   5.33,
+   5.43
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Gn",
+  "label": "TWLOOK drowned_garden High cand|ship",
+  "side": "TWLOOK-drowned_garden-ship-High",
+  "mapped": 5.4,
+  "judges": [
+   5.33,
+   5.23,
+   5.63
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Gn",
+  "label": "TWLOOK drowned_garden High cand|ship",
+  "side": "TWLOOK-drowned_garden-cand-High",
+  "mapped": 6.24,
+  "judges": [
+   6.35,
+   5.94,
+   6.45
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Sv",
+  "label": "TWLOOK gull_rest High cand|ship",
+  "side": "TWLOOK-gull_rest-ship-High",
+  "mapped": 4.96,
+  "judges": [
+   4.82,
+   5.02,
+   5.02
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Sv",
+  "label": "TWLOOK gull_rest High cand|ship",
+  "side": "TWLOOK-gull_rest-cand-High",
+  "mapped": 6.04,
+  "judges": [
+   5.84,
+   5.84,
+   6.45
+  ],
+  "defects": [
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   },
+   {
+    "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+    "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+   }
+  ]
+ }
+]

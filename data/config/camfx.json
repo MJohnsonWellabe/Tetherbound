@@ -1,0 +1,76 @@
+{
+  "_comment": "Cameras-and-effects cause lane (tb/cause-camfx, owner 1 Nov: bring every catalogue item to a mapped High 7.0+ by fixing shared causes). One block per sub-cause, each its own flag, every flag OFF until GPU judged. Presentation only and local to each peer: no hit test, timing, catch maths or save state reads any of it. scripts/vfx/camfx.gd reads this file; a block whose `enabled` is not true reads as empty and callers draw exactly as before.",
+
+  "catch_orb": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "Judges 1 Nov and GPU item scores (P2-060 6.06, P2-059 5.21, P2-113): 'flat glow disc, no physical orb' -- the camera-facing halo around the resting orb fills a third of the resolve close-up as a flat yellow bubble with an over-bright white ball inside. When enabled: the authored Meshy capture orb (teal and cream shell, brass band, lit button; already in the repo, assets/props/meshy-1020) replaces the flat sphere; the halo is drawn only in flight and smaller; at hang, rest and seal there is no disc at all, so the orb's own shading carries it; a soft contact shadow sits it on the ground; landing and each shake kick a little dust and grit (the fights' contact_burst, small) instead of the flat gold flash disc; each shake squashes and hops the shell. The verdict flashes (catching.json vfx) are scaled by verdict_flash_scale so the seal no longer veils the orb. scripts/combat/orb.gd, combat_manager.gd _catch_flash.",
+    "model": "res://assets/props/meshy-1020/capture_orb/model_capture_orb/capture_orb.glb",
+    "model_source_diameter_m": 0.30,
+    "model_scale": 1.25,
+    "flight_halo_scale": 2.6,
+    "flight_halo_alpha": 0.6,
+    "rest_halo": false,
+    "contact_shadow_radius_m": 0.34,
+    "contact_shadow_alpha": 0.5,
+    "land_dust": {"cue_contact_puffs": 7, "cue_contact_reach_m": 0.75, "cue_contact_seconds": 0.6, "cue_contact_dust_alpha": 0.55, "cue_contact_debris_scale": 0.7, "cue_contact_light_energy": 0.0},
+    "shake_dust": {"cue_contact_puffs": 4, "cue_contact_reach_m": 0.5, "cue_contact_seconds": 0.45, "cue_contact_dust_alpha": 0.4, "cue_contact_debris_scale": 0.45, "cue_contact_light_energy": 0.0},
+    "shake_squash": 0.14,
+    "shake_flash": false,
+    "verdict_flash_scale": 0.55
+  },
+
+  "flame": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "Judges 1 Nov: 'flat yellow cone flame' (P2-035 bonfire_fire, every authored camp fire through props.gd glow:\"campfire\"). Earlier rounds that made the same cone translucent or added uniform-alpha cards were judged 'hard-edged ... cut from cardboard': a uniform alpha never softens a polygon edge. When enabled, ignite() hides the Bonfire's Fire cone and stands a procedural flame in its footprint instead: two camera-facing (Y-locked) quads with a feathered, noise-licked teardrop mask that sways and flickers (shaders/camfx_flame.gdshader), orange edges to a pale-gold core, no texture, no particles, so it reads the same on Compatibility and Forward+ and costs two quads per fire. The CampfireGlow halo card is dropped (the flame carries its own soft edge); light, embers and smoke unchanged. scripts/world/campfire_glow.gd ignite(), scripts/vfx/camfx.gd add_flame().",
+    "height_scale": 1.0,
+    "width_scale": 1.15,
+    "energy": 1.15,
+    "alpha": 1.0,
+    "speed": 1.0,
+    "inner_scale": 0.62,
+    "drop_halo": true
+  },
+
+  "impact_fx": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "Judges 1 Nov: 'flat magenta telegraph rings and slabs' and P2-063 'bright impact effects obscure creatures': a landed blow reads as a flat additive disc over the struck body. When enabled every landed blow (quick and charged) also leaves physical objects at the struck creature's feet: lit stone chips thrown up that tumble, bounce once and settle (none for water and air blows); on a charged blow a jagged ground crack (not for water, air or ice) that glows briefly for electric and fire; and on an electric blow three jagged lightning arcs from the body to the ground for a third of a second. The flat flash disc shrinks to flash_scale. Meshes and one shader on the physics clock; no particles, no shadows. scripts/vfx/camfx_impact.gd, combat_manager.gd _flash_host_impact.",
+    "chips_quick": 4,
+    "chips_charged": 8,
+    "chip_size_m": 0.11,
+    "chip_speed": 3.2,
+    "chip_colour": "#7c6c58",
+    "crack_radius_m": 1.0,
+    "electric_glow": "#fff1b8",
+    "fire_glow": "#ffb05a",
+    "arcs": 3,
+    "arc_seconds": 0.32,
+    "arc_width_m": 0.022,
+    "arc_colour": "#fff6d0",
+    "seconds": 1.4,
+    "flash_scale": 0.6
+  },
+
+  "dialogue_open": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "Judges 1 Nov: 'rock faces fill 70% of the frame' (P2-079 Quarry Foreman, 4.64, and Garrick: a black rock face fills the right third), 'speaker boxed in by rock'. The push-in only asks whether the speaker is visible, not what fills the rest of the frame. When enabled, the solved shot casts a fan of rays across the frame (12, the speaker's centre column left out) from the lens out to the speaker's depth; if more than blocked_threshold of them hit something, the push-in tries its existing swing angles (conversation swing_search) and takes the most open one that is reachable, has room, still sees the speaker and keeps them in frame, if it is at least min_gain more open. Last frame's choice is kept unless beaten, so the shot does not flick. Collider geometry only; collider-less walls are fight_fade's job. scripts/player/camera_rig.gd _open_view_shot.",
+    "blocked_threshold": 0.34,
+    "min_gain": 0.17,
+    "reach_fraction": 1.0,
+    "max_reach_m": 8.0,
+    "columns": [-0.85, -0.5, 0.5, 0.85],
+    "rows": [-0.6, 0.0, 0.6]
+  },
+
+  "fight_fade": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "Judges 1 Nov: 'camera inside canopy, fight lost' (Stormwood fights i11/i13/i15) and Fenn's near-black dialogue frame (P2-084: the push-in lens stands in a scattered trunk). camera.json occlusion_fade (tb/vis-storm-cams, GPU batch 5) fades what stands between the FOLLOWED body and the lens; in a fight the followed body is the piloted creature, so canopy over the opponent, and a crown the lens sits inside above the ally, stayed. When enabled this turns the same fade on for fight and conversation cameras even if occlusion_fade is off, and also fades along the opponent's (fight) and speaker's (conversation) chest-to-lens line. include_shadowless also fades tall foliage cards that cast no shadow (canopy leaf cards), which the base fade skips as effect cards; skinned bodies, grass under min_height_m and effects stay. Arm length and stands unchanged. scripts/player/camera_rig.gd _fade_occluders.",
+    "subject_height_m": 1.2,
+    "include_shadowless": true,
+    "shadowless_min_height_m": 2.5
+  }
+}

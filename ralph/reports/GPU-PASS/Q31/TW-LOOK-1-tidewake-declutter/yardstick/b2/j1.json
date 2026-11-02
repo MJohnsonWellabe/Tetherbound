@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Ym": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat noon light with no fog, single mid-tone sand and dark banded water stripes sink it; B's small gazebo/hut on the crest is a start but too small and isolated to carry a named place."
+  },
+  "Kg": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Trees, banner camp and the distant waterfall stack give some place, but uniform grass carpet, pebble scatter and atmosphere-free hard light keep it well below Palworld density and Valheim mood."
+  },
+  "Gk": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sheer featureless sand walls with a vertical cut fill most of stand 09 and the even grass grid looks generated; B's watchtower and stilt house help but stay small against empty dunes."
+  },
+  "Ml": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, readable stylised elder with warm expressive face, white hair and a coherent green/brown villager palette that sits comfortably beside Palworld characters, though the face is softer and more cartoon than the world."
+  },
+  "Th": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing finally read as construction, but a single free-standing flat-infill panel still looks like a placeholder door/outhouse, not a Palworld-grade base piece."
+  },
+  "Gx": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Long bare sand slopes with stray low-poly boulders and pebble scatter dominate; B's house sits canted on the stand 11 slope and the tower is small, so no landmark carries the frame."
+  },
+  "Gn": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The waterfall sea-stack and blue banners give the best Tidewake read in the batch and B's stilt huts add a settlement, but dark navy water bands, flat sand and no aerial haze keep it short of the same finish."
+  },
+  "Sv": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PRESENT",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention": "PARTIAL",
+     "Named location reads as a generic slope with no clear focal building or landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's crab creature and tower/huts bring life, but stand 19 is an empty sand bowl, the lone wooden cabinet prop on the crest reads as random, and the light has no atmosphere."
+  },
+  "Rb": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's purple-blue lightning wolf matches the Tanglevolt style bar, but B's faint frames lose the material entirely to white with black blotches, which breaks the creature at the same finish."
+  },
+  "Bf": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A heavy plated boar with good scale and tusks, but A's dark-brown-on-black plates go muddy and the faint end turns almost pure black; B's ember cracks add value contrast yet the whole body still reads low-key against the stage."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Compose every named Tidewake location around one large focal building or landmark cluster (scale buildings up 1.5-2x, place them centred in both camera stands with paths, docks, fences and banners leading to them), and replace the even grass carpet and pebble scatter with grouped dune-grass clumps and cleared sand paths.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give Tidewake real light and value structure: warmer time-of-day grade, aerial haze for distance, sand albedo/wetness variation at the waterline and shadowed dune faces, and remove the dark navy banding stripes on the water.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature material states in hurt/faint poses (Rb side B white-and-black texture loss, Bf side A faint end going pure black) and lift creature rim light so silhouettes separate from the stage.",
+   "kind": "scene"
+  }
+ ]
+}

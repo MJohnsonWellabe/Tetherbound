@@ -1,0 +1,61 @@
+{
+  "_comment": "Cause lane LANDMARKS (1 Nov): the coordinator's 1 Nov Meshy hero landmarks (assets/props/meshy-1101/<id>, reference, task ids and provenance beside each GLB) wired as three independent render-only candidates, each OFF until GPU judged. No collider, route, trigger, terrain, gate or camera change. Code: scripts/world/hero_landmarks_1101.gd.",
+  "scope": "client_presentation",
+  "crown_arch": {
+    "enabled": false,
+    "_why": "P2-041 (GPU 1 Nov 4.93-5.31: 'the arch reads as a single pillar on a square slab', 'red-brown bands near oxblood'). On: the visible arch piece becomes the 1101 Meshy crowned arch (grey-violet strata, five glass-tipped crown points, copper-patina bands, no red, mossy root feet). Its keys overlay crown_arch_hero.json after round 2, so the round-2 yaw (90 deg, facing the road approach), slab moss and edge stones stay; the footing collider, 2.2 x 2.5 m passage trigger and travel axis are untouched (stormwood_crown_arch_hero.gd). 7.0 m tall (round 2 height, >= 5.5 m, ~3.9x the 1.80 m trainer); sunk 0.3 m so the root feet sit in the moss.",
+    "model": "res://assets/props/meshy-1101/crown_arch_hero/crown_arch_hero.glb",
+    "height_m": 7.0,
+    "sink_m": 0.3
+  },
+  "glass_sink": {
+    "enabled": false,
+    "_why": "P2-070 (GPU 3.19-5.06: 'tiled cell plane meeting a hard grass edge reads as a placeholder void'; judges asked for a shaped bowl with glass material and a rim transition). On: the 1101 Meshy terraced basin ring is set into the sink floor ahead of the reachable Hollow Crown rim stands (approach (841, 2518) and close (812, 2484), both facing 220 deg). Its outer rim touches the island cliff at bearing ~185 deg, r = 245 m, where the cliff stands at rim_top_y, so the rim meets the terrain edge inside the judged frames; the bowl's centre lies on the approach view line, 276 m out. The ring is stretched vertically (height = rim_top_y - floor_y + bury_m) to span the cliff drop; its bottom is buried bury_m under the terrain floor. A dark indigo glass pool disc fills the ring's open centre just above the floor, replacing the checker floor inside the bowl. Visual only: no collider (the sink stays a non-walkable gap).",
+    "model": "res://assets/props/meshy-1101/glass_sink_hero/glass_sink_hero.glb",
+    "centre_xz": [663.6, 2306.7],
+    "across_m": 300.0,
+    "rim_top_y": 38.0,
+    "bury_m": 6.0,
+    "yaw_deg": 0.0,
+    "pool": {
+      "radius_fraction": 0.6,
+      "lift_m": 0.6,
+      "colour": "#151a2c",
+      "metallic": 0.25,
+      "roughness": 0.07,
+      "specular": 0.8,
+      "rim_tint": "#8c84c4",
+      "rim_strength": 0.35
+    },
+    "glow_colour": "#a8dcff",
+    "glow_energy": 1.1
+  },
+  "veilfall": {
+    "enabled": false,
+    "_why": "P2-010 / F39#4 (GPU 3.35: 'near-geometric dark cone with narrow broken waterfall streaks'). On: beyond the far-silhouette handoff (visible_from_m, the same 1100 m as VeilfallFarSilhouette) the polar-grid cone and its far crag copies stop drawing and the 1101 Meshy sea-cliff mountain (sandy-grey strata, green ledges, wide continuous white veils into a turquoise pool) stands on the same footprint: centre (200, 4140), 800 m across like the 400 m shore radius, which fits it ~595 m tall against the 620 m terrain peak. Its falls face the First Shore / Drowned Garden / Sluice sightlines (yaw 168). It writes its own reduced fog (copied live from the WorldEnvironment by the silhouette node) and keeps bright fall texels whiter, so the falls stay white against the blue distance. The old fall ribbons stop drawing past the same handoff so the far view has one set of falls; the near scene (< 1100 m), terrain, colliders, gate and routes are unchanged. Textures import at 1024 (far only).",
+    "model": "res://assets/props/meshy-1101/veilfall_hero/veilfall_hero.glb",
+    "centre_xz": [200.0, 4140.0],
+    "across_m": 800.0,
+    "base_y": 0.0,
+    "sink_m": 8.0,
+    "yaw_deg": 168.0,
+    "visible_from_m": 1100.0,
+    "visible_from_margin_m": 60.0,
+    "hide_far_crags": true,
+    "old_falls_far_hidden_from_m": 1100.0,
+    "shader": {
+      "albedo_tint": "#f2f2ee",
+      "roughness_value": 0.85,
+      "fog_keep_near": 0.9,
+      "fog_keep_far": 0.6,
+      "fog_keep_start_m": 1100.0,
+      "fog_keep_end_m": 4000.0,
+      "white_fog_keep": 0.45,
+      "white_lift": 0.25,
+      "depth_pull_fraction": 0.012,
+      "depth_pull_max_m": 60.0,
+      "presentation_pull_start_m": 900.0,
+      "presentation_pull_end_m": 1100.0
+    }
+  }
+}

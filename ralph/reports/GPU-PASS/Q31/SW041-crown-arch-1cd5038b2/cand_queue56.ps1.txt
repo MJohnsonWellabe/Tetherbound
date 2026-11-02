@@ -1,0 +1,55 @@
+# Queue 56 (coordinator GPU QUEUE 31 Oct, owner: "Continue all this work"; user: "keep working, you have a new queue").
+# Capture for jobs 1, 2, 3, 4, 6, 7 in order; hands-on jobs 8-11 (POSE-1, HERO-1..3) run separately. Medium and High, --source-commit on every capture.
+#  1 SW041  P2-041 Crown Arch: main d4d5b262f vs tb/sw-crownarch-on 1cd5038b2.
+#  2 CO12   capture_f36_poses --whole-body --context, one run per species: main vs tb/co12-main-on e5fcc1c47. --candidate for cliffspike,
+#           voltwig, thundertunnel; nightburrow plain (not in f36_pose_candidates enabled_species, so --candidate would abort).
+#  3 P095   P2-095 on main (one arm).
+#  4 DLG1   12 dialogue items: tb/dialogue-cam 57c9418e8 (flags off) vs tb/dialogue-cam-on 8486a5363.
+#  6 UI1    catching frames of P2-114, P2-058, P2-059, P2-061: tb/ui-near-bar e07666f35 vs tb/ui-near-bar-on e0f51545d.
+#  7 UIPAD  P2-031, P2-032, P2-096, P2-001, P2-007, P2-004 on main with --gamepad (one arm).
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $crA = "D:\tb-gpu-wt-crA"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+$arm = "D:\tb-gpu-runs\tools\arm_run.ps1"
+$main = "d4d5b262fc6b8d6741cf72e6326b04ddcf8bf127"
+"== queue56 start $(Get-Date -Format 'dd MMM HH:mm')"
+
+if (-not (Test-Path "D:\tb-gpu-runs\arms\SW041\_done")) {
+    & $arm -Job SW041 -Items "P2-041" -Arms "ctl=$main", "cand=1cd5038b2e92052f66abbc77d6ddad1a5a1f15d8"
+}
+
+if (-not (Test-Path "$out\CO12.done")) {
+    Gate "CO12"
+    "== CO12: cliffspike, voltwig, thundertunnel (--candidate) + nightburrow (plain); main vs co12-main-on e5fcc1c47"
+    foreach ($a in @(@("cand", "e5fcc1c47e6b8b689e698a62065895436e386a4c"), @("ship", $main))) {
+        CheckoutCrA $a[1]; Import $crA "crA-CO12-$($a[0])"
+        foreach ($pr in "Medium", "High") {
+            Gate "CO12 $($a[0]) $pr"
+            CleanCrA $a[1]
+            foreach ($sp in "cliffspike", "voltwig", "thundertunnel") { Pose "CO12-$($a[0])-$pr-$sp" $pr $sp @("--candidate") $a[1] }
+            Pose "CO12-$($a[0])-$pr-nightburrow" $pr "nightburrow" @() $a[1]
+        }
+    }
+    New-Item -ItemType File -Force "$out\CO12.done" | Out-Null
+    "CO12 done"
+}
+
+if (-not (Test-Path "D:\tb-gpu-runs\arms\P095\_done")) {
+    & $arm -Job P095 -Items "P2-095" -Arms "main=$main"
+}
+
+if (-not (Test-Path "D:\tb-gpu-runs\arms\DLG1\_done")) {
+    & $arm -Job DLG1 -Items "P2-083", "P2-074", "P2-073", "P2-075", "P2-079", "P2-078", "P2-087", "P2-086", "P2-076", "P2-077", "P2-081", "P2-084" `
+        -Arms "ctl=57c9418e89b839e8839e5c45199e338b344bb8a6", "cand=8486a5363b815bf70cfc93bf57980cd6f24aad33"
+}
+
+if (-not (Test-Path "D:\tb-gpu-runs\arms\UI1\_done")) {
+    & $arm -Job UI1 -Items "P2-114", "P2-058", "P2-059", "P2-061" `
+        -Arms "ctl=e07666f356bc98755e3e157c8877c4952e959d91", "cand=e0f51545d87199a6999bbcd081bf67235c819b8e"
+}
+
+if (-not (Test-Path "D:\tb-gpu-runs\arms\UIPAD\_done")) {
+    & $arm -Job UIPAD -Items "P2-031", "P2-032", "P2-096", "P2-001", "P2-007", "P2-004" -Arms "main=$main" -Extra "--gamepad"
+}
+"queue56 done $(Get-Date -Format 'dd MMM HH:mm')"

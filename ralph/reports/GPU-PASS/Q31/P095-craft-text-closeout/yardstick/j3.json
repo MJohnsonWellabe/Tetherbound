@@ -1,0 +1,104 @@
+{
+ "sets": {
+  "Dp": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra model itself (white fleece, dark ram horns, blue accents) matches the owner style bar and would pass beside Palworld, but it is staged on a flat grey stage with no atmosphere, and side B's faint mid/end sink the body into the floor with the horns lying loose, which sinks the read."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's panel is legible with a sound blue-grey/gold hierarchy, but the hint glyphs are generic keyboard icons with no teal emphasis and the world behind is a murky flat night with no light or depth, so it does not reach Palworld's HUD finish."
+  },
+  "It": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's furred boar is close to the naturalistic bar but carries odd yellow blob spots and floats above its shadow in faint mid, and side B is a smooth terracotta clay toy off the owner style; in both the boar stands no taller than the 1.80 m trainer."
+  },
+  "Dh": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The craft panel itself is clean (full material lines, Missing tags, need-N-more, teal Leave) and fits the UI direction, but the small orange preview text and the plain blurred meadow behind keep it short of Palworld's HUD and world finish."
+  },
+  "Fc": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same result as Dh: recipe names and material lines are complete and the hierarchy is clear, but the preview lines are small orange-on-teal text and the backdrop has no Valheim-class light or atmosphere."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder in moss-green vest, scarf and brown boots has an appealing, clean face and readable full-body silhouette on a par with Palworld humans, though the big-eyed cartoon face is more stylised than the naturalistic creature bar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Bring every creature above the 1.80 m trainer and to the owner style bar: replace the clay-toy boar (It B) and fix the gold-blob fur pattern (It A) with a naturalistic furred, mossy boar mesh/material per the Mudsnout/Tuskroot board.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix faint poses so the body stays on the ground plane and in one piece: no floating above its shadow (It A faint mid), no sinking through the floor with detached horns (Dp B faint mid/end), no tangled legs through the torso (Dp A faint end).",
+   "kind": "scene"
+  },
+  {
+   "change": "Unify the craft panel on the Dh/Fc layout across resolutions: larger material preview text with better contrast than orange-on-teal, controller-first teal Craft/Leave prompts instead of keyboard glyphs (Ql B), and no truncated lines (Ql A).",
+   "kind": "scene"
+  }
+ ]
+}

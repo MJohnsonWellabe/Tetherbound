@@ -1,0 +1,82 @@
+{
+ "sets": {
+  "Za": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager reads clearly, with an appealing face, readable eyes and a warm green/brown Meadows outfit, but he is a smooth, toy-like stylised figure on a black stage with no world light, so he does not sit at Palworld/Valheim finish."
+  },
+  "Mj": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's naturalistic boar fur gets close to the owner bar but its faint-mid pose floats above its shadow, and B's glossy terracotta 'piggy bank' material with flat moss decals reads as a toy, not a Palworld-class creature."
+  },
+  "Yf": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground, flat noon light with no atmosphere, sparse placeholder-like props and tiled stronghold walls sink it well below Palworld density and Valheim light, even where A's aftermaths (smoke column, fallen banner, open cage) tell a story."
+  },
+  "Us": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel, teal selection and warm ingredient text match a shipping HUD language, but the tiny list text, small central item icon and large empty areas keep it short of Palworld's dense, glanceable UI finish."
+  },
+  "Ce": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's Tanglevolt matches the owner style bar with a strong silhouette and readable rear-up hit react, but B loses its fur texture to flat white/black patches in both faint frames and has a hit react that barely differs from standing, and neither side shows world light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Keep authored creature materials through the hurt and faint states (Ce side B swaps to flat white/black patches), ground every faint pose on its shadow (Mj A faint mid floats), and make hit reacts clearly distinct from standing.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Mj boar to the owner's naturalistic style bar (real fur, moss growing into the coat, a mass taller than the 1.80 m trainer) instead of the glossy terracotta toy material.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Bring the Yf trainer sites up to Meadows density and light: replace the smeared ground with grass and dirt material plus clumped ground cover, add a warm directional key light with cool blue distance haze, keep site props in place after the win (no vanished cages or boxes), and take down or break the Team Tether banner in every aftermath.",
+   "kind": "scene"
+  }
+ ]
+}

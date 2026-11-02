@@ -1,0 +1,88 @@
+{
+ "Jn": {
+  "anchor": false,
+  "label": "R1 cindercub High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\cindercub-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\cindercub-High.png"
+ },
+ "Kv": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Gp": {
+  "anchor": false,
+  "label": "R1 bramblebun High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\bramblebun-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\bramblebun-High.png"
+ },
+ "Vv": {
+  "anchor": false,
+  "label": "R1 riverdrake High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\riverdrake-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\riverdrake-High.png"
+ },
+ "Iu": {
+  "anchor": false,
+  "label": "R1 ripplet High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\ripplet-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\ripplet-High.png"
+ },
+ "Fq": {
+  "anchor": false,
+  "label": "R1 tanglevolt High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\tanglevolt-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\tanglevolt-High.png"
+ },
+ "Hd": {
+  "anchor": false,
+  "label": "R1 aquaryn High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\aquaryn-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\aquaryn-High.png"
+ },
+ "Mg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Vw": {
+  "anchor": false,
+  "label": "R1 trailpup High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\trailpup-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\trailpup-High.png"
+ },
+ "Dy": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Cy": {
+  "anchor": false,
+  "label": "R1 water_riverdrake High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_riverdrake-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_riverdrake-High.png"
+ },
+ "Ok": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Xb": {
+  "anchor": false,
+  "label": "R1 sirenseal High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\sirenseal-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\sirenseal-High.png"
+ },
+ "Pr": {
+  "anchor": false,
+  "label": "R1 torrentoad High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\torrentoad-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\torrentoad-High.png"
+ },
+ "Lz": {
+  "anchor": false,
+  "label": "R1 duskhush High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\duskhush-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\duskhush-High.png"
+ }
+}

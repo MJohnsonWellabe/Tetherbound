@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Pw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing wolf matches the Tanglevolt style bar, but side A's faint frames break into a black-and-white cow-patch material and both sides sit on a flat grey stage with no Valheim-class light."
+  },
+  "Fw": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's aftermaths tell site-specific stories (freed cage, fallen banner, smoking tent), but blurry flat terrain, low-res wall textures, sparse even tree lines and a flat grade sink it next to Palworld."
+  },
+  "Jl": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's spotted bristle fur is on-style but its faint-mid pose floats clear of its shadow; side B's smooth clay-toy hide with moss decals reads as a piggy-bank prop, not a Palworld-class creature."
+  },
+  "Qb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The panel is clean and on-palette with a teal Leave hint, but the main craft action is still a dim grey 'Missing materials' slab, so it lacks a shipping game's punch."
+  },
+  "Ci": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A painted Meadows header strip and the wooden room behind the panel add some world, but the body is still small grey text in uniform dark boxes."
+  },
+  "Zv": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Tiny grey instruction lines, a long reset sentence and bare W/S/A/D or 1-5 key labels make it read as a debug options page, not a finished console settings screen."
+  },
+  "Ns": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The tab state now agrees with the TIDEWAKE heading, but the map itself is a blurry blue field with one green blob and orange lines, with no illustrated cartography."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Build now has three illustrated cards, but Players is greyed-out 'open seat' rows and the quest log uses barely half its height."
+  },
+  "Zb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The HUD is compact and corner-anchored like Palworld's, but six separate dark boxes plus a mid-right slot row and prompt bar still crowd the frame, and the warm interior has flat orange light."
+  },
+  "Qt": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grandpa has an appealing, readable face, eyes and earthy green and brown palette, but his glossy animated-film toon rendering is softer and more cartoon than the stylised-realism key art."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix creature material and pose integrity in hurt and faint states (Pw A faint frames lose the fur material and turn into black-and-white patches; Jl A faint-mid floats above its shadow) and give non-naturalistic creatures like Jl B real fur and hide instead of a smooth clay shell",
+   "kind": "new_art"
+  },
+  {
+   "change": "Raise Meadows world finish at enemy sites: higher-res ground and wall materials, grouped groves and grass clumps instead of even blur, warm key light with cool blue distance fog and stronger shadows",
+   "kind": "scene"
+  },
+  {
+   "change": "Interface pass: brighten and enlarge secondary text and primary action buttons (craft action, settings instructions), swap literal key labels for controller glyphs, merge HUD boxes into fewer panels, and fill sparse menu panels with illustrated content",
+   "kind": "scene"
+  }
+ ]
+}

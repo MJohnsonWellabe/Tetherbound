@@ -236,6 +236,17 @@ func dress(world: Node3D) -> void:
 			if mats.has(key):
 				paving.append(mats[key])
 		print("[cloudreach_paved_grass] cleared=", paved.clear(world, paving, grounding_cfg))
+	# Cause lane (flag-off, data/config/cloudreach_cause.json): cloud cards
+	# never stand on the meadow; groves, clearings and outcrops break the
+	# grass carpet. Last, so both see every builder and every grass pass.
+	var cause := preload("res://scripts/world/cloudreach_cause.gd")
+	if cause.part_on("cloud_sea") and world.has_method("ground_height_at"):
+		print("[cloudreach_cause] cloud_cards=", cause.reseat_cloud_cards(world,
+			func(x: float, z: float) -> float: return float(world.call("ground_height_at", x, z))))
+	var meadow := cause.part("meadow_groves")
+	if not meadow.is_empty():
+		print("[cloudreach_cause] meadow_groves=",
+			preload("res://scripts/world/cloudreach_meadow_groves.gd").new(meadow).build(self, world))
 
 
 func _dress_route_verges(config_data: Dictionary) -> void:

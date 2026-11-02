@@ -1,0 +1,25 @@
+{
+ "asset": "crown_arch_hero",
+ "date": "2026-11-01",
+ "authority": "CLAUDE.md standing owner direction 1 (Meshy, no cap); coordinator-drafted reference, existing Meshy license, no purchase",
+ "reference": {
+  "tool": "Meshy text-to-image nano-banana",
+  "task_id": "01a19850-42ee-74bc-8e4f-1a10da4b3615",
+  "prompt": "The Crown Arch: a tall ancient natural stone arch, weathered pale grey-violet rock with layered strata, the top of the arch rising into five irregular crown-like points tipped with translucent blue glass crystal spikes, thin weathered copper bands with green patina wrapped around the legs, thick moss and roots at the broad seated base growing out of rocky ground, single hero landmark prop for a stylised-realism open-world action RPG (Valheim light, Palworld world), whole object visible and centered, isolated on a plain light grey background, soft even daylight, three-quarter elevated view, painterly polished game concept art, readable silhouette, naturalistic materials, no red or crimson, no text, no people, no creatures",
+  "file": "reference/crown_arch_reference.png"
+ },
+ "model": {
+  "tool": "Meshy image-to-3D",
+  "task_id": "01a19851-8946-72d0-abe6-088856b235b8",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 30000,
+   "symmetry_mode": "auto"
+  }
+ },
+ "status": "candidate: OFF until its scene passes the yardstick",
+ "why": "P2-041 Crown Arch 4.93: judges read the arch as one pillar on a square slab; ask for a true crowned arch on a seated base; no red bands"
+}

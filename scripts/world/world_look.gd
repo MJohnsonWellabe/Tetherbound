@@ -126,8 +126,12 @@ func refresh_graphics() -> void:
 ## crown banks, so an exposed bank cannot acquire a different stone language.
 ## Never edits meshes, collision, placement, creature scale or durable state.
 func _apply_cliff_surface_candidate() -> void:
-	var cfg: Dictionary = _config.get("cloudreach_rock_surface", {})
-	var enabled := bool(GRAPHICS_PREFS.values().get("cloudreach_rock_candidate", false))
+	# Cause lane pale_strata (flag-off, data/config/cloudreach_cause.json) also
+	# turns the course surface on, with its own knobs over art.json's.
+	var cfg: Dictionary = preload("res://scripts/world/cloudreach_cause.gd").rock_surface(
+		_config.get("cloudreach_rock_surface", {}),
+		bool(GRAPHICS_PREFS.values().get("cloudreach_rock_candidate", false)))
+	var enabled := bool(cfg.get("enabled", false))
 	RenderingServer.global_shader_parameter_set("cloudreach_rock_courses", Vector4(
 		1.0 if enabled else 0.0,
 		maxf(float(cfg.get("texture_scale", 0.36)), 0.01),
@@ -1190,6 +1194,9 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# ambient. 1.0 here is the base/unchanged default -- every daytime measurement
 	# behind `field_emission`'s own value stays exactly what it was tuned against.
 	CREATURE_BODY.set_field_brightness_scale(float(cfg.get("creature_field_emission_scale", 1.0)))
+	# Cause lane tb/cause-meadows: a faint silhouette rim floor for every
+	# creature spawned under this look. Absent key = 0.0 = no change.
+	CREATURE_BODY.set_field_rim_floor(float(cfg.get("creature_field_rim_floor", 0.0)))
 
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.tonemap_exposure = float(cfg.get("exposure", 1.0))

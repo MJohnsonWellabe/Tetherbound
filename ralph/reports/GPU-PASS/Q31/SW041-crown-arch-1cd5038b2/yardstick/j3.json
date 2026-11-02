@@ -1,0 +1,102 @@
+{
+ "sets": {
+  "Fw": {
+   "A": {
+    "bar_a": 2.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B gains a timber frame with diagonal brace, a plank cap and a separate stone footing, but both sides stay a lone thin free-standing panel with flat untextured infill (A almost white) under flat, fog-free light on blurry terrain, far from Palworld's base-building finish."
+  },
+  "Ot": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky, rain and blue-green moss carry the Stormwood mood, but the subject is a small dark stacked block, not an arch, with only cyan corner glints, sitting on a bare grey paving slab (square with a hard dark edge in A, irregular and paler in B) and dwarfed by the 1.80 m trainer, so nothing reads as a landmark."
+  },
+  "Bc": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A likeable, clearly read elder villager (white hair and beard, olive vest, green scarf, worn boots) with warm natural colours, but the soft, big-eyed toy-like face sits apart from the naturalistic creature bar, and he is shown only on a black void, so nothing proves he fits the world."
+  },
+  "Co": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's spotted blue drake with coral fins and a cream belly is close to the Riverdrake board, with readable hit-react and grounded faint poses; A loses the read: hit react is identical to standing, faint mid floats above its shadow, and faint end turns into a grey-brown, almost untextured flattened lizard. Both are on a bare neutral stage and are long rather than tall next to the ruler."
+  },
+  "Ac": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as Ot: the storm sky and rain set a mood, but the Crown Arch is a small dark block with cyan glints on an exposed grey slab (a square hard-edged plate in A, a paler irregular plate in B), with no arch form and no copper, glass or lightning, so it reads as a placeholder."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's after frames tell each site's story (enemy banners pulled down and lying on the ground, an opened cage with a freed captive, a smoke plume, crates broken into planks), while A's after frames mostly just remove one prop and leave the enemy's red banners standing at sites 1, 3 and 5; on both sides the blurry low-res terrain and wall textures, flat noon light and empty, fog-free distance are far below Palworld's finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the Crown Arch with a real hero landmark: a tall stone arch with a crowned keystone, copper and glass inlays and white-violet lightning accents, rooted in moss and terrain-blended rubble instead of a bare grey slab, and clearly taller than the trainer (Ot, Ac).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give the homestead wall real depth and material: thick timber posts, textured wattle, daub or plank infill with value variation, and a cap and stone footing that cast contact shadows, tied into the ground with grass and dirt (Fw).",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise Meadows world finish: sharper terrain and wall textures, broken-up grass with clearings and edges, a warm sun grade with soft shadows, aerial perspective and cool blue distance fog (Fw, Hv); and fix the creature faint states so the material is kept, hit react differs from standing and faint mid stays grounded (Co A).",
+   "kind": "scene"
+  }
+ ]
+}

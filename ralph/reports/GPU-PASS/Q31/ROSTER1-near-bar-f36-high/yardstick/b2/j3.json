@@ -1,0 +1,246 @@
+{
+ "sets": {
+  "Da": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A vivid cyan and pink serpent with a clear coiled silhouette and fin detail matches Palworld creature finish, though the bare stage gives no Valheim-style light to judge."
+  },
+  "Aw": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The near-black plated body merges with the dark stage and has no rim light, and a thin stick pokes up from it in faint mid and faint end, so it reads below Palworld finish."
+  },
+  "Dw": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spiky navy drake has a good shape, but it is dark on a dark stage and still holds its head up in faint end, which sinks the read."
+  },
+  "Mq": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The geode shell is rich, but the hit react is almost the same as standing and the busy shell crowds out the head at small size."
+  },
+  "Df": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The saturated blue and violet sea-beast has a long, readable mount silhouette and a clear rideable read, close to Palworld mount finish."
+  },
+  "Of": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic big-cat mount with a saddle is on-style, but the back turns grey-green and mottled in faint mid and faint end, and the brown on grey has little rim light, so it stops short of Palworld finish."
+  },
+  "Gk": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired villager has a warm, expressive face and eyes and a green-brown outfit that fits the Meadows palette, at a Palworld-like stylised finish."
+  },
+  "Xx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution grass and terrain, a stretched stone-wall texture and flat midday light sit well below Palworld world density and Valheim atmosphere, and on side B the enemy banners stay up in most after frames."
+  },
+  "Mh": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat magenta telegraph rings, a murky brown frame with no purple storm sky, a large HUD and a player creature you can barely see sink it, and side B also loses whole frames to trunk and foliage."
+  },
+  "Rk": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The blue and amber feathered dragon has a tall, distinct silhouette and saturated colour that would sit beside Palworld creatures, though the rider is hard to see in the ridden frame."
+  },
+  "Hc": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The striped face and mossy rock back give it identity, but in faint mid and faint end it turns into a faceless boulder lump, and the warm browns lack rim separation."
+  },
+  "Od": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint end still reads upright or alert (head raised, body standing) rather than knocked out": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The otter has appealing fur and a teal tail, but standing it is only about trainer height, and in faint end it lies on its belly still looking forward, so it reads as alert rather than knocked out."
+  },
+  "Bl": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fleece and ram horns match the owner's Stormcapra bar, but the hit react barely changes on either side, and side B's faint mid and faint end hang in mid-air upside down with the shadow far below."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Mh (Stormwood fight): replace the flat magenta telegraph rings with real-object tells and impacts (ground cracks, dust, sparks, web strands). Keep the camera on a clear lane so trunks and foliage never fill the frame (B i11-i15). Add the fixed purple storm sky and a cool rim light so the spider and the player's creature separate from the brown floor. Shrink or fade the left and bottom HUD panels.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the creature hurt and faint poses that break the read: ground Bl B's faint mid and faint end, which float upside down above their shadow. Put the head on the floor in Dw's faint end and settle Od's faint end. Give Mq and Bl a real hit-react flinch.",
+   "kind": "scene"
+  },
+  {
+   "change": "Lift dark and flat creatures and the Meadows ground: add rim or key light and value separation for near-black creatures (Aw, Dw) and the brown ones (Hc, Of). In the Xx sites, replace the smeared grass and terrain textures with authored grass clumps, wildflower edges and the warm-green and cool-distance grade. Make every after frame clear the enemy banners (Xx B rows 1, 3, 5).",
+   "kind": "scene"
+  }
+ ]
+}

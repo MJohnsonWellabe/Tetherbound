@@ -1,0 +1,36 @@
+# Queue 65 (31 Oct, HALL-1 round 2): tb/hall-1 7f7c66e71 (r2, OFF) imported once; Hall tests headless; then crossing_hall.json is
+# byte-copied from each local ON ref and the F17-6 set is shot at High: r2a (hall_1 on) and r2b (r2a + darker night ambient).
+# Control stays queue 62's main frames.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $crA = "D:\tb-gpu-wt-crA"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+$py = "C:\Users\mattj\AppData\Local\Programs\Python\Python312\python.exe"
+$tree = (git -C D:\tb-gpu-pass rev-parse tb/hall-1).Trim()
+$mark = "D:\tb-gpu-runs\crA_imported_sha.txt"
+"== queue65 start $(Get-Date -Format 'dd MMM HH:mm') tree $($tree.Substring(0,9))"
+Gate "HALL1 r2"
+CheckoutCrA $tree
+if ((Test-Path $mark) -and ((Get-Content $mark -Raw).Trim() -eq $tree)) { "  crA already imported at tb/hall-1" }
+else { Import $crA "crA-q65hall"; Set-Content -Path $mark -Value $tree -Encoding ascii }
+$tlog = "$out\HALL1-r2-tests.log"
+& $godot --headless --path $crA --script res://tests/run_tests.gd -- --only=crossing_hall,f17_companion_interior *> $tlog
+"  tests exit=$LASTEXITCODE; " + ((Get-Content $tlog | Select-String 'tests, .* assertions') -join ' ')
+foreach ($arm in @("r2a", "r2b")) {
+    $on = (git -C D:\tb-gpu-pass rev-parse "gpu-local/hall1-$arm").Trim()
+    $dest = "$out\HALL1-$arm-High"
+    if (Test-Path "$dest\_done") { continue }
+    for ($try = 1; $try -le 2; $try++) {
+        Gate "HALL1 $arm"
+        CleanCrA $tree
+        $o = & $py "D:\tb-gpu-runs\tools\json_flip.py" --from $on "data/config/crossing_hall.json" $crA; "  $arm $o"
+        if (Test-Path $dest) { Move-Item $dest "$dest.try$try" -Force -ErrorAction SilentlyContinue }
+        $r = & $run -Preset "High" -Script "res://tools/visual_judge/capture_camera_set.gd" -OutDir $dest -Resolution "1920x1080" -ProjectPath $crA -GodotArgs @("--fullscreen") `
+            -UserArgs @("--set=res://tools/visual_judge/camera_sets/F17-6.json", "--out={FRAMES}", "--preset=High")
+        $n = @(Get-ChildItem "$dest\frames" -File -Include *.jpg, *.png -Recurse -ErrorAction SilentlyContinue).Count
+        "  HALL1 $arm High try=$try $r images=$n"
+        if ($n -ge 15) { New-Item -ItemType File -Force "$dest\_done" | Out-Null; break }
+    }
+}
+CleanCrA $tree
+"queue65 done $(Get-Date -Format 'dd MMM HH:mm')"

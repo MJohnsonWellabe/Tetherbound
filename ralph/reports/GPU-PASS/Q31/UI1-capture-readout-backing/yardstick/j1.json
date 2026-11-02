@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Qz": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The creatures are decent but the flat, treeless uniform-green meadow with no haze, groves or warm grade, plus tiny result text lost in the orb bloom under persistent HUD cards, sinks it."
+  },
+  "Dn": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cyan sky and pale dunes match the Tidewake board, but evenly scattered placeholder-like rock blobs, no water or falls in view and a ghosted see-through companion keep it short of a finished game."
+  },
+  "Xx": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model itself (fleece, horns, blue accents, clear scale over the ruler) is at Palworld-class finish, though side B's broken, floating faint poses would undercut it in play."
+  },
+  "Dc": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The strike and absorb frames are a top-down crop of flat grass with only a sliver of the companion, and the wide frame shows an empty hill with no groves, so neither the staging nor the world carries."
+  },
+  "Za": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clearly authored elder with readable face and eyes and a key-art-friendly green and brown outfit carries it, though the face is a little more cartoon than the naturalistic creature bar."
+  },
+  "Sr": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "One rock-hill landmark on an otherwise uniform grass carpet with no trees, groves or atmospheric depth reads as a test field rather than the key art's lived-in meadow."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a strong silhouette and real fur and stone detail, but a hit react identical to standing and faint poses that hover above their own shadow (A's faint end also crushing to near-black) sink it."
+  },
+  "Hh": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown forest with no purple storm sky, flat magenta outline telegraphs, a tiny barely visible player creature and HUD panels covering much of each frame (plus trunk/foliage blackouts in A) sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dress the meadows catch arena like the key art: oak groves and edges, rocks, flower patches and grass variation instead of a uniform green carpet, with warm sun grade and cool blue distance haze behind the landmark hill (Qz, Dc, Sr).",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: replace flat magenta outline telegraphs with grounded physical tells (dust, cracking ground, white-violet lightning with impact), add the purple storm sky and creature rim light, fade or avoid occluding trunks/foliage, and pull the player's creature into readable range (Hh).",
+   "kind": "scene"
+  },
+  {
+   "change": "Catch HUD and camera pass: back the capture chance with the dark plate everywhere (as in Dn A and Sr B) and move it off the target, hide persistent creature cards and action lists during the result beat with one large outcome banner, keep the companion in frame during strike/absorb, and ground faint poses on the floor with a real hit react (Kv, Xx B).",
+   "kind": "scene"
+  }
+ ]
+}

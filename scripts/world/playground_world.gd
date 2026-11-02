@@ -25,6 +25,7 @@ const LONG_WATER_VISUAL_CONFIG := "res://data/config/long_water_visual.json"
 ## presentation only, kept out of terrain_playground.json for the same reason
 ## the Long Water bank treatment is -- that file fingerprints both bakes.
 const GROUND_PRESENTATION_CONFIG := "res://data/config/terrain_presentation.json"
+const MEADOWS_LOOK_CONFIG := "res://data/config/meadows_look.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
 const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
@@ -1313,6 +1314,12 @@ func _apply_ground_shader(material: Object) -> void:
 			for key: String in candidate.keys():
 				if key != "enabled" and not key.begins_with("_"):
 					cfg[key] = candidate[key]
+	# Cause lane tb/cause-meadows (OFF until GPU-judged): meadows_look.json
+	# `cause_ground.terrain_shader`, layered last so it composes over the
+	# shipped overrides and the shader candidate above.
+	var cause_shader := meadows_cause_ground_shader(MEADOWS_LOOK_CONFIG)
+	for key: String in cause_shader.keys():
+		cfg[key] = cause_shader[key]
 	if cfg.is_empty():
 		# FLAT rather than NOISE, matching the shader's own default, so a missing
 		# config is the old look rather than an unlit void.
@@ -2332,6 +2339,22 @@ func terrain_height_source() -> Array:
 	if _terrain == null or not is_instance_valid(_terrain) or _terrain.get("data") == null:
 		return []
 	return [_terrain.get("data"), float(_terrain.get("vertex_spacing"))]
+
+
+## `cause_ground.terrain_shader` while `cause_ground.enabled`, else empty.
+static func meadows_cause_ground_shader(look_path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(look_path))
+	if not parsed is Dictionary:
+		return {}
+	var cause: Dictionary = (parsed as Dictionary).get("cause_ground", {})
+	if not bool(cause.get("enabled", false)):
+		return {}
+	var out: Dictionary = {}
+	var shader: Dictionary = cause.get("terrain_shader", {})
+	for key: String in shader.keys():
+		if not key.begins_with("_"):
+			out[key] = shader[key]
+	return out
 
 
 func _load_terrain_config() -> Dictionary:

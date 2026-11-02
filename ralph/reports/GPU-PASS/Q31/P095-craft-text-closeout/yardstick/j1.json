@@ -1,0 +1,104 @@
+{
+ "sets": {
+  "Dp": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram's standing model has Palworld-class wool, horn and dark fur and stands well above the 1.80 m ruler, but the faint frames break it: in A (faint mid) the legs splay and twist into a tangle, and in B (faint mid and faint end) the legs disappear under the wool and the horns straighten into long black tubes, which reads as a rig fault rather than a fainted animal."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped text helps, but the oversized rows show only three recipes, the ingredient lines are all alarm-orange, the Craft and Leave prompts are plain white text with keyboard-style glyphs instead of teal controller prompts, and the dim, flat night scene behind the panel is nowhere near Palworld's finish."
+  },
+  "It": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred boar comes closest to the naturalistic bar, but the gold nugget-like lumps on its back confuse its identity, the body floats above its shadow in faint mid, and it stands only about as tall as the trainer; B's smooth clay-toy pig with moss patches is off-style, and its hit react and faint mid barely differ."
+  },
+  "Dh": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel, the teal Leave prompt and the full material lines (for example Greater Orb, 4 Rootstone, 3 Wood, 3 Fiber) look like a shipping UI, but the preview sublines and red Missing tags are tiny at a glance, and the murky grass and flat sky behind the panel have none of Valheim-class light."
+  },
+  "Fc": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This set is identical to Dh: the panel hierarchy and teal Leave prompt carry it, while the very small orange preview lines and Missing tags, and the flat, dim world behind the panel, keep it below Palworld's finish."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder's moss scarf, olive vest and leather boots fit the meadows palette with no oxblood, and the clean face and eyes give it shipping-quality finish, though the big-eyed animated-film face is more cartoon than the naturalistic creatures and the full-body legs are slightly stubby."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the faint-pose rigging and placement on staged creatures: keep the ram's (Dp) horns rigid and its legs visible in faint mid and faint end, untangle the A faint-mid leg twist, and ground the boar (It A) faint mid on its shadow.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the clay-toy boar (It B) with a naturalistic furred boar at the style-bar quality, drop the gold nugget lumps, and scale it above the 1.80 m trainer.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Standardise the crafting panel on the Dh/Fc layout: compact rows showing five or more recipes, full unclipped material lines at a larger size, teal controller-glyph Craft and Leave prompts, and orange kept only for missing items.",
+   "kind": "scene"
+  }
+ ]
+}

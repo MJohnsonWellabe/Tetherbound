@@ -1,0 +1,56 @@
+[
+    {
+        "label":  "DLG1F P2-077 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-077-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-077-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue foreground composition. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+                    ]
+    },
+    {
+        "label":  "DLG1F P2-078 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-078-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-078-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: dialogue speaker occlusion. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+                    ]
+    },
+    {
+        "label":  "DLG1F P2-079 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-079-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-079-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: Meadows dialogue rock obstruction. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Large rock faces fill the camera and hide the named speaker during dialogue"
+                    ]
+    },
+    {
+        "label":  "DLG1F P2-075 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-075-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-075-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The player head and back overlap the named speaker in several conversation frames"
+                    ]
+    },
+    {
+        "label":  "DLG1F P2-087 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-087-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-087-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: named trainer dialogue subject visibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+                    ]
+    },
+    {
+        "label":  "DLG1F P2-081 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-081-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-081-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+                    ]
+    }
+]

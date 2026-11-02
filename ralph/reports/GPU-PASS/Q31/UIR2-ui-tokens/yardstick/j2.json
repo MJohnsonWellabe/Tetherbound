@@ -1,0 +1,168 @@
+{
+ "sets": {
+  "Ad": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sides are visually identical: seven separate dark boxes (team, quest, minimap, day clock, hotbar, button strip, health/food) frame an over-saturated orange wood interior, so the HUD reads busier and boxier than Palworld's lighter, edge-hugging overlay."
+  },
+  "Yt": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grandpa Elias has an appealing, readable face, clear eyes and a coherent green/olive/brown palette that matches the dialogue portrait, but the soft toy-like cartoon shading sits closer to animated film than to the naturalistic world, and the full-body view is small and stiff."
+  },
+  "Rz": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred boar has believable surface detail but a strange gold leopard-spot pattern and only reaches about the trainer's height; B's smooth terracotta body with flat green moss patches reads as a clay toy, far below the naturalistic owner style bar."
+  },
+  "Hx": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's larger wrapped recipe text and icon-led Craft/Leave hints read at a glance at both resolutions, while B's tiny truncated recipe lines ('4 Wood (have 0), 3 St...') and faint 'Craft: A / Enter' / 'Leave: B / Esc' strings fail the 7-inch test; neither panel has teal action emphasis."
+  },
+  "Ss": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sides are identical; Build has three illustrated cards, but Players and Quest Log are mostly empty navy with small gray text lines, so the panels feel like unfinished debug pages, not a finished game menu."
+  },
+  "Ax": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sides are identical: small gray instruction text on navy, the inline 'Hold ... (or F10) for a second and a half' sentence and plain W/A/S/D and 1-5 labels read as a utility table, and the 'Fighting' section is cut off at the bottom of quick_bindings."
+  },
+  "Ex": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Stormcapra matches the style bar standing (white fleece, dark curled horns, taller than the trainer), but A's faint end rolls into a contorted belly-up tangle, and in B's faint mid/end the legs vanish so the fleece lies as a legless blob with flat horns, which breaks the read."
+  },
+  "Yd": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sides are near-identical: Leave is now teal and the orange 'need N more' ingredient lines read well, but the craft action is still a dim gray 'Missing materials' slab with little contrast, over a murky grassland backdrop."
+  },
+  "Wz": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake tab now carries the teal active outline under the TIDEWAKE heading in both sides, but the map itself is a blurred blue field with one yellow-green blob and thin orange lines, with none of the board's cyan water, pale dunes or landmark language."
+  },
+  "Zd": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted village banner strip and the creature preview add some world, but backpack, build and creatures panels remain flat charcoal grids of small, evenly weighted text with no warm gold progression or clear focal hierarchy."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild menu and HUD typography and hierarchy: larger primary text, pale-on-blue-grey contrast, teal-highlighted primary action button, gold progression accents, fewer and lighter boxed HUD panels, and fill empty Players/Quests panels with illustrated or icon content (Ad, Ss, Ax, Hx, Yd, Zd).",
+   "kind": "scene"
+  },
+  {
+   "change": "Remake the meadows boar to the naturalistic owner style bar: real fur, tusk and hide detail, believable colour pattern, and scale taller than the 1.80 m trainer, replacing the clay/leopard-spot looks (Rz).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix creature faint poses so they stay grounded with visible legs and a readable collapse (Stormcapra legs vanish in B, belly-up tangle in A), and paint the region map with the chapter board's water, dune and landmark language (Ex, Wz).",
+   "kind": "scene"
+  }
+ ]
+}

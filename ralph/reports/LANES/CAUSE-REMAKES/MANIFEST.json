@@ -1,0 +1,627 @@
+[
+ {
+  "item": "F36 Abyssal Guardian remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "abyssal_guardian"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Aeriex remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "aeriex"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Aquaryn remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "aquaryn"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Bramblebun remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "bramblebun"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Breezetail remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "breezetail"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Brooktail remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "brooktail"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Burrowback remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "burrowback"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Cannonback remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cannonback"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Cindercub remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cindercub"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Cliffspike remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cliffspike"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Cloudfang remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cloudfang"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Cragclaw remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cragclaw"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Craghorn remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "craghorn"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Duskhush remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "duskhush"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Frostclaw remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "frostclaw"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Fulgocobra remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "fulgocobra"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Galewisp remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "galewisp"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Glimmermoth remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "glimmermoth"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Mangrove Monitor remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mangrove_monitor"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Meadowhart remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "meadowhart"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Mirejaw remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Mosshock remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mosshock"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Mudsnout remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mudsnout"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Paddlenewt remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "paddlenewt"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Pebbik remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "pebbik"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Pipwing remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "pipwing"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Reedwing remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "reedwing"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Ribbonray remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ribbonray"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Ripplet remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ripplet"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Riptusk remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riptusk"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Riverdrake remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riverdrake"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Shadelet remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "shadelet"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Sirenseal remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sirenseal"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Skyrill remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "skyrill"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Sparkit remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sparkit"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Staticub remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "staticub"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Stormbrush remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormbrush"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Stormraven remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormraven"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Tempestwing remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tempestwing"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Terrapup remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "terrapup"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Thundertunnel remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "thundertunnel"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Tidecoil remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tidecoil"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Torrentoad remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "torrentoad"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Trailpup remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "trailpup"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Voltarach remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltarach"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Voltwig remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_glow_read.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltwig"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 Bramblebun remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_plate_blend.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "bramblebun"
+  ],
+  "group": 2
+ },
+ {
+  "item": "F36 Terrapup remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_plate_blend.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "terrapup"
+  ],
+  "group": 2
+ },
+ {
+  "item": "F36 Brooktail remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_dark_lift.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "brooktail"
+  ],
+  "group": 3
+ },
+ {
+  "item": "F36 Voltarach remake",
+  "flag": "data/config/creature_coat_flags.json:flags.remake_owner1101_dark_lift.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltarach"
+  ],
+  "group": 3
+ },
+ {
+  "item": "F36 Bramblebun remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_body_line.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "bramblebun"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 Cliffspike remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_body_line.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cliffspike"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 Craghorn remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_body_line.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "craghorn"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 Galewisp remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_body_line.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "galewisp"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 Glimmermoth remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_body_line.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "glimmermoth"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 Shadelet remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_body_line.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "shadelet"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 Sparkit remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_body_line.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sparkit"
+  ],
+  "group": 4
+ },
+ {
+  "item": "F36 Pipwing remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_judged_short.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "pipwing"
+  ],
+  "group": 5
+ },
+ {
+  "item": "F36 Terrapup remake",
+  "flag": "data/config/creature_scale_flags.json:flags.remake_owner1101_judged_short.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "terrapup"
+  ],
+  "group": 5
+ },
+ {
+  "item": "F36 Torrentoad remake (rig fixed: attack contact 15/23, rest binding)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_torrentoad.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "torrentoad"
+  ],
+  "group": 6
+ },
+ {
+  "item": "F36 Meadowhart remake (rig fixed: MeadowhartBareBody skin)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_meadowhart.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "meadowhart"
+  ],
+  "group": 7
+ },
+ {
+  "item": "F36 Burrowback remake (variant Nightburrow on the remake)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_burrowback.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "burrowback",
+   "nightburrow"
+  ],
+  "group": 8
+ },
+ {
+  "item": "F36 Trailpup remake (variant Stormtrail on the remake)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_trailpup.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "trailpup",
+   "stormtrail"
+  ],
+  "group": 9
+ },
+ {
+  "item": "F36 Paddlenewt remake (variant Riftfrill on the remake)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_paddlenewt.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "paddlenewt",
+   "riftfrill"
+  ],
+  "group": 10
+ },
+ {
+  "item": "F36 Tuskroot remake (variant Ashtusk on the remake; own-mesh Ashtusk remake dropped)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_tuskroot.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tuskroot",
+   "ashtusk"
+  ],
+  "group": 11
+ },
+ {
+  "item": "F36 Frostclaw remake (F36 pose recipe on the remake rig)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_frostclaw.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "frostclaw"
+  ],
+  "group": 12
+ },
+ {
+  "item": "F36 Terrapup remake (fitted to the installed footprint for Warrens admission)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_terrapup.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "terrapup"
+  ],
+  "group": 13
+ },
+ {
+  "item": "F36 Riptusk remake (water rest binding)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_riptusk.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riptusk"
+  ],
+  "group": 14
+ },
+ {
+  "item": "F36 Bramblebun remake (alpha/shiny colourways on the remake)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_bramblebun.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "bramblebun"
+  ],
+  "group": 15
+ }
+]

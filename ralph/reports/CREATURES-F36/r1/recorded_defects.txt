@@ -1,0 +1,7 @@
+Oa: "The hit react lifts the forefeet off the ground instead of staying grounded"
+Rl: none
+Py: "The hit react lifts the forefeet off the ground instead of staying grounded"
+Lj: "The coat reads as one flat teal value with no lighter belly"
+Uc: "A busy blue harness print"
+Ns: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ss: none

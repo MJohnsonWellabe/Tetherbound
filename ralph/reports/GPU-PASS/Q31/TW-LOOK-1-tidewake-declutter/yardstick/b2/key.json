@@ -1,0 +1,58 @@
+{
+ "Ym": {
+  "anchor": false,
+  "label": "TWLOOK first_shore High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-first_shore-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-first_shore-cand-High.png"
+ },
+ "Kg": {
+  "anchor": false,
+  "label": "TWLOOK lantern_cove High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-lantern_cove-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-lantern_cove-cand-High.png"
+ },
+ "Gk": {
+  "anchor": false,
+  "label": "TWLOOK tidal_cradle High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-tidal_cradle-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-tidal_cradle-cand-High.png"
+ },
+ "Ml": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Th": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Gx": {
+  "anchor": false,
+  "label": "TWLOOK salt_crown High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-salt_crown-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-salt_crown-cand-High.png"
+ },
+ "Gn": {
+  "anchor": false,
+  "label": "TWLOOK drowned_garden High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-drowned_garden-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-drowned_garden-cand-High.png"
+ },
+ "Sv": {
+  "anchor": false,
+  "label": "TWLOOK gull_rest High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-gull_rest-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TWLOOK\\sides\\TWLOOK-gull_rest-cand-High.png"
+ },
+ "Rb": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ },
+ "Bf": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ }
+}

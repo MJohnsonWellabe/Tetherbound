@@ -1,0 +1,76 @@
+{
+ "Da": {
+  "anchor": false,
+  "label": "R1 water_tidecoil High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_tidecoil-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_tidecoil-High.png"
+ },
+ "Aw": {
+  "anchor": false,
+  "label": "R1 ashtusk High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\ashtusk-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\ashtusk-High.png"
+ },
+ "Dw": {
+  "anchor": false,
+  "label": "R1 water_riptusk High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_riptusk-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_riptusk-High.png"
+ },
+ "Mq": {
+  "anchor": false,
+  "label": "R1 water_cannonback High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_cannonback-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_cannonback-High.png"
+ },
+ "Df": {
+  "anchor": false,
+  "label": "R1 water_sirenseal High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_sirenseal-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_sirenseal-High.png"
+ },
+ "Of": {
+  "anchor": false,
+  "label": "R1 terrapup High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\terrapup-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\terrapup-High.png"
+ },
+ "Gk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Xx": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Mh": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Rk": {
+  "anchor": false,
+  "label": "R1 water_aquaryn High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_aquaryn-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\water_aquaryn-High.png"
+ },
+ "Hc": {
+  "anchor": false,
+  "label": "R1 burrowback High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\burrowback-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\burrowback-High.png"
+ },
+ "Od": {
+  "anchor": false,
+  "label": "R1 brooktail High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\R1\\sides\\brooktail-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R1\\sides\\brooktail-High.png"
+ },
+ "Bl": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ }
+}

@@ -1,0 +1,112 @@
+[
+ {
+  "label": "brine_steps",
+  "a": "judge_src/r1/brine_steps_a.png",
+  "b": "judge_src/r1/brine_steps_b.png",
+  "brief": "Tidewake archipelago, Brine Steps island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "deep_watch",
+  "a": "judge_src/r1/deep_watch_a.png",
+  "b": "judge_src/r1/deep_watch_b.png",
+  "brief": "Tidewake archipelago, Deep Watch island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "drowned_garden",
+  "a": "judge_src/r1/drowned_garden_a.png",
+  "b": "judge_src/r1/drowned_garden_b.png",
+  "brief": "Tidewake archipelago, Drowned Garden island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "first_shore",
+  "a": "judge_src/r1/first_shore_a.png",
+  "b": "judge_src/r1/first_shore_b.png",
+  "brief": "Tidewake archipelago, First Shore island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "gull_rest",
+  "a": "judge_src/r1/gull_rest_a.png",
+  "b": "judge_src/r1/gull_rest_b.png",
+  "brief": "Tidewake archipelago, Gull Rest island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "lantern_cove",
+  "a": "judge_src/r1/lantern_cove_a.png",
+  "b": "judge_src/r1/lantern_cove_b.png",
+  "brief": "Tidewake archipelago, Lantern Cove island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "reedhaven",
+  "a": "judge_src/r1/reedhaven_a.png",
+  "b": "judge_src/r1/reedhaven_b.png",
+  "brief": "Tidewake archipelago, Reedhaven island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "salt_crown",
+  "a": "judge_src/r1/salt_crown_a.png",
+  "b": "judge_src/r1/salt_crown_b.png",
+  "brief": "Tidewake archipelago, Salt Crown island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "shellwatch",
+  "a": "judge_src/r1/shellwatch_a.png",
+  "b": "judge_src/r1/shellwatch_b.png",
+  "brief": "Tidewake archipelago, Shellwatch island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "sluice_isle",
+  "a": "judge_src/r1/sluice_isle_a.png",
+  "b": "judge_src/r1/sluice_isle_b.png",
+  "brief": "Tidewake archipelago, Sluice Isle island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ },
+ {
+  "label": "tidal_cradle",
+  "a": "judge_src/r1/tidal_cradle_a.png",
+  "b": "judge_src/r1/tidal_cradle_b.png",
+  "brief": "Tidewake archipelago, Tidal Cradle island: two named beach locations, each shown from an approach view (left) and a close view (right), trainer in frame, midday.",
+  "defects": [
+   "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention",
+   "Named location reads as a generic slope with no clear focal building or landmark"
+  ]
+ }
+]

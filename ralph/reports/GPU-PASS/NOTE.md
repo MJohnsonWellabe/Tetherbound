@@ -1,5 +1,182 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-9, Mudsnout, Paddlenewt and Riftfrill taller (flag, High first); this tree supersedes CO-F36-8's
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-9-on` e8da58fe1cc82fd919ed02cf564318748fc214b4.
+  - The candidate is CO-F36-8's all-flags tree plus one scale flag, so use this tree for every CREATURES-F36 flag arm (table in the CO-F36-8 request below).
+  - With every flag `false` it renders as main.
+- **To judge:** set `flags.creatures_f36_taller_than_trainer_3.enabled` to `true` in `data/config/creature_scale_flags.json`.
+  - mudsnout grows x1.5 (2.0 -> 3.0 m); paddlenewt and riftfrill x1.8 (2.15 -> 3.87 m).
+- **CPU r10** (three judges, confirming, r 0.92): mudsnout 6.22 -> 7.02, paddlenewt 6.18 -> 6.94, riftfrill 6.13 -> 6.90. The height defect goes from PRESENT x3 to FIXED x3 on all three.
+- **Verdict:** `ralph/reports/CREATURES-F36/r10/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:** `capture_f36_poses.gd --whole-body --context --species=mudsnout,paddlenewt,riftfrill --out=<fresh dir> --source-commit=e8da58fe1cc82fd919ed02cf564318748fc214b4`, plain.
+- **Report:** MET at High and the height defect call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-8, Pipwing and Sparkit taller, plus ONE TREE FOR EVERY CREATURES-F36 FLAG ARM (High first)
+
+- **One tree for all the flag arms:** check out `tb/co-f36-8-on` 4c13f7560ef4b01d88895b0cfdd592c2f42e9435 and import once (seven new coat textures).
+  - With every flag `false` it renders as main a41e1b30.
+  - Then flip one flag per arm:
+
+    | Arm | Flag | Species |
+    |---|---|---|
+    | CO-F36-2 | `data/creatures/f36_pose_candidates.json` `candidate_role_flags.creatures_f36_sirenseal_grounded_hit` | sirenseal, `--candidate` |
+    | CO-F36-3 | `data/config/creature_scale_flags.json` `creatures_f36_taller_than_trainer` | duskhush, brooktail, plain |
+    | CO-F36-4 | `data/config/creature_coat_flags.json` `creatures_f36_coat_lift` | cindercub, duskhush plain; ashtusk, thundertunnel `--candidate` |
+    | CO-F36-5 | `creatures_f36_coat_lift_2` | shadelet `--candidate`; stormtrail, nightburrow plain |
+    | CO-F36-6 | `data/config/creature_clip_flags.json` `creatures_f36_grounded_hit_remakes` | cindercub, trailpup, plain |
+    | CO-F36-7 | `creatures_f36_matte_finish` | skyrill, voltarach, cragclaw `--candidate`; sparkit, reedwing plain; GPU-only candidate |
+    | CO-F36-8 | `creatures_f36_taller_than_trainer_2` | pipwing, sparkit, plain |
+
+  - CO-F36-1 (Cragclaw and Skyrill side-lie faints) is the only arm that is not a flag; it stays on its own branch.
+- **CO-F36-8 itself:** pipwing x1.6 (1.9 -> 3.0 m) and sparkit x1.6 (1.95 -> 3.1 m). Height and collider radius grow together.
+  - GPU roster has pipwing at 6.66 and sparkit at 6.28 (R3 scale).
+  - CPU r9 (three judges, confirming, r 0.95): 5.67 -> 6.78, 5.62 -> 6.39.
+  - Verdict: `ralph/reports/CREATURES-F36/r9/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:** `capture_f36_poses.gd --whole-body --context --species=<list> --out=<fresh dir> --source-commit=4c13f7560ef4b01d88895b0cfdd592c2f42e9435`.
+  - Add `--candidate` for recipe species, as in the table.
+  - The control capture is the same tree with every flag `false`.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-7, matte finish for chrome and plastic creatures (flag, High first, GPU-only candidate)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-7-on` d2fa6f63c4a2af2962a980f038ef59cab690e405.
+  - The candidate is built on CO-F36-6, so it holds CO-F36-4 through -7. Each has its own flag; all are `false` by default.
+- **To judge:** set `flags.creatures_f36_matte_finish.enabled` to `true` (coat hook, `data/config/creature_coat_flags.json`).
+  - **Skyrill, Voltarach, Sparkit, Reedwing:** metallic goes to 0. The roughness map is replaced by a constant 0.8–0.85, and specular is 0.35.
+  - **Cragclaw:** roughness 0.92, specular 0.25.
+- **Why:** GPU roster 24 Oct, R4 "off-style materials":
+  - skyrill 6.33: "chrome-mirror skin"
+  - voltarach 6.87: "chrome-gold statue shader"
+  - sparkit 6.28: "flat mustard material"
+  - reedwing 6.78: "decal-like"
+  - cragclaw 6.40: "plasticky salmon skin"
+- **No CPU score:** CPU Compatibility renders no environment reflections, and the flag-on and flag-off CPU frames look the same. This is a GPU-only candidate, so please judge it only when the queue has room.
+- **Capture, High first:**
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=skyrill,voltarach,cragclaw --out=<fresh dir> --source-commit=<arm sha>`
+  - `capture_f36_poses.gd --whole-body --context --species=sparkit,reedwing --out=<fresh dir> --source-commit=<arm sha>`
+- **Combining arms:** CO-F36-1's Cragclaw and Skyrill faints are a separate branch from main; they combine with this one at landing.
+- **Report:** MET at High and the chrome or plastic call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-6, stronger grounded hit react for Cindercub and Trailpup (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-6-on` 66dc86a09e0d957c421cfa62a27a2da6c508a3b2.
+  - The candidate is built on CO-F36-5 (which contains CO-F36-4) and adds the flag-off clip hook plus `data/config/creature_clip_flags.json`.
+  - With every flag `false` it renders exactly as main.
+- **One tree for four arms:** after one import for the coat textures, this tree judges CO-F36-4, -5 and -6 by flipping one flag each:
+  - `creatures_f36_coat_lift` (CO-F36-4)
+  - `creatures_f36_coat_lift_2` (CO-F36-5)
+  - `creatures_f36_grounded_hit_remakes` (CO-F36-6)
+  - Flags can be combined. Cindercub has both a coat lift and this hit change.
+- **Why:** ROSTER-1 High has cindercub at 7.13 and trailpup at 7.00, both with the hit react PARTIAL 3/3 ("barely differs from standing"). They play their own clips.
+  - Enabled, the hit clip's rotation is scaled x1.6 and its root position x0.5.
+- **CPU r8** (three judges, confirming): 6.69 -> 7.04 and 6.69 -> 7.00. That is under 0.5, sent under the near-bar close-out exception; the hit defect is FIXED for 2 of 3 judges.
+- **Verdict:** `ralph/reports/CREATURES-F36/r8/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `capture_f36_poses.gd --whole-body --context --species=cindercub,trailpup --out=<fresh dir> --source-commit=<arm sha>`
+  - Plain run, no `--candidate`.
+- **Report:**
+  - MET at High: per flag, and for cindercub with both its flags on.
+  - The hit defect call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-5, coat value lift batch 2 (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-5-on` c2b5851b4bcb1cfd45d891eb9a98842e3ea82ffc.
+  - The candidate is built on CO-F36-4 and contains it.
+  - With both coat flags `false` it renders exactly as main.
+- **To judge:**
+  1. Run one import, for the seven new coat textures across CO-F36-4 and -5.
+  2. Set `flags.creatures_f36_coat_lift_2.enabled` to `true`.
+  - This tree can also judge CO-F36-4 by flipping `creatures_f36_coat_lift` instead.
+- **Species:**
+  - shadelet 6.29: "near-black, no rim light".
+  - stormtrail 5.98: "flat black placeholder dog".
+  - nightburrow 6.67: CO12 "coat noisy".
+- **CPU r7** (three judges, confirming, r 0.98): 5.59 -> 6.63, 5.63 -> 6.88, 5.72 -> 6.30.
+- **Verdict:** `ralph/reports/CREATURES-F36/r7/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=shadelet --out=<fresh dir> --source-commit=<arm sha>`
+  - `capture_f36_poses.gd --whole-body --context --species=stormtrail,nightburrow --out=<fresh dir> --source-commit=<arm sha>`
+- **Report:** MET at High and the dark-body defect call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-4, coat value lift for four dark creatures (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-4-on` 529829e882fee4ba71ff0a25f734af2da60051fc.
+  - The candidate is main plus a flag-off coat hook in `scripts/creatures/creature_body.gd`, `data/config/creature_coat_flags.json`, and four graded coat PNGs with their `.import` files.
+  - With the flag `false` it renders exactly as main.
+- **To judge:**
+  1. Run one import, for the four new textures.
+  2. Set `flags.creatures_f36_coat_lift.enabled` to `true`.
+- **Species:** cindercub 7.13, duskhush 6.77 and ashtusk 6.68 (ROSTER-1 "rim light and value lift"), plus thundertunnel 6.49 (CO12: "a dark mound with no readable face").
+- **CPU r6** (three judges, confirming, r 0.996): 5.83 -> 6.93, 5.42 -> 6.56, 5.74 -> 6.79, 6.01 -> 6.70. The dark-body defect goes from PRESENT to PARTIAL on all four.
+- **Verdict:** `ralph/reports/CREATURES-F36/r6/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first.** Same tool and flags as the other F36 arms:
+  - `capture_f36_poses.gd --whole-body --context --species=cindercub,duskhush --out=<fresh dir> --source-commit=<arm sha>`, plain.
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=ashtusk,thundertunnel --out=<fresh dir> --source-commit=<arm sha>`; both play pose recipes.
+- **Combining arms:** CO-F36-3 (duskhush taller) and this arm are independent flags and can be enabled together on one tree.
+- **Report:**
+  - MET at High.
+  - The dark-body defect call.
+  - Any reserved-red read on Cindercub's embers.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-3, Duskhush and Brooktail taller than the trainer (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-3-on` d13f2db3345f8a72c809ab2c94c7f28062965c26.
+  - The candidate is main plus a flag-off scale hook in `scripts/creatures/creature_species.gd` and `data/config/creature_scale_flags.json`.
+  - With the flag `false` it renders exactly as main.
+- **To judge:** set `flags.creatures_f36_taller_than_trainer.enabled` to `true`. No re-import is needed.
+  - Duskhush grows x1.35 (2.3 -> 3.1 m) and Brooktail x1.4 (2.1 -> 2.94 m).
+  - Height and collider radius grow together.
+- **Why:** ROSTER-1 High has duskhush at 6.77 and brooktail at 6.84; both stand barely above the trainer.
+- **CPU r5** (three judges, confirming, r 0.98): duskhush 5.81 -> 6.31, brooktail 5.81 -> 6.56. Both height defects go from PARTIAL x3 to FIXED x3.
+- **Verdict:** `ralph/reports/CREATURES-F36/r5/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --whole-body --context --species=duskhush,brooktail --out=<fresh dir> --source-commit=<arm sha>`
+  - Plain run, no `--candidate`: neither species plays a pose recipe.
+- **Report:**
+  - MET at High.
+  - The height defect call.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-2, Sirenseal grounded hit (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-2-on` 505bc2e5ffad9bde51fa9919c2db7f8879af5fa1.
+  - The candidate is main plus the flag-off `candidate_role_flags` hook in `scripts/creatures/creature_pose_candidates.gd` and one flag in `data/creatures/f36_pose_candidates.json`.
+  - With the flag `false` it renders exactly as main.
+- **To judge:** on the candidate tree, set `candidate_role_flags.creatures_f36_sirenseal_grounded_hit.enabled` to `true`.
+  - No re-import is needed; the change is code plus JSON only.
+- **Why:** ROSTER-1 High has sirenseal at 6.81, with the hit react PARTIAL 3/3 and the whole body leaving the floor.
+  - Enabled, land Sirenseal's hit keeps 15% of its pivot rotation and 70% of its body recoil.
+  - water_sirenseal (7.27) is untouched.
+- **CPU r4** (three judges, confirming, r 0.95): 5.90 -> 7.14 (+1.24), airborne hit FIXED x3.
+- **Verdict:** `ralph/reports/CREATURES-F36/r4/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --whole-body --context --species=sirenseal,water_sirenseal --out=<fresh dir> --source-commit=<arm sha>`
+  - water_sirenseal is a no-change check.
+- **Report:**
+  - MET at High.
+  - The hit defect call.
+  - Whether water_sirenseal is unchanged.
+
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-1, side-lie faints for Cragclaw and Skyrill
+
+- **Arms:** control main 3a0e1fa0d8446c5dffa3359a3c3543fa6ded18ca vs candidate `tb/co-f36-1-on` e5667aecd6e8cdcf66c9a33e9a69df049229b12e.
+  - The candidate is main plus one data change: the Cragclaw and Skyrill faint recipes in `data/creatures/f36_pose_candidates.json` roll the body 70 deg onto its side, back to the camera.
+  - water_cragclaw plays Cragclaw's recipe.
+- **Why:** GPU roster 24 Oct named these defects:
+  - Cragclaw 5.87: faint the same as standing.
+  - water_cragclaw 6.32: faint poses the same as standing.
+  - Skyrill 6.33: faint keeps head and sail up.
+- **CPU r2** (three judges, confirming, r 0.90): Cragclaw 5.71 -> 6.24, water_cragclaw 5.71 -> 6.24, Skyrill 6.00 -> 6.53 (+0.53 each). Skyrill's defect is FIXED x3; the crab's is PARTIAL x3 (it tips onto its shell edge).
+- **Verdict:** `ralph/reports/CREATURES-F36/r2/VERDICT.md` on `tb/creatures-f36`.
+- **Capture,** each arm at its own SHA on a clean tree, Medium and High, standard roster crop:
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --whole-body --context --species=cragclaw,water_cragclaw,skyrill --out=<fresh dir> --source-commit=<arm sha>`
+  - All three are in `enabled_species`, so `--candidate` installs.
+- **High first;** add Medium only if High reaches 7.5.
+- **No re-import needed:** the arm changes only `data/creatures/f36_pose_candidates.json` (two recipe lines plus a provenance key). It can be judged on any imported main tree by checking out that one file at e5667aecd.
+- **Report:**
+  - MET per form per preset.
+  - The faint defect calls.
+  - Whether the crab's shell-edge tip reads as grounded.
+
 ## READY (24 Oct): newest first
 
 - **F38#0 / F26#3 Meadows matrix on main 779422f10.** The matrix evidence is DELIVERED (High 354/528 and Medium 355/528 frames, plus the fight at 84/85). **F26#3 (Meadows) is REOPENED.**
@@ -156,6 +333,225 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 2. Confirm the F22#4 renderer-aware boss aura once Fights ships it (the same Riverwatch capture at Medium, matched tell frames).
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
+
+## Other lanes (31 Oct): the creatures lane (tb/creatures-f36, CPU) prepares F36 close-out arms and appends requests for them; the route lane (tb/routes-f49) needs no GPU.
+
+## OWNER DIRECTION (31 Oct 2026): "Yes, judge High first and leave the GPU on overnight". Applies to every job from now on.
+
+- **High first.** Capture and judge each arm at High only. Capture and judge Medium only for an arm whose High mapped score is 7.5 or above. A row still closes only at 7.5 or above on both Medium and High; the bar is unchanged.
+- **Overnight.** The owner leaves this machine on, so keep the queue running unattended through the night. Pick up the next job as each one ends, and push each verdict as it lands.
+- **Flag flips on one import.** When several arms differ only by data/config JSON, check out one tree that holds all their code (flags off), import it once, and flip one flag per capture. Record the flip in each verdict.
+
+## OWNER DIRECTION (31 Oct, lane progress rules; docs/CRITERION_DELIVERY.md): THIS MACHINE JUDGES
+
+- **Moved to CPU lanes; drop them from this queue:**
+  - POSE-1 goes to the creatures lane. If you have local POSE-1 work (the flag hook, Riptusk's first-pass faint and rest), push it to `tb/pose-ground` so that lane can continue from it.
+  - HERO-1 (Stormheart) goes to the world lane.
+  - HERO-2 (Sky Aviary) goes to the Cloudreach lane.
+  - HERO-3 (Veilfall) goes to the Tidewake lane.
+- **Stays hands-on here:** HALL-1, because its light-shaft defect only shows on Forward+. It runs last, after every queued judging job.
+- **Order:**
+  1. finish DLG-1, UI-1, UI-R2, CRAFT-R3b and Tanglevolt at Medium;
+  2. the creatures one-tree (job 16);
+  3. WD2 (job 17);
+  4. TW-LOOK-1 (job 18);
+  5. any new lane arms I merge;
+  6. HALL-1.
+
+## LANE ARMS (coordinator, 31 Oct 21:45 UTC): run these after CRAFT-R3b and Tanglevolt at Medium, BEFORE the hands-on jobs (POSE-1, HERO-1..3, HALL-1). Each has a CPU gain worth confirming. Full requests are in each lane branch's NOTE.md, at the SHAs below.
+
+16. **CREATURES ONE-TREE: every creatures-lane flag arm, CO-F36-1 to CO-F36-9.** This replaces the CO-F36-1/2 entry below.
+    - **Tree:** check out `tb/co-f36-9-on` e8da58fe1 and import once (it adds seven coat textures). With every flag false it renders as main a41e1b30.
+    - **Arms:** flip one flag per arm, as tabled in the lane's CO-F36-8 request (tb/creatures-f36 NOTE.md):
+      - CO-F36-2: Sirenseal grounded hit, CPU 5.90 to 7.14.
+      - CO-F36-3: Duskhush and Brooktail taller than the trainer.
+      - CO-F36-4 and CO-F36-5: coat value lifts (Cindercub, Duskhush, Ashtusk, Thundertunnel, Shadelet, Stormtrail, Nightburrow).
+      - CO-F36-6: stronger grounded hit for Cindercub and Trailpup.
+      - CO-F36-7: matte finish for chrome and plastic creatures.
+      - CO-F36-8: Pipwing and Sparkit taller.
+      - CO-F36-9: Mudsnout, Paddlenewt and Riftfrill taller, CPU about +0.8 each, height FIXED x3.
+      - CO-F36-1: side-lie faints for Cragclaw and Skyrill. It changes only `f36_pose_candidates.json` at e5667aecd and can be checked out on the same tree.
+    - **Capture:** High first, with the species and flags per the lane's table.
+17. **WD2: world dressing batch, supersedes WD1.** `tb/world-2-on` 1bfc5d095 vs main a41e1b30e.
+    - **Import:** run one `--import` for `assets/props/meshy-1031/*`, then flip the flags listed in the request.
+    - **What it holds:**
+      - the Meshy Crown Arch hero (P2-041);
+      - the Meshy Glass Sink rim (P2-070);
+      - the Meshy Glass Field spikes (P2-043);
+      - Stormwood harvest cues (P2-046);
+      - pickup grounding (P2-045, P2-033);
+      - the Meadows trail camp floor (P2-035);
+      - the Meshy camp bed and workbench (P2-115, P2-116);
+      - mushrooms (P2-054).
+    - **CPU b2:**
+
+      | Item | Main | Candidate |
+      |---|---|---|
+      | P2-046 | 3.86 | 6.31 |
+      | P2-041 | 3.15 | 5.33 |
+      | P2-070 | 2.71 | 4.89 |
+      | P2-115 | 4.95 | 6.25 |
+      | P2-043 | 4.95 | 6.20 |
+      | P2-116 | 5.22 | 6.04 |
+      | P2-035 | 6.20 | 6.96 |
+      | P2-054 | 5.71 | 6.36 |
+
+    - **Capture:** the job.json frames listed in the request, High first.
+    - **Report:** per-item before/after and the defect calls. Per-flag attribution is not needed unless an item regresses.
+
+    - **Correction from the world lane:** P2-041's CPU gain was not like-for-like. The landmark stand depends on the `--subset` list, so capture P2-041 with the identical `--subset` list on both arms.
+18. **TW-LOOK-1: Tidewake declutter with the Meshy beach focal pieces (owner feedback 31 Oct).** `tb/tidewake-1-on` 29ca0d23b vs main.
+    - **Import:** once, for `assets/props/meshy-1031/tidewake/`.
+    - **Capture:** 12 location stands, day approach and close, High. The request on tb/tidewake-look NOTE.md lists them.
+    - **Judge:** one 2x2 set per island.
+    - **CPU:** six islands, 5.35 to 5.99 mean (+0.64).
+
+## PRIORITY (coordinator, 31 Oct 17:15 UTC): ROSTER-1 runs next, right after queue 56 (CO12, P2-095, UI-PAD) and before DLG-1. It is the fastest way to close rows.
+
+**ROSTER-1: re-judge the near-bar F36 roster on current main. No arm, a plain verdict.**
+- **Why:** your roster baseline was judged on main 124a7393c (24 Oct). Since then, creature changes have landed that the GPU has not judged, among them:
+  - Cindercub's ash-grey face mask;
+  - Trailpup's rim removed and its softer paw dust;
+  - Mudsnout's tusks;
+  - Nightburrow's chipped plate edges;
+  - Riverdrake and Mirejaw's gold edges (the red check);
+  - Tanglevolt's navy coat and arcs;
+  - Ripplet's matte countershaded coat;
+  - Mosshell's faint;
+  - Galecrest matte;
+  - the Cloudfang flinch;
+  - the Grandpa eyes.
+
+  About 22 rows sit at 7.0–7.42 and need under 0.5 each.
+- **Capture:** `capture_f36_poses.gd` on current main (d4d5b262f or later), the same whole-body context and standard crop as the 24 Oct roster run, Medium and High, for these species:
+  - aquaryn, bramblebun, brooktail, burrowback, cindercub, duskhush, ripplet, riverdrake, sirenseal;
+  - thundertunnel, torrentoad, trailpup, tanglevolt, ashtusk;
+  - water_aquaryn, water_cannonback, water_riptusk, water_riverdrake, water_sirenseal, water_tidecoil;
+  - terrapup, the shipped dog (its pose row was last judged on the badger mesh).
+
+  Species outside `enabled_species` are shot plain.
+- **Judge:** per species, mapped Bar A plus the pose defect calls, as the roster-base verdict did.
+- **Report:** a READY line listing each species' mapped score per preset. Any species at 7.5 or above on both presets, with no pose PRESENT, closes its F36 (1) row; the model rows for ripplet, tanglevolt and ashtusk close the same way.
+- **CO12 overlap:** its species (cliffspike, voltwig, nightburrow, thundertunnel) are being judged in CO12. For thundertunnel, take the CO12 candidate result.
+
+## GPU QUEUE (coordinator, 31 Oct; owner: "Continue all this work. I'll start the remote session soon"). Run top to bottom.
+
+The per-item scores showed shared causes. The plan, in order: dialogue and catch cameras, the near-bar UI items, creature ground contact, Meshy hero art for the worst landmarks, then a bigger atmosphere change per biome. These jobs feed it. Work from origin/main d4d5b262f or later, and add `--source-commit=<sha>` to every capture.
+
+1. **SW-P2-041, Crown Arch (Stormwood 3.97).**
+   - **Arms:** control main d4d5b262f vs candidate `tb/sw-crownarch-on` 1cd5038b2. The candidate is main plus one flag: `assets/environment/stormwood/crown_arch/candidate.json` `enabled: true` (the octagonal landing and fuller crown; never judged).
+   - **Capture:** P2-041's frames from `ralph/reports/VISUAL/item-scores/job.json`, Medium and High.
+   - **Report:** the mapped score per preset, the before/after gain, and the P2-041 defect call.
+2. **CO12 on main, four near-bar creatures.**
+   - **Arms:** control main vs `tb/co12-main-on` e5fcc1c47. It rebuilds the archived tb/co12-on commits on main:
+     - a grounded flinch for Cliffspike and Voltwig;
+     - Nightburrow's aspect flame goes out when it faints;
+     - Thundertunnel's fur value lift.
+   - **Capture:** `capture_f36_poses.gd --candidate --whole-body --context --species=cliffspike,voltwig,nightburrow,thundertunnel`, standard roster crop, Medium and High.
+   - **Report:** MET per species per preset, and any regression.
+3. **P2-095 close-out (Meadows craft recipe text, 7.53 on the default renderer).**
+   - **Capture:** P2-095's job.json frames on main at Medium and High.
+   - **Report:** the one-sided yardstick score per preset. 7.5 or above on both closes F38#18.
+4. **DLG-1: dialogue camera arm, with its diagnosis (P2-083, P2-074, P2-073, P2-075, P2-079, P2-078, P2-087, P2-086, P2-076, P2-077, P2-081, P2-084).**
+   - **Arms:** control `tb/dialogue-cam` 57c9418e8 vs candidate `tb/dialogue-cam-on` 8486a5363. The control is main plus the new code with its flags OFF, so it renders as main. The candidate turns ON `camera.json` `conversation.sight_search_short_arm` and `conversation.speaker_frame_candidate_enabled`:
+     - a blocked shot in a rock-ringed post may take a shorter arm that sees the speaker;
+     - the speaker must also be inside the frame, not just unblocked.
+   - **Capture:** `tools/phase2_capture_dialogue.gd`, the dialogue frames of the 12 items above (repro commands in job.json), both arms, Medium and High.
+   - **Report:**
+     - the mapped score per item per preset, and the defect call;
+     - any frame where the candidate is worse;
+     - the overall dialogue mean, before vs after.
+   - **Push:** each capture's `manifest.json` (both arms) to `ralph/reports/VISUAL/item-scores/diag-dialogue/<biome>/{control,candidate}/`. Their `conversation_camera_*` fields separate "push-in never fired" from "push-in fired but blocked"; frames that stay bad on the candidate are diagnosed from them.
+   - **If you can:** a local, uncommitted print at `conversation_camera.gd::begin()` of the speaker node and the arbiter's `winning_provider()`, saved as `speakers.txt` beside each manifest.
+5. **CR-CANDY (capture only, no arm).** The c026/c034 catch commands stand nearer the candy than the wild pair, so the pickup wins the offer. In play the candy is one press, then the fight. If you re-run Cloudreach catch frames, start them after taking that candy.
+6. **UI-1: capture readout backing (P2-114, Tidewake 5.37; the same widget is in P2-058, P2-059 and P2-061).**
+   - **Arms:** control `tb/ui-near-bar` e07666f35 (flag OFF, renders as main) vs candidate `tb/ui-near-bar-on` e0f51545d. The candidate turns ON `capture_readout_visual.json` `backing_enabled`: one rounded panel plate behind the catch percentage and caption.
+   - **Capture:** the catching frames of P2-114, P2-058, P2-059 and P2-061 from job.json, Medium and High.
+   - **Report:** the mapped score per item, the P2-114 defect call, and whether the plate draws at all (it was built here without a renderer).
+7. **UI-PAD: the menus as the ROG Ally shows them (controller glyphs), on main. No arm.**
+   - **Why:** the earlier frames were shot with no pad, so the hint rows used keyboard keys:
+     - P2-031: "[Q] Previous tab [Tab] Next tab", in brackets because there is no Tab keycap art;
+     - P2-032: keys mixed with buttons;
+     - P2-096: the craft button's confirm glyph.
+
+     The game is controller-first, and on the Ally a pad is connected from the first frame.
+   - **Capture:** P2-031, P2-032, P2-096, P2-001, P2-007 and P2-004 from job.json with `--gamepad` added; every phase-2 UI tool takes it.
+   - **Report:** the one-sided yardstick score with the pad, beside the keyboard score already on the board. The keyboard path's bracket labels stay a known keyboard defect; this does not replace that score.
+
+8. **POSE-1: creature ground contact. Hands-on work for this lane, because it needs a render after every change and the coordinator's container cannot render.** Work on a new branch `tb/pose-ground` from main. Each change goes behind a flag-off candidate, as before. Then judge main vs the candidate with code-blind judges (not you).
+   - **Defects** (GPU item scores, 28 Oct):
+     - **Riptusk:** its faint still sits in an upright crouch with its head raised (P2-028, 5.61); its rest lies belly-up with its legs raised at the waterline (P2-029, 5.32).
+     - **Veridian:** its faint reads upright (P2-015, 5.93).
+     - **Terrapup:** its faint is indistinguishable from its rest (P2-015).
+     - **Aquaryn** (mounted, P2-108, 4.97): it stands upright on the water with no splash or wake, and casts a hard shadow on the water. `water_mounts.json` `surface_origin_offset_m` sets how deep it sits.
+     - **The flying landing:** the bird lands still wings-up (P2-069, 5.88).
+   - **Where:** the faint and rest poses are per species in `data/creatures/f36_pose_candidates.json` (Mosshell's on-its-back faint in CO11 is the model); mounted swim is `scripts/world/water_mounted_swim.gd` with `water_mounts.json`.
+   - **Report:** each item's before/after per preset, and push the branch for the coordinator to land.
+
+9. **HERO-1: Stormheart tree, round 2 (P2-037, Stormwood 4.41). Hands-on.**
+   - **Candidates:** two Meshy models on `tb/stormheart-r2` 22bba04a0, under `assets/environment/stormwood/stormheart_hero/candidates_r2/`. That folder is .gdignore'd, so copy the chosen one out to import it. They are built from the owner board's front and side views; `provenance.json` holds the task ids. Unlike round 1's torn-sheet crown, the canopy is solid rounded clusters with a split twin trunk and platforms.
+   - **Do:**
+     - Pick a or b from a quick render.
+     - Trim the baked base clutter: a has pines at its base, b a rock mound.
+     - Place it as exterior presentation only: the distance silhouette and outer shell. The hollow interior ascent, decks, rails, collision and entrance split stay exactly as they are.
+     - Reuse `stormheart_hero.tscn`/`.gd` and the bark and leaf shaders. Put it behind a flag in `stormheart_presentation.json`, OFF by default.
+   - **Judge:** P2-037's job.json frames, main vs flag ON, Medium and High, with code-blind judges.
+   - **Push:** the branch, and report the result.
+
+10. **HERO-2: Cloudreach Sky Aviary (P2-022, 5.81). Hands-on.**
+    - **Candidates:** `tb/hero-landmarks-r2` 4ed83159e (that branch also carries HERO-1's Stormheart), `assets/props/meshy-1031/hero_aviary/`. They are built from the board's front gate, side and rear views, and show a glass-and-gold dome sanctuary with towers.
+    - **Do:** delete the folder's .gdignore on your branch to import it. Pick a or b. Place it at the summit aviary as the landmark's main silhouette; the existing courtyard and walkable layout stay. Put it behind a flag, OFF by default.
+    - **Judge:** P2-022's and P2-024's job.json frames, main vs ON.
+11. **HERO-3: Tidewake Veilfall (P2-010, 5.78; F39#31; F13#5's Veilfall read). Hands-on.**
+    - **Candidates:** the same branch, `assets/props/meshy-1031/hero_veilfall/`. They are built from the board's exterior and approach views: a cliff massif with waterfall channels and a carved gateway.
+    - **Do:** use it for the distance and approach silhouette. The playable entrance and the existing veilfall_terraced_buttress pieces stay. The baked waterfall geometry can take the existing water and foam shader. Put it behind a flag, OFF by default.
+    - **Judge:** P2-010's job.json frames and the F39#31 Veilfall views, main vs ON.
+
+12. **HALL-1: F17#6, the Crossing Hall (GPU 5.83 on 24 Oct; needs +1.7). Hands-on, one big swing, after HERO-3.**
+    - **Fix the renderer split your own F17-6 verdict found:**
+      - The four `hall_great_hall.shafts` DaylightShaft quads draw as blown-out white bead bars on Forward+. Make them renderer-aware like the F22#4 aura: a soft volumetric falloff and much lower energy on Forward+, or drop them on Forward+ and let window light carry it.
+      - The sealed-arch rim strips read as neon UI. Warm them to stone and gold, or dim them at night and in rain.
+    - **Fix what the judges call an empty corridor:**
+      - Furnish the nave from installed families: long tables and benches, a hearth, banners, crates and sacks, plus the shrine's own pedestals.
+      - Light the shrine warm (lantern gold), not cool white-blue.
+      - Thin the near-field posts in the approach views.
+    - **Where:** `data/config/crossing_hall.json`, `scripts/world/crossing_hall_great_hall.gd`, `crossing_hall_arch_facades.gd`. Everything new goes behind flag-off keys.
+    - **Judge:** the F17-6 camera set (`tools/visual_judge/camera_sets/F17-6.json`), main vs candidate, Medium and High. 7.5 closes F17#6.
+
+13. **CRAFT-R3: P2-095 close-out, round 2 (7.43, 0.07 short). A flag flip.**
+    - **Code:** `tb/craft-r3` 86a1c9825 is main plus `craft_panel.gd` with flag `readable_r3` OFF.
+    - **Do:** merge it into your one imported tree. Capture control, then flip `data/config/craft_presentation.json` `readable_r3: true` and capture the candidate.
+    - **What it does:** the compact sub-lines and Missing tags go up a step, and the greyed Missing materials button gets a TEXT_PRIMARY label and a 3 px border, which are the judges' asks.
+    - **Capture:** High first, P2-095's frames from job.json. If High reaches 7.5, add Medium. 7.5 on both closes F38#18.
+    - **When:** it can ride the DLG-1 / UI-1 flag-flip session.
+
+14. **UI-R2: brighter, larger secondary text across every menu (P2-001, P2-004, P2-007, P2-031, P2-032, P2-096 and P2-114: the judges' shared UI-PAD ask). Script-only arm, no re-import.**
+    - **Arms:** main vs `tb/ui-r2-on` f6ee5c6d5, which changes only `scripts/ui/ui_tokens.gd`:
+      - TEXT_SECONDARY #B8C5C4 to #D2DCDB;
+      - TEXT_MUTED #7F9394 to #A2B3B4;
+      - FONT_TINY 19 to 21;
+      - FONT_LABEL 23 to 25.
+    - **Do:** on your imported tree, swap that one script for the candidate and capture. No import needed.
+    - **Capture:** the UI-PAD frames, with `--gamepad`, at High. Also watch for any clipped or overflowing text, which would be a regression to report.
+    - **Report:** the per-item score and any overflow.
+
+15. **CRAFT-R3b: P2-095 round 3, the full combined fix judged on the pad path. After UI-R2.**
+    - **Arms:** control is main as-is. The candidate combines three changes:
+      - `tb/craft-r3` 489f6de20 with `readable_r3` ON (the bordered button, larger sub-lines, and now a 200 px item preview on its own plate in the centre column);
+      - the UI-R2 `ui_tokens.gd` (brighter, larger secondary text);
+      - `--gamepad`, so the hints show the Ally's pad buttons instead of the Esc keycap.
+    - **Capture:** P2-095's frames, `--gamepad` on both arms, High first.
+    - **Why:** the owner directs controller-first, so the pad path is the score that matters. The keyboard path's Esc keycap is a known keyboard-only defect.
+
+19. **DLG-2: honest dialogue scores. No arm, a re-capture on main with the corrected dialogue fixture.**
+    - **Why:** the code lane found that the old fixture opened conversations at catalogue posts where play never opens them, so 14 frames never pushed in. The game's real Cloudreach topic-prompt bug is fixed separately in PR #785. Tool: `tb/world-fix-dialogue-capture` c718cf325, a `tools/phase2_capture_dialogue.gd` change; the game is unchanged.
+    - **Capture:** main with that one tool file, the dialogue frames of P2-073, P2-074, P2-076, P2-083, P2-081 and P2-087, High, one boot per biome.
+    - **Expected:** CPU shows Daro, Bex, Irva, Nerissa x2, Kelm and Veyra now pushed in. Nalia, Marrow and Kell still won't push in (no stand beside the body, or the NPC isn't placed yet); report them as captured.
+    - **Report:** the per-item mapped score as the new score of record.
+20. **MENU-1: menu text floors (UI-R2 follow-up). One flag flip, no re-import.** `tb/world-fix-menu-text` 305ac709c.
+    - **Flip:** `menu.json` `menu_text_floors.enabled`.
+    - **What it does:** settings, skills and backpack tabs move onto the token floors; the Satchel worn list scrolls; the bindings get a bottom-edge fade.
+    - **Capture:** the UI-PAD frames (P2-001, P2-004, P2-007, P2-031, P2-032), `--gamepad`, High. Report scores and any clipping.
 
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
@@ -320,3 +716,83 @@ Skip F39#4 (reopened 24 Oct: the Veilfall close-up needs new art first). F21#5 c
   - P2-043: `stormwood__dynamo__11__the_glass_field__walk_03_day`
   - P2-033: `meadows__inventory__pickup__good_candy`, `__rare_candy`, `__potion_small`
 - **CPU result (b1, 3 judges, anchors, mapped):** P2-041 3.52 -> 5.27 (+1.75); P2-070 3.36 -> 4.91 (+1.55); P2-046 4.47 -> 5.87 (+1.40); P2-045 5.07 -> 5.98 (+0.91); P2-043 4.83 -> 5.39 (+0.56); P2-033 6.02 -> 6.58 (+0.56). Verdict: `ralph/reports/WORLD-DRESSING/b1/VERDICT.md` on tb/world-dressing.
+
+## ARM REQUEST WD2 (world dressing lane, 31 Oct; supersedes WD1 if both are queued)
+
+- **Arms:** control origin/main a41e1b30eb729ecf92d5fb944ad6872a7551eacb vs candidate tb/world-2-on 1bfc5d0951d13ce796a9f5325fa8870b98631805 (main merged with tb/world-dressing 5b179d12 + flags). JSON flags ON (flip only these to judge on one imported tree):
+  - WD1's five: `crown_arch_hero.json enabled`, `stormwood_glass_sink.json meshy_rim.enabled`, `stormwood_harvests.json material_cues.{stormglass,glowmoss,stormglass_crown}.hero.enabled`, `pickup_grounding.json enabled`, `stormwood_glass_field.json meshy_spikes.enabled` (now at round-2 values; grounding now dresses only the families each realm lists)
+  - `data/config/bands/band1_lower_meadows/props.json` trail_camp `camp_floor.enabled` (P2-035)
+  - `data/config/meshy_camp_props.json` `bed.enabled`, `workbench.enabled` (P2-115, P2-116; Meshy camp_bed and camp_workbench from tb/props-r2 31592e46)
+- **Imports:** `assets/props/meshy-1031/*` (as WD1). Run `--import` once.
+- **Capture (job.json frames, High first):** WD1's list, plus
+  - P2-035: `meadows__inventory__prop__camp_tent`, `__camp_bed`, `__bonfire_fire`
+  - P2-115: `tidewake__bed__water_camp_{first_shore,brine_steps,salt_crown}__bed`
+  - P2-116: `tidewake__crafting__water_camp_{first_shore,brine_steps,salt_crown}__crafting`
+  - P2-054: `cloudreach__inventory__pickup__speed_mushroom`, `__wild_mushroom`
+- **CPU result (b2, mapped):** P2-046 3.86 -> 6.31; P2-041 3.15 -> 5.33; P2-070 2.71 -> 4.89; P2-115 4.95 -> 6.25; P2-043 4.95 -> 6.20; P2-116 5.22 -> 6.04; P2-035 6.20 -> 6.96; P2-054 5.71 -> 6.36. Verdict: `ralph/reports/WORLD-DRESSING/b2/VERDICT.md`.
+
+## WD1/WD2 CORRECTION (world dressing lane, 31 Oct)
+
+- **P2-041 CPU gain is not like-for-like.** In b1 and b2 the Crown Arch candidate frame came from a multi-subset boot of `phase2_capture_locations.gd`. Landmark rows with no authored heading take `_route_forward(destination_index)`, and a landmark's `destination_index` counts only the landmarks matched in that boot, so the candidate faced the arch head-on while main (single-subset job command) saw it edge-on. Treat the +1.75 / +2.18 as unmeasured. Capture P2-041 with the job.json command exactly (single subset) on both arms; a matched-stand CPU re-judge (b3) follows.
+- Other WD items are unaffected (spot rows, the inventory, sink, camps and routes tools fix their stands independently of the subset list).
+- Harness note for TECHNICAL 8.1: capture a landmark A/B with the identical `--subset` list on both arms.
+## ARM REQUEST TW-look-1 (Tidewake look lane, tb/tidewake-look, 31 Oct 2026 ~4:50 PM CT)
+
+Owner 31 Oct: Tidewake locations "too cluttered ... beach huts ... the focus". **Judge High first**, then Medium only if High maps to 7.5 or above.
+
+- **Arms:**
+  - Main: current origin/main (a41e1b30 or later).
+  - On: `tb/tidewake-1-on` at 29ca0d23b45159a09ffb4ffa9e82716f9c61112b. This is the judged s2 state with `beach_scene_candidate` and `beach_declutter_candidate` removed from `sections_off`.
+  - Capture the on arm from that exact commit: later `tb/tidewake-look` commits change `beach_scene_candidate` for round 2.
+- **Import first:** the new Meshy 1031 set is under `assets/props/meshy-1031/tidewake/`. Its texture `.import` files are on `compress/mode=2`.
+- **Stands:** 12 location stands, day approach and close (24 frames per arm):
+  ```
+  godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/phase2_capture_locations.gd -- --biome=water --preset=High --source-commit=<sha> --times=day --views=approach,close --seed=2042 --output=res://<fresh dir> --subset=water__gull_rest__19 --subset=water__gull_rest__20 --subset=water__salt_crown__11 --subset=water__salt_crown__12 --subset=water__tidal_cradle__09 --subset=water__tidal_cradle__10 --subset=water__drowned_garden__21 --subset=water__drowned_garden__22 --subset=water__lantern_cove__17 --subset=water__lantern_cove__18 --subset=water__first_shore__01 --subset=water__first_shore__02
+  ```
+- **Judge:**
+  - One set per island: a 2x2 of its two sites, approach | close.
+  - Recorded defects: "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention"; "Named location reads as a generic slope with no clear focal building or landmark".
+- **CPU result** (`ralph/reports/TIDEWAKE-LOOK/r1/VERDICT.md`, mapped, confirming batch, slope 0.98, RMSE 0.51), these six islands:
+
+  | Island | Main | Arm |
+  |---|---|---|
+  | gull_rest | 5.29 | 6.17 |
+  | salt_crown | 5.03 | 5.78 |
+  | tidal_cradle | 5.16 | 5.81 |
+  | drowned_garden | 5.55 | 6.11 |
+  | lantern_cove | 5.49 | 6.01 |
+  | first_shore | 5.59 | 6.08 |
+  | **Mean** | **5.35** | **5.99 (+0.64)** |
+
+  All 11 islands: 5.59 → 6.03.
+- **Rows:** F39#30 / F39#32 Tidewake location frames, P2-011 named destinations, P2-008 shore; F13#5 inhabited docks (declutter section).
+
+## ARM REQUEST TW-look-2 (Tidewake look lane, 31 Oct 2026 evening CT). Supersedes TW-look-1; run this one instead.
+
+Same owner request and method as TW-look-1. **Judge High first.**
+
+- **Arms:**
+  - Main: current origin/main.
+  - On: `tb/tidewake-2-on` at 773118e1f499ac751baeec1aca3f34f38bebe3a3. This is the judged r2b state (8dfd1f4d2) with `beach_scene_candidate`, `beach_declutter_candidate` and `beach_groups_candidate` ON.
+  - Import first: the Meshy 1031 set.
+- **Stands:** 18 location stands, day approach and close (36 frames per arm). Use the TW-look-1 command with these subsets:
+  ```
+  --subset=water__gull_rest__19 --subset=water__gull_rest__20 --subset=water__tidal_cradle__09 --subset=water__tidal_cradle__10 --subset=water__lantern_cove__17 --subset=water__lantern_cove__18 --subset=water__salt_crown__11 --subset=water__salt_crown__12 --subset=water__reedhaven__03 --subset=water__reedhaven__04 --subset=water__sluice_isle__13 --subset=water__sluice_isle__14 --subset=water__first_shore__01 --subset=water__first_shore__02 --subset=water__deep_watch__23 --subset=water__deep_watch__24 --subset=water__drowned_garden__21 --subset=water__drowned_garden__22
+  ```
+- **Judge:** one set per island (2x2: its two sites, approach | close). Same recorded defects as TW-look-1.
+- **CPU result** (`ralph/reports/TIDEWAKE-LOOK/r3/VERDICT.md`, direct batch against main, confirming, r 0.97, RMSE 0.27):
+
+  | Island | Main | On |
+  |---|---|---|
+  | gull_rest | 4.73 | 5.72 |
+  | tidal_cradle | 4.55 | 5.54 |
+  | lantern_cove | 5.18 | 6.04 |
+  | salt_crown | 4.32 | 5.18 |
+  | reedhaven | 5.36 | 6.17 |
+  | sluice_isle | 5.09 | 5.90 |
+  | first_shore | 5.27 | 6.04 |
+  | deep_watch | 5.04 | 5.63 |
+  | drowned_garden | 5.36 | 5.95 |
+  | **Mean** | | **+0.79** |
+
+- **Rows:** F39#30 / F39#32 Tidewake location frames, P2-011 named destinations, P2-008 shore; F13#5 inhabited docks.

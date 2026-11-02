@@ -1,0 +1,40 @@
+# ROSTER-1 (coordinator PRIORITY 31 Oct): near-bar F36 roster re-judged on main d4d5b262f, the roster-base layout (24 Oct,
+# build_yard_f36base.ps1): one set per species, Medium vs High, standing / hit react / faint mid / faint end + travel role where shot,
+# standard crop, batches of 11 shuffled with a fixed seed. One run per species: out\R1-<preset>-<species>.
+# Difference from roster-base: the coordinator asks for pose defect calls, so every set carries the three standard pose defects.
+param([string[]] $Presets = @("High"))
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\R1\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 5; thumb_w = 300; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out; crop = @(560, 200, 1000, 640) }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_r1.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_r1.json" | Out-Null; return $out
+}
+$brief = "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read."
+$defects = @("the fainted body floats above the stage, with a gap between the body and its shadow",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+    "the faint end still reads upright or alert (head raised, body standing) rather than knocked out")
+$species = "aquaryn,brooktail,riverdrake,sirenseal,tanglevolt,torrentoad,ashtusk,water_aquaryn,water_riptusk,water_riverdrake,water_sirenseal,water_tidecoil,bramblebun,burrowback,cindercub,duskhush,ripplet,trailpup,water_cannonback,terrapup".Split(",")
+$sets = @(); $cover = @()
+foreach ($sp in $species) {
+    $sd = @{}; $n = @{}
+    foreach ($pr in $Presets) {
+        $dir = "$o\R1-$pr-$sp\frames"
+        $role = @("ride", "swim", "fly_grip") | Where-Object { Test-Path "$dir\$sp-$_-050.png" } | Select-Object -First 1
+        $p = @(@("hit-000", "standing"), @("hit-025", "hit react"), @("faint-050", "faint mid"), @("faint-100", "faint end"))
+        if ($role) { $p += , @("$role-050", @{ ride = "ridden"; swim = "swimming"; fly_grip = "carrying" }[$role]) }
+        $files = @($p | ForEach-Object { "$dir\$sp-$($_[0]).png" } | Where-Object { Test-Path $_ })
+        $caps = @($p | Where-Object { Test-Path "$dir\$sp-$($_[0]).png" } | ForEach-Object { $_[1] })
+        $n[$pr] = $files.Count
+        if ($files.Count -gt 0) { $sd[$pr] = Side $files $caps "$od\$sp-$pr.png" }
+    }
+    $cover += [ordered]@{ species = $sp; medium = $n["Medium"]; high = $n["High"] }
+    if ($Presets.Count -eq 2) {
+        if ($sd["Medium"] -and $sd["High"]) { $sets += [ordered]@{ label = "R1 $sp Medium|High"; a = $sd["Medium"]; b = $sd["High"]; brief = $brief; defects = $defects } }
+    } elseif ($sd[$Presets[0]]) {
+        # Owner 31 Oct, High first: one preset, one-sided (the same strip on both sides).
+        $sets += [ordered]@{ label = "R1 $sp $($Presets[0]) one-sided"; a = $sd[$Presets[0]]; b = $sd[$Presets[0]]; brief = $brief; defects = $defects }
+    }
+}
+$rng = New-Object System.Random 2042; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = 0; for ($i = 0; $i -lt $sets.Count; $i += 11) { $nb++; $chunk = $sets[$i..([math]::Min($i + 10, $sets.Count - 1))]; New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\R1\b$nb" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\R1\b$nb\candidates.json", (ConvertTo-Json -InputObject @($chunk) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\R1\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"R1 sets: $($sets.Count) in $nb batches; missing: " + (($cover | Where-Object { -not $_.medium -or -not $_.high } | ForEach-Object { $_.species }) -join ",")

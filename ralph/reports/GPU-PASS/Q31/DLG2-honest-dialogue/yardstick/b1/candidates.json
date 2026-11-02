@@ -1,0 +1,56 @@
+[
+    {
+        "label":  "DLG2 P2-081 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-081-dlg2-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-081-dlg2-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+                    ]
+    },
+    {
+        "label":  "DLG2 P2-074 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-074-dlg2-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-074-dlg2-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several named conversations show no identifiable speaker near the dialogue panel"
+                    ]
+    },
+    {
+        "label":  "DLG2 P2-076 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-076-dlg2-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-076-dlg2-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+                    ]
+    },
+    {
+        "label":  "DLG2 P2-083 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-083-dlg2-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-083-dlg2-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+                    ]
+    },
+    {
+        "label":  "DLG2 P2-073 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-073-dlg2-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-073-dlg2-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+                    ]
+    },
+    {
+        "label":  "DLG2 P2-087 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-087-dlg2-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-087-dlg2-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: named trainer dialogue subject visibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+                    ]
+    }
+]

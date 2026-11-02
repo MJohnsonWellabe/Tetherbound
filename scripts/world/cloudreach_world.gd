@@ -18,6 +18,7 @@ const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_readability.gd")
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
+const CAUSE := preload("res://scripts/world/cloudreach_cause.gd")
 const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const SETTLEMENT_LIFE := preload("res://scripts/world/cloudreach_settlement_life.gd")
@@ -395,6 +396,9 @@ func _ready() -> void:
 	_visual_config = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(_visual_config)
 	_visual_config = preload("res://scripts/world/cloudreach_settlement_life.gd").apply(_visual_config, "visual")
 	_visual_config = SETTLEMENT_LIFE.merge(_visual_config, SETTLEMENT_LIFE.items_config().get("visual", {}))
+	# Cause lane (flag-off, data/config/cloudreach_cause.json): pale strata and
+	# the cloud sea merge last, so every other overlay composes underneath.
+	_visual_config = CAUSE.apply_visual(_visual_config)
 	# The draw-distance presets put the far plane at 320-900 m, which clipped the
 	# cloud deck (230-330 m under every stand), the distant shelves and the
 	# Aviary sightline out of every Low frame -- the "grey void" below the rims.
@@ -414,6 +418,8 @@ func _ready() -> void:
 		var light_candidate := _read_json("res://data/config/cloudreach_light_candidate.json")
 		if bool(light_candidate.get("enabled", false)) or OS.get_cmdline_user_args().has("--cloudreach-light-candidate"):
 			apply_time_overrides(local_look.get("times", {}), light_candidate.get("time_overrides", {}))
+		# Cause lane light_grade (flag-off): bright sky, warm key, depth haze.
+		apply_time_overrides(local_look.get("times", {}), CAUSE.light_overrides())
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
 		var biome_profile: Dictionary = biome_look.config()
@@ -939,6 +945,8 @@ func _build_materials() -> void:
 	_materials["trail_dry"]=trail_dry
 	_materials["upland"]=ENVIRONMENT_MATERIALS.ground(false, geology, _visual_config.get("ground_rock_transition", {}))
 	_materials["upland_dry"]=ENVIRONMENT_MATERIALS.ground(true, geology, _visual_config.get("ground_rock_transition", {}))
+	# Cause lane pale_strata (flag-off): pale the rusty plain-stone materials.
+	CAUSE.apply_materials(_materials)
 
 
 func _build_cloud_sea() -> void:
@@ -3289,10 +3297,13 @@ const ROCK_PALETTE_NORMAL := preload("res://assets/environment/terrain/Rock030_N
 
 static func apply_stone_palette(root_node: Node) -> void:
 	var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
-	var use_biome_palette := not biome_look.config().is_empty()
+	# Cause lane pale_strata (flag-off) also routes installed boulders onto the
+	# shared geology, so they wear the same pale stratified stone as the cliffs.
+	var use_biome_palette := not biome_look.config().is_empty() or CAUSE.part_on("pale_strata")
 	if use_biome_palette and _biome_stone_palette == null:
 		var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
 		visual = biome_look.apply_visual(visual)
+		visual = CAUSE.apply_visual(visual)
 		_biome_stone_palette = ENVIRONMENT_MATERIALS.geology(visual.get("geology", {}))
 	for mesh_node: Node in root_node.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := mesh_node as MeshInstance3D

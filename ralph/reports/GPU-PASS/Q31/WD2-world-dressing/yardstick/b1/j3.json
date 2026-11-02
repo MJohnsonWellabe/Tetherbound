@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Ah": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing read as a built wall, but it is still a lone thin panel with flat beige infill under flat even light, and A is a blank white card, far from Palworld's base-building finish."
+  },
+  "Mh": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped candy and pink flask now read at gameplay distance, but rare_candy is an ambiguous brown pile on a cloth and none of the pickups has grounding shadow or rim light against the uniform green carpet."
+  },
+  "Vx": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B adds a visible bench with rack and tool shapes beside the tent in the third view, but the station is still tiny at frame scale and the flat, shadowless pale-sand lighting lacks Valheim-class atmosphere."
+  },
+  "Ua": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder villager with readable eyes, strong white-hair silhouette and an olive/brown palette that fits the meadows family, at a stylised character finish comparable to Palworld's NPCs."
+  },
+  "Uf": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither side reads as an arch: A is a dark block with cyan studs and B is a narrow blue totem, both standing on a hard-edged square slab dropped onto the moss, so the landmark sinks despite the purple storm sky."
+  },
+  "Gp": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger green, blue and gold tiers (gold with a ring) separate better, but they are still similar blobs that read mainly through glow colour, and A's tiers are pinpoint glows on the dark path."
+  },
+  "Ja": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's blue-violet storm wolf holds its fur material and a readable rear-up hit and grounded faint, but B's faint frames turn into a flat white-and-black patched mesh that breaks the creature's identity, and B's hit react is indistinguishable from standing."
+  },
+  "En": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's crisp black-and-yellow banding and hood give a stronger standing silhouette than A's muddy mottled coils, but B's faint mid and end float upright in the air with a detached shadow and wash to pale yellow, and neither side's hit react reads."
+  },
+  "Rv": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.7,
+    "defects": {
+     "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's first view shows a curbed bed with a darker filled interior and wooden trim, but in B it is an empty pale stone ring with sand inside that vanishes into the dunes, and neither shows a bedding shape at gameplay distance."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the placeholder hero props with authored meshes that read by silhouette: a true Crown Arch (two pillars and a spanning crown, seated into the moss with no square slab), a creature bed with a raised straw/cushion nest, and a camp workbench with vice, tools and a work surface",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix creature hurt/faint states so they keep the base material and stay grounded: no swap to white patched texture (Ja B faint) and no upright floating coils (En B faint), with a distinct hit-react pose",
+   "kind": "scene"
+  },
+  {
+   "change": "Give pickups gameplay-scale size, contact shadows and tier-coded silhouette plus colour (wrapper shape, base ring, rim light) so Good/Great/Rare candy and meadow items separate at normal camera distance",
+   "kind": "scene"
+  }
+ ]
+}

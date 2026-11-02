@@ -1,0 +1,82 @@
+{
+ "sets": {
+  "Za": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with readable face and eyes and an earthy green/brown Meadows palette sits at Palworld NPC finish, though the void stage shows no light or atmosphere to test the Valheim half."
+  },
+  "Mj": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither boar reaches the owner bar: A's real fur is undercut by noisy yellow blotches and a faint-mid pose lifted off its shadow, and B reads as a smooth terracotta piggy-bank toy with stuck-on moss."
+  },
+  "Yf": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat noon light, blurred smeared ground textures, a stretched cliff wall and a uniform wall of identical trees with no haze or grade sink it, even where A's smoke column and freed captive give the aftermaths a story."
+  },
+  "Us": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The deep blue-grey translucent panel with pale border, teal selection and clear ingredient hierarchy sits beside Palworld's menus, held back only by tiny orange sub-lines and an empty centre column."
+  },
+  "Ce": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's Tanglevolt matches the owner style bar in every pose with a big readable silhouette well above the ruler, while side B's faint frames lose their material to white/black blotches and would sink it on their own."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the creature faint-state breaks: restore the fur material and mesh in Ce side B faint mid/end (white/black blotches, deformed body) and ground Mj side A faint mid onto its shadow.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Meadows boar at the Tanglevolt/Stormursa naturalistic fur bar (drop the clay piggy-bank surface and noisy yellow blotches), standing clearly taller than the 1.80 m trainer.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give the trainer-site aftermath frames a Meadows grade and composition: always strike the oxblood banner after the win, add warm low sun with long shadows and blue distance haze, break the uniform tree wall into groves, and replace the smeared ground and stretched cliff textures.",
+   "kind": "scene"
+  }
+ ]
+}

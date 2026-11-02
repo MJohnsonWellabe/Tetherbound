@@ -1,0 +1,38 @@
+[
+ {
+  "label": "bramblebun",
+  "a": "bramblebun-base.png",
+  "b": "bramblebun-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The hit react leaves the ground, reading as a hop rather than a grounded flinch"
+  ]
+ },
+ {
+  "label": "cindercub",
+  "a": "cindercub-base.png",
+  "b": "cindercub-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The hit react barely differs from standing"
+  ]
+ },
+ {
+  "label": "trailpup",
+  "a": "trailpup-base.png",
+  "b": "trailpup-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The hit react barely differs from standing"
+  ]
+ },
+ {
+  "label": "duskhush",
+  "a": "duskhush-base.png",
+  "b": "duskhush-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "The hit react barely differs from standing"
+  ]
+ }
+]

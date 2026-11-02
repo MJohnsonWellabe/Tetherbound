@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Kf": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark, low-contrast mole on a neutral grey stage with faint poses that barely differ from standing has neither Palworld creature appeal nor any Valheim-class light to carry it."
+  },
+  "Ra": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spined hedgehog has a strong naturalistic silhouette, but faint poses that read as a crouch and (on B) an airborne flinch sink it below shipping finish."
+  },
+  "Ca": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder is appealing with readable eyes and a Meadows olive/brown palette, but it is a stage capture with no world light or atmosphere, and its soft cartoon face sits a step off the naturalistic bar."
+  },
+  "Yb": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's ram matches the owner's Stormcapra bar with a clear rearing flinch and grounded faint, but the bare stage gives no Valheim-class light, and B's mangled, flattened faint mesh would sink it outright."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-green crested lizard reads well and lies flat when fainted, but the hopping hit react and a standing height barely over the trainer keep it short of Palworld finish."
+  },
+  "Os": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, brace, cap and stone footing help, but a lone thin panel with flat tan infill beside a faceted grey placeholder rock in flat noon light is not Palworld base-building finish."
+  },
+  "Wo": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The hedgehog model and spines are on-style, but A's airborne flinch and faint poses that read as a crouch rather than a collapse sink it."
+  },
+  "Yf": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's black-and-gold serpent is muddy and its hit react matches standing; B's bold yellow pattern reads far better but its faint poses hang the body high in the air with the shadow detached far below."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ground every reaction pose: keep hit-react flinches planted (no hop or lift, Ra B, Wo A, Hd A), give faint mid/end a real collapse onto the side rather than a crouch (Kf, Ra, Wo), and snap faint bodies to the stage (Yf B floating, Yb B mangled faint mesh).",
+   "kind": "scene"
+  },
+  {
+   "change": "Lift albedo value and add rim light/secondary colour on dark-coated creatures (Kf near-black fur, Yf A black-gold scales) so form and markings separate from the ground.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the homestead wall with a thick multi-panel built wall: posts, plank or wattle-and-daub infill with texture, a cap/top rail and a distinct stone footing, so it reads as a wall rather than a single framed card.",
+   "kind": "new_art"
+  }
+ ]
+}

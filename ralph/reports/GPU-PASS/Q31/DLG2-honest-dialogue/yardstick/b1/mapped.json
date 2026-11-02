@@ -1,0 +1,146 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8719,
+  "least_squares_slope": 0.8729,
+  "method": "linear",
+  "slope": 0.8729,
+  "intercept": 1.3581,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.553,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 6.833,
+   "reference": 7.79,
+   "mapped": 7.323,
+   "residual": 0.467
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 5.9,
+   "reference": 6.23,
+   "mapped": 6.508,
+   "residual": -0.278
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.233,
+   "reference": 7.03,
+   "mapped": 6.799,
+   "residual": 0.231
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.033,
+   "reference": 6.3,
+   "mapped": 6.625,
+   "residual": -0.325
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.3,
+   "reference": 7.47,
+   "mapped": 7.73,
+   "residual": -0.26
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.267,
+   "reference": 7.53,
+   "mapped": 7.701,
+   "residual": -0.171
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.633,
+   "reference": 6.53,
+   "mapped": 5.403,
+   "residual": 1.127
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.933,
+   "reference": 4.0,
+   "mapped": 4.791,
+   "residual": -0.791
+  }
+ },
+ "candidates": {
+  "DLG2 P2-073 High one-sided | P2-073-dlg2-High": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.83,
+   "mapped_judges": [
+    6.77,
+    6.86,
+    6.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "DLG2 P2-081 High one-sided | P2-081-dlg2-High": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.62,
+   "mapped_judges": [
+    6.6,
+    6.42,
+    6.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "DLG2 P2-083 High one-sided | P2-083-dlg2-High": {
+   "measured_mean": 4.767,
+   "mapped_mean": 5.52,
+   "mapped_judges": [
+    5.64,
+    5.55,
+    5.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "DLG2 P2-087 High one-sided | P2-087-dlg2-High": {
+   "measured_mean": 6.4,
+   "mapped_mean": 6.94,
+   "mapped_judges": [
+    6.94,
+    6.77,
+    7.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "DLG2 P2-076 High one-sided | P2-076-dlg2-High": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.92,
+   "mapped_judges": [
+    7.12,
+    6.6,
+    7.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "DLG2 P2-074 High one-sided | P2-074-dlg2-High": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.78,
+   "mapped_judges": [
+    5.81,
+    5.64,
+    5.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
