@@ -1,0 +1,42 @@
+[
+ {
+  "label": "cragclaw",
+  "a": "sides/cragclaw-base.png",
+  "b": "sides/cragclaw-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "muddled dark mass whose body hides under the shell, face does not read",
+   "head and limbs vanish in the faint frames"
+  ]
+ },
+ {
+  "label": "craghorn",
+  "a": "sides/craghorn-base.png",
+  "b": "sides/craghorn-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "spindly, overlong horns that double or stretch in the hit-react frame and pierce the faint-mid pose",
+   "thin silhouette"
+  ]
+ },
+ {
+  "label": "mangrove_monitor",
+  "a": "sides/mangrove_monitor-base.png",
+  "b": "sides/mangrove_monitor-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "plain, smooth, rubbery green monitor with little surface detail",
+   "no elemental trait",
+   "tail passes through the ruler / clips the trainer"
+  ]
+ },
+ {
+  "label": "cannonback",
+  "a": "sides/cannonback-base.png",
+  "b": "sides/cannonback-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "tank-like cartoon turtle with cannon studs reads as toy styling"
+  ]
+ }
+]

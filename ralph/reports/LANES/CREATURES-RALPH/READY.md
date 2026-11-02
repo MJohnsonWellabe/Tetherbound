@@ -6,14 +6,13 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 
 - **Cliffspike** r1: 5.53 → 6.49 mapped (+0.96; target ≥ 5.80). GLB weight relax plus the coat flag `creatures_ralph_cliffspike_bands`. Ships as is.
 - **Ashtusk** r1: 5.94 → 6.71 mapped (+0.77; target ≥ 6.60). Remake aspect textures plus rigid tusks in the Tuskroot GLB. Live only once `remake_owner1101_tuskroot` leaves HELD (Task 2).
-- GPU form: `capture_f36_poses.gd -- --species=cliffspike,ashtusk --whole-body --context` with `remake_owner1101_tuskroot` enabled for Ashtusk; Forward+ 1920x1080, High first.
+- **Craghorn** r2: 5.75 → 6.45 mapped (+0.70; target ≥ 6.12). Weight relax in the GLB (horn stretch 1.38 m → 0.17 m). Ships as is.
+- GPU form: `capture_f36_poses.gd -- --species=cliffspike,ashtusk,craghorn --whole-body --context` with `remake_owner1101_tuskroot` enabled for Ashtusk; Forward+ 1920x1080, High first.
 
 ## In progress
 
-- Set 3: Cragclaw, Craghorn, Mangrove Monitor, Cannonback. The shipped arms are captured. Fixes are ready:
-  - weight relax on Craghorn (horn stretch 1.38 m → 0.17 m), Cragclaw (0.68 → 0.18) and Cannonback (0.69 → 0.26);
-  - regional grades for the Monitor (countershading, scale detail) and Cannonback (weathered shell).
-- Aquaryn and Duskhush: attempt 2 needs a silhouette-level change (see `r1/VERDICT.md`).
+- Aquaryn and Duskhush attempt 2 (silhouette-level): Aquaryn scale x1.3, a faint that lays the head down (spine_1 x1.55) and hit x2.0; Duskhush keeps its violet coat, gets eye-only glow and scale x1.15. Captured; judging next (r3).
+- Not kept in r2 (see `r2/VERDICT.md`): Cannonback (+0.19), Cragclaw (0), Mangrove Monitor (−0.95). Each needs a different approach.
 
 ## Local checks
 

@@ -84,6 +84,8 @@ def grade(name, entry):
     def vec(hue):
         r = np.radians(hue)
         return np.cos(r), np.sin(r)
+    if "base" not in entry:
+        return _glow(name, entry, models, stem, size, anatomy, valid)
     bh, bs, bv = entry["base"]
     cx, sx = [np.full(h.shape, c) for c in vec(bh)]
     ts, tv = np.full(h.shape, float(bs)), np.full(h.shape, float(bv))
@@ -129,9 +131,13 @@ def grade(name, entry):
     dst = os.path.join(models, "%s_Image_0_%s.jpg" % (stem, suffix))
     Image.fromarray((out * 255).round().astype(np.uint8)).save(dst, quality=90)
     print("%s: -> %s (kept %.1f%% element pixels)" % (name, os.path.relpath(dst, ROOT), 100 * keep[valid].mean()))
-    # Optional: an emission map limited to one body region (eyes only, say),
-    # cut from an existing glow mask: {"from": "<suffix of stem_*.png>",
-    # "where": {...}, "suffix": "..."}.
+    _glow(name, entry, models, stem, size, anatomy, valid)
+
+
+def _glow(name, entry, models, stem, size, anatomy, valid):
+    """Optional: an emission map limited to one body region (eyes only, say),
+    cut from an existing glow mask: {"from": "<suffix of stem_*.png>",
+    "where": {...}, "suffix": "..."}. An entry with no `base` writes only this."""
     glow = entry.get("glow")
     if glow:
         src = Image.open(os.path.join(models, "%s_%s.png" % (stem, glow["from"]))).convert("RGB")
