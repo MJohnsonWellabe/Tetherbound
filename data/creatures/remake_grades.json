@@ -152,5 +152,42 @@
     "detail_strength": 1.25,
     "mix_source": 0.4,
     "keep": [{"hue": [170, 200], "sat_min": 0.45, "val_min": 0.6}]
+  },
+  "sparkit": {
+    "_why": "GPU batch 6 (5.14 -> 4.80): 'noisy stripes'. The remake atlas scatters yellow, black and white at texel scale. Fennec palette by region: warm golden-yellow body, cream throat, chest and belly, dark charcoal lower legs and ear tips, fur grain kept (mix 30 percent); the electric-blue eyes and lightning lines keep their pixels.",
+    "folder": "sparkit/candidate_owner1101",
+    "suffix": "fennec",
+    "base": [44, 0.62, 0.74],
+    "regions": [
+      {"where": {"up_max": -0.25}, "hsv": [42, 0.14, 0.86], "softness": 0.15},
+      {"where": {"z_min": 0.78, "up_max": 0.0, "y_max": 0.7}, "hsv": [42, 0.14, 0.88], "softness": 0.06},
+      {"where": {"y_max": 0.2}, "hsv": [30, 0.2, 0.2], "softness": 0.08},
+      {"where": {"y_min": 0.9}, "hsv": [30, 0.2, 0.18], "softness": 0.05}
+    ],
+    "detail_strength": 1.0,
+    "mix_source": 0.3,
+    "keep": [{"hue": [180, 240], "sat_min": 0.35, "val_min": 0.55}]
+  },
+  "ribbonray": {
+    "_why": "GPU batch 6 (6.02 -> 5.62): the remake reads dull and dark on the stage. Source colours kept; value x1.2 and saturation x1.25 with fine scale contrast x1.2; violet-magenta hues are unchanged (clear of Team Tether red).",
+    "folder": "ribbonray/candidate_owner1101",
+    "suffix": "lift",
+    "detail_only": true,
+    "detail_strength": 1.2,
+    "value_scale": 1.2,
+    "sat_scale": 1.25
+  },
+  "tempestwing": {
+    "_why": "GPU batch 6 (6.05 -> 5.68): face and value unclear. The atlas scatters white, grey and black at texel scale. Pale gold and grey by region (the remake's identity): pale gold body, a cooler grey back, a lighter warm head so the cyan eyes read; fur and plate grain kept (mix 30 percent); the cyan eyes and wisp lines keep their pixels.",
+    "folder": "tempestwing/candidate_owner1101",
+    "suffix": "gold",
+    "base": [40, 0.24, 0.62],
+    "regions": [
+      {"where": {"up_min": 0.45, "y_min": 0.45}, "hsv": [36, 0.1, 0.5], "softness": 0.15},
+      {"where": {"z_min": 0.8}, "hsv": [42, 0.22, 0.74], "softness": 0.06}
+    ],
+    "detail_strength": 1.15,
+    "mix_source": 0.3,
+    "keep": [{"hue": [170, 220], "sat_min": 0.35, "val_min": 0.5}]
   }
 }

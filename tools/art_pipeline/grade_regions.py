@@ -15,6 +15,7 @@ data/config/creature_coat_flags.json selects it.
 
 Region `where` keys: x/y/z_min/max (0..1 box units), up_min/up_max (normal Y),
 fwd_min/fwd_max (normal Z), lateral_min (|x-0.5|*2), radial_min/max.
+detail_only entries take detail_strength, detail_blur_px, value_scale and sat_scale.
 
     python3 tools/art_pipeline/grade_regions.py duskhush [species ...]
 """
@@ -98,6 +99,11 @@ def grade(name, entry):
         ratio = np.clip(v / np.maximum(local, 0.04), 0.3, 3.0)
         v2 = np.clip(local * ratio ** float(entry.get("detail_strength", 1.5)) * float(entry.get("value_scale", 1.0)), 0, 1)
         out = np.clip(rgb * (v2 / np.maximum(v, 0.02))[..., None], 0, 1)
+        # Optional saturation scale about each texel's value (max channel).
+        sat_scale = float(entry.get("sat_scale", 1.0))
+        if sat_scale != 1.0:
+            top = out.max(axis=-1, keepdims=True)
+            out = np.clip(top - (top - out) * sat_scale, 0, 1)
         keep = ~valid
         out[keep] = rgb[keep]
         suffix = entry.get("suffix", "graded")
