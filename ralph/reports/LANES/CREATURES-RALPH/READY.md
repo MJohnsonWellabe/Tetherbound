@@ -22,6 +22,11 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - **Rig recipe:** the r18–r22 recipe (hit hop ×0.3, folded limbs, faint settled after the leg tuck, weights relaxed) has already lifted Sirenseal (+1.48), Mangrove Monitor (+0.77) and Abyssal Guardian (+0.41) on CPU.
 - **Shelved per the coordinator:** the r21 and r22 work and the water-variant probe. Their files are on the branch and not landed by me.
 
+**Batch 1a results (r23, `cae748e1d`):**
+- **F39#11** Riverdrake ground contact (unscored before): CPU 6.32 → 6.42. **At or above 6.0.** The GLB rest is settled and the hit hop is ×0.3.
+- **F39#24** rest poses: Riptusk CPU 5.72 → 6.07 (kept, GLB) and Torrentoad 5.81 → 5.84 (a tie, not kept). The item stays under 6 until Torrentoad gets new art (the gaunt upright stance).
+- These are GLB edits on live remakes, with their scores recorded in each remake flag's `_why`. Evidence is in `r23/`.
+
 **Batch 2, if disk allows:** the shared creature-stage items F38#1, F38#2 and F38#26 (Meadows collapse, hurt poses, ground contact), F39#6 (faint state), and F41#13 (Fulgocobra and Stormraven electric finish, a coat-flag arm).
 
 ## PR #799: both CI failures fixed on this branch (2 Nov ~15:40 UTC). Bring in head `f89846eb5` or later.
