@@ -1,7 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## P2-006 (vis-meadows, OFF until GPU-judged): water.json
-## `river.surface_candidate` changes only the river's own config and material.
+## P2-006 (vis-meadows): water.json `river.surface_candidate` changes only the
+## river's own config and material. GPU-judged ON 2 Nov (CLOUD-JUDGE/MEADOWS-AB-1102,
+## mapped Bar A 4.94 -> 5.29).
 
 const WATER := preload("res://scripts/world/water.gd")
 const CONFIG := "res://data/config/water.json"
@@ -11,9 +12,15 @@ func _shipping() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) as Dictionary
 
 
-func test_candidate_ships_off_and_off_changes_nothing() -> void:
+func test_candidate_ships_on_with_its_judged_score() -> void:
 	var cfg := _shipping()
-	assert_false(bool(cfg.river.surface_candidate.get("enabled", true)), "P2-006 candidate ships OFF")
+	assert_true(bool(cfg.river.surface_candidate.get("enabled", false)), "P2-006 candidate ships ON after GPU judging")
+	assert_true(str(cfg.river.surface_candidate._why_r2).contains("4.94 -> 5.29"), "the judged score is recorded with the flag")
+
+
+func test_off_changes_nothing() -> void:
+	var cfg := _shipping()
+	cfg.river.surface_candidate.enabled = false
 	var applied := cfg.duplicate(true)
 	WATER.apply_river_candidate(applied)
 	assert_eq(JSON.stringify(applied), JSON.stringify(cfg))
@@ -38,6 +45,8 @@ func test_on_merges_river_only_and_converts_colours() -> void:
 
 func test_r2_adds_bank_rocks_only_through_the_candidate() -> void:
 	var cfg := _shipping()
+	cfg.river.surface_candidate.enabled = false
+	WATER.apply_river_candidate(cfg)
 	assert_false(cfg.river.has("bank_rocks"), "no river rocks while OFF")
 	cfg.river.surface_candidate.enabled = true
 	WATER.apply_river_candidate(cfg)

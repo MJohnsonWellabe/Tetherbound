@@ -1,0 +1,200 @@
+{
+ "F36 (1) Cliffspike": {
+  "species": "cliffspike",
+  "installed": 5.97,
+  "shipped": 6.91,
+  "delta": 0.94,
+  "substitutions": [],
+  "control_frames": [
+   "cliffspike-hit-000.jpg",
+   "cliffspike-hit-050.jpg",
+   "cliffspike-faint-050.jpg",
+   "cliffspike-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "cliffspike-hit-000.jpg",
+   "cliffspike-hit-050.jpg",
+   "cliffspike-faint-050.jpg",
+   "cliffspike-faint-100.jpg"
+  ],
+  "b4_main": 6.6,
+  "b4_batch4": 5.58,
+  "b4_delta": -1.02
+ },
+ "F36 (0) #16 Ashtusk": {
+  "species": "ashtusk",
+  "installed": 6.83,
+  "shipped": 6.31,
+  "delta": -0.52,
+  "substitutions": [],
+  "control_frames": [
+   "ashtusk-hit-000.jpg",
+   "ashtusk-hit-050.jpg",
+   "ashtusk-faint-050.jpg",
+   "ashtusk-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "ashtusk-hit-000.jpg",
+   "ashtusk-hit-050.jpg",
+   "ashtusk-faint-050.jpg",
+   "ashtusk-faint-100.jpg"
+  ],
+  "b4_main": 7.4,
+  "b4_batch4": 6.0,
+  "b4_delta": -1.4
+ },
+ "F36 Tuskroot": {
+  "species": "tuskroot",
+  "installed": 7.17,
+  "shipped": 6.31,
+  "delta": -0.86,
+  "substitutions": [],
+  "control_frames": [
+   "tuskroot-hit-000.jpg",
+   "tuskroot-hit-050.jpg",
+   "tuskroot-faint-050.jpg",
+   "tuskroot-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "tuskroot-hit-000.jpg",
+   "tuskroot-hit-050.jpg",
+   "tuskroot-faint-050.jpg",
+   "tuskroot-faint-100.jpg"
+  ],
+  "b4_main": null,
+  "b4_batch4": null,
+  "b4_delta": null
+ },
+ "F36 (1) Craghorn": {
+  "species": "craghorn",
+  "installed": 6.31,
+  "shipped": 7.25,
+  "delta": 0.94,
+  "substitutions": [],
+  "control_frames": [
+   "craghorn-hit-000.jpg",
+   "craghorn-hit-050.jpg",
+   "craghorn-faint-050.jpg",
+   "craghorn-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "craghorn-hit-000.jpg",
+   "craghorn-hit-050.jpg",
+   "craghorn-faint-050.jpg",
+   "craghorn-faint-100.jpg"
+  ],
+  "b4_main": 6.92,
+  "b4_batch4": 6.17,
+  "b4_delta": -0.75
+ },
+ "F36 (0) #17 Cannonback": {
+  "species": "cannonback",
+  "installed": 6.23,
+  "shipped": 6.68,
+  "delta": 0.45,
+  "substitutions": [],
+  "control_frames": [
+   "cannonback-hit-000.jpg",
+   "cannonback-hit-050.jpg",
+   "cannonback-faint-050.jpg",
+   "cannonback-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "cannonback-hit-000.jpg",
+   "cannonback-hit-050.jpg",
+   "cannonback-faint-050.jpg",
+   "cannonback-faint-100.jpg"
+  ],
+  "b4_main": 6.68,
+  "b4_batch4": 6.34,
+  "b4_delta": -0.34
+ },
+ "F36 Terrapup": {
+  "species": "terrapup",
+  "installed": 6.57,
+  "shipped": 6.38,
+  "delta": -0.19,
+  "substitutions": [],
+  "control_frames": [
+   "terrapup-hit-000.jpg",
+   "terrapup-hit-050.jpg",
+   "terrapup-faint-050.jpg",
+   "terrapup-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "terrapup-hit-000.jpg",
+   "terrapup-hit-050.jpg",
+   "terrapup-faint-050.jpg",
+   "terrapup-faint-100.jpg"
+  ],
+  "b4_main": null,
+  "b4_batch4": null,
+  "b4_delta": null
+ },
+ "F36 Torrentoad": {
+  "species": "torrentoad",
+  "installed": 7.06,
+  "shipped": 5.59,
+  "delta": -1.47,
+  "substitutions": [],
+  "control_frames": [
+   "torrentoad-hit-000.jpg",
+   "torrentoad-hit-050.jpg",
+   "torrentoad-faint-050.jpg",
+   "torrentoad-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "torrentoad-hit-000.jpg",
+   "torrentoad-hit-050.jpg",
+   "torrentoad-faint-050.jpg",
+   "torrentoad-faint-100.jpg"
+  ],
+  "b4_main": null,
+  "b4_batch4": null,
+  "b4_delta": null
+ },
+ "F36 Meadowhart": {
+  "species": "meadowhart",
+  "installed": 6.87,
+  "shipped": 7.06,
+  "delta": 0.19,
+  "substitutions": [],
+  "control_frames": [
+   "meadowhart-hit-000.jpg",
+   "meadowhart-hit-050.jpg",
+   "meadowhart-faint-050.jpg",
+   "meadowhart-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "meadowhart-hit-000.jpg",
+   "meadowhart-hit-050.jpg",
+   "meadowhart-faint-050.jpg",
+   "meadowhart-faint-100.jpg"
+  ],
+  "b4_main": null,
+  "b4_batch4": null,
+  "b4_delta": null
+ },
+ "F36 Riptusk": {
+  "species": "riptusk",
+  "installed": 6.42,
+  "shipped": 6.68,
+  "delta": 0.26,
+  "substitutions": [],
+  "control_frames": [
+   "riptusk-hit-000.jpg",
+   "riptusk-hit-050.jpg",
+   "riptusk-faint-050.jpg",
+   "riptusk-faint-100.jpg"
+  ],
+  "candidate_frames": [
+   "riptusk-hit-000.jpg",
+   "riptusk-hit-050.jpg",
+   "riptusk-faint-050.jpg",
+   "riptusk-faint-100.jpg"
+  ],
+  "b4_main": null,
+  "b4_batch4": null,
+  "b4_delta": null
+ }
+}
