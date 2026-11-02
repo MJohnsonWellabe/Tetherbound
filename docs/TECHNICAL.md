@@ -236,6 +236,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 - **Start saves:** `godot --headless --fixed-fps 60 --path . --script tools/earned_saves/generate_boundary_save.gd -- --profile=<profile> --slot=0 --out=<absent dir>`. Profiles are in `tests/fixtures/earned_saves/generated_boundary_profiles.json`.
 - **Runners:**
   - `earned_chain_runner.gd` (Meadows story pieces; every continuation needs `--generated-fixture`)
+    - The fresh-title trained lineage (`--training-profile=meadows_training_v1`, opening_village → … → tidewake_handoff) is `chain.sh` runner `et`; it takes no `--generated-fixture`, and every piece's root holds the whole prefix.
   - `tidewake_piece_runner.gd` (homestead and training; prefer the split `training_tN_kitchen_<k>` pieces)
   - `cloudreach_chain_runner.gd`
 - **Seams for `tidewake_piece_runner.gd`:** its receipts record no position. A seam there matches when every receipt field matches and the next piece loaded the previous piece's committed save byte-identical (sha256 of the save tree); record both in the seam JSON (`ralph/reports/STORMWOOD/close-1024/seams/s3_*.json`).
