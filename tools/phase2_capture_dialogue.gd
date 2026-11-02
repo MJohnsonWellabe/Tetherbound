@@ -11,7 +11,7 @@ func _load_plan() -> bool:
 		return false
 	var start := 0
 	var count := -1
-	for arg: String in OS.get_cmdline_user_args():
+	for arg: String in _user_args():
 		if arg.begins_with("--start="):
 			start = maxi(0, int(arg.trim_prefix("--start=")))
 		elif arg.begins_with("--count="):
@@ -29,8 +29,18 @@ func _begin_manifest() -> void:
 	_manifest["dialogue_fixture"] = "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof."
 
 func _finish(_complete: bool) -> void:
+	super._finish(_job_complete())
+
+
+func _job_complete() -> bool:
 	# This pass deliberately records a post plus a conversation per plan row.
-	super._finish(_failures.is_empty() and _records.size() == _planned.size() * 2)
+	return _failures.is_empty() and _records.size() == _planned.size() * 2
+
+
+## Each row closes its conversation and eases the camera back to the ordinary
+## stand, so a later post is captured as its own launch would capture it.
+func _supports_jobs() -> bool:
+	return true
 
 func _dialogue_for(row: Dictionary) -> String:
 	var source := str(row.get("authored_source", ""))
@@ -79,7 +89,63 @@ func _dialogue_for(row: Dictionary) -> String:
 		return a.length() < b.length() if a.length() != b.length() else a < b)
 	return candidates[0] if not candidates.is_empty() else ""
 
+## Cause lane CAMFX (judges 1 Nov: "Kell is off-screen", P2-078): a speaker
+## authored with a `place_when` flag (Kell after `legendary_freed`, Sela after
+## `captive_rescued`) is not standing anywhere in a fresh capture state, so the
+## post and dialogue frames showed only the player. The row's own placement
+## flag is raised for that row and cleared afterwards, which is the world her
+## line is written for. Capture fixture only; the game is unchanged.
 func _capture_row(row: Dictionary) -> void:
+	var raised := _raise_placement_flags(row)
+	if not raised.is_empty():
+		# village_npcs.gd places on the next frame the flag store's revision moves.
+		for _frame in POPULATE_FRAMES:
+			await physics_frame
+	await _capture_row_with_dialogue(row)
+	if not raised.is_empty():
+		var progression: Variant = _progression_store()
+		for flag: String in raised:
+			progression.call("set_flag", flag, false)
+		for _frame in POPULATE_FRAMES:
+			await physics_frame
+
+
+func _progression_store() -> Variant:
+	var game := root.get_node_or_null(^"Game")
+	return game.get("progression") if game != null else null
+
+
+## The `if_flag`s of the first `place_when` branch of this row's villager spec
+## that are not already set, now set. Empty when the speaker needs none.
+func _raise_placement_flags(row: Dictionary) -> Array[String]:
+	var raised: Array[String] = []
+	var source := str(row.get("authored_source", row.get("source", "")))
+	if not source.ends_with("village_npcs.json"):
+		return raised
+	var progression: Variant = _progression_store()
+	if progression == null:
+		return raised
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://" + source))
+	if not parsed is Dictionary:
+		return raised
+	for raw: Variant in (parsed as Dictionary).get("villagers", []):
+		if not raw is Dictionary or str((raw as Dictionary).get("name", "")) != str(row.get("authored_id", "")):
+			continue
+		var branches: Variant = (raw as Dictionary).get("place_when", [])
+		if not branches is Array or (branches as Array).is_empty() or not (branches as Array)[0] is Dictionary:
+			return raised
+		var flags: Variant = ((branches as Array)[0] as Dictionary).get("if_flag", [])
+		for flag: Variant in (flags if flags is Array else [flags]):
+			var id := str(flag)
+			if id.is_empty() or bool(progression.call("has", id)):
+				continue
+			progression.call("set_flag", id, true)
+			raised.append(id)
+			print("DLG_SPEAKER %s placement flag raised: %s" % [str(row.get("frame_id", "")), id])
+	return raised
+
+
+func _capture_row_with_dialogue(row: Dictionary) -> void:
 	var before := _records.size()
 	await super._capture_row(row)
 	if _records.size() == before:
@@ -262,6 +328,14 @@ func _frame_speaker(row: Dictionary) -> String:
 					continue
 				var ground := resolve_capture_ground(_player, at.x, at.y, terrain)
 				if not is_finite(ground) or absf(ground - body.global_position.y) > 2.5:
+					# P2-083/P2-081 (GPU DLG-2): Captain Marrow stands on the
+					# Dynamo deck 260 m above the terrain, which the terrain and
+					# built-floor answers never see, so every stand was refused
+					# and the frame showed the player on the forest floor under
+					# the deck. A walkable collider within reach of the body's
+					# own height is the floor the player talks to him from.
+					ground = _deck_floor(at, body.global_position.y)
+				if not is_finite(ground) or absf(ground - body.global_position.y) > 2.5:
 					continue
 				_player.global_position = Vector3(at.x, ground, at.y)
 				_player.velocity = Vector3.ZERO
@@ -286,3 +360,20 @@ func _frame_speaker(row: Dictionary) -> String:
 		return "refused"
 	print("DLG_SPEAKER %s %s %s" % [str(row.frame_id), note, str(body.get_path())])
 	return note
+
+
+## The top of whatever collider lies under `at` within 2.5 m of `near_y`, or
+## NAN. Used only when the terrain and built-floor answers are far from the
+## speaker's own height (a raised deck no building registers).
+func _deck_floor(at: Vector2, near_y: float) -> float:
+	var space := _player.get_world_3d().direct_space_state if _player != null else null
+	if space == null:
+		return NAN
+	var query := PhysicsRayQueryParameters3D.create(
+		Vector3(at.x, near_y + 2.5, at.y), Vector3(at.x, near_y - 2.5, at.y))
+	if _player is CollisionObject3D:
+		query.exclude = [(_player as CollisionObject3D).get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return NAN
+	return float((hit["position"] as Vector3).y)

@@ -45,6 +45,10 @@ const VALID_CHARACTERS := ["trainer", "kael", "sera", "lyra"]
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
 const SWIM_CONFIG := "res://data/config/water_swimming.json"
+## P2-014 (cause lane tb/cause-meadows): `buried_stand_guard.enabled` rejects a
+## terrain stand, or its production camera, that has solid geometry just over
+## it (the Burrow Warrens earth bank's hollow shell swallowed walk_02/walk_03).
+const STAND_GUARD_CONFIG := "res://data/config/capture_stands.json"
 const BUILD_TIMEOUT_MSEC := 900000
 const BOOT_SETTLE_FRAMES := 24
 const ARRIVE_FRAMES := 20
@@ -56,6 +60,7 @@ const TRAINER_CLEARANCE := 0.4
 var _biome_id := ""
 var _output_dir := ""
 var _subsets: Array[String] = []
+var _extra_spots: Array[Dictionary] = []
 var _times: Array[String] = []
 var _views: Array[String] = []
 var _character_id := "trainer"
@@ -90,6 +95,10 @@ func _run() -> void:
 		push_error("catalogue survey requires a rendering display; never use --headless")
 		quit(1)
 		return
+	var jobs := _jobs_from_args(OS.get_cmdline_user_args())
+	if not jobs.is_empty():
+		await _run_jobs(jobs)
+		return
 	if not _parse_args():
 		quit(1)
 		return
@@ -111,11 +120,11 @@ func _run() -> void:
 		return
 	for row: Dictionary in _planned:
 		await _capture_row(row)
-	_finish(_failures.is_empty() and _records.size() == _planned.size())
+	_finish(_job_complete())
 
 
 func _parse_args() -> bool:
-	for arg: String in OS.get_cmdline_user_args():
+	for arg: String in _user_args():
 		if arg.begins_with("--biome="):
 			_biome_id = arg.trim_prefix("--biome=").strip_edges().to_lower()
 		elif arg.begins_with("--output="):
@@ -132,6 +141,15 @@ func _parse_args() -> bool:
 			_character_id = arg.trim_prefix("--character=").strip_edges().to_lower()
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg.begins_with("--spot="):
+			# Ad-hoc stand: --spot=<id>@<x>,<z>@<heading_deg> (repeatable).
+			var parts := arg.trim_prefix("--spot=").split("@")
+			var xz := parts[1].split(",") if parts.size() == 3 else PackedStringArray()
+			if xz.size() != 2:
+				push_error("phase2 locations: --spot expects id@x,z@heading_deg")
+				return false
+			_extra_spots.append({"id": _slug(parts[0]), "x": float(xz[0]), "z": float(xz[1]),
+				"heading": float(parts[2])})
 	if not SCENES.has(_biome_id):
 		push_error("catalogue survey: --biome must be meadows, cloudreach, stormwood, or water")
 		return false
@@ -259,6 +277,21 @@ func _load_plan() -> bool:
 					"band_display_name": "", "destination_index": destination_index,
 					"spot_index_in_band": 0, "destination_display_name": display_name,
 					"position_xz": [x, z], "view_heading_deg": null,
+					"time": time_name, "view": view_name, "identity": identity})
+	for spot: Dictionary in _extra_spots:
+		destination_index += 1
+		var identity := "%s__spot__%s" % [_biome_id, str(spot.id)]
+		_all_destinations.append({"destination_index": destination_index, "identity": identity,
+			"position_xz": [spot.x, spot.z], "view_heading_deg": spot.heading})
+		for time_name: String in _times:
+			for view_name: String in _views:
+				var frame_id := "%s__%s__%s" % [identity, time_name, view_name]
+				frame_ids[frame_id] = true
+				_planned.append({"frame_id": frame_id, "biome_id": _biome_id,
+					"biome_display_name": str(selected_biome.get("display_name", _biome_id)),
+					"band_id": "spot", "band_display_name": "", "destination_index": destination_index,
+					"spot_index_in_band": 0, "destination_display_name": str(spot.id),
+					"position_xz": [spot.x, spot.z], "view_heading_deg": spot.heading,
 					"time": time_name, "view": view_name, "identity": identity})
 	if _planned.is_empty():
 		push_error("catalogue survey: selection yielded no frames")
@@ -430,8 +463,11 @@ func _capture_row(row: Dictionary) -> void:
 	var observed_clock: Dictionary = {}
 	var selected_spec: Dictionary = {}
 	var rejected: Array[Dictionary] = []
-	var offsets: Array = row.get("stand_offsets_m",
-		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0])
+	var offsets: Array = (row.get("stand_offsets_m",
+		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]) as Array).duplicate()
+	for extra: Variant in stand_guard_offsets(STAND_GUARD_CONFIG):
+		if not offsets.has(float(extra)):
+			offsets.append(float(extra))
 	var sideways := Vector2(-forward.y, forward.x)
 	var laterals: Array = row.get("stand_laterals_m", [0.0, -5.0, 5.0])
 	for offset: float in offsets:
@@ -610,7 +646,63 @@ func _capture_support_preflight(spec: Dictionary) -> String:
 	shape.margin = 0.0
 	if not space.intersect_shape(shape, 1).is_empty():
 		return "production player capsule overlaps solid geometry at staged stand"
+	if _stand_guard_window() > 0.0 and not bool(spec.swimming) \
+			and is_equal_approx(float(spec.ground_y), float(spec.terrain_y)):
+		var overhead := capture_overhead_failure(space, at, _stand_guard_window(),
+			_player.collision_mask, [_player.get_rid()])
+		if not overhead.is_empty():
+			return "stand: " + overhead
 	return ""
+
+
+## The guard's look-up window in metres, 0.0 while the guard is off.
+func _stand_guard_window() -> float:
+	if _stand_guard_cache < 0.0:
+		_stand_guard_cache = stand_guard_window(STAND_GUARD_CONFIG)
+	return _stand_guard_cache
+
+
+var _stand_guard_cache := -1.0
+
+
+static func stand_guard_window(path: String) -> float:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary:
+		return 0.0
+	var guard: Dictionary = (parsed as Dictionary).get("buried_stand_guard", {})
+	if not bool(guard.get("enabled", false)):
+		return 0.0
+	return maxf(0.0, float(guard.get("window_m", 8.0)))
+
+
+## Fallback stand offsets the guard adds after a row's own list, so a walk
+## stand whose first choices are all buried can still seat further back.
+static func stand_guard_offsets(path: String) -> Array:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary:
+		return []
+	var guard: Dictionary = (parsed as Dictionary).get("buried_stand_guard", {})
+	if not bool(guard.get("enabled", false)):
+		return []
+	return guard.get("fallback_offsets_m", []) as Array
+
+
+## A down ray from `window` metres over `point` to just above it. Any solid
+## hit means the point sits inside or under geometry (a hollow trimesh shell
+## is not caught by the capsule overlap or the floor ray, which start inside).
+static func capture_overhead_failure(space: PhysicsDirectSpaceState3D, point: Vector3,
+		window: float, mask: int, exclude: Array) -> String:
+	if window <= 0.0 or space == null or not point.is_finite():
+		return ""
+	var excluded: Array[RID] = []
+	excluded.assign(exclude)
+	var ray := PhysicsRayQueryParameters3D.create(point + Vector3.UP * window,
+		point + Vector3.UP * 0.5, mask, excluded)
+	var hit := space.intersect_ray(ray)
+	if hit.is_empty():
+		return ""
+	var position: Vector3 = hit.get("position", point)
+	return "solid geometry %.2fm overhead (buried or overhung)" % (position.y - point.y)
 
 
 static func capture_floor_failure(ground: float, hit: Dictionary, floor_angle: float) -> String:
@@ -661,6 +753,12 @@ func _capture_settled_failure(at: Vector2, row: Dictionary, spec: Dictionary) ->
 		float(row.get("min_camera_player_distance_m", 3.5)), _rig.spring_length + 3.0)
 	if not failure.is_empty():
 		return failure
+	if _stand_guard_window() > 0.0 and not bool(spec.get("swimming", false)) \
+			and is_equal_approx(float(spec.get("ground_y", NAN)), float(spec.get("terrain_y", NAN))):
+		var overhead := capture_overhead_failure(_world.get_world_3d().direct_space_state,
+			_camera.global_position, _stand_guard_window(), _player.collision_mask, [_player.get_rid()])
+		if not overhead.is_empty():
+			return "camera: " + overhead
 	return capture_surface_failure(spec, _capture_surface_record(), _player.global_position.y,
 		_player.floor_max_angle, root.get_camera_3d() == _camera)
 
@@ -827,6 +925,17 @@ func _write_manifest() -> void:
 
 
 func _finish(complete: bool) -> void:
+	_close_manifest(complete)
+	quit(0 if complete else 1)
+
+
+## Whether this launch (or the current job of a --jobs launch) captured every
+## planned frame. Tools that record more than one frame per row override it.
+func _job_complete() -> bool:
+	return _failures.is_empty() and _records.size() == _planned.size()
+
+
+func _close_manifest(complete: bool) -> void:
 	_manifest["capture_finished_utc"] = Time.get_datetime_string_from_system(true)
 	_manifest["complete"] = complete
 	_manifest["captured_frame_count"] = _records.size()
@@ -836,4 +945,234 @@ func _finish(complete: bool) -> void:
 		for failure: String in _failures:
 			push_error("catalogue survey: %s" % failure)
 	print("CATALOGUE SURVEY %s: %d/%d frames in %s" % ["OK" if complete else "FAILED", _records.size(), _planned.size(), _output_dir])
-	quit(0 if complete else 1)
+
+
+# ---------------------------------------------------------------------------
+# Batched launches (capture-speed lane, 1 Nov 2026).
+#
+# A GPU boot of a production world takes three to eight minutes and a dialogue
+# or build-suite capture under a second, so one launch per catalogue post spent
+# nearly all of its time booting. `--jobs=<json>` (or repeated `--job=`) runs
+# several launches' worth of work on ONE boot. Each job is defined as exactly
+# the single launch `godot ... -- <shared args> <job args>`: the shared
+# command-line args (everything except --jobs/--job) are followed by the job's
+# own args, parsed by the same `_parse_args()`/`_load_plan()`, written to the
+# job's own --output with its own manifest.json, under the same frame names.
+# So a batch frame pairs with the single-launch frame of the same name.
+#
+#   --jobs=res://path/jobs.json   {"jobs": [{"output": "res://out/a",
+#                                  "args": ["--subset=meadows__inventory__character__mira"]}, ...]}
+#                                 (a bare top-level array of jobs is accepted too)
+#   --job=<output>|<arg>|<arg>    the same job inline; repeatable
+#
+# Jobs may not change what the one boot is (biome, character, seed, preset),
+# every job needs its own fresh --output, and every job's plan is validated
+# before the world boots. Between jobs the tool does what it already does
+# between rows of one launch (close the panel or clear the fixture, return to
+# the ordinary third-person stand); world simulation state (wild creature
+# wander, clock between pins) is not rebooted, the same as a multi-row launch.
+
+## Args a job may not override: they define the single boot every job shares.
+const JOB_FIXED_PREFIXES := ["--biome=", "--character=", "--seed=", "--preset=",
+	"--low-resolution=", "--source-commit=", "--source-sha=", "--jobs=", "--job="]
+
+## The current job's own args, appended to the shared command line.
+var _job_args := PackedStringArray()
+
+
+## Tools opt in once their per-row reset makes a later row equivalent to a
+## fresh launch's first row.
+func _supports_jobs() -> bool:
+	return false
+
+
+## The command line this launch (or the current job) is defined by.
+func _user_args() -> PackedStringArray:
+	var out := PackedStringArray()
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--jobs=") or arg.begins_with("--job="):
+			continue
+		out.append(arg)
+	out.append_array(_job_args)
+	return out
+
+
+func _has_user_flag(flag: String) -> bool:
+	return _user_args().has(flag)
+
+
+func _has_user_flag_prefix(prefix: String) -> bool:
+	for arg: String in _user_args():
+		if arg.begins_with(prefix):
+			return true
+	return false
+
+
+## Parse --jobs=<json path> and repeated --job=<output>|<arg>... into
+## [{"output": String, "args": PackedStringArray}]. Returns [] when neither is
+## given. A malformed spec returns a single {"error": String} entry.
+static func parse_jobs(user_args: PackedStringArray, read_file: Callable = Callable()) -> Array[Dictionary]:
+	var jobs: Array[Dictionary] = []
+	for arg: String in user_args:
+		if arg.begins_with("--jobs="):
+			var path := arg.trim_prefix("--jobs=").strip_edges()
+			var text := str(read_file.call(path)) if read_file.is_valid() else FileAccess.get_file_as_string(path)
+			var parsed: Variant = JSON.parse_string(text)
+			if parsed is Dictionary:
+				parsed = (parsed as Dictionary).get("jobs", null)
+			if not parsed is Array or (parsed as Array).is_empty():
+				return [{"error": "--jobs=%s must hold a non-empty jobs array" % path}]
+			for raw: Variant in parsed:
+				if not raw is Dictionary:
+					return [{"error": "--jobs=%s: every job must be an object" % path}]
+				var job_args := PackedStringArray()
+				var raw_args: Variant = (raw as Dictionary).get("args", [])
+				if not raw_args is Array:
+					return [{"error": "--jobs=%s: job args must be an array of strings" % path}]
+				for value: Variant in raw_args:
+					job_args.append(str(value))
+				var output := str((raw as Dictionary).get("output", "")).strip_edges()
+				jobs.append({"output": output, "args": job_args})
+		elif arg.begins_with("--job="):
+			var parts := arg.trim_prefix("--job=").split("|", true)
+			if parts.is_empty():
+				return [{"error": "--job= needs <output>|<arg>..."}]
+			var job_args := PackedStringArray()
+			for index in range(1, parts.size()):
+				if not parts[index].strip_edges().is_empty():
+					job_args.append(parts[index].strip_edges())
+			jobs.append({"output": parts[0].strip_edges(), "args": job_args})
+	var outputs: Dictionary = {}
+	for job: Dictionary in jobs:
+		var args: PackedStringArray = job.args
+		for value: String in args:
+			if value.begins_with("--output="):
+				if not str(job.output).is_empty():
+					return [{"error": "job gives its output twice: %s" % str(job.output)}]
+				job.output = value.trim_prefix("--output=").strip_edges()
+			for prefix: String in JOB_FIXED_PREFIXES:
+				if value.begins_with(prefix):
+					return [{"error": "job arg %s would change the shared boot; put it on the command line" % value}]
+		var cleaned := PackedStringArray()
+		for value: String in args:
+			if not value.begins_with("--output="):
+				cleaned.append(value)
+		job.args = cleaned
+		if str(job.output).is_empty():
+			return [{"error": "every job needs its own output"}]
+		if outputs.has(str(job.output)):
+			return [{"error": "two jobs share output %s" % str(job.output)}]
+		outputs[str(job.output)] = true
+	return jobs
+
+
+func _jobs_from_args(user_args: PackedStringArray) -> Array[Dictionary]:
+	var has_jobs := false
+	for arg: String in user_args:
+		if arg.begins_with("--jobs=") or arg.begins_with("--job="):
+			has_jobs = true
+	if not has_jobs:
+		return []
+	return parse_jobs(user_args)
+
+
+## Restore the per-launch state `_parse_args()` and `_load_plan()` fill, then
+## re-parse as the given job.
+func _enter_job(job: Dictionary) -> bool:
+	_job_args = PackedStringArray(job.args)
+	_job_args.append("--output=" + str(job.output))
+	_output_dir = ""
+	_subsets.clear()
+	_times.clear()
+	_views.clear()
+	_planned = []
+	_all_destinations = []
+	_records = []
+	_failures = []
+	return _parse_args()
+
+
+func _run_jobs(jobs: Array[Dictionary]) -> void:
+	if jobs.size() == 1 and jobs[0].has("error"):
+		push_error("capture jobs: %s" % str(jobs[0].error))
+		quit(1)
+		return
+	if not _supports_jobs():
+		push_error("capture jobs: %s does not support --jobs/--job" % str(get_script().resource_path))
+		quit(1)
+		return
+	# Validate and open every job exactly as its single launch would, before
+	# the world boots: plan, fresh output, initial manifest. A job that its
+	# single launch would refuse is logged and skipped; the rest still run.
+	var prepared: Array[Dictionary] = []
+	var skipped: Array[String] = []
+	for job: Dictionary in jobs:
+		var refusal := ""
+		if not _enter_job(job):
+			refusal = "arguments refused"
+		else:
+			seed(_seed)
+			if not _load_plan():
+				refusal = "no plan rows"
+			# Look-dev presets require an absent output directory per launch
+			# (lookdev_capture_bootstrap.gd); a batch applies that to every job.
+			elif _has_user_flag_prefix("--preset=") \
+					and DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output_dir)):
+				refusal = "preset capture requires a fresh output directory"
+			else:
+				DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
+				if not _output_is_fresh():
+					refusal = "output already holds a manifest or frames"
+		if not refusal.is_empty():
+			push_error("capture jobs: skipping job %s (%s): %s" % [str(job.output), " ".join(job.args), refusal])
+			skipped.append(str(job.output))
+			continue
+		_begin_manifest()
+		_write_manifest()
+		prepared.append({"job": job, "planned": _planned.duplicate(true), "manifest": _manifest})
+	if prepared.is_empty():
+		push_error("capture jobs: no runnable job")
+		quit(1)
+		return
+	print("CAPTURE JOBS %d on one boot" % prepared.size())
+	# Boot once. The mount/prepare steps add the camera/character records each
+	# single launch's manifest carries; copy them into every job's manifest.
+	_enter_job(prepared[0].job)
+	_planned = (prepared[0].planned as Array).duplicate(true)
+	_manifest = {}
+	var booted: bool = await _mount_production_world()
+	booted = booted and _prepare_capture_shell()
+	var shell_manifest := _manifest.duplicate(true)
+	var boot_failures := _failures.duplicate()
+	var all_complete := booted
+	var failed: Array[String] = []
+	for job_index in prepared.size():
+		var entry: Dictionary = prepared[job_index]
+		_enter_job(entry.job)
+		_planned = (entry.planned as Array).duplicate(true)
+		_manifest = entry.manifest
+		for key: Variant in shell_manifest:
+			if not _manifest.has(key):
+				_manifest[key] = shell_manifest[key]
+		_manifest["batched_job"] = {"jobs_in_boot": prepared.size(),
+			"job_index": job_index, "job_args": Array(entry.job.args)}
+		if not booted:
+			_failures.append_array(boot_failures)
+			_close_manifest(false)
+			failed.append(_output_dir)
+			continue
+		for row: Dictionary in _planned:
+			await _capture_row(row)
+		var complete := _job_complete()
+		_close_manifest(complete)
+		if not complete:
+			failed.append(_output_dir)
+		all_complete = all_complete and complete
+	# One failing post never stops the others; the exit code and this summary
+	# report every job that did not complete.
+	all_complete = all_complete and skipped.is_empty()
+	print("CAPTURE JOBS %s: %d/%d jobs complete; failed: %s; skipped before boot: %s" % [
+		"OK" if all_complete else "FAILED", prepared.size() - failed.size(), jobs.size(),
+		", ".join(failed) if not failed.is_empty() else "none",
+		", ".join(skipped) if not skipped.is_empty() else "none"])
+	quit(0 if all_complete else 1)

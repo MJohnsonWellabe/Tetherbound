@@ -1,0 +1,41 @@
+{
+ "Zz": {
+  "anchor": false,
+  "label": "duskhush",
+  "A": "duskhush-cand.png",
+  "B": "duskhush-base.png"
+ },
+ "Kh": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Ht": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Fy": {
+  "anchor": false,
+  "label": "bramblebun",
+  "A": "bramblebun-base.png",
+  "B": "bramblebun-cand.png"
+ },
+ "Tk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Qk": {
+  "anchor": false,
+  "label": "trailpup",
+  "A": "trailpup-base.png",
+  "B": "trailpup-cand.png"
+ },
+ "Yv": {
+  "anchor": false,
+  "label": "cindercub",
+  "A": "cindercub-base.png",
+  "B": "cindercub-cand.png"
+ }
+}

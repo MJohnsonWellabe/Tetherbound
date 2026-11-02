@@ -1,0 +1,57 @@
+Mv: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Cw: "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+Zn: none
+Iv: none
+Ys: "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+Pu: none
+Sh: "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"
+Mo: none
+Vi: none
+Kc: none
+Cs: none
+Rf: none
+
+# judge 1 defect calls and Bar B
+Mv: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | bar_b no: B's panel is legible and on-palette, but the prompts are still small and lack controller-first teal emphasis, and the dim, empty world behind it sinks the finish.
+Cw: A {"Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"} | B {"Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"} | bar_b no: Crushed black-green grass and a flat lilac sky lack Valheim-class storm light, and B's pale officer separates but looks unlit.
+Zn: A {} | B {} | bar_b no: The bright Tidewake vista carries the day frame, but the dark interior floor and B's camera clipping into the trainer's shoulder sink it.
+Iv: A {} | B {} | bar_b no: Good sky and water colour, but vast empty, evenly lit dunes with sparse uniform tufts lack Palworld density.
+Ys: A {"Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PRESENT"} | B {"Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"} | bar_b no: Path-and-grass framing with crushed darks and no copper, glass or lightning accents sinks it.
+Pu: A {} | B {} | bar_b no: The blurry, low-detail face texture and smudged eyes fall well short of the shipping character finish.
+Sh: A {"Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"} | B {"Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"} | bar_b no: Same-height stocky NPC silhouettes and a flat, dark storm grade sink it; B changes only value.
+Mo: A {} | B {} | bar_b no: Untextured curtain-like dune walls and empty sand sink it, though B's stand 4 vista composition helps.
+Vi: A {} | B {} | bar_b no: The waterfall stack and clean day light carry it, but empty sand and sparse even scatter keep it below Palworld density.
+Kc: A {} | B {} | bar_b no: Huts, the pump and the lit interior carry it; B's white dashed lines on the water and head-blocked framing sink it.
+Cs: A {} | B {} | bar_b no: B's clean long silhouette and spotted hide read well, but it leans stylised rather than matching the owner's naturalistic fur and scale finish.
+Rf: A {} | B {} | bar_b no: A strong waterfall landmark and a clear sky carry it; empty dunes and B's dashed-line water artefact sink it.
+top_changes: [{"change": "Break up the empty Tidewake dunes with authored clusters (driftwood, rock outcrops, dune-grass groves and edges), texture the smooth dune walls, and remove the stripe and dashed-line overlays on the water", "kind": "scene"}, {"change": "Regrade Stormwood: lift the crushed black-green grass, add a storm key light with rim light on characters and creatures, and add copper/glass highlights and lightning accents at named destinations", "kind": "scene"}, {"change": "Give officers and named NPCs distinct outfit silhouettes, rank or colour markers and higher-detail faces instead of value-only recolours", "kind": "new_art"}]
+
+# judge 2 defect calls and Bar B
+Mv: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | bar_b no: Side B's panel is readable and on-direction, but the dull dark world behind it and the small prompts sit below Palworld's crisp HUD finish.
+Cw: A {"Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"} | B {"Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"} | bar_b no: Posterised crushed greens, a flat lilac sky and a ghostly or black officer sink it, far from Valheim-class storm light.
+Zn: A {} | B {} | bar_b no: The bright coast sky carries the day frame, but the murky interior and stiff characters fall short of Palworld finish.
+Iv: A {} | B {} | bar_b no: Clean sky and a waterfall landmark help, but empty dune planes and flat banded water read unfinished beside Palworld density.
+Ys: A {"Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PRESENT"} | B {"Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"} | bar_b no: Generic path-and-tree frames under a flat purple sky with crushed ground values lack any Valheim-like storm atmosphere.
+Pu: A {} | B {} | bar_b no: A blurry, flat face with smudged eyes and a generic uniform is below Palworld character appeal.
+Sh: A {"Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"} | B {"Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"} | bar_b no: Repeated small human bodies and a ghostly pale render on B in a dark posterised forest sink it.
+Mo: A {} | B {} | bar_b no: Huge featureless dune walls and unlit black figures undercut the good sky; B's framed dune gap is the best moment.
+Vi: A {} | B {} | bar_b no: The sky, waterfall and a horizon creature carry it, but sparse sand and flat water stay below Palworld density.
+Kc: A {} | B {} | bar_b no: Village huts, characters and creatures make it lived-in, but flat water and B's dashed overlay keep it short of shipping finish.
+Cs: A {} | B {} | bar_b no: A readable silhouette, but smooth toy-like scales without the owner bar's naturalistic detail, roughly trainer height, and on B a grey faint-end material.
+Rf: A {} | B {} | bar_b no: A strong Veilfall landmark and sky, sunk by empty dunes, banded water and on B dashed lines and an unlit trainer.
+top_changes: [{"change": "Stormwood grade and light: lift the crushed, posterised ground values, add a storm sky with cloud structure and lightning-lit rim/fill, and stop rendering NPCs as black silhouettes or ghostly silver overrides", "kind": "scene"}, {"change": "Break up the Tidewake dune planes and water: cluster grass, driftwood, rocks and props into groves and edges, add surface detail and foam to the flat two-tone water, and remove the dashed-line and beige shaft-card overlays", "kind": "scene"}, {"change": "Give the named NPCs and Team Tether members distinct faces, bodies and outfits with readable rank markers, and bring creatures to the naturalistic owner bar at clearly taller-than-trainer scale", "kind": "new_art"}]
+
+# judge 3 defect calls and Bar B
+Mv: A {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"} | B {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"} | bar_b no: Side B's larger text helps, but the panel's oversized rows, empty space and keyboard glyphs fall short of a shipping controller-first UI.
+Cw: A {"Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"} | B {"Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"} | bar_b no: The posterised dark-green carpet and flat lavender sky with no storm light sink it; B's pale uniform separates but looks ghostly.
+Zn: A {} | B {} | bar_b no: On-board water and a lantern-lit hall carry it, but flat daylight with no atmosphere and black dialogue boxes keep it below Palworld finish.
+Iv: A {} | B {} | bar_b no: The falls landmark and water colour carry it; bare evenly scattered dunes and the flat quads on the water at the pier sink it.
+Ys: A {"Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PRESENT"} | B {"Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"} | bar_b no: Generic dirt paths under dark trees, with a single mid-tone and no storm light, read as unfinished; only B's glowing pond gives a focal point.
+Pu: A {} | B {} | bar_b no: A clear cap-and-jacket silhouette, but the smudged low-resolution face and eyes read as a stand-in.
+Sh: A {"Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"} | B {"Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"} | bar_b no: The same elder model in every frame (only recoloured in B) and a posterised dark forest sink it.
+Mo: A {} | B {} | bar_b no: B's framed dune window with creatures helps, but black-silhouette grunts and smooth curtain-like sand walls look unfinished.
+Vi: A {} | B {} | bar_b no: Good falls landmark and readable creature on the skyline, but sparse even scatter and flat light with no atmosphere.
+Kc: A {} | B {} | bar_b no: Coherent village props and characters carry it; B's dashed white lines on the water and the flat grade sink it.
+Cs: A {} | B {} | bar_b no: A's chunky spotted drake approaches the naturalistic bar but its faint end crumples; B is toy-glossy with a washed grey underside in faint.
+Rf: A {} | B {} | bar_b no: Strong falls stack, cottage and tower composition, but bare dunes, flat daylight and B's debug-like dashed water lines and unlit trainer.
+top_changes: [{"change": "Stormwood grade and light: replace the flat lavender sky and single dark mid-tone with a storm sky gradient, white-violet lightning rim light, moss value variation and grove/clearing structure instead of a uniform grass carpet", "kind": "scene"}, {"change": "Tidewake atmosphere and dressing: add haze/sun grade and dune detail (erosion, driftwood, cluster-placed grass, shore rocks), remove the flat quads and dashed lines on the water, and keep the trainer lit against the sand", "kind": "scene"}, {"change": "Distinct NPC and faction models: unique faces/outfits for repeated named roles and higher-fidelity Team Tether faces with readable rank markers, instead of recolours", "kind": "new_art"}]

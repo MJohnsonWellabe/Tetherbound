@@ -527,13 +527,21 @@ func _retrofit_timber_material() -> StandardMaterial3D:
 func _ground_pad_material() -> StandardMaterial3D:
 	if _ground_pad_material_cache != null:
 		return _ground_pad_material_cache
-	var config: Dictionary = _config.get("ground_pad", {})
+	var config: Dictionary = ground_pad_config(_config)
 	# F38 band3_the_river_lock_0 (close-1024, OFF until judged): GPU judges read
 	# the yard as flat featureless earth (5.29). `surface_candidate` swaps the
 	# whole pad, seamlessly and feathered as before, for worn stone flags.
 	var surface: Dictionary = config.get("surface_candidate", {})
 	if not bool(surface.get("enabled", false)):
 		surface = {}
+	# World dressing P2-013 (`surface_candidate.r2`, OFF until judged): GPU
+	# 6.59 "an oversized uniform cobble texture": smaller flags, a little warmer.
+	var r2: Dictionary = surface.get("r2", {}) as Dictionary
+	if bool(r2.get("enabled", false)):
+		surface = surface.duplicate()
+		for key: String in r2:
+			if key != "enabled" and not key.begins_with("_"):
+				surface[key] = r2[key]
 	var m := StandardMaterial3D.new()
 	m.albedo_texture = load(str(surface["albedo"])) as Texture2D if surface.has("albedo") else GROUND_PAD_ALBEDO
 	m.albedo_color = Color(str(surface.get("tint", config.get("tint", "#463c30"))))
@@ -560,8 +568,27 @@ func _ground_pad_material() -> StandardMaterial3D:
 ## darkens a band either side of t=0 -- the road/gantry axis every person and
 ## conduit run on this site already treats as its spine -- for the "visible
 ## boot/tyre wear" the defect report asks for, all procedural (no new asset).
+## P2-013 (vis-meadows, OFF until GPU-judged): `ground_pad.p2_013_candidate`
+## merges its keys over the pad, and its `surface` keys over the pad's
+## `surface_candidate`, so the stone flags tile larger with a stronger worn
+## track. Off: the shipped pad exactly.
+static func ground_pad_config(config: Dictionary) -> Dictionary:
+	var pad: Dictionary = (config.get("ground_pad", {}) as Dictionary).duplicate(true)
+	var candidate: Dictionary = pad.get("p2_013_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return pad
+	for key: Variant in candidate:
+		if key == "surface":
+			var surface: Dictionary = pad.get("surface_candidate", {})
+			surface.merge(candidate["surface"] as Dictionary, true)
+			pad["surface_candidate"] = surface
+		elif key != "enabled" and not str(key).begins_with("_"):
+			pad[key] = candidate[key]
+	return pad
+
+
 func _build_ground_pad() -> void:
-	var config: Dictionary = _config.get("ground_pad", {})
+	var config: Dictionary = ground_pad_config(_config)
 	if not bool(config.get("enabled", true)):
 		return
 	var s_min := float(config.get("s_min", -27.0))

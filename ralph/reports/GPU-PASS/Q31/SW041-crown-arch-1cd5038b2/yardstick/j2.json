@@ -1,0 +1,102 @@
+{
+ "sets": {
+  "Fw": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing finally read as a half-timbered wall, but it is still a lone thin panel with flat untextured infill standing on smeared low-res grass beside a faceted grey boulder, far below Palworld's base-building finish."
+  },
+  "Ot": {
+   "A": {
+    "bar_a": 2.8,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.1,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky and rain carry some Stormwood mood, but the landmark is a small boxy stone block with blue corner lights on a bare paving slab (raised and dark-edged in A, flatter hexagon in B), nothing like an arch or a hero landmark."
+  },
+  "Bc": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with readable eyes, white hair and beard and an olive vest and scarf that sit in the Meadows palette carries it, though the soft rounded animated-film styling leans more cartoon than the key art and the frame shows no world context."
+  },
+  "Co": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's scaled blue body with coral spines and distinct hit and faint poses comes close to the owner's creature bar, but A's hit react is identical to standing and its faint-end frame loses all colour to a flat grey-brown material, and the flat grey stage gives no Valheim-class light."
+  },
+  "Ac": {
+   "A": {
+    "bar_a": 2.8,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.1,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as the other Crown Arch captures: storm sky and rain help, but the subject is a small blocky pillar with blue lights on an exposed slab rather than an arch, and the moss carpet around it is uniform and dark."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are site-specific (rack knocked over, cage opened with a freed captive, crates cleared, tent collapsed with smoke, banner torn down) where A mostly just removes props and leaves the red enemy banners up, but both sit on smeared low-resolution ground with flat light and a repeated emblem boulder, well short of Palworld's finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the Crown Arch with a real hero arch mesh (tall twin stone or root columns spanning an opening, copper and glass accents, violet glow) bedded into the terrain with moss and roots instead of standing on an exposed paving slab",
+   "kind": "new_art"
+  },
+  {
+   "change": "Raise ground and lighting finish in Meadows captures: higher-resolution grass and path textures, grouped vegetation edges and clearings instead of an even carpet, stronger sun and shadow contrast and blue distance fog",
+   "kind": "scene"
+  },
+  {
+   "change": "Give every faction-defeat after frame a site-specific aftermath (enemy banner down, structure broken or opened, smoke or scorch) and vary the emblem boulder so sites stop repeating; give the homestead wall thickness, textured wattle infill and neighbouring wall pieces so it reads as part of a build",
+   "kind": "scene"
+  }
+ ]
+}

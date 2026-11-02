@@ -1,0 +1,601 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 499843598571,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T20:08:10",
+	"capture_started_utc": "2026-10-31T20:07:31",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "water_trainer_bex",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "sluice_isle",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 566561,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76771926879883,
+			"camera_position": [
+				672.0,
+				11.7601804733276,
+				2812.12133789063
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460622147348
+				],
+				"basis_y": [
+					0.0000000000000000212650218755316,
+					0.984805822372437,
+					-0.173647850751877
+				],
+				"basis_z": [
+					-0.000000000000000120599942225136,
+					0.173647850751877,
+					0.984805822372437
+				],
+				"origin": [
+					672.0,
+					10.8571653366089,
+					2807.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.0000000000000000000000062256449,
+					0.000000000000000122460595677568
+				],
+				"basis_y": [
+					0.0000000000000000212651261002887,
+					0.984807670116425,
+					-0.173648670315742
+				],
+				"basis_z": [
+					-0.000000000000000120600140748483,
+					0.173648685216904,
+					0.984807670116425
+				],
+				"origin": [
+					672.0,
+					11.7601804733276,
+					2812.12133789063
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Bex",
+			"destination_index": 1,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-ctl-High-c034/water__inventory__trainer__water_trainer_bex.jpg",
+			"frame_id": "water__inventory__trainer__water_trainer_bex",
+			"identity": "water__inventory__trainer__water_trainer_bex",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_to_sluice_isle_sheltered_03_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						595.778015136719,
+						-1.03600001335144,
+						2752.35595703125
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_to_sluice_isle_sheltered_03_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						589.178039550781,
+						-1.03600001335144,
+						2752.35595703125
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "road_visibility_sluice_isle_exploration_spine_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						703.471984863281,
+						20.2944240570068,
+						2870.85888671875
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "road_visibility_sluice_isle_exploration_spine_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						707.971984863281,
+						20.622766494751,
+						2870.85888671875
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_sluice_isle_wild_003_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						691.843017578125,
+						2.25386953353882,
+						2727.51293945313
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_sluice_isle_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						765.318969726563,
+						27.0889015197754,
+						2836.10791015625
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_sluice_isle_wild_018_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						603.872985839844,
+						-0.437682867050171,
+						2803.90795898438
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 7,
+			"observed_clock": {
+				"elapsed_seconds": 200.223841037037,
+				"hour": 8.00895364148148,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				672.0,
+				9.1071662902832,
+				2807.0
+			],
+			"position_xz": [
+				671.0,
+				2805.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 9.10143756866455,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				672.0,
+				2807.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.987758219242096,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				671.0,
+				2805.0
+			],
+			"terrain_ground_y": 9.10143756866455,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water_trainer_bex",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "sluice_isle",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 443336,
+			"camera_fov_degrees": 70.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76748323440552,
+			"camera_position": [
+				672.0,
+				11.7601385116577,
+				2812.12109375
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460635382238
+				],
+				"basis_y": [
+					0.000000000000000021265025184254,
+					0.984805822372437,
+					-0.173647835850716
+				],
+				"basis_z": [
+					-0.000000000000000120599942225136,
+					0.173647835850716,
+					0.984805822372437
+				],
+				"origin": [
+					672.0,
+					10.8571662902832,
+					2807.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000000622564451,
+					0.000000000000000122460608912458
+				],
+				"basis_y": [
+					0.00000000000000002126512775465,
+					0.984807729721069,
+					-0.173648670315742
+				],
+				"basis_z": [
+					-0.000000000000000120600153983373,
+					0.173648670315742,
+					0.984807729721069
+				],
+				"origin": [
+					672.0,
+					11.7601385116577,
+					2812.12109375
+				]
+			},
+			"conversation_camera_active": false,
+			"conversation_camera_blend": 0.0,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {},
+			"debug_travel": true,
+			"destination_display_name": "Bex",
+			"destination_index": 1,
+			"dialogue_id": "water_trainer_bex_intro",
+			"dialogue_portrait": "res://assets/ui/portraits/grunt_c.png",
+			"dialogue_speaker": "Bex",
+			"dialogue_visual_only": true,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-ctl-High-c034/water__inventory__trainer__water_trainer_bex__dialogue.jpg",
+			"frame_id": "water__inventory__trainer__water_trainer_bex__dialogue",
+			"identity": "water__inventory__trainer__water_trainer_bex__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_to_sluice_isle_sheltered_03_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						595.778015136719,
+						-1.03600001335144,
+						2752.35595703125
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_to_sluice_isle_sheltered_03_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						589.178039550781,
+						-1.03600001335144,
+						2752.35595703125
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "road_visibility_sluice_isle_exploration_spine_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						703.471984863281,
+						20.2944240570068,
+						2870.85888671875
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "road_visibility_sluice_isle_exploration_spine_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						707.971984863281,
+						20.622766494751,
+						2870.85888671875
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_sluice_isle_wild_003_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						691.608276367188,
+						2.12186598777771,
+						2727.03295898438
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_sluice_isle_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						765.318969726563,
+						27.0889015197754,
+						2836.10791015625
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_sluice_isle_wild_018_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						603.872985839844,
+						-0.437682867050171,
+						2803.90795898438
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 7,
+			"observed_clock": {
+				"elapsed_seconds": 200.223841037037,
+				"hour": 8.00895364148148,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				672.0,
+				9.1071662902832,
+				2807.0
+			],
+			"position_xz": [
+				671.0,
+				2805.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 9.10143756866455,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				672.0,
+				2807.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.987758219242096,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				671.0,
+				2805.0
+			],
+			"terrain_ground_y": 9.10143756866455,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"water__inventory__trainer__water_trainer_bex"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"water__inventory__trainer__water_trainer_bex"
+	]
+}

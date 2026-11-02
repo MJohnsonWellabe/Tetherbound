@@ -444,12 +444,31 @@ func _build_materials() -> void:
 		_visual.terrain.get("cliff_material", {}), veilfall_rock)
 
 
+## `watersky_cluster_candidate.tiers` merged key by key into the named cover
+## tiers when enabled (or previewed with --watersky-cluster-candidate).
+static func watersky_cluster(profile: Dictionary) -> Dictionary:
+	var candidate: Dictionary = profile.get("watersky_cluster_candidate", {})
+	if not bool(candidate.get("enabled", false)) and not OS.get_cmdline_user_args().has("--watersky-cluster-candidate"):
+		return profile
+	var out := profile.duplicate(true)
+	var tiers: Dictionary = candidate.get("tiers", {})
+	for tier: Variant in out.get("cover_tiers", []):
+		if tier is Dictionary and tiers.has(str((tier as Dictionary).get("name", ""))):
+			(tier as Dictionary).merge(tiers[str((tier as Dictionary).name)], true)
+	return out
+
+
 func _stand_up_ground_cover() -> void:
 	var profile: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_COVER_PATH))
 	if not profile is Dictionary or not bool((profile as Dictionary).get("enabled", false)):
 		return
 	var dunes := preload("res://scripts/world/water_dune_cover.gd")
 	profile = dunes.ground_profile(profile as Dictionary, dunes.config())
+	# P2-008 preview of the flag-off clearing feather (built_feather_enabled).
+	if OS.get_cmdline_user_args().has("--grass-feather-candidate"):
+		(profile as Dictionary)["built_feather_enabled"] = true
+	# tb/vis-water-sky group 2 (flag-off): clustered bush and flower drifts.
+	profile = watersky_cluster(profile as Dictionary)
 	# close-1024 `stones_candidate` (OFF in play): grouped pebbles and a tide band.
 	var stones_candidate: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("stones_candidate", {})
 	if not stones_candidate.is_empty():

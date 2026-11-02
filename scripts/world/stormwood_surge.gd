@@ -11,6 +11,7 @@ extends "res://scripts/world/world_weather.gd"
 ## rain emitter, a realm-local storm ceiling dome and Break's flash rhythm.
 const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
+const SHAFTS := preload("res://scripts/world/stormwood_storm_shafts.gd")
 const LONG_STORM_ENDED := "stormwood:long_storm_ended"
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 
@@ -169,6 +170,12 @@ uniform float head = 0.3;
 uniform float tail = 0.25;
 uniform float near_fade_start = 0.0;
 uniform float near_fade_end = 0.0;
+// soft_rain_1101 (judges 1 Nov: "rain rendered as sparse white sticks"):
+// fade each streak across its own width by how squarely its surface faces the
+// camera, so its edges dissolve and a drop reads as a soft wet line rather
+// than a hard-edged stick. 0 = off (the shipped look).
+uniform float soft_edge = 0.0;
+uniform float soft_edge_power = 1.6;
 // The Stormheart Tree's hollow trunk (tree-local inner clearance): x, y =
 // inner radius below/above the crown taper, z, w = taper start/end height.
 uniform bool hollow_enabled = false;
@@ -196,8 +203,13 @@ void fragment() {
 			|| inside_hollow((INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz))) {
 		discard;
 	}
+	float soft = 1.0;
+	if (soft_edge > 0.0) {
+		float facing = abs(dot(normalize(NORMAL), normalize(VIEW)));
+		soft = mix(1.0, pow(facing, soft_edge_power), soft_edge);
+	}
 	ALBEDO = COLOR.rgb;
-	ALPHA = COLOR.a * taper * near;
+	ALPHA = COLOR.a * taper * near * soft;
 }
 """
 
@@ -213,6 +225,7 @@ var _shelter_check_left := 0.0
 var _aftermath := false
 var _ceiling: MeshInstance3D
 var _ceiling_material: ShaderMaterial
+var _shafts: SHAFTS
 var _skyline_on := false
 var _flash_light: DirectionalLight3D
 ## Cross-fade between presentations. `_to` is the target row as authored
@@ -288,6 +301,7 @@ func _ready() -> void:
 		add_child(_rain)
 		_rain.emitting = true
 		_build_ceiling()
+		_build_shafts()
 		_build_flash_light()
 		_build_steam()
 		_flash_rng.randomize()
@@ -425,7 +439,7 @@ const _COLOUR_KEYS := ["ambient_colour", "sky_top", "sky_horizon", "sky_ground_h
 const _NUMBER_KEYS := ["sun_energy_mult", "shadow_opacity", "ambient_energy_mult", "fog_density_add",
 	"ceiling_opacity", "ceiling_speed", "ceiling_contrast", "ceiling_breakup", "rain_amount",
 	"wind", "sheet_glow", "sheet_glow_rate", "intensity", "steam", "afterglow",
-	"ceiling_definition", "ceiling_rim", "ceiling_thin_glow", "crawlers"]
+	"ceiling_definition", "ceiling_rim", "ceiling_thin_glow", "crawlers", "shafts"]
 
 ## Authored row → typed values, still in authored (daylight) colours.
 func _resolved(row: Dictionary) -> Dictionary:
@@ -844,7 +858,7 @@ func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 	spindle.top_radius = 0.0
 	spindle.bottom_radius = float(cfg.get("streak_width_m", 0.015)) * 0.5
 	spindle.height = float(cfg.get("streak_length_m", 0.4))
-	spindle.radial_segments = 4
+	spindle.radial_segments = int(cfg.get("radial_segments", 4))
 	spindle.rings = 1
 	spindle.cap_top = false
 	spindle.cap_bottom = false
@@ -854,6 +868,9 @@ func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 	if near_fade.size() == 2:
 		streak_material.set_shader_parameter("near_fade_start", float(near_fade[0]))
 		streak_material.set_shader_parameter("near_fade_end", float(near_fade[1]))
+	if float(cfg.get("soft_edge", 0.0)) > 0.0:
+		streak_material.set_shader_parameter("soft_edge", float(cfg.soft_edge))
+		streak_material.set_shader_parameter("soft_edge_power", float(cfg.get("soft_edge_power", 1.6)))
 	spindle.material = streak_material
 	emitter.draw_pass_1 = spindle
 	var process := emitter.process_material as ParticleProcessMaterial
@@ -1085,6 +1102,18 @@ func _update_ceiling(p: Dictionary) -> void:
 	_ceiling_material.set_shader_parameter("thin_glow", float(p.get("ceiling_thin_glow", 0.0)))
 	_ceiling_material.set_shader_parameter("crawlers", float(p.get("crawlers", 0.0)) * _crawler_gate)
 	_ceiling.visible = float(p.get("ceiling_opacity", 0.0)) > 0.001 or _skyline_on
+	if _shafts != null:
+		_shafts.set_strength(float(p.get("shafts", 0.0)) * clampf(float(p.get("night_scale", 1.0)), 0.0, 1.0))
+
+## storm_sky_1101 light shafts (presentation.shafts, OFF unless a candidate
+## overlay enables it). Strength per phase row `shafts`.
+func _build_shafts() -> void:
+	var cfg: Dictionary = _pres_cfg().get("shafts", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	_shafts = SHAFTS.new()
+	_shafts.setup(cfg)
+	add_child(_shafts)
 
 func _build_ceiling() -> void:
 	var cfg: Dictionary = _pres_cfg().get("ceiling", {})

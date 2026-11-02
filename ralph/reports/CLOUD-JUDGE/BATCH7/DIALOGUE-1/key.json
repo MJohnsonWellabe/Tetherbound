@@ -1,0 +1,65 @@
+{
+ "Zt": {
+  "anchor": false,
+  "label": "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_0_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_0_main.jpg"
+ },
+ "Tu": {
+  "anchor": false,
+  "label": "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_2_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_2_main.jpg"
+ },
+ "Mc": {
+  "anchor": false,
+  "label": "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/cloudreach_1_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/cloudreach_1_main.jpg"
+ },
+ "Vc": {
+  "anchor": false,
+  "label": "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_1_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_1_cand.jpg"
+ },
+ "Wc": {
+  "anchor": false,
+  "label": "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #5",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_4_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_4_main.jpg"
+ },
+ "Tj": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Gm": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Hi": {
+  "anchor": false,
+  "label": "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/cloudreach_2_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/cloudreach_2_main.jpg"
+ },
+ "Rv": {
+  "anchor": false,
+  "label": "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/cloudreach_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/cloudreach_0_cand.jpg"
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_3_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/DIALOGUE-1/img/tidewake_3_main.jpg"
+ },
+ "Wg": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}

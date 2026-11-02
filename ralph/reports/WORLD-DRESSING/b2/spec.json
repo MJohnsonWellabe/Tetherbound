@@ -1,0 +1,110 @@
+[
+ {
+  "label": "P2-038",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-038_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-038_cand.jpg",
+  "brief": "Stormwood named destinations (Lantern Pools, Crown Overlook, Fallen Giant), close views",
+  "defects": [
+   "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+  ]
+ },
+ {
+  "label": "P2-115",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-115_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-115_cand.jpg",
+  "brief": "Tidewake forward camps: the creature bed",
+  "defects": [
+   "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place"
+  ]
+ },
+ {
+  "label": "P2-116",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-116_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-116_cand.jpg",
+  "brief": "Tidewake forward camps: the craft workbench",
+  "defects": [
+   "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer"
+  ]
+ },
+ {
+  "label": "P2-035",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-035_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-035_cand.jpg",
+  "brief": "Meadows trail camp props: tent, bed and bonfire",
+  "defects": [
+   "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+  ]
+ },
+ {
+  "label": "P2-034",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-034_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-034_cand.jpg",
+  "brief": "Meadows harvest reward nodes (orb, travel pack, attack tonic)",
+  "defects": [
+   "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item"
+  ]
+ },
+ {
+  "label": "P2-094",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-094_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-094_cand.jpg",
+  "brief": "A placed homestead wall segment in the Meadows",
+  "defects": [
+   "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+  ]
+ },
+ {
+  "label": "P2-024",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-024_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-024_cand.jpg",
+  "brief": "Cloudreach destinations (Windscar beacon, broken skyroad arch, old wind observatory), approach views",
+  "defects": [
+   "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail"
+  ]
+ },
+ {
+  "label": "P2-054",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-054_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-054_cand.jpg",
+  "brief": "Cloudreach mushroom pickups (speed and wild) at gameplay camera distance",
+  "defects": [
+   "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+  ]
+ },
+ {
+  "label": "P2-046r2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-046r2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-046r2_cand.jpg",
+  "brief": "Stormwood harvest resource nodes (stormglass, stormglass crown, glowmoss) at gameplay camera distance",
+  "defects": [
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+  ]
+ },
+ {
+  "label": "P2-043r2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-043r2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-043r2_cand.jpg",
+  "brief": "Stormwood Glass Field spike clusters along the route",
+  "defects": [
+   "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+  ]
+ },
+ {
+  "label": "P2-070r2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-070r2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-070r2_cand.jpg",
+  "brief": "Stormwood Glass Sink landmark from the reachable rim, approach and close views",
+  "defects": [
+   "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+  ]
+ },
+ {
+  "label": "P2-041r2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-041r2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b2_src/P2-041r2_cand.jpg",
+  "brief": "Stormwood Crown Arch landmark, close view",
+  "defects": [
+   "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+  ]
+ }
+]

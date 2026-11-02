@@ -1,0 +1,99 @@
+{
+ "species": "skyrill",
+ "round": "r10 (2 Nov 2026), new model after GPU batch 6 / roster baseline regression",
+ "owner_direction": "22 Oct 2026 creature style bar (naturalistic, Galecrest/Tanglevolt/Stormcapra/Stormursa level, identity kept); 1 Nov creature rule (believable adult animal, one elemental trait)",
+ "reference": "reference/ref.png",
+ "reference_alt": "reference/ref_alt.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image on the existing licence; coordinator picked 1 of 2 concepts after inspecting both (alternate kept as reference/ref_alt.png)",
+ "text_to_image_task": "01a19b71-f36c-72eb-9c4a-e325f7c5413c",
+ "text_to_image_prompt": "Skyrill, a big sail-backed frilled lizard on all fours, tall translucent dorsal sail in pale blue with white edges, naturalistic scales in blue-green and sand, glowing cyan eyes, soft glowing air currents traced on the sail, a believable adult animal with grounded realistic anatomy and real fur, feather or scale detail, carrying one clear elemental fantasy trait; large wild creature clearly taller than a 1.8 m person; full body, three-quarter side view, natural standing stance, all limbs visible and separate, head and face clearly visible with bright glowing eyes catching light; body in mid-to-light values that read against dark ground, strong rim light; plain light grey background, soft even daylight, high-quality naturalistic game creature concept art; not cartoon, not chibi, not a mascot; no red or crimson anywhere, no text, no people, no props",
+ "text_to_image_task_alt": "01a19b71-f217-7434-87d8-936bc9dafbf7",
+ "meshy_image_to_3d_task": "01a19b72-6ac9-70ba-8828-bf3e686c1abb",
+ "meshy_thumbnail": "reference/meshy_thumb.png",
+ "raw_model": "source/skyrill_r10_meshy.glb",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "rigged candidate, not wired to any flag (.gdignore kept); creature lane removes .gdignore, runs texture_import_policy.py --apply, wires a flag and judges it against the shipped model",
+ "scale_note": "rig to the species' installed height (data/creatures/species.json placeholder.height, taller than the 1.80 m trainer); never shrink",
+ "prepared_model": "assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10.glb",
+ "preparation": {
+  "date": "2026-11-02",
+  "lane": "tb/meshy-r10",
+  "script": "assets/creatures/tetherbound/skyrill/candidate_r10/source/prepare_skyrill_r10.py",
+  "commands": "BLENDER=<blender 4.2> python3 assets/creatures/tetherbound/skyrill/candidate_r10/source/prepare_skyrill_r10.py",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (dog3 rig and skin recipe; strip_ground_patch auto: no disc found) with rig_quadruped.find_legs replaced by the r9 preps' find_legs_by_feet (feet-only band, 2-means front/rear split): the long tail pulled the stock rear columns 0.43 m behind and 0.15 m inside the real rear feet. Quadruped recipe, not the owner1101 rig_glider: the r10 model is a sail-backed lizard on four legs",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, unchanged; eleven roles)",
+   "embedded textures re-encoded JPEG q88 (normal included)",
+   "tools/art_pipeline/arc_emission.py build() with the skyrill_owner1101 rule (hue 180-205, sat 0.3, lift 0.14) pointed at this model: 0.14% of the albedo (eyes and a thin flank line)"
+  ],
+  "report": "assets/creatures/tetherbound/skyrill/candidate_r10/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped",
+   "height_m": 3.25,
+   "length_m": 4.6348,
+   "width_m": 1.286,
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ],
+   "arc_emission_coverage_pct": 0.14,
+   "checks": "Blender 4.2.9 re-import: one armature (15 bones), all eleven clips present, height 3.25 m (0.00% from target), 0 zero-weight vertices, one connected body",
+   "triangles": 27986,
+   "legs_found_at_normalised": {
+    "front_l": [
+     -0.1145,
+     -0.3794,
+     0.0273
+    ],
+    "front_r": [
+     0.1145,
+     -0.3782,
+     0.0277
+    ],
+    "rear_l": [
+     -0.1251,
+     0.0231,
+     0.0315
+    ],
+    "rear_r": [
+     0.124,
+     0.0227,
+     0.032
+    ]
+   },
+   "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+     "disc": false,
+     "base_over_leg_band_area": 0.61
+    }
+   },
+   "islands": "one connected body",
+   "clip_notes_for_creature_lane": "walk/run drop the body low with long flat leg swings; hit tucks the head and frill down; faint ends belly-up"
+  },
+  "not_run": "tools/art_pipeline/texture_import_policy.py --apply: it edits Godot .import sidecars, which do not exist under .gdignore"
+ }
+}

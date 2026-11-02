@@ -287,6 +287,9 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 		center.y -= readout_bottom - safe_bottom
 	var pct_text := "%d%%" % int(round(chance * 100.0)) if locked else "--"
 	var pct_size := UITokens.FONT_BIG_NUMBER - 4
+	var side := bool(_readout_visual.get("readout_side_enabled", false))
+	if side:
+		pct_size += int(_readout_visual.get("side_number_px_bonus", 0))
 	var pct_dims: Vector2 = font.get_string_size(pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size)
 	var pct_pos := center + Vector2(-pct_dims.x * 0.5, radius + READOUT_GAP)
 	var outlined := bool(_readout_visual.get("outline_enabled", false))
@@ -296,6 +299,12 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
 	)
 	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
+	if side:
+		var placed := side_readout_positions(center, radius, pct_dims, caption_dims,
+			font.get_ascent(pct_size), get_viewport_rect().size,
+			float(_readout_visual.get("side_gap", 36.0)))
+		pct_pos = placed[0]
+		caption_pos = placed[1]
 	if bool(_readout_visual.get("backing_enabled", false)):
 		_draw_readout_backing(font, pct_pos, pct_dims, pct_size, caption_pos, caption_dims, alpha)
 	if outlined:
@@ -313,6 +322,27 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 		draw_string_outline(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1,
 			CAPTION_FONT_SIZE, outline_size, caption_outline)
 	draw_string(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE, caption_colour)
+
+
+## P2-058/P2-114 (GPU UI-1, 31 Oct): with the plate on, the judges still found
+## the readout sitting on the creature and the reticle. capture_readout_visual
+## `readout_side_enabled` moves the percentage and caption beside the ring
+## (right side, flipped left near the screen edge), vertically centred on the
+## ring, so the target body stays clear. Returns [pct_pos, caption_pos] as
+## string baselines. Pure geometry; no target or chance state.
+static func side_readout_positions(center: Vector2, radius: float, pct_dims: Vector2,
+		caption_dims: Vector2, pct_ascent: float, viewport: Vector2, gap: float) -> Array:
+	var width := maxf(pct_dims.x, caption_dims.x)
+	var left := center.x + radius + gap
+	if left + width > viewport.x * (1.0 - READOUT_SAFE_MARGIN):
+		left = center.x - radius - gap - width
+	left = maxf(left, viewport.x * READOUT_SAFE_MARGIN)
+	var block := pct_ascent + CAPTION_GAP
+	var top := clampf(center.y - block * 0.5, viewport.y * READOUT_SAFE_MARGIN,
+		viewport.y * (1.0 - READOUT_SAFE_MARGIN) - block)
+	var pct_pos := Vector2(left + (width - pct_dims.x) * 0.5, top + pct_ascent)
+	var caption_pos := Vector2(left + (width - caption_dims.x) * 0.5, pct_pos.y + CAPTION_GAP)
+	return [pct_pos, caption_pos]
 
 
 ## P2-114 (GPU item scores, 28 Oct): outlined text still read "dark, unbacked

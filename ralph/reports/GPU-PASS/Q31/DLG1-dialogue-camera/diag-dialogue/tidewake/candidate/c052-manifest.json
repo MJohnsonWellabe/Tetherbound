@@ -1,0 +1,409 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 499843598571,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T22:33:09",
+	"capture_started_utc": "2026-10-31T22:32:34",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "water_trainer_nerissa",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "veilfall",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 594163,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76747512817383,
+			"camera_position": [
+				219.0,
+				608.892639160156,
+				4107.12109375
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460622147348
+				],
+				"basis_y": [
+					0.0000000000000000212650334560601,
+					0.984806180000305,
+					-0.173647925257683
+				],
+				"basis_z": [
+					-0.000000000000000120599981929806,
+					0.173647925257683,
+					0.984806180000305
+				],
+				"origin": [
+					219.0,
+					607.989685058594,
+					4102.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000000756361966,
+					0.000000000000000122460569207789
+				],
+				"basis_y": [
+					0.0000000000000000212651211372051,
+					0.984807670116425,
+					-0.173648670315742
+				],
+				"basis_z": [
+					-0.000000000000000120600114278704,
+					0.173648685216904,
+					0.984807670116425
+				],
+				"origin": [
+					219.0,
+					608.892639160156,
+					4107.12109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Captain Nerissa",
+			"destination_index": 1,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-cand-High-c052/water__inventory__trainer__water_trainer_nerissa.jpg",
+			"frame_id": "water__inventory__trainer__water_trainer_nerissa",
+			"identity": "water__inventory__trainer__water_trainer_nerissa",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "water_veilfall_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						201.565002441406,
+						619.955139160156,
+						4142.134765625
+					],
+					"species_id": "water_cragclaw"
+				}
+			],
+			"nearby_creatures_160m": 1,
+			"observed_clock": {
+				"elapsed_seconds": 200.207272,
+				"hour": 8.00829088,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				219.0,
+				606.239685058594,
+				4102.0
+			],
+			"position_xz": [
+				218.0,
+				4100.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 606.210510253906,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				219.0,
+				4102.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.933118164539337,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				218.0,
+				4100.0
+			],
+			"terrain_ground_y": 606.210510253906,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water_trainer_nerissa",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "veilfall",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 523533,
+			"camera_fov_degrees": 70.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.7669849395752,
+			"camera_position": [
+				219.0,
+				608.892517089844,
+				4107.12060546875
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460635382238
+				],
+				"basis_y": [
+					0.0000000000000000212650268386152,
+					0.984805822372437,
+					-0.173647850751877
+				],
+				"basis_z": [
+					-0.000000000000000120599942225136,
+					0.173647850751877,
+					0.984805822372437
+				],
+				"origin": [
+					219.0,
+					607.989685058594,
+					4102.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000001771669575,
+					0.000000000000000122460542738009
+				],
+				"basis_y": [
+					0.0000000000000000212651310633724,
+					0.984807729721069,
+					-0.173648685216904
+				],
+				"basis_z": [
+					-0.000000000000000120600087808924,
+					0.173648685216904,
+					0.984807729721069
+				],
+				"origin": [
+					219.0,
+					608.892517089844,
+					4107.12060546875
+				]
+			},
+			"conversation_camera_active": false,
+			"conversation_camera_blend": 0.0,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {},
+			"debug_travel": true,
+			"destination_display_name": "Captain Nerissa",
+			"destination_index": 1,
+			"dialogue_id": "water_trainer_nerissa_intro",
+			"dialogue_portrait": "res://assets/ui/portraits/captain_b.png",
+			"dialogue_speaker": "Captain Nerissa",
+			"dialogue_visual_only": true,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/gpu-arms/DLG1F-cand-High-c052/water__inventory__trainer__water_trainer_nerissa__dialogue.jpg",
+			"frame_id": "water__inventory__trainer__water_trainer_nerissa__dialogue",
+			"identity": "water__inventory__trainer__water_trainer_nerissa__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "water_veilfall_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						201.565002441406,
+						619.955139160156,
+						4142.134765625
+					],
+					"species_id": "water_cragclaw"
+				}
+			],
+			"nearby_creatures_160m": 1,
+			"observed_clock": {
+				"elapsed_seconds": 200.207272,
+				"hour": 8.00829088,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				219.0,
+				606.239685058594,
+				4102.0
+			],
+			"position_xz": [
+				218.0,
+				4100.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 606.210510253906,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				219.0,
+				4102.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.933118164539337,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				218.0,
+				4100.0
+			],
+			"terrain_ground_y": 606.210510253906,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": 0.0
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"water__inventory__trainer__water_trainer_nerissa"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 499860375789,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"water__inventory__trainer__water_trainer_nerissa"
+	]
+}

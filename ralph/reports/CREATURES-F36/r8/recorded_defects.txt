@@ -1,0 +1,7 @@
+Zz: "The hit react barely differs from standing"
+Kh: none
+Ht: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Fy: "The hit react leaves the ground, reading as a hop rather than a grounded flinch"
+Tk: none
+Qk: "The hit react barely differs from standing"
+Yv: "The hit react barely differs from standing"

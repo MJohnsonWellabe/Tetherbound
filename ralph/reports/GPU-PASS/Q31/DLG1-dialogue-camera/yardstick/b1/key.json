@@ -1,0 +1,58 @@
+{
+ "Mx": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Gt": {
+  "anchor": false,
+  "label": "DLG1F P2-081 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-081-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-081-ctl-High.png"
+ },
+ "Lg": {
+  "anchor": false,
+  "label": "DLG1F P2-079 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-079-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-079-cand-High.png"
+ },
+ "Bt": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Qa": {
+  "anchor": false,
+  "label": "DLG1F P2-077 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-077-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-077-cand-High.png"
+ },
+ "Pv": {
+  "anchor": false,
+  "label": "DLG1F P2-075 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-075-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-075-cand-High.png"
+ },
+ "Jg": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Jf": {
+  "anchor": false,
+  "label": "DLG1F P2-087 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-087-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-087-cand-High.png"
+ },
+ "Tw": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Uv": {
+  "anchor": false,
+  "label": "DLG1F P2-078 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-078-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG1F\\sides\\P2-078-cand-High.png"
+ }
+}

@@ -1,0 +1,6 @@
+Xg: none
+Hc: none
+Qd: "muddled dark mass whose body hides under the shell, face does not read"; "head and limbs vanish in the faint frames"
+Fu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Gz: none
+Wx: none

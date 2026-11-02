@@ -1,0 +1,748 @@
+{
+ "batch": 7,
+ "flags_on": {
+  "data/config/camera.json": [
+   "conversation.speaker_lights.enabled"
+  ],
+  "data/config/character_body_flags.json": [
+   "flags.npc_vis_look_kael.enabled",
+   "flags.npc_vis_look_sera.enabled",
+   "flags.npc_vis_look_lyra.enabled",
+   "flags.npc_vis_look_villager_farmer.enabled",
+   "flags.npc_vis_look_villager_keeper.enabled",
+   "flags.npc_vis_look_villager_smith.enabled",
+   "flags.npc_vis_look_villager_quarryman.enabled",
+   "flags.npc_vis_look_villager_ranger.enabled",
+   "flags.npc_vis_look_warden.enabled",
+   "flags.npc_vis_look_grunt.enabled",
+   "flags.npc_vis_look_grunt_a.enabled",
+   "flags.npc_vis_look_grunt_b.enabled",
+   "flags.npc_vis_look_grunt_c.enabled",
+   "flags.npc_vis_look_officer_a.enabled",
+   "flags.npc_vis_look_officer_b.enabled",
+   "flags.npc_vis_look_captain_a.enabled",
+   "flags.npc_vis_look_captain_b.enabled",
+   "flags.npc_vis_look_inn_helper.enabled",
+   "flags.npc_vis_look_craftsperson.enabled",
+   "flags.npc_vis_look_creature_caretaker.enabled",
+   "flags.npc_vis_look_farmer.enabled",
+   "flags.npc_vis_look_local_historian.enabled",
+   "flags.npc_vis_look_rival_trainer.enabled",
+   "flags.npc_vis_look_field_researcher.enabled",
+   "flags.npc_vis_look_lost_traveler.enabled",
+   "flags.npc_vis_look_alpha_tracker.enabled",
+   "flags.npc_vis_look_courier.enabled",
+   "flags.npc_vis_look_former_tether_member.enabled"
+  ]
+ },
+ "items": {
+  "Character look: kael": {
+   "main": 7.17,
+   "batch7": 7.07,
+   "delta": -0.1,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: kael"
+   ],
+   "set_scores": {
+    "Character look: kael": [
+     7.17,
+     7.07
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_kael.enabled"
+   ]
+  },
+  "Character look: sera": {
+   "main": 7.17,
+   "batch7": 7.09,
+   "delta": -0.08,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: sera"
+   ],
+   "set_scores": {
+    "Character look: sera": [
+     7.17,
+     7.09
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_sera.enabled"
+   ]
+  },
+  "Character look: lyra": {
+   "main": 7.07,
+   "batch7": 7.17,
+   "delta": 0.1,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: lyra"
+   ],
+   "set_scores": {
+    "Character look: lyra": [
+     7.07,
+     7.17
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_lyra.enabled"
+   ]
+  },
+  "Character look: villager_farmer": {
+   "main": 6.9,
+   "batch7": 6.26,
+   "delta": -0.64,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: villager_farmer"
+   ],
+   "set_scores": {
+    "Character look: villager_farmer": [
+     6.9,
+     6.26
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_villager_farmer.enabled"
+   ]
+  },
+  "Character look: villager_keeper": {
+   "main": 6.85,
+   "batch7": 6.72,
+   "delta": -0.13,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: villager_keeper"
+   ],
+   "set_scores": {
+    "Character look: villager_keeper": [
+     6.85,
+     6.72
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_villager_keeper.enabled"
+   ]
+  },
+  "Character look: villager_smith": {
+   "main": null,
+   "batch7": null,
+   "delta": null,
+   "pairs_used": 0,
+   "excluded": [],
+   "missing": [
+    "(not in the cast tool; villager_smith appears in-world)"
+   ],
+   "note": "no comparable frame pair (stand missing on one side or not in the capture tool)",
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_villager_smith.enabled"
+   ]
+  },
+  "Character look: villager_quarryman": {
+   "main": null,
+   "batch7": null,
+   "delta": null,
+   "pairs_used": 0,
+   "excluded": [],
+   "missing": [
+    "(not in the cast tool; villager_quarryman appears in-world)"
+   ],
+   "note": "no comparable frame pair (stand missing on one side or not in the capture tool)",
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_villager_quarryman.enabled"
+   ]
+  },
+  "Character look: villager_ranger": {
+   "main": null,
+   "batch7": null,
+   "delta": null,
+   "pairs_used": 0,
+   "excluded": [],
+   "missing": [
+    "(not in the cast tool; villager_ranger appears in-world)"
+   ],
+   "note": "no comparable frame pair (stand missing on one side or not in the capture tool)",
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_villager_ranger.enabled"
+   ]
+  },
+  "Character look: warden": {
+   "main": 6.99,
+   "batch7": 7.25,
+   "delta": 0.26,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: warden"
+   ],
+   "set_scores": {
+    "Character look: warden": [
+     6.99,
+     7.25
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_warden.enabled"
+   ]
+  },
+  "Character look: grunt": {
+   "main": 6.29,
+   "batch7": 6.85,
+   "delta": 0.56,
+   "pairs_used": 3,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: grunt"
+   ],
+   "set_scores": {
+    "Character look: grunt": [
+     6.29,
+     6.85
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_grunt.enabled"
+   ]
+  },
+  "Character look: grunt_a": {
+   "main": 6.21,
+   "batch7": 6.47,
+   "delta": 0.26,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: grunt_a"
+   ],
+   "set_scores": {
+    "Character look: grunt_a": [
+     6.21,
+     6.47
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_grunt_a.enabled"
+   ]
+  },
+  "Character look: grunt_b": {
+   "main": 6.39,
+   "batch7": 6.31,
+   "delta": -0.08,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: grunt_b"
+   ],
+   "set_scores": {
+    "Character look: grunt_b": [
+     6.39,
+     6.31
+    ]
+   },
+   "folders": [
+    "NPC-1"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_grunt_b.enabled"
+   ]
+  },
+  "Character look: grunt_c": {
+   "main": 6.47,
+   "batch7": 6.71,
+   "delta": 0.24,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: grunt_c"
+   ],
+   "set_scores": {
+    "Character look: grunt_c": [
+     6.47,
+     6.71
+    ]
+   },
+   "folders": [
+    "NPC-2"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_grunt_c.enabled"
+   ]
+  },
+  "Character look: officer_a": {
+   "main": 6.41,
+   "batch7": 6.61,
+   "delta": 0.2,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: officer_a"
+   ],
+   "set_scores": {
+    "Character look: officer_a": [
+     6.41,
+     6.61
+    ]
+   },
+   "folders": [
+    "NPC-2"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_officer_a.enabled"
+   ]
+  },
+  "Character look: officer_b": {
+   "main": 6.64,
+   "batch7": 6.87,
+   "delta": 0.23,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: officer_b"
+   ],
+   "set_scores": {
+    "Character look: officer_b": [
+     6.64,
+     6.87
+    ]
+   },
+   "folders": [
+    "NPC-2"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_officer_b.enabled"
+   ]
+  },
+  "Character look: captain_a": {
+   "main": 6.54,
+   "batch7": 6.67,
+   "delta": 0.13,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: captain_a"
+   ],
+   "set_scores": {
+    "Character look: captain_a": [
+     6.54,
+     6.67
+    ]
+   },
+   "folders": [
+    "NPC-2"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_captain_a.enabled"
+   ]
+  },
+  "Character look: captain_b": {
+   "main": 7.11,
+   "batch7": 6.94,
+   "delta": -0.17,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: captain_b"
+   ],
+   "set_scores": {
+    "Character look: captain_b": [
+     7.11,
+     6.94
+    ]
+   },
+   "folders": [
+    "NPC-2"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_captain_b.enabled"
+   ]
+  },
+  "Character look: inn_helper": {
+   "main": 7.11,
+   "batch7": 7.31,
+   "delta": 0.2,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: inn_helper"
+   ],
+   "set_scores": {
+    "Character look: inn_helper": [
+     7.11,
+     7.31
+    ]
+   },
+   "folders": [
+    "NPC-2"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_inn_helper.enabled"
+   ]
+  },
+  "Character look: craftsperson": {
+   "main": 7.41,
+   "batch7": 7.24,
+   "delta": -0.17,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: craftsperson"
+   ],
+   "set_scores": {
+    "Character look: craftsperson": [
+     7.41,
+     7.24
+    ]
+   },
+   "folders": [
+    "NPC-2"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_craftsperson.enabled"
+   ]
+  },
+  "Character look: creature_caretaker": {
+   "main": 6.94,
+   "batch7": 7.14,
+   "delta": 0.2,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: creature_caretaker"
+   ],
+   "set_scores": {
+    "Character look: creature_caretaker": [
+     6.94,
+     7.14
+    ]
+   },
+   "folders": [
+    "NPC-2"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_creature_caretaker.enabled"
+   ]
+  },
+  "Character look: farmer": {
+   "main": 6.38,
+   "batch7": 6.84,
+   "delta": 0.46,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: farmer"
+   ],
+   "set_scores": {
+    "Character look: farmer": [
+     6.38,
+     6.84
+    ]
+   },
+   "folders": [
+    "NPC-3"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_farmer.enabled"
+   ]
+  },
+  "Character look: local_historian": {
+   "main": 6.45,
+   "batch7": 6.88,
+   "delta": 0.43,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: local_historian"
+   ],
+   "set_scores": {
+    "Character look: local_historian": [
+     6.45,
+     6.88
+    ]
+   },
+   "folders": [
+    "NPC-3"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_local_historian.enabled"
+   ]
+  },
+  "Character look: rival_trainer": {
+   "main": 6.38,
+   "batch7": 6.21,
+   "delta": -0.17,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: rival_trainer"
+   ],
+   "set_scores": {
+    "Character look: rival_trainer": [
+     6.38,
+     6.21
+    ]
+   },
+   "folders": [
+    "NPC-3"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_rival_trainer.enabled"
+   ]
+  },
+  "Character look: field_researcher": {
+   "main": 6.53,
+   "batch7": 6.84,
+   "delta": 0.31,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: field_researcher"
+   ],
+   "set_scores": {
+    "Character look: field_researcher": [
+     6.53,
+     6.84
+    ]
+   },
+   "folders": [
+    "NPC-3"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_field_researcher.enabled"
+   ]
+  },
+  "Character look: lost_traveler": {
+   "main": 6.1,
+   "batch7": 6.53,
+   "delta": 0.43,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: lost_traveler"
+   ],
+   "set_scores": {
+    "Character look: lost_traveler": [
+     6.1,
+     6.53
+    ]
+   },
+   "folders": [
+    "NPC-3"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_lost_traveler.enabled"
+   ]
+  },
+  "Character look: alpha_tracker": {
+   "main": 6.21,
+   "batch7": 6.28,
+   "delta": 0.07,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: alpha_tracker"
+   ],
+   "set_scores": {
+    "Character look: alpha_tracker": [
+     6.21,
+     6.28
+    ]
+   },
+   "folders": [
+    "NPC-3"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_alpha_tracker.enabled"
+   ]
+  },
+  "Character look: courier": {
+   "main": 6.53,
+   "batch7": 6.28,
+   "delta": -0.25,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: courier"
+   ],
+   "set_scores": {
+    "Character look: courier": [
+     6.53,
+     6.28
+    ]
+   },
+   "folders": [
+    "NPC-3"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_courier.enabled"
+   ]
+  },
+  "Character look: former_tether_member": {
+   "main": 5.68,
+   "batch7": 5.54,
+   "delta": -0.14,
+   "pairs_used": 2,
+   "excluded": [],
+   "missing": [],
+   "sets": [
+    "Character look: former_tether_member"
+   ],
+   "set_scores": {
+    "Character look: former_tether_member": [
+     5.68,
+     5.54
+    ]
+   },
+   "folders": [
+    "NPC-3"
+   ],
+   "flags": [
+    "data/config/character_body_flags.json:flags.npc_vis_look_former_tether_member.enabled"
+   ]
+  },
+  "Character close-ups: dialogue key and rim light (all speakers)": {
+   "main": 5.2,
+   "batch7": 5.42,
+   "delta": 0.22,
+   "pairs_used": 51,
+   "excluded": [
+    "meadows-dialogue/meadows__inventory__character__corin.jpg (blank on batch7 and main)"
+   ],
+   "missing": [],
+   "sets": [
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #1",
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #2",
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #3",
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #4",
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #5",
+    "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #1",
+    "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #2",
+    "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #3",
+    "Character close-ups: dialogue key and rim light (all speakers) [stormwood] #1",
+    "Character close-ups: dialogue key and rim light (all speakers) [stormwood] #2",
+    "Character close-ups: dialogue key and rim light (all speakers) [stormwood] #3",
+    "Character close-ups: dialogue key and rim light (all speakers) [stormwood] #4",
+    "Character close-ups: dialogue key and rim light (all speakers) [meadows] #1",
+    "Character close-ups: dialogue key and rim light (all speakers) [meadows] #2"
+   ],
+   "set_scores": {
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #1": [
+     6.03,
+     6.44
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #2": [
+     3.13,
+     3.34
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #3": [
+     6.34,
+     6.75
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #4": [
+     6.44,
+     7.06
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [tidewake] #5": [
+     3.75,
+     3.7
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #1": [
+     6.18,
+     5.46
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #2": [
+     5.72,
+     6.44
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [cloudreach] #3": [
+     6.86,
+     7.27
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [stormwood] #1": [
+     4.81,
+     5.17
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [stormwood] #2": [
+     4.72,
+     4.74
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [stormwood] #3": [
+     5.48,
+     5.69
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [stormwood] #4": [
+     4.03,
+     4.44
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [meadows] #1": [
+     5.09,
+     5.09
+    ],
+    "Character close-ups: dialogue key and rim light (all speakers) [meadows] #2": [
+     4.27,
+     4.31
+    ]
+   },
+   "folders": [
+    "DIALOGUE-1",
+    "DIALOGUE-2"
+   ],
+   "flags": [
+    "data/config/camera.json:conversation.speaker_lights.enabled"
+   ]
+  }
+ }
+}

@@ -1,0 +1,38 @@
+[
+    {
+        "label":  "UI1F P2-061 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\UI1F\\sides\\P2-061-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UI1F\\sides\\P2-061-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: catch result hierarchy. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish"
+                    ]
+    },
+    {
+        "label":  "UI1F P2-114 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\UI1F\\sides\\P2-114-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UI1F\\sides\\P2-114-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: catch chance HUD contrast. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+                    ]
+    },
+    {
+        "label":  "UI1F P2-059 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\UI1F\\sides\\P2-059-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UI1F\\sides\\P2-059-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: catch sequence camera framing. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+                    ]
+    },
+    {
+        "label":  "UI1F P2-058 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\UI1F\\sides\\P2-058-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UI1F\\sides\\P2-058-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: catch aim readability. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+                    ]
+    }
+]

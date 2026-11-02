@@ -1,0 +1,56 @@
+[
+    {
+        "label":  "UIPAD P2-096 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-096-main-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-096-main-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Craft and leave button hints are faint gray on the dark translucent craft panel"
+                    ]
+    },
+    {
+        "label":  "UIPAD P2-004 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-004-main-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-004-main-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: exploration HUD. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+                    ]
+    },
+    {
+        "label":  "UIPAD P2-031 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-031-main-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-031-main-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: settings and binding instructions. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan"
+                    ]
+    },
+    {
+        "label":  "UIPAD P2-032 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-032-main-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-032-main-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: map active region. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab"
+                    ]
+    },
+    {
+        "label":  "UIPAD P2-007 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-007-main-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-007-main-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: secondary menu panels. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+                    ]
+    },
+    {
+        "label":  "UIPAD P2-001 High one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-001-main-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\UIPAD\\sides\\P2-001-main-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: menu shell. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world"
+                    ]
+    }
+]

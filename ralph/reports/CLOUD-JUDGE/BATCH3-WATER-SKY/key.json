@@ -1,0 +1,77 @@
+{
+ "Fu": {
+  "anchor": true,
+  "A": "f36_0_npc:C8B",
+  "B": "f36_0_npc:C8A"
+ },
+ "Vt": {
+  "anchor": false,
+  "label": "P2-067",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-067_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-067_main.jpg"
+ },
+ "Zx": {
+  "anchor": false,
+  "label": "OWN-980",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/OWN-980_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/OWN-980_cand.jpg"
+ },
+ "Di": {
+  "anchor": false,
+  "label": "P2-025",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-025_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-025_cand.jpg"
+ },
+ "Gn": {
+  "anchor": false,
+  "label": "OWN-366",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/OWN-366_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/OWN-366_main.jpg"
+ },
+ "Hh": {
+  "anchor": false,
+  "label": "OWN-313",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/OWN-313_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/OWN-313_main.jpg"
+ },
+ "Xs": {
+  "anchor": false,
+  "label": "P2-082",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-082_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-082_main.jpg"
+ },
+ "Hi": {
+  "anchor": false,
+  "label": "P2-114",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-114_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-114_main.jpg"
+ },
+ "Xz": {
+  "anchor": false,
+  "label": "P2-084",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-084_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-084_main.jpg"
+ },
+ "Zh": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Iz": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Kr": {
+  "anchor": false,
+  "label": "P2-066",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-066_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/P2-066_main.jpg"
+ },
+ "Lv": {
+  "anchor": false,
+  "label": "OWN-550",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/OWN-550_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3c/OWN-550_main.jpg"
+ }
+}

@@ -381,6 +381,814 @@
   "route_details": {
     "_comment": "Individually authored roadside pockets. Offsets are [sideways, forward] metres from each anchor; dimensions are actual final mesh bounds. Keep the route centre free and never bridge a missing surface with dressing.",
     "visibility_range_m": 320.0,
+    "plaza_paving_candidate": {
+      "enabled": false,
+      "_why": "P2-076 (GPU DLG-2 1 Nov, mapped 6.92; judges: 'the ground is a flat brown dirt plane instead of pale stratified stone'). When enabled, cloudreach_world.gd _build_authored_route_details also places these pockets: a worn stone-paving apron (installed RockPath_Round_Wide, stone palette) around where Kelm actually stands at Cliffhold (CPU r1: his runtime body is about 14 m east of the authored post, so the apron is anchored on his body) and where Captain Veyra actually stands on the summit (her runtime body is about 100 m north of the authored post), with low rocks at the edges. Visual only, no collision; route centre and speaker stands unchanged. OFF until GPU judged.",
+      "pockets": [
+        {
+          "id": "KelmPlazaPavingCandidate",
+          "anchor": [
+            -346.0,
+            830.0,
+            3975.0
+          ],
+          "forward": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "items": [
+            {
+              "asset": "paving",
+              "offset": [
+                0,
+                0
+              ],
+              "width_m": 3.6,
+              "yaw_deg": 10,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.3,
+                0.4
+              ],
+              "width_m": 3.4,
+              "yaw_deg": -25,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.2,
+                -0.3
+              ],
+              "width_m": 3.4,
+              "yaw_deg": 40,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                0.3,
+                3.3
+              ],
+              "width_m": 3.4,
+              "yaw_deg": -60,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -0.2,
+                -3.3
+              ],
+              "width_m": 3.4,
+              "yaw_deg": 75,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.4,
+                3.1
+              ],
+              "width_m": 3.0,
+              "yaw_deg": 15,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.3,
+                3.2
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -35,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.2,
+                -3.4
+              ],
+              "width_m": 3.0,
+              "yaw_deg": 55,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.5,
+                -3.1
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -80,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                5.9,
+                1.2
+              ],
+              "width_m": 2.6,
+              "yaw_deg": 30,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -5.8,
+                -1.0
+              ],
+              "width_m": 2.6,
+              "yaw_deg": -20,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                1.0,
+                5.9
+              ],
+              "width_m": 2.6,
+              "yaw_deg": 5,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -1.2,
+                -5.8
+              ],
+              "width_m": 2.6,
+              "yaw_deg": 65,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                8.02,
+                2.48
+              ],
+              "width_m": 3.2,
+              "yaw_deg": -90,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.92,
+                7.43
+              ],
+              "width_m": 3.2,
+              "yaw_deg": -43,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -2.48,
+                8.02
+              ],
+              "width_m": 3.2,
+              "yaw_deg": 4,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -7.43,
+                3.92
+              ],
+              "width_m": 3.2,
+              "yaw_deg": 51,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -8.02,
+                -2.48
+              ],
+              "width_m": 3.2,
+              "yaw_deg": -82,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.92,
+                -7.43
+              ],
+              "width_m": 3.2,
+              "yaw_deg": -35,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                2.48,
+                -8.02
+              ],
+              "width_m": 3.2,
+              "yaw_deg": 12,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                7.43,
+                -3.92
+              ],
+              "width_m": 3.2,
+              "yaw_deg": 59,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                4.28,
+                3.61
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -90,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                0.48,
+                5.58
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -29,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.61,
+                4.28
+              ],
+              "width_m": 3.0,
+              "yaw_deg": 32,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -5.58,
+                0.48
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -87,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -4.28,
+                -3.61
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -26,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -0.48,
+                -5.58
+              ],
+              "width_m": 3.0,
+              "yaw_deg": 35,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.61,
+                -4.28
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -84,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                5.58,
+                -0.48
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -23,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                1.86,
+                0.38
+              ],
+              "width_m": 2.8,
+              "yaw_deg": -90,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                0.6,
+                1.8
+              ],
+              "width_m": 2.8,
+              "yaw_deg": -7,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -1.26,
+                1.42
+              ],
+              "width_m": 2.8,
+              "yaw_deg": 76,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -1.86,
+                -0.38
+              ],
+              "width_m": 2.8,
+              "yaw_deg": -21,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -0.6,
+                -1.8
+              ],
+              "width_m": 2.8,
+              "yaw_deg": 62,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                1.26,
+                -1.42
+              ],
+              "width_m": 2.8,
+              "yaw_deg": -35,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "rock_low",
+              "offset": [
+                6.6,
+                4.6
+              ],
+              "height_m": 0.7,
+              "yaw_deg": 20
+            },
+            {
+              "asset": "rock",
+              "offset": [
+                -6.8,
+                4.2
+              ],
+              "height_m": 1.3,
+              "yaw_deg": -40
+            },
+            {
+              "asset": "rock_low",
+              "offset": [
+                -6.2,
+                -5.4
+              ],
+              "height_m": 0.6,
+              "yaw_deg": 70
+            },
+            {
+              "asset": "flowers",
+              "offset": [
+                7.4,
+                -3.0
+              ],
+              "height_m": 0.7
+            },
+            {
+              "asset": "bench",
+              "offset": [
+                5.2,
+                -5.6
+              ],
+              "width_m": 1.8,
+              "yaw_deg": -30
+            }
+          ]
+        },
+        {
+          "id": "VeyraSummitPavingCandidate",
+          "ground_from_anchor": true,
+          "anchor": [
+            100.0,
+            1160.15,
+            5450.0
+          ],
+          "forward": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "items": [
+            {
+              "asset": "paving",
+              "offset": [
+                0,
+                0
+              ],
+              "width_m": 3.6,
+              "yaw_deg": 10,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.3,
+                0.4
+              ],
+              "width_m": 3.4,
+              "yaw_deg": -25,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.2,
+                -0.3
+              ],
+              "width_m": 3.4,
+              "yaw_deg": 40,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                0.3,
+                3.3
+              ],
+              "width_m": 3.4,
+              "yaw_deg": -60,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -0.2,
+                -3.3
+              ],
+              "width_m": 3.4,
+              "yaw_deg": 75,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.4,
+                3.1
+              ],
+              "width_m": 3.0,
+              "yaw_deg": 15,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.3,
+                3.2
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -35,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.2,
+                -3.4
+              ],
+              "width_m": 3.0,
+              "yaw_deg": 55,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.5,
+                -3.1
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -80,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                5.9,
+                1.2
+              ],
+              "width_m": 2.6,
+              "yaw_deg": 30,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -5.8,
+                -1.0
+              ],
+              "width_m": 2.6,
+              "yaw_deg": -20,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                1.0,
+                5.9
+              ],
+              "width_m": 2.6,
+              "yaw_deg": 5,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -1.2,
+                -5.8
+              ],
+              "width_m": 2.6,
+              "yaw_deg": 65,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                8.02,
+                2.48
+              ],
+              "width_m": 3.2,
+              "yaw_deg": -90,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.92,
+                7.43
+              ],
+              "width_m": 3.2,
+              "yaw_deg": -43,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -2.48,
+                8.02
+              ],
+              "width_m": 3.2,
+              "yaw_deg": 4,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -7.43,
+                3.92
+              ],
+              "width_m": 3.2,
+              "yaw_deg": 51,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -8.02,
+                -2.48
+              ],
+              "width_m": 3.2,
+              "yaw_deg": -82,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.92,
+                -7.43
+              ],
+              "width_m": 3.2,
+              "yaw_deg": -35,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                2.48,
+                -8.02
+              ],
+              "width_m": 3.2,
+              "yaw_deg": 12,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                7.43,
+                -3.92
+              ],
+              "width_m": 3.2,
+              "yaw_deg": 59,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                4.28,
+                3.61
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -90,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                0.48,
+                5.58
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -29,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -3.61,
+                4.28
+              ],
+              "width_m": 3.0,
+              "yaw_deg": 32,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -5.58,
+                0.48
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -87,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -4.28,
+                -3.61
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -26,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -0.48,
+                -5.58
+              ],
+              "width_m": 3.0,
+              "yaw_deg": 35,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                3.61,
+                -4.28
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -84,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                5.58,
+                -0.48
+              ],
+              "width_m": 3.0,
+              "yaw_deg": -23,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                1.86,
+                0.38
+              ],
+              "width_m": 2.8,
+              "yaw_deg": -90,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                0.6,
+                1.8
+              ],
+              "width_m": 2.8,
+              "yaw_deg": -7,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -1.26,
+                1.42
+              ],
+              "width_m": 2.8,
+              "yaw_deg": 76,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -1.86,
+                -0.38
+              ],
+              "width_m": 2.8,
+              "yaw_deg": -21,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                -0.6,
+                -1.8
+              ],
+              "width_m": 2.8,
+              "yaw_deg": 62,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "paving",
+              "offset": [
+                1.26,
+                -1.42
+              ],
+              "width_m": 2.8,
+              "yaw_deg": -35,
+              "bury_m": 0.02
+            },
+            {
+              "asset": "rock_low",
+              "offset": [
+                7.0,
+                -1.5
+              ],
+              "height_m": 0.7,
+              "yaw_deg": 20
+            },
+            {
+              "asset": "rock_low",
+              "offset": [
+                -7.2,
+                -2.0
+              ],
+              "height_m": 0.6,
+              "yaw_deg": -50
+            },
+            {
+              "asset": "rock",
+              "offset": [
+                -7.6,
+                -6.0
+              ],
+              "height_m": 1.2,
+              "yaw_deg": 10
+            }
+          ]
+        }
+      ]
+    },
     "pockets": [
       {
         "id": "GalefootSupplyCourtyard", "anchor": [-280.0, 180.0, 520.0], "forward": [0, 0, 1],

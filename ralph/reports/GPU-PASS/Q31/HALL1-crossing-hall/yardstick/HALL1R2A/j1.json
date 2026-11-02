@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Wo": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, cross brace, plank cap and stone footing make a real built piece, but it is still a lone thin panel standing in a field under a flat painted mountain backdrop, and B's blown-out white card sinks it outright."
+  },
+  "Ix": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm wood floor, chandeliers and (on B) benches and lit hearth alcoves make it an interior, but the big dark stone pillars filling the frame edges and the long empty floor make it read as a level-blockout corridor, not a Valheim-class firelit great hall."
+  },
+  "Zh": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large readable panel fits the blue-grey translucent UI direction, but the murky near-black rainy world behind it and B's tiny clipped recipe lines and faint 'Craft: A / Enter' hint are well short of a shipping HUD finish."
+  },
+  "Sd": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The exterior approach (timber cottages, lit windows at night, the hall tower on the axis) is the strongest Meadows frame in the batch, but inside, empty floor and on B two huge wooden posts walling off the near field sink it."
+  },
+  "Ka": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue runner, warm lit shrine and hearth give the room a focus, but both sides are lit flat and blown out with no shafts or pools of light, and A's bare cobbles with a scatter of pedestals read as an open courtyard."
+  },
+  "Aa": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder villager (white hair and beard, expressive eyes, olive vest and scarf on the key-art palette) at a finish that would sit fine beside Palworld's NPCs, held back only by a softer toy-like face than the naturalistic creature bar."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A strong blue and white aquatic dragon silhouette, but its glossy, smooth toy finish falls short of the owner's naturalistic scale-and-plate creature bar, and the hit react is identical to the standing pose while the faint poses tangle (A) or float (B)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-frame the Crossing Hall cameras so structural pillars and posts sit in the midground rather than the near field, and furnish the long empty floor (long tables, benches, rugs, hearth clusters) with warm pooled light and a shaft or two from the windows so the nave reads as a lived-in great hall rather than a lit corridor or courtyard",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship the side-A homestead wall build (timber frame, cross brace, cap, stone footing) and the side-A large-text craft panel, then give the wall real thickness and a material that matches the village cottages",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring the aquatic dragon creature up to the owner's naturalistic bar: real scale and fin-membrane detail instead of the glossy toy shader, plus a distinct hit-react pose and grounded faint poses whose shadows touch the body",
+   "kind": "new_art"
+  }
+ ]
+}

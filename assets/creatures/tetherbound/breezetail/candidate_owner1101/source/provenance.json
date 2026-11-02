@@ -1,0 +1,65 @@
+{
+ "species": "breezetail",
+ "owner_direction": "1 Nov 2026 creature redesign under the owner's rule (believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Coordinator pick b from two rule-following concepts: Breezetail, a lean fennec fox with very large ears and a long bushy tail, pale sand and sky-blue fur, a believable lean adult creature in its natural stance, mostly realistic fur, feathers or scales, ",
+ "reference": "ref_b.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected and picked by the coordinator under the owner's delegated rule",
+ "meshy_image_to_3d_task": "01a197e2-ab80-74cf-b782-9ff758b623c9",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_breezetail (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (dog3 rig and skin recipe; strip_ground_patch.auto)",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, unchanged)",
+   "tools/art_pipeline/arc_emission.py",
+   "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/breezetail/candidate_owner1101/source/breezetail_b.glb rigged.glb prepare-report.json '{\"species\":\"breezetail\",\"height\":3.25}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/breezetail/candidate_owner1101/models/creature_breezetail_owner1101.glb ; python3 tools/art_pipeline/arc_emission.py breezetail_owner1101",
+  "report": "assets/creatures/tetherbound/breezetail/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped",
+   "height_m": 3.25,
+   "triangles": 27999,
+   "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+     "disc": false,
+     "base_over_leg_band_area": 0.52
+    }
+   },
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ]
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.breezetail_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_breezetail",
+ "test": "tests/test_creature_model_flags.gd"
+}

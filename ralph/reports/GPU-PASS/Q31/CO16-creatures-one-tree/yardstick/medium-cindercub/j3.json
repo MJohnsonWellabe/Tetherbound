@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Yl": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic brown-furred wolf at Stormursa-bar quality with grounded faints carries it; the even mid-brown coat with no rim light or value break keeps the face soft at small size."
+  },
+  "Md": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side B's indigo-and-white storm wolf matches the Tanglevolt bar with a readable rear-up hit react and grounded faints; side A sinks because its faint frames turn into a black-and-white blotched material and its hit react looks the same as standing."
+  },
+  "Ts": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Each site has a distinct aftermath, but blurry, uniform grass-carpet ground, flat noon light, a plain stretched-texture tunnel wall and sparse props sit well below Palworld density and Valheim atmosphere."
+  },
+  "Ba": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes, a strong silhouette and an earthy green/brown villager palette that fits the key art; only neutral stage light holds it back."
+  },
+  "Xr": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Very dark low-contrast frames, no visible purple storm sky or lightning, flat magenta ground rings for telegraphs and HUD panels covering much of the frame sink it; side A also loses the camera to canopy in several frames."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Xr: swap the flat magenta ring and slab telegraphs for real-object effects (lightning, stone or web strike with an impact), lift the exposure and rim light on both fighters, add camera collision against trunks and canopy, and shrink the debug-style HUD panels that cover the action.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ts: make each after frame fully clear the enemy's occupation (remove the oxblood banners that stay up in side B rows 1, 2, 3 and 5), and break up the uniform blurry grass carpet with paths, clearings, groves and site-specific props under warmer directional light.",
+   "kind": "scene"
+  },
+  {
+   "change": "Md side A: fix the faint-state material swap so the coat stays the indigo/white storm fur through faint mid and faint end, and give the hit react a pose that reads differently from standing (as side B does).",
+   "kind": "scene"
+  }
+ ]
+}

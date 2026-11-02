@@ -31,10 +31,15 @@ def mask(rgb, rule):
     around them by `lift` (value minus a `blur_px` local mean). The lift is what
     separates a thin painted arc from violet fur of the same hue."""
     h, s, v = T._hsv(rgb)
-    lo, hi = rule["hue"]
+    # `hue_bands` (a list of [lo, hi]) lights several element hues at once,
+    # e.g. blue eyes and violet veins; otherwise the single `hue` band.
+    bands = rule.get("hue_bands") or [rule["hue"]]
+    in_band = np.zeros(h.shape, dtype=bool)
+    for lo, hi in bands:
+        in_band |= (h >= lo) & (h <= hi)
     local = np.asarray(Image.fromarray((v * 255).astype(np.uint8)).filter(
         ImageFilter.GaussianBlur(float(rule.get("blur_px", 6.0))))).astype(np.float64) / 255.0
-    return (h >= lo) & (h <= hi) & (s >= rule["sat_min"]) & ((v - local) >= rule["lift"])
+    return in_band & (s >= rule["sat_min"]) & ((v - local) >= rule["lift"])
 
 
 def build(species, rule):

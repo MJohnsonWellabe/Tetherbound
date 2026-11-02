@@ -1,0 +1,156 @@
+{
+ "sets": {
+  "Sd": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame with diagonal brace, plank cap and separate stone footing reads as built, but it is still a single thin panel standing alone on a flat-lit meadow, and B's blank white board with no cap or footing sinks it outright."
+  },
+  "Ka": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The HUD follows the blue-grey, teal and gold direction, but the team strip, quest box, minimap, hotbar and hint bar are separate dark boxes that cover about a third of the bedroom view, so it reads busier and less finished than Palworld's compact HUD."
+  },
+  "Aa": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted header banner helps, but the Players and Quest Log panels are mostly empty charcoal with a few small grey lines, so they look like placeholder screens next to a shipping game's menus."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large ingredient lines, full wrapped recipe costs and clear 'Craft' and 'Leave' glyph prompts read at a glance at both resolutions, but the panel is a plain slab over a murky, flat-lit night, and B's tiny truncated rows ('3 St...') with faint 'Craft: A / Enter' text sink it."
+  },
+  "Am": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's thick-bodied blue lizard with coral-tipped dorsal fins has a strong, appealing silhouette, but in both sides the body stays below the 1.80 m trainer's height, and B's thin serpentine body, stick legs and flat grey underside in faint end fall short of the owner's naturalistic creature bar."
+  },
+  "Vg": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder in an olive vest and green scarf has a clean silhouette, readable face and eyes and an earthy palette that fits the key art's village, though the large cartoon eyes sit a little softer than the naturalistic creature style."
+  },
+  "Nx": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake tab is now the outlined active tab under the TIDEWAKE heading, but the map itself is a blurry navy wash with one green blob and thin orange lines, with none of Tidewake's dunes, falls or water detail, so it reads as a debug map."
+  },
+  "Aq": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted landscape header strip and the lit Terrapup portrait add some world connection, but the body of each panel is still uniform charcoal with small grey text and thin teal outlines, with weak hierarchy, compared with a shipping game's menu finish."
+  },
+  "Hy": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B drops the literal '(or F10)' label, cuts the half-visible Fighting rows and adds a 'More below' cue, but both sides still show small grey text on navy in sparse, widely spaced columns, which reads as a functional placeholder rather than finished UI."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Restyle the menu shell and secondary panels (Aa, Aq, Hy, Ur B): deep blue-grey translucent panels that show the world behind them, larger near-white body text, gold section headers, and content that fills or compacts empty panels (Players, Quest Log, settings columns), using Ur A's text sizes as the minimum.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship side A's timber-framed homestead wall (Sd) instead of the blank pale board, and give it real thickness, a textured plaster or wattle infill instead of flat cream, and contact shadow at the stone footing so it sits in the meadow.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the blurry navy region map (Nx) with a painted, key-art-style Tidewake map (dunes, falls, reefs, landmarks), and scale the Am creature so it stands taller than the 1.80 m trainer, with a fuller body than B's thin serpent.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Jx": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The heavy brown bear-badger has grounded naturalistic fur and good scale, but the noisy yellow speckle plating and dark low-contrast mass fall short of Palworld's clean, saturated creature read, and the neutral stage carries no Valheim-class light."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fleece-and-horn ram matches the owner's style bar and reads at Palworld finish; the faint poses (A legs twisted in the air, B horns stretched into flat tubes) are what keep it off the top."
+  },
+  "Qd": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither boar reaches the bar: A's fur is covered in flat gold coin blobs and its faint-mid body hangs above a detached shadow, while B is a smooth clay toy with moss stickers, off the naturalistic style, and both stand barely trainer height."
+  },
+  "Cj": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue-grey translucent panel with full wrapped recipes and large ingredient lines is close to a shipping UI, but the Craft/Leave hints are still small white text with tiny key glyphs and no teal emphasis, and the murky rainy night behind it has no Valheim-class atmosphere."
+  },
+  "Hs": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder in a mossy green vest has an expressive, appealing face and a clear silhouette with an earthy palette that belongs to the key art's settlement, at Palworld-class finish."
+  },
+  "Hf": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same bear-badger as Jx: solid scale and grounded anatomy, but the speckled yellow plating reads as noise and the dark body lacks the rim-lit value separation of Palworld creatures."
+  },
+  "Wp": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-and-moss lizard has a strong saturated silhouette with a frilled crest that would hold up in Palworld company, but in B the whole body leaves the ground in the hit react, and on a bare stage nothing shows Valheim-class light."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's lifted mauve-violet fur finally shows the quilled mole-hedgehog's form, but the coat still lacks markings or rim light and A is a near-black lump, short of Palworld's high-contrast creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ground and clean up the hurt/faint states across the roster: snuff the aspect flame on faint (Jx A, Hf B), keep feet planted in hit reacts (Wp B), stop the floating faint-mid on the boar (Qd A), and fix the twisted faint legs and horn stretching on the ram (Le A/B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Lift dark creature albedo and add rim light and readable markings (Rw, Jx/Hf body), and replace noisy yellow speckle/coin-blob patterns with authored markings so silhouettes separate at 30%.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the boar (Qd) to the owner's naturalistic style bar, with real bristled fur, moss accents per the Mudsnout board, and a height clearly above the 1.80 m trainer, replacing both the coin-blob and the clay-toy versions.",
+   "kind": "new_art"
+  }
+ ]
+}

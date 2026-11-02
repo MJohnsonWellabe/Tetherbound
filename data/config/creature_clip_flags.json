@@ -1,23 +1,221 @@
 {
- "_comment": "Candidate clip amplitude changes for species that play their own authored clips, OFF by default (scripts/creatures/creature_body.gd _apply_clip_flags). An enabled flag scales each named role's keys relative to the clip's first key: a number scales rotation and position alike, a {rotation, position} pair scales them apart (0..2). The GPU judges an arm by flipping enabled.",
- "flags": {
-  "creatures_f36_grounded_hit_remakes": {
-   "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): hit react 'barely differs from standing' PARTIAL 3/3 for cindercub 7.13 and trailpup 7.00 (near-bar; owner close-out exception). They play their own clips, so the recipe flinch cannot reach them: the recoil is exaggerated (rotation x1.6) with the feet planted (position x0.5). CPU r8: cindercub 6.69 -> 7.04, trailpup 6.69 -> 7.00, hit defect FIXED for 2-3 judges. Bramblebun (+0.11) and duskhush (+0.04) left out.",
-   "enabled": true,
-   "species": {
-    "cindercub": {
-     "hit": {
-      "rotation": 1.6,
-      "position": 0.5
-     }
+  "_comment": "Candidate clip amplitude changes for species that play their own authored clips, OFF by default (scripts/creatures/creature_body.gd _apply_clip_flags). An enabled flag scales each named role's keys relative to the clip's first key: a number scales rotation and position alike, a {rotation, position} pair scales them apart (0..2). The GPU judges an arm by flipping enabled.",
+  "flags": {
+    "creatures_f36_grounded_hit_remakes": {
+      "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): hit react 'barely differs from standing' PARTIAL 3/3 for cindercub 7.13 and trailpup 7.00 (near-bar; owner close-out exception). They play their own clips, so the recipe flinch cannot reach them: the recoil is exaggerated (rotation x1.6) with the feet planted (position x0.5). CPU r8: cindercub 6.69 -> 7.04, trailpup 6.69 -> 7.00, hit defect FIXED for 2-3 judges. Bramblebun (+0.11) and duskhush (+0.04) left out.",
+      "enabled": true,
+      "species": {
+        "cindercub": {
+          "hit": {
+            "rotation": 1.6,
+            "position": 0.5
+          }
+        },
+        "trailpup": {
+          "hit": {
+            "rotation": 1.6,
+            "position": 0.5
+          }
+        }
+      }
     },
-    "trailpup": {
-     "hit": {
-      "rotation": 1.6,
-      "position": 0.5
-     }
+    "creatures_vis_grounded_hit_bramblebun": {
+      "_why": "VIS-CREATURES (1 Nov). GPU ROSTER-1 High: bramblebun 7.19, hit react PARTIAL 3/3, it 'looks airborne' (a hop). It plays its own clips, so the recipe flinch cannot reach it: keep the recoil (rotation x1.35) and plant the feet (position x0.25). Same hook as the landed cindercub/trailpup arm (CO16 +0.28 to +0.32).",
+      "enabled": false,
+      "species": {
+        "bramblebun": {
+          "hit": {
+            "rotation": 1.35,
+            "position": 0.25
+          }
+        }
+      }
+    },
+    "creatures_vis_grounded_hit_water_cannonback": {
+      "_why": "VIS-CREATURES (1 Nov). GPU ROSTER-1 High: water_cannonback 6.72, hit react PARTIAL 3/3 (barely differs from standing); it plays its own clips. Recoil exaggerated (rotation x1.6) with the body kept on the water (position x0.5), as the landed cindercub/trailpup arm.",
+      "enabled": false,
+      "species": {
+        "water_cannonback": {
+          "hit": {
+            "rotation": 1.6,
+            "position": 0.5
+          }
+        }
+      }
+    },
+    "creatures_ralph_grounded_hit_roster": {
+      "_why": "Creatures-ralph (2 Nov 2026). A shared lift for the coordinator's 2 Nov GPU roster: the dog3 hit clip hops the root, so the remakes' hit react leaves the floor (2nd-percentile lift on CPU skinning: abyssal_guardian 0.40 m, ashtusk 0.24 m, breezetail 0.17 m, cannonback 0.15 m, cliffspike 0.44 m, cloudfang 0.19 m, cragclaw 0.21 m, craghorn 0.21 m, glimmermoth 0.16 m, mangrove_monitor 0.17 m, meadowhart 0.16 m, mirejaw 0.43 m, mosshock 0.35 m, pebbik 0.21 m, riptusk 0.20 m, riverdrake 0.23 m, shadelet 0.43 m, skyrill 0.16 m, solmane 0.68 m, sparkit 0.17 m, staticub 0.24 m, tempestwing 0.19 m, terrapup 0.35 m, thundertunnel 0.22 m, tidecoil 0.44 m, tuskroot 0.24 m, voltarach 0.32 m, voltwig 0.15 m). The judges name it on Sirenseal ('hit lifts off the floor'; fixed in its GLB in r18 with the same x0.3) and across the roster. Plants the hit: root position x0.3 relative to the first key, rotation unchanged, for every live remake lifting over 0.15 m that no clip flag already covers. Not judged: the CPU stage A/B on tuskroot, mosshock and cliffspike (2 Nov) changes the hit frames by a mean 0.7-1.4 of 255 grey levels, because the hop is 0.17-0.34 m of root lift while the raised legs are the recoil itself, too small to clear the +0.5 rule at the stage camera. Stays OFF; a candidate only for a closer combat camera.",
+      "enabled": false,
+      "species": {
+        "abyssal_guardian": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "ashtusk": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "breezetail": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "cannonback": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "cliffspike": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "cloudfang": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "cragclaw": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "craghorn": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "glimmermoth": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "mangrove_monitor": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "meadowhart": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "mirejaw": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "mosshock": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "pebbik": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "riptusk": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "riverdrake": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "shadelet": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "skyrill": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "solmane": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "sparkit": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "staticub": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "tempestwing": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "terrapup": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "thundertunnel": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "tidecoil": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "tuskroot": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "voltarach": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        },
+        "voltwig": {
+          "hit": {
+            "rotation": 1.0,
+            "position": 0.3
+          }
+        }
+      }
     }
-   }
   }
- }
 }

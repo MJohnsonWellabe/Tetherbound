@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Ah": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, plank cap and stone footing finally read as built, but it is still a lone thin panel with flat beige infill beside a flat grey low-poly boulder under a flat sky, well short of Palworld base-building finish."
+  },
+  "Mh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The meadow grove and pickups are distinct in shape (wrapped candy, pink flask, cloth bundle) and larger on B, but the bundle does not read as candy and the light is a flat midday grade with no haze or shafts."
+  },
+  "Vx": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Tidewake's pale dunes and cyan water read, but the bench stays a small prop in a sparse sand field with a stray translucent cyan outline structure in frame 1 and flat, unatmospheric light."
+  },
+  "Ua": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with clear eyes, a readable white-hair silhouette and an earthy green/brown palette that sits in the key art's village family; only the slightly toy-smooth skin and plain full-body pose hold it back."
+  },
+  "Uf": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky and rain carry the Stormwood mood, but A is a small dark brick box and B a tall blue totem rather than an arch, both on an exposed hard-edged square slab, so no landmark reads."
+  },
+  "Gp": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Lightning cracks, rain and the storm sky give strong mood, but the candies are still small glows whose form (as opposed to colour tier) is hard to read, and the scene is very dark in the foreground."
+  },
+  "Ja": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A's Tanglevolt matches the owner style bar with dense violet fur, a clear wolf silhouette and a readable rearing hit react; B is sunk by faint mid/end frames where the fur material turns into white skin with black blotches and the limbs splay."
+  },
+  "En": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's coiled black-and-gold serpent has naturalistic scale detail and a grounded belly-up faint, though standing and hit react barely differ and the ruler is hidden for three frames; B's bold banding reads better standing but its faint frames float the snake high off the ground with its shadow far below."
+  },
+  "Rv": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither bed has bedding volume: A's wooden ring with dark teal fill reads as a pit or well, B's pale ring melts into the sand, and frame 1 on both sides is half-blocked by a foreground creature."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give landmark and camp props real authored hero meshes with volume and identity: an actual arched Crown Arch seated into terrain without a square slab, a creature bed with a raised straw/fabric nest mound, and a workbench with tools, vice and work surface.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix creature faint/hurt states: keep the creature's fur/scale material through the faint (Ja B white-and-black blotch swap) and keep faint poses grounded (En B floating serpent), and make hit react a visible pose change.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stage pickups and props for readability: scale small pickups up with distinct tier silhouettes plus a soft ground contact shadow or rim, frame catalogue cameras so the trainer and foreground creatures do not occlude the subject, and add atmospheric haze/warm grade to flat midday scenes.",
+   "kind": "scene"
+  }
+ ]
+}

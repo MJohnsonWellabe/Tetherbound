@@ -1,0 +1,86 @@
+{
+ "sets": {
+  "Aq": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, cap plank and stone footing start to read as a built wall, but it is still a lone flat-infilled panel beside a faceted placeholder rock under a painted mountain backdrop with flat light, well short of Palworld base-building finish."
+  },
+  "Ra": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's wolf matches the owner Tanglevolt bar in silhouette and pose reads, but its shard-like fur reads as crystal fragments and B's faint frames break to a white body with black blotches and a collapsed blob mesh, which sinks the finish."
+  },
+  "Sb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey translucent panel and teal selection are on-brief, but the flat T-shaped axe icon does not read as an axe, the small orange sub-lines are thin at 7 inches, and a 'system crafting' debug label sits on the frame."
+  },
+  "Wv": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, finished elder villager with readable face and eyes, earthy green-brown palette and a clear full-body silhouette carries it, though the soft rounded animated-film face leans away from the key art's stylised realism."
+  },
+  "Bz": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's afters (banner torn down, cage opened, smoke column, fallen standard) read as real aftermaths, but blurry low-res ground, tiled fortress wall, sparse lollipop trees and flat midday light with no atmosphere keep both sides far below the Palworld and Valheim bar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Meadows ground and backdrop pass: replace the blurry stretched ground texture with layered grass/dirt/path materials, swap the painted mountain card and faceted pale rock for depth-fogged terrain and textured boulders, and add a warm key light with cool blue distance haze (Aq, Bz).",
+   "kind": "scene"
+  },
+  {
+   "change": "Homestead wall rebuild: give the wall real thickness, textured wattle/plank infill, posts that join neighbouring segments and a footing that sits into the ground instead of a lone framed panel (Aq).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the faint-state material swap on the wolf (B faint mid/end turns white with black blotches and the mesh collapses) and make each Bz aftermath site-specific: strike the oxblood banners in A's afters and replace the repeated emblem stone with site-unique debris (Ra, Bz).",
+   "kind": "scene"
+  }
+ ]
+}

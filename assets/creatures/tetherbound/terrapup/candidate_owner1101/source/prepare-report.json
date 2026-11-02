@@ -1,0 +1,87 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 3699,
+    "spine": 4335,
+    "neck": 2626,
+    "head": 4230,
+    "front_upper_l": 439,
+    "front_lower_l": 218,
+    "front_upper_r": 427,
+    "front_lower_r": 200,
+    "tail_1": 208,
+    "tail_2": 240,
+    "rear_upper_l": 570,
+    "rear_lower_l": 298,
+    "rear_upper_r": 299,
+    "rear_lower_r": 252
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 8245,
+  "height_m": 3.2,
+  "length_m": 4.6767,
+  "width_m": 1.471,
+  "triangles": 16375,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.1721,
+      -0.2631,
+      0.1031
+    ],
+    "front_r": [
+      0.1334,
+      -0.2583,
+      0.1063
+    ],
+    "rear_l": [
+      -0.1163,
+      0.5026,
+      0.1707
+    ],
+    "rear_r": [
+      0.1241,
+      0.3468,
+      0.1375
+    ]
+  },
+  "back_top_normalised": 0.6839,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.1,
+    "patch_surface_z": 0.0342,
+    "columns": [
+      [
+        -0.166,
+        -0.239,
+        0.041
+      ],
+      [
+        0.129,
+        -0.237,
+        0.041
+      ],
+      [
+        -0.161,
+        0.411,
+        0.042
+      ],
+      [
+        0.117,
+        0.358,
+        0.046
+      ]
+    ],
+    "removed_vertices": 7072,
+    "removed_islands": 6,
+    "removed_island_vertices": 41,
+    "regrounded_by": 0.0342
+  },
+  "params": {
+    "species": "terrapup",
+    "height": 3.2
+  }
+}

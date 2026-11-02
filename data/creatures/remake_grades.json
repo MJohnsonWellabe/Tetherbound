@@ -1,0 +1,239 @@
+{
+  "_comment": "Creatures-ralph (2 Nov 2026): regional coat grades for owner remakes, read by tools/art_pipeline/grade_regions.py. Each species: folder (its remake folder under assets/creatures/tetherbound), base [hue, sat, val], regions (soft anatomy masks, later over earlier, each with a target [hue, sat, val]), keep (element pixels kept exactly, optionally limited by where), suffix of the written texture. The texel's local value ratio carries the fine detail. A coat flag in data/config/creature_coat_flags.json selects the written file. Hues stay clear of Team Tether red (0-15, 345-360).",
+  "mangrove_monitor": {
+    "_why": "Batch-4 GPU: 'plain, smooth, rubbery green monitor with little surface detail'. r2 showed a lighter countershaded regrade reads more rubbery, and the judges prefer the shipped darker olive. This keeps the source colour and only sharpens scale-pattern contrast (x1.6) a step darker (value x0.92); the coat flag adds a matte finish and lights the aqua lines.",
+    "folder": "mangrove_monitor/candidate_owner1101",
+    "suffix": "scales",
+    "detail_only": true,
+    "detail_strength": 1.6,
+    "detail_blur_px": 5,
+    "value_scale": 0.92
+  },
+  "cragclaw": {
+    "_why": "Batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'. r2: the shipped dark body hides. r6: a pale sand lift reads 'unpainted clay', apart from the mossy shell. Attempt 3: the body below the shell line goes to a mid-value warm slate-olive in the shell's own hue family (one animal), the face a step lighter, the shell keeps its pixels, the blue lines keep theirs.",
+    "folder": "cragclaw/candidate_owner1101",
+    "suffix": "body_mid",
+    "base": [52, 0.26, 0.47],
+    "regions": [
+      {"where": {"z_min": 0.78, "y_max": 0.55}, "hsv": [45, 0.22, 0.54], "softness": 0.06}
+    ],
+    "detail_strength": 1.25,
+    "mix_source": 0.25,
+    "keep": [{"hue": [180, 225], "sat_min": 0.35, "val_min": 0.5}, {"where": {"y_min": 0.52, "up_min": -0.2}}]
+  },
+  "cannonback": {
+    "_why": "Batch-4 GPU: 'tank-like cartoon turtle with cannon studs reads as toy styling'. r2: a lighter tan shell made the barrels pop more; the muted moss-teal side read closer to the world. The barrels and the top of the shell go to the same dark mossy basalt as the scutes around them (so they read as rock knobs, not fittings), scutes darker moss-brown, skin olive-grey; source grain kept at 30 percent; the aqua cracks keep their pixels and glow low.",
+    "folder": "cannonback/candidate_owner1101",
+    "suffix": "moss",
+    "base": [68, 0.16, 0.4],
+    "regions": [
+      {"where": {"y_min": 0.5}, "hsv": [62, 0.26, 0.33], "softness": 0.1},
+      {"where": {"y_min": 0.7}, "hsv": [80, 0.24, 0.27], "softness": 0.08}
+    ],
+    "detail_strength": 1.3,
+    "mix_source": 0.3,
+    "keep": [{"hue": [165, 200], "sat_min": 0.35, "val_min": 0.55}]
+  },
+  "burrowback": {
+    "_why": "r5: the Burrowback remake (6.71) trails the installed model (6.80); judges: the back plates tile like a turtle shell in the faint frames. The spine plates get a model-space value jitter (+/-28 percent, coarse grain) in warm stone-moss so neighbouring plates differ, the coat keeps its source colour (mix 85 percent) with a little more fur contrast.",
+    "folder": "burrowback/candidate_owner1101",
+    "suffix": "plates",
+    "base": [30, 0.4, 0.4],
+    "regions": [
+      {"where": {"y_min": 0.55, "up_min": 0.25}, "hsv": [70, 0.22, 0.46], "softness": 0.1, "value_jitter": 0.28, "jitter_grain": 5.0, "mix": 0.7}
+    ],
+    "detail_strength": 1.15,
+    "mix_source": 0.55,
+    "keep": [{"sat_max": 0.12, "val_min": 0.7}]
+  },
+  "trailpup": {
+    "_why": "r5: the Trailpup remake (6.11) reads as a darker brown wolf against the installed near-real coyote (6.93); the owner pick is 'nearly real coyote'. Coyote palette by region: tawny flanks and legs, a grizzled grey-brown saddle, cream throat, belly and inner legs; source fur grain kept (mix 30 percent); the amber eyes and paws keep their pixels.",
+    "folder": "trailpup/candidate_owner1101",
+    "suffix": "coyote",
+    "base": [32, 0.46, 0.62],
+    "regions": [
+      {"where": {"up_min": 0.45, "y_min": 0.55}, "hsv": [30, 0.24, 0.48], "softness": 0.15},
+      {"where": {"up_max": -0.25}, "hsv": [38, 0.18, 0.82], "softness": 0.15},
+      {"where": {"z_min": 0.8, "up_max": 0.0, "y_max": 0.75}, "hsv": [38, 0.16, 0.84], "softness": 0.06}
+    ],
+    "detail_strength": 1.2,
+    "mix_source": 0.3,
+    "keep": [{"hue": [25, 50], "sat_min": 0.6, "val_min": 0.75}]
+  },
+  "meadowhart": {
+    "_why": "GPU batch 5 (installed 7.67 -> remake 6.91; judges x3): the remake is a 'pale, thin vine-wrapped deer' that 'loses value contrast', with a 'mottled root-veined hide' that 'muddies the read'. Toward the installed stag's readable values: a warm red-brown coat, a darker saddle along the back, a cream belly and throat; the source keeps 30 percent so the vines stay as soft markings instead of ropes; fur detail x1.2. r8: shipped remake 6.12 -> 6.80 mapped (+0.68; hit-react stoop FIXED x3), 0.10 short of the 6.9 target. r9 attempt 2 (cooler, deeper coat, vines at 15 percent) gained nothing (6.23 -> 6.28), so these are the attempt-1 values.",
+    "folder": "meadowhart/candidate_owner1101",
+    "suffix": "warm",
+    "base": [
+      24,
+      0.52,
+      0.5
+    ],
+    "regions": [
+      {
+        "where": {
+          "up_min": 0.45,
+          "y_min": 0.55
+        },
+        "hsv": [
+          20,
+          0.52,
+          0.36
+        ],
+        "softness": 0.15
+      },
+      {
+        "where": {
+          "up_max": -0.25
+        },
+        "hsv": [
+          34,
+          0.22,
+          0.8
+        ],
+        "softness": 0.15
+      },
+      {
+        "where": {
+          "z_min": 0.8,
+          "up_max": 0.0,
+          "y_max": 0.8,
+          "y_min": 0.45
+        },
+        "hsv": [
+          34,
+          0.2,
+          0.78
+        ],
+        "softness": 0.06
+      }
+    ],
+    "detail_strength": 1.2,
+    "mix_source": 0.3,
+    "keep": [
+      {
+        "sat_max": 0.15,
+        "val_min": 0.82
+      }
+    ]
+  },
+  "tuskroot": {
+    "_why": "GPU main1102 (installed 7.17 -> remake 6.31; judges x3): 'near-black boar sinks into the dark stage, no rim, face unreadable' against the installed 'brown boar with mossy stone back and white tusks, good value separation'. Mid-brown bristled coat, a lighter tan muzzle and belly, the dorsal plates as mossy grey-green stone with a model-space value jitter, the source grain kept at 35 percent; the ivory tusks keep their pixels.",
+    "folder": "tuskroot/candidate_owner1101",
+    "suffix": "brown",
+    "base": [26, 0.45, 0.47],
+    "regions": [
+      {"where": {"up_max": -0.2}, "hsv": [30, 0.32, 0.6], "softness": 0.15},
+      {"where": {"z_min": 0.85, "y_max": 0.6}, "hsv": [28, 0.3, 0.58], "softness": 0.05},
+      {"where": {"y_min": 0.62, "up_min": 0.1}, "hsv": [80, 0.18, 0.5], "softness": 0.08, "value_jitter": 0.22, "jitter_grain": 5.0}
+    ],
+    "detail_strength": 1.2,
+    "mix_source": 0.35,
+    "keep": [{"sat_max": 0.3, "val_min": 0.62, "where": {"z_min": 0.86}}]
+  },
+  "ashtusk": {
+    "_why": "GPU main1102 (installed 6.83 -> remake 6.31): the Ashtusk repaint 'sinks into the dark stage'. Its live aspect texture (creature_tuskroot_owner1101_Image_0_ashtusk.png, the r1 recipe) lifted about 1.45x in value with sharper fur and plate detail, ash-brown kept; its ember glow map is unchanged.",
+    "folder": "tuskroot/candidate_owner1101",
+    "source": "Image_0_ashtusk.png",
+    "suffix": "ashtusk_lift",
+    "detail_only": true,
+    "detail_strength": 1.2,
+    "value_scale": 1.45
+  },
+  "torrentoad": {
+    "_why": "GPU main1102 (installed 7.06 -> remake 5.59; judges x3): 'dark green upright frog-man is murky, low-value, alien silhouette' against the installed 'naturalistic speckled blue toad with pale belly'. The remake keeps the installed hue (about 150) at half its value (median 0.24 against 0.51). Teal-blue toad coat at the installed value, a darker speckled back from the source (mix 40 percent), a pale cream belly and throat; the aqua glow pixels keep their values.",
+    "folder": "torrentoad/candidate_owner1101",
+    "suffix": "toad",
+    "base": [168, 0.4, 0.52],
+    "regions": [
+      {"where": {"up_min": 0.45, "y_min": 0.5}, "hsv": [175, 0.42, 0.4], "softness": 0.15},
+      {"where": {"up_max": -0.2}, "hsv": [55, 0.14, 0.84], "softness": 0.15}
+    ],
+    "detail_strength": 1.25,
+    "mix_source": 0.4,
+    "keep": [{"hue": [170, 200], "sat_min": 0.45, "val_min": 0.6}]
+  },
+  "sparkit": {
+    "_why": "GPU batch 6 (5.14 -> 4.80): 'noisy stripes'. The remake atlas scatters yellow, black and white at texel scale. Fennec palette by region: warm golden-yellow body, cream throat, chest and belly, dark charcoal lower legs and ear tips, fur grain kept (mix 30 percent); the electric-blue eyes and lightning lines keep their pixels.",
+    "folder": "sparkit/candidate_owner1101",
+    "suffix": "fennec",
+    "base": [44, 0.62, 0.74],
+    "regions": [
+      {"where": {"up_max": -0.25}, "hsv": [42, 0.14, 0.86], "softness": 0.15},
+      {"where": {"z_min": 0.78, "up_max": 0.0, "y_max": 0.7}, "hsv": [42, 0.14, 0.88], "softness": 0.06},
+      {"where": {"y_max": 0.2}, "hsv": [30, 0.2, 0.2], "softness": 0.08},
+      {"where": {"y_min": 0.9}, "hsv": [30, 0.2, 0.18], "softness": 0.05}
+    ],
+    "detail_strength": 1.0,
+    "mix_source": 0.3,
+    "keep": [{"hue": [180, 240], "sat_min": 0.35, "val_min": 0.55}]
+  },
+  "ribbonray": {
+    "_why": "GPU batch 6 (6.02 -> 5.62): the remake reads dull and dark on the stage. Source colours kept; value x1.2 and saturation x1.1 with fine scale contrast x1.2; violet-magenta hues are unchanged (clear of Team Tether red).",
+    "folder": "ribbonray/candidate_owner1101",
+    "suffix": "lift",
+    "detail_only": true,
+    "detail_strength": 1.2,
+    "value_scale": 1.2,
+    "sat_scale": 1.1
+  },
+  "tempestwing": {
+    "_why": "GPU batch 6 (6.05 -> 5.68): face and value unclear. The atlas scatters white, grey and black at texel scale. Pale gold and grey by region (the remake's identity): pale gold body, a cooler grey back, a lighter warm head so the cyan eyes read; fur and plate grain kept (mix 30 percent); the cyan eyes and wisp lines keep their pixels.",
+    "folder": "tempestwing/candidate_owner1101",
+    "suffix": "gold",
+    "base": [40, 0.24, 0.62],
+    "regions": [
+      {"where": {"up_min": 0.45, "y_min": 0.45}, "hsv": [36, 0.1, 0.5], "softness": 0.15},
+      {"where": {"z_min": 0.8}, "hsv": [42, 0.22, 0.74], "softness": 0.06}
+    ],
+    "detail_strength": 1.15,
+    "mix_source": 0.3,
+    "keep": [{"hue": [170, 220], "sat_min": 0.35, "val_min": 0.5}]
+  },
+  "ripplet": {
+    "_why": "GPU batch 6 (6.69 -> 6.12): 'rubbery teal lizard-cat, dome bumps read as toy'. Natural otter coat by region in its identity colours: sky-teal flanks, a deeper river-teal back, cream throat and belly; the grey dome texels take the coat colour so they stop reading as studs; fur grain sharper (x1.4, source mixed 25 percent); the aqua markings and eyes keep their pixels. The coat flag adds a matte fur finish.",
+    "folder": "ripplet/candidate_owner1101",
+    "suffix": "otter",
+    "base": [186, 0.36, 0.56],
+    "regions": [
+      {"where": {"up_min": 0.45, "y_min": 0.5}, "hsv": [192, 0.42, 0.4], "softness": 0.15},
+      {"where": {"up_max": -0.25}, "hsv": [38, 0.18, 0.82], "softness": 0.15},
+      {"where": {"z_min": 0.8, "up_max": 0.0, "y_max": 0.7}, "hsv": [38, 0.16, 0.84], "softness": 0.06}
+    ],
+    "detail_strength": 1.4,
+    "mix_source": 0.25,
+    "keep": [{"hue": [165, 200], "sat_min": 0.6, "val_min": 0.7}]
+  },
+  "thundertunnel": {
+    "_why": "Coordinator GPU roster 2 Nov (4.72, lowest; the r10 Meshy remodel is blocked on credits): rescue on the current remake with a value lift and a readable face. Its atlas is near-black brown (mean value 0.22) with stray lime and grey Meshy patches. Velvet mole by region: warm mid-brown body, a lighter tan belly, pale horn digging claws and lower legs, a tan muzzle a step lighter so the eyes read; fur grain kept (mix 25 percent); the electric-blue lightning lines and eyes keep their pixels.",
+    "folder": "thundertunnel/candidate_owner1101",
+    "suffix": "velvet",
+    "base": [24, 0.4, 0.46],
+    "regions": [
+      {"where": {"up_max": -0.25}, "hsv": [28, 0.3, 0.58], "softness": 0.15},
+      {"where": {"y_max": 0.18}, "hsv": [38, 0.16, 0.66], "softness": 0.06},
+      {"where": {"z_min": 0.84, "y_max": 0.75}, "hsv": [26, 0.3, 0.6], "softness": 0.05}
+    ],
+    "detail_strength": 1.3,
+    "mix_source": 0.25,
+    "keep": [{"hue": [180, 235], "sat_min": 0.35, "val_min": 0.5}]
+  },
+  "aquaryn_r9": {
+    "_why": "GPU cr1102 (r9 Aquaryn 6.64): 'the uniform glossy turquoise finish looks toy-like, not naturalistic; needs scale detail and less gloss'. Source colour kept; scale contrast sharpened x1.6 at a 5 px scale, saturation x0.85 (less candy turquoise), value x0.95; the coat flag adds a matte scale finish.",
+    "folder": "aquaryn/candidate_r9",
+    "suffix": "scales",
+    "detail_only": true,
+    "detail_strength": 1.6,
+    "detail_blur_px": 5,
+    "value_scale": 0.95,
+    "sat_scale": 0.85
+  },
+  "skyrill_r10": {
+    "_why": "GPU cr1102 (r10 Skyrill 6.87): 'dark material against the stage; needs rim light/value lift'. Source colour kept; value x1.3 with scale contrast x1.25; the coat flag takes the glassy sheen down.",
+    "folder": "skyrill/candidate_r10",
+    "suffix": "lift",
+    "detail_only": true,
+    "detail_strength": 1.25,
+    "value_scale": 1.3
+  }
+}

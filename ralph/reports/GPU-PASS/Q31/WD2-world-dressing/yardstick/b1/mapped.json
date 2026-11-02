@@ -1,0 +1,198 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9658,
+  "least_squares_slope": 0.9781,
+  "method": "linear",
+  "slope": 0.9781,
+  "intercept": 0.8006,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.343,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "p2_094_r4:X_before": {
+   "measured": 3.267,
+   "reference": 3.5,
+   "mapped": 3.996,
+   "residual": -0.496
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.667,
+   "reference": 6.73,
+   "mapped": 6.343,
+   "residual": 0.387
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.033,
+   "reference": 7.53,
+   "mapped": 7.68,
+   "residual": -0.15
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.033,
+   "reference": 7.47,
+   "mapped": 7.68,
+   "residual": -0.21
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 7.233,
+   "reference": 7.89,
+   "mapped": 7.876,
+   "residual": 0.014
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 4.667,
+   "reference": 6.04,
+   "mapped": 5.365,
+   "residual": 0.675
+  },
+  "f36_0_gap:C5B": {
+   "measured": 6.4,
+   "reference": 6.93,
+   "mapped": 7.061,
+   "residual": -0.131
+  },
+  "f36_0_gap:C5A": {
+   "measured": 5.1,
+   "reference": 5.7,
+   "mapped": 5.789,
+   "residual": -0.089
+  }
+ },
+ "candidates": {
+  "WD2 P2-033 High cand|ctl | P2-033-ctl-High": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.37,
+   "mapped_judges": [
+    5.5,
+    5.5,
+    5.1
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-033 High cand|ctl | P2-033-cand-High": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.34,
+   "mapped_judges": [
+    6.28,
+    6.57,
+    6.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-116 High cand|ctl | P2-116-ctl-High": {
+   "measured_mean": 4.5,
+   "mapped_mean": 5.2,
+   "mapped_judges": [
+    4.91,
+    5.69,
+    5.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-116 High cand|ctl | P2-116-cand-High": {
+   "measured_mean": 5.4,
+   "mapped_mean": 6.08,
+   "mapped_judges": [
+    5.69,
+    6.47,
+    6.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-041 High cand|ctl | P2-041-ctl-High": {
+   "measured_mean": 3.233,
+   "mapped_mean": 3.96,
+   "mapped_judges": [
+    3.74,
+    4.22,
+    3.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-041 High cand|ctl | P2-041-cand-High": {
+   "measured_mean": 4.067,
+   "mapped_mean": 4.78,
+   "mapped_judges": [
+    5.1,
+    5.01,
+    4.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-045 High cand|ctl | P2-045-ctl-High": {
+   "measured_mean": 4.133,
+   "mapped_mean": 4.84,
+   "mapped_judges": [
+    4.71,
+    5.3,
+    4.52
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-045 High cand|ctl | P2-045-cand-High": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.92,
+   "mapped_judges": [
+    5.89,
+    6.18,
+    5.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-115 High cand|ctl | P2-115-cand-High": {
+   "measured_mean": 4.533,
+   "mapped_mean": 5.23,
+   "mapped_judges": [
+    4.91,
+    5.69,
+    5.1
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "WD2 P2-115 High cand|ctl | P2-115-ctl-High": {
+   "measured_mean": 3.9,
+   "mapped_mean": 4.62,
+   "mapped_judges": [
+    4.32,
+    5.1,
+    4.42
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

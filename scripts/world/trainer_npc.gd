@@ -33,6 +33,7 @@ extends Node3D
 ## `encounter_director.begin_trainer_battle()` that runs their fight, so
 ## nothing about a trainer's data or its battle logic forked in two.
 
+const POST_STANCE := preload("res://scripts/characters/post_stance.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
@@ -452,6 +453,7 @@ func _play_defeat_reaction(body: Node3D) -> void:
 		await _until_the_last_victory_line(lines)
 		if is_instance_valid(body):
 			TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", "")))
+			POST_STANCE.attach_rows(body, POST_STANCE.beaten_stance())
 		return
 	body.call("play", clip, false)
 	var reactions := CHARACTER_MODEL.config_for("cast_reactions")
@@ -461,6 +463,10 @@ func _play_defeat_reaction(body: Node3D) -> void:
 	if is_instance_valid(body):
 		if not TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", ""))):
 			body.call("play", str(body.call("clip_for", "idle")))
+		# P2-065 (UIPOSES, npc_post_stances.json beaten_trainer_stance, OFF):
+		# the beaten trainer keeps a dejected bearing once the slump hands off,
+		# instead of the same neutral stance as before the fight.
+		POST_STANCE.attach_rows(body, POST_STANCE.beaten_stance())
 
 
 ## F04#6 (judge r5): after the lines closed, the camera was back behind the

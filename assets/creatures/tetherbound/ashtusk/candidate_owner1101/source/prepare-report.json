@@ -1,0 +1,71 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 6453,
+    "spine": 9277,
+    "neck": 3646,
+    "head": 6734,
+    "front_upper_l": 315,
+    "front_lower_l": 648,
+    "front_upper_r": 322,
+    "front_lower_r": 652,
+    "tail_1": 553,
+    "tail_2": 629,
+    "rear_upper_l": 453,
+    "rear_lower_l": 336,
+    "rear_upper_r": 448,
+    "rear_lower_r": 346
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13989,
+  "height_m": 3.6,
+  "length_m": 5.9532,
+  "width_m": 2.1237,
+  "triangles": 27998,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.1207,
+      -0.1182,
+      0.149
+    ],
+    "front_r": [
+      0.119,
+      -0.1183,
+      0.1497
+    ],
+    "rear_l": [
+      -0.1143,
+      0.3878,
+      0.1643
+    ],
+    "rear_r": [
+      0.116,
+      0.3939,
+      0.1645
+    ]
+  },
+  "back_top_normalised": 0.9028,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+      "disc": false,
+      "base_over_leg_band_area": 1.022
+    }
+  },
+  "params": {
+    "species": "ashtusk",
+    "height": 3.6
+  }
+}

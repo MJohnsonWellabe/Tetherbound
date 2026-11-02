@@ -1,0 +1,586 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "stormwood",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 490733570280,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 490750347499,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T16:05:56",
+	"capture_started_utc": "2026-10-31T16:03:23",
+	"captured_frame_count": 1,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"band_display_name": "",
+			"band_id": "hollow_crown",
+			"biome_display_name": "The Stormwood",
+			"biome_id": "stormwood",
+			"bytes": 440942,
+			"camera_player_distance_m": 5.821457862854,
+			"camera_position": [
+				482.908325195313,
+				76.8321228027344,
+				2709.86743164063
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.978259384632111,
+					0.0,
+					0.207385167479515
+				],
+				"basis_y": [
+					0.0431178063154221,
+					0.978147625923157,
+					-0.203391581773758
+				],
+				"basis_z": [
+					-0.202853307127953,
+					0.207911714911461,
+					0.956882119178772
+				],
+				"origin": [
+					483.963073730469,
+					75.7509384155273,
+					2704.89135742188
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.978259384632111,
+					0.000000298798511266796,
+					0.20738510787487
+				],
+				"basis_y": [
+					0.0431176349520683,
+					0.978147506713867,
+					-0.203392252326012
+				],
+				"basis_z": [
+					-0.202853262424469,
+					0.207912310957909,
+					0.956881880760193
+				],
+				"origin": [
+					482.908325195313,
+					76.8321228027344,
+					2709.86743164063
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "The Crown Arch",
+			"destination_index": 13,
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/gpu-arms/SW041-ctl-Medium-c039/stormwood__landmark__crown_arch__day__close.jpg",
+			"frame_id": "stormwood__landmark__crown_arch__day__close",
+			"identity": "stormwood__landmark__crown_arch",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Named_crown_guardian",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						640.0,
+						74.0,
+						2700.0
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.085,
+					"node_path": "Wild_glimmermoth_1326803620_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						499.258972167969,
+						74.0,
+						2633.263671875
+					],
+					"species_id": "glimmermoth"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.085,
+					"node_path": "Wild_glimmermoth_1326803620_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						541.265686035156,
+						74.0,
+						2579.76245117188
+					],
+					"species_id": "glimmermoth"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.085,
+					"node_path": "Wild_glimmermoth_1326803686_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						547.746215820313,
+						74.0,
+						2748.40747070313
+					],
+					"species_id": "glimmermoth"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.085,
+					"node_path": "Wild_glimmermoth_1326803686_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						539.137756347656,
+						74.0,
+						2719.53930664063
+					],
+					"species_id": "glimmermoth"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1326803587_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						545.595581054688,
+						74.0,
+						2562.70288085938
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1326803587_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						501.605133056641,
+						56.4941558837891,
+						2563.59252929688
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803592_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						546.588623046875,
+						74.0,
+						2590.76684570313
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803621_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						615.338439941406,
+						74.0,
+						2671.38256835938
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803621_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						634.270446777344,
+						74.0,
+						2667.87036132813
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803625_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						548.37451171875,
+						74.0,
+						2670.15771484375
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803625_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						556.666931152344,
+						74.0,
+						2634.41967773438
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803653_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						507.627990722656,
+						74.0,
+						2676.84008789063
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803653_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						536.525024414063,
+						74.0,
+						2670.45678710938
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803654_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						624.157470703125,
+						74.0,
+						2710.06982421875
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803654_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						639.4013671875,
+						74.0,
+						2698.98974609375
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803658_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						558.596008300781,
+						74.0,
+						2714.72045898438
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803658_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						583.722778320313,
+						74.0,
+						2702.318359375
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803687_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						608.049377441406,
+						74.0,
+						2771.4189453125
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803687_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						593.828063964844,
+						74.0,
+						2734.4501953125
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803691_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						542.327941894531,
+						74.0,
+						2740.39501953125
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803691_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						578.653869628906,
+						74.0,
+						2774.2626953125
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803719_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						508.885192871094,
+						74.0,
+						2777.11254882813
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803719_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						515.445007324219,
+						74.0,
+						2809.97631835938
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_1326803724_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						552.287841796875,
+						74.0,
+						2801.24072265625
+					],
+					"species_id": "staticub"
+				}
+			],
+			"nearby_creatures_160m": 25,
+			"observed_clock": {
+				"elapsed_seconds": 200.198214888889,
+				"hour": 8.00792859555556,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"phase": "calm",
+			"player_character": "trainer",
+			"player_position": [
+				483.963073730469,
+				74.0009460449219,
+				2704.89135742188
+			],
+			"position_xz": [
+				485.0,
+				2700.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 74.0,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 5.0,
+			"selected_stand_xz": [
+				483.963073730469,
+				2704.89135742188
+			],
+			"spot_index_in_band": 0,
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				485.0,
+				2700.0
+			],
+			"terrain_ground_y": 74.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.207385167479515,
+				-0.978259384632111
+			],
+			"water_surface_y": null
+		}
+	],
+	"graphics_capture": {
+		"adapter": "NVIDIA GeForce GTX 1060 3GB",
+		"graphics_config_sha256": "8bf8d8e8552fb68e5ce84e200217f62d2e229495be7fb6dc465d5ce9dc9f1359",
+		"preset": "Medium",
+		"renderer": "forward_plus",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "d4d5b262fc6b8d6741cf72e6326b04ddcf8bf127"
+	},
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"stormwood__landmark__crown_arch__day__close"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 490750347499,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day"
+	],
+	"requested_views": [
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/stormwood.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"stormwood__landmark__crown_arch"
+	]
+}

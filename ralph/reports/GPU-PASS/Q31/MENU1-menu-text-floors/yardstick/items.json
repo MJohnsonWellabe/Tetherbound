@@ -1,0 +1,62 @@
+[
+    {
+        "item":  "P2-001",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#9",
+        "subject":  "menu shell",
+        "defect":  "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world",
+        "frames":  [
+                       "meadows__menu_backpack",
+                       "meadows__menu_build",
+                       "meadows__menu_creatures"
+                   ]
+    },
+    {
+        "item":  "P2-007",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#10",
+        "subject":  "secondary menu panels",
+        "defect":  "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button",
+        "frames":  [
+                       "meadows__menu_build",
+                       "meadows__menu_players",
+                       "meadows__menu_quest_log"
+                   ]
+    },
+    {
+        "item":  "P2-004",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#19",
+        "subject":  "exploration HUD",
+        "defect":  "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view",
+        "frames":  [
+                       "meadows__exploration_hud"
+                   ]
+    },
+    {
+        "item":  "P2-031",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#27",
+        "subject":  "settings and binding instructions",
+        "defect":  "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan",
+        "frames":  [
+                       "meadows__settings_controls",
+                       "meadows__quick_bindings"
+                   ]
+    },
+    {
+        "item":  "P2-032",
+        "preset":  "High",
+        "biome":  "tidewake",
+        "board_row":  "F39#25",
+        "subject":  "map active region",
+        "defect":  "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab",
+        "frames":  [
+                       "tidewake__menu_map"
+                   ]
+    }
+]

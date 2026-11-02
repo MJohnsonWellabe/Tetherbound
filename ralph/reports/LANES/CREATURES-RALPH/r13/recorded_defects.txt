@@ -1,0 +1,5 @@
+Dr: "navy serpent coil is dark, mid-value and barely changes between poses"; "too small and static"; "neither faint reads"
+Om: "plain, smooth, rubbery green monitor with little surface detail"; "no elemental trait"; "tail passes through the ruler / clips the trainer"
+Pw: none
+Dc: none
+Or: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

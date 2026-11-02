@@ -1,0 +1,53 @@
+{
+ "Yt": {
+  "anchor": false,
+  "label": "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #5",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_4_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_4_cand.jpg"
+ },
+ "Sy": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Zz": {
+  "anchor": true,
+  "A": "f36_0_npc:C5B",
+  "B": "f36_0_npc:C5A"
+ },
+ "Xn": {
+  "anchor": false,
+  "label": "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_0_cand.jpg"
+ },
+ "Oa": {
+  "anchor": false,
+  "label": "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_2_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_2_cand.jpg"
+ },
+ "Py": {
+  "anchor": false,
+  "label": "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_3_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_3_cand.jpg"
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #6",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_5_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_5_main.jpg"
+ },
+ "Xh": {
+  "anchor": false,
+  "label": "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_1_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CLOUDREACH-B/img/F40_shared_light__P2_021__P2_023__P2_025_1_main.jpg"
+ },
+ "As": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ }
+}

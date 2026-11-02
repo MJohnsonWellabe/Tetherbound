@@ -1,0 +1,12 @@
+Ah: "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+Ix: none
+Wc: "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+Fl: "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+Ls: none
+Ne: "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+Qa: "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+Hd: "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+Jq: "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+Xn: "Large rock faces fill the camera and hide the named speaker during dialogue"
+Ir: "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+Gg: none

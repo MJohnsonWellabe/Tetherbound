@@ -1,0 +1,87 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 1557,
+    "spine": 1839,
+    "neck": 1131,
+    "head": 1763,
+    "front_upper_l": 152,
+    "front_lower_l": 105,
+    "front_upper_r": 151,
+    "front_lower_r": 104,
+    "tail_1": 167,
+    "tail_2": 215,
+    "rear_upper_l": 167,
+    "rear_lower_l": 134,
+    "rear_upper_r": 221,
+    "rear_lower_r": 133
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 3627,
+  "height_m": 3.45,
+  "length_m": 2.6417,
+  "width_m": 1.0164,
+  "triangles": 7239,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.0633,
+      -0.1175,
+      0.1012
+    ],
+    "front_r": [
+      0.0645,
+      -0.1174,
+      0.1036
+    ],
+    "rear_l": [
+      -0.1008,
+      0.3057,
+      0.1267
+    ],
+    "rear_r": [
+      0.0713,
+      0.2345,
+      0.1478
+    ]
+  },
+  "back_top_normalised": 0.5966,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.1,
+    "patch_surface_z": 0.0302,
+    "islands_only": false,
+    "columns": [
+      [
+        -0.001,
+        -0.113,
+        0.071
+      ],
+      [
+        -0.098,
+        0.3,
+        0.023
+      ],
+      [
+        0.071,
+        0.237,
+        0.029
+      ]
+    ],
+    "removed_vertices": 11120,
+    "removed_islands": 57,
+    "removed_island_vertices": 259,
+    "regrounded_by": 0.0307,
+    "auto_detect": {
+      "disc": true,
+      "base_over_leg_band_area": 4.887
+    }
+  },
+  "params": {
+    "species": "meadowhart",
+    "height": 3.45
+  }
+}

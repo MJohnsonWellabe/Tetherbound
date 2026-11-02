@@ -1,0 +1,80 @@
+[
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-locations] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__0_cand.jpg",
+  "brief": "Game frames of Meadows landmarks and settlements, day and night: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-locations] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__1_cand.jpg",
+  "brief": "Game frames of Meadows landmarks and settlements, day and night: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-locations] #3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__2_cand.jpg",
+  "brief": "Game frames of Meadows landmarks and settlements, day and night: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-locations] #4",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__3_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__3_cand.jpg",
+  "brief": "Game frames of Meadows landmarks and settlements, day and night: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-locations] #5",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__4_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__4_cand.jpg",
+  "brief": "Game frames of Meadows landmarks and settlements, day and night: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-locations] #6",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__5_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_locations__5_cand.jpg",
+  "brief": "Game frames of Meadows landmarks and settlements, day and night: 4 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": []
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-dialogue] #1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_dialogue__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_dialogue__0_cand.jpg",
+  "brief": "Game frames of Meadows named characters at their posts and in conversation: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Large rock faces fill the camera and hide the named speaker during dialogue"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-dialogue] #2",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_dialogue__1_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_dialogue__1_cand.jpg",
+  "brief": "Game frames of Meadows named characters at their posts and in conversation: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Large rock faces fill the camera and hide the named speaker during dialogue"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [meadows-dialogue] #3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_dialogue__2_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__meadows_dialogue__2_cand.jpg",
+  "brief": "Game frames of Meadows named characters at their posts and in conversation: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Large rock faces fill the camera and hide the named speaker during dialogue"
+  ]
+ },
+ {
+  "label": "SHARED-CAM-OCCLUSION [dialogue meadows]",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__dialogue_meadows__0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-B/img/SHARED_CAM_OCCLUSION__dialogue_meadows__0_cand.jpg",
+  "brief": "Game frames of Meadows named-character conversations: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Large rock faces fill the camera and hide the named speaker during dialogue"
+  ]
+ }
+]

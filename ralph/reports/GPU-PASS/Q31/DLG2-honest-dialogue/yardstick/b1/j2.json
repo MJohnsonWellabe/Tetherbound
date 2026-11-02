@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "An": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake beach palette (cyan water, pale dunes) carries it, but flat noon light, no haze or sky drama, and an over-shoulder camera where the player's back outweighs the speaker (Bex and Irva frames) keep it below Palworld finish."
+  },
+  "Tq": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model matches the owner style bar (white fleece, dark horns, blue accents, clearly larger than the trainer); side B is let down by a hit react that looks the same as standing and faint poses that twist and seem to hover."
+  },
+  "Yv": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky, rain and glowing mushrooms carry the Stormwood mood, but the Captain Marrow frame shows only the tiny player under a flat brown overhang with no speaker, and the forest floor is a uniform dark carpet."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a strong, large silhouette, but the hit react looks the same as standing, faint mid floats above its own shadow, faint end collapses into a black, misshapen mass, and B's all-dark-brown material loses value separation (A's orange-red glow adds interest but the tusks pick up a reddish tint)."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both Captain Marrow frames are half filled by a flat brown overhead slab with no speaker in view, only the small distant player; the Officer Nysa close-up reads well but crops the player's head at the left edge."
+  },
+  "Sz": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Old Bram on the warm meadow with cool blue distance is close to the key art, but the stronghold interiors (Solene, Hald) sink into one orange mid-tone, a little hotter on side B, with no light shafts or depth."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Kelm and Captain Veyra are clearly framed with a striking winged lion behind them, but the courtyard is a flat, evenly tiled brown dirt plane under plain daylight with no Cloudreach sky depth or stratified stone at scale."
+  },
+  "Wp": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Captain Nerissa reads in both chamber frames, but the Resident Nalia frame is a bare grey-green slope with one small figure and no identifiable speaker, and the chambers are murky and underlit with no Tidewake cyan."
+  },
+  "Zi": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "An appealing, well-finished elder villager with clear eyes, a readable silhouette and a natural green-brown palette that fits the key art; B's skin is slightly more flushed."
+  },
+  "Wi": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark, low-value forest in which the spider boss is the only readable subject, the player's creature is barely visible, flat magenta rings and slabs act as telegraphs (A i06-i10, i15-i17, tell2 a-c; B i09-i10, i16-i17), and in B the camera sits inside trunks and foliage for i12-i15."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera rule: frame the named speaker at medium-close range beside the panel, run a line-of-sight check that removes overhead slabs and trunks (Kr Marrow frames, Yv Marrow, Wp Nalia), and shrink the player's over-shoulder footprint.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace flat magenta telegraph rings and slabs with real-object ground effects (cracks, debris, lightning strikes), add camera collision against Stormwood trunks and foliage, and lift fight lighting so the player's creature separates from the ground (Wi).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature reaction and faint poses: a distinct hit react, grounded faint mid and end with no floating or deformed collapse (Uw faint end, Tq side B faint poses).",
+   "kind": "new_art"
+  }
+ ]
+}

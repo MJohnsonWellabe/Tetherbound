@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 4775,
+    "spine": 7554,
+    "neck": 4490,
+    "head": 7350,
+    "front_upper_l": 695,
+    "front_lower_l": 687,
+    "front_upper_r": 692,
+    "front_lower_r": 677,
+    "tail_1": 196,
+    "tail_2": 426,
+    "rear_upper_l": 606,
+    "rear_lower_l": 513,
+    "rear_upper_r": 619,
+    "rear_lower_r": 518
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13993,
+  "height_m": 3.6,
+  "length_m": 5.5531,
+  "width_m": 1.9765,
+  "triangles": 28000,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.1597,
+      -0.0842,
+      0.1067
+    ],
+    "front_r": [
+      0.1602,
+      -0.0846,
+      0.1038
+    ],
+    "rear_l": [
+      -0.1827,
+      0.5148,
+      0.0895
+    ],
+    "rear_r": [
+      0.1835,
+      0.5148,
+      0.0903
+    ]
+  },
+  "back_top_normalised": 0.8373,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "tuskroot",
+    "height": 3.6,
+    "patch": false
+  }
+}

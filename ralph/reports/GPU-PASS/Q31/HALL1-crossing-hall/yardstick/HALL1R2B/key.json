@@ -1,0 +1,40 @@
+{
+ "Db": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ng": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Sj": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Uo": {
+  "anchor": false,
+  "label": "HALL1 approach-nave High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\HALL1R2B\\sides\\HALL1-approach-nave-r2b-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\HALL1R2B\\sides\\HALL1-approach-nave-main-High.png"
+ },
+ "Nl": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Kr": {
+  "anchor": false,
+  "label": "HALL1 nave-sides High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\HALL1R2B\\sides\\HALL1-nave-sides-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\HALL1R2B\\sides\\HALL1-nave-sides-r2b-High.png"
+ },
+ "Yi": {
+  "anchor": false,
+  "label": "HALL1 shrine High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\HALL1R2B\\sides\\HALL1-shrine-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\HALL1R2B\\sides\\HALL1-shrine-r2b-High.png"
+ }
+}

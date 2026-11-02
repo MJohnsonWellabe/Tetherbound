@@ -1,0 +1,71 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 8791,
+    "spine": 9453,
+    "neck": 2742,
+    "head": 3631,
+    "front_upper_l": 895,
+    "front_lower_l": 1103,
+    "front_upper_r": 1130,
+    "front_lower_r": 1137,
+    "tail_1": 562,
+    "tail_2": 392,
+    "rear_upper_l": 525,
+    "rear_lower_l": 804,
+    "rear_upper_r": 542,
+    "rear_lower_r": 809
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13997,
+  "height_m": 2.95,
+  "length_m": 5.6312,
+  "width_m": 2.4146,
+  "triangles": 27999,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2585,
+      -0.2835,
+      0.1178
+    ],
+    "front_r": [
+      0.2597,
+      -0.2901,
+      0.1169
+    ],
+    "rear_l": [
+      -0.182,
+      0.3467,
+      0.1185
+    ],
+    "rear_r": [
+      0.1841,
+      0.349,
+      0.1186
+    ]
+  },
+  "back_top_normalised": 0.862,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+      "disc": false,
+      "base_over_leg_band_area": 1.227
+    }
+  },
+  "params": {
+    "species": "burrowback",
+    "height": 2.95
+  }
+}

@@ -80,6 +80,11 @@ static func _light_windows(model: Node3D, cfg: Dictionary) -> void:
 			# white base lit the whole keep; black leaves only the masked windows.
 			lit.emission = Color.BLACK
 			lit.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
+			# `emission_colour` (P2-003 r2, optional): multiply the window mask by
+			# a colour instead of adding it, so the lit windows burn that hue.
+			if cfg.has("emission_colour"):
+				lit.emission = Color(str(cfg["emission_colour"]))
+				lit.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
 			lit.emission_texture = mask
 			lit.emission_energy_multiplier = float(cfg.get("emission_energy", 2.5))
 			mesh_instance.set_surface_override_material(surface, lit)

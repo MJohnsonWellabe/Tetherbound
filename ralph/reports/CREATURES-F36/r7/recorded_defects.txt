@@ -1,0 +1,6 @@
+Vl: "A dark body value merges with the ground and backdrop, and the face does not read"
+Cq: none
+Ke: "A dark body value merges with the ground and backdrop, and the face does not read"
+Qb: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Zy: none
+Ib: "A dark body value merges with the ground and backdrop, and the face does not read"

@@ -1,0 +1,53 @@
+{
+ "Uh": {
+  "anchor": false,
+  "label": "P2-006",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-006_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-006_cand.jpg"
+ },
+ "Bm": {
+  "anchor": false,
+  "label": "P2-005",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-005_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-005_cand.jpg"
+ },
+ "Di": {
+  "anchor": false,
+  "label": "P2-059",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-059_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-059_cand.jpg"
+ },
+ "Ye": {
+  "anchor": false,
+  "label": "P2-012",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-012_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-012_cand.jpg"
+ },
+ "Lv": {
+  "anchor": true,
+  "A": "f36_0_npc:C2A",
+  "B": "f36_0_npc:C2B"
+ },
+ "Ok": {
+  "anchor": false,
+  "label": "P2-064",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-064_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-064_main.jpg"
+ },
+ "Hm": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Yd": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Cn": {
+  "anchor": false,
+  "label": "P2-003",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-003_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-003_cand.jpg"
+ }
+}

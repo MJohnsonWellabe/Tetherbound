@@ -29,6 +29,7 @@ extends MultiMeshInstance3D
 ## this project to.
 
 const CONFIG_PATH := "res://data/config/grass_field.json"
+const MEADOWS_LOOK_CONFIG := "res://data/config/meadows_look.json"
 const SHADER_PATH := "res://shaders/grass_field.gdshader"
 const STONE_SHADER_PATH := "res://shaders/stone_field.gdshader"
 const COVER_SHADER_PATH := "res://shaders/cover_tier.gdshader"
@@ -151,7 +152,43 @@ static func config() -> Dictionary:
 	file.close()
 	if parsed is Dictionary:
 		_config = parsed
+		apply_meadows_ground_candidate(_config)
+		apply_meadows_cause_ground(_config, MEADOWS_LOOK_CONFIG)
 	return _config
+
+
+## P2-005 (vis-meadows, OFF until GPU-judged): `meadows_ground_candidate`
+## layers onto the shipped Meadows field before anything reads it. `merge`
+## sets top-level keys (the ground-zone uniforms); `tiers` merges keys into the
+## `cover_tiers` row with that name. Realm profiles (configure_profile) never
+## pass through here, so other biomes are untouched.
+static func apply_meadows_ground_candidate(cfg: Dictionary, override: Dictionary = {}) -> void:
+	var candidate: Dictionary = override if not override.is_empty() else cfg.get("meadows_ground_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return
+	var merge: Dictionary = candidate.get("merge", {})
+	for key: Variant in merge:
+		cfg[key] = merge[key].duplicate(true) if merge[key] is Dictionary or merge[key] is Array else merge[key]
+	var tiers: Dictionary = candidate.get("tiers", {})
+	for row: Variant in cfg.get("cover_tiers", []):
+		if row is Dictionary and tiers.has(str((row as Dictionary).get("name", ""))):
+			(row as Dictionary).merge(tiers[str(row.name)], true)
+
+
+## Cause lane tb/cause-meadows (OFF until GPU-judged): meadows_look.json
+## `cause_ground.grass` layers on after `meadows_ground_candidate`, in the same
+## merge/tiers shape, only while `cause_ground.enabled`. Off: `cfg` unchanged.
+## `look_path` is a parameter so a unit test can point it at a fixture.
+static func apply_meadows_cause_ground(cfg: Dictionary, look_path: String) -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(look_path))
+	if not parsed is Dictionary:
+		return
+	var cause: Dictionary = (parsed as Dictionary).get("cause_ground", {})
+	if not bool(cause.get("enabled", false)):
+		return
+	var grass: Dictionary = cause.get("grass", {})
+	apply_meadows_ground_candidate(cfg, {"enabled": true,
+		"merge": grass.get("merge", {}), "tiers": grass.get("tiers", {})})
 
 
 ## Whether the field is on. Read by `vegetation.gd` as well as by this node, so
@@ -1694,6 +1731,10 @@ func _apply_config(cfg: Dictionary) -> void:
 	for key: String in ["tint_base", "tint_tip", "zone_moss_tint"]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, Color(str(cfg[key])))
+	# P2-008 (flag-off): feather the hard ruled edge of every built-ground
+	# clearing (beach bars, plazas, camps) instead of cutting blades on a circle.
+	if bool(cfg.get("built_feather_enabled", false)):
+		_material.set_shader_parameter("built_feather_m", maxf(0.0, float(cfg.get("built_feather_m", 2.5))))
 	for key: String in ["zone_bare", "zone_moss"]:
 		var pair: Array = cfg.get(key, [])
 		if pair.size() == 2:

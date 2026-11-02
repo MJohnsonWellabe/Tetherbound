@@ -1,0 +1,264 @@
+{
+ "bar": 7.0,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8916,
+  "least_squares_slope": 1.2316,
+  "method": "linear",
+  "slope": 1.2316,
+  "intercept": -0.3794,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.553,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.8,
+   "reference": 6.53,
+   "mapped": 5.532,
+   "residual": 0.998
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.2,
+   "reference": 4.0,
+   "mapped": 4.793,
+   "residual": -0.793
+  },
+  "f36_0_gap:C5B": {
+   "measured": 5.667,
+   "reference": 6.93,
+   "mapped": 6.599,
+   "residual": 0.331
+  },
+  "f36_0_gap:C5A": {
+   "measured": 5.033,
+   "reference": 5.7,
+   "mapped": 5.819,
+   "residual": -0.119
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.567,
+   "reference": 7.47,
+   "mapped": 7.708,
+   "residual": -0.238
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.567,
+   "reference": 7.53,
+   "mapped": 7.708,
+   "residual": -0.178
+  }
+ },
+ "candidates": {
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #14 cand": {
+   "measured_mean": 4.567,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    4.79,
+    5.66,
+    5.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #14 main": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.7,
+   "mapped_judges": [
+    5.29,
+    6.02,
+    5.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #17 cand": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.7,
+   "mapped_judges": [
+    5.53,
+    5.78,
+    5.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #17 main": {
+   "measured_mean": 4.333,
+   "mapped_mean": 4.96,
+   "mapped_judges": [
+    4.79,
+    5.16,
+    4.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #16 cand": {
+   "measured_mean": 4.567,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    4.79,
+    5.53,
+    5.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #16 main": {
+   "measured_mean": 4.767,
+   "mapped_mean": 5.49,
+   "mapped_judges": [
+    5.41,
+    5.53,
+    5.53
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #12 main": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.94,
+   "mapped_judges": [
+    5.66,
+    6.15,
+    6.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #12 cand": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.94,
+   "mapped_judges": [
+    5.66,
+    6.15,
+    6.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #10 cand": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.57,
+   "mapped_judges": [
+    5.29,
+    5.78,
+    5.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #10 main": {
+   "measured_mean": 4.533,
+   "mapped_mean": 5.2,
+   "mapped_judges": [
+    4.92,
+    5.41,
+    5.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #15 main": {
+   "measured_mean": 4.467,
+   "mapped_mean": 5.12,
+   "mapped_judges": [
+    4.79,
+    5.41,
+    5.16
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #15 cand": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.78,
+   "mapped_judges": [
+    5.41,
+    6.02,
+    5.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #11 cand": {
+   "measured_mean": 4.4,
+   "mapped_mean": 5.04,
+   "mapped_judges": [
+    4.92,
+    5.29,
+    4.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #11 main": {
+   "measured_mean": 4.4,
+   "mapped_mean": 5.04,
+   "mapped_judges": [
+    4.92,
+    5.29,
+    4.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #13 main": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.86,
+   "mapped_judges": [
+    5.53,
+    6.15,
+    5.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #13 cand": {
+   "measured_mean": 4.6,
+   "mapped_mean": 5.29,
+   "mapped_judges": [
+    4.92,
+    5.53,
+    5.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

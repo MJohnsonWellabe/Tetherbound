@@ -1,0 +1,127 @@
+[
+    {
+        "item":  "P2-033",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#6",
+        "subject":  "ground pickup identity",
+        "defect":  "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance",
+        "frames":  [
+                       "meadows__inventory__pickup__good_candy",
+                       "meadows__inventory__pickup__rare_candy",
+                       "meadows__inventory__pickup__potion_small"
+                   ]
+    },
+    {
+        "item":  "P2-035",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#32",
+        "subject":  "camp and workshop prop legibility",
+        "defect":  "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out",
+        "frames":  [
+                       "meadows__inventory__prop__camp_tent",
+                       "meadows__inventory__prop__camp_bed",
+                       "meadows__inventory__prop__bonfire_fire"
+                   ]
+    },
+    {
+        "item":  "P2-115",
+        "preset":  "High",
+        "biome":  "tidewake",
+        "board_row":  "F39#12",
+        "subject":  "authored camp creature bed silhouette",
+        "defect":  "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place",
+        "frames":  [
+                       "tidewake__bed__water_camp_first_shore__bed",
+                       "tidewake__bed__water_camp_brine_steps__bed",
+                       "tidewake__bed__water_camp_salt_crown__bed"
+                   ]
+    },
+    {
+        "item":  "P2-116",
+        "preset":  "High",
+        "biome":  "tidewake",
+        "board_row":  "F39#13",
+        "subject":  "authored camp workbench identity",
+        "defect":  "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer",
+        "frames":  [
+                       "tidewake__crafting__water_camp_first_shore__crafting",
+                       "tidewake__crafting__water_camp_brine_steps__crafting",
+                       "tidewake__crafting__water_camp_salt_crown__crafting"
+                   ]
+    },
+    {
+        "item":  "P2-054",
+        "preset":  "High",
+        "biome":  "cloudreach",
+        "board_row":  "F40#16",
+        "subject":  "mushroom pickup variants",
+        "defect":  "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance",
+        "frames":  [
+                       "cloudreach__inventory__pickup__speed_mushroom",
+                       "cloudreach__inventory__pickup__wild_mushroom"
+                   ]
+    },
+    {
+        "item":  "P2-046",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#9",
+        "subject":  "harvest resource identity",
+        "defect":  "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material",
+        "frames":  [
+                       "stormwood__inventory__harvest__stormglass",
+                       "stormwood__inventory__harvest__stormglass_crown",
+                       "stormwood__inventory__harvest__glowmoss"
+                   ]
+    },
+    {
+        "item":  "P2-070",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#10",
+        "subject":  "Glass Sink landmark",
+        "defect":  "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints",
+        "frames":  [
+                       "stormwood__landmark__glass_sink__day__approach",
+                       "stormwood__landmark__glass_sink__day__close",
+                       "stormwood__landmark__glass_sink__golden__approach"
+                   ]
+    },
+    {
+        "item":  "P2-045",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#14",
+        "subject":  "candy pickup tiers",
+        "defect":  "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance",
+        "frames":  [
+                       "stormwood__inventory__pickup__good_candy",
+                       "stormwood__inventory__pickup__great_candy",
+                       "stormwood__inventory__pickup__rare_candy"
+                   ]
+    },
+    {
+        "item":  "P2-041",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#17",
+        "subject":  "Crown Arch",
+        "defect":  "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it",
+        "frames":  [
+                       "stormwood__landmark__crown_arch__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-043",
+        "preset":  "High",
+        "biome":  "stormwood",
+        "board_row":  "F41#19",
+        "subject":  "Glass Field spike bases",
+        "defect":  "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster",
+        "frames":  [
+                       "stormwood__dynamo__11__the_glass_field__walk_03_day"
+                   ]
+    }
+]

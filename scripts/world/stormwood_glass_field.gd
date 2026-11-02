@@ -88,6 +88,9 @@ func _build_cluster(spec: Dictionary) -> void:
 	scar.material_override = _fused_material()
 	scar.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	root.add_child(scar)
+	# P2-043 rock_collar_candidate: the flat dark scar patch is the "slab".
+	if bool(_rock_collar().get("enabled", false)) and bool(_rock_collar().get("hide_scar_patch", false)):
+		scar.visible = false
 	var clearing := Node3D.new()
 	clearing.name = "ScarGrassClearance"
 	clearing.position = _local_grounded(centre, 0.0)
@@ -151,8 +154,57 @@ func _add_meshy_spikes(parent: Node3D, centre: Vector2, spec: Dictionary, scar_r
 		seat.rotation.y = float((seed_value + index * 131) % 360) * PI / 180.0
 		seat.add_child(model)
 		parent.add_child(seat)
+		_add_rock_collar(parent, centre + offset, height, seed_value + index * 31)
 		placed = true
 	return placed
+
+
+## P2-043 (GPU WD2 1 Nov, 5.75: "the base is still flat and dark ... not
+## rooted in the rock"). `rock_collar_candidate` (OFF by default): a ring of
+## installed rock-family stones in cracked basalt grey around each spike
+## cluster's foot, half sunk, so the glass breaks out of rock. Visual only;
+## colliders are removed as `_add_fused_lumps` does.
+func _rock_collar() -> Dictionary:
+	var cand: Variant = config.get("rock_collar_candidate", {})
+	return cand if cand is Dictionary else {}
+
+
+func _add_rock_collar(parent: Node3D, at: Vector2, spike_height: float, seed_value: int) -> void:
+	var cfg := _rock_collar()
+	if not bool(cfg.get("enabled", false)):
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
+	var count := maxi(3, int(cfg.get("stones", 5)))
+	var ring := spike_height * float(cfg.get("ring_fraction", 0.16))
+	var tall := spike_height * float(cfg.get("stone_height_fraction", 0.11))
+	var material := StandardMaterial3D.new()
+	var tint := Color(str(cfg.get("colour", "#4a4d52")))
+	for index in count:
+		var scene := load(LUMP_MODELS[(index + seed_value) % LUMP_MODELS.size()]) as PackedScene
+		if scene == null:
+			continue
+		var stone := scene.instantiate() as Node3D
+		stone.name = "SpikeCollarStone%d" % index
+		var angle := TAU * float(index) / float(count) + rng.randf_range(-0.35, 0.35)
+		var local := at + Vector2(cos(angle), sin(angle)) * ring * rng.randf_range(0.8, 1.15)
+		var size := tall * rng.randf_range(0.75, 1.25)
+		stone.position = _local_grounded(local, -0.3 * size)
+		stone.rotation.y = rng.randf() * TAU
+		stone.rotation.z = rng.randf_range(-0.25, 0.25)
+		stone.scale = Vector3(size * 1.5, size, size * 1.3)
+		for mesh: Node in stone.find_children("*", "MeshInstance3D", true, false):
+			var visual := mesh as MeshInstance3D
+			for surface in visual.mesh.get_surface_count():
+				var source := visual.get_active_material(surface) as StandardMaterial3D
+				var rock := source.duplicate() as StandardMaterial3D if source != null else material.duplicate() as StandardMaterial3D
+				rock.albedo_color = tint
+				rock.roughness = float(cfg.get("roughness", 0.88))
+				rock.metallic = 0.0
+				visual.set_surface_override_material(surface, rock)
+		for body: Node in stone.find_children("*", "CollisionObject3D", true, false):
+			body.queue_free()
+		parent.add_child(stone)
 
 
 func _add_shard(parent: Node3D, suffix: String, local: Vector2, height: float, angle: float) -> void:

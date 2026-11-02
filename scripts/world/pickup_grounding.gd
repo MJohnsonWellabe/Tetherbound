@@ -58,11 +58,15 @@ static func apply(pickup: Node3D, visual: Node3D, item_id: String, realm: String
 	pickup.set_meta(APPLIED, true)
 	var seed_value := absi((placement_id if not placement_id.is_empty() else item_id).hash()) % 9973
 	var scale := float(spec.get("scale", 1.0))
+	var tier := tier_spec(item_id)
+	scale *= float(tier.get("scale_mult", 1.0))
 	if not is_equal_approx(scale, 1.0):
 		visual.scale *= scale
+	visual.set_meta(&"pickup_grounding_scale", scale)
 	var root := Node3D.new()
 	root.name = "PickupGrounding"
 	pickup.add_child(root)
+	# Tier copies are made by `tier_cluster_dressed`, after the candy tint.
 	var stone_cfg: Dictionary = spec.get("stone", {})
 	var stone_top := 0.0
 	if not stone_cfg.is_empty():
@@ -75,6 +79,103 @@ static func apply(pickup: Node3D, visual: Node3D, item_id: String, realm: String
 	var pebbles: Dictionary = spec.get("pebbles", {})
 	if not pebbles.is_empty():
 		_pebbles(root, pebbles, seed_value)
+
+
+## P2-045 (GPU WD2 1 Nov, 5.92: "Good and Great still share one blob form and
+## scale, so they read mainly by glow colour"). `tier_candidate` (OFF by
+## default) gives each candy tier its own silhouette from the same installed
+## model: a size step plus a count, so Good is one sweet, Great a leaning pair
+## and Rare a stacked trio. Visual copies only; the pickup, its claim and its
+## collider are untouched.
+static func tier_spec(item_id: String) -> Dictionary:
+	var cand: Variant = config().get("tier_candidate", {})
+	if not cand is Dictionary or not bool((cand as Dictionary).get("enabled", false)):
+		return {}
+	var items: Variant = (cand as Dictionary).get("items", {})
+	if not items is Dictionary:
+		return {}
+	var spec: Variant = (items as Dictionary).get(item_id, {})
+	return spec if spec is Dictionary else {}
+
+
+## Offsets, in multiples of the visual's own measured width times `spread`,
+## for each extra copy.
+const _CLUSTER := [
+	[Vector3(0.55, 0.0, 0.25), 0.45],
+	[Vector3(0.1, 0.0, -0.55), -0.7],
+	[Vector3(0.3, 0.55, -0.05), 1.3],
+]
+
+
+## `make_visual` builds a fresh visual for the same item (the pickup's own
+## factory). Preferred over duplicating: the candy visuals' tier tint and fit
+## did not survive `duplicate()` in either mode (CPU r1/r2: Great and Rare
+## copies came back as oversized green sweets).
+static func _tier_cluster(pickup: Node3D, visual: Node3D, tier: Dictionary,
+		make_visual: Callable = Callable()) -> void:
+	var count := int(tier.get("count", 1))
+	if count <= 1:
+		return
+	var spread := float(tier.get("spread", 0.75)) * _width_of(visual)
+	var copy_scale := float(tier.get("copy_scale", 0.85))
+	visual.position.x -= spread * 0.25
+	for i in mini(count - 1, _CLUSTER.size()):
+		var copy: Node3D = null
+		if make_visual.is_valid():
+			copy = make_visual.call() as Node3D
+			if copy == null:
+				return
+			# The factory's base scale times the size step `apply` gave `visual`.
+			copy.scale = copy.scale * float(visual.get_meta(&"pickup_grounding_scale", 1.0))
+		else:
+			copy = visual.duplicate(Node.DUPLICATE_SIGNALS | Node.DUPLICATE_GROUPS | Node.DUPLICATE_SCRIPTS) as Node3D
+		if copy == null:
+			continue
+		copy.name = "%sTierCopy%d" % [visual.name, i + 1]
+		var row: Array = _CLUSTER[i]
+		copy.position = visual.position + (row[0] as Vector3) * spread
+		copy.rotation.y = visual.rotation.y + float(row[1])
+		copy.scale = (copy.scale if make_visual.is_valid() else visual.scale) * copy_scale
+		pickup.add_child(copy)
+
+
+## Candy tiers are tinted and ringed by candy_pickup_presentation.gd after
+## `apply` runs, so their copies are made there, from the dressed visual; the
+## tier ring stays on the original only. No-op while the candidate is off.
+static func tier_cluster_dressed(pickup: Node3D, visual: Node3D, item_id: String) -> void:
+	var tier := tier_spec(item_id)
+	if int(tier.get("count", 1)) <= 1 or pickup.has_meta(&"pickup_grounding_tier_copies"):
+		return
+	pickup.set_meta(&"pickup_grounding_tier_copies", true)
+	_tier_cluster(pickup, visual, tier)
+	for child: Node in pickup.get_children():
+		if str(child.name).contains("TierCopy"):
+			for ring: Node in child.find_children("TierRing", "", true, false):
+				ring.queue_free()
+
+
+## Horizontal size of `visual` in its parent's space, from its meshes' local
+## bounds. 0.3 m when it has no mesh to measure.
+static func _width_of(visual: Node3D) -> float:
+	var bounds := AABB()
+	var found := false
+	var meshes: Array = visual.find_children("*", "MeshInstance3D", true, false)
+	if visual is MeshInstance3D:
+		meshes.append(visual)
+	for node: Variant in meshes:
+		var mesh_node := node as MeshInstance3D
+		if mesh_node == null or mesh_node.mesh == null:
+			continue
+		var xf := Transform3D()
+		var walk: Node = mesh_node
+		while walk != null and walk != visual.get_parent():
+			if walk is Node3D:
+				xf = (walk as Node3D).transform * xf
+			walk = walk.get_parent()
+		var box := xf * mesh_node.mesh.get_aabb()
+		bounds = box if not found else bounds.merge(box)
+		found = true
+	return maxf(bounds.size.x, bounds.size.z) if found else 0.3
 
 
 static func _stone(root: Node3D, cfg: Dictionary, seed_value: int) -> float:

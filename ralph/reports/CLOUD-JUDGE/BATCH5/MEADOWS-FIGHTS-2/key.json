@@ -1,0 +1,65 @@
+{
+ "Yj": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #14",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__13_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__13_main.jpg"
+ },
+ "Cv": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #17",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__16_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__16_main.jpg"
+ },
+ "Xf": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #16",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__15_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__15_main.jpg"
+ },
+ "Ag": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #12",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__11_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__11_cand.jpg"
+ },
+ "Bq": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #10",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__9_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__9_main.jpg"
+ },
+ "Ci": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Dm": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Of": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Mx": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #15",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__14_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__14_cand.jpg"
+ },
+ "Ud": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #11",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__10_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__10_main.jpg"
+ },
+ "Ti": {
+  "anchor": false,
+  "label": "SHARED-CAM-OCCLUSION [meadows-fights-f312a5] #13",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__12_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/MEADOWS-FIGHTS-2/img/SHARED_CAM_OCCLUSION__meadows_fights_f312a5__12_cand.jpg"
+ }
+}

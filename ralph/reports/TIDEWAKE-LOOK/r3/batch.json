@@ -1,0 +1,146 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.5,
+   5.0,
+   5.0
+  ],
+  "craft:after": [
+   6.8,
+   6.6,
+   6.6
+  ],
+  "f36_0_gap:C1A": [
+   6.0,
+   6.4,
+   6.4
+  ],
+  "f36_0_gap:C1B": [
+   5.0,
+   5.2,
+   5.2
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   6.7,
+   7.2
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   6.7,
+   7.2
+  ]
+ },
+ "candidates": {
+  "brine_steps:main": [
+   5.6,
+   5.6,
+   5.6
+  ],
+  "brine_steps:hamlet": [
+   5.8,
+   5.9,
+   5.8
+  ],
+  "deep_watch:main": [
+   5.2,
+   5.3,
+   5.0
+  ],
+  "deep_watch:hamlet": [
+   5.6,
+   5.8,
+   5.4
+  ],
+  "gull_rest:hamlet": [
+   5.6,
+   5.8,
+   5.6
+  ],
+  "gull_rest:main": [
+   4.9,
+   5.0,
+   4.9
+  ],
+  "tidal_cradle:hamlet": [
+   5.5,
+   5.6,
+   5.5
+  ],
+  "tidal_cradle:main": [
+   4.8,
+   4.8,
+   4.8
+  ],
+  "drowned_garden:hamlet": [
+   5.8,
+   6.0,
+   5.7
+  ],
+  "drowned_garden:main": [
+   5.4,
+   5.6,
+   5.2
+  ],
+  "first_shore:main": [
+   5.3,
+   5.4,
+   5.3
+  ],
+  "first_shore:hamlet": [
+   5.9,
+   5.9,
+   5.9
+  ],
+  "lantern_cove:hamlet": [
+   5.9,
+   6.0,
+   5.8
+  ],
+  "lantern_cove:main": [
+   5.2,
+   5.4,
+   5.2
+  ],
+  "sluice_isle:main": [
+   5.2,
+   5.2,
+   5.2
+  ],
+  "sluice_isle:hamlet": [
+   5.8,
+   5.9,
+   5.7
+  ],
+  "shellwatch:main": [
+   5.6,
+   5.7,
+   5.6
+  ],
+  "shellwatch:hamlet": [
+   5.6,
+   5.6,
+   5.5
+  ],
+  "salt_crown:hamlet": [
+   5.3,
+   5.3,
+   5.2
+  ],
+  "salt_crown:main": [
+   4.7,
+   4.6,
+   4.6
+  ],
+  "reedhaven:hamlet": [
+   6.0,
+   6.0,
+   6.0
+  ],
+  "reedhaven:main": [
+   5.4,
+   5.4,
+   5.4
+  ]
+ }
+}

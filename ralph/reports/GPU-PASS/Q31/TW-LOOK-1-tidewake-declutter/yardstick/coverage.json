@@ -1,0 +1,56 @@
+[
+    {
+        "island":  "gull_rest",
+        "views":  [
+                      "stand 19 approach",
+                      "stand 19 close",
+                      "stand 20 approach",
+                      "stand 20 close"
+                  ]
+    },
+    {
+        "island":  "salt_crown",
+        "views":  [
+                      "stand 11 approach",
+                      "stand 11 close",
+                      "stand 12 approach",
+                      "stand 12 close"
+                  ]
+    },
+    {
+        "island":  "tidal_cradle",
+        "views":  [
+                      "stand 09 approach",
+                      "stand 09 close",
+                      "stand 10 approach",
+                      "stand 10 close"
+                  ]
+    },
+    {
+        "island":  "drowned_garden",
+        "views":  [
+                      "stand 21 approach",
+                      "stand 21 close",
+                      "stand 22 approach",
+                      "stand 22 close"
+                  ]
+    },
+    {
+        "island":  "lantern_cove",
+        "views":  [
+                      "stand 17 approach",
+                      "stand 17 close",
+                      "stand 18 approach",
+                      "stand 18 close"
+                  ]
+    },
+    {
+        "island":  "first_shore",
+        "views":  [
+                      "stand 01 approach",
+                      "stand 01 close",
+                      "stand 02 approach",
+                      "stand 02 close"
+                  ]
+    }
+]

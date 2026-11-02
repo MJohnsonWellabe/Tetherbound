@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 7279,
+    "spine": 6418,
+    "neck": 2548,
+    "head": 3468,
+    "front_upper_l": 1152,
+    "front_lower_l": 638,
+    "front_upper_r": 1102,
+    "front_lower_r": 596,
+    "tail_1": 1072,
+    "tail_2": 2373,
+    "rear_upper_l": 679,
+    "rear_lower_l": 495,
+    "rear_upper_r": 686,
+    "rear_lower_r": 502
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13997,
+  "height_m": 3.0,
+  "length_m": 3.5324,
+  "width_m": 1.5928,
+  "triangles": 28000,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.1795,
+      -0.2571,
+      0.0786
+    ],
+    "front_r": [
+      0.1837,
+      -0.2622,
+      0.0799
+    ],
+    "rear_l": [
+      -0.1874,
+      0.1821,
+      0.0814
+    ],
+    "rear_r": [
+      0.1899,
+      0.1696,
+      0.0813
+    ]
+  },
+  "back_top_normalised": 0.7357,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "bramblebun",
+    "height": 3.0,
+    "patch": false
+  }
+}

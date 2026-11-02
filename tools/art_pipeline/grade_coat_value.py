@@ -41,8 +41,15 @@ SPECIES = {
     "shadelet": (C + "shadelet/models/creature_shadelet_lod0_base_color.jpg", (0.30, 0.42), (0.55, 0.70), 1.5, 0.03, 1.0),
     "stormtrail": (C + "trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail.png", (0.34, 0.46), (0.40, 0.55), 1.35, 0.03, 1.0),
     "nightburrow": (C + "burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png", (0.32, 0.45), (0.40, 0.55), 1.4, 0.03, 1.0),
+    # Batch 3 (flag remake_owner1101_dark_lift, cause-remakes 1 Nov). GPU
+    # creature stage: the owner-rule remakes Brooktail (black river otter) and
+    # Voltarach (dark spider) sink into dark ground. A gentle lift keeps the
+    # black identity; the aqua spots and blue sparks (saturated) keep their pixels.
+    "brooktail_owner1101": (C + "brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0.jpg", (0.26, 0.40), (0.45, 0.60), 1.35, 0.03, 1.0),
+    "voltarach_owner1101": (C + "voltarach/candidate_owner1101/models/creature_voltarach_owner1101_Image_0.jpg", (0.28, 0.42), (0.45, 0.60), 1.4, 0.03, 1.0),
 }
 BATCH_2 = ("shadelet", "stormtrail", "nightburrow")
+BATCH_3 = ("brooktail_owner1101", "voltarach_owner1101")
 KEEP_DARKEST = (0.03, 0.06)
 
 
@@ -52,8 +59,9 @@ def _ramp(lo, hi, x):
 
 
 def target(source):
-    stem, _ = os.path.splitext(source)
-    return stem + "_coat_lift.png"
+    # JPEG sources (Meshy remakes, 2048 px) stay JPEG: a lossless 2048 PNG is 5-8 MB.
+    stem, ext = os.path.splitext(source)
+    return stem + ("_coat_lift.jpg" if ext == ".jpg" and "_owner1101_" in stem else "_coat_lift.png")
 
 
 def grade(rgb, val_band, sat_band, scale, floor, sat_scale):
@@ -77,7 +85,7 @@ def main():
         graded = Image.fromarray((out * 255 + 0.5).astype(np.uint8), "RGB")
         if alpha is not None:
             graded.putalpha(alpha)
-        graded.save(os.path.join(ROOT, target(source)))
+        graded.save(os.path.join(ROOT, target(source)), **({"quality": 90} if target(source).endswith(".jpg") else {}))
         print("%s: lifted %.1f%% of texels (w > 0.5), median value %.2f -> %.2f, reserved red %.3f%% -> %s"
               % (name, (w > 0.5).mean() * 100, np.median(rgb.max(-1)), np.median(out.max(-1)),
                  red.mean() * 100, target(source)))

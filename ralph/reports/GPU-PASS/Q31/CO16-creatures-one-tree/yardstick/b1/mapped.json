@@ -1,0 +1,302 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8621,
+  "least_squares_slope": 0.8001,
+  "method": "linear",
+  "slope": 0.8001,
+  "intercept": 1.9068,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.442,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C1B": {
+   "measured": 5.2,
+   "reference": 5.33,
+   "mapped": 6.067,
+   "residual": -0.737
+  },
+  "f36_0_gap:C1A": {
+   "measured": 5.933,
+   "reference": 6.1,
+   "mapped": 6.654,
+   "residual": -0.554
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.0,
+   "reference": 7.47,
+   "mapped": 7.508,
+   "residual": -0.038
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.0,
+   "reference": 7.53,
+   "mapped": 7.508,
+   "residual": 0.022
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 6.767,
+   "reference": 7.89,
+   "mapped": 7.321,
+   "residual": 0.569
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 4.4,
+   "reference": 6.04,
+   "mapped": 5.427,
+   "residual": 0.613
+  },
+  "f04_6_r22:control": {
+   "measured": 4.833,
+   "reference": 5.83,
+   "mapped": 5.774,
+   "residual": 0.056
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.967,
+   "reference": 6.75,
+   "mapped": 6.681,
+   "residual": 0.069
+  }
+ },
+ "candidates": {
+  "CO16 f1crag-water_cragclaw High cand|ship | CO16-f1crag-water_cragclaw-cand-High": {
+   "measured_mean": 5.967,
+   "mapped_mean": 6.68,
+   "mapped_judges": [
+    6.95,
+    6.55,
+    6.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f1crag-water_cragclaw High cand|ship | CO16-f1crag-water_cragclaw-ship-High": {
+   "measured_mean": 6.733,
+   "mapped_mean": 7.29,
+   "mapped_judges": [
+    7.51,
+    7.35,
+    7.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f9tall3-mudsnout High cand|ship | CO16-f9tall3-mudsnout-cand-High": {
+   "measured_mean": 6.867,
+   "mapped_mean": 7.4,
+   "mapped_judges": [
+    7.51,
+    7.19,
+    7.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f9tall3-mudsnout High cand|ship | CO16-f9tall3-mudsnout-ship-High": {
+   "measured_mean": 6.5,
+   "mapped_mean": 7.11,
+   "mapped_judges": [
+    7.19,
+    6.95,
+    7.19
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f7matte-cragclaw High cand|ship | CO16-f7matte-cragclaw-cand-High": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.65,
+   "mapped_judges": [
+    7.03,
+    6.39,
+    6.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f7matte-cragclaw High cand|ship | CO16-f7matte-cragclaw-ship-High": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.65,
+   "mapped_judges": [
+    6.95,
+    6.39,
+    6.63
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f3tall-brooktail High cand|ship | CO16-f3tall-brooktail-cand-High": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.63,
+   "mapped_judges": [
+    7.11,
+    6.55,
+    6.23
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f3tall-brooktail High cand|ship | CO16-f3tall-brooktail-ship-High": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.39,
+   "mapped_judges": [
+    6.79,
+    6.31,
+    6.07
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f4coat-cindercub High cand|ship | CO16-f4coat-cindercub-ship-High": {
+   "measured_mean": 6.233,
+   "mapped_mean": 6.89,
+   "mapped_judges": [
+    7.03,
+    7.03,
+    6.63
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f4coat-cindercub High cand|ship | CO16-f4coat-cindercub-cand-High": {
+   "measured_mean": 7.0,
+   "mapped_mean": 7.51,
+   "mapped_judges": [
+    7.51,
+    7.51,
+    7.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO16 f1crag-skyrill High cand|ship | CO16-f1crag-skyrill-ship-High": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.96,
+   "mapped_judges": [
+    6.23,
+    5.91,
+    5.75
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f1crag-skyrill High cand|ship | CO16-f1crag-skyrill-cand-High": {
+   "measured_mean": 5.3,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.39,
+    6.15,
+    5.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f7matte-voltarach High cand|ship | CO16-f7matte-voltarach-ship-High": {
+   "measured_mean": 4.533,
+   "mapped_mean": 5.53,
+   "mapped_judges": [
+    5.59,
+    5.59,
+    5.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f7matte-voltarach High cand|ship | CO16-f7matte-voltarach-cand-High": {
+   "measured_mean": 4.533,
+   "mapped_mean": 5.53,
+   "mapped_judges": [
+    5.59,
+    5.59,
+    5.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f8tall2-pipwing High cand|ship | CO16-f8tall2-pipwing-cand-High": {
+   "measured_mean": 6.6,
+   "mapped_mean": 7.19,
+   "mapped_judges": [
+    7.43,
+    6.95,
+    7.19
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f8tall2-pipwing High cand|ship | CO16-f8tall2-pipwing-ship-High": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.71,
+   "mapped_judges": [
+    7.03,
+    6.71,
+    6.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f3tall-duskhush High cand|ship | CO16-f3tall-duskhush-cand-High": {
+   "measured_mean": 6.167,
+   "mapped_mean": 6.84,
+   "mapped_judges": [
+    7.03,
+    6.63,
+    6.87
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO16 f3tall-duskhush High cand|ship | CO16-f3tall-duskhush-ship-High": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.49,
+   "mapped_judges": [
+    6.71,
+    6.39,
+    6.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

@@ -3,5 +3,6 @@
   "enabled": true,
   "still_speed": 0.15,
   "settle_s": 0.6,
-  "radius_scale": 1.6
+  "radius_scale": 1.6,
+  "p2_020_candidate": {"_why": "P2-020 (vis-meadows, 1 Nov, OFF until GPU-judged): today's re-score still reads the hare's and owlet's feet as buried in grass. A creature joins the clearing only when it stands still (< 0.15 m/s for 0.6 s), so a wild creature ambling through its wander never clears its feet. On: the clearing also holds while it ambles (< 0.7 m/s, after 0.3 s), over a wider disc (body radius x2.1). The grass field already re-reads clearings when a creature joins or leaves.", "enabled": false, "still_speed": 0.7, "settle_s": 0.3, "radius_scale": 2.1}
 }

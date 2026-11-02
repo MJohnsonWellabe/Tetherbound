@@ -1,0 +1,6 @@
+In: "chrome-mirror skin"; "upright lizard pose, faint does not read"
+Qy: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Yb: none
+Ar: none
+Pd: "armoured toy-like bear, plates read as fittings"; "faint ends belly-up"
+Yh: "stylised upright seal-dragon, does not read as a believable animal"; "faint does not settle"

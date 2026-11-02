@@ -1,0 +1,12 @@
+[
+    {
+        "label":  "CO16 f4coat-cindercub Medium one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO16M\\sides\\CO16-f4coat-cindercub-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO16M\\sides\\CO16-f4coat-cindercub-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the coat reads near-black or muddy, so form and face are lost against the stage",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    }
+]

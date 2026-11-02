@@ -1,0 +1,71 @@
+{
+ "Ul": {
+  "anchor": false,
+  "label": "F36 (1) Glimmermoth",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Glimmermoth_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Glimmermoth_main.jpg"
+ },
+ "Qd": {
+  "anchor": false,
+  "label": "F36 (0) #14 Fulgocobra",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__0___14_Fulgocobra_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__0___14_Fulgocobra_cand.jpg"
+ },
+ "Ws": {
+  "anchor": false,
+  "label": "F36 (1) Duskhush",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Duskhush_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Duskhush_main.jpg"
+ },
+ "To": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Fp": {
+  "anchor": false,
+  "label": "F36 (0) #11 Cloudfang",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__0___11_Cloudfang_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__0___11_Cloudfang_main.jpg"
+ },
+ "It": {
+  "anchor": false,
+  "label": "F36 (1) Cragclaw",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Cragclaw_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Cragclaw_cand.jpg"
+ },
+ "Oc": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Fy": {
+  "anchor": false,
+  "label": "F36 (1) Frostclaw",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Frostclaw_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Frostclaw_main.jpg"
+ },
+ "Hy": {
+  "anchor": false,
+  "label": "F36 (1) Mangrove Monitor",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Mangrove_Monitor_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Mangrove_Monitor_cand.jpg"
+ },
+ "Uf": {
+  "anchor": true,
+  "A": "f36_0_npc:C8A",
+  "B": "f36_0_npc:C8B"
+ },
+ "Yc": {
+  "anchor": false,
+  "label": "F36 (1) Craghorn",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Craghorn_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Craghorn_cand.jpg"
+ },
+ "Sz": {
+  "anchor": false,
+  "label": "F36 (1) Cliffspike",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Cliffspike_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/CREATURES-2/img/F36__1__Cliffspike_cand.jpg"
+ }
+}

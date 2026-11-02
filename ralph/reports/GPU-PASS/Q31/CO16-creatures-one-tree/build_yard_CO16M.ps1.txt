@@ -1,0 +1,21 @@
+# CO16 Medium follow-up (queue 61): Cindercub with CO-F36-4 coat lift mapped 7.51 at High, so its MET line needs Medium.
+# One-sided set (the same strip on both sides), as for Tanglevolt Medium. Frames: out\CO16-f4coat-Medium-cindercub\frames,
+# tree A c4806f1ab with flags.creatures_f36_coat_lift.enabled = true, plain mode, standard roster crop.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\CO16M\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 5; thumb_w = 300; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out; crop = @(560, 200, 1000, 640) }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_co16m.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_co16m.json" | Out-Null; return $out
+}
+$brief = "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read."
+$def = @("the coat reads near-black or muddy, so form and face are lost against the stage", "the fainted body floats above the stage, with a gap between the body and its shadow")
+$sp = "cindercub"; $dir = "$o\CO16-f4coat-Medium-$sp\frames"
+$role = @("ride", "swim", "fly_grip") | Where-Object { Test-Path "$dir\$sp-$_-050.png" } | Select-Object -First 1
+$p = @(@("hit-000", "standing"), @("hit-025", "hit react"), @("faint-050", "faint mid"), @("faint-100", "faint end"))
+if ($role) { $p += , @("$role-050", @{ ride = "ridden"; swim = "swimming"; fly_grip = "carrying" }[$role]) }
+$p = @($p | Where-Object { Test-Path "$dir\$sp-$($_[0]).png" })
+if ($p.Count -eq 0) { "NO FRAMES in $dir"; exit 1 }
+$side = Side @($p | ForEach-Object { "$dir\$sp-$($_[0]).png" }) @($p | ForEach-Object { $_[1] }) "$od\CO16-f4coat-$sp-Medium.png"
+$sets = @([ordered]@{ label = "CO16 f4coat-$sp Medium one-sided"; a = $side; b = $side; brief = $brief; defects = $def })
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\CO16M\b1" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO16M\b1\candidates.json", (ConvertTo-Json -InputObject @($sets) -Depth 5))
+"CO16M sets: 1 ($($p.Count) poses)"

@@ -1,0 +1,89 @@
+{
+ "Zi": {
+  "anchor": false,
+  "label": "F36-27",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/F36-27_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/F36-27_main.jpg"
+ },
+ "Rr": {
+  "anchor": false,
+  "label": "P2-076",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-076_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-076_cand.jpg"
+ },
+ "Cz": {
+  "anchor": false,
+  "label": "P2-113",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-113_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-113_cand.jpg"
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "F36-28",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/F36-28_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/F36-28_cand.jpg"
+ },
+ "Aa": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ },
+ "Yr": {
+  "anchor": false,
+  "label": "F36-25",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/F36-25_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/F36-25_main.jpg"
+ },
+ "Ii": {
+  "anchor": false,
+  "label": "P2-075",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-075_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-075_cand.jpg"
+ },
+ "Hh": {
+  "anchor": false,
+  "label": "P2-073",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-073_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-073_cand.jpg"
+ },
+ "Oy": {
+  "anchor": false,
+  "label": "P2-087",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-087_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-087_main.jpg"
+ },
+ "Pa": {
+  "anchor": false,
+  "label": "P2-034",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-034_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-034_main.jpg"
+ },
+ "Kn": {
+  "anchor": false,
+  "label": "P2-074",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-074_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-074_cand.jpg"
+ },
+ "Lu": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ },
+ "Ap": {
+  "anchor": false,
+  "label": "F36-29",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/F36-29_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/F36-29_cand.jpg"
+ },
+ "Ug": {
+  "anchor": false,
+  "label": "P2-059",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-059_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b3m/P2-059_main.jpg"
+ },
+ "Dl": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

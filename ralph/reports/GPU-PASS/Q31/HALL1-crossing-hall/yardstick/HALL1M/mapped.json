@@ -1,0 +1,107 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9394,
+  "least_squares_slope": 1.0271,
+  "method": "linear",
+  "slope": 1.0271,
+  "intercept": 0.4377,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.447,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "p2_094_r4:X_before": {
+   "measured": 3.433,
+   "reference": 3.5,
+   "mapped": 3.964,
+   "residual": -0.464
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.567,
+   "reference": 6.73,
+   "mapped": 6.155,
+   "residual": 0.575
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 6.433,
+   "reference": 6.23,
+   "mapped": 7.046,
+   "residual": -0.816
+  },
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 6.867,
+   "reference": 7.79,
+   "mapped": 7.491,
+   "residual": 0.299
+  },
+  "f36_0_gap:C5A": {
+   "measured": 4.6,
+   "reference": 5.7,
+   "mapped": 5.163,
+   "residual": 0.537
+  },
+  "f36_0_gap:C5B": {
+   "measured": 6.367,
+   "reference": 6.93,
+   "mapped": 6.977,
+   "residual": -0.047
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.933,
+   "reference": 7.47,
+   "mapped": 7.559,
+   "residual": -0.089
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.9,
+   "reference": 7.53,
+   "mapped": 7.525,
+   "residual": 0.005
+  }
+ },
+ "candidates": {
+  "HALL1 approach-nave High one-sided | HALL1-approach-nave-main-High": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.43,
+   "mapped_judges": [
+    5.98,
+    6.6,
+    6.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "HALL1 shrine High one-sided | HALL1-shrine-main-High": {
+   "measured_mean": 5.333,
+   "mapped_mean": 5.92,
+   "mapped_judges": [
+    5.57,
+    5.98,
+    6.19
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "HALL1 nave-sides High one-sided | HALL1-nave-sides-main-High": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.19,
+   "mapped_judges": [
+    5.78,
+    6.29,
+    6.5
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

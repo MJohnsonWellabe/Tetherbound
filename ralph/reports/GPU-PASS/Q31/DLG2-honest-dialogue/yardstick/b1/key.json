@@ -1,0 +1,58 @@
+{
+ "An": {
+  "anchor": false,
+  "label": "DLG2 P2-073 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-073-dlg2-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-073-dlg2-High.png"
+ },
+ "Tq": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Yv": {
+  "anchor": false,
+  "label": "DLG2 P2-081 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-081-dlg2-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-081-dlg2-High.png"
+ },
+ "Uw": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Kr": {
+  "anchor": false,
+  "label": "DLG2 P2-083 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-083-dlg2-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-083-dlg2-High.png"
+ },
+ "Sz": {
+  "anchor": false,
+  "label": "DLG2 P2-087 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-087-dlg2-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-087-dlg2-High.png"
+ },
+ "Ul": {
+  "anchor": false,
+  "label": "DLG2 P2-076 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-076-dlg2-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-076-dlg2-High.png"
+ },
+ "Wp": {
+  "anchor": false,
+  "label": "DLG2 P2-074 High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-074-dlg2-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\DLG2\\sides\\P2-074-dlg2-High.png"
+ },
+ "Zi": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Wi": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}

@@ -1,0 +1,9 @@
+Uh: "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+Bm: "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks"
+Di: "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+Ye: "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+Lv: none
+Ok: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Hm: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Yd: none
+Cn: "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"

@@ -1,0 +1,59 @@
+{
+ "species": "duskhush",
+ "owner_direction": "1 Nov 2026 creature redesign under the owner's rule (believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Coordinator pick a from two rule-following concepts: Duskhush, a large grey-brown owl with ear tufts and dusky barred feathers, a believable lean adult creature in its natural stance, mostly realistic fur, feathers or scales, glowing violet eyes, thin g",
+ "reference": "ref_a.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected and picked by the coordinator under the owner's delegated rule",
+ "meshy_image_to_3d_task": "01a197e6-ee6c-7729-9cf2-fc6627a32647",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_duskhush (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes",
+  "steps": [
+   "assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py (rig_bird.py with the shell-aware torso measurement; species-agnostic)",
+   "tools/art_pipeline/arc_emission.py",
+   "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
+  ],
+  "commands": "blender --background --python assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py -- assets/creatures/tetherbound/duskhush/candidate_owner1101/source/duskhush_a.glb --out assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101.glb --report prepare-report.json ; python3 tools/art_pipeline/arc_emission.py duskhush_owner1101",
+  "report": "assets/creatures/tetherbound/duskhush/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "rig_bird 19 bones",
+   "proportions": {
+    "height_m": 1.8711,
+    "leg_fraction": 0.2,
+    "leg_length_m": 0.3742,
+    "crotch_measured": true,
+    "neck_measured": true,
+    "torso_half_width_m": 0.401,
+    "wingspan_over_torso": 1.21,
+    "wings_folded": true,
+    "waddle_deg": 8.09
+   },
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint",
+    "charged",
+    "fly_grip",
+    "rest",
+    "swim",
+    "ride"
+   ]
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.duskhush_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_duskhush",
+ "test": "tests/test_creature_model_flags.gd"
+}

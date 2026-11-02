@@ -1,0 +1,71 @@
+{
+ "Mv": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Cw": {
+  "anchor": false,
+  "label": "P2-056",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/P2_056_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/P2_056_0_cand.jpg"
+ },
+ "Zn": {
+  "anchor": false,
+  "label": "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #6",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_5_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_5_cand.jpg"
+ },
+ "Iv": {
+  "anchor": false,
+  "label": "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_0_cand.jpg"
+ },
+ "Ys": {
+  "anchor": false,
+  "label": "P2-038",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/P2_038_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/P2_038_0_cand.jpg"
+ },
+ "Pu": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Sh": {
+  "anchor": false,
+  "label": "P2-055",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/P2_055_0_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/P2_055_0_cand.jpg"
+ },
+ "Mo": {
+  "anchor": false,
+  "label": "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_3_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_3_cand.jpg"
+ },
+ "Vi": {
+  "anchor": false,
+  "label": "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_2_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_2_main.jpg"
+ },
+ "Kc": {
+  "anchor": false,
+  "label": "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #5",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_4_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_4_main.jpg"
+ },
+ "Cs": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Rf": {
+  "anchor": false,
+  "label": "F39 shared light (P2-008, P2-009, P2-011, P2-026, P2-057, P2-073, P2-074, P2-075 and other Tidewake scene items) #2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_1_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b4j/TIDEWAKE-STORMWOOD/img/F39_shared_light__P2_008__P2_009__P2_011_1_main.jpg"
+ }
+}

@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f36_0_gap:C6B": [
+   6.4,
+   5.7,
+   5.6
+  ],
+  "f36_0_gap:C6A": [
+   6.9,
+   7.0,
+   7.0
+  ],
+  "craft:after": [
+   6.9,
+   7.2,
+   6.6
+  ],
+  "craft:before": [
+   5.6,
+   5.5,
+   5.5
+  ],
+  "f36_0_npc:C1A": [
+   7.3,
+   7.1,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   7.3,
+   7.1,
+   7.0
+  ]
+ },
+ "candidates": {
+  "duskhush cand": [
+   6.6,
+   6.4,
+   6.6
+  ],
+  "duskhush base": [
+   7.0,
+   6.1,
+   6.4
+  ],
+  "bramblebun base": [
+   6.8,
+   6.8,
+   6.9
+  ],
+  "bramblebun cand": [
+   7.1,
+   6.7,
+   7.0
+  ],
+  "trailpup base": [
+   6.6,
+   6.5,
+   6.5
+  ],
+  "trailpup cand": [
+   6.8,
+   6.9,
+   6.7
+  ],
+  "cindercub base": [
+   6.9,
+   6.4,
+   6.3
+  ],
+  "cindercub cand": [
+   7.2,
+   6.7,
+   6.6
+  ]
+ }
+}

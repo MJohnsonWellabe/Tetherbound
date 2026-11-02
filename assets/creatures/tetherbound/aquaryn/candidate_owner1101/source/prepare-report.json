@@ -1,0 +1,68 @@
+{
+  "per_bone": {
+    "root": 6633,
+    "spine_1": 2919,
+    "spine_2": 3720,
+    "spine_3": 2331,
+    "spine_4": 2509,
+    "head": 63
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13999,
+  "height_m": 3.4,
+  "triangles": 27999,
+  "bones": 6,
+  "chain_joints_normalised": [
+    [
+      -0.062,
+      -0.187,
+      0.24
+    ],
+    [
+      -0.082,
+      -0.155,
+      0.475
+    ],
+    [
+      -0.04,
+      -0.109,
+      0.675
+    ],
+    [
+      -0.039,
+      -0.15,
+      0.825
+    ],
+    [
+      -0.041,
+      -0.085,
+      0.975
+    ],
+    [
+      -0.059,
+      -0.25,
+      0.975
+    ]
+  ],
+  "coil_fraction": 0.3,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+      "disc": false,
+      "base_over_leg_band_area": 0.874
+    }
+  },
+  "params": {
+    "species": "aquaryn",
+    "height": 3.4
+  },
+  "method": "measured_column_chain_coil_on_root",
+  "candidate_enabled": false
+}

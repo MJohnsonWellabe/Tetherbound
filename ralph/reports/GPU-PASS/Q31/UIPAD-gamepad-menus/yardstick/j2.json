@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Pw": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The violet-streaked wolf matches the Tanglevolt bar and stands well above the ruler, but side A's hit react is identical to standing and its faint end flips to a white belly with black blotches that reads as a cow-patterned texture fault; a neutral grey stage carries no Valheim-class light."
+  },
+  "Fw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's aftermaths tell site-specific stories (banner torn down, cage opened with freed villager, tent struck and fire smoking), while side A leaves enemy banners standing in rows 1, 3 and 5; both sink on smeared low-res ground, flat tiled wall texture, a pale flat sky and floating dark blobs on the row-4 horizon."
+  },
+  "Jl": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's furry boar is close to the naturalistic bar but carries odd gold blob spots, floats above its shadow in faint mid and barely reaches the trainer's head height; side B is a smooth terracotta clay toy with flat moss patches and a nose-up faint end that reads as sitting, far off the owner's style bar."
+  },
+  "Qb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Clear blue-grey translucent panel with orange shortfall text and a teal Leave hint, but the Missing materials action is still gray-on-gray and the panel reads as functional tooling rather than Palworld-finish UI."
+  },
+  "Ci": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted Meadows header strip, wooden room behind the frame and creature model preview connect the shell to the world, but the body is still dense small charcoal panels with tiny text that would not read on a 7-inch screen."
+  },
+  "Zv": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Gamepad glyphs, gold section heads and row boxes help, but the instruction lines are still small gray-on-navy and the keyboard column still shows literal W/S/A/D and 1-5 labels in a dense table."
+  },
+  "Ns": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake tab now carries the active outline matching the TIDEWAKE heading, but the map itself is a blurry blue field with one green blob and orange lines, with no drawn coastline, dunes or landmarks from the Tidewake board."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Build now fills its panel with three illustrated cards, but Players is still mostly greyed empty seat rows and the Quest log leaves the lower half blank under a few small lines."
+  },
+  "Zb": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The HUD boxes are smaller and pushed to the edges, but six separate dark panels still frame the view, and the bedroom behind them is a monotone orange floor and ceiling with flat plaster walls and no light shafts."
+  },
+  "Qt": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Grandpa reads at once as a warm, appealing villager with expressive eyes, sculpted white hair and an earthy green vest and scarf that sit in the key art's palette, though he is more cartoon-styled than the naturalistic creature bar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give Meadows ground a sharper, layered grass/dirt material with real foreground density and replace the flat pale sky with a graded sky and distance fog, so the defeated-trainer sites (Fw) and every scene behind the UI read as the key art's world.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the boar (Jl) to the owner's naturalistic bar (real bristle fur, natural colouring rather than gold blobs or clay terracotta, taller than the 1.80 m trainer) and fix the wolf (Pw side A) hit react and the blotchy white underside texture in its faint poses.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Restructure the menus and HUD for a 7-inch screen: larger type, brighter hint and button text, fill or collapse empty Players/Quests space, merge HUD boxes into fewer edge clusters, and draw the map with real coastline and landmark art.",
+   "kind": "scene"
+  }
+ ]
+}

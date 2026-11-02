@@ -1,0 +1,6 @@
+Se: none
+Mr: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Hp: "The creature stands no taller than, or barely above, the 1.80 m trainer"
+Gl: none
+Gc: "The creature stands no taller than, or barely above, the 1.80 m trainer"
+Vg: "The creature stands no taller than, or barely above, the 1.80 m trainer"

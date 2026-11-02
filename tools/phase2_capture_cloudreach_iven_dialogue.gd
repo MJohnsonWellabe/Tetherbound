@@ -16,3 +16,8 @@ func _load_plan() -> bool:
 		selected.append(row)
 	_planned = selected
 	return not selected.is_empty()
+
+
+## Custom per-launch flow; not validated for batched --jobs launches.
+func _supports_jobs() -> bool:
+	return false

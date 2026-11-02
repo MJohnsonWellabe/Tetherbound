@@ -20,7 +20,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
 	assert_true(bool(raw.enabled), "the judged Tidewake look ships on")
 	var off: Array = raw.get("sections_off", [])
-	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor",
+	for section: String in ["current_flow_visual", "night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
 			"stones_candidate", "veilfall_hero_candidate",
 			"veilfall_facade_candidate", "forward_plus_candidate",
@@ -29,7 +29,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 				"shore_surf_candidate", "shore_surf_vary_candidate", "veilfall_falls_candidate", "rain_fog_candidate",
 				"rain_grade_candidate", "rain_veil_candidate", "swim_candidate", "dune_grass_candidate", "shore_water_candidate",
 				"veilfall_mountain_candidate",
-				"waterline_declutter_candidate", "golden_sky_candidate", "current_bands_candidate", "lesson_clusters_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate"]:
+				"waterline_declutter_candidate", "golden_sky_candidate", "current_bands_candidate", "lesson_clusters_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -69,8 +69,13 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
+	# Cloud yardstick 1 Nov batch-3: the current-flow lane beat main (P2-066
+	# 4.12 -> 5.18), so it ships ON with its score recorded beside it.
+	assert_false(off.has("current_flow"), "the judged current flow ships on")
+	assert_true(str(raw.get("_why_current_flow_on", "")).contains("5.18"), "the current flow's mapped score is recorded in the config")
 	var base := {"untouched": true}
-	assert_eq(PROFILE.overlay(base, "current_flow", config), base)
+	assert_ne(PROFILE.overlay(base, "current_flow", config), base, "the current flow reaches play")
+	assert_eq(PROFILE.overlay(base, "current_flow_visual", config), base, "the unjudged current visual stays out of play")
 	assert_true(bool(config.enabled))
 
 

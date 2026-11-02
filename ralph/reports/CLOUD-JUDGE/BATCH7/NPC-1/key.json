@@ -1,0 +1,71 @@
+{
+ "Gu": {
+  "anchor": false,
+  "label": "Character look: kael",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__kael_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__kael_cand.jpg"
+ },
+ "Zq": {
+  "anchor": false,
+  "label": "Character look: villager_keeper",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__villager_keeper_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__villager_keeper_cand.jpg"
+ },
+ "Rr": {
+  "anchor": false,
+  "label": "Character look: sera",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__sera_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__sera_cand.jpg"
+ },
+ "Kj": {
+  "anchor": false,
+  "label": "Character look: grunt",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__grunt_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__grunt_main.jpg"
+ },
+ "Xi": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Gv": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Bu": {
+  "anchor": false,
+  "label": "Character look: villager_farmer",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__villager_farmer_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__villager_farmer_cand.jpg"
+ },
+ "Jq": {
+  "anchor": false,
+  "label": "Character look: warden",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__warden_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__warden_cand.jpg"
+ },
+ "Ic": {
+  "anchor": false,
+  "label": "Character look: grunt_b",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__grunt_b_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__grunt_b_cand.jpg"
+ },
+ "Cl": {
+  "anchor": false,
+  "label": "Character look: lyra",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__lyra_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__lyra_main.jpg"
+ },
+ "Ll": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Dl": {
+  "anchor": false,
+  "label": "Character look: grunt_a",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__grunt_a_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b7j/NPC-1/img/Character_look__grunt_a_cand.jpg"
+ }
+}

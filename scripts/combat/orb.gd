@@ -26,6 +26,8 @@ extends Node3D
 const CATCH_KIT := preload("res://scripts/vfx/catch_kit.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+const CAMFX := preload("res://scripts/vfx/camfx.gd")
+const PATTERN_CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 
 ## Struck the target. `offset` is metres from its centre of mass, which is what
 ## the accuracy half of the catch formula reads.
@@ -129,6 +131,10 @@ var _trail: MeshInstance3D = null
 var _trail_mesh: ImmediateMesh = null
 var _path: PackedVector3Array = PackedVector3Array()
 var _orb_material: StandardMaterial3D = null
+## camfx.json `catch_orb` (OFF = empty): the physical-orb candidate. See
+## `_build_r2()` and the `_r2` branches below.
+var _r2: Dictionary = {}
+var _contact_shadow: MeshInstance3D = null
 
 @onready var _mesh: MeshInstance3D = $Mesh
 
@@ -140,6 +146,10 @@ func _ready() -> void:
 	_max_life = float(cfg.get("max_flight_time", _max_life))
 	_hang_total = float(CATCH.config().get("resolve", {}).get("absorb_seconds", 0.45))
 	_hang_left = _hang_total
+	_r2 = CAMFX.block("catch_orb")
+	if not _r2.is_empty() and _build_r2():
+		return
+	_r2 = {}
 	_build_placeholder()
 
 
@@ -205,6 +215,73 @@ func _build_placeholder() -> void:
 	_build_glows()
 
 
+## camfx.json `catch_orb` (judges 1 Nov: "flat glow disc, no physical orb"):
+## the authored capture orb with no resting halo, a soft contact shadow, and
+## dust at landing and on each shake. False (and the ordinary orb is built)
+## when the model is missing.
+func _build_r2() -> bool:
+	var diameter := _radius * float(_r2.get("model_scale", 1.0))
+	var authored := CATCH_KIT.orb_model_at(str(_r2.get("model", "")), diameter,
+		float(_r2.get("model_source_diameter_m", 0.30)), 0.15)
+	if authored == null:
+		return false
+	_mesh.mesh = null
+	# The orb's origin rests `_radius / 2` above the ground; a larger shell is
+	# lifted so it sits on the ground rather than in it.
+	authored.position.y = (diameter - _radius) * 0.5
+	_mesh.add_child(authored)
+	_build_glows()
+	_contact_shadow = MeshInstance3D.new()
+	_contact_shadow.name = "OrbContactShadow"
+	var disc := QuadMesh.new()
+	var shadow_radius := float(_r2.get("contact_shadow_radius_m", 0.34))
+	disc.size = Vector2(shadow_radius * 2.0, shadow_radius * 2.0)
+	disc.orientation = PlaneMesh.FACE_Y
+	_contact_shadow.mesh = disc
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_color = Color(0.0, 0.0, 0.0, float(_r2.get("contact_shadow_alpha", 0.5)))
+	material.albedo_texture = _soft_disc_texture()
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	_contact_shadow.material_override = material
+	_contact_shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_contact_shadow.top_level = true
+	_contact_shadow.visible = false
+	add_child(_contact_shadow)
+	return true
+
+
+static var _disc_texture: Texture2D = null
+
+
+static func _soft_disc_texture() -> Texture2D:
+	if _disc_texture == null:
+		var gradient := Gradient.new()
+		gradient.set_color(0, Color(1, 1, 1, 1))
+		gradient.set_color(1, Color(1, 1, 1, 0))
+		var texture := GradientTexture2D.new()
+		texture.gradient = gradient
+		texture.fill = GradientTexture2D.FILL_RADIAL
+		texture.fill_from = Vector2(0.5, 0.5)
+		texture.fill_to = Vector2(1.0, 0.5)
+		texture.width = 64
+		texture.height = 64
+		_disc_texture = texture
+	return _disc_texture
+
+
+## The ground point under a resting orb.
+func _ground_point() -> Vector3:
+	return global_position - Vector3.UP * _radius * 0.5
+
+
+func _r2_dust(key: String) -> void:
+	var profile: Variant = _r2.get(key, {})
+	if profile is Dictionary and not (profile as Dictionary).is_empty() and get_parent() != null:
+		PATTERN_CUE.contact_burst(get_parent(), _ground_point(), profile)
+
+
 func _build_glows() -> void:
 	# A disc with alpha falling to nothing at its rim, rebuilt each frame facing
 	# the camera. It was a QuadMesh with a flat colour, which is exactly what it
@@ -251,6 +328,15 @@ func _draw_halo(scale_value: float, alpha: float) -> void:
 	if CATCH_KIT.enabled() and not _flying_for_halo():
 		scale_value *= 0.55
 		alpha *= 0.35
+	# camfx.json `catch_orb`: a smaller glow in flight only; no disc once the
+	# orb has struck, so its own shell carries the moment.
+	if not _r2.is_empty():
+		if not _flying_for_halo() and _r2.get("rest_halo", false) != true:
+			_halo_mesh.clear_surfaces()
+			return
+		if _flying_for_halo():
+			scale_value = float(_r2.get("flight_halo_scale", 2.6))
+			alpha *= float(_r2.get("flight_halo_alpha", 0.6))
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return
@@ -472,6 +558,8 @@ func _tick_drop(delta: float) -> void:
 		_phase = Phase.RESTING
 		_rest_time = 0.0
 		_mesh.rotation = Vector3.ZERO
+		if not _r2.is_empty():
+			_r2_dust("land_dust")
 	elif _velocity.y < -30.0:
 		# Falling with no ground found (struck over a hole, a prop, a seam):
 		# rest where it is rather than falling forever under the camera.
@@ -505,22 +593,35 @@ func _tick_rest(delta: float) -> void:
 		_mesh.position = lateral + Vector3.UP * envelope * SHAKE_HOP
 		halo_scale += envelope * 1.1
 		halo_alpha = 1.0
+		if not _r2.is_empty():
+			# Squash on each contact, stretch on the hop: the shell has weight.
+			var squash := float(_r2.get("shake_squash", 0.14)) * cos(t * TAU * 1.5) * envelope
+			_mesh.scale = Vector3(1.0 + squash * 0.5, 1.0 - squash, 1.0 + squash * 0.5)
 		if _shake_left <= 0.0:
 			_mesh.rotation.z = 0.0
 			_mesh.position = Vector3.ZERO
+			_mesh.scale = Vector3.ONE
 
 	if _phase == Phase.SEALED:
 		_seal_time += delta
 		# Bloom fast, then settle into a calm, brighter-than-before glow: the
 		# orb has decided, and it should look pleased about it.
 		var bloom: float = exp(-_seal_time * 3.0)
-		halo_scale = REST_HALO_SCALE + 0.8 + bloom * 2.2
-		halo_alpha = 1.0
+		var calm := calm_seal_config()
+		if calm.is_empty():
+			halo_scale = REST_HALO_SCALE + 0.8 + bloom * 2.2
+		else:
+			halo_scale = REST_HALO_SCALE + float(calm.get("halo_extra", 0.2)) + bloom * float(calm.get("halo_bloom", 0.6))
+		halo_alpha = 1.0 if calm.is_empty() else float(calm.get("halo_alpha", 0.55))
 		if _orb_material != null:
 			# Warm, not white: past ~2.5 the sphere clips to a featureless blob
 			# and the seal stops reading as the gold orb it is.
-			_orb_material.emission_energy_multiplier = 1.1 + bloom * 0.9
+			_orb_material.emission_energy_multiplier = 1.1 + bloom * 0.9 if calm.is_empty() \
+				else float(calm.get("emission", 0.6)) + bloom * float(calm.get("emission_bloom", 0.3))
 
+	if _contact_shadow != null:
+		_contact_shadow.visible = true
+		_contact_shadow.global_position = _ground_point() + Vector3.UP * 0.02
 	_draw_halo(halo_scale, halo_alpha)
 
 
@@ -530,7 +631,12 @@ func _tick_rest(delta: float) -> void:
 ## distance where the rock itself is a few pixels.
 func shake(_index: int) -> void:
 	_shake_left = SHAKE_SECONDS
-	FLASH.burst(get_parent(), global_position, Color("#ffd27a"), 0.55, 0.28, 0.8)
+	if not _r2.is_empty():
+		# camfx.json `catch_orb`: grit and dust kicked from under the shell
+		# instead of a flat gold disc over it.
+		_r2_dust("shake_dust")
+	if _r2.is_empty() or _r2.get("shake_flash", false) == true:
+		FLASH.burst(get_parent(), global_position, Color("#ffd27a"), 0.55, 0.28, 0.8)
 	# P2-060: presentation-only shake beat; OFF unless catch_kit.json enables it.
 	if CATCH_KIT.enabled():
 		CATCH_KIT.play(get_parent(), "shake", global_position, self)
@@ -547,6 +653,22 @@ func _across_the_view() -> Vector3:
 	return Vector3.RIGHT if right.length() < 0.01 else right.normalized()
 
 
+## P2-061 (UIPOSES, GPU UI-1 31 Oct: "tone down the orb bloom"): hud.json
+## `catch_card.calm_seal`, read only while the catch card is enabled. The
+## sealed orb keeps its gold albedo readable under the result card instead of
+## blooming to a white blob with a wide halo. Presentation only.
+static var _calm_seal: Variant = null
+
+
+static func calm_seal_config() -> Dictionary:
+	if _calm_seal == null:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+		var card: Variant = parsed.get("catch_card", {}) if parsed is Dictionary else {}
+		var calm: Variant = card.get("calm_seal", {}) if card is Dictionary and card.get("enabled") == true else {}
+		_calm_seal = calm if calm is Dictionary and calm.get("enabled") == true else {}
+	return _calm_seal
+
+
 ## The catch succeeded: hold a warm, settled glow until the fight cleans up.
 func seal() -> void:
 	_phase = Phase.SEALED
@@ -554,6 +676,7 @@ func seal() -> void:
 	_shake_left = 0.0
 	_mesh.rotation = Vector3.ZERO
 	_mesh.position = Vector3.ZERO
+	_mesh.scale = Vector3.ONE
 
 
 func is_resting() -> bool:
