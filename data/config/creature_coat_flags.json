@@ -615,7 +615,7 @@
       }
     },
     "creatures_ralph_ripplet_otter": {
-      "_why": "Creatures-ralph (2 Nov 2026), Ripplet remake (GPU batch 6: 6.69 -> 6.12; 'rubbery teal lizard-cat, dome bumps read as toy'). Natural otter coat in its sky-teal and cream identity (data/creatures/remake_grades.json ripplet) with a matte fur finish.",
+      "_why": "Creatures-ralph (2 Nov 2026), Ripplet remake (GPU batch 6: 6.69 -> 6.12; 'rubbery teal lizard-cat, dome bumps read as toy'). Natural otter coat in its sky-teal and cream identity (data/creatures/remake_grades.json ripplet) with a matte fur finish. r15 CPU three-judge A/B: 5.42 -> 5.29 mapped, OFF; needs new art.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_Image_0.jpg": {

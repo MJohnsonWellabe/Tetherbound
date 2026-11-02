@@ -30,9 +30,11 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - **Tempestwing:** shipped 6.20 vs pale gold coat with the faint grounded 5.71. Not kept. The judges prefer the shipped dark body under bright white wings for the value split; the shipped faint already rests on its body (only the wingtips cross the floor).
 - **Ribbonray:** shipped 5.53 vs value and saturation lift with the hit eased and the faint grounded 5.39. Not kept. All three judges call the magenta body "toy-like, no readable face". **It needs new Meshy art (a natural hue and a face). Parked.**
 - The coat flags (`creatures_ralph_sparkit_fennec`, `_tempestwing_gold`, `_ribbonray_lift`) stay OFF with their scores. Evidence is in `r14/`.
+- **Ripplet look (r15):** a natural otter regrade (sky-teal, deeper back, cream belly, matte, the grey dome texels recoloured) scored 5.29 against the shipped 5.42, so it is not kept. The judges want new art: fur or scale breakup, a back-to-belly gradient, natural plates in place of the domes, and glowing aqua markings and eyes. **Parked for Meshy.**
 - **Requests for the coordinator's Meshy queue:**
   - Ribbonray: a natural-hued ray or serpent with a readable face;
-  - Sparkit: the fennec with sturdier legs.
+  - Sparkit: the fennec with sturdier legs;
+  - Ripplet: the otter with fur, natural plates and glowing aqua markings.
 
 ## GPU main1102 regressions (coordinator, 2 Nov ~08:30 UTC): status
 
