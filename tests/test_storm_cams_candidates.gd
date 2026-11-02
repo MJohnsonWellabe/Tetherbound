@@ -127,21 +127,25 @@ func test_road_puddles_ship_off() -> void:
 	assert_false(bool(puddles.get("enabled", true)), "the candidate ships OFF")
 
 
-func test_camera_occlusion_fade_ships_off_and_is_inert_off_tree() -> void:
+func test_camera_occlusion_fade_ships_on_and_is_inert_off_tree() -> void:
 	var cfg := _json("res://data/config/camera.json")
 	var fade: Dictionary = cfg.get("occlusion_fade", {})
 	assert_true(fade.has("fade_transparency"), "the occlusion candidate must be declared")
-	assert_false(bool(fade.get("enabled", true)), "the candidate ships OFF")
+	assert_true(bool(fade.get("enabled", false)), "the occlusion fade ships ON (GPU batch 5)")
+	assert_true(str(fade.get("_why", "")).contains("GPU batch 5"), "the judged gain is recorded")
 	var occ := preload("res://scripts/player/camera_occlusion.gd")
 	assert_true(occ.occluders(null, Vector3.ZERO, Vector3.ONE, []).is_empty(), "no world, no occluders")
 
 
-func test_stormwood_light_pass_ships_off_and_merges_when_on() -> void:
+func test_stormwood_light_pass_ships_on_and_merges_when_on() -> void:
 	var look := preload("res://scripts/world/stormwood_look.gd")
 	var cfg := _json("res://data/config/stormwood_look.json")
 	var pass_cfg: Dictionary = cfg["light_pass_1101"]
-	assert_false(bool(pass_cfg.get("enabled", true)), "the light pass ships OFF")
-	assert_eq(look.with_light_pass(cfg)["rig"], cfg["rig"], "OFF leaves the rig alone")
+	assert_true(bool(pass_cfg.get("enabled", false)), "the light pass ships ON (GPU batch 5)")
+	assert_true(str(pass_cfg.get("_why", "")).contains("GPU batch 5"), "the judged gain is recorded")
+	var off_cfg := cfg.duplicate(true)
+	off_cfg["light_pass_1101"]["enabled"] = false
+	assert_eq(look.with_light_pass(off_cfg)["rig"], off_cfg["rig"], "OFF leaves the rig alone")
 	pass_cfg = pass_cfg.duplicate(true)
 	pass_cfg["enabled"] = true
 	cfg["light_pass_1101"] = pass_cfg

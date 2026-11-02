@@ -1,0 +1,319 @@
+{
+ "bar": 7.0,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7374,
+  "least_squares_slope": 1.136,
+  "method": "linear",
+  "slope": 1.136,
+  "intercept": -0.0255,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.663,
+ "top_anchor_reference": 6.9,
+ "confirming_batch": false,
+ "anchors": {
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.533,
+   "reference": 4.0,
+   "mapped": 5.125,
+   "residual": -1.125
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.233,
+   "reference": 6.53,
+   "mapped": 5.92,
+   "residual": 0.61
+  },
+  "f36_0_gap:C2B": {
+   "measured": 5.5,
+   "reference": 6.9,
+   "mapped": 6.223,
+   "residual": 0.677
+  },
+  "f36_0_gap:C2A": {
+   "measured": 6.6,
+   "reference": 6.83,
+   "mapped": 7.472,
+   "residual": -0.642
+  },
+  "f36_0_npc:C7B": {
+   "measured": 5.0,
+   "reference": 5.97,
+   "mapped": 5.655,
+   "residual": 0.315
+  },
+  "f36_0_npc:C7A": {
+   "measured": 5.133,
+   "reference": 5.97,
+   "mapped": 5.806,
+   "residual": 0.164
+  }
+ },
+ "candidates": {
+  "F36 (0) #9 Mirejaw cand": {
+   "measured_mean": 6.133,
+   "mapped_mean": 6.94,
+   "mapped_judges": [
+    7.25,
+    6.56,
+    7.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": false
+  },
+  "F36 (0) #9 Mirejaw main": {
+   "measured_mean": 5.467,
+   "mapped_mean": 6.18,
+   "mapped_judges": [
+    6.56,
+    6.11,
+    5.88
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36 (1) Cindercub main": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.4,
+   "mapped_judges": [
+    7.13,
+    7.59,
+    7.47
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (1) Cindercub cand": {
+   "measured_mean": 7.133,
+   "mapped_mean": 8.08,
+   "mapped_judges": [
+    8.15,
+    7.81,
+    8.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (1) Breezetail main": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.65,
+   "mapped_judges": [
+    5.65,
+    5.43,
+    5.88
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36 (1) Breezetail cand": {
+   "measured_mean": 6.267,
+   "mapped_mean": 7.09,
+   "mapped_judges": [
+    7.47,
+    6.45,
+    7.36
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (0) #4 Mudsnout cand": {
+   "measured_mean": 7.0,
+   "mapped_mean": 7.93,
+   "mapped_judges": [
+    7.93,
+    7.93,
+    7.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (0) #4 Mudsnout main": {
+   "measured_mean": 6.367,
+   "mapped_mean": 7.21,
+   "mapped_judges": [
+    7.13,
+    7.36,
+    7.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (0) #16 Ashtusk cand": {
+   "measured_mean": 5.3,
+   "mapped_mean": 6.0,
+   "mapped_judges": [
+    6.0,
+    5.77,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36 (0) #16 Ashtusk main": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.4,
+   "mapped_judges": [
+    7.13,
+    7.36,
+    7.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (1) Aquaryn cand": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.3,
+   "mapped_judges": [
+    6.9,
+    5.88,
+    6.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36 (1) Aquaryn main": {
+   "measured_mean": 6.467,
+   "mapped_mean": 7.32,
+   "mapped_judges": [
+    7.7,
+    6.9,
+    7.36
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (0) #12 Aeriex main": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.6,
+   "mapped_judges": [
+    6.34,
+    6.56,
+    6.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36 (0) #12 Aeriex cand": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.55,
+   "mapped_judges": [
+    7.59,
+    7.25,
+    7.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (0) #3 Galewisp cand": {
+   "measured_mean": 6.7,
+   "mapped_mean": 7.59,
+   "mapped_judges": [
+    7.47,
+    7.7,
+    7.59
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (0) #3 Galewisp main": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.43,
+   "mapped_judges": [
+    5.65,
+    5.2,
+    5.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36 (0) #17 Cannonback main": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.68,
+   "mapped_judges": [
+    7.02,
+    6.34,
+    6.68
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36 (0) #17 Cannonback cand": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.34,
+   "mapped_judges": [
+    6.22,
+    6.11,
+    6.68
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36 (0) #6 Burrowback cand": {
+   "measured_mean": 6.867,
+   "mapped_mean": 7.78,
+   "mapped_judges": [
+    7.7,
+    7.7,
+    7.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36 (0) #6 Burrowback main": {
+   "measured_mean": 6.767,
+   "mapped_mean": 7.66,
+   "mapped_judges": [
+    7.47,
+    7.47,
+    8.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (6.9): F36 (0) #12 Aeriex cand, F36 (0) #16 Ashtusk main, F36 (0) #3 Galewisp cand, F36 (0) #4 Mudsnout cand, F36 (0) #4 Mudsnout main, F36 (0) #6 Burrowback cand, F36 (0) #6 Burrowback main, F36 (1) Aquaryn main, F36 (1) Breezetail cand, F36 (1) Cindercub cand, F36 (1) Cindercub main; extrapolated, confirm in a batch whose anchors reach at least 7.35 (anchor_tiles.py --include craft or --include f36_0_npc:C1)",
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}
