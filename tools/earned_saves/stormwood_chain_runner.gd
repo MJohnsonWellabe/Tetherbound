@@ -90,6 +90,7 @@ const PIECES := {
 	"home_relic": "res://tests/helpers/f49_portal_travel.gd",
 	"home_credits": "res://tests/helpers/f49_portal_travel.gd",
 	"06s_solmane": "res://tests/helpers/f49_portal_travel.gd",
+	"meadows_walk_to_mira": "res://tools/earned_saves/wip_fights/meadows_master.gd",
 }
 ## The Home Key follows the Stormheart answer: accepted (marrow_aftermath) or,
 ## for the F49 retained five, declined (settlement).
@@ -413,6 +414,8 @@ func _play() -> void:
 				disclosures.append("Credits closed with the ordinary Skip (menu_cancel) after they opened")
 			helper_result = {"passed": passed, "failures": travel.get("failures"),
 				"transcript": [], "realm_after": str(game.get("current_realm"))}
+		"meadows_walk_to_mira":
+			await _walk_to_mira(world)
 		"06s_solmane":
 			# Coordinator-approved return trip (2 Nov): Cloudreach's post-Veyra
 			# Solmane answer, which no earlier piece walked; refused to keep the five.
@@ -802,3 +805,45 @@ func _revive_fainted(world: Node3D) -> bool:
 		if bool(care.get("passed", false)):
 			disclosures.append("arrival_prefix: used a carried potion_large on party row %d through the Satchel" % index)
 	return true
+
+
+
+## Coordinator decision (2 Nov): the earned line's Meadows T2 Master (Mira)
+## from the post-credits home is ~5 km away with no Meadows waystone touched,
+## so the walk is split into ~25 min pieces. Each piece walks the master
+## adapter's own legs (meadows_master.mira_legs from the loaded position, the
+## same Meadows route walker) leg by leg, stops at a leg boundary once its
+## wall budget is spent or on arrival, and saves. Ordinary movement only.
+const MIRA_WALK_BUDGET_MS := 25 * 60 * 1000
+
+func _walk_to_mira(world: Node3D) -> void:
+	if str(game.get("current_realm")) != "meadows":
+		failures.append("meadows_walk_to_mira must load the actual Meadows")
+		return
+	var master_script := load("res://tools/earned_saves/wip_fights/meadows_master.gd")
+	var spec: Dictionary = preload("res://scripts/creatures/breakthrough.gd").master("master_t2")
+	var site := Vector2(float(spec.position[0]), float(spec.position[2]))
+	var player := world.get_node_or_null("Player") as CharacterBody3D
+	var rig := world.get_node_or_null("CameraRig") as Node3D
+	if player == null or rig == null or spec.is_empty():
+		failures.append("meadows_walk_to_mira lacks the live player, camera or Mira's authored site")
+		return
+	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	var legs: Array = master_script.mira_legs(Vector2(player.global_position.x, player.global_position.z), site, terrain)
+	var walked := 0
+	var arrived := false
+	for index in legs.size():
+		if Time.get_ticks_msec() - started_ms > MIRA_WALK_BUDGET_MS and walked > 0:
+			break
+		var target: Vector2 = legs[index]
+		var walker: RefCounted = load("res://tests/helpers/meadows_earned_material_segment.gd").new()
+		var ok: bool = await walker.walk_route(self, world, game, player, rig,
+			Vector3(target.x, float(world.call("ground_height_at", target.x, target.y)), target.y))
+		if not ok:
+			failures.append("meadows_walk_to_mira leg %d to %s failed: %s" % [index, str(target), str(walker.get("failures"))])
+			return
+		walked += 1
+		arrived = index == legs.size() - 1
+	disclosures.append("meadows_walk_to_mira: walked %d of %d Mira legs (arrived=%s) at %s" % [walked, legs.size(), str(arrived), str(player.global_position)])
+	helper_result = {"passed": true, "failures": [], "transcript": [], "legs_walked": walked, "legs_total": legs.size(),
+		"arrived": arrived, "realm_after": str(game.get("current_realm"))}

@@ -553,7 +553,7 @@ func _play() -> void:
 			# a training loop on the earned line): a passing home_credits receipt.
 			var provenance: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("PROVENANCE.json")))
 			var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
-			var earned_home: bool = prior is Dictionary and prior.get("segment") == "home_credits" and prior.get("passed") == true
+			var earned_home: bool = prior is Dictionary and prior.get("segment") in ["home_credits", "meadows_walk_to_mira"] and prior.get("passed") == true
 			if earned_home:
 				disclosures.append("training_t2_master from the earned F49 line's post-credits home (home_credits receipt), not a generated boundary")
 			elif not provenance is Dictionary or provenance.get("kind") != "generated_boundary_save" \
