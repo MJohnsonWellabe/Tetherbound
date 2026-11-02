@@ -10,11 +10,10 @@ Each entry gives the species, the commit and the capture. All entries use `captu
 - **Thundertunnel** (r17, CPU 2.93 → 5.36): the GLB carries the hit and faint fixes, and `creatures_ralph_thundertunnel_velvet` is ON. A is main.
 - **One GPU job for all seven:** `--species=aquaryn,duskhush,mangrove_monitor,staticub,sirenseal,skyrill,thundertunnel`.
 
-## Next (r19, capturing on CPU from GPU cr1102 notes)
+## Ready for GPU (r19 keeps; A is main)
 
-- **Staticub r10:** the faint end floated 0.18 m (the leg tuck ran after grounding). Settled on the 3rd percentile.
-- **Mangrove Monitor r9:** the faint end floated 0.41 m. Settled.
-- **Aquaryn r9:** scale detail and less gloss (`creatures_ralph_aquaryn_r9_scales`).
-- **Skyrill r10:** value lift and a less glassy finish (`creatures_ralph_skyrill_r10_lift`).
-
-What passes the CPU A/B joins the next GPU job.
+- **Staticub r10:** the faint is settled; the GLB is CPU 7.09 → 7.22.
+- **Skyrill r10:** `creatures_ralph_skyrill_r10_lift` is ON, CPU 6.15 → 6.37.
+- **Torrentoad:** `creatures_ralph_torrentoad_toad` is ON (already in cr1102b).
+- **Job:** `--species=staticub,skyrill`.
+- **Not kept in r19:** Aquaryn matte scales (−0.05) and the Mangrove Monitor faint settle (tie). Both need new art: Aquaryn a value ramp and a natural finish; Mangrove Monitor a lying faint and its dorsal stripe moved off red.

@@ -657,6 +657,28 @@
           "albedo": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_velvet.jpg"
         }
       }
+    },
+    "creatures_ralph_skyrill_r10_lift": {
+      "_why": "Creatures-ralph (2 Nov 2026), r10 Skyrill (GPU cr1102 6.87; 'dark material against the stage, needs value lift'; r16 judges: glassy sheen). Value x1.3 with sharper scale detail (data/creatures/remake_grades.json skyrill_r10) and a less glassy finish. r19 CPU three-judge A/B: 6.15 -> 6.37 mapped, ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_Image_0_lift.jpg",
+          "roughness": 0.75,
+          "specular": 0.3
+        }
+      }
+    },
+    "creatures_ralph_aquaryn_r9_scales": {
+      "_why": "Creatures-ralph (2 Nov 2026), r9 Aquaryn (GPU cr1102 6.64; 'uniform glossy turquoise, toy-like; needs scale detail and less gloss'). Scale contrast sharpened, saturation down (data/creatures/remake_grades.json aquaryn_r9) with a matte scale finish. r19 CPU three-judge A/B: 5.88 -> 5.83 mapped (judges: still one glossy turquoise; scale detail does not read at the stage camera), OFF; needs new art or a value ramp.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0_scales.jpg",
+          "roughness": 0.85,
+          "specular": 0.25
+        }
+      }
     }
   }
 }
