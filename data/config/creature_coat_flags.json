@@ -613,6 +613,17 @@
           "albedo": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0_lift.jpg"
         }
       }
+    },
+    "creatures_ralph_ripplet_otter": {
+      "_why": "Creatures-ralph (2 Nov 2026), Ripplet remake (GPU batch 6: 6.69 -> 6.12; 'rubbery teal lizard-cat, dome bumps read as toy'). Natural otter coat in its sky-teal and cream identity (data/creatures/remake_grades.json ripplet) with a matte fur finish.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_Image_0_otter.jpg",
+          "roughness": 0.85,
+          "specular": 0.3
+        }
+      }
     }
   }
 }
