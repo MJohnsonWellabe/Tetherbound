@@ -1,3 +1,6 @@
+TO COORDINATOR (2 Nov 00:15Z): tb/routes-meadows (967e4adb) and tb/routes-sky-storm (ba7c2d1d) merged (no rebase) into tb/routes-f49; head 92d93e67. Both archived branches can be deleted. Reviewed: camp_tournament→bridge (f49_mt_bridge) matches with differences=[]; cr04→cr05 (sk_cr05, legacy generated-arrival lineage) MATCH with one explained receipt-shape field. Kept as-is: earned_chain_runner --historical-team-start and chain.sh `et` runner; sky-storm crosscut_draft/ files stay labelled UNREVIEWED drafts (not counted as seams).
+Progress since #794's 6584b78b: none landed yet; Stormwood dynamo is running from f49_sw_05.
+
 READY Cloudreach (1 Nov 14:20Z, tb/routes-f49 bbcaf260): f49_tw_09 -> f49_cr_01 .. f49_cr_07 all seams MATCH (ralph/reports/ROUTES/f49-1031/seams/); f49_cr_07 re-earned on aca00f08 with the owner-approved surplus drop + Storage Chest deposit (disclosed), Stormwood entered with 12 free slots. Stormwood chain running from it.
 
 # Routes lane (tb/routes-f49): RESUMED 1 Nov 13:30Z (owner: keep 24 slots, drop surplus, deposit); earlier pause record below
