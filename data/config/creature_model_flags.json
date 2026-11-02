@@ -177,7 +177,7 @@
     },
     "remake_owner1101_mudsnout": {
       "_why": "Remake 1 Nov 2026: Owner pick A: young wild boar, glowing green root lines, green eyes (Meshy 01a197c2-74b0-76de-b727-b805bc577662). dog3 quadruped rig at the installed 2.0 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing green root lines and green eyes. Provenance: assets/creatures/tetherbound/mudsnout/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "enabled": false,
       "species": {
         "mudsnout": {
           "model": "res://assets/creatures/tetherbound/mudsnout/candidate_owner1101/models/creature_mudsnout_owner1101.glb",
