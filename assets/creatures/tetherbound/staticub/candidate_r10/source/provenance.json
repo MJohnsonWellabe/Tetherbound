@@ -1,0 +1,86 @@
+{
+ "species": "staticub",
+ "round": "r10 (2 Nov 2026), new model after GPU batch 6 / roster baseline regression",
+ "owner_direction": "22 Oct 2026 creature style bar (naturalistic, Galecrest/Tanglevolt/Stormcapra/Stormursa level, identity kept); 1 Nov creature rule (believable adult animal, one elemental trait)",
+ "reference": "reference/ref.png",
+ "reference_alt": "reference/ref_alt.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image on the existing licence; coordinator picked 1 of 2 concepts after inspecting both (alternate kept as reference/ref_alt.png)",
+ "text_to_image_task": "01a19b71-ea33-72ee-a9c2-9a4425e4acdc",
+ "text_to_image_prompt": "Staticub, a sturdy young brown bear cub on all fours, thick realistic chestnut-brown fur with a paler muzzle and chest, rounded ears, large bright blue glowing eyes, thin glowing violet lightning veins running through the fur on its shoulders and back, no armour, no straps, a believable adult animal with grounded realistic anatomy and real fur, feather or scale detail, carrying one clear elemental fantasy trait; large wild creature clearly taller than a 1.8 m person; full body, three-quarter side view, natural standing stance, all limbs visible and separate, head and face clearly visible with bright glowing eyes catching light; body in mid-to-light values that read against dark ground, strong rim light; plain light grey background, soft even daylight, high-quality naturalistic game creature concept art; not cartoon, not chibi, not a mascot; no red or crimson anywhere, no text, no people, no props",
+ "text_to_image_task_alt": "01a19b71-eb8e-73eb-b748-35f7792c325e",
+ "meshy_image_to_3d_task": "01a19bb4-2dd2-76aa-9c97-8b43c93ba9cc",
+ "meshy_thumbnail": "reference/meshy_thumb.png",
+ "raw_model": "source/staticub_r10_meshy.glb",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "rigged candidate, not wired to any flag (.gdignore kept); creature lane removes .gdignore, runs texture_import_policy.py --apply, wires a flag and judges it against the shipped model",
+ "scale_note": "rig to the species' installed height (data/creatures/species.json placeholder.height, taller than the 1.80 m trainer); never shrink",
+ "prepared_model": "assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10.glb",
+ "preparation": {
+  "date": "2026-11-02",
+  "lane": "tb/meshy-r10",
+  "script": "assets/creatures/tetherbound/staticub/candidate_r10/source/prepare_staticub_r10.py",
+  "commands": "BLENDER=<blender 4.2> python3 assets/creatures/tetherbound/staticub/candidate_r10/source/prepare_staticub_r10.py",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (dog3 rig and skin recipe) run unchanged with the owner1101 parameters (patch false); stock rig_quadruped.find_legs kept: no long tail, the quadrant split lands on the four paws",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, unchanged; eleven roles)",
+   "embedded textures re-encoded JPEG q88 (normal included)",
+   "tools/art_pipeline/arc_emission.py build() with the staticub_owner1101 rule (hue 175-205, lift 0.04, blur 8, gain 2) pointed at this model, sat_min stepped 0.45 -> 0.25 by that rule's recorded method (first 0.05 step reaching 0.004%): 0.005% of the albedo (bits of the blue eyes). The r10 lightning veins are violet (albedo hue 255-285), outside the rule's electric-blue band, so they do not glow; widening the hue band is a rule change left to the creature lane"
+  ],
+  "report": "assets/creatures/tetherbound/staticub/candidate_r10/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped",
+   "height_m": 3.25,
+   "length_m": 5.1609,
+   "width_m": 2.141,
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ],
+   "arc_emission_coverage_pct": 0.005,
+   "checks": "Blender 4.2.9 re-import: one armature (15 bones), all eleven clips present, height 3.25 m (0.00% from target), 0 zero-weight vertices, one connected body",
+   "triangles": 27999,
+   "legs_found_at_normalised": {
+    "front_l": [
+     -0.1883,
+     -0.1305,
+     0.1159
+    ],
+    "front_r": [
+     0.2018,
+     -0.1055,
+     0.1126
+    ],
+    "rear_l": [
+     -0.2012,
+     0.4245,
+     0.1502
+    ],
+    "rear_r": [
+     0.1922,
+     0.4362,
+     0.1458
+    ]
+   },
+   "ground_patch": "none: no baked ground patch",
+   "islands": "one connected body",
+   "clip_notes_for_creature_lane": "hit pitches the head and neck down below the chest (strong stretch at the neck); faint ends rolled belly-up, paws in the air"
+  },
+  "not_run": "tools/art_pipeline/texture_import_policy.py --apply: it edits Godot .import sidecars, which do not exist under .gdignore"
+ }
+}
