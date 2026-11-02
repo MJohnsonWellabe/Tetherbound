@@ -486,6 +486,41 @@
           "albedo": "res://assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101_Image_0_bands.jpg"
         }
       }
+    },
+    "creatures_ralph_mangrove_monitor_scales": {
+      "_why": "Creatures-ralph (2 Nov 2026), attempt 2 on the Mangrove Monitor remake (batch-4 GPU: 'plain, smooth, rubbery green monitor', 'no elemental trait'). The shipped olive colour kept (r2: a lighter regrade read more rubbery), scale-pattern contrast x1.6 a step darker (data/creatures/remake_grades.json), a matte finish, and the thin aqua lines lit through the glow_read mask at 2.2.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101_Image_0_scales.jpg",
+          "roughness": 0.82,
+          "emission": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101_glow_read.png",
+          "emission_energy": 2.2
+        }
+      }
+    },
+    "creatures_ralph_cragclaw_body_lift": {
+      "_why": "Creatures-ralph (2 Nov 2026), attempt 2 on the Cragclaw remake (batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'). Legs, claws, underside and face lift to a lighter sand-slate below the shell line, the mossy shell keeps its own pixels (data/creatures/remake_grades.json cragclaw), and the blue lines glow through the glow_read mask at 2.4.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0_body_lift.jpg",
+          "emission": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_glow_read.png",
+          "emission_energy": 2.4
+        }
+      }
+    },
+    "creatures_ralph_cannonback_moss": {
+      "_why": "Creatures-ralph (2 Nov 2026), attempt 2 on the Cannonback remake (batch-4 GPU: 'tank-like cartoon turtle with cannon studs reads as toy styling'). Barrels and shell top go to the same dark mossy basalt as the scutes so they read as rock knobs, darker moss-brown scutes, olive-grey skin (data/creatures/remake_grades.json cannonback), matte, aqua cracks low at 1.2.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0_moss.jpg",
+          "roughness": 0.85,
+          "emission": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_glow_read.png",
+          "emission_energy": 1.2
+        }
+      }
     }
   }
 }
