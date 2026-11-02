@@ -1,6 +1,16 @@
 {
   "_comment": "Storm-creature arc emission (tools/art_pipeline/arc_emission.py). Owner 25 Oct: glow only where natural to the element -- lightning arcs on storm creatures, never seams on fur or hide. Each entry builds an emissiveTexture from the albedo's painted arcs only. Owner-picked remakes (1 Nov 2026, flag-off candidates): the glowing eyes and the concept's glowing lines, veins or paws get the same albedo-derived emissive map.",
   "species": {
+    "staticub_r10": {
+      "_why": "Coordinator r10 Meshy Staticub (2 Nov). The concept's lightning veins are violet (albedo hue 255-285), outside the owner1101 blue band, so they rendered unlit. Both bands: the electric-blue eyes (175-205) and the violet veins (255-285); about 0.23 percent of the albedo. Violet is the storm element's colour here, not Team Tether red.",
+      "model": "assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10.glb",
+      "hue_bands": [[175, 205], [255, 285]],
+      "sat_min": 0.25,
+      "lift": 0.04,
+      "blur_px": 8.0,
+      "soften_px": 1.0,
+      "gain": 2.0
+    },
     "tanglevolt": {
       "_why": "Coordinator 25 Oct (order 4): Tanglevolt's lightning veins are painted into the albedo with no emissive map, so since the 24 Oct Forward+ emission-floor change they light like fur on Medium and High. Stormursa ships a real emissive map and is unaffected.",
       "model": "assets/creatures/tetherbound/tanglevolt/candidate/models/creature_tanglevolt_native.glb",
