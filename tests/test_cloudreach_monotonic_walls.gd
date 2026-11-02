@@ -8,9 +8,9 @@ const WORLD := preload("res://scripts/world/cloudreach_world.gd")
 const GROUNDING := preload("res://scripts/world/cloudreach_grounding.gd")
 
 
-func test_flag_defaults_off() -> void:
-	assert_false(bool(GROUNDING.read_config().get("monotonic_walls", true)),
-		"monotonic_walls ships off until the GPU verdict")
+func test_flag_ships_on() -> void:
+	assert_true(bool(GROUNDING.read_config().get("monotonic_walls", false)),
+		"monotonic_walls ships ON: cloud yardstick 1 Nov batch-3, cliff bulge 5.48 -> 5.85, drums 4.92 -> 5.58")
 
 
 func test_wall_pushes_never_overhang() -> void:
