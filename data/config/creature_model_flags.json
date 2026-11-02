@@ -644,7 +644,7 @@
       }
     },
     "remake_owner1101_abyssal_guardian": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Abyssal Guardian, a colossal long-necked plesiosaur-like sea guardian with four large flippers, deep blue a (Meshy 01a197e1-57f8-726e-8c91-db106f77a9e6). dog3 quadruped rig at the installed 7.2 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing blue eyes and accents. Provenance: assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r22 (2 Nov 2026): the hit plunged the neck and lifted the body, and the faint sank 1.5 m with a flipper standing upright (the flippers ride the spine bone). Hit: neck x0.45, head x0.6, tail x0.4, root hop x0.3. Faint: belly-down (root roll 0), neck and head droop x3, legs x0.6, settled on the 3rd percentile; weights relaxed. CPU three-judge A/B 5.26 -> 5.67 mapped (target 4.47). Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Abyssal Guardian, a colossal long-necked plesiosaur-like sea guardian with four large flippers, deep blue a (Meshy 01a197e1-57f8-726e-8c91-db106f77a9e6). dog3 quadruped rig at the installed 7.2 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing blue eyes and accents. Provenance: assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "abyssal_guardian": {

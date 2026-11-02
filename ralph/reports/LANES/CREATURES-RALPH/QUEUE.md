@@ -56,3 +56,7 @@ Each entry gives the species, the commit and the capture. All entries use `captu
   - Skyrill: rim 0.15 on the lift; GPU 7.43 now, 7.5 is the bar.
   - Tuskroot: rim 0.15 on main's dark coat plus x1.1, against main 7.65.
 - **Why GPU only:** Compatibility draws no rim, so the rim arms have no CPU score.
+
+## READY GPU job (r22 keep): `--species=abyssal_guardian`; can join cr1102d
+
+- **Abyssal Guardian:** the GLB has the hit eased and a belly-down faint. CPU 5.26 → 5.67. A is main.
