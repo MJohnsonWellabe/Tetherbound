@@ -2,6 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
+uid="uid://dosmxg7m3rlhh"
+path.s3tc="res://.godot/imported/creature_trailpup_owner1101_Image_0_coyote.jpg-29fdea4ea6b64df197dbbe095a300c0a.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_Image_0_coyote.jpg"
+dest_files=["res://.godot/imported/creature_trailpup_owner1101_Image_0_coyote.jpg-29fdea4ea6b64df197dbbe095a300c0a.s3tc.ctex"]
 
 [params]
 

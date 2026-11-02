@@ -2,6 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
+uid="uid://dbw5u3kljnkmk"
+path.s3tc="res://.godot/imported/creature_burrowback_owner1101_Image_0_plates.jpg-a7a4a410553ac185a720d8d4624da5bc.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_Image_0_plates.jpg"
+dest_files=["res://.godot/imported/creature_burrowback_owner1101_Image_0_plates.jpg-a7a4a410553ac185a720d8d4624da5bc.s3tc.ctex"]
 
 [params]
 
