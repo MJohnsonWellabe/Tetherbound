@@ -14,6 +14,7 @@ var installed: Dictionary
 ## Held OFF while their remake breaks a gameplay contract the rest of the suite
 ## checks; each comes back ON once its rig carries the missing data.
 const HELD := {
+	"remake_owner1101_bramblebun": "the remake as the practice-cluster wild keeps the combat camera on the starter (smoke_combat on #796: followed anchor 2.6 m from the trainer vs 2.8 m from the creature with the Bramblebun remake as the wild foe)",
 	"remake_owner1101_ripplet": "the remake keeps the combat camera following the starter, not the trainer (smoke_combat: followed anchor 2.5 m from trainer vs 2.8 m from creature)",
 	"remake_owner1101_burrowback": "its aspect variant Nightburrow reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_trailpup": "its aspect variant Stormtrail reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
