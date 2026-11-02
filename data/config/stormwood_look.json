@@ -9,7 +9,7 @@
     "rig": {
       "sun": {"energy": 1.95, "colour": "#e6e0fb"},
       "sky": {"top_colour": "#4a3f73", "horizon_colour": "#7a74a8", "ground_horizon_colour": "#6a6390", "horizon_haze_colour": "#7a74a8", "cloud_lit": "#c4bce0", "cloud_shade": "#6f6896"},
-      "environment": {"ambient_colour": "#a9b6c8", "ambient_energy": 1.9, "exposure": 1.42, "fog_density": 0.0011, "fog_colour": "#776fa3", "aerial_perspective": 0.55, "adjustment_contrast": 1.12, "adjustment_saturation": 1.12}
+      "environment": {"ambient_colour": "#a9b6c8", "ambient_energy": 1.9, "exposure": 1.42, "fog_density": 0.0011, "fog_colour": "#7a74a8", "aerial_perspective": 0.55, "adjustment_contrast": 1.12, "adjustment_saturation": 1.12}
     },
     "materials": {"solid_specular": 0.42, "roughness_floor": 0.4},
     "rim": {"rim_colour": "#b4c2ff", "rim_energy": 1.05, "rim_specular": 0.9, "rim_rotation_deg": [-18.0, 320.0], "environment": {}},
