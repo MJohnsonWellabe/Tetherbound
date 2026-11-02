@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hfnr82umqmah"
-path="res://.godot/imported/creature_staticub_r10_normal.jpg-1fd15a0559a5e251c7c380ee263ca6ca.ctex"
+path.s3tc="res://.godot/imported/creature_staticub_r10_normal.jpg-1fd15a0559a5e251c7c380ee263ca6ca.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "17c3ee765981c5e981fcf40e2f23847b"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_normal.jpg"
-dest_files=["res://.godot/imported/creature_staticub_r10_normal.jpg-1fd15a0559a5e251c7c380ee263ca6ca.ctex"]
+dest_files=["res://.godot/imported/creature_staticub_r10_normal.jpg-1fd15a0559a5e251c7c380ee263ca6ca.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -28,6 +28,18 @@ func _flags(path: String) -> Dictionary:
 	return _json(path).get("flags", {})
 
 
+## A remake's live albedo is its current model's _Image_0.jpg: the owner1101
+## remake, or the coordinator's newer Meshy model (candidate_r9, candidate_r10)
+## its remake flag now points at. An owner1101 albedo still counts while it
+## remains a source texture (aspect repaints read it).
+func _live_albedos() -> Dictionary:
+	var out := {}
+	var remakes := _remake_species()
+	for id: String in remakes:
+		out[str(remakes[id]).get_basename() + "_Image_0.jpg"] = true
+	return out
+
+
 func _remake_species() -> Dictionary:
 	var out := {}
 	var flags := _flags(SPECIES.MODEL_FLAGS_PATH)
@@ -58,14 +70,7 @@ func test_finish_flags_ship_off_and_change_nothing_while_off() -> void:
 
 func test_enabled_coat_flags_apply_every_key() -> void:
 	var coats := _flags(COAT_PATH)
-	# A remake's live albedo is its current model's _Image_0.jpg: the owner1101
-	# remake, or the coordinator's newer Meshy model (candidate_r9, candidate_r10)
-	# its remake flag now points at. An owner1101 albedo still counts while it
-	# remains a source texture (aspect repaints read it).
-	var live_albedos := {}
-	var remakes := _remake_species()
-	for id: String in remakes:
-		live_albedos[str(remakes[id]).get_basename() + "_Image_0.jpg"] = true
+	var live_albedos := _live_albedos()
 	for flag: String in COAT_FLAGS:
 		var entry: Dictionary = (coats.get(flag, {}) as Dictionary).duplicate(true)
 		entry.enabled = true
@@ -123,10 +128,11 @@ func test_scale_flags_only_grow_and_keep_evolution_order() -> void:
 func test_judged_creature_coat_flags_ship_on_with_their_scores() -> void:
 	var coats := _flags(COAT_PATH)
 	var live := BODY.parse_coat_flags(_json(COAT_PATH))
+	var live_albedos := _live_albedos()
 	for flag: String in JUDGED_ON:
 		var entry: Dictionary = coats.get(flag, {})
 		assert_true(bool(entry.get("enabled", false)), "%s ships ON (judged gain)" % flag)
 		assert_true(str(entry.get("_why", "")).contains(JUDGED_ON[flag]), "%s records its mapped score %s" % [flag, JUDGED_ON[flag]])
 		for from_path: String in (entry.get("coats", {}) as Dictionary):
-			assert_true(from_path.contains(REMAKE_DIR), "%s grades a remake texture" % flag)
+			assert_true(from_path.contains(REMAKE_DIR) or live_albedos.has(from_path), "%s grades a remake texture" % flag)
 			assert_true(live.has(from_path), "%s reaches the live coat map" % from_path)
