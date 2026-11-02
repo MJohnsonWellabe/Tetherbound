@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "An": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Open cyan water, pale dunes and dune grass carry the Tidewake read, but the over-shoulder framing gives a third of each frame to the player's back while the speakers (Daro, Bex, Irva) stay small mid-ground figures, and the flat midday light has no atmosphere or grade."
+  },
+  "Tq": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing ram model matches the owner's Stormcapra bar (white fleece, dark curled horns, blue accents, clearly taller than the ruler), but the faint poses lose the head inside the fleece (A), and B's faint mid/end flips into an inverted, splayed, broken-rig shape that no longer reads."
+  },
+  "Yv": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky, moss and glowing mushrooms read as Stormwood, and each speaker now has their own portrait and line, but the Captain Marrow frame shows only the tiny player under a flat overhead slab with no speaker in view, and the ground is a dark, even carpet."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a big, grounded silhouette well above the ruler, but the hit react is almost the same as standing, the faint mid floats over a detached shadow, the faint end shows a dark hollow (inside-out) back, and B's body sinks into one dark brown mid-tone while A's red seams and pinkish tusks look off-palette."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In two of three frames a huge flat wooden overhead plane covers the top third and Captain Marrow is nowhere on screen, leaving only the tiny player; only the Officer Nysa frame stages its speaker properly."
+  },
+  "Sz": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Every speaker (Old Bram, Warder Solene, Keeper Hald) is now in view and the oxblood banner is correctly limited to the Team Tether stronghold, but the stronghold interiors sit under a heavy orange cast (stronger on B) and the meadow frame is a flat, even grass plane with no grove or edge structure."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Captain Veyra with the winged griffin behind her is a strong, readable staging, but the ground is a flat brown dirt plane instead of pale stratified stone, and in frame 1 the player's head crowds Kelm."
+  },
+  "Wp": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Resident Nalia frame is a camera pressed against a steep, flat grey-green slope with a curved geometry edge cutting the sky and no Nalia in sight, and the Nerissa chamber frames are dim, with the speaker small and distant."
+  },
+  "Zi": {
+   "A": {
+    "bar_a": 7.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager: readable eyes and white hair, a natural olive-and-leather palette with no oxblood, and a clear full-body silhouette; it would sit comfortably beside the Palworld cast."
+  },
+  "Wi": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dark, low-value forest floor swallows the fight: the golden spider reads but the player's creature is barely findable, the telegraphs are flat magenta rings and wedges (A i06-i10, i15-i17, tell2 a-c; B i09-i10, i16-i17), the HUD stacks over the left side and bottom, and in B the camera sits inside canopy or behind a trunk (i12, i13, i15 almost fully green or black)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera rule: frame the named speaker in a two-shot at medium distance (speaker at least one third of frame height, player only as a shoulder edge), with line-of-sight checks that pull in or move the camera when overhead slabs, terrain slopes or foliage would block it (Kr frames 1-2, Wp frame 1, Yv frame 3).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat magenta telegraph rings and wedges with real-object tells (cracking ground, dust, lightning arcs) that land with an impact, and keep the combat camera out of the trunks and canopy, with a value lift or rim light on both fighters so the player's creature reads (Wi).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the creature hurt and faint passes: a hit react clearly different from standing, faints that stay grounded with the head visible, no inverted or inside-out meshes (Tq B faint mid/end, Uw faint mid float and faint end hollow back).",
+   "kind": "new_art"
+  }
+ ]
+}

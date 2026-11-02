@@ -47,14 +47,22 @@ static func orb_material() -> ShaderMaterial:
 ## The authored capture orb, fitted to the orb's diameter. Its materials are
 ## self-lit lightly (stored in meta) so the shake beat can flare them.
 static func orb_model(diameter: float) -> Node3D:
-	var path := str(config().get("orb_model", ""))
+	return orb_model_at(str(config().get("orb_model", "")), diameter,
+		float(config().get("orb_model_diameter_m", 0.30)), float(config().get("orb_self_lit", 0.3)))
+
+
+## The same fitting for any capture-orb GLB (camfx.json `catch_orb` passes its
+## own path, so it does not need this kit's flag).
+static func orb_model_at(path: String, diameter: float, source_diameter: float, self_lit: float) -> Node3D:
 	if path.is_empty() or not ResourceLoader.exists(path):
 		return null
-	var scene := (load(path) as PackedScene).instantiate() as Node3D
+	var packed := load(path) as PackedScene
+	if packed == null:
+		return null
+	var scene := packed.instantiate() as Node3D
 	var root := Node3D.new()
 	root.name = "AuthoredOrb"
 	root.add_child(scene)
-	var source_diameter := float(config().get("orb_model_diameter_m", 0.30))
 	root.scale = Vector3.ONE * (diameter / source_diameter)
 	# The GLB rests on its base; centre it on the orb's origin.
 	scene.position.y = -source_diameter * 0.5
@@ -76,7 +84,7 @@ static func orb_model(diameter: float) -> Node3D:
 			material.emission = Color.WHITE
 			material.emission_texture = material.albedo_texture
 			material.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
-			material.emission_energy_multiplier = float(config().get("orb_self_lit", 0.3))
+			material.emission_energy_multiplier = self_lit
 			instance.set_surface_override_material(surface, material)
 			lit.append(material)
 	root.set_meta("flare_materials", lit)

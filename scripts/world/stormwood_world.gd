@@ -479,4 +479,6 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 	if not simulation_only:
 		GLASS_SINK.install(_terrain, _field.config.glass_sink)
 		GLASS_SINK.dress(self, _field.config.glass_sink)
+		# P2-070 cause lane LANDMARKS (hero_landmarks_1101.json glass_sink, OFF).
+		preload("res://scripts/world/hero_landmarks_1101.gd").dress_glass_sink(self, _field.config.glass_sink)
 		GROUND_ZONES.install(_terrain)

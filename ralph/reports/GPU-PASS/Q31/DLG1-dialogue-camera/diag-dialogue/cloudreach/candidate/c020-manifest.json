@@ -1,0 +1,361 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 522476062955,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 522492840174,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T22:41:46",
+	"capture_started_utc": "2026-10-31T22:33:22",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "young_trainer_tavi",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 495329,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76750326156616,
+			"camera_position": [
+				-181.0,
+				852.682800292969,
+				4092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262201105272197,
+					0.984806299209595,
+					0.173647940158844
+				],
+				"basis_z": [
+					0.000000148701616353719,
+					0.173647940158844,
+					-0.984806299209595
+				],
+				"origin": [
+					-181.0,
+					851.77978515625,
+					4098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000246768564919142,
+					-0.000000150995816738941
+				],
+				"basis_y": [
+					-0.0000000262202188849869,
+					0.984807670116425,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.000000148701843727395,
+					0.173648685216904,
+					-0.984807670116425
+				],
+				"origin": [
+					-181.0,
+					852.682800292969,
+					4092.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Tavi",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/gpu-arms/DLG1F-cand-High-c020/cloudreach__inventory__character__young_trainer_tavi.jpg",
+			"frame_id": "cloudreach__inventory__character__young_trainer_tavi",
+			"identity": "cloudreach__inventory__character__young_trainer_tavi",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.216666666667,
+				"hour": 8.00866666666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-181.0,
+				850.02978515625,
+				4098.0
+			],
+			"position_xz": [
+				-180.0,
+				4100.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 850.029968261719,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-181.0,
+				4098.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-180.0,
+				4100.0
+			],
+			"terrain_ground_y": 850.029968261719,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": null
+		},
+		{
+			"authored_id": "young_trainer_tavi",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 480300,
+			"camera_fov_degrees": 40.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 2.52259111404419,
+			"camera_position": [
+				-182.662628173828,
+				851.68896484375,
+				4097.080078125
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 3.5,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.712453842163086,
+					0.0,
+					0.701718270778656
+				],
+				"basis_y": [
+					0.0855177864432335,
+					0.992543816566467,
+					0.0868261232972145
+				],
+				"basis_z": [
+					-0.69648677110672,
+					0.121869102120399,
+					-0.707142293453217
+				],
+				"origin": [
+					-180.220001220703,
+					851.261413574219,
+					4099.56005859375
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.712454080581665,
+					-0.0000000255549394978516,
+					0.701718747615814
+				],
+				"basis_y": [
+					0.0855182930827141,
+					0.992546141147614,
+					0.0868266373872757
+				],
+				"basis_z": [
+					-0.696488261222839,
+					0.121869780123234,
+					-0.707143604755402
+				],
+				"origin": [
+					-182.662628173828,
+					851.68896484375,
+					4097.080078125
+				]
+			},
+			"conversation_camera_active": true,
+			"conversation_camera_blend": 0.999999999999999,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {
+				"dir": [
+					-0.69648814201355,
+					0.121869340538979,
+					-0.707143723964691
+				],
+				"distance": 3.5,
+				"fallback": false,
+				"fov": 40.0,
+				"pitch": -0.12217304475191,
+				"pivot": [
+					-180.220001220703,
+					851.261413574219,
+					4099.56005859375
+				],
+				"yaw": -2.36378578070312
+			},
+			"debug_travel": true,
+			"destination_display_name": "Tavi",
+			"destination_index": 1,
+			"dialogue_id": "cloudreach_tavi_circuit",
+			"dialogue_portrait": "res://assets/ui/portraits/bryn.png",
+			"dialogue_speaker": "Tavi",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/gpu-arms/DLG1F-cand-High-c020/cloudreach__inventory__character__young_trainer_tavi__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+			"identity": "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.216666666667,
+				"hour": 8.00866666666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-181.0,
+				850.02978515625,
+				4098.0
+			],
+			"position_xz": [
+				-180.0,
+				4100.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 850.029968261719,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-181.0,
+				4098.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-180.0,
+				4100.0
+			],
+			"terrain_ground_y": 850.029968261719,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": null
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"cloudreach__inventory__character__young_trainer_tavi"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 522492840174,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"cloudreach__inventory__character__young_trainer_tavi"
+	]
+}

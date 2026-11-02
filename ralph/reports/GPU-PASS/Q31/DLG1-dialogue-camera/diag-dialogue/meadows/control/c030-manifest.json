@@ -1,0 +1,2187 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "meadows",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 453655922898,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 3.62706089019775
+	},
+	"capture_camera": {
+		"far": 2000.0,
+		"fov": 65.0,
+		"instance_id": 453672700115,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T19:17:55",
+	"capture_started_utc": "2026-10-31T19:14:09",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "old_champion_bram",
+			"authored_source": "data/config/bands/band1_lower_meadows/trainers.json",
+			"band_display_name": "",
+			"band_id": "band1_lower_meadows",
+			"biome_display_name": "Meadows",
+			"biome_id": "meadows",
+			"bytes": 612112,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76739883422852,
+			"camera_position": [
+				305.085266113281,
+				6.36154937744141,
+				977.915832519531
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.601815104484558,
+					0.0,
+					-0.798635482788086
+				],
+				"basis_y": [
+					-0.138681545853615,
+					0.984807252883911,
+					0.104504056274891
+				],
+				"basis_z": [
+					0.786502420902252,
+					0.173648193478584,
+					-0.592672169208527
+				],
+				"origin": [
+					300.995452880859,
+					5.45859718322754,
+					980.997741699219
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.601814925670624,
+					-0.000000222744944267106,
+					-0.79863566160202
+				],
+				"basis_y": [
+					-0.138681814074516,
+					0.984807729721069,
+					0.104503937065601
+				],
+				"basis_z": [
+					0.786502540111542,
+					0.173648282885551,
+					-0.592671990394592
+				],
+				"origin": [
+					305.085266113281,
+					6.36154937744141,
+					977.915832519531
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Old Bram",
+			"destination_index": 1,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/gpu-arms/DLG1F-ctl-High-c030/meadows__inventory__trainer__old_champion_bram.jpg",
+			"frame_id": "meadows__inventory__trainer__old_champion_bram",
+			"identity": "meadows__inventory__trainer__old_champion_bram",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						361.84814453125,
+						-0.83633828163147,
+						990.780578613281
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						377.899353027344,
+						-0.533924520015717,
+						1014.53399658203
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						382.640899658203,
+						-0.588992774486542,
+						1014.14447021484
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						375.096008300781,
+						-1.28629469871521,
+						1018.98687744141
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_5",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						372.713592529297,
+						-0.465932697057724,
+						1012.63146972656
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1073_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						338.956298828125,
+						1.8250435590744,
+						940.296630859375
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1914_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						275.564239501953,
+						-2.37441730499268,
+						860.982055664063
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1914_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						272.76220703125,
+						-2.415611743927,
+						863.462463378906
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1914_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						276.181793212891,
+						-2.48610353469849,
+						864.628356933594
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1052_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						267.918487548828,
+						-1.1648360490799,
+						897.997680664063
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1052_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						253.161209106445,
+						-3.66717100143433,
+						904.436279296875
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1052_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						265.557525634766,
+						-1.67060470581055,
+						896.276794433594
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1053_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						342.557464599609,
+						-0.809636533260345,
+						968.509826660156
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1053_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						345.293975830078,
+						-0.839574694633484,
+						964.627197265625
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1053_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						343.122161865234,
+						-1.40038299560547,
+						973.416870117188
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1053_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						328.649810791016,
+						0.783471047878265,
+						973.47705078125
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1004_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						379.174987792969,
+						1.45934581756592,
+						954.610229492188
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1004_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						381.731414794922,
+						-0.423471748828888,
+						972.734680175781
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1038_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						246.420181274414,
+						-5.02589178085327,
+						1109.89367675781
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1038_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						235.347106933594,
+						-2.31383895874023,
+						1114.48852539063
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1038_5",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						237.445022583008,
+						-3.0915629863739,
+						1122.35803222656
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1031_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						289.1181640625,
+						0.871833086013794,
+						837.627319335938
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1031_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						294.709655761719,
+						1.30667757987976,
+						837.681823730469
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1031_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						298.407989501953,
+						2.38284587860107,
+						833.908325195313
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1031_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						295.676239013672,
+						1.31337332725525,
+						840.41552734375
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1033_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						398.969085693359,
+						-1.58870220184326,
+						921.044982910156
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1033_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						397.585357666016,
+						-1.55875766277313,
+						928.556884765625
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1033_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						392.126007080078,
+						-1.33961522579193,
+						912.173461914063
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1036_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						333.834411621094,
+						-1.28896117210388,
+						1099.10107421875
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1036_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						342.877838134766,
+						-0.633205115795136,
+						1095.20336914063
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1036_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						331.410583496094,
+						-0.915070772171021,
+						1094.8271484375
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						401.059295654297,
+						-5.33723211288452,
+						1087.65673828125
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						389.961059570313,
+						-3.50575566291809,
+						1062.88403320313
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						391.885620117188,
+						-4.41333246231079,
+						1083.900390625
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						399.573089599609,
+						-4.12839889526367,
+						1079.65185546875
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_5",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						389.983551025391,
+						-4.19641256332397,
+						1071.51635742188
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1030_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						225.218414306641,
+						-2.64764547348022,
+						842.539733886719
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1030_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						234.725433349609,
+						-3.28815650939941,
+						835.545532226563
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1030_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						228.852294921875,
+						-3.22086429595947,
+						860.239379882813
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1034_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						396.994293212891,
+						-0.892704248428345,
+						1010.3935546875
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1034_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						411.865325927734,
+						-0.275466293096542,
+						995.457824707031
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1034_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						395.470184326172,
+						-0.728104472160339,
+						1014.259765625
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1034_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						407.014739990234,
+						-2.25880551338196,
+						1008.84246826172
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						359.717834472656,
+						-0.882929980754852,
+						874.126098632813
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						353.85302734375,
+						-0.407411009073257,
+						878.019409179688
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						359.266845703125,
+						-0.919510841369629,
+						883.411010742188
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						345.377593994141,
+						1.15270221233368,
+						870.097778320313
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_5",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						355.584655761719,
+						-0.23974797129631,
+						869.427429199219
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1060_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						349.625244140625,
+						0.137832283973694,
+						1045.09594726563
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1060_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						355.489074707031,
+						0.38637501001358,
+						1050.63793945313
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1060_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						352.575439453125,
+						-0.09880530834198,
+						1041.984375
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1060_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						358.740783691406,
+						-0.587965369224548,
+						1044.17395019531
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1061_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						407.737670898438,
+						-0.27604466676712,
+						1044.36999511719
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1061_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						412.188720703125,
+						0.15162168443203,
+						1040.416015625
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1061_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						419.960418701172,
+						-3.38935780525208,
+						1054.650390625
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1061_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						405.846252441406,
+						-1.60413455963135,
+						1051.6533203125
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1074_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						349.478637695313,
+						1.21389484405518,
+						940.951782226563
+					],
+					"species_id": "trailpup"
+				}
+			],
+			"nearby_creatures_160m": 57,
+			"observed_clock": {
+				"elapsed_seconds": 200.143508,
+				"hour": 8.00574032,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				300.995452880859,
+				3.70859742164612,
+				980.997741699219
+			],
+			"position_xz": [
+				300.0,
+				983.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 3.70828533172607,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				300.995452880859,
+				980.997741699219
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.999318599700928,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				300.0,
+				983.0
+			],
+			"terrain_ground_y": 3.70828533172607,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 307.0,
+			"view_heading_xz": [
+				-0.798635482788086,
+				0.601815044879913
+			],
+			"water_surface_y": null
+		},
+		{
+			"authored_id": "old_champion_bram",
+			"authored_source": "data/config/bands/band1_lower_meadows/trainers.json",
+			"band_display_name": "",
+			"band_id": "band1_lower_meadows",
+			"biome_display_name": "Meadows",
+			"biome_id": "meadows",
+			"bytes": 478201,
+			"camera_fov_degrees": 40.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 2.57598900794983,
+			"camera_position": [
+				300.728576660156,
+				5.45515775680542,
+				979.123168945313
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 3.5,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.989182472229004,
+					0.0,
+					-0.146686628460884
+				],
+				"basis_y": [
+					-0.017876585945487,
+					0.992544710636139,
+					0.120550908148289
+				],
+				"basis_z": [
+					0.145593196153641,
+					0.12186923623085,
+					-0.981808960437775
+				],
+				"origin": [
+					300.218994140625,
+					5.02861547470093,
+					982.559509277344
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.989183008670807,
+					-0.000000211675910577469,
+					-0.146687150001526
+				],
+				"basis_y": [
+					-0.0178768709301949,
+					0.992546141147614,
+					0.120551019906998
+				],
+				"basis_z": [
+					0.145593732595444,
+					0.121869325637817,
+					-0.981809735298157
+				],
+				"origin": [
+					300.728576660156,
+					5.45515775680542,
+					979.123168945313
+				]
+			},
+			"conversation_camera_active": true,
+			"conversation_camera_blend": 1.0,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {
+				"dir": [
+					0.145593225955963,
+					0.121869340538979,
+					-0.981809854507446
+				],
+				"distance": 3.5,
+				"fallback": false,
+				"fov": 40.0,
+				"pitch": -0.12217304475191,
+				"pivot": [
+					300.218994140625,
+					5.02861547470093,
+					982.559509277344
+				],
+				"yaw": 2.99437485523386
+			},
+			"debug_travel": true,
+			"destination_display_name": "Old Bram",
+			"destination_index": 1,
+			"dialogue_id": "old_champion_challenge",
+			"dialogue_portrait": "res://assets/ui/portraits/wandering_trainer.png",
+			"dialogue_speaker": "Old Bram",
+			"dialogue_visual_only": true,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/gpu-arms/DLG1F-ctl-High-c030/meadows__inventory__trainer__old_champion_bram__dialogue.jpg",
+			"frame_id": "meadows__inventory__trainer__old_champion_bram__dialogue",
+			"identity": "meadows__inventory__trainer__old_champion_bram__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						361.84814453125,
+						-0.83633828163147,
+						990.780578613281
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						377.899353027344,
+						-0.533924520015717,
+						1014.53399658203
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						382.640899658203,
+						-0.588992774486542,
+						1014.14447021484
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						375.096008300781,
+						-1.28629469871521,
+						1018.98687744141
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1032_5",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						372.713592529297,
+						-0.465932697057724,
+						1012.63146972656
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1073_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						338.956298828125,
+						1.8250435590744,
+						940.296630859375
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1914_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						275.564239501953,
+						-2.37441730499268,
+						860.982055664063
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1914_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						272.76220703125,
+						-2.415611743927,
+						863.462463378906
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_1914_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						276.181793212891,
+						-2.48610353469849,
+						864.628356933594
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1052_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						267.918487548828,
+						-1.1648360490799,
+						897.997680664063
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1052_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						253.161209106445,
+						-3.66717100143433,
+						904.436279296875
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1052_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						265.557525634766,
+						-1.67060470581055,
+						896.276794433594
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1053_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						342.557464599609,
+						-0.809636533260345,
+						968.509826660156
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1053_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						345.293975830078,
+						-0.839574694633484,
+						964.627197265625
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1053_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						343.122161865234,
+						-1.40038299560547,
+						973.416870117188
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_1053_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						328.649810791016,
+						0.783471047878265,
+						973.47705078125
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1004_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						379.174987792969,
+						1.45934581756592,
+						954.610229492188
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1004_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						381.731414794922,
+						-0.423471748828888,
+						972.734680175781
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1038_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						246.420181274414,
+						-5.02589178085327,
+						1109.89367675781
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1038_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						235.347106933594,
+						-2.31383895874023,
+						1114.48852539063
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_1038_5",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						237.445022583008,
+						-3.0915629863739,
+						1122.35803222656
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1031_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						289.1181640625,
+						0.871833086013794,
+						837.627319335938
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1031_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						294.709655761719,
+						1.30667757987976,
+						837.681823730469
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1031_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						298.407989501953,
+						2.38284587860107,
+						833.908325195313
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1031_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						295.676239013672,
+						1.31337332725525,
+						840.41552734375
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1033_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						398.969085693359,
+						-1.58870220184326,
+						921.044982910156
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1033_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						397.585357666016,
+						-1.55875766277313,
+						928.556884765625
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1033_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						392.126007080078,
+						-1.33961522579193,
+						912.173461914063
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1036_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						333.834411621094,
+						-1.28896117210388,
+						1099.10107421875
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1036_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						342.877838134766,
+						-0.633205115795136,
+						1095.20336914063
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_1036_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						331.410583496094,
+						-0.915070772171021,
+						1094.8271484375
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						401.059295654297,
+						-5.33723211288452,
+						1087.65673828125
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						389.961059570313,
+						-3.50575566291809,
+						1062.88403320313
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						391.885620117188,
+						-4.41333246231079,
+						1083.900390625
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						399.573089599609,
+						-4.12839889526367,
+						1079.65185546875
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_1035_5",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						389.983551025391,
+						-4.19641256332397,
+						1071.51635742188
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1030_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						225.218414306641,
+						-2.64764547348022,
+						842.539733886719
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1030_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						234.725433349609,
+						-3.28815650939941,
+						835.545532226563
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1030_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						228.852294921875,
+						-3.22086429595947,
+						860.239379882813
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1034_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						396.994293212891,
+						-0.892704248428345,
+						1010.3935546875
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1034_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						411.865325927734,
+						-0.275466293096542,
+						995.457824707031
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1034_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						395.470184326172,
+						-0.728104472160339,
+						1014.259765625
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1034_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						407.014739990234,
+						-2.25880551338196,
+						1008.84246826172
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						359.717834472656,
+						-0.882929980754852,
+						874.126098632813
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						353.85302734375,
+						-0.407411009073257,
+						878.019409179688
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						359.266845703125,
+						-0.919510841369629,
+						883.411010742188
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						345.377593994141,
+						1.15270221233368,
+						870.097778320313
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1059_5",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						355.584655761719,
+						-0.23974797129631,
+						869.427429199219
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1060_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						349.625244140625,
+						0.137832283973694,
+						1045.09594726563
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1060_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						355.489074707031,
+						0.38637501001358,
+						1050.63793945313
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1060_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						352.575439453125,
+						-0.09880530834198,
+						1041.984375
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1060_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						358.740783691406,
+						-0.587965369224548,
+						1044.17395019531
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1061_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						407.737670898438,
+						-0.27604466676712,
+						1044.36999511719
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1061_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						412.188720703125,
+						0.15162168443203,
+						1040.416015625
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1061_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						419.960418701172,
+						-3.38935780525208,
+						1054.650390625
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1061_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						405.846252441406,
+						-1.60413455963135,
+						1051.6533203125
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_1074_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						349.478637695313,
+						1.21389484405518,
+						940.951782226563
+					],
+					"species_id": "trailpup"
+				}
+			],
+			"nearby_creatures_160m": 57,
+			"observed_clock": {
+				"elapsed_seconds": 200.143508,
+				"hour": 8.00574032,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				300.995452880859,
+				3.70859742164612,
+				980.997741699219
+			],
+			"position_xz": [
+				300.0,
+				983.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 3.70828533172607,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				300.995452880859,
+				980.997741699219
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.999318599700928,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				300.0,
+				983.0
+			],
+			"terrain_ground_y": 3.70828533172607,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 307.0,
+			"view_heading_xz": [
+				-0.798635482788086,
+				0.601815044879913
+			],
+			"water_surface_y": null
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"meadows__inventory__trainer__old_champion_bram"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 2000.0,
+		"fov": 65.0,
+		"instance_id": 453672700115,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/meadows_playground.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"meadows__inventory__trainer__old_champion_bram"
+	]
+}

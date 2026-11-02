@@ -1,21 +1,79 @@
 {
   "scope": "client_presentation",
-  "meshy_rim": {"enabled": true, "_candidate": "World dressing P2-070 (OFF until GPU judged; coordinator Meshy batch 31 Oct, assets/props/meshy-1031/glass_sink, provenance there). GPU 3.19: no rim marker, copper or black pool. The Meshy stone-and-copper ring of glass spikes stands as rim markers on the Hollow Crown lip in front of the reachable south-west viewpoints, and two scaled-up rings sit on the sink floor below as basin dressing. Visual only, no collider.", "model": "res://assets/props/meshy-1031/glass_sink/glass_sink.glb", "rim_offset_m": -6.0, "rim": [], "_why_floor": "Rim markers are absolute positions on the Hollow Crown lip ridge (bearing 145-155 deg, radius 235-248 m) screened on the CPU approach (844.5, 2522.2) and close (800.3, 2500.6) frames, both facing 220 deg; the last two are scaled-up basin rings on the sink floor.", "floor": [{"at": [832.5, 2508.0], "across_m": 10.0, "yaw_deg": 25.0}, {"at": [822.1, 2486.2], "across_m": 12.0, "yaw_deg": 40.0}, {"at": [838.5, 2493.3], "across_m": 9.0, "yaw_deg": 10.0}, {"at": [791.3, 2489.9], "across_m": 14.0, "yaw_deg": 70.0}, {"at": [775.0, 2470.0], "across_m": 16.0, "yaw_deg": 15.0}, {"at": [700, 2350], "across_m": 70.0, "yaw_deg": 20.0}, {"at": [612, 2445], "across_m": 46.0, "yaw_deg": 75.0}], "sink_fraction": 0.04, "glow_colour": "#a8dcff", "glow_energy": 1.2},
-  "dark_pool_candidate": {
-  "enabled": false,
-  "_why": "P2-070 (GPU WD2 1 Nov, 4.63): judges read the sink floor as an unchanged flat blue-grey plane and asked for a glass floor or black pool. On: near-black obsidian glass with dim fracture seams, and the r34 far fade from 20 m (CPU r1 at 60-260 m still mirrored the pale sky and the pale seams read as a grid) so the floor shows its own dark body instead of mirroring the pale storm sky. Terrain shader parameters only (stormwood_glass_sink.gd with_dark_pool); no geometry, collision or bake input. OFF until GPU judged.",
-  "glass_colour": "#0d1719",
-  "facet_colour": "#1c2c30",
-  "seam_colour": "#40585a",
-  "seam_width": 0.02,
-  "roughness": 0.22,
-  "metallic": 0.1,
-  "far_fade_m": [20.0, 120.0],
-  "far_specular": 0.03,
-  "far_roughness": 0.62
- },
- "edge_feather_m": 12.0,
-  "far_fade_m": [0.0, 0.0],
+  "meshy_rim": {
+    "enabled": true,
+    "_candidate": "World dressing P2-070 (OFF until GPU judged; coordinator Meshy batch 31 Oct, assets/props/meshy-1031/glass_sink, provenance there). GPU 3.19: no rim marker, copper or black pool. The Meshy stone-and-copper ring of glass spikes stands as rim markers on the Hollow Crown lip in front of the reachable south-west viewpoints, and two scaled-up rings sit on the sink floor below as basin dressing. Visual only, no collider.",
+    "model": "res://assets/props/meshy-1031/glass_sink/glass_sink.glb",
+    "rim_offset_m": -6.0,
+    "rim": [],
+    "_why_floor": "Rim markers are absolute positions on the Hollow Crown lip ridge (bearing 145-155 deg, radius 235-248 m) screened on the CPU approach (844.5, 2522.2) and close (800.3, 2500.6) frames, both facing 220 deg; the last two are scaled-up basin rings on the sink floor.",
+    "floor": [
+      {
+        "at": [
+          832.5,
+          2508.0
+        ],
+        "across_m": 10.0,
+        "yaw_deg": 25.0
+      },
+      {
+        "at": [
+          822.1,
+          2486.2
+        ],
+        "across_m": 12.0,
+        "yaw_deg": 40.0
+      },
+      {
+        "at": [
+          838.5,
+          2493.3
+        ],
+        "across_m": 9.0,
+        "yaw_deg": 10.0
+      },
+      {
+        "at": [
+          791.3,
+          2489.9
+        ],
+        "across_m": 14.0,
+        "yaw_deg": 70.0
+      },
+      {
+        "at": [
+          775.0,
+          2470.0
+        ],
+        "across_m": 16.0,
+        "yaw_deg": 15.0
+      },
+      {
+        "at": [
+          700,
+          2350
+        ],
+        "across_m": 70.0,
+        "yaw_deg": 20.0
+      },
+      {
+        "at": [
+          612,
+          2445
+        ],
+        "across_m": 46.0,
+        "yaw_deg": 75.0
+      }
+    ],
+    "sink_fraction": 0.04,
+    "glow_colour": "#a8dcff",
+    "glow_energy": 1.2
+  },
+  "edge_feather_m": 12.0,
+  "far_fade_m": [
+    0.0,
+    0.0
+  ],
   "_candidate_far": "r34 (OFF at [0, 0] until judged; candidate [160, 420]). Every stand's 'flat grey band' is this crater wall seen from afar: the satin glass mirrors the pale storm sky into one flat slab. Beyond far_fade_m its specular and metallic ease to far_specular/far_roughness, so it reads as dark glass.",
   "far_specular": 0.1,
   "far_roughness": 0.8,
@@ -25,5 +83,36 @@
   "fracture_scale": 0.085,
   "seam_width": 0.022,
   "roughness": 0.31,
-  "metallic": 0.18
+  "metallic": 0.18,
+  "dark_pool_candidate": {
+    "enabled": false,
+    "_why": "P2-070 (GPU WD2 1 Nov, 4.63): judges read the sink floor as an unchanged flat blue-grey plane and asked for a glass floor or black pool. On: near-black obsidian glass with dim fracture seams, and the r34 far fade from 20 m (CPU r1 at 60-260 m still mirrored the pale sky and the pale seams read as a grid) so the floor shows its own dark body instead of mirroring the pale storm sky. Terrain shader parameters only (stormwood_glass_sink.gd with_dark_pool); no geometry, collision or bake input. OFF until GPU judged.",
+    "glass_colour": "#0d1719",
+    "facet_colour": "#1c2c30",
+    "seam_colour": "#40585a",
+    "seam_width": 0.02,
+    "roughness": 0.22,
+    "metallic": 0.1,
+    "far_fade_m": [
+      20.0,
+      120.0
+    ],
+    "far_specular": 0.03,
+    "far_roughness": 0.62
+  },
+  "dark_glass": {
+    "enabled": false,
+    "_candidate": "World dressing P2-070 r3 (OFF until judged; own flag). b1/b2 judges x6: the sink floor below the rim is a pale tiled checker void. Darker glass body, facets and seams (black-pool Stormwood palette) and the r34 far fade [160, 420] so distant glass stops mirroring the pale sky.",
+    "glass_colour": "#0f1d21",
+    "facet_colour": "#22383c",
+    "seam_colour": "#4d7a72",
+    "far_fade_m": [
+      8.0,
+      70.0
+    ],
+    "far_specular": 0.06,
+    "far_roughness": 0.88,
+    "roughness": 0.22,
+    "_why_r3b": "r3 CPU: darker albedo alone did not change the read; the pale tiles are sky specular at grazing angles, so the fade now starts at 8 m."
+  }
 }

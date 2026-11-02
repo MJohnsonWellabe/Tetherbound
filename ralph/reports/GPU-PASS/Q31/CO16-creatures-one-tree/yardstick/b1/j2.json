@@ -1,0 +1,228 @@
+{
+ "sets": {
+  "Pc": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The barnacled shell and coral legs are a believable naturalistic crab that reads at small size, but the swimming frame puts it on a flat untextured blue slab with no foam, wake or depth, well below Palworld finish."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A is a smooth clay-like toy boar off the owner's naturalistic bar and B's fur reads naturalistic but its gold blotches look like a texture error, and in both the boar stands no taller than the trainer."
+  },
+  "Nf": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A well-modelled naturalistic boar with a real bristle coat and a faint that lies on its side carries it, though it is too small against the ruler to read as a Palworld-class large creature."
+  },
+  "Ai": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The shell reads well, but the glossy coral legs look slightly plastic and the faint end is still up on its legs like the standing pose, so knockouts do not read."
+  },
+  "Cl": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The beaver is appealing and readable, but every frame, faint end included, has it sitting upright facing the camera, so hurt and faint never read."
+  },
+  "Bm": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic wolf close to the Tanglevolt and Stormursa bar, with a grounded side-lying faint, carries it; A's darker coat and the yellow-orange blob at the trainer in the faint frames hold it back."
+  },
+  "Rd": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder with expressive eyes and an earthy green-brown Meadows palette carries it; the soft animated-film face is a touch more cartoon than the naturalistic creatures."
+  },
+  "Pw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the faint end barely differs from standing (head, sail or body still raised) rather than lying collapsed on its side": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-and-orange sail gives a strong silhouette, but the mirror-chrome body reads as a metal toy, not a living hide, and the faints are still upright (A) or float mid-air flipped (B)."
+  },
+  "Xw": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "the surface reads chrome, mirror-like or plastic rather than a natural matte hide, fur or scale": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A polished gold-chrome spider-crab with no readable face or eyes looks like a jewellery prop rather than a creature, and its faint keeps the body propped high off the stage."
+  },
+  "Af": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-violet wolf silhouette is strong in standing and hit react, but its fur reads as crystal shards rather than fur, and B's faint frames turn the texture white with black blotches."
+  },
+  "Cw": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white-and-teal owl has a clear face and appealing feather detail, but it is barely trainer height and its round body reads small and toy-like next to Palworld's large creatures."
+  },
+  "Dm": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the creature stands no taller than the 1.80 m trainer": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The near-black purple plumage swallows the face and form against the dark stage, so the silhouette survives but the creature does not read at small size."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's torn banners, opened cage and smoke plume tell site-specific stories that A lacks, but blurry smeared ground textures, a flat tiled stone wall and thin flat lighting with no fog depth or time-of-day grade sit well below Palworld and Valheim finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace chrome/metallic and plastic shading on Xw, Pw and the Ai/Pc legs with matte naturalistic hide or chitin materials (low specular, roughness, albedo detail), and lift near-black coats (Dm, Bm A) into a readable mid-value with rim light so face and eyes separate.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rework faint animations so every creature ends collapsed on its side and grounded (Ai, Pw A, Cl, Xw, Pc A), and fix B-side faint frames that float mid-air (Pw B) or lose their texture (Af B).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Rescale the creatures that sit at or below the trainer's height (Nf, Rw, Cl, Cw, Dm) so all stand clearly above 1.80 m, and give the Le aftermath sites ground textures, depth fog and a time-of-day grade with banners removed or torn after every win.",
+   "kind": "scene"
+  }
+ ]
+}

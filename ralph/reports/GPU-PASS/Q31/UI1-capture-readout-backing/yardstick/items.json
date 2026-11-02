@@ -1,0 +1,54 @@
+[
+    {
+        "item":  "P2-058",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#7",
+        "subject":  "catch aim readability",
+        "defect":  "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc",
+        "frames":  [
+                       "meadows__catching__01-aiming-full-health",
+                       "meadows__catching__catch_low",
+                       "meadows__catching__catch_high"
+                   ]
+    },
+    {
+        "item":  "P2-059",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#13",
+        "subject":  "catch sequence camera framing",
+        "defect":  "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link",
+        "frames":  [
+                       "meadows__catching__03-strike",
+                       "meadows__catching__03-absorbing",
+                       "meadows__catching__04-orb-resting"
+                   ]
+    },
+    {
+        "item":  "P2-061",
+        "preset":  "High",
+        "biome":  "meadows",
+        "board_row":  "F38#33",
+        "subject":  "catch result hierarchy",
+        "defect":  "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish",
+        "frames":  [
+                       "meadows__catching__06-breakout",
+                       "meadows__catching__08-caught-verdict",
+                       "meadows__catching__09-caught-banner"
+                   ]
+    },
+    {
+        "item":  "P2-114",
+        "preset":  "High",
+        "biome":  "tidewake",
+        "board_row":  "F39#23",
+        "subject":  "catch chance HUD contrast",
+        "defect":  "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming",
+        "frames":  [
+                       "tidewake__catching__catch_low",
+                       "tidewake__catching__catch_high",
+                       "tidewake__catching__01-aiming-full-health"
+                   ]
+    }
+]

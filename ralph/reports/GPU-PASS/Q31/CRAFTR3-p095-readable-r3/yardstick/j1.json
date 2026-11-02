@@ -1,0 +1,82 @@
+{
+ "sets": {
+  "Za": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager is clean, warm and readable (olive vest, sage scarf, leather boots fit the Meadows palette), but the glossy oversized-eye cartoon face sits closer to a toy/animated-film look than the naturalistic finish of the owner bar, and the neutral stage carries no light or atmosphere."
+  },
+  "Mj": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's shaggy fur gets closest to the owner's naturalistic bar but is broken up by noisy yellow blotches and floats off the floor in faint mid; side B's smooth terracotta clay body with stuck-on moss reads as a piggy-bank toy, well below Palworld creature finish."
+  },
+  "Yf": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared, low-resolution ground blends, a flat tiled stronghold wall and a hazeless flat sky sink it; side A's cleared camps and smoke column give some aftermath story, but nothing has Valheim-class light or Palworld-class density."
+  },
+  "Us": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey translucent panel with teal selection is on-brief and tidy, but tiny orange material lines, a large empty centre column and a small subject icon keep it below a shipping HUD's at-a-glance hierarchy on a 7-inch screen."
+  },
+  "Ce": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's crystalline violet-and-white wolf matches the owner's Tanglevolt bar and its rearing hit react reads instantly, but side B's faint frames swap to a white-and-black blotched material that looks like a missing texture, which would never pass in a shipping game."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rework Meadows ground and wall materials plus the sky/atmosphere grade: replace the smeared low-res grass/dirt blend and flat tiled stronghold wall with crisp, value-varied terrain materials, add grass clumps and groves instead of carpet, and add warm sun/cool blue distance haze so aftermath sites read as the key art's world (Yf all rows).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature state materials and grounding: keep Tanglevolt's violet fur material through faint mid/end (Ce B shows a white/black blotch swap), keep faint poses on the floor (Mj A faint mid floats above its shadow), and give hit reacts a visible change from standing (Ce B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Meadows boar (Mj) to the owner's naturalistic style bar: real bristled brown fur with moss growth as on the creature colour board, a clear face and eyes, and enough height to stand clearly taller than the 1.80 m trainer, replacing both the blotchy-fur and clay-toy versions.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -27,6 +27,7 @@
   "hide_slab": false,
   "slab_moss": {"albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png", "tint": "#5d7462", "uv_per_m": 0.22},
   "_why_slab": "Hiding the slab mesh would float the trainer 0.2 m on the unchanged footing collider; the slab is re-skinned with the Stormwood wet-moss ground texture instead so it reads as a raised moss bank.",
+  "skirt": {"enabled": false, "_candidate": "r3 (OFF until judged; own flag so WD1/WD2 are unchanged). All six b1/b2 judges: the arch stands on a hard-edged square slab floating over the moss. A moss skirt slopes 2.6 m from the footing's top edge into the sampled ground so it reads as a raised mound, with installed rocks, ferns and glowing storm fungi on the edge. No collider; the footing collider is unchanged.", "out_m": 2.6, "uv_per_m": 0.22, "dressing_count": 16, "dressing": [{"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "height_m": [0.7, 1.1], "at_fraction": 0.5}, {"model": "res://assets/environment/stylized_nature/Fern_1.gltf", "height_m": [0.6, 0.9], "at_fraction": 0.35}, {"model": "res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb", "height_m": [0.6, 1.0], "at_fraction": 0.3, "glow_colour": "#5ad8a6", "glow_energy": 1.2}, {"model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "height_m": [0.5, 0.9], "at_fraction": 0.65}]},
   "glow_colour": "#a8dcff",
   "glow_energy": 1.2
 }

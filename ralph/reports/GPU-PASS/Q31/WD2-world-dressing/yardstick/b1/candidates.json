@@ -1,0 +1,47 @@
+[
+    {
+        "label":  "WD2 P2-045 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-045-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-045-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: candy pickup tiers. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+                    ]
+    },
+    {
+        "label":  "WD2 P2-115 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-115-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-115-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: authored camp creature bed silhouette. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place"
+                    ]
+    },
+    {
+        "label":  "WD2 P2-116 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-116-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-116-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: authored camp workbench identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer"
+                    ]
+    },
+    {
+        "label":  "WD2 P2-041 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-041-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-041-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Crown Arch. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+                    ]
+    },
+    {
+        "label":  "WD2 P2-033 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-033-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\WD2\\sides\\P2-033-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: ground pickup identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+                    ]
+    }
+]

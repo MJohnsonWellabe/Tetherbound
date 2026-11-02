@@ -1,0 +1,6 @@
+Fo: "The faint poses the same as standing"
+Rp: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Po: none
+Pg: "The faint keeps the head and sail up"
+Re: "The faint poses the same as standing"
+Hu: none

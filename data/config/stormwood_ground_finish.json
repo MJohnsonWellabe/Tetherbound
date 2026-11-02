@@ -11,6 +11,22 @@
   "terrain_materials": {"textures": {"grass": {"tint": "#d2c49e"}}},
   "ground_zones": {"enabled": true}
  },
+ "moss_variation_1101": {
+   "enabled": false,
+   "scope": "client_presentation",
+   "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'crushed near-black uniform carpet', 'player creature unreadable against the dark floor'). OFF until GPU judged; composes with value_lift_candidate (tints and ground zones). The cover-tier shader (stormwood_ground_cover.gdshader sw_*) re-hues each leaf through a broad world-space field of olive, sage and copper-brown moss while keeping its own light/dark structure, lifts the carpet's value, opens sparse clearings to the loam and pools beneath, and scatters rare wet copper and stormglass flecks that catch the storm light (the glass flecks glow faintly, natural to stormglass). Shader uniforms only: placement, bake inputs, collision and harvest identity are unchanged. No red or oxblood: the copper stays brown-orange.",
+   "sw_moss_strength": 0.8,
+   "sw_moss_scale": 0.045,
+   "sw_moss_olive": "#6b7038",
+   "sw_moss_sage": "#566b5e",
+   "sw_moss_copper": "#6e5434",
+   "sw_moss_lift": 1.3,
+   "sw_clearing": 0.2,
+   "sw_glint": 0.035,
+   "sw_glint_copper": "#c08650",
+   "sw_glint_glass": "#8cb4f0",
+   "sw_glass_glow": 0.35
+ },
  "ground_zones": {
     "enabled": false,
     "scope": "client_presentation",

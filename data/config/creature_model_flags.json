@@ -30,7 +30,8 @@
       "species": {
         "bramblebun": {
           "model": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb",
-          "colourway_source_species": "bramblebun_owner1101",
+          "_comment_colourway": "Bramblebun's colourway rules stay the owner of its alpha and shiny (shiny_colourways.json `bramblebun`, via the shipped bramblebun_nat1022 source; tests/smoke_bramblebun_colourway_binding.gd). The textures themselves are repainted from this remake's own albedo and resolve beside it: candidate_owner1101/source/author_colourways.py.",
+          "colourway_source_species": "bramblebun_nat1022",
           "animations": {
             "idle": "idle",
             "walk": "walk",
@@ -54,6 +55,23 @@
         "trailpup": {
           "model": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101.glb",
           "colourway_source_species": "trailpup_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        },
+        "stormtrail": {
+          "_why": "Aspect variant of trailpup: it reuses the base mesh (tests/test_dual_type.gd), so this flag carries it onto the remake with its aspect textures repainted for the remake UVs (tools/generate_aspect_variant_textures.py --remake stormtrail).",
+          "model": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101.glb",
           "animations": {
             "idle": "idle",
             "walk": "walk",
@@ -200,6 +218,23 @@
             "fly_grip": "fly_grip",
             "ride": "ride"
           }
+        },
+        "nightburrow": {
+          "_why": "Aspect variant of burrowback: it reuses the base mesh (tests/test_dual_type.gd), so this flag carries it onto the remake with its aspect textures repainted for the remake UVs (tools/generate_aspect_variant_textures.py --remake nightburrow).",
+          "model": "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101.glb",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
         }
       }
     },
@@ -222,29 +257,6 @@
             "swim": "swim",
             "fly_grip": "fly_grip",
             "ride": "ride"
-          }
-        }
-      }
-    },
-    "remake_owner1101_ashtusk": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Ashtusk, a heavy armoured wild boar with big tusks, dark brown bristly coat, a believable lean adult creatu (Meshy 01a197e1-7a29-767d-b42c-ff85425fc55a). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing ember eyes and ember cracks. Provenance: assets/creatures/tetherbound/ashtusk/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
-      "species": {
-        "ashtusk": {
-          "model": "res://assets/creatures/tetherbound/ashtusk/candidate_owner1101/models/creature_ashtusk_owner1101.glb",
-          "colourway_source_species": "ashtusk_owner1101",
-          "animations": {
-            "idle": "idle",
-            "walk": "walk",
-            "run": "run",
-            "attack": "attack",
-            "hit": "hit",
-            "faint": "faint",
-            "swim": "swim",
-            "ride": "ride",
-            "fly_grip": "fly_grip",
-            "charged": "charged",
-            "rest": "rest"
           }
         }
       }
@@ -591,6 +603,23 @@
         "paddlenewt": {
           "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101.glb",
           "colourway_source_species": "paddlenewt_owner1101",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          }
+        },
+        "riftfrill": {
+          "_why": "Aspect variant of paddlenewt: it reuses the base mesh (tests/test_dual_type.gd), so this flag carries it onto the remake with its aspect textures repainted for the remake UVs (tools/generate_aspect_variant_textures.py --remake riftfrill).",
+          "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101.glb",
           "animations": {
             "idle": "idle",
             "walk": "walk",
@@ -1013,6 +1042,8 @@
             "walk": "walk",
             "run": "run",
             "attack": "attack",
+            "_comment_attack_contact_phase": "Same timing as the installed Torrentoad: the remake attack clip is retimed (candidate_owner1101/source/retime_attack_contact.py) to 23 frame intervals (23/24 s) with the strike peak at frame 15 (0.625 s), so the phase is 15/23.",
+            "attack_contact_phase": 0.652174,
             "charged": "charged",
             "hit": "hit",
             "faint": "faint",
@@ -1044,6 +1075,24 @@
             "fly_grip": "fly_grip",
             "ride": "ride"
           }
+        },
+        "ashtusk": {
+          "_why": "Aspect variant of tuskroot: it reuses the base mesh (tests/test_dual_type.gd), so this flag carries it onto the remake with its aspect textures repainted for the remake UVs (tools/generate_aspect_variant_textures.py --remake ashtusk). aspect_source_species moves off ashtusk_native, whose branch would put the native Tuskroot's normal and roughness maps (old UVs) on the remake.",
+          "model": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101.glb",
+          "animations": {
+            "idle": "idle",
+            "walk": "walk",
+            "run": "run",
+            "attack": "attack",
+            "charged": "charged",
+            "hit": "hit",
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
+          },
+          "aspect_source_species": "tuskroot"
         }
       }
     },

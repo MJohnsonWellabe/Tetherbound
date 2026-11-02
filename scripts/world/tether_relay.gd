@@ -534,6 +534,14 @@ func _ground_pad_material() -> StandardMaterial3D:
 	var surface: Dictionary = config.get("surface_candidate", {})
 	if not bool(surface.get("enabled", false)):
 		surface = {}
+	# World dressing P2-013 (`surface_candidate.r2`, OFF until judged): GPU
+	# 6.59 "an oversized uniform cobble texture": smaller flags, a little warmer.
+	var r2: Dictionary = surface.get("r2", {}) as Dictionary
+	if bool(r2.get("enabled", false)):
+		surface = surface.duplicate()
+		for key: String in r2:
+			if key != "enabled" and not key.begins_with("_"):
+				surface[key] = r2[key]
 	var m := StandardMaterial3D.new()
 	m.albedo_texture = load(str(surface["albedo"])) as Texture2D if surface.has("albedo") else GROUND_PAD_ALBEDO
 	m.albedo_color = Color(str(surface.get("tint", config.get("tint", "#463c30"))))

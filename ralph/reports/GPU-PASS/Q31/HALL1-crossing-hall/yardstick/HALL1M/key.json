@@ -1,0 +1,40 @@
+{
+ "Oc": {
+  "anchor": false,
+  "label": "HALL1 approach-nave High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\HALL1M\\sides\\HALL1-approach-nave-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\HALL1M\\sides\\HALL1-approach-nave-main-High.png"
+ },
+ "Dw": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Uk": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Pj": {
+  "anchor": false,
+  "label": "HALL1 shrine High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\HALL1M\\sides\\HALL1-shrine-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\HALL1M\\sides\\HALL1-shrine-main-High.png"
+ },
+ "Uq": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Cw": {
+  "anchor": false,
+  "label": "HALL1 nave-sides High one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\HALL1M\\sides\\HALL1-nave-sides-main-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\HALL1M\\sides\\HALL1-nave-sides-main-High.png"
+ },
+ "Ei": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}

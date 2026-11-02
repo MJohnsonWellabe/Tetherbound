@@ -1,0 +1,42 @@
+[
+    {
+        "label":  "CO12 nightburrow Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-nightburrow-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-nightburrow-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO12 voltwig High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-voltwig-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-voltwig-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO12 thundertunnel High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-thundertunnel-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-thundertunnel-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fur reads near-black and muddy, so the body\u0027s form and markings are lost",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO12 nightburrow High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-nightburrow-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-nightburrow-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    }
+]

@@ -1,0 +1,156 @@
+{
+ "sets": {
+  "Sd": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's braced timber frame, overhanging cap and stone footing read as a built piece, but the flat cream infill, single isolated wall and flat grass grade sit well below Palworld base-building finish, and side B is a blown-out white billboard."
+  },
+  "Ka": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The HUD follows the blue-grey/teal/gold direction and is legible, but seven separate dark boxes plus placeholder white hotbar glyphs crowd the frame more than Palworld's lighter, more integrated HUD."
+  },
+  "Aa": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted Meadows header strip is a good link to the world, but the panels below are mostly empty dark fields with tiny grey text and greyed-out rows, far from a shipping game's menu finish."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's large ingredient lines and icon-led Craft/Leave hints read at a glance, but the plain teal box over a dark rainy scene, with only three recipes visible, and side B's clipped, tiny grey text keep both short of shipping UI finish."
+  },
+  "Am": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A saturated blue-and-white aquatic dragon with a clear silhouette and face, but its glossy toy-like surface lacks the naturalistic scale detail of the owner's creature bar, and side A's faint end collapses into an unreadable heap."
+  },
+  "Vg": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing grandfather with clear eyes, an earthy green/brown palette and a solid full-body silhouette, finished well enough to sit beside Palworld's humans, though its toon face leans more cartoon than the naturalistic creature style."
+  },
+  "Nx": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The tab state now reads correctly, but the map itself is a blurry blue field with one green blob and thin orange lines, with none of the illustrated Tidewake dunes, falls or water a finished game's map would show."
+  },
+  "Aq": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted header banner and the framed panel over the blurred room add some scenic tie, but flat, evenly weighted dark cards with small grey text and empty slot rows still give it a debug-menu feel rather than shipping finish."
+  },
+  "Hy": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B drops the '(or F10)' literal and swaps the cut-off Fighting rows for 'More below' cues, but both still show small grey-on-navy rows, tiny gamepad glyphs and bare W/S/A/1-5 keyboard columns that scan slowly."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Raise menu hierarchy and legibility across Aa, Aq, Hy and Ur-B: bigger, brighter type (at least about 18 px at 720p), one emphasised primary element per panel, empty space filled with item, creature or world art or the panels shrunk to their content, and controller glyphs in place of literal key labels and 'X: A / Enter' strings.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make the homestead wall a built material (Sd): keep side A's braced frame, cap and stone footing, and replace the flat cream infill with textured, value-varied wattle/plaster or planks, with a darker footing and contact shadow, so it holds up beside the meadow grass.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the blurry blob region map (Nx) with an illustrated, palette-matched Tidewake map (dunes, falls, water bands, landmarks) and give unsurveyed areas a parchment fog instead of flat blue noise.",
+   "kind": "new_art"
+  }
+ ]
+}

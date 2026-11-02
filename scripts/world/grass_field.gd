@@ -29,6 +29,7 @@ extends MultiMeshInstance3D
 ## this project to.
 
 const CONFIG_PATH := "res://data/config/grass_field.json"
+const MEADOWS_LOOK_CONFIG := "res://data/config/meadows_look.json"
 const SHADER_PATH := "res://shaders/grass_field.gdshader"
 const STONE_SHADER_PATH := "res://shaders/stone_field.gdshader"
 const COVER_SHADER_PATH := "res://shaders/cover_tier.gdshader"
@@ -152,6 +153,7 @@ static func config() -> Dictionary:
 	if parsed is Dictionary:
 		_config = parsed
 		apply_meadows_ground_candidate(_config)
+		apply_meadows_cause_ground(_config, MEADOWS_LOOK_CONFIG)
 	return _config
 
 
@@ -160,8 +162,8 @@ static func config() -> Dictionary:
 ## sets top-level keys (the ground-zone uniforms); `tiers` merges keys into the
 ## `cover_tiers` row with that name. Realm profiles (configure_profile) never
 ## pass through here, so other biomes are untouched.
-static func apply_meadows_ground_candidate(cfg: Dictionary) -> void:
-	var candidate: Dictionary = cfg.get("meadows_ground_candidate", {})
+static func apply_meadows_ground_candidate(cfg: Dictionary, override: Dictionary = {}) -> void:
+	var candidate: Dictionary = override if not override.is_empty() else cfg.get("meadows_ground_candidate", {})
 	if not bool(candidate.get("enabled", false)):
 		return
 	var merge: Dictionary = candidate.get("merge", {})
@@ -171,6 +173,22 @@ static func apply_meadows_ground_candidate(cfg: Dictionary) -> void:
 	for row: Variant in cfg.get("cover_tiers", []):
 		if row is Dictionary and tiers.has(str((row as Dictionary).get("name", ""))):
 			(row as Dictionary).merge(tiers[str(row.name)], true)
+
+
+## Cause lane tb/cause-meadows (OFF until GPU-judged): meadows_look.json
+## `cause_ground.grass` layers on after `meadows_ground_candidate`, in the same
+## merge/tiers shape, only while `cause_ground.enabled`. Off: `cfg` unchanged.
+## `look_path` is a parameter so a unit test can point it at a fixture.
+static func apply_meadows_cause_ground(cfg: Dictionary, look_path: String) -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(look_path))
+	if not parsed is Dictionary:
+		return
+	var cause: Dictionary = (parsed as Dictionary).get("cause_ground", {})
+	if not bool(cause.get("enabled", false)):
+		return
+	var grass: Dictionary = cause.get("grass", {})
+	apply_meadows_ground_candidate(cfg, {"enabled": true,
+		"merge": grass.get("merge", {}), "tiers": grass.get("tiers", {})})
 
 
 ## Whether the field is on. Read by `vegetation.gd` as well as by this node, so

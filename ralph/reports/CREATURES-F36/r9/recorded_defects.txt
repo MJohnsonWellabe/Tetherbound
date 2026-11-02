@@ -1,0 +1,8 @@
+Tu: "The creature stands no taller than, or barely above, the 1.80 m trainer"
+Us: none
+Qm: "The creature stands no taller than, or barely above, the 1.80 m trainer"
+Ue: "The creature stands no taller than, or barely above, the 1.80 m trainer"
+Ig: "The creature stands no taller than, or barely above, the 1.80 m trainer"
+Qn: "The creature stands no taller than, or barely above, the 1.80 m trainer"
+Ck: none
+Eq: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

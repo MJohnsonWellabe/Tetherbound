@@ -549,6 +549,8 @@ func _cloud_ring(parent: Node3D, ring: Dictionary) -> void:
 			card.position = centre + Vector3(sin(angle) * r,
 				-rng.randf_range(float(drop[0]), float(drop[1])), cos(angle) * r)
 			card.visibility_range_end = float(ring.get("visible_m", 2500.0))
+			# The cause lane's cloud_sea pass pushes a grounded card outward from here.
+			card.set_meta(&"cloud_ring_centre", centre)
 			parent.add_child(card)
 
 

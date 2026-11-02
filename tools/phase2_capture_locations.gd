@@ -45,6 +45,10 @@ const VALID_CHARACTERS := ["trainer", "kael", "sera", "lyra"]
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
 const SWIM_CONFIG := "res://data/config/water_swimming.json"
+## P2-014 (cause lane tb/cause-meadows): `buried_stand_guard.enabled` rejects a
+## terrain stand, or its production camera, that has solid geometry just over
+## it (the Burrow Warrens earth bank's hollow shell swallowed walk_02/walk_03).
+const STAND_GUARD_CONFIG := "res://data/config/capture_stands.json"
 const BUILD_TIMEOUT_MSEC := 900000
 const BOOT_SETTLE_FRAMES := 24
 const ARRIVE_FRAMES := 20
@@ -459,8 +463,11 @@ func _capture_row(row: Dictionary) -> void:
 	var observed_clock: Dictionary = {}
 	var selected_spec: Dictionary = {}
 	var rejected: Array[Dictionary] = []
-	var offsets: Array = row.get("stand_offsets_m",
-		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0])
+	var offsets: Array = (row.get("stand_offsets_m",
+		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]) as Array).duplicate()
+	for extra: Variant in stand_guard_offsets(STAND_GUARD_CONFIG):
+		if not offsets.has(float(extra)):
+			offsets.append(float(extra))
 	var sideways := Vector2(-forward.y, forward.x)
 	var laterals: Array = row.get("stand_laterals_m", [0.0, -5.0, 5.0])
 	for offset: float in offsets:
@@ -639,7 +646,63 @@ func _capture_support_preflight(spec: Dictionary) -> String:
 	shape.margin = 0.0
 	if not space.intersect_shape(shape, 1).is_empty():
 		return "production player capsule overlaps solid geometry at staged stand"
+	if _stand_guard_window() > 0.0 and not bool(spec.swimming) \
+			and is_equal_approx(float(spec.ground_y), float(spec.terrain_y)):
+		var overhead := capture_overhead_failure(space, at, _stand_guard_window(),
+			_player.collision_mask, [_player.get_rid()])
+		if not overhead.is_empty():
+			return "stand: " + overhead
 	return ""
+
+
+## The guard's look-up window in metres, 0.0 while the guard is off.
+func _stand_guard_window() -> float:
+	if _stand_guard_cache < 0.0:
+		_stand_guard_cache = stand_guard_window(STAND_GUARD_CONFIG)
+	return _stand_guard_cache
+
+
+var _stand_guard_cache := -1.0
+
+
+static func stand_guard_window(path: String) -> float:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary:
+		return 0.0
+	var guard: Dictionary = (parsed as Dictionary).get("buried_stand_guard", {})
+	if not bool(guard.get("enabled", false)):
+		return 0.0
+	return maxf(0.0, float(guard.get("window_m", 8.0)))
+
+
+## Fallback stand offsets the guard adds after a row's own list, so a walk
+## stand whose first choices are all buried can still seat further back.
+static func stand_guard_offsets(path: String) -> Array:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary:
+		return []
+	var guard: Dictionary = (parsed as Dictionary).get("buried_stand_guard", {})
+	if not bool(guard.get("enabled", false)):
+		return []
+	return guard.get("fallback_offsets_m", []) as Array
+
+
+## A down ray from `window` metres over `point` to just above it. Any solid
+## hit means the point sits inside or under geometry (a hollow trimesh shell
+## is not caught by the capsule overlap or the floor ray, which start inside).
+static func capture_overhead_failure(space: PhysicsDirectSpaceState3D, point: Vector3,
+		window: float, mask: int, exclude: Array) -> String:
+	if window <= 0.0 or space == null or not point.is_finite():
+		return ""
+	var excluded: Array[RID] = []
+	excluded.assign(exclude)
+	var ray := PhysicsRayQueryParameters3D.create(point + Vector3.UP * window,
+		point + Vector3.UP * 0.5, mask, excluded)
+	var hit := space.intersect_ray(ray)
+	if hit.is_empty():
+		return ""
+	var position: Vector3 = hit.get("position", point)
+	return "solid geometry %.2fm overhead (buried or overhung)" % (position.y - point.y)
 
 
 static func capture_floor_failure(ground: float, hit: Dictionary, floor_angle: float) -> String:
@@ -690,6 +753,12 @@ func _capture_settled_failure(at: Vector2, row: Dictionary, spec: Dictionary) ->
 		float(row.get("min_camera_player_distance_m", 3.5)), _rig.spring_length + 3.0)
 	if not failure.is_empty():
 		return failure
+	if _stand_guard_window() > 0.0 and not bool(spec.get("swimming", false)) \
+			and is_equal_approx(float(spec.get("ground_y", NAN)), float(spec.get("terrain_y", NAN))):
+		var overhead := capture_overhead_failure(_world.get_world_3d().direct_space_state,
+			_camera.global_position, _stand_guard_window(), _player.collision_mask, [_player.get_rid()])
+		if not overhead.is_empty():
+			return "camera: " + overhead
 	return capture_surface_failure(spec, _capture_surface_record(), _player.global_position.y,
 		_player.floor_max_angle, root.get_camera_3d() == _camera)
 

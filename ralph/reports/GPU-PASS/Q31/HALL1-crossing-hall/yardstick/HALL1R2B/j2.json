@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Db": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A and B look the same: a readable, appealing white-haired elder in an olive vest whose earthy palette fits the Meadows, but the big-eyed, smooth-skinned cartoon face leans more animated-film than Palworld/Valheim stylised realism and has no rim light, so it sank on finish rather than on identity."
+  },
+  "Ng": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, plank cap and stone footing make it read as a built wall, but it is still a single thin panel with flat cream infill; B is a blown-out white card with no cap or footing that reads as a placeholder in both the close and gameplay views."
+  },
+  "Sj": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar has a naturalistic fur-and-plate build and stands taller than the trainer, but in A the dark plates merge into one dark mass at small size, the hit react is the same as standing and faint end crushes to near-black; B's orange-red glowing seams give it an identity but leave the tusks an odd red, and neither side has rim light."
+  },
+  "Uo": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The village approach is warm and believable by day and night, but inside the nave is a sparse amber box with a single runner and bench; in B large diagonal timber posts fill the near field in all three nave frames, and neither side has the haze, light shafts or hearth glow of Valheim-class interiors."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's lit hearth alcoves, benches and side props start to make the side arches feel lived-in, where A is an empty plank floor and runner; both still have dark stone piers at the frame edges, a flat even grade and no atmosphere, so the finish falls short."
+  },
+  "Nl": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The standing Stormcapra matches the owner's style bar (white fleece, dark curled horns, blue accents, taller than the trainer), which carried it, though A's faint mid and faint end crumple into clipped black patches and B's faint frames detach and stretch the horns away from the head."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PARTIAL",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In A the shrine end is an overexposed cobbled courtyard with scattered pedestals and a cool blue fountain as its only focus; B's blue runner, glowing shrine light and the hearth on the reverse view give it a direction, but blown-out walls and dark timber frames at the edges sink both."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Crossing Hall interiors (Uo, Kr, Yi): add a strong warm hearth or brazier focal point at the shrine end, plus long tables, rugs, hanging cloth and clutter along the nave; bring the overexposed wall grade down and add warm haze and light shafts from the windows",
+   "kind": "scene"
+  },
+  {
+   "change": "Move or re-aim the fixed hall cameras so timber posts and stone piers no longer fill the near field (worst in Uo B's nave frames)",
+   "kind": "scene"
+  },
+  {
+   "change": "Homestead wall (Ng): a thick timber-frame wall section with a top cap, a stone plinth and a textured wattle-and-daub or plank infill that does not blow out, in place of the flat pale card",
+   "kind": "new_art"
+  }
+ ]
+}

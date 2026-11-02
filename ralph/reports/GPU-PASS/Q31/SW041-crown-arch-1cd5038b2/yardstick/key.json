@@ -1,0 +1,34 @@
+{
+ "Fw": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Ot": {
+  "anchor": false,
+  "label": "SW041 P2-041 Medium cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\SW041\\sides\\P2-041-ctl-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW041\\sides\\P2-041-cand-Medium.png"
+ },
+ "Bc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Co": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Ac": {
+  "anchor": false,
+  "label": "SW041 P2-041 High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\SW041\\sides\\P2-041-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW041\\sides\\P2-041-cand-High.png"
+ },
+ "Hv": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}

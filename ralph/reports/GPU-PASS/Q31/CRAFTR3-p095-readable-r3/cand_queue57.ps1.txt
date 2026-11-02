@@ -1,0 +1,24 @@
+# Queue 57 (coordinator throughput note + owner "High first", 31 Oct): flag-flip arms on ONE imported tree, High only, run from queue 58.
+# Tree: local commit 402a80f3a = main d4d5b262f + tb/dialogue-cam 57c9418e8 + tb/ui-near-bar e07666f35 + tb/craft-r3 86a1c9825
+# (all flags off, renders as main; not pushed; craft-r3 also brings main 1ea58eb45's dashboard/doc commits, no game files).
+# Control = that tree. Candidate = the same tree with one flag flipped:
+#   CRAFTR3 (job 13, CLOSE-OUT first): data/config/craft_presentation.json readable_r3 = true
+#   DLG1F: data/config/camera.json copied byte for byte from tb/dialogue-cam-on 8486a5363 (sight_search_short_arm + speaker_frame_candidate_enabled ON)
+#   UI1F:  data/config/capture_readout_visual.json copied from tb/ui-near-bar-on e0f51545d (backing_enabled ON)
+# Imported once (arm_run skips the import when crA_imported_sha.txt already names the tree). Queue 56's DLG1/UI1 steps were pre-marked done.
+$env:TB_RUN_TIMEOUT_MIN = "30"
+$arm = "D:\tb-gpu-runs\tools\arm_run.ps1"
+$tree = "402a80f3ab89f45dea97d422c81f7ea28523a41a"
+"== queue57 start $(Get-Date -Format 'dd MMM HH:mm')"
+if (-not (Test-Path "D:\tb-gpu-runs\arms\CRAFTR3\_done")) {
+    & $arm -Job CRAFTR3 -Items "P2-095" -Arms "ctl=$tree", "cand=$tree|data/config/craft_presentation.json|readable_r3|true"
+}
+if (-not (Test-Path "D:\tb-gpu-runs\arms\DLG1F\_done")) {
+    & $arm -Job DLG1F -Items "P2-083", "P2-074", "P2-073", "P2-075", "P2-079", "P2-078", "P2-087", "P2-086", "P2-076", "P2-077", "P2-081", "P2-084" `
+        -Arms "ctl=$tree", "cand=$tree|@8486a5363b815bf70cfc93bf57980cd6f24aad33:data/config/camera.json"
+}
+if (-not (Test-Path "D:\tb-gpu-runs\arms\UI1F\_done")) {
+    & $arm -Job UI1F -Items "P2-114", "P2-058", "P2-059", "P2-061" `
+        -Arms "ctl=$tree", "cand=$tree|@e0f51545d87199a6999bbcd081bf67235c819b8e:data/config/capture_readout_visual.json"
+}
+"queue57 done $(Get-Date -Format 'dd MMM HH:mm')"

@@ -1,0 +1,22 @@
+# Queue 61 (31 Oct, after queue 60): Medium follow-ups for arms whose High mapped >= 7.5 (owner, High first).
+#  CO16 cindercub with CO-F36-4 coat lift: High 7.51. Shoot it at Medium on tree A c4806f1ab with
+#  flags.creatures_f36_coat_lift.enabled = true (plain, as at High) for its MET line; judged one-sided.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $crA = "D:\tb-gpu-wt-crA"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+$py = "C:\Users\mattj\AppData\Local\Programs\Python\Python312\python.exe"
+$treeA = "c4806f1ab93f36cc6099f140fdbb84ab3924037d"
+$mark = "D:\tb-gpu-runs\crA_imported_sha.txt"
+"== queue61 start $(Get-Date -Format 'dd MMM HH:mm')"
+if (-not (Test-Path "$out\CO16-f4coat-Medium-cindercub\frames\cindercub-faint-100.png")) {
+    Gate "CO16 Medium cindercub"
+    CheckoutCrA $treeA
+    if ((Test-Path $mark) -and ((Get-Content $mark -Raw).Trim() -eq $treeA)) { "  crA already imported at tree A" }
+    else { Import $crA "crA-q61A"; Set-Content -Path $mark -Value $treeA -Encoding ascii }
+    CleanCrA $treeA
+    $o = & $py "D:\tb-gpu-runs\tools\json_flip.py" (Join-Path $crA "data\config\creature_coat_flags.json") "flags.creatures_f36_coat_lift.enabled" "true"
+    "  $o"; "q61 cindercub Medium $o" | Add-Content "$out\CO16-flips.txt"
+    if ($LASTEXITCODE -eq 0) { Pose "CO16-f4coat-Medium-cindercub" "Medium" "cindercub" @() $treeA }
+}
+"queue61 done $(Get-Date -Format 'dd MMM HH:mm')"

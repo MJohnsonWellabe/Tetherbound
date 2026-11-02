@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Yl": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads near-black or muddy, so form and face are lost against the stage": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic brown wolf with real fur and a clear, taller-than-trainer silhouette sits at the owner's Tanglevolt/Stormursa finish, held back only by a mid-brown coat that goes muddy against the dark stage and has no rim light."
+  },
+  "Md": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue lightning-wolf model is on-style in standing, but side A's faint frames swap to a flat white-and-black material and side B's faint end collapses into a shapeless blue lump, so the creature does not hold a Palworld finish through its states."
+  },
+  "Ts": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry, low-detail ground textures, a flat stretched tunnel wall and sparse sites under flat noon light sink it well below Palworld's density and Valheim's atmosphere, even where side A's banner removal and smoke column give a real aftermath."
+  },
+  "Ba": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with readable eyes, a strong white-hair silhouette and a moss-green and brown outfit that matches the key art palette carries it, though his soft cartoon face is more stylised than the naturalistic creatures."
+  },
+  "Xr": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near-black forest with no visible purple storm sky or lightning, flat magenta telegraph rings, a player creature that is barely visible, and a HUD covering roughly a third of every frame sink it far below the Palworld forest boss fight."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Xr Stormwood fight: raise exposure and add the fixed purple storm sky, white-violet lightning and rim light on both fighters; pull the camera off trunks and canopy; shrink or move the left and bottom HUD panels off the arena; replace the flat magenta telegraph rings with real-object tells (crackling ground, debris, lightning) that end in a visible impact.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ts aftermaths: in every after frame take down the oxblood enemy banners and leave one site-specific aftermath beat (smoke from a struck camp, opened cage with a freed creature, toppled crates); dress the bare ground with groves, edges and higher-detail grass and path textures, and replace the stretched tunnel wall texture.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature materials and faint states: keep the authored coat material through hit and faint (Md side A goes white and black), keep the faint-end body readable as an animal rather than a lump, and lift the Yl brown coat value and add rim light so its form separates from the dark stage.",
+   "kind": "scene"
+  }
+ ]
+}

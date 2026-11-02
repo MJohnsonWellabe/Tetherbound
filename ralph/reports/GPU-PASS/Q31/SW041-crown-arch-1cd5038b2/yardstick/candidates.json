@@ -1,0 +1,20 @@
+[
+    {
+        "label":  "SW041 P2-041 High cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\SW041\\sides\\P2-041-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\SW041\\sides\\P2-041-ctl-High.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Crown Arch. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+                    ]
+    },
+    {
+        "label":  "SW041 P2-041 Medium cand|ctl",
+        "a":  "D:\\tb-gpu-runs\\yard\\SW041\\sides\\P2-041-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\SW041\\sides\\P2-041-ctl-Medium.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Crown Arch. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+                    ]
+    }
+]

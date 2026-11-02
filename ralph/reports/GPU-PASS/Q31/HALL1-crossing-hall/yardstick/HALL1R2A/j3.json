@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Wo": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's timber frame, diagonal brace, cap board and stone footing read as a built wall, but it is still one free-standing thin panel with pale flat infill on bare grass, and side B is a blown-out white card with no cap or footing."
+  },
+  "Ix": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm plank floor, chandeliers and B's added benches and hearth help, but flat even interior light with no shafts or pools of firelight, dark stone columns filling the frame edges and long empty floor keep it short of Palworld/Valheim finish."
+  },
+  "Zh": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's large legible recipe rows and ingredient list on a blue-grey translucent panel carry it, but the hints are plain white text with tiny glyphs and no teal emphasis, and side B's clipped, tiny recipe text and faint 'Craft: A / Enter' line sink it."
+  },
+  "Sd": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The approach with half-timbered houses, a tower and lit windows at night comes close, but the nave views are sparse with flat light, and in side B big diagonal wooden posts cut across the near field of every nave-forward frame."
+  },
+  "Ka": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall": "PARTIAL",
+     "Structural posts sit in the camera's near field and frame or block the views": "PRESENT",
+     "The shrine end has no warm focal point that draws the eye": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue runner, warm shrine glow and reverse-view hearth help, but blown-out cream walls, a cobblestone courtyard floor with evenly scattered pedestals, and no light shafts or shadowed depth read as an over-lit set, not a Valheim-class hall."
+  },
+  "Aa": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with a clear white-hair-and-beard silhouette, a readable face and an earthy green-brown outfit carries it at stylised-NPC finish, though the big-eyed cartoon face sits slightly softer than the key art."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A bold blue aquatic drake with a crested fin silhouette that reads at small size and stands above the trainer carries it; it is glossier and more toy-like than the naturalistic owner bar, and A's curled faint-end heap reads less clearly than B's belly-up collapse."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dress the Crossing Hall as a lived-in great hall: plank floor instead of courtyard cobble in the shrine end, long tables, benches, hanging banners, wall sconces and a warm hearth or brazier-lit shrine as the end-wall focal point, with exposure pulled down so firelight pools and shadows give depth",
+   "kind": "scene"
+  },
+  {
+   "change": "Move or re-frame the fixed hall cameras (or move the posts) so the stone columns and diagonal wooden posts leave the near field and frame the nave from mid-ground instead of blocking it",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the placed homestead wall with a thick timber-frame wall segment that has a real depth, a stone footing distinct from the infill, a cap or roof board and darker, textured wattle-and-daub infill that connects to neighbouring segments",
+   "kind": "new_art"
+  }
+ ]
+}

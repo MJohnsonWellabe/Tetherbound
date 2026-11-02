@@ -1,0 +1,86 @@
+{
+ "sets": {
+  "Aq": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, brace, plank cap and stone footing finally read as built, but the untextured tan infill, panel thinness, flat-shaded grey placeholder boulder and shadowless flat lighting keep both sides well short of Palworld base-building finish and Valheim light."
+  },
+  "Ra": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's wolf matches the owner style bar (navy fur, violet lightning, white ruff, clearly taller than the ruler) but B's faint frames collapse into a white-and-black untextured body and its hit react is indistinguishable from standing, which sinks the set."
+  },
+  "Sb": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey translucent panel, pale borders and teal selection are on-brief and every list line now fits, but small text for a 7-inch screen, flat placeholder item icons and a mostly empty detail column read below Palworld's crafting UI finish."
+  },
+  "Wv": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elder villager's clear face and eyes, sculpted white hair and beard, warm green-and-brown costume and strong silhouette sit at stylised Palworld-NPC finish, carried by the model rather than by any lighting context."
+  },
+  "Bz": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's torn-down banners, wrecked crates, opened cage and smoke plume make the aftermaths read, but the smeared blurry ground textures, flat low-poly treelines, slab-like stone wall and flat noon light with no atmosphere are nowhere near Palworld or Valheim finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the creature faint/hit material and pose path (Ra B faint mid/end lose all fur material and turn white-black; hit react does not deform) so every state keeps the standing material and reads without a label.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows ground and lighting pass for Aq/Bz: replace smeared ground textures with crisp grass/dirt detail, add directional sun shadows, aerial perspective fog and a warmer time-of-day grade, and swap the flat-shaded grey boulder for a textured rock.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the homestead wall panel with real thickness and textured wattle/plank infill (B's frame, cap and footing are the right direction), and give each Bz site a unique aftermath prop instead of the repeated emblem stone.",
+   "kind": "new_art"
+  }
+ ]
+}
