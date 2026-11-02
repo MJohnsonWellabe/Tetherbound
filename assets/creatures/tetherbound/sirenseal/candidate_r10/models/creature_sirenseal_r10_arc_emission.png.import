@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://do5lfis5wkc8a"
-path="res://.godot/imported/creature_sirenseal_r10_arc_emission.png-7d89eab6733dad55c93c9e7c8f70cdba.ctex"
+path.s3tc="res://.godot/imported/creature_sirenseal_r10_arc_emission.png-7d89eab6733dad55c93c9e7c8f70cdba.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "49c89826d8ec52cf3eeeb11d82588009"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_arc_emission.png"
-dest_files=["res://.godot/imported/creature_sirenseal_r10_arc_emission.png-7d89eab6733dad55c93c9e7c8f70cdba.ctex"]
+dest_files=["res://.godot/imported/creature_sirenseal_r10_arc_emission.png-7d89eab6733dad55c93c9e7c8f70cdba.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bj1dvxe75kn2c"
-path="res://.godot/imported/creature_staticub_r10_arc_emission.png-24a6368fa0b4baa512216a2dc9b5e84e.ctex"
+path.s3tc="res://.godot/imported/creature_staticub_r10_arc_emission.png-24a6368fa0b4baa512216a2dc9b5e84e.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "6bb43cdb4f30c5bea2b617b9f4db2996"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_arc_emission.png"
-dest_files=["res://.godot/imported/creature_staticub_r10_arc_emission.png-24a6368fa0b4baa512216a2dc9b5e84e.ctex"]
+dest_files=["res://.godot/imported/creature_staticub_r10_arc_emission.png-24a6368fa0b4baa512216a2dc9b5e84e.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
