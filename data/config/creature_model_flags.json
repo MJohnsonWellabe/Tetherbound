@@ -581,7 +581,7 @@
       }
     },
     "remake_owner1101_mosshock": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mosshock, a big toad with spiny back ridges, mossy green and yellow skin, a believable lean adult creature  (Meshy 01a197e9-f4b0-7398-9fd5-3147497e0f55). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing electric-blue eyes. Provenance: assets/creatures/tetherbound/mosshock/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r24 (2 Nov 2026, board F36#54): the rest clip floated 0.40 m; it is now settled on the 3rd percentile per key, hit root hop x0.3. CPU three-judge A/B 5.74 -> 5.98 mapped. Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mosshock, a big toad with spiny back ridges, mossy green and yellow skin, a believable lean adult creature  (Meshy 01a197e9-f4b0-7398-9fd5-3147497e0f55). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing electric-blue eyes. Provenance: assets/creatures/tetherbound/mosshock/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "mosshock": {
@@ -667,7 +667,7 @@
       }
     },
     "remake_owner1101_pebbik": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Pebbik, a small sturdy desert fox-like creature with big ears, sandy fur (Meshy 01a197ea-bc18-71e5-9ce1-9a9018362f13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the thin green-gold lines and amber eyes. Provenance: assets/creatures/tetherbound/pebbik/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r24 (2 Nov 2026, board F36#58): the rest clip floated 0.20 m; it is now settled on the 3rd percentile per key, hit root hop x0.3. CPU three-judge A/B 5.98 -> 6.07 mapped. Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Pebbik, a small sturdy desert fox-like creature with big ears, sandy fur (Meshy 01a197ea-bc18-71e5-9ce1-9a9018362f13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the thin green-gold lines and amber eyes. Provenance: assets/creatures/tetherbound/pebbik/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "pebbik": {

@@ -1,0 +1,6 @@
+Jq: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Qo: "faint end reads belly-up"; "rest pose floats above the floor"
+Hc: "spindly stick legs"; "boneless sprawled faint"; "rest pose floats above the floor"
+Tl: none
+Ta: none
+Wm: "hit react leaves the floor"; "rest pose floats above the floor"

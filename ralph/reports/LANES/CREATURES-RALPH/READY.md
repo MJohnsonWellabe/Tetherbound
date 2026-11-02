@@ -27,6 +27,12 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 - **F39#24** rest poses: Riptusk CPU 5.72 → 6.07 (kept, GLB) and Torrentoad 5.81 → 5.84 (a tie, not kept). The item stays under 6 until Torrentoad gets new art (the gaunt upright stance).
 - These are GLB edits on live remakes, with their scores recorded in each remake flag's `_why`. Evidence is in `r23/`.
 
+**Batch 1b results (r24):**
+- **F36#58** Pebbik poses: CPU 5.98 → 6.07. **At or above 6.0.** GLB rest settled, hit hop ×0.3.
+- **F36#54** Mosshock poses: 5.74 → 5.98 (kept, 0.02 short).
+- **F36#70** Sparkit poses: 5.56, a tie, not kept. It needs new art (legs, coat).
+- Evidence is in `r24/`.
+
 **Batch 2, if disk allows:** the shared creature-stage items F38#1, F38#2 and F38#26 (Meadows collapse, hurt poses, ground contact), F39#6 (faint state), and F41#13 (Fulgocobra and Stormraven electric finish, a coat-flag arm).
 
 ## PR #799: both CI failures fixed on this branch (2 Nov ~15:40 UTC). Bring in head `f89846eb5` or later.
