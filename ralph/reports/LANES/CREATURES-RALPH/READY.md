@@ -26,10 +26,7 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 
 ## Coordinator order of 2 Nov ~11:30 UTC: status
 
-1. **Sirenseal hit and faint:** in progress.
-   - The hit's root hop is scaled ×0.3; it lifted 0.42 m off the floor.
-   - The faint is settled on the 5th percentile, so it comes down off the flipper prop.
-   - CPU A/B against the live r10 is capturing.
+1. **Sirenseal hit and faint (r18): KEPT.** CPU 5.82 → 7.30 mapped on the r10 model. The hit hop is ×0.3; the left flippers fold and the faint settles, so the flipper prop is FIXED for all three judges. The GLB is in the queued GPU job.
 2. **Bramblebun and Ripplet fight-camera bias (option 2):** already its own commit ("Fight camera: lean the pair midpoint toward the ally for longer remakes; Bramblebun and Ripplet ON"). Ready to land; CI's `smoke_combat` decides.
 3. **Torrentoad blue speckled toad:** `creatures_ralph_torrentoad_toad` is ON. It scored r10 CPU 4.64 → 5.55, which clears the new target 4.73 (GPU roster 5.53 − 0.8). It is registered in `JUDGED_ON`. The gaunt biped silhouette still needs new art.
 4. **Tuskroot and Ashtusk value lift:** already ON since r10 (Tuskroot 5.55 → 7.42, Ashtusk 5.71 → 7.07, CPU). The roster baseline (main dd2d01342) does not contain this branch, so its Tuskroot 6.85 and Ashtusk 7.16 are pre-fix. Please add both to the next GPU job.
