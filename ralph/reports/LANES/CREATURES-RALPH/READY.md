@@ -32,7 +32,7 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
    - CPU A/B against the live r10 is capturing.
 2. **Bramblebun and Ripplet fight-camera bias (option 2):** already its own commit ("Fight camera: lean the pair midpoint toward the ally for longer remakes; Bramblebun and Ripplet ON"). Ready to land; CI's `smoke_combat` decides.
 3. **Torrentoad blue speckled toad:** `creatures_ralph_torrentoad_toad` is ON. It scored r10 CPU 4.64 → 5.55, which clears the new target 4.73 (GPU roster 5.53 − 0.8). It is registered in `JUDGED_ON`. The gaunt biped silhouette still needs new art.
-4. **Tuskroot and Ashtusk value lift:** already ON since r10 (Tuskroot 5.55 → 7.42, Ashtusk 5.71 → 7.07, CPU). Please include both in a GPU job, since the roster baseline predates them only if main lacks this branch.
+4. **Tuskroot and Ashtusk value lift:** already ON since r10 (Tuskroot 5.55 → 7.42, Ashtusk 5.71 → 7.07, CPU). The roster baseline (main dd2d01342) does not contain this branch, so its Tuskroot 6.85 and Ashtusk 7.16 are pre-fix. Please add both to the next GPU job.
 5. **The 6.8–7.0 band:** next.
 
 ## r10 Meshy models wired (r16, 2 Nov ~11:00 UTC): Staticub, Sirenseal and Skyrill ON, queued for GPU with r9
