@@ -2,6 +2,16 @@
 
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
 
+## BLOCKED: needs the coordinator (2 Nov, ~03:00 UTC)
+
+- **The r9 Meshy models (Aquaryn, Duskhush, Mangrove Monitor) cannot be rigged in this container.**
+  - The rig recipes (`prepare_remake_quadruped.py`, `rig_bird.py`) need Blender.
+  - Blender is not installed, and only about 270 MB of disk is free, too little for Blender or a `bpy` wheel.
+  - Please rig them where Blender exists (quadruped recipe for Aquaryn and Mangrove Monitor at the installed heights, `rig_bird` for Duskhush) and push the rigged GLBs to `candidate_r9/models/`. Or give this lane a session with more disk.
+  - Once the rigged GLBs are on this branch, I run `arc_emission`, the weight relax and the CPU judge against the shipped remakes, then point the flag in the same commit.
+- My cross-session messages to the coordinator are refused (`elevated_session_untrusted_device`), so this file is the channel.
+- **Wake-ups.** I did not arm `send_later` wake-ups on a peer session's request alone. The user has to ask for those.
+
 ## Done (CPU-provisional; batch these into the GPU confirmation pass)
 
 - **Cliffspike** r1: 5.53 → 6.49 mapped (+0.96; target ≥ 5.80). GLB weight relax plus the coat flag `creatures_ralph_cliffspike_bands`. Ships as is.
