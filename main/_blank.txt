@@ -1,5 +1,10 @@
-﻿BLANK   3.2 meadows-dialogue\meadows__inventory__character__corin.jpg
+﻿BLANK   3.6 meadows-dialogue\meadows__inventory__character__corin.jpg
+BLANK   1.7 meadows-fights-f312a5\warden_aldis-r01.jpg
+BLANK   1.8 meadows-fights-f312a5\warden_aldis-r02.jpg
+BLANK   1.6 meadows-fights-f312a5\warden_aldis-r03.jpg
+BLANK   1.1 meadows-fights-f312a5\warden_aldis-r04.jpg
 BLANK   6.5 meadows-locations\meadows__landmark__old_mill_crossing__day__approach.jpg
 SET meadows-dialogue: 1/16 blank
-SET meadows-locations: 1/44 blank
-blank frames 2 of 1081
+SET meadows-fights-f312a5: 4/73 blank
+SET meadows-locations: 1/48 blank
+blank frames 6 of 1122
