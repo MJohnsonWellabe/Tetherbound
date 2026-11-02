@@ -30,7 +30,21 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
     - the faint pose (Blender).
 - **Mosshock remake (live): 6.55 → 6.45 on GPU.** A mild regression, at the end of Task 1.
 
-## Bramblebun + Ripplet: smoke_combat camera anchor (coordinator request, 2 Nov ~03:25 UTC)
+## Bramblebun + Ripplet ON with the long-body fight-camera bias (coordinator option 2, 2 Nov ~08:40 UTC)
+
+- **Commit.** "Fight camera: lean the pair midpoint toward the ally for longer remakes; Bramblebun and Ripplet ON". This commit stands alone. If CI's `smoke_combat` is red, drop only the failing species.
+- **Code.** `fight_camera.gd::midpoint_bias_for(config, ally_ratio, foe_ratio)` returns `midpoint_bias` unchanged unless `camera.json fight.long_body_bias.enabled` is on and a fighter declares `framing_length_ratio` > 1. In that case it returns `midpoint_bias − slope·(ratio − 1)`, floored at `min_bias` (0.3). `combat_manager.gd` feeds it each fighter's declared ratio. No other fight changes.
+- **Declared ratios** in `creature_model_flags.json`:
+  - Bramblebun 1.18 (3.53 m rendered against the installed 2.99 m);
+  - Ripplet 1.09 (hit-pose 6.22 m against the installed 5.73 m).
+- **Test.** `tests/test_fight_camera_long_body_bias.gd` passes here: 4 tests, 79 assertions. It checks:
+  - the bias is 0.5 within installed footprints, and shorter bodies never move it;
+  - a longer remake leans the midpoint toward the ally;
+  - with the flag OFF, nothing changes;
+  - only declared remakes carry a ratio.
+- **Not run here:** `smoke_combat` needs the Meadows world. If 1.18 or 1.09 is not enough lean, raise `slope` in `camera.json`; that touches only these two.
+
+### Earlier analysis: smoke_combat camera anchor (2 Nov ~03:25 UTC)
 
 Analysis only. `smoke_combat` needs the Meadows world imported, which does not fit this container's disk, so I could not run it.
 

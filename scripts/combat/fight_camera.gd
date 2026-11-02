@@ -25,6 +25,23 @@ static func pair_profile(ally: AABB, foe: AABB, config: Dictionary) -> Dictionar
 	out["pair"] = key
 	return out
 
+## Creatures-ralph (2 Nov 2026, coordinator option 2): a remake whose rendered
+## body is longer than the installed model it replaced declares
+## `framing_length_ratio` (> 1) on its species look. With
+## `long_body_bias.enabled`, the pair midpoint leans toward the ally by
+## `slope * (ratio - 1)`, floored at `min_bias`, so the followed anchor stays
+## on the piloted creature. Any fight where neither fighter declares a ratio
+## above 1 keeps `midpoint_bias` exactly (byte-identical framing).
+static func midpoint_bias_for(config: Dictionary, ally_ratio: float, foe_ratio: float) -> float:
+	var base := float(config.get("midpoint_bias", 0.5))
+	var long: Dictionary = config.get("long_body_bias", {}) as Dictionary
+	var ratio := maxf(ally_ratio, foe_ratio)
+	if not bool(long.get("enabled", false)) or not is_finite(ratio) or ratio <= 1.0:
+		return base
+	var bias := base - float(long.get("slope", 1.0)) * (ratio - 1.0)
+	return clampf(maxf(bias, float(long.get("min_bias", 0.3))), 0.0, base)
+
+
 static func pivot(ally: AABB, foe: AABB, config: Dictionary, profile: Dictionary) -> Vector3:
 	var point := ally.get_center().lerp(foe.get_center(), clampf(float(config.get("midpoint_bias", 0.5)), 0.0, 1.0))
 	point.y += float(profile.get("height_offset_m", 0.0))
