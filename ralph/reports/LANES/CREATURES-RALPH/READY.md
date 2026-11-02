@@ -24,6 +24,20 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
   - Duskhush's wings eased ×0.5 in attack and fly_grip;
   - weights relaxed on all three.
 
+## GPU-confirmed: cr1102 (2 Nov ~12:10 UTC; three code-blind judges, anchors, calibrated; tree 29518c111 vs main1102b)
+
+| Species | main | lane | Δ |
+|---|---|---|---|
+| Sirenseal | 5.93 | **7.10** | +1.17 |
+| Skyrill | 6.05 | 6.87 | +0.82 |
+| Staticub | 6.46 | **7.16** | +0.70 |
+| Thundertunnel | 5.59 | 6.28 | +0.69 |
+| Aquaryn | 6.26 | 6.64 | +0.38 |
+| Duskhush | 6.44 | 6.77 | +0.33 |
+| Mangrove Monitor | 6.13 | 6.44 | +0.31 |
+
+All seven are GPU-confirmed gains, and Sirenseal and Staticub cross 7.0. **Nothing on this branch must be held back from landing.** Every OFF flag (the grounded-hit roster flag and the unkept coat flags) changes nothing while off.
+
 ## Coordinator order of 2 Nov ~11:30 UTC: status
 
 1. **Sirenseal hit and faint (r18): KEPT.** CPU 5.82 → 7.30 mapped on the r10 model. The hit hop is ×0.3; the left flippers fold and the faint settles, so the flipper prop is FIXED for all three judges. The GLB is in the queued GPU job.
