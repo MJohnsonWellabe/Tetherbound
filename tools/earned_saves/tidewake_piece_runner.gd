@@ -329,6 +329,10 @@ func _handoff_check() -> void:
 	if not prior.get("after") is Dictionary:
 		failures.append("Previous checkpoint receipt has no after-state")
 		return
+	# A Stormwood-runner predecessor (the earned line's home_credits) records
+	# progression.all_set() as `world_flags`; this runner's `flags` is the same set.
+	if not (prior.after as Dictionary).has("flags") and (prior.after as Dictionary).has("world_flags"):
+		prior.after["flags"] = prior.after.world_flags
 	for key: String in TRAINING_HANDOFF.missing_route_fields(prior.after, not training_job.is_empty()):
 		failures.append("Previous checkpoint after-state lacks " + key)
 		return
