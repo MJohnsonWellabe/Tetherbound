@@ -43,7 +43,7 @@ Each entry gives the species, the commit and the capture. All entries use `captu
 
 ## READY GPU job cr1102d (2 Nov ~16:10 UTC): one job, `--species=mangrove_monitor,skyrill,tuskroot`
 
-- **Tree:** `tb/creatures-ralph` at `8b44ca5d8` or later.
+- **Tree:** `tb/creatures-ralph` at `fd0ddfe18` or later (on top of main bd2a8fe91, #799 merged).
 - **A (control):** main1102b or main1102c (interchangeable).
 - **B:** the branch with these OFF flags set `"enabled": true` in a capture-only working copy (this lane has no scratch branches):
   - `data/config/creature_coat_flags.json`: `creatures_ralph_skyrill_r10_rim`, `creatures_ralph_tuskroot_rim`;
