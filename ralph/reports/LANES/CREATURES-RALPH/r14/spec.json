@@ -1,0 +1,33 @@
+[
+ {
+  "label": "sparkit",
+  "a": "sides/sparkit-base.png",
+  "b": "sides/sparkit-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "spindly stick legs",
+   "noisy stripes",
+   "boneless sprawled faint"
+  ]
+ },
+ {
+  "label": "tempestwing",
+  "a": "sides/tempestwing-base.png",
+  "b": "sides/tempestwing-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "faint does not settle on the ground",
+   "face and value read unclear"
+  ]
+ },
+ {
+  "label": "ribbonray",
+  "a": "sides/ribbonray-base.png",
+  "b": "sides/ribbonray-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "dull, dark value on the stage",
+   "faint pose does not read"
+  ]
+ }
+]

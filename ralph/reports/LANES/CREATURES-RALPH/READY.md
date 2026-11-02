@@ -24,6 +24,16 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
   - Duskhush's wings eased ×0.5 in attack and fly_grip;
   - weights relaxed on all three.
 
+## GPU batch 6 (Sparkit, Tempestwing, Ribbonray), r14 (2 Nov): no keeps, shipped remakes unchanged
+
+- **Sparkit:** shipped 5.86 vs regional fennec coat with the faint grounded 5.89 (mapped, three judges). A tie, so not kept. All three judges name "spindly stick legs"; that is mesh, so it needs a re-mesh or new Meshy art.
+- **Tempestwing:** shipped 6.20 vs pale gold coat with the faint grounded 5.71. Not kept. The judges prefer the shipped dark body under bright white wings for the value split; the shipped faint already rests on its body (only the wingtips cross the floor).
+- **Ribbonray:** shipped 5.53 vs value and saturation lift with the hit eased and the faint grounded 5.39. Not kept. All three judges call the magenta body "toy-like, no readable face". **It needs new Meshy art (a natural hue and a face). Parked.**
+- The coat flags (`creatures_ralph_sparkit_fennec`, `_tempestwing_gold`, `_ribbonray_lift`) stay OFF with their scores. Evidence is in `r14/`.
+- **Requests for the coordinator's Meshy queue:**
+  - Ribbonray: a natural-hued ray or serpent with a readable face;
+  - Sparkit: the fennec with sturdier legs.
+
 ## GPU main1102 regressions (coordinator, 2 Nov ~08:30 UTC): status
 
 - **Tuskroot and Ashtusk** (r10): KEEP and ON.

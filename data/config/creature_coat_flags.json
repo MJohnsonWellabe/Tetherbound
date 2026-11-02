@@ -588,7 +588,7 @@
       }
     },
     "creatures_ralph_sparkit_fennec": {
-      "_why": "Creatures-ralph (2 Nov 2026), Sparkit remake (GPU batch 6: 5.14 -> 4.80; 'noisy stripes'). Regional fennec coat: golden-yellow body, cream throat and belly, charcoal lower legs and ear tips (data/creatures/remake_grades.json sparkit); eyes and lightning lines kept.",
+      "_why": "Creatures-ralph (2 Nov 2026), Sparkit remake (GPU batch 6: 5.14 -> 4.80; 'noisy stripes'). Regional fennec coat: golden-yellow body, cream throat and belly, charcoal lower legs and ear tips (data/creatures/remake_grades.json sparkit); eyes and lightning lines kept. r14 CPU three-judge A/B: 5.86 -> 5.89 mapped (a tie), OFF.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_Image_0.jpg": {
@@ -597,7 +597,7 @@
       }
     },
     "creatures_ralph_tempestwing_gold": {
-      "_why": "Creatures-ralph (2 Nov 2026), tempestwing remake (GPU batch 6). Coat grade data/creatures/remake_grades.json tempestwing.",
+      "_why": "Creatures-ralph (2 Nov 2026), tempestwing remake (GPU batch 6). Coat grade data/creatures/remake_grades.json tempestwing. r14 CPU three-judge A/B: 6.20 -> 5.71 mapped (judges prefer the shipped dark body under white wings), OFF.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0.jpg": {
@@ -606,7 +606,7 @@
       }
     },
     "creatures_ralph_ribbonray_lift": {
-      "_why": "Creatures-ralph (2 Nov 2026), ribbonray remake (GPU batch 6). Coat grade data/creatures/remake_grades.json ribbonray.",
+      "_why": "Creatures-ralph (2 Nov 2026), ribbonray remake (GPU batch 6). Coat grade data/creatures/remake_grades.json ribbonray. r14 CPU three-judge A/B: 5.53 -> 5.39 mapped, OFF.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0.jpg": {
