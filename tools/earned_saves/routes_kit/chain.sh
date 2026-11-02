@@ -5,6 +5,8 @@
 #                                        cr (cloudreach_chain_runner)  tw (tidewake_piece_runner, incl. training_tN_*)
 #                                        sw (stormwood_chain_runner)
 #                                        ea (earned_chain_runner, generated-origin Meadows lineage: relay/sigils/hall/warden/tidewake_handoff)
+#                                        et (earned_chain_runner, fresh-title trained lineage: --training-profile=meadows_training_v1,
+#                                            no generated input; start dir `none` only for opening_village)
 # Writes $RB/<name>/ (save/, receipt.json) and $RB/<name>.log; prints START/END/STOP lines. Skips a step whose out dir has a receipt.
 # Run detached: nohup setsid chain.sh ... > $RB/x_chain.out 2>&1 < /dev/null & disown
 # The checkout must stay clean and at one SHA for the whole run (runners refuse a dirty tree; altar pieces need their
@@ -15,7 +17,7 @@ prev="$1"; shift
 for step in "$@"; do
   IFS=: read -r runner seg name <<<"$step"
   out="$RB/$name"; log="$RB/$name.log"
-  if [[ -f "$out/receipt.json" || -f "$out/$seg/receipt.json" || ( "$runner" == gen && -d "$out" ) ]]; then echo "SKIP $name"; prev="$out"; [[ $runner == ea ]] && prev="$out/$seg"; continue; fi
+  if [[ -f "$out/receipt.json" || -f "$out/$seg/receipt.json" || ( "$runner" == gen && -d "$out" ) ]]; then echo "SKIP $name"; prev="$out"; [[ $runner == ea || $runner == et ]] && prev="$out/$seg"; continue; fi
   rm -rf "$out"
   echo "START $name $seg $(date -u +%FT%TZ) sha=$(git rev-parse --short HEAD)"; t0=$(date +%s)
   case $runner in
@@ -25,11 +27,13 @@ for step in "$@"; do
     sw) args=(--script tools/earned_saves/stormwood_chain_runner.gd -- --segment="$seg" --from="$prev" --out="$out");;
     ea) h=(); [[ "$prev" != none ]] && h=(--handoff-from="$prev")
         args=(--script tools/earned_saves/earned_chain_runner.gd -- --segment="$seg" --save-dir="$out/$seg/save" --receipt="$out/$seg/receipt.json" "${h[@]}" --generated-fixture);;
+    et) h=(); [[ "$prev" != none ]] && h=(--handoff-from="$prev")
+        args=(--script tools/earned_saves/earned_chain_runner.gd -- --segment="$seg" --save-dir="$out/$seg/save" --receipt="$out/$seg/receipt.json" "${h[@]}" --training-profile=meadows_training_v1 ${ET_EXTRA:-});;
   esac
   timeout "${PIECE_TIMEOUT:-21600}" godot --headless --fixed-fps 60 --path . "${args[@]}" > "$log" 2>&1
   code=$?; echo "END $name exit=$code wall=$(( $(date +%s)-t0 ))s"
   grep -E "PIECE RESULT|CHAIN RESULT|BOUNDARY SAVE" "$log" | tail -1 | cut -c1-600
   if [[ $code != 0 ]]; then echo "STOP at $name (last good $prev)"; exit 1; fi
-  prev="$out"; [[ $runner == ea ]] && prev="$out/$seg"
+  prev="$out"; [[ $runner == ea || $runner == et ]] && prev="$out/$seg"
 done
 echo COMPLETE
