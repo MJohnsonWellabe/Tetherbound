@@ -585,8 +585,8 @@
       }
     },
     "creatures_ralph_tuskroot_brown": {
-      "_why": "Creatures-ralph (2 Nov 2026), Tuskroot remake (GPU main1102: installed 7.17 -> remake 6.31; 'near-black boar sinks into the dark stage, face unreadable'). Mid-brown coat, tan muzzle and belly, mossy stone dorsal plates (data/creatures/remake_grades.json tuskroot). r10 CPU three-judge A/B: 5.55 -> 7.42 mapped (target 6.37), ON.",
-      "enabled": true,
+      "_why": "Creatures-ralph (2 Nov 2026), Tuskroot remake (GPU main1102: installed 7.17 -> remake 6.31; 'near-black boar sinks into the dark stage, face unreadable'). Mid-brown coat, tan muzzle and belly, mossy stone dorsal plates (data/creatures/remake_grades.json tuskroot). r10 CPU three-judge A/B: 5.55 -> 7.42 mapped (target 6.37), ON. GPU cr1102b (2 Nov): main 7.65 -> lane 7.01, a regression; all three judges say the pale moss-tan hide melts into the floor, and main's darker boar reads better. OFF; the next try keeps main's value and adds rim light.",
+      "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0_brown.jpg"

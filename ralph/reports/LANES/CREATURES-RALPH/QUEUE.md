@@ -17,3 +17,11 @@ Each entry gives the species, the commit and the capture. All entries use `captu
 - **Torrentoad:** `creatures_ralph_torrentoad_toad` is ON (already in cr1102b).
 - **Job:** `--species=staticub,skyrill`.
 - **Not kept in r19:** Aquaryn matte scales (−0.05) and the Mangrove Monitor faint settle (tie). Both need new art: Aquaryn a value ramp and a natural finish; Mangrove Monitor a lying faint and its dorsal stripe moved off red.
+
+## READY next fixes (coordinator 2 Nov ~12:40 UTC); the first job after the origin/main merge needs a fresh main control (main1102c)
+
+1. **Mangrove Monitor r9:** a faint that lies down (r19's settle tied: it still crouches on folded legs), and the red-brown dorsal stripe moved off red.
+2. **Aquaryn r9:** a natural finish with a back-to-belly value ramp. r19's matte scales scored −0.05, because the scale detail does not read at the stage camera.
+3. **Duskhush r9:** one clear elemental trait and a cleaner faint.
+4. **Torrentoad:** a grounded, squat toad pose and a less glossy skin.
+5. **Tuskroot:** keep main's value, add rim light and a slightly larger read against the ruler. Don't lighten the hide.

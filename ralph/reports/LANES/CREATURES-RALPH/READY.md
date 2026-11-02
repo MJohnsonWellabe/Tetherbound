@@ -24,6 +24,25 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
   - Duskhush's wings eased ×0.5 in attack and fly_grip;
   - weights relaxed on all three.
 
+## GPU cr1102b (2 Nov ~12:40 UTC; tree 29c1b53c5 vs main1102b) and the landing head
+
+| Species | main | lane | Δ |
+|---|---|---|---|
+| Ashtusk | 7.21 | **7.52** | +0.31 |
+| Torrentoad | 6.81 | 6.97 | +0.16 |
+| Tuskroot | 7.65 | 7.01 | **−0.64, regression** |
+
+- **Tuskroot is fixed for landing.** `creatures_ralph_tuskroot_brown` is OFF and removed from `JUDGED_ON`.
+  - It was the only Tuskroot change: the Tuskroot GLB matches main, so Tuskroot on this branch now renders as main.
+  - The Ashtusk lift is a separate flag on Ashtusk's own repaint, and it stays ON.
+- **Landing-ready head:** the commit that carries this section; see `git log -1 -- ralph/reports/LANES/CREATURES-RALPH/READY.md`.
+- **Nothing must not land.** Every OFF flag changes nothing while off:
+  - tuskroot_brown, aquaryn_r9_scales, the grounded-hit roster flag, and the unkept r14/r15 coats.
+- **Local checks:**
+  - `test_remake_owner1101_finish.gd` and `test_creature_model_flags.gd` pass for every species this lane touched.
+  - Species outside this container's partial import set fail only because their textures are not imported; CI imports everything.
+  - `test_fight_camera_long_body_bias.gd` passes.
+
 ## Main merge held (coordinator, 2 Nov ~12:30 UTC)
 
 #798 turned Meadows light and river candidates ON in main, and the F36 creature stage reads production `meadows_look.json`. This branch does **not** merge `origin/main` until cr1102b is judged and the creature landing PR is open, so the A/B lighting keeps matching the main1102b control. The first QUEUE job after that merge is marked "needs fresh main control (main1102c)".
