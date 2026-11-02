@@ -24,6 +24,16 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
   - Duskhush's wings eased ×0.5 in attack and fly_grip;
   - weights relaxed on all three.
 
+## Work list from 2 Nov ~09:20 UTC: the coordinator's GPU roster baseline (main dd2d01342)
+
+16 of 70 creatures are at 7.0 or above. The full table lands as `ralph/reports/CLOUD-JUDGE/ROSTER-1102/`. Order of work:
+
+1. **The 6.8–7.0 band** (aeriex 6.92, mosshell 6.92, galewisp 6.96, paddlenewt 6.98, trailpup 6.99, tuskroot 6.85, cindercub 6.85, stormbrush 6.82, nightburrow 6.80, water_mosshell 6.95): look first for a shared lift (faints, value against the dark stage, rim). Started: a CPU baseline of mosshell, galewisp and aeriex.
+2. **Water variants:** do they inherit the base model's look fixes, and are their swim and ride clips missing?
+3. **The bottom, worst first.**
+   - Thundertunnel, Sirenseal, Skyrill and Staticub get coordinator r10 Meshy models.
+   - Sparkit, Ribbonray, Tempestwing and Ripplet are already tried (r14, r15) and need new art.
+
 ## GPU batch 6 (Sparkit, Tempestwing, Ribbonray), r14 (2 Nov): no keeps, shipped remakes unchanged
 
 - **Sparkit:** shipped 5.86 vs regional fennec coat with the faint grounded 5.89 (mapped, three judges). A tie, so not kept. All three judges name "spindly stick legs"; that is mesh, so it needs a re-mesh or new Meshy art.
