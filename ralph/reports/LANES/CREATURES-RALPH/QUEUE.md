@@ -40,3 +40,19 @@ Each entry gives the species, the commit and the capture. All entries use `captu
 
 - **Mangrove Monitor r9:** the GLB lies flat in its faint and `creatures_ralph_mangrove_monitor_r9_olive` is ON. CPU 5.28 → 6.05.
 - **Aquaryn:** parked for new art after two failed coat approaches (r19, r21).
+
+## READY GPU job cr1102d (2 Nov ~16:10 UTC): one job, `--species=mangrove_monitor,skyrill,tuskroot`
+
+- **Tree:** `tb/creatures-ralph` at `8b44ca5d8` or later.
+- **A (control):** main1102b or main1102c (interchangeable).
+- **B:** the branch with these OFF flags set `"enabled": true` in a capture-only working copy (this lane has no scratch branches):
+  - `data/config/creature_coat_flags.json`: `creatures_ralph_skyrill_r10_rim`, `creatures_ralph_tuskroot_rim`;
+  - `data/config/creature_scale_flags.json`: `creatures_ralph_tuskroot_presence`.
+- **Already ON on the branch, no flip needed:**
+  - Mangrove Monitor: the r21 lie-down GLB plus `creatures_ralph_mangrove_monitor_r9_olive`, CPU 5.28 → 6.05;
+  - Skyrill: `creatures_ralph_skyrill_r10_lift`.
+- **What the job decides:**
+  - Mangrove Monitor: r21 on GPU.
+  - Skyrill: rim 0.15 on the lift; GPU 7.43 now, 7.5 is the bar.
+  - Tuskroot: rim 0.15 on main's dark coat plus x1.1, against main 7.65.
+- **Why GPU only:** Compatibility draws no rim, so the rim arms have no CPU score.
