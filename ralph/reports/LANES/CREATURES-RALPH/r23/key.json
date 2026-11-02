@@ -1,0 +1,35 @@
+{
+ "Bn": {
+  "anchor": true,
+  "A": "f36_0_npc:C8B",
+  "B": "f36_0_npc:C8A"
+ },
+ "Fg": {
+  "anchor": false,
+  "label": "riverdrake",
+  "A": "sides/riverdrake-cand.png",
+  "B": "sides/riverdrake-base.png"
+ },
+ "Pp": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Vy": {
+  "anchor": false,
+  "label": "riptusk",
+  "A": "sides/riptusk-cand.png",
+  "B": "sides/riptusk-base.png"
+ },
+ "Im": {
+  "anchor": false,
+  "label": "torrentoad",
+  "A": "sides/torrentoad-base.png",
+  "B": "sides/torrentoad-cand.png"
+ },
+ "Vt": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

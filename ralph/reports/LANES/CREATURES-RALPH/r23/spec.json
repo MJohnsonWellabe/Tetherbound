@@ -1,0 +1,30 @@
+[
+ {
+  "label": "riptusk",
+  "a": "sides/riptusk-base.png",
+  "b": "sides/riptusk-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: hit react, faint end, rest (settling), rest (settled). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether each pose reads and stays grounded.",
+  "defects": [
+   "rest pose rolls onto its back and floats above the floor"
+  ]
+ },
+ {
+  "label": "torrentoad",
+  "a": "sides/torrentoad-base.png",
+  "b": "sides/torrentoad-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: hit react, faint end, rest (settling), rest (settled). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether each pose reads and stays grounded.",
+  "defects": [
+   "rest pose rolls onto its back and floats above the floor"
+  ]
+ },
+ {
+  "label": "riverdrake",
+  "a": "sides/riverdrake-base.png",
+  "b": "sides/riverdrake-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: hit react, faint end, rest (settling), rest (settled). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether each pose reads and stays grounded.",
+  "defects": [
+   "crouch and recoil leave the body hovering or sink it into the ground",
+   "rest pose floats"
+  ]
+ }
+]

@@ -1,0 +1,6 @@
+Bn: none
+Fg: "crouch and recoil leave the body hovering or sink it into the ground"; "rest pose floats"
+Pp: none
+Vy: "rest pose rolls onto its back and floats above the floor"
+Im: "rest pose rolls onto its back and floats above the floor"
+Vt: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

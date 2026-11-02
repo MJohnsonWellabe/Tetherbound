@@ -751,7 +751,7 @@
       }
     },
     "remake_owner1101_riptusk": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riptusk, a large walrus-like armoured sea beast with long tusks, blue-grey hide with sandy plates (Meshy 01a197ed-364b-733d-8048-2e07c93b064f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the thin aqua lines on the hide and eyes. Provenance: assets/creatures/tetherbound/riptusk/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r23 (2 Nov 2026, board F39#24): the rest clip floated 0.76 m; it is now settled on the 3rd percentile per key, hit root hop x0.3. CPU three-judge A/B 5.72 -> 6.07 mapped. Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riptusk, a large walrus-like armoured sea beast with long tusks, blue-grey hide with sandy plates (Meshy 01a197ed-364b-733d-8048-2e07c93b064f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the thin aqua lines on the hide and eyes. Provenance: assets/creatures/tetherbound/riptusk/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "riptusk": {
@@ -774,7 +774,7 @@
       }
     },
     "remake_owner1101_riverdrake": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riverdrake, a lean river drake lizard with a crest along its head and spine, blue scales and amber crest (Meshy 01a197ed-424e-7645-aabb-b223008f0477). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.0 m; emission on the thin aqua lines between the blue scales and eyes. Provenance: assets/creatures/tetherbound/riverdrake/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r23 (2 Nov 2026, board F39#11): the rest clip floated 0.48 m; it is now settled on the 3rd percentile per key, hit root hop x0.3. CPU three-judge A/B 6.32 -> 6.42 mapped. Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riverdrake, a lean river drake lizard with a crest along its head and spine, blue scales and amber crest (Meshy 01a197ed-424e-7645-aabb-b223008f0477). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.0 m; emission on the thin aqua lines between the blue scales and eyes. Provenance: assets/creatures/tetherbound/riverdrake/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "riverdrake": {
