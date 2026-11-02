@@ -13,6 +13,9 @@ const COAT_PATH := "res://data/config/creature_coat_flags.json"
 const COAT_FLAGS := ["remake_owner1101_glow_read", "remake_owner1101_plate_blend", "remake_owner1101_dark_lift"]
 const SCALE_FLAGS := ["remake_owner1101_body_line", "remake_owner1101_judged_short"]
 const REMAKE_DIR := "/candidate_owner1101/models/"
+## Creatures-ralph coat flags judged on CPU against the shipped remake and kept
+## ON (2 Nov 2026), with the mapped score each one's _why records.
+const JUDGED_ON := {"creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22"}
 
 
 func _json(path: String) -> Dictionary:
@@ -44,9 +47,13 @@ func test_finish_flags_ship_off_and_change_nothing_while_off() -> void:
 	for flag: String in SCALE_FLAGS:
 		assert_true(scales.has(flag), "%s is declared" % flag)
 		assert_false(bool((scales.get(flag, {}) as Dictionary).get("enabled", true)), "%s ships OFF" % flag)
-	# Off: no remake albedo is remapped by the live coat map.
-	for from_path: String in BODY.parse_coat_flags(_json(COAT_PATH)):
-		assert_false(from_path.contains(REMAKE_DIR), "%s is not remapped while the finish flags are off" % from_path)
+	# Off: the finish flags, exactly as shipped, contribute nothing to the live
+	# coat map. (Separately judged per-species coat flags may remap a remake;
+	# see test_judged_creature_coat_flags_ship_on_with_their_scores.)
+	var finish_only := {}
+	for flag: String in COAT_FLAGS:
+		finish_only[flag] = coats.get(flag, {})
+	assert_eq(BODY.parse_coat_flags({"flags": finish_only}), {}, "the shipped finish flags remap nothing while off")
 
 
 func test_enabled_coat_flags_apply_every_key() -> void:
@@ -103,3 +110,15 @@ func test_scale_flags_only_grow_and_keep_evolution_order() -> void:
 				if str((rows[other] as Dictionary).get("evolves_from", "")) == id:
 					var evolved := float((rows[other].placeholder as Dictionary).get("height", 1.0))
 					assert_true(grown < evolved, "%s: %s at %.2fm stays under its evolution %s (%.2fm)" % [flag, id, grown, other, evolved])
+
+
+func test_judged_creature_coat_flags_ship_on_with_their_scores() -> void:
+	var coats := _flags(COAT_PATH)
+	var live := BODY.parse_coat_flags(_json(COAT_PATH))
+	for flag: String in JUDGED_ON:
+		var entry: Dictionary = coats.get(flag, {})
+		assert_true(bool(entry.get("enabled", false)), "%s ships ON (judged gain)" % flag)
+		assert_true(str(entry.get("_why", "")).contains(JUDGED_ON[flag]), "%s records its mapped score %s" % [flag, JUDGED_ON[flag]])
+		for from_path: String in (entry.get("coats", {}) as Dictionary):
+			assert_true(from_path.contains(REMAKE_DIR), "%s grades a remake texture" % flag)
+			assert_true(live.has(from_path), "%s reaches the live coat map" % from_path)
