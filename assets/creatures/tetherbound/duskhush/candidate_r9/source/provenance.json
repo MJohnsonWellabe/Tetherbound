@@ -1,0 +1,20 @@
+{
+ "species": "duskhush",
+ "round": "r9 (2 Nov 2026), new model for a remake that regressed in batch 4 and did not recover with two texture/rig approaches in tb/creatures-ralph",
+ "owner_direction": "2 Nov 2026: 'improve the new versions back to where the old versions were'; 1 Nov creature rule (believable adult animal, one elemental trait)",
+ "reference": "reference/ref.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence; coordinator picked 1 of 2 concepts after inspecting both (alternate kept as reference/ref_alt.png)",
+ "text_to_image_task": "01a19a18-54b7-76b6-85ee-f08cec27f83e",
+ "text_to_image_prompt": "Duskhush, a huge eagle owl, pale grey and soft violet plumage with crisp dark barring, bright white facial disc framing big glowing violet eyes, long ear tufts, glowing violet edges on the primary feathers, standing upright on thick feathered legs, a believable adult animal with grounded realistic anatomy and real fur, feather or scale detail, carrying one clear elemental fantasy trait; large wild creature clearly taller than a 1.8 m person; full body, three-quarter side view, natural standing stance, all limbs visible and separate, head and face clearly visible with bright glowing eyes catching light; body in mid-to-light values that read against dark ground, strong rim light; plain light grey background, soft even daylight, high-quality naturalistic game creature concept art; not cartoon, not chibi, not a mascot; no red or crimson anywhere, no text, no people, no props",
+ "meshy_image_to_3d_task": "01a19a18-fb1c-7255-ab3b-80669617837e",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "raw Meshy candidate, not wired to any flag; creature lane rigs it and judges it against the shipped remake before any flag change",
+ "scale_note": "rig to the species' installed height (taller than the 1.80 m trainer); never shrink"
+}
