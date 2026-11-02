@@ -1,0 +1,6 @@
+Nx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Sz: "dull, dark value on the stage"; "faint pose does not read"
+Mn: none
+Zo: "spindly stick legs"; "noisy stripes"; "boneless sprawled faint"
+Bb: "faint does not settle on the ground"; "face and value read unclear"
+Wv: none

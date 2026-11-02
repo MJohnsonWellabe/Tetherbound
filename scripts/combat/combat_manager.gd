@@ -2773,6 +2773,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	if floor_m > 0.0:
 		local["max_distance_m"] = maxf(float(cfg.get("distance", 6.0)), minf(float(local.max_distance_m), floor_m))
 	local["roll_radians"] = (_camera_rig as Node3D).rotation.z
+	local["midpoint_bias"] = FIGHT_CAMERA.midpoint_bias_for(local, _framing_length_ratio(_ally_body), _framing_length_ratio(_wild))
 	if manual:
 		local["orbit_candidates_deg"] = [0.0]
 		local["allow_pair_side_views"] = false
@@ -3075,6 +3076,17 @@ static func body_limit_along_arm(pivot: Vector3, arm_end: Vector3, bounds: AABB,
 
 ## A body's live render bounds in world space (the model's transform applied
 ## to `_body_render_bounds`, which is measured in the model's own space).
+## A remake's declared rendered-length ratio against the installed model it
+## replaced (creature_model_flags.json `framing_length_ratio`); 1.0 otherwise.
+func _framing_length_ratio(body: Node3D) -> float:
+	if body == null or not is_instance_valid(body):
+		return 1.0
+	var id := str(body.get("species_id"))
+	if id.is_empty() or not SPECIES.has(id):
+		return 1.0
+	return float(SPECIES.placeholder(id).get("framing_length_ratio", 1.0))
+
+
 func _body_world_bounds(body: Node3D) -> AABB:
 	var local := _body_render_bounds(body)
 	if local.size.is_zero_approx() or not body.is_inside_tree():

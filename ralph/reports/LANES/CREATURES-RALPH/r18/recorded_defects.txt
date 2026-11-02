@@ -1,0 +1,4 @@
+My: none
+Vy: "hit react lifts the body off the floor"; "faint end propped on a flipper, never settles"
+To: none
+Hi: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

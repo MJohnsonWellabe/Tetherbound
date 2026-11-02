@@ -1,0 +1,6 @@
+Pe: "dark green upright frog-man / gaunt biped is murky, low-value, alien silhouette"; "faint end grows odd dorsal spikes"
+In: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Kk: "near-black boar sinks into the dark stage, no rim, face unreadable"
+Pu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Lg: none
+Ca: "near-black boar sinks into the dark stage, no rim, face unreadable"

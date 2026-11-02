@@ -1,0 +1,59 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 4909,
+    "spine": 5940,
+    "neck": 4119,
+    "head": 7192,
+    "front_upper_l": 682,
+    "front_lower_l": 995,
+    "front_upper_r": 697,
+    "front_lower_r": 959,
+    "tail_1": 102,
+    "tail_2": 158,
+    "rear_upper_l": 258,
+    "rear_lower_l": 1455,
+    "rear_upper_r": 259,
+    "rear_lower_r": 1430
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14012,
+  "height_m": 3.25,
+  "length_m": 3.6729,
+  "width_m": 3.8399,
+  "triangles": 28000,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2734,
+      -0.2599,
+      0.0894
+    ],
+    "front_r": [
+      0.2715,
+      -0.2592,
+      0.0916
+    ],
+    "rear_l": [
+      -0.185,
+      0.4101,
+      0.0441
+    ],
+    "rear_r": [
+      0.1845,
+      0.4061,
+      0.0449
+    ]
+  },
+  "back_top_normalised": 0.407,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": "none: no baked ground patch",
+  "params": {
+    "species": "sirenseal",
+    "height": 3.25,
+    "patch": false
+  }
+}

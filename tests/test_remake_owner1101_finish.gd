@@ -15,7 +15,7 @@ const SCALE_FLAGS := ["remake_owner1101_body_line", "remake_owner1101_judged_sho
 const REMAKE_DIR := "/candidate_owner1101/models/"
 ## Creatures-ralph coat flags judged on CPU against the shipped remake and kept
 ## ON (2 Nov 2026), with the mapped score each one's _why records.
-const JUDGED_ON := {"creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22"}
+const JUDGED_ON := {"creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22", "creatures_ralph_cragclaw_body_mid": "6.34", "creatures_ralph_ashtusk_lift": "7.07", "creatures_ralph_thundertunnel_velvet": "5.36", "creatures_ralph_torrentoad_toad": "5.55", "creatures_ralph_skyrill_r10_lift": "6.37"}
 
 
 func _json(path: String) -> Dictionary:
@@ -26,6 +26,18 @@ func _json(path: String) -> Dictionary:
 
 func _flags(path: String) -> Dictionary:
 	return _json(path).get("flags", {})
+
+
+## A remake's live albedo is its current model's _Image_0.jpg: the owner1101
+## remake, or the coordinator's newer Meshy model (candidate_r9, candidate_r10)
+## its remake flag now points at. An owner1101 albedo still counts while it
+## remains a source texture (aspect repaints read it).
+func _live_albedos() -> Dictionary:
+	var out := {}
+	var remakes := _remake_species()
+	for id: String in remakes:
+		out[str(remakes[id]).get_basename() + "_Image_0.jpg"] = true
+	return out
 
 
 func _remake_species() -> Dictionary:
@@ -58,13 +70,14 @@ func test_finish_flags_ship_off_and_change_nothing_while_off() -> void:
 
 func test_enabled_coat_flags_apply_every_key() -> void:
 	var coats := _flags(COAT_PATH)
+	var live_albedos := _live_albedos()
 	for flag: String in COAT_FLAGS:
 		var entry: Dictionary = (coats.get(flag, {}) as Dictionary).duplicate(true)
 		entry.enabled = true
 		var resolved: Dictionary = BODY.parse_coat_flags({"flags": {flag: entry}})
 		assert_eq(resolved.size(), (entry.coats as Dictionary).size(), "%s resolves every entry when on" % flag)
 		for from_path: String in resolved:
-			assert_true(from_path.contains(REMAKE_DIR) and from_path.ends_with("_Image_0.jpg"),
+			assert_true((from_path.contains(REMAKE_DIR) or live_albedos.has(from_path)) and from_path.ends_with("_Image_0.jpg"),
 				"%s keys the remake's live albedo (%s)" % [flag, from_path])
 			var spec: Dictionary = resolved[from_path]
 			var source := StandardMaterial3D.new()
@@ -115,10 +128,11 @@ func test_scale_flags_only_grow_and_keep_evolution_order() -> void:
 func test_judged_creature_coat_flags_ship_on_with_their_scores() -> void:
 	var coats := _flags(COAT_PATH)
 	var live := BODY.parse_coat_flags(_json(COAT_PATH))
+	var live_albedos := _live_albedos()
 	for flag: String in JUDGED_ON:
 		var entry: Dictionary = coats.get(flag, {})
 		assert_true(bool(entry.get("enabled", false)), "%s ships ON (judged gain)" % flag)
 		assert_true(str(entry.get("_why", "")).contains(JUDGED_ON[flag]), "%s records its mapped score %s" % [flag, JUDGED_ON[flag]])
 		for from_path: String in (entry.get("coats", {}) as Dictionary):
-			assert_true(from_path.contains(REMAKE_DIR), "%s grades a remake texture" % flag)
+			assert_true(from_path.contains(REMAKE_DIR) or live_albedos.has(from_path), "%s grades a remake texture" % flag)
 			assert_true(live.has(from_path), "%s reaches the live coat map" % from_path)

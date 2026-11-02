@@ -1,0 +1,35 @@
+{
+ "Pe": {
+  "anchor": false,
+  "label": "torrentoad",
+  "A": "sides/torrentoad-cand.png",
+  "B": "sides/torrentoad-base.png"
+ },
+ "In": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Kk": {
+  "anchor": false,
+  "label": "ashtusk",
+  "A": "sides/ashtusk-base.png",
+  "B": "sides/ashtusk-cand.png"
+ },
+ "Pu": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Lg": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Ca": {
+  "anchor": false,
+  "label": "tuskroot",
+  "A": "sides/tuskroot-base.png",
+  "B": "sides/tuskroot-cand.png"
+ }
+}

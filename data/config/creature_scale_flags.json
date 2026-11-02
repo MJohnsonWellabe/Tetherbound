@@ -61,6 +61,13 @@
         "terrapup": 1.15,
         "pipwing": 1.15
       }
+    },
+    "creatures_ralph_cragclaw_presence": {
+      "_why": "Creatures-ralph (2 Nov 2026), Cragclaw: r6 judges (x3) see the shell crown only just clear the 1.80 m trainer. x1.2 (2.95 -> 3.54 m). Landing needs the usual gameplay checks (arena containment, spawn clearance).",
+      "enabled": true,
+      "species": {
+        "cragclaw": 1.2
+      }
     }
   }
 }

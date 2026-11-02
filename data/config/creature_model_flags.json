@@ -26,9 +26,11 @@
     },
     "remake_owner1101_bramblebun": {
       "_why": "Owner-picked remake 1 Nov 2026: four-legged hare, bark plates, glowing green veins and eyes (Meshy 01a197b7-3167-76f8-9c57-1ea6639fb9fc). No baked ground patch, dog3 rig recipe at the established 3.00 m, dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/bramblebun/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "bramblebun": {
+          "_why_framing": "Creatures-ralph: rendered 3.53 m long against the installed 2.99 m; camera.json long_body_bias leans the fight midpoint toward the ally (smoke_combat followed anchor).",
+          "framing_length_ratio": 1.18,
           "model": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb",
           "_comment_colourway": "Bramblebun's colourway rules stay the owner of its alpha and shiny (shiny_colourways.json `bramblebun`, via the shipped bramblebun_nat1022 source; tests/smoke_bramblebun_colourway_binding.gd). The textures themselves are repainted from this remake's own albedo and resolve beside it: candidate_owner1101/source/author_colourways.py.",
           "colourway_source_species": "bramblebun_nat1022",
@@ -349,19 +351,24 @@
       }
     },
     "remake_owner1101_aquaryn": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Aquaryn, a sleek serpentine water dragon with fin-like frills, deep blue with gold fin edges, a believable  (Meshy 01a197e1-6e77-76e6-998e-58443e8cbabd). rig_serpent column chain at the installed 3.4 m, clips idle, walk, run, attack, hit, faint; emission: glowing aqua fin edges and eyes. Provenance: assets/creatures/tetherbound/aquaryn/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r12-r13 (2 Nov 2026): the live model is the coordinator r9 Meshy water drake (candidate_r9, dog3; hit neck/head/tail eased, faint root roll about 77 deg with the root lifted per key so it rests on the ground, weights relaxed); CPU three-judge A/B 4.44 -> 6.54 mapped against the owner1101 serpent (target 6.5). Earlier: Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Aquaryn, a sleek serpentine water dragon with fin-like frills, deep blue with gold fin edges, a believable  (Meshy 01a197e1-6e77-76e6-998e-58443e8cbabd). rig_serpent column chain at the installed 3.4 m, clips idle, walk, run, attack, hit, faint; emission: glowing aqua fin edges and eyes. Provenance: assets/creatures/tetherbound/aquaryn/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "aquaryn": {
-          "model": "res://assets/creatures/tetherbound/aquaryn/candidate_owner1101/models/creature_aquaryn_owner1101.glb",
-          "colourway_source_species": "aquaryn_owner1101",
+          "model": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9.glb",
+          "colourway_source_species": "aquaryn_r9",
           "animations": {
             "idle": "idle",
             "walk": "walk",
             "run": "run",
             "attack": "attack",
+            "charged": "charged",
             "hit": "hit",
-            "faint": "faint"
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
           }
         }
       }
@@ -459,12 +466,12 @@
       }
     },
     "remake_owner1101_duskhush": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Duskhush, a large grey-brown owl with ear tufts and dusky barred feathers, a believable lean adult creature (Meshy 01a197e6-ee6c-7729-9cf2-fc6627a32647). rig_bird measured bird rig at the installed 2.3 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing violet eyes. Provenance: assets/creatures/tetherbound/duskhush/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r12 (2 Nov 2026): the live model is the coordinator r9 Meshy eagle owl (candidate_r9, rig_bird; wings eased x0.5 in attack and fly_grip, weights relaxed); CPU three-judge A/B 4.61 -> 6.30 mapped against the owner1101 remake (target 6.3). Earlier: Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Duskhush, a large grey-brown owl with ear tufts and dusky barred feathers, a believable lean adult creature (Meshy 01a197e6-ee6c-7729-9cf2-fc6627a32647). rig_bird measured bird rig at the installed 2.3 m, clips idle, walk, run, attack, hit, faint, charged, fly_grip, rest, swim, ride; emission: glowing violet eyes. Provenance: assets/creatures/tetherbound/duskhush/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "duskhush": {
-          "model": "res://assets/creatures/tetherbound/duskhush/candidate_owner1101/models/creature_duskhush_owner1101.glb",
-          "colourway_source_species": "duskhush_owner1101",
+          "model": "res://assets/creatures/tetherbound/duskhush/candidate_r9/models/creature_duskhush_r9.glb",
+          "colourway_source_species": "duskhush_r9",
           "animations": {
             "idle": "idle",
             "walk": "walk",
@@ -505,12 +512,12 @@
       }
     },
     "remake_owner1101_mangrove_monitor": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mangrove Monitor, a big monitor lizard with green and olive scales, a believable lean adult creature in its (Meshy 01a197e8-b7ad-72ae-b6e7-27cabf69cdbb). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua eyes and thin aqua lines. Provenance: assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r12-r13 (2 Nov 2026): the live model is the coordinator r9 Meshy banded monitor (candidate_r9, dog3; hit neck/head/tail eased and its root hop at 30 percent, faint root roll about 77 deg grounded per key, weights relaxed); CPU three-judge A/B 5.02 -> 5.69 mapped against the owner1101 remake (target 5.4). The bark-plate spine is red-brown (hue 15-30; 0.03 percent of texels below hue 15), not the reserved red. Earlier: Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mangrove Monitor, a big monitor lizard with green and olive scales, a believable lean adult creature in its (Meshy 01a197e8-b7ad-72ae-b6e7-27cabf69cdbb). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua eyes and thin aqua lines. Provenance: assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "mangrove_monitor": {
-          "model": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101.glb",
-          "colourway_source_species": "mangrove_monitor_owner1101",
+          "model": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9.glb",
+          "colourway_source_species": "mangrove_monitor_r9",
           "animations": {
             "idle": "idle",
             "walk": "walk",
@@ -598,7 +605,7 @@
     },
     "remake_owner1101_paddlenewt": {
       "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Paddlenewt, a big newt with a paddle tail and frilled cheeks, teal skin with cream belly, a believable lean (Meshy 01a197ea-004c-7252-aa57-ef9ac793ae83). dog3 quadruped rig at the installed 2.15 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua accents and eyes. Provenance: assets/creatures/tetherbound/paddlenewt/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "paddlenewt": {
           "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101.glb",
@@ -720,9 +727,11 @@
     },
     "remake_owner1101_ripplet": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Ripplet, a water starter creature: a lean otter-like creature with fin-shaped ears, sky-teal fur and cream belly (Meshy 01a197ec-b437-740d-9194-1dae04f16d5c). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.6 m; emission on the bright aqua markings and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/ripplet/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "ripplet": {
+          "_why_framing": "Creatures-ralph: hit-pose length 6.22 m against the installed 5.73 m; camera.json long_body_bias leans the fight midpoint toward the ally (smoke_combat followed anchor).",
+          "framing_length_ratio": 1.09,
           "model": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101.glb",
           "colourway_source_species": "ripplet_owner1101",
           "animations": {
@@ -811,12 +820,12 @@
       }
     },
     "remake_owner1101_sirenseal": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sirenseal, a large seal with long fin-like frills on its head and neck, pale grey-blue with darker blue spots (Meshy 01a197ee-4383-70ad-9243-f2f8c3e6feff). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua frill lines and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/sirenseal/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r16 (2 Nov 2026): the live model is the coordinator r10 Meshy sea lion (candidate_r10, dog3 four-flipper; faint root roll x0.85 grounded per key, hit root and spine x0.5 with neck and head eased, weights relaxed). CPU three-judge A/B 4.35 -> 6.95 mapped against the owner1101 seal-dragon (target 4.31). r18: hit hop x0.3, left flippers folded and the faint settled on the 5th percentile, 5.82 -> 7.30 mapped. Earlier: Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Sirenseal, a large seal with long fin-like frills on its head and neck, pale grey-blue with darker blue spots (Meshy 01a197ee-4383-70ad-9243-f2f8c3e6feff). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua frill lines and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/sirenseal/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "sirenseal": {
-          "model": "res://assets/creatures/tetherbound/sirenseal/candidate_owner1101/models/creature_sirenseal_owner1101.glb",
-          "colourway_source_species": "sirenseal_owner1101",
+          "model": "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10.glb",
+          "colourway_source_species": "sirenseal_r10",
           "animations": {
             "idle": "idle",
             "walk": "walk",
@@ -834,19 +843,24 @@
       }
     },
     "remake_owner1101_skyrill": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Skyrill, a flying-squirrel glider with wide gliding membranes, sandy brown fur (Meshy 01a197ee-c4be-77b8-b29c-e2f42ec62ab5). No baked ground patch. rig_glider.py biped-glider rig (15 bones) and animate_quadruped.py glider clips (six) at the established 3.25 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/skyrill/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r16 (2 Nov 2026): the live model is the coordinator r10 Meshy sail-back lizard (candidate_r10, dog3; faint root roll x0.85 grounded per key, hit neck and head eased, walk and run leg swing x1.3, weights relaxed; all 11 clips). CPU three-judge A/B 4.79 -> 7.34 mapped against the owner1101 upright lizard (target 4.68). Earlier: Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Skyrill, a flying-squirrel glider with wide gliding membranes, sandy brown fur (Meshy 01a197ee-c4be-77b8-b29c-e2f42ec62ab5). No baked ground patch. rig_glider.py biped-glider rig (15 bones) and animate_quadruped.py glider clips (six) at the established 3.25 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/skyrill/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "skyrill": {
-          "model": "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101.glb",
-          "colourway_source_species": "skyrill_owner1101",
+          "model": "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10.glb",
+          "colourway_source_species": "skyrill_r10",
           "animations": {
             "idle": "idle",
             "walk": "walk",
             "run": "run",
             "attack": "attack",
+            "charged": "charged",
             "hit": "hit",
-            "faint": "faint"
+            "faint": "faint",
+            "rest": "rest",
+            "swim": "swim",
+            "fly_grip": "fly_grip",
+            "ride": "ride"
           }
         }
       }
@@ -898,12 +912,12 @@
       }
     },
     "remake_owner1101_staticub": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Staticub, a young brown bear cub, the cub of the storm bear, warm brown fur (Meshy 01a197f0-825a-7574-825c-18eae9afbb13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/staticub/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r19: the faint end floated 0.18 m (the leg tuck ran after grounding), now settled on the 3rd percentile, CPU 7.09 -> 7.22. r16 (2 Nov 2026): the live model is the coordinator r10 Meshy bear (candidate_r10, dog3; faint root roll x0.85 grounded per key on the 2nd percentile, legs tucked; hit neck, head and tail eased; weights relaxed; violet lightning veins lit by arc_emission.json staticub_r10). CPU three-judge A/B 5.34 -> 8.55 mapped against the owner1101 armoured bear (target 5.18). Earlier: Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Staticub, a young brown bear cub, the cub of the storm bear, warm brown fur (Meshy 01a197f0-825a-7574-825c-18eae9afbb13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/staticub/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "staticub": {
-          "model": "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101.glb",
-          "colourway_source_species": "staticub_owner1101",
+          "model": "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10.glb",
+          "colourway_source_species": "staticub_r10",
           "animations": {
             "idle": "idle",
             "walk": "walk",

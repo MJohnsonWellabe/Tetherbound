@@ -268,6 +268,30 @@
       "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage (1 Nov, three judges): the owner rule's fantasy element (glowing eyes plus element lines, veins or spots) does not read at gameplay distance on the remakes; only Brooktail's aqua spots showed (its map covers 2.8% of the texture at mean 0.76; Terrapup's 0.02%, eye dots only; Bramblebun's veins mean 0.52). One shared pass for all 46 remakes with a glow mask: the existing arc_emission mask (same hue choices) lit fully, a small halo inside the UV island for eye-only and thin-line masks (none above 2% coverage, so spots never become a body glow), purer element hue so Compatibility's LDR clip keeps the colour (warm glows held at hue 28+), emission energy 2.6 / 2.0 / 1.4 by coverage under 0.15% / under 2% / above. Bramblebun's core is rebuilt from its crevice veins (hue 112-155, about 3%; leaves stay unlit) at 2.0. Solmane and Tuskroot have no glow map (none in the concept / natural amber eyes). Real emission, not bloom: it reads with glow off. Script tools/art_pipeline/remake_owner1101_finish.py glow.",
       "enabled": false,
       "coats": {
+        "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/duskhush/candidate_r9/models/creature_duskhush_r9_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/duskhush/candidate_r9/models/creature_duskhush_r9_glow_read.png",
+          "emission_energy": 2.6
+        },
+        "res://assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/mangrove_monitor/candidate_r9/models/creature_mangrove_monitor_r9_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_glow_read.png",
+          "emission_energy": 2.0
+        },
+        "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_glow_read.png",
+          "emission_energy": 1.4
+        },
+        "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_glow_read.png",
+          "emission_energy": 2.0
+        },
         "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_Image_0.jpg": {
           "emission": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_glow_read.png",
           "emission_energy": 1.4
@@ -519,6 +543,140 @@
           "roughness": 0.85,
           "emission": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_glow_read.png",
           "emission_energy": 1.2
+        }
+      }
+    },
+    "creatures_ralph_cragclaw_body_mid": {
+      "_why": "Creatures-ralph (2 Nov 2026), Cragclaw attempt 3 (batch-4 GPU: 'muddled dark mass whose body hides under the shell, face does not read'; r6: a pale lift read 'unpainted clay'). Body below the shell in a mid-value slate-olive of the shell's hue family, face a step lighter (data/creatures/remake_grades.json cragclaw), blue lines lit through glow_read at 2.4. Pairs with the scale flag creatures_ralph_cragclaw_presence. r7 CPU three-judge A/B: 5.39 -> 6.34 mapped (target 5.90), ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0_body_mid.jpg",
+          "emission": "res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_glow_read.png",
+          "emission_energy": 2.4
+        }
+      }
+    },
+    "creatures_ralph_burrowback_plates": {
+      "_why": "Creatures-ralph (2 Nov 2026), Burrowback remake (r5: 6.71 against the installed 6.80; judges: the back plates tile like a turtle shell). Spine plates get a model-space value jitter in warm stone-moss so neighbouring plates differ; the coat keeps its source colour (data/creatures/remake_grades.json burrowback). Applies only while remake_owner1101_burrowback is ON. r7: remake+plates 6.34 against the installed 6.97 mapped; stays OFF with the remake HELD (second approach, parked).",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/burrowback/candidate_owner1101/models/creature_burrowback_owner1101_Image_0_plates.jpg"
+        }
+      }
+    },
+    "creatures_ralph_trailpup_coyote": {
+      "_why": "Creatures-ralph (2 Nov 2026), Trailpup remake (r5: 6.11 against the installed near-real coyote 6.93). Coyote palette by region: tawny flanks, grizzled saddle, cream throat and belly, source fur grain kept (data/creatures/remake_grades.json trailpup). Applies only while remake_owner1101_trailpup is ON. r7: remake+coyote 6.70 against the installed 7.37 mapped; stays OFF with the remake HELD (second approach, parked).",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101_Image_0_coyote.jpg"
+        }
+      }
+    },
+    "creatures_ralph_meadowhart_warm": {
+      "_why": "Creatures-ralph (2 Nov 2026), Meadowhart remake (GPU batch 5: installed 7.67 -> remake 6.91; judges: 'pale, thin vine-wrapped deer loses value contrast', 'mottled root-veined hide muddies the read'). Warm red-brown coat with a darker saddle and cream belly and throat, vines kept as soft markings (data/creatures/remake_grades.json meadowhart). The hit react's neck and head swing are reduced in the GLB (neck x0.45, head x0.6) so the head no longer collapses into a stoop. r8 CPU three-judge A/B: shipped remake 6.12 -> 6.80 mapped (+0.68), 0.10 short of the 6.9 target, so OFF pending the coordinator (it is a clear gain over the live remake); r9 attempt 2 gained nothing.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_Image_0_warm.jpg"
+        }
+      }
+    },
+    "creatures_ralph_tuskroot_brown": {
+      "_why": "Creatures-ralph (2 Nov 2026), Tuskroot remake (GPU main1102: installed 7.17 -> remake 6.31; 'near-black boar sinks into the dark stage, face unreadable'). Mid-brown coat, tan muzzle and belly, mossy stone dorsal plates (data/creatures/remake_grades.json tuskroot). r10 CPU three-judge A/B: 5.55 -> 7.42 mapped (target 6.37), ON. GPU cr1102b (2 Nov): main 7.65 -> lane 7.01, a regression; all three judges say the pale moss-tan hide melts into the floor, and main's darker boar reads better. OFF; the next try keeps main's value and adds rim light.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0_brown.jpg"
+        }
+      }
+    },
+    "creatures_ralph_ashtusk_lift": {
+      "_why": "Creatures-ralph (2 Nov 2026), Ashtusk on the Tuskroot remake (GPU main1102: installed 6.83 -> remake 6.31; 'sinks into the dark stage'). Its live aspect repaint lifted about 1.45x with sharper detail (data/creatures/remake_grades.json ashtusk); ember glow unchanged. r10 CPU three-judge A/B: 5.71 -> 7.07 mapped (target 6.03), ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0_ashtusk.png": {
+          "albedo": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0_ashtusk_lift.jpg"
+        }
+      }
+    },
+    "creatures_ralph_torrentoad_toad": {
+      "_why": "Creatures-ralph (2 Nov 2026), Torrentoad remake (GPU main1102: installed 7.06 -> remake 5.59; 'dark green upright frog-man, murky, low-value'). Teal-blue toad coat at the installed value with a speckled back and pale belly (data/creatures/remake_grades.json torrentoad); skin weights relaxed in the GLB (faint-end spikes; worst clip stretch 0.57 m -> 0.27 m). r10 CPU three-judge A/B: 4.64 -> 5.55 mapped (+0.91), short of the 6.26 target; r11 attempt 2 (matte) gained less (+0.55). ON from 2 Nov ~11:40 UTC: the coordinator's GPU roster on main dd2d01342 puts the live remake at 5.53, so the target is now 5.53 - 0.8 = 4.73, which 5.55 clears while beating the live remake; the gaunt biped silhouette still needs new art.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101_Image_0_toad.jpg"
+        }
+      }
+    },
+    "creatures_ralph_sparkit_fennec": {
+      "_why": "Creatures-ralph (2 Nov 2026), Sparkit remake (GPU batch 6: 5.14 -> 4.80; 'noisy stripes'). Regional fennec coat: golden-yellow body, cream throat and belly, charcoal lower legs and ear tips (data/creatures/remake_grades.json sparkit); eyes and lightning lines kept. r14 CPU three-judge A/B: 5.86 -> 5.89 mapped (a tie), OFF.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_Image_0_fennec.jpg"
+        }
+      }
+    },
+    "creatures_ralph_tempestwing_gold": {
+      "_why": "Creatures-ralph (2 Nov 2026), tempestwing remake (GPU batch 6). Coat grade data/creatures/remake_grades.json tempestwing. r14 CPU three-judge A/B: 6.20 -> 5.71 mapped (judges prefer the shipped dark body under white wings), OFF.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0_gold.jpg"
+        }
+      }
+    },
+    "creatures_ralph_ribbonray_lift": {
+      "_why": "Creatures-ralph (2 Nov 2026), ribbonray remake (GPU batch 6). Coat grade data/creatures/remake_grades.json ribbonray. r14 CPU three-judge A/B: 5.53 -> 5.39 mapped, OFF.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0_lift.jpg"
+        }
+      }
+    },
+    "creatures_ralph_ripplet_otter": {
+      "_why": "Creatures-ralph (2 Nov 2026), Ripplet remake (GPU batch 6: 6.69 -> 6.12; 'rubbery teal lizard-cat, dome bumps read as toy'). Natural otter coat in its sky-teal and cream identity (data/creatures/remake_grades.json ripplet) with a matte fur finish. r15 CPU three-judge A/B: 5.42 -> 5.29 mapped, OFF; needs new art.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/ripplet/candidate_owner1101/models/creature_ripplet_owner1101_Image_0_otter.jpg",
+          "roughness": 0.85,
+          "specular": 0.3
+        }
+      }
+    },
+    "creatures_ralph_thundertunnel_velvet": {
+      "_why": "Creatures-ralph (2 Nov 2026), Thundertunnel remake (GPU roster 2 Nov 4.72, lowest; r10 remodel blocked on Meshy credits). Velvet mole coat: warm mid-brown body, tan belly and muzzle, pale horn claws (data/creatures/remake_grades.json thundertunnel); lightning lines and eyes kept. r17 CPU three-judge A/B (with the hit and faint fixes in the GLB): 2.93 -> 5.36 mapped (target 3.92), ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_velvet.jpg"
+        }
+      }
+    },
+    "creatures_ralph_skyrill_r10_lift": {
+      "_why": "Creatures-ralph (2 Nov 2026), r10 Skyrill (GPU cr1102 6.87; 'dark material against the stage, needs value lift'; r16 judges: glassy sheen). Value x1.3 with sharper scale detail (data/creatures/remake_grades.json skyrill_r10) and a less glassy finish. r19 CPU three-judge A/B: 6.15 -> 6.37 mapped, ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/skyrill/candidate_r10/models/creature_skyrill_r10_Image_0_lift.jpg",
+          "roughness": 0.75,
+          "specular": 0.3
+        }
+      }
+    },
+    "creatures_ralph_aquaryn_r9_scales": {
+      "_why": "Creatures-ralph (2 Nov 2026), r9 Aquaryn (GPU cr1102 6.64; 'uniform glossy turquoise, toy-like; needs scale detail and less gloss'). Scale contrast sharpened, saturation down (data/creatures/remake_grades.json aquaryn_r9) with a matte scale finish. r19 CPU three-judge A/B: 5.88 -> 5.83 mapped (judges: still one glossy turquoise; scale detail does not read at the stage camera), OFF; needs new art or a value ramp.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0_scales.jpg",
+          "roughness": 0.85,
+          "specular": 0.25
         }
       }
     }

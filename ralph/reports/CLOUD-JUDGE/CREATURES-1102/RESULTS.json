@@ -1,0 +1,136 @@
+{
+ "cr1102": {
+  "tree": "29518c111",
+  "results": {
+   "aquaryn": {
+    "main": 6.26,
+    "lane": 6.64,
+    "delta": 0.38,
+    "lane_ge_7": false
+   },
+   "duskhush": {
+    "main": 6.44,
+    "lane": 6.77,
+    "delta": 0.33,
+    "lane_ge_7": false
+   },
+   "mangrove_monitor": {
+    "main": 6.13,
+    "lane": 6.44,
+    "delta": 0.31,
+    "lane_ge_7": false
+   },
+   "sirenseal": {
+    "main": 5.93,
+    "lane": 7.1,
+    "delta": 1.17,
+    "lane_ge_7": true
+   },
+   "skyrill": {
+    "main": 6.05,
+    "lane": 6.87,
+    "delta": 0.82,
+    "lane_ge_7": false
+   },
+   "staticub": {
+    "main": 6.46,
+    "lane": 7.16,
+    "delta": 0.7,
+    "lane_ge_7": true
+   },
+   "thundertunnel": {
+    "main": 5.59,
+    "lane": 6.28,
+    "delta": 0.69,
+    "lane_ge_7": false
+   }
+  }
+ },
+ "cr1102b": {
+  "tree": "29c1b53c5",
+  "results": {
+   "ashtusk": {
+    "main": 7.21,
+    "lane": 7.52,
+    "delta": 0.31,
+    "lane_ge_7": true
+   },
+   "torrentoad": {
+    "main": 6.81,
+    "lane": 6.97,
+    "delta": 0.16,
+    "lane_ge_7": false
+   },
+   "tuskroot": {
+    "main": 7.65,
+    "lane": 7.01,
+    "delta": -0.64,
+    "lane_ge_7": true
+   }
+  }
+ },
+ "main1102c": {
+  "tree": "81702ded1",
+  "results": {
+   "cindercub": {
+    "main": 6.78,
+    "lane": 6.78,
+    "delta": 0.0,
+    "lane_ge_7": false
+   },
+   "galecrest": {
+    "main": 6.75,
+    "lane": 6.75,
+    "delta": 0.0,
+    "lane_ge_7": false
+   },
+   "mosshell": {
+    "main": 6.69,
+    "lane": 6.69,
+    "delta": 0.0,
+    "lane_ge_7": false
+   },
+   "sirenseal": {
+    "main": 5.93,
+    "lane": 5.93,
+    "delta": 0.0,
+    "lane_ge_7": false
+   },
+   "stormursa": {
+    "main": 7.07,
+    "lane": 7.07,
+    "delta": 0.0,
+    "lane_ge_7": true
+   },
+   "thundertunnel": {
+    "main": 5.17,
+    "lane": 5.17,
+    "delta": 0.0,
+    "lane_ge_7": false
+   },
+   "tuskroot": {
+    "main": 6.86,
+    "lane": 6.86,
+    "delta": 0.0,
+    "lane_ge_7": false
+   }
+  }
+ },
+ "cr1102c": {
+  "tree": "9b1e168f6",
+  "results": {
+   "skyrill": {
+    "main": 5.97,
+    "lane": 7.43,
+    "delta": 1.46,
+    "lane_ge_7": true
+   },
+   "staticub": {
+    "main": 6.43,
+    "lane": 7.98,
+    "delta": 1.55,
+    "lane_ge_7": true
+   }
+  }
+ }
+}
