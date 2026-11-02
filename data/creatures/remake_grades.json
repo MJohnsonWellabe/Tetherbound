@@ -189,5 +189,19 @@
     "detail_strength": 1.15,
     "mix_source": 0.3,
     "keep": [{"hue": [170, 220], "sat_min": 0.35, "val_min": 0.5}]
+  },
+  "ripplet": {
+    "_why": "GPU batch 6 (6.69 -> 6.12): 'rubbery teal lizard-cat, dome bumps read as toy'. Natural otter coat by region in its identity colours: sky-teal flanks, a deeper river-teal back, cream throat and belly; the grey dome texels take the coat colour so they stop reading as studs; fur grain sharper (x1.4, source mixed 25 percent); the aqua markings and eyes keep their pixels. The coat flag adds a matte fur finish.",
+    "folder": "ripplet/candidate_owner1101",
+    "suffix": "otter",
+    "base": [186, 0.36, 0.56],
+    "regions": [
+      {"where": {"up_min": 0.45, "y_min": 0.5}, "hsv": [192, 0.42, 0.4], "softness": 0.15},
+      {"where": {"up_max": -0.25}, "hsv": [38, 0.18, 0.82], "softness": 0.15},
+      {"where": {"z_min": 0.8, "up_max": 0.0, "y_max": 0.7}, "hsv": [38, 0.16, 0.84], "softness": 0.06}
+    ],
+    "detail_strength": 1.4,
+    "mix_source": 0.25,
+    "keep": [{"hue": [165, 200], "sat_min": 0.6, "val_min": 0.7}]
   }
 }
