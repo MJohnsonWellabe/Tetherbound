@@ -814,7 +814,10 @@ func _revive_fainted(world: Node3D) -> bool:
 ## adapter's own legs (meadows_master.mira_legs from the loaded position, the
 ## same Meadows route walker) leg by leg, stops at a leg boundary once its
 ## wall budget is spent or on arrival, and saves. Ordinary movement only.
-const MIRA_WALK_BUDGET_MS := 25 * 60 * 1000
+const MIRA_WALK_BUDGET_MS := 20 * 60 * 1000
+## Sub-legs keep every piece inside the runner's 45 min no-receipt watchdog
+## (mw_1's first full leg ran past it, 2 Nov): ~100 m on this CPU host.
+const MIRA_SUBLEG_M := 100.0
 
 func _walk_to_mira(world: Node3D) -> void:
 	if str(game.get("current_realm")) != "meadows":
@@ -829,7 +832,14 @@ func _walk_to_mira(world: Node3D) -> void:
 		failures.append("meadows_walk_to_mira lacks the live player, camera or Mira's authored site")
 		return
 	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
-	var legs: Array = master_script.mira_legs(Vector2(player.global_position.x, player.global_position.z), site, terrain)
+	var coarse: Array = master_script.mira_legs(Vector2(player.global_position.x, player.global_position.z), site, terrain)
+	var legs: Array = []
+	var from := Vector2(player.global_position.x, player.global_position.z)
+	for target: Vector2 in coarse:
+		var steps := maxi(1, int(ceil(from.distance_to(target) / MIRA_SUBLEG_M)))
+		for step in range(1, steps + 1):
+			legs.append(from.lerp(target, float(step) / float(steps)))
+		from = target
 	var walked := 0
 	var arrived := false
 	for index in legs.size():
