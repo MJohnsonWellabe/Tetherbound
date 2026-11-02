@@ -7,16 +7,27 @@ extends "res://tests/test_case.gd"
 
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const FLAGS_PATH := "res://data/config/character_body_flags.json"
+## Looks judged on GPU batch 7 (2 Nov, three code-blind judges, mapped) and kept
+## ON; each one's _why records its score. Every other flag ships OFF.
+const JUDGED_ON := ["npc_vis_look_grunt", "npc_vis_look_farmer", "npc_vis_look_local_historian",
+	"npc_vis_look_lost_traveler", "npc_vis_look_field_researcher", "npc_vis_look_warden",
+	"npc_vis_look_grunt_a", "npc_vis_look_grunt_c", "npc_vis_look_officer_b", "npc_vis_look_officer_a",
+	"npc_vis_look_inn_helper", "npc_vis_look_creature_caretaker"]
 
 
-func test_shipped_flags_are_off_and_resolve() -> void:
+func test_shipped_flags_resolve_and_only_judged_looks_ship_on() -> void:
 	var doc: Variant = JSON.parse_string(FileAccess.get_file_as_string(FLAGS_PATH))
 	assert_true(doc is Dictionary, "character_body_flags.json parses to an object")
 	var flags: Dictionary = (doc as Dictionary).get("flags", {}) if doc is Dictionary else {}
 	assert_true(not flags.is_empty(), "the file declares flags")
 	for flag: String in flags:
 		var entry: Dictionary = flags[flag]
-		assert_false(bool(entry.get("enabled", true)), "%s ships OFF" % flag)
+		var judged_on := flag in JUDGED_ON
+		if judged_on:
+			assert_true(bool(entry.get("enabled", false)), "%s ships ON (judged gain)" % flag)
+			assert_true(str(entry.get("_why", "")).contains("GPU batch 7"), "%s records its judged score" % flag)
+		else:
+			assert_false(bool(entry.get("enabled", true)), "%s ships OFF" % flag)
 		var characters: Dictionary = entry.get("characters", {})
 		for key: String in characters:
 			var base := CHARACTER_MODEL.config_for(key)
@@ -34,8 +45,10 @@ func test_shipped_flags_are_off_and_resolve() -> void:
 				continue
 			var path := str((characters[key] as Dictionary).get("body_albedo_override", ""))
 			assert_true(ResourceLoader.exists(path), "%s override %s exists" % [flag, path])
-			# Off (as shipped), config_for is unchanged.
-			assert_false(base.get("body_albedo_override", "") == path, "%s does not apply while OFF" % flag)
+			# Off (as shipped), config_for is unchanged. A judged-ON flag is live,
+			# so this holds only for the flags that ship OFF.
+			if not judged_on:
+				assert_false(base.get("body_albedo_override", "") == path, "%s does not apply while OFF" % flag)
 
 
 func test_flag_touches_only_its_character_and_body_keys() -> void:

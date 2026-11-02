@@ -1,0 +1,214 @@
+{
+ "bar": 7.0,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9429,
+  "least_squares_slope": 1.5962,
+  "method": "linear",
+  "slope": 1.5962,
+  "intercept": -2.6861,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.326,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.267,
+   "reference": 7.35,
+   "mapped": 7.317,
+   "residual": 0.033
+  },
+  "craft:before": {
+   "measured": 4.867,
+   "reference": 4.83,
+   "mapped": 5.082,
+   "residual": -0.252
+  },
+  "f36_0_npc:C5B": {
+   "measured": 4.967,
+   "reference": 5.03,
+   "mapped": 5.242,
+   "residual": -0.212
+  },
+  "f36_0_npc:C5A": {
+   "measured": 5.033,
+   "reference": 5.07,
+   "mapped": 5.348,
+   "residual": -0.278
+  },
+  "f36_0_gap:C5B": {
+   "measured": 6.0,
+   "reference": 6.93,
+   "mapped": 6.891,
+   "residual": 0.039
+  },
+  "f36_0_gap:C5A": {
+   "measured": 4.833,
+   "reference": 5.7,
+   "mapped": 5.029,
+   "residual": 0.671
+  }
+ },
+ "candidates": {
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #5 main": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.94,
+   "mapped_judges": [
+    7.21,
+    6.09,
+    7.53
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #5 cand": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.52,
+   "mapped_judges": [
+    6.89,
+    5.77,
+    6.89
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #1 main": {
+   "measured_mean": 5.867,
+   "mapped_mean": 6.68,
+   "mapped_judges": [
+    7.37,
+    5.3,
+    7.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #1 cand": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.78,
+   "mapped_judges": [
+    7.05,
+    5.77,
+    7.53
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #3 main": {
+   "measured_mean": 6.367,
+   "mapped_mean": 7.48,
+   "mapped_judges": [
+    7.53,
+    6.73,
+    8.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #3 cand": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.03,
+   "mapped_judges": [
+    4.98,
+    4.5,
+    5.61
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #4 main": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.47,
+   "mapped_judges": [
+    6.41,
+    5.77,
+    7.21
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #4 cand": {
+   "measured_mean": 5.167,
+   "mapped_mean": 5.56,
+   "mapped_judges": [
+    5.45,
+    4.66,
+    6.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #6 cand": {
+   "measured_mean": 6.467,
+   "mapped_mean": 7.64,
+   "mapped_judges": [
+    7.85,
+    7.05,
+    8.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #6 main": {
+   "measured_mean": 6.433,
+   "mapped_mean": 7.58,
+   "mapped_judges": [
+    7.85,
+    6.57,
+    8.33
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #2 cand": {
+   "measured_mean": 6.067,
+   "mapped_mean": 7.0,
+   "mapped_judges": [
+    7.37,
+    6.25,
+    7.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #2 main": {
+   "measured_mean": 6.367,
+   "mapped_mean": 7.48,
+   "mapped_judges": [
+    7.69,
+    6.73,
+    8.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.35): F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #2 main, F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #3 main, F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #6 cand, F40 shared light (P2-021, P2-023, P2-025, P2-049, P2-068, P2-076, P2-077, P2-102 and other Cloudreach scene items) #6 main; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}

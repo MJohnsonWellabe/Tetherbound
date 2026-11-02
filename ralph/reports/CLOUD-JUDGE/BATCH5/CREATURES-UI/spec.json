@@ -1,0 +1,66 @@
+[
+ {
+  "label": "P2-020/P2-017 bramblebun",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_020_P2_017_bramblebun_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_020_P2_017_bramblebun_cand.jpg",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end (2x2, left to right, top to bottom). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+  ]
+ },
+ {
+  "label": "P2-020/P2-017 duskhush",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_020_P2_017_duskhush_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_020_P2_017_duskhush_cand.jpg",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end (2x2, left to right, top to bottom). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+  ]
+ },
+ {
+  "label": "F36 (0) #22 Abyssal Guardian",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__0___22_Abyssal_Guardian_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__0___22_Abyssal_Guardian_cand.jpg",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end (2x2, left to right, top to bottom). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "F36 (0) #7 Meadowhart",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__0___7_Meadowhart_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__0___7_Meadowhart_cand.jpg",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end (2x2, left to right, top to bottom). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "F36 (1) Mosshock",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__1__Mosshock_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__1__Mosshock_cand.jpg",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end (2x2, left to right, top to bottom). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "F36 (1) Paddlenewt",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__1__Paddlenewt_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/F36__1__Paddlenewt_cand.jpg",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end (2x2, left to right, top to bottom). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "P2-048",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_048_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_048_0_cand.jpg",
+  "brief": "Game frames of Cloudreach map region label: 1 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis"
+  ]
+ },
+ {
+  "label": "P2-071",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_071_0_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/b5j/CREATURES-UI/img/P2_071_0_cand.jpg",
+  "brief": "Game frames of surface swimming trainer pose: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming"
+  ]
+ }
+]

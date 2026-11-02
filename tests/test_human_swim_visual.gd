@@ -182,6 +182,8 @@ func test_disabling_candidate_while_swimming_restores_visuals_immediately() -> v
 
 func test_uiposes_stroke_candidates_ship_off_and_layer_the_tidewake_pose() -> void:
 	var loaded := preload("res://scripts/player/trainer_model.gd").load_human_swim_visual()
-	assert_false(bool(loaded.get("uiposes_stroke_candidates", true)), "uiposes_stroke_candidates defaults OFF")
+	assert_true(bool(loaded.get("uiposes_stroke_candidates", false)), "uiposes_stroke_candidates ships ON (GPU batch 5: P2-071 6.60 -> 7.21)")
+	var shipped: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/human_swim_visual.json"))
+	assert_true(str(shipped.get("_why_uiposes_stroke_candidates_on", "")).contains("7.21"), "the stroke candidates' judged score is recorded")
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_look.json"))
 	assert_true(raw.swim_stroke_candidate.swim_pose.has("body_pitch_deg"), "the stroke candidate still authors a body pitch")

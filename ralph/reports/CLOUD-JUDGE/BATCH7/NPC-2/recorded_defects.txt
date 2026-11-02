@@ -1,0 +1,53 @@
+Mq: none
+Po: none
+Pw: none
+Ts: none
+Yq: none
+Gr: none
+Vf: none
+Kb: none
+Fg: none
+Kw: none
+Ip: none
+
+# judge 1 defect calls and Bar B
+Mq: A {} | B {} | bar_b yes: A charming, clearly authored villager who would sit fine beside Palworld NPCs; the dim stage lighting keeps the finish modest.
+Po: A {} | B {} | bar_b yes: A strong face and layered armour carry it, but the dark leather loses detail under the flat stage light.
+Pw: A {} | B {} | bar_b no: The sallow, grimacing face and an all-black costume mass sink the appeal next to Palworld's crisp characters.
+Ts: A {} | B {} | bar_b yes: A friendly caretaker that fits the world, held back by a monochrome olive palette and soft materials.
+Yq: A {} | B {} | bar_b yes: A good face and a confident pose carry it, while the nearly all-black costume flattens at small size.
+Gr: A {} | B {} | bar_b no: A nice hood silhouette and palette, but the soft low-detail face and dot eyes fall below Palworld's close-up finish.
+Vf: A {} | B {} | bar_b no: The horned ram body is close to the owner bar, but A floats upside down when it faints and B's faint end collapses into an unreadable ball.
+Kb: A {} | B {} | bar_b yes: A distinctive goggled craftsperson with rich material breakup reads like a shipped NPC.
+Fg: A {} | B {} | bar_b no: The eyepatch and white hair hook is good, but a doll-like oversized head on a heavy coat reads off-model next to Palworld.
+Kw: A {} | B {} | bar_b no: A generic grunt whose black clothing merges into one mass, with only the emblem giving any colour read.
+Ip: A {} | B {} | bar_b no: Smeared ground textures, flat lighting and a carpet of grass sink both sides; A's site aftermaths read, while B leaves the enemy banners up and simply deletes the cage.
+top_changes: [{"change": "Raise stage and scene key and rim light, and lift the dark faction cloth albedo so black costumes separate into readable trims and layers at small size", "kind": "scene"}, {"change": "Ground the creature faint animation: keep the body on the floor and turn it into a readable side-lying collapse instead of floating or balling up", "kind": "scene"}, {"change": "Replace the smeared Meadows ground and wall textures with crisp terrain materials and break the grass carpet into groves and clearings at the defeat sites, and make each after state remove or topple the faction banners", "kind": "scene"}]
+
+# judge 2 defect calls and Bar B
+Mq: A {} | B {} | bar_b yes: Warm, friendly villager costume and clear face would sit in a Palworld village, though soft textures and oversized head hold back finish.
+Po: A {} | B {} | bar_b no: Distinctive bearded captain silhouette, but the near-black costume and smeared textures read below shipping finish.
+Pw: A {} | B {} | bar_b no: Muddy face and an all-black costume mass give little readable form or appeal.
+Ts: A {} | B {} | bar_b yes: Cohesive olive caretaker fits the village family; a single mid-tone value range keeps it just short.
+Yq: A {} | B {} | bar_b no: Strong crossed-arms pose and face, but the dark coat collapses into one mass.
+Gr: A {} | B {} | bar_b no: Nice hood palette, but the flat painted-mask face falls short of the finish.
+Vf: A {} | B {} | bar_b yes: Naturalistic ram with elemental glow matches the owner bar; A's floating belly-up faint sinks that side.
+Kb: A {} | B {} | bar_b yes: Characterful goggled craftsperson with authored props carries it despite brown-on-brown values.
+Fg: A {} | B {} | bar_b no: Strong white-hair head read, but a doll-smooth face against blotchy coat textures breaks the finish.
+Kw: A {} | B {} | bar_b no: Generic grunt in a single dark mass; only the faction emblem reads.
+Ip: A {} | B {} | bar_b no: A's site-specific aftermaths read, but blurry stretched ground, flat cave wall and uniform tree wall are below Palworld finish; B also leaves enemy banners up.
+top_changes: [{"change": "Light character stages and Team Tether costumes for value separation: stronger rim/key, lift costume blacks to dark grey-plum with readable material breakup so faction outfits stop collapsing into one mass", "kind": "scene"}, {"change": "Regenerate the flat painted-mask faces (hooded villager, white-haired captain, officer A) with modelled eyes and features at the realism level of the craftsperson, identity kept", "kind": "new_art"}, {"change": "Raise Meadows ground texture resolution/detail and break the uniform tree wall into groves for the aftermath sites; keep faint poses grounded on the floor", "kind": "scene"}]
+
+# judge 3 defect calls and Bar B
+Mq: A {} | B {} | bar_b yes: A warm, clearly costumed inn helper with a readable face fits a Palworld-class village cast; only soft textures hold it back.
+Po: A {} | B {} | bar_b yes: The bearded captain has a strong faction identity and silhouette, but the blotchy dark costume texture keeps it below shipping finish.
+Pw: A {} | B {} | bar_b no: The near-black outfit with no rim light collapses into one mass, so the officer does not read at the finish of a shipping game.
+Ts: A {} | B {} | bar_b yes: A clear caretaker identity in natural greens and browns fits the world; the soft fabric texture is the main gap.
+Yq: A {} | B {} | bar_b no: The crossed-arms pose gives character, but the dark coat and dim face lose the read at small size.
+Gr: A {} | B {} | bar_b no: The hood silhouette and palette fit, but the flat pale face with blank eyes in the close-ups sinks the appeal.
+Vf: A {} | B {} | bar_b no: The standing ram is close to the owner bar, but the faint frames (floating on A, an illegible crumple on B) break the read.
+Kb: A {} | B {} | bar_b yes: Goggles, tool belt and beard make an instantly readable craftsperson in the village family; the grime texture is slightly noisy.
+Fg: A {} | B {} | bar_b no: The doll-like young face and blotchy coat texture undercut a captain who should read as a menacing senior officer.
+Kw: A {} | B {} | bar_b no: The black uniform swallows the form without rim light; only the face and emblem carry the grunt.
+Ip: A {} | B {} | bar_b no: Blurry ground, flat walls, sparse vegetation and flat light sink both sides; A at least gives each site a distinct aftermath, while B often leaves the enemy banner standing.
+top_changes: [{"change": "Add a cool rim/back light and a slight value lift on faces and eyes for character and creature stages, and in-world for NPCs, so dark Team Tether costumes separate from the background", "kind": "scene"}, {"change": "Fix the creature faint poses so the body stays grounded on its contact shadow and settles into a readable collapsed pose (no floating, no rolled underside, no crumple behind the horns)", "kind": "scene"}, {"change": "Re-texture or regenerate the NPC faces and costumes at higher texture resolution (sharper eyes, modelled faces, cleaner fabric), especially the Gr villager and the Fg captain's face", "kind": "new_art"}]
