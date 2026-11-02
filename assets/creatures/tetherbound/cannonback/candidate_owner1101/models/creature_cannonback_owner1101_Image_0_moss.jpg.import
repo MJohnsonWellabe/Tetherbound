@@ -2,6 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
+uid="uid://b55rf0vwwsi14"
+path.s3tc="res://.godot/imported/creature_cannonback_owner1101_Image_0_moss.jpg-a0a3c4bdf7149cd4d1cbd3913dc2bb64.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0_moss.jpg"
+dest_files=["res://.godot/imported/creature_cannonback_owner1101_Image_0_moss.jpg-a0a3c4bdf7149cd4d1cbd3913dc2bb64.s3tc.ctex"]
 
 [params]
 

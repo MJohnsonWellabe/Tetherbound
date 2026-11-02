@@ -2,6 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
+uid="uid://dkw6i4ygvlg8d"
+path.s3tc="res://.godot/imported/creature_cragclaw_owner1101_Image_0_body_lift.jpg-f56da9d276e0f1f3f77796b20a0d7115.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://assets/creatures/tetherbound/cragclaw/candidate_owner1101/models/creature_cragclaw_owner1101_Image_0_body_lift.jpg"
+dest_files=["res://.godot/imported/creature_cragclaw_owner1101_Image_0_body_lift.jpg-f56da9d276e0f1f3f77796b20a0d7115.s3tc.ctex"]
 
 [params]
 

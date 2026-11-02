@@ -2,6 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
+uid="uid://dotgmyto3a4y0"
+path.s3tc="res://.godot/imported/creature_mangrove_monitor_owner1101_Image_0_scales.jpg-8e77fc3218febd6b2bcb8bc4910bb4fa.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/models/creature_mangrove_monitor_owner1101_Image_0_scales.jpg"
+dest_files=["res://.godot/imported/creature_mangrove_monitor_owner1101_Image_0_scales.jpg-8e77fc3218febd6b2bcb8bc4910bb4fa.s3tc.ctex"]
 
 [params]
 
