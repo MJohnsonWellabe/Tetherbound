@@ -23,7 +23,6 @@ const HELD := {
 	"remake_owner1101_burrowback": "its aspect variant Nightburrow reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_trailpup": "its aspect variant Stormtrail reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_paddlenewt": "its aspect variant Riftfrill reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
-	"remake_owner1101_tuskroot": "its aspect variant Ashtusk reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_ashtusk": "it is an aspect variant of Tuskroot and must reuse Tuskroot's mesh, not its own (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_mudsnout": "the Burrow Warrens mouth fight seats the companion beside the remake (smoke_arena_contain: with the remake as the wild Warrens Mudsnout, the clear-seat search for the Terrapup companion was exhausted and the engagement refused)",
 	"remake_owner1101_frostclaw": "the F36 pose candidate library is measured on Frostclaw's installed rig carries over to the remake rig",

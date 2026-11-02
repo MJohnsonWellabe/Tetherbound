@@ -1057,7 +1057,7 @@
     },
     "remake_owner1101_tuskroot": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tuskroot, a big grown wild boar with heavy tusks, brown bristly coat, the adult form of a young root boar (Meshy 01a197f5-2f19-7013-a06a-67e1f70089e6). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.6 m; no glow painted in the albedo (the reference has natural amber eyes); no emission added. Provenance: assets/creatures/tetherbound/tuskroot/candidate_owner1101/source/provenance.json.",
-      "enabled": false,
+      "enabled": true,
       "species": {
         "tuskroot": {
           "model": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101.glb",

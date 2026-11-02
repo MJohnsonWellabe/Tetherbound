@@ -1,0 +1,5 @@
+Gb: none
+It: none
+Gy: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Tn: none
+Aq: "stone-patch texture is noisy camouflage that dissolves the silhouette and hides the face"; "gravel-noise surface"; "mottled collage surface reads as generator output"

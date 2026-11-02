@@ -1,0 +1,108 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8489,
+  "least_squares_slope": 1.595,
+  "method": "linear",
+  "slope": 1.595,
+  "intercept": -3.5209,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.446,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C7B": {
+   "measured": 6.0,
+   "reference": 6.3,
+   "mapped": 6.049,
+   "residual": 0.251
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.267,
+   "reference": 7.03,
+   "mapped": 6.475,
+   "residual": 0.555
+  },
+  "f36_0_npc:C8B": {
+   "measured": 6.167,
+   "reference": 5.7,
+   "mapped": 6.315,
+   "residual": -0.615
+  },
+  "f36_0_npc:C8A": {
+   "measured": 6.233,
+   "reference": 5.83,
+   "mapped": 6.421,
+   "residual": -0.591
+  },
+  "craft:after": {
+   "measured": 6.633,
+   "reference": 7.35,
+   "mapped": 7.059,
+   "residual": 0.291
+  },
+  "craft:before": {
+   "measured": 5.167,
+   "reference": 4.83,
+   "mapped": 4.72,
+   "residual": 0.11
+  }
+ },
+ "candidates": {
+  "tuskroot remake": {
+   "measured_mean": 6.633,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    6.85,
+    6.69,
+    7.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "tuskroot installed": {
+   "measured_mean": 6.5,
+   "mapped_mean": 6.85,
+   "mapped_judges": [
+    6.53,
+    6.85,
+    7.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ashtusk installed": {
+   "measured_mean": 5.567,
+   "mapped_mean": 5.36,
+   "mapped_judges": [
+    4.93,
+    5.25,
+    5.89
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ashtusk remake": {
+   "measured_mean": 6.767,
+   "mapped_mean": 7.27,
+   "mapped_judges": [
+    7.01,
+    7.01,
+    7.8
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

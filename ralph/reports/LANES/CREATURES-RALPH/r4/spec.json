@@ -1,0 +1,20 @@
+[
+ {
+  "label": "tuskroot",
+  "a": "sides/tuskroot-base.png",
+  "b": "sides/tuskroot-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "ashtusk",
+  "a": "sides/ashtusk-base.png",
+  "b": "sides/ashtusk-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "stone-patch texture is noisy camouflage that dissolves the silhouette and hides the face",
+   "gravel-noise surface",
+   "mottled collage surface reads as generator output"
+  ]
+ }
+]

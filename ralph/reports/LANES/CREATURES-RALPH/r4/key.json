@@ -1,0 +1,29 @@
+{
+ "Gb": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "It": {
+  "anchor": true,
+  "A": "f36_0_npc:C8B",
+  "B": "f36_0_npc:C8A"
+ },
+ "Gy": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Tn": {
+  "anchor": false,
+  "label": "tuskroot",
+  "A": "sides/tuskroot-cand.png",
+  "B": "sides/tuskroot-base.png"
+ },
+ "Aq": {
+  "anchor": false,
+  "label": "ashtusk",
+  "A": "sides/ashtusk-base.png",
+  "B": "sides/ashtusk-cand.png"
+ }
+}
