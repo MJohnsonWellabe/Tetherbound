@@ -847,8 +847,26 @@ func _walk_to_mira(world: Node3D) -> void:
 			break
 		var target: Vector2 = legs[index]
 		var walker: RefCounted = load("res://tests/helpers/meadows_earned_material_segment.gd").new()
-		var ok: bool = await walker.walk_route(self, world, game, player, rig,
-			Vector3(target.x, float(world.call("ground_height_at", target.x, target.y)), target.y))
+		var ok := true
+		var at := Vector2(player.global_position.x, player.global_position.z)
+		var bridge := world.get_node_or_null("SouthBridge")
+		if bridge != null and bool(bridge.call("is_open")) and float(bridge.call("depth_past_crossing", at)) <= 0.0 \
+				and float(bridge.call("depth_past_crossing", target)) > 0.0:
+			# The sub-legs already brought the player up the approach road, so
+			# the walker's own bridge routing (which re-walks the whole approach
+			# from the village) is skipped: near bank, then over the open deck.
+			var carve: Dictionary = preload("res://tests/helpers/meadows_earned_bridge_segment.gd").crossing_config(terrain).get("carve", {})
+			var bank := float(carve.get("half_width", 0.0)) + float(carve.get("rim", 0.0)) + 3.0
+			var near: Vector2 = bridge.call("near_point", bank)
+			var far: Vector2 = bridge.call("far_point", bank)
+			ok = await walker.walk_route(self, world, game, player, rig,
+				Vector3(near.x, float(world.call("ground_height_at", near.x, near.y)), near.y))
+			var far3 := Vector3(far.x, float(world.call("ground_height_at", far.x, far.y)), far.y)
+			ok = ok and await walker._walk_same_side(far3, walker._travel_budget(far3))
+			if ok: disclosures.append("meadows_walk_to_mira: crossed the open South Bridge %s -> %s" % [str(near), str(far)])
+		if ok:
+			ok = await walker.walk_route(self, world, game, player, rig,
+				Vector3(target.x, float(world.call("ground_height_at", target.x, target.y)), target.y))
 		if not ok:
 			failures.append("meadows_walk_to_mira leg %d to %s failed: %s" % [index, str(target), str(walker.get("failures"))])
 			return
