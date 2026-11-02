@@ -11,7 +11,10 @@ ground without floating. Rotations, other clips and the mesh are untouched.
 
 --percentile grounds a low percentile of the vertices instead of the lowest
 one, so a thin wing or fin swinging through the floor does not hold the body
-up in the air (Tempestwing, Ribbonray).
+up in the air (Tempestwing, Ribbonray). --settle also lowers keys whose
+percentile sits above the floor, so a pose propped up on a limb comes down;
+--hop=F scales the clip's root lift above its first key by F (a hit hop that
+leaves the floor).
 """
 import os
 import sys
@@ -25,9 +28,13 @@ from relax_stretched_weights import Skin, load, save, view  # noqa: E402
 def main():
     path, clip = sys.argv[1], sys.argv[2]
     pct = 0.0
+    settle = "--settle" in sys.argv[3:]
+    hop = None
     for arg in sys.argv[3:]:
         if arg.startswith("--percentile="):
             pct = float(arg.split("=", 1)[1])
+        if arg.startswith("--hop="):
+            hop = float(arg.split("=", 1)[1])
     gltf, binary = load(path)
     prim = gltf["meshes"][0]["primitives"][0]
     skin = Skin(gltf, binary, prim)
@@ -41,14 +48,17 @@ def main():
     sampler = anim["samplers"][channel[0]["sampler"]]
     times = view(gltf, binary, sampler["input"]).ravel().astype(float)
     keys = view(gltf, binary, sampler["output"])
+    if hop is not None:
+        base = float(keys[0, 1])
+        keys[:, 1] = base + (keys[:, 1] - base) * hop
     lifted = 0
     for i, t in enumerate(times):
         low = float(np.percentile(skin.pose(joints, weights, anim, t)[:, 1], pct))
-        if low < 0.0:
+        if low < 0.0 or (settle and low > 0.01):
             keys[i, 1] += -low + 0.01
             lifted += 1
     save(path, gltf, binary)
-    print("%s: lifted %d of %d root keys onto the floor" % (clip, lifted, len(times)))
+    print("%s: moved %d of %d root keys onto the floor" % (clip, lifted, len(times)))
 
 
 if __name__ == "__main__":

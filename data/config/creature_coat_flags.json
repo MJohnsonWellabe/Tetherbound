@@ -603,8 +603,8 @@
       }
     },
     "creatures_ralph_torrentoad_toad": {
-      "_why": "Creatures-ralph (2 Nov 2026), Torrentoad remake (GPU main1102: installed 7.06 -> remake 5.59; 'dark green upright frog-man, murky, low-value'). Teal-blue toad coat at the installed value with a speckled back and pale belly (data/creatures/remake_grades.json torrentoad); skin weights relaxed in the GLB (faint-end spikes; worst clip stretch 0.57 m -> 0.27 m). r10 CPU three-judge A/B: 4.64 -> 5.55 mapped (+0.91), short of the 6.26 target; OFF while attempt 2 runs (judges: gaunt biped silhouette, wet-plastic gloss).",
-      "enabled": false,
+      "_why": "Creatures-ralph (2 Nov 2026), Torrentoad remake (GPU main1102: installed 7.06 -> remake 5.59; 'dark green upright frog-man, murky, low-value'). Teal-blue toad coat at the installed value with a speckled back and pale belly (data/creatures/remake_grades.json torrentoad); skin weights relaxed in the GLB (faint-end spikes; worst clip stretch 0.57 m -> 0.27 m). r10 CPU three-judge A/B: 4.64 -> 5.55 mapped (+0.91), short of the 6.26 target; r11 attempt 2 (matte) gained less (+0.55). ON from 2 Nov ~11:40 UTC: the coordinator's GPU roster on main dd2d01342 puts the live remake at 5.53, so the target is now 5.53 - 0.8 = 4.73, which 5.55 clears while beating the live remake; the gaunt biped silhouette still needs new art.",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101_Image_0_toad.jpg"
