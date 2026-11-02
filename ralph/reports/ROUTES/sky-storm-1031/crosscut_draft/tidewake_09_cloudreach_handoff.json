@@ -1,0 +1,462 @@
+{
+ "kind": "f49_cross_cut_seam_manifest",
+ "producer_dir": "tests/fixtures/earned_saves/tidewake_09_cloudreach_handoff",
+ "consumer_input_dir": "tests/fixtures/earned_saves/cloudreach_arrival_generated",
+ "producer_save_sha256": {
+  "save/characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "0d8f6bda7bbda91d3e4f42694c2a515e6f5b2a0a7579ace0386d707980e50ce3",
+  "save/slot_0.json": "69af545c46ac97cfbb113ed83e75415dd12910d472b774fb865dec3ffb4add00",
+  "save/worlds/slot-0/world.json": "ed11a9d6efcd2f03801d05ffbb814896730f512092016888911055c27463b467"
+ },
+ "consumer_input_save_sha256": {
+  "save/characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "5359187106ec9e8423c195f42111e15b36b7bd76f5da907098e60b9740605280",
+  "save/slot_0.json": "a5270fa541ca265144b500ba1afc516df219185273d1785e05f7672b1aa4699c",
+  "save/worlds/slot-0/world.json": "ee716843ffbb30ceca7eb2fc787d04f419cf3de4305f7ff57d30c07301b81003"
+ },
+ "producer_end_state": {
+  "realm": "cloudreach",
+  "position": [
+   0.0,
+   105.03,
+   -260.0
+  ],
+  "day": 17,
+  "party": [
+   {
+    "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+    "species": "terrapup",
+    "level": 44,
+    "xp": 2974,
+    "cap_level": 50,
+    "breakthroughs": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+    "species": "bramblebun",
+    "level": 44,
+    "xp": 2008,
+    "cap_level": 50,
+    "breakthroughs": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+    "species": "bramblebun",
+    "level": 44,
+    "xp": 1745,
+    "cap_level": 50,
+    "breakthroughs": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "uid": "creature-afbd0d982b14221393f70c29863586a1",
+    "species": "mudsnout",
+    "level": 45,
+    "xp": 256,
+    "cap_level": 50,
+    "breakthroughs": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+    "species": "bramblebun",
+    "level": 45,
+    "xp": 562,
+    "cap_level": 50,
+    "breakthroughs": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  ],
+  "master_wins": [],
+  "feast_recipes": [],
+  "relics_held": [],
+  "relics_hung": [
+   "meadows",
+   "tidewake"
+  ],
+  "portal_unlocks": [
+   "tidewake",
+   "cloudreach"
+  ],
+  "world_flags": [
+   "captive_rescued",
+   "defeated_captain_field",
+   "defeated_captain_ridge",
+   "defeated_captain_riverwatch",
+   "defeated_south_bridge_grunt",
+   "defeated_stronghold_courtyard",
+   "defeated_stronghold_elite",
+   "defeated_stronghold_patrol",
+   "defeated_warden",
+   "defeated_water_trainer_bex",
+   "defeated_water_trainer_calder",
+   "defeated_water_trainer_irva",
+   "defeated_water_trainer_solm",
+   "defeated_water_trainer_tovin",
+   "defeated_water_trainer_venn",
+   "hall_approach_open",
+   "harvest_node:order:14.0",
+   "learned_legendary_is_the_source",
+   "legendary_freed",
+   "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d",
+   "legendary_settled",
+   "mill_crossing_restored",
+   "mira_shop_open",
+   "oskar_trade_open",
+   "pickup:castle_gate_key",
+   "realm_heart_meadows_earned",
+   "realm_key_cloudreach",
+   "realm_relic_water_earned",
+   "recipe_orb_basic",
+   "recipe_saddle",
+   "relay_captain_defeated",
+   "relay_disabled",
+   "reward:trainer:warrens_cleared:xp:1",
+   "road_gate_open",
+   "south_bridge_open",
+   "tournament_quarter_won",
+   "tournament_semi_won",
+   "tournament_won",
+   "warrens_cleared",
+   "water_aquaryn_resolved",
+   "water_captain_nerissa_defeated",
+   "water_claim:alpha:aquaryn:entitled:b33e9b00782fc6acf600407107b5296036b526aa1f92affef2fc5e90de39f058",
+   "water_claim:alpha:aquaryn:outcome:won",
+   "water_claim:dock_paid:reedhaven_repair:character-cb1b88c682cd3219e5c3d8d63558473d:796751874a58fbcb073163efa664b72bddf41c5fc1f941b3b37b2fe53fea889b",
+   "water_claim:guardian:offered:b33e9b00782fc6acf600407107b5296036b526aa1f92affef2fc5e90de39f058",
+   "water_currents_restored",
+   "water_dock_brine_steps_trial_won",
+   "water_dock_reedhaven_repaired",
+   "water_dock_salt_crown_landing_charted",
+   "water_dock_shellwatch_residents_freed_and_pump_disabled",
+   "water_dock_sluice_isle_both_controls_disabled",
+   "water_guardian_claimed",
+   "water_guardian_freed",
+   "water_guardian_settled",
+   "water_shellwatch_pump_disabled",
+   "water_shellwatch_residents_freed",
+   "water_sluice_east_disabled",
+   "water_sluice_west_disabled",
+   "water_swim_lesson_complete",
+   "water_tether_disabled",
+   "water_veilfall_intake_stopped",
+   "water_veilfall_return_opened"
+  ],
+  "personal_flags": [
+   "alpha_pin_intro_seen",
+   "camp_hammer_given",
+   "creature_bed_built",
+   "creature_bed_built_2",
+   "creature_bed_built_3",
+   "home_built",
+   "home_key_given",
+   "home_materials_gathered",
+   "legendary_refused",
+   "opening:beat:choose",
+   "opening:beat:encounter",
+   "opening:beat:free_play",
+   "opening:beat:house",
+   "opening:beat:name",
+   "opening:beat:qualification",
+   "opening:beat:return_mira",
+   "opening:beat:return_starter",
+   "opening:beat:road",
+   "opening:beat:tournament_signup",
+   "opening:beat:visit_mira",
+   "opening:beat:wake",
+   "opening:beat:walk_out",
+   "opening:lesson:home_key",
+   "opening:lesson:trigger:home_return",
+   "opening:mira_visited",
+   "opening:starter_granted",
+   "opening:tournament_registered",
+   "player_slept_at_home",
+   "tam_tools_given",
+   "tournament_entered",
+   "tournament_final_at_ring",
+   "tournament_quarter_at_ring",
+   "tournament_semi_at_ring",
+   "tournament_team_ready",
+   "tournament_training_ready",
+   "water:legendary_refused",
+   "water_capture_receipt:38202cdc8946278093e086cf7a913795a013d67ea16083e62d5b2de801f6a869",
+   "water_chapter_started",
+   "water_cordage_recipe_gated",
+   "water_swim_lesson_briefed",
+   "water_swim_saddle_recipe_learned",
+   "water_swim_stone_earned"
+  ],
+  "inventory": {
+   "coin": 260,
+   "home_key": 1,
+   "revive": 3
+  },
+  "buildings": [
+   "bedroll",
+   "campfire",
+   "creature_bed",
+   "creature_bed",
+   "creature_bed",
+   "tent"
+  ]
+ },
+ "differences": [
+  {
+   "field": "day",
+   "producer": 17,
+   "consumer_input": 12,
+   "reason": "UNEXPLAINED"
+  },
+  {
+   "field": "party",
+   "producer": [
+    {
+     "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+     "species": "terrapup",
+     "level": 44,
+     "xp": 2974,
+     "cap_level": 50,
+     "breakthroughs": [
+      1,
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+     "species": "bramblebun",
+     "level": 44,
+     "xp": 2008,
+     "cap_level": 50,
+     "breakthroughs": [
+      1,
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+     "species": "bramblebun",
+     "level": 44,
+     "xp": 1745,
+     "cap_level": 50,
+     "breakthroughs": [
+      1,
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "uid": "creature-afbd0d982b14221393f70c29863586a1",
+     "species": "mudsnout",
+     "level": 45,
+     "xp": 256,
+     "cap_level": 50,
+     "breakthroughs": [
+      1,
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+     "species": "bramblebun",
+     "level": 45,
+     "xp": 562,
+     "cap_level": 50,
+     "breakthroughs": [
+      1,
+      2,
+      3,
+      4
+     ]
+    }
+   ],
+   "consumer_input": [
+    {
+     "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+     "species": "terrapup",
+     "level": 31,
+     "xp": 0,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+     "species": "bramblebun",
+     "level": 31,
+     "xp": 0,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+     "species": "bramblebun",
+     "level": 31,
+     "xp": 0,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "uid": "creature-afbd0d982b14221393f70c29863586a1",
+     "species": "mudsnout",
+     "level": 31,
+     "xp": 0,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+     "species": "bramblebun",
+     "level": 31,
+     "xp": 0,
+     "cap_level": 40,
+     "breakthroughs": [
+      1,
+      2,
+      3
+     ]
+    }
+   ],
+   "reason": "UNEXPLAINED"
+  },
+  {
+   "field": "world_flags",
+   "only_producer": [
+    "water_claim:alpha:aquaryn:entitled:b33e9b00782fc6acf600407107b5296036b526aa1f92affef2fc5e90de39f058",
+    "water_claim:alpha:aquaryn:outcome:won",
+    "water_claim:dock_paid:reedhaven_repair:character-cb1b88c682cd3219e5c3d8d63558473d:796751874a58fbcb073163efa664b72bddf41c5fc1f941b3b37b2fe53fea889b",
+    "water_claim:guardian:offered:b33e9b00782fc6acf600407107b5296036b526aa1f92affef2fc5e90de39f058",
+    "water_guardian_claimed"
+   ],
+   "only_consumer_input": [
+    "water_civilian_departure_complete"
+   ],
+   "reason": "UNEXPLAINED"
+  },
+  {
+   "field": "personal_flags",
+   "only_producer": [
+    "water_capture_receipt:38202cdc8946278093e086cf7a913795a013d67ea16083e62d5b2de801f6a869",
+    "water_swim_saddle_recipe_learned"
+   ],
+   "only_consumer_input": [
+    "tournament_team_fed"
+   ],
+   "reason": "UNEXPLAINED"
+  },
+  {
+   "field": "inventory",
+   "delta": {
+    "axe": [
+     0,
+     1
+    ],
+    "berries": [
+     0,
+     2
+    ],
+    "coin": [
+     260,
+     200
+    ],
+    "fiber": [
+     0,
+     3
+    ],
+    "hammer": [
+     0,
+     1
+    ],
+    "hide_vest": [
+     0,
+     1
+    ],
+    "knife": [
+     0,
+     1
+    ],
+    "orb_basic": [
+     0,
+     41
+    ],
+    "orb_greater": [
+     0,
+     2
+    ],
+    "pickaxe": [
+     0,
+     1
+    ],
+    "potion_small": [
+     0,
+     3
+    ],
+    "revive": [
+     3,
+     9
+    ],
+    "rootstone": [
+     0,
+     19
+    ],
+    "torch": [
+     0,
+     1
+    ],
+    "wood": [
+     0,
+     2
+    ]
+   },
+   "reason": "UNEXPLAINED"
+  }
+ ],
+ "unexplained": [
+  "day",
+  "party",
+  "world_flags",
+  "personal_flags",
+  "inventory"
+ ]
+}
