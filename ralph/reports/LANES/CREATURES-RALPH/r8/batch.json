@@ -1,0 +1,14 @@
+{
+ "anchors": {
+  "craft:before": [5.6, 5.2, 5.2],
+  "craft:after": [6.9, 6.6, 6.9],
+  "f36_0_gap:C1A": [5.4, 6.3, 5.9],
+  "f36_0_gap:C1B": [4.7, 5.2, 4.8],
+  "f36_0_npc:C1B": [6.6, 6.8, 6.9],
+  "f36_0_npc:C1A": [6.7, 6.8, 6.7]
+ },
+ "candidates": {
+  "meadowhart fix": [6.2, 6.4, 6.4],
+  "meadowhart shipped remake": [5.8, 5.9, 5.8]
+ }
+}

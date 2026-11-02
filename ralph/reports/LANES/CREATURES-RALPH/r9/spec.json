@@ -1,0 +1,13 @@
+[
+ {
+  "label": "meadowhart",
+  "a": "sides/meadowhart-base.png",
+  "b": "sides/meadowhart-cand2.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "pale, thin vine-wrapped deer loses value contrast",
+   "mottled root-veined hide muddies the read",
+   "hit-react hunch reads as a broken stoop with the head collapsed"
+  ]
+ }
+]

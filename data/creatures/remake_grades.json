@@ -59,5 +59,62 @@
     "detail_strength": 1.2,
     "mix_source": 0.3,
     "keep": [{"hue": [25, 50], "sat_min": 0.6, "val_min": 0.75}]
+  },
+  "meadowhart": {
+    "_why": "GPU batch 5 (installed 7.67 -> remake 6.91; judges x3): the remake is a 'pale, thin vine-wrapped deer' that 'loses value contrast', with a 'mottled root-veined hide' that 'muddies the read'. Toward the installed stag's readable values: a warm red-brown coat, a darker saddle along the back, a cream belly and throat; the source keeps 30 percent so the vines stay as soft markings instead of ropes; fur detail x1.2. r8: shipped remake 6.12 -> 6.80 mapped (+0.68; hit-react stoop FIXED x3), 0.10 short of the 6.9 target. r9 attempt 2 (cooler, deeper coat, vines at 15 percent) gained nothing (6.23 -> 6.28), so these are the attempt-1 values.",
+    "folder": "meadowhart/candidate_owner1101",
+    "suffix": "warm",
+    "base": [
+      24,
+      0.52,
+      0.5
+    ],
+    "regions": [
+      {
+        "where": {
+          "up_min": 0.45,
+          "y_min": 0.55
+        },
+        "hsv": [
+          20,
+          0.52,
+          0.36
+        ],
+        "softness": 0.15
+      },
+      {
+        "where": {
+          "up_max": -0.25
+        },
+        "hsv": [
+          34,
+          0.22,
+          0.8
+        ],
+        "softness": 0.15
+      },
+      {
+        "where": {
+          "z_min": 0.8,
+          "up_max": 0.0,
+          "y_max": 0.8,
+          "y_min": 0.45
+        },
+        "hsv": [
+          34,
+          0.2,
+          0.78
+        ],
+        "softness": 0.06
+      }
+    ],
+    "detail_strength": 1.2,
+    "mix_source": 0.3,
+    "keep": [
+      {
+        "sat_max": 0.15,
+        "val_min": 0.82
+      }
+    ]
   }
 }
