@@ -845,6 +845,12 @@ func _walk_to_mira(world: Node3D) -> void:
 	for index in legs.size():
 		if Time.get_ticks_msec() - started_ms > MIRA_WALK_BUDGET_MS and walked > 0:
 			break
+		# Inside 120 m the master adapter walks its own final stand on the
+		# player's side (meadows_master.mira_legs); mw_12 (3 Nov) stalled
+		# 17 m short forcing the spine-side stand, so the walk ends here.
+		if Vector2(player.global_position.x, player.global_position.z).distance_to(site) <= 120.0:
+			arrived = true
+			break
 		var target: Vector2 = legs[index]
 		var walker: RefCounted = load("res://tests/helpers/meadows_earned_material_segment.gd").new()
 		var ok := true
