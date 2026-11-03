@@ -1,5 +1,26 @@
 # CREATURES-RALPH: running status
 
+## VISUAL LANE (new session, 3 Nov ~00:45 UTC): setup done, batch plan and ETA for the 89 items
+
+**Setup (measured):** fresh disk allowance (about 13 GB free). Godot 4.7-stable at `/usr/local/bin/godot`; the **full** headless import of the whole project is running (no `.gdignore` trimming), so biome, landmark, HUD and fight items can now be captured here. Portable **Blender 4.2.3 LTS** runs from scratch (`blender --version` OK), so new meshes are built here; no Meshy, no GPU.
+
+**Yardstick:** every score below is CPU Low/Compatibility, tools/visual_judge (JUDGE_PROMPT, `anchor_tiles.py --pairs 3`, three code-blind judges, `calibrate.py`), baseline (current branch = main + PR #803 content) and candidate in the same run. Done = mapped Bar A ≥ 6.0 CPU, recorded as "CPU <base> -> <cand>".
+
+**Batch U (the 12 unscored, one capture set per biome; one Godot at a time):**
+| Set | Tool (TECHNICAL §8.1 form) | Covers | ETA (UTC) |
+|---|---|---|---|
+| U1 Meadows | `capture_f38_matrix.gd --f38-preset=Low --f38-baseline --times=day,night --subset=<6 sites>` | F38#0, F38#41 (+ re-score F38#24 mountains, #22 mill, #23 relay yard, #20 stronghold, #30 Warrens) | 03:30 |
+| U2 Tidewake | `capture_tidewake_f13_5.gd --camera-set=F39-look.json --preset=Low` + `phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn` | F39#30, F39#32, F39#21 (victory panel) (+ F39#31 Veilfall, F13#5, F39#1/#2/#15) | 05:30 |
+| U3 Cloudreach | `capture_cloudreach_f40_matrix.gd --piece=N` (day/night/weather pieces of 3 stands, `--ground-cover-cache`) + `phase2_capture_catch.gd --biome=cloudreach` (candy taken first) | F40#0, F40#19, F40#21, F40#18 (+ F40#1/#2/#4/#11) | 08:00 |
+| U4 Stormwood | `capture_stormwood_f10_matrix.gd --phases=calm,break` + `capture_named_fights_f10_6.gd` | F41#22, F41#24 (+ F41#1 Stormheart, #5, #17, #10) | 09:30 |
+| U5 Named fights | `capture_named_fight.gd` Warden and Riverwatch; Venn/Stormwood reused from U2/U4 | F22#4 (visual half; C2/C3 smokes are hours each, reuse the recorded 6/6, 22/24, 15/18, 48/54 and rerun only Riverwatch) | 10:30 |
+
+Judging runs in parallel with the next capture (judges are agents, not Godot). Unscored items get their own score as each set lands.
+
+**Then worst first (fix batches):** F39#31 Veilfall 3.35, F13#5 3.61, F41#18 uniforms 3.91 (material/rank markers, scene-level), F41#8 named silhouettes 4.03 (Blender outfit variants on installed cast), F41#1 Stormheart 4.41, F38#24 mountains 4.42 (Blender continuous ridge backdrop), F39#12 bed and F39#13 workbench (Meshy props from 31 Oct are already ON; re-baseline first, the old scores may predate them). New Blender meshes keep a drafted reference, a 1.80 m trainer scale check and provenance, flag-OFF until judged.
+
+**Not reachable here, stated now:** `capture_f39_tidewake_matrix.gd`, `capture_f41_stormwood_catalog.gd`, `capture_stormwood_look.gd` refuse CPU; I use the CPU tools above for those matrices (the same stands where they overlap) and say so in each verdict.
+
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
 
 
