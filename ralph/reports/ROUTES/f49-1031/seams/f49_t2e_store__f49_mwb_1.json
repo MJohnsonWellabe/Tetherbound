@@ -1,0 +1,32 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "training_t2_master_store",
+ "from_commit": "74caefdd21e53e8d6ef2d2f8351123c4d43d56c2",
+ "to_piece": "meadows_walk_to_mira",
+ "to_commit": "74caefdd21e53e8d6ef2d2f8351123c4d43d56c2",
+ "to_loaded_from": "/home/user/rb/t2e_store",
+ "consumer_handoff_check": {
+  "checked": true,
+  "cross_runner": true,
+  "ending_matches": true,
+  "ending_required": false,
+  "keys": [
+   "uids",
+   "species",
+   "realm",
+   "items",
+   "world_flags"
+  ],
+  "mismatched": [],
+  "passed": true,
+  "previous": "t2e_store",
+  "training": {
+   "checked": true,
+   "matches": true,
+   "reason": ""
+  }
+ },
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}
