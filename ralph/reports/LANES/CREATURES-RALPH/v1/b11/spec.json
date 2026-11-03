@@ -1,0 +1,38 @@
+[
+ {
+  "label": "F41#14",
+  "a": "/tmp/claude-0/work/judge/b11/k/sides/F41_14_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b11/k/sides/F41_14_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: candy pickup tiers. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+  ]
+ },
+ {
+  "label": "F41#18",
+  "a": "/tmp/claude-0/work/judge/b11/k/sides/F41_18_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b11/k/sides/F41_18_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: uniformed character readability. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+  ]
+ },
+ {
+  "label": "F41#19",
+  "a": "/tmp/claude-0/work/judge/b11/k/sides/F41_19_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b11/k/sides/F41_19_b.jpg",
+  "brief": "1 in-game frame (Stormwood) for one catalogue subject: Glass Field spike bases. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+  ]
+ },
+ {
+  "label": "F41#20",
+  "a": "/tmp/claude-0/work/judge/b11/k/sides/F41_20_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b11/k/sides/F41_20_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: named character dialogue reuse. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Distinct named Stormwood characters use identical dialogue lines"
+  ]
+ }
+]
