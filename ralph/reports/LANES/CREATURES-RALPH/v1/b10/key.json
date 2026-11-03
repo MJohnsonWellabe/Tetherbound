@@ -1,0 +1,47 @@
+{
+ "Mp": {
+  "anchor": false,
+  "label": "F41#12",
+  "A": "/tmp/claude-0/work/judge/b10/k/sides/F41_12_a.jpg",
+  "B": "/tmp/claude-0/work/judge/b10/k/sides/F41_12_b.jpg"
+ },
+ "Ty": {
+  "anchor": false,
+  "label": "F41#11",
+  "A": "/tmp/claude-0/work/judge/b10/k/sides/F41_11_b.jpg",
+  "B": "/tmp/claude-0/work/judge/b10/k/sides/F41_11_a.jpg"
+ },
+ "Xl": {
+  "anchor": true,
+  "A": "f36_0_npc:C7B",
+  "B": "f36_0_npc:C7A"
+ },
+ "Qc": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Aq": {
+  "anchor": false,
+  "label": "F41#9",
+  "A": "/tmp/claude-0/work/judge/b10/k/sides/F41_9_a.jpg",
+  "B": "/tmp/claude-0/work/judge/b10/k/sides/F41_9_b.jpg"
+ },
+ "Qr": {
+  "anchor": false,
+  "label": "F41#10",
+  "A": "/tmp/claude-0/work/judge/b10/k/sides/F41_10_b.jpg",
+  "B": "/tmp/claude-0/work/judge/b10/k/sides/F41_10_a.jpg"
+ },
+ "Xj": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Xw": {
+  "anchor": false,
+  "label": "F41#8",
+  "A": "/tmp/claude-0/work/judge/b10/k/sides/F41_8_a.jpg",
+  "B": "/tmp/claude-0/work/judge/b10/k/sides/F41_8_b.jpg"
+ }
+}
