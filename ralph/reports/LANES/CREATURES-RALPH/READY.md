@@ -32,6 +32,17 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**Judged (3 Nov ~04:40 UTC), `v1/sw1/VERDICT.md`:** first CPU scores of the current branch, Stormwood arms ON vs OFF (linear fit, slope 1.38, r 0.87, RMSE 0.42, confirming batch):
+| Row | Item | CPU base -> arms ON | Decision |
+|---|---|---|---|
+| F41#4 | named destinations | 5.25 -> 5.21 | arms stay OFF |
+| F41#2 | Surge phases | 5.02 -> 4.93 | arms stay OFF |
+| F41#5 | forest ground | 4.75 -> 4.70 | arms stay OFF |
+| F41#17 | Crown Arch | 4.70 -> 4.56 | `hero_landmarks_1101.crown_arch` stays OFF |
+| F41#1 | Stormheart | 4.52 -> 4.33 | arms stay OFF |
+- No Stormwood arm gains; `stormwood_road_current.puddle_candidate` draws "flat lavender decal discs" in every frame (all three judges). All three ask for new art for the Crown Arch and the Stormheart.
+- **New OFF arm `7ede7c5e` F41#17:** a Blender four-legged crowned arch (`data/config/crown_arch_vl.json`; an arch faces every approach, so the stand reads it as an arch whatever the yaw). Its test and its CPU capture are queued after the Tidewake import.
+
 **Not reachable here, stated now:** `capture_f39_tidewake_matrix.gd`, `capture_f41_stormwood_catalog.gd`, `capture_stormwood_look.gd` refuse CPU; I use the CPU tools above for those matrices (the same stands where they overlap) and say so in each verdict.
 
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
