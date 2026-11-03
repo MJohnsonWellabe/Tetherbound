@@ -4,6 +4,53 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
 
 
 
+
+## HANDOFF (3 Nov ~00:20 UTC): this session stops; the visual lane moves to session_01GPgpLTSwTp4iBviA53GNuS on this branch
+
+**State:**
+- Batch 1 (F39#11, F39#24 Riptusk, F36#58 Pebbik, F36#54 Mosshock) is committed and in PR #803. The r23 and r24 evidence is on this branch.
+- Everything is pushed, and the tree is clean.
+
+**Half-done:**
+- **F41#13 electric finish (r25).**
+  - `creatures_ralph_electric_charge` is committed OFF. It lights the Fulgocobra and Stormraven glow maps at energy 2.6 over a matte body.
+  - The CPU A/B capture is done; the sheet is `r25/_sheet_r25.jpg` and the `key.json` and `spec.json` are committed.
+  - The three judges were mid-run when this session stopped, so it has **no score**. Re-capture A (main) and B (flag ON) with `capture_f36_poses.gd -- --species=fulgocobra,stormraven --whole-body --context`, then judge.
+  - By eye: Stormraven gains visible blue charged feather edges; Fulgocobra barely changes.
+- **F39#4 shiny finish:** scoped, not started. The remakes ship no shiny textures, so a shiny remake falls back to a flat tint (the "near-uniform hot magenta"). It needs shiny colourways for the remakes.
+
+**Not started; they need a full import (a fresh disk):**
+- F38#1, F38#2 and F38#26 (Meadows creature collapse, hurt and ground contact) are captured with `tools/capture_f38_fight.gd` in the real yard.
+- F39#6 is the same, in Tidewake.
+- Every biome, landmark and settlement item.
+
+**Shelved and flag-OFF, the coordinator's call:**
+- Mangrove Monitor r21 (GLB and olive ON, already in PR #803 or later);
+- the Skyrill and Tuskroot rim arms (OFF);
+- Tuskroot ×1.1 (OFF);
+- Abyssal Guardian r22 (GLB);
+- the water_mangrove_monitor probe (not committed).
+
+**What worked (the runbook, CPU, this container):**
+- **Import one species at a time.** Temporary `.gdignore`s via a keepset; drop each species' `.godot/imported` after its capture.
+- **Capture:** `capture_f36_poses.gd -- --species=X --whole-body --context [--roles=hit,faint,rest]`. `--roles` is new and covers the rest-pose items.
+- **Rig fixes with `tools/art_pipeline`:**
+  - `ground_clip.py` (`--percentile`, `--settle`, `--hop`): ground or settle last, after any limb amplify;
+  - `amplify_clip.py` for hit ease and faint droop;
+  - `relax_stretched_weights.py` for stretched skin;
+  - a z −80° upper-limb fold for flipper or leg props.
+- **Coats:**
+  - `grade_regions.py`, with `detail_only`, `sat_scale`, `hue_shift` and regions;
+  - coat flags take `albedo`, `roughness`, `specular`, `emission` and `rim` (rim renders on Forward+ only, never on Compatibility).
+- **Judging:**
+  - `anchor_tiles.py --pairs 3 --include craft`, copy `docs/reference`, then the JUDGE_PROMPT text block;
+  - three general-purpose judges, then `calibrate.py`.
+- **What did not work:**
+  - value-ramp or matte coats on Aquaryn (two failures);
+  - a roster grounded-hit clip flag (invisible at the stage camera);
+  - lightening Tuskroot's hide (GPU regression).
+
+
 ## NEW ASSIGNMENT (owner via coordinator, 2 Nov ~22:35 UTC): the 89 visual items to ≥ 6.0 CPU mapped. First batch plan and constraints
 
 **What this container can and cannot do (measured, not assumed):**

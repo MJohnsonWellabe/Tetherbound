@@ -1,0 +1,20 @@
+[
+ {
+  "label": "fulgocobra",
+  "a": "sides/fulgocobra-base.png",
+  "b": "sides/fulgocobra-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - including whether its electric element reads as charged material contrast.",
+  "defects": [
+   "no clear charged material contrast: mottled brown with no visible charged seam"
+  ]
+ },
+ {
+  "label": "stormraven",
+  "a": "sides/stormraven-base.png",
+  "b": "sides/stormraven-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - including whether its electric element reads as charged material contrast.",
+  "defects": [
+   "no clear charged material contrast: mostly uniform cobalt"
+  ]
+ }
+]

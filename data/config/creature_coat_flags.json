@@ -719,6 +719,24 @@
           "specular": 0.25
         }
       }
+    },
+    "creatures_ralph_electric_charge": {
+      "_why": "Creatures-ralph (3 Nov 2026), board F41#13 (GPU 4.54: 'Fulgocobra and Stormraven lack charged material contrast'). The remakes' own glow maps (electric lines and eyes, remake_owner1101_finish.py) are lit at energy 2.6 over a matte body (roughness 0.8, specular 0.25), so the charge reads against the hide. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_read.png",
+          "emission_energy": 2.6,
+          "roughness": 0.8,
+          "specular": 0.25
+        },
+        "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {
+          "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read.png",
+          "emission_energy": 2.6,
+          "roughness": 0.8,
+          "specular": 0.25
+        }
+      }
     }
   }
 }
