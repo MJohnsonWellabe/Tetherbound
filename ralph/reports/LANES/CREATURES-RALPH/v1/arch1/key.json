@@ -1,0 +1,23 @@
+{
+ "Mj": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Ly": {
+  "anchor": false,
+  "label": "F41#17",
+  "A": "/tmp/claude-0/work/judge/arch1/k/F41_17_a.jpg",
+  "B": "/tmp/claude-0/work/judge/arch1/k/F41_17_b.jpg"
+ },
+ "Rc": {
+  "anchor": true,
+  "A": "f36_0_npc:C4A",
+  "B": "f36_0_npc:C4B"
+ },
+ "Ad": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

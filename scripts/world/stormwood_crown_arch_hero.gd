@@ -22,7 +22,8 @@ static func settings() -> Dictionary:
 	var cfg: Dictionary = parsed if parsed is Dictionary else {}
 	# Cause lane LANDMARKS (hero_landmarks_1101.json crown_arch, OFF until GPU
 	# judged): the 1101 Meshy arch model over the round-2 settings.
-	return preload("res://scripts/world/hero_landmarks_1101.gd").crown_arch_overlay(with_round2(cfg))
+	var landmarks := preload("res://scripts/world/hero_landmarks_1101.gd")
+	return landmarks.crown_arch_vl_overlay(landmarks.crown_arch_overlay(with_round2(cfg)))
 
 
 ## P2-041 round 2 (GPU WD2 1 Nov, 4.78: "neither side reads as an arch, and the
