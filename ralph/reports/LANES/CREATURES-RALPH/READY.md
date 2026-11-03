@@ -16,10 +16,10 @@ Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (c
   - `creatures_ralph_electric_charge` is committed OFF. It lights the Fulgocobra and Stormraven glow maps at energy 2.6 over a matte body.
   - The CPU A/B capture is done; the sheet is `r25/_sheet_r25.jpg` and the `key.json` and `spec.json` are committed.
   - The three judges were mid-run when this session stopped, so it has **no score**. Re-capture A (main) and B (flag ON) with `capture_f36_poses.gd -- --species=fulgocobra,stormraven --whole-body --context`, then judge.
-  - **Partial judging:** 2 of 3 judges finished before the stop. The third was mid-run, so there is no calibrated score.
-    - Stormraven: flag ON 6.5 and 6.6 against live 5.5 and 5.4. "Mostly uniform cobalt" goes PRESENT → PARTIAL.
-    - Fulgocobra: ON 6.3 and 5.6 against live 6.3 and 5.5, flat; it needs real emissive veins along its gold bands.
-    - Suggested next arm: Stormraven-only, as its own flag. Then re-judge it with three judges and calibrate.
+  - **Judged after the stop (all 3 judges, calibrated; `r25/VERDICT.md`):**
+    - Stormraven: 5.26 → **6.72** (+1.46).
+    - Fulgocobra: 5.83 → 5.92 (flat).
+    - The flag stays OFF. Next: split it into a Stormraven-only flag, turned ON with 6.72 in `_why` and in `JUDGED_ON`, and give Fulgocobra a vein mask on its gold bands.
   - The judges also flag Stormraven's raised wing as a flat "card" in hit and faint. That is a mesh or skin issue.
 - **F39#4 shiny finish:** scoped, not started. The remakes ship no shiny textures, so a shiny remake falls back to a flat tint (the "near-uniform hot magenta"). It needs shiny colourways for the remakes.
 
