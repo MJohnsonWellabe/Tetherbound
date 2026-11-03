@@ -1,0 +1,35 @@
+{
+ "Jq": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Qo": {
+  "anchor": false,
+  "label": "pebbik",
+  "A": "sides/pebbik-cand.png",
+  "B": "sides/pebbik-base.png"
+ },
+ "Hc": {
+  "anchor": false,
+  "label": "sparkit",
+  "A": "sides/sparkit-base.png",
+  "B": "sides/sparkit-cand.png"
+ },
+ "Tl": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Ta": {
+  "anchor": true,
+  "A": "f36_0_npc:C8B",
+  "B": "f36_0_npc:C8A"
+ },
+ "Wm": {
+  "anchor": false,
+  "label": "mosshock",
+  "A": "sides/mosshock-cand.png",
+  "B": "sides/mosshock-base.png"
+ }
+}

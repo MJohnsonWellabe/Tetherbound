@@ -1,0 +1,4 @@
+Xt: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ax: "hit react: neck plunges and the body leaves the floor"; "faint sinks into the floor / a flipper stands upright"
+Ki: none
+Lm: none

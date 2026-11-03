@@ -25,3 +25,38 @@ Each entry gives the species, the commit and the capture. All entries use `captu
 3. **Duskhush r9:** one clear elemental trait and a cleaner faint.
 4. **Torrentoad:** a grounded, squat toad pose and a less glossy skin.
 5. **Tuskroot:** keep main's value, add rim light and a slightly larger read against the ruler. Don't lighten the hide.
+
+## READY GPU jobs (2 Nov ~14:40 UTC): rim arms (GPU-only; Compatibility draws no rim, so the CPU stage cannot judge them)
+
+**Job:** `--species=skyrill,tuskroot`. Arm B turns the flags below ON; A is the branch as is.
+
+- **Skyrill r10** (GPU 7.43): `creatures_ralph_skyrill_r10_rim` (coat rim 0.15). It stacks with the ON lift.
+- **Tuskroot** on main's dark coat (GPU 7.65):
+  - `creatures_ralph_tuskroot_rim` (coat rim 0.15, albedo unchanged);
+  - `creatures_ralph_tuskroot_presence` (scale ×1.1, 3.6 → 3.96 m; the CPU stage receipt confirms 3.96 m).
+- **Code:** `coat_material` takes `rim` / `rim_tint`, capped at FIELD_RIM_MAX (0.30) under the alpha's 0.65. `tests/test_creature_coat_flags.gd` passes.
+
+## READY GPU job (r21 keep): `--species=mangrove_monitor`
+
+- **Mangrove Monitor r9:** the GLB lies flat in its faint and `creatures_ralph_mangrove_monitor_r9_olive` is ON. CPU 5.28 → 6.05.
+- **Aquaryn:** parked for new art after two failed coat approaches (r19, r21).
+
+## READY GPU job cr1102d (2 Nov ~16:10 UTC): one job, `--species=mangrove_monitor,skyrill,tuskroot`
+
+- **Tree:** `tb/creatures-ralph` at `fd0ddfe18` or later (on top of main bd2a8fe91, #799 merged).
+- **A (control):** main1102b or main1102c (interchangeable).
+- **B:** the branch with these OFF flags set `"enabled": true` in a capture-only working copy (this lane has no scratch branches):
+  - `data/config/creature_coat_flags.json`: `creatures_ralph_skyrill_r10_rim`, `creatures_ralph_tuskroot_rim`;
+  - `data/config/creature_scale_flags.json`: `creatures_ralph_tuskroot_presence`.
+- **Already ON on the branch, no flip needed:**
+  - Mangrove Monitor: the r21 lie-down GLB plus `creatures_ralph_mangrove_monitor_r9_olive`, CPU 5.28 → 6.05;
+  - Skyrill: `creatures_ralph_skyrill_r10_lift`.
+- **What the job decides:**
+  - Mangrove Monitor: r21 on GPU.
+  - Skyrill: rim 0.15 on the lift; GPU 7.43 now, 7.5 is the bar.
+  - Tuskroot: rim 0.15 on main's dark coat plus x1.1, against main 7.65.
+- **Why GPU only:** Compatibility draws no rim, so the rim arms have no CPU score.
+
+## READY GPU job (r22 keep): `--species=abyssal_guardian`; can join cr1102d
+
+- **Abyssal Guardian:** the GLB has the hit eased and a belly-down faint. CPU 5.26 → 5.67. A is main.

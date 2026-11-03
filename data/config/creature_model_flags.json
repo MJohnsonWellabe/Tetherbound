@@ -512,7 +512,7 @@
       }
     },
     "remake_owner1101_mangrove_monitor": {
-      "_why": "Creatures-ralph r12-r13 (2 Nov 2026): the live model is the coordinator r9 Meshy banded monitor (candidate_r9, dog3; hit neck/head/tail eased and its root hop at 30 percent, faint root roll about 77 deg grounded per key, weights relaxed); CPU three-judge A/B 5.02 -> 5.69 mapped against the owner1101 remake (target 5.4). The bark-plate spine is red-brown (hue 15-30; 0.03 percent of texels below hue 15), not the reserved red. Earlier: Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mangrove Monitor, a big monitor lizard with green and olive scales, a believable lean adult creature in its (Meshy 01a197e8-b7ad-72ae-b6e7-27cabf69cdbb). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua eyes and thin aqua lines. Provenance: assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/source/provenance.json.",
+      "_why": "r21 (2 Nov 2026): the faint crouched on folded legs, so both left legs now fold (z -80 deg) and the faint settles on the 5th percentile; with the olive coat flag CPU 5.28 -> 6.05. Creatures-ralph r12-r13 (2 Nov 2026): the live model is the coordinator r9 Meshy banded monitor (candidate_r9, dog3; hit neck/head/tail eased and its root hop at 30 percent, faint root roll about 77 deg grounded per key, weights relaxed); CPU three-judge A/B 5.02 -> 5.69 mapped against the owner1101 remake (target 5.4). The bark-plate spine is red-brown (hue 15-30; 0.03 percent of texels below hue 15), not the reserved red. Earlier: Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mangrove Monitor, a big monitor lizard with green and olive scales, a believable lean adult creature in its (Meshy 01a197e8-b7ad-72ae-b6e7-27cabf69cdbb). dog3 quadruped rig at the installed 3.4 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua eyes and thin aqua lines. Provenance: assets/creatures/tetherbound/mangrove_monitor/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "mangrove_monitor": {
@@ -581,7 +581,7 @@
       }
     },
     "remake_owner1101_mosshock": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mosshock, a big toad with spiny back ridges, mossy green and yellow skin, a believable lean adult creature  (Meshy 01a197e9-f4b0-7398-9fd5-3147497e0f55). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing electric-blue eyes. Provenance: assets/creatures/tetherbound/mosshock/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r24 (2 Nov 2026, board F36#54): the rest clip floated 0.40 m; it is now settled on the 3rd percentile per key, hit root hop x0.3. CPU three-judge A/B 5.74 -> 5.98 mapped. Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mosshock, a big toad with spiny back ridges, mossy green and yellow skin, a believable lean adult creature  (Meshy 01a197e9-f4b0-7398-9fd5-3147497e0f55). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing electric-blue eyes. Provenance: assets/creatures/tetherbound/mosshock/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "mosshock": {
@@ -644,7 +644,7 @@
       }
     },
     "remake_owner1101_abyssal_guardian": {
-      "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Abyssal Guardian, a colossal long-necked plesiosaur-like sea guardian with four large flippers, deep blue a (Meshy 01a197e1-57f8-726e-8c91-db106f77a9e6). dog3 quadruped rig at the installed 7.2 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing blue eyes and accents. Provenance: assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r22 (2 Nov 2026): the hit plunged the neck and lifted the body, and the faint sank 1.5 m with a flipper standing upright (the flippers ride the spine bone). Hit: neck x0.45, head x0.6, tail x0.4, root hop x0.3. Faint: belly-down (root roll 0), neck and head droop x3, legs x0.6, settled on the 3rd percentile; weights relaxed. CPU three-judge A/B 5.26 -> 5.67 mapped (target 4.47). Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Abyssal Guardian, a colossal long-necked plesiosaur-like sea guardian with four large flippers, deep blue a (Meshy 01a197e1-57f8-726e-8c91-db106f77a9e6). dog3 quadruped rig at the installed 7.2 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing blue eyes and accents. Provenance: assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "abyssal_guardian": {
@@ -667,7 +667,7 @@
       }
     },
     "remake_owner1101_pebbik": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Pebbik, a small sturdy desert fox-like creature with big ears, sandy fur (Meshy 01a197ea-bc18-71e5-9ce1-9a9018362f13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the thin green-gold lines and amber eyes. Provenance: assets/creatures/tetherbound/pebbik/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r24 (2 Nov 2026, board F36#58): the rest clip floated 0.20 m; it is now settled on the 3rd percentile per key, hit root hop x0.3. CPU three-judge A/B 5.98 -> 6.07 mapped. Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Pebbik, a small sturdy desert fox-like creature with big ears, sandy fur (Meshy 01a197ea-bc18-71e5-9ce1-9a9018362f13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the thin green-gold lines and amber eyes. Provenance: assets/creatures/tetherbound/pebbik/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "pebbik": {
@@ -751,7 +751,7 @@
       }
     },
     "remake_owner1101_riptusk": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riptusk, a large walrus-like armoured sea beast with long tusks, blue-grey hide with sandy plates (Meshy 01a197ed-364b-733d-8048-2e07c93b064f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the thin aqua lines on the hide and eyes. Provenance: assets/creatures/tetherbound/riptusk/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r23 (2 Nov 2026, board F39#24): the rest clip floated 0.76 m; it is now settled on the 3rd percentile per key, hit root hop x0.3. CPU three-judge A/B 5.72 -> 6.07 mapped. Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riptusk, a large walrus-like armoured sea beast with long tusks, blue-grey hide with sandy plates (Meshy 01a197ed-364b-733d-8048-2e07c93b064f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the thin aqua lines on the hide and eyes. Provenance: assets/creatures/tetherbound/riptusk/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "riptusk": {
@@ -774,7 +774,7 @@
       }
     },
     "remake_owner1101_riverdrake": {
-      "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riverdrake, a lean river drake lizard with a crest along its head and spine, blue scales and amber crest (Meshy 01a197ed-424e-7645-aabb-b223008f0477). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.0 m; emission on the thin aqua lines between the blue scales and eyes. Provenance: assets/creatures/tetherbound/riverdrake/candidate_owner1101/source/provenance.json.",
+      "_why": "Creatures-ralph r23 (2 Nov 2026, board F39#11): the rest clip floated 0.48 m; it is now settled on the 3rd percentile per key, hit root hop x0.3. CPU three-judge A/B 6.32 -> 6.42 mapped. Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Riverdrake, a lean river drake lizard with a crest along its head and spine, blue scales and amber crest (Meshy 01a197ed-424e-7645-aabb-b223008f0477). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.0 m; emission on the thin aqua lines between the blue scales and eyes. Provenance: assets/creatures/tetherbound/riverdrake/candidate_owner1101/source/provenance.json.",
       "enabled": true,
       "species": {
         "riverdrake": {

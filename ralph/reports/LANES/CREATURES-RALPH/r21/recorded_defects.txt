@@ -1,0 +1,5 @@
+Nq: "one glossy turquoise with no back-to-belly value structure"; "toy-like finish"
+Cj: none
+Cd: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Pz: none
+Yl: "faint never lies down (crouches on folded legs)"; "red-brown dorsal stripe reads oxblood-adjacent"; "plain surface"

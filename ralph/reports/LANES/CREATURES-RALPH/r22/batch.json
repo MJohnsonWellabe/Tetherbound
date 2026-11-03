@@ -1,0 +1,14 @@
+{
+ "anchors": {
+  "craft:after": [6.8, 6.6, 6.4],
+  "craft:before": [5.2, 5.2, 4.8],
+  "f36_0_gap:C4B": [6.2, 6.2, 5.8],
+  "f36_0_gap:C4A": [6.6, 6.5, 5.6],
+  "f36_0_npc:C4B": [6.4, 6.4, 6.0],
+  "f36_0_npc:C4A": [6.4, 6.4, 6.0]
+ },
+ "candidates": {
+  "abyssal_guardian live": [5.3, 5.6, 5.1],
+  "abyssal_guardian hit eased + belly-down faint": [5.5, 5.8, 5.6]
+ }
+}

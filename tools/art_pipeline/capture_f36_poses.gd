@@ -25,6 +25,8 @@ const FLY_VIEW_TURN_DEG := 35.0
 ## creature downed on its side reads as belly-up; fights are watched from
 ## combat.json's starting pitch. Opt-in so earlier rounds stay reproducible.
 var _combat_pitch := false
+## --roles=a,b overrides ROLES (e.g. hit,faint,rest for the rest-pose items).
+var _roles: Array = []
 
 
 func _run() -> void:
@@ -50,6 +52,8 @@ func _run() -> void:
 			_combat_pitch = true
 		elif arg == "--all":
 			all_roster = true
+		elif arg.begins_with("--roles="):
+			_roles.assign(arg.trim_prefix("--roles=").split(",", false))
 		elif arg.begins_with("--out="):
 			out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--source-commit="):
@@ -148,7 +152,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	var look: Dictionary = SPECIES.placeholder(id)
 	var map: Dictionary = look.get("animations", {})
 	var receipt: Array = []
-	var roles: Array = ["standing"] if _scale_only else ROLES
+	var roles: Array = ["standing"] if _scale_only else (_roles if not _roles.is_empty() else ROLES)
 	var phases: Array = [0.0, 1.0] if _scale_only else PHASES
 	for role: String in roles:
 		if _context and role == "ride" and _mount_offset(id) == null:

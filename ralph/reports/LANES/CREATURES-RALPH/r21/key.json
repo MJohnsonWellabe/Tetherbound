@@ -1,0 +1,29 @@
+{
+ "Nq": {
+  "anchor": false,
+  "label": "aquaryn",
+  "A": "sides/aquaryn-base.png",
+  "B": "sides/aquaryn-cand.png"
+ },
+ "Cj": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Cd": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Pz": {
+  "anchor": true,
+  "A": "f36_0_npc:C5A",
+  "B": "f36_0_npc:C5B"
+ },
+ "Yl": {
+  "anchor": false,
+  "label": "mangrove_monitor",
+  "A": "sides/mangrove_monitor-cand.png",
+  "B": "sides/mangrove_monitor-base.png"
+ }
+}

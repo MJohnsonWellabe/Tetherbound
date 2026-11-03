@@ -3,6 +3,48 @@
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
 
 
+
+## NEW ASSIGNMENT (owner via coordinator, 2 Nov ~22:35 UTC): the 89 visual items to ≥ 6.0 CPU mapped. First batch plan and constraints
+
+**What this container can and cannot do (measured, not assumed):**
+- **Blender is not installed here.** About 310 MB of disk is free (the allowance is spent), too little to install Blender or a `bpy` wheel, so I cannot build new meshes in this container.
+  - A Blender-capable session with more disk is needed for every "new art" item: P2-014 mountains, P2-037 Stormheart tree, P2-055 and P2-056 character silhouettes, the P2-115 bed and P2-116 workbench props, and so on.
+- **Biome, landmark and settlement items need a full project import.**
+  - This covers the F38–F41 matrices, Veilfall, the destinations, mill, relay yard, stronghold, terrain, clouds and the Glass Sink.
+  - Earlier in this session the full import did not fit this container's disk. I import one creature folder at a time with temporary `.gdignore`s.
+  - Those items need a session with a normal disk allowance. I cannot score them honestly here.
+- **What fits here:** creature pose and material items that `capture_f36_poses.gd` stages on the neutral stage, imported one species at a time.
+
+**Batch 1 (started 2 Nov ~22:40 UTC; ETA about 3 h for scores; CPU baseline and candidate in the same run, three judges, anchors, calibrated):**
+- **Pose items:** F36#70 Sparkit (5.41), F36#56 Nightburrow (5.66), F36#54 Mosshock (5.85), F36#58 Pebbik (5.88).
+- **Roll-onto-back rests:** F39#24 (Riptusk and Torrentoad).
+- **Riverdrake:** F39#11 crouch and recoil ground contact (unscored).
+- **Rig recipe:** the r18–r22 recipe (hit hop ×0.3, folded limbs, faint settled after the leg tuck, weights relaxed) has already lifted Sirenseal (+1.48), Mangrove Monitor (+0.77) and Abyssal Guardian (+0.41) on CPU.
+- **Shelved per the coordinator:** the r21 and r22 work and the water-variant probe. Their files are on the branch and not landed by me.
+
+**Batch 1a results (r23, `cae748e1d`):**
+- **F39#11** Riverdrake ground contact (unscored before): CPU 6.32 → 6.42. **At or above 6.0.** The GLB rest is settled and the hit hop is ×0.3.
+- **F39#24** rest poses: Riptusk CPU 5.72 → 6.07 (kept, GLB) and Torrentoad 5.81 → 5.84 (a tie, not kept). The item stays under 6 until Torrentoad gets new art (the gaunt upright stance).
+- These are GLB edits on live remakes, with their scores recorded in each remake flag's `_why`. Evidence is in `r23/`.
+
+**Batch 1b results (r24):**
+- **F36#58** Pebbik poses: CPU 5.98 → 6.07. **At or above 6.0.** GLB rest settled, hit hop ×0.3.
+- **F36#54** Mosshock poses: 5.74 → 5.98 (kept, 0.02 short).
+- **F36#70** Sparkit poses: 5.56, a tie, not kept. It needs new art (legs, coat).
+- Evidence is in `r24/`.
+
+**Batch 2, if disk allows:** the shared creature-stage items F38#1, F38#2 and F38#26 (Meadows collapse, hurt poses, ground contact), F39#6 (faint state), and F41#13 (Fulgocobra and Stormraven electric finish, a coat-flag arm).
+
+## PR #799: both CI failures fixed on this branch (2 Nov ~15:40 UTC). Bring in head `f89846eb5` or later.
+
+1. **`test_every_runtime_3d_texture_uses_vram_compression`:** fixed in `f89846eb5`.
+   - The 33 sidecars are on mode 2, via `texture_import_policy.py --apply` and a headless reimport.
+   - `--check` PASS (1434). `test_texture_import_policy.gd` passes locally.
+2. **`test_judged_creature_coat_flags_ship_on_with_their_scores`:** fixed in `7a5951fbf`.
+   - A judged coat must grade a `candidate_owner1101/` texture, or the exact live albedo of a remake's current model (r9 or r10). It never grades an installed model.
+   - The same exact-live-albedo rule backs the "keys the remake's live albedo" check at `test_enabled_coat_flags_apply_every_key`.
+   - `test_remake_owner1101_finish.gd`: every test passes locally except `apply_every_key` for species outside this container's partial import set (textures not imported here; CI imports all).
+
 ## ANSWER FOR THE CREATURE LANDING PR (2 Nov ~14:15 UTC)
 
 - **Landing-ready head:** `7c7de66c9`, which is `9b1e168f6` plus a clean merge of origin/main (#798), or any later head of this branch.

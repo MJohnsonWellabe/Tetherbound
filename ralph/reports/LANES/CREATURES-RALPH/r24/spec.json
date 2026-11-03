@@ -1,0 +1,33 @@
+[
+ {
+  "label": "mosshock",
+  "a": "sides/mosshock-base.png",
+  "b": "sides/mosshock-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: hit react, faint end, rest (settling), rest (settled). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether each pose reads and stays grounded.",
+  "defects": [
+   "hit react leaves the floor",
+   "rest pose floats above the floor"
+  ]
+ },
+ {
+  "label": "pebbik",
+  "a": "sides/pebbik-base.png",
+  "b": "sides/pebbik-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: hit react, faint end, rest (settling), rest (settled). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether each pose reads and stays grounded.",
+  "defects": [
+   "faint end reads belly-up",
+   "rest pose floats above the floor"
+  ]
+ },
+ {
+  "label": "sparkit",
+  "a": "sides/sparkit-base.png",
+  "b": "sides/sparkit-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: hit react, faint end, rest (settling), rest (settled). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether each pose reads and stays grounded.",
+  "defects": [
+   "spindly stick legs",
+   "boneless sprawled faint",
+   "rest pose floats above the floor"
+  ]
+ }
+]
