@@ -126,8 +126,12 @@ func _route_to(site: Node3D) -> bool:
 		var side := 1.0 if player.global_position.z >= npc.global_position.z else -1.0
 		var front := Vector2(npc.global_position.x, npc.global_position.z + side * 2.0)
 		var walker := ROUTE.new()
-		arrived = await walker.walk_route(_tree, world, _game, player, rig,
-			Vector3(front.x, float(world.call("ground_height_at", front.x, front.y)), front.y))
+		var front3 := Vector3(front.x, float(world.call("ground_height_at", front.x, front.y)), front.y)
+		arrived = await walker.walk_route(_tree, world, _game, player, rig, front3)
+		# The challenge prompt (raised 1.07 m) is nearest only within 0.37 m of
+		# her z axis; the route's 1.65 m arrival ring does not move a player
+		# already beside her (3 Nov attempt 2), so finish on the axis itself.
+		arrived = arrived and await walker._walk_to(front3, 0.25, 600)
 		_failures.append_array(walker.failures)
 		_receipts.append({"beat": "master_front_of_rematch_zones", "front": str(front), "arrived": arrived})
 	_receipts.append({"beat": "master_travel", "arrived": arrived, "stand": str(stand), "player": str(player.global_position)})
