@@ -1,0 +1,29 @@
+{
+ "Ig": {
+  "anchor": false,
+  "label": "F38#19",
+  "A": "/tmp/claude-0/work/judge/b5/k/sides/F38_19_b.jpg",
+  "B": "/tmp/claude-0/work/judge/b5/k/sides/F38_19_a.jpg"
+ },
+ "Ny": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Rn": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Qt": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ww": {
+  "anchor": false,
+  "label": "F39#23",
+  "A": "/tmp/claude-0/work/judge/b5/k/sides/F39_23_a.jpg",
+  "B": "/tmp/claude-0/work/judge/b5/k/sides/F39_23_b.jpg"
+ }
+}
