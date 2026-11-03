@@ -4,5 +4,11 @@
   "enabled": false,
   "colour": "#b8c8ff",
   "energy": 0.75,
-  "power": 2.4
+  "power": 2.4,
+  "r2": {
+    "_why": "Visual lane (3 Nov 2026), F41#18: r1 (0.75 / 2.4) judged CPU v1/b11 5.58 -> 5.98 (officer reads pale grey in A, still no rank read). r2 widens and brightens the edge so small post-view figures separate from the moss. Only energy and power change. OFF until judged.",
+    "enabled": false,
+    "energy": 1.15,
+    "power": 1.7
+  }
 }

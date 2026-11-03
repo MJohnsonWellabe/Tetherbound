@@ -15,7 +15,15 @@ const META := &"stormwood_character_rim"
 static func settings() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) \
 		if FileAccess.file_exists(CONFIG) else {}
-	return parsed if parsed is Dictionary else {}
+	var cfg: Dictionary = parsed if parsed is Dictionary else {}
+	# Visual lane 3 Nov: r2 widens and brightens the rim (CPU v1/b10: r1 5.58 -> 5.98
+	# for F41#18), applied only while r2.enabled; OFF until judged.
+	var r2: Variant = cfg.get("r2", {})
+	if r2 is Dictionary and bool((r2 as Dictionary).get("enabled", false)):
+		for key: String in ["energy", "power"]:
+			if (r2 as Dictionary).has(key):
+				cfg[key] = (r2 as Dictionary)[key]
+	return cfg
 
 
 ## Dress every body under `container` now and every body added to it later.

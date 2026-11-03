@@ -120,6 +120,19 @@ func test_stormwood_character_rim_ships_off_and_dresses_only_shadowed_meshes() -
 	body.free()
 
 
+## Visual lane 3 Nov: the r2 rim (wider, brighter) ships OFF and only ever
+## replaces energy and power.
+func test_stormwood_character_rim_r2_ships_off_and_only_changes_energy_and_power() -> void:
+	var rim := preload("res://scripts/world/stormwood_character_rim.gd")
+	var cfg := _json("res://data/config/stormwood_character_rim.json")
+	var r2: Dictionary = cfg.get("r2", {})
+	assert_false(bool(r2.get("enabled", true)), "rim r2 ships OFF until judged")
+	assert_true(float(r2.get("energy", 0.0)) > float(cfg.get("energy", 0.0)), "r2 brightens the rim")
+	var shipped: Dictionary = rim.settings()
+	assert_eq(float(shipped.get("energy", 0.0)), float(cfg.get("energy", -1.0)), "OFF leaves the shipped energy")
+	assert_eq(float(shipped.get("power", 0.0)), float(cfg.get("power", -1.0)), "OFF leaves the shipped power")
+
+
 func test_road_puddles_ship_off() -> void:
 	var cfg := _json("res://data/config/stormwood_road_current.json")
 	var puddles: Dictionary = cfg.get("puddle_candidate", {})
