@@ -5,6 +5,7 @@ extends RefCounted
 ## (data/config/hero_landmarks_1101.json; assets and provenance in
 ## assets/props/meshy-1101/<id>). None adds or moves a collider, trigger,
 ## route, gate or terrain sample; each only adds visuals or hides old visuals.
+const CROWN_ARCH_VL := "res://data/config/crown_arch_vl.json"
 const CONFIG := "res://data/config/hero_landmarks_1101.json"
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
@@ -44,6 +45,23 @@ static func crown_arch_overlay(cfg: Dictionary, config: Dictionary = {}) -> Dict
 		merged[key] = cand[key]
 	return merged
 
+
+
+## Visual lane (3 Nov): the Blender four-legged crowned arch
+## (crown_arch_vl.json). ON replaces only model, height and sink, never yaw,
+## slab or passage keys; it reads as an arch from every approach.
+static func crown_arch_vl_overlay(cfg: Dictionary) -> Dictionary:
+	var vl: Variant = JSON.parse_string(FileAccess.get_file_as_string(CROWN_ARCH_VL))
+	if not vl is Dictionary or not bool((vl as Dictionary).get("enabled", false)):
+		return cfg
+	var built := cfg.duplicate(true)
+	for key: String in ["model", "height_m", "sink_m"]:
+		if (vl as Dictionary).has(key):
+			built[key] = vl[key]
+	var r2: Dictionary = (vl as Dictionary).get("r2_candidate", {})
+	if bool(r2.get("enabled", false)) and r2.has("model"):
+		built["model"] = r2["model"]
+	return built
 
 ## Glass Sink (P2-070): the terraced basin ring set into the sink floor with a
 ## glass pool in its open centre. `world` needs ground_height_at only for the

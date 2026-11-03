@@ -1,0 +1,4 @@
+Mj: none
+Ly: "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+Rc: none
+Ad: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

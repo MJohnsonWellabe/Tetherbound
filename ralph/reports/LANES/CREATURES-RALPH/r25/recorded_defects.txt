@@ -1,0 +1,5 @@
+Yd: "no clear charged material contrast: mottled brown with no visible charged seam"
+Pl: "no clear charged material contrast: mostly uniform cobalt"
+Fu: none
+Mh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Qt: none

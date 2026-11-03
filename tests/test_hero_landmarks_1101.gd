@@ -58,7 +58,8 @@ func test_all_three_ship_off_with_a_declared_scope() -> void:
 func test_crown_arch_off_leaves_the_landed_arch_settings() -> void:
 	var landed := CROWN.with_round2(_json("res://data/config/crown_arch_hero.json"))
 	assert_eq(HERO.crown_arch_overlay(landed), landed, "OFF must not change the hero arch")
-	assert_eq(CROWN.settings(), landed, "the shipped settings are the round-2 arch")
+	assert_eq(CROWN.settings(), HERO.crown_arch_vl_overlay(landed),
+		"the shipped settings are the round-2 arch with the judged Blender arch model")
 
 
 func test_crown_arch_on_swaps_the_model_keeps_yaw_and_colliders() -> void:
@@ -180,3 +181,27 @@ func test_veilfall_on_replaces_the_far_cone_only_beyond_the_handoff() -> void:
 		"old fall ribbons stop only past the handoff")
 	assert_eq(_colliders(root), 0, "render-only: no collider")
 	(f[0] as Node).free()
+
+
+## Visual lane (3 Nov): the Blender four-legged crowned arch ships ON with its
+## judged CPU score (v1/arch1: 3.91 -> 5.92 mapped), its model is imported, and
+## it declares only model, height and sink (crown_arch_overlay never takes yaw,
+## slab or passage keys from it).
+func test_crown_arch_vl_ships_on_with_its_score_and_declares_only_model_keys() -> void:
+	var vl := _json(HERO.CROWN_ARCH_VL)
+	assert_true(bool(vl.get("enabled", false)), "crown_arch_vl ships ON (judged gain)")
+	assert_true(str(vl.get("_why", "")).contains("5.92"), "crown_arch_vl records its mapped score")
+	assert_true(ResourceLoader.exists(str(vl.get("model", ""))), "crown_arch_vl model is imported")
+	assert_true(float(vl.get("height_m", 0.0)) >= 5.5, "the arch stands at least 5.5 m")
+	for key: String in vl:
+		assert_true(key.begins_with("_") or key in ["enabled", "model", "height_m", "sink_m", "r2_candidate"],
+			"crown_arch_vl declares only model keys, not %s" % key)
+	var landed := CROWN.with_round2(_json("res://data/config/crown_arch_hero.json"))
+	var on := HERO.crown_arch_vl_overlay(landed)
+	assert_eq(str(on.model), str(vl.model), "ON shows the judged r1 Blender arch")
+	var r2: Dictionary = vl.get("r2_candidate", {})
+	assert_false(bool(r2.get("enabled", true)), "the r2 arch ships OFF until judged")
+	assert_true(ResourceLoader.exists(str(r2.get("model", ""))), "the r2 arch model is imported")
+	for key: String in landed:
+		if key not in ["model", "height_m", "sink_m"]:
+			assert_eq(on[key], landed[key], "ON keeps the landed %s" % key)

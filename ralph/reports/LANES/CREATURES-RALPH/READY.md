@@ -1,7 +1,115 @@
 # CREATURES-RALPH: running status
 
+## VISUAL LANE (new session, 3 Nov ~00:45 UTC): setup done, batch plan and ETA for the 89 items
+
+**Setup (measured):** fresh disk allowance (about 13 GB free). Godot 4.7-stable at `/usr/local/bin/godot`; the **full** headless import of the whole project is running (no `.gdignore` trimming), so biome, landmark, HUD and fight items can now be captured here. Portable **Blender 4.2.3 LTS** runs from scratch (`blender --version` OK), so new meshes are built here; no Meshy, no GPU.
+
+**Yardstick:** every score below is CPU Low/Compatibility, tools/visual_judge (JUDGE_PROMPT, `anchor_tiles.py --pairs 3`, three code-blind judges, `calibrate.py`), baseline (current branch = main + PR #803 content) and candidate in the same run. Done = mapped Bar A ≥ 6.0 CPU, recorded as "CPU <base> -> <cand>".
+
+**Batch U (the 12 unscored, one capture set per biome; one Godot at a time):**
+| Set | Tool (TECHNICAL §8.1 form) | Covers | ETA (UTC) |
+|---|---|---|---|
+| U1 Meadows | `capture_f38_matrix.gd --f38-preset=Low --f38-baseline --times=day,night --subset=<6 sites>` | F38#0, F38#41 (+ re-score F38#24 mountains, #22 mill, #23 relay yard, #20 stronghold, #30 Warrens) | 03:30 |
+| U2 Tidewake | `capture_tidewake_f13_5.gd --camera-set=F39-look.json --preset=Low` + `phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn` | F39#30, F39#32, F39#21 (victory panel) (+ F39#31 Veilfall, F13#5, F39#1/#2/#15) | 05:30 |
+| U3 Cloudreach | `capture_cloudreach_f40_matrix.gd --piece=N` (day/night/weather pieces of 3 stands, `--ground-cover-cache`) + `phase2_capture_catch.gd --biome=cloudreach` (candy taken first) | F40#0, F40#19, F40#21, F40#18 (+ F40#1/#2/#4/#11) | 08:00 |
+| U4 Stormwood | `capture_stormwood_f10_matrix.gd --phases=calm,break` + `capture_named_fights_f10_6.gd` | F41#22, F41#24 (+ F41#1 Stormheart, #5, #17, #10) | 09:30 |
+| U5 Named fights | `capture_named_fight.gd` Warden and Riverwatch; Venn/Stormwood reused from U2/U4 | F22#4 (visual half; C2/C3 smokes are hours each, reuse the recorded 6/6, 22/24, 15/18, 48/54 and rerun only Riverwatch) | 10:30 |
+
+Judging runs in parallel with the next capture (judges are agents, not Godot). Unscored items get their own score as each set lands.
+
+**Then worst first (fix batches):** F39#31 Veilfall 3.35, F13#5 3.61, F41#18 uniforms 3.91 (material/rank markers, scene-level), F41#8 named silhouettes 4.03 (Blender outfit variants on installed cast), F41#1 Stormheart 4.41, F38#24 mountains 4.42 (Blender continuous ridge backdrop), F39#12 bed and F39#13 workbench (Meshy props from 31 Oct are already ON; re-baseline first, the old scores may predate them). New Blender meshes keep a drafted reference, a 1.80 m trainer scale check and provenance, flag-OFF until judged.
+
+**Progress (3 Nov ~01:00 UTC):**
+- **Landed on this branch (ready for the coordinator):**
+  - `a3825550` **F41#13**: `creatures_ralph_stormraven_charge` ON, Stormraven **CPU 5.26 -> 6.72** (r25, three judges, calibrated); test `test_remake_owner1101_finish.gd` JUDGED_ON entry "6.72", 5 tests / 347 assertions pass. Fulgocobra stays OFF (5.83 -> 5.92, flat), so F41#13 is half met: Fulgocobra needs a vein mask on its gold bands.
+  - `d98884fc` **F39#12 arm (OFF)**: a Blender-built raised woven nest bed (`meshy_camp_props.json bed.nest_candidate`), answering the GPU WD2 judges' "reads as a fire pit; path: a raised nest or cushion with bedding". Provenance, drafted reference and 1.80 m scale check in `assets/props/vl-1103/nest_bed/`.
+  - `355cc9d0` import UID normalisation for 58 remake textures (no references to the old UIDs).
+- **Found:** 53 flag-OFF arms in `data/config` cite P2 items on this list and were waiting on a GPU that is now off. They cover 45 items. Each biome is captured twice in one CPU run (baseline, then the same launches with that biome's arms ON as a temporary overlay, reverted after), and each item is judged A/B on its own frames. The launch list comes from `VISUAL/item-scores/job.json` (each frame's repro command, `--subset`s merged per boot).
+- **Running now:** Stormwood baseline (10 boots, 16 items incl. F41#18 and F41#8), then Stormwood candidate (rim, role accessories, dialogue lens, fight fade, Crown Arch, Glass Sink x2, road puddles, harvest round 2, candy tiers). Tidewake (14 boots, 23 items, 12 arms incl. Veilfall x2, the nest, victory focus) is queued behind it. ETA: Stormwood scores ~06:00, Tidewake ~10:00 UTC; Meadows and Cloudreach follow.
+- **Stand note (F41#1):** the Stormheart `approach` stand renders from inside the hollow trunk (wooden ceiling, banners), which is why the item reads as "a dark ring". It is a stand defect rather than the tree; I record it in the verdict and do not move the camera to change a score.
+
+**Queue update (3 Nov ~01:45 UTC, one Godot at a time, flock-serialised):** Stormwood items (running) → Tidewake items (import first; arms incl. the nest and the new workbench `a1defe43`) → Tidewake look (`capture_tidewake_f13_5.gd`, F39-look 11 views + T2-current 4 views, base and Veilfall/current/shore arms: F39#30, F39#31, F39#32, F13#5) → **unscored set** (Meadows `capture_f38_matrix` 4 sites day for F38#0/#41; Cloudreach `capture_cloudreach_f40_matrix` pieces 3/51/83/91 for F40#0/#19/#21; `capture_stormwood_f10_matrix` calm+break for F41#22/#24; Riverwatch named fight for F22#4; Stormwood fights base/candidate for F41#3/#16/#21) → Meadows items → Cloudreach items. The matrix rows asking for ≥200 frames get a CPU subset score, stated as a subset; a full 200-frame CPU recapture takes about 40 h for Cloudreach alone.
+- New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
+- New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
+
+**PR #804 CI fixes (3 Nov ~08:45 UTC): both are fixed at `e8ba5211` or later; take this file's commit as the head.**
+1. `tests/test_hero_landmarks_1101.gd`: `test_crown_arch_off_leaves_the_landed_arch_settings` is restored to its own job (the OFF assertion `HERO.crown_arch_overlay(landed) == landed`, plus the shipped-settings assertion against `HERO.crown_arch_vl_overlay(landed)`); the vl/r2 checks live only in `test_crown_arch_vl_ships_on_with_its_score_and_declares_only_model_keys`. Local: **8 tests, 74 assertions, 0 failed**.
+2. Texture policy: the four `crown_arch_r2_arch_*.png.import` sidecars (and every vl-1103 and Fulgocobra goldvein sidecar) are mode 2 after `--apply` and a full headless import; `texture_import_policy.py --check` over the whole tree: **PASS, 1453 sidecars**. `test_texture_import_policy.gd`: **2 tests, 1589 assertions, 0 failed** (local, this head).
+- From now on, before every push I run `test_texture_import_policy` and the unit tests for every test file I touched.
+
+**LANDING-READY GAIN (3 Nov ~07:45 UTC), `b36b6105`:** **F41#17 Crown Arch CPU 3.91 -> 5.92 mapped (+2.01)**, `data/config/crown_arch_vl.json` ON (Blender four-legged crowned arch; three judges, linear slope 1.51, r 0.96, RMSE 0.24, confirming batch; `v1/arch1/VERDICT.md`). Test: `tests/test_hero_landmarks_1101.gd` (`test_crown_arch_vl_ships_on_with_its_score_and_declares_only_model_keys` asserts ON and "5.92"; the shipped-settings assertion now expects the judged arch). The r1 OFF version passed 8 tests / 57 assertions; the ON version's run is queued after the r2 import. 0.08 under 6.0; r2 (`r2_candidate`, OFF: dark slate, broken mossy flagstones over the slab) is captured next.
+
+**Judged (3 Nov ~04:40 UTC), `v1/sw1/VERDICT.md`:** first CPU scores of the current branch, Stormwood arms ON vs OFF (linear fit, slope 1.38, r 0.87, RMSE 0.42, confirming batch):
+| Row | Item | CPU base -> arms ON | Decision |
+|---|---|---|---|
+| F41#4 | named destinations | 5.25 -> 5.21 | arms stay OFF |
+| F41#2 | Surge phases | 5.02 -> 4.93 | arms stay OFF |
+| F41#5 | forest ground | 4.75 -> 4.70 | arms stay OFF |
+| F41#17 | Crown Arch | 4.70 -> 4.56 | `hero_landmarks_1101.crown_arch` stays OFF |
+| F41#1 | Stormheart | 4.52 -> 4.33 | arms stay OFF |
+- No Stormwood arm gains; `stormwood_road_current.puddle_candidate` draws "flat lavender decal discs" in every frame (all three judges). All three ask for new art for the Crown Arch and the Stormheart.
+- **New OFF arm `7ede7c5e` F41#17:** a Blender four-legged crowned arch (`data/config/crown_arch_vl.json`; an arch faces every approach, so the stand reads it as an arch whatever the yaw). Its test and its CPU capture are queued after the Tidewake import.
+
+**Reprioritised per the coordinator (3 Nov ~04:45 UTC):** after the Stormwood step the queue runs, in order:
+- **UI step:** the Meadows, Tidewake and Cloudreach UI and catch launches (F38#4/#7/#9/#13/#19/#33, F39#9/#23, F40#14/#18), with every UI arm ON as the candidate. The arms: `hud.json` quiet_empty_slots, hud_lean, catch_card, message_clears_prompt and victory_focus; `menu.json` satchel_focus and shell_board; `catching.json framed_camera.r2`; `camfx.json catch_orb`; `catch_kit.json`.
+- **Pose step:** F38#1/#2/#26 and F39#6 in the Meadows/Tidewake creature frames, plus F36#56 Nightburrow on the neutral stage. The r23/r24 recipe is applied to the live remake GLBs of Terrapup, Bramblebun, Pipwing, Burrowback (= Nightburrow's model), Aquaryn r9 and Ripplet: `ground_clip.py --settle` on rest and faint, hit hop ×0.3. Terrapup and Burrowback also get their hit-react spine and root amplified ×1.8 for F38#2 "hurt frames keep the idle silhouette". A GLB is kept only where its row gains.
+- **Then:** Fulgocobra, Tidewake, the unscored set, Meadows and Cloudreach.
+
+**Not reachable here, stated now:** `capture_f39_tidewake_matrix.gd`, `capture_f41_stormwood_catalog.gd`, `capture_stormwood_look.gd` refuse CPU; I use the CPU tools above for those matrices (the same stands where they overlap) and say so in each verdict.
+
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
 
+
+
+
+## HANDOFF (3 Nov ~00:20 UTC): this session stops; the visual lane moves to session_01GPgpLTSwTp4iBviA53GNuS on this branch
+
+**State:**
+- Batch 1 (F39#11, F39#24 Riptusk, F36#58 Pebbik, F36#54 Mosshock) is committed and in PR #803. The r23 and r24 evidence is on this branch.
+- Everything is pushed, and the tree is clean.
+
+**Half-done:**
+- **F41#13 electric finish (r25).**
+  - `creatures_ralph_electric_charge` is committed OFF. It lights the Fulgocobra and Stormraven glow maps at energy 2.6 over a matte body.
+  - The CPU A/B capture is done; the sheet is `r25/_sheet_r25.jpg` and the `key.json` and `spec.json` are committed.
+  - The three judges were mid-run when this session stopped, so it has **no score**. Re-capture A (main) and B (flag ON) with `capture_f36_poses.gd -- --species=fulgocobra,stormraven --whole-body --context`, then judge.
+  - **Judged after the stop (all 3 judges, calibrated; `r25/VERDICT.md`):**
+    - Stormraven: 5.26 → **6.72** (+1.46).
+    - Fulgocobra: 5.83 → 5.92 (flat).
+    - The flag stays OFF. Next: split it into a Stormraven-only flag, turned ON with 6.72 in `_why` and in `JUDGED_ON`, and give Fulgocobra a vein mask on its gold bands.
+  - The judges also flag Stormraven's raised wing as a flat "card" in hit and faint. That is a mesh or skin issue.
+- **F39#4 shiny finish:** scoped, not started. The remakes ship no shiny textures, so a shiny remake falls back to a flat tint (the "near-uniform hot magenta"). It needs shiny colourways for the remakes.
+
+**Not started; they need a full import (a fresh disk):**
+- F38#1, F38#2 and F38#26 (Meadows creature collapse, hurt and ground contact) are captured with `tools/capture_f38_fight.gd` in the real yard.
+- F39#6 is the same, in Tidewake.
+- Every biome, landmark and settlement item.
+
+**Shelved and flag-OFF, the coordinator's call:**
+- Mangrove Monitor r21 (GLB and olive ON, already in PR #803 or later);
+- the Skyrill and Tuskroot rim arms (OFF);
+- Tuskroot ×1.1 (OFF);
+- Abyssal Guardian r22 (GLB);
+- the water_mangrove_monitor probe (not committed).
+
+**What worked (the runbook, CPU, this container):**
+- **Import one species at a time.** Temporary `.gdignore`s via a keepset; drop each species' `.godot/imported` after its capture.
+- **Capture:** `capture_f36_poses.gd -- --species=X --whole-body --context [--roles=hit,faint,rest]`. `--roles` is new and covers the rest-pose items.
+- **Rig fixes with `tools/art_pipeline`:**
+  - `ground_clip.py` (`--percentile`, `--settle`, `--hop`): ground or settle last, after any limb amplify;
+  - `amplify_clip.py` for hit ease and faint droop;
+  - `relax_stretched_weights.py` for stretched skin;
+  - a z −80° upper-limb fold for flipper or leg props.
+- **Coats:**
+  - `grade_regions.py`, with `detail_only`, `sat_scale`, `hue_shift` and regions;
+  - coat flags take `albedo`, `roughness`, `specular`, `emission` and `rim` (rim renders on Forward+ only, never on Compatibility).
+- **Judging:**
+  - `anchor_tiles.py --pairs 3 --include craft`, copy `docs/reference`, then the JUDGE_PROMPT text block;
+  - three general-purpose judges, then `calibrate.py`.
+- **What did not work:**
+  - value-ramp or matte coats on Aquaryn (two failures);
+  - a roster grounded-hit clip flag (invisible at the stage camera);
+  - lightening Tuskroot's hide (GPU regression).
 
 
 ## NEW ASSIGNMENT (owner via coordinator, 2 Nov ~22:35 UTC): the 89 visual items to ≥ 6.0 CPU mapped. First batch plan and constraints

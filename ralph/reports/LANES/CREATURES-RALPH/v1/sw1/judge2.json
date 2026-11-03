@@ -1,0 +1,9 @@
+{"sets": {
+"Hv": {"A": {"bar_a": 4.8}, "B": {"bar_a": 6.6}},
+"Dr": {"A": {"bar_a": 6.0}, "B": {"bar_a": 5.9}},
+"Ec": {"A": {"bar_a": 5.1, "defects": {"d": "PRESENT"}}, "B": {"bar_a": 5.3, "defects": {"d": "PRESENT"}}},
+"Bj": {"A": {"bar_a": 4.4, "defects": {"d": "PARTIAL"}}, "B": {"bar_a": 4.6, "defects": {"d": "PARTIAL"}}},
+"Vf": {"A": {"bar_a": 5.8}, "B": {"bar_a": 5.9}},
+"Es": {"A": {"bar_a": 5.0, "defects": {"d": "PRESENT"}}, "B": {"bar_a": 4.9, "defects": {"d": "PRESENT"}}},
+"Uz": {"A": {"bar_a": 5.1, "defects": {"d": "PRESENT"}}, "B": {"bar_a": 5.0, "defects": {"d": "PRESENT"}}},
+"Eo": {"A": {"bar_a": 4.4, "defects": {"d": "PRESENT"}}, "B": {"bar_a": 4.6, "defects": {"d": "PRESENT"}}}}}

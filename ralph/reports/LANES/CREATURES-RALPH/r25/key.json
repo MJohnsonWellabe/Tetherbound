@@ -1,0 +1,29 @@
+{
+ "Yd": {
+  "anchor": false,
+  "label": "fulgocobra",
+  "A": "sides/fulgocobra-cand.png",
+  "B": "sides/fulgocobra-base.png"
+ },
+ "Pl": {
+  "anchor": false,
+  "label": "stormraven",
+  "A": "sides/stormraven-cand.png",
+  "B": "sides/stormraven-base.png"
+ },
+ "Fu": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Mh": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Qt": {
+  "anchor": true,
+  "A": "f36_0_npc:C8B",
+  "B": "f36_0_npc:C8A"
+ }
+}
