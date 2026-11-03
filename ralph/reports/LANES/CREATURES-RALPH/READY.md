@@ -32,6 +32,12 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**LANDING-READY GAINS (3 Nov ~14:40 UTC), `1f19f24b` (v1/b5; three judges, linear slope 1.57, r 0.90, RMSE 0.50, confirming batch):**
+- **F39#23 catch-chance contrast: CPU 6.02 -> 6.91 mapped, at or above 6.0.** `capture_readout_visual.json` `readout_side_enabled` + `contrast_r2` ON. The readout moves beside the ring onto a near-opaque plate, with a 32 px primary-colour caption. Defect FIXED 3/3.
+- **F38#19 exploration HUD: CPU 5.23 -> 5.92 mapped (+0.69).** `house_textiles.json` ON: the loft bed comforter changes from plum-maroon (flagged as oxblood by all three judges) to sea-teal. 0.08 short of 6.0; `hud_lean` (+0.21 in v1/ui1a) is the next lever.
+- Local, this head: `test_capture_readout_side.gd` 6/12, `test_house_textiles.gd` 3/7, `test_texture_import_policy.gd` 2/1589, `test_map_baker.gd` 7/16; all 0 failed.
+- New OFF arm `461c4c94` + `3af001e6`, **F38#4 map paint** (`map_paint.json`): hillshade, canopy from the baked tree layers, painterly grain. OFF leaves the bake byte-identical (test_map_baker passes); a scratch bake takes about 7 s. Its F38#4 capture is queued.
+
 **LANDING-READY GAIN (3 Nov ~12:10 UTC), `e9cdee30`: F39#9 at or above 6.0 CPU.** `hud.json message_clears_prompt` ON: Tidewake catch frames **CPU 6.14 -> 6.75 mapped** with this flag alone (v1/ui1c; three judges, linear slope 1.51, r 0.81, RMSE 0.69, confirming batch). Catches still complete with it; the full UI arm set broke catch completion 3/3, so the rest of that set stays OFF. Local: `test_storm_cams_candidates.gd` **14 tests, 48 assertions, 0 failed** (asserts ON and "6.75"). Also scored as shipped, no change needed: **F38#9 menu shell 6.08** (v1/ui1a), **F40#14 Cloudreach map label 6.29** (v1/ui1c).
 
 **PR #805 `smoke_stormwood_spawn_slicing` (CI 2070 ms > 2000 ms): measured here, and the r2 arch is not the cause (3 Nov ~12:05 UTC).**
