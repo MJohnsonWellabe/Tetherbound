@@ -32,6 +32,21 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**LANDING-READY GAIN (3 Nov ~12:10 UTC), `e9cdee30`: F39#9 at or above 6.0 CPU.** `hud.json message_clears_prompt` ON: Tidewake catch frames **CPU 6.14 -> 6.75 mapped** with this flag alone (v1/ui1c; three judges, linear slope 1.51, r 0.81, RMSE 0.69, confirming batch). Catches still complete with it; the full UI arm set broke catch completion 3/3, so the rest of that set stays OFF. Local: `test_storm_cams_candidates.gd` **14 tests, 48 assertions, 0 failed** (asserts ON and "6.75"). Also scored as shipped, no change needed: **F38#9 menu shell 6.08** (v1/ui1a), **F40#14 Cloudreach map label 6.29** (v1/ui1c).
+
+**PR #805 `smoke_stormwood_spawn_slicing` (CI 2070 ms > 2000 ms): measured here, and the r2 arch is not the cause (3 Nov ~12:05 UTC).**
+- **Code:** the smoke builds the host realm shell with `simulation_only = true` (line 45). In that mode `stormwood_arch_runtime.gd` returns right after the footing collider (line 114), before the slab, `ArchPresentation` and `CROWN_HERO.apply`, so no arch model (r1 or r2) and no arch texture is loaded during the measured boot.
+- **Measured** on this 4-core container, `godot --headless --path . --script tests/smoke_stormwood_spawn_slicing.gd`, two runs per state, nothing else running (Godot lock held):
+
+| State | run 1 | run 2 |
+|---|---|---|
+| r2 ON (PR #805) | 2357 ms | 3152 ms |
+| r2 OFF, r1 ON | 2459 ms | 2177 ms |
+| Blender arch fully OFF (main's state) | 2356 ms | 2129 ms |
+
+- Every state, main's included, goes over 2000 ms here: the shell-boot gap is close to the limit on a 4-core runner, and the run-to-run spread (2.1-3.2 s) is wider than any difference between the states. CI's 2070 ms is the same near-limit gap, not an asset regression.
+- **Not changed:** the limit and the smoke are untouched, and nothing on this branch alters the shell boot path. The fix belongs to whoever owns the encounter-director wild-spawn slicing (`wild_spawn_slice_ms`) or the sliced world build. A CI rerun of the shard should pass when it lands under the limit.
+
 **LANDING-READY GAIN (3 Nov ~10:30 UTC): F41#17 Crown Arch at or above 6.0 CPU.** `crown_arch_vl.json` `r2_candidate` ON: **CPU r1 5.37 -> r2 6.19 mapped** (v1/arch2; three judges, linear slope 0.98, r 0.65, RMSE 0.64, confirming batch). The item went from the shipped Meshy pillar at 3.91 (v1/arch1) to 6.19. Local, this head: `test_hero_landmarks_1101.gd` **8 tests, 75 assertions, 0 failed** (asserts r2 ON and "6.19"); `test_texture_import_policy.gd` **2 tests, 1589 assertions, 0 failed**; `texture_import_policy.py --check` PASS. New OFF arm `0979aba4`: loft bed comforter retint (`house_textiles.json`; judges flag the plum-maroon comforter as reserved oxblood), `test_house_textiles.gd` 3/6 pass, `grandpa_house.gd` --check-only clean.
 
 **PR #804 CI fixes (3 Nov ~08:45 UTC): both are fixed at `e8ba5211` or later; take this file's commit as the head.**

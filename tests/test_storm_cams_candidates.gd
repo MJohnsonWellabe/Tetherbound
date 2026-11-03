@@ -165,7 +165,8 @@ func test_catch_framed_r2_and_hud_prompt_clear_ship_off() -> void:
 			> float((catching["framed_camera"]["resolve_camera"] as Dictionary)["pitch_start_deg"]),
 		"round 2 is a shallower resolve shot")
 	var hud := _json("res://data/config/hud.json")
-	assert_false(bool((hud["message_clears_prompt"] as Dictionary).get("enabled", true)), "the prompt clear ships OFF")
+	assert_true(bool((hud["message_clears_prompt"] as Dictionary).get("enabled", false)), "the prompt clear ships ON (judged gain)")
+	assert_true(str((hud["message_clears_prompt"] as Dictionary).get("_why", "")).contains("6.75"), "the prompt clear records its mapped score")
 
 
 func test_stormwood_value_lift_ships_off_and_lifts_when_on() -> void:

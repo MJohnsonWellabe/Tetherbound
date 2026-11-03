@@ -1,0 +1,29 @@
+{
+ "Pj": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Nf": {
+  "anchor": false,
+  "label": "F40#14",
+  "A": "/tmp/claude-0/work/judge/ui1c/k/sides/F40_14_b.jpg",
+  "B": "/tmp/claude-0/work/judge/ui1c/k/sides/F40_14_a.jpg"
+ },
+ "Mo": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Hs": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Wj": {
+  "anchor": false,
+  "label": "F39#9",
+  "A": "/tmp/claude-0/work/judge/ui1c/k/sides/F39_9_a.jpg",
+  "B": "/tmp/claude-0/work/judge/ui1c/k/sides/F39_9_b.jpg"
+ }
+}
