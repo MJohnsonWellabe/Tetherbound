@@ -733,8 +733,8 @@
       }
     },
     "creatures_ralph_fulgocobra_goldvein": {
-      "_why": "Visual lane (3 Nov 2026), board F41#13 Fulgocobra half (r25: lighting its glow map alone stayed flat, 5.83 -> 5.92; judges: 'needs real emissive veins along its gold bands'). Emission = its glow map plus the bright scale ridges inside its gold bands (hue 25-52 deg, pale electric gold), matte body. OFF until judged. ON (visual lane v1/b12, 3 Nov 2026): CPU 6.06 -> 6.52 mapped (three code-blind judges, linear slope 1.26, r 0.91, anchor RMSE 0.35, confirming batch; pale gold bands separate from the black hood, defect PARTIAL 3/3). HELD OFF (coordinator, 3 Nov ~19:57 UTC): turns ON again once test_remake_owner1101_finish re-runs clean.",
-      "enabled": false,
+      "_why": "Visual lane (3 Nov 2026), board F41#13 Fulgocobra half (r25: lighting its glow map alone stayed flat, 5.83 -> 5.92; judges: 'needs real emissive veins along its gold bands'). Emission = its glow map plus the bright scale ridges inside its gold bands (hue 25-52 deg, pale electric gold), matte body. OFF until judged. ON (visual lane v1/b12, 3 Nov 2026): CPU 6.06 -> 6.52 mapped (three code-blind judges, linear slope 1.26, r 0.91, anchor RMSE 0.35, confirming batch; pale gold bands separate from the black hood, defect PARTIAL 3/3).",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
           "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_goldvein.png",
