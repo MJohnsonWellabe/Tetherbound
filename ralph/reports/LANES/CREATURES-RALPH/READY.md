@@ -19,6 +19,15 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 
 **Then worst first (fix batches):** F39#31 Veilfall 3.35, F13#5 3.61, F41#18 uniforms 3.91 (material/rank markers, scene-level), F41#8 named silhouettes 4.03 (Blender outfit variants on installed cast), F41#1 Stormheart 4.41, F38#24 mountains 4.42 (Blender continuous ridge backdrop), F39#12 bed and F39#13 workbench (Meshy props from 31 Oct are already ON; re-baseline first, the old scores may predate them). New Blender meshes keep a drafted reference, a 1.80 m trainer scale check and provenance, flag-OFF until judged.
 
+**Progress (3 Nov ~01:00 UTC):**
+- **Landed on this branch (ready for the coordinator):**
+  - `a3825550` **F41#13**: `creatures_ralph_stormraven_charge` ON, Stormraven **CPU 5.26 -> 6.72** (r25, three judges, calibrated); test `test_remake_owner1101_finish.gd` JUDGED_ON entry "6.72", 5 tests / 347 assertions pass. Fulgocobra stays OFF (5.83 -> 5.92, flat), so F41#13 is half met: Fulgocobra needs a vein mask on its gold bands.
+  - `d98884fc` **F39#12 arm (OFF)**: a Blender-built raised woven nest bed (`meshy_camp_props.json bed.nest_candidate`), answering the GPU WD2 judges' "reads as a fire pit; path: a raised nest or cushion with bedding". Provenance, drafted reference and 1.80 m scale check in `assets/props/vl-1103/nest_bed/`.
+  - `355cc9d0` import UID normalisation for 58 remake textures (no references to the old UIDs).
+- **Found:** 53 flag-OFF arms in `data/config` cite P2 items on this list and were waiting on a GPU that is now off. They cover 45 items. Each biome is captured twice in one CPU run (baseline, then the same launches with that biome's arms ON as a temporary overlay, reverted after), and each item is judged A/B on its own frames. The launch list comes from `VISUAL/item-scores/job.json` (each frame's repro command, `--subset`s merged per boot).
+- **Running now:** Stormwood baseline (10 boots, 16 items incl. F41#18 and F41#8), then Stormwood candidate (rim, role accessories, dialogue lens, fight fade, Crown Arch, Glass Sink x2, road puddles, harvest round 2, candy tiers). Tidewake (14 boots, 23 items, 12 arms incl. Veilfall x2, the nest, victory focus) is queued behind it. ETA: Stormwood scores ~06:00, Tidewake ~10:00 UTC; Meadows and Cloudreach follow.
+- **Stand note (F41#1):** the Stormheart `approach` stand renders from inside the hollow trunk (wooden ceiling, banners), which is why the item reads as "a dark ring". It is a stand defect rather than the tree; I record it in the verdict and do not move the camera to change a score.
+
 **Not reachable here, stated now:** `capture_f39_tidewake_matrix.gd`, `capture_f41_stormwood_catalog.gd`, `capture_stormwood_look.gd` refuse CPU; I use the CPU tools above for those matrices (the same stands where they overlap) and say so in each verdict.
 
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
