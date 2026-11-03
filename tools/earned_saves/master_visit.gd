@@ -172,6 +172,10 @@ func _chest(site: Node3D, master_id: String, definition: Dictionary, args: Dicti
 			site = _site(master_id)
 			if site == null:
 				return _fail("Storage returned without the mounted Master site")
+			if bool(args.get("chest_store_only", false)):
+				# Earned F49 line: the walk back is its own pieces (3 Nov).
+				_receipt("chest_deferred_after_storage", {"satchel_free": _free_slots(), "realm": str(_game.get("current_realm"))})
+				return true
 			if route_back and not await travel.call(site):
 				return _fail("Ordinary travel did not return to " + master_id + " after storage")
 			continue
