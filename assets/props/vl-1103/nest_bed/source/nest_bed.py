@@ -151,7 +151,7 @@ for o in final:
     bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=0.01); bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.shade_smooth()
     m = o.data.materials[0]; nt = m.node_tree
-    img = bpy.data.images.new(o.name + '_albedo', 2048 if 'straw' in o.name else 1024, 2048 if 'straw' in o.name else 1024); tex = nt.nodes.new('ShaderNodeTexImage'); tex.image = img
+    img = bpy.data.images.new(o.name + '_albedo', 1024, 1024); tex = nt.nodes.new('ShaderNodeTexImage'); tex.image = img
     nt.nodes.active = tex
     bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR'}, margin=4)
     bsdf = next(n for n in nt.nodes if n.type == 'BSDF_PRINCIPLED')

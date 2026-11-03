@@ -5,7 +5,7 @@
   "source": "source/nest_bed.py (run: blender -b -P nest_bed.py -- <out.glb> <preview.png>)",
   "reference": "Drafted reference (text): a creature nest bed for a seaside camp. A thick woven sea-grass rim (about 0.8 m crest, about 4.6 m across, readable edge-on), driftwood branches lashed around it, a domed sailcloth cushion inside, a sea-teal wool blanket with one pale woven stripe draped over the cushion and the rim, loose straw spilling out. Palette: straw gold, driftwood grey-brown, cream canvas, teal. No red or oxblood. Answers the GPU WD2 judges' path for P2-115: 'a raised nest or cushion shape with bedding'.",
   "scale_check": "source/scale_check.jpg: the nest beside a 1.80 m cylinder (the trainer). Rim crest 0.82 m (below the trainer's hip), 4.6 m span, so creatures taller than the trainer fit inside, the same span as the Meshy 31 Oct bed it replaces when the flag is on.",
-  "textures": "Baked from procedural Cycles materials into packed 1024/2048 albedo images",
+  "textures": "Baked from procedural Cycles materials into packed 1024 albedo images",
   "triangles": "about 60k",
   "flag": "data/config/meshy_camp_props.json bed.nest_candidate (OFF until judged)"
 }
