@@ -43,6 +43,11 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - No Stormwood arm gains; `stormwood_road_current.puddle_candidate` draws "flat lavender decal discs" in every frame (all three judges). All three ask for new art for the Crown Arch and the Stormheart.
 - **New OFF arm `7ede7c5e` F41#17:** a Blender four-legged crowned arch (`data/config/crown_arch_vl.json`; an arch faces every approach, so the stand reads it as an arch whatever the yaw). Its test and its CPU capture are queued after the Tidewake import.
 
+**Reprioritised per the coordinator (3 Nov ~04:45 UTC):** after the Stormwood step the queue runs, in order:
+- **UI step:** the Meadows, Tidewake and Cloudreach UI and catch launches (F38#4/#7/#9/#13/#19/#33, F39#9/#23, F40#14/#18), with every UI arm ON as the candidate. The arms: `hud.json` quiet_empty_slots, hud_lean, catch_card, message_clears_prompt and victory_focus; `menu.json` satchel_focus and shell_board; `catching.json framed_camera.r2`; `camfx.json catch_orb`; `catch_kit.json`.
+- **Pose step:** F38#1/#2/#26 and F39#6 in the Meadows/Tidewake creature frames, plus F36#56 Nightburrow on the neutral stage. The r23/r24 recipe is applied to the live remake GLBs of Terrapup, Bramblebun, Pipwing, Burrowback (= Nightburrow's model), Aquaryn r9 and Ripplet: `ground_clip.py --settle` on rest and faint, hit hop ×0.3. Terrapup and Burrowback also get their hit-react spine and root amplified ×1.8 for F38#2 "hurt frames keep the idle silhouette". A GLB is kept only where its row gains.
+- **Then:** Fulgocobra, Tidewake, the unscored set, Meadows and Cloudreach.
+
 **Not reachable here, stated now:** `capture_f39_tidewake_matrix.gd`, `capture_f41_stormwood_catalog.gd`, `capture_stormwood_look.gd` refuse CPU; I use the CPU tools above for those matrices (the same stands where they overlap) and say so in each verdict.
 
 Branch `tb/creatures-ralph`. Capture and judging run in this container on CPU (coordinator, 2 Nov): import works with a partial import set (untracked temporary `.gdignore` files), and `capture_f36_poses.gd` renders on llvmpipe. Disk is about 300 MB free, so each set is imported, captured and dropped in turn.
