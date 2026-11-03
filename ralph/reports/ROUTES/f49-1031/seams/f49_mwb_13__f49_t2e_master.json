@@ -1,0 +1,12 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "meadows_walk_to_mira",
+ "from_commit": "74caefdd21e53e8d6ef2d2f8351123c4d43d56c2",
+ "to_piece": "training_t2_master",
+ "to_commit": "74caefdd21e53e8d6ef2d2f8351123c4d43d56c2",
+ "to_loaded_from": "/home/user/rb/mwb_13",
+ "consumer_handoff_check": null,
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}
