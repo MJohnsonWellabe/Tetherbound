@@ -38,3 +38,13 @@ func test_side_readout_ships_off() -> void:
 func test_calm_seal_off_while_catch_card_off() -> void:
 	var orb := preload("res://scripts/combat/orb.gd")
 	assert_true(orb.calm_seal_config().is_empty(), "calm seal glow is read only while hud.json catch_card is enabled (OFF by default)")
+
+
+## Visual lane (3 Nov): the contrast round 2 (larger primary caption, near-opaque
+## plate) ships OFF until judged and only ever raises legibility.
+func test_contrast_r2_ships_off_and_only_raises_legibility() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/capture_readout_visual.json"))
+	var r2: Dictionary = cfg.get("contrast_r2", {})
+	assert_false(bool(r2.get("enabled", true)), "contrast_r2 ships OFF until judged")
+	assert_true(int(r2.get("caption_px", 0)) >= 26, "the caption never shrinks below the shipped 26 px")
+	assert_true(float(r2.get("backing_opacity", 0.0)) >= float(cfg.get("backing_opacity", 0.85)), "the plate never gets more transparent")

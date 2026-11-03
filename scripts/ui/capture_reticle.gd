@@ -295,8 +295,14 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 	var outlined := bool(_readout_visual.get("outline_enabled", false))
 	var outline_size := maxi(0, int(_readout_visual.get("outline_size", UITokens.OUTLINE_SIZE)))
 	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
+	# Visual lane 3 Nov (contrast_r2, OFF until judged; v1/ui1b judges: "tiny
+	# pale caption", "orange on pale shell and sand"): a larger caption in the
+	# primary text colour over a near-opaque plate.
+	var contrast: Dictionary = _readout_visual.get("contrast_r2", {})
+	var contrast_on := bool(contrast.get("enabled", false))
+	var caption_px := int(contrast.get("caption_px", CAPTION_FONT_SIZE)) if contrast_on else CAPTION_FONT_SIZE
 	var caption_dims: Vector2 = font.get_string_size(
-		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
+		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, caption_px
 	)
 	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
 	if side:
@@ -314,14 +320,14 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 			pct_size, outline_size, pct_outline)
 	draw_string(font, pct_pos, pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size, tier_colour)
 
-	var caption_colour := UITokens.TEXT_SECONDARY
+	var caption_colour := UITokens.TEXT_PRIMARY if contrast_on else UITokens.TEXT_SECONDARY
 	caption_colour.a *= alpha
 	if outlined:
 		var caption_outline := UITokens.OUTLINE
 		caption_outline.a *= caption_colour.a
 		draw_string_outline(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1,
-			CAPTION_FONT_SIZE, outline_size, caption_outline)
-	draw_string(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE, caption_colour)
+			caption_px, outline_size, caption_outline)
+	draw_string(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, caption_px, caption_colour)
 
 
 ## P2-058/P2-114 (GPU UI-1, 31 Oct): with the plate on, the judges still found
@@ -358,7 +364,10 @@ func _draw_readout_backing(font: Font, pct_pos: Vector2, pct_dims: Vector2, pct_
 	var right := maxf(pct_pos.x + pct_dims.x, caption_pos.x + caption_dims.x)
 	var plate := StyleBoxFlat.new()
 	var fill := UITokens.BG_PANEL
-	fill.a *= float(_readout_visual.get("backing_opacity", 0.85)) * alpha
+	var contrast: Dictionary = _readout_visual.get("contrast_r2", {})
+	var opacity := float(contrast.get("backing_opacity", 0.85)) if bool(contrast.get("enabled", false)) \
+		else float(_readout_visual.get("backing_opacity", 0.85))
+	fill.a *= opacity * alpha
 	plate.bg_color = fill
 	plate.set_corner_radius_all(UITokens.RADIUS)
 	draw_style_box(plate, Rect2(Vector2(left - pad, top - pad * 0.5),
