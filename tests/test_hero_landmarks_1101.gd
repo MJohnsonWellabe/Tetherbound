@@ -180,3 +180,18 @@ func test_veilfall_on_replaces_the_far_cone_only_beyond_the_handoff() -> void:
 		"old fall ribbons stop only past the handoff")
 	assert_eq(_colliders(root), 0, "render-only: no collider")
 	(f[0] as Node).free()
+
+
+## Visual lane (3 Nov): the Blender four-legged crowned arch ships OFF until
+## judged, its model is imported, and it declares only model, height and sink
+## (crown_arch_overlay never takes yaw, slab or passage keys from it).
+func test_crown_arch_vl_ships_off_and_declares_only_model_keys() -> void:
+	var vl := _json(HERO.CROWN_ARCH_VL)
+	assert_false(bool(vl.get("enabled", true)), "crown_arch_vl ships OFF until judged")
+	assert_true(ResourceLoader.exists(str(vl.get("model", ""))), "crown_arch_vl model is imported")
+	assert_true(float(vl.get("height_m", 0.0)) >= 5.5, "the arch stands at least 5.5 m")
+	for key: String in vl:
+		assert_true(key.begins_with("_") or key in ["enabled", "model", "height_m", "sink_m"],
+			"crown_arch_vl declares only model keys, not %s" % key)
+	var landed := CROWN.with_round2(_json("res://data/config/crown_arch_hero.json"))
+	assert_eq(HERO.crown_arch_overlay(landed), landed, "OFF must not change the hero arch")

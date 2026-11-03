@@ -5,6 +5,7 @@ extends RefCounted
 ## (data/config/hero_landmarks_1101.json; assets and provenance in
 ## assets/props/meshy-1101/<id>). None adds or moves a collider, trigger,
 ## route, gate or terrain sample; each only adds visuals or hides old visuals.
+const CROWN_ARCH_VL := "res://data/config/crown_arch_vl.json"
 const CONFIG := "res://data/config/hero_landmarks_1101.json"
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
@@ -34,6 +35,16 @@ static func enabled(id: String, config: Dictionary = {}) -> bool:
 ## 1101 model keys. OFF returns `cfg` unchanged; ON replaces only declared keys,
 ## never yaw, slab or passage keys.
 static func crown_arch_overlay(cfg: Dictionary, config: Dictionary = {}) -> Dictionary:
+	# Visual lane 3 Nov: the Blender four-legged crowned arch (crown_arch_vl.json,
+	# OFF until judged) reads as an arch from every approach; it replaces the
+	# visible model only, never yaw, slab or passage keys.
+	var vl: Variant = JSON.parse_string(FileAccess.get_file_as_string(CROWN_ARCH_VL))
+	if vl is Dictionary and bool((vl as Dictionary).get("enabled", false)):
+		var built := cfg.duplicate(true)
+		for key: String in ["model", "height_m", "sink_m"]:
+			if (vl as Dictionary).has(key):
+				built[key] = vl[key]
+		return built
 	var cand := section("crown_arch", config)
 	if not bool(cand.get("enabled", false)):
 		return cfg

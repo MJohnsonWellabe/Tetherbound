@@ -1,0 +1,7 @@
+{
+  "_why": "Visual lane (3 Nov 2026), P2-041 / F41#17 (CPU v1/sw1 4.70 shipped, 4.56 with the 1101 Meshy arch; all three judges: 'a lone pillar on an exposed square slab, not an arch'; GPU WD2 path: 'an authored arch, two pillars and a spanning crown, seated into the moss'). Blender-built four-legged crowned arch: four stratified slate legs at +-2.15 m (outside the 2.2 x 2.5 m passage on both axes), four pointed voussoir arches, verdigris copper bands, a stone crown ring with five glowing glass points, moss-stone root feet. Reads as an arch from every approach, so the yaw question does not matter. Replaces the visible model only (stormwood_crown_arch_hero.gd via hero_landmarks_1101.gd crown_arch_overlay); collider, passage trigger, travel axis, slab and edge stones unchanged. Provenance assets/props/vl-1103/crown_arch/provenance.json. OFF until judged.",
+  "enabled": false,
+  "model": "res://assets/props/vl-1103/crown_arch/crown_arch.glb",
+  "height_m": 7.0,
+  "sink_m": 0.15
+}

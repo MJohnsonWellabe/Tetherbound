@@ -1,0 +1,11 @@
+{
+  "asset": "crown_arch.glb",
+  "item": "P2-041 (board F41#17) Stormwood Crown Arch",
+  "made_by": "Visual lane (Claude), 3 Nov 2026, Blender 4.2.3 LTS, procedural build; no Meshy, no external assets",
+  "source": "source/crown_arch.py (blender -b -P crown_arch.py -- <out.glb> <preview.png>)",
+  "reference": "Drafted reference (text): a crowned stone gateway for the Stormwood. Four legs of stacked, stratified slate (dark grey-violet, horizontal strata) on mossy root-stone feet, joined by four pointed arches of dressed voussoirs so that an arch faces every approach; a verdigris copper band two thirds up each leg and a copper-capped keystone on each arch; a stone crown ring over the crossing carrying five pale-blue glowing glass points, the tallest reaching 7 m. Palette per the Stormwood board: storm slate, cool moss, copper-patina green and glass highlights. No red or oxblood (earlier judges flagged red-brown bands). Answers the judges' 'an authored arch, two pillars and a spanning crown, seated into the moss'.",
+  "scale_check": "source/scale_check.jpg: the arch beside a 1.80 m cylinder (the trainer). Legs at +-2.15 m leave a 3.4 m clear opening on both axes (the passage trigger is 2.2 x 2.5 m); arch spring 3.7 m, apex 5.35 m, crown points to 7.0 m, about 3.9x the trainer.",
+  "textures": "Baked from procedural Cycles materials (packed 1024 albedo); glass uses an emissive material",
+  "triangles": "about 8k",
+  "flag": "data/config/crown_arch_vl.json (OFF until judged)"
+}
