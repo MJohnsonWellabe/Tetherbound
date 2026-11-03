@@ -46,7 +46,9 @@ static func overlay(cfg: Dictionary) -> ShaderMaterial:
 	return material
 
 
-static func dress(root: Node, material: ShaderMaterial) -> int:
+## `keep_existing_overlay` (creature_rim.gd) leaves a mesh that already wears
+## another overlay alone instead of replacing it.
+static func dress(root: Node, material: ShaderMaterial, keep_existing_overlay := false) -> int:
 	var count := 0
 	var nodes: Array = root.find_children("*", "GeometryInstance3D", true, false)
 	if root is GeometryInstance3D:
@@ -56,7 +58,8 @@ static func dress(root: Node, material: ShaderMaterial) -> int:
 		# Prompts, rings and effect cards cast no shadow; bodies do.
 		if geometry == null or geometry.has_meta(META) \
 				or geometry.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF \
-				or not (geometry is MeshInstance3D):
+				or not (geometry is MeshInstance3D) \
+				or (keep_existing_overlay and geometry.material_overlay != null):
 			continue
 		geometry.material_overlay = material
 		geometry.set_meta(META, true)
