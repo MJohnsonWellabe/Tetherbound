@@ -1,0 +1,29 @@
+[
+ {
+  "label": "F38#4",
+  "a": "/tmp/claude-0/work/judge/ui1a/k/sides/F38_4_a.jpg",
+  "b": "/tmp/claude-0/work/judge/ui1a/k/sides/F38_4_b.jpg",
+  "brief": "1 in-game frame (Meadows) for one catalogue subject: map. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+  ]
+ },
+ {
+  "label": "F38#9",
+  "a": "/tmp/claude-0/work/judge/ui1a/k/sides/F38_9_a.jpg",
+  "b": "/tmp/claude-0/work/judge/ui1a/k/sides/F38_9_b.jpg",
+  "brief": "3 in-game frames (Meadows) for one catalogue subject: menu shell. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world"
+  ]
+ },
+ {
+  "label": "F38#19",
+  "a": "/tmp/claude-0/work/judge/ui1a/k/sides/F38_19_a.jpg",
+  "b": "/tmp/claude-0/work/judge/ui1a/k/sides/F38_19_b.jpg",
+  "brief": "1 in-game frame (Meadows) for one catalogue subject: exploration HUD. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+  ]
+ }
+]

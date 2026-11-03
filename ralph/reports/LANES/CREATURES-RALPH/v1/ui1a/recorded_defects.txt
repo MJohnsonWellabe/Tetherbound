@@ -1,0 +1,6 @@
+Zg: "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+Iv: "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world"
+So: none
+Ug: none
+Iy: "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+Wx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
