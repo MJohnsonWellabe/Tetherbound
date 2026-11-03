@@ -1,0 +1,8 @@
+Hv: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Dr: none
+Ec: "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+Bj: "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+Vf: none
+Es: "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
+Uz: "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain"
+Eo: "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"

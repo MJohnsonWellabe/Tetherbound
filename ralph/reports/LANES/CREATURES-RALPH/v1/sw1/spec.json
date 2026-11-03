@@ -1,0 +1,47 @@
+[
+ {
+  "label": "F41#1",
+  "a": "/tmp/claude-0/work/judge/sw1/k/sides/F41_1_a.jpg",
+  "b": "/tmp/claude-0/work/judge/sw1/k/sides/F41_1_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: Stormheart finale. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+  ]
+ },
+ {
+  "label": "F41#2",
+  "a": "/tmp/claude-0/work/judge/sw1/k/sides/F41_2_a.jpg",
+  "b": "/tmp/claude-0/work/judge/sw1/k/sides/F41_2_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: Surge phase presentation. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain"
+  ]
+ },
+ {
+  "label": "F41#4",
+  "a": "/tmp/claude-0/work/judge/sw1/k/sides/F41_4_a.jpg",
+  "b": "/tmp/claude-0/work/judge/sw1/k/sides/F41_4_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: named destination identities. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+  ]
+ },
+ {
+  "label": "F41#5",
+  "a": "/tmp/claude-0/work/judge/sw1/k/sides/F41_5_a.jpg",
+  "b": "/tmp/claude-0/work/judge/sw1/k/sides/F41_5_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: forest ground and distance layers. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
+  ]
+ },
+ {
+  "label": "F41#17",
+  "a": "/tmp/claude-0/work/judge/sw1/k/sides/F41_17_a.jpg",
+  "b": "/tmp/claude-0/work/judge/sw1/k/sides/F41_17_b.jpg",
+  "brief": "1 in-game frame (Stormwood) for one catalogue subject: Crown Arch. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+  ]
+ }
+]
