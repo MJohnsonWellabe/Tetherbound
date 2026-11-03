@@ -1,0 +1,5 @@
+Pj: none
+Nf: "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis"
+Mo: none
+Hs: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Wj: "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path"
