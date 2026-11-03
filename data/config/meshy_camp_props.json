@@ -6,7 +6,12 @@
     "across_m": 4.6,
     "sink_m": 0.05,
     "yaw_deg": 0.0,
-    "hide_children": ["WaterPaddedBolster"]
+    "hide_children": ["WaterPaddedBolster"],
+    "nest_candidate": {
+      "_why": "Visual lane (3 Nov 2026), P2-115 / F39#12 (GPU WD2 5.23 on the Meshy ring: 'reads as a fire pit or well'; path 'a raised nest or cushion shape with bedding'). Blender-built raised woven nest (0.82 m rim crest, domed sailcloth cushion, teal blanket draped over the rim, driftwood lashings); provenance assets/props/vl-1103/nest_bed/provenance.json. Same 4.6 m span, same colliders and rest anchor. OFF until judged.",
+      "enabled": false,
+      "model": "res://assets/props/vl-1103/nest_bed/nest_bed.glb"
+    }
   },
   "workbench": {
     "enabled": true,

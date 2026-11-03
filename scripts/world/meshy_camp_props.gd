@@ -26,7 +26,10 @@ static func apply_bed(bed: Node3D) -> Node3D:
 	var cfg: Dictionary = settings().get("bed", {})
 	if not bool(cfg.get("enabled", false)) or not is_instance_valid(bed) or bed.has_node(BED_NODE):
 		return null
-	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+	# Visual lane 3 Nov: Blender-built raised nest (P2-115), OFF until judged.
+	var nest: Dictionary = cfg.get("nest_candidate", {})
+	var model_path := str(nest.get("model", "")) if bool(nest.get("enabled", false)) else str(cfg.get("model", ""))
+	var model := HERO_PROP.load_model(model_path)
 	if model == null:
 		return null
 	# Hide the old pad, rim and any regional bolster; keep everything else.
