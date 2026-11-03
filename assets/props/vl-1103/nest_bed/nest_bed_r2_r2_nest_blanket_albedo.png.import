@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bukyseh1egbee"
-path="res://.godot/imported/nest_bed_r2_r2_nest_blanket_albedo.png-da735853cae70965d8ba4dd2b5dcb30a.ctex"
+path.s3tc="res://.godot/imported/nest_bed_r2_r2_nest_blanket_albedo.png-da735853cae70965d8ba4dd2b5dcb30a.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "385aaefb84e6fcd36ca65c4db944a353"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/vl-1103/nest_bed/nest_bed_r2_r2_nest_blanket_albedo.png"
-dest_files=["res://.godot/imported/nest_bed_r2_r2_nest_blanket_albedo.png-da735853cae70965d8ba4dd2b5dcb30a.ctex"]
+dest_files=["res://.godot/imported/nest_bed_r2_r2_nest_blanket_albedo.png-da735853cae70965d8ba4dd2b5dcb30a.s3tc.ctex"]
 
 [params]
 

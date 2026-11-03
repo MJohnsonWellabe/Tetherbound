@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ro6wsj76110j"
-path="res://.godot/imported/camp_workbench_r2_r2_wb_wood.png-e75d5f7c120ac432ef99c87fe3e92b6e.ctex"
+path.s3tc="res://.godot/imported/camp_workbench_r2_r2_wb_wood.png-e75d5f7c120ac432ef99c87fe3e92b6e.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "05dea578290f51ab67bde509bcc8c80d"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/vl-1103/camp_workbench/camp_workbench_r2_r2_wb_wood.png"
-dest_files=["res://.godot/imported/camp_workbench_r2_r2_wb_wood.png-e75d5f7c120ac432ef99c87fe3e92b6e.ctex"]
+dest_files=["res://.godot/imported/camp_workbench_r2_r2_wb_wood.png-e75d5f7c120ac432ef99c87fe3e92b6e.s3tc.ctex"]
 
 [params]
 
