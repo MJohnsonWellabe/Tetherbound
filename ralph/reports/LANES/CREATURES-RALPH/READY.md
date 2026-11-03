@@ -32,6 +32,8 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**LANDING-READY GAIN (3 Nov ~07:45 UTC), `b36b6105`:** **F41#17 Crown Arch CPU 3.91 -> 5.92 mapped (+2.01)**, `data/config/crown_arch_vl.json` ON (Blender four-legged crowned arch; three judges, linear slope 1.51, r 0.96, RMSE 0.24, confirming batch; `v1/arch1/VERDICT.md`). Test: `tests/test_hero_landmarks_1101.gd` (`test_crown_arch_vl_ships_on_with_its_score_and_declares_only_model_keys` asserts ON and "5.92"; the shipped-settings assertion now expects the judged arch). The r1 OFF version passed 8 tests / 57 assertions; the ON version's run is queued after the r2 import. 0.08 under 6.0; r2 (`r2_candidate`, OFF: dark slate, broken mossy flagstones over the slab) is captured next.
+
 **Judged (3 Nov ~04:40 UTC), `v1/sw1/VERDICT.md`:** first CPU scores of the current branch, Stormwood arms ON vs OFF (linear fit, slope 1.38, r 0.87, RMSE 0.42, confirming batch):
 | Row | Item | CPU base -> arms ON | Decision |
 |---|---|---|---|
