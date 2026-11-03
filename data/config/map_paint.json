@@ -1,0 +1,17 @@
+{
+  "_why": "Visual lane (3 Nov 2026), P2-002 / F38#4 map (CPU v1/ui1a 5.73; all three judges: 'a green disc on cloud fog with road lines, no terrain, groves, water or buildings'). On: the map bake (scripts/world/map_baker.gd, shared by the minimap and the full map) adds a north-west hillshade, canopy painted from the scatter bake's tree layers (trees, grove; every other layer skipped while reading), and a fixed painterly grain. OFF leaves the bake byte-identical; its bytes join the cache key so turning it on rebakes once. OFF until judged.",
+  "scope": "client_presentation",
+  "enabled": false,
+  "scatter_world": "playground",
+  "hillshade": {"azimuth_deg": 315.0, "gain": 1.6, "strength": 0.3},
+  "canopy": {
+    "enabled": true,
+    "layers": ["trees", "grove"],
+    "all_layers": ["trees", "grove", "saplings", "deadfall", "bushes", "grass", "drygrass", "flowers", "rocks", "path_stones", "groundmat"],
+    "weights": {"trees": 1.0, "grove": 1.4},
+    "radius_m": 9.0,
+    "colour": "#2c5232",
+    "strength": 0.75
+  },
+  "grain": 0.035
+}

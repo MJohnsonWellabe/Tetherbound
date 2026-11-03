@@ -81,6 +81,12 @@ const BUILDING_APRON_COLOUR := Color(0.58, 0.56, 0.52)
 const DEFAULT_METRES_PER_PIXEL := 8.0
 const PRODUCTION_OUTPUT_SCALE := 2
 const CACHE_SCHEMA := "corridor-aspect-8m-sample-4m-routes-v2"
+## Visual lane 3 Nov (P2-002 / F38#4; CPU v1/ui1a 5.73, all three judges: "a
+## green disc on fog, no terrain, groves or water"): map_paint.json, OFF until
+## judged. Directional hillshade, canopy painted from the baked tree layers,
+## and a fixed painterly grain. Its bytes join the cache key.
+const PAINT_CONFIG_PATH := "res://data/config/map_paint.json"
+const SCATTER_BAKE := preload("res://scripts/world/scatter_bake.gd")
 
 ## Set by `bake_cached()` on every call — true when the cached PNG was reused,
 ## false when a bake actually ran. Exists purely so `tests/test_map_baker.gd`
@@ -152,6 +158,9 @@ static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) ->
 
 	var water_level := _water_level()
 	var land_floor := water_level if not is_nan(water_level) else min_height
+	var paint := _paint_config()
+	var canopy := _canopy_density(paint, resolution_x, resolution_z, min_x, min_z, step_x, step_z) \
+		if not paint.is_empty() else PackedFloat32Array()
 
 	# Colour ramp stops, built from UITokens per the brief rather than
 	# hand-picked hexes — see each comment for the derivation.
@@ -188,6 +197,9 @@ static func bake(world: Object, resolution: int = 0, bounds: Dictionary = {}) ->
 			var slope := absf(h_east - h) + absf(h_south - h)
 			var darken := clampf(slope / (((step_x + step_z) * 0.5) * 6.0), 0.0, 0.25)
 			colour = colour.darkened(darken)
+			if not paint.is_empty():
+				colour = _paint_pixel(paint, colour, h, h_east, h_south, step_x, step_z, water_level,
+					canopy[iz * resolution_x + ix] if not canopy.is_empty() else 0.0, ix, iz)
 
 			# Paths/structures, on top of the height ramp -- never under
 			# water (a road does not paint through the pond), and paths win
@@ -313,6 +325,8 @@ static func _overlay_authored_routes(image: Image, heightfield: RefCounted, exte
 static func bake_cached(world: Object, cache_path: String = "user://cache/map_meadows.png") -> ImageTexture:
 	var config_bytes := FileAccess.get_file_as_bytes(TERRAIN_CONFIG_PATH)
 	var key := "%s:%s" % [CACHE_SCHEMA, str(hash(config_bytes))]
+	if not _paint_config().is_empty():
+		key += ":paint-%s" % str(hash(FileAccess.get_file_as_bytes(PAINT_CONFIG_PATH)))
 	var key_path := cache_path + ".key"
 
 	if FileAccess.file_exists(cache_path) and FileAccess.file_exists(key_path):
@@ -386,3 +400,78 @@ static func _colour_for(height: float, water_level: float, land_floor: float, ma
 	if t <= 0.5:
 		return meadow_green.lerp(UITokens.GROUND_OCHRE, t / 0.5)
 	return UITokens.GROUND_OCHRE.lerp(pale_high, (t - 0.5) / 0.5)
+
+
+## map_paint.json when enabled, else {} (OFF leaves the bake byte-identical).
+static func _paint_config() -> Dictionary:
+	if not FileAccess.file_exists(PAINT_CONFIG_PATH):
+		return {}
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PAINT_CONFIG_PATH))
+	if not parsed is Dictionary or not bool((parsed as Dictionary).get("enabled", false)):
+		return {}
+	return parsed
+
+
+## Canopy coverage 0..1 per bake texel, splatted from the scatter bake's tree
+## layers only (every other layer is skipped while reading). Empty when the
+## bake is missing; the map then paints relief and grain only.
+static func _canopy_density(paint: Dictionary, res_x: int, res_z: int, min_x: float, min_z: float,
+		step_x: float, step_z: float) -> PackedFloat32Array:
+	var cfg: Dictionary = paint.get("canopy", {})
+	var out := PackedFloat32Array()
+	if not bool(cfg.get("enabled", true)):
+		return out
+	var keep: Array = cfg.get("layers", ["trees", "grove"])
+	var skip := {}
+	for layer: String in cfg.get("all_layers", []):
+		if not layer in keep:
+			skip[layer] = true
+	var by_layer: Dictionary = SCATTER_BAKE.load_all(str(paint.get("scatter_world", "playground")), {}, skip)
+	out.resize(res_x * res_z)
+	var radius_m := float(cfg.get("radius_m", 9.0))
+	var rx := maxi(1, int(ceil(radius_m / step_x)))
+	var rz := maxi(1, int(ceil(radius_m / step_z)))
+	for layer: String in keep:
+		var weight := float((cfg.get("weights", {}) as Dictionary).get(layer, 1.0))
+		for placement: Dictionary in by_layer.get(layer, []):
+			var pos: Vector3 = placement.get("position", Vector3.ZERO)
+			var cx := int((pos.x - min_x) / step_x)
+			var cz := int((pos.z - min_z) / step_z)
+			for dz in range(-rz, rz + 1):
+				var iz := cz + dz
+				if iz < 0 or iz >= res_z:
+					continue
+				for dx in range(-rx, rx + 1):
+					var ix := cx + dx
+					if ix < 0 or ix >= res_x:
+						continue
+					var d := Vector2(float(dx) * step_x, float(dz) * step_z).length() / radius_m
+					if d >= 1.0:
+						continue
+					var i := iz * res_x + ix
+					out[i] = minf(1.0, out[i] + weight * (1.0 - d * d) * 0.6)
+	return out
+
+
+## One texel of the painted pass: hillshade from a fixed sun azimuth, canopy
+## tint (darker, cooler green with a lit crown), and a deterministic grain.
+static func _paint_pixel(paint: Dictionary, colour: Color, h: float, h_east: float, h_south: float,
+		step_x: float, step_z: float, water_level: float, canopy: float, ix: int, iz: int) -> Color:
+	var shade: Dictionary = paint.get("hillshade", {})
+	var az := deg_to_rad(float(shade.get("azimuth_deg", 315.0)))
+	var gx := (h_east - h) / step_x
+	var gz := (h_south - h) / step_z
+	var light := Vector2(cos(az), sin(az))
+	var lit := clampf(-(gx * light.x + gz * light.y) * float(shade.get("gain", 1.6)), -1.0, 1.0)
+	var strength := float(shade.get("strength", 0.3))
+	colour = colour.lightened(lit * strength) if lit > 0.0 else colour.darkened(-lit * strength)
+	var under_water := not is_nan(water_level) and h < water_level
+	if canopy > 0.0 and not under_water:
+		var cfg: Dictionary = paint.get("canopy", {})
+		var tint := Color(str(cfg.get("colour", "#2c5232")))
+		colour = colour.lerp(tint, clampf(canopy, 0.0, 1.0) * float(cfg.get("strength", 0.75)))
+	var grain := float(paint.get("grain", 0.035))
+	if grain > 0.0:
+		var n := fmod(sin(float(ix) * 12.9898 + float(iz) * 78.233) * 43758.5453, 1.0)
+		colour = colour.lightened((absf(n) - 0.5) * grain * 2.0) if n >= 0.0 else colour.darkened((absf(n) - 0.5) * grain * 2.0)
+	return colour
