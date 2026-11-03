@@ -1,0 +1,20 @@
+[
+ {
+  "label": "F39#12",
+  "a": "/tmp/claude-0/work/judge/b9/k/sides/F39_12_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b9/k/sides/F39_12_b.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: authored camp creature bed silhouette. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place"
+  ]
+ },
+ {
+  "label": "F39#13",
+  "a": "/tmp/claude-0/work/judge/b9/k/sides/F39_13_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b9/k/sides/F39_13_b.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: authored camp workbench identity. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer"
+  ]
+ }
+]
