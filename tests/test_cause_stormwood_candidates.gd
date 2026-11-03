@@ -23,11 +23,15 @@ func _surge_with(keys: Array) -> Dictionary:
 	return config
 
 
-func test_surge_candidates_ship_off_and_are_inert() -> void:
+## Visual lane v1/b16 (3 Nov): storm sky and soft rain ship ON with their judged
+## scores; turned OFF they still leave the config identical.
+func test_surge_candidates_ship_on_with_scores_and_are_inert_when_off() -> void:
 	var config := _json(RULES.PATH)
 	for key: String in RULES.PRESENTATION_CANDIDATES:
 		assert_true(config.presentation.has(key), "%s must be declared" % key)
-		assert_false(bool(config.presentation[key].get("enabled", true)), "%s ships OFF" % key)
+		assert_true(bool(config.presentation[key].get("enabled", false)), "%s ships ON (judged gain)" % key)
+		assert_true(str(config.presentation[key].get("_why_on", "")).contains("5.84"), "%s records its mapped score" % key)
+		(config.presentation[key] as Dictionary)["enabled"] = false
 	assert_eq(RULES.with_presentation_candidates(config), config, "OFF must leave the config identical")
 
 
@@ -98,9 +102,11 @@ func test_shaft_layout_is_deterministic_and_sparse() -> void:
 		"about `chance` of cells carry a shaft (got %.2f)" % share)
 
 
-func test_moss_variation_ships_off_and_sets_nothing() -> void:
+func test_moss_variation_ships_on_with_its_score_and_sets_nothing_when_off() -> void:
 	var finish := _json("res://data/config/stormwood_ground_finish.json")
-	assert_false(bool(finish.moss_variation_1101.get("enabled", true)), "ships OFF")
+	assert_true(bool(finish.moss_variation_1101.get("enabled", false)), "ships ON (judged gain, v1/b16)")
+	assert_true(str(finish.moss_variation_1101.get("_why_on", "")).contains("5.84"), "records its mapped score")
+	(finish.moss_variation_1101 as Dictionary)["enabled"] = false
 	assert_true(COVER.moss_variation_params(finish).is_empty(), "OFF sets no uniform")
 	var code := FileAccess.get_file_as_string("res://shaders/stormwood_ground_cover.gdshader")
 	for zero: String in ["uniform float sw_moss_strength = 0.0;", "uniform float sw_clearing = 0.0;",

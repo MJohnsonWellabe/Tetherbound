@@ -182,9 +182,14 @@ func test_catch_framed_r2_and_hud_prompt_clear_ship_off() -> void:
 	assert_true(str((hud["message_clears_prompt"] as Dictionary).get("_why", "")).contains("6.75"), "the prompt clear records its mapped score")
 
 
-func test_stormwood_value_lift_ships_off_and_lifts_when_on() -> void:
+## Visual lane v1/b16 (3 Nov): the value lift ships ON with its judged score and
+## replaces the crushed grass tint with its own.
+func test_stormwood_value_lift_ships_on_with_its_score_and_lifts() -> void:
 	var zones := preload("res://scripts/world/stormwood_ground_zones.gd")
 	var raw := _json("res://data/config/stormwood_ground_finish.json")
-	assert_false(bool((raw["value_lift_candidate"] as Dictionary).get("enabled", true)), "ships OFF")
-	var off := zones.finish()
-	assert_eq(off["grass"]["tint_base"], raw["grass"]["tint_base"], "OFF leaves the tints")
+	var lift: Dictionary = raw["value_lift_candidate"]
+	assert_true(bool(lift.get("enabled", false)), "ships ON (judged gain)")
+	assert_true(str(lift.get("_why_on", "")).contains("5.84"), "records its mapped score")
+	var on := zones.finish()
+	assert_eq(on["grass"]["tint_base"], lift["grass"]["tint_base"], "ON applies the lifted tint")
+	assert_true(str(on["grass"]["tint_base"]) != str(raw["grass"]["tint_base"]), "the lift changes the shipped tint")
