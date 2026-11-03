@@ -663,6 +663,28 @@ func _raked_box(size: Vector3, at: Vector3, roll: float, colour: Color) -> void:
 	add_child(mesh)
 
 
+## Visual lane 3 Nov (house_textiles.json, OFF until judged): retint named
+## textile surfaces of a furniture OBJ (the loft bed's plum-maroon comforter
+## reads as Team Tether's reserved oxblood). Surface override only.
+func _retint_textiles(mesh: MeshInstance3D, model: String) -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/house_textiles.json"))
+	if not parsed is Dictionary or not bool((parsed as Dictionary).get("enabled", false)):
+		return
+	var tints: Dictionary = ((parsed as Dictionary).get("models", {}) as Dictionary).get(model, {})
+	if tints.is_empty() or mesh.mesh == null:
+		return
+	for i in mesh.mesh.get_surface_count():
+		var source := mesh.mesh.surface_get_material(i)
+		var name := str(source.resource_name) if source != null else ""
+		if name.is_empty() and mesh.mesh is ArrayMesh:
+			name = (mesh.mesh as ArrayMesh).surface_get_name(i)
+		if not tints.has(name):
+			continue
+		var tinted: StandardMaterial3D = (source.duplicate() as StandardMaterial3D) if source is StandardMaterial3D else StandardMaterial3D.new()
+		tinted.albedo_color = Color(str(tints[name]))
+		mesh.set_surface_override_material(i, tinted)
+
+
 func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FURNITURE_SCALE,
 		dir := FURNITURE_DIR, solid := true) -> void:
 	# OBJ pieces load as a bare Mesh (the Furniture/Survival packs); glTF
@@ -678,6 +700,7 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 		var mesh := MeshInstance3D.new()
 		mesh.mesh = load(obj_path)
 		aabb = (mesh.mesh as Mesh).get_aabb()
+		_retint_textiles(mesh, model)
 		node = mesh
 	elif ResourceLoader.exists(gltf_path):
 		node = (load(gltf_path) as PackedScene).instantiate() as Node3D
