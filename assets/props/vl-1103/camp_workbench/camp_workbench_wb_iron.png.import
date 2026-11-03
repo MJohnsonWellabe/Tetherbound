@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dsdyownwfenn1"
-path="res://.godot/imported/camp_workbench_wb_iron.png-131cdf511f875e0dc60df67daa3fadbb.ctex"
+path.s3tc="res://.godot/imported/camp_workbench_wb_iron.png-131cdf511f875e0dc60df67daa3fadbb.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "ed4bae3c251b444535debf03d6f86ab1"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/vl-1103/camp_workbench/camp_workbench_wb_iron.png"
-dest_files=["res://.godot/imported/camp_workbench_wb_iron.png-131cdf511f875e0dc60df67daa3fadbb.ctex"]
+dest_files=["res://.godot/imported/camp_workbench_wb_iron.png-131cdf511f875e0dc60df67daa3fadbb.s3tc.ctex"]
 
 [params]
 
