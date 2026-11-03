@@ -198,10 +198,11 @@ func test_crown_arch_vl_ships_on_with_its_score_and_declares_only_model_keys() -
 			"crown_arch_vl declares only model keys, not %s" % key)
 	var landed := CROWN.with_round2(_json("res://data/config/crown_arch_hero.json"))
 	var on := HERO.crown_arch_vl_overlay(landed)
-	assert_eq(str(on.model), str(vl.model), "ON shows the judged r1 Blender arch")
 	var r2: Dictionary = vl.get("r2_candidate", {})
-	assert_false(bool(r2.get("enabled", true)), "the r2 arch ships OFF until judged")
+	assert_true(bool(r2.get("enabled", false)), "the r2 arch ships ON (judged gain)")
+	assert_true(str(r2.get("_why", "")).contains("6.19"), "the r2 arch records its mapped score")
 	assert_true(ResourceLoader.exists(str(r2.get("model", ""))), "the r2 arch model is imported")
+	assert_eq(str(on.model), str(r2.model), "ON shows the judged r2 Blender arch")
 	for key: String in landed:
 		if key not in ["model", "height_m", "sink_m"]:
 			assert_eq(on[key], landed[key], "ON keeps the landed %s" % key)

@@ -5,8 +5,8 @@
   "height_m": 7.0,
   "sink_m": 0.15,
   "r2_candidate": {
-    "_why": "Visual lane r2 (3 Nov), from the v1/arch1 judges: 'sits on the exposed square slab', 'pale lavender stone loses value against the purple cliff', 'banded/stripy stone'. Same arch in dark grey-blue slate with noise strata (no regular bands), darker moss and verdigris, plus broken mossy flagstones and moss stones over the 9 x 9 m landing so its square edge stops reading as a tile (crown_arch_r2.glb, source/crown_arch_r2.py). OFF until judged.",
-    "enabled": false,
+    "_why": "Visual lane r2 (3 Nov), from the v1/arch1 judges: 'sits on the exposed square slab', 'pale lavender stone loses value against the purple cliff', 'banded/stripy stone'. Same arch in dark grey-blue slate with noise strata (no regular bands), darker moss and verdigris, plus broken mossy flagstones and moss stones over the 9 x 9 m landing so its square edge stops reading as a tile (crown_arch_r2.glb, source/crown_arch_r2.py). Judged (CPU v1/arch2, 3 Nov ~10:15 UTC; three code-blind judges, anchors f36_0_gap:C5, f36_0_npc:C8, craft; linear slope 0.98, r 0.65, RMSE 0.64, confirming batch): r1 5.37 -> r2 6.19 mapped (+0.82), ON. Judges: 'reads as an authored ruin', rubble softens the slab; still asks for copper/glass accents and a less square footprint.",
+    "enabled": true,
     "model": "res://assets/props/vl-1103/crown_arch/crown_arch_r2.glb"
   }
 }

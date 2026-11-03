@@ -1,0 +1,20 @@
+[
+ {
+  "label": "F39#9",
+  "a": "/tmp/claude-0/work/judge/ui1b/k/sides/F39_9_a.jpg",
+  "b": "/tmp/claude-0/work/judge/ui1b/k/sides/F39_9_b.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: catch camera distance. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path"
+  ]
+ },
+ {
+  "label": "F39#23",
+  "a": "/tmp/claude-0/work/judge/ui1b/k/sides/F39_23_a.jpg",
+  "b": "/tmp/claude-0/work/judge/ui1b/k/sides/F39_23_b.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: catch chance HUD contrast. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+  ]
+ }
+]
