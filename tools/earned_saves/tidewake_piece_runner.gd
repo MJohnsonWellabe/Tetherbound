@@ -64,7 +64,7 @@ const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "0
 	"05j_ione_duel_only", "05k_ione_chest",
 	"05r_first_shore", "05s_reedhaven_ione", "05t_reedhaven_brine", "05u_brine_shellwatch", "05v_shellwatch_tidal",
 	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa", "08_ending", "09_cloudreach_handoff",
-	"training_t2_master"]
+	"training_t2_master", "training_t2_master_store"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -201,7 +201,7 @@ func _run() -> void:
 	if failures.is_empty():
 		var after_uids: Array = _snapshot().uids
 		var end_realm := "cloudreach" if segment == "09_cloudreach_handoff" else "water"
-		if segment == "training_t2_master": end_realm = "meadows"
+		if segment in ["training_t2_master", "training_t2_master_store"]: end_realm = "meadows"
 		if not training_job.is_empty(): end_realm = str(training_job.realm) if training_job.phase in ["return", "preparereturn"] else "meadows"
 		if after_uids.size() != 5 or str(game.current_realm) != end_realm or bool(game.get("free_build")):
 			failures.append("Piece must end with five companions in %s without free build" % end_realm)
@@ -329,6 +329,10 @@ func _handoff_check() -> void:
 	if not prior.get("after") is Dictionary:
 		failures.append("Previous checkpoint receipt has no after-state")
 		return
+	# A Stormwood-runner predecessor (the earned line's home_credits) records
+	# progression.all_set() as `world_flags`; this runner's `flags` is the same set.
+	if not (prior.after as Dictionary).has("flags") and (prior.after as Dictionary).has("world_flags"):
+		prior.after["flags"] = prior.after.world_flags
 	for key: String in TRAINING_HANDOFF.missing_route_fields(prior.after, not training_job.is_empty()):
 		failures.append("Previous checkpoint after-state lacks " + key)
 		return
@@ -545,13 +549,42 @@ func _play() -> void:
 			# Meadows T2 from the disclosed meadows_t2_independent boundary:
 			# Mira's duel and recipe chest (storage trip home and back if the
 			# kit needs room), then the shared homestead Kitchen/feed pieces.
+			# Also from the earned F49 line's post-credits home (coordinator, 2 Nov:
+			# a training loop on the earned line): a passing home_credits receipt.
 			var provenance: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("PROVENANCE.json")))
-			if not provenance is Dictionary or provenance.get("kind") != "generated_boundary_save" \
+			var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
+			var earned_home: bool = prior is Dictionary and prior.get("segment") in ["home_credits", "meadows_walk_to_mira"] and prior.get("passed") == true
+			if earned_home:
+				disclosures.append("training_t2_master from the earned F49 line's post-credits home (home_credits receipt), not a generated boundary")
+			elif not provenance is Dictionary or provenance.get("kind") != "generated_boundary_save" \
 					or provenance.get("profile") != "meadows_t2_independent":
-				failures.append("training_t2_master starts only from the generated meadows_t2_independent boundary save")
+				failures.append("training_t2_master starts only from the generated meadows_t2_independent boundary save or the earned post-credits home")
 				return
 			_take(await MEADOWS_TRAINING.new().run(self, world, game, {"tier": 2, "phase": "master",
 				"previous_training": before.get("training", {})}), "passed", segment)
+		"training_t2_master_store":
+			# Earned F49 line only (3 Nov): Mira's chest kit (candy, potions and
+			# ~300 materials) needs more than the seven free slots this satchel
+			# has, and the nearest touched waystone is in Stormwood. Win the duel
+			# at her site, press her chest (refused: no room), then its designed
+			# storage trip home by the Home Key (a Home Key straight after the
+			# duel never finished, 3 Nov);
+			# the walk back is its own meadows_walk_to_mira pieces, and the chest
+			# is claimed by training_t2_master's already-won branch.
+			var prior_store: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
+			if not prior_store is Dictionary or prior_store.get("segment") != "meadows_walk_to_mira" or prior_store.get("passed") != true:
+				failures.append("training_t2_master_store starts only from a passing meadows_walk_to_mira piece at Mira's site")
+				return
+			var wins_before: Array = (before.get("training", {}) as Dictionary).get("master_wins", [])
+			var visit: Dictionary = await load("res://tools/earned_saves/wip_fights/meadows_master.gd").new().run(self, world, game,
+				{"master_id": "master_t2", "chest_store_only": true})
+			if not bool(visit.get("passed", false)):
+				failures.append_array(visit.get("failures", ["Mira's duel did not pass"]))
+				return
+			var wins_after: Array = (_snapshot().get("training", {}) as Dictionary).get("master_wins", [])
+			if not wins_after.has("master_t2") or wins_before.has("master_t2"):
+				failures.append("training_t2_master_store must add exactly Mira's durable win")
+			disclosures.append("training_t2_master_store: Mira beaten at her site; chest deferred for satchel room; storage trip home by the Home Key (keep home_key)")
 		"01_opening":
 			var opening: RefCounted = load("res://tests/helpers/f49_tidewake_opening.gd").new()
 			_take(await opening.run(self, world, game), "passed", "opening")

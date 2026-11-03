@@ -59,7 +59,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = {}) -> D
 		"storage": STORAGE,
 		"rebind": func(returned: Node3D) -> bool:
 			return returned == tree.current_scene and str(game.get("current_realm")) == "meadows" and _travel._bind(),
-		"chest": true})
+		"chest": bool(args.get("chest", true)), "chest_store_only": bool(args.get("chest_store_only", false))})
 	_failures.append_array(outcome.get("failures", []))
 	_failures.append_array(_travel.failures)
 	_receipts.append_array(outcome.get("receipts", []))
@@ -112,6 +112,28 @@ func _route_to(site: Node3D) -> bool:
 			Vector3(target.x, float(world.call("ground_height_at", target.x, target.y)), target.y))
 		_failures.append_array(walker.failures)
 		if not arrived: break
+	# After credits the rematch zones flank the Master at world x ±1.5 m, foot
+	# height (foundation_rematches / rematch_prompt.gd), so a stand to her side
+	# offers a rematch before her raised challenge prompt (t2e_master, 3 Nov).
+	# Step in front of her on the world z axis, where her challenge is nearest.
+	var npc := site.get_node_or_null(^"Master") as Node3D
+	var flanked := false
+	if npc != null:
+		for child: Node in npc.get_children():
+			if child.get_script() == preload("res://scripts/repeatables/rematch_prompt.gd") and bool(child.get("enabled")):
+				flanked = true
+	if arrived and flanked:
+		var side := 1.0 if player.global_position.z >= npc.global_position.z else -1.0
+		var front := Vector2(npc.global_position.x, npc.global_position.z + side * 2.0)
+		var walker := ROUTE.new()
+		var front3 := Vector3(front.x, float(world.call("ground_height_at", front.x, front.y)), front.y)
+		arrived = await walker.walk_route(_tree, world, _game, player, rig, front3)
+		# The challenge prompt (raised 1.07 m) is nearest only within 0.37 m of
+		# her z axis; the route's 1.65 m arrival ring does not move a player
+		# already beside her (3 Nov attempt 2), so finish on the axis itself.
+		arrived = arrived and await walker._walk_to(front3, 0.25, 600)
+		_failures.append_array(walker.failures)
+		_receipts.append({"beat": "master_front_of_rematch_zones", "front": str(front), "arrived": arrived})
 	_receipts.append({"beat": "master_travel", "arrived": arrived, "stand": str(stand), "player": str(player.global_position)})
 	return arrived
 
