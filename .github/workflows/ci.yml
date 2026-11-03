@@ -905,7 +905,11 @@ jobs:
   # and whose shipped binary fails from reaching the rolling download.
   export:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Was 15. The job now runs ~15 min end to end (checkout ~5-7 min, export and
+    # boot check ~6 min, artifact upload ~3 min), so the limit cancelled runs
+    # whose every step had passed (#800, #801 on 2 Nov). A timeout reports as
+    # CANCELLED and ci-gate then fails; this is headroom, not a slower job.
+    timeout-minutes: 25
     # Export starts with the tests instead of after them; ci-gate still
     # requires every verify job and export == success before a merge.
     needs: changes

@@ -313,6 +313,69 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 func _activation(provider: Object) -> void:
 	_activated = provider
 
+
+## F49#0 Cloudreach chapter answer as a return trip (coordinator-approved
+## option (b), 2 Nov): from home, re-enter the already-open Cloudreach arch,
+## press the summit engine's tether-chamber machine (CloudreachSolmaneClimax,
+## opened by Captain Veyra's defeat), read the chamber/free/join beats, press
+## "Leave Solmane free" to refuse this character's volunteer offer and keep the
+## five, then take the Home Key home. Ordinary input only; the offer comes from
+## the world's own Veyra participant journal.
+## The summit part on its own (fallback (a), 2 Nov: the arch's Cloudreach
+## arrival is the chapter's start gate when no Cloudreach waystone was touched,
+## so the return trip cannot reach the summit; this runs from the saved
+## post-Veyra summit instead). Walk to the tether-chamber machine, read the
+## beats, refuse the offer, keep the five.
+func solmane_choice() -> bool:
+	if not _bind(): return false
+	var before := _uids()
+	var climax: Node = tree.current_scene.find_child("CloudreachSolmaneClimax", true, false)
+	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
+	if climax == null or panel == null: return _fail("F49 missing producer: Cloudreach has no Solmane climax or dialogue panel")
+	var machine := climax.find_child("MachinePrompt", true, false) as Node3D
+	if machine == null: return _fail("F49 missing producer: the Solmane tether chamber has no machine control")
+	print("F49 SOLMANE arrival=", _player.global_position, " machine=", machine.global_position)
+	if not await activate(machine): return false
+	var opened := false
+	for frame in 7200:
+		if bool(panel.call("is_open")):
+			await tap("interact")
+			for wait in 20: await tree.process_frame
+		elif bool(climax.call("choice_open")):
+			opened = true
+			break
+		else:
+			await tree.physics_frame
+	if not opened: return _fail("F49 the Solmane machine never opened this character's choice")
+	var refuse := climax.find_child("SolmaneRefusePrompt", true, false) as Node3D
+	if refuse == null: return _fail("F49 the open Solmane choice lacks its refuse prompt")
+	if not await activate(refuse): return false
+	var answered := false
+	for frame in 3600:
+		var has: bool = bool(game.progression.call("has", "cloudreach:legendary_refused"))
+		if bool(panel.call("is_open")):
+			await tap("interact")
+			for wait in 20: await tree.process_frame
+		elif has and INPUT_OWNER.current(tree) == null:
+			answered = true
+			break
+		else:
+			await tree.physics_frame
+	if not answered: return _fail("F49 refusing Solmane did not record cloudreach:legendary_refused")
+	if _uids() != before or game.pending_catch != null: return _fail("F49 the Solmane answer changed the five")
+	return true
+
+
+func solmane_return_trip() -> bool:
+	if not _bind() or str(game.current_realm) != "meadows":
+		return _fail("F49 Solmane return trip must start at home")
+	if not await reenter("cloudreach", "cloudreach"): return false
+	for frame in 300: await tree.physics_frame
+	if not _bind(): return false
+	if not await solmane_choice(): return false
+	for frame in 300: await tree.physics_frame
+	return await home_key()
+
 func grandpa_and_credits() -> bool:
 	if not _bind(): return false
 	var before := _uids()
@@ -326,7 +389,9 @@ func grandpa_and_credits() -> bool:
 	if panel == null: return _fail("F49 homecoming has no actual dialogue panel")
 	# Grandpa is indoors: enter by the east door, as a player does.
 	var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
-	var via: Array[Vector3] = []
+	# From the Shrine Room the player first leaves the Crossing Hall by its
+	# entrance (a straight line to the door ran into the Hall wall, F49#0 1 Nov).
+	var via: Array[Vector3] = _hall_exit_via()
 	if house != null and house.has_method("marker"):
 		via.append(house.call("marker", "door") as Vector3)
 	if not await activate(prompt, via): return false
@@ -430,6 +495,31 @@ func _lessons_read_by_caller() -> bool:
 ## From outside the Hall, walk in through its authored entrance, as a player
 ## does: outside the doorway, the doorway, the home arrival inside, then the
 ## arch's own Approach marker. A trainer already inside gets no waypoints.
+## The reverse of _hall_entry_via: from inside the Crossing Hall, walk to the
+## home arrival point, the entrance, then just outside it (same authored
+## crossing_hall.json anchors). Outside the Hall it returns no waypoints.
+func _hall_exit_via() -> Array[Vector3]:
+	var via: Array[Vector3] = []
+	var arch: Node3D = null
+	for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+		arch = candidate as Node3D
+		break
+	var slot := arch.get_parent() as Node3D if arch != null else null
+	var hall := slot.get_parent() as Node3D if slot != null else null
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+	if hall == null or not config is Dictionary or not config.get("entrance") is Array or not config.get("home_arrival") is Array:
+		return via
+	var local := hall.to_local(_player.global_position)
+	var inside := (absf(local.x) < 7.0 and absf(local.z) < 15.0) or (local.x >= 7.0 and local.x < 17.0 and absf(local.z) < 7.0)
+	if not inside: return via
+	var entrance := Vector3(float(config.entrance[0]), float(config.entrance[1]), float(config.entrance[2]))
+	var arrival := Vector3(float(config.home_arrival[0]), float(config.home_arrival[1]), float(config.home_arrival[2]))
+	via.append(hall.to_global(arrival))
+	via.append(hall.to_global(entrance))
+	via.append(hall.to_global(entrance + Vector3(0, 0, -2.5)))
+	return via
+
+
 func _hall_entry_via(arch: Node3D) -> Array[Vector3]:
 	var via: Array[Vector3] = []
 	var slot := arch.get_parent() as Node3D

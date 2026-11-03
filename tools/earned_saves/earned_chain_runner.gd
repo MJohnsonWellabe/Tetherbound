@@ -127,6 +127,12 @@ var diagnostic := false
 ## --pinned-start: load the immediate predecessor's accepted end save from any
 ## earlier commit (owner, 22 Oct 2026); see f49_disk_handoff.pinned_start.
 var pinned_start := false
+## --historical-team-start (owner, 31 Oct 2026: "do not reprove anything that's
+## already proven"): the imported prefix begins at the historical fresh-title
+## opening_team piece (meadows_chain_ev_fights, before opening_village became
+## its own piece). Uses the order's existing opening_team-first form
+## (f49_disk_handoff.order_profile slice(1)); requires --pinned-start; disclosed.
+var historical_team_start := false
 ## F02#4: `--reload-at-sigils` saves and reloads through the production Load
 ## after each Sigil captain, with the three Sigils before the gate, and at the
 ## Warden arena. F02#6/#7: `--route-ledger` runs the route-ledger observer
@@ -168,6 +174,8 @@ func _run() -> void:
 			diagnostic = true
 		elif arg == "--pinned-start":
 			pinned_start = true
+		elif arg == "--historical-team-start":
+			historical_team_start = true
 		elif arg == "--reload-at-sigils":
 			reload_at_sigils = true
 		elif arg == "--route-ledger":
@@ -195,6 +203,12 @@ func _run() -> void:
 		piece_order = HANDOFF.TRAINED_MEADOWS_PIECES.duplicate()
 		piece_realms = HANDOFF.TRAINED_MEADOWS_REALMS.duplicate()
 		if legacy_order_diagnostic or generated_fixture: failures.append("Trained Meadows profile requires an earned new-order prefix")
+	if historical_team_start:
+		if not pinned_start or segment in ["opening_village", "opening_team"] or legacy_order_diagnostic or generated_fixture:
+			failures.append("--historical-team-start continues an earned opening_team-first prefix and requires --pinned-start")
+		piece_order = piece_order.slice(1)
+		piece_realms = piece_realms.slice(1)
+		disclosures.append("Historical team start: prefix begins at the earned fresh-title opening_team piece (no separate opening_village piece existed then)")
 	if not feast_choices.is_empty() and (training_profile != HANDOFF.TRAINING_PROFILE or segment not in ["training_t1_feed", "training_t2_feed"]):
 		failures.append("Feast choices apply only to trained Meadows feed pieces")
 	if (not SEGMENTS.has(segment) and not piece_order.has(segment)) or save_dir.is_empty() or receipt_path.is_empty():
