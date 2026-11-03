@@ -50,7 +50,7 @@ const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_arrival_gate", "02_broken_causeways", "03_flight_training", "04_high_roost",
 	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06k_return_cliffhold", "06l_return_aerie", "06m_aster_duel", "06n_aster_departure",
-	"06m_aster_duel_only", "06o_aster_storage_departure", "06p_aster_chest"]
+	"06m_aster_duel_only", "06o_aster_storage_departure", "06p_aster_chest", "06s_solmane"]
 const SLOT := 0
 const LOAD_SETTLE_FRAMES := 300
 
@@ -76,6 +76,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		"06m_aster_duel_only": ["cloudreach_chapter_complete"],
 		"06o_aster_storage_departure": ["cloudreach_chapter_complete"],
 		"06p_aster_chest": ["cloudreach_chapter_complete"],
+		"06s_solmane": ["cloudreach_chapter_complete", "cloudreach:legendary_refused"],
 	}
 	var body_finished := false
 
@@ -97,6 +98,9 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"06m_aster_duel": await _aster_duel()
 			"06m_aster_duel_only": await _aster_duel(false)
 			"06p_aster_chest": await _aster_chest()
+			# Fallback (a), coordinator-approved 2 Nov: Cloudreach's Solmane answer,
+			# which no earlier piece walked, from the saved post-Veyra summit.
+			"06s_solmane": await _solmane()
 			"06n_aster_departure": await _aster_departure()
 			"06o_aster_storage_departure": await _aster_departure(false)
 		if failed or not body_finished:
@@ -224,6 +228,23 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		for i in int(inventory.slot_count()):
 			if (inventory.stack_at(i) as Dictionary).is_empty(): return true
 		return _fail("Satchel still has no room for " + item)
+
+	func _solmane() -> void:
+		stage = "solmane"
+		# The machine stands on the finale arena deck. Reverse the authored
+		# aftermath exit (06_veyra_relay: arena origin -30/-50 m, then
+		# (100,1160,5350), then the overlook): a straight walk from the overlook
+		# stalled at the summit bivouac (attempt 1, 2 Nov).
+		var finale_origin := _vec(runtime.finale.config.get("arena_origin", [100.0, 1160.0, 5450.0]))
+		if not await _navigate(Vector3(100.0, 1160.0, 5350.0)): return
+		for point: Vector3 in [finale_origin - Vector3(0.0, 0.0, 50.0), finale_origin - Vector3(0.0, 0.0, 30.0)]:
+			if not await _walk(point): return
+		var travel := PORTAL.new(_tree, game)
+		if await travel.solmane_choice():
+			body_finished = true
+			return
+		for line: Variant in travel.failures: _fail("solmane: " + str(line))
+		if travel.failures.is_empty(): _fail("solmane: choice failed without a receipt")
 
 	func _arrival_gate() -> void:
 		_purpose("Orient in Cloudreach and learn why the routes are broken", "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining")

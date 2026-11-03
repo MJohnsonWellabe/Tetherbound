@@ -1,0 +1,35 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "crown_arch",
+ "from_commit": "2792bdd397a430075141b6daafb23c5240ece715",
+ "to_piece": "rootgate",
+ "to_commit": "2792bdd397a430075141b6daafb23c5240ece715",
+ "to_loaded_from": "/home/user/rb/swb_04",
+ "consumer_handoff_check": {
+  "checked": true,
+  "cross_runner": false,
+  "ending_matches": true,
+  "ending_required": false,
+  "keys": [
+   "uids",
+   "species",
+   "world_flags",
+   "player_flags",
+   "items",
+   "portal_unlocks",
+   "realm",
+   "creature_progression"
+  ],
+  "mismatched": [],
+  "passed": true,
+  "previous": "swb_04",
+  "training": {
+   "checked": true,
+   "matches": true,
+   "reason": ""
+  }
+ },
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}
