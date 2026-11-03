@@ -1,0 +1,11 @@
+{
+  "asset": "camp_workbench.glb",
+  "item": "P2-116 (board F39#13) Tidewake camp workbench identity",
+  "made_by": "Visual lane (Claude), 3 Nov 2026, Blender 4.2.3 LTS, procedural build; no Meshy, no external assets",
+  "source": "source/workbench.py (blender -b -P workbench.py -- <out.glb> <preview.png>)",
+  "reference": "Drafted reference (text): a seaside camp carpenter's bench. A long three-plank top (2.6 m x 1.05 m at 0.95 m) on thick legs with a lower shelf; behind it a 2.15 m tool board with a hammer, a saw, tongs and a rope coil hung on brass pegs, spaced so each reads alone; an iron vise at one end; a plank workpiece, mallet, brass jar and folded teal sail on the top; a 2.6 m lantern post at the other end. Warm brown wood, iron, brass, rope, teal. No red or oxblood. Answers the GPU WD2 judges' path: 'a larger work surface with clear tools'.",
+  "scale_check": "source/scale_check.jpg: the bench beside a 1.80 m cylinder (the trainer). Top at 0.95 m (hip height), tool board top 2.15 m and lantern post 2.6 m stand above the trainer so the station reads past a trainer standing in front of it.",
+  "textures": "Baked from procedural Cycles materials into packed 512 albedo images",
+  "triangles": "about 2.5k",
+  "flag": "data/config/meshy_camp_props.json workbench.vl_candidate (OFF until judged)"
+}

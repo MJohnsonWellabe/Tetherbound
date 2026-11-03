@@ -19,6 +19,11 @@
     "height_m": 2.6,
     "sink_m": 0.03,
     "yaw_deg": -39.0,
+    "vl_candidate": {
+      "_why": "Visual lane (3 Nov 2026), P2-116 / F39#13 (GPU WD2 6.08 on the Meshy bench; path 'a larger work surface with clear tools'). Blender-built 2.6 m plank bench with a 2.15 m tool board (hammer, saw, tongs, rope coil on pegs), vise, workpiece, mallet and a 2.6 m lantern post; provenance assets/props/vl-1103/camp_workbench/provenance.json. Same collider and craft offer. OFF until judged.",
+      "enabled": false,
+      "model": "res://assets/props/vl-1103/camp_workbench/camp_workbench.glb"
+    },
     "_why_yaw": "r2: the camp view stands at (+4, -5) from the bench and looks through the trainer; -39 deg turns the long axis across that view so the bench spans past the trainer."
   }
 }

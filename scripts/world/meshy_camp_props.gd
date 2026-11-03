@@ -58,7 +58,9 @@ static func apply_workbench(bench: Node3D) -> Node3D:
 	var cfg: Dictionary = settings().get("workbench", {})
 	if not bool(cfg.get("enabled", false)) or not is_instance_valid(bench) or bench.has_node(BENCH_NODE):
 		return null
-	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+	# Visual lane 3 Nov: Blender-built long bench with a tool board (P2-116), OFF until judged.
+	var built: Dictionary = cfg.get("vl_candidate", {})
+	var model := HERO_PROP.load_model(str(built.get("model", "")) if bool(built.get("enabled", false)) else str(cfg.get("model", "")))
 	if model == null:
 		return null
 	var old := bench.get("_model") as Node3D
