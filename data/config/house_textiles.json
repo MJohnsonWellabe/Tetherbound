@@ -1,7 +1,7 @@
 {
-  "_why": "Visual lane (3 Nov 2026), from v1/ui1a: two of three code-blind judges flag the player's bed comforter in Grandpa's loft (Quaternius BedTwin 'Comforter'/'ComforterLight', Kd 0.26/0.12/0.19 plum-maroon) as dark red/oxblood on a friendly object; red/oxblood is reserved for Team Tether (CLAUDE.md hard rule). On: those two surfaces only are retinted to a sea-teal quilt; mesh, collider and sleep prompt unchanged (grandpa_house.gd _furnish). OFF until judged.",
+  "_why": "Visual lane (3 Nov 2026), from v1/ui1a: two of three code-blind judges flag the player's bed comforter in Grandpa's loft (Quaternius BedTwin 'Comforter'/'ComforterLight', Kd 0.26/0.12/0.19 plum-maroon) as dark red/oxblood on a friendly object; red/oxblood is reserved for Team Tether (CLAUDE.md hard rule). On: those two surfaces only are retinted to a sea-teal quilt; mesh, collider and sleep prompt unchanged (grandpa_house.gd _furnish). OFF until judged. CPU v1/b5 (3 Nov 2026; three code-blind judges, anchors, linear slope 1.57, r 0.90, RMSE 0.50, confirming batch): F38#19 Meadows exploration HUD frame (loft bed) 5.23 -> 5.92 mapped, ON; all three judges also flag the shipped maroon comforter as oxblood.",
   "scope": "client_presentation",
-  "enabled": false,
+  "enabled": true,
   "models": {
     "BedTwin": {
       "Comforter": "#2e5866",

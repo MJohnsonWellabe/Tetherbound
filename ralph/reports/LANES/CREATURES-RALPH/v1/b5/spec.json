@@ -1,0 +1,20 @@
+[
+ {
+  "label": "F38#19",
+  "a": "/tmp/claude-0/work/judge/b5/k/sides/F38_19_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b5/k/sides/F38_19_b.jpg",
+  "brief": "1 in-game frame (Meadows) for one catalogue subject: exploration HUD. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+  ]
+ },
+ {
+  "label": "F39#23",
+  "a": "/tmp/claude-0/work/judge/b5/k/sides/F39_23_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b5/k/sides/F39_23_b.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: catch chance HUD contrast. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+  ]
+ }
+]

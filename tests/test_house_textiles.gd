@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
 ## Visual lane (3 Nov 2026): the loft bed comforter retint (house_textiles.json)
-## ships OFF until judged, declares its scope, never tints a textile into the
+## ships ON with its judged score, declares its scope, never tints a textile into the
 ## reserved red/oxblood range, and names surfaces the installed BedTwin really has.
 
 const CONFIG := "res://data/config/house_textiles.json"
@@ -26,9 +26,10 @@ func _surface_names(model: String) -> Array[String]:
 	return names
 
 
-func test_ships_off_with_scope() -> void:
+func test_ships_on_with_its_score_and_scope() -> void:
 	var cfg := _config()
-	assert_false(bool(cfg.get("enabled", true)), "house_textiles ships OFF until judged")
+	assert_true(bool(cfg.get("enabled", false)), "house_textiles ships ON (judged gain)")
+	assert_true(str(cfg.get("_why", "")).contains("5.92"), "house_textiles records its mapped score")
 	assert_eq(str(cfg.get("scope", "")), "client_presentation", "the flag declares its scope")
 
 
