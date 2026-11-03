@@ -469,10 +469,16 @@ jobs:
       fail-fast: false
       matrix:
         suite: ${{ fromJSON(needs.changes.outputs.suites || '[]') }}
-    timeout-minutes: 45
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 45.
+    timeout-minutes: 75
     needs: changes
     if: needs.changes.outputs.suites != '' && needs.changes.outputs.suites != '[]'
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           filter: blob:none
@@ -578,12 +584,18 @@ jobs:
   # already moved it once (the bake went 466,922 -> 725,949 placements).
   verify-veg-corridor:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 25.
+    timeout-minutes: 55
     needs: changes
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- vegetation placement data regression; runs on the 8-hourly schedule and on dispatch, not on a full-ci PR.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veg-corridor|'))
 
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           # Fetch commits and trees but no blobs, then materialise only the
@@ -634,12 +646,18 @@ jobs:
   # roughly 2x headroom for the next one.
   verify-scatter-rules:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 30.
+    timeout-minutes: 60
     needs: changes
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- vegetation/scatter placement data regression; runs on the 8-hourly schedule and on dispatch, not on a full-ci PR.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-scatter-rules|'))
 
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           # Fetch commits and trees but no blobs, then materialise only the
@@ -684,10 +702,16 @@ jobs:
     # Tidewake loops steps. Those three are bounded at 1430 s (23.8 min) in
     # total, so the worst case is ~32 min plus runner variance; 45 min keeps
     # margin.
-    timeout-minutes: 45
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 45.
+    timeout-minutes: 75
     needs: changes
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-regions-relay|'))
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           # Fetch commits and trees but no blobs, then materialise only the
@@ -722,7 +746,9 @@ jobs:
 
   verify-continuous-core-known-red:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 25.
+    timeout-minutes: 55
     needs: changes
     # This is an investigation probe, not a release gate: it is explicitly
     # allowed to fail and currently repeats a costly whole-world opening drive
@@ -737,6 +763,10 @@ jobs:
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-continuous-core-known-red|'))
     continue-on-error: true
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           # Fetch commits and trees but no blobs, then materialise only the
@@ -795,7 +825,9 @@ jobs:
   # above run the whole file again.
   verify-gate-b-full-known-red:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 30.
+    timeout-minutes: 60
     needs: changes
     # Owner, 2026-10-04: known-red probes run only on the scheduled full
     # tier and on manual dispatch, never on a `full-ci` pull request. They
@@ -804,6 +836,10 @@ jobs:
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-b-full-known-red|'))
     continue-on-error: true
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           filter: blob:none
@@ -854,10 +890,16 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    timeout-minutes: 30
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 30.
+    timeout-minutes: 60
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           filter: blob:none
@@ -916,7 +958,9 @@ jobs:
     # boot check ~6 min, artifact upload ~3 min), so the limit cancelled runs
     # whose every step had passed (#800, #801 on 2 Nov). A timeout reports as
     # CANCELLED and ci-gate then fails; this is headroom, not a slower job.
-    timeout-minutes: 25
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 25.
+    timeout-minutes: 55
     # Export starts with the tests instead of after them; ci-gate still
     # requires every verify job and export == success before a merge.
     needs: changes
@@ -924,6 +968,10 @@ jobs:
       needs.changes.outputs.code == 'true'
 
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           # CI6172 spent 612 seconds fetching/materialising the full tree.
@@ -1047,11 +1095,17 @@ jobs:
       fail-fast: false
       matrix:
         group: [space, capacity, recovery]
-    timeout-minutes: 50
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 50.
+    timeout-minutes: 80
     needs: changes
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- six solo world boots (~26 runner-min) walking the offer; the per-participant offer stays gated by the five smoke_net_veridian_* smokes. The rift gate smoke moved to verify-gate-b-core.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veridian-offer|'))
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           # Fetch commits and trees but no blobs, then materialise only the
@@ -1117,12 +1171,18 @@ jobs:
     # to Craft at the Workbench, Save/Load UI, then the home arch back to the
     # same stone. Measured 15.4 min locally (headless).
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 35.
+    timeout-minutes: 65
     # A ~15-min job: queued first, on `changes` only (QUEUE ORDER above).
     needs: changes
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- a 12.5-min scripted walk; its pieces stay gated by gate-b-core (opening), smoke_net_f18_fixture_teaching, smoke_net_homestead_station_craft and title_load_game.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           filter: blob:none
@@ -1174,11 +1234,17 @@ jobs:
         # one runner instead of three (run 37256861064: 6.1, 5.2, 5.1 min jobs)
         # under the account's ~20 concurrent-job cap.
         segment: [s0_setup_and_control, s1_ride_a, s2_ride_b]
-    timeout-minutes: 30
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 30.
+    timeout-minutes: 60
     needs: changes
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- rejoin stays gated by smoke_net_reconnect_keeps_character, behind_character_joins_ahead_world, realm_owner_disconnect_mid_fight and veridian_relic_key; the segment handoff checks still gate every run.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|'))
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           filter: blob:none
@@ -1243,11 +1309,17 @@ jobs:
       fail-fast: false
       matrix:
         chain: [midride, bracket]
-    timeout-minutes: 45
+    # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
+    # assets/props 2.6 GB) and took 20-45 min a job that day; was 45.
+    timeout-minutes: 75
     needs: changes
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-unbroken-chains|'))
     continue-on-error: true
     steps:
+      - name: Free runner disk for the ~7 GB asset checkout
+        # A blobless checkout downloads ~7.1 GB and writes it again to the
+        # work tree; on 3 Nov a shard ran out of disk in checkout.
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
       - uses: actions/checkout@v4
         with:
           filter: blob:none
