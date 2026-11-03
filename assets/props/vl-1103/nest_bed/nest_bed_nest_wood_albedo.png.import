@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dgqt12we3mkuu"
-path="res://.godot/imported/nest_bed_nest_wood_albedo.png-682bf6223f57b3058a2d0992de879a77.ctex"
+path.s3tc="res://.godot/imported/nest_bed_nest_wood_albedo.png-682bf6223f57b3058a2d0992de879a77.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "c316737e5a2120539e71b5f732b200f4"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/vl-1103/nest_bed/nest_bed_nest_wood_albedo.png"
-dest_files=["res://.godot/imported/nest_bed_nest_wood_albedo.png-682bf6223f57b3058a2d0992de879a77.ctex"]
+dest_files=["res://.godot/imported/nest_bed_nest_wood_albedo.png-682bf6223f57b3058a2d0992de879a77.s3tc.ctex"]
 
 [params]
 

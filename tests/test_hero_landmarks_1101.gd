@@ -57,14 +57,7 @@ func test_all_three_ship_off_with_a_declared_scope() -> void:
 
 func test_crown_arch_off_leaves_the_landed_arch_settings() -> void:
 	var landed := CROWN.with_round2(_json("res://data/config/crown_arch_hero.json"))
-	var on := HERO.crown_arch_vl_overlay(landed)
-	assert_eq(str(on.model), str(vl.model), "ON shows the judged r1 Blender arch")
-	var r2: Dictionary = vl.get("r2_candidate", {})
-	assert_false(bool(r2.get("enabled", true)), "the r2 arch ships OFF until judged")
-	assert_true(ResourceLoader.exists(str(r2.get("model", ""))), "the r2 arch model is imported")
-	for key: String in landed:
-		if key not in ["model", "height_m", "sink_m"]:
-			assert_eq(on[key], landed[key], "ON keeps the landed %s" % key)
+	assert_eq(HERO.crown_arch_overlay(landed), landed, "OFF must not change the hero arch")
 	assert_eq(CROWN.settings(), HERO.crown_arch_vl_overlay(landed),
 		"the shipped settings are the round-2 arch with the judged Blender arch model")
 

@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdpaiybxlhwuo"
-path="res://.godot/imported/creature_fulgocobra_owner1101_glow_goldvein.png-e7247e74b44a7dc291921719e5a0616c.ctex"
+path.s3tc="res://.godot/imported/creature_fulgocobra_owner1101_glow_goldvein.png-e7247e74b44a7dc291921719e5a0616c.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_goldvein.png"
-dest_files=["res://.godot/imported/creature_fulgocobra_owner1101_glow_goldvein.png-e7247e74b44a7dc291921719e5a0616c.ctex"]
+dest_files=["res://.godot/imported/creature_fulgocobra_owner1101_glow_goldvein.png-e7247e74b44a7dc291921719e5a0616c.s3tc.ctex"]
 
 [params]
 

@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bd78iibujysr0"
-path="res://.godot/imported/crown_arch_arch_copper.png-cafcd83ba949b1551a6624e8a67dfb86.ctex"
+path.s3tc="res://.godot/imported/crown_arch_arch_copper.png-cafcd83ba949b1551a6624e8a67dfb86.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "aa57d1fe035c66ba394ae5a840139809"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/vl-1103/crown_arch/crown_arch_arch_copper.png"
-dest_files=["res://.godot/imported/crown_arch_arch_copper.png-cafcd83ba949b1551a6624e8a67dfb86.ctex"]
+dest_files=["res://.godot/imported/crown_arch_arch_copper.png-cafcd83ba949b1551a6624e8a67dfb86.s3tc.ctex"]
 
 [params]
 
