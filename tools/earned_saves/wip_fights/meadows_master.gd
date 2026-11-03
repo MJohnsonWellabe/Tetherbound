@@ -59,7 +59,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = {}) -> D
 		"storage": STORAGE,
 		"rebind": func(returned: Node3D) -> bool:
 			return returned == tree.current_scene and str(game.get("current_realm")) == "meadows" and _travel._bind(),
-		"chest": bool(args.get("chest", true))})
+		"chest": bool(args.get("chest", true)), "chest_store_only": bool(args.get("chest_store_only", false))})
 	_failures.append_array(outcome.get("failures", []))
 	_failures.append_array(_travel.failures)
 	_receipts.append_array(outcome.get("receipts", []))

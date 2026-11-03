@@ -566,7 +566,9 @@ func _play() -> void:
 			# Earned F49 line only (3 Nov): Mira's chest kit (candy, potions and
 			# ~300 materials) needs more than the seven free slots this satchel
 			# has, and the nearest touched waystone is in Stormwood. Win the duel
-			# at her site, then the designed storage trip home by the Home Key;
+			# at her site, press her chest (refused: no room), then its designed
+			# storage trip home by the Home Key (a Home Key straight after the
+			# duel never finished, 3 Nov);
 			# the walk back is its own meadows_walk_to_mira pieces, and the chest
 			# is claimed by training_t2_master's already-won branch.
 			var prior_store: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
@@ -575,14 +577,9 @@ func _play() -> void:
 				return
 			var wins_before: Array = (before.get("training", {}) as Dictionary).get("master_wins", [])
 			var visit: Dictionary = await load("res://tools/earned_saves/wip_fights/meadows_master.gd").new().run(self, world, game,
-				{"master_id": "master_t2", "chest": false})
+				{"master_id": "master_t2", "chest_store_only": true})
 			if not bool(visit.get("passed", false)):
 				failures.append_array(visit.get("failures", ["Mira's duel did not pass"]))
-				return
-			var trip: Dictionary = await load("res://tools/earned_saves/wip_fights/storage_trip.gd").new().run(self, current_scene as Node3D, game,
-				{"keep": ["home_key"], "return": false})
-			if not bool(trip.get("passed", false)):
-				failures.append("training_t2_master_store storage trip failed: " + str(trip.get("failures", [])))
 				return
 			var wins_after: Array = (_snapshot().get("training", {}) as Dictionary).get("master_wins", [])
 			if not wins_after.has("master_t2") or wins_before.has("master_t2"):
