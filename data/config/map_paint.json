@@ -8,10 +8,10 @@
     "enabled": true,
     "layers": ["trees", "grove"],
     "all_layers": ["trees", "grove", "saplings", "deadfall", "bushes", "grass", "drygrass", "flowers", "rocks", "path_stones", "groundmat"],
-    "weights": {"trees": 1.0, "grove": 1.4},
-    "radius_m": 9.0,
+    "weights": {"trees": 1.2, "grove": 1.8},
+    "radius_m": 14.0,
     "colour": "#2c5232",
-    "strength": 0.75
+    "strength": 0.8
   },
   "grain": 0.035
 }
