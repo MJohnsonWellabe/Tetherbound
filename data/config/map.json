@@ -65,7 +65,8 @@
     "chart_grid_1104": {
       "_why": "F38#4 P2-002 (NEAR6-MS, 4 Nov 2026): judges still read the unsurveyed parchment as featureless mottle. A faint inked survey grid at a whole-metre spacing (the first of spacings_m at least min_spacing_px apart) and a small north mark make it read as a chart without revealing any terrain (OW3). tab_map.gd _draw_chart_grid. OFF until judged.",
       "scope": "client_presentation",
-      "enabled": false,
+      "_why_on": "CPU 6.81 -> 6.93 (quick judge F38-4-fcb5301c9826-11042108; two judges up, one tied; owner 4 Nov: any judged gain ships ON).",
+      "enabled": true,
       "realms": ["meadows"],
       "spacings_m": [25, 50, 100, 250, 500, 1000, 2500],
       "min_spacing_px": 80.0,
