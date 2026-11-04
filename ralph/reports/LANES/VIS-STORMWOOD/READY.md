@@ -17,7 +17,22 @@
 - `test_character_appearance_variants`
 - `test_stormwood_struck_sentinel_identity`, `test_stormwood_capacitor_grove_identity`, `test_stormwood_glass_field_identity`
 
-Results land here.
+Results: below, all 0 failed.
+
+**Region identity and look tests (4 Nov ~10:45 UTC, head with obsidian r3 ON; seam r2 ON separately passed basalt, judged_on, glass_field_identity 4/73, surge 4/46), all 0 failed:**
+- `test_stormheart_presentation` 7/784
+- `test_stormheart_ancient_trunk` 4/240
+- `test_stormheart_canopy_atlas` 2/10
+- `test_stormheart_split_bark` 3/10
+- `test_stormheart_wayfinding` 3/3952
+- `test_stormwood_look` 8/54
+- `test_stormwood_crown_overlook` 2/526
+- `test_stormwood_charged_ground` 2/7
+- `test_stormwood_route_walkability` 4/37
+- `test_stormwood_surge` 4/46
+- `test_character_appearance_variants` 11/235
+- `test_stormwood_struck_sentinel_identity` 2/23
+- `test_stormwood_capacitor_grove_identity` 2/24
 
 **Tests on the synced head (06:20 UTC, after main merge `9faa85e1` and the j1-j4 commits), all 0 failed:**
 - `test_vis_stormwood_judged_on` 4/25
