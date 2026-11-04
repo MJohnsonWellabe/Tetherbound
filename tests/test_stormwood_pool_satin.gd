@@ -57,3 +57,15 @@ func test_grass_patch_ships_off_and_opens_clearings() -> void:
 	assert_eq(float(grass.clump_contrast), 1.0, "full contrast for true clearings")
 	assert_true(float(grass.clump_patch_start) < float(grass.clump_patch_full), "a ramp from clearing to colony")
 	assert_true(float(grass.clump_patch_start) > 0.0 and float(grass.clump_patch_full) <= 1.0, "within the shader's range")
+
+
+## F41#5 macro_1104: ships OFF; ON gives two cool, non-red macro colours at
+## long noise scales (large drifts, not grain).
+func test_macro_ships_off_and_is_cool_drifts() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ZONES.CONFIG_PATH))
+	assert_false(bool(raw.macro_1104.get("enabled", true)), "ships OFF until judged")
+	assert_eq(ZONES.macro_variation(), {}, "OFF installs nothing")
+	for key: String in ["macro_variation1", "macro_variation2"]:
+		var c := Color(str(raw.macro_1104[key]))
+		assert_false(c.r > c.g * 1.4 and c.r > c.b * 1.4, "%s is no red or oxblood" % key)
+	assert_true(float(raw.macro_1104.noise1_scale) < 0.05, "long-wavelength drifts")

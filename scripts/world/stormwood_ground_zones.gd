@@ -195,3 +195,30 @@ static func install(terrain: Object) -> void:
 	for key: String in ["pool_roughness", "pool_specular"]:
 		if zones.has(key):
 			material.call("set_shader_param", "sz_" + key, float(zones[key]))
+
+
+## F41#5 `macro_1104` (stormwood_ground_finish.json, OFF until judged). Judges
+## read the Stormwood ground as "a flat green grass carpet": the terrain grass
+## slot (the wet-moss floor texture) tiles evenly because Stormwood's terrain
+## never enables Terrain3D's macro variation. On: two cool moss-tone macro
+## colours at long noise scales lay large darker and lighter drifts across it,
+## as Meadows does (terrain_playground.json). Shader uniforms only; no bake.
+static func macro_variation() -> Dictionary:
+	var cand: Variant = finish().get("macro_1104", {})
+	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
+
+
+static func install_macro(terrain: Object) -> void:
+	var cfg := macro_variation()
+	if cfg.is_empty() or terrain == null:
+		return
+	var material: Object = terrain.get("material")
+	if material == null:
+		return
+	material.call("set_shader_param", "enable_macro_variation", true)
+	for key: String in ["macro_variation1", "macro_variation2"]:
+		if cfg.has(key):
+			material.call("set_shader_param", key, Color(str(cfg[key])))
+	for key: String in ["noise1_scale", "noise2_scale"]:
+		if cfg.has(key):
+			material.call("set_shader_param", key, float(cfg[key]))
