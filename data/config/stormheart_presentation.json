@@ -64,7 +64,7 @@
     "light_range_m": 16.0
   },
   "deck_light_1101": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#1 Stormheart 3.22 -> 3.94 mapped with deck_light_1101 + hollow_floor + hero_interior.round2.",
     "scope": "client_presentation",
     "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'untextured giant trunk walls and a bare plank deck', 'murky dark brown frames, little value range'). OFF until GPU judged. Warm lantern pools along the OuterWorks lip and the DynamoCore deck (Captain Marrow's dialogue area) and one cool storm light falling through the crown opening give the bark its relief and the decks a warm/cool value range; cut-wood planks gain board-to-board tone. Shadowless omni/spot lights (Compatibility-safe, within the per-object light cap) and one shader parameter; no floor, rail, collider, ascent or save change.",
     "lantern_colour": "#ffb874",
@@ -207,14 +207,14 @@
     "lantern_clusters": {"count": 8, "phase": 0.25, "radius_m": 18.7, "drops_m": [0.9, 1.6, 2.3], "spread_m": 0.9, "lantern_scale": 1.2, "flame_energy": 3.6, "light_energy": 3.0, "light_range_m": 15.0},
     "lip_banners": {"count": 8, "phase": 0.75, "radius_m": 18.35, "drop_scale": 0.5},
     "round2": {
-      "enabled": false,
+      "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#1 Stormheart 3.22 -> 3.94 mapped with deck_light_1101 + hollow_floor + hero_interior.round2.",
       "_candidate": "r27 (OFF until judged; needs hero_interior on). r19 judges x3: the hollow floor reads as 'a dirt disc in a grass ring, an arena, not a living trunk', and the core as 'a bloomed light pillar, not arcing lightning'. Bark roots flow from the wall foot across the floor (entrance split and centre clear); thin white-violet arcs wind up around the core column (natural glow, hidden after the storm is released). Visual only.",
       "roots": {"count": 20, "seed": 27, "start_radius_m": 45.0, "end_radius_m": [11.0, 18.0], "radius_m": [1.9, 0.25], "bark_repeat_m": 4.0},
       "arcs": {"count": 4, "seed": 271, "colour": "#ebe6ff", "width_m": 0.16, "segments": 90, "radius_scale": 0.9}
     }
   },
   "hollow_floor": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#1 Stormheart 3.22 -> 3.94 mapped with deck_light_1101 + hollow_floor + hero_interior.round2.",
     "_why_off": "r17 code-blind CPU round (25 Oct): clearing the hollow's ground cover mapped 5.24 -> 4.75 against r16. OFF.",
     "scope": "client_presentation",
     "_why": "r17 (25 Oct): r16 judges read the hollow's grass carpet as outdoors. Ground-cover tiers keep out of clear_radius_m around the trunk axis.",
