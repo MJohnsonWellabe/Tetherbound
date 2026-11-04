@@ -26,7 +26,6 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 			"veilfall_facade_candidate", "forward_plus_candidate",
 			"first_shore_declutter_candidate",
 			"veilfall_formation_relief_fill_candidate",
-				"shore_surf_candidate", "shore_surf_vary_candidate",
 				"swim_candidate",
 				"veilfall_mountain_candidate",
 				"current_bands_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
@@ -94,6 +93,13 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
 	assert_true(str(raw.get("_why_golden_shore_water_on", "")).contains("5.87"),
 		"the golden sky and shore water mapped score is recorded in the config")
+	# tb/vis-tidewake-1104 look r15: the broken surf line lifted F39#30a CPU
+	# 5.86 -> 6.19 and F13#5 5.31 -> 5.82, so it ships ON.
+	for section: String in ["shore_surf_candidate", "shore_surf_vary_candidate"]:
+		assert_false(off.has(section), "%s ships on after look r15" % section)
+		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
+	assert_true(str(raw.get("_why_shore_surf_on", "")).contains("6.19"),
+		"the surf line's mapped score is recorded in the config")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)

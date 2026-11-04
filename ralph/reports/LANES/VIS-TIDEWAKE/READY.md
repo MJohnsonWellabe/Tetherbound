@@ -15,6 +15,7 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `tidewake_look.json` lesson_clusters/dune_grass/stones/waterline_declutter out of `sections_off` | F39#30a/#30b, F13#5 | CPU 6.19 -> 6.43 / 5.71 -> 5.88 / 5.81 -> 5.85 | `test_tidewake_look_profile.gd`, `test_tidewake_cause.gd::test_dunes_part_restores_dressing_and_sets_dune_form` | look/r12 |
 | `water_veilfall_falls_visual.json` `geometry.standoff_m` 0.8 -> 3.0 | F39#30b (F39#31 flat) | CPU 5.75 -> 5.85 | `test_tidewake_look_profile.gd::test_veilfall_fall_sheet_clears_the_rock` | look/r12 |
 | `tidewake_look.json` golden_sky + shore_water out of `sections_off` | F13#5 (F39#30a/#30b flat) | CPU 5.69 -> 5.87 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r14 |
+| `tidewake_look.json` shore_surf + shore_surf_vary out of `sections_off` | F39#30a, F13#5 | CPU 5.86 -> 6.19 / 5.31 -> 5.82 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r15 |
 
 | ~~`human_water_contact_visual.json` base wake values~~ (withdrawn 11:27, superseded by NEAR6-TW's `wake_trail` in batch 11) | F39#5 | CPU 5.31 -> 5.63 (r4) | the test is removed; this branch's view, config and test now equal batch 11 | this commit |
 
