@@ -1,0 +1,32 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "training_t5_return",
+ "from_commit": "87249f49a4303126ad66903f4f81953a8f871ace",
+ "to_piece": "rowan_visit",
+ "to_commit": "3ee3a508a4931cb19ac308420cd26669725a2757",
+ "to_loaded_from": "/root/rb/f49_s3_return1",
+ "consumer_handoff_check": {
+  "checked": true,
+  "cross_runner": true,
+  "ending_matches": true,
+  "ending_required": false,
+  "keys": [
+   "uids",
+   "species",
+   "realm",
+   "items",
+   "world_flags"
+  ],
+  "mismatched": [],
+  "passed": true,
+  "previous": "f49_s3_return1",
+  "training": {
+   "checked": true,
+   "matches": true,
+   "reason": ""
+  }
+ },
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}
