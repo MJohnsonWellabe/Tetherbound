@@ -43,3 +43,10 @@ func test_summit_silhouette_ships_on() -> void:
 func test_night_foreground_fill_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_visual.json")
 	_assert_on(cfg.time_override_arms.night_foreground_fill, "5.84", "time_override_arms.night_foreground_fill")
+
+
+## F40-4-f99566cca348-11041557: F40#4 P2-023 landform edges 5.96 -> 6.27.
+func test_shelf_edge_fringe_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_f40_items.json")
+	_assert_on(cfg.shelf_edge_fringe, "6.27", "shelf_edge_fringe")
+	assert_false(bool(cfg.shelf_edge_soften.get("enabled", false)), "shelf_edge_soften (judged worse) stays OFF")
