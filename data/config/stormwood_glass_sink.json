@@ -1,5 +1,23 @@
 {
   "scope": "client_presentation",
+  "obsidian_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "VIS-STORMWOOD (4 Nov 2026), F41#10 P2-070 (GPU 5.06; CPU v1/b10 4.45 -> 4.92 with the hero basin and dark pool, judges: 'still a terrain edge over a tiled plane'; the pale cells are the 0.085 fracture seams plus sky specular). On (stormwood_glass_sink.gd with_obsidian): plates three times larger, near-black indigo obsidian body, seams dark blue with about a third carrying a faint stormglass glow, and the sky mirror cut from 4 m. Terrain shader parameters only. OFF until judged.",
+    "glass_colour": "#0a0d14",
+    "facet_colour": "#151a26",
+    "seam_colour": "#1c2c40",
+    "fracture_scale": 0.028,
+    "seam_width": 0.03,
+    "roughness": 0.46,
+    "metallic": 0.0,
+    "far_fade_m": [4.0, 40.0],
+    "far_specular": 0.04,
+    "far_roughness": 0.82,
+    "vein_colour": "#6fb4ff",
+    "vein_energy": 0.85,
+    "vein_fraction": 0.35
+  },
   "meshy_rim": {
     "enabled": true,
     "_candidate": "World dressing P2-070 (OFF until GPU judged; coordinator Meshy batch 31 Oct, assets/props/meshy-1031/glass_sink, provenance there). GPU 3.19: no rim marker, copper or black pool. The Meshy stone-and-copper ring of glass spikes stands as rim markers on the Hollow Crown lip in front of the reachable south-west viewpoints, and two scaled-up rings sit on the sink floor below as basin dressing. Visual only, no collider.",
