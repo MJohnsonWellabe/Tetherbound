@@ -17,6 +17,10 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | F39#7 | P2-089 fight composition | `combat.json` `contact_spacing.all_pairs.enabled` | Every ally/foe pair uses the hollows_alpha fix (render-box support, 14 m/s swept correction); clearance and reach unchanged |
 | F39#19 | P2-088 roster contrast | `combat.json` `hud_subject_fade.roster_floor.enabled` | The fight roster holder never fades below alpha 0.9 |
 
+## Verdicts
+
+- **r6, F39#6, flat (5.29 -> 5.29), held OFF:** `uiposes_riptusk_side_faint_prone_rest` cannot reach the shipped Riptusk. It now renders the owner1101 remake, which has no F36 recipe, so A and B were pixel-identical (3/3 judges). The new arm is `creature_pose_settle.json` `tidewake_scope` (CAUSE-POSES settle, scoped to ripplet, riptusk and aquaryn, with the roster master still OFF). It is queued as r6b.
+
 ## Queue
 
 `runbook/chain.sh` (resumable): import, then r6, r27, r14, r19, r7. F39#1/#2 wait for VIS-TIDEWAKE's r2a verdict; F39#4 waits for its shiny round; F39#20 is designed from the r19 base fight frames.
