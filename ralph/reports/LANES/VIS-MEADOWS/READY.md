@@ -19,3 +19,4 @@ Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the sa
 ## Notes for the coordinator (messages from this lane are refused as an untrusted device)
 
 - The shallow .git is done (depth 1, `blob:none`, 21 GB free). Harness fix for any lane that does the same: in a `blob:none` clone, `git commit` lazily fetches every blob and hangs. Commit with `GIT_NO_LAZY_FETCH=1 git write-tree --missing-ok`, then `git commit-tree <tree> -p HEAD -m ...` and `git update-ref HEAD <commit>`. Push works normally.
+- Harness fix: this cloud container is reclaimed (all processes killed) whenever the session has no harness-tracked task. That happened twice, at about 01:35 and 02:00 UTC. A `nohup setsid` chain does NOT keep it alive. Run long capture chains as a tracked background Bash (`run_in_background`, timeout ≤ 2 h) and make them resumable (a per-group `.done` marker; re-applying an overlay is idempotent). Relaunch the chain from each check-in.
