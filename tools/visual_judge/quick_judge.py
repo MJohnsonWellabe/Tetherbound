@@ -315,7 +315,8 @@ def command(e, out_res, sha, biome):
         engine += ["--rendering-method", "gl_compatibility"]
     args = e["args"] + e["subsets"] + e["narrow"]
     script_text = (ROOT / e["script"]).read_text(errors="ignore")
-    if "source-commit" in script_text:
+    # The F40 matrix tools take --source-commit through lookdev_capture_bootstrap.gd, not their own text.
+    if "source-commit" in script_text or "capture_lookdev_catalogue" in script_text:
         args.append(f"--source-commit={sha}")
     flag = WORLD_CACHE.get(biome)
     if flag and flag in script_text and not any(a.startswith(flag) for a in args):

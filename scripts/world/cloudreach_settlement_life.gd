@@ -340,6 +340,7 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 					world.call("_apply_tree_palette", model, holder.get_child_count())
 				elif str(item.asset).begins_with("rock") or item.asset == "paving":
 					world.call("apply_stone_palette", model)
+				_fringe_edges(world, spec, landmark_name, str(item.asset), model, size)
 		# P2-022 / F40#2 (NEAR6-CR): `summit_silhouette` (OFF until judged)
 		# overrides authored building dimensions per asset for one site, so
 		# the imported belvederes can rise beside the 54 m aviary drum. Visual
@@ -653,6 +654,52 @@ func _ground(world: Node3D, parent: Node3D, local: Vector3) -> Vector3:
 
 ## width > 0 fits the footprint to that width independently of the height
 ## (a Meshy building whose proportions miss the brief).
+## P2-023 / F40#4 round 2 (NEAR6-CR): `shelf_edge_fringe` (OFF until judged).
+## Judges keep the pale stratified cliff_shelf modules but call their lips
+## dead-straight extrusions and ask for edge debris and bushes. When on, the
+## listed asset at the listed site gets a fringe of installed bushes and rocks
+## along its top rim, part overhanging the lip, so the silhouette line breaks.
+## Children of the module's own placement; visual only, no collider.
+func _fringe_edges(world: Node3D, spec: Dictionary, site_name: String, asset: String,
+		model: Node3D, height: float) -> void:
+	var cfg: Dictionary = spec.get("shelf_edge_fringe", {})
+	if model == null or cfg.get("enabled") != true:
+		return
+	var per: Variant = ((cfg.get("sites", {}) as Dictionary).get(site_name, {}) as Dictionary).get(asset)
+	if not (per is Dictionary):
+		return
+	var placement := model.get_parent() as Node3D
+	var bounds: AABB = BOUNDS.measure(model)
+	var hx := bounds.size.x * model.scale.x * 0.5
+	var hz := bounds.size.z * model.scale.z * 0.5
+	var spacing := float((per as Dictionary).get("spacing_m", 3.0))
+	var drop := float((per as Dictionary).get("drop_m", 0.4))
+	var out := float((per as Dictionary).get("overhang_m", 0.4))
+	var corners: Array[Vector3] = [Vector3(-hx, 0, -hz), Vector3(hx, 0, -hz), Vector3(hx, 0, hz), Vector3(-hx, 0, hz)]
+	var n := 0
+	for e in 4:
+		var a: Vector3 = corners[e]
+		var b: Vector3 = corners[(e + 1) % 4]
+		var normal := Vector3(b.z - a.z, 0, a.x - b.x).normalized() * -1.0
+		var count := maxi(1, int(a.distance_to(b) / maxf(spacing, 0.5)))
+		for k in count:
+			var t := (float(k) + 0.25 + 0.5 * absf(sin(float(n) * 1.9))) / float(count)
+			var at := a.lerp(b, t) + normal * out * (0.4 + 0.6 * absf(sin(float(n) * 2.7))) \
+				+ Vector3.UP * (height - drop)
+			var rocky := n % 3 == 2
+			var key := "rock_mid" if rocky else "bush"
+			var h := lerpf(float((per as Dictionary).get("height_min_m", 0.9)),
+				float((per as Dictionary).get("height_max_m", 1.8)), absf(sin(float(n) * 3.1)))
+			var piece := _scene(placement, load(str(PROPS[key])) as PackedScene, at, h * (0.7 if rocky else 1.0),
+				float(n) * 47.0)
+			if piece != null:
+				if rocky:
+					world.call("apply_stone_palette", piece)
+				else:
+					world.call("_apply_tree_palette", piece, n)
+			n += 1
+
+
 func _scene(parent: Node3D, packed: PackedScene, at: Vector3, height: float, yaw: float, width := 0.0) -> Node3D:
 	if packed == null:
 		return null
