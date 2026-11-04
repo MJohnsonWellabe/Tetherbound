@@ -1,0 +1,5 @@
+Tl: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Mr: none
+Vs: "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+Dz: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vm: none
