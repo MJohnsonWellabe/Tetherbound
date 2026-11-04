@@ -25,6 +25,14 @@
   ],
   "_why_scorched_scars": "F10#4 scene-art pass (owner 5860380772): strike scars as terrain-following burnt glass-fused patches with the grass cleared, blackened rock-family lumps and low smoked-glass blades. Enabled for Phase 1b; the old spire clusters remain only as a legacy fallback.",
   "scorched_scars": true,
+  "seam_clear_1104": {
+    "enabled": false, "_why_held": "Held OFF in batch 9 (#817, 4 Nov 2026): judged CPU 4.34 -> 5.30, but dropping the fissure ribbons breaks test_stormwood_glass_field_identity (each impact keeps its three main lightning fissures; the fused ground keeps its branching lightning language). VIS-STORMWOOD to rework it so the fissures stay.", "_why_on_judged": "ON (VIS-STORMWOOD qj_seam, 4 Nov 2026): CPU three-judge quick_judge A/B, calibrated slope 1.52, r 0.99, anchor RMSE 0.14: F41#19 Glass Field spike bases 4.34 -> 5.30 mapped (3/3 score the candidate higher; defect PRESENT -> PARTIAL).",
+    "scope": "client_presentation",
+    "_why": "VIS-STORMWOOD qj_basalt (4 Nov 2026), F41#19 P2-043: the basalt mound judged worse (5.25 -> 4.42); 3/3 preferred the shipped purple-cyan glass crust but named 'a rigid thin white line' (the straight emissive fissure ribbons), grass passing through the crust edge, and a crust 'much wider than the cluster'. On (stormwood_glass_field.gd _seam_clear): no fissure ribbons, grass cleared across the whole scar (1.0 instead of 0.82) and the glass crust at 0.6 of the scar width instead of 0.9. Visual only. OFF until judged.",
+    "hide_fissures": true,
+    "grass_clear_fraction": 1.0,
+    "crust_footprint": 0.6
+  },
   "basalt_crust_1104": {
     "enabled": false,
     "scope": "client_presentation",

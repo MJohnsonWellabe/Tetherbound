@@ -162,6 +162,8 @@ def _merge(dst, patch):
 def _switch_on(d, dotted):
     keys = [k for k in dotted.split(".") if k]
     o = d
+    # A numeric key indexes a list (e.g. "clusters.6.candidate" in a band props file).
+    keys = [int(k) if k.isdigit() else k for k in keys]
     for k in keys[:-1]:
         o = o[k]
     if keys and o[keys[-1]] is False:

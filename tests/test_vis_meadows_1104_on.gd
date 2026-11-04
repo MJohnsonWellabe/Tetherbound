@@ -55,3 +55,32 @@ func test_f38_13_catch_arms_ship_on_with_their_cpu_score() -> void:
 	assert_true(bool(orb.get("enabled", false)), "physical catch orb ON")
 	var card: Dictionary = _load("res://data/config/hud.json").get("catch_card", {})
 	assert_true(bool(card.get("enabled", false)), "catch result card ON")
+
+
+func test_f38_20_yard_fill_reaches_the_whole_courtyard_with_its_score() -> void:
+	var day: Dictionary = _load("res://data/config/stronghold.json").get("courtyard_daylight_candidate", {})
+	assert_true(bool(day.get("enabled", false)), "courtyard daylight ON")
+	var light: Dictionary = day.get("light", {})
+	assert_true(float(light.get("range", 0.0)) >= 52.0, "the fill reaches the courtyard entrance")
+	assert_true(float(light.get("attenuation", 1.0)) <= 0.22, "an even pool, not a steep peak")
+	assert_true(str(day.get("_why_r3_yard_fill", "")).contains("CPU 4.71 -> 5.73"), "r3 records its CPU score")
+
+
+func test_f38_20_keep_keeps_its_value_through_the_fog_with_its_score() -> void:
+	var keep: Dictionary = (_load("res://data/config/stronghold.json").get("p2_003_candidate", {}) as Dictionary).get("keep", {})
+	assert_true(bool(keep.get("fog_disable", false)), "the keep resists the depth fog")
+	assert_eq(str(keep.get("albedo_tint", "")), "#b3ab9c", "lifted stone so it reads as shaded stone, not a black cut-out")
+	assert_true(str(keep.get("_why_r4_fog", "")).contains("CPU 5.22 -> 5.70"), "r4 records its CPU score")
+	var gate: Dictionary = preload("res://scripts/world/stronghold.gd").p2_003_gatehouse(_load("res://data/config/stronghold.json"))
+	assert_true(bool(gate.get("fog_disable", false)), "the shipped gatehouse carries fog_disable")
+
+
+func test_f38_20_courtyard_centre_dressing_ships_on_with_its_score() -> void:
+	var centre := _cluster("res://data/config/bands/band5_stronghold_approach/props.json", "vm_stronghold_courtyard_centre")
+	var candidate: Dictionary = centre.get("candidate", {})
+	assert_true(bool(candidate.get("enabled", false)), "courtyard centre dressing ON")
+	assert_true(str(candidate.get("_why_on", "")).contains("CPU 5.51 -> 5.75"), "records its CPU score")
+	for prop: Variant in centre.get("props", []):
+		assert_true(bool((prop as Dictionary).get("visual_only", false)), "visual only, so routes and NPC paths are unchanged")
+		var x := float(((prop as Dictionary).get("at", [0, 0]) as Array)[0])
+		assert_true(x < 6.5 or x > 9.5 or str((prop as Dictionary).get("model", "")) == "Torch_Metal", "the walking lane (x 6.5-9.5) stays clear")

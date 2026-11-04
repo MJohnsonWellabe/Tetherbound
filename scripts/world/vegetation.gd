@@ -103,6 +103,10 @@ var _presentation_retint_cache: Variant = null
 ## The playground's presentation tint overlay, or {} for any realm shell (they
 ## keep their own configs byte-for-byte) and when the file is absent.
 func _presentation_retint() -> Dictionary:
+	if _realm_bake_name == STORMWOOD_GRADE_REALM:
+		if _presentation_retint_cache == null:
+			_presentation_retint_cache = stormwood_foliage_grade(_vegetation_config())
+		return _presentation_retint_cache
 	if _realm_bake_name != BAKE_WORLD_NAME:
 		return {}
 	if _presentation_retint_cache == null:
@@ -127,6 +131,36 @@ func _presentation_retint() -> Dictionary:
 							merged[key] = candidate[key]
 					_presentation_retint_cache = merged
 	return _presentation_retint_cache
+
+
+## F41 VIS-STORMWOOD `foliage_grade_1104` (stormwood_look.json, OFF until
+## judged): CPU judges across every Stormwood row read the canopy as "bright
+## Meadows-style green" over a mint carpet instead of the board's cool
+## blue-green moss forest. When enabled, each named layer's material tints
+## are replaced per model through the existing variant_retint overlay, so the
+## scatter bake (which fingerprints stormwood_vegetation.json) stays fresh.
+## Presentation only; {} when OFF, which leaves every tint as shipped.
+const STORMWOOD_GRADE_REALM := "stormwood"
+const STORMWOOD_LOOK_PATH := "res://data/config/stormwood_look.json"
+
+
+static func stormwood_foliage_grade(vegetation: Dictionary, look: Dictionary = {}) -> Dictionary:
+	if look.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STORMWOOD_LOOK_PATH))
+		look = parsed if parsed is Dictionary else {}
+	var grade: Variant = look.get("foliage_grade_1104", {})
+	if not grade is Dictionary or not bool((grade as Dictionary).get("enabled", false)):
+		return {}
+	var variants := {}
+	var layers: Dictionary = vegetation.get("layers", {})
+	var tints_by_layer: Dictionary = (grade as Dictionary).get("layers", {})
+	for layer_name: String in tints_by_layer:
+		var layer: Variant = layers.get(layer_name)
+		if not layer is Dictionary:
+			continue
+		for model: Variant in (layer as Dictionary).get("models", []):
+			variants[str(model)] = (tints_by_layer[layer_name] as Dictionary).duplicate()
+	return {"variant_retint": variants}
 
 
 ## vegetation.json's global retint map with the presentation overlay on top.
