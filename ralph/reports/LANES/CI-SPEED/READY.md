@@ -124,3 +124,20 @@ Follow-up worth one more change: the "Free runner disk" step costs 0.6-2 min
 in every job and was added for the old 7 GB checkout written twice. The peak is
 now the 6.3 GB of tars plus 7 GB extracted; unpacking each chunk right after
 its restore would let that step go.
+
+### On main: first full-tier run with the cache, 41787100516 (schedule 06:40 UTC, 12e76f2aa = #813 merge)
+
+All 36 engine jobs: checkout 0.2-0.3 min, assets restore 1.1-2.1 min, every
+restore step green (before 3 Nov: checkout 4-47.5 min, median ~26). Prep
+job 3.9 min (built changed chunks in 1.7 min).
+
+Run concluded **failure**, not from the cache: verify-regions-relay
+(tidewake) failed "Water species catalogue accepts the Aquaryn fixture";
+verify-suite (2) and verify-multiplayer-shard (9) failed in their test steps.
+The restore had already verified all 7,548 assets/ files against git, so these are
+game/data regressions in the merged batches. They belong to the owning lanes.
+
+setup-godot was 5.4-9.1 min in 21 of 35 jobs (cold import) and 1.1-1.5 min in
+the rest. That is the cache-budget eviction a9ea0b2e7 fixes, and it is still
+unlanded (#810-#817 all lack it). Landing it should take each of those jobs
+back to ~1.3 min.
