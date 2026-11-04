@@ -789,6 +789,27 @@
       "coats": {
         "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": {"albedo": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_value_lift.png"}
       }
+    },
+    "creatures_ralph_stormbrush_value_lift": {
+      "_why": "Stage value lift for Stormbrush (one of the darkest live remake albedos). Same recipe as creatures_ralph_mosshock_value_lift (F36#54 +0.92) and creatures_ralph_nightburrow_value_lift (F36#56 +1.05): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_thundertunnel_value_lift": {
+      "_why": "Stage value lift for Thundertunnel (one of the darkest live remake albedos). Same recipe as creatures_ralph_mosshock_value_lift (F36#54 +0.92) and creatures_ralph_nightburrow_value_lift (F36#56 +1.05): a value-lifted copy of its shipped velvet albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_tuskroot_value_lift": {
+      "_why": "Stage value lift for Tuskroot (one of the darkest live remake albedos). Same recipe as creatures_ralph_mosshock_value_lift (F36#54 +0.92) and creatures_ralph_nightburrow_value_lift (F36#56 +1.05): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0_value_lift.png"}
+      }
     }
   }
 }
