@@ -21,7 +21,6 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 
 ## Arms in flight (flag OFF)
 
-- `catching.json:seal_reveal` (new, F40#18 P2-118): on a catch the camera glides to a shallow shot over the sealed orb; quick_judge `qj_reveal` capturing (base = tree with card + full-team line ON). All-biome camera change: if it ships, the Meadows catch rows (P2-059/P2-061) should be re-checked.
 
 | Arm | Items | State |
 |---|---|---|
@@ -31,6 +30,8 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 | (baseline) F40 matrix pieces 3, 4, 7 | F40#0, #19, #21 | **First CPU subset scores (`mx1/`):** day clear 5.45, rain 4.90, night 5.05, mean 5.13 (12 of 384 frames). F40#21: no magenta/placeholder; one judge read the gate's overhanging ledge as floating. |
 
 ## Tried, no change or not judged
+
+- `catching.json:seal_reveal` (F40#18): **worse, CPU 5.63 -> 3.33** (`qj/qj_reveal/`); the raised camera digs into the hillside. Stays OFF. Merged-tree P2-118 base with card + full-team line ON: **5.63**.
 
 - Night moon key light via `cloudreach_visual.json` `time_overrides.night.sun` (F40#19/#0, matrix piece 7): no visible change; a later light layer overrides it (`mx2/`).
 

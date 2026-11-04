@@ -1155,6 +1155,14 @@
           }
         }
       }
+    },
+    "creatures_ralph_burrowback_lateral_hit": {
+      "_why": "F38#2 (CPU 5.81 after the creature rim, qj rim10): all three judges say the Meadows hurt and moving frames 'retain the idle silhouette'. The authored hit is a fore-aft shove, which barely changes the outline seen face-on. This copy of the live nat1024 mesh layers a sideways recoil onto its hit clip (tools/art_pipeline/lateral_recoil.py --spec=spine:z:12,neck:y:20,head:z:14: body leans, head tosses aside), ramping in by the clip's own hit_impact.start_phase (0.12), holding to 0.5 and easing out. Mesh, textures, other clips and timing are unchanged. Burrowback and its Nightburrow aspect share the mesh. OFF until judged.",
+      "enabled": false,
+      "species": {
+        "burrowback": {"model": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_lateral_hit.glb"},
+        "nightburrow": {"model": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_lateral_hit.glb"}
+      }
     }
   }
 }

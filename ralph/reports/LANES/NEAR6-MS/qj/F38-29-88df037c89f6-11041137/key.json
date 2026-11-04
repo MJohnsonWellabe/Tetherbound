@@ -1,0 +1,23 @@
+{
+ "Tz": {
+  "anchor": false,
+  "label": "F38#29",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F38-29-88df037c89f6-11041137/k/sides/F38_29_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F38-29-88df037c89f6-11041137/k/sides/F38_29_base.jpg"
+ },
+ "Oc": {
+  "anchor": true,
+  "A": "f36_0_npc:C6B",
+  "B": "f36_0_npc:C6A"
+ },
+ "Eq": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Oy": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}
