@@ -8,6 +8,12 @@ takes 1.25-2.1 min and verifies all 7,548 files against git. A third run proves 
 trimmed export templates. The main-only import-cache save is proven only after
 landing (the first main run fills main's caches).
 
+**PR #810 (tb/land-batch-2) carries this lane only up to 5aa5cb68c. Please merge
+tb/ci-speed-1104 again (head includes a9ea0b2e7, the cache-budget fix).**
+Without it, every branch and PR keeps saving its own 2.7 GB import cache and
+1.27 GB template set, GitHub keeps evicting main's caches, and setup-godot
+falls back to cold imports (7.5-8 min). Run 41759063511 below proves a9ea0b2e7.
+
 Owner (4 Nov): "Do all the fixes to make the download faster without losing any meshy assets permanently".
 
 ## Design (as built, branch tb/ci-speed-1104)
@@ -99,3 +105,20 @@ were the overflow: GitHub evicts least recently used entries beyond 10 GB.
 - Can only be fully proven on main: the first main run after landing fills
   main's assets and import caches, and later branch/PR runs hit them.
 
+
+### After, run 41759063511 (a9ea0b2e7; fast tier; ci-gate success; 17 min wall)
+
+| Job | checkout | assets restore | setup-godot / import | total job | before (3 Nov) total |
+|---|---|---|---|---|---|
+| assets-cache (prep) | 1 s | 8/8 chunks cached, nothing to build | - | 2.0 min (1.9 of it the disk-free step) | (new) |
+| verify-suite (3) | 12 s | 1.4 min | 1.35 min (warm) | 8.2 min | 25.1 min |
+| verify-suite (4) | 12 s | 1.3 min | 1.3 min (warm) | 14.3 min | 29.2 min |
+| export | 11 s | 1.9 min | templates install 38 s (win/linux only), import 41 s | 12.3 min | 36.1 min |
+
+Export (Windows debug) and the Linux run check (tools/verify_export.sh) are green
+with the trimmed templates; the import save stayed skipped off main, as designed.
+
+Follow-up worth one more change: the "Free runner disk" step costs 0.6-2 min
+in every job and was added for the old 7 GB checkout written twice. The peak is
+now the 6.3 GB of tars plus 7 GB extracted; unpacking each chunk right after
+its restore would let that step go.
