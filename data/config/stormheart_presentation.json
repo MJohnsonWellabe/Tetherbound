@@ -224,8 +224,10 @@
     "loam_colour": "#16150f",
     "root_colour": "#2b2519",
     "grain_strength": 0.6,
-    "keep_moss": 0.35,
-    "roughness": 0.82,
+    "_r3": "r2 (qj_rootfloor2, not judged): dark loam read, but a glossy lavender sheen and regular polka-dot moss. r3: matte (specular 0.08, roughness 0.95, no metal) and moss kept only in large irregular drifts.",
+    "roughness": 0.95,
+    "specular": 0.08,
+    "keep_moss": 0.5,
     "strength": 1.0
   },
   "hollow_floor": {
