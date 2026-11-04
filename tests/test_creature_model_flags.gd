@@ -19,6 +19,7 @@ const HELD := {
 	"remake_owner1101_ashtusk": "it is an aspect variant of Tuskroot and must reuse Tuskroot's mesh, not its own (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_mudsnout": "the Burrow Warrens mouth fight seats the companion beside the remake (smoke_arena_contain: with the remake as the wild Warrens Mudsnout, the clear-seat search for the Terrapup companion was exhausted and the engagement refused)",
 	"remake_owner1101_frostclaw": "the F36 pose candidate library is measured on Frostclaw's installed rig carries over to the remake rig",
+	"creatures_ralph_burrowback_lateral_hit": "the visual lane's F38#2 lateral hit recoil arm is judged (OFF until a CPU gain)",
 }
 
 
