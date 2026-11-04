@@ -488,6 +488,8 @@ func _ready() -> void:
 	await _build_step("routes")
 	_build_progression_gates()
 	await _build_step("gates")
+	if not simulation_only:
+		_build_gate_path_braziers()
 	_build_bridges()
 	await _build_step("bridges")
 	if bool(_shell_build.call("uses_multiplayer_staging")):
@@ -5297,6 +5299,26 @@ func _summit_gate_post_brazier(root: Node3D, at: Vector3) -> void:
 	light.omni_range = 16.0
 	root.add_child(light)
 
+
+## F40#19 (NEAR6-CR, flag-off): `gate_path_braziers` in cloudreach_visual.json
+## sets manned braziers (the installed summit brazier pair plus a warm light)
+## beside the realm-gate path, so the night frame has a lit focal point instead
+## of a uniform dark foreground. Each [x, z] is seated on the ground.
+func _build_gate_path_braziers() -> void:
+	var cfg: Dictionary = _visual_config.get("gate_path_braziers", {})
+	if cfg.get("enabled") != true:
+		return
+	var root := Node3D.new()
+	root.name = "GatePathBraziers"
+	add_child(root)
+	for point: Variant in cfg.get("points", []):
+		var xz := point as Array
+		if xz.size() < 2:
+			continue
+		var y := ground_height_at(float(xz[0]), float(xz[1]))
+		if not is_finite(y):
+			continue
+		_summit_gate_post_brazier(root, Vector3(float(xz[0]), y, float(xz[1])))
 
 ## Height-normalised install of a packed scene, seated so its base sits at
 ## `at`. `_place_local_prop` only reaches the fourteen ROUTE_DETAIL_SCENES; this
