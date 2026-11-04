@@ -6,6 +6,12 @@
   "colour": "#b8c8ff",
   "energy": 0.75,
   "power": 2.4,
+  "fill_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#8 named silhouettes (4.96) and F41#18 uniformed readability (5.98): judges read the faces as 'flat painted, small dark eyes with no catchlight'. A soft front fill through the shared overlay's fill_energy (NEAR6-TW P2-057 uniform; 0 = rim only). OFF until judged.",
+    "fill_energy": 0.14
+  },
   "r2": {
     "_why": "Visual lane (3 Nov 2026), F41#18: r1 (0.75 / 2.4) judged CPU v1/b11 5.58 -> 5.98 (officer reads pale grey in A, still no rank read). r2 widens and brightens the edge so small post-view figures separate from the moss. Only energy and power change. OFF until judged.",
     "enabled": false,

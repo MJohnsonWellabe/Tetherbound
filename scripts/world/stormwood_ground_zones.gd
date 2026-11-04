@@ -109,7 +109,10 @@ static func finish() -> Dictionary:
 	return out
 
 
-const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104"]
+# `path_loam_1104` (VIS-STORMWOOD, OFF until judged): the pale sand-coloured
+# path slot that fills the lower half of every destination close view reads
+# darker and cooler, as damp trodden forest earth.
+const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104", "path_loam_1104"]
 
 
 static func _merge_into(target: Dictionary, key: String, value: Variant) -> void:

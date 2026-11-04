@@ -67,12 +67,13 @@ func test_f38_32_trail_camp_keep_clear_ships_on() -> void:
 		"a zone with enabled false is skipped")
 
 
-## F39#23 P2-114: the capture ring style ships OFF; the reticle reads it from
+## F39#23 P2-114: the capture ring style ships ON (judged gain); the reticle reads it from
 ## the same readout visual config as the readout outline and plate.
-func test_f39_23_ring_style_ships_off() -> void:
+func test_f39_23_ring_style_ships_on() -> void:
 	var cfg := _json("res://data/config/capture_readout_visual.json")
 	var ring: Dictionary = cfg.ring_style_1104
-	assert_false(bool(ring.enabled), "ring style ships OFF until judged")
+	assert_true(bool(ring.enabled), "ring style ships ON (judged gain)")
+	assert_true(str(ring._why_on).contains("CPU 5.26 -> 5.62"), "records its score")
 	assert_eq(str(ring.scope), "client_presentation", "declares its scope")
 	assert_between(float(ring.alpha_scale), 0.2, 1.0, "the ring stays visible")
 	assert_between(float(ring.width_scale), 0.4, 1.0, "a thinner ring, never a bolder one (round 1 lost)")
