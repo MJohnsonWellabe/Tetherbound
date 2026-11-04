@@ -8,8 +8,10 @@ takes 1.25-2.1 min and verifies all 7,548 files against git. A third run proves 
 trimmed export templates. The main-only import-cache save is proven only after
 landing (the first main run fills main's caches).
 
-**PR #810 (tb/land-batch-2) carries this lane only up to 5aa5cb68c. Please merge
-tb/ci-speed-1104 again (head includes a9ea0b2e7, the cache-budget fix).**
+**PR #810 landed this lane on main only up to 5aa5cb68c (the assets cache).
+The cache-budget fix a9ea0b2e7 is still open: tb/ci-speed-1104 now has main
+merged in, and its diff against main is just that fix plus this report. Please land
+it in the next batch.**
 Without it, every branch and PR keeps saving its own 2.7 GB import cache and
 1.27 GB template set, GitHub keeps evicting main's caches, and setup-godot
 falls back to cold imports (7.5-8 min). Run 41759063511 below proves a9ea0b2e7.
