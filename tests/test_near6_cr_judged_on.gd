@@ -50,3 +50,10 @@ func test_shelf_edge_fringe_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_f40_items.json")
 	_assert_on(cfg.shelf_edge_fringe, "6.27", "shelf_edge_fringe")
 	assert_false(bool(cfg.shelf_edge_soften.get("enabled", false)), "shelf_edge_soften (judged worse) stays OFF")
+
+
+## F40-19-rain-810b52e4b41d-11041812: F40#19 Cloudreach day rain (matrix piece 4) 5.69 -> 5.80.
+func test_rain_storm_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_visual.json")
+	_assert_on(cfg.weather_arms.rain_storm, "5.80", "weather_arms.rain_storm")
+	assert_false(bool(cfg.weather_arms.rain_mood.get("enabled", false)), "rain_mood (judged flat) stays OFF")
