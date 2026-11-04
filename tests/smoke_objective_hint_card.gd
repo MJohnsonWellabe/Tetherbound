@@ -153,7 +153,11 @@ func _check_shortest_authored_objective_uses_its_measured_floor() -> void:
 		_fail("shortest authored objective was altered while its plate was laid out")
 	var constants: Dictionary = (_hud.get_script() as Script).get_script_constant_map()
 	var floor_height := float(constants.get("OBJECTIVE_BLOCK_HEIGHT", -1.0))
-	var eyebrow := float(constants.get("OBJECTIVE_EYEBROW_ROW", 0.0))
+	# The row the HUD actually lays out: hud_lean gives the eyebrow its own taller
+	# row (hud.json objective_eyebrow_row), so read the live value, not the
+	# shipped constant.
+	var eyebrow := float(_hud.call("_objective_eyebrow_row")) if _hud.has_method("_objective_eyebrow_row") \
+			else float(constants.get("OBJECTIVE_EYEBROW_ROW", 0.0))
 	var inset := float(constants.get("OBJECTIVE_INSET", 0.0))
 	var cap := int(constants.get("OBJECTIVE_LINES", 0))
 	var shown_lines := mini(label.get_line_count(), cap)
