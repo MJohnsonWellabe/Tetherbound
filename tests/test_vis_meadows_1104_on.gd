@@ -100,3 +100,15 @@ func test_village_market_cloth_is_not_oxblood() -> void:
 			assert_false(bool(cloth.get("vertex_colour", true)), "the stall cloth drops its red vertex paint")
 			checked += 1
 	assert_true(checked >= 2, "both market stalls are covered")
+
+
+func test_f38_22_market_folk_ship_on_silent_with_their_score() -> void:
+	var folk: Dictionary = _load("res://data/config/village_npcs.json").get("market_folk", {})
+	assert_true(bool(folk.get("enabled", false)), "market folk ON")
+	assert_true(str(folk.get("_why_on", "")).contains("CPU 6.44 -> 6.62"), "records its CPU score")
+	var people: Array = folk.get("villagers", [])
+	assert_eq(people.size(), 4, "four market villagers")
+	for person: Variant in people:
+		var spec: Dictionary = person
+		assert_false(spec.has("greeting") or spec.has("greeting_when"), "silent set dressing: no prompt, no dialogue")
+		assert_false(preload("res://scripts/world/village_npcs.gd").has_anything_to_say(spec), "nothing to say, so no Greet prompt")
