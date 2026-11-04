@@ -3661,11 +3661,26 @@ uniform sampler2D detail_tex : source_color, filter_linear_mipmap, repeat_enable
 uniform float detail_uv_per_m = 0.5;
 uniform float detail_mix = 0.0;
 uniform vec4 detail_tint : source_color = vec4(1.0);
+uniform float skirt_drop_m = 0.0;
+uniform float skirt_normal_start = -0.05;
+uniform float skirt_normal_full = -0.45;
+uniform vec3 skirt_keep_min;
+uniform vec3 skirt_keep_max;
 varying vec3 model_pos;
 varying vec3 world_pos;
 varying vec3 world_normal;
 void vertex() {
 	model_pos = VERTEX;
+	if (skirt_drop_m > 0.0 && !(all(greaterThan(VERTEX, skirt_keep_min)) && all(lessThan(VERTEX, skirt_keep_max)))) {
+		// F38#30 skirt: a downward-facing face of the mound (an overhang the
+		// player can walk under) is pulled straight down below the meadow, so
+		// the shell's rim meets the ground instead of hanging over it. The
+		// mouth's arch and tunnel (skirt_keep box) are left exactly as built.
+		float n_up = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz).y;
+		float k = smoothstep(skirt_normal_start, skirt_normal_full, n_up);
+		vec3 down_model = (inverse(MODEL_MATRIX) * vec4(0.0, -1.0, 0.0, 0.0)).xyz;
+		VERTEX += down_model * skirt_drop_m * k;
+	}
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
@@ -3717,6 +3732,20 @@ void fragment() {
 					material.set_shader_parameter("detail_tint", Color(str(cfg.get("detail_tint", "#ffffff"))))
 				material.set_shader_parameter("clip_min", Vector3(minf(a.x, b.x), minf(a.y, b.y), minf(a.z, b.z)))
 				material.set_shader_parameter("clip_max", Vector3(maxf(a.x, b.x), maxf(a.y, b.y), maxf(a.z, b.z)))
+				var skirt: Dictionary = cfg.get("skirt", {})
+				if bool(skirt.get("enabled", false)):
+					# The keep box is authored in warrens space like clip_box.
+					var keep: Dictionary = skirt.get("keep_box", {})
+					var to_keep := _chain_to_self(mesh).affine_inverse()
+					var km: Array = keep.get("min", [0, 0, 0])
+					var kx: Array = keep.get("max", [0, 0, 0])
+					var ka := to_keep * Vector3(float(km[0]), float(km[1]), float(km[2]))
+					var kb := to_keep * Vector3(float(kx[0]), float(kx[1]), float(kx[2]))
+					material.set_shader_parameter("skirt_keep_min", Vector3(minf(ka.x, kb.x), minf(ka.y, kb.y), minf(ka.z, kb.z)))
+					material.set_shader_parameter("skirt_keep_max", Vector3(maxf(ka.x, kb.x), maxf(ka.y, kb.y), maxf(ka.z, kb.z)))
+					material.set_shader_parameter("skirt_drop_m", float(skirt.get("drop_m", 0.0)))
+					material.set_shader_parameter("skirt_normal_start", float(skirt.get("normal_start", -0.05)))
+					material.set_shader_parameter("skirt_normal_full", float(skirt.get("normal_full", -0.45)))
 				mesh.set_surface_override_material(i, material)
 
 

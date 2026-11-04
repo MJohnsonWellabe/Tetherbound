@@ -13,8 +13,12 @@ Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the sa
 
 - **F38#13 P2-059 catch camera: CPU 6.22 -> 7.19; F38#33 P2-061 catch result: CPU 6.02 -> 6.88** (r1b). ON: `catching.json framed_camera.r2`, `camfx.json catch_orb`, `hud.json catch_card`.
 - **F38#15 P2-069 flight and landing: CPU 5.99 -> 6.33** (r1b). ON: `fly_traversal.json landing_presentation.wing_fold_enabled`.
-- r1b tests: `test_vis_meadows_1104_on` (new catch test), `test_camfx_candidates`, `test_uiposes_fly_hang_body` and `test_capture_readout_side` now assert ON with the score and keep their OFF-path checks. **r1b tests PENDING:** they run when the quick-judge capture frees the Godot slot. Do not land the r1b commit until this line reads PASSED.
+- r1b tests: `test_vis_meadows_1104_on` (new catch test), `test_camfx_candidates`, `test_uiposes_fly_hang_body` and `test_capture_readout_side` now assert ON with the score and keep their OFF-path checks. **r1b tests PASSED (05:40 UTC):** `--only=` test_vis_meadows_1104_on, test_camfx_candidates, test_uiposes_fly_hang_body, test_capture_readout_side, test_catch_math, test_fly_traversal, test_hud_widgets, test_tutorial_orb_floor, test_texture_import_policy, test_hud_presentation_lifecycle, test_catch_arbitration. The first run had 139 tests and 1 failure: `test_every_camfx_block_ships_off`, which the change was expected to break. It now takes a JUDGED_ON map (catch_orb must be ON with its score; flame and fight_fade must still be OFF). Re-run of the touched files: 23 tests, 118 assertions, 0 failed.
 - r1b flat or already at 6.0 or above as shipped (arms OFF): F38#7 6.99-7.15, F38#6 6.64, F38#32 6.37, F38#29 6.18.
+
+## Parked
+
+- F38#30 Burrow hillside (4.23): `capture_stands.json buried_stand_guard` leaves both walk stands where they were (quick_judge f38_30-stand-guard, identical frames, not judged). The slabs are the Warrens hill shell and chambers floating over walkable meadow with no collider under them, so this is a world geometry defect, not a stand defect. Next: find which mesh floats (`hill_shell` mound vs. the chamber boxes, `_comment_exterior_faces`: 'the cave's own boxes stand 4.6-6.2 m proud of the meadow') and seat or skirt it.
 
 ## In flight
 
