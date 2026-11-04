@@ -1,5 +1,9 @@
 # NEAR6-TW lane (tb/near6-tw-1104): Tidewake F39 items scored 5.4–6.0, CPU quick-judged
 
+## Taken from VIS-STORMWOOD (coordinator 16:44)
+
+- **F41#10 Glass Sink: the pale white wall** on the left of every F41#10 frame. VIS-STORMWOOD's arms left it untouched and the source is unknown. This lane traces the source and tries a scene-level fix (lighting, material or fog on the real node). VIS-STORMWOOD should skip it; its material arms (obsidian, wall_grade) are not touched. The line cannot go into VIS-STORMWOOD's READY.md from here: this lane pushes only tb/near6-tw-1104.
+
 ## Handoff update (15:00 UTC)
 
 - **Second batch (coordinator, 11:45):** F39#24 rest poses ON 5.02 -> 6.69; F39#16 live current seams ON 5.96 -> 6.54 (both in the table below, tests passing). F39#21 is blocked on CPU (victory lifecycle needs continuous rendering; see Blockers). F39#15: one no-change round. F39#3: scene lever already shipped; the remainder is new art.
