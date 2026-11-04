@@ -73,6 +73,7 @@ var _handback_observations: Array[Dictionary] = []
 const PINNED_WILD_SPECIES := ["skyrill", "galecrest", "pebbik"]
 const PINNED_WILD_XZ := Vector2(-4.0, -254.0)
 const PINNED_WILD_LEVEL := 30
+const CAPTURE_ARBITRATION_WINDOW_MS := 600000
 var _pinned_wild := false
 var _throw_index := 0
 
@@ -540,6 +541,15 @@ func _collect_nodes() -> bool:
 	if _player == null or _manager == null or _director == null or _rig == null:
 		_failures.append("scene is missing the player, camera rig, combat manager or director")
 		return false
+	# F40#18 (VIS-CLOUDREACH, 4 Nov 2026): the catch arbiter's lease is wall-clock
+	# milliseconds (multiplayer.json catch_arbitration_window_ms, 6 s). On CPU
+	# llvmpipe at 1080p the throw-and-wobble outlives it, the claim lapses and
+	# every finish is refused `not_claimant` (seen in qj_portrait2/2b). This
+	# capture process alone widens the arbiter's test-overridable window.
+	if _pinned_wild:
+		var arbiter: Variant = _director.get("_catch_arbiter")
+		if arbiter is Object and "window_ms" in (arbiter as Object):
+			(arbiter as Object).set("window_ms", CAPTURE_ARBITRATION_WINDOW_MS)
 	if _wild == null:
 		_wild = _director.call("wild_creature") as Node3D
 	if _wild == null and _biome == "tidewake":
