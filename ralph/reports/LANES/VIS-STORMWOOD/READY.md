@@ -1,6 +1,36 @@
 # VIS-STORMWOOD: READY
 
-**Landing-ready flags: none yet** (first CPU base and candidate are capturing).
+**Landing-ready flags (judged CPU gains, ON, tests assert ON with the score):**
+
+| Item | Flags ON | CPU score | Verdict | Commit | Test |
+|---|---|---|---|---|---|
+| F41#10 Glass Sink | `hero_landmarks_1101.glass_sink`, `stormwood_glass_sink` `dark_pool_candidate` + `obsidian_1104` | **4.03 -> 5.07** | `j4/` | `84f06e8a` | `test_vis_stormwood_judged_on`, `test_hero_landmarks_1101`, `test_storm_cams_candidates`, `test_stormwood_glass_sink_obsidian` |
+| F41#1 Stormheart | `stormheart_presentation` `deck_light_1101`, `hollow_floor`, `hero_interior.round2` | **3.22 -> 3.94** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_cause_stormwood_candidates` |
+| F41#4 destinations | `stormwood_lantern_pools` `arrival_pools`, `basin`, `lantern_model`, `glow_fungi`, `grove` | **4.00 -> 4.59** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_stormwood_lantern_pools_grove` |
+| F41#8 named silhouettes | `npc_role_accessories` | **4.72 -> 4.96** (offset-map caveat) | `j3/` | `155cdd39` | `test_vis_stormwood_judged_on` |
+
+**Tests on the synced head (06:20 UTC, after main merge `9faa85e1` and the j1-j4 commits), all 0 failed:**
+- `test_vis_stormwood_judged_on` 4/25
+- `test_cause_stormwood_candidates` 11/95
+- `test_stormwood_lantern_pools_grove` 3/11
+- `test_stormheart_branching_crown` 2/9
+- `test_stormwood_basalt_crust` 2/5
+- `test_hero_landmarks_1101` 8/76
+- `test_storm_cams_candidates` 15/56
+- `test_stormwood_glass_sink_obsidian` 2/8
+- `test_stormwood_rank_marks` 2/11
+- `test_stormwood_pool_satin` 2/4
+- `test_stormwood_surge_presentation` 53/730
+- `test_stormwood_restored_sky` 2/39
+- `test_texture_import_policy` 2/1591
+
+**Judged flat or worse, stay OFF:**
+- F41#2 `phase_grade_1104` r1: 5.46 -> 5.46. r2 is built.
+- F41#18 rim r2 + `rank_marks_1104`: 4.96 -> 4.99.
+- F41#5 `pool_satin_1104`: 4.13 -> 4.20, and the judges split.
+- F41#9 `stormwood_harvest_hero2`: 4.76 -> 4.59.
+
+**Arms waiting for quick_judge:** F41#19 `basalt_crust_1104` and F41#2 `phase_grade_1104` r2.
 
 **FOR THE COORDINATOR (4 Nov ~02:50 UTC; send_message is refused here, untrusted device):** merged as asked. `ae954029` merges `origin/tb/creatures-ralph` 7568796b: storm-light set ON, `phase_grade_1104` OFF, main's newer CI, routes and docs kept. One commit after it adds the F41#18 `rank_marks_1104` arm (OFF). Tests on this head, all 0 failed:
 - `test_stormwood_surge_presentation` 53 tests / 728 assertions

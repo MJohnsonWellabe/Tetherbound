@@ -50,7 +50,12 @@ func test_all_three_ship_off_with_a_declared_scope() -> void:
 	assert_eq(str(config.get("scope", "")), "client_presentation", "new flags declare scope")
 	for id: String in ["crown_arch", "glass_sink", "veilfall"]:
 		assert_true(config.has(id), "%s candidate declared" % id)
-		assert_false(HERO.enabled(id), "%s ships OFF" % id)
+		if id == "glass_sink":
+			# VIS-STORMWOOD j4 (4 Nov): judged gain, ships ON with its score.
+			assert_true(HERO.enabled(id), "glass_sink ships ON")
+			assert_true(str((config[id] as Dictionary).get("_why_on", "")).contains("5.07"), "records its mapped score")
+		else:
+			assert_false(HERO.enabled(id), "%s ships OFF" % id)
 		assert_true(ResourceLoader.exists(str((config[id] as Dictionary).get("model", ""))),
 			"%s model is imported" % id)
 
@@ -108,7 +113,9 @@ func test_crown_arch_on_swaps_the_model_keeps_yaw_and_colliders() -> void:
 func test_glass_sink_off_adds_nothing() -> void:
 	var world := Node3D.new()
 	var sink := {"centre": [700, 2700], "floor_y": -65, "island_radius": 250}
-	assert_true(HERO.dress_glass_sink(world, sink) == null, "OFF returns no node")
+	var off := HERO.settings().duplicate(true)
+	(off.glass_sink as Dictionary)["enabled"] = false
+	assert_true(HERO.dress_glass_sink(world, sink, off) == null, "OFF returns no node")
 	assert_eq(world.get_child_count(), 0, "OFF adds nothing to the world")
 	world.free()
 

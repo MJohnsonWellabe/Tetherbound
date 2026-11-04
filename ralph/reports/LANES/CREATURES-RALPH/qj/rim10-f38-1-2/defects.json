@@ -1,0 +1,46 @@
+{
+ "F38#1 base": [
+  {
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+  },
+  {
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+  },
+  {
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PRESENT"
+  }
+ ],
+ "F38#1 cand": [
+  {
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+  },
+  {
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+  },
+  {
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+  }
+ ],
+ "F38#2 cand": [
+  {
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PRESENT"
+  },
+  {
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PRESENT"
+  },
+  {
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PRESENT"
+  }
+ ],
+ "F38#2 base": [
+  {
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PRESENT"
+  },
+  {
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PRESENT"
+  },
+  {
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PRESENT"
+  }
+ ]
+}
