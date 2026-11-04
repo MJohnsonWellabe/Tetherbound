@@ -17,7 +17,7 @@ func _init(authored: Dictionary = {}) -> void:
 ## `overlay` into `presentation` before anything reads it, so every phase row,
 ## ceiling, fog and rain key it names changes and nothing else. Presentation
 ## only: strike, phase timing, shelter and save rules never read `presentation`.
-const PRESENTATION_CANDIDATES := ["storm_sky_1101", "soft_rain_1101"]
+const PRESENTATION_CANDIDATES := ["storm_sky_1101", "soft_rain_1101", "phase_grade_1104"]
 
 
 static func with_presentation_candidates(source: Dictionary) -> Dictionary:
