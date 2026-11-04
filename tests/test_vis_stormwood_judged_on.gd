@@ -57,3 +57,8 @@ func test_glass_field_seam_clear_r2_ships_on() -> void:
 ## F41#4 qj_path: darker damp-earth path judged 5.56 -> 5.92.
 func test_path_loam_ships_on() -> void:
 	_assert_on(_json("res://data/config/stormwood_ground_finish.json").path_loam_1104, "5.92", "path_loam_1104")
+
+
+## F41#19 qj_footing: fuller installed-rock collar judged 5.09 -> 5.22.
+func test_glass_field_footing_ships_on() -> void:
+	_assert_on(_json("res://data/config/stormwood_glass_field.json").rock_collar_candidate.footing_1104, "5.22", "footing_1104")
