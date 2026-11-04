@@ -25,3 +25,9 @@ func test_rim_pickup_in_view_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_physical_runtime.json")
 	_assert_on(cfg.rim_pickup_in_view, "5.72", "rim_pickup_in_view")
 	assert_false(bool(cfg.rim_pickup_inset.get("enabled", false)), "round-1 inset (flat 4.57) stays OFF")
+
+
+## F40-9-68037b4643f8-11041154: F40#9 P2-068 named NPC posts 5.05 -> 5.25.
+func test_post_role_props_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_npc_runtime.json")
+	_assert_on(cfg.post_role_props, "5.25", "post_role_props")

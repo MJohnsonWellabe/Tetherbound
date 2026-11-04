@@ -9,8 +9,10 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `water_mount_presentation.json` `enabled` (sink, bob, no blob shadow, new Aquaryn `wake`) | F39#8 | CPU 4.93 -> 6.09 | `test_uiposes_water_mount.gd::test_ships_on_with_its_judged_score` | this commit |
 | `water_mount_presentation.json` `camera_hide.enabled` | F39#22 | CPU 5.25 -> 6.28 (FIXED 3/3) | same test; `smoke_camera_pass_through.gd` (hidden inside, shown outside) | this commit |
 | `tidewake_look.json` `cause_tidewake.currents.enabled` | F39#17 | CPU 5.54 -> 6.09 | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing`; `smoke_tidewake_b_current_restore.gd` (71 checks, 0 failed) | this commit |
+| `tidewake_look.json` `cause_tidewake.stars.enabled` (+ `world_look.gd` per-time star reset) | F39#30b | CPU 4.77 -> 4.89 (F13#5 5.45 -> 5.84) | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing` | look/r6 |
+| `tidewake_look.json` `cause_tidewake.night.enabled` | F39#30b | CPU 5.67 -> 6.25 (F13#5 6.12 -> 6.35) | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing` | look/r8 |
 
-| `human_water_contact_visual.json` wake trail (ring 2.1 m, 12 trail rings, 2.6 s; values plus `_why_wake_trail_on`) | F39#5 | CPU 5.31 -> 5.63 (r 0.96, all three judges higher) | `test_vis_tidewake_swim_wake.gd` (2 tests); with `test_texture_import_policy`: 4 tests, 0 failed | this commit |
+| ~~`human_water_contact_visual.json` base wake values~~ (withdrawn 11:27, superseded by NEAR6-TW's `wake_trail` in batch 11) | F39#5 | CPU 5.31 -> 5.63 (r4) | the test is removed; this branch's view, config and test now equal batch 11 | this commit |
 
 | `tidewake_look.json`: veilfall_rock_detail, veilfall_formation_relief and veilfall_falls sections ON (out of sections_off; `_why_veilfall_near_on`) | F39#31 | CPU 4.94 -> 5.20 (r 0.96); F39#30 matrix level; F13#5 5.68 -> 5.72 | `test_tidewake_look_profile.gd` (asserts ON plus the score); with veilfall_geometry, tidewake_cause and texture_import_policy: 17 tests, 0 failed | this commit |
 
@@ -44,10 +46,15 @@ F39#1 5.40 -> 5.45, F39#2 5.35 -> 5.19, F39#3 5.45 -> 5.40, F39#15 5.50 -> 5.56.
   - scene: irregular shallows instead of the rest-shoal disc chain, plus wet-sand, foam, rock and driftwood bands and haze;
   - new art: hero structures at the destinations.
 - Owner reassignment (coordinator, 07:42): F39#27/#1/#6/#7/#20/#2/#14/#19/#4 move to the NEAR6-TW lane. This lane keeps #3, #15, #16, #17, #5, #8, #22, #24, #21, #30, #31, #32 and F13#5.
+- Coordinator (11:45): stars landed in batch 13 (#821). F39#16/#15/#3/#24/#21 move to NEAR6-TW. This lane keeps F39#30 (night/matrix), #31 Veilfall, #32 matrix cleanliness, #5 (wake_trail reconcile) and F13#5.
 
 ## Round 5 (11:15 UTC): unshadowed falls are flat on F39#31, so they stay OFF (`look/r5/VERDICT.md`)
 
-## Batch 11 note (coordinator, 10:49)
+## Batch 11 note (coordinator, 10:49): reconciled 11:27
+
+This branch now carries batch 11's `human_water_contact_visual.json` (base values plus `wake_trail` ON), `human_water_contact_view.gd` and `test_human_water_contact_visual.gd` (8 tests, 0 failed), and drops `test_vis_tidewake_swim_wake.gd`. Next: re-judge F39#5 with ring 2.1 m and interval 0.12 over `wake_trail`.
+
+### Original note
 
 The F39#5 wake (`human_water_contact_visual` base values) was held because NEAR6-TW's `wake_trail` (F39#14 6.10 -> 6.80) overrides them. Once the round-6 capture ends, this branch reverts its base values, drops `test_vis_tidewake_swim_wake.gd`, takes batch 11's `wake_trail` block verbatim, and re-judges F39#5 with ring 2.1 m and interval 0.12 on top of it.
 
@@ -82,3 +89,4 @@ Arm: `cause_tidewake.sea` + `horizon`. Calibration r 0.84, RMSE 0.45 (`qj/r2b/VE
 - **No merge of origin/main here:** a depth-1 fetch has no merge base, and `git fetch --deepen=40` ran out of disk (66 MB free). The coordinator's landing PR has to merge this branch with main.
 
 - Container disk: the 21 GB `.git` pack fills the allowance (117 MB free). Godot's `.godot` import cache, captures and judge folders run from `/dev/shm` (RAM). Rewriting the pack to depth 1 was refused by the permission classifier.
+- qj/r7 (12:10): F39#5 re-judged on the batch-11 wake_trail base: base maps 6.20 (CPU, above 6.0). A wake_trail tune (interval 0.12, spacing 0.55, lifetime 2.8, grow 2.6) was flat (6.20 -> 6.14; F39#14 6.89 -> 6.77) and stays OFF.

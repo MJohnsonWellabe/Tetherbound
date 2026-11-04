@@ -6435,6 +6435,14 @@ func _finish_catch() -> void:
 			_catch_flash("caught", orb.global_position)
 			# W09-VFX: the seal is a reward, not only a verdict.
 			VFX.catch_success(_arena if _arena != null else _player.get_parent(), orb.global_position)
+			# P2-118 (VIS-CLOUDREACH, 4 Nov 2026): catching.json `seal_reveal`
+			# (off unless enabled). The resolve close-up looks down at the orb
+			# on the ground; on a catch the camera glides back up to a shallow
+			# shot over the sealed orb so the world reads behind the result.
+			var reveal: Variant = CATCH.config().get("seal_reveal", {})
+			if reveal is Dictionary and (reveal as Dictionary).get("enabled") == true \
+					and _camera_rig != null and _camera_rig.has_method("set_target"):
+				_camera_rig.call("set_target", orb, CATCH.camera_profile("seal_reveal"))
 		catch_resolved.emit(true, _catch_index)
 		_begin_resolve(OUTCOME_CAUGHT)
 		return

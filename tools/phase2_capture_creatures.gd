@@ -287,9 +287,13 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		var wait_seconds := 5.0
 		if player != null and not str(player.current_animation).is_empty():
 			wait_seconds = clampf(player.current_animation_length / maxf(absf(player.speed_scale), 0.01) + 2.0, 5.0, 30.0)
-		var deadline := Time.get_ticks_msec() + int(wait_seconds * 1000.0)
-		while bool(body.call("rest_pose_pending")) and Time.get_ticks_msec() < deadline:
+		# Game time, not wall time: on CPU (llvmpipe) a frame takes far longer than
+		# its delta, so a wall-clock deadline expired before the clip could finish.
+		var waited := 0.0
+		var wall_cap := Time.get_ticks_msec() + 300000
+		while bool(body.call("rest_pose_pending")) and waited < wait_seconds and Time.get_ticks_msec() < wall_cap:
 			await process_frame
+			waited += get_root().get_process_delta_time()
 		rest_receipt = body.call("rest_pose_receipt")
 		if bool(rest_receipt.get("pending", false)) or not bool(rest_receipt.get("active", false)):
 			_failures.append("%s resting: authored rest did not complete before capture" % species)
