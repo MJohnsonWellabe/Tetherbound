@@ -38,6 +38,13 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**qj verheaddown-f38-1 (4 Nov ~19:30 UTC): Veridian faint head-down ships ON.**
+- **Result:** F38#1 creature collapse and rest, CPU 6.21 -> 6.30 (+0.09; raw 5.7/5.8/5.9 -> 5.8/5.9/5.9; no judge lower; calibrate r 0.93).
+- **Base vs flag:** the base rose from 5.91 because of the capture fix that lets fainted stills finish their clip, not this flag. F38#1 is now above 6.0.
+- **What it is:** flag `creatures_ralph_veridian_faint_headdown`, a copy of the live nat1024 GLB with its faint clip's neck tipped 40 deg and head 30 deg toward the body (`lateral_recoil.py`).
+- **Tests:** new `tests/test_veridian_faint_headdown_flag.gd`; the flag is out of HELD.
+- **Judges' remaining asks:** a contact shadow and value lift for the dark Terrapup on dark grass, and a more limp, settled Veridian.
+
 **F38#1 follow-up (4 Nov ~19:05 UTC): the splayed Veridian is its faint end pose; the rest arm is not measurable on F38#1, so it stays OFF.**
 - **Which frame:** F38#1's catalogue frames are Terrapup fainted, Terrapup resting and Veridian FAINTED. The "semi-upright, splayed" Veridian the judges flag is its faint, not its rest.
 - **Rest arm:** `creatures_visual.json` `rest_faint_settled` (OFF, `test_rest_faint_settled`) starts a faint-clip rest at the clip's settled end. It is correct game-side, but it touches none of F38#1's judged frames (Terrapup rests via the roll path), so its A/B round was identical and not judged. It stays OFF for a future rest item.
