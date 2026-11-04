@@ -207,3 +207,18 @@ func test_low_sun_pitch_ships_with_its_score() -> void:
 	assert_eq(float(times.golden.sun.pitch_deg), -12.0)
 	assert_eq(float(times.dawn.sun.pitch_deg), -9.0)
 	assert_true(str(raw.get("_why_low_sun_pitch", "")).contains("6.18"))
+
+
+func test_destination_landmarks_ship_with_their_score() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	var arch := 0.0
+	var garden_walls := 0
+	for entry: Dictionary in raw.landmark_models:
+		if str(entry.landmark_id) == "lantern_cove_drift_arch" and str(entry.model).ends_with("tidewake_drift_arch.glb"):
+			arch = float(entry.height_m)
+		if str(entry.landmark_id) == "drowned_garden_terraces":
+			garden_walls += 1
+	assert_eq(arch, 8.0, "the drift arch ships at 8 m")
+	assert_eq(garden_walls, 4, "two stepped terrace walls join the two collided ones")
+	assert_true(str(raw.get("_why_d3_landmarks", "")).contains("5.93"))
+	assert_false("landmark_models" in raw.get("sections_off", []), "landmark models are in play")
