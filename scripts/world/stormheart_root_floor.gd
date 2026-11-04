@@ -22,6 +22,7 @@ uniform float rf_roughness = 0.82;
 uniform float rf_strength = 1.0;
 uniform float rf_grain_strength = 0.6;
 uniform float rf_keep_moss = 0.35;
+uniform float rf_specular = 0.08;
 
 """
 
@@ -36,12 +37,17 @@ const TAIL := """
             // as damp loam with root humps, not a sunburst.
             float rf_n1 = sin(v_vertex.x * 0.31 + sin(v_vertex.z * 0.23) * 2.0) * sin(v_vertex.z * 0.27 + sin(v_vertex.x * 0.19) * 2.0);
             float rf_n2 = sin(v_vertex.x * 1.3 + v_vertex.z * 0.9) * sin(v_vertex.z * 1.1 - v_vertex.x * 0.7);
+            // r3: moss survives in large irregular drifts (two incommensurate
+            // low-frequency waves), not regular spots.
+            float rf_drift = sin(v_vertex.x * 0.083 + sin(v_vertex.z * 0.051) * 3.1) * 0.6
+                + sin(v_vertex.z * 0.067 + sin(v_vertex.x * 0.043) * 2.7) * 0.4;
             float rf_root_mask = smoothstep(0.35, 0.75, rf_n1 * 0.5 + 0.5) * rf_grain_strength;
             vec3 rf_col = mix(rf_loam.rgb, rf_root.rgb, rf_root_mask) * (0.9 + rf_n2 * 0.1);
-            rf_col = mix(rf_col, ALBEDO, rf_keep_moss * smoothstep(0.55, 0.9, rf_n2 * 0.5 + 0.5));
+            rf_col = mix(rf_col, ALBEDO * 0.7, rf_keep_moss * smoothstep(0.25, 0.75, rf_drift + rf_n2 * 0.12));
             ALBEDO = mix(ALBEDO, rf_col, rf_w);
             ROUGHNESS = mix(ROUGHNESS, rf_roughness, rf_w);
-            SPECULAR = mix(SPECULAR, 0.3, rf_w);
+            SPECULAR = mix(SPECULAR, rf_specular, rf_w);
+            METALLIC = mix(METALLIC, 0.0, rf_w);
         }
     }
 """
@@ -99,3 +105,4 @@ static func install(terrain: Object, cfg: Dictionary = {}) -> void:
 	material.call("set_shader_param", "rf_strength", float(cfg.get("strength", 1.0)))
 	material.call("set_shader_param", "rf_grain_strength", float(cfg.get("grain_strength", 0.6)))
 	material.call("set_shader_param", "rf_keep_moss", float(cfg.get("keep_moss", 0.35)))
+	material.call("set_shader_param", "rf_specular", float(cfg.get("specular", 0.08)))
