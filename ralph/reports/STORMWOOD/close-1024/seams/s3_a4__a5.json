@@ -1,0 +1,12 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "training_t5_altar_4",
+ "from_commit": "6e2c3a15f9599cdf170aafb089db119d7b9ccb8d",
+ "to_piece": "training_t5_altar_5",
+ "to_commit": "6e2c3a15f9599cdf170aafb089db119d7b9ccb8d",
+ "to_loaded_from": "/root/rb/f49_s3_a4",
+ "consumer_handoff_check": null,
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}
