@@ -49,6 +49,14 @@ func test_prone_rest_ships_on() -> void:
 		"the settle stays a partial sink")
 
 
+## r16b: F39#16 live current streaks 5.96 -> 6.54.
+func test_live_current_seams_ship_softened() -> void:
+	var flow: Dictionary = _json("res://data/config/tidewake_look.json").current_flow
+	assert_true(str(flow.get("_why_near6_live_seams", "")).contains("6.54"), "records 6.54")
+	assert_almost_eq(float(flow.state_shader.live.seam_opacity), 0.1, 0.0001, "live seams faded")
+	assert_almost_eq(float(flow.shader.seam_wander_m), 9.0, 0.0001, "seams wander")
+
+
 ## The fill uniform defaults to 0, so the Stormwood rim keeps its rim-only look.
 func test_rim_overlay_fill_defaults_off() -> void:
 	var code := FileAccess.get_file_as_string("res://shaders/character_rim_overlay.gdshader")
