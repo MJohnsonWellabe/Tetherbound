@@ -97,6 +97,13 @@
     "_why_foe_yield_after_s": "The opponent's position is host-authoritative and stays put while the ally resolves the overlap. Only when a deficit outlives this (the ally is pinned by terrain or the ring) does the opponent step back itself. Longer than the ally's own settle time at push_speed_mps. TUNABLE.",
     "foe_yield_after_s": 0.35,
     "foe_yield_share": 1.0,
+    "all_pairs": {
+      "_why": "NEAR6-TW (4 Nov 2026), P2-089 / F39#7 (GPU 5.65): in close Tidewake fights Cannonback and Ripplet stack into one mass or touch. When on, every ally/foe pair uses the hollows_alpha fix (full fitted render-box support instead of the ellipse, faster swept correction). Visible clearance, reach floors, burst/lunge exemption, foe yield and arena guards are unchanged.",
+      "scope": "combat presentation spacing: same numbers solo, host and guest (config read by every peer); no save, transaction or network message",
+      "enabled": false,
+      "footprint_shape": "render_box",
+      "push_speed_mps": 14.0
+    },
     "named_overrides": {
       "hollows_alpha": {
         "enabled": false,
@@ -180,6 +187,12 @@
     "power": 10.4
   },
   "hud_subject_fade": {
+    "roster_floor": {
+      "_why": "NEAR6-TW (4 Nov 2026), P2-088 / F39#19 (GPU 5.78): during active Tidewake combat the left team roster fades to pale low-contrast rows against terrain (the subject fade takes its holder to alpha 0.3). When on, the roster holder never fades below `alpha`. Other panels keep their fade.",
+      "scope": "client-local presentation only (combat HUD); no host authority, save or gameplay state",
+      "enabled": false,
+      "alpha": 0.9
+    },
     "_why_tells_are_subjects": "F22#4 Riverwatch judge (13 Oct): HUD panels clipped the edges of the opponent's tells. While it winds up, its live ground shape counts as a subject, so panels over it fade like they do over the fighters. TUNABLE.",
     "tells_are_subjects": true,
     "fade_commands_strip": true,
