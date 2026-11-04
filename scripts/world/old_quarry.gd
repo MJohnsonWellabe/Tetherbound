@@ -76,7 +76,7 @@ func build(world: Node3D) -> void:
 	_build_foundation_finish(world, config.get("foundation_finish", []))
 	_build_work_lights(world, config.get("work_lights", []))
 	_build_conduit_run(world, config.get("pylons", {}))
-	_build_conduit_head_station(world)
+	_build_conduit_head_station(world, config.get("conduit_head", {}))
 	print("[quarry] %d foundations, %d pylons, %d finish treatment standing" % [
 		_foundations, _pylons, _foundation_finishes])
 
@@ -962,7 +962,7 @@ func _build_conduit_run(world: Node3D, pylons: Dictionary) -> void:
 	_pylons = list.size()
 
 
-func _build_conduit_head_station(world: Node3D) -> void:
+func _build_conduit_head_station(world: Node3D, cfg: Variant = {}) -> void:
 	# Stand this beside the live Pylon_0 handoff, not back inside the worked
 	# shoring. It turns the apron endpoint into a readable powered extraction
 	# station while leaving the pylon/conduit route itself authoritative.
@@ -982,11 +982,17 @@ func _build_conduit_head_station(world: Node3D) -> void:
 	metal.albedo_color = Color("#26343a")
 	metal.metallic = 0.55
 	metal.roughness = 0.5
+	# `conduit_head.core` (F38#41, optional): the core's albedo, emission and
+	# energy. Absent, it is the original #62dce8 / #35c8df at 2.2, which the
+	# CPU judges read as "an overexposed white primitive cylinder".
+	var core_cfg: Dictionary = {}
+	if cfg is Dictionary and (cfg as Dictionary).get("core") is Dictionary:
+		core_cfg = (cfg as Dictionary)["core"]
 	var cyan := StandardMaterial3D.new()
-	cyan.albedo_color = Color("#62dce8")
+	cyan.albedo_color = Color(str(core_cfg.get("albedo", "#62dce8")))
 	cyan.emission_enabled = true
-	cyan.emission = Color("#35c8df")
-	cyan.emission_energy_multiplier = 2.2
+	cyan.emission = Color(str(core_cfg.get("emission", "#35c8df")))
+	cyan.emission_energy_multiplier = float(core_cfg.get("energy", 2.2))
 	for side in [-1.0, 1.0]:
 		var post := MeshInstance3D.new()
 		post.name = "HeadFramePost"
