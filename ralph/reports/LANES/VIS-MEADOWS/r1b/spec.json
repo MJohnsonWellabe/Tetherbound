@@ -1,0 +1,65 @@
+[
+ {
+  "label": "F38#6",
+  "a": "6-r1base.png",
+  "b": "6-r1cand.png",
+  "brief": "Meadows ground pickup identity: items lying on the ground in the world, seen from the exploration camera",
+  "defects": [
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+  ]
+ },
+ {
+  "label": "F38#32",
+  "a": "32-r1base.png",
+  "b": "32-r1cand.png",
+  "brief": "Meadows camp and workshop prop legibility: camp and workshop props in the world, seen from the exploration camera",
+  "defects": [
+   "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+  ]
+ },
+ {
+  "label": "F38#13",
+  "a": "13-r1base.png",
+  "b": "13-r1cand.png",
+  "brief": "Meadows catch sequence camera framing: the catch sequence (orb strike, absorbing, orb resting), the catch camera",
+  "defects": [
+   "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+  ]
+ },
+ {
+  "label": "F38#33",
+  "a": "33-r1base.png",
+  "b": "33-r1cand.png",
+  "brief": "Meadows catch result hierarchy: the catch result moments (breakout, caught verdict, caught banner)",
+  "defects": [
+   "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish"
+  ]
+ },
+ {
+  "label": "F38#7",
+  "a": "7-r1base.png",
+  "b": "7-r1cand.png",
+  "brief": "Meadows catch aim readability: aiming a capture orb at a wild creature, with the capture chance readout",
+  "defects": [
+   "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+  ]
+ },
+ {
+  "label": "F38#29",
+  "a": "29-r1base.png",
+  "b": "29-r1cand.png",
+  "brief": "Meadows trainer defeated presentation: a trainer fight against a Team Tether grunt, before, during and after victory",
+  "defects": [
+   "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change"
+  ]
+ },
+ {
+  "label": "F38#15",
+  "a": "15-r1base.png",
+  "b": "15-r1cand.png",
+  "brief": "Meadows flight and landing pose read: flying on a bird creature: glide and landing",
+  "defects": [
+   "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut"
+  ]
+ }
+]

@@ -90,6 +90,11 @@ func test_catch_orb_block_names_an_installed_model_and_hides_the_rest_disc() -> 
 	assert_false(bool(orb.get("rest_halo", true)), "no disc at rest")
 	assert_true(float(orb["flight_halo_scale"]) < 5.5, "a smaller flight glow than the shipped 5.5x")
 	assert_true(float(orb["verdict_flash_scale"]) < 1.0, "the verdict flashes shrink")
+	assert_true(bool(orb.get("enabled", false)), "catch_orb ships ON (VIS-MEADOWS r1b judged gain)")
+	assert_true(str(orb.get("_why_on", "")).contains("CPU 6.22 -> 7.19"), "catch_orb records its CPU score")
+	var off := _with("catch_orb")
+	(off["catch_orb"] as Dictionary)["enabled"] = false
+	CAMFX.set_config_for_tests(off)
 	assert_true(CAMFX.block("catch_orb").is_empty(), "OFF reads as empty")
 	CAMFX.set_config_for_tests(_with("catch_orb"))
 	assert_false(CAMFX.block("catch_orb").is_empty(), "ON reads its keys")

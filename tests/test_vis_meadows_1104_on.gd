@@ -43,3 +43,15 @@ func test_f38_22_mill_and_settlement_arms_ship_on_with_their_cpu_score() -> void
 	var candidate: Dictionary = market.get("candidate", {})
 	assert_true(bool(candidate.get("enabled", false)), "village market ON")
 	assert_true(str(candidate.get("_why_on", "")).contains("CPU 5.67 -> 6.38"), "market carries its CPU score")
+
+
+func test_f38_13_catch_arms_ship_on_with_their_cpu_score() -> void:
+	var framed: Dictionary = _load("res://data/config/catching.json").get("framed_camera", {})
+	assert_true(bool(framed.get("enabled", false)), "framed catch camera ON")
+	var r2: Dictionary = framed.get("r2", {})
+	assert_true(bool(r2.get("enabled", false)), "framed_camera r2 (oblique behind-trainer resolve) ON")
+	assert_true(str(r2.get("_why_on", "")).contains("CPU 6.22 -> 7.19"), "r2 carries its CPU score")
+	var orb: Dictionary = _load("res://data/config/camfx.json").get("catch_orb", {})
+	assert_true(bool(orb.get("enabled", false)), "physical catch orb ON")
+	var card: Dictionary = _load("res://data/config/hud.json").get("catch_card", {})
+	assert_true(bool(card.get("enabled", false)), "catch result card ON")
