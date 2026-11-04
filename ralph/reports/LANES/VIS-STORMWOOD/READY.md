@@ -12,7 +12,7 @@
 
 | Item | Arm | Commit | Test |
 |---|---|---|---|
-| F41#2 P2-042 surge phases | `stormwood_surge.json presentation.phase_grade_1104`: Calm higher-key sky with cloud breaks, Building lower indigo sky, denser fog and rain; Break, energies and ambient unchanged | `5c0d…` (see `git log`) | `test_cause_stormwood_candidates.gd test_phase_grade_separates_calm_from_building_and_keeps_break_rules` |
+| F41#2 P2-042 surge phases | `stormwood_surge.json presentation.phase_grade_1104`: Calm higher-key sky with cloud breaks, Building lower indigo sky, denser fog and rain; Break, energies and ambient unchanged | `442053bb` | `test_cause_stormwood_candidates.gd test_phase_grade_separates_calm_from_building_and_keeps_break_rules` |
 
 ## Capture queue (one Godot at a time, `tools/visual_judge/lane_bin`)
 
