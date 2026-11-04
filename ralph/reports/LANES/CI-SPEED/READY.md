@@ -63,5 +63,31 @@ Actions > Caches; billed above 10 GB). Without it, an occasional eviction
 costs a 1 GB chunk re-fetch (~1 min) or one cold import (~6 min), never
 correctness.
 
-### After, warm run: PENDING (dispatched 01:4x on 5aa5cb68c)
+### After, run 41755756668 (warm; 5aa5cb68c; fast tier; ci-gate success)
+
+| Job | checkout | assets restore | setup-godot | total job |
+|---|---|---|---|---|
+| assets-cache (prep) | 2 s | 4/8 chunks still cached; rebuilt 0,1,2,7 (evicted) in 56 s, saved in 19 s | - | 3.3 min |
+| verify-suite (3) | 15 s | 1.8 min, 8/8 hit, 7,548 files verified, 0 from git | 7.5 min (import cache evicted: cold) | 15.7 min |
+| verify-suite (4) | 12 s | 1.25 min, 8/8 hit, verified, 0 from git | 8.1 min (cold) | ~21 min |
+| export | 12 s | 1.25 min, 8/8 hit, verified, 0 from git | cold import 7.8 min | 18.6 min |
+
+Cache at 01:49 UTC: 11.24 GB active. **Every main-scoped entry had been
+evicted** (main's import caches, godot-4.7-stable, godot-editor); what remained
+was this branch's assets chunks and godot-4.7-stable plus PR #808's import
+(2.67 GB) and godot-4.7-stable (1.27 GB). Per-branch import and template copies
+were the overflow: GitHub evicts least recently used entries beyond 10 GB.
+
+### Budget fix, a9ea0b2e7 (third run dispatched to prove the export path)
+- Godot import caches (~2.7 GB) are restored everywhere and **saved only from
+  main runs** (setup-godot and export). Branches restore main's by prefix and
+  reimport only what they changed.
+- The export job's editor+templates entry keeps only Windows and Linux
+  templates under a new key `godot-winlinux-<ver>` (was 1.27 GB with every
+  platform). release.yml keeps its own full `godot-<ver>` entry.
+- Steady state on main: assets ~6.3 + one import ~2.7 + editor 0.07 +
+  win/linux templates (well under 1.27) is about 9.3 GB, so it fits 10 GB with room
+  for a PR's changed chunks (~1 GB each, pruned when stale).
+- Can only be fully proven on main: the first main run after landing fills
+  main's assets and import caches, and later branch/PR runs hit them.
 
