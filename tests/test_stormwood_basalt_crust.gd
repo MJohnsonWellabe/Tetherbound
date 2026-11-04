@@ -33,14 +33,18 @@ func test_basalt_crust_on_is_smaller_taller_and_matte() -> void:
 
 ## F41#19 seam_clear_1104: ships OFF; ON drops the fissure ribbons, clears the
 ## whole scar of grass and narrows the shipped glass crust.
-func test_seam_clear_ships_off_and_narrows_when_on() -> void:
+## F41#19 seam_clear_1104 r2: ships OFF until re-judged; ON keeps every
+## fissure (the glass-field identity needs them) but darkens it, clears the
+## whole scar of grass and narrows the shipped glass crust.
+func test_seam_clear_ships_off_and_darkens_fissures_when_on() -> void:
 	var field := FIELD.new()
 	field.config = _config()
-	assert_false(bool(field.config.seam_clear_1104.get("enabled", true)), "ships OFF until judged")
+	assert_false(bool(field.config.seam_clear_1104.get("enabled", true)), "ships OFF until re-judged")
 	assert_eq(field._seam_clear(), {}, "OFF returns no override")
 	field.config.seam_clear_1104["enabled"] = true
 	var seam: Dictionary = field._seam_clear()
-	assert_true(bool(seam.hide_fissures), "no fissure ribbons")
+	assert_false(seam.has("hide_fissures"), "the fissures are never dropped")
+	assert_true(Color(str(seam.fissure_colour)).get_luminance() < 0.2, "fissures read as dark cracks")
 	assert_true(float(seam.grass_clear_fraction) > 0.82, "grass cleared wider than shipped")
 	assert_true(float(seam.crust_footprint) < float(field.config.shard_finish.crust_footprint), "a narrower crust")
 	field.free()

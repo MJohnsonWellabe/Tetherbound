@@ -1,0 +1,10 @@
+{
+  "_why": "NEAR6-TW (4 Nov 2026), P2-057 / F39#27 (GPU 5.48): judges read the Tidewake named characters as backlit near-black figures on bare dunes. When on, every Tidewake named NPC and trainer body wears the existing character rim overlay (character_rim_overlay.gdshader) in a warm sand tone with a soft front fill, so the costume silhouette separates from the sand. No red. Presentation only.",
+  "scope": "client_presentation: Tidewake named NPC and trainer bodies; no state, collision or other realm",
+  "enabled": true,
+  "colour": "#fff0d8",
+  "energy": 0.8,
+  "power": 2.2,
+  "fill_energy": 0.14,
+  "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r27 F39#27 CPU 6.03 -> 6.23 (three code-blind judges all higher, calibrated; anchor RMSE 0.79 caveat)."
+}

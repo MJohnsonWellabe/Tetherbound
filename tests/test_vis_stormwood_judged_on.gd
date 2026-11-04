@@ -41,3 +41,4 @@ func test_glass_sink_j4_arms_ship_on() -> void:
 	var sink := _json("res://data/config/stormwood_glass_sink.json")
 	_assert_on(sink.dark_pool_candidate, "5.07", "dark_pool_candidate")
 	_assert_on(sink.obsidian_1104, "5.07", "obsidian_1104")
+

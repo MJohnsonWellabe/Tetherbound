@@ -42,6 +42,22 @@ static func beaten_stance(cfg: Dictionary = {}) -> Array:
 	return rows if rows is Array else []
 
 
+## NEAR6-MS (4 Nov 2026), F38#29 P2-065: the stance a beaten trainer takes
+## the moment the fight is lost (`beaten_trainer_stance.immediate_1104`), so
+## the defeat shows during the victory lines instead of after the hold, or []
+## when off.
+static func beaten_stance_immediate(cfg: Dictionary = {}) -> Array:
+	var source := cfg if not cfg.is_empty() else config()
+	var block: Variant = source.get("beaten_trainer_stance", {})
+	if not block is Dictionary:
+		return []
+	var now: Variant = (block as Dictionary).get("immediate_1104", {})
+	if not now is Dictionary or not bool((now as Dictionary).get("enabled", false)):
+		return []
+	var rows: Variant = (source.get("stances", {}) as Dictionary).get(str((now as Dictionary).get("stance", "")), [])
+	return rows if rows is Array else []
+
+
 ## Attach under the NPC's one skeleton when it has a stance. Returns the
 ## modifier or null.
 static func attach(npc: Node, npc_name: String) -> Node:

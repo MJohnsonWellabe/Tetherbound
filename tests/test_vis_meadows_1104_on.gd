@@ -84,3 +84,31 @@ func test_f38_20_courtyard_centre_dressing_ships_on_with_its_score() -> void:
 		assert_true(bool((prop as Dictionary).get("visual_only", false)), "visual only, so routes and NPC paths are unchanged")
 		var x := float(((prop as Dictionary).get("at", [0, 0]) as Array)[0])
 		assert_true(x < 6.5 or x > 9.5 or str((prop as Dictionary).get("model", "")) == "Torch_Metal", "the walking lane (x 6.5-9.5) stays clear")
+
+
+## Hard rule: dark red/oxblood is Team Tether's only. The market stall cloth
+## (MI_Banner) is painted red through vertex colours, so a tan multiply alone
+## left it maroon (two judges, quick_judge f38_22-market-folk). The retint must
+## drop the vertex colour.
+func test_village_market_cloth_is_not_oxblood() -> void:
+	var market := _cluster("res://data/config/bands/band1_lower_meadows/props.json", "wd_village_market")
+	var checked := 0
+	for prop: Variant in market.get("props", []):
+		var retint: Dictionary = (prop as Dictionary).get("retint", {})
+		if retint.has("MI_Banner"):
+			var cloth: Dictionary = retint["MI_Banner"]
+			assert_false(bool(cloth.get("vertex_colour", true)), "the stall cloth drops its red vertex paint")
+			checked += 1
+	assert_true(checked >= 2, "both market stalls are covered")
+
+
+func test_f38_22_market_folk_ship_on_silent_with_their_score() -> void:
+	var folk: Dictionary = _load("res://data/config/village_npcs.json").get("market_folk", {})
+	assert_true(bool(folk.get("enabled", false)), "market folk ON")
+	assert_true(str(folk.get("_why_on", "")).contains("CPU 6.44 -> 6.62"), "records its CPU score")
+	var people: Array = folk.get("villagers", [])
+	assert_eq(people.size(), 4, "four market villagers")
+	for person: Variant in people:
+		var spec: Dictionary = person
+		assert_false(spec.has("greeting") or spec.has("greeting_when"), "silent set dressing: no prompt, no dialogue")
+		assert_false(preload("res://scripts/world/village_npcs.gd").has_anything_to_say(spec), "nothing to say, so no Greet prompt")

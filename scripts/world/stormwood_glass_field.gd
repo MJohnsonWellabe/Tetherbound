@@ -116,8 +116,7 @@ func _build_cluster(spec: Dictionary) -> void:
 		var local := centre + Vector2(cos(angle), sin(angle)) * radius
 		var height := float(spec.height_m) * (0.48 + 0.52 * float((index * 5 + 2) % count) / maxf(1.0, float(count - 1)))
 		_add_shard(root, "%02d" % index, local, height, angle)
-	if not bool(seam.get("hide_fissures", false)):
-		_add_fissures(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
+	_add_fissures(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
 	if bool(spec.get("night_light", false)):
 		var light := OmniLight3D.new()
 		light.name = "ResidualStrikeGlow"
@@ -366,8 +365,9 @@ func _basalt_crust() -> Dictionary:
 ## qj_basalt judges (3/3) preferred the shipped glass crust but called the
 ## straight emissive fissure ribbons "a rigid thin white line", saw grass
 ## passing through the crust edge and the crust "much wider than the
-## cluster". On: no fissure ribbons, grass cleared across the whole scar and
-## the glass crust narrowed. Visual only.
+## cluster". On: the fissure ribbons stay but turn into dark fused cracks with a
+## faint glow, grass is cleared across the whole scar and the glass crust is
+## narrowed. Visual only.
 func _seam_clear() -> Dictionary:
 	var cand: Variant = config.get("seam_clear_1104", {})
 	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
@@ -466,6 +466,13 @@ func _glow_material() -> StandardMaterial3D:
 	material.emission_enabled = true
 	material.emission = FISSURE_GLOW
 	material.emission_energy_multiplier = 0.20
+	# seam_clear_1104: the fissures stay (three main and three branches per
+	# impact) but read as dark fused cracks with a faint glow, not a bright line.
+	var seam := _seam_clear()
+	if seam.has("fissure_colour"):
+		material.albedo_color = Color(str(seam.fissure_colour))
+		material.emission = Color(str(seam.get("fissure_glow", seam.fissure_colour)))
+		material.emission_energy_multiplier = float(seam.get("fissure_energy", 0.05))
 	return material
 
 

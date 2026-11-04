@@ -16,7 +16,26 @@
     "far_roughness": 0.82,
     "vein_colour": "#6fb4ff",
     "vein_energy": 0.85,
-    "vein_fraction": 0.35
+    "vein_fraction": 0.35,
+    "r2": {
+      "enabled": false,
+      "_why": "VIS-STORMWOOD j4 (r1 judged 4.03 -> 5.07; 3/3: 'the cell lines are regular and read as computer-generated', 'still a uniform pattern to the horizon'). r2: plates about a third larger, darker seams, and only one plate edge in seven carries a fainter glow, so the floor reads as dark glass with a few live veins rather than a lit grid. OFF until judged.",
+      "fracture_scale": 0.02,
+      "seam_colour": "#142232",
+      "vein_energy": 0.6,
+      "vein_fraction": 0.15
+    },
+    "r3": {
+      "enabled": false,
+      "_why": "VIS-STORMWOOD qj_obs2 (r2 flat, 3.93 -> 4.02; 3/3: the glowing seams read as 'a debug wireframe grid'; asked for 'a black reflective pool'). r3: no glowing veins, seams the colour of the facets so the cells disappear, and a satin black-glass body that keeps a soft near reflection fading out by 160 m. OFF until judged.",
+      "seam_colour": "#121824",
+      "seam_width": 0.0,
+      "vein_energy": 0.0,
+      "roughness": 0.28,
+      "far_fade_m": [30.0, 160.0],
+      "far_specular": 0.06,
+      "far_roughness": 0.7
+    }
   },
   "meshy_rim": {
     "enabled": true,

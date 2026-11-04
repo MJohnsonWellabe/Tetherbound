@@ -792,6 +792,12 @@ func _update_subject_fade(delta: float) -> void:
 		else:
 			# PartyStrip owns its internal draw/fade lifecycle; do not invent a
 			# second row-opacity controller in this no-draw parent holder.
+			# NEAR6-TW (P2-088, F39#19): `roster_floor` keeps the fight roster
+			# above a readable alpha over terrain. Inert while OFF.
+			var roster_floor: Variant = cfg.get("roster_floor", {})
+			if panel == _strip_fader and roster_floor is Dictionary \
+					and bool((roster_floor as Dictionary).get("enabled", false)):
+				level = maxf(level, clampf(float((roster_floor as Dictionary).get("alpha", 1.0)), 0.0, 1.0))
 			panel.modulate.a = level
 
 
@@ -1592,6 +1598,12 @@ func _combat_party() -> Array:
 	return source
 
 
+func _team_full() -> bool:
+	var game: Node = get_node_or_null(^"/root/Game")
+	var party_auto: Variant = game.get("party") if game != null else null
+	return party_auto != null and bool(party_auto.call("is_full"))
+
+
 func _player_party() -> Array:
 	var game: Node = get_node_or_null(^"/root/Game")
 	if game == null:
@@ -2005,6 +2017,14 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 		detail = TRAIT_READOUT.summary(foe) if foe != null else ""
 		if detail.begins_with("No "):
 			detail = ""
+		# P2-118 (VIS-CLOUDREACH, 4 Nov 2026): hud.json `catch_card.full_team_line`
+		# (off unless enabled). A catch with all five holders filled says so on
+		# the card, with what happens next, instead of leaving the player to
+		# find the release choice later.
+		var full_line: Variant = cfg.get("full_team_line", {})
+		if full_line is Dictionary and (full_line as Dictionary).get("enabled") == true and _team_full():
+			var line := str((full_line as Dictionary).get("text", "Your team is full: choose who goes free."))
+			detail = line if detail.is_empty() else detail + "\n" + line
 	else:
 		var most := int(CATCH.config().get("resolve", {}).get("max_shakes_on_failure", 3))
 		headline = "%s broke free" % name
