@@ -1,0 +1,7 @@
+Ib: none
+Lp: "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+Jl: "Distinct named Stormwood characters use identical dialogue lines"
+Jg: "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+Eu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Qs: none
+Ol: "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"

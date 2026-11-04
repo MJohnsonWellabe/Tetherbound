@@ -1,0 +1,5 @@
+Mg: "Hurt frames keep the idle silhouette so the state is hard to read, and faint or rest poses float above the ground or stay upright"
+Tn: none
+Ip: none
+Wi: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bi: "Hurt frames keep the idle silhouette so the state is hard to read, and faint or rest poses float above the ground or stay upright"

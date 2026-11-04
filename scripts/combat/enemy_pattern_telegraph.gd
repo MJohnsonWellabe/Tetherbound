@@ -3,6 +3,8 @@ extends Node3D
 ## F22 ground shape. Uses the frozen strike profile; a moving camera or
 ## opponent cannot move a locked marker. Rendering never decides damage.
 const STYLE := preload("res://scripts/combat/tell_style.gd")
+## The creature rim (OFF by default) yields the overlay slot to an aura and gets it back.
+const CREATURE_RIM := preload("res://scripts/world/creature_rim.gd")
 const WATER_GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
 const BURST := preload("res://scripts/vfx/vfx_burst.gd")
 const COMBAT_VFX := preload("res://scripts/vfx/combat_vfx.gd")
@@ -259,7 +261,8 @@ func _add_boss_aura() -> void:
 		float(_profile.get("cue_boss_aura_strength", 1.0)) * _aura_scale.x)
 	for node: Node in art.find_children("*", "GeometryInstance3D", true, false):
 		var geometry := node as GeometryInstance3D
-		if geometry is MeshInstance3D and geometry.visible and geometry.material_overlay == null:
+		if geometry is MeshInstance3D and geometry.visible and (geometry.material_overlay == null
+				or CREATURE_RIM.is_rim(geometry.material_overlay)):
 			geometry.material_overlay = _aura_material
 			_aura_meshes.append(geometry)
 	if _aura_scale.y <= 0.0:
@@ -288,7 +291,7 @@ static func aura_renderer_scale(profile: Dictionary, rendering_method: String) -
 func _exit_tree() -> void:
 	for geometry in _aura_meshes:
 		if is_instance_valid(geometry) and geometry.material_overlay == _aura_material:
-			geometry.material_overlay = null
+			geometry.material_overlay = CREATURE_RIM.rest_overlay(geometry)
 	_aura_meshes.clear()
 
 

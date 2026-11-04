@@ -15,7 +15,15 @@ const META := &"stormwood_character_rim"
 static func settings() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) \
 		if FileAccess.file_exists(CONFIG) else {}
-	return parsed if parsed is Dictionary else {}
+	var cfg: Dictionary = parsed if parsed is Dictionary else {}
+	# Visual lane 3 Nov: r2 widens and brightens the rim (CPU v1/b10: r1 5.58 -> 5.98
+	# for F41#18), applied only while r2.enabled; OFF until judged.
+	var r2: Variant = cfg.get("r2", {})
+	if r2 is Dictionary and bool((r2 as Dictionary).get("enabled", false)):
+		for key: String in ["energy", "power"]:
+			if (r2 as Dictionary).has(key):
+				cfg[key] = (r2 as Dictionary)[key]
+	return cfg
 
 
 ## Dress every body under `container` now and every body added to it later.
@@ -38,7 +46,9 @@ static func overlay(cfg: Dictionary) -> ShaderMaterial:
 	return material
 
 
-static func dress(root: Node, material: ShaderMaterial) -> int:
+## `keep_existing_overlay` (creature_rim.gd) leaves a mesh that already wears
+## another overlay alone instead of replacing it.
+static func dress(root: Node, material: ShaderMaterial, keep_existing_overlay := false) -> int:
 	var count := 0
 	var nodes: Array = root.find_children("*", "GeometryInstance3D", true, false)
 	if root is GeometryInstance3D:
@@ -48,7 +58,8 @@ static func dress(root: Node, material: ShaderMaterial) -> int:
 		# Prompts, rings and effect cards cast no shadow; bodies do.
 		if geometry == null or geometry.has_meta(META) \
 				or geometry.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF \
-				or not (geometry is MeshInstance3D):
+				or not (geometry is MeshInstance3D) \
+				or (keep_existing_overlay and geometry.material_overlay != null):
 			continue
 		geometry.material_overlay = material
 		geometry.set_meta(META, true)

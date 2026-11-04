@@ -1,0 +1,4 @@
+Yh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ru: "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+Zf: none
+Ai: none
