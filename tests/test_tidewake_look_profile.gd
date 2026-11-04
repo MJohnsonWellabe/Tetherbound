@@ -24,9 +24,9 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
 			"stones_candidate", "veilfall_hero_candidate",
 			"veilfall_facade_candidate", "forward_plus_candidate",
-			"veilfall_rock_detail_candidate", "first_shore_declutter_candidate",
-			"veilfall_formation_relief_candidate", "veilfall_formation_relief_fill_candidate",
-				"shore_surf_candidate", "shore_surf_vary_candidate", "veilfall_falls_candidate", "rain_fog_candidate",
+			"first_shore_declutter_candidate",
+			"veilfall_formation_relief_fill_candidate",
+				"shore_surf_candidate", "shore_surf_vary_candidate", "rain_fog_candidate",
 				"rain_grade_candidate", "rain_veil_candidate", "swim_candidate", "dune_grass_candidate", "shore_water_candidate",
 				"veilfall_mountain_candidate",
 				"waterline_declutter_candidate", "golden_sky_candidate", "current_bands_candidate", "lesson_clusters_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
@@ -66,6 +66,13 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	assert_false(off.has("veilfall_family_candidate"), "the judged rock family ships on")
 	assert_true(str(raw.get("_why_veilfall_family_candidate", "")).contains("4.51"),
 		"the rock family's mapped score is recorded in the config")
+	# tb/vis-tidewake-1104 r3: the Veilfall near sections (rock detail, crag
+	# relief, falls) lifted F39#31 CPU 4.94 -> 5.20, so they ship ON.
+	for section: String in ["veilfall_rock_detail_candidate", "veilfall_formation_relief_candidate", "veilfall_falls_candidate"]:
+		assert_false(off.has(section), "%s ships on after r3" % section)
+		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
+	assert_true(str(raw.get("_why_veilfall_near_on", "")).contains("5.20"),
+		"the Veilfall near sections' mapped score is recorded in the config")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
