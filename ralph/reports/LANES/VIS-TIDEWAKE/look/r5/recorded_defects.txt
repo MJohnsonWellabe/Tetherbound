@@ -1,0 +1,7 @@
+Ja: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frames"
+Hm: none
+Uu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Fy: none
+Wb: "The hero landmark (Veilfall) does not read as the board's towering waterfall mountain at distance and up close"
+Op: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frames"
+Hj: "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
