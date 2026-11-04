@@ -8,6 +8,7 @@ extends Node3D
 ## deliberately separate world builder rather than another branch inside the
 ## Meadows' 1,700-line runtime composer.
 
+const NPC_POSTS := preload("res://scripts/world/cloudreach_npc_posts.gd")
 const CONFIG_PATH := "res://data/config/cloudreach_world.json"
 const VISUAL_CONFIG_PATH := "res://data/config/cloudreach_visual.json"
 const REALM_ID := "cloudreach"
@@ -518,6 +519,8 @@ func _ready() -> void:
 	runtime.call("build_environment", self)
 	await _build_step("environment")
 	if not simulation_only:
+		# P2-068: cloudreach_npc_runtime.json `post_readability` (off unless enabled).
+		_cover_exclusions.append_array(NPC_POSTS.cover_exclusions(NPC_POSTS.spec()))
 		await _build_ground_cover()
 	_place_player()
 	_realm_map = _game().call("bind_realm_map", REALM_ID, _player.global_position)

@@ -37,6 +37,13 @@
     "circuit_board": {"position":[-183,850,4101],"facing_degrees":180},
     "tavi_rematch": {"id":"young_trainer_tavi_rematch","base_id":"young_trainer_tavi_upper_ring","name":"Tavi · Circuit Mastery","defeat_flag":"defeated_cloudreach_tavi_rematch","requires_flags":["side_cliff_circuit_complete","cloudreach_upper_route_unlocked"],"level_bonus":3,"reward_tier":"ace"}
   },
+  "post_readability": {
+    "_scope": "world_presentation",
+    "_why": "P2-068 / F40#9 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct 5.50 mapped): named Cloudreach NPCs read as tiny figures half lost in tall grass, shadow and tree trunks. When on (scripts/world/cloudreach_npc_posts.gd): ground cover is kept off a clear_radius_m disc around every position a named NPC can stand at (flag-independent, so every peer builds the same cover), and each standing NPC gets a soft shadowless warm fill light. Presentation only. OFF until judged.",
+    "enabled": false,
+    "clear_radius_m": 3.2,
+    "fill_light": {"enabled": true, "colour": "#ffe2b8", "energy": 0.7, "range_m": 4.5, "attenuation": 1.2, "offset": [0.0, 1.6, 1.2]}
+  },
   "npcs": [
     {
       "id": "warden_aila", "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png", "portrait_mode": "clean_owner_reference", "facing_deg": 180.0,
