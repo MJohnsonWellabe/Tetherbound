@@ -41,6 +41,14 @@ F39#1 5.40 -> 5.45, F39#2 5.35 -> 5.19, F39#3 5.45 -> 5.40, F39#15 5.50 -> 5.56.
   - new art: hero structures at the destinations.
 - Owner reassignment (coordinator, 07:42): F39#27/#1/#6/#7/#20/#2/#14/#19/#4 move to the NEAR6-TW lane. This lane keeps #3, #15, #16, #17, #5, #8, #22, #24, #21, #30, #31, #32 and F13#5.
 
+## Round 2b (09:25 UTC): sea + horizon lost; stays OFF
+
+Arm: `cause_tidewake.sea` + `horizon`. Calibration r 0.84, RMSE 0.45 (`qj/r2b/VERDICT.md`).
+- F39#16 6.18 -> 6.00, F39#5 6.03 -> 5.60, F39#14 6.32 -> 5.82.
+- All three judges see a hard-edged pale triangular wedge in the shallows on the candidate swim frames, a seam that the sea part's depth-band break draws, and broad regular diagonal bands in the live current.
+- The shipped base already maps 6.0 or above on CPU for F39#16 and #5.
+- Next judge-named levers: a horizontal swim stroke with a V-wake (r2c tests the existing stroke candidate), and curved, broken current foam.
+
 ## Handoff to NEAR6-TW: F39#4 shiny cue (flag OFF, not judged)
 
 - `creatures_visual.json` `shiny_cue` (OFF): the shiny body gets a rim (BaseMaterial3D rim plus `rim_amount` on the creature_surface_finish next_pass overlays) and the alpha mote ring in #dff3ff. Code: `creature_body.gd` `_apply_shiny_cue` / `_rim_finish_overlays`.
