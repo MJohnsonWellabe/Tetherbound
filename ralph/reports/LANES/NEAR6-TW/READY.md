@@ -1,5 +1,14 @@
 # NEAR6-TW lane (tb/near6-tw-1104): Tidewake F39 items scored 5.4–6.0, CPU quick-judged
 
+## Taken (coordinator 19:25)
+
+- **r12, F41#12, not judged, held OFF:** `puddle_candidate` renders as flat lavender sky-reflecting discs on the road. VIS-STORMWOOD's READY records the same puddles already judged as flat slabs (3/3, v1/b10), so this repeats a known failure. The remaining F41#12 asks (white-violet lightning instead of a gold decal, edge wear, form) need a road-current shader rework; not tried.
+- **r14s, F41#14, worse (5.57 -> 5.26), held OFF:** tier_candidate at 1.45/1.6/1.75x. The tier read is FIXED, but the enlarged Rare cluster blooms into a flat yellow burst that 3/3 judges call an effect slab. Round 2, r14t (1.3/1.3/1.05x): not judged, because Rare's three overlapping copies still bloom into a yellow shard burst at the smaller size. r14u: Rare as one sweet (1.2x), Great a pair (1.3x), Good 1.2x. Judged: 4.49 -> 4.78 (+0.29, under 0.5; one judge calls the tier read FIXED, two PARTIAL). Held OFF, because it would also break the tier count and size ordering that `test_storm_cams_candidates` asserts. **F41#14 is parked** after two rounds under 0.5; it needs new tier art (distinct shapes), not scale.
+
+- **F41#12** (charged road, 5.63): judging the existing unjudged `stormwood_road_current.puddle_candidate`.
+- **F41#14** (candy tiers, 5.70): `pickup_grounding.tier_candidate` with larger tiers (1.45/1.6/1.75x; the arm had shrunk them, while the judges call them pinhead-sized).
+- **F39#2**: parked here after two failed rounds; new art. **F39#31 and F13#5 are left to VIS-TIDEWAKE**, which has them in flight.
+
 ## Taken from VIS-STORMWOOD (coordinator 16:44)
 
 - **F41#10 Glass Sink: the pale white wall. DONE, ON 4.84 -> 5.36:** the wall was `HollowCrownSilhouette` (stormwood_crown_overlook massif), whose 300 m visibility start sat inside its own 560 m footprint, so stands on the Crown island saw its inner cliff. One judge flags the trunk revealed at the left edge as red-brown; two read it as bark.

@@ -97,6 +97,7 @@
         }
       }
     },
+    "building_glow_1104": {"enabled": false, "scope": "client_presentation", "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#2 Surge phases (5.80): judges keep saying Calm and Building look alike; phase_grade_1104 (sky, sun, rain, fog shifts) was flat twice and is parked. New lever: Building's in-cloud sheet lightning (sheet_glow 0.22 -> 0.7, faster pulse) and higher cloud contrast, so Building visibly carries lightning in the cloud deck while Calm does not. Presentation only: `flashes` (strike sky flashes) stays Break-only. OFF until judged.", "_r2": "r1 (qj_bglow, not judged): 0.2% px changed; the sheet glow is masked to the upper sky (dir.y above 0.14-0.3) and the F41#2 frames show the low sky. r2 lowers Building's glow edge (glow_low 0.0) so the glow reaches the horizon band, and steadies the pulse.", "overlay": {"phases": {"building": {"sheet_glow": 0.7, "sheet_glow_rate": 0.3, "ceiling_contrast": 0.75, "glow_low": 0.0}}}},
     "phase_grade_1104": {
       "enabled": false,
       "scope": "client_presentation",
