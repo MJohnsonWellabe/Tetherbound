@@ -35,5 +35,14 @@
    "file": "veilfall_b.glb",
    "sha256": "6a9cda32e7f9f179ccb3936d9e34f98e0df3033ff4b5638d775b9c8b5e069ae0"
   }
- ]
+ ],
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/props/meshy-1031/hero_veilfall/veilfall_a.glb",
+      "assets/props/meshy-1031/hero_veilfall/veilfall_b.glb"
+    ]
+  }
 }

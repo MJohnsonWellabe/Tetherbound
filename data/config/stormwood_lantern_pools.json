@@ -17,7 +17,7 @@
   "light_colour": "#ffc77a",
   "light_energy": 1.6,
   "light_range_m": 9.0,
-  "arrival_pools": {"enabled": false, "_candidate": "World dressing P2-038 (OFF until GPU judged; tb/world-dressing). GPU 4.54: the Lantern Pools frame is a dirt path through grass with no pool or lantern. Two more pools beside the destination point, inside the arrival view (screened on the CPU close frame: camera at -386.9,1392.6 facing 43 deg), and the installed Meshy lantern posts in place of the black box posts. Pools on ground steeper than max_relief_m are still skipped.", "with_lantern_model": true, "_why_relief": "r2: both arrival pools were skipped by the 0.36 m flatness limit on CPU; each carries its own max_relief_m and still levels at mid-relief.", "pools": [{"at": [-376.1, 1397.6], "radius_m": 2.6, "stones": 4, "lantern_angle_deg": 210, "max_relief_m": 1.2}, {"at": [-379.3, 1406.0], "radius_m": 2.8, "stones": 4, "lantern_angle_deg": 250, "max_relief_m": 1.2}]},
+  "arrival_pools": {"enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#4 named destinations 4.00 -> 4.59 mapped with arrival_pools + basin + lantern_model + glow_fungi + grove.", "_candidate": "World dressing P2-038 (OFF until GPU judged; tb/world-dressing). GPU 4.54: the Lantern Pools frame is a dirt path through grass with no pool or lantern. Two more pools beside the destination point, inside the arrival view (screened on the CPU close frame: camera at -386.9,1392.6 facing 43 deg), and the installed Meshy lantern posts in place of the black box posts. Pools on ground steeper than max_relief_m are still skipped.", "with_lantern_model": true, "_why_relief": "r2: both arrival pools were skipped by the 0.36 m flatness limit on CPU; each carries its own max_relief_m and still levels at mid-relief.", "pools": [{"at": [-376.1, 1397.6], "radius_m": 2.6, "stones": 4, "lantern_angle_deg": 210, "max_relief_m": 1.2}, {"at": [-379.3, 1406.0], "radius_m": 2.8, "stones": 4, "lantern_angle_deg": 250, "max_relief_m": 1.2}]},
   "pools": [
     {
       "at": [
@@ -86,7 +86,7 @@
   "_why_spots": "Spots screened on the Stormwood heightfield for relief under 0.35 m inside the two survey headings, clear of the pools shelter pad and the path.",
   "_why_level": "The surface sits at mid-relief plus surface_lift_m; scatter inside each kept pool is cleared on every shell (vegetation.gd clear_area).",
   "basin": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#4 named destinations 4.00 -> 4.59 mapped with arrival_pools + basin + lantern_model + glow_fungi + grove.",
     "_candidate": "r18 Meshy candidate (OFF until judged; coordinator big-swing order 25 Oct): the root-rimmed pool basin replaces each flat disc and its loose stones; the square slab is sunk below the lowest ground.",
     "model": "res://assets/props/meshy-1024/glowmoss_pool_basin/glowmoss_pool_basin.glb",
     "radius_scale": 1.25,
@@ -101,7 +101,7 @@
     "max_lift_m": 0.25
   },
   "lantern_model": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#4 named destinations 4.00 -> 4.59 mapped with arrival_pools + basin + lantern_model + glow_fungi + grove.",
     "_candidate": "r33 (OFF until judged). r30b/r31/r32 judges x3: the posts read as 'flat black bars'; asked for real lanterns with lit glass and copper. The Meshy stormwood_lantern_post (tb/meshy-1024 a24b25f7a, concept c1_1: aged timber post, carved bracket, hanging aged-copper lantern with patina and lit square panes, mossy stone footing) replaces the box post at each pool. Lit panes glow (warm flame light only), one warm light at the lantern.",
     "model": "res://assets/props/meshy-1024/stormwood_lantern_post/stormwood_lantern_post.glb",
     "height_m": 2.6,
@@ -113,7 +113,7 @@
     "glow_energy": 1.4
   },
   "glow_fungi": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#4 named destinations 4.00 -> 4.59 mapped with arrival_pools + basin + lantern_model + glow_fungi + grove.",
     "_candidate": "r30 (rides with the basin): bioluminescent storm fungi (the storm_mushroom layer's own Meshy model) in clumps on each basin rim. Natural glow, Glowmoss Hollows' living light.",
     "model": "res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb",
     "per_pool": 4,
@@ -122,7 +122,7 @@
     "glow_energy": 1.2
   },
   "grove": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#4 named destinations 4.00 -> 4.59 mapped with arrival_pools + basin + lantern_model + glow_fungi + grove.",
     "_candidate": "r30 Lantern Pools hollow (OFF until judged). GPU R: Lantern Pools 5.62 Medium / 5.37 High, 'no change'; every judge asks for groves and clearings instead of the open carpet. A ring of the Ash Road's storm-canopy trees (stormwood_vegetation.json layer storm_canopy: same models, retint and retexture) 24-62 m round the pools, with trunk colliders on every shell. Scatter is baked and fingerprinted (harvest ids), so the grove is authored here instead of a dense stand.",
     "layer": "storm_canopy",
     "collider_height_m": 6.0,

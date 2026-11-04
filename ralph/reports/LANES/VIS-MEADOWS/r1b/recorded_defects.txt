@@ -1,0 +1,10 @@
+Wh: "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+Dv: "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+Ed: "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut"
+Ps: "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change"
+Ro: "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+Wn: none
+Xr: "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+Md: none
+Jw: "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish"
+Zz: none

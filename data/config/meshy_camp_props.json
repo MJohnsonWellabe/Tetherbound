@@ -9,8 +9,10 @@
     "hide_children": ["WaterPaddedBolster"],
     "nest_candidate": {
       "_why": "Visual lane (3 Nov 2026), P2-115 / F39#12 (GPU WD2 5.23 on the Meshy ring: 'reads as a fire pit or well'; path 'a raised nest or cushion shape with bedding'). Blender-built raised woven nest (0.82 m rim crest, domed sailcloth cushion, teal blanket draped over the rim, driftwood lashings); provenance assets/props/vl-1103/nest_bed/provenance.json. Same 4.6 m span, same colliders and rest anchor. OFF until judged.",
-      "enabled": false,
-      "model": "res://assets/props/vl-1103/nest_bed/nest_bed.glb"
+      "enabled": true,
+      "_why_on": "ON (visual lane v1/b9, 3 Nov 2026): r2 nest F39#12 CPU 5.86 -> 7.02 mapped (three code-blind judges, linear slope 1.06, r 0.79, anchor RMSE 0.74, confirming batch; reads as a pet bed in all three camp views, defect FIXED 1 / PARTIAL 2).",
+      "model": "res://assets/props/vl-1103/nest_bed/nest_bed_r2.glb",
+      "_why_r2": "r1 (nest_bed.glb) judged CPU v1/b6 (3 Nov; three judges, linear slope 0.82, r 0.59, RMSE 0.66): 5.39 -> 5.83, reads as bedding but near-white on pale sand. r2: golden straw, warm canvas, deeper teal and driftwood in linear-correct values; OFF until judged."
     }
   },
   "workbench": {
@@ -21,8 +23,10 @@
     "yaw_deg": -39.0,
     "vl_candidate": {
       "_why": "Visual lane (3 Nov 2026), P2-116 / F39#13 (GPU WD2 6.08 on the Meshy bench; path 'a larger work surface with clear tools'). Blender-built 2.6 m plank bench with a 2.15 m tool board (hammer, saw, tongs, rope coil on pegs), vise, workpiece, mallet and a 2.6 m lantern post; provenance assets/props/vl-1103/camp_workbench/provenance.json. Same collider and craft offer. OFF until judged.",
-      "enabled": false,
-      "model": "res://assets/props/vl-1103/camp_workbench/camp_workbench.glb"
+      "enabled": true,
+      "_why_on": "ON (visual lane v1/b9, 3 Nov 2026): r2 bench F39#13 CPU 6.03 -> 6.56 mapped (three code-blind judges, linear slope 1.06, r 0.79, anchor RMSE 0.74, confirming batch; reads as a work station, defect PARTIAL 3/3: pale on sand and the trainer still covers it in view 1).",
+      "model": "res://assets/props/vl-1103/camp_workbench/camp_workbench_r2.glb",
+      "_why_r2": "r1 (camp_workbench.glb) judged CPU v1/b6: 5.75 -> 5.36 (worse); the judges saw the tool board from behind ('an upright pale board like a notice board'). r2 is the same bench turned 180 deg so the tools face the camp camera; OFF until judged."
     },
     "_why_yaw": "r2: the camp view stands at (+4, -5) from the bench and looks through the trainer; -39 deg turns the long axis across that view so the bench spans past the trainer."
   }

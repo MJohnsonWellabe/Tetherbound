@@ -5435,7 +5435,7 @@
     },
     "currents": {
       "_comment": "Judges 1 Nov: road-marking dashes and chevrons on the sea; the restored current changes nothing. current_flow (watersky) zeroes the live dashes, but its restored state inherits water_veilfall.json's restored dashes (dash_fill 0.2), comets, chevrons and dashed tan channel edges, which CPU current-state frames show as white dashes and chevron outlines on restored water. Restored keeps no paint: soft bank seams, gentle wavelets and a faint clear channel, so a restored current reads as calm moving water. Brings current_flow into play (same section the watersky switch restores).",
-      "enabled": false,
+      "_why_on": "tb/vis-tidewake-1104 r1 (CPU, 3 judges, calibrated): F39#17 current restoration environment CPU 5.54 -> 6.09 mapped; the restored lanes lose the dashed road-paint that sank the base side.", "enabled": true,
       "restore": [
         "current_flow"
       ],

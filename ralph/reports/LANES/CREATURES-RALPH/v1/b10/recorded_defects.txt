@@ -1,0 +1,8 @@
+Mp: "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern"
+Ty: "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+Xl: none
+Qc: none
+Aq: "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+Qr: "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+Xj: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Xw: "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"

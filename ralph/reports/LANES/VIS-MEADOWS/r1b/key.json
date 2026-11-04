@@ -1,0 +1,59 @@
+{
+ "Wh": {
+  "anchor": false,
+  "label": "F38#13",
+  "A": "13-r1cand.png",
+  "B": "13-r1base.png"
+ },
+ "Dv": {
+  "anchor": false,
+  "label": "F38#7",
+  "A": "7-r1cand.png",
+  "B": "7-r1base.png"
+ },
+ "Ed": {
+  "anchor": false,
+  "label": "F38#15",
+  "A": "15-r1cand.png",
+  "B": "15-r1base.png"
+ },
+ "Ps": {
+  "anchor": false,
+  "label": "F38#29",
+  "A": "29-r1cand.png",
+  "B": "29-r1base.png"
+ },
+ "Ro": {
+  "anchor": false,
+  "label": "F38#32",
+  "A": "32-r1base.png",
+  "B": "32-r1cand.png"
+ },
+ "Wn": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Xr": {
+  "anchor": false,
+  "label": "F38#6",
+  "A": "6-r1cand.png",
+  "B": "6-r1base.png"
+ },
+ "Md": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Jw": {
+  "anchor": false,
+  "label": "F38#33",
+  "A": "33-r1cand.png",
+  "B": "33-r1base.png"
+ },
+ "Zz": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ }
+}

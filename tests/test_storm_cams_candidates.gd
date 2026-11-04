@@ -100,10 +100,11 @@ func test_water_npc_placement_ships_off_and_moves_only_named_npcs() -> void:
 	assert_eq(placement.offset(bren, on), [9.0, 0.0, 12.0], "ON leaves everyone else alone")
 
 
-func test_stormwood_character_rim_ships_off_and_dresses_only_shadowed_meshes() -> void:
+func test_stormwood_character_rim_ships_on_and_dresses_only_shadowed_meshes() -> void:
 	var rim := preload("res://scripts/world/stormwood_character_rim.gd")
-	assert_false(bool(_json("res://data/config/stormwood_character_rim.json").get("enabled", true)),
-		"the P2-056 candidate ships OFF")
+	var cfg := _json("res://data/config/stormwood_character_rim.json")
+	assert_true(bool(cfg.get("enabled", false)), "the P2-056 rim ships ON (judged gain)")
+	assert_true(str(cfg.get("_why_on", "")).contains("5.98"), "the rim records its judged CPU score")
 	var body := Node3D.new()
 	var mesh := MeshInstance3D.new()
 	mesh.mesh = BoxMesh.new()
@@ -118,6 +119,19 @@ func test_stormwood_character_rim_ships_off_and_dresses_only_shadowed_meshes() -
 	assert_eq(card.material_overlay, null, "effect cards are left alone")
 	assert_eq(rim.dress(body, material), 0, "dressing twice changes nothing")
 	body.free()
+
+
+## Visual lane 3 Nov: the r2 rim (wider, brighter) ships OFF and only ever
+## replaces energy and power.
+func test_stormwood_character_rim_r2_ships_off_and_only_changes_energy_and_power() -> void:
+	var rim := preload("res://scripts/world/stormwood_character_rim.gd")
+	var cfg := _json("res://data/config/stormwood_character_rim.json")
+	var r2: Dictionary = cfg.get("r2", {})
+	assert_false(bool(r2.get("enabled", true)), "rim r2 ships OFF until judged")
+	assert_true(float(r2.get("energy", 0.0)) > float(cfg.get("energy", 0.0)), "r2 brightens the rim")
+	var shipped: Dictionary = rim.settings()
+	assert_eq(float(shipped.get("energy", 0.0)), float(cfg.get("energy", -1.0)), "OFF leaves the shipped energy")
+	assert_eq(float(shipped.get("power", 0.0)), float(cfg.get("power", -1.0)), "OFF leaves the shipped power")
 
 
 func test_road_puddles_ship_off() -> void:
@@ -157,10 +171,13 @@ func test_stormwood_light_pass_ships_on_and_merges_when_on() -> void:
 	assert_eq(on["rig"]["sun"]["pitch_deg"], cfg["rig"]["sun"]["pitch_deg"], "unlisted rig keys keep their values")
 
 
-func test_catch_framed_r2_and_hud_prompt_clear_ship_off() -> void:
+## VIS-MEADOWS r1b (4 Nov 2026): the P2-059 round-2 framing ships ON after a
+## judged CPU gain (F38#13 6.22 -> 7.19).
+func test_catch_framed_r2_ships_on_with_its_score_and_hud_prompt_clear_ships_on() -> void:
 	var catching := _json("res://data/config/catching.json")
 	var r2: Dictionary = (catching["framed_camera"] as Dictionary)["r2"]
-	assert_false(bool(r2.get("enabled", true)), "the P2-059 round-2 framing ships OFF")
+	assert_true(bool(r2.get("enabled", false)), "the P2-059 round-2 framing ships ON (judged gain)")
+	assert_true(str(r2.get("_why_on", "")).contains("6.22 -> 7.19"), "the round-2 framing records its mapped score")
 	assert_true(float((r2["resolve_camera"] as Dictionary)["pitch_start_deg"])
 			> float((catching["framed_camera"]["resolve_camera"] as Dictionary)["pitch_start_deg"]),
 		"round 2 is a shallower resolve shot")
@@ -169,9 +186,14 @@ func test_catch_framed_r2_and_hud_prompt_clear_ship_off() -> void:
 	assert_true(str((hud["message_clears_prompt"] as Dictionary).get("_why", "")).contains("6.75"), "the prompt clear records its mapped score")
 
 
-func test_stormwood_value_lift_ships_off_and_lifts_when_on() -> void:
+## Visual lane v1/b16 (3 Nov): the value lift ships ON with its judged score and
+## replaces the crushed grass tint with its own.
+func test_stormwood_value_lift_ships_on_with_its_score_and_lifts() -> void:
 	var zones := preload("res://scripts/world/stormwood_ground_zones.gd")
 	var raw := _json("res://data/config/stormwood_ground_finish.json")
-	assert_false(bool((raw["value_lift_candidate"] as Dictionary).get("enabled", true)), "ships OFF")
-	var off := zones.finish()
-	assert_eq(off["grass"]["tint_base"], raw["grass"]["tint_base"], "OFF leaves the tints")
+	var lift: Dictionary = raw["value_lift_candidate"]
+	assert_true(bool(lift.get("enabled", false)), "ships ON (judged gain)")
+	assert_true(str(lift.get("_why_on", "")).contains("5.84"), "records its mapped score")
+	var on := zones.finish()
+	assert_eq(on["grass"]["tint_base"], lift["grass"]["tint_base"], "ON applies the lifted tint")
+	assert_true(str(on["grass"]["tint_base"]) != str(raw["grass"]["tint_base"]), "the lift changes the shipped tint")

@@ -3,7 +3,7 @@
   "scope": "client_presentation",
   "_comment": "P2-039 final source repair: rounded moss, three wet curled-leaf shapes, terrain-conforming wet soil and roots anchored to existing baked trees. Living canopy positions define cover islands and open clearings. Shared field shaders, terrain/control data, harvest identity, collision and actor scale are unchanged. Native matched evidence and Claude judgment remain pending.",
   "value_lift_candidate": {
-  "enabled": false,
+  "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
   "scope": "client_presentation",
   "_why": "Owner priority 1 Nov; batch-1 judges: 'crushed near-black uniform carpet; lift values, add grove/clearing variation'. When enabled (stormwood_ground_zones.gd finish), these keys merge over this file's own: grass and moss-bush tints rise out of near-black, the terrain grass tint lightens, and the authored ground_zones field (bare loam, deep moss, still pools; r22 tuned on CPU, never GPU-judged) switches on for clearing and grove variation. Shader/tint inputs only; no bake input, collision or placement change. OFF until GPU judged.",
   "grass": {"tint_base": "#2e5440", "tint_tip": "#6a9a76"},
@@ -12,7 +12,7 @@
   "ground_zones": {"enabled": true}
  },
  "moss_variation_1101": {
-   "enabled": false,
+   "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
    "scope": "client_presentation",
    "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'crushed near-black uniform carpet', 'player creature unreadable against the dark floor'). OFF until GPU judged; composes with value_lift_candidate (tints and ground zones). The cover-tier shader (stormwood_ground_cover.gdshader sw_*) re-hues each leaf through a broad world-space field of olive, sage and copper-brown moss while keeping its own light/dark structure, lifts the carpet's value, opens sparse clearings to the loam and pools beneath, and scatters rare wet copper and stormglass flecks that catch the storm light (the glass flecks glow faintly, natural to stormglass). Shader uniforms only: placement, bake inputs, collision and harvest identity are unchanged. No red or oxblood: the copper stays brown-orange.",
    "sw_moss_strength": 0.8,
@@ -204,6 +204,13 @@
     "scope": "client_presentation",
     "bush_item_size": 0.8,
     "_comment": "The three rounded moss lobes reach 0.104m local height; canopy understory remains a separate full-height shrub tier. Harvested plants and all gameplay actors retain their own transforms."
+  },
+  "pool_satin_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "VIS-STORMWOOD (4 Nov 2026), F41#5 P2-039 (CPU v1/b16 5.84, judges: 'pool specular that blows out to white in one frame'; v1/b10 3/3: 'flat lavender slabs'). In the CPU frames the value-lift black pools mirror the pale storm sky as large lilac sheets across roads and clearings. On (stormwood_ground_zones.gd config): the pools' fixed satin 0.38 roughness / 0.25 specular become 0.66 / 0.07, so they stay near-black and wet with a soft sheen. Terrain shader parameters only. OFF until judged.",
+    "pool_roughness": 0.66,
+    "pool_specular": 0.07
   },
   "_why_wet_gloss": "F41#3 candidate (r11 judges: pale lilac pool slabs): the fully wet soil patches mirrored the purple sky at roughness 0.28 / specular 0.38. A duller sheen keeps them dark and wet.",
   "wet_gloss": {"roughness": 0.55, "specular": 0.2},

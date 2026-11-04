@@ -15,7 +15,7 @@ const SCALE_FLAGS := ["remake_owner1101_body_line", "remake_owner1101_judged_sho
 const REMAKE_DIR := "/candidate_owner1101/models/"
 ## Creatures-ralph coat flags judged on CPU against the shipped remake and kept
 ## ON (2 Nov 2026), with the mapped score each one's _why records.
-const JUDGED_ON := {"creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22", "creatures_ralph_cragclaw_body_mid": "6.34", "creatures_ralph_ashtusk_lift": "7.07", "creatures_ralph_thundertunnel_velvet": "5.36", "creatures_ralph_torrentoad_toad": "5.55", "creatures_ralph_skyrill_r10_lift": "6.37", "creatures_ralph_mangrove_monitor_r9_olive": "6.05", "creatures_ralph_stormraven_charge": "6.72"}
+const JUDGED_ON := {"creatures_ralph_meadowhart_warm": "6.80", "creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22", "creatures_ralph_cragclaw_body_mid": "6.34", "creatures_ralph_ashtusk_lift": "7.07", "creatures_ralph_thundertunnel_velvet": "5.36", "creatures_ralph_torrentoad_toad": "5.55", "creatures_ralph_skyrill_r10_lift": "6.37", "creatures_ralph_mangrove_monitor_r9_olive": "6.05", "creatures_ralph_stormraven_charge": "6.72", "creatures_ralph_fulgocobra_goldvein": "6.52"}
 
 
 func _json(path: String) -> Dictionary:
@@ -136,3 +136,28 @@ func test_judged_creature_coat_flags_ship_on_with_their_scores() -> void:
 		for from_path: String in (entry.get("coats", {}) as Dictionary):
 			assert_true(from_path.contains(REMAKE_DIR) or live_albedos.has(from_path), "%s grades a remake texture" % flag)
 			assert_true(live.has(from_path), "%s reaches the live coat map" % from_path)
+
+
+## Visual lane v1/b15 (4 Nov): Terrapup's hit clip holds its peak recoil to the end
+## of the clip, so the hurt-end frame no longer returns to idle; judged 6.37 -> 6.79.
+func test_terrapup_hit_holds_its_peak_with_its_score() -> void:
+	var flags: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/creature_model_flags.json"))
+	var why := ""
+	for key: String in flags:
+		if flags[key] is Dictionary and (flags[key] as Dictionary).has("remake_owner1101_terrapup"):
+			why = str(flags[key]["remake_owner1101_terrapup"].get("_why", ""))
+	assert_true(why.contains("6.79"), "the Terrapup remake records its hold-peak score")
+	var scene: PackedScene = load("res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101.glb")
+	var root: Node = scene.instantiate()
+	var player := root.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer
+	var anim := player.get_animation("hit")
+	var held := 0
+	for track in anim.get_track_count():
+		if anim.track_get_type(track) != Animation.TYPE_ROTATION_3D or anim.track_get_key_count(track) < 2:
+			continue
+		var last: Quaternion = anim.track_get_key_value(track, anim.track_get_key_count(track) - 1)
+		var mid: Quaternion = anim.rotation_track_interpolate(track, anim.length * 0.5)
+		if last.is_equal_approx(mid):
+			held += 1
+	assert_true(held > 0, "hit-end matches mid-clip: the peak recoil is held")
+	root.free()

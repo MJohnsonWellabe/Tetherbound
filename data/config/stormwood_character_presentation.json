@@ -9,6 +9,17 @@
   },
   "rank_uniforms": {"grunt": "grunt", "officer": "officer", "lieutenant": "officer", "captain": "captain"},
   "lieutenant_rim_scale": 1.28,
+  "rank_marks_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "VIS-STORMWOOD (4 Nov 2026), F41#18 P2-056 (GPU 3.91; CPU v1/b11 5.98 with rim r1, judges: 'still no rank read', asked for 'a stronger rim or a pale trim'): pale shoulder knots on both upper-arm bones and a collar ring in the identity colour, larger for lieutenants and the captain, so a uniformed figure carries light accents at normal camera distance. Presentation only (stormwood_character_presentation.gd rank_marks). OFF until judged.",
+    "rank_scale": {"officer": 1.0, "lieutenant": 1.15, "captain": 1.3},
+    "marks": [
+      {"name": "rank_knot_left", "shape": "sphere", "size": 0.14, "bone": "LeftArm", "offset": [0.0, 0.02, 0.0], "metallic": 0.35, "roughness": 0.32},
+      {"name": "rank_knot_right", "shape": "sphere", "size": 0.14, "bone": "RightArm", "offset": [0.0, 0.02, 0.0], "metallic": 0.35, "roughness": 0.32},
+      {"name": "rank_collar", "shape": "ring", "size": 0.22, "bone": "neck", "offset": [0.0, 0.02, 0.0], "rotation_degrees": [0.0, 0.0, 0.0], "metallic": 0.3, "roughness": 0.35}
+    ]
+  },
   "identities": {
     "dace": {"rank": "lieutenant", "rim_color": "#d1a267"},
     "varga": {"rank": "lieutenant", "rim_color": "#d8cba0"},

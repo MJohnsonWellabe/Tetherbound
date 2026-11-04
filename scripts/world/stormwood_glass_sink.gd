@@ -27,6 +27,11 @@ uniform float gs_metallic = 0.18;
 uniform vec2 gs_far_fade_m = vec2(0.0, 0.0);
 uniform float gs_far_specular = 0.12;
 uniform float gs_far_roughness = 0.75;
+// F41#10 obsidian_1104: sparse stormglass veins glow along a share of the
+// fracture seams (natural to stormglass); energy 0 leaves the shader as it was.
+uniform vec4 gs_vein_colour : source_color = vec4(0.44, 0.72, 1.0, 1.0);
+uniform float gs_vein_energy = 0.0;
+uniform float gs_vein_fraction = 0.35;
 
 vec2 gs_fracture_point(vec2 cell) {
     return fract(sin(vec2(dot(cell, vec2(127.1, 311.7)),
@@ -81,6 +86,10 @@ const TAIL := """
             METALLIC = mix(METALLIC, mix(gs_metallic, 0.0, gs_far), gs_weight);
             SPECULAR = mix(SPECULAR, mix(0.55, gs_far_specular, gs_far), gs_weight);
             NORMAL_MAP_DEPTH *= 1.0 - gs_weight * 0.8;
+            if (gs_vein_energy > 0.0) {
+                float gs_vein = gs_line * step(1.0 - gs_vein_fraction, gs_grain.x);
+                EMISSION += gs_vein_colour.rgb * gs_vein * gs_vein_energy * gs_weight;
+            }
         }
     }
 """
@@ -117,6 +126,7 @@ static func install(terrain: Object, sink: Dictionary) -> void:
 	material.call("set_shader_param", "gs_inner_radius", float(sink.island_radius) - 12.0)
 	material.call("set_shader_param", "gs_outer_radius", float(sink.outer_radius) - 2.0)
 	config = with_dark_pool(config)
+	config = with_obsidian(config)
 	for key: String in ["glass_colour", "facet_colour", "seam_colour"]:
 		material.call("set_shader_param", "gs_" + key, Color(str(config[key])))
 	for key: String in ["edge_feather_m", "fracture_scale", "seam_width", "roughness", "metallic"]:
@@ -124,9 +134,28 @@ static func install(terrain: Object, sink: Dictionary) -> void:
 	var far: Array = config.get("far_fade_m", [0.0, 0.0])
 	if far.size() == 2:
 		material.call("set_shader_param", "gs_far_fade_m", Vector2(float(far[0]), float(far[1])))
-	for key: String in ["far_specular", "far_roughness"]:
+	for key: String in ["far_specular", "far_roughness", "vein_energy", "vein_fraction"]:
 		if config.has(key):
 			material.call("set_shader_param", "gs_" + key, float(config[key]))
+	if config.has("vein_colour"):
+		material.call("set_shader_param", "gs_vein_colour", Color(str(config.vein_colour)))
+
+
+## F41#10 P2-070 `obsidian_1104` (OFF until judged). CPU judges (v1/b10, 4.92
+## with the hero basin and dark pool): "still a terrain edge over a tiled
+## plane". On: the floor's small pale-seamed cells become large near-black
+## obsidian plates, the sky mirror is cut from the first metres, and a share
+## of the plate seams carry a faint blue stormglass glow. Terrain shader
+## parameters only: no geometry, collision or bake input.
+static func with_obsidian(config: Dictionary) -> Dictionary:
+	var cand: Variant = config.get("obsidian_1104", {})
+	if not cand is Dictionary or not bool((cand as Dictionary).get("enabled", false)):
+		return config
+	var out := config.duplicate(true)
+	for key: String in cand:
+		if key != "enabled" and key != "scope" and not key.begins_with("_"):
+			out[key] = (cand as Dictionary)[key]
+	return out
 
 
 ## P2-070 (GPU WD2 1 Nov, 4.63: "the plane below is unchanged ... a real

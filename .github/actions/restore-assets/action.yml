@@ -1,0 +1,57 @@
+name: Restore assets/ from the shared cache
+description: >-
+  Unpack assets/ from the chunked Actions cache the assets-cache job filled,
+  fetch any chunk that did not restore from git instead, and verify every file
+  against its git blob id (tools/ci/assets_cache.py). Run it right after a
+  sparse blobless actions/checkout whose patterns exclude /assets/.
+runs:
+  using: composite
+  steps:
+    - id: plan
+      shell: bash
+      run: python3 tools/ci/assets_cache.py plan
+    # One restore per chunk (CHUNKS in tools/ci/assets_cache.py; keep in step).
+    # A miss or a download error is not fatal: the restore step below fetches
+    # that chunk from git, the way checkout used to.
+    - uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/ci-assets/c0.tar
+        key: ${{ steps.plan.outputs.key0 }}
+    - uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/ci-assets/c1.tar
+        key: ${{ steps.plan.outputs.key1 }}
+    - uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/ci-assets/c2.tar
+        key: ${{ steps.plan.outputs.key2 }}
+    - uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/ci-assets/c3.tar
+        key: ${{ steps.plan.outputs.key3 }}
+    - uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/ci-assets/c4.tar
+        key: ${{ steps.plan.outputs.key4 }}
+    - uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/ci-assets/c5.tar
+        key: ${{ steps.plan.outputs.key5 }}
+    - uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/ci-assets/c6.tar
+        key: ${{ steps.plan.outputs.key6 }}
+    - uses: actions/cache/restore@v4
+      continue-on-error: true
+      with:
+        path: ${{ runner.temp }}/ci-assets/c7.tar
+        key: ${{ steps.plan.outputs.key7 }}
+    - shell: bash
+      run: python3 tools/ci/assets_cache.py restore --cache-dir "$RUNNER_TEMP/ci-assets"

@@ -32,6 +32,92 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**qj rimr2-f41-18 (4 Nov ~05:10 UTC): Stormwood rim r2 is flat-to-worse and stays OFF.** F41#18 CPU 5.10 (r1 as shipped) -> 4.98 with r2 (energy 1.15, power 1.7); raw 5.5/6/5.7 vs 5.5/5.8/5.7, defect PARTIAL on both. All three judges say the uniform now separates from the ground but has no rank or individual markers at this camera distance, so more rim light does not help. The next lever is an insignia or bright accent on the uniform (scene or new art); report in `qj/rimr2-f41-18/VERDICT.md`.
+
+**v1/b19 (4 Nov ~04:45 UTC): the retuned storm-light set still gains and stays ON (live on main).** F41#5 5.04 -> 5.63; F41#2 5.39 -> 5.46; F41#19 5.42 -> 5.46. Base was captured with the set OFF, same run. The CI retune cost most of the F41#2 phase lift (b16 +0.74). The next lever is a per-phase grade inside the phase rules, which is for the Stormwood region lane.
+
+**LANDING-READY (4 Nov ~04:30 UTC): F36#56 Nightburrow partial plates ON, CPU 6.37 -> 6.67 (v1/b18; three judges, slope 1.51, r 0.96, RMSE 0.40).** `creature_coat_flags.json` `creatures_ralph_nightburrow_partial_plates`: plates kept only on the spine and shoulders, the rest repainted as the coat's fur, moss and its glow removed. Texture only, anatomy-masked by `tools/art_pipeline/nightburrow_partial_plates.py`. Tests: `test_nightburrow_partial_plates_flag.gd` (asserts ON, "6.67", resolves ON to the arm and OFF to the shipped coat) 2/32; `test_creature_coat_flags.gd` 6/627. The creature rim (F38#1/#2/#26) is flat at the world camera (5.46 / 5.96 / 6.06 -> 6.11) and stays OFF.
+
+**LANDING-READY (4 Nov ~04:20 UTC): Terrapup hold-peak hit react, F38#2 (stage) CPU 6.37 -> 6.79 (v1/b15).** The live `creature_terrapup_owner1101.glb` hit clip now holds its peak recoil to the clip end (`tools/art_pipeline/hold_clip.py`), so the hurt-end frame no longer snaps back to idle. The score is recorded in `creature_model_flags.json` `remake_owner1101_terrapup._why`. Test: `test_remake_owner1101_finish.gd::test_terrapup_hit_holds_its_peak_with_its_score` asserts the score and that hit-end equals mid-clip; the file passes 6/353, and `test_texture_import_policy` passes 2/1591.
+
+**v1/b17 (4 Nov ~02:45 UTC): Meadows Blender ridge F38#24 is worse, 4.19 -> 3.44, and stays OFF.** The ridge reads as a pale smeared wall right behind the meadow, while the shipped rings read as soft blue distance. The row's main blocker is in the two Warrens frames: a camera-occluding bank-shell mass and floating dark slab undersides. That is for the Meadows region lane (`tb/vis-meadows-1104`). A further, lower, darker, layered ridge r2 is the next attempt.
+
+**FOR #808 (4 Nov ~03:15 UTC): the storm-light set is fixed. Every named test passes with it ON, so it can go back ON.** The CI suite 4 failures had two causes.
+- **(1) Real phase-rule breaks in the `storm_sky_1101` overlay**, now retuned (`_why_rules`):
+  - Calm had a sheet glow (Calm has no lightning), now 0.
+  - Break ambient 0.72 exceeded Building 0.70, now 0.66, so Break keeps the darkest ground.
+  - Storm phases had deck rims, which are reserved for the aftermath, now 0.
+  - Calm contrast 0.45 is now 0.40, so the aftermath deck stays more defined.
+  - Break sun 0.38 is now 0.27, so the aftermath key stays over 2.5x Break. The shipped value is 0.22.
+  - Calm no longer overrides the deck colour, so it darkens and saturates Calm > Building > Break.
+  - `soft_rain_1101` drops: 2000 near + 1700 far + 800 curtain = 4500, inside the Break budget.
+- **(2) Tests that assumed the storm-free config:** `test_stormwood_surge_presentation.gd` `_config()` now reads the effective config (`stormwood_surge_rules.with_presentation_candidates`), the same merge the surge runs. No assertion changed.
+- **Local results, all 0 failed:**
+  - `test_stormwood_surge_presentation` 53 tests / 730 assertions
+  - `test_stormwood_restored_sky` 2/39
+  - `test_cause_stormwood_candidates` 10/68
+  - `test_storm_cams_candidates` 15/54
+- **Effect on the judged look:** the retune trims some of the lift that was judged (v1/b16: F41#5 5.84, F41#2 5.80), so a re-judge of the retuned set is queued.
+
+**FOR #808 (4 Nov ~03:00 UTC): hud_lean fixed, so `smoke_objective_hint_card` passes with hud_lean ON and OFF.**
+- **Cause:** lean `objective_width` 460 moved the objective block's left edge into the centre gutter. The objective hint card measures its width off that edge, so it narrowed, wrapped and ran 10 px into the bottom dock.
+- **Fix, config:** lean `objective_width` returns to 348 (`hud.json` `_why_r4`). The r3 eyebrow row (46) stays.
+- **Fix, test:** the plate check now reads the HUD's live eyebrow row (`_objective_eyebrow_row()`) instead of the constant.
+- **Local result, `smoke_objective_hint_card`, PASS:**
+  - lean ON: 28 hints fit, tallest card 281 px in band 168-533, 84 px spare; 2-line plate 176 px.
+  - lean OFF: the same, with a 166 px plate.
+- **To land:** take the next head and keep hud_lean ON as #808 had it.
+
+**FOR #808 (4 Nov ~00:45 UTC): take this branch's head; it fixes two test failures that the storm-light-ON commit `43f47541` causes.** In `tests/test_cause_stormwood_candidates.gd`, `test_storm_sky_on_...` and `test_soft_rain_on_...` failed. Both build their candidate from the shipped config, which now has BOTH candidates ON, so "the sky candidate leaves rain alone" and "the rain candidate leaves phases alone" each saw the other flag applied. The fix: the helper `_surge_with` turns every candidate OFF first, then turns on only the named ones. No assertion is changed. Re-run: `test_cause_stormwood_candidates.gd` **10 tests, 68 assertions, 0 failed**.
+
+**Owner rule, 4 Nov (via the coordinator): every judged improvement ships ON, even below 6.0. Only flat or worse stays OFF.** Applying it to this lane's held items:
+- **F38#2 / Terrapup hold-peak hit react (v1/b15: stage 6.37 -> 6.79):** ships as the held-peak `creature_terrapup_owner1101.glb`. The swap waits for the in-flight rim capture to finish, so its base and candidate keep the same model. The Nightburrow hold was flat and stays OFF.
+- **Already ON by the coordinator in #808:** `hud_lean` (5.30 -> 5.64) and Stormwood rim r1 (5.58 -> 5.98).
+- **Next to judge:** rim r2 (Stormwood region lane), the Meadows ridge F38#24, the creature rim F38#1/#2/#26, and Nightburrow partial plates (being built).
+
+**Scope (coordinator, 4 Nov ~00:30 UTC):** the coordinator archived all three sessions I started at 00:25. The region items belong to its `tb/vis-*-1104` lanes, and I will not start sessions without asking the coordinator first.
+
+This lane covers creatures and poses, UI/HUD and in-flight arms:
+- **Fulgocobra 6.52:** landing-ready.
+- **Storm-light set:** its tests run once the Tidewake overlay reverts.
+- **Rim, ridge and Tidewake recapture:** the creature rim (F38#1/#2/#26), the F38#24 ridge judging and the Tidewake recapture, whose verdicts go to the Tidewake region lane.
+- **Roster rows with a judge-named fix:** F36#56 Nightburrow (partial plates), F36#70 Sparkit, F36#54 Mosshock, F39#24 Torrentoad.
+- **HUD:** F38#19.
+
+Each READY item is pushed as it passes.
+
+**Queue fault found and fixed (3 Nov ~23:30 UTC).**
+- **What happened:** the Tidewake items candidate (`tw_cand`, 22:52) failed its overlay because the camp bed and workbench were already ON. Its partial overlay was left applied. The Tidewake look capture (`twl_base`, 22:52-23:16) then ran with that overlay, so twl is discarded and will be rerun cleanly.
+- **Fixes:**
+  - Every overlay list now drops flags that are already ON. That covers camp props, map paint, house textiles, capture readout and the storm-light set.
+  - `chain.sh` now holds a scene lock from overlay to revert.
+  - `run_group.sh` base launches take the same lock, so no capture runs while another job's overlay is applied.
+- **Caveat:** before the fix, the candidate overlays could overlap other jobs' base launches. The overlays only touch their own biome's configs plus HUD and catch flags, and every verdict above compares rows whose frames those flags do not reach.
+
+**v1/b16 (3 Nov ~23:20 UTC), `43f47541`: Stormwood storm-light set ON vs a fresh base.** `stormwood_surge` storm_sky_1101 + soft_rain_1101, `stormwood_ground_finish` moss_variation_1101 + value_lift_candidate. **F41#5 4.84 -> 5.84, F41#2 5.06 -> 5.80**, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise). **F41#17 Crown Arch is 6.45 as shipped** (6.80 with the set). Fit: slope 1.31, r 0.93, RMSE 0.31. These are floor-raising gains, and F41#5/#2 are still under 6.0. The tests now assert ON with "5.84" (`test_cause_stormwood_candidates.gd`, `test_storm_cams_candidates.gd`). Their run is queued behind the rim tests, so **do not land `43f47541` until READY records it passing.** v1/b15 hold-peak: Terrapup stage 6.37 -> 6.79 (+0.42, under 0.5) and Nightburrow flat, so the GLBs are not kept and pose work is parked.
+
+**New OFF arm `4e606ff6` (3 Nov ~22:25 UTC): creature rim (`creature_rim.json`) for F38#1/#2/#26.** It reuses the Stormwood character rim overlay on each Meadows creature body, applied in `creature_body.gd` after every model build, so creatures built by the capture tool get it too. Tell auras, boss auras and body glows take the overlay slot from the rim and hand it back. With the flag OFF no mesh wears the rim, so those paths are unchanged. `test_creature_rim.gd` passed 3/19 in the subagent's run. Tests: `test_creature_rim` 3/19, `test_combat_vfx` 14/72, `test_enemy_pattern_telegraph` 6/6923, `test_f22_riverwatch_presentation` 3/16, `test_stormwood_strike_countdown` 5/22, `test_tell_aura_overlap` 3/12, all 0 failed. `test_storm_cams_candidates` failed only `test_water_npc_placement_ships_off`, because the Tidewake capture overlay had that flag ON in the working tree; a clean re-run is queued. The flag stays OFF until they pass and the arm is judged. Its capture (fresh base vs rim ON) is queued.
+
+**v1/b14 (3 Nov ~22:15 UTC): pose recipe in the Meadows world frames, exact tie.** F38#1 5.35, F38#2 5.58, F38#26 5.77 on both sides (r 0.97, RMSE 0.32). The GLBs are not kept, and after two rounds without a gain (b7, b14) the recipe is parked. The next lever for these rows is creature rim light and value separation from the tree band, not more animation. F39#6 had no frames in either run.
+
+**Stormwood baseline caveat (3 Nov ~21:20 UTC, v1/b13):** most of `sw_base` was captured 00:43-03:33 UTC, before the Blender Crown Arch and other branch changes. The resumable queue kept those launches. So b10, b11 and b13 compare candidates captured in the afternoon and evening with an early-morning base. No flag was turned ON from them. b13 (storm sky and rain, moss variation, value lift) shows +0.1 to +0.65 on F41#2/#4/#5/#19, all still under 6.0. A fresh base (`swb_base`) is queued before any decision. Clean re-run so far: `test_storm_cams_candidates.gd` **15 tests, 52 assertions, 0 failed**; `test_remake_owner1101_finish.gd` **5 tests, 347 assertions, 0 failed** (Fulgocobra OFF). Fulgocobra is back ON in `bb95db78`; its ON run passed: `test_remake_owner1101_finish.gd` **5 tests, 351 assertions, 0 failed** (asserts ON and "6.52"). `bb95db78` is landing-ready.
+
+**PUSHED WITH TESTS PENDING (3 Nov ~20:00 UTC, coordinator: push hourly):** the capture queue's Stormwood storm-light overlay (`stormwood_ground_finish` value lift, `stormwood_surge`) has been in the working tree since ~17:40. `test_storm_cams_candidates.gd` ran with it applied: 14/15 passed, and `test_stormwood_value_lift_ships_off_and_lifts_when_on` failed because the overlay turns that arm ON (the committed file has it OFF). Not yet re-run clean: `test_storm_cams_candidates.gd`, `test_remake_owner1101_finish.gd`, `test_meadows_ridge_vl.gd` (the subagent ran it: 3/15 pass), and `test_texture_import_policy.gd` (needs the ridge texture reimport). Held OFF until they pass: **Fulgocobra gold vein (judged 6.52; flag OFF, its JUDGED_ON entry removed)**. Already OFF: rim r2, Meadows ridge. The re-run starts automatically when the overlay reverts.
+
+**LANDING-READY GAIN (3 Nov ~17:55 UTC), `a5b28e0f`: F41#13 both halves now ON.** `creatures_ralph_fulgocobra_goldvein` ON: Fulgocobra **CPU 6.06 -> 6.52 mapped** (v1/b12; three judges, linear slope 1.26, r 0.91, RMSE 0.35, confirming batch). Stormraven `creatures_ralph_stormraven_charge` stays ON at 6.72. Test: `test_remake_owner1101_finish.gd` JUDGED_ON "6.52" (run queued with the clean retest). F38#19 `hud_lean` 5.30 -> 5.64 stays OFF: the judges blame the dim interior grade and the camera inside the loft ceiling, not the HUD.
+- New OFF arms: `01a0f479` Stormwood rim r2 (F41#18, energy 1.15 / power 1.7); `15788371` **F38#24 Blender Meadows ridge ring** (`meadows_ridge_vl.json`: one continuous 360 deg ridge that replaces the procedural FarRanges/Foothills rings when ON; 43k tris; reference, 1.80 m scale check and provenance in `assets/props/vl-1103/meadows_ridge/`; `test_meadows_ridge_vl.gd` 3/15). Both are queued for capture.
+
+**LANDING-READY GAINS (3 Nov ~17:25 UTC), `a8918db7` (v1/b9; three judges, linear slope 1.06, r 0.79, RMSE 0.74, confirming batch):**
+- **F39#12 camp creature bed: CPU 5.86 -> 7.02 mapped.** `meshy_camp_props.json` `bed.nest_candidate` ON (Blender r2 straw nest; "reads as a pet bed in all three frames").
+- **F39#13 camp workbench: CPU 6.03 -> 6.56 mapped.** `workbench.vl_candidate` ON (Blender r2 bench turned to face the camp).
+- Test: `tests/test_camp_props_vl.gd` (both ON with "7.02"/"6.56", r2 models imported, both seat a model) **3 tests, 10 assertions, 0 failed**. Caveat: the base is b6's camp_base capture (same stands and seed, earlier run).
+
+**Stormwood, remaining items (v1/b10 and b11, 3 Nov ~17:25 UTC):** at or above 6.0 as shipped, no change needed: **F41#11 portraits 6.90**, **F41#12 charged road 6.08**, **F41#14 candy tiers 6.13**. Held: F41#9 5.87 -> 6.00 (within noise; harvest round 2 alone next), F41#18 5.58 -> 5.98 (rim; a stronger rim next), F41#10 Glass Sink 4.45 -> 4.92 (needs a Blender basin). Unchanged or worse: F41#8 5.52, F41#19 5.58. F41#20 is not trusted (the base frame rendered black; recapture). F41#7 and F41#15 have no frames in either run. The road-puddle arm stays OFF: all judges flag it as flat lavender slabs, and it costs F41#8/#12/#14.
+
+**LANDING-READY GAIN (3 Nov ~16:40 UTC), `1c80c758`: F38#4 map at or above 6.0 CPU.** `map_paint.json` ON (hillshade, canopy groves from the baked tree layers, painterly grain): **CPU 5.90 -> 6.30 mapped** (v1/b8; three judges, linear slope 1.11, r 0.66, RMSE 0.62, confirming batch, no warnings). All 3/3 judges preferred the painted side. Local, this head: `test_map_baker.gd` **8 tests, 18 assertions, 0 failed** (asserts ON and "6.30"); `test_texture_import_policy.gd` **2 tests, 1591 assertions, 0 failed**.
+
+**v1/b7 stage poses (3 Nov ~15:50 UTC): no gain, GLBs not kept; F36#56 Nightburrow scores 6.11 as shipped.** The pose recipe (ground-clip settle, hit hop x0.3, hit spine/root amplify x1.8) on Terrapup and Burrowback/Nightburrow: F38#2 stage 6.50 -> 6.47; **F36#56 6.11 -> 6.11**. All three judges: hurt-end frames still read idle, and the faint frames are grounded (PARTIAL 3/3). The shipped Nightburrow maps 6.11 here, up from 5.66 in an earlier batch (caveat: anchor RMSE 0.80 > 0.75). The real levers are a distinct hurt-end keyframe and side-collapse faint, and fewer plates on Nightburrow ("full-body overgrowth" 3/3). `v1/b7/VERDICT.md`.
+
 **LANDING-READY GAINS (3 Nov ~14:40 UTC), `1f19f24b` (v1/b5; three judges, linear slope 1.57, r 0.90, RMSE 0.50, confirming batch):**
 - **F39#23 catch-chance contrast: CPU 6.02 -> 6.91 mapped, at or above 6.0.** `capture_readout_visual.json` `readout_side_enabled` + `contrast_r2` ON. The readout moves beside the ring onto a near-opaque plate, with a 32 px primary-colour caption. Defect FIXED 3/3.
 - **F38#19 exploration HUD: CPU 5.23 -> 5.92 mapped (+0.69).** `house_textiles.json` ON: the loft bed comforter changes from plum-maroon (flagged as oxblood by all three judges) to sea-teal. 0.08 short of 6.0; `hud_lean` (+0.21 in v1/ui1a) is the next lever.

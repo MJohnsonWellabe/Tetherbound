@@ -5,8 +5,8 @@
   "disabled_rod_calm_multiplier": 1.5,
   "disabled_rod_break_multiplier": 0.6,
   "presentation": {
-    "storm_sky_1101": {
-      "enabled": false,
+    "storm_sky_1101": {"_why_rules": "Visual lane, 4 Nov (CI on #808): the overlay broke two phase rules, so Calm takes no sheet glow (Calm has no lightning) and Break ambient is 0.66, below Building 0.70 (Break keeps the darkest ground). Then (same CI run) storm phases take no deck rims (rims mark the aftermath), Calm contrast 0.40 (the aftermath deck stays more defined), Break sun 0.27 (aftermath key light stays over 2.5x Break; the shipped Break is 0.22) and soft rain 2000 near + 1700 far (+800 curtain = 4500, inside the Break rain budget). Calm keeps the shipped deck colour (the deck must darken and saturate Calm > Building > Break). A re-judge of the retuned set is queued.",
+      "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
       "scope": "client_presentation",
       "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'flat lilac/purple sky card', 'murky dark brown frames, little value range', 'no shafts or lightning drama'). OFF until GPU judged. The overlay deep-merges into presentation (stormwood_surge_rules.gd with_presentation_candidates): every phase keeps the fixed purple storm sky but its ceiling gains cloud form (contrast, definition, lit rims, thin-spot glow) and faint white-violet sheet glow even in Calm; the storm's sun and ambient cuts ease so the near-black ground and dark creatures separate (composes with stormwood_look.json light_pass_1101); the parked r22 skyline and r34 depth fog switch on for distance layers; and cheap additive light shafts (stormwood_storm_shafts.gd) break through the canopy. Strike, phase timing, shelter and saves are untouched.",
       "overlay": {
@@ -50,12 +50,11 @@
             "sun_energy_mult": 0.66,
             "ambient_colour": "#a4a6c4",
             "ambient_energy_mult": 0.84,
-            "ceiling_colour": "#5f5889",
-            "ceiling_contrast": 0.45,
+            "ceiling_contrast": 0.4,
             "ceiling_definition": 0.35,
-            "ceiling_rim": 0.22,
+            "ceiling_rim": 0.0,
             "ceiling_thin_glow": 0.06,
-            "sheet_glow": 0.08,
+            "sheet_glow": 0.0,
             "sheet_glow_rate": 0.16,
             "shafts": 0.75
           },
@@ -64,17 +63,17 @@
             "ambient_energy_mult": 0.7,
             "ceiling_contrast": 0.6,
             "ceiling_definition": 0.4,
-            "ceiling_rim": 0.3,
+            "ceiling_rim": 0.0,
             "ceiling_thin_glow": 0.1,
             "sheet_glow": 0.32,
             "shafts": 0.45
           },
           "break": {
-            "sun_energy_mult": 0.38,
-            "ambient_energy_mult": 0.72,
+            "sun_energy_mult": 0.27,
+            "ambient_energy_mult": 0.66,
             "ceiling_contrast": 0.65,
             "ceiling_definition": 0.45,
-            "ceiling_rim": 0.26,
+            "ceiling_rim": 0.0,
             "ceiling_thin_glow": 0.08,
             "shafts": 0.2
           },
@@ -83,7 +82,7 @@
             "ambient_energy_mult": 0.8,
             "ceiling_contrast": 0.55,
             "ceiling_definition": 0.35,
-            "ceiling_rim": 0.45,
+            "ceiling_rim": 0.0,
             "ceiling_thin_glow": 0.22,
             "shafts": 1.0
           }
@@ -98,8 +97,21 @@
         }
       }
     },
-    "soft_rain_1101": {
+    "phase_grade_1104": {
       "enabled": false,
+      "scope": "client_presentation",
+      "_why": "VIS-STORMWOOD (4 Nov 2026), F41#2 P2-042: every CPU judge since v1/b13 (and v1/b16 with the storm-light set ON) says 'Calm and Building still look alike'; the named next lever is a per-phase grade. When enabled this overlay deep-merges after storm_sky_1101 (stormwood_surge_rules.gd PRESENTATION_CANDIDATES): Calm takes a higher-key pale lavender sky with thin cloud breaks and less fog (a resting storm), Building a lower indigo sky, denser fog and heavier rain under its blue-green understory. Hues stay in the purple family, ambient colours, every light energy, strike, timing and the Break rules are unchanged. OFF until judged.",
+      "_why_r2": "VIS-STORMWOOD j2 (4 Nov): r1 judged flat (F41#2 CPU 5.46 -> 5.46, 3/3 'Calm and Building cannot be told apart'): the close stands show little sky. r2 separates them on the ground too: Calm key light 0.70 (the aftermath's, which stays steadier), no fog, light rain and full shafts; Building key 0.34 (still above Break 0.27; ambient 0.70 still above Break 0.66), fog 0.0055 and rain 0.9. OFF until judged.",
+      "overlay": {
+        "phases": {
+          "calm": {"sky_top": "#736f98", "sky_horizon": "#9894b2", "sky_ground_horizon": "#8783a4", "ceiling_colour": "#807ba6", "ceiling_breakup": 0.3, "fog_density_add": 0.0, "rain_amount": 0.18, "sun_energy_mult": 0.7, "shafts": 1.0},
+          "building": {"sky_top": "#4a4474", "sky_horizon": "#615b8a", "sky_ground_horizon": "#57517f", "ceiling_colour": "#675f97", "ceiling_speed": 0.04}
+        },
+        "phase_readability_candidate": {"phases": {"building": {"fog_density_add": 0.0055, "rain_amount": 0.9, "sun_energy_mult": 0.34}}}
+      }
+    },
+    "soft_rain_1101": {
+      "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
       "scope": "client_presentation",
       "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'rain rendered as sparse white sticks'). OFF until GPU judged. Streaks become wider but soft-edged (the streak shader's soft_edge fades each one across its width by how squarely it faces the camera), longer, denser and tinted toward the storm's lilac-grey instead of white, so rain reads as soft motion-blurred streaks. Near-lens fade, roof suppression, hollow-tree mask and night tint are unchanged.",
       "overlay": {
@@ -107,14 +119,14 @@
           "soft_edge": 1.0,
           "soft_edge_power": 2.2,
           "radial_segments": 6,
-          "max_drops": 2200,
+          "max_drops": 2000,
           "streak_width_m": 0.07,
           "streak_length_m": 1.15,
           "colour": "#a6adc6",
           "alpha": 0.3,
           "scale_min": 0.6,
           "far_layer": {
-            "max_drops": 2000,
+            "max_drops": 1700,
             "streak_width_m": 0.045,
             "streak_length_m": 0.8,
             "alpha": 0.15
