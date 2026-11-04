@@ -1377,6 +1377,7 @@
     "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only, no collision",
     "_why": "NEAR6-CR F40#19 night round 3: judges flagged a uniform flat lawn; clustered installed bushes, flowers and low rocks along the path edges. OFF until judged.",
     "enabled": false,
+    "ref_y": 109.0,
     "items": [
       ["flowers", -8.1, -208.8, 1.0, 20],
       ["bush", -7.0, -209.9, 1.3, 75],
