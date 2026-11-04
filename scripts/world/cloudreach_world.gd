@@ -6012,6 +6012,17 @@ func _emit_mesa_root(tool: SurfaceTool, sides: int, bottom_ring: Array[Vector3],
 ## integrates the ray through [-1, 1] and supplies its own cloud silhouette.
 func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value: int) -> void:
 	var cfg: Dictionary = _visual_config.get("island_roots", {})
+	# P2-106 (VIS-CLOUDREACH lane, 4 Nov 2026): `island_roots.low_mist` (off
+	# unless enabled, or --cloudreach-island-mist-candidate) merges over the
+	# collar keys so the mist sits well below each island base, beside the
+	# terrace rims it no longer reaches.
+	var low: Variant = cfg.get("low_mist", {})
+	if low is Dictionary and ((low as Dictionary).get("enabled") == true \
+			or OS.get_cmdline_user_args().has("--cloudreach-island-mist-candidate")):
+		cfg = cfg.duplicate()
+		for key: String in (low as Dictionary):
+			if not key.begins_with("_") and key != "enabled":
+				cfg[key] = (low as Dictionary)[key]
 	var count := maxi(0, int(cfg.get("mist_puffs", 26)))
 	if count == 0:
 		return
