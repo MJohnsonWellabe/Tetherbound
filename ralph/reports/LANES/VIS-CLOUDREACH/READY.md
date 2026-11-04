@@ -1,6 +1,6 @@
 # VIS-CLOUDREACH lane (tb/vis-cloudreach-1104), 4 Nov 2026
 
-Status 4 Nov 07:20 UTC: three judged gains ON (P2-105, P2-106, P2-118; +2.99 cumulative CPU); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
+Status 4 Nov 14:25 UTC: five judged gains ON (P2-105 x2, P2-106, P2-118 x2; +5.98 cumulative CPU mapped); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
 
 CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `tools/visual_judge`.
 
@@ -16,6 +16,7 @@ CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `
 **Smokes (4 Nov 06:48, on the r3b tree):** `smoke_cloudreach_companion_fall` 36 checks, 0 failures. `smoke_cloudreach_saddle_remount` 331 checks, 1 failure: "a later challenge of trainer_ila_lower_ring works" (combat admission refused, the ally overlaps an arrival-route collider). It fails identically with `mounted_drop_no_air_drive` OFF, so the scramble does not cause it; whether it also fails on unmodified main is untested. The first smoke run caught the scramble firing on the survivable causeway ledge; fixed in ea8847741 (the floor probe casts past non-walkable hits and samples a ring), and the ledge checks pass.
 
 | `data/config/hud.json:catch_card.full_team_line` (new) | F40#18 P2-118 | 3.57 -> **4.98** (merged tree, card ON in both arms) | `tests/test_vis_cloudreach_landed.gd` | see log |
+| `data/config/cloudreach_visual.json:landing_tree_clear` (new) | F40#6 P2-105 | 3.68 -> **5.28** (+1.60; base had the camera inside LandingTree171 on the road-back frame; `tc/VERDICT.md`) | `tests/test_vis_cloudreach_landed.gd` | see log |
 
 P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coordinator/owner:** the scramble ends an unsurvivable mounted fall sooner than the walker's 100 m recovery (SYSTEMS §8 parity reading); survivable ride-offs are unchanged. Turning the flag off restores strict parity.
 

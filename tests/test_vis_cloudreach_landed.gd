@@ -41,3 +41,10 @@ func test_full_team_line_is_on_with_its_score() -> void:
 	assert_true(line.get("enabled") == true, "P2-118 catch_card.full_team_line ships ON")
 	assert_true(str(line.get("_why_on", "")).contains("3.57 -> 4.98"), "P2-118 full-team line CPU score recorded")
 	assert_false(str(line.get("text", "")).is_empty(), "the line has text")
+
+
+func test_landing_tree_clear_is_on_with_its_score() -> void:
+	var spec: Dictionary = _read(VISUAL).get("landing_tree_clear", {})
+	assert_true(spec.get("enabled") == true, "P2-105 landing_tree_clear ships ON")
+	assert_true(str(spec.get("_why_on", "")).contains("3.68 -> 5.28"), "P2-105 tree-clear CPU score recorded")
+	assert_true((spec.get("names", []) as Array).has("LandingTree171"), "the road-side canopy tree is the one cleared")
