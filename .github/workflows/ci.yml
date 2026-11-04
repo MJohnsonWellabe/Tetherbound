@@ -1212,7 +1212,12 @@ jobs:
           path: |
             ~/godot-bin
             ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
+          # Windows and Linux templates only (CI-SPEED 4 Nov): this job exports
+          # "Windows Desktop" and tools/verify_export.sh's Linux build, and the
+          # full set (Android, web, macOS, iOS) was 1.27 GB of the repo's 10 GB
+          # cache budget that the shared assets cache needs. release.yml keeps
+          # its own full `godot-<version>` entry.
+          key: godot-winlinux-${{ env.GODOT_VERSION }}
 
       - name: Install Godot
         if: steps.cache-godot.outputs.cache-hit != 'true'
@@ -1230,12 +1235,18 @@ jobs:
           TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
           mkdir -p "$(dirname "$TEMPLATE_DIR")"
           mv /tmp/templates "$TEMPLATE_DIR"
+          find "$TEMPLATE_DIR" -maxdepth 1 -type f ! -name 'windows_*' ! -name 'linux_*' ! -name 'version.txt' -print -delete
+          du -sh "$TEMPLATE_DIR"
 
       - name: Add Godot to PATH
         run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
 
       - name: Cache the import artifacts
-        uses: actions/cache@v4
+        id: import-cache
+        # Restore here; saved only from main runs (step after the imports),
+        # because each import cache is ~2.7 GB and a branch restores main's by
+        # prefix (CI-SPEED 4 Nov, cache budget). Same rule in setup-godot.
+        uses: actions/cache/restore@v4
         with:
           path: .godot
           key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
@@ -1246,6 +1257,14 @@ jobs:
 
       - name: Import project (verify)
         run: godot --headless --path . --import
+
+      - name: Save the import artifacts (main only)
+        if: github.ref == 'refs/heads/main' && steps.import-cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: .godot
+          key: ${{ steps.import-cache.outputs.cache-primary-key }}
 
       - name: Export Windows build
         run: |

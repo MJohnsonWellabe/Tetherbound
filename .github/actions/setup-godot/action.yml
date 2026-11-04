@@ -24,7 +24,12 @@ runs:
         chmod +x ~/godot-bin/godot
     - shell: bash
       run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-    - uses: actions/cache@v4
+    # Restored on every run, saved only from main runs (last step below):
+    # each import cache is ~2.7 GB, a branch restores main's by prefix and
+    # reimports only what it changed, and per-branch copies were evicting the
+    # shared assets cache from the repo's 10 GB budget (CI-SPEED, 4 Nov 2026).
+    - uses: actions/cache/restore@v4
+      id: import-cache
       with:
         path: .godot
         key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
@@ -39,3 +44,9 @@ runs:
           echo '::error::import produced script or resource errors'
           exit 1
         fi
+    - if: github.ref == 'refs/heads/main' && steps.import-cache.outputs.cache-hit != 'true'
+      continue-on-error: true
+      uses: actions/cache/save@v4
+      with:
+        path: .godot
+        key: ${{ steps.import-cache.outputs.cache-primary-key }}
