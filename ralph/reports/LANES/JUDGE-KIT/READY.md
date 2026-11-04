@@ -38,7 +38,7 @@ Main now ships both readout flags ON, so the base is the shipped look (b5's ON a
 | Default draw | craft, f36_0_gap, f36_0_npc | linear 1.31, r 0.88, RMSE 0.40 | 6.38 (Δ 0.53) | 5.11 (Δ 0.91) | +1.27 | PRESENT → FIXED 3/3 |
 
 - **Verdict: parity passes with b5's own anchor set.** Both arms are within the batch's anchor RMSE (0.68), and within b5's (0.50). The default draw keeps the gain within RMSE (Δ 0.38) but sits about 0.5–0.9 lower, so different anchor draws move the absolute level.
-- **For comparisons across rounds, pin the anchors:** `quick_judge.py packet <round> --include craft,f10_2_r3_capacitor,f04_6_r22`.
+- **The anchors are now pinned by default** (`PINNED_ANCHORS` = craft, f10_2_r3_capacitor, f04_6_r22), so every quick round is comparable with b5's level. Override with `packet --include`.
 - **Verdicts:** `qj/parity-f39-23-b5anchors/`, `qj/parity-f39-23-default-anchors/`.
 
 ## Lane notes

@@ -19,4 +19,4 @@ QJ_LANE=VIS-TIDEWAKE python3 tools/visual_judge/quick_judge.py finish .artifacts
 #   -> ralph/reports/LANES/<QJ_LANE>/qj/<round>/: VERDICT.md, batch/key/spec/mapped/defects JSON, _sheet_<round>.jpg (<1.5 MB)
 ```
 
-Other subcommands: `capture` (capture only), `packet <round>` (rebuild the judge folder with a new seed), and `--dry-run` (print the Godot commands). The rules still hold: CPU mapped scores rank candidates; a row closes only on the GPU.
+Anchors are pinned to the v1/b5 set (`craft,f10_2_r3_capacitor,f04_6_r22`) so that rounds stay comparable. That set reproduced b5 within RMSE, while a random draw moved the level by 0.5–0.9. Override it with `packet --include`. Other subcommands: `capture` (capture only), `packet <round>` (rebuild the judge folder with a new seed), and `--dry-run` (print the Godot commands). The rules still hold: CPU mapped scores rank candidates; a row closes only on the GPU.
