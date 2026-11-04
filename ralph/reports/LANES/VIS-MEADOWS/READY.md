@@ -68,7 +68,7 @@ Given away: F38#29, #6, #26, #7, #32 to NEAR6-MS. F38#24 ridge, F38#19 HUD and c
 
 - **F38#30 Burrow hillside (CPU 4.23): parked after two approaches; needs an owner-level choice.** (1) `capture_stands buried_stand_guard`: frames unchanged. (2) New `hill_shell.skirt` arm (OFF, `3678f7513`): visibly worse (stretched curtains), not judged. Cause, from `tests/probe_warrens_float.gd`: the Warrens chambers and their hill-shell mound are built for a raised site, but the meadow under the route stands is about 18 m lower. The chambers' collider sits at y 21 over ground at about 3, and the shell (about 263 m across, no collider) hangs over walkable grass, so a walking player can stand under the cave. Real fixes are gameplay changes: raise the terrain under the Warrens footprint (Terrain3D sculpt), or give the shell a trimesh collider and keep spawns and routes out of its footprint. Either one changes traversal, so this lane does not make it alone.
 
-- F38#23 relay yard: brighter and wider undercroft lights (quick_judge f38_23-undercroft) leave the right-third dark mass unchanged. The camera sees the deck's back-lit front face and legs, not the undercroft. Not judged; config unchanged.
+- **F38#23 parked (two approaches flat on sight; at 6.38-6.47 it is already above 6):** (2) a shadowless daylight fill aimed at the deck's yard face (quick_judge f38_23-face-fill) barely changes the mass either. The deck needs a material or albedo lift, or new art. (1) Brighter and wider undercroft lights (quick_judge f38_23-undercroft) leave the right-third dark mass unchanged. The camera sees the deck's back-lit front face and legs, not the undercroft. Not judged; config unchanged.
 
 ## In flight
 
