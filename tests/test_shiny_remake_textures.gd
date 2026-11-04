@@ -92,3 +92,9 @@ func test_the_shiny_finish_stands_down_only_for_a_worn_repaint() -> void:
 	var off_mesh := off.get_child(0) as MeshInstance3D
 	assert_true(off_mesh.get_surface_override_material(0) != null, "OFF: the shiny finish applies as before")
 	off.free()
+
+
+func test_the_map_ships_on_with_its_score() -> void:
+	var cfg: Dictionary = _saved
+	assert_true(bool(cfg.get("enabled", false)), "shiny_remake_textures ships ON (judged gain)")
+	assert_true(str(cfg.get("_why_on", "")).contains("6.76"), "it records its mapped score")

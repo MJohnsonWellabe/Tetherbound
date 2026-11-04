@@ -38,6 +38,17 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**qj shinyplates2-f39-4 (4 Nov ~18:00 UTC): shiny remake textures ship ON.**
+- **Result:** F39#4 shiny creature finish, CPU 5.61 -> 6.76 (+1.15; raw 5.4/5.6/5.6 -> 6.3/6.3/6.4; defect PRESENT -> PARTIAL; calibrate r 0.98). All three judges say the violet-magenta whole-body tint is gone and the shell and plate pattern survives.
+- **Cause:** the Tidewake remakes had no shiny texture of their own, so the shiny swap fell back to the OLD mesh's extracted shiny (different UVs) and wired it into emission as well. On top of that, the shiny surface finish hue-rotated the whole body.
+- **What changed:**
+  - `creatures_visual.json` `shiny_remake_textures` maps each live remake albedo to its own repaint (`tools/art_pipeline/shiny_secondary_shift.py`: only the warm secondary band moves, to gold on Aquaryn's fins and jade on Cannonback's and Riptusk's plates).
+  - Each glow map maps to itself.
+  - A four-line hook in `creature_body._texture_for` reads the map.
+  - `creature_surface_finish.apply` stands down for a shiny already wearing one of these repaints.
+- **Tests:** `test_shiny_remake_textures` (5/48); `test_shiny`, `test_phase2_shiny_finish`, `test_realm_look_overlay` and texture policy pass.
+- **Judges' next lever:** shiny as an accent over each species' own albedo, and keep Aquaryn's pale cyan apart from the water.
+
 **qj headdown-f39-6 (4 Nov ~16:50 UTC): Aquaryn faint head-down ships ON.**
 - **Result:** F39#6 creature faint state, CPU 6.05 -> 6.24 (+0.19; raw 5.6/6.2/5.4 -> 5.6/6.6/5.5; calibrate r 0.86). Two judges see Aquaryn lie lower and more horizontal; one ties.
 - **What it is:** flag `creatures_ralph_aquaryn_faint_headdown`, a copy of the live r9 GLB with its faint clip's neck tipped down 35 deg and head 25 deg (`lateral_recoil.py --spec=neck:x:35,head:x:25 --peak=0.5 --release=1.0`). Same textures and clips.
