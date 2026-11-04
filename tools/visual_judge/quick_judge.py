@@ -67,7 +67,7 @@ def _narrow_ui_tabs(frames):
     names = [f.split("__", 1)[-1] for f in frames]
     tabs = sorted({n[5:] for n in names if n.startswith("menu_")})
     ok = all(n.startswith("menu_") or n == "exploration_hud" for n in names)
-    return [f"--tabs={','.join(tabs)}"] if ok and tabs and all(t.isalpha() for t in tabs) else []
+    return [f"--tabs={','.join(tabs)}"] if ok and tabs and all(re.fullmatch(r"[a-z_]+", t) for t in tabs) else []
 
 
 NARROW = {"tools/phase2_capture_creatures.gd": _narrow_creature_poses,
