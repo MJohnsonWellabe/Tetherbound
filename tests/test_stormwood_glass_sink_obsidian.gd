@@ -43,3 +43,14 @@ func test_obsidian_r2_ships_off_and_thins_the_veins_when_on() -> void:
 	assert_true(float(r2.vein_energy) < float(r1.vein_energy), "fainter glow")
 	assert_true(float(r2.fracture_scale) < float(r1.fracture_scale), "larger plates")
 	assert_false(r2.has("r2"), "the switch block does not leak into material keys")
+
+
+## r3 (OFF until judged): no glowing veins and no visible seams.
+func test_obsidian_r3_ships_off_and_removes_the_grid_when_on() -> void:
+	var config := _config()
+	assert_false(bool(config.obsidian_1104.r3.get("enabled", true)), "r3 ships OFF")
+	config.obsidian_1104.r3["enabled"] = true
+	var r3 := SINK.with_obsidian(config)
+	assert_almost_eq(float(r3.vein_energy), 0.0, 0.0001, "no glowing veins")
+	assert_almost_eq(float(r3.seam_width), 0.0, 0.0001, "no seam lines")
+	assert_false(r3.has("r3"), "the switch block does not leak into material keys")
