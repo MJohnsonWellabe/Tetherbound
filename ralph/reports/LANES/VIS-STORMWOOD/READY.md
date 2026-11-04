@@ -4,11 +4,19 @@
 
 | Item | Flags ON | CPU score | Verdict | Commit | Test |
 |---|---|---|---|---|---|
-| F41#19 Glass Field spike bases | `stormwood_glass_field.seam_clear_1104` (no fissure ribbons, grass cleared, narrower glass crust) | **4.34 -> 5.30** | `qj/qj_seam/` | `8b662c34` | `test_stormwood_basalt_crust` 3/11, `test_vis_stormwood_judged_on` 5/27 (pass) |
+| ~~F41#19 seam clear r1~~ | **withdrawn**: r1 dropped the fissure ribbons and broke `test_stormwood_glass_field_identity` (24 fissures expected, got 0; coordinator held it OFF in batch 9). r2 (`e85d4d85`, OFF) keeps every fissure, darkened; re-judge `qj_seam2` queued, then the identity test runs with r2 ON before it is turned on | (r1 4.34 -> 5.30) | `qj/qj_seam/` | `e85d4d85` | `test_stormwood_basalt_crust`, `test_stormwood_glass_field_identity` |
 | F41#10 Glass Sink | `hero_landmarks_1101.glass_sink`, `stormwood_glass_sink` `dark_pool_candidate` + `obsidian_1104` | **4.03 -> 5.07** | `j4/` | `84f06e8a` | `test_vis_stormwood_judged_on`, `test_hero_landmarks_1101`, `test_storm_cams_candidates`, `test_stormwood_glass_sink_obsidian` |
 | F41#1 Stormheart | `stormheart_presentation` `deck_light_1101`, `hollow_floor`, `hero_interior.round2` | **3.22 -> 3.94** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_cause_stormwood_candidates` |
 | F41#4 destinations | `stormwood_lantern_pools` `arrival_pools`, `basin`, `lantern_model`, `glow_fungi`, `grove` | **4.00 -> 4.59** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_stormwood_lantern_pools_grove` |
 | F41#8 named silhouettes | `npc_role_accessories` | **4.72 -> 4.96** (offset-map caveat) | `j3/` | `155cdd39` | `test_vis_stormwood_judged_on` |
+
+**FOR THE COORDINATOR (4 Nov ~08:45 UTC):** seam clear r1 has been withdrawn. r2 is OFF, re-judge queued. Region identity and look tests now run before any flag goes ON. Queued on this head:
+- `test_stormheart_*` (presentation, ancient_trunk, canopy_atlas, split_bark, wayfinding)
+- `test_stormwood_look`, `test_stormwood_crown_overlook`, `test_stormwood_charged_ground`, `test_stormwood_route_walkability`, `test_stormwood_surge`
+- `test_character_appearance_variants`
+- `test_stormwood_struck_sentinel_identity`, `test_stormwood_capacitor_grove_identity`, `test_stormwood_glass_field_identity`
+
+Results land here.
 
 **Tests on the synced head (06:20 UTC, after main merge `9faa85e1` and the j1-j4 commits), all 0 failed:**
 - `test_vis_stormwood_judged_on` 4/25
