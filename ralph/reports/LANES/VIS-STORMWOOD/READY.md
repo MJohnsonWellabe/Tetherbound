@@ -4,6 +4,7 @@
 
 | Item | Flags ON | CPU score | Verdict | Commit | Test |
 |---|---|---|---|---|---|
+| F41#19 Glass Field spike bases | `stormwood_glass_field.seam_clear_1104` (no fissure ribbons, grass cleared, narrower glass crust) | **4.34 -> 5.30** | `qj/qj_seam/` | `8b662c34` | `test_stormwood_basalt_crust`, `test_vis_stormwood_judged_on` (re-run queued) |
 | F41#10 Glass Sink | `hero_landmarks_1101.glass_sink`, `stormwood_glass_sink` `dark_pool_candidate` + `obsidian_1104` | **4.03 -> 5.07** | `j4/` | `84f06e8a` | `test_vis_stormwood_judged_on`, `test_hero_landmarks_1101`, `test_storm_cams_candidates`, `test_stormwood_glass_sink_obsidian` |
 | F41#1 Stormheart | `stormheart_presentation` `deck_light_1101`, `hollow_floor`, `hero_interior.round2` | **3.22 -> 3.94** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_cause_stormwood_candidates` |
 | F41#4 destinations | `stormwood_lantern_pools` `arrival_pools`, `basin`, `lantern_model`, `glow_fungi`, `grove` | **4.00 -> 4.59** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_stormwood_lantern_pools_grove` |
@@ -30,7 +31,16 @@
 - F41#5 `pool_satin_1104`: 4.13 -> 4.20, and the judges split.
 - F41#9 `stormwood_harvest_hero2`: 4.76 -> 4.59.
 
-**Arms waiting for quick_judge:** F41#19 `basalt_crust_1104` and F41#2 `phase_grade_1104` r2.
+- F41#19 `basalt_crust_1104`: 5.25 -> 4.42 (`qj/qj_basalt/`).
+- F41#2 `phase_grade_1104` r2: 4.40 -> 4.23 (`qj/qj_phase2/`). The approach is parked after two flat rounds.
+
+**Arms in the queue:**
+- F41#3 `combat.contact_spacing.named_overrides.capacitor_alpha`, run through `run_group`/`chain`. quick_judge cannot capture `phase2_capture_stormwood_fights.gd`: the tool refuses any output outside its Phase 2 report folder.
+- Stormwood `stormwood_look.foliage_grade_1104` on F41#5 and F41#4.
+
+**Open:**
+- F41#20: Fenn's dialogue frame is black in both arms. The camera sits behind a dark blocker next to Fenn's seat. Moving the seat stales the scatter bake, so this needs an engine probe of the blocker first.
+- Blender is blocked in this session.
 
 **FOR THE COORDINATOR (4 Nov ~02:50 UTC; send_message is refused here, untrusted device):** merged as asked. `ae954029` merges `origin/tb/creatures-ralph` 7568796b: storm-light set ON, `phase_grade_1104` OFF, main's newer CI, routes and docs kept. One commit after it adds the F41#18 `rank_marks_1104` arm (OFF). Tests on this head, all 0 failed:
 - `test_stormwood_surge_presentation` 53 tests / 728 assertions

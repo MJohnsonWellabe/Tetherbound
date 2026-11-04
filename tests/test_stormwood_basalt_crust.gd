@@ -33,10 +33,13 @@ func test_basalt_crust_on_is_smaller_taller_and_matte() -> void:
 
 ## F41#19 seam_clear_1104: ships OFF; ON drops the fissure ribbons, clears the
 ## whole scar of grass and narrows the shipped glass crust.
-func test_seam_clear_ships_off_and_narrows_when_on() -> void:
+## qj_seam (4 Nov): judged gain, ships ON with its score; OFF is still inert.
+func test_seam_clear_ships_on_and_narrows() -> void:
 	var field := FIELD.new()
 	field.config = _config()
-	assert_false(bool(field.config.seam_clear_1104.get("enabled", true)), "ships OFF until judged")
+	assert_true(bool(field.config.seam_clear_1104.get("enabled", false)), "ships ON (judged gain)")
+	assert_true(str(field.config.seam_clear_1104.get("_why_on", "")).contains("5.30"), "records its mapped score")
+	field.config.seam_clear_1104["enabled"] = false
 	assert_eq(field._seam_clear(), {}, "OFF returns no override")
 	field.config.seam_clear_1104["enabled"] = true
 	var seam: Dictionary = field._seam_clear()
