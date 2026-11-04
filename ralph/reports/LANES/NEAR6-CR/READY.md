@@ -30,9 +30,13 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | Judged gain (qj/F40-2-edb6d881b763-11041450), ON (above). Judges still ask for a cliff plinth, cloud sea below and lit windows at night. |
 | `cloudreach_f40_items.json:shelf_edge_soften` | F40#4 P2-023 | **Judged worse** (qj/F40-4-24add0c49b36-11041519): CPU 6.35 -> 5.69. Root cause found by a ray probe: the straight-edged pale shelves are the installed `cloudreach_cliff_shelf_edge` modules from the shared `stand_pattern` (P2-021 dressing). Turning and sinking them lost the layered pale strata the judges like; they ask for chamfered, overhanging, eroded lips instead. Stays OFF. Current CPU base for the item on this tree: **6.35**. |
 
-## Status (4 Nov 13:35 UTC): lane items done
+## Status (4 Nov 17:10 UTC)
 
-Three CPU gains ON: P2-053 5.87 -> 6.32 (over 6), P2-102 5.09 -> 5.72, P2-068 5.05 -> 5.25. P2-022 un-parked: the earlier arms hit hidden procedural geometry; retargeted at the imported belvederes. P2-023 parked (two arms with no visible change; builder of the scored shelves not yet identified). Zero criteria closed (CPU scores rank only; rows close on the GPU).
+Seven CPU gains ON (owner/coordinator batch): P2-053 5.87 -> 6.32, P2-102 5.09 -> 5.72, P2-068 5.05 -> 5.25 (the first three landed on main in #818/#820/#823), then P2-022 5.64 -> 6.16, P2-023 5.96 -> 6.27, F40#19 night 5.10 -> 5.84 (plus the earlier P2-023/P2-022 OFF arms recorded above). Zero criteria closed (CPU scores rank only; rows close on the GPU).
+
+Open for this lane: F40#19 rain (mx1 4.90; judges: rain only desaturates; Cloudreach rain needs a realm-scoped weather hook, not yet built). P2-068 is still under 6 (the NPCs sit 2 m behind the trainer at the capture stand). P2-102 is under 6 (5.72).
+
+**Blocked:** installing portable Blender 4.2 LTS in scratch (coordinator item 2) was refused by this session's permission classifier ("code from external"). P2-022 was instead done in-engine on the installed belvedere meshes (no new mesh), which judged 6.16.
 
 ## Harness fixes
 
