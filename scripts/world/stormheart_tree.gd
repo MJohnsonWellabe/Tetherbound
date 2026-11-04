@@ -1342,6 +1342,16 @@ func _core_arcs(root: Node3D, cfg: Dictionary, column: Dictionary) -> void:
 	var base_r := float(column.get("sheath_radius_m", 2.4)) * float(cfg.get("radius_scale", 0.9))
 	var height := float(column.get("top_m", 149.5))
 	var segments := int(cfg.get("segments", 90))
+	# F41#1 glow_1104 (OFF until judged; judges x3: "flat white line strokes,
+	# no glow, impact or violet tint"): a hot white-violet core, a wide additive
+	# violet halo on every segment and jaggier steps. Natural glow only.
+	var glow: Dictionary = cfg.get("glow_1104", {})
+	var glow_on := bool(glow.get("enabled", false))
+	var jitter := float(glow.get("jitter_m", 0.6)) if glow_on else 0.6
+	var radial_jitter := float(glow.get("radial_jitter_m", 0.5)) if glow_on else 0.5
+	var halo_poses: Array[Transform3D] = []
+	if glow_on:
+		material.albedo_color = Color(str(glow.get("core_colour", "#f6f2ff")))
 	for arc in arcs:
 		var phase := TAU * float(arc) / float(arcs)
 		var turns := rng.randf_range(5.0, 8.0) * (1.0 if arc % 2 == 0 else -1.0)
@@ -1349,15 +1359,28 @@ func _core_arcs(root: Node3D, cfg: Dictionary, column: Dictionary) -> void:
 		for step in segments + 1:
 			var t := float(step) / float(segments)
 			var a := phase + turns * TAU * t
-			var r := base_r + rng.randf_range(-0.5, 0.5)
-			var point := centre + Vector3(cos(a) * r, lerpf(1.0, height, t) + rng.randf_range(-0.6, 0.6), sin(a) * r)
+			var r := base_r + rng.randf_range(-radial_jitter, radial_jitter)
+			var point := centre + Vector3(cos(a) * r, lerpf(1.0, height, t) + rng.randf_range(-jitter, jitter), sin(a) * r)
 			if step > 0:
 				poses.append(_charge_pose(previous, point, float(cfg.get("width_m", 0.16))))
+				if glow_on:
+					halo_poses.append(_charge_pose(previous, point, float(glow.get("halo_width_m", 0.9))))
 			previous = point
 	var holder := Node3D.new()
 	holder.name = "CoreArcs"
 	root.add_child(holder)
 	_instances(holder, poses, material, _charge_mesh())
+	if glow_on and not halo_poses.is_empty():
+		var halo := StandardMaterial3D.new()
+		halo.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		halo.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		halo.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		halo.cull_mode = BaseMaterial3D.CULL_DISABLED
+		halo.no_depth_test = false
+		var tint := Color(str(glow.get("halo_colour", "#8f7dff")))
+		tint.a = float(glow.get("halo_alpha", 0.35))
+		halo.albedo_color = tint
+		_instances(holder, halo_poses, halo, _charge_mesh())
 	_core_arc_holder = holder
 
 

@@ -210,7 +210,8 @@
       "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#1 Stormheart 3.22 -> 3.94 mapped with deck_light_1101 + hollow_floor + hero_interior.round2.",
       "_candidate": "r27 (OFF until judged; needs hero_interior on). r19 judges x3: the hollow floor reads as 'a dirt disc in a grass ring, an arena, not a living trunk', and the core as 'a bloomed light pillar, not arcing lightning'. Bark roots flow from the wall foot across the floor (entrance split and centre clear); thin white-violet arcs wind up around the core column (natural glow, hidden after the storm is released). Visual only.",
       "roots": {"count": 20, "seed": 27, "start_radius_m": 45.0, "end_radius_m": [11.0, 18.0], "radius_m": [1.9, 0.25], "bark_repeat_m": 4.0},
-      "arcs": {"count": 4, "seed": 271, "colour": "#ebe6ff", "width_m": 0.16, "segments": 90, "radius_scale": 0.9}
+      "arcs": {"count": 4, "seed": 271, "colour": "#ebe6ff", "width_m": 0.16, "segments": 90, "radius_scale": 0.9,
+        "glow_1104": {"enabled": false, "scope": "client_presentation", "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#1: qj_rootfloor3 judges x3 read the core arcs as 'flat white line strokes, no glow, impact or violet tint'. Hot white-violet core, a wide additive violet halo on every segment and jaggier steps. Natural glow (the trunk's own lightning); hidden on release like the arcs. OFF until judged.", "core_colour": "#f6f2ff", "halo_colour": "#8f7dff", "halo_alpha": 0.35, "halo_width_m": 0.9, "jitter_m": 1.4, "radial_jitter_m": 0.9}}
     }
   },
   "root_floor_1104": {
