@@ -792,6 +792,12 @@ func _update_subject_fade(delta: float) -> void:
 		else:
 			# PartyStrip owns its internal draw/fade lifecycle; do not invent a
 			# second row-opacity controller in this no-draw parent holder.
+			# NEAR6-TW (P2-088, F39#19): `roster_floor` keeps the fight roster
+			# above a readable alpha over terrain. Inert while OFF.
+			var roster_floor: Variant = cfg.get("roster_floor", {})
+			if panel == _strip_fader and roster_floor is Dictionary \
+					and bool((roster_floor as Dictionary).get("enabled", false)):
+				level = maxf(level, clampf(float((roster_floor as Dictionary).get("alpha", 1.0)), 0.0, 1.0))
 			panel.modulate.a = level
 
 

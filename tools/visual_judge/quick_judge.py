@@ -373,6 +373,8 @@ def find_frame(d, fid):
         names.append(fid.split("__catching__", 1)[1])
     if fid.count("__") >= 2:
         names.append(fid.split("__", 2)[2])
+    if fid.startswith("tidewake__"):  # Tidewake route/location tools write water__<stand> files
+        names.append("water__" + fid.split("__", 1)[1])
     for n in names:
         for ext in ("png", "jpg"):
             hits = sorted(Path(d).rglob(f"{n}.{ext}"))
