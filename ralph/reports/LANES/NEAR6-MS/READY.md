@@ -10,9 +10,11 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813; rebuilt on main 60f2df2
 
 - ~~F38#26 creature_rim ON (CPU 5.95 -> 6.07)~~ **Withdrawn (coordinator, 4 Nov 13:47):** it duplicated the visual lane's stronger rim10 rim, ON on main since #817 (batch 16 keeps main's). The branch was rebuilt on main `60f2df27` (#823) without it; further F38#26 work is judged on top of rim10. The verdict stays in `qj/F38-26-662667cd3005-11041311/` as evidence that a Meadows creature rim reads.
 
+- **F38#32 P2-035 camp and workshop prop legibility: CPU 5.61 -> 5.81** (`qj/F38-32-48f121f0ded9-11041358/`; judged on main 60f2df27). ON: `combat.json arena.wild_keep_clear` entry `trail_camp_1104` (14 m around the trail camp floor; wild bodies neither spawn nor settle a wander target there) plus a 3-line `enabled` check in `encounter_director.gd::_wild_keep_clear_zones` (zones without the key stay on). All three judges scored the camp without the coyote and hare higher. Test: `test_near6_ms_1104.gd test_f38_32_trail_camp_keep_clear_ships_on`. **Tests passed (14:50 UTC):** test_near6_ms_1104, test_wild_once, test_capacitor_spacing_override, test_texture_import_policy: 24 tests, 1696 assertions, 0 failed. Commit `773e609b`.
+
 ## Arms built (OFF until judged)
 
-- F38#29 P2-065: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (the beaten trainer drops to both knees, head bowed, the moment they lose; `post_stance.gd` rows take an optional hip drop). Test `test_near6_ms_1104.gd`. First candidate run was cut off by a timeout; rerun queued.
+- (landed) F38#29 P2-065: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (the beaten trainer drops to both knees, head bowed, the moment they lose; `post_stance.gd` rows take an optional hip drop). Test `test_near6_ms_1104.gd`. First candidate run was cut off by a timeout; rerun queued.
 - F41#3 P2-092: `combat.json contact_spacing.named_overrides.capacitor_alpha` (taken from VIS-STORMWOOD `ea108029`). Test `test_capacitor_spacing_override.gd`.
 
 ## Judged flat or worse (stay OFF)
