@@ -46,9 +46,18 @@ Results land here.
 
 **Ownership change (coordinator, 4 Nov ~07:40):** F41#9, F41#20, F41#15 and F41#3 move to lane NEAR6-MS. My OFF arm `combat.contact_spacing.named_overrides.capacitor_alpha` (`ea108029`, `test_capacitor_spacing_override` 1/5) is theirs to judge. quick_judge cannot capture `phase2_capture_stormwood_fights.gd` (the tool refuses output outside its Phase 2 report folder); `tools/visual_judge/lane_bin/run_group.sh` retries under that folder.
 
+- F41#1 `stormheart_presentation.meshy_interior`: flat, 4.91 -> 4.91, identical sides; it does not render at the judged stands (`qj/qj_heart/`).
+- F41#10 `obsidian_1104.r2`: flat, 3.93 -> 4.02 (`qj/qj_obs2/`). The judges read the glowing seams as "a debug wireframe grid".
+- F41#10/F41#4 `stormwood_ground_finish.rock_value_1104`: flat, identical sides (`qj/qj_rock/`). The pale cliff wall is not the terrain rock slot.
+
+**Lesson (this lane):** three arms in a row changed no pixels at the judged stands. Each new arm now needs its effect visible in the frames before it is judged.
+
 **In the queue:**
-- F41#1 `stormheart_presentation.meshy_interior` (carved root-wall panels).
-- F41#10 `stormwood_glass_sink.obsidian_1104.r2` (sparser, fainter veins over larger plates; `ed9c65f7`).
+- `presentation.height_fog` on F41#5, F41#4 and F41#2 (`qj_hfog`, capturing).
+- F41#10 `obsidian_1104.r3`: no veins, no seams, a satin black-glass pool (`5e72fdf9`).
+- F41#19 seam clear r2 (`qj_seam2`).
+- Region identity and look tests.
+- Unscored baselines: the `capture_stormwood_f10_matrix` calm/break run (F41#22, F41#24).
 
 **Open:**
 - F41#20: Fenn's dialogue frame is black in both arms. The camera sits behind a dark blocker next to Fenn's seat. Moving the seat stales the scatter bake, so this needs an engine probe of the blocker first.
