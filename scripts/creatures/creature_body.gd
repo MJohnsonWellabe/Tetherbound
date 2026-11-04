@@ -1165,6 +1165,14 @@ func _apply_shiny_cue() -> void:
 		_rim_light_node(_model, rim, "shiny")
 	if bool((cue as Dictionary).get("motes", true)):
 		_shiny_cue = ALPHA_AURA.attach(self, _radius * 1.5, _height, Color(str((cue as Dictionary).get("mote_colour", "#dff3ff"))))
+	# NEAR6-TW (F39#4): `shiny_cue.overlay` (OFF) dresses a shiny's meshes in the
+	# character rim overlay (fresnel edge + soft fill) so the cue reads at stand
+	# distance; meshes already wearing another overlay are left alone.
+	var overlay: Variant = (cue as Dictionary).get("overlay", {})
+	if _has_model and overlay is Dictionary and bool((overlay as Dictionary).get("enabled", false)):
+		var material: ShaderMaterial = CREATURE_RIM.RIM.overlay(overlay)
+		material.set_shader_parameter("fill_energy", float((overlay as Dictionary).get("fill_energy", 0.0)))
+		CREATURE_RIM.RIM.dress(_model, material, true)
 
 
 ## Keep a named preview's painted coat readable under the same forest light as
