@@ -1369,7 +1369,8 @@
   "gate_path_braziers": {
     "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only",
     "_why": "NEAR6-CR F40#19 night round 2: judges saw no lit focal point at night; manned braziers beside the gate path. OFF until judged.",
-    "enabled": false,
+    "enabled": true,
+    "_why_on": "CPU 5.00 -> 5.51 (qj/F40-19-458a13de2967-11042202, night_foreground_fill ON in both arms; judges: warm lantern pools give the path a focal line, foreground defect FIXED on 2 of 3)",
     "points": [[-11.6, -206.4], [-17.4, -207.6], [-14.1, -192.4], [-19.9, -193.6]]
   }
 }
