@@ -15,8 +15,9 @@
   },
   "summit_silhouette": {
     "_scope": "world_presentation",
-    "_why": "P2-022 / F40#2 (NEAR6-CR, 4 Nov 2026; GPU 5.81): judges read the summit as a small skeletal dome rather than a layered sanctuary. The landmark in frame is this file's SummitEyrieStronghold set (54 m aviary_drum_ring_v2 plus four 26 m aviary_belvedere_tower), not the procedural cloudreach_aviary.gd build, which earlier arms targeted with no visible change. On: the four installed belvederes rise to 40 m so their roofs stand proud of the drum shoulder and the skyline reads as layered towers around the dome. Same meshes and positions; collision stays 0. Scale: a 40 m tower is about 22 trainer heights against the 1.80 m trainer, below the 54 m drum. OFF until judged.",
-    "enabled": false,
+    "_why": "P2-022 / F40#2 (NEAR6-CR, 4 Nov 2026; GPU 5.81): judges read the summit as a small skeletal dome rather than a layered sanctuary. The landmark in frame is this file's SummitEyrieStronghold set (54 m aviary_drum_ring_v2 plus four 26 m aviary_belvedere_tower), not the procedural cloudreach_aviary.gd build, which earlier arms targeted with no visible change. On: the four installed belvederes rise to 40 m so their roofs stand proud of the drum shoulder and the skyline reads as layered towers around the dome. Same meshes and positions; collision stays 0. Scale: a 40 m tower is about 22 trainer heights against the 1.80 m trainer, below the 54 m drum.",
+    "enabled": true,
+    "_why_on": "NEAR6-CR quick judge F40-2-edb6d881b763-11041450 (4 Nov 2026): CPU 5.64 -> 6.16 (+0.52), all three judges preferred it; defect PRESENT/PARTIAL -> PARTIAL. Ships ON (owner 4 Nov: every judged CPU gain ships ON).",
     "sites": {
       "SummitEyrieStronghold": {
         "aviary_belvedere_tower": {"height": 40.0}

@@ -9,6 +9,7 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `data/config/cloudreach_npc_runtime.json:world_payoffs.anchor_vessel_quiet` | F40#8 P2-053 | 5.87 -> **6.32** | `tests/test_near6_cr_judged_on.gd` | 4558ec49 |
 | `data/config/cloudreach_physical_runtime.json:rim_pickup_in_view` | F40#17 P2-102 | 5.09 -> **5.72** | `tests/test_near6_cr_judged_on.gd` | ec870b02 |
 | `data/config/cloudreach_npc_runtime.json:post_role_props` | F40#9 P2-068 | 5.05 -> **5.25** | `tests/test_near6_cr_judged_on.gd` | 0e41fe16 |
+| `data/config/cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | 5.64 -> **6.16** | `tests/test_near6_cr_judged_on.gd` | see log |
 
 ## Arms in flight (flag OFF)
 
@@ -24,7 +25,7 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `cloudreach_visual.json:geology.rim_fringe` | F40#4 P2-023 | Round 1 captured (qj F40-4-41e840386d6b-11041218): **no visible change** on the scored stands (those pale shelves are crag-kit outcrops, not shelf/shoulder mesas). Not judged; stays OFF. |
 | `cloudreach_visual.json:geology.rim_fringe.outcrops` | F40#4 P2-023 | Round 2 captured with a fresh base (qj F40-4-33a9d9ff23ed-11041233): **no visible change** either; the pale straight-edged shelves on the three stands are built by neither the shelf/shoulder mesa path nor the crag-kit outcrops. Stays OFF. **P2-023 parked** after two invisible arms; next step is to identify the builder of those shelves (node names from a scene dump at the sky shrine stand) before another arm. |
 | `cloudreach_aviary.json:towers.silhouette_raise` | F40#2 P2-022 | Captured (qj F40-2-43dc52e38af7-11041416): **no visible change**. Cause found: the summit landmark in frame is the imported `cloudreach_f40_items.json` SummitEyrieStronghold set (54 m drum ring and four 26 m belvederes); the procedural `cloudreach_aviary.gd` build that all three earlier arms edited is hidden under it. Stays OFF. |
-| `cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | Un-parked with a new idea: raise the installed belvederes 26 -> 40 m. Capturing. |
+| `cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | Judged gain (qj/F40-2-edb6d881b763-11041450), ON (above). Judges still ask for a cliff plinth, cloud sea below and lit windows at night. |
 
 ## Status (4 Nov 13:35 UTC): lane items done
 
