@@ -1,0 +1,35 @@
+extends "res://tests/test_case.gd"
+
+## VIS-STORMWOOD judged gains (owner 4 Nov 2026: every judged CPU improvement
+## ships ON with its score). Each flag below is ON and records its mapped
+## CPU score from the lane's verdict (ralph/reports/LANES/VIS-STORMWOOD/).
+
+
+func _json(path: String) -> Dictionary:
+	return JSON.parse_string(FileAccess.get_file_as_string(path))
+
+
+func _assert_on(block: Dictionary, score: String, label: String) -> void:
+	assert_true(bool(block.get("enabled", false)), "%s ships ON (judged gain)" % label)
+	assert_true(str(block.get("_why_on", "")).contains(score), "%s records %s" % [label, score])
+
+
+## j1: F41#1 Stormheart 3.22 -> 3.94.
+func test_stormheart_j1_arms_ship_on() -> void:
+	var cfg := _json("res://data/config/stormheart_presentation.json")
+	_assert_on(cfg.deck_light_1101, "3.94", "deck_light_1101")
+	_assert_on(cfg.hollow_floor, "3.94", "hollow_floor")
+	_assert_on(cfg.hero_interior.round2, "3.94", "hero_interior.round2")
+	assert_true(bool(cfg.hero_interior.get("enabled", false)), "round2 needs hero_interior ON")
+
+
+## j1: F41#4 named destinations 4.00 -> 4.59.
+func test_lantern_pools_j1_arms_ship_on() -> void:
+	var cfg := _json("res://data/config/stormwood_lantern_pools.json")
+	for key: String in ["arrival_pools", "basin", "lantern_model", "glow_fungi", "grove"]:
+		_assert_on(cfg[key], "4.59", key)
+
+
+## j3: F41#8 named silhouettes 4.72 -> 4.96 (offset-map caveat recorded).
+func test_role_accessories_j3_ship_on() -> void:
+	_assert_on(_json("res://data/config/npc_role_accessories.json"), "4.96", "npc_role_accessories")

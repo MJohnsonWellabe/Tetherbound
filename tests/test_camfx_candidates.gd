@@ -43,13 +43,23 @@ func _bonfire() -> MeshInstance3D:
 	return instance
 
 
-func test_every_camfx_block_ships_off() -> void:
+## catch_orb ships ON after a judged CPU gain (VIS-MEADOWS r1b, 4 Nov 2026);
+## the other blocks still ship OFF.
+const JUDGED_ON := {"catch_orb": "CPU 6.22 -> 7.19"}
+
+
+func test_every_camfx_block_ships_off_unless_judged_on() -> void:
 	var cfg := _json(CAMFX.CONFIG_PATH)
 	for block: String in ["catch_orb", "flame", "fight_fade"]:
 		assert_true(cfg.has(block), "camfx.json must declare %s" % block)
-		assert_false(bool((cfg[block] as Dictionary).get("enabled", true)), "%s ships OFF" % block)
 		assert_eq((cfg[block] as Dictionary).get("scope"), "client_presentation", "%s declares its scope" % block)
-		assert_true(CAMFX.block(block).is_empty(), "OFF reads as empty: %s" % block)
+		if JUDGED_ON.has(block):
+			assert_true(bool((cfg[block] as Dictionary).get("enabled", false)), "%s ships ON (judged gain)" % block)
+			assert_true(str((cfg[block] as Dictionary).get("_why_on", "")).contains(JUDGED_ON[block]), "%s records its score" % block)
+			assert_false(CAMFX.block(block).is_empty(), "ON reads its keys: %s" % block)
+		else:
+			assert_false(bool((cfg[block] as Dictionary).get("enabled", true)), "%s ships OFF" % block)
+			assert_true(CAMFX.block(block).is_empty(), "OFF reads as empty: %s" % block)
 
 
 func test_flame_off_keeps_the_lit_cone() -> void:
@@ -90,6 +100,11 @@ func test_catch_orb_block_names_an_installed_model_and_hides_the_rest_disc() -> 
 	assert_false(bool(orb.get("rest_halo", true)), "no disc at rest")
 	assert_true(float(orb["flight_halo_scale"]) < 5.5, "a smaller flight glow than the shipped 5.5x")
 	assert_true(float(orb["verdict_flash_scale"]) < 1.0, "the verdict flashes shrink")
+	assert_true(bool(orb.get("enabled", false)), "catch_orb ships ON (VIS-MEADOWS r1b judged gain)")
+	assert_true(str(orb.get("_why_on", "")).contains("CPU 6.22 -> 7.19"), "catch_orb records its CPU score")
+	var off := _with("catch_orb")
+	(off["catch_orb"] as Dictionary)["enabled"] = false
+	CAMFX.set_config_for_tests(off)
 	assert_true(CAMFX.block("catch_orb").is_empty(), "OFF reads as empty")
 	CAMFX.set_config_for_tests(_with("catch_orb"))
 	assert_false(CAMFX.block("catch_orb").is_empty(), "ON reads its keys")

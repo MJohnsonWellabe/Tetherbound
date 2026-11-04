@@ -134,10 +134,12 @@ func test_moss_variation_on_sets_typed_uniforms_without_red() -> void:
 			assert_false(c.r > c.g * 1.6 and c.r > c.b * 2.0, "no red/oxblood tone: " + key)
 
 
-func test_deck_light_ships_off_and_lays_out_its_rings() -> void:
+## VIS-STORMWOOD j1 (4 Nov): the deck light ships ON with its judged score.
+func test_deck_light_ships_on_and_lays_out_its_rings() -> void:
 	var presentation := _json(PRESENTATION_PATH)
 	var settings: Dictionary = presentation.deck_light_1101
-	assert_false(bool(settings.get("enabled", true)), "ships OFF")
+	assert_true(bool(settings.get("enabled", false)), "ships ON (judged gain)")
+	assert_true(str(settings.get("_why_on", "")).contains("3.94"), "records its mapped score")
 	var poses := DECK_LIGHT.poses(settings)
 	var expected := 0
 	for ring: Dictionary in settings.rings:
@@ -181,9 +183,12 @@ func test_phase_grade_separates_calm_from_building_and_keeps_break_rules() -> vo
 	for phase: String in ["calm", "building", "break", "fading"]:
 		var hue := Color(str(on.presentation.phases[phase].sky_top)).h * 360.0
 		assert_true(hue >= 235.0 and hue <= 290.0, "%s sky stays purple (hue %.0f)" % [phase, hue])
-		assert_eq(on.presentation.phases[phase].sun_energy_mult, off.presentation.phases[phase].sun_energy_mult, "%s key light unchanged" % phase)
 		assert_eq(on.presentation.phases[phase].ambient_colour, off.presentation.phases[phase].ambient_colour, "%s ambient unchanged" % phase)
 	assert_eq(on.presentation.phases.break, off.presentation.phases.break, "Break is untouched")
+	var building_sun := float(on.presentation.phase_readability_candidate.phases.building.sun_energy_mult)
+	assert_true(float(on.presentation.phases.calm.sun_energy_mult) > building_sun, "Calm keys brighter than Building")
+	assert_true(building_sun > float(on.presentation.phases.break.sun_energy_mult), "Break keeps the lowest key light")
+	assert_true(float(on.presentation.phases.calm.sun_energy_mult) <= float(on.presentation.aftermath.all.sun_energy_mult), "the aftermath key stays steadiest")
 	var brk := Color(str(on.presentation.phases.break.ceiling_colour)).get_luminance()
 	assert_true(Color(str(on.presentation.phases.building.ceiling_colour)).get_luminance() > brk, "the Break deck stays darkest")
 	assert_true(Color(str(on.presentation.phases.calm.ceiling_colour)).get_luminance() > brk, "Calm's deck is lighter than Break's")

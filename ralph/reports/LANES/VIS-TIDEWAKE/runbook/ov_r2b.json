@@ -1,0 +1,12 @@
+{
+ "data/config/tidewake_look.json": {
+  "cause_tidewake": {
+   "sea": {
+    "enabled": true
+   },
+   "horizon": {
+    "enabled": true
+   }
+  }
+ }
+}

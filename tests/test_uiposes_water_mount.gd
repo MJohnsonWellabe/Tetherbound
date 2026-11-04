@@ -6,9 +6,20 @@ extends "res://tests/test_case.gd"
 const LOOK := preload("res://scripts/world/water_mount_presentation.gd")
 
 
-func test_ships_off() -> void:
-	assert_false(bool(LOOK.config().get("enabled", true)))
-	assert_true(LOOK.row("water_aquaryn").is_empty())
+func test_ships_on_with_its_judged_score() -> void:
+	# tb/vis-tidewake-1104 r1: F39#8 CPU 4.93 -> 6.09, F39#22 CPU 5.25 -> 6.28 (camera_hide).
+	var cfg := LOOK.config()
+	assert_true(bool(cfg.get("enabled", false)))
+	assert_true(str(cfg.get("_why_on", "")).contains("6.09"))
+	assert_false(LOOK.row("water_aquaryn").is_empty())
+	assert_true(LOOK.row("water_aquaryn").has("wake"))
+	var hide: Dictionary = cfg.get("camera_hide", {})
+	assert_true(bool(hide.get("enabled", false)))
+	assert_true(str(hide.get("_why_on", "")).contains("6.28"))
+
+
+func test_off_row_is_empty() -> void:
+	assert_true(LOOK.row("water_aquaryn", {"enabled": false, "mounts": {"water_aquaryn": {}}}).is_empty())
 
 
 func test_row_matches_with_or_without_water_prefix() -> void:

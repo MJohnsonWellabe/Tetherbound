@@ -119,7 +119,7 @@
     "aim": {"distance": 4.9, "height": 2.05, "fov": 58.0, "shoulder_offset": 1.25},
     "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0},
     "r2": {
-      "enabled": false,
+      "enabled": true, "_why_on": "CPU 6.22 -> 7.19 (VIS-MEADOWS r1b, 4 Nov 2026: F38#13 P2-059 catch camera framing; F38#33 P2-061 catch result hierarchy CPU 6.02 -> 6.88; three code-blind judges, calibrated slope 1.16 r 0.90 RMSE 0.53; ralph/reports/LANES/VIS-MEADOWS/r1b/VERDICT.md). Judged together: catching.json framed_camera.r2, camfx.json catch_orb and hud.json catch_card. Owner 4 Nov: a judged gain ships ON.",
       "_why": "P2-059 (GPU batch 1, 1 Nov: framed_camera 4.96 -> 5.92; judges: still a steep downward crop, asked for an oblique behind-the-trainer framing that keeps trainer, companion and target together). When enabled (with framed_camera), these resolve values merge over the framed ones (catch_math.gd camera_profile): a shallower pitch from further back and a little higher, with a wider lens. Aim unchanged. PRESENTATION ONLY. OFF until GPU judged.",
       "resolve_camera": {"distance": 7.2, "height": 1.5, "fov": 50.0, "pitch_start_deg": -16.0}
     }
