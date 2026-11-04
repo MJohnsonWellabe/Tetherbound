@@ -766,6 +766,14 @@
           "emission_energy": 0.85
         }
       }
+    },
+    "creatures_ralph_mosshock_value_lift": {
+      "_why": "F36#54 Mosshock stage poses (CPU 5.95, v1/b20): judges say the olive moss body has 'little value separation' from the stage and the face barely reads. A value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12; mean value 0.33 -> 0.43); only the albedo changes (the remake_owner1101_glow_read coat that would add a glow map is OFF, on both judged sides).",
+      "_why_on": "Visual lane v1/b21 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.91): F36#54 Mosshock 5.63 -> 6.55 mapped (+0.92; raw 5.4/5.6/5.3 -> 6.0/6.1/5.9; defect PRESENT -> PARTIAL). Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_Image_0_value_lift.png"}
+      }
     }
   }
 }
