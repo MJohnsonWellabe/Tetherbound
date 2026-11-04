@@ -21,6 +21,10 @@ Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the sa
 
 - **Unscored rows now scored (CPU subset, r1c):** F38#0 **6.16** and F38#41 **5.68**, from 14 frames at 2 of 22 sites. A full ≥200-frame matrix needs the GPU rig (CPU takes about 4 min a frame). F38#41's named defect is the old-quarry ruin floor tiles showing through as a dark slab (see r1c VERDICT).
 
+## Scope change (coordinator, 07:42 UTC)
+
+- F38#29, F38#6, F38#26, F38#7 and F38#32 move to lane NEAR6-MS (tb/near6-ms-1104). This lane leaves them alone. Their r1b CPU scores are in r1b/VERDICT.md, for that lane's base.
+
 ## Parked
 
 - **F38#30 Burrow hillside (CPU 4.23): parked after two approaches; needs an owner-level choice.** (1) `capture_stands buried_stand_guard`: frames unchanged. (2) New `hill_shell.skirt` arm (OFF, `3678f7513`): visibly worse (stretched curtains), not judged. Cause, from `tests/probe_warrens_float.gd`: the Warrens chambers and their hill-shell mound are built for a raised site, but the meadow under the route stands is about 18 m lower. The chambers' collider sits at y 21 over ground at about 3, and the shell (about 263 m across, no collider) hangs over walkable grass, so a walking player can stand under the cave. Real fixes are gameplay changes: raise the terrain under the Warrens footprint (Terrain3D sculpt), or give the shell a trimesh collider and keep spawns and routes out of its footprint. Either one changes traversal, so this lane does not make it alone.
