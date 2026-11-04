@@ -37,3 +37,9 @@ func test_post_role_props_ships_on() -> void:
 func test_summit_silhouette_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_f40_items.json")
 	_assert_on(cfg.summit_silhouette, "6.16", "summit_silhouette")
+
+
+## F40-19-63afb3c3967f-11041555: F40#19 Cloudreach night (matrix piece 7) 5.10 -> 5.84.
+func test_night_foreground_fill_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_visual.json")
+	_assert_on(cfg.time_override_arms.night_foreground_fill, "5.84", "time_override_arms.night_foreground_fill")
