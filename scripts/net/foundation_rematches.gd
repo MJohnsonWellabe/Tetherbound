@@ -103,7 +103,8 @@ func _mount_realm(realm_id: String) -> void:
 			var reference_prompt: WeakRef = _prompts.get(key)
 			var prompt := reference_prompt.get_ref() as Node3D if reference_prompt != null else null
 			if not is_instance_valid(prompt):
-				prompt = preload("res://scripts/repeatables/rematch_prompt.gd").new(Vector3(-1.5 if tier == "r1" else 1.5, 0, 0))
+				var zone := preload("res://scripts/repeatables/rematch_prompt.gd")
+				prompt = zone.new(zone.side_offset(old_prompt, body as Node3D, -1.5 if tier == "r1" else 1.5))
 				body.add_child(prompt)
 				prompt.call("configure", "R1 rematch" if tier == "r1" else "Endgame rematch", float(old_prompt.get("radius")), false)
 				prompt.connect("activated", Callable(self, "challenge").bind(service, body, str(spec.id), tier))

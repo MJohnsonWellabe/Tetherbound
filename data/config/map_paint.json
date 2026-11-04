@@ -1,7 +1,8 @@
 {
   "_why": "Visual lane (3 Nov 2026), P2-002 / F38#4 map (CPU v1/ui1a 5.73; all three judges: 'a green disc on cloud fog with road lines, no terrain, groves, water or buildings'). On: the map bake (scripts/world/map_baker.gd, shared by the minimap and the full map) adds a north-west hillshade, canopy painted from the scatter bake's tree layers (trees, grove; every other layer skipped while reading), and a fixed painterly grain. OFF leaves the bake byte-identical; its bytes join the cache key so turning it on rebakes once. OFF until judged.",
+  "_why_on": "ON (visual lane v1/b8, 3 Nov 2026): F38#4 CPU 5.90 -> 6.30 mapped (three code-blind judges, linear slope 1.11, r 0.66, anchor RMSE 0.62, confirming batch; canopy groves read as terrain context, defect PARTIAL 3/3 on both sides).",
   "scope": "client_presentation",
-  "enabled": false,
+  "enabled": true,
   "scatter_world": "playground",
   "hillshade": {"azimuth_deg": 315.0, "gain": 1.6, "strength": 0.3},
   "canopy": {

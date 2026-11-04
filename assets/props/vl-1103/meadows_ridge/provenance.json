@@ -1,0 +1,16 @@
+{
+  "asset": "meadows_ridge.glb",
+  "item": "P2-014 (board F38#24) Meadows mountains: distant ridge backdrop",
+  "author": "visual lane (Blender)",
+  "made_by": "Visual lane (Claude), 3 Nov 2026, Blender 4.2.3 LTS, procedural build from a deterministic numpy heightfield; no Meshy, no external assets",
+  "tool": "Blender 4.2.3 LTS (portable, headless) + numpy",
+  "meshy": false,
+  "date": "2026-11-03",
+  "source": "source/meadows_ridge.py (blender -b -P meadows_ridge.py -- <out.glb> <albedo.png> <ring_preview.png> <scale_check.jpg>)",
+  "reference": "source/reference.png (painted concept, source/reference_concept.py): three continuous layered ridges in aerial perspective, a far grey-blue rock range with a little snow on the highest crest, a mid green-grey range and a dark forested foothill band, all unbroken across the frame. Answers the judges' 'continuous landform silhouettes' instead of isolated facets and cones.",
+  "scale_check": "source/scale_check.jpg: a 1.80 m trainer cylinder 12 m from the camera at eye height (1.7 m) on a flat plain, ring base 40 m below (horizon_ranges base_y). Crests 250-650 m above the ring base at 1.6-1.9 km read as a mountain range several kilometres off; the trainer stands well below the ridge line in frame. source/ring_preview.jpg is the whole 360-degree ring (equirectangular) showing one unbroken ridge.",
+  "geometry": "One mesh, 896 bearing segments x 24 depth rows, 43,008 triangles; radius 1400-1945 m; front skirt to -150 m; smooth normals facing the ring centre",
+  "textures": "One 2048 x 2048 albedo atlas (eight 45-degree strips) computed from the same heightfield at about 6x mesh resolution (forest / rock / snow by height and slope, warped strata, gully darkening), sRGB values authored dark; embedded in the GLB",
+  "palette": "Muted forest greens, grey-blue rock, a little snow; no red or oxblood",
+  "flag": "data/config/meadows_ridge_vl.json (OFF until judged)"
+}
