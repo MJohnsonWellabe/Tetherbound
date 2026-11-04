@@ -1990,7 +1990,9 @@ func _message_clears_prompt() -> bool:
 func _catch_card_config() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
 	var cfg: Variant = parsed.get("catch_card", {}) if parsed is Dictionary else {}
-	return cfg if cfg is Dictionary and cfg.get("enabled") == true else {}
+	# Capture-only preview (VIS-CLOUDREACH, P2-118): judge the card without editing hud.json.
+	var preview := OS.get_cmdline_user_args().has("--catch-card-candidate")
+	return cfg if cfg is Dictionary and (cfg.get("enabled") == true or preview) else {}
 
 
 func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
