@@ -38,6 +38,20 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**Coordinator, rim fix verification and the batch-8 f20 question (4 Nov ~09:50 UTC):** all of these ran locally on `fe9d2120`, which is the same creature-rim code as tb/land-batch-9.
+- With the rim ON, every one passed and none logged a `Parameter "material" is null` error:
+  - `smoke_net_f48_cut_key`
+  - `smoke_net_f18_fixture_teaching`
+  - `smoke_net_f20_ending`
+  - `smoke_backpack_equipment` (26/26)
+  - `smoke_vfx_lifecycle` (9/9)
+  - `test_creature_rim` (4/29)
+  - `test_combat_vfx`, `test_tell_aura_overlap`, `test_meadows_cause_flags` and texture policy
+- **f20 with the rim OFF:** `smoke_net_f20_ending` also passes (rc 0).
+- **Grandpa failure looks intermittent, not the rim.** f20 passes both ways here, so the batch-8 "natural Grandpa completion receives durable personal acknowledgement" failure looks intermittent. That check is a 30 s wait for `homecoming_seen` after the dialogue, and nothing in it touches creature materials.
+- **Re-dress doesn't pile up.** `dress_body` connects `tree_exiting`/`tree_entered` once per body: the `is_connected` guard is keyed on the bound callable.
+- **Harness note:** `tools/net/run_net_smoke.sh` leaves a `tail -f <run>/SUMMARY.md` running. Under an outer `flock`, that tail inherits the lock and blocks the next run, which cost 78 min here. Kill it after each run.
+
 **qj rim10-f38-1-2 (4 Nov ~06:30 UTC): stronger creature rim ships ON.** `creature_rim.json` enabled, energy 0.55 -> 1.0, power 2.6 -> 1.8 (Meadows looks only). F38#1 collapse and rest CPU 5.53 -> 5.84 (+0.31; all three judges scored the rimmed side higher and named the outline separating the body from the grass); F38#2 hurt and movement 5.84 -> 5.81 (flat). This round's anchor fit is weak (r 0.65, RMSE 0.64), but the raw scores agree (5.5/5.7/5.5 -> 5.8/5.9/5.9). One frame is missing (Terrapup resting). `test_creature_rim.gd` now asserts ON with "5.84"; creature rim, Meadows cause flags, combat VFX, tell-aura overlap, VFX lifecycle smoke and texture policy all pass. The judges' next lever for F38#1/#2 is new art: distinct hurt/move keys and side-down faint and rest poses that settle on the ground.
 
 **qj rimr2-f41-18 (4 Nov ~05:10 UTC): Stormwood rim r2 is flat-to-worse and stays OFF.** F41#18 CPU 5.10 (r1 as shipped) -> 4.98 with r2 (energy 1.15, power 1.7); raw 5.5/6/5.7 vs 5.5/5.8/5.7, defect PARTIAL on both. All three judges say the uniform now separates from the ground but has no rank or individual markers at this camera distance, so more rim light does not help. The next lever is an insignia or bright accent on the uniform (scene or new art); report in `qj/rimr2-f41-18/VERDICT.md`.
