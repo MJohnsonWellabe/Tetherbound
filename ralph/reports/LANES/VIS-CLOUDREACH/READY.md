@@ -1,6 +1,6 @@
 # VIS-CLOUDREACH lane (tb/vis-cloudreach-1104), 4 Nov 2026
 
-Status 4 Nov 05:05 UTC: round 1 judged (cause arm OFF); rounds 2/3/3b capturing my arms; then merge main and quick_judge. Coordinator messages from this session are refused (untrusted device); this file is the channel.
+Status 4 Nov 07:20 UTC: three judged gains ON (P2-105, P2-106, P2-118; +2.99 cumulative CPU); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
 
 CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `tools/visual_judge`.
 
@@ -12,6 +12,8 @@ CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `
 | `data/config/cloudreach_visual.json:island_roots.low_mist` | F40#11 P2-106 | 4.97 -> **6.03** | `tests/test_vis_cloudreach_landed.gd` | 570c09678 |
 
 | `data/config/hud.json:catch_card` (existing UIPOSES arm) | F40#18 P2-118 | 3.77 -> **4.61** | `tests/test_vis_cloudreach_landed.gd`, `tests/test_capture_readout_side.gd` (calm seal follows the card) | see log |
+
+**Smokes (4 Nov 06:48, on the r3b tree):** `smoke_cloudreach_companion_fall` 36 checks, 0 failures. `smoke_cloudreach_saddle_remount` 331 checks, 1 failure: "a later challenge of trainer_ila_lower_ring works" (combat admission refused, the ally overlaps an arrival-route collider). It fails identically with `mounted_drop_no_air_drive` OFF, so the scramble does not cause it; whether it also fails on unmodified main is untested. The first smoke run caught the scramble firing on the survivable causeway ledge; fixed in ea8847741 (the floor probe casts past non-walkable hits and samples a ring), and the ledge checks pass.
 
 P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coordinator/owner:** the scramble ends an unsurvivable mounted fall sooner than the walker's 100 m recovery (SYSTEMS §8 parity reading); survivable ride-offs are unchanged. Turning the flag off restores strict parity.
 
