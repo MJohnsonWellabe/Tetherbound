@@ -1,5 +1,13 @@
 # CI-SPEED (4 Nov 2026): shared assets cache for engine-job checkouts
 
+**Coordinator: READY to land in a PR with full-ci** (send_message to your session was
+refused for an untrusted device, 02:11 UTC). Head of tb/ci-speed-1104; design
+complete at a9ea0b2e7. Two fast-tier runs were green (41751198534, 41755756668).
+Checkout per engine job went from 4-47.5 min (median ~26) to 12-17 s; restore
+takes 1.25-2.1 min and verifies all 7,548 files against git. A third run proves the
+trimmed export templates. The main-only import-cache save is proven only after
+landing (the first main run fills main's caches).
+
 Owner (4 Nov): "Do all the fixes to make the download faster without losing any meshy assets permanently".
 
 ## Design (as built, branch tb/ci-speed-1104)
