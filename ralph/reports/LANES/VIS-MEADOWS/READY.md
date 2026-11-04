@@ -6,7 +6,10 @@ Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the sa
 
 ## Landing-ready
 
-(none yet)
+- **F38#20 P2-003 Team Tether stronghold: CPU 5.67 -> 6.38** (r1a). ON: `stronghold.json approach_pylons.p2_003_unlit_candidate_enabled` and band5 `wd_stronghold_courtyard` `candidate`; the score is appended to `p2_003_candidate._why_on` (that flag is already ON from #808).
+- **F38#22 P2-006 mill and settlements: CPU 5.67 -> 6.38** (r1a). ON: `meadows_hero_pieces.json clearings_wd`, `meadows_doorstep_seat.json doorstep_seat_enabled`, band1 `wd_village_market` `candidate`.
+- Test: `tests/test_vis_meadows_1104_on.gd` (asserts each ON with "CPU 5.67 -> 6.38"). **Tests PENDING:** the r1 capture chain holds the only Godot slot until about 04:15 UTC. Do not land this commit until this line reads PASSED. The run will cover that test, `test_stronghold_arena_conduits.gd`, `test_meadows_tier1_art_gates.gd`, the props-reading tests (`test_trail_camp_arrival_identity`, `test_village_road_topology`, `test_stronghold_approach_visual_identity`, `test_tournament_ground_presentation`, `test_grandpa_yard_visual_identity`, `test_rise_visual_identity`, `test_meadows_banner_*`) and `test_texture_import_policy.gd`.
+- Already at 6.0 or above as shipped (no change): F38#17 6.66, F38#37 6.52, F38#35 6.09, F38#23 6.38 (arms flat, OFF).
 
 ## In flight
 
