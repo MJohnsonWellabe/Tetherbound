@@ -32,6 +32,11 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**Owner rule, 4 Nov (via the coordinator): every judged improvement ships ON, even below 6.0. Only flat or worse stays OFF.** Applying it to this lane's held items:
+- **F38#2 / Terrapup hold-peak hit react (v1/b15: stage 6.37 -> 6.79):** ships as the held-peak `creature_terrapup_owner1101.glb`. The swap waits for the in-flight rim capture to finish, so its base and candidate keep the same model. The Nightburrow hold was flat and stays OFF.
+- **Already ON by the coordinator in #808:** `hud_lean` (5.30 -> 5.64) and Stormwood rim r1 (5.58 -> 5.98).
+- **Next to judge:** rim r2 (Stormwood region lane), the Meadows ridge F38#24, the creature rim F38#1/#2/#26, and Nightburrow partial plates (being built).
+
 **Scope (coordinator, 4 Nov ~00:30 UTC):** the coordinator archived all three sessions I started at 00:25. The region items belong to its `tb/vis-*-1104` lanes, and I will not start sessions without asking the coordinator first.
 
 This lane covers creatures and poses, UI/HUD and in-flight arms:
