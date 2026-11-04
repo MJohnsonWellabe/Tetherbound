@@ -10,6 +10,7 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `water_mount_presentation.json` `camera_hide.enabled` | F39#22 | CPU 5.25 -> 6.28 (FIXED 3/3) | same test; `smoke_camera_pass_through.gd` (hidden inside, shown outside) | this commit |
 | `tidewake_look.json` `cause_tidewake.currents.enabled` | F39#17 | CPU 5.54 -> 6.09 | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing`; `smoke_tidewake_b_current_restore.gd` (71 checks, 0 failed) | this commit |
 | `tidewake_look.json` `cause_tidewake.stars.enabled` (+ `world_look.gd` per-time star reset) | F39#30b | CPU 4.77 -> 4.89 (F13#5 5.45 -> 5.84) | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing` | look/r6 |
+| `tidewake_look.json` `cause_tidewake.night.enabled` | F39#30b | CPU 5.67 -> 6.25 (F13#5 6.12 -> 6.35) | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing` | look/r8 |
 
 | ~~`human_water_contact_visual.json` base wake values~~ (withdrawn 11:27, superseded by NEAR6-TW's `wake_trail` in batch 11) | F39#5 | CPU 5.31 -> 5.63 (r4) | the test is removed; this branch's view, config and test now equal batch 11 | this commit |
 
