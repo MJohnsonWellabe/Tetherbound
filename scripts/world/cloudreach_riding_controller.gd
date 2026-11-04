@@ -245,7 +245,23 @@ func _early_scramble(body: Node3D) -> bool:
 	var after := float(spec.get("scramble_after_s", 0.0))
 	if spec.is_empty() or after <= 0.0 or _airborne_s < after:
 		return false
-	return is_nan(_floor_under(body))
+	# Only a drop the walker's 100 m recovery would catch anyway: no walkable
+	# floor within `scramble_probe_m` under the mount. A survivable ride-off
+	# (the causeway ledge's ~11 m) always lands as a walker would.
+	return is_nan(_floor_under(body)) and is_nan(_floor_within(body, float(spec.get("scramble_probe_m", MOUNTED_FALL_DROP_M))))
+
+
+## Walkable floor straight under `body` within `depth` metres, or NAN.
+func _floor_within(body: Node3D, depth: float) -> float:
+	if _player == null or not is_instance_valid(_player) or not _player.is_inside_tree():
+		return NAN
+	var at := body.global_position
+	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * PROBE_UP_M, at - Vector3.UP * depth,
+		_standing_mask, _excluded(body))
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty() or (hit["normal"] as Vector3).y < cos(_player.floor_max_angle):
+		return NAN
+	return (hit["position"] as Vector3).y
 
 
 func _hold_drive_over_drop() -> void:
