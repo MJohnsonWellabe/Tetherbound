@@ -66,6 +66,8 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 
 ## Blockers
 
+- **New-art assignment (coordinator 16:18: Blender work on F39#3 and F39#2) is on hold for the owner.** (1) Installing portable Blender 4.2 (downloading and running an external binary) was denied by this session's permission policy. (2) CLAUDE.md says "Claude lanes may do scene-level art from installed asset families; new meshes and Meshy work stay with Codex (owner, 2026-09-27)", and no newer owner line clearly lifts that for Claude lanes. I have not worked around either. Both need an owner decision: allow the Blender install, and confirm Claude lanes may author new meshes, or route F39#3/F39#2 art to a Codex lane.
+
 - **F39#21 (victory hierarchy, `hud.json` `victory_focus`, OFF, unjudged): cannot be captured on CPU.** Its stands (`venn_resolve__win`/`aftermath`, `nerissa_resolve__win`) exist only in `phase2_capture_tidewake_fights.gd --verified-victory-lifecycle` runs. That mode refuses `--render-only-saves` and needs a native 1080p window, so two full trainer fights must render continuously on llvmpipe. job.json's repro also omits the flag, so r21 (ordinary render-only runs: 29 frames, fight resolved at 99 s) wrote no win frames. Better judged on the GPU queue.
 
 - First `--import` on this container takes about 2 h on CPU.
