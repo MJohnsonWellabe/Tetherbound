@@ -40,7 +40,11 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 - `cloudreach_visual.json:ground_cover` clumping overlay (F40#1): no visible change at the P2-021 stands; not judged (`qj/qj_clumps/`).
 - `hud.json:catch_card.full_team_line` (F40#18): the first candidate capture lost its catch to an arbitration timing refusal ("not_claimant") on the slow CPU render; the confirming rerun caught and was judged (shipped ON above).
 
-## Handed to NEAR6-CR (coordinator, 4 Nov 07:42)
+## Handed to NEAR6-CR
+
+**4 Nov 14:12:** F40#19 night and rain (mx1 pieces 4 and 7; the night light layer that overrides `time_overrides`, see `mx2/`) also go to NEAR6-CR. This lane keeps F40#0 (re-score), F40#1 (open terrain), F40#21 (cleanliness), F40#6, #11, #18.
+
+**4 Nov 07:42:**
 
 F40#9, #4, #8, #2, #17 now belong to NEAR6-CR (`tb/near6-cr-1104`). From this lane:
 - **F40#8 P2-053:** `objective_beacon.json:realm_styles.cloudreach` (fdfb015a7, OFF, not captured): Cloudreach-only paler, thinner, quieter objective beacon (the cyan post judges call a debug marker). Overlay: `{"data/config/objective_beacon.json": {"realm_styles": {"cloudreach": {"enabled": true}}}}`.
