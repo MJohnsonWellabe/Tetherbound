@@ -124,6 +124,16 @@
       "resolve_camera": {"distance": 7.2, "height": 1.5, "fov": 50.0, "pitch_start_deg": -16.0}
     }
   },
+  "seal_reveal": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-118 / F40#18 (VIS-CLOUDREACH lane, 4 Nov 2026; CPU 4.98 with the catch card and full-team line): in both P2-118 rounds all three judges said the camera at the catch moment is buried in the ground with no creature, sky or chapter in frame. When on, a successful catch glides the camera to this shallower, higher shot over the sealed orb (camera_rig profile, same keys as resolve_camera) for the rest of the resolve pause. All biomes; presentation only. OFF until judged.",
+    "enabled": false,
+    "distance": 7.5,
+    "height": 2.6,
+    "fov": 52.0,
+    "pitch_start_deg": -8.0,
+    "retarget_lag": 3.0
+  },
   "resolve_camera": {
     "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the creature on a breakout and to the trainer when a catch ends the fight.",
     "_comment_framing": "First capture at distance 3.2 / height 1.1 / pitch -16 was not a close-up at all: the orb huddled small at the bottom of the frame with dead grass in the centre. Height near the orb itself and a steeper look-down centre it.",

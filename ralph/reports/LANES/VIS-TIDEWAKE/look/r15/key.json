@@ -1,0 +1,35 @@
+{
+ "Ty": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Nv": {
+  "anchor": false,
+  "label": "F39#30a",
+  "A": "/dev/shm/artifacts/look_r15/s/F39_30a_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r15/s/F39_30a_base.jpg"
+ },
+ "Tb": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Rd": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Cc": {
+  "anchor": false,
+  "label": "F13#5",
+  "A": "/dev/shm/artifacts/look_r15/s/F13_5_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r15/s/F13_5_base.jpg"
+ },
+ "Iu": {
+  "anchor": false,
+  "label": "F39#30b",
+  "A": "/dev/shm/artifacts/look_r15/s/F39_30b_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r15/s/F39_30b_base.jpg"
+ }
+}

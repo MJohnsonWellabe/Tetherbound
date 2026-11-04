@@ -18,10 +18,12 @@ func _json(path: String) -> Dictionary:
 func test_f38_29_immediate_beaten_stance() -> void:
 	var cfg := _json("res://data/config/npc_post_stances.json")
 	var block: Dictionary = cfg.beaten_trainer_stance.immediate_1104
-	assert_false(bool(block.enabled), "F38#29 immediate kneel ships OFF until judged")
-	assert_eq(POST_STANCE.beaten_stance_immediate(cfg), [], "OFF attaches nothing")
+	assert_true(bool(block.enabled), "F38#29 immediate kneel ships ON (judged gain)")
+	assert_true(str(block._why_on).contains("CPU 5.76 -> 6.18"), "records its score")
+	var off := cfg.duplicate(true)
+	off.beaten_trainer_stance.immediate_1104.enabled = false
+	assert_eq(POST_STANCE.beaten_stance_immediate(off), [], "OFF attaches nothing")
 	var on := cfg.duplicate(true)
-	on.beaten_trainer_stance.immediate_1104.enabled = true
 	var rows: Array = POST_STANCE.beaten_stance_immediate(on)
 	assert_eq(rows, cfg.stances[str(block.stance)], "ON uses the configured stance rows")
 	var bones := {}
@@ -35,10 +37,11 @@ func test_f38_29_immediate_beaten_stance() -> void:
 
 ## F38#29 P2-065 round 2: a trainer beaten without victory lines gets the
 ## aftermath push-in for a few seconds. Ships OFF; client presentation only.
-func test_f38_29_silent_victory_shot_ships_off() -> void:
+func test_f38_29_silent_victory_shot_ships_on() -> void:
 	var cfg := _json("res://data/config/trainer_aftermath.json")
 	var block: Dictionary = cfg.silent_victory_shot_1104
-	assert_false(bool(block.enabled), "silent victory shot ships OFF until judged")
+	assert_true(bool(block.enabled), "silent victory shot ships ON (judged gain)")
+	assert_true(str(block._why_on).contains("CPU 5.76 -> 6.18"), "records its score")
 	assert_eq(str(block.scope), "client_presentation", "declares its scope")
 	assert_between(float(block.hold_s), 2.0, 8.0, "a short beat, not a held camera")
 	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
@@ -46,3 +49,19 @@ func test_f38_29_silent_victory_shot_ships_off() -> void:
 		"only trainers without victory lines take the silent shot")
 	var profiles: Dictionary = _json("res://data/config/camera.json").conversation.profiles
 	assert_true(profiles.has("aftermath"), "it reuses the existing aftermath profile")
+
+
+## F38#32 P2-035: the trail camp keep-clear zone ships ON (judged gain); a disabled
+## zone is skipped and the Practice Meadow zone (no enabled key) stays on.
+func test_f38_32_trail_camp_keep_clear_ships_on() -> void:
+	var zones: Array = _json("res://data/config/combat.json").arena.wild_keep_clear
+	assert_eq(zones.size(), 2, "the practice zone and the trail camp zone")
+	assert_false(zones[0].has("enabled"), "the Practice Meadow zone keeps its default (on)")
+	var camp: Dictionary = zones[1]
+	assert_eq(str(camp.id), "trail_camp_1104", "the camp zone is named")
+	assert_true(bool(camp.enabled), "the trail camp zone ships ON (judged gain)")
+	assert_true(str(camp._why_on).contains("CPU 5.61 -> 5.81"), "records its score")
+	assert_between(float(camp.radius_m), 6.0, 20.0, "covers the 5.2 m camp floor plus wander room")
+	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
+	assert_true(director.contains("if not bool((raw as Dictionary).get(\"enabled\", true)):\n\t\t\tcontinue"),
+		"a zone with enabled false is skipped")

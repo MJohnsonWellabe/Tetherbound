@@ -125,6 +125,16 @@ class Overlay(unittest.TestCase):
                          {"data/config/a.json": ["nested.arm"], "data/config/b.json": ["x"]})
 
 
+class FrameLookup(unittest.TestCase):
+    def test_numbered_flight_frames_match_their_job_ids(self):
+        with tempfile.TemporaryDirectory() as t:
+            for name in ("01-launch.png", "02-glide.png", "03-landed.png"):
+                (Path(t) / name).write_bytes(b"x")
+            self.assertEqual(qj.find_frame(t, "meadows__flying__glide").name, "02-glide.png")
+            self.assertEqual(qj.find_frame(t, "meadows__flying__landed").name, "03-landed.png")
+            self.assertIsNone(qj.find_frame(t, "meadows__flying__perch"))
+
+
 class Finish(unittest.TestCase):
     def test_assemble_maps_shuffled_sides_and_refuses_gaps(self):
         key = {"Ab": {"anchor": True, "A": "craft:after", "B": "craft:before"},

@@ -399,6 +399,13 @@ def find_frame(d, fid):
         # A one-off moment (win, aftermath) is that moment whatever second it lands on.
         if best and (best[0] <= 1.0 or len(hits) == 1):
             return best[1]
+    # phase2_capture_realm_flight.gd numbers its frames (02-glide.png) and
+    # the job ids name the moment (meadows__flying__glide).
+    for n in names:
+        for ext in ("png", "jpg"):
+            hits = sorted(Path(d).rglob(f"[0-9][0-9]-{n}.{ext}"))
+            if hits:
+                return hits[0]
     return None
 
 

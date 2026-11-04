@@ -63,6 +63,9 @@ Results: below, all 0 failed.
 **Ownership change (coordinator, 4 Nov ~07:40):** F41#9, F41#20, F41#15 and F41#3 move to lane NEAR6-MS. My OFF arm `combat.contact_spacing.named_overrides.capacitor_alpha` (`ea108029`, `test_capacitor_spacing_override` 1/5) is theirs to judge. quick_judge cannot capture `phase2_capture_stormwood_fights.gd` (the tool refuses output outside its Phase 2 report folder); `tools/visual_judge/lane_bin/run_group.sh` retries under that folder.
 
 - F41#1 `stormheart_presentation.meshy_interior`: flat, 4.91 -> 4.91, identical sides; it does not render at the judged stands (`qj/qj_heart/`).
+- F41#1 `root_floor_1104` (dark root loam in the Stormheart hollow; r1 sunburst and r2 glossy polka dots retuned unjudged): r3 **worse**, 4.64 -> 3.83 (`qj/qj_rootfloor3/`); 3/3 preferred the shipped moss floor. Stays OFF, **parked**. All three judges put the defect in the plank-drum shell, striped ceiling, line-drawn lightning and missing crown/core: **new art (Blender, blocked here; needs a Codex/Meshy lane)**.
+- F41#2/#5/#18 `stormwood_look.storm_light` (r26 rim): **no visible change** in `qj_rim` (mean diff 0.9-1.4). Superseded: `light_pass_1101` (ON) already ships its own `rim` and `with_light_pass()` replaces `storm_light` with it, so the top-level flag is dead. Not judged; stays OFF.
+- F41#5/#4 `ground_zones` r22 (authored loam/moss/pools): **no visible change** in `qj_gzones` (mean pixel diff 0.9-1.0, nothing over 20 levels; capture ran with the overlay and no zone error in the Godot log), so not judged. Something later in the terrain material path likely overrides the zone shader; not chased further (diagnostics). Stays OFF.
 - F41#5/#4 `foliage_grade_1104` r2 (texture desaturate/brighten): **worse**, 5.09 -> 4.88 / 5.24 -> 5.02 (`qj/qj_foliage2/`); 3/3 preferred the shipped green ferns over the pale-white candidate. Stays OFF; **parked** (r1 flat, r2 worse).
 - F41#10 `obsidian_1104.r2`: flat, 3.93 -> 4.02 (`qj/qj_obs2/`). The judges read the glowing seams as "a debug wireframe grid".
 - F41#10/F41#4 `stormwood_ground_finish.rock_value_1104`: flat, identical sides (`qj/qj_rock/`). The pale cliff wall is not the terrain rock slot.
@@ -74,7 +77,7 @@ Results: below, all 0 failed.
 - F41#10 `obsidian_1104.r3`: no veins, no seams, a satin black-glass pool (`5e72fdf9`).
 - F41#19 seam clear r2 (`qj_seam2`).
 - Region identity and look tests.
-- Unscored baselines: the `capture_stormwood_f10_matrix` calm/break run (F41#22, F41#24).
+- Unscored baselines F41#22 / F41#24 (**FOR THE COORDINATOR / GPU queue**): the calm matrix is captured on CPU (`capture_stormwood_f10_matrix.gd --phases=calm`, 10 views: forest, giant, glass, rod_line, stormheart x calm/aftermath, local `.artifacts/vl/u_matrix_calm/out`, exit 0). The break phase takes ~30 min a view on llvmpipe (the calm+break run would time out at 90 min), so it was cut. Neither row is in `item-scores/job.json`, so `quick_judge` cannot score them, and the owner rule gives unscored items a GPU baseline first: please run the matrix (calm, break) on the GPU rig for their baseline. Known F41#24 evidence from my rounds: 3/3 judges called the Stormwood named-fight telegraphs "flat magenta rings/slabs" (fight rows are NEAR6-MS's).
 
 **Open:**
 - F41#20: Fenn's dialogue frame is black in both arms. The camera sits behind a dark blocker next to Fenn's seat. Moving the seat stales the scatter bake, so this needs an engine probe of the blocker first.

@@ -13,6 +13,31 @@
     {"conversation": "cloudreach_neri_delivery_report", "effect": "cloudreach:side:packs_on_the_wrong_side:report_to_neri", "event": "side:packs_on_the_wrong_side:report_to_neri", "requires_flags": ["causeway_survivors_reconnected", "side_courier_pack_recovered", "side_courier_medicine_delivered"]},
     {"conversation": "cloudreach_aila_final_reward", "effect": "cloudreach:cloudreach_aila_final_reward_complete", "event": "dialogue:cloudreach_aila_final_reward_complete", "requires_flags": ["cloudreach_act_ii_complete", "captain_veyra_defeated", "storm_anchor_network_disabled", "cloudreach_winds_restored"]}
   ],
+  "post_role_props": {
+    "_scope": "world_presentation",
+    "_why": "P2-068 / F40#9 round 2 (NEAR6-CR, 4 Nov 2026; GPU 5.50, CPU 5.16; VIS-CLOUDREACH r3 fill-light arm flat). All three r3 judges asked for a role prop at each named post that says who the NPC is. On (scripts/world/cloudreach_npc_posts.gd place_role_props): installed Quaternius fantasy props stand beside each post in the NPC's facing frame, mostly to its sides: Tavi a training dummy, weapon stand and shield; Sora a book stand, satchel and specimen crate; Maela a bird cage on a barrel, rope coil and torch. Visual only.",
+    "enabled": true,
+    "_why_on": "NEAR6-CR quick judge F40-9-68037b4643f8-11041154 (4 Nov 2026): CPU 5.05 -> 5.25 (+0.20), all three judges preferred it; defect still PRESENT (NPCs remain small behind the trainer). Ships ON (owner 4 Nov: every judged CPU gain ships ON, even under 6).",
+    "max_step_m": 1.5,
+    "posts": {
+      "young_trainer_tavi": [
+        {"scene": "res://assets/props/quaternius_fantasy/Dummy.gltf", "offset": [-2.0, 0.0, -0.8], "height_m": 1.75, "yaw_deg": 20.0},
+        {"scene": "res://assets/props/quaternius_fantasy/WeaponStand.gltf", "offset": [2.1, 0.0, -0.9], "height_m": 1.5, "yaw_deg": -25.0},
+        {"scene": "res://assets/props/quaternius_fantasy/Shield_Wooden.gltf", "offset": [2.6, 0.0, -0.2], "height_m": 0.9, "yaw_deg": 60.0}
+      ],
+      "naturalist_sora": [
+        {"scene": "res://assets/props/quaternius_fantasy/BookStand.gltf", "offset": [1.9, 0.0, -0.6], "height_m": 1.35, "yaw_deg": -30.0},
+        {"scene": "res://assets/props/quaternius_fantasy/Bag.gltf", "offset": [-1.6, 0.0, -0.4], "height_m": 0.6, "yaw_deg": 40.0},
+        {"scene": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "offset": [-2.3, 0.0, -1.2], "height_m": 0.8, "yaw_deg": 15.0}
+      ],
+      "keeper_maela": [
+        {"scene": "res://assets/props/quaternius_fantasy/Barrel.gltf", "offset": [2.0, 0.0, -0.8], "height_m": 1.0, "yaw_deg": 0.0},
+        {"scene": "res://assets/props/quaternius_fantasy/Cage_Small.gltf", "offset": [2.0, 1.0, -0.8], "height_m": 0.85, "yaw_deg": 20.0},
+        {"scene": "res://assets/props/quaternius_fantasy/Rope_2.gltf", "offset": [-1.7, 0.0, -0.5], "height_m": 0.35, "yaw_deg": 0.0},
+        {"scene": "res://assets/props/quaternius_fantasy/Torch_Metal.gltf", "offset": [-2.4, 0.0, -1.3], "height_m": 2.0, "yaw_deg": 0.0}
+      ]
+    }
+  },
   "world_payoffs": {
     "anchor_vessel_quiet": {
       "_scope": "device_local_presentation",
