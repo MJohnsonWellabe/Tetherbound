@@ -41,6 +41,13 @@ F39#1 5.40 -> 5.45, F39#2 5.35 -> 5.19, F39#3 5.45 -> 5.40, F39#15 5.50 -> 5.56.
   - new art: hero structures at the destinations.
 - Owner reassignment (coordinator, 07:42): F39#27/#1/#6/#7/#20/#2/#14/#19/#4 move to the NEAR6-TW lane. This lane keeps #3, #15, #16, #17, #5, #8, #22, #24, #21, #30, #31, #32 and F13#5.
 
+## Round 2c (09:45 UTC): swim stroke is a tie; it is already shipped
+
+- F39#5 5.85 -> 5.85; F39#14 6.98 -> 6.98 (r 0.98). Frames differ by under 2% of pixels.
+- `human_swim_visual.json` `uiposes_stroke_candidates` is already ON (GPU 6.60 -> 7.21, 2 Nov) and applies these same pose keys, so the tidewake_look stroke section is redundant.
+- A crop of the CPU frame shows the trainer already prone with the arms spread. Judges read "upright, legs hanging" because the legs trail toward the high rear camera and show clearly through the shallows.
+- Next arm (r4, config only): a longer, denser foam trail (`human_water_contact_visual.json` ring 2.1 m, 12 trail rings, 2.6 s life). The aim is a wake that also veils the submerged legs.
+
 ## Round 2b (09:25 UTC): sea + horizon lost; stays OFF
 
 Arm: `cause_tidewake.sea` + `horizon`. Calibration r 0.84, RMSE 0.45 (`qj/r2b/VERDICT.md`).
