@@ -210,6 +210,10 @@ func dress(world: Node3D) -> void:
 	if profile_look: print("[cloudreach_look] route_verges ms=", Time.get_ticks_msec() - phase_started)
 	phase_started = Time.get_ticks_msec()
 	_dress_trees_and_stones(config_data)
+	# P2-105: route/landing trees outside the look scatter get the same crown stop.
+	for route_tree: Node in world.find_children("LandingTree*", "Node3D", true, false) \
+			+ world.find_children("RouteTree*", "Node3D", true, false):
+		_add_canopy_camera_stop(route_tree as Node3D)
 	if profile_look: print("[cloudreach_look] trees_stones ms=", Time.get_ticks_msec() - phase_started)
 	_dress_settlement_materials()
 	var settlement_life := preload("res://scripts/world/cloudreach_settlement_life.gd").new()
