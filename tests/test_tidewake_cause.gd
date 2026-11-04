@@ -21,13 +21,17 @@ func test_every_part_ships_off_and_off_changes_nothing() -> void:
 	for part: String in ["sea", "light", "dunes"]:
 		assert_false(bool(raw.cause_tidewake[part].enabled), "%s ships off" % part)
 	# currents ships ON (tb/vis-tidewake-1104 r1: F39#17 CPU 5.54 -> 6.09); the
-	# remaining parts are compared with currents on in both profiles.
+	# remaining parts are compared with currents and stars on in both profiles.
 	assert_true(bool(raw.cause_tidewake.currents.enabled), "currents ships on")
 	assert_true(str(raw.cause_tidewake.currents.get("_why_on", "")).contains("6.09"))
+	# stars ships ON (look r6: F39#30b CPU 4.77 -> 4.89).
+	assert_true(bool(raw.cause_tidewake.stars.enabled), "stars ships on")
+	assert_true(str(raw.cause_tidewake.stars.get("_why_on", "")).contains("4.89"))
 	var shipped := PROFILE.resolve(_raw())
 	var stripped := _raw()
 	var currents: Dictionary = stripped.cause_tidewake.currents
-	stripped.cause_tidewake = {"currents": currents}
+	var stars: Dictionary = stripped.cause_tidewake.stars
+	stripped.cause_tidewake = {"currents": currents, "stars": stars}
 	var expected := PROFILE.resolve(stripped)
 	shipped.erase("cause_tidewake")
 	expected.erase("cause_tidewake")
