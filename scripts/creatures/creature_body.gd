@@ -1138,6 +1138,29 @@ func _refresh_shiny_tint() -> void:
 	_apply_art_model_emission()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
+	_apply_shiny_cue()
+
+
+## P2-030 (F39#4, tb/vis-tidewake-1104, flag-off): GPU judges 28 Oct, "the
+## shinies ... stand small and pale against bright sand and water with no rim
+## light or shiny sparkle cue". creatures_visual.json `shiny_cue`: a shiny
+## (never an Aspect variant) gets a rim over its finished surfaces and the
+## alpha mote ring in a pale silver-blue. Presentation only.
+var _shiny_cue: Node3D = null
+
+
+func _apply_shiny_cue() -> void:
+	if _shiny_cue != null:
+		_shiny_cue.queue_free()
+		_shiny_cue = null
+	var cue: Variant = VISUAL.config().get("shiny_cue", {})
+	if not shiny or aspect_variant != "" or not cue is Dictionary or not bool((cue as Dictionary).get("enabled", false)):
+		return
+	var rim := float((cue as Dictionary).get("rim_strength", 0.0))
+	if _has_model and rim > 0.0:
+		_rim_light_node(_model, rim, "shiny")
+	if bool((cue as Dictionary).get("motes", true)):
+		_shiny_cue = ALPHA_AURA.attach(self, _radius * 1.5, _height, Color(str((cue as Dictionary).get("mote_colour", "#dff3ff"))))
 
 
 ## Keep a named preview's painted coat readable under the same forest light as
