@@ -25,6 +25,7 @@ signal trial_progress(gates_passed: int, gate_count: int)
 signal placement_failed(id: String, position: Vector3)
 signal encounter_recorded(id: String, first_victory: bool)
 
+const NPC_POSTS := preload("res://scripts/world/cloudreach_npc_posts.gd")
 const RULES := preload("res://scripts/world/cloudreach_physical_rules.gd")
 const BOND_FEEDBACK := preload("res://scripts/creatures/bond_milestones.gd")
 const PROGRESSION_FEEDBACK := preload("res://scripts/creatures/progression_feed.gd")
@@ -816,6 +817,8 @@ func _sync_npcs() -> void:
 	_people.name = "CloudreachPeople"
 	add_child(_people)
 	_people.call("build_specs", _player, specs.filter(func(spec: Dictionary) -> bool: return positions.has(spec["id"])))
+	# P2-068: cloudreach_npc_runtime.json `post_readability` fill light (off unless enabled).
+	NPC_POSTS.light_people(_people, NPC_POSTS.spec(npc_runtime))
 	if is_instance_valid(_topic_root):
 		remove_child(_topic_root)
 		_topic_root.queue_free()
