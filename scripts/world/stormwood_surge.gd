@@ -35,6 +35,10 @@ uniform float flash = 0.0;
 // smooth glow in cloud patches, not a strobe, so most Break stills catch
 // some. glow_time is accumulated by the script (0 rate under reduced motion).
 uniform float sheet_glow = 0.0;
+// F41#2 building_glow_1104 r2: lower sky edge of the sheet glow. The default
+// 0.14 keeps every phase exactly as before; a phase that sets `glow_low`
+// lets its in-cloud glow reach the band nearer the horizon.
+uniform float glow_low = 0.14;
 uniform float glow_time = 0.0;
 uniform vec3 flash_colour : source_color = vec3(0.9, 0.86, 1.0);
 // Round 3 (blind judge 8): decorative Break sky lightning lights the cloud
@@ -113,7 +117,8 @@ void fragment() {
 	colour += flash_colour * flash * (0.35 + 0.9 * body);
 	float patch = smoothstep(0.45, 0.8, fbm(uv * 0.45 + vec2(glow_time * 0.07, -glow_time * 0.05)));
 	float pulse = 0.5 + 0.5 * sin(glow_time * 6.2832 + fbm(uv * 0.3) * 9.0);
-	colour += flash_colour * sheet_glow * patch * pulse * (0.4 + 0.6 * body) * aloft;
+	float glow_aloft = smoothstep(glow_low, glow_low + 0.16, dir.y);
+	colour += flash_colour * sheet_glow * patch * pulse * (0.4 + 0.6 * body) * glow_aloft;
 	float spot = smoothstep(1.0 - cloud_flash_size, 1.0, dot(dir, normalize(cloud_flash_dir)));
 	colour += flash_colour * cloud_flash * spot * (0.2 + 1.1 * body) * aloft;
 	if (crawlers > 0.0) {
@@ -439,12 +444,12 @@ const _COLOUR_KEYS := ["ambient_colour", "sky_top", "sky_horizon", "sky_ground_h
 const _NUMBER_KEYS := ["sun_energy_mult", "shadow_opacity", "ambient_energy_mult", "fog_density_add",
 	"ceiling_opacity", "ceiling_speed", "ceiling_contrast", "ceiling_breakup", "rain_amount",
 	"wind", "sheet_glow", "sheet_glow_rate", "intensity", "steam", "afterglow",
-	"ceiling_definition", "ceiling_rim", "ceiling_thin_glow", "crawlers", "shafts"]
+	"ceiling_definition", "ceiling_rim", "ceiling_thin_glow", "crawlers", "shafts", "glow_low"]
 
 ## Authored row → typed values, still in authored (daylight) colours.
 func _resolved(row: Dictionary) -> Dictionary:
 	var defaults := {"sun_energy_mult": 1.0, "shadow_opacity": 1.0, "ambient_energy_mult": 1.0,
-		"ceiling_contrast": 0.3, "wind": 1.0}
+		"ceiling_contrast": 0.3, "wind": 1.0, "glow_low": 0.14}
 	var out := {}
 	for key: String in _NUMBER_KEYS:
 		out[key] = float(row.get(key, defaults.get(key, 0.0)))
@@ -1274,6 +1279,7 @@ func _advance_flash(delta: float) -> void:
 			_glow_time = fposmod(_glow_time + delta * float(shown.get("sheet_glow_rate", 0.0)), 1000.0)
 		_ceiling_material.set_shader_parameter("glow_time", _glow_time)
 		_ceiling_material.set_shader_parameter("sheet_glow", float(shown.get("sheet_glow", 0.0)) * flash_motion_scale())
+		_ceiling_material.set_shader_parameter("glow_low", float(shown.get("glow_low", 0.14)))
 		_ceiling_material.set_shader_parameter("cloud_flash", _cloud_flash)
 		_ceiling_material.set_shader_parameter("cloud_flash_dir", _cloud_flash_dir)
 		# F10#3 round 6 (code-blind strike judge: the steady crawler veins read

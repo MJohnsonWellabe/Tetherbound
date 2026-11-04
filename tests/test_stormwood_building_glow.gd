@@ -26,3 +26,14 @@ func test_building_glow_on_only_lifts_building_sheet_glow() -> void:
 	assert_false(bool(b_on.get("flashes", false)), "strike flashes stay Break-only")
 	assert_eq(on.presentation.phases.calm, off.presentation.phases.calm, "Calm is unchanged")
 	assert_eq(on.presentation.phases.break, off.presentation.phases.break, "Break is unchanged")
+
+
+## r2: Building lowers the glow's sky edge; every other phase keeps the
+## default 0.14 (unset), so their skies are unchanged.
+func test_building_glow_r2_lowers_only_building_glow_edge() -> void:
+	var cfg := _cfg()
+	cfg.presentation.building_glow_1104["enabled"] = true
+	var on := RULES.with_presentation_candidates(cfg)
+	assert_true(float(on.presentation.phases.building.get("glow_low", 0.14)) < 0.14, "Building glow reaches lower sky")
+	for phase: String in ["calm", "break", "fading"]:
+		assert_false((on.presentation.phases[phase] as Dictionary).has("glow_low"), "%s keeps the default edge" % phase)
