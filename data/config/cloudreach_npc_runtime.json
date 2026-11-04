@@ -15,8 +15,9 @@
   ],
   "post_role_props": {
     "_scope": "world_presentation",
-    "_why": "P2-068 / F40#9 round 2 (NEAR6-CR, 4 Nov 2026; GPU 5.50, CPU 5.16; VIS-CLOUDREACH r3 fill-light arm flat). All three r3 judges asked for a role prop at each named post that says who the NPC is. On (scripts/world/cloudreach_npc_posts.gd place_role_props): installed Quaternius fantasy props stand beside each post in the NPC's facing frame, mostly to its sides: Tavi a training dummy, weapon stand and shield; Sora a book stand, satchel and specimen crate; Maela a bird cage on a barrel, rope coil and torch. Visual only. OFF until judged.",
-    "enabled": false,
+    "_why": "P2-068 / F40#9 round 2 (NEAR6-CR, 4 Nov 2026; GPU 5.50, CPU 5.16; VIS-CLOUDREACH r3 fill-light arm flat). All three r3 judges asked for a role prop at each named post that says who the NPC is. On (scripts/world/cloudreach_npc_posts.gd place_role_props): installed Quaternius fantasy props stand beside each post in the NPC's facing frame, mostly to its sides: Tavi a training dummy, weapon stand and shield; Sora a book stand, satchel and specimen crate; Maela a bird cage on a barrel, rope coil and torch. Visual only.",
+    "enabled": true,
+    "_why_on": "NEAR6-CR quick judge F40-9-68037b4643f8-11041154 (4 Nov 2026): CPU 5.05 -> 5.25 (+0.20), all three judges preferred it; defect still PRESENT (NPCs remain small behind the trainer). Ships ON (owner 4 Nov: every judged CPU gain ships ON, even under 6).",
     "max_step_m": 1.5,
     "posts": {
       "young_trainer_tavi": [
