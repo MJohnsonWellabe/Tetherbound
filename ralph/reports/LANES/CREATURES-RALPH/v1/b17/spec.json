@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F38#24",
+  "a": "/tmp/claude-0/work/judge/b17/k/sides/F38_24_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b17/k/sides/F38_24_b.jpg",
+  "brief": "3 in-game frames (Meadows) for one catalogue subject: distant mountains. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ }
+]

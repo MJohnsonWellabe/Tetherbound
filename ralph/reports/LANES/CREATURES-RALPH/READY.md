@@ -32,6 +32,8 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**v1/b17 (4 Nov ~02:45 UTC): Meadows Blender ridge F38#24 is worse, 4.19 -> 3.44, and stays OFF.** The ridge reads as a pale smeared wall right behind the meadow, while the shipped rings read as soft blue distance. The row's main blocker is in the two Warrens frames: a camera-occluding bank-shell mass and floating dark slab undersides. That is for the Meadows region lane (`tb/vis-meadows-1104`). A further, lower, darker, layered ridge r2 is the next attempt.
+
 **FOR #808 (4 Nov ~03:15 UTC): the storm-light set is fixed. Every named test passes with it ON, so it can go back ON.** The CI suite 4 failures had two causes.
 - **(1) Real phase-rule breaks in the `storm_sky_1101` overlay**, now retuned (`_why_rules`):
   - Calm had a sheet glow (Calm has no lightning), now 0.
