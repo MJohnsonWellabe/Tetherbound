@@ -48,6 +48,21 @@
     "horizon_haze_height": 0.15,
     "horizon_haze_strength": 0.42
   },
+  "weather_arms": {
+    "rain_mood": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU day rain 4.90): all three judges said Cloudreach rain only desaturates the scene. On (scripts/world/cloudreach_weather.gd realm_preset): Cloudreach-only keys over the shared rain preset keep more of the realm's colour and form: stronger diffuse sun with soft shadows, a cooler blue-grey sky and fog with a little less density so the stratified distance layers in haze, a teal-cool ambient and wetter ground. Meadows rain is unchanged. OFF until judged.",
+      "enabled": false,
+      "presets": {
+        "rain": {
+          "sun": {"energy_mult": 0.68, "shadow_opacity": 0.3},
+          "sky": {"top_colour": "#4f6782", "horizon_colour": "#93a6b4", "ground_horizon_colour": "#93a6b4"},
+          "environment": {"ambient_colour": "#7a95ab", "fog_density_add": 0.0042, "fog_colour": "#8aa0b2", "adjustment_saturation_mult": 0.97},
+          "ground_wetness": 0.8
+        }
+      }
+    }
+  },
   "time_override_arms": {
     "night_foreground_fill": {
       "_scope": "device_local_presentation",
