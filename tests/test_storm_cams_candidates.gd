@@ -100,10 +100,11 @@ func test_water_npc_placement_ships_off_and_moves_only_named_npcs() -> void:
 	assert_eq(placement.offset(bren, on), [9.0, 0.0, 12.0], "ON leaves everyone else alone")
 
 
-func test_stormwood_character_rim_ships_off_and_dresses_only_shadowed_meshes() -> void:
+func test_stormwood_character_rim_ships_on_and_dresses_only_shadowed_meshes() -> void:
 	var rim := preload("res://scripts/world/stormwood_character_rim.gd")
-	assert_false(bool(_json("res://data/config/stormwood_character_rim.json").get("enabled", true)),
-		"the P2-056 candidate ships OFF")
+	var cfg := _json("res://data/config/stormwood_character_rim.json")
+	assert_true(bool(cfg.get("enabled", false)), "the P2-056 rim ships ON (judged gain)")
+	assert_true(str(cfg.get("_why_on", "")).contains("5.98"), "the rim records its judged CPU score")
 	var body := Node3D.new()
 	var mesh := MeshInstance3D.new()
 	mesh.mesh = BoxMesh.new()
