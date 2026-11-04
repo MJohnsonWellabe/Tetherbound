@@ -24,8 +24,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
 			"veilfall_hero_candidate",
 			"veilfall_facade_candidate", "forward_plus_candidate",
-			"first_shore_declutter_candidate",
-			"veilfall_formation_relief_fill_candidate",
+						"veilfall_formation_relief_fill_candidate",
 				"swim_candidate",
 				"veilfall_mountain_candidate",
 				"current_bands_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
@@ -100,6 +99,12 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
 	assert_true(str(raw.get("_why_shore_surf_on", "")).contains("6.19"),
 		"the surf line's mapped score is recorded in the config")
+	# tb/vis-tidewake-1104 look r18: the First Shore declutter lifted F39#30a CPU
+	# 5.64 -> 5.73 and F39#30b 5.36 -> 5.45, so it ships ON.
+	assert_false(off.has("first_shore_declutter_candidate"), "the First Shore declutter ships on after look r18")
+	assert_true(PROFILE.settings().has("first_shore_declutter_candidate"), "the declutter reaches play")
+	assert_true(str(raw.get("_why_first_shore_declutter_on", "")).contains("5.73"),
+		"the declutter's mapped score is recorded in the config")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
@@ -192,3 +197,13 @@ func test_veilfall_fall_sheet_clears_the_rock() -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall_falls_visual.json"))
 	assert_eq(float(cfg.geometry.standoff_m), 3.0)
 	assert_true(str(cfg.get("_why_standoff_3m", "")).contains("5.85"))
+
+
+## tb/vis-tidewake-1104 look r22: a higher golden and dawn sun shortens the
+## long terrain shadows on the First Shore sand (F39#30a CPU 5.98 -> 6.18).
+func test_low_sun_pitch_ships_with_its_score() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	var times: Dictionary = raw.lighting_candidate.times
+	assert_eq(float(times.golden.sun.pitch_deg), -12.0)
+	assert_eq(float(times.dawn.sun.pitch_deg), -9.0)
+	assert_true(str(raw.get("_why_low_sun_pitch", "")).contains("6.18"))

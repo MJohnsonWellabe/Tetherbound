@@ -47,6 +47,23 @@ const PHASE2_SHINY_SPECIES := [
 ]
 
 
+## F39#4 (creatures-ralph, 4 Nov): creatures_visual.json `shiny_remake_textures`.
+## While enabled, maps a live remake texture path to its shiny replacement
+## (an albedo to its secondary-region repaint, a glow map to itself); "" when
+## off or unmapped, so the shiny lookup is unchanged.
+static func shiny_remake_texture(path: String) -> String:
+	var cfg: Variant = config().get("shiny_remake_textures", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return ""
+	return str(((cfg as Dictionary).get("map", {}) as Dictionary).get(path, ""))
+
+
+## F38#1 (creatures-ralph, 4 Nov): creatures_visual.json `rest_faint_settled`.
+static func rest_faint_settled() -> bool:
+	var cfg: Variant = config().get("rest_faint_settled", {})
+	return cfg is Dictionary and bool((cfg as Dictionary).get("enabled", false))
+
+
 static func shiny_colourway_allowed(source_species: String) -> bool:
 	return source_species not in PHASE2_SHINY_SPECIES \
 		or bool(config().get("phase2_shiny_finish_enabled", false)) \

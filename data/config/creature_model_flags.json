@@ -1178,6 +1178,22 @@
       "species": {
         "sparkit": {"model": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_lateral_hit.glb"}
       }
+    },
+    "creatures_ralph_aquaryn_faint_headdown": {
+      "_why": "F39#6 creature faint state (CPU 5.86 on real faint frames, qj settle-f39-6): all three judges say Ripplet and Riptusk now read as fainted but Aquaryn 'keeps its head raised in an upright crouch'. A copy of the live r9 GLB whose faint clip tips the neck (35 deg) and head (25 deg) down about the model's side axis (tools/art_pipeline/lateral_recoil.py --spec=neck:x:35,head:x:25 --peak=0.5 --release=1.0: ramps in by mid-clip and holds to the end). Mesh, textures and other clips unchanged.",
+      "_why_on": "Visual lane qj headdown-f39-6 (4 Nov, CPU, three code-blind judges, calibrate.py): F39#6 creature faint state CPU 6.05 -> 6.24 (+0.19; raw 5.6/6.2/5.4 -> 5.6/6.6/5.5; two judges see the Aquaryn faint lie lower and more horizontal, one ties). Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
+      "species": {
+        "aquaryn": {"model": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_faint_headdown.glb"}
+      }
+    },
+    "creatures_ralph_veridian_faint_headdown": {
+      "_why": "F38#1 creature collapse and rest (CPU 5.91): judges read Veridian's faint as 'semi-upright, splayed' (a leap). With the full clip played, its end pose is side-lying with legs out and antlers held up. A copy of the live nat1024 GLB whose faint clip tips the neck (40 deg) and head (30 deg) toward the body (tools/art_pipeline/lateral_recoil.py --spec=neck:x:40,head:x:30 --peak=0.5 --release=1.0), as shipped for Aquaryn on F39#6. Mesh, textures and other clips unchanged.",
+      "_why_on": "Visual lane qj verheaddown-f38-1 (4 Nov, CPU, three code-blind judges, calibrate.py): F38#1 creature collapse and rest CPU 6.21 -> 6.30 (+0.09; raw 5.7/5.8/5.9 -> 5.8/5.9/5.9; no judge lower). The base rose from 5.91 with the capture fix that lets fainted stills finish their clip, not this flag. Owner 4 Nov: every judged improvement ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
+      "species": {
+        "veridian": {"model": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_faint_headdown.glb"}
+      }
     }
   }
 }

@@ -1,0 +1,23 @@
+{
+ "Xv": {
+  "anchor": true,
+  "A": "f36_0_npc:C6A",
+  "B": "f36_0_npc:C6B"
+ },
+ "Nu": {
+  "anchor": false,
+  "label": "F40#19",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F40-19-63afb3c3967f-11041555/k/sides/F40_19_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F40-19-63afb3c3967f-11041555/k/sides/F40_19_base.jpg"
+ },
+ "Ak": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Xz": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

@@ -1,0 +1,23 @@
+{
+ "Ds": {
+  "anchor": false,
+  "label": "F40#19-rain",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F40-19-rain-9079be470ae9-11041657/k/sides/F40_19-rain_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F40-19-rain-9079be470ae9-11041657/k/sides/F40_19-rain_cand.jpg"
+ },
+ "Ad": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Aa": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Vs": {
+  "anchor": true,
+  "A": "f36_0_npc:C6B",
+  "B": "f36_0_npc:C6A"
+ }
+}

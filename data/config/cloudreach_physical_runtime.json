@@ -81,7 +81,7 @@
     "officer_voss_summit_approach": ["cloudreach_act_ii_complete"],
     "captain_veyra_storm_anchor": ["cloudreach_upper_anchors_disabled", "summit_extraction_engine_reached"]
   },
-  "mounted_drop_no_air_drive": {"_scope": "world_presentation", "_why_on": "ON 4 Nov 2026 (VIS-CLOUDREACH r3b, together with cloudreach_visual.json island_roots.low_mist): CPU 4.82 -> 5.91 mapped on P2-105 (three code-blind judges, linear r 0.80, anchor RMSE 0.51; drop defect FIXED 3/3). ralph/reports/LANES/VIS-CLOUDREACH/r3b/VERDICT.md.", "_why": "P2-105 / F40#6 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct 4.92 mapped): a mount ridden off the arrival terrace kept galloping on through the air and read as walking on the cloud floor. When on (cloudreach_riding_controller.gd::_hold_drive_over_drop), a mount airborne for airborne_s with no walkable floor within the ground probe is no longer driven by the stick, and after scramble_after_s over that drop it scrambles back to its newest verified ground (the mounted-fall recovery path). Hops and edge flickers keep control; recovery and dismount rules unchanged. Judged ON.", "enabled": true, "airborne_s": 0.25, "_scramble_after_s_note": "Seconds over a real drop (no walkable floor within the ground probe) before the mount scrambles back to its newest verified ground, through the same recovery path as the 100 m rule (more lenient, never stricter). 0 disables.", "scramble_after_s": 0.7, "_scramble_probe_m_note": "The scramble fires only when no walkable floor lies within this depth under the mount (the walker recovery depth), so every survivable ride-off lands as a walker would.", "scramble_probe_m": 100.0},
+  "mounted_drop_no_air_drive": {"_scope": "world_presentation", "_why_on": "ON 4 Nov 2026 (VIS-CLOUDREACH r3b, together with cloudreach_visual.json island_roots.low_mist): CPU 4.82 -> 5.91 mapped on P2-105 (three code-blind judges, linear r 0.80, anchor RMSE 0.51; drop defect FIXED 3/3). ralph/reports/LANES/VIS-CLOUDREACH/r3b/VERDICT.md.", "_why": "P2-105 / F40#6 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct 4.92 mapped): a mount ridden off the arrival terrace kept galloping on through the air and read as walking on the cloud floor. When on (cloudreach_riding_controller.gd::_hold_drive_over_drop), a mount airborne for airborne_s with no walkable floor within the ground probe is no longer driven by the stick, and after scramble_after_s over that drop it scrambles back to its newest verified ground (the mounted-fall recovery path). Hops and edge flickers keep control; recovery and dismount rules unchanged. Judged ON.", "enabled": true, "airborne_s": 0.25, "_scramble_after_s_note": "Seconds over a real drop (no walkable floor within the ground probe) before the mount scrambles back to its newest verified ground, through the same recovery path as the 100 m rule (more lenient, never stricter). 0 disables.", "scramble_after_s": 0.3, "_scramble_after_s_why_on": "0.7 -> 0.3 judged 4 Nov 2026 (VIS-CLOUDREACH sc): P2-105 CPU mapped 4.38 -> 6.10 (+1.72), floating-mount defect FIXED 3/3; at 0.7 s the terrace 1.0 s frame still showed deer and rider upright over the cloud floor. ralph/reports/LANES/VIS-CLOUDREACH/sc/VERDICT.md.", "_scramble_probe_m_note": "The scramble fires only when no walkable floor lies within this depth under the mount (the walker recovery depth), so every survivable ride-off lands as a walker would.", "scramble_probe_m": 100.0},
   "npc_position_overrides": {
     "healer_iven": [-290,180,526],
     "bridgekeeper_orrin": [-491,338,1320],
@@ -101,6 +101,17 @@
       "cr_recovery_high_roost_flight_speed_01": [908.0, 1020.0, 2712.0]
     },
     "_round1": "qj F40-17-ade4ecff4c0e-11040935: flat (4.57 -> 4.57). Moving the cluster out of frame removed the defect but left the subject unreadable; all three judges asked for it grounded and visible in frame. Stays OFF."
+  },
+  "rim_pickup_cluster": {
+    "_scope": "world_presentation",
+    "_why": "P2-102 / F40#17 round 3 (NEAR6-CR, 4 Nov 2026; CPU 5.72 with rim_pickup_in_view ON): judges asked for the rim mushroom as a natural clustered group rather than one generic cap. On: the High Perches stamina and wild mushrooms (authored 10-25 m away on the same crown) join the speed mushroom on open crown turf, each within 1.5 m, so the three read as one patch. Same ids, items, counts, unlocks and claims.",
+    "enabled": true,
+    "_why_on": "NEAR6-CR quick judge F40-17-53b0b6dc0941-11041858 (4 Nov 2026, with rim_pickup_in_view ON in both arms): CPU 5.85 -> 6.19 (+0.34), all three judges preferred it. The wild mushroom's existing red-orange cap (items.json #c4402c) is now in frame; judges read it as warm orange, not oxblood. Ships ON (owner 4 Nov: every judged CPU gain ships ON).",
+    "pickup_overrides": {
+      "cr_recovery_high_roost_flight_speed_01": [914.5, 1020.0, 2685.5],
+      "cr_recovery_high_roost_flight_stamina_01": [913.4, 1020.0, 2684.6],
+      "cr_recovery_high_roost_flight_wild_01": [915.4, 1020.0, 2686.9]
+    }
   },
   "rim_pickup_in_view": {
     "_scope": "world_presentation",
