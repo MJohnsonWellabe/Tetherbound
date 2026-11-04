@@ -33,6 +33,7 @@ Given away: F38#29, #6, #26, #7, #32 to NEAR6-MS. F38#24 ridge, F38#19 HUD and c
 Ready for new items or a Blender new-art assignment.
 
 **Open candidates and recommendations:**
+- F38#20 curtain wall (`vm_stronghold_curtain`, OFF, parked after two attempts): band props do not render from the 500-700 m approach stand. A keep base or palisade has to come from the stronghold's own distant build (`stronghold.gd` hero gatehouse companions).
 - F38#37: `camfx fight_fade` (fade on the speaker-to-lens line) leaves the foreman's overhang frame identical (quick_judge f38_37-fight-fade). Not judged; stays OFF. The item is at 6.52.
 - **F38#35:** the villager post frames (`phase2_capture_dialogue.gd` catalogue view) aim at stale catalogue posts, e.g. Oskar at (25, 4) while the game places him 41.8 m away. The dialogue view already re-seats beside the real body, but the post view does not, so the post-stance arm can never show. Fixing this changes a shared capture tool and every character baseline, so it is a coordinator decision.
 - **F38#20:** the remaining asks are new art: a larger keep seated on a hill, a palisade approach, and real fire instead of flat flame cards.
