@@ -235,6 +235,19 @@ func _drop_drive_spec() -> Dictionary:
 	return _drop_drive_cfg
 
 
+## P2-105 arm, second part: `scramble_after_s` (> 0) recovers a mount that has
+## been over a real drop (no walkable floor within the ground probe) for that
+## long, through the same verified return path as the 100 m rule: the mount
+## scrambles back from the edge instead of riding the fall down past the cliff.
+## More lenient than the walker's 100 m rule, never stricter.
+func _early_scramble(body: Node3D) -> bool:
+	var spec := _drop_drive_spec()
+	var after := float(spec.get("scramble_after_s", 0.0))
+	if spec.is_empty() or after <= 0.0 or _airborne_s < after:
+		return false
+	return is_nan(_floor_under(body))
+
+
 func _hold_drive_over_drop() -> void:
 	if not is_mounted() or _mount == null or not _mount.has_method("request_move"):
 		return
@@ -299,7 +312,8 @@ func _watch_mounted_ground(delta: float) -> void:
 	# comes first. The volume only reports the trainer's own body, which has
 	# no collision layer while carried, so its top face is checked here.
 	if body.global_position.y > last_ground.y - MOUNTED_FALL_DROP_M \
-			and body.global_position.y > _kill_trigger_y():
+			and body.global_position.y > _kill_trigger_y() \
+			and not _early_scramble(body):
 		return
 	# The newest still-supported sample, re-probed so a spot that no longer
 	# holds ground is never the answer, with a clear line from the take-off
