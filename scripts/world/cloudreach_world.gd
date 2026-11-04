@@ -6595,6 +6595,7 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 		rock.position = seat - rock.basis * bounds.get_center()
 		rock.name = "EmbeddedCliffOutcrop%d" % i
 		parent.add_child(rock)
+		_fringe_outcrop_top(parent, rock, bounds, seed_value + i)
 		for mesh: MeshInstance3D in rock.find_children("*", "MeshInstance3D", true, false):
 			mesh.material_override = _materials["cliff"]
 		_set_geometry_visibility(rock, 1250.0)
@@ -6688,7 +6689,46 @@ func _build_rim_fringe(root: Node3D, label: String, top_ring: Array[Vector3], si
 		placed += 1
 
 
-## Whether a colliding shelf whose top centre is `top` (global) would stand in## Whether a colliding shelf whose top centre is `top` (global) would stand in
+## P2-023 round 2: `geology.rim_fringe.outcrops` (OFF until judged). The pale
+## stepped ledge blocks on cliff faces (crag-kit outcrops) carry dead-straight
+## top edges; a sparse fringe of installed bushes along those top edges breaks
+## the line. Visual only.
+func _fringe_outcrop_top(parent: Node3D, rock: Node3D, bounds: AABB, seed_value: int) -> void:
+	var cfg: Dictionary = ((_visual_config.get("geology", {}) as Dictionary).get("rim_fringe", {}) as Dictionary).get("outcrops", {})
+	if cfg.get("enabled") != true:
+		return
+	var spacing := float(cfg.get("spacing_m", 6.0))
+	var limit := int(cfg.get("max_per_outcrop", 12))
+	var h_min := float(cfg.get("height_min_m", 1.2))
+	var h_max := float(cfg.get("height_max_m", 2.2))
+	var drop := float(cfg.get("drop_m", 0.3))
+	var scenes: Array[PackedScene] = [ROUTE_DETAIL_SCENES["bush"], ROUTE_DETAIL_SCENES["flowers"]]
+	var top := bounds.end.y
+	var lo := bounds.position
+	var hi := bounds.end
+	var corners: Array[Vector3] = [Vector3(lo.x, top, lo.z), Vector3(hi.x, top, lo.z), Vector3(hi.x, top, hi.z), Vector3(lo.x, top, hi.z)]
+	var placed := 0
+	for e in 4:
+		var a: Vector3 = rock.transform * corners[e]
+		var b: Vector3 = rock.transform * corners[(e + 1) % 4]
+		var n := maxi(1, int(a.distance_to(b) / maxf(spacing, 1.0)))
+		for k in n:
+			if placed >= limit:
+				return
+			var t := (float(k) + 0.5) / float(n)
+			var jitter := 0.5 + 0.5 * sin(float(placed) * 2.31 + float(seed_value))
+			var bush := scenes[posmod(placed + seed_value, scenes.size())].instantiate() as Node3D
+			var bb: AABB = BUILDING_PREFABS.new().combined_aabb(bush)
+			bush.scale = Vector3.ONE * (lerpf(h_min, h_max, jitter) / maxf(bb.size.y, 0.01))
+			bush.position = a.lerp(b, t) - Vector3.UP * drop
+			bush.rotation.y = float(placed) * 1.7 + float(seed_value)
+			parent.add_child(bush)
+			_apply_tree_palette(bush, seed_value + placed)
+			_set_geometry_visibility(bush, float(cfg.get("visibility_m", 900.0)))
+			placed += 1
+
+
+## Whether a colliding shelf whose top centre is `top` (global) would stand in
 ## a ground route's walking space: horizontally within the road ribbon plus the
 ## shelf's own radius, and vertically overlapping the band from just above the
 ## road surface to a walker's headroom (`landmass.route_shelf_headroom_m`).
