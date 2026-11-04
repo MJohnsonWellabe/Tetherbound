@@ -821,6 +821,34 @@
       "coats": {
         "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0_value_lift.png"}
       }
+    },
+    "creatures_ralph_stormraven_value_lift": {
+      "_why": "Stage value lift for Stormraven (among the darkest live remake albedos). Same recipe as the v1/b21-b24 lifts (eight for eight at the stage camera): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes; it merges with the shipped emission and material coats. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_fulgocobra_value_lift": {
+      "_why": "Stage value lift for Fulgocobra (among the darkest live remake albedos). Same recipe as the v1/b21-b24 lifts (eight for eight at the stage camera): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes; it merges with the shipped emission and material coats. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_voltwig_value_lift": {
+      "_why": "Stage value lift for Voltwig (among the darkest live remake albedos). Same recipe as the v1/b21-b24 lifts (eight for eight at the stage camera): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes; it merges with the shipped emission and material coats. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_mirejaw_value_lift": {
+      "_why": "Stage value lift for Mirejaw (among the darkest live remake albedos). Same recipe as the v1/b21-b24 lifts (eight for eight at the stage camera): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes; it merges with the shipped emission and material coats. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0_value_lift.png"}
+      }
     }
   }
 }
