@@ -206,15 +206,19 @@ func test_shipped_shore_site_places_while_the_candidate_stays_off() -> void:
 	var candidate: Dictionary = settings.get("shore_ecology_candidate", {})
 	assert_false(bool(candidate.get("enabled", true)), "the whole shore-ecology candidate ships off")
 	var shipped: Array = candidate.get("shipped_sites", [])
-	assert_eq(shipped, ["f26_deep_watch_beach_transition"], "only the judged Deep Watch site ships")
-	assert_true(str(candidate.get("_why_shipped_sites", "")).contains("6.02"), "its score is recorded")
+	# NEAR6-TW qj/r1 (F39#1, CPU 6.37 -> 6.44) added the First Shore and Brine Steps sites.
+	assert_eq(shipped, ["f26_deep_watch_beach_transition", "welcome_bay", "horizon_headland", "east_beach"],
+		"only the judged sites ship")
+	assert_true(str(candidate.get("_why_shipped_sites", "")).contains("6.02"), "Deep Watch's score is recorded")
+	assert_true(str(candidate.get("_why_shipped_sites_near6", "")).contains("6.44"), "the r1 sites' score is recorded")
 	var probe := ShorePlacementProbe.new()
 	probe._dune_settings = settings
-	for island_id: String in ["deep_watch", "first_shore"]:
+	for island_id: String in ["deep_watch", "first_shore", "brine_steps", "shellwatch"]:
 		probe._place_shore_ecology_candidate({"scatter_seed": 7}, {}, Vector2.ZERO, 120.0, island_id)
-	assert_true(probe.placed_layers.size() > 0, "the shipped Deep Watch site places")
+	assert_true(probe.placed_layers.size() > 0, "the shipped sites place")
 	for entry: String in probe.placed_layers:
-		assert_true(entry.begins_with("deep_watch/"), "an unjudged island's site stays off: %s" % entry)
+		assert_true(entry.begins_with("deep_watch/") or entry.begins_with("first_shore/") or entry.begins_with("brine_steps/"),
+			"an unjudged island's site stays off: %s" % entry)
 	probe.free()
 
 

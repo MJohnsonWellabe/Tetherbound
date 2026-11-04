@@ -380,6 +380,18 @@ def find_frame(d, fid):
             hits = sorted(Path(d).rglob(f"{n}.{ext}"))
             if hits:
                 return hits[0]
+    # Fight tools write <trainer>/<tag>-<sss.ss>.png for ..__fight__<trainer>__<tag>-<sss_ss> ids;
+    # tell moments drift run to run, so take the same tag nearest in time (t- ticks match exactly).
+    m = re.search(r"__fight__([a-z0-9_]+?)__([a-z-]+)-(\d+)_(\d+)$", fid)
+    if m:
+        want = float(f"{m.group(3)}.{m.group(4)}")
+        best = None
+        for q in Path(d).rglob(f"{m.group(1)}/{m.group(2)}-*.png"):
+            mm = re.fullmatch(rf"{re.escape(m.group(2))}-(\d+\.\d+)", q.stem)
+            if mm and (best is None or abs(float(mm.group(1)) - want) < best[0]):
+                best = (abs(float(mm.group(1)) - want), q)
+        if best and best[0] <= 1.0:
+            return best[1]
     return None
 
 

@@ -7,6 +7,8 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | Flag | Row | CPU base -> cand | Test | Commit |
 |---|---|---|---|---|
 | `water_character_rim.json` `enabled` (Tidewake named NPC/trainer rim + front fill) | F39#27 | CPU 6.03 -> 6.23 (3/3 judges higher; anchor RMSE 0.79 caveat) | `tests/test_near6_tw_judged_on.gd` (+ `test_creature_rim`, `test_texture_import_policy`: 7 tests, 0 failed) | this commit |
+| `human_water_contact_visual.json` `wake_trail.enabled` (longer, spreading trail rings) | F39#14 | CPU 6.10 -> 6.80 (3/3 judges higher, RMSE 0.52) | `test_near6_tw_judged_on.gd::test_swim_wake_trail_ships_on`; `test_human_water_contact_visual.gd` idle step now runs past the configured lifetime (13 tests, 0 failed) | this commit |
+| `water_dune_cover.json` `shore_ecology_candidate.shipped_sites` += welcome_bay, horizon_headland, east_beach; `water_ground_cover.json` `built_feather_enabled` | F39#1 | CPU 6.37 -> 6.44 (2 judges higher, 1 equal; RMSE 0.41) | `test_water_dune_cover.gd::test_shipped_shore_site_places_while_the_candidate_stays_off` now lists the judged sites; unjudged islands still never place (15 tests, 0 failed) | this commit |
 
 ## Arms built (all OFF, commit 6cd7f370)
 
@@ -21,6 +23,15 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 ## Verdicts
 
 - **r6, F39#6, flat (5.29 -> 5.29), held OFF:** `uiposes_riptusk_side_faint_prone_rest` cannot reach the shipped Riptusk. It now renders the owner1101 remake, which has no F36 recipe, so A and B were pixel-identical (3/3 judges). The new arm is `creature_pose_settle.json` `tidewake_scope` (CAUSE-POSES settle, scoped to ripplet, riptusk and aquaryn, with the roster master still OFF). It is queued as r6b.
+
+- **r7, F39#7, worse (6.19 -> 5.42), held OFF:** with `contact_spacing.all_pairs` on, all three judges saw Ripplet pressed into Cannonback and the trainer against Ripplet's tail; the base kept clear sand. Round 1 of 2 on this item.
+- **r19, F39#19, not judged (no visible change):** `roster_floor` changed nothing on CPU. The roster region differs by a mean of 0.2–1.2 per pixel, because the subject fade never takes the roster down in these three stands. The arm stays OFF. The pale roster the GPU judges describe needs another cause.
+- **Harness fix (quick_judge `find_frame`):** fight tools write `<trainer>/<tag>-<sss.ss>.png` for `..__fight__<trainer>__<tag>-<sss_ss>` ids, and tell moments drift from run to run. Lookup now takes the same tag nearest in time (within 1 s). Without it, every Venn fight round failed with "no frame pair".
+
+- **r6b, F39#6, worse on pre-check, held OFF, item PARKED:** the `tidewake_scope` settle leaves Ripplet and Aquaryn standing and Riptusk floating upright at the faint-end moment (`qj/r6b/`). This was round 2 on the item.
+
+- **r20, F39#20, no visible change, not judged:** hiding gather nodes left the frames identical. The judges' "small blue creature-like figure" is the `great_candy` world pickup (blue figure plus highlight ring), 9 m from Venn's fight centre, and it is not a harvest node. The arm now also covers pickups (`fight_ring_hide.pickups`, `item_cache_pickup.gd set_fight_hidden`). Re-queued as r20b.
+- **F39#4:** the new `shiny_cue.overlay` (a pale-gold rim overlay on shiny bodies, OFF) is queued as r4.
 
 ## Queue
 
