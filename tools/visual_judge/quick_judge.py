@@ -323,10 +323,11 @@ def run_launch(e, side_key, biome, sha, log, timeout=3000, dry=False):
     if dry:
         return dst, 0.0, False
     env = dict(os.environ, XDG_DATA_HOME=os.environ.get("XDG_DATA_HOME", str(LOCKS / "xdg")))
+    (ART / "logs").mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     with flock("godot.lock"):
         t1 = time.time()
-        with open(ART / f"{side_key}_{key}.log", "w") as out:
+        with open(ART / "logs" / f"{side_key.replace('/', '_')}_{key}.log", "w") as out:
             rc = subprocess.run(prefix + cmd, cwd=ROOT, stdout=out, stderr=subprocess.STDOUT, env=env).returncode
     secs = time.time() - t1
     shutil.rmtree(dst, ignore_errors=True)
@@ -336,7 +337,7 @@ def run_launch(e, side_key, biome, sha, log, timeout=3000, dry=False):
     else:
         dst.mkdir()
     n = len(list(dst.rglob("*.png")) + list(dst.rglob("*.jpg")))
-    stale = "stale" in (ART / f"{side_key}_{key}.log").read_text(errors="ignore").lower()
+    stale = "stale" in (ART / "logs" / f"{side_key.replace('/', '_')}_{key}.log").read_text(errors="ignore").lower()
     log.write(f"    exit {rc}, {n} frames, {secs:.0f}s run (+{t1 - t0:.0f}s lock wait){'  WARNING: log mentions stale' if stale else ''}\n")
     if n:   # frame_cap/124 exits after writing frames are normal for some tools
         (dst / ".ok").write_text(json.dumps({"rc": rc, "secs": round(secs), "frames": n}))
