@@ -332,6 +332,9 @@ def run_launch(e, side_key, biome, sha, log, timeout=3000, dry=False):
     # Write where the tool expects its own output (some tools only write under VISUAL/phase2/),
     # then move into the cache: frames never stay in ralph/.
     rel_parent = e["out_parent"].removeprefix("res://") or ".artifacts/qj/tmp"
+    # Some job.json repros carry a Windows checkout path (D:/tetherbound/x04-capture/ralph/...):
+    # keep only the repo-relative part, or a tool that checks its output root refuses to run.
+    rel_parent = re.sub(r"^[A-Za-z]:/(?:[^/]+/)*?(?=ralph/)", "", rel_parent)
     tmp_rel = f"{rel_parent}/qj_{side_key}_{key}"
     tmp = ROOT / tmp_rel
     shutil.rmtree(tmp, ignore_errors=True)
