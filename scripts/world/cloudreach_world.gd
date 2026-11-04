@@ -2416,6 +2416,14 @@ func _add_landing_nature(parent: Node3D, points: Array[Vector3], index: int,
 	var side := -1.0 if posmod(seed_value, 2) == 0 else 1.0
 	var tree := NATURE_TREES[posmod(seed_value, NATURE_TREES.size())].instantiate() as Node3D
 	tree.name = "LandingTree%03d" % posmod(seed_value, 1000)
+	# P2-105 (VIS-CLOUDREACH, 4 Nov 2026): cloudreach_visual.json
+	# `landing_tree_clear` (off unless enabled) drops named landing trees whose
+	# crowns the riding camera passes through beside the arrival road.
+	var clear_cfg: Variant = _visual_config.get("landing_tree_clear", {})
+	if clear_cfg is Dictionary and (clear_cfg as Dictionary).get("enabled") == true \
+			and ((clear_cfg as Dictionary).get("names", []) as Array).has(str(tree.name)):
+		tree.free()
+		return
 	tree.position = pad + right * side * landing_size * 0.33 - Vector3.UP * 0.12
 	tree.rotation.y = float(posmod(seed_value * 17, 41)) / 41.0 * TAU
 	tree.rotation.z = deg_to_rad(-0.8 - float(posmod(seed_value, 3)) * 0.6)
