@@ -38,6 +38,12 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**qj headdown-f39-6 (4 Nov ~16:50 UTC): Aquaryn faint head-down ships ON.**
+- **Result:** F39#6 creature faint state, CPU 6.05 -> 6.24 (+0.19; raw 5.6/6.2/5.4 -> 5.6/6.6/5.5; calibrate r 0.86). Two judges see Aquaryn lie lower and more horizontal; one ties.
+- **What it is:** flag `creatures_ralph_aquaryn_faint_headdown`, a copy of the live r9 GLB with its faint clip's neck tipped down 35 deg and head 25 deg (`lateral_recoil.py --spec=neck:x:35,head:x:25 --peak=0.5 --release=1.0`). Same textures and clips.
+- **Tests:** new `tests/test_aquaryn_faint_headdown_flag.gd`.
+- **`test_creature_model_flags` change:** `test_every_owner_remake_ships_on_and_is_the_live_model` now checks each species against its LAST enabled flag (flags merge in order). A later flag must be a variant from the same remake folder. Before, it compared every flag, which fails as soon as one ON arm refines an ON remake. No assertion was dropped.
+
 **qj settle-f39-6 (4 Nov ~16:10 UTC): F39#6 re-based on the fixed capture, and NEAR6-TW's settle arm stays OFF (worse).**
 - **Re-base:** F39#6 creature faint state is CPU 5.86 on real faint frames (was 5.29 on the old capture). That +0.57 is a measurement fix (the capture tool now waits for the model before `play_faint`), not a game change.
 - **Base frames:** Ripplet and Riptusk lie on their sides; all three judges call the defect PARTIAL.
