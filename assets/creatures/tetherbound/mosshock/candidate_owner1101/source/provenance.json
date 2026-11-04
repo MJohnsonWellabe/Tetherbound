@@ -61,5 +61,13 @@
   "emission_rule": "data/creatures/arc_emission.json species.mosshock_owner1101"
  },
  "flag": "data/config/creature_model_flags.json:remake_owner1101_mosshock",
- "test": "tests/test_creature_model_flags.gd"
+ "test": "tests/test_creature_model_flags.gd",
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/creatures/tetherbound/mosshock/candidate_owner1101/source/mosshock_a.glb"
+    ]
+  }
 }
