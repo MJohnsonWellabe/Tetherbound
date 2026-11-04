@@ -781,6 +781,13 @@
       "coats": {
         "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0_value_lift.png"}
       }
+    },
+    "creatures_ralph_nightburrow_value_lift": {
+      "_why": "F36#56 Nightburrow stage (CPU 6.67 with partial plates ON): judges name 'the dark mid-tone hide and the faint-end blackout'. Same recipe as creatures_ralph_mosshock_value_lift (F36#54 5.63 -> 6.55): a value-lifted copy of the live partial-plates albedo (midtone gamma 0.78, saturation x1.12). It merges over creatures_ralph_nightburrow_partial_plates for the live Nightburrow albedo, so its glow map and energy are kept. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": {"albedo": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_value_lift.png"}
+      }
     }
   }
 }
