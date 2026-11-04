@@ -586,3 +586,8 @@ Not run yet. The required suite needs every remake imported, which does not fit 
 - `tools/art_pipeline/amplify_clip.py`: exaggerates a clip's rotations.
 - `tools/art_pipeline/grade_regions.py` with `data/creatures/remake_grades.json`: regional coat grade by anatomy map.
 - `tools/art_pipeline/grade_quill_bands.py`: banded quills.
+
+## v1/b25 (4 Nov): Stormraven value lift ON (5.89 -> 6.59 mapped CPU); Fulgocobra, Voltwig and Mirejaw lifts judged flat, stay OFF
+- `creatures_ralph_stormraven_value_lift` is ON, with its score in `_why_on`. The three flat arms record their result in `_judged`.
+- Test: `test_dark_value_lift_flags` (+Stormraven). Ran `test_remake_owner1101_finish`, `test_creature_coat_flags` and `test_texture_import_policy`; all pass.
+- Verdict: `v1/b25/VERDICT.md`. Albedo lift is now exhausted for near-black bodies, so the next arm is face/eye readability.
