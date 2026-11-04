@@ -148,3 +148,21 @@ func test_f38_20_courtyard_fires_light_the_yard_with_their_score() -> void:
 			assert_almost_eq(float(spec.get("glow_scale", 1.0)), 4.0, 0.001, "the fire's light reaches the yard")
 			fires += 1
 	assert_eq(fires, 2, "both courtyard fires")
+
+
+## F38#20 r7: the gate camera's foreground cobbles are dressed in two working
+## groups that keep the walking lane clear (CPU 5.36 -> 6.08,
+## quick_judge f38_20-yard-fore).
+func test_f38_20_courtyard_foreground_ships_on_clear_of_the_lane() -> void:
+	var fore := _cluster("res://data/config/bands/band5_stronghold_approach/props.json", "vm_stronghold_courtyard_fore")
+	var cand: Dictionary = fore.get("candidate", {})
+	assert_true(bool(cand.get("enabled", false)), "foreground dressing ON")
+	assert_true(str(cand.get("_why_on", "")).contains("CPU 5.36 -> 6.08"), "records its CPU score")
+	var props: Array = fore.get("props", [])
+	assert_true(props.size() >= 10, "both groups placed")
+	for prop: Variant in props:
+		var spec: Dictionary = prop
+		assert_true(bool(spec.get("visual_only", false)), "visual only, no collider: routes unchanged")
+		var x := float((spec.get("at", [0.0, 0.0]) as Array)[0])
+		assert_false(x > 6.5 and x < 9.5, "%s stays out of the walking lane" % spec.get("model", ""))
+		assert_almost_eq(float(spec.get("y_world", 0.0)), 6.17, 0.001, "seated on the courtyard floor")
