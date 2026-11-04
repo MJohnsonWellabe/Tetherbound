@@ -16,8 +16,9 @@
   "world_payoffs": {
     "anchor_vessel_quiet": {
       "_scope": "device_local_presentation",
-      "_why": "P2-053 / F40#8 (NEAR6-CR, 4 Nov 2026; GPU 5.72): the saturated cyan post at the Three Bells bridge is the lower-west Storm Anchor's bottled-wind column (scripts/world/cloudreach_world_payoffs.gd _anchor) whose teal column and two teal rings read as a debug T marker competing with the bridge. On: rings become bronze cage bands (the realm's route-post metal), the column thinner and greyed with almost no glow; teal still tells locked from restored. Presentation only. OFF until judged.",
-      "enabled": false,
+      "_why": "P2-053 / F40#8 (NEAR6-CR, 4 Nov 2026; GPU 5.72): the saturated cyan post at the Three Bells bridge is the lower-west Storm Anchor's bottled-wind column (scripts/world/cloudreach_world_payoffs.gd _anchor) whose teal column and two teal rings read as a debug T marker competing with the bridge. On: rings become bronze cage bands (the realm's route-post metal), the column thinner and greyed with almost no glow; teal still tells locked from restored. Presentation only.",
+      "enabled": true,
+      "_why_on": "NEAR6-CR quick judge F40-8-2a6eb2207108-11040854 (4 Nov 2026): CPU 5.87 -> 6.32 (+0.45), defect PRESENT -> PARTIAL, all three judges preferred it. Ships ON (owner 4 Nov: every judged CPU gain ships ON).",
       "column_colour": "#6f9493",
       "column_emission": "#3f6f72",
       "column_emission_energy": 0.05,
@@ -51,7 +52,7 @@
   },
   "post_readability": {
     "_scope": "world_presentation",
-    "_why": "P2-068 / F40#9 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct 5.50 mapped): named Cloudreach NPCs read as tiny figures half lost in tall grass, shadow and tree trunks. When on (scripts/world/cloudreach_npc_posts.gd): ground cover is kept off a clear_radius_m disc around every position a named NPC can stand at (flag-independent, so every peer builds the same cover), and each standing NPC gets a soft shadowless warm fill light. Presentation only. OFF until judged.",
+    "_why": "P2-068 / F40#9 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct 5.50 mapped): named Cloudreach NPCs read as tiny figures half lost in tall grass, shadow and tree trunks. When on (scripts/world/cloudreach_npc_posts.gd): ground cover is kept off a clear_radius_m disc around every position a named NPC can stand at (flag-independent, so every peer builds the same cover), and each standing NPC gets a soft shadowless warm fill light. Presentation only.",
     "enabled": false,
     "clear_radius_m": 3.2,
     "fill_light": {"enabled": true, "colour": "#ffe2b8", "energy": 0.7, "range_m": 4.5, "attenuation": 1.2, "offset": [0.0, 1.6, 1.2]}
