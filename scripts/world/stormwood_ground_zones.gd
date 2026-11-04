@@ -24,6 +24,8 @@ uniform vec4 sz_soil_colour : source_color = vec4(0.17, 0.14, 0.11, 1.0);
 uniform vec4 sz_moss_colour : source_color = vec4(0.14, 0.22, 0.12, 1.0);
 uniform vec2 sz_pool = vec2(0.0, 0.0);
 uniform vec4 sz_pool_colour : source_color = vec4(0.05, 0.06, 0.07, 1.0);
+uniform float sz_pool_roughness = 0.38;
+uniform float sz_pool_specular = 0.25;
 
 float sz_hash12(vec2 p) {
     vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -72,8 +74,8 @@ const TAIL := """
                 ALBEDO = mix(ALBEDO, sz_pool_colour.rgb, sz_pool_w);
                 // Satin, not mirror: a glossy pool reflected the pale sky as
                 // a silver puddle (r21 preview).
-                ROUGHNESS = mix(ROUGHNESS, 0.38, sz_pool_w);
-                SPECULAR = mix(SPECULAR, 0.25, sz_pool_w);
+                ROUGHNESS = mix(ROUGHNESS, sz_pool_roughness, sz_pool_w);
+                SPECULAR = mix(SPECULAR, sz_pool_specular, sz_pool_w);
             }
         }
     }
@@ -110,10 +112,20 @@ static func _merge_into(target: Dictionary, key: String, value: Variant) -> void
 
 
 ## `stormwood_ground_finish.json ground_zones`, or {} when it is off.
+## F41#5 `pool_satin_1104` (OFF until judged): its pool_roughness and
+## pool_specular replace the black pools' fixed 0.38 / 0.25 sheen.
 static func config() -> Dictionary:
 	var finish: Dictionary = finish()
 	var zones: Dictionary = finish.get("ground_zones", {})
-	return zones if bool(finish.get("enabled", false)) and bool(zones.get("enabled", false)) else {}
+	if not (bool(finish.get("enabled", false)) and bool(zones.get("enabled", false))):
+		return {}
+	var satin: Variant = finish.get("pool_satin_1104", {})
+	if satin is Dictionary and bool((satin as Dictionary).get("enabled", false)):
+		zones = zones.duplicate(true)
+		for key: String in ["pool_roughness", "pool_specular"]:
+			if (satin as Dictionary).has(key):
+				zones[key] = (satin as Dictionary)[key]
+	return zones
 
 
 ## The grass field's zone_* keys for the same field (empty when zones are off).
@@ -164,3 +176,6 @@ static func install(terrain: Object) -> void:
 	for key: String in ["soil_colour", "moss_colour", "pool_colour"]:
 		if zones.has(key):
 			material.call("set_shader_param", "sz_" + key, Color(str(zones[key])))
+	for key: String in ["pool_roughness", "pool_specular"]:
+		if zones.has(key):
+			material.call("set_shader_param", "sz_" + key, float(zones[key]))
