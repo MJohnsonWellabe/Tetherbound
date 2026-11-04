@@ -61,7 +61,17 @@ def _narrow_creature_poses(frames):
     return [f"--poses={','.join(poses)}"] if poses and set(poses) <= known else []
 
 
-NARROW = {"tools/phase2_capture_creatures.gd": _narrow_creature_poses}
+def _narrow_ui_tabs(frames):
+    # --tabs only filters the menu loop (the exploration HUD is shot before it). Narrow only when every
+    # frame is a plain menu_<tab> or the HUD, and at least one is a menu tab.
+    names = [f.split("__", 1)[-1] for f in frames]
+    tabs = sorted({n[5:] for n in names if n.startswith("menu_")})
+    ok = all(n.startswith("menu_") or n == "exploration_hud" for n in names)
+    return [f"--tabs={','.join(tabs)}"] if ok and tabs and all(t.isalpha() for t in tabs) else []
+
+
+NARROW = {"tools/phase2_capture_creatures.gd": _narrow_creature_poses,
+          "tools/phase2_capture_ui.gd": _narrow_ui_tabs}
 # Per-tool filters that take a comma list: launches differing only in this filter share one boot.
 MERGE = {"tools/phase2_capture_creatures.gd": "--only="}
 # Tools that accept a reusable prepared-world cache (byte-identical buffers on a hit).
