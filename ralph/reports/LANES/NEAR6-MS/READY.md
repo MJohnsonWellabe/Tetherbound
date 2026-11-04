@@ -1,5 +1,18 @@
 # NEAR6-MS (4 Nov 2026): running status
 
+## Round 2 (coordinator, 4 Nov 17:09): UI rows taken
+
+All earlier gains are on main. Branch `tb/near6-ms-1104` now equals main a8320228 (#827) via a merge commit that takes main's tree (`4f47609e`). Items taken (no new art; quick_judge; any judged gain ships ON with its score and tests):
+
+| Board row | Item | Board | Note |
+|---|---|---|---|
+| F38#4 | P2-002 map canvas headings and markers | 5.95 | |
+| F38#9 | P2-001 menu shell | 5.93 | v1/ui1a: menu.json arms make no visible change |
+| F38#19 | P2-004 exploration HUD | 5.64 | hud_lean ON; judges still see many dark boxed panels |
+| F41#21 | P2-111 Hollows victory reward tiles | 4.92 | `hud.victory_focus` OFF, never captured on CPU (Hollows capture timed out before the win) |
+| F41#16 | P2-110 Hollows fight-loss result clarity | 5.05 | `hud.loss_card` ON; judged frame shows no loss state |
+| F39#23 | P2-114 catch-chance HUD contrast | 5.65 | |
+
 ## Handoff (4 Nov ~15:50 UTC)
 
 - **State:** branch `tb/near6-ms-1104` rebuilt on main `60f2df27` (#823). Landed on main from this lane: F41#20 camfx fade + dialogue open (CPU 4.72 -> 5.64), F38#29 beaten kneel + silent victory shot (5.76 -> 6.18). Landing-ready on the branch: **F38#32 trail camp keep-clear (5.61 -> 5.81, `773e609b`, tests pass)**.

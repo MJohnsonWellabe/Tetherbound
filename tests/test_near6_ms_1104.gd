@@ -65,3 +65,15 @@ func test_f38_32_trail_camp_keep_clear_ships_on() -> void:
 	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
 	assert_true(director.contains("if not bool((raw as Dictionary).get(\"enabled\", true)):\n\t\t\tcontinue"),
 		"a zone with enabled false is skipped")
+
+
+## F39#23 P2-114: the capture ring outline ships OFF; the reticle reads it from
+## the same readout visual config as the readout outline and plate.
+func test_f39_23_ring_outline_ships_off() -> void:
+	var cfg := _json("res://data/config/capture_readout_visual.json")
+	var ring: Dictionary = cfg.ring_outline_1104
+	assert_false(bool(ring.enabled), "ring outline ships OFF until judged")
+	assert_eq(str(ring.scope), "client_presentation", "declares its scope")
+	assert_between(float(ring.width_scale), 1.0, 2.0, "thickens the arcs modestly")
+	var reticle := FileAccess.get_file_as_string("res://scripts/ui/capture_reticle.gd")
+	assert_true(reticle.contains("_readout_visual.get(\"ring_outline_1104\", {})"), "the reticle reads the flag")
