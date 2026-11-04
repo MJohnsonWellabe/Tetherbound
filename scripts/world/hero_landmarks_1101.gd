@@ -84,8 +84,12 @@ static func dress_glass_sink(world: Node3D, sink: Dictionary, config: Dictionary
 	model.scale = Vector3(plan, lift, plan)
 	model.position = Vector3(-bounds.get_center().x * plan, -bounds.position.y * lift,
 		-bounds.get_center().z * plan)
+	var grade := wall_grade(cfg)
 	if cfg.has("glow_colour"):
-		HERO_PROP.glow(model, Color(str(cfg.glow_colour)), float(cfg.get("glow_energy", 1.0)))
+		HERO_PROP.glow(model, Color(str(grade.get("glow_colour", cfg.glow_colour))),
+			float(grade.get("glow_energy", cfg.get("glow_energy", 1.0))))
+	if grade.has("tint"):
+		_tint_shell(model, Color(str(grade.tint)), float(grade.get("roughness", -1.0)))
 	_no_shadow_cost(model)
 	var root := Node3D.new()
 	root.name = GLASS_SINK_NODE
@@ -98,6 +102,28 @@ static func dress_glass_sink(world: Node3D, sink: Dictionary, config: Dictionary
 		root.add_child(_glass_pool(pool_cfg, across * 0.5, floor_y - bottom))
 	world.add_child(root)
 	return root
+
+
+## F41#10 `glass_sink.wall_grade_1104` (OFF until judged; empty when OFF).
+## qj_obs3 frames: next to the dark obsidian floor the Meshy sink shell reads
+## as a huge blown-out white wall (pale texture plus an ice-blue glow at 1.1).
+## On: a dimmer glow and a darker cool tint so the walls read as glass rock.
+static func wall_grade(cfg: Dictionary) -> Dictionary:
+	var grade: Variant = cfg.get("wall_grade_1104", {})
+	return grade if grade is Dictionary and bool((grade as Dictionary).get("enabled", false)) else {}
+
+
+static func _tint_shell(model: Node, tint: Color, roughness: float) -> void:
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var shaded := source if visual.get_surface_override_material(surface) == source else source.duplicate() as BaseMaterial3D
+			shaded.albedo_color = shaded.albedo_color * tint
+			if roughness >= 0.0:
+				shaded.roughness = roughness
+			visual.set_surface_override_material(surface, shaded)
 
 
 static func _glass_pool(cfg: Dictionary, outer_radius: float, floor_above_bottom: float) -> MeshInstance3D:

@@ -1,4 +1,16 @@
 {
+	"shiny_remake_textures": {
+		"_why": "F39#4 (CPU 6.21; NEAR6-TW judges: shinies go near-uniform hot magenta, the lever is a colour shift on shell or plates). The remakes have no shiny texture of their own, so the shiny swap fell back to the OLD mesh's extracted shiny (different UVs) and wired it into emission too, so the whole body glowed. When enabled, creature_body._texture_for maps each live remake albedo to its own repaint (tools/art_pipeline/shiny_secondary_shift.py: only the warm secondary band moves, gold on Aquaryn's fins, jade on Cannonback's and Riptusk's plates; value, pattern, primary and glow regions kept), and each glow map to itself so only the glow lines glow. Never red. Presentation only. OFF until judged.",
+		"enabled": false,
+		"map": {
+			"res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0.jpg": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0_shiny_plates.png",
+			"res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0.jpg": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0_shiny_plates.png",
+			"res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0.jpg": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0_shiny_plates.png",
+			"res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_arc_emission.png": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_arc_emission.png",
+			"res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_arc_emission.png": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_arc_emission.png",
+			"res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_arc_emission.png": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_arc_emission.png"
+		}
+	},
 	"_comment": "tunable -- shiny odds (OF27). OF28 adds per-species base/shiny palettes here or in data/creatures/palettes.json; this file starts with only the roll odds because OF27 is plumbing, not colours.",
 	"shiny_chance": 0.0078,
 	"_comment_phase2_shiny_finish": "P2-030 production authored shiny repaints, default on under the owner's Phase 1 instruction for all thirteen staged species. No shiny odds, save, network or gameplay change. Phase 2 native ordinary/shiny comparisons and visual acceptance remain required.",

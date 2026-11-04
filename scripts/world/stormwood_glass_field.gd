@@ -339,12 +339,13 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 	var crust := scene.instantiate() as Node3D
 	var basalt := _basalt_crust()
 	var footprint := float(basalt.get("footprint", _seam_clear().get("crust_footprint", _shard_finish().get("crust_footprint", 0.9))))
-	var height := float(basalt.get("height_m", _shard_finish().get("crust_height_m", 0.45)))
+	var seat := _seam_seat()
+	var height := float(basalt.get("height_m", seat.get("crust_height_m", _shard_finish().get("crust_height_m", 0.45))))
 	# The installed mesh is ~1.89 units wide and ~0.21 tall, centred.
 	var across := radius * 2.0 * footprint / 1.89
 	crust.scale = Vector3(across, height / 0.21, across)
 	crust.rotation.y = float(seed_value % 360) * PI / 180.0
-	crust.position = _local_grounded(centre, height * 0.5 - 0.06 - float(basalt.get("sink_m", 0.0)))
+	crust.position = _local_grounded(centre, height * 0.5 - 0.06 - float(basalt.get("sink_m", seat.get("sink_m", 0.0))))
 	crust.name = "FusedGlassCrust"
 	if not basalt.is_empty():
 		_tint_basalt(crust, basalt)
@@ -371,6 +372,17 @@ func _basalt_crust() -> Dictionary:
 func _seam_clear() -> Dictionary:
 	var cand: Variant = config.get("seam_clear_1104", {})
 	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
+
+
+## F41#19 `seam_clear_1104.seat_1104` (OFF until judged; needs seam_clear on).
+## qj_seam2 judges (3/3, candidate side) still saw "a flat purple-and-cyan slab
+## lying over the tree root as a thin disc" and "a purple glass plate floating
+## beside the trunk": the crust sits on the ground height sampled at the scar
+## centre, so on roots and slopes its rim lifts clear. On: a thinner crust sunk
+## into the terrain so its rim tucks under the ground. Visual only.
+func _seam_seat() -> Dictionary:
+	var seat: Variant = _seam_clear().get("seat_1104", {})
+	return seat if seat is Dictionary and bool((seat as Dictionary).get("enabled", false)) else {}
 
 
 func _tint_basalt(root: Node3D, cfg: Dictionary) -> void:

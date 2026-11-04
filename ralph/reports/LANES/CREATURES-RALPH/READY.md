@@ -38,6 +38,37 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**qj headdown-f39-6 (4 Nov ~16:50 UTC): Aquaryn faint head-down ships ON.**
+- **Result:** F39#6 creature faint state, CPU 6.05 -> 6.24 (+0.19; raw 5.6/6.2/5.4 -> 5.6/6.6/5.5; calibrate r 0.86). Two judges see Aquaryn lie lower and more horizontal; one ties.
+- **What it is:** flag `creatures_ralph_aquaryn_faint_headdown`, a copy of the live r9 GLB with its faint clip's neck tipped down 35 deg and head 25 deg (`lateral_recoil.py --spec=neck:x:35,head:x:25 --peak=0.5 --release=1.0`). Same textures and clips.
+- **Tests:** new `tests/test_aquaryn_faint_headdown_flag.gd`.
+- **`test_creature_model_flags` change:** `test_every_owner_remake_ships_on_and_is_the_live_model` now checks each species against its LAST enabled flag (flags merge in order). A later flag must be a variant from the same remake folder. Before, it compared every flag, which fails as soon as one ON arm refines an ON remake. No assertion was dropped.
+
+**qj settle-f39-6 (4 Nov ~16:10 UTC): F39#6 re-based on the fixed capture, and NEAR6-TW's settle arm stays OFF (worse).**
+- **Re-base:** F39#6 creature faint state is CPU 5.86 on real faint frames (was 5.29 on the old capture). That +0.57 is a measurement fix (the capture tool now waits for the model before `play_faint`), not a game change.
+- **Base frames:** Ripplet and Riptusk lie on their sides; all three judges call the defect PARTIAL.
+- **Candidate:** `creature_pose_settle.tidewake_scope` 5.86 -> 5.11; it stands Ripplet up and floats Riptusk. Its third failure on this item, so it stays OFF.
+- **Remaining defect:** only Aquaryn still holds its head and chest up at faint end. Its own faint clip is the next lever.
+- **Also:** the F38#19 HUD frame now waits past the opening fade (`job.json`); the settled frame shows the real exploration HUD, including the "Get up" prompt and action legend. Every earlier F38#19 score was on a dimmed frame. A legend-fade candidate would change onboarding hints, which is a design call, so it is parked.
+
+**Coordinator, batch 16 `smoke_stormwood_spawn_slicing` (4 Nov ~15:05 UTC): not the lateral hit arm.** I ran the smoke locally on this branch, alternating the arm ON and OFF; worst main-thread gap per run:
+- **ON:** 7691 (the first Stormwood boot after a long Meadows capture, a cold cache), then 1730, 1884 and 1789 ms.
+- **OFF:** 1861 and 1682 ms.
+- **Read:** warm runs sit at about 1.7-1.9 s whichever way the flag is set, so the 2000 ms limit has under 0.3 s of headroom on its own. The arm only swaps Burrowback/Nightburrow's model (the same mesh, imported .scn and extracted textures), and the band spawn tables place those species in the Meadows bands. Your 2006 ms reads as that existing thin margin, not a load-time cost.
+- **No warm/cache change made.**
+
+**v1/b20 (4 Nov ~15:00 UTC): Mosshock and Sparkit lateral hit arms are worse and stay OFF (in HELD).** F36#54 5.95 -> 5.79; F36#70 6.20 -> 5.75. Sparkit maps at 6.20 as shipped. Mosshock needs new art: its face and elemental trait do not read at stage distance, and its faint is a "rock-like lump". Verdict in `v1/b20/`.
+
+**qj lathit4-f38-2 (4 Nov ~14:00 UTC): Burrowback/Nightburrow lateral hit ships ON.**
+- **Result:** F38#2 creature hurt and movement poses, CPU 6.18 -> 6.40 (+0.22; raw 6.1/5.8/5.6 -> 6.4/6.0/5.6; defect PRESENT -> PARTIAL for two of three judges; calibration r 0.95).
+- **What it is:** flag `creatures_ralph_burrowback_lateral_hit`, a copy of the live nat1024 GLB.
+  - Its hit clip gets a sideways lean and head toss (`tools/art_pipeline/lateral_recoil.py`: spine 24, neck yaw 38, head roll 24).
+  - Its peak is then held to the clip end (`hold_clip.py`, as shipped for Terrapup).
+  - The copy uses the live extracted textures, so the Nightburrow repaint and coat flags still resolve.
+- **Test:** `tests/test_burrowback_lateral_hit_flag.gd`.
+- **Harness fix found on the way (commit "Creature pose capture: wait for the art model"):** `phase2_capture_creatures.gd` posed creatures before their model existed, so "hurt", "fainted" and "resting" stills were idle. The base rise (5.81 -> 6.18) comes from that fix, not from a game change.
+- **F38#1 needs a fresh base on the fixed tool.** Its "fainted bodies upright or floating" defect is likely the same capture bug. The stills also land after a 0.54 s hit under CPU frame deltas; recorded in TECHNICAL 8.1.
+
 **Coordinator, rim fix verification and the batch-8 f20 question (4 Nov ~09:50 UTC):** all of these ran locally on `fe9d2120`, which is the same creature-rim code as tb/land-batch-9.
 - With the rim ON, every one passed and none logged a `Parameter "material" is null` error:
   - `smoke_net_f48_cut_key`

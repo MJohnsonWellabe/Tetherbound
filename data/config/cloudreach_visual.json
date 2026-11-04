@@ -48,6 +48,16 @@
     "horizon_haze_height": 0.15,
     "horizon_haze_strength": 0.42
   },
+  "time_override_arms": {
+    "night_foreground_fill": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU night 5.05): all three judges said night turns the foreground into a black-green mass. The night sun key was found not to reach the frame (VIS-CLOUDREACH mx2), so this arm uses the ambient path the M4 override already proved: a brighter, cooler moonlit ambient with a lighter blue, a slightly higher exposure and a touch more saturation so grass reads as green-blue turf rather than black, while the sky keeps its night colours. OFF until judged.",
+      "enabled": false,
+      "overrides": {
+        "night": {"environment": {"ambient_energy": 3.4, "ambient_colour": "#5c74bd", "ambient_sky_contribution": 0.12, "exposure": 1.08, "adjustment_saturation": 1.0}}
+      }
+    }
+  },
   "time_overrides": {
     "_comment": "Frame-matrix M4, read by cloudreach_world.gd::apply_time_overrides onto this realm's own copy of art.json's time presets (the shared presets, which also drive the Meadows, are untouched; night_end is same_as night and inherits this). The blind judge measured the Cloudreach night route (frame 31) at mean luma 10.5/255 with two-thirds of the frame pure black, and the arrival cliff (frame 30) as a black wedge: under Compatibility only the (1 - ambient_sky_contribution) share of the ambient colour reaches a slope facing away from the moon, and the shared 1.5 x #3d50a3 at 0.2 sky share lands those slopes in ACES's toe. Ambient energy 1.5 -> 2.6, colour one step lighter in the same blue, sky share 0.2 -> 0.15: roughly 2.2x the moon-shadow fill (world_look light_budget ambient 0.46 -> 1.00) while the moon, sky, exposure and saturation stay the shared night's, so the sky stays dark and the moonlit/shadowed split still reads as night. creature_emission_floor 0.22 -> 0.08: the floor adds each plain-PBR creature's own albedo as emission, so a pale creature (Stormcapra, frame 32) glowed at a fixed value that ignored the night; with the ambient raised the creatures are lit by the night itself and keep only a small legibility floor.",
     "night": {
@@ -107,6 +117,7 @@
     "haze_normal_scale": 0.5,
     "haze_emission": 0.12
   },
+  "landing_tree_clear": {"_scope": "world_presentation", "_why": "P2-105 / F40#6 (VIS-CLOUDREACH lane, 4 Nov 2026; CPU 5.91): judges found the riding camera inside a tree canopy on the arrival terrace road; a probe found it is AuthoredRoutes/LandingTree171 (CommonTree_2, 15 m off the road), and occlusion-only crown stops did not keep the camera out (twice). When on, the named landing trees are not placed. Presentation only (no collider on these trees' routes changes the walkable road). OFF until judged.", "_why_on": "Judged gain ships ON (owner rule): P2-105 CPU mapped 3.68 -> 5.28 (+1.60), three code-blind judges with 3 anchor pairs; the base road-back frame had the camera inside LandingTree171, the candidate shows the rider on the grass with the cloud sea behind (ralph/reports/LANES/VIS-CLOUDREACH/tc/VERDICT.md).", "enabled": true, "names": ["LandingTree171"]},
   "island_roots": {
     "_comment": "CLOUDREACH-ATMOS-0906 (C5), read by cloudreach_world.gd::_mesa. The blind judge on stands 04 and 11: 'A detached chunk of cliff hangs in the sky with pebbles falling from it ... it has no underside, no roots, no mist, no anchor -- it reads as a mesh that lost its parent and is a bug to any player who sees it.' Three literal causes, all fixed against this block: _mesa closes its crown and its four wall bands but never capped the bottom ring, so an airborne LandmarkLedge is an open-ended tube; _build_embedded_rock_shelves placed outcrops up to 97 m below a 72 m mass's own crown, i.e. hanging in the air under it, which is the falling pebbles; and nothing marked the base as high air. A mass counts as airborne when its base sits more than airborne_gap_m above landmass.geology_base_y -- every region CliffMass is built down TO that datum and so never qualifies, which is what keeps this off the buried masses where it would be invisible cost.",
     "enabled": true,
