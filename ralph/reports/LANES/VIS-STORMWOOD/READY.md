@@ -76,7 +76,7 @@ Results: below, all 0 failed.
 - F41#10 `obsidian_1104.r3`: no veins, no seams, a satin black-glass pool (`5e72fdf9`).
 - F41#19 seam clear r2 (`qj_seam2`).
 - Region identity and look tests.
-- Unscored baselines: the `capture_stormwood_f10_matrix` calm/break run (F41#22, F41#24).
+- Unscored baselines F41#22 / F41#24 (**FOR THE COORDINATOR / GPU queue**): the calm matrix is captured on CPU (`capture_stormwood_f10_matrix.gd --phases=calm`, 10 views: forest, giant, glass, rod_line, stormheart x calm/aftermath, local `.artifacts/vl/u_matrix_calm/out`, exit 0). The break phase takes ~30 min a view on llvmpipe (the calm+break run would time out at 90 min), so it was cut. Neither row is in `item-scores/job.json`, so `quick_judge` cannot score them, and the owner rule gives unscored items a GPU baseline first: please run the matrix (calm, break) on the GPU rig for their baseline. Known F41#24 evidence from my rounds: 3/3 judges called the Stormwood named-fight telegraphs "flat magenta rings/slabs" (fight rows are NEAR6-MS's).
 
 **Open:**
 - F41#20: Fenn's dialogue frame is black in both arms. The camera sits behind a dark blocker next to Fenn's seat. Moving the seat stales the scatter bake, so this needs an engine probe of the blocker first.
