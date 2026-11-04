@@ -19,6 +19,15 @@ func test_water_character_rim_ships_on() -> void:
 	_assert_on(_json("res://data/config/water_character_rim.json"), "6.23", "water_character_rim")
 
 
+## r14: F39#14 swimmer water contact 6.10 -> 6.80.
+func test_swim_wake_trail_ships_on() -> void:
+	var cfg := _json("res://data/config/human_water_contact_visual.json")
+	_assert_on(cfg.wake_trail, "6.80", "human_water_contact_visual.wake_trail")
+	var loaded: Dictionary = preload("res://scripts/player/human_water_contact_view.gd").load_settings()
+	assert_eq(int(loaded.get("max_trail_rings", 0)), int(cfg.wake_trail.max_trail_rings), "the wake's ring count applies")
+	assert_true(float(loaded.get("trail_grow_to", 1.0)) > 1.0, "trail rings spread as they fade")
+
+
 ## The fill uniform defaults to 0, so the Stormwood rim keeps its rim-only look.
 func test_rim_overlay_fill_defaults_off() -> void:
 	var code := FileAccess.get_file_as_string("res://shaders/character_rim_overlay.gdshader")
