@@ -36,10 +36,35 @@ static func decorate(spec: Dictionary, identity_id: String, authored_rank: Strin
 			outer["size"] = float(item.get("size", 0.10)) * float(settings.get("lieutenant_rim_scale", 1.28))
 			extra_rims.append(outer)
 	accessories.append_array(extra_rims)
+	accessories.append_array(rank_marks(settings, identity, rank))
 	# Preserve any individual accessories supplied by an authored placement.
 	accessories.append_array((spec.get("accessories", []) as Array).duplicate(true))
 	result["accessories"] = accessories
 	return result
+
+## F41#18 P2-056 `rank_marks_1104` (OFF until judged): judges read Stormwood
+## officers as "small dark figures" with no rank read at normal distance; the
+## chest badge is 5-13 cm. When enabled, every uniformed rank gains pale
+## shoulder knots on both upper-arm bones and a collar ring on the neck in its
+## identity colour, sized up for lieutenants and the captain. Presentation
+## only: the base rig, palette, rank and dialogue are unchanged.
+static func rank_marks(settings: Dictionary, identity: Dictionary, rank: String) -> Array:
+	var cfg: Variant = settings.get("rank_marks_1104", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return []
+	var scale := float(((cfg as Dictionary).get("rank_scale", {}) as Dictionary).get(rank, 1.0))
+	var colour := str(identity.get("rim_color", (cfg as Dictionary).get("colour", "#d8cba0")))
+	var out: Array = []
+	for template: Variant in (cfg as Dictionary).get("marks", []):
+		if not template is Dictionary:
+			continue
+		var mark := (template as Dictionary).duplicate(true)
+		mark["size"] = float(mark.get("size", 0.1)) * scale
+		if mark.has("height"):
+			mark["height"] = float(mark.height) * scale
+		mark["color"] = colour
+		out.append(mark)
+	return out
 
 static func _read() -> Dictionary:
 	if _settings.is_empty():

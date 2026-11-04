@@ -205,6 +205,13 @@
     "bush_item_size": 0.8,
     "_comment": "The three rounded moss lobes reach 0.104m local height; canopy understory remains a separate full-height shrub tier. Harvested plants and all gameplay actors retain their own transforms."
   },
+  "pool_satin_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "VIS-STORMWOOD (4 Nov 2026), F41#5 P2-039 (CPU v1/b16 5.84, judges: 'pool specular that blows out to white in one frame'; v1/b10 3/3: 'flat lavender slabs'). In the CPU frames the value-lift black pools mirror the pale storm sky as large lilac sheets across roads and clearings. On (stormwood_ground_zones.gd config): the pools' fixed satin 0.38 roughness / 0.25 specular become 0.66 / 0.07, so they stay near-black and wet with a soft sheen. Terrain shader parameters only. OFF until judged.",
+    "pool_roughness": 0.66,
+    "pool_specular": 0.07
+  },
   "_why_wet_gloss": "F41#3 candidate (r11 judges: pale lilac pool slabs): the fully wet soil patches mirrored the purple sky at roughness 0.28 / specular 0.38. A duller sheen keeps them dark and wet.",
   "wet_gloss": {"roughness": 0.55, "specular": 0.2},
   "forest_layers": [
