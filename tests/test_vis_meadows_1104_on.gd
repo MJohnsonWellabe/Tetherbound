@@ -133,3 +133,18 @@ func test_f38_20_keep_crag_ships_on_with_its_score() -> void:
 		if companion is Dictionary and str((companion as Dictionary).get("id", "")) == "spire":
 			spire_kept = true
 	assert_true(spire_kept, "the spire is still placed")
+
+
+## F38#20 r6: the two courtyard bonfires pool real light on the floor by day
+## (CPU 5.87 -> 6.42, quick_judge f38_20-fire-glow).
+func test_f38_20_courtyard_fires_light_the_yard_with_their_score() -> void:
+	var yard := _cluster("res://data/config/bands/band5_stronghold_approach/props.json", "wd_stronghold_courtyard")
+	assert_true(str((yard.get("candidate", {}) as Dictionary).get("_why_on", "")).contains("CPU 5.87 -> 6.42"), "records its CPU score")
+	var fires := 0
+	for prop: Variant in yard.get("props", []):
+		var spec: Dictionary = prop
+		if str(spec.get("model", "")) == "Bonfire_Fire":
+			assert_eq(str(spec.get("glow", "")), "campfire", "the fire keeps its campfire overlay")
+			assert_almost_eq(float(spec.get("glow_scale", 1.0)), 4.0, 0.001, "the fire's light reaches the yard")
+			fires += 1
+	assert_eq(fires, 2, "both courtyard fires")
