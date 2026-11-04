@@ -41,3 +41,8 @@ func test_glass_sink_j4_arms_ship_on() -> void:
 	var sink := _json("res://data/config/stormwood_glass_sink.json")
 	_assert_on(sink.dark_pool_candidate, "5.07", "dark_pool_candidate")
 	_assert_on(sink.obsidian_1104, "5.07", "obsidian_1104")
+
+
+## qj_seam: F41#19 Glass Field spike bases 4.34 -> 5.30.
+func test_glass_field_seam_clear_ships_on() -> void:
+	_assert_on(_json("res://data/config/stormwood_glass_field.json").seam_clear_1104, "5.30", "seam_clear_1104")
