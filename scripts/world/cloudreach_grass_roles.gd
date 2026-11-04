@@ -22,6 +22,15 @@ static func role_at(at: Vector3, config: Dictionary) -> int:
 	var jitter: float = float(config.get("grass_role_cell_jitter", 1.0))
 	_ensure_noises(seed, frequency, jitter)
 	var radius: float = _distance_noise.get_noise_2d(at.x, at.z) + 1.0
+	# P2-106 / F40#11 (VIS-CLOUDREACH, 4 Nov 2026): cloudreach_visual.json
+	# ground_cover `grass_role_edge_feather` (0 = off). A role cell's hard radius
+	# threshold drew a sharp dark oval of taller, denser grass that judges read
+	# as a pasted decal; a per-tuft, position-hashed dither on the radius
+	# scatters the boundary over a band instead. Deterministic per position, so
+	# every peer and every cache build places the same tufts.
+	var feather: float = float(config.get("grass_role_edge_feather", 0.0))
+	if feather > 0.0:
+		radius += (_hash01(at) - 0.5) * 2.0 * feather
 	var cell_value: float = _value_noise.get_noise_2d(at.x, at.z)
 	if radius <= float(config.get("grass_role_tall_radius", 0.15)) \
 			and cell_value > float(config.get("grass_role_tall_cell_value_min", 0.20)):
@@ -122,3 +131,7 @@ static func _ensure_noises(seed: int, frequency: float, jitter: float) -> void:
 	_value_noise.cellular_jitter = jitter
 	_value_noise.cellular_distance_function = FastNoiseLite.DISTANCE_EUCLIDEAN
 	_value_noise.cellular_return_type = FastNoiseLite.RETURN_CELL_VALUE
+
+
+static func _hash01(at: Vector3) -> float:
+	return fposmod(sin(at.x * 12.9898 + at.z * 78.233) * 43758.5453, 1.0)
