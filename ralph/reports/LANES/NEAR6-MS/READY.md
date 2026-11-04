@@ -13,6 +13,12 @@ All earlier gains are on main. Branch `tb/near6-ms-1104` now equals main a832022
 | F41#16 | P2-110 Hollows fight-loss result clarity | 5.05 | `hud.loss_card` ON; judged frame shows no loss state |
 | F39#23 | P2-114 catch-chance HUD contrast | 5.65 | |
 
+### F38#19 P2-004 exploration HUD: the judged frame is the opening wake fade mid-way (stand artefact, for the coordinator)
+
+- `job.json` stand for F38#19 is `phase2_capture_ui.gd --biome=meadows --seed=2042 --hud-settle-frames=180`. On CPU llvmpipe the exploration_hud frame it shoots is still under `sequence_director.gd`'s OpeningFade (the black wake fade): whole-frame mean RGB 99/75/47 vs 168/129/81 with `--hud-settle-frames=900` on the same tree (main a8320228). Sheet: `probe_hud_settle/_sheet_hud_settle.jpg` (left 180 frames, right 900).
+- The settled frame is the HUD the player actually sees: full brightness, the temporary team reveal gone, the action legend (Map, Satchel, Build, Call Out) and the bed's "Get up" prompt up. The GPU notes ("five dark boxes ring a dim, flat-lit interior") likely judged the same transient.
+- **Ask:** raise this stand's `--hud-settle-frames` (900 settles on CPU) or wait on the fade clearing, then re-score F38#19 before any further HUD change. Not changed here: the stand is the shared yardstick. No game change made for F38#19.
+
 ## Handoff (4 Nov ~15:50 UTC)
 
 - **State:** branch `tb/near6-ms-1104` rebuilt on main `60f2df27` (#823). Landed on main from this lane: F41#20 camfx fade + dialogue open (CPU 4.72 -> 5.64), F38#29 beaten kneel + silent victory shot (5.76 -> 6.18). Landing-ready on the branch: **F38#32 trail camp keep-clear (5.61 -> 5.81, `773e609b`, tests pass)**.
