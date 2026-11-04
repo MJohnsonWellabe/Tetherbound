@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
-## F38#1/#2/#26 creature rim (client presentation, OFF until GPU judged): ships
-## OFF and inert; when on it dresses only shadow-casting creature body meshes,
+## F38#1/#2/#26 creature rim (client presentation; ON after the NEAR6-MS F38#26
+## judged gain, Meadows look only); when on it dresses only shadow-casting creature body meshes,
 ## never replaces another overlay, and lends the slot to combat tell auras.
 
 const RIM := preload("res://scripts/world/creature_rim.gd")
@@ -35,19 +35,23 @@ func _rim_material() -> ShaderMaterial:
 	return material
 
 
-func test_creature_rim_ships_off_and_off_is_a_no_op() -> void:
+func test_creature_rim_ships_on_in_the_meadows_and_inactive_elsewhere() -> void:
 	var cfg := RIM.settings()
 	assert_eq(str(cfg.get("scope", "")), "client_presentation", "the arm declares its scope")
-	assert_false(bool(cfg.get("enabled", true)), "the creature rim ships OFF")
+	# NEAR6-MS (4 Nov 2026): F38#26 judged gain, CPU 5.95 -> 6.07; ships ON.
+	assert_true(bool(cfg.get("enabled", false)), "the creature rim ships ON (judged gain)")
+	assert_true(str(cfg.get("_why_on", "")).contains("CPU 5.95 -> 6.07"), "the rim records its score")
 	assert_true((cfg.get("realm_looks", []) as Array).has(MEADOWS_LOOK), "the arm targets the Meadows look")
 	var colour := Color(str(cfg.get("colour", "#ff0000")))
 	assert_true(colour.b > colour.r, "the rim is a cool tone, never red/oxblood")
 	RIM.set_realm(MEADOWS_LOOK)
-	assert_false(RIM.active(), "OFF leaves the rim inactive in the Meadows")
+	assert_true(RIM.active(), "ON makes the rim active in the Meadows")
+	RIM.set_realm("res://data/config/stormwood_look.json")
+	assert_false(RIM.active(), "a look outside realm_looks leaves the rim inactive")
 	var parts := _body()
-	assert_eq(RIM.dress_body(parts.body), 0, "OFF dresses nothing")
-	assert_eq((parts.mesh as MeshInstance3D).material_overlay, null, "OFF leaves the body mesh bare")
-	assert_eq(RIM.rest_overlay(parts.mesh), null, "OFF hands a transient overlay back to nothing")
+	assert_eq(RIM.dress_body(parts.body), 0, "inactive dresses nothing")
+	assert_eq((parts.mesh as MeshInstance3D).material_overlay, null, "inactive leaves the body mesh bare")
+	assert_eq(RIM.rest_overlay(parts.mesh), null, "inactive hands a transient overlay back to nothing")
 	assert_false(RIM.is_rim((parts.held as MeshInstance3D).material_overlay), "another overlay is never the rim")
 	(parts.body as Node).free()
 
