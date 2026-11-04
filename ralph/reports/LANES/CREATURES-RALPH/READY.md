@@ -32,6 +32,13 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**WORK SPLIT (owner request, 4 Nov ~00:25 UTC): four parallel visual lanes, each with its own CPU container and branch, all from this branch's head `9a5b23ca`.** The shared capture and judging scripts are in `tools/visual_judge/lane_bin/`.
+- **This lane (`tb/creatures-ralph`):** Tidewake F39 rows (20; capture running), F38#1/#2/#26 creature rim (queued), F38#24 Meadows ridge (queued).
+- **`tb/visual-meadows`** (session_01GPgpLVWzM8XEsyp3wq3xZ1): F38#5/#6/#7/#12/#13/#15/#17/#19/#20/#22/#30/#31/#32/#33/#35/#36/#37, plus unscored F38#0/#41. READY at `ralph/reports/LANES/VISUAL-MEADOWS/`.
+- **`tb/visual-stormwood`** (session_01GPgpLTDaYg7gMHKr9QQJCo): F41#1/#2/#3/#4/#5/#7/#8/#9/#10/#15/#16/#18/#19/#20/#21, plus unscored F41#22/#24 and F22#4. READY at `ralph/reports/LANES/VISUAL-STORMWOOD/`.
+- **`tb/visual-cloudreach`** (session_01GPgpLUz2mRNqZuSH9Csfva): F40#1/#2/#4/#6/#7/#8/#9/#10/#11/#12/#17/#18, unscored F40#0/#19/#21, and roster F36#70/#54/#56 + F39#24 Torrentoad. READY at `ralph/reports/LANES/VISUAL-CLOUDREACH/`.
+- This lane's queued Meadows (`me`), Cloudreach (`cr`), unscored and Stormwood follow-up (`sw2`, `swf`) steps are stopped, so nothing is captured twice.
+
 **Queue fault found and fixed (3 Nov ~23:30 UTC).**
 - **What happened:** the Tidewake items candidate (`tw_cand`, 22:52) failed its overlay because the camp bed and workbench were already ON. Its partial overlay was left applied. The Tidewake look capture (`twl_base`, 22:52-23:16) then ran with that overlay, so twl is discarded and will be rerun cleanly.
 - **Fixes:**
