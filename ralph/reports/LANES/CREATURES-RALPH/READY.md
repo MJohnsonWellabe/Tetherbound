@@ -38,6 +38,8 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**v1/b21 (4 Nov ~20:10 UTC): Mosshock value lift ships ON.** F36#54 CPU 5.63 -> 6.55 (+0.92; raw 5.4/5.6/5.3 -> 6.0/6.1/5.9; defect PRESENT -> PARTIAL; r 0.91). `creature_coat_flags.json` `creatures_ralph_mosshock_value_lift` is a value-lifted albedo (midtone gamma 0.78, saturation x1.12); only the albedo changes, since the `remake_owner1101_glow_read` coat is OFF. Test: `tests/test_mosshock_value_lift_flag.gd`. Mosshock is now above 6.0.
+
 **qj verheaddown-f38-1 (4 Nov ~19:30 UTC): Veridian faint head-down ships ON.**
 - **Result:** F38#1 creature collapse and rest, CPU 6.21 -> 6.30 (+0.09; raw 5.7/5.8/5.9 -> 5.8/5.9/5.9; no judge lower; calibrate r 0.93).
 - **Base vs flag:** the base rose from 5.91 because of the capture fix that lets fainted stills finish their clip, not this flag. F38#1 is now above 6.0.

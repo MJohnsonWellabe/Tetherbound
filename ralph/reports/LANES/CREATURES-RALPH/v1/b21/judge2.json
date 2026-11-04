@@ -1,0 +1,4 @@
+{"sets": {"Lg": {"A": {"bar_a": 4.6, "defects": {}}, "B": {"bar_a": 5.3, "defects": {}}},
+ "Ku": {"A": {"bar_a": 6.6, "defects": {}}, "B": {"bar_a": 5.2, "defects": {}}},
+ "Gn": {"A": {"bar_a": 5.6, "defects": {"the moss body has little value separation from the stage and the face barely reads": "PRESENT"}}, "B": {"bar_a": 6.1, "defects": {"the moss body has little value separation from the stage and the face barely reads": "PARTIAL"}}},
+ "Tn": {"A": {"bar_a": 6.4, "defects": {}}, "B": {"bar_a": 5.9, "defects": {}}}}}
