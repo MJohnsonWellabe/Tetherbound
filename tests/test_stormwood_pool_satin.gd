@@ -32,12 +32,14 @@ func test_rock_value_ships_off_and_darkens_rock_when_on() -> void:
 	assert_false(on_tint.r > on_tint.g * 1.3 and on_tint.r > on_tint.b * 1.3, "no red or oxblood")
 
 
-## F41#4 path_loam_1104: ships OFF; ON darkens and cools the path slot tint
+## F41#4 path_loam_1104: ships ON (qj_path 5.56 -> 5.92); it darkens and cools the path slot tint
 ## (never near-black, never red) and deepens its relief.
-func test_path_loam_ships_off_and_darkens_the_path() -> void:
+func test_path_loam_ships_on_and_darkens_the_path() -> void:
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ZONES.CONFIG_PATH))
-	assert_false(bool(raw.path_loam_1104.get("enabled", true)), "ships OFF until judged")
-	var shipped := Color(str(ZONES.finish().terrain_materials.textures.path.tint))
+	assert_true(bool(raw.path_loam_1104.get("enabled", false)), "ships ON (judged 5.92)")
+	assert_true(str(raw.path_loam_1104.get("_why_on", "")).contains("5.92"), "_why_on cites the judged score")
+	var shipped := Color(str(raw.terrain_materials.textures.path.tint))
+	assert_eq(Color(str(ZONES.finish().terrain_materials.textures.path.tint)), Color(str(raw.path_loam_1104.terrain_materials.textures.path.tint)), "finish() applies the darker path")
 	var cand := Color(str(raw.path_loam_1104.terrain_materials.textures.path.tint))
 	assert_true(cand.get_luminance() < shipped.get_luminance(), "a darker path")
 	assert_true(cand.get_luminance() > 0.2, "not near-black")
