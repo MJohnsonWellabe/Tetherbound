@@ -232,3 +232,34 @@ func test_f38_15_mount_grows_without_moving_collision_or_seat() -> void:
 		if art != null:
 			assert_almost_eq(art.position.y, float(want[1]), 0.001, id + " art hangs from the same offset")
 			art.free()
+
+
+## F38#41 old quarry: natural rock worked faces, grey stone and sunk floor
+## tiles (raw Bar A 5.80 -> 6.43, three code-blind judges,
+## qj/f38_41-natural-faces). The worked faces still build and keep their names.
+func test_f38_41_quarry_natural_faces_ship_on_with_their_score() -> void:
+	var quarry := _load("res://data/config/old_quarry.json")
+	var cut: Dictionary = quarry.get("worked_cut", {})
+	assert_true(bool(cut.get("natural_faces", false)), "natural worked faces ON")
+	assert_true(str(cut.get("_why_natural_faces", "")).contains("5.80 -> 6.43"), "records its CPU score")
+	for piece: Variant in cut.get("pieces", []):
+		var p := piece as Dictionary
+		if str(p.get("role", "")) in ["extraction_face", "tool_course", "working_bench"]:
+			var c := Color(str(p.get("colour", "#000000")))
+			assert_true(c.s < 0.15, "%s is grey stone, not tan" % str(p.get("name", "")))
+	var prefabs := _load("res://data/config/building_prefabs.json")
+	var floors := 0
+	for module: Variant in ((((prefabs.get("prefabs", {}) as Dictionary).get("quarry_foundation", {})) as Dictionary).get("modules", []) as Array):
+		if str((module as Dictionary).get("module", "")) == "Floor_UnevenBrick":
+			floors += 1
+			assert_almost_eq(float(((module as Dictionary).get("at", []) as Array)[1]), -0.4, 0.001, "floor tile sunk")
+	assert_eq(floors, 6, "six quarry floor tiles")
+	var builder: Object = preload("res://scripts/world/old_quarry.gd").new()
+	builder.set("_natural_worked_faces", true)
+	var face := builder.call("_textured_wedge", "WorkedFaceWest", Vector3(6.8, 5.2, 4.0),
+		Color("#8f8b82"), "", "", 0.52, 0.78, 0.96) as MeshInstance3D
+	assert_true(face != null and face.mesh != null, "natural worked face builds")
+	if face != null:
+		assert_eq(face.name, "WorkedFaceWest", "keeps its production node name")
+		face.free()
+	builder.free()
