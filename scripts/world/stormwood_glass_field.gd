@@ -94,7 +94,8 @@ func _build_cluster(spec: Dictionary) -> void:
 	var clearing := Node3D.new()
 	clearing.name = "ScarGrassClearance"
 	clearing.position = _local_grounded(centre, 0.0)
-	clearing.set_meta("grass_clear_radius", scar_radius * 0.82)
+	var seam := _seam_clear()
+	clearing.set_meta("grass_clear_radius", scar_radius * float(seam.get("grass_clear_fraction", 0.82)))
 	root.add_child(clearing)
 	clearing.add_to_group("grass_clear")
 	_add_fused_lumps(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
@@ -115,7 +116,8 @@ func _build_cluster(spec: Dictionary) -> void:
 		var local := centre + Vector2(cos(angle), sin(angle)) * radius
 		var height := float(spec.height_m) * (0.48 + 0.52 * float((index * 5 + 2) % count) / maxf(1.0, float(count - 1)))
 		_add_shard(root, "%02d" % index, local, height, angle)
-	_add_fissures(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
+	if not bool(seam.get("hide_fissures", false)):
+		_add_fissures(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
 	if bool(spec.get("night_light", false)):
 		var light := OmniLight3D.new()
 		light.name = "ResidualStrikeGlow"
@@ -337,7 +339,7 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 		return
 	var crust := scene.instantiate() as Node3D
 	var basalt := _basalt_crust()
-	var footprint := float(basalt.get("footprint", _shard_finish().get("crust_footprint", 0.9)))
+	var footprint := float(basalt.get("footprint", _seam_clear().get("crust_footprint", _shard_finish().get("crust_footprint", 0.9))))
 	var height := float(basalt.get("height_m", _shard_finish().get("crust_height_m", 0.45)))
 	# The installed mesh is ~1.89 units wide and ~0.21 tall, centred.
 	var across := radius * 2.0 * footprint / 1.89
@@ -357,6 +359,17 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 ## so the spikes break out of rock instead of standing on a slab.
 func _basalt_crust() -> Dictionary:
 	var cand: Variant = config.get("basalt_crust_1104", {})
+	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
+
+
+## F41#19 P2-043 `seam_clear_1104` (OFF until judged; empty when OFF). The
+## qj_basalt judges (3/3) preferred the shipped glass crust but called the
+## straight emissive fissure ribbons "a rigid thin white line", saw grass
+## passing through the crust edge and the crust "much wider than the
+## cluster". On: no fissure ribbons, grass cleared across the whole scar and
+## the glass crust narrowed. Visual only.
+func _seam_clear() -> Dictionary:
+	var cand: Variant = config.get("seam_clear_1104", {})
 	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
 
 
