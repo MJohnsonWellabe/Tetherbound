@@ -1,0 +1,65 @@
+[
+ {
+  "label": "F38#17",
+  "a": "17-r1base.png",
+  "b": "17-r1cand.png",
+  "brief": "Meadows named trainer dialogue subject visibility: a named character speaking in a conversation shot",
+  "defects": [
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+  ]
+ },
+ {
+  "label": "F38#37",
+  "a": "37-r1base.png",
+  "b": "37-r1cand.png",
+  "brief": "Meadows Meadows dialogue rock obstruction: a named character speaking in a conversation shot",
+  "defects": [
+   "Large rock faces fill the camera and hide the named speaker during dialogue"
+  ]
+ },
+ {
+  "label": "F38#35",
+  "a": "35-r1base.png",
+  "b": "35-r1cand.png",
+  "brief": "Meadows human post poses: named villagers standing at their posts in the village, seen from the normal exploration camera",
+  "defects": [
+   "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles"
+  ]
+ },
+ {
+  "label": "F38#30",
+  "a": "30-r1base.png",
+  "b": "30-r1cand.png",
+  "brief": "Meadows Burrow Warrens hillside: the player walking a Meadows route, normal exploration camera",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "F38#23",
+  "a": "23-r1base.png",
+  "b": "23-r1cand.png",
+  "brief": "Meadows Tether Relay yard: the player walking a Meadows route, normal exploration camera",
+  "defects": [
+   "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp"
+  ]
+ },
+ {
+  "label": "F38#22",
+  "a": "22-r1base.png",
+  "b": "22-r1cand.png",
+  "brief": "Meadows mill and settlements: a Meadows place seen close from the exploration camera",
+  "defects": [
+   "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+  ]
+ },
+ {
+  "label": "F38#20",
+  "a": "20-r1base.png",
+  "b": "20-r1cand.png",
+  "brief": "Meadows Team Tether stronghold: approaching a Meadows landmark from the exploration camera, day and night",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ }
+]
