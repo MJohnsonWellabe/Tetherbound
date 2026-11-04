@@ -34,6 +34,9 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 - **r20, F39#20, no visible change, not judged:** hiding gather nodes left the frames identical. The judges' "small blue creature-like figure" is the `great_candy` world pickup (blue figure plus highlight ring), 9 m from Venn's fight centre, and it is not a harvest node. The arm now also covers pickups (`fight_ring_hide.pickups`, `item_cache_pickup.gd set_fight_hidden`). Re-queued as r20b.
 - **F39#4:** the new `shiny_cue.overlay` (a pale-gold rim overlay on shiny bodies, OFF) is queued as r4.
 
+- **r4 / r4b, F39#4, flat, held OFF, item PARKED:** in r4 the default `shiny_cue.overlay` was too faint to read at the stand on pre-check, so it was not judged. In r4b (energy 1.6, power 1.5, fill 0.2) A and B scored equal for all three judges (`qj/r4b/`). The judges' lever is the shiny repaint itself: Aquaryn's whole-body violet should become a hue shift on secondary regions (shell, bands, plates) over the species pattern. That is a texture repaint, beyond a scene flag.
+- **r20b, F39#20: shipped ON (see table).**
+
 ## Queue
 
 `runbook/chain.sh` (resumable): import, then r6, r27, r14, r19, r7. F39#1/#2 wait for VIS-TIDEWAKE's r2a verdict; F39#4 waits for its shiny round; F39#20 is designed from the r19 base fight frames.
