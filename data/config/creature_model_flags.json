@@ -1186,6 +1186,13 @@
       "species": {
         "aquaryn": {"model": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_faint_headdown.glb"}
       }
+    },
+    "creatures_ralph_veridian_faint_headdown": {
+      "_why": "F38#1 creature collapse and rest (CPU 5.91): judges read Veridian's faint as 'semi-upright, splayed' (a leap). With the full clip played, its end pose is side-lying with legs out and antlers held up. A copy of the live nat1024 GLB whose faint clip tips the neck (40 deg) and head (30 deg) toward the body (tools/art_pipeline/lateral_recoil.py --spec=neck:x:40,head:x:30 --peak=0.5 --release=1.0), as shipped for Aquaryn on F39#6. Mesh, textures and other clips unchanged. OFF until judged.",
+      "enabled": false,
+      "species": {
+        "veridian": {"model": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_faint_headdown.glb"}
+      }
     }
   }
 }

@@ -14,6 +14,7 @@ var installed: Dictionary
 ## Held OFF while their remake breaks a gameplay contract the rest of the suite
 ## checks; each comes back ON once its rig carries the missing data.
 const HELD := {
+	"creatures_ralph_veridian_faint_headdown": "the visual lane's F38#1 Veridian faint head-down arm is judged (OFF until a CPU gain)",
 	"creatures_ralph_mosshock_lateral_hit": "the visual lane's F36#54 lateral hit arm is judged (OFF until a CPU gain)",
 	"creatures_ralph_sparkit_lateral_hit": "the visual lane's F36#70 lateral hit arm is judged (OFF until a CPU gain)",
 	"remake_owner1101_burrowback": "its aspect variant Nightburrow reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
