@@ -235,9 +235,22 @@ func _draw_ring(center: Vector2, chance: float, scale_value: float, alpha: float
 
 	var gap_rad := deg_to_rad(GAP_DEGREES)
 	var segment_rad: float = (TAU - float(ARC_SEGMENTS) * gap_rad) / float(ARC_SEGMENTS)
+	# NEAR6-MS F39#23 (capture_readout_visual.json ring_outline_1104, flag):
+	# a dark outline under each arc and a slightly thicker arc, so the ring
+	# holds against pale sand and pale creatures like the outlined readout.
+	var ring_cfg: Variant = _readout_visual.get("ring_outline_1104", {})
+	var ring_on := ring_cfg is Dictionary and bool((ring_cfg as Dictionary).get("enabled", false))
+	var arc_width := ARC_WIDTH * (float((ring_cfg as Dictionary).get("width_scale", 1.0)) if ring_on else 1.0)
+	if ring_on:
+		var outline := UITokens.OUTLINE
+		outline.a *= alpha
+		var pad := float((ring_cfg as Dictionary).get("outline_px", 3.0))
+		for i in ARC_SEGMENTS:
+			var o_start: float = float(i) * (segment_rad + gap_rad) + gap_rad * 0.5
+			draw_arc(center, radius, o_start, o_start + segment_rad, 24, outline, arc_width + pad * 2.0, true)
 	for i in ARC_SEGMENTS:
 		var start: float = float(i) * (segment_rad + gap_rad) + gap_rad * 0.5
-		draw_arc(center, radius, start, start + segment_rad, 24, tier_colour, ARC_WIDTH, true)
+		draw_arc(center, radius, start, start + segment_rad, 24, tier_colour, arc_width, true)
 		var dot_angle: float = start - gap_rad * 0.5
 		var dot_pos: Vector2 = center + Vector2(cos(dot_angle), sin(dot_angle)) * radius
 		draw_circle(dot_pos, NODE_DOT_RADIUS * scale_value, tier_colour)
@@ -263,7 +276,12 @@ func _draw_ring(center: Vector2, chance: float, scale_value: float, alpha: float
 		# clockwise on screen (Y-down), so starting at -TAU/4 (straight up)
 		# and sweeping by a POSITIVE amount is exactly "fill clockwise from
 		# twelve o'clock" — the same direction the shake countdown empties.
-		draw_arc(center, inner_radius, -PI * 0.5, -PI * 0.5 + sweep, 48, inner_colour, ARC_WIDTH, true)
+		if ring_on:
+			var inner_outline := UITokens.OUTLINE
+			inner_outline.a *= alpha
+			draw_arc(center, inner_radius, -PI * 0.5, -PI * 0.5 + sweep, 48, inner_outline,
+				arc_width + float((ring_cfg as Dictionary).get("outline_px", 3.0)) * 2.0, true)
+		draw_arc(center, inner_radius, -PI * 0.5, -PI * 0.5 + sweep, 48, inner_colour, arc_width, true)
 
 	_draw_readout(center, radius, chance, tier_colour, alpha, locked)
 

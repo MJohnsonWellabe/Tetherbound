@@ -1140,7 +1140,15 @@ static func make_carrier_art(capability: Dictionary) -> Node3D:
 		bounds = box if first else bounds.merge(box)
 		first = false
 	if bounds.size.y > 0.001:
-		var scale_factor := float(capability.get("height_m", 2.1)) / bounds.size.y
+		# `presentation_height_m` (F38#15, OFF unless `presentation_scale_enabled`):
+		# the judges read the mount as smaller than the 1.80 m trainer. Grows the
+		# art only; collision (`collision_height_m`), the feet offset and the
+		# wrist/foot grip alignment are unchanged, and the art's origin stays at
+		# its feet so the trainer still hangs from the same grip.
+		var art_height := float(capability.get("height_m", 2.1))
+		if bool(capability.get("presentation_scale_enabled", false)):
+			art_height = maxf(art_height, float(capability.get("presentation_height_m", art_height)))
+		var scale_factor := art_height / bounds.size.y
 		art.scale *= scale_factor
 		art.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_factor
 	var offset: Array = capability.get("feet_offset", [0.0, 2.45, 0.0])

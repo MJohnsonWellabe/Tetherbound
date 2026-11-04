@@ -5,6 +5,8 @@ extends "res://tools/phase2_capture_characters.gd"
 ## is started directly after the post fixture; this records presentation, not
 ## proof that a normal interaction or progress gate is reachable.
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+## A post more than this far from the speaker's live body is a stale catalogue post.
+const POST_RESEAT_M := 6.0
 
 func _load_plan() -> bool:
 	if not super._load_plan():
@@ -147,6 +149,22 @@ func _raise_placement_flags(row: Dictionary) -> Array[String]:
 
 func _capture_row_with_dialogue(row: Dictionary) -> void:
 	var before := _records.size()
+	# F38#35 (reproduced judging blocker, coordinator-approved): the post frame
+	# stood at the catalogue's post even where the game places the speaker
+	# elsewhere (Oskar's catalogue post is 41.8 m from his body), so the post
+	# view showed only the player. Aim the post frame at the real body, as
+	# `_frame_speaker` already does for the dialogue view. The game's own
+	# placement is untouched; the manifest records the re-seat.
+	var post_body := _speaker_body(row)
+	if post_body != null:
+		var post_xz: Array = row.get("position_xz", [])
+		if post_xz.size() == 2:
+			var post := Vector2(float(post_xz[0]), float(post_xz[1]))
+			var at := Vector2(post_body.global_position.x, post_body.global_position.z)
+			if post.distance_to(at) > POST_RESEAT_M:
+				row = row.duplicate()
+				row["position_xz"] = [at.x, at.y]
+				row["post_reseated_from"] = [post.x, post.y]
 	await super._capture_row(row)
 	if _records.size() == before:
 		return
