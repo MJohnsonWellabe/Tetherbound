@@ -104,8 +104,9 @@
   },
   "rim_pickup_in_view": {
     "_scope": "world_presentation",
-    "_why": "P2-102 / F40#17 round 2 (NEAR6-CR, 4 Nov 2026): instead of hiding it, set the speed mushroom on open crown turf in front of and left of the rim stand (about 3 m from the trainer, inside the rim) so it reads as a grounded cluster on grass rather than a glowing blob cut by the frame edge over the drum footing. Same id, item, count, unlock and claim. OFF until judged.",
-    "enabled": false,
+    "_why": "P2-102 / F40#17 round 2 (NEAR6-CR, 4 Nov 2026): instead of hiding it, set the speed mushroom on open crown turf in front of and left of the rim stand (about 3 m from the trainer, inside the rim) so it reads as a grounded cluster on grass rather than a glowing blob cut by the frame edge over the drum footing. Same id, item, count, unlock and claim.",
+    "enabled": true,
+    "_why_on": "NEAR6-CR quick judge F40-17-f201152b7ca0-11041023 (4 Nov 2026): CPU 5.09 -> 5.72 (+0.63); defect PARTIAL -> FIXED (1) / PARTIAL (2), all three judges preferred it. Ships ON (owner 4 Nov: every judged CPU gain ships ON).",
     "pickup_overrides": {
       "cr_recovery_high_roost_flight_speed_01": [914.5, 1020.0, 2685.5]
     }
