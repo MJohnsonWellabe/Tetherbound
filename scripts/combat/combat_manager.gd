@@ -6479,7 +6479,20 @@ func _finish_catch() -> void:
 func _watch_the_orb(orb: Node3D) -> void:
 	if orb == null or _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
-	_camera_rig.call("set_target", orb, CATCH.camera_profile("resolve_camera"))
+	var profile := CATCH.camera_profile("resolve_camera")
+	_camera_rig.call("set_target", orb, profile)
+	# P2-118 (VIS-CLOUDREACH, 4 Nov 2026): catching.json `resolve_clearance`
+	# (off unless enabled). On a slope the resolve arm collapsed into the turf
+	# and the result card played over a frame of blurred grass; pick a pose
+	# whose arm has room before the shot starts. Presentation only.
+	var clear: Dictionary = CATCH.config().get("resolve_clearance", {})
+	if clear.get("enabled") == true and _camera_rig.has_method("clear_arm_pose"):
+		var start := float(profile.get("pitch_start_deg", -16.0))
+		var pitches: Array = [start]
+		for step: Variant in clear.get("pitch_steps_deg", [-26.0, -36.0, -46.0]):
+			pitches.append(float(step))
+		_camera_rig.call("clear_arm_pose", float(clear.get("min_free_fraction", 0.85)),
+			pitches, clear.get("yaw_steps_deg", [0.0, 45.0, -45.0, 90.0, -90.0, 135.0, -135.0, 180.0]))
 
 
 ## One of the catch's three flashes (catching.json `vfx`): strike, caught,

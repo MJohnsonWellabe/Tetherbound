@@ -1,0 +1,24 @@
+{
+ "F40#18 cand": [
+  {
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "FIXED"
+  },
+  {
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "PARTIAL"
+  },
+  {
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "PARTIAL"
+  }
+ ],
+ "F40#18 base": [
+  {
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "FIXED"
+  },
+  {
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "PARTIAL"
+  },
+  {
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "PARTIAL"
+  }
+ ]
+}

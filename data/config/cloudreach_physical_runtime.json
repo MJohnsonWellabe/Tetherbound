@@ -102,6 +102,17 @@
     },
     "_round1": "qj F40-17-ade4ecff4c0e-11040935: flat (4.57 -> 4.57). Moving the cluster out of frame removed the defect but left the subject unreadable; all three judges asked for it grounded and visible in frame. Stays OFF."
   },
+  "rim_pickup_cluster": {
+    "_scope": "world_presentation",
+    "_why": "P2-102 / F40#17 round 3 (NEAR6-CR, 4 Nov 2026; CPU 5.72 with rim_pickup_in_view ON): judges asked for the rim mushroom as a natural clustered group rather than one generic cap. On: the High Perches stamina and wild mushrooms (authored 10-25 m away on the same crown) join the speed mushroom on open crown turf, each within 1.5 m, so the three read as one patch. Same ids, items, counts, unlocks and claims.",
+    "enabled": true,
+    "_why_on": "NEAR6-CR quick judge F40-17-53b0b6dc0941-11041858 (4 Nov 2026, with rim_pickup_in_view ON in both arms): CPU 5.85 -> 6.19 (+0.34), all three judges preferred it. The wild mushroom's existing red-orange cap (items.json #c4402c) is now in frame; judges read it as warm orange, not oxblood. Ships ON (owner 4 Nov: every judged CPU gain ships ON).",
+    "pickup_overrides": {
+      "cr_recovery_high_roost_flight_speed_01": [914.5, 1020.0, 2685.5],
+      "cr_recovery_high_roost_flight_stamina_01": [913.4, 1020.0, 2684.6],
+      "cr_recovery_high_roost_flight_wild_01": [915.4, 1020.0, 2686.9]
+    }
+  },
   "rim_pickup_in_view": {
     "_scope": "world_presentation",
     "_why": "P2-102 / F40#17 round 2 (NEAR6-CR, 4 Nov 2026): instead of hiding it, set the speed mushroom on open crown turf in front of and left of the rim stand (about 3 m from the trainer, inside the rim) so it reads as a grounded cluster on grass rather than a glowing blob cut by the frame edge over the drum footing. Same id, item, count, unlock and claim.",

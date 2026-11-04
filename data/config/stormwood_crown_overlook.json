@@ -29,6 +29,13 @@
     "width_m": 560.0,
     "yaw_deg": 0.0,
     "visible_from_m": 300.0,
-    "fade_m": 40.0
+    "fade_m": 40.0,
+    "near_hide_1104": {
+      "_why": "NEAR6-TW (4 Nov 2026), F41#10 Glass Sink (CPU 4.38 after VIS-STORMWOOD obsidian r3): the huge pale wall on the left of every Glass Sink frame is this distant-only massif. At visible_from_m 300 the Glass Sink stands (on the Crown island, inside the 560 m footprint) are already past the range and see its inner cliff face up close (probe: camera inside HollowCrownSilhouette bounds, no collider on the wall). When on, the silhouette begins beyond its footprint; it still draws from the Crown Overlook (~900 m).",
+      "scope": "client presentation: HollowCrownSilhouette visibility range only",
+      "enabled": true,
+      "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r10 F41#10 Glass Sink CPU 4.84 -> 5.36 (three code-blind judges all higher; calibrated, RMSE 0.64). The Crown Overlook (880 m) still sees the silhouette.",
+      "visible_from_m": 470.0
+    }
   }
 }

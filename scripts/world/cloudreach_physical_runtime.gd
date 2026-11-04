@@ -1081,7 +1081,7 @@ func _sync_personal_rewards() -> void:
 ## pickup that sits on a rim camera stand back onto open crown turf. Same
 ## identity, item and claim; only the authored spot changes.
 func _pickup_override(id: String, fallback: Variant) -> Variant:
-	for key: String in ["rim_pickup_in_view", "rim_pickup_inset"]:
+	for key: String in ["rim_pickup_cluster", "rim_pickup_in_view", "rim_pickup_inset"]:
 		var inset: Dictionary = config.get(key, {})
 		if inset.get("enabled") == true and (inset.get("pickup_overrides", {}) as Dictionary).has(id):
 			return inset["pickup_overrides"][id]

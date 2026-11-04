@@ -1,6 +1,6 @@
 # VIS-CLOUDREACH lane (tb/vis-cloudreach-1104), 4 Nov 2026
 
-Status 4 Nov 15:10 UTC: six judged gains ON (P2-105 x3, P2-106, P2-118 x2; +7.70 cumulative CPU mapped); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
+Status 4 Nov 18:40 UTC: seven judged gains ON (P2-105 x3, P2-106 x2, P2-118 x2; +8.13 cumulative CPU mapped); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
 
 CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `tools/visual_judge`.
 
@@ -18,17 +18,22 @@ CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `
 | `data/config/hud.json:catch_card.full_team_line` (new) | F40#18 P2-118 | 3.57 -> **4.98** (merged tree, card ON in both arms) | `tests/test_vis_cloudreach_landed.gd` | see log |
 | `data/config/cloudreach_visual.json:landing_tree_clear` (new) | F40#6 P2-105 | 3.68 -> **5.28** (+1.60; base had the camera inside LandingTree171 on the road-back frame; `tc/VERDICT.md`) | `tests/test_vis_cloudreach_landed.gd` | see log |
 | `cloudreach_physical_runtime.json:mounted_drop_no_air_drive.scramble_after_s` 0.7 -> 0.3 | F40#6 P2-105 | 4.38 -> **6.10** (+1.72; floating mount FIXED 3/3; `sc/VERDICT.md`) | `tests/test_vis_cloudreach_landed.gd`, `smoke_cloudreach_saddle_remount.gd` unchanged: 15:20 run, terrace scramble at 5.8 m PASS, ledge legs PASS, 331 checks with the one known `trainer_ila_lower_ring` failure | see log |
+| `cloudreach_visual.json:island_roots.mist_core_alpha` 0.62 -> 0.45 + `low_mist.mist_below_m` 170 -> 260 | F40#11 P2-106 | 6.00 -> **6.43** (+0.43; puff defect PRESENT -> PARTIAL 3/3; `mt/VERDICT.md`) | `tests/test_vis_cloudreach_landed.gd` | see log |
 
 P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coordinator/owner:** the scramble ends an unsurvivable mounted fall sooner than the walker's 100 m recovery (SYSTEMS §8 parity reading); survivable ride-offs are unchanged. Turning the flag off restores strict parity.
 
 ## Arms in flight (flag OFF)
+
+**Harness gap for the coordinator (F40#18):** `phase2_capture_catch.gd --seed=2042` does not fix the wild spawn or the catch outcome across trees: three Cloudreach catch rounds today paired different species (Galecrest/Skyrill/Pebbik) at different spots, and one round never reached the caught banner. A/B on the catch frame is confounded until the spawn is pinned; this lane is not fixing the harness (CRITERION_DELIVERY) and has moved off P2-118.
 
 
 | Arm | Items | State |
 |---|---|---|
 | `cloudreach_cause.json:enabled` (earlier cause lane) | F40#1, #4, #2, #6, #11, #7 | **Judged r1: flat or worse, stays OFF** (P2-021 5.24->5.06, P2-022 5.59->5.52, P2-023 5.41->5.16, P2-025 5.88->5.27, P2-105 4.65->4.51, P2-106 5.32->5.39; `r1/`, `r1-ride/`). `meadow_groves` + `cloud_sea` alone, quick_judge on the merged tree (`qj/qj_groves/`): F40#1 6.39 -> 6.16, F40#4 6.47 -> 6.31, F40#7 6.51 -> 6.51; stays OFF. Merged-tree CPU bases: F40#1 6.39, F40#4 6.47, F40#7 6.51 (all above 6.0). |
 | `cloudreach_open_terrain_candidate.json:enabled` (existing, unjudged) | F40#1 P2-021 | quick_judge `qj_openterrain` (15:40): no visible change at the sky shrine or realm gate (a few mid-ground rocks shift; the lawn reads the same). Not judged; stays OFF. The flat-lawn ask is parked for this lane after three misses (groves flat, clumps invisible, `cloudreach_ground_cluster` judged -0.31 in CLOUD-JUDGE BATCH4). |
-| `hud.json:catch_card.portrait` (new) | F40#18 P2-118 (lowest owned item, 4.98) | The caught species' installed portrait at the card's left edge. quick_judge `qj_portrait` capturing. |
+| `hud.json:catch_card.portrait` (new) | F40#18 P2-118 (lowest owned item, 4.98) | The caught species' installed portrait at the card's left edge. **Judged `qj/qj_portrait`: 5.29 -> 3.14, stays OFF** (confounded: the candidate's random spawn put the post-catch camera inside a grass slope; no judge faulted the portrait). Next: the post-catch camera in terrain. |
+| `catching.json:resolve_clearance` (new) | F40#18 P2-118 | The catch resolve shot picks a pose (steeper pitch, then yaw swings) whose SpringArm keeps 85% of its length free, so the result card never plays over a camera collapsed into turf (all three `qj_portrait` judges' first ask). quick_judge `qj_resolveclear` (17:50): **inconclusive, not judged, stays OFF**: both sides' catches broke free (no 09-caught-banner frame) and spawned different species (Skyrill vs Pebbik); the 04/08 frames show no clear camera difference. |
+| `cloudreach_visual.json:ground_cover.grass_role_edge_feather` (new, 0 = off) | F40#11 P2-106 | Dithers the hard radius edge of the grass role cells. quick_judge `qj_feather` (19:20, 0.14): **no visible change**; the dark terrace oval the mt judges flagged is not a role cell. Not judged; stays 0. A probe of the geometry at the terrace road is running to find what draws the oval. |
 | `menu.json:release_choice_focus` (new) | F40#18 P2-118 | Round 2: no visible change (the scored 09-caught-banner frame is before the release ceremony opens); stays OFF. `hud.json:catch_card` judged r2b and shipped ON (above). |
 | `cloudreach_npc_runtime.json:post_readability` (new) | F40#9 P2-068 | **Judged r3: flat, stays OFF** (CPU 5.16 -> 5.20; `r3/`). First CPU score for the item. |
 | (baseline) F40 matrix pieces 3, 4, 7 | F40#0, #19, #21 | **First CPU subset scores (`mx1/`):** day clear 5.45, rain 4.90, night 5.05, mean 5.13 (12 of 384 frames). F40#21: no magenta/placeholder; one judge read the gate's overhanging ledge as floating. |

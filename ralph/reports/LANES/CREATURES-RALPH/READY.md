@@ -38,6 +38,38 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**v1/b21 (4 Nov ~20:10 UTC): Mosshock value lift ships ON.** F36#54 CPU 5.63 -> 6.55 (+0.92; raw 5.4/5.6/5.3 -> 6.0/6.1/5.9; defect PRESENT -> PARTIAL; r 0.91). `creature_coat_flags.json` `creatures_ralph_mosshock_value_lift` is a value-lifted albedo (midtone gamma 0.78, saturation x1.12); only the albedo changes, since the `remake_owner1101_glow_read` coat is OFF. Test: `tests/test_mosshock_value_lift_flag.gd`. Mosshock is now above 6.0.
+
+**qj verheaddown-f38-1 (4 Nov ~19:30 UTC): Veridian faint head-down ships ON.**
+- **Result:** F38#1 creature collapse and rest, CPU 6.21 -> 6.30 (+0.09; raw 5.7/5.8/5.9 -> 5.8/5.9/5.9; no judge lower; calibrate r 0.93).
+- **Base vs flag:** the base rose from 5.91 because of the capture fix that lets fainted stills finish their clip, not this flag. F38#1 is now above 6.0.
+- **What it is:** flag `creatures_ralph_veridian_faint_headdown`, a copy of the live nat1024 GLB with its faint clip's neck tipped 40 deg and head 30 deg toward the body (`lateral_recoil.py`).
+- **Tests:** new `tests/test_veridian_faint_headdown_flag.gd`; the flag is out of HELD.
+- **Judges' remaining asks:** a contact shadow and value lift for the dark Terrapup on dark grass, and a more limp, settled Veridian.
+
+**F38#1 follow-up (4 Nov ~19:05 UTC): the splayed Veridian is its faint end pose; the rest arm is not measurable on F38#1, so it stays OFF.**
+- **Which frame:** F38#1's catalogue frames are Terrapup fainted, Terrapup resting and Veridian FAINTED. The "semi-upright, splayed" Veridian the judges flag is its faint, not its rest.
+- **Rest arm:** `creatures_visual.json` `rest_faint_settled` (OFF, `test_rest_faint_settled`) starts a faint-clip rest at the clip's settled end. It is correct game-side, but it touches none of F38#1's judged frames (Terrapup rests via the roll path), so its A/B round was identical and not judged. It stays OFF for a future rest item.
+- **Capture fix:** "fainted" stills now wait, in game time, for the faint clip to finish (commit "fainted stills wait for the faint clip to finish"; TECHNICAL 8.1).
+- **Veridian's faint still reads as a leap:** with the full clip played, its END pose is side-lying with legs straight out and antlers up. F38#1's remaining lever is new faint art for Veridian (or a faint-clip pose edit), not a capture or scene change.
+
+**qj rim075-f38-1 (4 Nov ~18:40 UTC): F38#1 re-based at CPU 5.91 on the fixed capture; creature rim at 0.75 is flat, so 1.0 stays.**
+- **Re-base:** raw 5.8/5.6/5.6 on both sides; defect PARTIAL.
+- **What the frames show now:** Terrapup's fainted and resting frames lie down (the resting frame was missing before), and Veridian's faint lies flat.
+- **Judges' remaining defects:** the fainted Terrapup is a dark smudge against dark grass, and Veridian at the resting moment still reads semi-upright or splayed.
+- **Next levers (creatures, per the coordinator's new scope):** a value lift for dark coats in the Meadows, and Veridian's rest pose. NEAR6-MS now owns the UI rows, including F38#19.
+
+**qj shinyplates2-f39-4 (4 Nov ~18:00 UTC): shiny remake textures ship ON.**
+- **Result:** F39#4 shiny creature finish, CPU 5.61 -> 6.76 (+1.15; raw 5.4/5.6/5.6 -> 6.3/6.3/6.4; defect PRESENT -> PARTIAL; calibrate r 0.98). All three judges say the violet-magenta whole-body tint is gone and the shell and plate pattern survives.
+- **Cause:** the Tidewake remakes had no shiny texture of their own, so the shiny swap fell back to the OLD mesh's extracted shiny (different UVs) and wired it into emission as well. On top of that, the shiny surface finish hue-rotated the whole body.
+- **What changed:**
+  - `creatures_visual.json` `shiny_remake_textures` maps each live remake albedo to its own repaint (`tools/art_pipeline/shiny_secondary_shift.py`: only the warm secondary band moves, to gold on Aquaryn's fins and jade on Cannonback's and Riptusk's plates).
+  - Each glow map maps to itself.
+  - A four-line hook in `creature_body._texture_for` reads the map.
+  - `creature_surface_finish.apply` stands down for a shiny already wearing one of these repaints.
+- **Tests:** `test_shiny_remake_textures` (5/48); `test_shiny`, `test_phase2_shiny_finish`, `test_realm_look_overlay` and texture policy pass.
+- **Judges' next lever:** shiny as an accent over each species' own albedo, and keep Aquaryn's pale cyan apart from the water.
+
 **qj headdown-f39-6 (4 Nov ~16:50 UTC): Aquaryn faint head-down ships ON.**
 - **Result:** F39#6 creature faint state, CPU 6.05 -> 6.24 (+0.19; raw 5.6/6.2/5.4 -> 5.6/6.6/5.5; calibrate r 0.86). Two judges see Aquaryn lie lower and more horizontal; one ties.
 - **What it is:** flag `creatures_ralph_aquaryn_faint_headdown`, a copy of the live r9 GLB with its faint clip's neck tipped down 35 deg and head 25 deg (`lateral_recoil.py --spec=neck:x:35,head:x:25 --peak=0.5 --release=1.0`). Same textures and clips.

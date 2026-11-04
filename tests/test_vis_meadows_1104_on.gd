@@ -208,3 +208,58 @@ func test_f38_20_bigger_keep_keeps_its_front_face_with_its_score() -> void:
 	var centre := float((keep.get("offset", [0.0, 0.0, 0.0]) as Array)[2])
 	assert_almost_eq(width, 210.0, 0.001, "keep 210 m wide")
 	assert_almost_eq(centre - width * 0.43 * 0.5, 140.6 - 170.0 * 0.43 * 0.5, 0.2, "front face unchanged, so nothing new reaches the chambers")
+
+
+## F38#15 mount scale (coordinator-approved, presentation only): the carrier
+## art grows so the bird stands clearly taller than the 1.80 m trainer, while
+## flight collision, the seat (feet offset) and the grip bones are unchanged
+## (CPU 6.21 -> 7.08, quick_judge f38_15-mount-scale).
+func test_f38_15_mount_grows_without_moving_collision_or_seat() -> void:
+	var fly := _load("res://data/config/fly_traversal.json")
+	assert_almost_eq(float(fly.get("collision_height_m", 0.0)), 4.5, 0.001, "flight collision height unchanged")
+	var expected := {"galecrest": [3.2, 2.45, ["foot_l", "foot_r"]], "galewisp": [3.0, 2.3, ["leg_lower_l", "leg_lower_r"]]}
+	for id: String in expected:
+		var cap: Dictionary = (fly.get("capabilities", {}) as Dictionary).get(id, {})
+		var want: Array = expected[id]
+		assert_true(bool(cap.get("presentation_scale_enabled", false)), id + " presentation scale ON")
+		assert_almost_eq(float(cap.get("presentation_height_m", 0.0)), float(want[0]), 0.001, id + " art height")
+		assert_true(float(cap.get("presentation_height_m", 0.0)) > 1.8, id + " taller than the trainer")
+		assert_true(str(cap.get("_why_presentation_height", "")).contains("CPU 6.21 -> 7.08"), id + " records its CPU score")
+		assert_almost_eq(float((cap.get("feet_offset", [0, 0, 0]) as Array)[1]), float(want[1]), 0.001, id + " seat (feet offset) unchanged")
+		assert_eq(cap.get("grip_bones", []), want[2], id + " grip bones unchanged")
+		var art: Node3D = preload("res://scripts/player/fly_controller.gd").make_carrier_art(cap)
+		assert_ne(art, null, id + " carrier art builds")
+		if art != null:
+			assert_almost_eq(art.position.y, float(want[1]), 0.001, id + " art hangs from the same offset")
+			art.free()
+
+
+## F38#41 old quarry: natural rock worked faces, grey stone and sunk floor
+## tiles (raw Bar A 5.80 -> 6.43, three code-blind judges,
+## qj/f38_41-natural-faces). The worked faces still build and keep their names.
+func test_f38_41_quarry_natural_faces_ship_on_with_their_score() -> void:
+	var quarry := _load("res://data/config/old_quarry.json")
+	var cut: Dictionary = quarry.get("worked_cut", {})
+	assert_true(bool(cut.get("natural_faces", false)), "natural worked faces ON")
+	assert_true(str(cut.get("_why_natural_faces", "")).contains("5.80 -> 6.43"), "records its CPU score")
+	for piece: Variant in cut.get("pieces", []):
+		var p := piece as Dictionary
+		if str(p.get("role", "")) in ["extraction_face", "tool_course", "working_bench"]:
+			var c := Color(str(p.get("colour", "#000000")))
+			assert_true(c.s < 0.15, "%s is grey stone, not tan" % str(p.get("name", "")))
+	var prefabs := _load("res://data/config/building_prefabs.json")
+	var floors := 0
+	for module: Variant in ((((prefabs.get("prefabs", {}) as Dictionary).get("quarry_foundation", {})) as Dictionary).get("modules", []) as Array):
+		if str((module as Dictionary).get("module", "")) == "Floor_UnevenBrick":
+			floors += 1
+			assert_almost_eq(float(((module as Dictionary).get("at", []) as Array)[1]), -0.4, 0.001, "floor tile sunk")
+	assert_eq(floors, 6, "six quarry floor tiles")
+	var builder: Object = preload("res://scripts/world/old_quarry.gd").new()
+	builder.set("_natural_worked_faces", true)
+	var face := builder.call("_textured_wedge", "WorkedFaceWest", Vector3(6.8, 5.2, 4.0),
+		Color("#8f8b82"), "", "", 0.52, 0.78, 0.96) as MeshInstance3D
+	assert_true(face != null and face.mesh != null, "natural worked face builds")
+	if face != null:
+		assert_eq(face.name, "WorkedFaceWest", "keeps its production node name")
+		face.free()
+	builder.free()
