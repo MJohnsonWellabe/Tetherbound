@@ -171,10 +171,13 @@ func test_stormwood_light_pass_ships_on_and_merges_when_on() -> void:
 	assert_eq(on["rig"]["sun"]["pitch_deg"], cfg["rig"]["sun"]["pitch_deg"], "unlisted rig keys keep their values")
 
 
-func test_catch_framed_r2_and_hud_prompt_clear_ship_off() -> void:
+## VIS-MEADOWS r1b (4 Nov 2026): the P2-059 round-2 framing ships ON after a
+## judged CPU gain (F38#13 6.22 -> 7.19).
+func test_catch_framed_r2_ships_on_with_its_score_and_hud_prompt_clear_ships_on() -> void:
 	var catching := _json("res://data/config/catching.json")
 	var r2: Dictionary = (catching["framed_camera"] as Dictionary)["r2"]
-	assert_false(bool(r2.get("enabled", true)), "the P2-059 round-2 framing ships OFF")
+	assert_true(bool(r2.get("enabled", false)), "the P2-059 round-2 framing ships ON (judged gain)")
+	assert_true(str(r2.get("_why_on", "")).contains("6.22 -> 7.19"), "the round-2 framing records its mapped score")
 	assert_true(float((r2["resolve_camera"] as Dictionary)["pitch_start_deg"])
 			> float((catching["framed_camera"]["resolve_camera"] as Dictionary)["pitch_start_deg"]),
 		"round 2 is a shallower resolve shot")
