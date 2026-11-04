@@ -18,10 +18,11 @@
     "_why": "P2-068 / F40#9 round 3 (NEAR6-CR, 4 Nov 2026; CPU 5.25 with post_role_props ON): judges still read the named NPCs as small figures partly hidden behind the trainer. On (scripts/world/cloudreach_npc_posts.gd build_dais): Tavi, Sora and Maela each stand on a low weathered-stone dais (0.45 m, collision) so they rise above the trainer's shoulder line from the approach. Same prompt, dialogue and save. OFF until judged.",
     "enabled": false,
     "posts": ["young_trainer_tavi", "naturalist_sora", "keeper_maela"],
-    "height_m": 0.45,
+    "height_m": 0.4,
     "sink_m": 0.35,
-    "radius_m": 1.15,
-    "colour": "#a9a491"
+    "radius_m": 0.8,
+    "colour": "#5f5c50",
+    "_tune_1": "first capture (qj F40-9-bf0f5543f8e6-11041955, not judged): #a9a491 at 1.15 m rendered as a bright white disc hiding the NPCs' legs; darker weathered stone, smaller footprint."
   },
   "post_role_props": {
     "_scope": "world_presentation",
