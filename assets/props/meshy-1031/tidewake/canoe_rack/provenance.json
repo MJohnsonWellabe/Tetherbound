@@ -23,5 +23,13 @@
   },
   "file": "canoe_rack.glb",
   "sha256": "25db028a268d07aac415bcb985850f1fe41fd19cb1dd3aaf38ef06ccba8b7a60"
- }
+ },
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb"
+    ]
+  }
 }

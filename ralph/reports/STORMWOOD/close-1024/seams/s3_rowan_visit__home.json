@@ -1,0 +1,12 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "rowan_visit",
+ "from_commit": "45dad1ad920ef2ed06d68582e7855b9c5a18f8a0",
+ "to_piece": "training_t5_home",
+ "to_commit": "6ed02b58f2fbac88611397e9731447065f6bf391",
+ "to_loaded_from": "/root/rb/f49_s3_rowan_visit",
+ "consumer_handoff_check": null,
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}

@@ -170,6 +170,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 - **Meshy textures:** set each texture `.import` to `compress/mode=2` and `detect_3d/compress_to=0`, then import again. Commit the `.import` files and the extracted images.
 - **Disk:** the allowance is small and `.git` alone is about 18–21 GB.
   - Fetch single branches, shallow where possible.
+  - **Full disk with a full-history `.git`:** keep the working tree and replace `.git` with a blob-less shallow fetch (`git init`, `git fetch --depth 1 --filter=blob:none origin <branch> main`, `git reset origin/<branch>`). This gives a 6 MB `.git` instead of 21 GB. A plain depth-1 fetch is about 5 GB and dies when the proxy closes its tunnel at 300 s (`early EOF`). In that clone, `git commit` lazily fetches blobs. Commit with `GIT_NO_LAZY_FETCH=1`, `git write-tree --missing-ok`, `git commit-tree <tree> -p HEAD -m …` and `git update-ref refs/heads/<branch> <commit>`, and push with `git -c pack.window=0 push` (delta search otherwise lazily fetches old blobs as bases). After a depth-1 fetch of your own pushed tip, delete that SHA from `.git/shallow` when you still have its parent.
   - Build land branches with `git merge-tree --write-tree` plus `commit-tree`, never `git worktree add` (about 3 GB).
   - Delete old capture folders, `.godot/imported` and pushed GLBs before big runs.
   - A capture that stalls for 30+ min usually means the disk is full.
@@ -229,6 +230,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 5. **Batch file:** map A/B per set from `key.json`; sides are shuffled per set. Copy each score from the judges' JSON, never from memory. Write `batch.json` as `{"anchors": {id: [j1,j2,j3]}, "candidates": {label: [j1,j2,j3]}}`.
 6. **Calibrate:** `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`. Flag RMSE > 0.75.
 7. **Commit only** VERDICT.md, the batch/key/spec/mapped JSON and one `_sheet*` image under 1.5 MB.
+- **One-item A/B (fast path):** `tools/visual_judge/quick_judge.py run <F row> --overlay <json>` does steps 1–3 for that item's own stands only: one boot per tool, the base cached per tree, and the overlay restored byte-identically. `finish` does steps 5–7. See `tools/visual_judge/README.md`.
 - **Reference crops:** `.gitignore` drops `ralph/reports/**/*.jpg` unless the file name starts with `_`. Name Meshy reference crops `_<name>.jpg` (or the coordinator never sees them) and check `git show --stat` after committing.
 - **What CPU scores are good for:** ranking candidates only. CPU mapped ≈ GPU − 0.8, and CPU wins have failed on GPU (P2-016 twice). A candidate goes to the GPU queue only when its expected gain is above 0.5 (owner, 25 Oct).
 

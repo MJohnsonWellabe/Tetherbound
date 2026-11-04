@@ -62,5 +62,13 @@
   "consumed_credits": 39,
   "credits_note": "From the Meshy API price table (nano-banana-pro image-to-image 9; multi-image-to-3d meshy-7.1 with textures 30); balance is shared with other workers so per-task diffs are not exact.",
   "scale_check": "Pending at integration: scale GLB to target_size_m extents in Godot; Meshy output is unit-normalised.",
-  "integration_status": "candidate, flag-off"
+  "integration_status": "candidate, flag-off",
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/props/meshy-1020/tidewake_current_buoy_marker/tidewake_current_buoy_marker.glb"
+    ]
+  }
 }

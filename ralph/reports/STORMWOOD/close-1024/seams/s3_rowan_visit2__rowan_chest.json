@@ -1,0 +1,35 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "rowan_visit",
+ "from_commit": "3ee3a508a4931cb19ac308420cd26669725a2757",
+ "to_piece": "rowan_chest",
+ "to_commit": "faec30135cae5e73651df6ecc5fb6d4e0e83886c",
+ "to_loaded_from": "/root/rb/f49_s3_rowan_visit2",
+ "consumer_handoff_check": {
+  "checked": true,
+  "cross_runner": false,
+  "ending_matches": true,
+  "ending_required": false,
+  "keys": [
+   "uids",
+   "species",
+   "world_flags",
+   "player_flags",
+   "items",
+   "portal_unlocks",
+   "realm",
+   "creature_progression"
+  ],
+  "mismatched": [],
+  "passed": true,
+  "previous": "f49_s3_rowan_visit2",
+  "training": {
+   "checked": true,
+   "matches": true,
+   "reason": ""
+  }
+ },
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}

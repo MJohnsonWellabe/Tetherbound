@@ -1026,6 +1026,44 @@ func hold_input(held: bool) -> void:
 ## the menu) has to say so here too, or this static footer keeps advertising
 ## the shell's own binding for a button that means something else right now.
 ## Empty restores the configured default.
+## P2-118 (VIS-CLOUDREACH lane, 4 Nov 2026): menu.json `release_choice_focus`
+## (off unless `enabled`). The full-belt release ceremony left the battle HUD
+## readable through the shell's dim and put its choice instructions in the
+## dim footer. While a ceremony holds the shell, the dim goes near-opaque and
+## the footer becomes a bright, larger instruction strip; off restores both.
+## Presentation only, device-local.
+var _ceremony_saved_dim := -1.0
+
+func set_ceremony_focus(on: bool) -> void:
+	var cfg: Variant = _config.get("release_choice_focus", {})
+	var spec: Dictionary = cfg if cfg is Dictionary else {}
+	if spec.get("enabled") != true and not OS.get_cmdline_user_args().has("--release-choice-focus-candidate"):
+		return
+	var dim := get_node_or_null(^"Root/Dim") as ColorRect
+	if on:
+		if dim != null and _ceremony_saved_dim < 0.0:
+			_ceremony_saved_dim = dim.color.a
+			dim.color.a = float(spec.get("dim_alpha", 0.9))
+		_footer.add_theme_color_override("font_color", Color(str(spec.get("footer_colour", "#F2DFA6"))))
+		_footer.add_theme_font_size_override("font_size", int(spec.get("footer_px", 30)))
+		if _scenic_footer != null:
+			_scenic_footer.add_theme_color_override("default_color", Color(str(spec.get("footer_colour", "#F2DFA6"))))
+	else:
+		if dim != null and _ceremony_saved_dim >= 0.0:
+			dim.color.a = _ceremony_saved_dim
+		_ceremony_saved_dim = -1.0
+		_footer.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		_footer.remove_theme_font_size_override("font_size")
+		if _scenic != null and not _scenic.is_empty():
+			_footer.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+		if _scenic_footer != null:
+			_scenic_footer.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
+
+
+func ceremony_focus_active() -> bool:
+	return _ceremony_saved_dim >= 0.0
+
+
 func override_footer(text: String) -> void:
 	_footer.text = legend(text if not text.is_empty() else str(_config.get("footer", "")))
 	_scenic_footer_default = text.is_empty()

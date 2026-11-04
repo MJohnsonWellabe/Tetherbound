@@ -29,9 +29,11 @@ func test_clip_moves_the_arena_end_to_its_wall_line() -> void:
 
 ## P2-003 (vis-meadows, OFF until GPU-judged): `p2_003_candidate` scales the
 ## lit keep with its front face held, and grows the spire, only when enabled.
-func test_p2_003_candidate_ships_off_and_off_returns_the_shipped_gatehouse() -> void:
+func test_p2_003_candidate_ships_on_and_off_returns_the_shipped_gatehouse() -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
-	assert_false(bool(cfg.p2_003_candidate.get("enabled", true)), "P2-003 candidate ships OFF")
+	assert_true(bool(cfg.p2_003_candidate.get("enabled", false)), "P2-003 candidate ships ON (judged gain)")
+	assert_true(str(cfg.p2_003_candidate.get("_why_on", "")).contains("6.29"), "P2-003 records its judged score")
+	cfg.p2_003_candidate.enabled = false
 	assert_eq(JSON.stringify(STRONGHOLD.p2_003_gatehouse(cfg)), JSON.stringify(cfg.hero_gatehouse))
 
 
