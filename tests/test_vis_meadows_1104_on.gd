@@ -263,3 +263,21 @@ func test_f38_41_quarry_natural_faces_ship_on_with_their_score() -> void:
 		assert_eq(face.name, "WorkedFaceWest", "keeps its production node name")
 		face.free()
 	builder.free()
+
+
+## F38#37 quarry foreman dialogue: the east worked face moved 3 m back so the
+## dialogue camera no longer sits inside it (mapped 5.31 -> 6.09,
+## qj/f38_37-east-face). The face stays inside the quarry worksite.
+func test_f38_37_east_face_clears_the_foreman_camera_with_its_score() -> void:
+	var cut: Dictionary = _load("res://data/config/old_quarry.json").get("worked_cut", {})
+	assert_true(str(cut.get("_why_east_face_moved", "")).contains("5.31 -> 6.09"), "records its CPU score")
+	var found := false
+	for piece: Variant in cut.get("pieces", []):
+		if str((piece as Dictionary).get("name", "")) == "WorkedFaceEast":
+			found = true
+			var at := (piece as Dictionary).get("at", []) as Array
+			assert_almost_eq(float(at[0]), 391.64, 0.01, "east face x")
+			assert_almost_eq(float(at[1]), 1788.23, 0.01, "east face z")
+			assert_true(Vector2(float(at[0]), float(at[1])).distance_to(Vector2(392.0, 1792.0)) > 3.5,
+				"east face clear of the foreman's stand")
+	assert_true(found, "WorkedFaceEast still built")
