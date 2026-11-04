@@ -17,6 +17,7 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `tidewake_look.json` golden_sky + shore_water out of `sections_off` | F13#5 (F39#30a/#30b flat) | CPU 5.69 -> 5.87 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r14 |
 | `tidewake_look.json` shore_surf + shore_surf_vary out of `sections_off` | F39#30a, F13#5 | CPU 5.86 -> 6.19 / 5.31 -> 5.82 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r15 |
 | `tidewake_look.json` first_shore_declutter out of `sections_off` | F39#30a/#30b | CPU 5.64 -> 5.73 / 5.36 -> 5.45 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r18 |
+| `tidewake_look.json` lighting_candidate golden/dawn sun pitch -12/-9 | F39#30a/#30b | CPU 5.98 -> 6.18 / 5.59 -> 5.75 | `test_tidewake_look_profile.gd::test_low_sun_pitch_ships_with_its_score` | look/r22 |
 
 | ~~`human_water_contact_visual.json` base wake values~~ (withdrawn 11:27, superseded by NEAR6-TW's `wake_trail` in batch 11) | F39#5 | CPU 5.31 -> 5.63 (r4) | the test is removed; this branch's view, config and test now equal batch 11 | this commit |
 

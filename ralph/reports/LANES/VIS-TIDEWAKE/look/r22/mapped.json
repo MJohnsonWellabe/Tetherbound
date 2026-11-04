@@ -1,0 +1,110 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8257,
+  "least_squares_slope": 1.1798,
+  "method": "linear",
+  "slope": 1.1798,
+  "intercept": -0.1907,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.781,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.3,
+   "reference": 7.47,
+   "mapped": 7.242,
+   "residual": 0.228
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.333,
+   "reference": 7.53,
+   "mapped": 7.281,
+   "residual": 0.249
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.467,
+   "reference": 6.53,
+   "mapped": 5.079,
+   "residual": 1.451
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.2,
+   "reference": 4.0,
+   "mapped": 4.764,
+   "residual": -0.764
+  },
+  "craft:before": {
+   "measured": 5.0,
+   "reference": 4.83,
+   "mapped": 5.708,
+   "residual": -0.878
+  },
+  "craft:after": {
+   "measured": 6.633,
+   "reference": 7.35,
+   "mapped": 7.635,
+   "residual": -0.285
+  }
+ },
+ "candidates": {
+  "F39#30a cand": {
+   "measured_mean": 5.4,
+   "mapped_mean": 6.18,
+   "mapped_judges": [
+    6.18,
+    6.3,
+    6.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#30a base": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.98,
+   "mapped_judges": [
+    5.94,
+    6.18,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#30b cand": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.75,
+   "mapped_judges": [
+    5.71,
+    6.06,
+    5.47
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#30b base": {
+   "measured_mean": 4.9,
+   "mapped_mean": 5.59,
+   "mapped_judges": [
+    5.47,
+    5.94,
+    5.35
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "anchor residual RMSE 0.78 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}
