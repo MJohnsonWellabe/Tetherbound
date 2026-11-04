@@ -1,0 +1,29 @@
+{
+ "Ge": {
+  "anchor": false,
+  "label": "F38#0",
+  "A": "f0.png",
+  "B": "f0.png"
+ },
+ "Ro": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Kp": {
+  "anchor": false,
+  "label": "F38#41",
+  "A": "f41.png",
+  "B": "f41.png"
+ },
+ "Hl": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Ua": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}
