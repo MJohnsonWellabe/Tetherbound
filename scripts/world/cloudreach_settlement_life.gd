@@ -339,7 +339,22 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 					world.call("_apply_tree_palette", model, holder.get_child_count())
 				elif str(item.asset).begins_with("rock") or item.asset == "paving":
 					world.call("apply_stone_palette", model)
-		for building: Dictionary in site.get("buildings", []):
+		# P2-022 / F40#2 (NEAR6-CR): `summit_silhouette` (OFF until judged)
+		# overrides authored building dimensions per asset for one site, so
+		# the imported belvederes can rise beside the 54 m aviary drum. Visual
+		# dimensions only; collision_fraction stays as authored (0 here).
+		var silhouette: Dictionary = spec.get("summit_silhouette", {})
+		var resize: Dictionary = {}
+		if silhouette.get("enabled") == true:
+			resize = (silhouette.get("sites", {}) as Dictionary).get(landmark_name, {})
+		for authored: Dictionary in site.get("buildings", []):
+			var building := authored
+			if resize.has(str(authored.get("asset", ""))):
+				building = authored.duplicate(true)
+				var over: Dictionary = resize[str(authored.get("asset", ""))]
+				for key: String in over:
+					if not key.begins_with("_"):
+						building[key] = over[key]
 			# A cliff-hung piece sits at its authored height (its rock tiers
 			# drop below the rim); everything else snaps to the authored ground.
 			var at := _v3(building.at) if bool(building.get("no_snap", false)) \
