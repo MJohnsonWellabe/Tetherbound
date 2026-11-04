@@ -99,6 +99,15 @@
     "enabled": false,
     "pickup_overrides": {
       "cr_recovery_high_roost_flight_speed_01": [908.0, 1020.0, 2712.0]
+    },
+    "_round1": "qj F40-17-ade4ecff4c0e-11040935: flat (4.57 -> 4.57). Moving the cluster out of frame removed the defect but left the subject unreadable; all three judges asked for it grounded and visible in frame. Stays OFF."
+  },
+  "rim_pickup_in_view": {
+    "_scope": "world_presentation",
+    "_why": "P2-102 / F40#17 round 2 (NEAR6-CR, 4 Nov 2026): instead of hiding it, set the speed mushroom on open crown turf in front of and left of the rim stand (about 3 m from the trainer, inside the rim) so it reads as a grounded cluster on grass rather than a glowing blob cut by the frame edge over the drum footing. Same id, item, count, unlock and claim. OFF until judged.",
+    "enabled": false,
+    "pickup_overrides": {
+      "cr_recovery_high_roost_flight_speed_01": [914.5, 1020.0, 2685.5]
     }
   },
   "pickup_overrides": {
