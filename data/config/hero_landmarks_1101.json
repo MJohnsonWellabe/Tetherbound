@@ -27,7 +27,7 @@
       "rim_tint": "#8c84c4",
       "rim_strength": 0.35
     },
-    "glow_colour": "#a8dcff",
+    "wall_grade_1104": {"enabled": false, "scope": "client_presentation", "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#10: in the qj_obs3 frames the Meshy sink shell reads as a huge blown-out white wall beside the dark obsidian floor (pale texture plus ice-blue glow 1.1). Dimmer glow and a darker cool tint so the walls read as glass rock. OFF until judged.", "glow_colour": "#7fa6d6", "glow_energy": 0.35, "tint": "#6f7a92", "roughness": 0.55}, "glow_colour": "#a8dcff",
     "glow_energy": 1.1
   },
   "veilfall": {
