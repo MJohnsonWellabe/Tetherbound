@@ -33,7 +33,7 @@ Three CPU gains ON: P2-053 5.87 -> 6.32 (over 6), P2-102 5.09 -> 5.72, P2-068 5.
 
 ## Harness fixes
 
-- `tools/visual_judge/quick_judge.py`: `QJ_JOB=<path>` merges extra item definitions (job.json schema) over the catalogue job. Blocker: F40#19 (F40 matrix night/rain pieces) has no stand in job.json, so no quick round could be built for it. `tools/visual_judge/tests/test_quick_judge.py` 14 OK.
+- `tools/visual_judge/quick_judge.py`: `QJ_JOB=<path>` merges extra item definitions (job.json schema) over the catalogue job. Blocker: F40#19 (F40 matrix night/rain pieces) has no stand in job.json, so no quick round could be built for it. Second, the matrix tools get `--source-commit` through `lookdev_capture_bootstrap.gd`, so quick_judge now also passes it to scripts that extend `capture_lookdev_catalogue` (reproduced: the launch exited in 15 s with "requires ... source SHA"). `tools/visual_judge/tests/test_quick_judge.py` 14 OK.
 
 ## Blockers
 
