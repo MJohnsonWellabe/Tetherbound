@@ -14,6 +14,14 @@ func _json(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
+func _without(block: String) -> Dictionary:
+	var cfg := _json(CAMFX.CONFIG_PATH).duplicate(true)
+	var off: Dictionary = (cfg[block] as Dictionary).duplicate(true)
+	off["enabled"] = false
+	cfg[block] = off
+	return cfg
+
+
 func _with(block: String) -> Dictionary:
 	var cfg := _json(CAMFX.CONFIG_PATH).duplicate(true)
 	var on: Dictionary = (cfg[block] as Dictionary).duplicate(true)
@@ -45,7 +53,8 @@ func _bonfire() -> MeshInstance3D:
 
 ## catch_orb ships ON after a judged CPU gain (VIS-MEADOWS r1b, 4 Nov 2026);
 ## the other blocks still ship OFF.
-const JUDGED_ON := {"catch_orb": "CPU 6.22 -> 7.19"}
+## NEAR6-MS (4 Nov 2026) judged fight_fade and dialogue_open together on F41#20.
+const JUDGED_ON := {"catch_orb": "CPU 6.22 -> 7.19", "fight_fade": "CPU 4.72 -> 5.64"}
 
 
 func test_every_camfx_block_ships_off_unless_judged_on() -> void:
@@ -120,6 +129,7 @@ func test_orb_off_paths_are_the_shipped_ones() -> void:
 
 
 func test_fight_fade_off_is_inert_and_options_keep_the_base_filters() -> void:
+	CAMFX.set_config_for_tests(_without("fight_fade"))
 	assert_true(CAMFX.block("fight_fade").is_empty(), "OFF reads as empty")
 	assert_true(OCCLUSION.occluders(null, Vector3.ZERO, Vector3.ONE * 3.0, [],
 		{"include_shadowless": true}).is_empty(), "no world, no occluders, with or without options")
@@ -196,9 +206,10 @@ func _rig() -> SpringArm3D:
 	return rig
 
 
-func test_dialogue_open_ships_off() -> void:
+func test_dialogue_open_ships_on_after_judged_gain() -> void:
 	var cfg := _json(CAMFX.CONFIG_PATH)
-	assert_false(bool((cfg["dialogue_open"] as Dictionary).get("enabled", true)), "dialogue_open ships OFF")
+	assert_true(bool((cfg["dialogue_open"] as Dictionary).get("enabled", false)), "dialogue_open ships ON (judged gain)")
+	assert_true(str((cfg["dialogue_open"] as Dictionary).get("_why_on", "")).contains("CPU 4.72 -> 5.64"), "dialogue_open records its score")
 	var rig := FileAccess.get_file_as_string("res://scripts/player/camera_rig.gd")
 	assert_true(rig.contains("var open_cfg := CAMFX.block(\"dialogue_open\")\n\tif not open_cfg.is_empty():"),
 		"the push-in only searches when the block is on")
