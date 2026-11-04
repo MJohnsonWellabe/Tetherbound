@@ -807,8 +807,18 @@ func _sync_npcs() -> void:
 			continue
 		spec["position"] = [at.x, at.y, at.z]
 		positions[spec["id"]] = spec["position"]
+	# P2-068 round 3: `post_dais` (off unless enabled) raises each listed post
+	# onto a low stone dais so the NPC reads above the approaching trainer.
+	var dais: Dictionary = NPC_POSTS.dais_spec(npc_runtime)
+	if not dais.is_empty():
+		for spec: Dictionary in specs:
+			if positions.has(spec["id"]) and (dais.get("posts", []) as Array).has(spec["id"]):
+				var p: Array = spec["position"]
+				spec["position"] = [p[0], float(p[1]) + float(dais.get("height_m", 0.45)), p[2]]
+				positions[spec["id"]] = spec["position"]
 	if positions == _npc_positions and is_instance_valid(_people):
 		return
+	NPC_POSTS.build_dais(self, positions, dais)
 	_npc_positions = positions
 	if is_instance_valid(_people):
 		remove_child(_people)
