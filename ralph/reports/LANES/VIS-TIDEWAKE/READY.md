@@ -16,6 +16,7 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `water_veilfall_falls_visual.json` `geometry.standoff_m` 0.8 -> 3.0 | F39#30b (F39#31 flat) | CPU 5.75 -> 5.85 | `test_tidewake_look_profile.gd::test_veilfall_fall_sheet_clears_the_rock` | look/r12 |
 | `tidewake_look.json` golden_sky + shore_water out of `sections_off` | F13#5 (F39#30a/#30b flat) | CPU 5.69 -> 5.87 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r14 |
 | `tidewake_look.json` shore_surf + shore_surf_vary out of `sections_off` | F39#30a, F13#5 | CPU 5.86 -> 6.19 / 5.31 -> 5.82 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r15 |
+| `tidewake_look.json` first_shore_declutter out of `sections_off` | F39#30a/#30b | CPU 5.64 -> 5.73 / 5.36 -> 5.45 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r18 |
 
 | ~~`human_water_contact_visual.json` base wake values~~ (withdrawn 11:27, superseded by NEAR6-TW's `wake_trail` in batch 11) | F39#5 | CPU 5.31 -> 5.63 (r4) | the test is removed; this branch's view, config and test now equal batch 11 | this commit |
 
@@ -98,4 +99,4 @@ Arm: `cause_tidewake.sea` + `horizon`. Calibration r 0.84, RMSE 0.45 (`qj/r2b/VE
 - look/r9 (13:05): `current_bands_candidate` lost (F13#5 5.95 -> 5.59) and stays OFF.
 - look/r11 (13:20): `veilfall_cladding_candidate` + `veilfall_hero_candidate` flat (F39#31 5.29 -> 5.32, F39#30b 5.40 -> 5.40); stay OFF.
 - Coordinator 15:00, batch 17 (#825) `smoke_net_water_alpha` "peer silent (peer 0)": ran locally (`runbook/net_b17.sh`, 4-core container, one Godot at a time), this lane's batch-17 arms ON (HEAD) vs OFF (`ov_b17off.json`: shore dressing, surf, golden sky, shore water back in `sections_off`, standoff 0.8). **Both PASS, ALL CHECKS PASSED**, wall 162 s ON / 160 s OFF. The host's Water shell for the crossing client reports `finished building in 14.2 s` ON and `14.9 s` OFF, so no arm adds main-thread time. Code check agrees: every batch-17 arm is presentation-gated (`simulation_only` skips landmark models/lesson clusters, ground cover, surf/shore water overlays and current markers; the standoff only changes a parameter on a mesh of the same size). The shell build itself (~14-15 s here) sits right at the 15 s heartbeat detector, so a slower CI runner can trip it with or without these arms. That is a pre-existing margin issue in the Water shell build or the harness allowance (the host-shell crossing allowance did not apply), not a change from this lane.
-
+- look/r16 (ripple calm) and look/r17 (low-sun shadow bias): no visible change, stay OFF; the golden-hour sand stripes are not ripple normals, acne or the First Shore props.

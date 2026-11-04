@@ -48,11 +48,27 @@
     "horizon_haze_height": 0.15,
     "horizon_haze_strength": 0.42
   },
+  "weather_arms": {
+    "rain_mood": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU day rain 4.90): all three judges said Cloudreach rain only desaturates the scene. On (scripts/world/cloudreach_weather.gd realm_preset): Cloudreach-only keys over the shared rain preset keep more of the realm's colour and form: stronger diffuse sun with soft shadows, a cooler blue-grey sky and fog with a little less density so the stratified distance layers in haze, a teal-cool ambient and wetter ground. Meadows rain is unchanged. OFF until judged.",
+      "enabled": false,
+      "presets": {
+        "rain": {
+          "sun": {"energy_mult": 0.68, "shadow_opacity": 0.3},
+          "sky": {"top_colour": "#4f6782", "horizon_colour": "#93a6b4", "ground_horizon_colour": "#93a6b4"},
+          "environment": {"ambient_colour": "#7a95ab", "fog_density_add": 0.0042, "fog_colour": "#8aa0b2", "adjustment_saturation_mult": 0.97},
+          "ground_wetness": 0.8
+        }
+      }
+    }
+  },
   "time_override_arms": {
     "night_foreground_fill": {
       "_scope": "device_local_presentation",
-      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU night 5.05): all three judges said night turns the foreground into a black-green mass. The night sun key was found not to reach the frame (VIS-CLOUDREACH mx2), so this arm uses the ambient path the M4 override already proved: a brighter, cooler moonlit ambient with a lighter blue, a slightly higher exposure and a touch more saturation so grass reads as green-blue turf rather than black, while the sky keeps its night colours. OFF until judged.",
-      "enabled": false,
+      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU night 5.05): all three judges said night turns the foreground into a black-green mass. The night sun key was found not to reach the frame (VIS-CLOUDREACH mx2), so this arm uses the ambient path the M4 override already proved: a brighter, cooler moonlit ambient with a lighter blue, a slightly higher exposure and a touch more saturation so grass reads as green-blue turf rather than black, while the sky keeps its night colours.",
+      "enabled": true,
+      "_why_on": "NEAR6-CR quick judge F40-19-63afb3c3967f-11041555 (4 Nov 2026, F40 matrix piece 7, realm gate night): CPU 5.10 -> 5.84 (+0.74), all three judges preferred it; defect PRESENT -> PARTIAL. Ships ON (owner 4 Nov: every judged CPU gain ships ON).",
       "overrides": {
         "night": {"environment": {"ambient_energy": 3.4, "ambient_colour": "#5c74bd", "ambient_sky_contribution": 0.12, "exposure": 1.08, "adjustment_saturation": 1.0}}
       }

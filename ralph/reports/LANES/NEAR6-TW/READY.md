@@ -1,5 +1,9 @@
 # NEAR6-TW lane (tb/near6-tw-1104): Tidewake F39 items scored 5.4–6.0, CPU quick-judged
 
+## Taken from VIS-STORMWOOD (coordinator 16:44)
+
+- **F41#10 Glass Sink: the pale white wall** on the left of every F41#10 frame. VIS-STORMWOOD's arms left it untouched and the source is unknown. This lane traces the source and tries a scene-level fix (lighting, material or fog on the real node). VIS-STORMWOOD should skip it; its material arms (obsidian, wall_grade) are not touched. The line cannot go into VIS-STORMWOOD's READY.md from here: this lane pushes only tb/near6-tw-1104.
+
 ## Handoff update (15:00 UTC)
 
 - **Second batch (coordinator, 11:45):** F39#24 rest poses ON 5.02 -> 6.69; F39#16 live current seams ON 5.96 -> 6.54 (both in the table below, tests passing). F39#21 is blocked on CPU (victory lifecycle needs continuous rendering; see Blockers). F39#15: one no-change round. F39#3: scene lever already shipped; the remainder is new art.
@@ -65,6 +69,8 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 `runbook/chain.sh` (resumable): import, then r6, r27, r14, r19, r7. F39#1/#2 wait for VIS-TIDEWAKE's r2a verdict; F39#4 waits for its shiny round; F39#20 is designed from the r19 base fight frames.
 
 ## Blockers
+
+- **New-art assignment (coordinator 16:18: Blender work on F39#3 and F39#2) is on hold for the owner.** (1) Installing portable Blender 4.2 (downloading and running an external binary) was denied by this session's permission policy. (2) CLAUDE.md says "Claude lanes may do scene-level art from installed asset families; new meshes and Meshy work stay with Codex (owner, 2026-09-27)", and no newer owner line clearly lifts that for Claude lanes. I have not worked around either. Both need an owner decision: allow the Blender install, and confirm Claude lanes may author new meshes, or route F39#3/F39#2 art to a Codex lane.
 
 - **F39#21 (victory hierarchy, `hud.json` `victory_focus`, OFF, unjudged): cannot be captured on CPU.** Its stands (`venn_resolve__win`/`aftermath`, `nerissa_resolve__win`) exist only in `phase2_capture_tidewake_fights.gd --verified-victory-lifecycle` runs. That mode refuses `--render-only-saves` and needs a native 1080p window, so two full trainer fights must render continuously on llvmpipe. job.json's repro also omits the flag, so r21 (ordinary render-only runs: 29 frames, fight resolved at 99 s) wrote no win frames. Better judged on the GPU queue.
 
