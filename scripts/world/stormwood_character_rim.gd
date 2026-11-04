@@ -23,6 +23,12 @@ static func settings() -> Dictionary:
 		for key: String in ["energy", "power"]:
 			if (r2 as Dictionary).has(key):
 				cfg[key] = (r2 as Dictionary)[key]
+	# F41#8/#18 fill_1104 (OFF until judged; coordinator 4 Nov 19:25): a soft
+	# front fill through the shared overlay's `fill_energy`, so faces and
+	# uniform fronts lift off the dark moss ("flat faces, no catchlight").
+	var fill: Variant = cfg.get("fill_1104", {})
+	if fill is Dictionary and bool((fill as Dictionary).get("enabled", false)):
+		cfg["fill_energy"] = float((fill as Dictionary).get("fill_energy", 0.0))
 	return cfg
 
 
@@ -43,6 +49,7 @@ static func overlay(cfg: Dictionary) -> ShaderMaterial:
 	material.set_shader_parameter("rim_colour", Color(str(cfg.get("colour", "#b8c8ff"))))
 	material.set_shader_parameter("rim_energy", float(cfg.get("energy", 0.45)))
 	material.set_shader_parameter("rim_power", float(cfg.get("power", 3.0)))
+	material.set_shader_parameter("fill_energy", float(cfg.get("fill_energy", 0.0)))
 	return material
 
 
