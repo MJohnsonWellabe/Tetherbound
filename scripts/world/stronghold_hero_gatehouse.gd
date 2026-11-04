@@ -72,6 +72,11 @@ static func _light_windows(model: Node3D, cfg: Dictionary) -> void:
 				continue
 			var lit := source.duplicate() as StandardMaterial3D
 			lit.albedo_color = source.albedo_color * tint
+			# `fog_disable` (F38#20 r4, optional, OFF unless set): the depth fog
+			# bleaches the distant keep to a pale ghost behind the near pylons
+			# (judges, 4 Nov). The keep alone keeps its own value through the fog.
+			if bool(cfg.get("fog_disable", false)):
+				lit.disable_fog = true
 			if mask == null:
 				mesh_instance.set_surface_override_material(surface, lit)
 				continue
