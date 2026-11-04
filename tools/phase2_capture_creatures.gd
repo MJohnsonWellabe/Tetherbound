@@ -275,6 +275,17 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	for frame in 5:
 		await process_frame
 	var player: AnimationPlayer = (animator as Object).get("_player") as AnimationPlayer if animator is Object else null
+	# Creatures-ralph 4 Nov (reproduced): a "fainted" still is the end state the
+	# player sees, but five CPU frames land mid-collapse in a 1.5 s faint clip
+	# (Veridian read as "splayed" mid-fall). Wait, in game time, for the faint
+	# clip to finish (bounded by wall time).
+	if pose == "fainted" and player != null and not str(player.current_animation).is_empty():
+		var faint_left := player.current_animation_length - player.current_animation_position
+		var waited := 0.0
+		var wall_cap := Time.get_ticks_msec() + 60000
+		while player.is_playing() and waited < faint_left + 0.1 and Time.get_ticks_msec() < wall_cap:
+			await process_frame
+			waited += root.get_process_delta_time()
 	if pose == "idle":
 		print("PHASE2 POSE PLAYER %s player=%s active=%s" % [species,
 			str(player != null), str(player.current_animation) if player != null else ""])
