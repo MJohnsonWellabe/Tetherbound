@@ -2,7 +2,8 @@
 
 ## Taken from VIS-STORMWOOD (coordinator 16:44)
 
-- **F41#10 Glass Sink: the pale white wall** on the left of every F41#10 frame. VIS-STORMWOOD's arms left it untouched and the source is unknown. This lane traces the source and tries a scene-level fix (lighting, material or fog on the real node). VIS-STORMWOOD should skip it; its material arms (obsidian, wall_grade) are not touched. The line cannot go into VIS-STORMWOOD's READY.md from here: this lane pushes only tb/near6-tw-1104.
+- **F41#10 Glass Sink: the pale white wall. DONE, ON 4.84 -> 5.36:** the wall was `HollowCrownSilhouette` (stormwood_crown_overlook massif), whose 300 m visibility start sat inside its own 560 m footprint, so stands on the Crown island saw its inner cliff. One judge flags the trunk revealed at the left edge as red-brown; two read it as bark.
+- (original note) on the left of every F41#10 frame. VIS-STORMWOOD's arms left it untouched and the source is unknown. This lane traces the source and tries a scene-level fix (lighting, material or fog on the real node). VIS-STORMWOOD should skip it; its material arms (obsidian, wall_grade) are not touched. The line cannot go into VIS-STORMWOOD's READY.md from here: this lane pushes only tb/near6-tw-1104.
 
 ## Handoff update (15:00 UTC)
 
@@ -30,6 +31,7 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `water_resource_models.json` `fight_ring_hide.enabled` (+ `pickups`): Tidewake gather nodes and world pickups stand aside inside a fight ring | F39#20 | CPU 5.87 -> 6.42 (3/3 judges higher, PRESENT -> FIXED 3/3) | `test_near6_tw_judged_on.gd::test_fight_ring_hide_ships_on` (+ `test_fight_ring_occluders`: 16 tests, 0 failed) | this commit |
 | `water_creature_rest_visual.json` `prone_rest.enabled`: Riptusk and Torrentoad rest upright, settled belly-down | F39#24 | CPU 5.02 -> 6.69 (3/3 judges higher, PRESENT -> FIXED 3/3) | `test_near6_tw_judged_on.gd::test_prone_rest_ships_on` (+ `test_creature_rest_pose`, `test_companion_presence`, `test_texture_import_policy`: 54 tests, 0 failed); capture fix `phase2_capture_creatures.gd` (the authored-rest wait counts game time) | 2bab77374 |
 | `tidewake_look.json` `current_flow` live seams 0.3 -> 0.1, caps 0.45, flecks 0.16; seam_wander 9, seam_gap 0.65 (`_why_near6_live_seams`) | F39#16 | CPU 5.96 -> 6.54 (3/3 judges higher, guide-lane defect FIXED 3/3; 2 judges note the current now reads faint) | `test_near6_tw_judged_on.gd::test_live_current_seams_ship_softened` (+ current-flow, look-profile, cause tests: 27 tests, 0 failed) | this commit |
+| `stormwood_crown_overlook.json` `massif.near_hide_1104.enabled` (Crown silhouette begins at 470 m, beyond its 560 m footprint; was 300 m) | F41#10 | CPU 4.84 -> 5.36 (3/3 judges higher; the pale left wall was the silhouette seen from inside; RMSE 0.64) | `test_near6_tw_judged_on.gd::test_crown_massif_near_hide_ships_on` (+ crown_overlook, hero_landmarks, stormwood_look: 27 tests, 0 failed) | this commit |
 
 ## Arms built (all OFF, commit 6cd7f370)
 
