@@ -51,15 +51,16 @@ func test_f38_29_silent_victory_shot_ships_on() -> void:
 	assert_true(profiles.has("aftermath"), "it reuses the existing aftermath profile")
 
 
-## F38#32 P2-035: the trail camp keep-clear zone ships OFF; a disabled zone is
-## skipped and the Practice Meadow zone (no enabled key) stays on.
-func test_f38_32_trail_camp_keep_clear_ships_off() -> void:
+## F38#32 P2-035: the trail camp keep-clear zone ships ON (judged gain); a disabled
+## zone is skipped and the Practice Meadow zone (no enabled key) stays on.
+func test_f38_32_trail_camp_keep_clear_ships_on() -> void:
 	var zones: Array = _json("res://data/config/combat.json").arena.wild_keep_clear
 	assert_eq(zones.size(), 2, "the practice zone and the trail camp zone")
 	assert_false(zones[0].has("enabled"), "the Practice Meadow zone keeps its default (on)")
 	var camp: Dictionary = zones[1]
 	assert_eq(str(camp.id), "trail_camp_1104", "the camp zone is named")
-	assert_false(bool(camp.enabled), "the trail camp zone ships OFF until judged")
+	assert_true(bool(camp.enabled), "the trail camp zone ships ON (judged gain)")
+	assert_true(str(camp._why_on).contains("CPU 5.61 -> 5.81"), "records its score")
 	assert_between(float(camp.radius_m), 6.0, 20.0, "covers the 5.2 m camp floor plus wander room")
 	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
 	assert_true(director.contains("if not bool((raw as Dictionary).get(\"enabled\", true)):\n\t\t\tcontinue"),

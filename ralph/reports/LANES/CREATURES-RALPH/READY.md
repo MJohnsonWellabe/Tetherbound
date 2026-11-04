@@ -38,6 +38,12 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**Coordinator, batch 16 `smoke_stormwood_spawn_slicing` (4 Nov ~15:05 UTC): not the lateral hit arm.** I ran the smoke locally on this branch, alternating the arm ON and OFF; worst main-thread gap per run:
+- **ON:** 7691 (the first Stormwood boot after a long Meadows capture, a cold cache), then 1730, 1884 and 1789 ms.
+- **OFF:** 1861 and 1682 ms.
+- **Read:** warm runs sit at about 1.7-1.9 s whichever way the flag is set, so the 2000 ms limit has under 0.3 s of headroom on its own. The arm only swaps Burrowback/Nightburrow's model (the same mesh, imported .scn and extracted textures), and the band spawn tables place those species in the Meadows bands. Your 2006 ms reads as that existing thin margin, not a load-time cost.
+- **No warm/cache change made.**
+
 **v1/b20 (4 Nov ~15:00 UTC): Mosshock and Sparkit lateral hit arms are worse and stay OFF (in HELD).** F36#54 5.95 -> 5.79; F36#70 6.20 -> 5.75. Sparkit maps at 6.20 as shipped. Mosshock needs new art: its face and elemental trait do not read at stage distance, and its faint is a "rock-like lump". Verdict in `v1/b20/`.
 
 **qj lathit4-f38-2 (4 Nov ~14:00 UTC): Burrowback/Nightburrow lateral hit ships ON.**

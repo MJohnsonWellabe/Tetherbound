@@ -1,6 +1,6 @@
 # VIS-CLOUDREACH lane (tb/vis-cloudreach-1104), 4 Nov 2026
 
-Status 4 Nov 07:20 UTC: three judged gains ON (P2-105, P2-106, P2-118; +2.99 cumulative CPU); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
+Status 4 Nov 14:25 UTC: five judged gains ON (P2-105 x2, P2-106, P2-118 x2; +5.98 cumulative CPU mapped); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
 
 CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `tools/visual_judge`.
 
@@ -16,6 +16,7 @@ CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `
 **Smokes (4 Nov 06:48, on the r3b tree):** `smoke_cloudreach_companion_fall` 36 checks, 0 failures. `smoke_cloudreach_saddle_remount` 331 checks, 1 failure: "a later challenge of trainer_ila_lower_ring works" (combat admission refused, the ally overlaps an arrival-route collider). It fails identically with `mounted_drop_no_air_drive` OFF, so the scramble does not cause it; whether it also fails on unmodified main is untested. The first smoke run caught the scramble firing on the survivable causeway ledge; fixed in ea8847741 (the floor probe casts past non-walkable hits and samples a ring), and the ledge checks pass.
 
 | `data/config/hud.json:catch_card.full_team_line` (new) | F40#18 P2-118 | 3.57 -> **4.98** (merged tree, card ON in both arms) | `tests/test_vis_cloudreach_landed.gd` | see log |
+| `data/config/cloudreach_visual.json:landing_tree_clear` (new) | F40#6 P2-105 | 3.68 -> **5.28** (+1.60; base had the camera inside LandingTree171 on the road-back frame; `tc/VERDICT.md`) | `tests/test_vis_cloudreach_landed.gd` | see log |
 
 P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coordinator/owner:** the scramble ends an unsurvivable mounted fall sooner than the walker's 100 m recovery (SYSTEMS §8 parity reading); survivable ride-offs are unchanged. Turning the flag off restores strict parity.
 
@@ -40,7 +41,11 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 - `cloudreach_visual.json:ground_cover` clumping overlay (F40#1): no visible change at the P2-021 stands; not judged (`qj/qj_clumps/`).
 - `hud.json:catch_card.full_team_line` (F40#18): the first candidate capture lost its catch to an arbitration timing refusal ("not_claimant") on the slow CPU render; the confirming rerun caught and was judged (shipped ON above).
 
-## Handed to NEAR6-CR (coordinator, 4 Nov 07:42)
+## Handed to NEAR6-CR
+
+**4 Nov 14:12:** F40#19 night and rain (mx1 pieces 4 and 7; the night light layer that overrides `time_overrides`, see `mx2/`) also go to NEAR6-CR. This lane keeps F40#0 (re-score), F40#1 (open terrain), F40#21 (cleanliness), F40#6, #11, #18.
+
+**4 Nov 07:42:**
 
 F40#9, #4, #8, #2, #17 now belong to NEAR6-CR (`tb/near6-cr-1104`). From this lane:
 - **F40#8 P2-053:** `objective_beacon.json:realm_styles.cloudreach` (fdfb015a7, OFF, not captured): Cloudreach-only paler, thinner, quieter objective beacon (the cyan post judges call a debug marker). Overlay: `{"data/config/objective_beacon.json": {"realm_styles": {"cloudreach": {"enabled": true}}}}`.

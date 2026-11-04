@@ -1,6 +1,6 @@
 # NEAR6-MS (4 Nov 2026): running status
 
-Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813). Items F38#29, #6, #26, #7, #32 and F41#9, #20, #15, #3 (board 5.4-6.0). Yardstick: `tools/visual_judge/quick_judge.py` (CPU llvmpipe Low/Compatibility, base and candidate on the same stands, JUDGE_PROMPT verbatim, 3+ anchor pairs, three code-blind judges, calibrate.py). Owner 4 Nov: any judged CPU gain ships ON; flat or worse stays OFF.
+Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813; rebuilt on main 60f2df27, #823, at 13:55 UTC, which already carries F41#20 and F38#29). Items F38#29, #6, #26, #7, #32 and F41#9, #20, #15, #3 (board 5.4-6.0). Yardstick: `tools/visual_judge/quick_judge.py` (CPU llvmpipe Low/Compatibility, base and candidate on the same stands, JUDGE_PROMPT verbatim, 3+ anchor pairs, three code-blind judges, calibrate.py). Owner 4 Nov: any judged CPU gain ships ON; flat or worse stays OFF.
 
 ## Landing-ready (flag, score, test, commit)
 
@@ -8,7 +8,7 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813). Items F38#29, #6, #26,
 
 - **F38#29 P2-065 trainer defeated presentation: CPU 5.76 -> 6.18** (`qj/F38-29-88df037c89f6-11041137/`; round 2, after the kneel alone was flat in round 1). ON: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (beaten trainer drops to both knees, head bowed, the moment they lose; `post_stance.gd` rows take an optional hip drop) and `trainer_aftermath.json silent_victory_shot_1104` (a trainer beaten without victory lines gets the existing `aftermath` push-in for 5 s; `encounter_director.gd::_present_silent_victory`). All three judges scored the candidate higher. Test: `test_near6_ms_1104.gd` (asserts both ON with the score; OFF path still checked). **Tests passed (13:00 UTC):** test_near6_ms_1104, test_uiposes_post_stance, test_trainer_aftermath, test_trainer_aftermath_lifetime, test_trainer_aftermath_world_change, test_conversation_camera, test_texture_import_policy: 55 tests, 1929 assertions, 0 failed. Commit `f4748d0b`.
 
-- **F38#26 P2-020 creature ground contact: CPU 5.95 -> 6.07** (`qj/F38-26-662667cd3005-11041311/`; round 2, after the grass-clear radius was flat in round 3). ON: `creature_rim.json` (creatures-ralph's Meadows creature rim, `4e606ff6`, never judged before). Small gain, but every judge saw the rim-side creatures lighter against the tree band and none scored it lower. Test: `test_creature_rim.gd` (asserts ON with the score; a look outside `realm_looks` still leaves it inactive). **Tests passed (13:45 UTC):** test_creature_rim, test_meadows_cause_flags, test_enemy_pattern_telegraph, test_telegraph_glow, test_texture_import_policy: 24 tests, 8655 assertions, 0 failed. Commit `14df24cb`. Also lifts F38#1/#2 (same creatures), not measured here.
+- ~~F38#26 creature_rim ON (CPU 5.95 -> 6.07)~~ **Withdrawn (coordinator, 4 Nov 13:47):** it duplicated the visual lane's stronger rim10 rim, ON on main since #817 (batch 16 keeps main's). The branch was rebuilt on main `60f2df27` (#823) without it; further F38#26 work is judged on top of rim10. The verdict stays in `qj/F38-26-662667cd3005-11041311/` as evidence that a Meadows creature rim reads.
 
 ## Arms built (OFF until judged)
 
