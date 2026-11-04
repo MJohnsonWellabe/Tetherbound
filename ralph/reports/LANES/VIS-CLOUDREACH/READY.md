@@ -21,7 +21,7 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 
 | Arm | Items | State |
 |---|---|---|
-| `cloudreach_cause.json:enabled` (earlier cause lane) | F40#1, #4, #2, #6, #11, #7 | **Judged r1: flat or worse, stays OFF** (P2-021 5.24->5.06, P2-022 5.59->5.52, P2-023 5.41->5.16, P2-025 5.88->5.27, P2-105 4.65->4.51, P2-106 5.32->5.39; `r1/`, `r1-ride/`). Round 3c retries its `meadow_groves` + `cloud_sea` parts alone. |
+| `cloudreach_cause.json:enabled` (earlier cause lane) | F40#1, #4, #2, #6, #11, #7 | **Judged r1: flat or worse, stays OFF** (P2-021 5.24->5.06, P2-022 5.59->5.52, P2-023 5.41->5.16, P2-025 5.88->5.27, P2-105 4.65->4.51, P2-106 5.32->5.39; `r1/`, `r1-ride/`). `meadow_groves` + `cloud_sea` alone, quick_judge on the merged tree (`qj/qj_groves/`): F40#1 6.39 -> 6.16, F40#4 6.47 -> 6.31, F40#7 6.51 -> 6.51; stays OFF. Merged-tree CPU bases: F40#1 6.39, F40#4 6.47, F40#7 6.51 (all above 6.0). |
 | `menu.json:release_choice_focus` (new) | F40#18 P2-118 | Round 2: no visible change (the scored 09-caught-banner frame is before the release ceremony opens); stays OFF. `hud.json:catch_card` judged r2b and shipped ON (above). |
 | `cloudreach_npc_runtime.json:post_readability` (new) | F40#9 P2-068 | **Judged r3: flat, stays OFF** (CPU 5.16 -> 5.20; `r3/`). First CPU score for the item. |
 | (baseline) F40 matrix pieces 3, 7, 51, 83 | F40#0, #19, #21 | Round 4: `capture_cloudreach_f40_matrix.gd --preset=Low`, base vs `--cloudreach-cause-candidate` (CPU subset score, stated as a subset) |
@@ -32,7 +32,7 @@ F40#9, #4, #8, #2, #17 now belong to NEAR6-CR (`tb/near6-cr-1104`). From this la
 - **F40#8 P2-053:** `objective_beacon.json:realm_styles.cloudreach` (fdfb015a7, OFF, not captured): Cloudreach-only paler, thinner, quieter objective beacon (the cyan post judges call a debug marker). Overlay: `{"data/config/objective_beacon.json": {"realm_styles": {"cloudreach": {"enabled": true}}}}`.
 - **F40#17 P2-102 (idea, not built as a flag):** night moon key light instead of ambient (ambient lifts the trainer more than the terrain). Overlay tried here but never run: `{"data/config/cloudreach_visual.json": {"time_overrides": {"night": {"sun": {"energy": 1.0, "shadow_opacity": 0.55, "colour": "#c4d4f2"}, "environment": {"ambient_colour": "#5568b4"}}}}}`.
 - **F40#9 P2-068:** `post_readability` judged flat (r3, 5.16 -> 5.20); judges want NPCs unoccluded by the trainer, larger, with role props.
-- **F40#4/#2:** r1 base CPU 5.41 / 5.59; F40#4 is also in this lane's running `qj_groves` round (meadow_groves + cloud_sea overlay, with F40#1/#7); its #4 score will be passed on, not shipped from here.
+- **F40#4/#2:** r1 base CPU 5.41 / 5.59; F40#4 is also in this lane's running `qj_groves` round (meadow_groves + cloud_sea overlay, with F40#1/#7); merged-tree CPU base 6.47 (`qj/qj_groves/`); the groves arm is worse there (6.31).
 
 ## Harness fixes
 
