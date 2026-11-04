@@ -493,9 +493,7 @@ func _ride_off_edges_by_input() -> void:
 		var drop_cfg: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
 			"res://data/config/cloudreach_physical_runtime.json")) as Dictionary).get("mounted_drop_no_air_drive", {})
 		if drop_cfg.get("enabled") == true and float(drop_cfg.get("scramble_after_s", 0.0)) > 0.0:
-			# The mount must have left the edge (any real drop, at scramble_after_s 0.3
-			# about 0.4 m) and been caught well before the walker's 100 m depth.
-			_check(float(last.fell) > 0.1 and float(last.fell) < 95.0,
+			_check(float(last.fell) > 1.0 and float(last.fell) < 95.0,
 				"the mount scrambled back from the unsurvivable drop before falling the walker's depth (%.1f m)" % float(last.fell))
 		else:
 			_check(float(last.fell) > 95.0, "the mount fell as far as a walker would before recovery (%.1f m)" % float(last.fell))
