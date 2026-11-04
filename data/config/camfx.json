@@ -54,7 +54,7 @@
   },
 
   "dialogue_open": {
-    "enabled": false,
+    "enabled": true, "_why_on": "CPU 4.72 -> 5.64 (NEAR6-MS, 4 Nov 2026: F41#20 P2-084 named character dialogue; Fenn's black frame, camera inside a dark blocker, now shows Fenn; three code-blind judges, calibrated slope 1.31 r 0.93 RMSE 0.51; ralph/reports/LANES/NEAR6-MS/qj/F41-20-afe828ee024f-11040806/VERDICT.md). Judged together: camfx.json fight_fade and dialogue_open. Owner 4 Nov: a judged gain ships ON.",
     "scope": "client_presentation",
     "_why": "Judges 1 Nov: 'rock faces fill 70% of the frame' (P2-079 Quarry Foreman, 4.64, and Garrick: a black rock face fills the right third), 'speaker boxed in by rock'. The push-in only asks whether the speaker is visible, not what fills the rest of the frame. When enabled, the solved shot casts a fan of rays across the frame (12, the speaker's centre column left out) from the lens out to the speaker's depth; if more than blocked_threshold of them hit something, the push-in tries its existing swing angles (conversation swing_search) and takes the most open one that is reachable, has room, still sees the speaker and keeps them in frame, if it is at least min_gain more open. Last frame's choice is kept unless beaten, so the shot does not flick. Collider geometry only; collider-less walls are fight_fade's job. scripts/player/camera_rig.gd _open_view_shot.",
     "blocked_threshold": 0.34,
@@ -66,7 +66,7 @@
   },
 
   "fight_fade": {
-    "enabled": false,
+    "enabled": true, "_why_on": "CPU 4.72 -> 5.64 (NEAR6-MS, 4 Nov 2026: F41#20 P2-084 named character dialogue; Fenn's black frame, camera inside a dark blocker, now shows Fenn; three code-blind judges, calibrated slope 1.31 r 0.93 RMSE 0.51; ralph/reports/LANES/NEAR6-MS/qj/F41-20-afe828ee024f-11040806/VERDICT.md). Judged together: camfx.json fight_fade and dialogue_open. Owner 4 Nov: a judged gain ships ON.",
     "scope": "client_presentation",
     "_why": "Judges 1 Nov: 'camera inside canopy, fight lost' (Stormwood fights i11/i13/i15) and Fenn's near-black dialogue frame (P2-084: the push-in lens stands in a scattered trunk). camera.json occlusion_fade (tb/vis-storm-cams, GPU batch 5) fades what stands between the FOLLOWED body and the lens; in a fight the followed body is the piloted creature, so canopy over the opponent, and a crown the lens sits inside above the ally, stayed. When enabled this turns the same fade on for fight and conversation cameras even if occlusion_fade is off, and also fades along the opponent's (fight) and speaker's (conversation) chest-to-lens line. include_shadowless also fades tall foliage cards that cast no shadow (canopy leaf cards), which the base fade skips as effect cards; skinned bodies, grass under min_height_m and effects stay. Arm length and stands unchanged. scripts/player/camera_rig.gd _fade_occluders.",
     "subject_height_m": 1.2,

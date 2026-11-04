@@ -4,11 +4,11 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813). Items F38#29, #6, #26,
 
 ## Landing-ready (flag, score, test, commit)
 
-(none yet)
+- **F41#20 P2-084 named character dialogue: CPU 4.72 -> 5.64** (`qj/F41-20-afe828ee024f-11040806/`). ON: `camfx.json fight_fade` and `camfx.json dialogue_open` (judged together; `_why_on` carries the score). Fenn's dialogue frame was black (camera inside a dark blocker); with the fade it shows Fenn. Test: `test_camfx_candidates.gd` (JUDGED_ON map; OFF paths still checked with the block forced off). **Tests passed (10:00 UTC):** test_camfx_candidates, test_conversation_camera, test_fight_camera, test_foliage_fight_fade, test_storm_cams_candidates, test_combat_camera_clear_orbit, test_texture_import_policy, test_near6_ms_1104, test_capacitor_spacing_override: 90 tests, 2102 assertions, 0 failed. Commit: see `git log` (flip commit after 4cebe0eb).
 
 ## Arms built (OFF until judged)
 
-- F38#29 P2-065: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (deeper bow attached the moment the trainer is beaten). Test `test_near6_ms_1104.gd`.
+- F38#29 P2-065: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (the beaten trainer drops to both knees, head bowed, the moment they lose; `post_stance.gd` rows take an optional hip drop). Test `test_near6_ms_1104.gd`. First candidate run was cut off by a timeout; rerun queued.
 - F41#3 P2-092: `combat.json contact_spacing.named_overrides.capacitor_alpha` (taken from VIS-STORMWOOD `ea108029`). Test `test_capacitor_spacing_override.gd`.
 
 ## Judged flat or worse (stay OFF)
