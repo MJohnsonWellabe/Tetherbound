@@ -29,12 +29,13 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `cloudreach_aviary.json:towers.silhouette_raise` | F40#2 P2-022 | Captured (qj F40-2-43dc52e38af7-11041416): **no visible change**. Cause found: the summit landmark in frame is the imported `cloudreach_f40_items.json` SummitEyrieStronghold set (54 m drum ring and four 26 m belvederes); the procedural `cloudreach_aviary.gd` build that all three earlier arms edited is hidden under it. Stays OFF. |
 | `cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | Judged gain (qj/F40-2-edb6d881b763-11041450), ON (above). Judges still ask for a cliff plinth, cloud sea below and lit windows at night. |
 | `cloudreach_f40_items.json:shelf_edge_soften` | F40#4 P2-023 | **Judged worse** (qj/F40-4-24add0c49b36-11041519): CPU 6.35 -> 5.69. Root cause found by a ray probe: the straight-edged pale shelves are the installed `cloudreach_cliff_shelf_edge` modules from the shared `stand_pattern` (P2-021 dressing). Turning and sinking them lost the layered pale strata the judges like; they ask for chamfered, overhanging, eroded lips instead. Stays OFF. Current CPU base for the item on this tree: **6.35**. |
+| `cloudreach_visual.json:weather_arms.rain_mood` | F40#19 rain (matrix piece 4) | **Judged flat** (qj/F40-19-rain-9079be470ae9-11041657): 5.81 -> 5.81, all three judges saw no difference. Stays OFF. Next idea (round 2): a stronger storm grade (darker sky, wet path sheen, low mist), which the judges asked for. |
 
 ## Status (4 Nov 17:10 UTC)
 
 Six CPU gains ON (owner/coordinator batch): P2-053 5.87 -> 6.32, P2-102 5.09 -> 5.72, P2-068 5.05 -> 5.25 (the first three landed on main in #818/#820/#823), then P2-022 5.64 -> 6.16, P2-023 5.96 -> 6.27, F40#19 night 5.10 -> 5.84. Zero criteria closed (CPU scores rank only; rows close on the GPU).
 
-Open for this lane: F40#19 rain (mx1 4.90; judges: rain only desaturates; Cloudreach rain needs a realm-scoped weather hook, not yet built). P2-068 is still under 6 (the NPCs sit 2 m behind the trainer at the capture stand). P2-102 is under 6 (5.72).
+Open for this lane: F40#19 rain (CPU 5.81 on this tree; the realm-scoped weather hook is built, round 1 flat). P2-068 is still under 6 (the NPCs sit 2 m behind the trainer at the capture stand). P2-102 is under 6 (5.72).
 
 **Blocked:** installing portable Blender 4.2 LTS in scratch (coordinator item 2) was refused by this session's permission classifier ("code from external"). P2-022 was instead done in-engine on the installed belvedere meshes (no new mesh), which judged 6.16.
 
