@@ -57,3 +57,9 @@ func test_rain_storm_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_visual.json")
 	_assert_on(cfg.weather_arms.rain_storm, "5.80", "weather_arms.rain_storm")
 	assert_false(bool(cfg.weather_arms.rain_mood.get("enabled", false)), "rain_mood (judged flat) stays OFF")
+
+
+## F40-17-53b0b6dc0941-11041858: F40#17 P2-102 rim mushroom cluster 5.85 -> 6.19.
+func test_rim_pickup_cluster_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_physical_runtime.json")
+	_assert_on(cfg.rim_pickup_cluster, "6.19", "rim_pickup_cluster")
