@@ -18,7 +18,7 @@ Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the sa
 
 ## Parked
 
-- F38#30 Burrow hillside (4.23): `capture_stands.json buried_stand_guard` leaves both walk stands where they were (quick_judge f38_30-stand-guard, identical frames, not judged). The slabs are the Warrens hill shell and chambers floating over walkable meadow with no collider under them, so this is a world geometry defect, not a stand defect. Next: find which mesh floats (`hill_shell` mound vs. the chamber boxes, `_comment_exterior_faces`: 'the cave's own boxes stand 4.6-6.2 m proud of the meadow') and seat or skirt it.
+- **F38#30 Burrow hillside (CPU 4.23): parked after two approaches; needs an owner-level choice.** (1) `capture_stands buried_stand_guard`: frames unchanged. (2) New `hill_shell.skirt` arm (OFF, `3678f7513`): visibly worse (stretched curtains), not judged. Cause, from `tests/probe_warrens_float.gd`: the Warrens chambers and their hill-shell mound are built for a raised site, but the meadow under the route stands is about 18 m lower. The chambers' collider sits at y 21 over ground at about 3, and the shell (about 263 m across, no collider) hangs over walkable grass, so a walking player can stand under the cave. Real fixes are gameplay changes: raise the terrain under the Warrens footprint (Terrain3D sculpt), or give the shell a trimesh collider and keep spawns and routes out of its footprint. Either one changes traversal, so this lane does not make it alone.
 
 ## In flight
 
