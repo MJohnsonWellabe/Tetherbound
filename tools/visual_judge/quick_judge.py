@@ -273,11 +273,30 @@ def git(*a):
     return subprocess.run(["git", *a], cwd=ROOT, capture_output=True, text=True).stdout.strip()
 
 
+# Paths that never change a render: judging tools, reports, docs and markdown. Edits there keep the base.
+KEY_SKIP = ("ralph/", "docs/", ".artifacts/", "tools/visual_judge/", ".claude/", ".agents/", ".github/")
+
+
+def _keep(path):
+    return not path.startswith(KEY_SKIP) and not path.endswith(".md")
+
+
 def tree_key():
-    """HEAD tree plus any tracked edits outside ralph/: a base is reused only on an identical tree."""
-    dirty = subprocess.run(["git", "diff", "HEAD", "--binary", "--", ".", ":!ralph", ":!.artifacts"],
-                           cwd=ROOT, capture_output=True).stdout
-    return git("rev-parse", "HEAD^{tree}")[:12] + ("-" + hashlib.sha256(dirty).hexdigest()[:8] if dirty else "")
+    """Content key of every render-relevant file: HEAD blob ids plus any tracked edits (hashed from the
+    working tree, so no blob is fetched in a blob-less clone). A base is reused only on an identical key."""
+    env = dict(os.environ, GIT_NO_LAZY_FETCH="1")
+    ls = subprocess.run(["git", "ls-tree", "-r", "HEAD"], cwd=ROOT, capture_output=True, text=True, env=env).stdout
+    h = hashlib.sha256("\n".join(l for l in ls.splitlines() if _keep(l.split("\t", 1)[1])).encode())
+    key = h.hexdigest()[:12]
+    names = subprocess.run(["git", "diff", "HEAD", "--name-only", "--no-renames"], cwd=ROOT, capture_output=True,
+                           text=True, env=env).stdout.split()
+    dirty = hashlib.sha256()
+    n = 0
+    for name in sorted(x for x in names if _keep(x)):
+        p = ROOT / name
+        dirty.update(name.encode() + b"\0" + (p.read_bytes() if p.exists() else b"<deleted>"))
+        n += 1
+    return key + ("-" + dirty.hexdigest()[:8] if n else "")
 
 
 def command(e, out_res, sha, biome):

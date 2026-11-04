@@ -50,6 +50,13 @@ class StandLookup(unittest.TestCase):
         self.assertIn("--only=terrapup,veridian", n)
         self.assertIn("--poses=fainted,resting", n)
 
+    def test_base_key_ignores_judging_tools_and_reports_only(self):
+        for path in ("tools/visual_judge/quick_judge.py", "ralph/reports/x.json", "docs/TECHNICAL.md", "README.md"):
+            self.assertFalse(qj._keep(path), path)
+        for path in ("data/config/capture_readout_visual.json", "scripts/ui/capture_reticle.gd",
+                     "tools/phase2_capture_catch.gd", "assets/x.png.import"):
+            self.assertTrue(qj._keep(path), path)
+
     def test_unknown_item_is_refused(self):
         with self.assertRaises(SystemExit):
             qj.plan(["F99#1"])
