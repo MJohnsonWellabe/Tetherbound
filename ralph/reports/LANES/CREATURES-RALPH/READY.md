@@ -38,6 +38,12 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**F38#1 follow-up (4 Nov ~19:05 UTC): the splayed Veridian is its faint end pose; the rest arm is not measurable on F38#1, so it stays OFF.**
+- **Which frame:** F38#1's catalogue frames are Terrapup fainted, Terrapup resting and Veridian FAINTED. The "semi-upright, splayed" Veridian the judges flag is its faint, not its rest.
+- **Rest arm:** `creatures_visual.json` `rest_faint_settled` (OFF, `test_rest_faint_settled`) starts a faint-clip rest at the clip's settled end. It is correct game-side, but it touches none of F38#1's judged frames (Terrapup rests via the roll path), so its A/B round was identical and not judged. It stays OFF for a future rest item.
+- **Capture fix:** "fainted" stills now wait, in game time, for the faint clip to finish (commit "fainted stills wait for the faint clip to finish"; TECHNICAL 8.1).
+- **Veridian's faint still reads as a leap:** with the full clip played, its END pose is side-lying with legs straight out and antlers up. F38#1's remaining lever is new faint art for Veridian (or a faint-clip pose edit), not a capture or scene change.
+
 **qj rim075-f38-1 (4 Nov ~18:40 UTC): F38#1 re-based at CPU 5.91 on the fixed capture; creature rim at 0.75 is flat, so 1.0 stays.**
 - **Re-base:** raw 5.8/5.6/5.6 on both sides; defect PARTIAL.
 - **What the frames show now:** Terrapup's fainted and resting frames lie down (the resting frame was missing before), and Veridian's faint lies flat.
