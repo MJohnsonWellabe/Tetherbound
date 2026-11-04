@@ -16,8 +16,17 @@ func _json(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
-func _surge_with(keys: Array) -> Dictionary:
+## The shipped config with every presentation candidate turned OFF, so each
+## overlay is measured on its own (the candidates now ship ON).
+func _all_off() -> Dictionary:
 	var config := _json(RULES.PATH)
+	for key: String in RULES.PRESENTATION_CANDIDATES:
+		(config.presentation[key] as Dictionary)["enabled"] = false
+	return config
+
+
+func _surge_with(keys: Array) -> Dictionary:
+	var config := _all_off()
 	for key: String in keys:
 		(config.presentation[key] as Dictionary)["enabled"] = true
 	return config
@@ -36,7 +45,7 @@ func test_surge_candidates_ship_on_with_scores_and_are_inert_when_off() -> void:
 
 
 func test_storm_sky_on_gives_cloud_form_shafts_and_lift_only_in_presentation() -> void:
-	var base := _json(RULES.PATH)
+	var base := RULES.with_presentation_candidates(_all_off())
 	var on := RULES.with_presentation_candidates(_surge_with(["storm_sky_1101"]))
 	var calm: Dictionary = on.presentation.phases.calm
 	var calm_off: Dictionary = base.presentation.phases.calm
@@ -59,7 +68,7 @@ func test_storm_sky_on_gives_cloud_form_shafts_and_lift_only_in_presentation() -
 
 
 func test_soft_rain_on_softens_and_tints_streaks() -> void:
-	var base := _json(RULES.PATH)
+	var base := RULES.with_presentation_candidates(_all_off())
 	var on := RULES.with_presentation_candidates(_surge_with(["soft_rain_1101"]))
 	var rain: Dictionary = on.presentation.rain
 	assert_true(float(rain.soft_edge) > 0.0, "streak edges must soften")
