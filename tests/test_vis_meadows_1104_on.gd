@@ -185,3 +185,15 @@ func test_f38_20_door_torches_ship_on_with_their_score() -> void:
 		assert_true(bool(spec.get("visual_only", false)), "visual only, no collider")
 		var x := float((spec.get("at", [0.0, 0.0]) as Array)[0])
 		assert_false(x > 6.5 and x < 9.5, "clear of the walking lane to the door")
+
+
+## F38#20 r9: the approach pylons stand 7 m, so the line leads to the keep
+## without out-topping it in frame (CPU 5.31 -> 5.83,
+## quick_judge f38_20-pylons-low).
+func test_f38_20_approach_pylons_ship_low_with_their_score() -> void:
+	var pylons: Dictionary = _load("res://data/config/stronghold.json").get("approach_pylons", {})
+	assert_almost_eq(float(pylons.get("height", 0.0)), 7.0, 0.001, "pylons lowered to 7 m")
+	assert_true(float(pylons.get("height", 0.0)) > 1.8 * 3.0, "still several times the 1.80 m trainer")
+	assert_almost_eq(float(pylons.get("sag_scale", 0.0)), 1.3, 0.001, "cable sag kept in proportion")
+	assert_true(str(pylons.get("_why_r9_height", "")).contains("CPU 5.31 -> 5.83"), "records its CPU score")
+	assert_eq((pylons.get("list", []) as Array).size(), 15, "every pylon station kept")
