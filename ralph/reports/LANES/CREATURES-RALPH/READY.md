@@ -38,6 +38,13 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**qj settle-f39-6 (4 Nov ~16:10 UTC): F39#6 re-based on the fixed capture, and NEAR6-TW's settle arm stays OFF (worse).**
+- **Re-base:** F39#6 creature faint state is CPU 5.86 on real faint frames (was 5.29 on the old capture). That +0.57 is a measurement fix (the capture tool now waits for the model before `play_faint`), not a game change.
+- **Base frames:** Ripplet and Riptusk lie on their sides; all three judges call the defect PARTIAL.
+- **Candidate:** `creature_pose_settle.tidewake_scope` 5.86 -> 5.11; it stands Ripplet up and floats Riptusk. Its third failure on this item, so it stays OFF.
+- **Remaining defect:** only Aquaryn still holds its head and chest up at faint end. Its own faint clip is the next lever.
+- **Also:** the F38#19 HUD frame now waits past the opening fade (`job.json`); the settled frame shows the real exploration HUD, including the "Get up" prompt and action legend. Every earlier F38#19 score was on a dimmed frame. A legend-fade candidate would change onboarding hints, which is a design call, so it is parked.
+
 **Coordinator, batch 16 `smoke_stormwood_spawn_slicing` (4 Nov ~15:05 UTC): not the lateral hit arm.** I ran the smoke locally on this branch, alternating the arm ON and OFF; worst main-thread gap per run:
 - **ON:** 7691 (the first Stormwood boot after a long Meadows capture, a cold cache), then 1730, 1884 and 1789 ms.
 - **OFF:** 1861 and 1682 ms.
