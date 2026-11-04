@@ -30,3 +30,16 @@ func test_obsidian_on_darkens_enlarges_and_glows_without_red() -> void:
 	var vein := Color(str(on.vein_colour))
 	assert_true(vein.b > vein.r, "stormglass glow is blue, never red")
 	assert_eq(on.meshy_rim, config.meshy_rim, "dressing keys are untouched")
+
+
+## r2 (OFF until judged): sparser, fainter veins over larger plates.
+func test_obsidian_r2_ships_off_and_thins_the_veins_when_on() -> void:
+	var config := _config()
+	assert_false(bool(config.obsidian_1104.r2.get("enabled", true)), "r2 ships OFF")
+	var r1 := SINK.with_obsidian(config)
+	config.obsidian_1104.r2["enabled"] = true
+	var r2 := SINK.with_obsidian(config)
+	assert_true(float(r2.vein_fraction) < float(r1.vein_fraction), "fewer glowing seams")
+	assert_true(float(r2.vein_energy) < float(r1.vein_energy), "fainter glow")
+	assert_true(float(r2.fracture_scale) < float(r1.fracture_scale), "larger plates")
+	assert_false(r2.has("r2"), "the switch block does not leak into material keys")

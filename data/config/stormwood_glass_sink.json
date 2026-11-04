@@ -16,7 +16,15 @@
     "far_roughness": 0.82,
     "vein_colour": "#6fb4ff",
     "vein_energy": 0.85,
-    "vein_fraction": 0.35
+    "vein_fraction": 0.35,
+    "r2": {
+      "enabled": false,
+      "_why": "VIS-STORMWOOD j4 (r1 judged 4.03 -> 5.07; 3/3: 'the cell lines are regular and read as computer-generated', 'still a uniform pattern to the horizon'). r2: plates about a third larger, darker seams, and only one plate edge in seven carries a fainter glow, so the floor reads as dark glass with a few live veins rather than a lit grid. OFF until judged.",
+      "fracture_scale": 0.02,
+      "seam_colour": "#142232",
+      "vein_energy": 0.6,
+      "vein_fraction": 0.15
+    }
   },
   "meshy_rim": {
     "enabled": true,
