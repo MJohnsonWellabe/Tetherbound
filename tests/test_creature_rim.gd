@@ -1,12 +1,13 @@
 extends "res://tests/test_case.gd"
 
-## F38#1/#2/#26 creature rim (client presentation, OFF until GPU judged): ships
-## OFF and inert; when on it dresses only shadow-casting creature body meshes,
+## F38#1/#2/#26 creature rim (client presentation): ships ON since qj rim10
+## (4 Nov); inactive outside its listed looks and inert there; when on it dresses only shadow-casting creature body meshes,
 ## never replaces another overlay, and lends the slot to combat tell auras.
 
 const RIM := preload("res://scripts/world/creature_rim.gd")
 const TELL_STYLE := preload("res://scripts/combat/tell_style.gd")
 const MEADOWS_LOOK := "res://data/config/meadows_look.json"
+const OTHER_LOOK := "res://data/config/stormwood_look.json"
 
 
 func after_each() -> void:
@@ -35,19 +36,25 @@ func _rim_material() -> ShaderMaterial:
 	return material
 
 
-func test_creature_rim_ships_off_and_off_is_a_no_op() -> void:
+## Visual lane qj rim10-f38-1-2 (4 Nov): ships ON (F38#1 CPU 5.53 -> 5.84). The
+## inactive path is still checked, through a realm look the arm does not list.
+func test_creature_rim_ships_on_with_its_score_and_inactive_is_a_no_op() -> void:
 	var cfg := RIM.settings()
 	assert_eq(str(cfg.get("scope", "")), "client_presentation", "the arm declares its scope")
-	assert_false(bool(cfg.get("enabled", true)), "the creature rim ships OFF")
+	assert_true(bool(cfg.get("enabled", false)), "the creature rim ships ON (judged gain)")
+	assert_true(str(cfg.get("_why_on", "")).contains("5.84"), "it records its mapped score")
 	assert_true((cfg.get("realm_looks", []) as Array).has(MEADOWS_LOOK), "the arm targets the Meadows look")
+	assert_false((cfg.get("realm_looks", []) as Array).has(OTHER_LOOK), "and not the Stormwood look")
 	var colour := Color(str(cfg.get("colour", "#ff0000")))
 	assert_true(colour.b > colour.r, "the rim is a cool tone, never red/oxblood")
 	RIM.set_realm(MEADOWS_LOOK)
-	assert_false(RIM.active(), "OFF leaves the rim inactive in the Meadows")
+	assert_true(RIM.active(), "ON makes the rim active in the Meadows")
+	RIM.set_realm(OTHER_LOOK)
+	assert_false(RIM.active(), "an unlisted look leaves the rim inactive")
 	var parts := _body()
-	assert_eq(RIM.dress_body(parts.body), 0, "OFF dresses nothing")
-	assert_eq((parts.mesh as MeshInstance3D).material_overlay, null, "OFF leaves the body mesh bare")
-	assert_eq(RIM.rest_overlay(parts.mesh), null, "OFF hands a transient overlay back to nothing")
+	assert_eq(RIM.dress_body(parts.body), 0, "inactive dresses nothing")
+	assert_eq((parts.mesh as MeshInstance3D).material_overlay, null, "inactive leaves the body mesh bare")
+	assert_eq(RIM.rest_overlay(parts.mesh), null, "inactive hands a transient overlay back to nothing")
 	assert_false(RIM.is_rim((parts.held as MeshInstance3D).material_overlay), "another overlay is never the rim")
 	(parts.body as Node).free()
 
