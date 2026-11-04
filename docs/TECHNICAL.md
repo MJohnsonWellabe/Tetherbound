@@ -229,6 +229,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 5. **Batch file:** map A/B per set from `key.json`; sides are shuffled per set. Copy each score from the judges' JSON, never from memory. Write `batch.json` as `{"anchors": {id: [j1,j2,j3]}, "candidates": {label: [j1,j2,j3]}}`.
 6. **Calibrate:** `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`. Flag RMSE > 0.75.
 7. **Commit only** VERDICT.md, the batch/key/spec/mapped JSON and one `_sheet*` image under 1.5 MB.
+- **One-item A/B (fast path):** `tools/visual_judge/quick_judge.py run <F row> --overlay <json>` does steps 1–3 for that item's own stands only: one boot per tool, the base cached per tree, and the overlay restored byte-identically. `finish` does steps 5–7. See `tools/visual_judge/README.md`.
 - **Reference crops:** `.gitignore` drops `ralph/reports/**/*.jpg` unless the file name starts with `_`. Name Meshy reference crops `_<name>.jpg` (or the coordinator never sees them) and check `git show --stat` after committing.
 - **What CPU scores are good for:** ranking candidates only. CPU mapped ≈ GPU − 0.8, and CPU wins have failed on GPU (P2-016 twice). A candidate goes to the GPU queue only when its expected gain is above 0.5 (owner, 25 Oct).
 
