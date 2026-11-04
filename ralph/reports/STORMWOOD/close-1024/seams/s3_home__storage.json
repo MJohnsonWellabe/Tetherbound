@@ -1,0 +1,12 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "training_t5_home",
+ "from_commit": "6ed02b58f2fbac88611397e9731447065f6bf391",
+ "to_piece": "training_t5_storage",
+ "to_commit": "40353e1c9f57ab7442aff78e062679e25bb7372c",
+ "to_loaded_from": "/root/rb/f49_s3_home",
+ "consumer_handoff_check": null,
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [],
+ "matches": true
+}

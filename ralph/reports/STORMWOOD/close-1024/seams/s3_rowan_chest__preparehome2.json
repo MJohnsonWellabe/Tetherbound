@@ -1,0 +1,24 @@
+{
+ "kind": "f49_piece_seam_stormwood",
+ "from_piece": "rowan_chest",
+ "from_commit": "faec30135cae5e73651df6ecc5fb6d4e0e83886c",
+ "to_piece": "training_t5_preparehome",
+ "to_commit": "6e2c3a15f9599cdf170aafb089db119d7b9ccb8d",
+ "to_loaded_from": "/root/rb/f49_s3_rowan_chest",
+ "consumer_handoff_check": null,
+ "producer_save_tree_committed_equals_loaded": true,
+ "differences": [
+  {
+   "field": "position",
+   "distance_m": 7.35
+  }
+ ],
+ "matches": false,
+ "review": {
+  "field": "position",
+  "distance_m": 7.35,
+  "reason": "Same committed save (preparehome2 --from=f49_s3_rowan_chest); every other field matches (realm, uids, species, items, flags, training, progression, portal unlocks). Production Load seats the trainer about 7 m from the chest piece's end position, and preparehome's first step is the Home Key home, so the start position does not change its path (same pattern as the reviewed T3 seam 05k_ione_chest -> training_t3_preparehome).",
+  "verdict": "reviewed difference, accepted",
+  "reviewed": "routes lane, 4 Nov 2026"
+ }
+}
