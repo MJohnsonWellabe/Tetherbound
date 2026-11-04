@@ -16,3 +16,5 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813). Items F38#29, #6, #26,
 ## Blockers / notes
 
 - Harness note: a plain `git fetch origin <branch>` on this shallow clone pulled a 15 GB temp pack and filled the disk; `git fetch --depth=1 origin <branch>:refs/remotes/origin/<branch>` takes the same branches in seconds.
+- **For the coordinator:** `send_message` from this lane is refused (untrusted device), so this file is the handoff. The F41#20 flip you asked for is on `tb/near6-ms-1104` at `f07442cc` with the touched tests passing.
+- F38#29 kneel checked by render (`tools/_probe_beaten_kneel.gd`, grunt_a on a stage: knees flex back and rest on the floor, hips lowered, head bowed) before its round.
