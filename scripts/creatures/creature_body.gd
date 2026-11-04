@@ -33,6 +33,8 @@ const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
 const ASPECT_VFX := preload("res://scripts/creatures/vfx/aspect_vfx.gd")
 const ENVIRONMENT_VELOCITY := preload("res://scripts/world/environment_velocity_modifiers.gd")
 const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
+## F38#1/#2/#26 creature rim (OFF; data/config/creature_rim.json).
+const CREATURE_RIM := preload("res://scripts/world/creature_rim.gd")
 
 var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 
@@ -532,6 +534,7 @@ func ensure_visual_resident() -> bool:
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
 	_apply_night_floor()
+	CREATURE_RIM.dress_body(self)
 	_model.visible = _resident_model_visible
 	_suspended_render_bounds = AABB()
 	return true
@@ -748,6 +751,7 @@ func _build_placeholder() -> void:
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
 	_apply_night_floor()
+	CREATURE_RIM.dress_body(self)
 
 
 ## Load the species' model and fit it to the gameplay size. Returns false when
@@ -2308,6 +2312,7 @@ func apply_size_multiplier(multiplier: float) -> void:
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
 	_apply_night_floor()
+	CREATURE_RIM.dress_body(self)
 	# BACKLOG-VISUAL-ALPHA-GROUNDING. The caller already stood this body on the
 	# ground via `place_on_ground()` BEFORE calling here (`encounter_director.
 	# _make_alpha()` resizes an already-placed wild), and that call's
