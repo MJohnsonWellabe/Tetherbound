@@ -2,6 +2,8 @@
 
 ## Taken (coordinator 19:25)
 
+- **r14s, F41#14, worse (5.57 -> 5.26), held OFF:** tier_candidate at 1.45/1.6/1.75x. The tier read is FIXED, but the enlarged Rare cluster blooms into a flat yellow burst that 3/3 judges call an effect slab. Round 2, r14t: 1.3/1.3/1.05x.
+
 - **F41#12** (charged road, 5.63): judging the existing unjudged `stormwood_road_current.puddle_candidate`.
 - **F41#14** (candy tiers, 5.70): `pickup_grounding.tier_candidate` with larger tiers (1.45/1.6/1.75x; the arm had shrunk them, while the judges call them pinhead-sized).
 - **F39#2**: parked here after two failed rounds; new art. **F39#31 and F13#5 are left to VIS-TIDEWAKE**, which has them in flight.
