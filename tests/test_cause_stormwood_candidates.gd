@@ -134,10 +134,12 @@ func test_moss_variation_on_sets_typed_uniforms_without_red() -> void:
 			assert_false(c.r > c.g * 1.6 and c.r > c.b * 2.0, "no red/oxblood tone: " + key)
 
 
-func test_deck_light_ships_off_and_lays_out_its_rings() -> void:
+## VIS-STORMWOOD j1 (4 Nov): the deck light ships ON with its judged score.
+func test_deck_light_ships_on_and_lays_out_its_rings() -> void:
 	var presentation := _json(PRESENTATION_PATH)
 	var settings: Dictionary = presentation.deck_light_1101
-	assert_false(bool(settings.get("enabled", true)), "ships OFF")
+	assert_true(bool(settings.get("enabled", false)), "ships ON (judged gain)")
+	assert_true(str(settings.get("_why_on", "")).contains("3.94"), "records its mapped score")
 	var poses := DECK_LIGHT.poses(settings)
 	var expected := 0
 	for ring: Dictionary in settings.rings:
