@@ -31,3 +31,18 @@ func test_f38_29_immediate_beaten_stance() -> void:
 		assert_true(bones.has(bone), "the kneel sets %s" % bone)
 	assert_between(float(bones.Hips[4]), 0.2, 0.6, "the hips drop a knee's height, not into the ground")
 	assert_true(float(bones.LeftLeg[1]) > 45.0 and float(bones.RightLeg[1]) > 45.0, "both knees flex (+X)")
+
+
+## F38#29 P2-065 round 2: a trainer beaten without victory lines gets the
+## aftermath push-in for a few seconds. Ships OFF; client presentation only.
+func test_f38_29_silent_victory_shot_ships_off() -> void:
+	var cfg := _json("res://data/config/trainer_aftermath.json")
+	var block: Dictionary = cfg.silent_victory_shot_1104
+	assert_false(bool(block.enabled), "silent victory shot ships OFF until judged")
+	assert_eq(str(block.scope), "client_presentation", "declares its scope")
+	assert_between(float(block.hold_s), 2.0, 8.0, "a short beat, not a held camera")
+	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
+	assert_true(director.contains("if conversation == \"\":\n\t\t_present_silent_victory(speaker)\n\t\treturn"),
+		"only trainers without victory lines take the silent shot")
+	var profiles: Dictionary = _json("res://data/config/camera.json").conversation.profiles
+	assert_true(profiles.has("aftermath"), "it reuses the existing aftermath profile")
