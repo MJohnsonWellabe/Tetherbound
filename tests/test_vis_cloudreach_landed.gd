@@ -34,3 +34,10 @@ func test_catch_card_is_on_with_its_score() -> void:
 	var card: Dictionary = _read("res://data/config/hud.json").get("catch_card", {})
 	assert_true(card.get("enabled") == true, "P2-118 hud.json catch_card ships ON")
 	assert_true(str(card.get("_why_on_cloudreach", "")).contains("3.77 -> 4.61"), "P2-118 CPU score recorded")
+
+
+func test_full_team_line_is_on_with_its_score() -> void:
+	var line: Dictionary = (_read("res://data/config/hud.json").get("catch_card", {}) as Dictionary).get("full_team_line", {})
+	assert_true(line.get("enabled") == true, "P2-118 catch_card.full_team_line ships ON")
+	assert_true(str(line.get("_why_on", "")).contains("3.57 -> 4.98"), "P2-118 full-team line CPU score recorded")
+	assert_false(str(line.get("text", "")).is_empty(), "the line has text")
