@@ -1,13 +1,13 @@
 extends "res://tests/test_case.gd"
 
-## v1/b23 stage value lifts (creature_coat_flags.json): Stormbrush, Thundertunnel
-## and Tuskroot. Judged gains, ship ON. Each maps its live albedo to a
+## v1/b23-b24 stage value lifts (creature_coat_flags.json): Stormbrush,
+## Thundertunnel, Tuskroot and Cindercub. Judged gains, ship ON. Each maps its live albedo to a
 ## value-lifted copy; OFF leaves that albedo as before.
 
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const FLAGS_PATH := "res://data/config/creature_coat_flags.json"
 const ROOT := "res://assets/creatures/tetherbound/"
-const SCORES := {"stormbrush": "6.42", "thundertunnel": "5.78", "tuskroot": "7.16"}
+const SCORES := {"stormbrush": "6.42", "thundertunnel": "5.78", "tuskroot": "7.16", "cindercub": "7.38"}
 
 
 func _parsed() -> Dictionary:
