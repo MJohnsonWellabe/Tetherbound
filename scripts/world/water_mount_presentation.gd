@@ -70,3 +70,19 @@ static func set_shadows(body: Node3D, on: bool) -> void:
 		body.remove_meta("uiposes_shadows_off")
 	else:
 		body.set_meta("uiposes_shadows_off", true)
+
+
+## P2-108 (F39#8, flag-off with this file): a waterline ring and trailing wake
+## for a listed mount whose row carries a `wake` map. Created once; the wake
+## node clears itself whenever the mount is not swimming.
+static func ensure_wake(actor: Node3D, look: Dictionary) -> void:
+	var wake: Variant = look.get("wake", {})
+	if not wake is Dictionary or (wake as Dictionary).is_empty() or actor.get_node_or_null(^"MountWake") != null:
+		return
+	var view: Node3D = preload("res://scripts/world/water_mount_wake.gd").new()
+	view.name = "MountWake"
+	var settings := (wake as Dictionary).duplicate()
+	settings["enabled"] = true
+	view.set("settings", settings)
+	view.set("_body", actor)
+	actor.add_child(view)
