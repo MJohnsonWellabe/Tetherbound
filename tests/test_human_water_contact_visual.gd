@@ -131,8 +131,9 @@ func test_trail_is_bounded_expires_and_clears_on_land_and_disable() -> void:
 		view.step_visual(0.2, packet, Vector3(float(index + 1) * 0.5, 0.0, 0.0))
 		assert_true(view._trail.size() <= 2)
 	assert_eq(view._trail.size(), 2)
-	# Idle does not repeatedly stamp foam. Existing footprints finish fading.
-	view.step_visual(2.0, packet, Vector3(4.0, 0.0, 0.0))
+	# Idle does not repeatedly stamp foam. Existing footprints finish fading
+	# (idle past the shipped trail lifetime; the wake_trail arm lengthens it).
+	view.step_visual(maxf(2.0, float(view.settings.get("trail_lifetime_s", 1.15)) + 0.1), packet, Vector3(4.0, 0.0, 0.0))
 	assert_eq(view._trail.size(), 0)
 	packet.mode = SWIM.Mode.LAND
 	view.step_visual(0.1, packet, Vector3(4.0, 0.0, 0.0))
