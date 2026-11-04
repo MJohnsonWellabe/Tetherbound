@@ -51,8 +51,9 @@
   "weather_arms": {
     "rain_storm": {
       "_scope": "device_local_presentation",
-      "_why": "F40#19 rain round 2 (NEAR6-CR, 4 Nov 2026): rain_mood (softer, more colour) judged flat at 5.81 because rain still barely read; the judges asked for a real storm grade: a darker overcast sky, wet surfaces, rain haze in the distance. On: Cloudreach-only rain keys over the shared preset: a darker slate sky and horizon, a dimmer diffuse sun with soft shadows, denser cool fog, a cooler ambient, slightly lower saturation and fully wet ground. Meadows rain is unchanged. OFF until judged.",
-      "enabled": false,
+      "_why": "F40#19 rain round 2 (NEAR6-CR, 4 Nov 2026): rain_mood (softer, more colour) judged flat at 5.81 because rain still barely read; the judges asked for a real storm grade: a darker overcast sky, wet surfaces, rain haze in the distance. On: Cloudreach-only rain keys over the shared preset: a darker slate sky and horizon, a dimmer diffuse sun with soft shadows, denser cool fog, a cooler ambient, slightly lower saturation and fully wet ground. Meadows rain is unchanged.",
+      "enabled": true,
+      "_why_on": "NEAR6-CR quick judge F40-19-rain-810b52e4b41d-11041812 (4 Nov 2026, F40 matrix piece 4, realm gate day rain): CPU 5.69 -> 5.80 (+0.11), all three judges a tenth higher; defect still PRESENT. Ships ON (owner 4 Nov: any judged CPU gain ships ON, even small).",
       "presets": {
         "rain": {
           "sun": {"energy_mult": 0.45, "shadow_opacity": 0.12},

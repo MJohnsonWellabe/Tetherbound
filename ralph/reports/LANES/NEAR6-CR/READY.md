@@ -9,7 +9,8 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `data/config/cloudreach_npc_runtime.json:world_payoffs.anchor_vessel_quiet` | F40#8 P2-053 | 5.87 -> **6.32** | `tests/test_near6_cr_judged_on.gd` | 4558ec49 |
 | `data/config/cloudreach_physical_runtime.json:rim_pickup_in_view` | F40#17 P2-102 | 5.09 -> **5.72** | `tests/test_near6_cr_judged_on.gd` | ec870b02 |
 | `data/config/cloudreach_npc_runtime.json:post_role_props` | F40#9 P2-068 | 5.05 -> **5.25** | `tests/test_near6_cr_judged_on.gd` | 0e41fe16 |
-| `data/config/cloudreach_f40_items.json:shelf_edge_fringe` | F40#4 P2-023 | 5.96 -> **6.27** | `tests/test_near6_cr_judged_on.gd` | see log |
+| `data/config/cloudreach_visual.json:weather_arms.rain_storm` | F40#19 (matrix piece 4, day rain) | 5.69 -> **5.80** | `tests/test_near6_cr_judged_on.gd` | see log |
+| `data/config/cloudreach_f40_items.json:shelf_edge_fringe` | F40#4 P2-023 | 5.96 -> **6.27** | `tests/test_near6_cr_judged_on.gd` | d3ffce66 |
 | `data/config/cloudreach_visual.json:time_override_arms.night_foreground_fill` | F40#19 (matrix piece 7, night) | 5.10 -> **5.84** | `tests/test_near6_cr_judged_on.gd` | 2d7066c0 |
 | `data/config/cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | 5.64 -> **6.16** | `tests/test_near6_cr_judged_on.gd` | d720ad38 |
 
