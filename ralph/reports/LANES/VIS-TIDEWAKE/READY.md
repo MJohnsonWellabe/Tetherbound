@@ -6,7 +6,13 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 
 | Flag | Row(s) | CPU base -> cand | Test | Commit |
 |---|---|---|---|---|
-| (none yet) | | | | |
+| `water_mount_presentation.json` `enabled` (sink, bob, no blob shadow, new Aquaryn `wake`) | F39#8 | CPU 4.93 -> 6.09 | `test_uiposes_water_mount.gd::test_ships_on_with_its_judged_score` | this commit |
+| `water_mount_presentation.json` `camera_hide.enabled` | F39#22 | CPU 5.25 -> 6.28 (FIXED 3/3) | same test; `smoke_camera_pass_through.gd` (hidden inside, shown outside) | this commit |
+| `tidewake_look.json` `cause_tidewake.currents.enabled` | F39#17 | CPU 5.54 -> 6.09 | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing`; `smoke_tidewake_b_current_restore.gd` (71 checks, 0 failed) | this commit |
+
+Round 1 verdict: `qj/r1/VERDICT.md` (calibration r 0.73, RMSE 0.55, confirming). Local: the touched tests plus `test_texture_import_policy.gd` and `test_follower_leader_view_fade.gd`: 19 tests, 0 failed. Both smokes pass.
+
+**Round 1, held OFF (flat or worse in the stacked c1 arm):** F39#1 shore 6.15 -> 5.99; F39#2 Veilfall 6.28 -> 5.19; F39#3 destinations 6.47 -> 5.83; F39#15 approach 6.21 -> 5.48; F39#16 live streaks 6.02 -> 5.89; F39#5 swim pose 5.93 -> 5.67; F39#14 swim contact 5.96 -> 5.57. All three judges blame the c1 Veilfall, a pale floating crystal crown from `veilfall_mountain_candidate` plus the light haze. The swim sections dropped the foam ring that the judges credit. Round 2 judges sea, light, horizon and dunes as separate arms, without the Veilfall mountain section and with the shipping swim ring kept.
 
 ## In flight
 
@@ -24,6 +30,12 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 - 03:05 UTC: quick_judge is on main (c907b9997). origin/main merges into this branch once round 1's base and candidate captures finish, because a merge mid-round changes the render tree and drops the cached base. From then on, main's `tools/visual_judge/quick_judge.py` replaces the local copy.
 - Container note: a container restart at ~01:55 wiped /dev/shm (import and the first base captures). The chain is now `runbook/resume.sh` (resumable, with .done markers) with a tracked background waiter.
 
+## Harness finding for main's quick_judge.py
+
+- `find_frame` misses every Tidewake route and location frame. Those tools write `water__<stand>__…` files, but job.json ids are `tidewake__<stand>__…`, so F39#1/#2/#3/#15 (and every route row) build no sets. Fix: `runbook/qj_patch.py` part 1 (try `water__` + the id's tail). Main's copy at c907b9997 has the same bug.
+
 ## Blockers
+
+- **No merge of origin/main here:** a depth-1 fetch has no merge base, and `git fetch --deepen=40` ran out of disk (66 MB free). The coordinator's landing PR has to merge this branch with main.
 
 - Container disk: the 21 GB `.git` pack fills the allowance (117 MB free). Godot's `.godot` import cache, captures and judge folders run from `/dev/shm` (RAM). Rewriting the pack to depth 1 was refused by the permission classifier.

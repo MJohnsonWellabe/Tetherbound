@@ -13,7 +13,10 @@ extends SceneTree
 ##    fight, and leaves both while this peer fights (any phase, catching and
 ##    resolving included, host or guest) or is in any other local fight.
 ## 3. A body that opts in dithers every model surface with the camera inside
-##    it, and hands them back when the camera leaves.
+##    it, and hands them back when the camera leaves. With
+##    water_mount_presentation.json `camera_hide` ON (tb/vis-tidewake-1104,
+##    F39#22 CPU 5.25 -> 6.28) the body is hidden instead of dithered, and is
+##    shown again, undithered, when the camera leaves.
 
 const RIG_SCRIPT := "res://scripts/player/camera_rig.gd"
 const RIG := preload("res://scripts/player/camera_rig.gd")
@@ -144,8 +147,14 @@ func _an_opted_in_body_fades_with_the_lens_inside() -> void:
 	for i in 60:
 		camera.global_position = body.global_position + Vector3(0.0, 1.5, 0.0)
 		await process_frame
+	var hides := bool(CREATURE_BODY._camera_hide_enabled())
 	var inside := _dithered(model)
-	if inside.x == 0 or inside.y != inside.x:
+	if hides:
+		if model.visible:
+			_fail("camera_hide on, lens inside the body: the model is still drawn")
+		else:
+			print("inside: model hidden (camera_hide)")
+	elif inside.x == 0 or inside.y != inside.x:
 		_fail("lens inside the body: %d of %d model surfaces dithered" % [inside.y, inside.x])
 	else:
 		print("inside: %d/%d model surfaces dithered" % [inside.y, inside.x])
@@ -154,6 +163,8 @@ func _an_opted_in_body_fades_with_the_lens_inside() -> void:
 		await process_frame
 	if _dithered(model).y != 0:
 		_fail("lens outside the body: surfaces still dithered")
+	if not model.visible:
+		_fail("lens outside the body: the model is still hidden")
 	body.queue_free()
 	camera.queue_free()
 
