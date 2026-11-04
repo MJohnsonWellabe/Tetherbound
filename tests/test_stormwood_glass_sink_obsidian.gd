@@ -23,6 +23,7 @@ func test_obsidian_ships_on_and_is_inert_when_off() -> void:
 func test_obsidian_on_darkens_enlarges_and_glows_without_red() -> void:
 	var config := _config()
 	config.obsidian_1104["enabled"] = true
+	config.obsidian_1104.r3["enabled"] = false
 	var on := SINK.with_obsidian(config)
 	assert_true(Color(str(on.glass_colour)).get_luminance() < Color(str(config.glass_colour)).get_luminance(), "darker body")
 	assert_true(float(on.fracture_scale) < float(config.fracture_scale), "larger plates")
@@ -36,6 +37,7 @@ func test_obsidian_on_darkens_enlarges_and_glows_without_red() -> void:
 func test_obsidian_r2_ships_off_and_thins_the_veins_when_on() -> void:
 	var config := _config()
 	assert_false(bool(config.obsidian_1104.r2.get("enabled", true)), "r2 ships OFF")
+	config.obsidian_1104.r3["enabled"] = false
 	var r1 := SINK.with_obsidian(config)
 	config.obsidian_1104.r2["enabled"] = true
 	var r2 := SINK.with_obsidian(config)
@@ -45,11 +47,11 @@ func test_obsidian_r2_ships_off_and_thins_the_veins_when_on() -> void:
 	assert_false(r2.has("r2"), "the switch block does not leak into material keys")
 
 
-## r3 (OFF until judged): no glowing veins and no visible seams.
-func test_obsidian_r3_ships_off_and_removes_the_grid_when_on() -> void:
+## r3 (qj_obs3, judged gain): no glowing veins and no visible seams.
+func test_obsidian_r3_ships_on_and_removes_the_grid() -> void:
 	var config := _config()
-	assert_false(bool(config.obsidian_1104.r3.get("enabled", true)), "r3 ships OFF")
-	config.obsidian_1104.r3["enabled"] = true
+	assert_true(bool(config.obsidian_1104.r3.get("enabled", false)), "r3 ships ON (judged gain)")
+	assert_true(str(config.obsidian_1104.r3.get("_why_on", "")).contains("4.38"), "records its mapped score")
 	var r3 := SINK.with_obsidian(config)
 	assert_almost_eq(float(r3.vein_energy), 0.0, 0.0001, "no glowing veins")
 	assert_almost_eq(float(r3.seam_width), 0.0, 0.0001, "no seam lines")
