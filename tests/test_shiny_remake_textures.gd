@@ -59,3 +59,42 @@ func test_on_maps_each_albedo_to_its_repaint_and_only_for_shiny() -> void:
 		var vivid: Texture2D = BODY._texture_for(tex, "aquaryn", "vivid")
 		if vivid != null:
 			assert_false(vivid.resource_path.ends_with("_shiny_plates.png"), "the vivid lookup never takes a shiny repaint")
+
+
+func _model_wearing(albedo_path: String) -> Node3D:
+	var root := Node3D.new()
+	var mesh := MeshInstance3D.new()
+	mesh.mesh = BoxMesh.new()
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = load(albedo_path) as Texture2D
+	mesh.mesh.surface_set_material(0, material)
+	root.add_child(mesh)
+	return root
+
+
+func test_the_shiny_finish_stands_down_only_for_a_worn_repaint() -> void:
+	const FINISH := preload("res://scripts/creatures/creature_surface_finish.gd")
+	var repaint := ""
+	for from: String in _map():
+		if str(_map()[from]).ends_with("_shiny_plates.png") and from.contains("aquaryn"):
+			repaint = str(_map()[from])
+	assert_true(repaint != "", "the Aquaryn repaint is mapped")
+	var cfg: Dictionary = VISUAL.config()[KEY]
+	cfg["enabled"] = true
+	var on := _model_wearing(repaint)
+	FINISH.apply(on, "aquaryn", true)
+	var on_mesh := on.get_child(0) as MeshInstance3D
+	assert_eq(on_mesh.get_surface_override_material(0), null, "ON: the hue-shift finish leaves the repaint alone")
+	on.free()
+	cfg["enabled"] = false
+	var off := _model_wearing(repaint)
+	FINISH.apply(off, "aquaryn", true)
+	var off_mesh := off.get_child(0) as MeshInstance3D
+	assert_true(off_mesh.get_surface_override_material(0) != null, "OFF: the shiny finish applies as before")
+	off.free()
+
+
+func test_the_map_ships_on_with_its_score() -> void:
+	var cfg: Dictionary = _saved
+	assert_true(bool(cfg.get("enabled", false)), "shiny_remake_textures ships ON (judged gain)")
+	assert_true(str(cfg.get("_why_on", "")).contains("6.76"), "it records its mapped score")
