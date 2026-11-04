@@ -91,15 +91,25 @@ const TAIL := """
 static func finish() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	var out: Dictionary = parsed if parsed is Dictionary else {}
-	var lift: Variant = out.get("value_lift_candidate", {})
-	if not lift is Dictionary or not bool((lift as Dictionary).get("enabled", false)):
-		return out
-	out = out.duplicate(true)
-	for section: String in (lift as Dictionary):
-		if section == "enabled" or section.begins_with("_") or section == "scope":
+	# Each candidate (its own `enabled`) merges its sections in this order.
+	# `rock_value_1104` (VIS-STORMWOOD, OFF until judged) darkens the
+	# terrain rock slot so cliffs stop reading as pale white walls.
+	var copied := false
+	for key: String in FINISH_CANDIDATES:
+		var cand: Variant = out.get(key, {})
+		if not cand is Dictionary or not bool((cand as Dictionary).get("enabled", false)):
 			continue
-		_merge_into(out, section, (lift as Dictionary)[section])
+		if not copied:
+			out = out.duplicate(true)
+			copied = true
+		for section: String in (cand as Dictionary):
+			if section == "enabled" or section.begins_with("_") or section == "scope":
+				continue
+			_merge_into(out, section, (cand as Dictionary)[section])
 	return out
+
+
+const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104"]
 
 
 static func _merge_into(target: Dictionary, key: String, value: Variant) -> void:
