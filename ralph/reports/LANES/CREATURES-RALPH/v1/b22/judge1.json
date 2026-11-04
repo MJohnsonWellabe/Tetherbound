@@ -1,0 +1,4 @@
+{"sets": {"Vy": {"A": {"bar_a": 6.5, "defects": {"the dark mid-tone hide merges with its shadow and the faint end goes almost black": "PARTIAL"}}, "B": {"bar_a": 5.8, "defects": {"the dark mid-tone hide merges with its shadow and the faint end goes almost black": "PRESENT"}}},
+ "Pp": {"A": {"bar_a": 6.8, "defects": {}}, "B": {"bar_a": 5.3, "defects": {}}},
+ "Uh": {"A": {"bar_a": 5.5, "defects": {}}, "B": {"bar_a": 5.5, "defects": {}}},
+ "Ea": {"A": {"bar_a": 6.2, "defects": {}}, "B": {"bar_a": 6.3, "defects": {}}}}}

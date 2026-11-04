@@ -38,10 +38,22 @@ func test_arm_ships_on_with_its_score_and_names_its_new_files() -> void:
 	assert_true(ARM_ALBEDO != SHIPPED and ARM_GLOW != SHIPPED, "the arm writes new files, not the shipped ones")
 
 
+## v1/b22 (4 Nov): `creatures_ralph_nightburrow_value_lift` (ON) lifts this
+## arm's albedo; with the lift OFF, ON still resolves to the arm.
+const LIFT_FLAG := "creatures_ralph_nightburrow_value_lift"
+const LIFT_ALBEDO := MODELS + "creature_burrowback_nat1024_Image_0_nightburrow_value_lift.png"
+
+
 func test_on_resolves_to_the_arm_and_off_leaves_the_shipped_coat_path() -> void:
-	var on: Dictionary = BODY.parse_coat_flags(_parsed()).get(LIVE, {})
+	var lift_off := _parsed()
+	(lift_off.flags[LIFT_FLAG] as Dictionary)["enabled"] = false
+	var on: Dictionary = BODY.parse_coat_flags(lift_off).get(LIVE, {})
 	assert_eq(str(on.get("albedo", "")), ARM_ALBEDO, "ON: Nightburrow resolves to the partial-plates albedo")
+	var lifted: Dictionary = BODY.parse_coat_flags(_parsed()).get(LIVE, {})
+	assert_eq(str(lifted.get("albedo", "")), LIFT_ALBEDO, "with the shipped value lift, the plates albedo is lifted")
+	assert_eq(str(lifted.get("emission", "")), ARM_GLOW, "and the arm's glow map is kept")
 	var parsed := _parsed()
+	(parsed.flags[LIFT_FLAG] as Dictionary)["enabled"] = false
 	(parsed.flags[FLAG] as Dictionary)["enabled"] = false
 	var resolved: Dictionary = BODY.parse_coat_flags(parsed)
 	var spec: Dictionary = resolved.get(LIVE, {})
