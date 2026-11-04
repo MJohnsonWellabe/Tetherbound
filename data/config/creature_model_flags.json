@@ -1178,6 +1178,13 @@
       "species": {
         "sparkit": {"model": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_lateral_hit.glb"}
       }
+    },
+    "creatures_ralph_aquaryn_faint_headdown": {
+      "_why": "F39#6 creature faint state (CPU 5.86 on real faint frames, qj settle-f39-6): all three judges say Ripplet and Riptusk now read as fainted but Aquaryn 'keeps its head raised in an upright crouch'. A copy of the live r9 GLB whose faint clip tips the neck (35 deg) and head (25 deg) down about the model's side axis (tools/art_pipeline/lateral_recoil.py --spec=neck:x:35,head:x:25 --peak=0.5 --release=1.0: ramps in by mid-clip and holds to the end). Mesh, textures and other clips unchanged. OFF until judged.",
+      "enabled": false,
+      "species": {
+        "aquaryn": {"model": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_faint_headdown.glb"}
+      }
     }
   }
 }
