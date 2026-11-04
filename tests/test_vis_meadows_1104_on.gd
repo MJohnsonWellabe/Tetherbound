@@ -64,3 +64,12 @@ func test_f38_20_yard_fill_reaches_the_whole_courtyard_with_its_score() -> void:
 	assert_true(float(light.get("range", 0.0)) >= 52.0, "the fill reaches the courtyard entrance")
 	assert_true(float(light.get("attenuation", 1.0)) <= 0.22, "an even pool, not a steep peak")
 	assert_true(str(day.get("_why_r3_yard_fill", "")).contains("CPU 4.71 -> 5.73"), "r3 records its CPU score")
+
+
+func test_f38_20_keep_keeps_its_value_through_the_fog_with_its_score() -> void:
+	var keep: Dictionary = (_load("res://data/config/stronghold.json").get("p2_003_candidate", {}) as Dictionary).get("keep", {})
+	assert_true(bool(keep.get("fog_disable", false)), "the keep resists the depth fog")
+	assert_eq(str(keep.get("albedo_tint", "")), "#b3ab9c", "lifted stone so it reads as shaded stone, not a black cut-out")
+	assert_true(str(keep.get("_why_r4_fog", "")).contains("CPU 5.22 -> 5.70"), "r4 records its CPU score")
+	var gate: Dictionary = preload("res://scripts/world/stronghold.gd").p2_003_gatehouse(_load("res://data/config/stronghold.json"))
+	assert_true(bool(gate.get("fog_disable", false)), "the shipped gatehouse carries fog_disable")
