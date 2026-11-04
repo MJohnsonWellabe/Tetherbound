@@ -30,6 +30,10 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 
 Three CPU gains ON: P2-053 5.87 -> 6.32 (over 6), P2-102 5.09 -> 5.72, P2-068 5.05 -> 5.25. P2-022 un-parked: the earlier arms hit hidden procedural geometry; retargeted at the imported belvederes. P2-023 parked (two arms with no visible change; builder of the scored shelves not yet identified). Zero criteria closed (CPU scores rank only; rows close on the GPU).
 
+## Harness fixes
+
+- `tools/visual_judge/quick_judge.py`: `QJ_JOB=<path>` merges extra item definitions (job.json schema) over the catalogue job. Blocker: F40#19 (F40 matrix night/rain pieces) has no stand in job.json, so no quick round could be built for it. `tools/visual_judge/tests/test_quick_judge.py` 14 OK.
+
 ## Blockers
 
 None.

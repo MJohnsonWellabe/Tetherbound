@@ -46,6 +46,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 JOB = ROOT / "ralph/reports/VISUAL/item-scores/job.json"
+# Extra item definitions (same schema) merged over job.json: rows such as the F40 matrix pieces that
+# the catalogue job does not list (NEAR6-CR, 4 Nov 2026: F40#19 had no quick-judge stand).
+EXTRA_JOB = os.environ.get("QJ_JOB", "")
 ART = ROOT / ".artifacts/qj"
 CACHE = ART / "cache"            # base/candidate launch captures keyed by (tree, overlay, launch)
 BACKUP = ART / "overlay_backup"  # present only while an overlay is applied
@@ -81,14 +84,19 @@ WORLD_CACHE = {"cloudreach": "--ground-cover-cache"}
 # ---------------------------------------------------------------- stand lookup
 
 def load_items(job=JOB):
-    d = json.loads(Path(job).read_text())
-    bs = d["biomes"]
     out = {}
+    for path in [job] + ([ROOT / EXTRA_JOB] if EXTRA_JOB else []):
+        _load_job(Path(path), out)
+    return out
+
+
+def _load_job(path, out):
+    d = json.loads(Path(path).read_text())
+    bs = d["biomes"]
     for biome, b in (bs.items() if isinstance(bs, dict) else enumerate(bs)):
         for it in (b["items"] if isinstance(b, dict) else b):
             out[it["board_row"]] = dict(it, biome=biome)
             out.setdefault(it["item"], out[it["board_row"]])
-    return out
 
 
 def split_repro(repro):
