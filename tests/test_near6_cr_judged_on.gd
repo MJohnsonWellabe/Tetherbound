@@ -31,3 +31,9 @@ func test_rim_pickup_in_view_ships_on() -> void:
 func test_post_role_props_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_npc_runtime.json")
 	_assert_on(cfg.post_role_props, "5.25", "post_role_props")
+
+
+## F40-2-edb6d881b763-11041450: F40#2 P2-022 summit aviary 5.64 -> 6.16.
+func test_summit_silhouette_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_f40_items.json")
+	_assert_on(cfg.summit_silhouette, "6.16", "summit_silhouette")

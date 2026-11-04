@@ -55,14 +55,24 @@ func _clip_names(model_path: String) -> PackedStringArray:
 func test_every_owner_remake_ships_on_and_is_the_live_model() -> void:
 	var flags := _flags()
 	assert_true(not flags.is_empty(), "at least one model flag")
+	# Flags merge in file order, so a species plays the LAST enabled flag that
+	# names it. A later flag may only refine an earlier one with a variant of
+	# the same remake (same folder), e.g. a visual-lane clip edit of that GLB.
+	var last: Dictionary = {}
 	for flag: String in flags:
 		if flag in HELD:
 			assert_false(bool(flags[flag].get("enabled", true)), "%s stays OFF until %s" % [flag, HELD[flag]])
 			continue
 		assert_true(bool(flags[flag].get("enabled", false)), "%s ships ON (owner, 1 Nov 2026)" % flag)
 		for id: String in flags[flag].species:
-			var live := str(SPECIES.placeholder(id).get("model", ""))
-			assert_eq(live, str(flags[flag].species[id].model), "%s: %s plays the remake" % [flag, id])
+			var model := str(flags[flag].species[id].model)
+			if last.has(id):
+				assert_eq(model.get_base_dir(), str(last[id]).get_base_dir(),
+					"%s refines %s with a variant of the same remake" % [flag, id])
+			last[id] = model
+	for id: String in last:
+		var live := str(SPECIES.placeholder(id).get("model", ""))
+		assert_eq(live, str(last[id]), "%s plays its remake (last enabled flag)" % id)
 
 
 func test_a_disabled_flag_changes_nothing() -> void:

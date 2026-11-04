@@ -1,5 +1,13 @@
 # NEAR6-MS (4 Nov 2026): running status
 
+## Handoff (4 Nov ~15:50 UTC)
+
+- **State:** branch `tb/near6-ms-1104` rebuilt on main `60f2df27` (#823). Landed on main from this lane: F41#20 camfx fade + dialogue open (CPU 4.72 -> 5.64), F38#29 beaten kneel + silent victory shot (5.76 -> 6.18). Landing-ready on the branch: **F38#32 trail camp keep-clear (5.61 -> 5.81, `773e609b`, tests pass)**.
+- **Open candidates / ideas:** F38#6 needs a real item-identity cue (tier shapes never show in its frames: only one sweet per pickup); F41#3 overlap happens inside the boss lunge, which spacing exempts by design (would need a lunge stop-short, combat feel); F41#9 parked (needs new art: copper/glass cues, solid glowmoss model); F41#15 speakers already clear with the fade ON, Marrow's face is white from the model material; F38#7 wireframe aim silhouette (source unknown).
+- **What worked:** reading earlier judges' defect text, then fixing the *staging* rather than the asset (camera fade, victory push-in, keeping wild creatures out of a camp). Pure retunes of shipped values (grass radius, speaker light, glow energy) were flat or no-ops; check a pixel diff before spending a judge round.
+- **Runbook:** TECHNICAL §8.1 + `tools/visual_judge/quick_judge.py` (plan / run --overlay / finish). Lessons: never `git fetch` a branch without `--depth=1` on this shallow clone (15 GB pack fills the disk); `pgrep -f` waiters must not match their own command line (use `[q]uick_judge`); background Bash is killed at its timeout (2 h max), so re-arm long queues; any tracked edit (tests too) changes the base cache key; job.json repro commands can be narrowed locally (restore before commit).
+
+
 Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813; rebuilt on main 60f2df27, #823, at 13:55 UTC, which already carries F41#20 and F38#29). Items F38#29, #6, #26, #7, #32 and F41#9, #20, #15, #3 (board 5.4-6.0). Yardstick: `tools/visual_judge/quick_judge.py` (CPU llvmpipe Low/Compatibility, base and candidate on the same stands, JUDGE_PROMPT verbatim, 3+ anchor pairs, three code-blind judges, calibrate.py). Owner 4 Nov: any judged CPU gain ships ON; flat or worse stays OFF.
 
 ## Landing-ready (flag, score, test, commit)
@@ -10,12 +18,16 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813; rebuilt on main 60f2df2
 
 - ~~F38#26 creature_rim ON (CPU 5.95 -> 6.07)~~ **Withdrawn (coordinator, 4 Nov 13:47):** it duplicated the visual lane's stronger rim10 rim, ON on main since #817 (batch 16 keeps main's). The branch was rebuilt on main `60f2df27` (#823) without it; further F38#26 work is judged on top of rim10. The verdict stays in `qj/F38-26-662667cd3005-11041311/` as evidence that a Meadows creature rim reads.
 
+- **F38#32 P2-035 camp and workshop prop legibility: CPU 5.61 -> 5.81** (`qj/F38-32-48f121f0ded9-11041358/`; judged on main 60f2df27). ON: `combat.json arena.wild_keep_clear` entry `trail_camp_1104` (14 m around the trail camp floor; wild bodies neither spawn nor settle a wander target there) plus a 3-line `enabled` check in `encounter_director.gd::_wild_keep_clear_zones` (zones without the key stay on). All three judges scored the camp without the coyote and hare higher. Test: `test_near6_ms_1104.gd test_f38_32_trail_camp_keep_clear_ships_on`. **Tests passed (14:50 UTC):** test_near6_ms_1104, test_wild_once, test_capacitor_spacing_override, test_texture_import_policy: 24 tests, 1696 assertions, 0 failed. Commit `773e609b`.
+
 ## Arms built (OFF until judged)
 
-- F38#29 P2-065: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (the beaten trainer drops to both knees, head bowed, the moment they lose; `post_stance.gd` rows take an optional hip drop). Test `test_near6_ms_1104.gd`. First candidate run was cut off by a timeout; rerun queued.
+- (landed) F38#29 P2-065: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (the beaten trainer drops to both knees, head bowed, the moment they lose; `post_stance.gd` rows take an optional hip drop). Test `test_near6_ms_1104.gd`. First candidate run was cut off by a timeout; rerun queued.
 - F41#3 P2-092: `combat.json contact_spacing.named_overrides.capacitor_alpha` (taken from VIS-STORMWOOD `ea108029`). Test `test_capacitor_spacing_override.gd`.
 
 ## Judged flat or worse (stay OFF)
+
+- **F38#7 P2-058 catch aim: no arm; camfx fight_fade not implicated.** Base frames on main (CPU ~7 per VIS-MEADOWS r1b) show the target and the player's creature drawn as a pale wireframe silhouette through the trainer in every aim frame. A capture with `camfx.json fight_fade` OFF shows the same silhouette in 01/07/catch_high/catch_low (only the hare's position varies run to run), so the F41#20 fade did not cause it. The silhouette, not the readout, is now the main read problem; its source is not a data flag this lane found. Not pursued further (base already above 6).
 
 - **F41#15 P2-083: no-op, not judged.** With `camfx fight_fade` ON (F41#20 flip) the three dialogue frames already show Captain Marrow and Officer Nysa unobstructed. Candidate: softer conversation speaker light (`camera.json conversation.speaker_light_candidate` key 0.9 -> 0.45, rim 1.5 -> 1.0) aimed at Marrow's white-blown face. Under 0.2% of pixels changed (mean |diff| < 1/255), so the speaker light is not what blows the face out on CPU; no config change kept. Remaining defect on these frames is Marrow's near-white face (model material) and a pale deck post at the left edge.
 

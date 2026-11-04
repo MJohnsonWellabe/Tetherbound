@@ -414,6 +414,14 @@ func _ready() -> void:
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
+		# F40#19 (NEAR6-CR): `time_override_arms.<name>` (each OFF until
+		# judged) layers further realm-only preset overrides through the same
+		# path, so a judged arm ships as a flag instead of a retuned base block.
+		var arms: Dictionary = _visual_config.get("time_override_arms", {})
+		for arm_name: String in arms:
+			var arm: Variant = arms[arm_name]
+			if arm is Dictionary and (arm as Dictionary).get("enabled") == true:
+				apply_time_overrides(local_look.get("times", {}), (arm as Dictionary).get("overrides", {}))
 		# tb/vis-water-sky group 2 (OFF until GPU-judged): warm key, rim,
 		# aerial fog and night fill (data/config/cloudreach_light_candidate.json).
 		var light_candidate := _read_json("res://data/config/cloudreach_light_candidate.json")

@@ -2060,6 +2060,7 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	_miss_text = ""
 	_miss_left = 0.0
 	_catch_verdict_message = false
+	_apply_catch_portrait(cfg, card, success, foe)
 	if success:
 		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
 		_catch_focus_left = _outcome_left
@@ -2068,6 +2069,52 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 		_step_back_for_catch_focus()
 	else:
 		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
+
+
+## P2-118 (VIS-CLOUDREACH, 4 Nov 2026): hud.json `catch_card.portrait` (off
+## unless enabled). A successful catch shows the caught species' installed
+## portrait at the card's left edge, so the result names the creature with its
+## face as well as its name. Presentation only.
+const CATCH_PORTRAIT_NAME := "CatchPortrait"
+
+
+func _apply_catch_portrait(cfg: Dictionary, card: StyleBoxFlat, success: bool, foe: RefCounted) -> void:
+	var spec: Variant = cfg.get("portrait", {})
+	if not success or foe == null or not spec is Dictionary or (spec as Dictionary).get("enabled") != true:
+		_hide_catch_portrait()
+		return
+	var path := CREATURE_PORTRAIT.resolve(str(foe.get("species_id")))
+	if path.is_empty() or not ResourceLoader.exists(path):
+		_hide_catch_portrait()
+		return
+	var px := float((spec as Dictionary).get("px", 112.0))
+	var gap := float((spec as Dictionary).get("gap_px", 18.0))
+	var rect := _outcome.get_node_or_null(NodePath(CATCH_PORTRAIT_NAME)) as TextureRect
+	if rect == null:
+		rect = TextureRect.new()
+		rect.name = CATCH_PORTRAIT_NAME
+		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		_outcome.add_child(rect)
+	rect.texture = load(path)
+	var left := card.content_margin_left
+	rect.position = Vector2(left, card.content_margin_top)
+	rect.size = Vector2(px, px)
+	rect.visible = true
+	card.content_margin_left = left + px + gap
+	_outcome.offset_bottom = maxf(_outcome.offset_bottom, _outcome.offset_top + px + card.content_margin_top + card.content_margin_bottom)
+	var half := float(cfg.get("card_half_width", 380.0)) + (px + gap) * 0.5
+	_outcome.offset_left = -half
+	_outcome.offset_right = half
+
+
+func _hide_catch_portrait() -> void:
+	if _outcome == null:
+		return
+	var rect := _outcome.get_node_or_null(NodePath(CATCH_PORTRAIT_NAME))
+	if rect != null:
+		(rect as CanvasItem).visible = false
 
 
 ## P2-110: hud.json `loss_card` (off unless enabled). The loss verdict draws as
@@ -2125,6 +2172,7 @@ func relinquish_result_presentation() -> void:
 	_go_left = 0.0
 	_miss_left = 0.0
 	if _outcome != null: _outcome.text = ""
+	_hide_catch_portrait()
 	if _xp_line != null: _xp_line.text = ""
 	if _go_text != null: _go_text.text = ""
 	if _prompt != null: _prompt.text = ""
@@ -2240,6 +2288,7 @@ func _tick_outcome(delta: float) -> void:
 	_catch_focus_left = maxf(0.0, _catch_focus_left - delta)
 	if _outcome_left <= 0.0:
 		_outcome.text = ""
+		_hide_catch_portrait()
 		_outcome.remove_theme_stylebox_override("normal")
 		_outcome.remove_theme_font_size_override("font_size")
 		_outcome.autowrap_mode = TextServer.AUTOWRAP_OFF
