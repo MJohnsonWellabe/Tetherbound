@@ -22,14 +22,13 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var off: Array = raw.get("sections_off", [])
 	for section: String in ["current_flow_visual", "night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
-			"stones_candidate", "veilfall_hero_candidate",
+			"veilfall_hero_candidate",
 			"veilfall_facade_candidate", "forward_plus_candidate",
 			"first_shore_declutter_candidate",
 			"veilfall_formation_relief_fill_candidate",
-				"shore_surf_candidate", "shore_surf_vary_candidate",
-				"swim_candidate", "dune_grass_candidate", "shore_water_candidate",
+				"swim_candidate",
 				"veilfall_mountain_candidate",
-				"waterline_declutter_candidate", "golden_sky_candidate", "current_bands_candidate", "lesson_clusters_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
+				"current_bands_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -80,6 +79,27 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
 	assert_true(str(raw.get("_why_rain_on", "")).contains("6.04"),
 		"the rain trio's mapped score is recorded in the config")
+	# tb/vis-tidewake-1104 look r13: the shore dressing lifted F39#30a, F39#30b
+	# and F13#5 together (F39#30a CPU 6.19 -> 6.43), so it ships ON.
+	for section: String in ["lesson_clusters_candidate", "dune_grass_candidate", "stones_candidate", "waterline_declutter_candidate"]:
+		assert_false(off.has(section), "%s ships on after look r13" % section)
+		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
+	assert_true(str(raw.get("_why_shore_dressing_on", "")).contains("6.43"),
+		"the shore dressing's mapped score is recorded in the config")
+	# tb/vis-tidewake-1104 look r14: golden sky + shore water lifted F13#5 CPU
+	# 5.69 -> 5.87 (shore rows unchanged), so they ship ON.
+	for section: String in ["golden_sky_candidate", "shore_water_candidate"]:
+		assert_false(off.has(section), "%s ships on after look r14" % section)
+		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
+	assert_true(str(raw.get("_why_golden_shore_water_on", "")).contains("5.87"),
+		"the golden sky and shore water mapped score is recorded in the config")
+	# tb/vis-tidewake-1104 look r15: the broken surf line lifted F39#30a CPU
+	# 5.86 -> 6.19 and F13#5 5.31 -> 5.82, so it ships ON.
+	for section: String in ["shore_surf_candidate", "shore_surf_vary_candidate"]:
+		assert_false(off.has(section), "%s ships on after look r15" % section)
+		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
+	assert_true(str(raw.get("_why_shore_surf_on", "")).contains("6.19"),
+		"the surf line's mapped score is recorded in the config")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
@@ -164,3 +184,11 @@ func test_forward_plus_keys_leave_compatibility_untouched() -> void:
 		for section: String in ["sun", "environment", "sky"]:
 			assert_eq((times[name][section] as Dictionary).keys().size(),
 				(times["night"][section] as Dictionary).keys().size(), "%s.%s has the full key set" % [name, section])
+
+
+## tb/vis-tidewake-1104 look r12: the Veilfall fall sheet stands 3 m off the rock
+## so the gully ridge no longer cuts through it (F39#30b CPU 5.75 -> 5.85).
+func test_veilfall_fall_sheet_clears_the_rock() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall_falls_visual.json"))
+	assert_eq(float(cfg.geometry.standoff_m), 3.0)
+	assert_true(str(cfg.get("_why_standoff_3m", "")).contains("5.85"))
