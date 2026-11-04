@@ -13,6 +13,12 @@ All earlier gains are on main. Branch `tb/near6-ms-1104` now equals main a832022
 | F41#16 | P2-110 Hollows fight-loss result clarity | 5.05 | `hud.loss_card` ON; judged frame shows no loss state |
 | F39#23 | P2-114 catch-chance HUD contrast | 5.65 | |
 
+### F38#19 P2-004 exploration HUD: the judged frame is the opening wake fade mid-way (stand artefact, for the coordinator)
+
+- `job.json` stand for F38#19 is `phase2_capture_ui.gd --biome=meadows --seed=2042 --hud-settle-frames=180`. On CPU llvmpipe the exploration_hud frame it shoots is still under `sequence_director.gd`'s OpeningFade (the black wake fade): whole-frame mean RGB 99/75/47 vs 168/129/81 with `--hud-settle-frames=900` on the same tree (main a8320228). Sheet: `probe_hud_settle/_sheet_hud_settle.jpg` (left 180 frames, right 900).
+- The settled frame is the HUD the player actually sees: full brightness, the temporary team reveal gone, the action legend (Map, Satchel, Build, Call Out) and the bed's "Get up" prompt up. The GPU notes ("five dark boxes ring a dim, flat-lit interior") likely judged the same transient.
+- **Ask:** raise this stand's `--hud-settle-frames` (900 settles on CPU) or wait on the fade clearing, then re-score F38#19 before any further HUD change. Not changed here: the stand is the shared yardstick. No game change made for F38#19.
+
 ## Handoff (4 Nov ~15:50 UTC)
 
 - **State:** branch `tb/near6-ms-1104` rebuilt on main `60f2df27` (#823). Landed on main from this lane: F41#20 camfx fade + dialogue open (CPU 4.72 -> 5.64), F38#29 beaten kneel + silent victory shot (5.76 -> 6.18). Landing-ready on the branch: **F38#32 trail camp keep-clear (5.61 -> 5.81, `773e609b`, tests pass)**.
@@ -39,6 +45,8 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813; rebuilt on main 60f2df2
 - F41#3 P2-092: `combat.json contact_spacing.named_overrides.capacitor_alpha` (taken from VIS-STORMWOOD `ea108029`). Test `test_capacitor_spacing_override.gd`.
 
 ## Judged flat or worse (stay OFF)
+
+- **F39#23 P2-114 round 1: CPU 5.46 -> 4.70 (worse).** Arm: dark outline under the capture ring arcs, arcs x1.35 (`qj/F39-23-49d54adda13f-11041824/`). All three judges: the readout already reads (defect FIXED/PARTIAL on both sides), and the bolder ring now hides the creature being caught. Round 2 (`capture_readout_visual.json ring_style_1104`): the opposite, a thinner (x0.7) and more translucent (x0.55) ring with no outline; the readout keeps its full colour.
 
 - **F38#7 P2-058 catch aim: no arm; camfx fight_fade not implicated.** Base frames on main (CPU ~7 per VIS-MEADOWS r1b) show the target and the player's creature drawn as a pale wireframe silhouette through the trainer in every aim frame. A capture with `camfx.json fight_fade` OFF shows the same silhouette in 01/07/catch_high/catch_low (only the hare's position varies run to run), so the F41#20 fade did not cause it. The silhouette, not the readout, is now the main read problem; its source is not a data flag this lane found. Not pursued further (base already above 6).
 
