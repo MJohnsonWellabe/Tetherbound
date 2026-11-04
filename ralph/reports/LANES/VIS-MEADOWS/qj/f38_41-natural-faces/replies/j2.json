@@ -1,0 +1,1 @@
+{"sets": {"Ay": {"A": {"bar_a": 6.5}, "B": {"bar_a": 6.2}}, "Sb": {"A": {"bar_a": 6.6}, "B": {"bar_a": 5.2}}, "Gz": {"A": {"bar_a": 6.0, "defects": {"d": "PRESENT"}}, "B": {"bar_a": 6.5, "defects": {"d": "PARTIAL"}}}, "Hj": {"A": {"bar_a": 6.4}, "B": {"bar_a": 4.6}}}}
