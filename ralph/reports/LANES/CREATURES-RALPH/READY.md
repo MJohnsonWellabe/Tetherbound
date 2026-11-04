@@ -32,6 +32,50 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**URGENT for the coordinator (4 Nov ~07:40 UTC): batch-6 rim ERROR fix is `fe9d2120` on tb/creatures-ralph** (`scripts/world/creature_rim.gd` + `tests/test_creature_rim.gd` only; send_message to your session is refused, so this is the channel).
+- Reproduced here with the rim ON: `smoke_net_f48_cut_key` failed "pre-restart guest log has no ERROR:" (32x `Parameter "material" is null`); `smoke_backpack_equipment` (the Stormwood shard step) logged 94 of them, 0 with the rim OFF.
+- Your keep-alive hypothesis (a) did not hold: a never-freed static material still gave 88. The errors fire when the world is freed while a creature body's meshes still wear the overlay.
+- Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
+- Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
+
+**v1/b20 (4 Nov ~15:00 UTC): Mosshock and Sparkit lateral hit arms are worse and stay OFF (in HELD).** F36#54 5.95 -> 5.79; F36#70 6.20 -> 5.75. Sparkit maps at 6.20 as shipped. Mosshock needs new art: its face and elemental trait do not read at stage distance, and its faint is a "rock-like lump". Verdict in `v1/b20/`.
+
+**qj lathit4-f38-2 (4 Nov ~14:00 UTC): Burrowback/Nightburrow lateral hit ships ON.**
+- **Result:** F38#2 creature hurt and movement poses, CPU 6.18 -> 6.40 (+0.22; raw 6.1/5.8/5.6 -> 6.4/6.0/5.6; defect PRESENT -> PARTIAL for two of three judges; calibration r 0.95).
+- **What it is:** flag `creatures_ralph_burrowback_lateral_hit`, a copy of the live nat1024 GLB.
+  - Its hit clip gets a sideways lean and head toss (`tools/art_pipeline/lateral_recoil.py`: spine 24, neck yaw 38, head roll 24).
+  - Its peak is then held to the clip end (`hold_clip.py`, as shipped for Terrapup).
+  - The copy uses the live extracted textures, so the Nightburrow repaint and coat flags still resolve.
+- **Test:** `tests/test_burrowback_lateral_hit_flag.gd`.
+- **Harness fix found on the way (commit "Creature pose capture: wait for the art model"):** `phase2_capture_creatures.gd` posed creatures before their model existed, so "hurt", "fainted" and "resting" stills were idle. The base rise (5.81 -> 6.18) comes from that fix, not from a game change.
+- **F38#1 needs a fresh base on the fixed tool.** Its "fainted bodies upright or floating" defect is likely the same capture bug. The stills also land after a 0.54 s hit under CPU frame deltas; recorded in TECHNICAL 8.1.
+
+**Coordinator, rim fix verification and the batch-8 f20 question (4 Nov ~09:50 UTC):** all of these ran locally on `fe9d2120`, which is the same creature-rim code as tb/land-batch-9.
+- With the rim ON, every one passed and none logged a `Parameter "material" is null` error:
+  - `smoke_net_f48_cut_key`
+  - `smoke_net_f18_fixture_teaching`
+  - `smoke_net_f20_ending`
+  - `smoke_backpack_equipment` (26/26)
+  - `smoke_vfx_lifecycle` (9/9)
+  - `test_creature_rim` (4/29)
+  - `test_combat_vfx`, `test_tell_aura_overlap`, `test_meadows_cause_flags` and texture policy
+- **f20 with the rim OFF:** `smoke_net_f20_ending` also passes (rc 0).
+- **Grandpa failure looks intermittent, not the rim.** f20 passes both ways here, so the batch-8 "natural Grandpa completion receives durable personal acknowledgement" failure looks intermittent. That check is a 30 s wait for `homecoming_seen` after the dialogue, and nothing in it touches creature materials.
+- **Re-dress doesn't pile up.** `dress_body` connects `tree_exiting`/`tree_entered` once per body: the `is_connected` guard is keyed on the bound callable.
+- **Harness note:** `tools/net/run_net_smoke.sh` leaves a `tail -f <run>/SUMMARY.md` running. Under an outer `flock`, that tail inherits the lock and blocks the next run, which cost 78 min here. Kill it after each run.
+
+**qj rim10-f38-1-2 (4 Nov ~06:30 UTC): stronger creature rim ships ON.** `creature_rim.json` enabled, energy 0.55 -> 1.0, power 2.6 -> 1.8 (Meadows looks only). F38#1 collapse and rest CPU 5.53 -> 5.84 (+0.31; all three judges scored the rimmed side higher and named the outline separating the body from the grass); F38#2 hurt and movement 5.84 -> 5.81 (flat). This round's anchor fit is weak (r 0.65, RMSE 0.64), but the raw scores agree (5.5/5.7/5.5 -> 5.8/5.9/5.9). One frame is missing (Terrapup resting). `test_creature_rim.gd` now asserts ON with "5.84"; creature rim, Meadows cause flags, combat VFX, tell-aura overlap, VFX lifecycle smoke and texture policy all pass. The judges' next lever for F38#1/#2 is new art: distinct hurt/move keys and side-down faint and rest poses that settle on the ground.
+
+**qj rimr2-f41-18 (4 Nov ~05:10 UTC): Stormwood rim r2 is flat-to-worse and stays OFF.** F41#18 CPU 5.10 (r1 as shipped) -> 4.98 with r2 (energy 1.15, power 1.7); raw 5.5/6/5.7 vs 5.5/5.8/5.7, defect PARTIAL on both. All three judges say the uniform now separates from the ground but has no rank or individual markers at this camera distance, so more rim light does not help. The next lever is an insignia or bright accent on the uniform (scene or new art); report in `qj/rimr2-f41-18/VERDICT.md`.
+
+**v1/b19 (4 Nov ~04:45 UTC): the retuned storm-light set still gains and stays ON (live on main).** F41#5 5.04 -> 5.63; F41#2 5.39 -> 5.46; F41#19 5.42 -> 5.46. Base was captured with the set OFF, same run. The CI retune cost most of the F41#2 phase lift (b16 +0.74). The next lever is a per-phase grade inside the phase rules, which is for the Stormwood region lane.
+
+**LANDING-READY (4 Nov ~04:30 UTC): F36#56 Nightburrow partial plates ON, CPU 6.37 -> 6.67 (v1/b18; three judges, slope 1.51, r 0.96, RMSE 0.40).** `creature_coat_flags.json` `creatures_ralph_nightburrow_partial_plates`: plates kept only on the spine and shoulders, the rest repainted as the coat's fur, moss and its glow removed. Texture only, anatomy-masked by `tools/art_pipeline/nightburrow_partial_plates.py`. Tests: `test_nightburrow_partial_plates_flag.gd` (asserts ON, "6.67", resolves ON to the arm and OFF to the shipped coat) 2/32; `test_creature_coat_flags.gd` 6/627. The creature rim (F38#1/#2/#26) is flat at the world camera (5.46 / 5.96 / 6.06 -> 6.11) and stays OFF.
+
+**LANDING-READY (4 Nov ~04:20 UTC): Terrapup hold-peak hit react, F38#2 (stage) CPU 6.37 -> 6.79 (v1/b15).** The live `creature_terrapup_owner1101.glb` hit clip now holds its peak recoil to the clip end (`tools/art_pipeline/hold_clip.py`), so the hurt-end frame no longer snaps back to idle. The score is recorded in `creature_model_flags.json` `remake_owner1101_terrapup._why`. Test: `test_remake_owner1101_finish.gd::test_terrapup_hit_holds_its_peak_with_its_score` asserts the score and that hit-end equals mid-clip; the file passes 6/353, and `test_texture_import_policy` passes 2/1591.
+
+**v1/b17 (4 Nov ~02:45 UTC): Meadows Blender ridge F38#24 is worse, 4.19 -> 3.44, and stays OFF.** The ridge reads as a pale smeared wall right behind the meadow, while the shipped rings read as soft blue distance. The row's main blocker is in the two Warrens frames: a camera-occluding bank-shell mass and floating dark slab undersides. That is for the Meadows region lane (`tb/vis-meadows-1104`). A further, lower, darker, layered ridge r2 is the next attempt.
+
 **FOR #808 (4 Nov ~03:15 UTC): the storm-light set is fixed. Every named test passes with it ON, so it can go back ON.** The CI suite 4 failures had two causes.
 - **(1) Real phase-rule breaks in the `storm_sky_1101` overlay**, now retuned (`_why_rules`):
   - Calm had a sheet glow (Calm has no lightning), now 0.

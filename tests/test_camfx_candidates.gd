@@ -14,6 +14,14 @@ func _json(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
+func _without(block: String) -> Dictionary:
+	var cfg := _json(CAMFX.CONFIG_PATH).duplicate(true)
+	var off: Dictionary = (cfg[block] as Dictionary).duplicate(true)
+	off["enabled"] = false
+	cfg[block] = off
+	return cfg
+
+
 func _with(block: String) -> Dictionary:
 	var cfg := _json(CAMFX.CONFIG_PATH).duplicate(true)
 	var on: Dictionary = (cfg[block] as Dictionary).duplicate(true)
@@ -43,13 +51,24 @@ func _bonfire() -> MeshInstance3D:
 	return instance
 
 
-func test_every_camfx_block_ships_off() -> void:
+## catch_orb ships ON after a judged CPU gain (VIS-MEADOWS r1b, 4 Nov 2026);
+## the other blocks still ship OFF.
+## NEAR6-MS (4 Nov 2026) judged fight_fade and dialogue_open together on F41#20.
+const JUDGED_ON := {"catch_orb": "CPU 6.22 -> 7.19", "fight_fade": "CPU 4.72 -> 5.64"}
+
+
+func test_every_camfx_block_ships_off_unless_judged_on() -> void:
 	var cfg := _json(CAMFX.CONFIG_PATH)
 	for block: String in ["catch_orb", "flame", "fight_fade"]:
 		assert_true(cfg.has(block), "camfx.json must declare %s" % block)
-		assert_false(bool((cfg[block] as Dictionary).get("enabled", true)), "%s ships OFF" % block)
 		assert_eq((cfg[block] as Dictionary).get("scope"), "client_presentation", "%s declares its scope" % block)
-		assert_true(CAMFX.block(block).is_empty(), "OFF reads as empty: %s" % block)
+		if JUDGED_ON.has(block):
+			assert_true(bool((cfg[block] as Dictionary).get("enabled", false)), "%s ships ON (judged gain)" % block)
+			assert_true(str((cfg[block] as Dictionary).get("_why_on", "")).contains(JUDGED_ON[block]), "%s records its score" % block)
+			assert_false(CAMFX.block(block).is_empty(), "ON reads its keys: %s" % block)
+		else:
+			assert_false(bool((cfg[block] as Dictionary).get("enabled", true)), "%s ships OFF" % block)
+			assert_true(CAMFX.block(block).is_empty(), "OFF reads as empty: %s" % block)
 
 
 func test_flame_off_keeps_the_lit_cone() -> void:
@@ -90,6 +109,11 @@ func test_catch_orb_block_names_an_installed_model_and_hides_the_rest_disc() -> 
 	assert_false(bool(orb.get("rest_halo", true)), "no disc at rest")
 	assert_true(float(orb["flight_halo_scale"]) < 5.5, "a smaller flight glow than the shipped 5.5x")
 	assert_true(float(orb["verdict_flash_scale"]) < 1.0, "the verdict flashes shrink")
+	assert_true(bool(orb.get("enabled", false)), "catch_orb ships ON (VIS-MEADOWS r1b judged gain)")
+	assert_true(str(orb.get("_why_on", "")).contains("CPU 6.22 -> 7.19"), "catch_orb records its CPU score")
+	var off := _with("catch_orb")
+	(off["catch_orb"] as Dictionary)["enabled"] = false
+	CAMFX.set_config_for_tests(off)
 	assert_true(CAMFX.block("catch_orb").is_empty(), "OFF reads as empty")
 	CAMFX.set_config_for_tests(_with("catch_orb"))
 	assert_false(CAMFX.block("catch_orb").is_empty(), "ON reads its keys")
@@ -105,6 +129,7 @@ func test_orb_off_paths_are_the_shipped_ones() -> void:
 
 
 func test_fight_fade_off_is_inert_and_options_keep_the_base_filters() -> void:
+	CAMFX.set_config_for_tests(_without("fight_fade"))
 	assert_true(CAMFX.block("fight_fade").is_empty(), "OFF reads as empty")
 	assert_true(OCCLUSION.occluders(null, Vector3.ZERO, Vector3.ONE * 3.0, [],
 		{"include_shadowless": true}).is_empty(), "no world, no occluders, with or without options")
@@ -181,9 +206,10 @@ func _rig() -> SpringArm3D:
 	return rig
 
 
-func test_dialogue_open_ships_off() -> void:
+func test_dialogue_open_ships_on_after_judged_gain() -> void:
 	var cfg := _json(CAMFX.CONFIG_PATH)
-	assert_false(bool((cfg["dialogue_open"] as Dictionary).get("enabled", true)), "dialogue_open ships OFF")
+	assert_true(bool((cfg["dialogue_open"] as Dictionary).get("enabled", false)), "dialogue_open ships ON (judged gain)")
+	assert_true(str((cfg["dialogue_open"] as Dictionary).get("_why_on", "")).contains("CPU 4.72 -> 5.64"), "dialogue_open records its score")
 	var rig := FileAccess.get_file_as_string("res://scripts/player/camera_rig.gd")
 	assert_true(rig.contains("var open_cfg := CAMFX.block(\"dialogue_open\")\n\tif not open_cfg.is_empty():"),
 		"the push-in only searches when the block is on")

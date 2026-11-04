@@ -1,9 +1,10 @@
 {
   "_why": "F38#1 (5.35), F38#2 (5.58), F38#26 (5.77): all three code-blind judges said Meadows creatures 'sit in the shaded tree-trunk band, read as small dark blobs, no rim light'. When enabled, scripts/world/creature_rim.gd gives every creature body (wild and companion) spawned while a listed realm look is loaded a subtle cool fresnel backlight edge, reusing scripts/world/stormwood_character_rim.gd's overlay()/dress() and shaders/character_rim_overlay.gdshader (material overlay, additive, unshaded, no shadows). Cool pale, never red/oxblood. Combat tell auras, boss auras and hit/level-up glows take the overlay slot over the rim and hand it back when they end. Client presentation only; no state, no collision. OFF until GPU judged.",
   "scope": "client_presentation",
-  "enabled": false,
+  "enabled": true,
+  "_why_on": "Visual lane qj rim10-f38-1-2 (4 Nov, CPU llvmpipe, three code-blind judges, calibrate.py): energy 0.55 -> 1.0 and power 2.6 -> 1.8 ships ON. F38#1 creature collapse and rest CPU 5.53 -> 5.84 (+0.31; all three judges scored the rimmed side higher and named the rim outline separating the body from the grass); F38#2 hurt and movement 5.84 -> 5.81 (flat). The v1/b18 rim at 0.55 was flat at the world camera. Owner 4 Nov: every judged gain ships ON. A GPU High pass still closes the rows.",
   "colour": "#c8d6f2",
-  "energy": 0.55,
-  "power": 2.6,
+  "energy": 1.0,
+  "power": 1.8,
   "realm_looks": ["res://data/config/meadows_look.json"]
 }

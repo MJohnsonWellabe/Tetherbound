@@ -210,6 +210,10 @@ func dress(world: Node3D) -> void:
 	if profile_look: print("[cloudreach_look] route_verges ms=", Time.get_ticks_msec() - phase_started)
 	phase_started = Time.get_ticks_msec()
 	_dress_trees_and_stones(config_data)
+	# P2-105: route/landing trees outside the look scatter get the same crown stop.
+	for route_tree: Node in world.find_children("LandingTree*", "Node3D", true, false) \
+			+ world.find_children("RouteTree*", "Node3D", true, false):
+		_add_canopy_camera_stop(route_tree as Node3D)
 	if profile_look: print("[cloudreach_look] trees_stones ms=", Time.get_ticks_msec() - phase_started)
 	_dress_settlement_materials()
 	var settlement_life := preload("res://scripts/world/cloudreach_settlement_life.gd").new()
@@ -1683,8 +1687,48 @@ func _plant_tree_clusters(root: Node3D, centre: Vector3, half: Vector2, cfg: Dic
 			_world.call("_apply_tree_palette", tree, c * 13 + t)
 			root.add_child(tree)
 			_set_visibility(tree, 1050.0)
+			_add_canopy_camera_stop(tree)
 			_tree_count += 1
 			_tree_positions.append(ground)
+
+
+## P2-105 (VIS-CLOUDREACH, 4 Nov 2026): cloudreach_look.json
+## `tree_canopy_camera_stops` (off unless enabled). Judges found the riding
+## camera inside a look tree's canopy on the arrival terrace road. When on,
+## each look tree gets an occlusion-only sphere around its crown (the camera
+## rig's OCCLUSION_ONLY_LAYER, the same stop the High Perches arch uses), so
+## the spring arm shortens in front of the leaves. No player or creature
+## collision; the layer is read only by the camera arm.
+const CAMERA_OCCLUSION_ONLY_LAYER := 1 << 31
+
+func _add_canopy_camera_stop(tree: Node3D) -> void:
+	var cfg: Variant = _cfg.get("tree_canopy_camera_stops", {})
+	if not (cfg is Dictionary and (cfg as Dictionary).get("enabled") == true):
+		return
+	var box := AABB()
+	var first := true
+	for mesh: VisualInstance3D in tree.find_children("*", "MeshInstance3D", true, false):
+		var local := tree.global_transform.affine_inverse() * mesh.global_transform * mesh.get_aabb()
+		box = local if first else box.merge(local)
+		first = false
+	if first or box.size.y <= 0.0:
+		return
+	var crown_from := float((cfg as Dictionary).get("crown_from_fraction", 0.45))
+	var crown_bottom := box.position.y + box.size.y * crown_from
+	var crown_height := box.end.y - crown_bottom
+	var radius := maxf(crown_height, maxf(box.size.x, box.size.z)) * 0.5 \
+		* float((cfg as Dictionary).get("radius_scale", 0.9))
+	var body := StaticBody3D.new()
+	body.name = "CanopyCameraStop"
+	body.collision_layer = CAMERA_OCCLUSION_ONLY_LAYER
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var sphere := SphereShape3D.new()
+	sphere.radius = maxf(radius, 0.5)
+	shape.shape = sphere
+	shape.position = Vector3(box.get_center().x, crown_bottom + crown_height * 0.5, box.get_center().z)
+	body.add_child(shape)
+	tree.add_child(body)
 
 
 func _inside_architectural_tree_clearing(at: Vector3) -> bool:

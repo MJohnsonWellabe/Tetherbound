@@ -25,6 +25,7 @@ signal trial_progress(gates_passed: int, gate_count: int)
 signal placement_failed(id: String, position: Vector3)
 signal encounter_recorded(id: String, first_victory: bool)
 
+const NPC_POSTS := preload("res://scripts/world/cloudreach_npc_posts.gd")
 const RULES := preload("res://scripts/world/cloudreach_physical_rules.gd")
 const BOND_FEEDBACK := preload("res://scripts/creatures/bond_milestones.gd")
 const PROGRESSION_FEEDBACK := preload("res://scripts/creatures/progression_feed.gd")
@@ -652,7 +653,7 @@ func _sync_pickups_and_camps() -> void:
 			continue
 		if _placements.has(id) and is_instance_valid(_placements[id]):
 			continue
-		var at := _resolve(id, RULES.vec(config.get("pickup_overrides", {}).get(id, spec["position"])))
+		var at := _resolve(id, RULES.vec(_pickup_override(id, spec["position"])))
 		if at == Vector3.INF:
 			continue
 		var pickup := CACHE.new()
@@ -816,6 +817,11 @@ func _sync_npcs() -> void:
 	_people.name = "CloudreachPeople"
 	add_child(_people)
 	_people.call("build_specs", _player, specs.filter(func(spec: Dictionary) -> bool: return positions.has(spec["id"])))
+	# P2-068: cloudreach_npc_runtime.json `post_readability` fill light (off unless enabled).
+	NPC_POSTS.light_people(_people, NPC_POSTS.spec(npc_runtime))
+	# P2-068 round 2: `post_role_props` (off unless enabled).
+	NPC_POSTS.place_role_props(self, specs, positions, NPC_POSTS.role_props_spec(npc_runtime),
+		func(spot: Vector3) -> Vector3: return _ground.call(spot) if _ground.is_valid() else spot)
 	if is_instance_valid(_topic_root):
 		remove_child(_topic_root)
 		_topic_root.queue_free()
@@ -1069,6 +1075,17 @@ func _sync_personal_rewards() -> void:
 		reward.global_position = at
 		reward.call("setup", spec)
 		_placements[id] = reward
+
+
+## P2-102 / F40#17 (NEAR6-CR): `rim_pickup_inset` (OFF until judged) moves a
+## pickup that sits on a rim camera stand back onto open crown turf. Same
+## identity, item and claim; only the authored spot changes.
+func _pickup_override(id: String, fallback: Variant) -> Variant:
+	for key: String in ["rim_pickup_in_view", "rim_pickup_inset"]:
+		var inset: Dictionary = config.get(key, {})
+		if inset.get("enabled") == true and (inset.get("pickup_overrides", {}) as Dictionary).has(id):
+			return inset["pickup_overrides"][id]
+	return config.get("pickup_overrides", {}).get(id, fallback)
 
 
 func _resolve(id: String, at: Vector3) -> Vector3:

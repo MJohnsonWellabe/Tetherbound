@@ -1,0 +1,10 @@
+Zp: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Kx: "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+Yd: none
+Fp: "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles"
+Vy: "Large rock faces fill the camera and hide the named speaker during dialogue"
+Hu: "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp"
+To: none
+Pb: "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+Qg: "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+Hy: "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"

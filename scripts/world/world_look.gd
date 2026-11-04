@@ -1131,9 +1131,15 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		["cloud_high_coverage", "high_coverage"], ["cloud_high_scale", "high_scale"],
 		["cloud_high_opacity", "high_opacity"],
 		["horizon_haze_height", "haze_height"], ["horizon_haze_strength", "haze_strength"],
+		# tb/vis-tidewake-1104: night star field (shader default 0 = off).
+		["star_brightness", "star_brightness"], ["star_density", "star_density"], ["star_scale", "star_scale"],
 	]:
 		if cfg.has(str(pair[0])):
 			mat.set_shader_parameter(str(pair[1]), float(cfg[str(pair[0])]))
+	# Stars are per time of day: a sky cfg without star_brightness has none, so
+	# a night value never persists into the next day sky.
+	if not cfg.has("star_brightness"):
+		mat.set_shader_parameter("star_brightness", 0.0)
 	for pair2: Array in [
 		["cloud_lit", "cloud_lit"], ["cloud_shade", "cloud_shade"],
 		["cloud_base", "cloud_base"],

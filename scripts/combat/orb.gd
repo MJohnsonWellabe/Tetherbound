@@ -664,7 +664,7 @@ static func calm_seal_config() -> Dictionary:
 	if _calm_seal == null:
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
 		var card: Variant = parsed.get("catch_card", {}) if parsed is Dictionary else {}
-		var calm: Variant = card.get("calm_seal", {}) if card is Dictionary and card.get("enabled") == true else {}
+		var calm: Variant = card.get("calm_seal", {}) if card is Dictionary and (card.get("enabled") == true or OS.get_cmdline_user_args().has("--catch-card-candidate")) else {}
 		_calm_seal = calm if calm is Dictionary and calm.get("enabled") == true else {}
 	return _calm_seal
 

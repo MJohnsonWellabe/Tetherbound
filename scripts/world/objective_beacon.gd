@@ -55,7 +55,7 @@ var combat_manager: Node = null
 func _ready() -> void:
 	preload("res://scripts/onboarding/lesson_service.gd").attach(get_node_or_null(^"/root/Game"))
 	_log = QUEST_LOG.new()
-	_config = _load_config()
+	_config = _apply_realm_style(_load_config(), realm_id)
 	_colour = Color.from_string(str(_config.get("colour", "#63E8FF")), Color("63e8ff"))
 	_build_visual()
 	refresh_now()
@@ -269,6 +269,27 @@ func _ground_height(at: Vector2) -> float:
 				return height
 		source = source.get_parent()
 	return NAN
+
+
+## P2-053 (VIS-CLOUDREACH lane, 4 Nov 2026): objective_beacon.json
+## `realm_styles.<realm>` (off unless its `enabled`, or the capture flag
+## `--objective-beacon-<realm>-candidate`) merges presentation keys over the
+## shared beacon for one realm only. The objective, its destination and the
+## map marker are unchanged.
+static func _apply_realm_style(config: Dictionary, realm: String) -> Dictionary:
+	var styles: Variant = config.get("realm_styles", {})
+	var style: Variant = (styles as Dictionary).get(realm, {}) if styles is Dictionary else {}
+	if not (style is Dictionary):
+		return config
+	var on: bool = (style as Dictionary).get("enabled") == true \
+		or OS.get_cmdline_user_args().has("--objective-beacon-%s-candidate" % realm)
+	if not on:
+		return config
+	var merged := config.duplicate(true)
+	for key: String in (style as Dictionary):
+		if not key.begins_with("_") and key != "enabled":
+			merged[key] = (style as Dictionary)[key]
+	return merged
 
 
 func _load_config() -> Dictionary:

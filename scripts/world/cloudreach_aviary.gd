@@ -81,6 +81,18 @@ static func build(root: Node3D, materials: Dictionary, spec: Dictionary) -> Dict
 		rx + plinth_extra, rz + plinth_extra, plinth_height * 0.5,
 		thickness + plinth_extra * 2.0, plinth_height, masonry, true, gaps, segment_count)
 
+	# P2-022 / F40#2 (NEAR6-CR): `drum.terrace` (OFF until judged) seats the
+	# drum on broad, low stepped stone courses so the summit reads as a
+	# layered sanctuary rather than a dome set on grass. Arch gaps stay open;
+	# no collision, so routes, entries and the fight floor are unchanged.
+	var terrace: Dictionary = drum_spec.get("terrace", {})
+	if terrace.get("enabled") == true:
+		for tier: Dictionary in terrace.get("tiers", []):
+			_build_ring_course(drum_root, "AviaryTerraceStep",
+				rx + float(tier.get("radius_extra_m", 2.4)), rz + float(tier.get("radius_extra_m", 2.4)),
+				(float(tier.get("height_m", 0.4)) - float(tier.get("sink_m", 0.0))) * 0.5,
+				float(tier.get("width_m", 4.0)), float(tier.get("height_m", 0.4)) + float(tier.get("sink_m", 0.0)),
+				masonry, false, gaps, segment_count)
 	var piers := _build_piers(drum_root, drum_spec, masonry, rx, rz, drum_height)
 	var arches := _build_arch_frames(drum_root, arch_spec, stone, rx, rz)
 	_build_cornice(drum_root, drum_spec, masonry, rx, rz, drum_height, gaps, segment_count)

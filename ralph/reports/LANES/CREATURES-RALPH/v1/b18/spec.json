@@ -1,0 +1,38 @@
+[
+ {
+  "label": "F38#1",
+  "a": "/tmp/claude-0/work/judge/b18/k/sides/F38_1_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b18/k/sides/F38_1_b.jpg",
+  "brief": "2 in-game frames (Meadows) for one catalogue subject: creature collapse and rest. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground"
+  ]
+ },
+ {
+  "label": "F38#2",
+  "a": "/tmp/claude-0/work/judge/b18/k/sides/F38_2_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b18/k/sides/F38_2_b.jpg",
+  "brief": "3 in-game frames (Meadows) for one catalogue subject: creature hurt and movement poses. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename"
+  ]
+ },
+ {
+  "label": "F38#26",
+  "a": "/tmp/claude-0/work/judge/b18/k/sides/F38_26_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b18/k/sides/F38_26_b.jpg",
+  "brief": "3 in-game frames (Meadows) for one catalogue subject: creature ground contact. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view"
+  ]
+ },
+ {
+  "label": "F36#56",
+  "a": "/tmp/claude-0/work/judge/b18/k/sides/nightburrow_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b18/k/sides/nightburrow_b.jpg",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: hit react mid, hit react end, faint mid, faint end. Judge the creature's model, material and poses as the game's real look - identity, silhouette, surface and elemental finish, hurt and faint read without a label and stay grounded, scale against the ruler.",
+  "defects": [
+   "Hurt frames keep the idle silhouette so the state is hard to read, and faint or rest poses float above the ground or stay upright"
+  ]
+ }
+]
