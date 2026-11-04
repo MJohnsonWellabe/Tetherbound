@@ -19,6 +19,7 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `human_water_contact_visual.json` `wake_trail.enabled` (longer, spreading trail rings) | F39#14 | CPU 6.10 -> 6.80 (3/3 judges higher, RMSE 0.52) | `test_near6_tw_judged_on.gd::test_swim_wake_trail_ships_on`; `test_human_water_contact_visual.gd` idle step now runs past the configured lifetime (13 tests, 0 failed) | this commit |
 | `water_dune_cover.json` `shore_ecology_candidate.shipped_sites` += welcome_bay, horizon_headland, east_beach; `water_ground_cover.json` `built_feather_enabled` | F39#1 | CPU 6.37 -> 6.44 (2 judges higher, 1 equal; RMSE 0.41) | `test_water_dune_cover.gd::test_shipped_shore_site_places_while_the_candidate_stays_off` now lists the judged sites; unjudged islands still never place (15 tests, 0 failed) | this commit |
 | `water_resource_models.json` `fight_ring_hide.enabled` (+ `pickups`): Tidewake gather nodes and world pickups stand aside inside a fight ring | F39#20 | CPU 5.87 -> 6.42 (3/3 judges higher, PRESENT -> FIXED 3/3) | `test_near6_tw_judged_on.gd::test_fight_ring_hide_ships_on` (+ `test_fight_ring_occluders`: 16 tests, 0 failed) | this commit |
+| `water_creature_rest_visual.json` `prone_rest.enabled`: Riptusk and Torrentoad rest upright, settled belly-down | F39#24 | CPU 5.02 -> 6.69 (3/3 judges higher, PRESENT -> FIXED 3/3) | `test_near6_tw_judged_on.gd::test_prone_rest_ships_on` (+ `test_creature_rest_pose`, `test_companion_presence`, `test_texture_import_policy`: 54 tests, 0 failed); capture fix `phase2_capture_creatures.gd` (the authored-rest wait counts game time) | 2bab77374 |
 
 ## Arms built (all OFF, commit 6cd7f370)
 
@@ -47,6 +48,8 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 - **r20b, F39#20: shipped ON (see table).**
 
 - **r2, F39#2, worse (6.41 -> 5.73), held OFF, item PARKED:** a larger Meshy Veilfall (`hero_landmarks_1101.veilfall` on, 1150 m across, less fog, whiter falls). All three judges read its falls as flat, hard-edged white slabs with pasted green patches, which is worse than the shipping grey crag. This is the second failed round on this arm (VIS-TIDEWAKE r2a was flat). The judges' fix is new art: a tiered, tree-dressed Veilfall with soft, misty falls.
+
+- **r16, F39#16, no visible change, not judged:** the arm edited the current's `restored` state, but the stands show the `live` state, so the long seams were untouched (mean pixel difference 4). r16b targets `current_flow.state_shader.live` (seams 0.3 -> 0.1, more caps and flecks) and the seam wander and gaps.
 
 ## Queue
 

@@ -38,6 +38,18 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**v1/b20 (4 Nov ~15:00 UTC): Mosshock and Sparkit lateral hit arms are worse and stay OFF (in HELD).** F36#54 5.95 -> 5.79; F36#70 6.20 -> 5.75. Sparkit maps at 6.20 as shipped. Mosshock needs new art: its face and elemental trait do not read at stage distance, and its faint is a "rock-like lump". Verdict in `v1/b20/`.
+
+**qj lathit4-f38-2 (4 Nov ~14:00 UTC): Burrowback/Nightburrow lateral hit ships ON.**
+- **Result:** F38#2 creature hurt and movement poses, CPU 6.18 -> 6.40 (+0.22; raw 6.1/5.8/5.6 -> 6.4/6.0/5.6; defect PRESENT -> PARTIAL for two of three judges; calibration r 0.95).
+- **What it is:** flag `creatures_ralph_burrowback_lateral_hit`, a copy of the live nat1024 GLB.
+  - Its hit clip gets a sideways lean and head toss (`tools/art_pipeline/lateral_recoil.py`: spine 24, neck yaw 38, head roll 24).
+  - Its peak is then held to the clip end (`hold_clip.py`, as shipped for Terrapup).
+  - The copy uses the live extracted textures, so the Nightburrow repaint and coat flags still resolve.
+- **Test:** `tests/test_burrowback_lateral_hit_flag.gd`.
+- **Harness fix found on the way (commit "Creature pose capture: wait for the art model"):** `phase2_capture_creatures.gd` posed creatures before their model existed, so "hurt", "fainted" and "resting" stills were idle. The base rise (5.81 -> 6.18) comes from that fix, not from a game change.
+- **F38#1 needs a fresh base on the fixed tool.** Its "fainted bodies upright or floating" defect is likely the same capture bug. The stills also land after a 0.54 s hit under CPU frame deltas; recorded in TECHNICAL 8.1.
+
 **Coordinator, rim fix verification and the batch-8 f20 question (4 Nov ~09:50 UTC):** all of these ran locally on `fe9d2120`, which is the same creature-rim code as tb/land-batch-9.
 - With the rim ON, every one passed and none logged a `Parameter "material" is null` error:
   - `smoke_net_f48_cut_key`

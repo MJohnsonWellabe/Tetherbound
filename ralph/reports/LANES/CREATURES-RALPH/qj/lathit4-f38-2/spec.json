@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F38#2",
+  "a": "/home/user/Tetherbound/.artifacts/qj/lathit4-f38-2/k/sides/F38_2_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/lathit4-f38-2/k/sides/F38_2_cand.jpg",
+  "brief": "3 in-game frames (Meadows) for one catalogue subject: creature hurt and movement poses. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename"
+  ]
+ }
+]

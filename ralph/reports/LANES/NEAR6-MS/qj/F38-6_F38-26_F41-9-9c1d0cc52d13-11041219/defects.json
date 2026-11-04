@@ -1,0 +1,68 @@
+{
+ "F38#26 cand": [
+  {
+   "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PRESENT"
+  },
+  {
+   "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PRESENT"
+  },
+  {
+   "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PARTIAL"
+  }
+ ],
+ "F38#26 base": [
+  {
+   "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PRESENT"
+  },
+  {
+   "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PRESENT"
+  },
+  {
+   "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PARTIAL"
+  }
+ ],
+ "F41#9 cand": [
+  {
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PRESENT"
+  },
+  {
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+  },
+  {
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+  }
+ ],
+ "F41#9 base": [
+  {
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+  },
+  {
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+  },
+  {
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+  }
+ ],
+ "F38#6 base": [
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  },
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  },
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  }
+ ],
+ "F38#6 cand": [
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  },
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  },
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  }
+ ]
+}

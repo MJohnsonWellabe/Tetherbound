@@ -21,9 +21,6 @@
     "veilfall_formation_relief_fill_candidate",
     "shore_surf_candidate",
     "shore_surf_vary_candidate",
-    "rain_fog_candidate",
-    "rain_grade_candidate",
-    "rain_veil_candidate",
     "swim_candidate",
     "dune_grass_candidate",
     "shore_water_candidate",
@@ -463,6 +460,7 @@
       }
     }
   },
+  "_why_rain_on": "tb/vis-tidewake-1104 look r9 (CPU, 3 judges, calibrated; all three judges higher on every row): rain_fog + rain_grade + rain_veil ON together lift F39#30a shore 6.09 -> 6.29, F39#30b night/dawn/rain/approach 5.81 -> 6.04 and F39#31 Veilfall 5.29 -> 5.56 mapped; judges: rain streaks and a cool overcast now read as weather.",
   "rain_fog_candidate": {
     "_comment": "close-1024 vv1 and vf4 judges x3: in rain the fog flattens the Veilfall and the sea into one grey-cyan mid-tone and the landmark loses its silhouette. Tidewake sightlines run to kilometres, so the shared rain mist (fog_density_add 0.0055) is scaled to 0.35 here only; rain streaks, grade and wet ground are unchanged. Unjudged; OFF in play.",
     "fog_density_add_scale": 0.35
@@ -3483,6 +3481,14 @@
         "face": "pier"
       }
     ]
+  },
+  "rest_shoal_dressing_vary": {
+    "_why": "NEAR6-TW (4 Nov 2026), P2-026 / F39#15 (GPU 4.85): the Veilfall approach reads as a ruler-straight chain of near-identical tan discs. The shipped sandbar dressing is the same props at the same sizes on every shoal (only rotated). When on, each shoal draws its own seeded subset (keep_fraction), size (x1 +/- scale_jitter) and angle offsets, so neighbours differ. Props keep the recovery-centre clearance and have no collision; shoal terrain and safety are unchanged.",
+    "scope": "client presentation: rest-shoal dressing props only",
+    "enabled": false,
+    "keep_fraction": 0.75,
+    "scale_jitter": 0.4,
+    "angle_jitter_deg": 40.0
   },
   "rest_shoal_dressing": [
     {

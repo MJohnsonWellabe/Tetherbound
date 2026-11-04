@@ -1,0 +1,160 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.69,
+  "least_squares_slope": 0.8342,
+  "method": "linear",
+  "slope": 0.8342,
+  "intercept": 1.4215,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.578,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:r22": {
+   "measured": 5.467,
+   "reference": 6.75,
+   "mapped": 5.982,
+   "residual": 0.768
+  },
+  "f04_6_r22:control": {
+   "measured": 4.7,
+   "reference": 5.83,
+   "mapped": 5.342,
+   "residual": 0.488
+  },
+  "f36_0_npc:C4B": {
+   "measured": 5.933,
+   "reference": 5.8,
+   "mapped": 6.371,
+   "residual": -0.571
+  },
+  "f36_0_npc:C4A": {
+   "measured": 5.933,
+   "reference": 5.83,
+   "mapped": 6.371,
+   "residual": -0.541
+  },
+  "craft:after": {
+   "measured": 6.567,
+   "reference": 7.35,
+   "mapped": 6.899,
+   "residual": 0.451
+  },
+  "craft:before": {
+   "measured": 4.8,
+   "reference": 4.83,
+   "mapped": 5.425,
+   "residual": -0.595
+  }
+ },
+ "candidates": {
+  "F39#30b rain base": {
+   "measured_mean": 5.267,
+   "mapped_mean": 5.81,
+   "mapped_judges": [
+    6.01,
+    5.84,
+    5.59
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#30b rain cand": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.04,
+   "mapped_judges": [
+    6.18,
+    6.09,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#30a rain cand": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.29,
+   "mapped_judges": [
+    6.34,
+    6.34,
+    6.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#30a rain base": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.09,
+   "mapped_judges": [
+    6.18,
+    6.18,
+    5.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#31 rain cand": {
+   "measured_mean": 4.967,
+   "mapped_mean": 5.56,
+   "mapped_judges": [
+    5.84,
+    5.59,
+    5.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#31 rain base": {
+   "measured_mean": 4.633,
+   "mapped_mean": 5.29,
+   "mapped_judges": [
+    5.51,
+    5.34,
+    5.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F13#5 bands cand": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.59,
+   "mapped_judges": [
+    5.93,
+    5.59,
+    5.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F13#5 bands base": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.95,
+   "mapped_judges": [
+    6.26,
+    5.93,
+    5.68
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
