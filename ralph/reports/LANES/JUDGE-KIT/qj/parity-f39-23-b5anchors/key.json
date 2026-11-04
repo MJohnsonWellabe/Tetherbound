@@ -1,0 +1,23 @@
+{
+ "Cj": {
+  "anchor": false,
+  "label": "F39#23",
+  "A": ".artifacts/qj/parity-f39-23/k/sides/F39_23_cand.jpg",
+  "B": ".artifacts/qj/parity-f39-23/k/sides/F39_23_base.jpg"
+ },
+ "Wa": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Fb": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Zi": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

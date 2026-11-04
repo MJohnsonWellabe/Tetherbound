@@ -479,8 +479,9 @@ def packet(rd, seed=None, include="craft", pairs=3):
     seed = seed if seed is not None else random.SystemRandom().randrange(1 << 30)
     cmd = [sys.executable, str(HERE / "anchor_tiles.py"), "--out", str(j), "--key", str(k / "key.json"),
            "--candidates", str(k / "spec.json"), "--pairs", str(pairs), "--seed", str(seed)]
-    if include:
-        cmd += ["--include", include]
+    for g in (include or "").split(","):
+        if g:
+            cmd += ["--include", g]
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)
     link_tree(ROOT / "docs/reference", j / "reference")
     prompt = fill_prompt(j.resolve(), k)
@@ -629,6 +630,7 @@ def main(argv=None):
     s = sub.add_parser("packet")
     s.add_argument("round")
     s.add_argument("--seed", type=int)
+    s.add_argument("--include", default="craft", help="anchor groups, comma-separated (default craft)")
     s = sub.add_parser("finish")
     s.add_argument("round")
     s.add_argument("--report")
@@ -665,7 +667,7 @@ def main(argv=None):
         print("round dir:", rd)
         return
     if a.cmd == "packet":
-        launch, missing = packet(a.round, a.seed)
+        launch, missing = packet(a.round, a.seed, a.include)
         print(launch)
         return
     if a.cmd == "finish":
