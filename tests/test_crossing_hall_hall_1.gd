@@ -61,9 +61,11 @@ func test_shipping_candidate_only_names_existing_sections_and_rows() -> void:
 					assert_true(ResourceLoader.exists(str(row.model)), "appended model is installed: " + str(row.model))
 
 
-func test_hall_2_ships_off_and_off_leaves_hall_1_result_unchanged() -> void:
+func test_hall_2_ships_on_and_off_leaves_hall_1_result_unchanged() -> void:
 	var cfg := _shipping()
-	assert_false(bool(cfg.get("hall_2", {}).get("enabled", true)), "HALL-2 ships OFF until GPU-judged")
+	assert_true(bool(cfg.get("hall_2", {}).get("enabled", false)), "HALL-2 ships ON (judged gain)")
+	assert_true(str(cfg.get("hall_2", {}).get("_why_on", "")).contains("6.85"), "HALL-2 records its judged score")
+	cfg.hall_2.enabled = false
 	var with_off := cfg.duplicate(true)
 	HALL.apply_hall_1(with_off)
 	var hall_1_only := cfg.duplicate(true)

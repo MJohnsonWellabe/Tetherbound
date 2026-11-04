@@ -164,3 +164,10 @@ func test_bake_cached_bakes_once_then_hits_the_cache() -> void:
 		"a cache hit must return the same pixels the original bake wrote")
 
 	_cleanup(cache_path)
+
+
+## Visual lane v1/b8 (3 Nov 2026): the map paint ships ON with its judged score.
+func test_map_paint_ships_on_with_its_score() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/map_paint.json"))
+	assert_true(bool(cfg.get("enabled", false)), "map paint ships ON (judged gain)")
+	assert_true(str(cfg.get("_why_on", "")).contains("6.30"), "map paint records its mapped score")

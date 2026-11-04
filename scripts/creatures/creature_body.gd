@@ -33,6 +33,8 @@ const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
 const ASPECT_VFX := preload("res://scripts/creatures/vfx/aspect_vfx.gd")
 const ENVIRONMENT_VELOCITY := preload("res://scripts/world/environment_velocity_modifiers.gd")
 const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
+## F38#1/#2/#26 creature rim (OFF; data/config/creature_rim.json).
+const CREATURE_RIM := preload("res://scripts/world/creature_rim.gd")
 
 var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 
@@ -442,6 +444,19 @@ func _tick_camera_fade(delta: float) -> void:
 		if not inside and fades_when_camera_inside:
 			inside = _camera_fade_extra(model, camera.global_position)
 	var target := CAMERA_FADE_AMOUNT if inside and fades_when_camera_inside else 0.0
+	# P2-109 (tb/vis-tidewake-1104, flag-off): with `camera_hide` on, a body
+	# the camera sits inside is hidden outright (with its blob shadow) and
+	# snaps back when the camera leaves, instead of a see-through ghost and a
+	# detached shadow.
+	if _camera_hide_enabled():
+		_set_camera_hidden(model, target > 0.0)
+		if target > 0.0:
+			_camera_fade = target
+			return
+		if _camera_fade > 0.0:
+			_camera_fade = 0.0
+			CAMERA_FADE.restore(_camera_fade_state)
+			return
 	var next := move_toward(_camera_fade, target, CAMERA_FADE_SPEED * delta)
 	if is_zero_approx(next) and is_zero_approx(_camera_fade):
 		return
@@ -453,6 +468,35 @@ func _tick_camera_fade(delta: float) -> void:
 	var saddle := get_node_or_null(CAMERA_FADE_SADDLE)
 	if saddle != null:
 		CAMERA_FADE.apply(saddle, _camera_fade, _camera_fade_state, eye)
+
+
+const CAMERA_HIDE_CONFIG := "res://data/config/water_mount_presentation.json"
+static var _camera_hide_cfg: Variant = null
+var _camera_hidden := false
+
+
+## water_mount_presentation.json `camera_hide.enabled` (default OFF).
+static func _camera_hide_enabled() -> bool:
+	if _camera_hide_cfg == null:
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CAMERA_HIDE_CONFIG))
+		var row: Variant = raw.get("camera_hide", {}) if raw is Dictionary else {}
+		_camera_hide_cfg = row is Dictionary and bool(row.get("enabled", false))
+	return bool(_camera_hide_cfg)
+
+
+func _set_camera_hidden(model: Node3D, hidden: bool) -> void:
+	if hidden == _camera_hidden:
+		return
+	_camera_hidden = hidden
+	for node: Node3D in [model, get_node_or_null(CAMERA_FADE_SADDLE) as Node3D, get_node_or_null(^"ContactShadow") as Node3D]:
+		if node == null:
+			continue
+		if hidden:
+			node.set_meta("camera_hide_visible", node.visible)
+			node.visible = false
+		elif node.has_meta("camera_hide_visible"):
+			node.visible = bool(node.get_meta("camera_hide_visible"))
+			node.remove_meta("camera_hide_visible")
 
 
 ## A subclass's further reason to fade while the camera is outside the body
@@ -532,6 +576,7 @@ func ensure_visual_resident() -> bool:
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
 	_apply_night_floor()
+	CREATURE_RIM.dress_body(self)
 	_model.visible = _resident_model_visible
 	_suspended_render_bounds = AABB()
 	return true
@@ -748,6 +793,7 @@ func _build_placeholder() -> void:
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
 	_apply_night_floor()
+	CREATURE_RIM.dress_body(self)
 
 
 ## Load the species' model and fit it to the gameplay size. Returns false when
@@ -1096,6 +1142,29 @@ func _refresh_shiny_tint() -> void:
 	_apply_art_model_emission()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
+	_apply_shiny_cue()
+
+
+## P2-030 (F39#4, tb/vis-tidewake-1104, flag-off): GPU judges 28 Oct, "the
+## shinies ... stand small and pale against bright sand and water with no rim
+## light or shiny sparkle cue". creatures_visual.json `shiny_cue`: a shiny
+## (never an Aspect variant) gets a rim over its finished surfaces and the
+## alpha mote ring in a pale silver-blue. Presentation only.
+var _shiny_cue: Node3D = null
+
+
+func _apply_shiny_cue() -> void:
+	if _shiny_cue != null:
+		_shiny_cue.queue_free()
+		_shiny_cue = null
+	var cue: Variant = VISUAL.config().get("shiny_cue", {})
+	if not shiny or aspect_variant != "" or not cue is Dictionary or not bool((cue as Dictionary).get("enabled", false)):
+		return
+	var rim := float((cue as Dictionary).get("rim_strength", 0.0))
+	if _has_model and rim > 0.0:
+		_rim_light_node(_model, rim, "shiny")
+	if bool((cue as Dictionary).get("motes", true)):
+		_shiny_cue = ALPHA_AURA.attach(self, _radius * 1.5, _height, Color(str((cue as Dictionary).get("mote_colour", "#dff3ff"))))
 
 
 ## Keep a named preview's painted coat readable under the same forest light as
@@ -2308,6 +2377,7 @@ func apply_size_multiplier(multiplier: float) -> void:
 	_refresh_shiny_tint()
 	_apply_ground_contact_shadow()
 	_apply_night_floor()
+	CREATURE_RIM.dress_body(self)
 	# BACKLOG-VISUAL-ALPHA-GROUNDING. The caller already stood this body on the
 	# ground via `place_on_ground()` BEFORE calling here (`encounter_director.
 	# _make_alpha()` resizes an already-placed wild), and that call's

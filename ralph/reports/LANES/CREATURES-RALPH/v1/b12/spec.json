@@ -1,0 +1,20 @@
+[
+ {
+  "label": "F38#19",
+  "a": "/tmp/claude-0/work/judge/b12/k/sides/F38_19_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b12/k/sides/F38_19_b.jpg",
+  "brief": "1 in-game frame (Meadows) for one catalogue subject: exploration HUD. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+  ]
+ },
+ {
+  "label": "F41#13-fulgo",
+  "a": "/tmp/claude-0/work/judge/b12/k/sides/fulgocobra_a.jpg",
+  "b": "/tmp/claude-0/work/judge/b12/k/sides/fulgocobra_b.jpg",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: hit react mid, hit react end, faint mid, faint end. Judge the creature's model, material and poses as the game's real look - identity, silhouette, surface and elemental finish, hurt and faint read without a label and stay grounded, scale against the ruler.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ }
+]

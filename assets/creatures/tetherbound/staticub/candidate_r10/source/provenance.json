@@ -82,5 +82,13 @@
    "clip_notes_for_creature_lane": "hit pitches the head and neck down below the chest (strong stretch at the neck); faint ends rolled belly-up, paws in the air"
   },
   "not_run": "tools/art_pipeline/texture_import_policy.py --apply: it edits Godot .import sidecars, which do not exist under .gdignore"
- }
+ },
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/creatures/tetherbound/staticub/candidate_r10/source/staticub_r10_meshy.glb"
+    ]
+  }
 }

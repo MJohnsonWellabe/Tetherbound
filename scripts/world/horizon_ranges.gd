@@ -20,9 +20,13 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/meadows_horizon.json"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
+## F38#24 / P2-014 Blender ridge ring (meadows_ridge_vl.json, OFF until judged).
+const RIDGE_VL := preload("res://scripts/world/meadows_ridge_vl.gd")
 
 var _config: Dictionary = {}
 var _base_y := 0.0
+var _ridge: Node3D = null
+var _ridge_poll := 0.0
 
 
 func _ready() -> void:
@@ -38,8 +42,11 @@ func _ready() -> void:
 			var replacement: Dictionary = overrides.get(str(layer.get("name", "")), {})
 			layer.merge(replacement, true)
 	_base_y = float(_config.get("base_y", -40.0))
+	var replaced := RIDGE_VL.replaced_layers()
 	for layer_variant: Variant in _config.get("layers", []):
 		var layer: Dictionary = layer_variant
+		if replaced.has(str(layer.get("name", "Range"))):
+			continue
 		var instance := MeshInstance3D.new()
 		instance.name = str(layer.get("name", "Range"))
 		instance.mesh = build_ring(layer, int(_config.get("seed", 1)))
@@ -48,6 +55,7 @@ func _ready() -> void:
 		instance.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 		add_child(instance)
 	_add_hero_model(_config.get("hero_model", {}))
+	_ridge = RIDGE_VL.build(self)
 
 
 ## Optional sculpted backdrop summit (F38 P2-014), placed at a bearing and
@@ -93,6 +101,12 @@ func _process(_delta: float) -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera != null:
 		global_position = Vector3(camera.global_position.x, _base_y, camera.global_position.z)
+	if _ridge != null:
+		_ridge_poll -= _delta
+		if _ridge_poll <= 0.0:
+			_ridge_poll = 0.5
+			var env_node := get_parent().get_node_or_null(^"WorldEnvironment") as WorldEnvironment
+			RIDGE_VL.sync_fog(_ridge, env_node.environment if env_node != null else null, global_position.y)
 
 
 func _material() -> StandardMaterial3D:

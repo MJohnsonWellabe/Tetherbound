@@ -9,6 +9,8 @@ extends RefCounted
 ## the flag is off, and callers then draw exactly as before.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
+## The creature rim (OFF by default) yields the overlay slot to an aura and gets it back.
+const CREATURE_RIM := preload("res://scripts/world/creature_rim.gd")
 
 
 static func soft() -> Dictionary:
@@ -388,7 +390,7 @@ static func apply_aura(body: Node3D, colour: Color, style: Dictionary) -> Node3D
 	var taken: Array = []
 	for node: Node in art.find_children("*", "MeshInstance3D", true, false):
 		var mesh := node as MeshInstance3D
-		if mesh.visible and mesh.material_overlay == null:
+		if mesh.visible and (mesh.material_overlay == null or CREATURE_RIM.is_rim(mesh.material_overlay)):
 			mesh.material_overlay = material
 			taken.append(mesh)
 	if taken.is_empty():
@@ -410,7 +412,7 @@ static func clear_aura(body: Node3D) -> void:
 	material.set_meta(AURA_META, false)
 	for mesh: Variant in held.meshes:
 		if is_instance_valid(mesh) and (mesh as MeshInstance3D).material_overlay == material:
-			(mesh as MeshInstance3D).material_overlay = null
+			(mesh as MeshInstance3D).material_overlay = CREATURE_RIM.rest_overlay(mesh as MeshInstance3D)
 	body.remove_meta(AURA_META)
 
 

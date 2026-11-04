@@ -39,6 +39,8 @@ var _meshes: Array = []
 ## back on finish while that wind-up still runs, so a hit landing mid-tell flashes.
 var _borrowed: Dictionary = {}
 const TELL_STYLE := preload("res://scripts/combat/tell_style.gd")
+## The creature rim (OFF by default) yields the overlay slot to a glow and gets it back.
+const CREATURE_RIM := preload("res://scripts/world/creature_rim.gd")
 
 
 ## `body` is a creature body (or any Node3D with MeshInstance3D descendants).
@@ -103,7 +105,7 @@ func _walk(node: Node, deep: bool) -> void:
 	if node is MeshInstance3D:
 		var mesh := node as MeshInstance3D
 		if mesh.mesh != null and not _meshes.has(mesh):
-			if mesh.material_overlay == null:
+			if mesh.material_overlay == null or CREATURE_RIM.is_rim(mesh.material_overlay):
 				_meshes.append(mesh)
 			elif TELL_STYLE.is_live_aura(mesh.material_overlay):
 				_borrowed[mesh] = mesh.material_overlay
@@ -153,7 +155,8 @@ func _finish() -> void:
 		# Validate before even querying its type: `is` on a freed object errors.
 		if is_instance_valid(mesh) and mesh is MeshInstance3D and (mesh as MeshInstance3D).material_overlay == _material:
 			var back: Variant = _borrowed.get(mesh)
-			(mesh as MeshInstance3D).material_overlay = back if back != null and TELL_STYLE.is_live_aura(back) else null
+			(mesh as MeshInstance3D).material_overlay = back if back != null and TELL_STYLE.is_live_aura(back) \
+				else CREATURE_RIM.rest_overlay(mesh as MeshInstance3D)
 	_meshes.clear()
 	_borrowed.clear()
 	queue_free()

@@ -577,7 +577,7 @@
     },
     "creatures_ralph_meadowhart_warm": {
       "_why": "Creatures-ralph (2 Nov 2026), Meadowhart remake (GPU batch 5: installed 7.67 -> remake 6.91; judges: 'pale, thin vine-wrapped deer loses value contrast', 'mottled root-veined hide muddies the read'). Warm red-brown coat with a darker saddle and cream belly and throat, vines kept as soft markings (data/creatures/remake_grades.json meadowhart). The hit react's neck and head swing are reduced in the GLB (neck x0.45, head x0.6) so the head no longer collapses into a stoop. r8 CPU three-judge A/B: shipped remake 6.12 -> 6.80 mapped (+0.68), 0.10 short of the 6.9 target, so OFF pending the coordinator (it is a clear gain over the live remake); r9 attempt 2 gained nothing.",
-      "enabled": false,
+      "enabled": true, "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): r8 CPU three-judge A/B shipped remake 6.12 -> 6.80 mapped.",
       "coats": {
         "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_Image_0_warm.jpg"
@@ -733,8 +733,8 @@
       }
     },
     "creatures_ralph_fulgocobra_goldvein": {
-      "_why": "Visual lane (3 Nov 2026), board F41#13 Fulgocobra half (r25: lighting its glow map alone stayed flat, 5.83 -> 5.92; judges: 'needs real emissive veins along its gold bands'). Emission = its glow map plus the bright scale ridges inside its gold bands (hue 25-52 deg, pale electric gold), matte body. OFF until judged.",
-      "enabled": false,
+      "_why": "Visual lane (3 Nov 2026), board F41#13 Fulgocobra half (r25: lighting its glow map alone stayed flat, 5.83 -> 5.92; judges: 'needs real emissive veins along its gold bands'). Emission = its glow map plus the bright scale ridges inside its gold bands (hue 25-52 deg, pale electric gold), matte body. OFF until judged. ON (visual lane v1/b12, 3 Nov 2026): CPU 6.06 -> 6.52 mapped (three code-blind judges, linear slope 1.26, r 0.91, anchor RMSE 0.35, confirming batch; pale gold bands separate from the black hood, defect PARTIAL 3/3).",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
           "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_goldvein.png",
@@ -753,6 +753,17 @@
           "emission_energy": 2.6,
           "roughness": 0.8,
           "specular": 0.25
+        }
+      }
+    },
+    "creatures_ralph_nightburrow_partial_plates": {
+      "_why": "Visual lane (4 Nov 2026), board F36#56 Nightburrow (CPU stage 5.91-6.11). Three code-blind judges in v1/b7 and v1/b15 (ralph/reports/LANES/CREATURES-RALPH/v1/b7, v1/b15): 'the yellow and purple plates cover almost the whole back and sides -- close to the full-body overgrowth the owner rule forbids -- a busy, noisy surface at small size; the face is hard to read; faint frames read as a rock mound'; b15: 'its next lever is fewer plates (new art), not animation'. Owner rule 1 Nov: one elemental trait, PARTIAL natural plates on the spine, head or shoulders. This arm keeps the stone plates only along the spine row and the pair on the shoulders (3 of 24 plate groups, stone 12.2% -> 5.0% of the coat), repaints every other plate and the whole yellow moss bed as the coat's own brown fur, and trims the violet glow that sat in that moss so it does not float on bare fur (face mask, eyes and tail glow unchanged; energy 0.85 = emission_scale 0.5 x the nightburrow aspect boost 1.7, as the aspect swap sets it). Plates are selected by 3D anatomy (tools/creature_anatomy_maps.py), never by UV. Script tools/art_pipeline/nightburrow_partial_plates.py; it repaints the live coat (the creatures_f36_coat_lift_2 grade), which this flag replaces while ON. OFF until judged; capture with tools/art_pipeline/capture_f36_poses.gd --species=nightburrow after an import.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": {
+          "albedo": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_partial_plates.png",
+          "emission": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_emissive_nightburrow_partial_plates.png",
+          "emission_energy": 0.85
         }
       }
     }
