@@ -207,6 +207,43 @@ func _physics_process(delta: float) -> void:
 	if is_mounted():
 		_watch_mounted_ground(delta)
 	super._physics_process(delta)
+	_hold_drive_over_drop()
+
+
+## P2-105 / F40#6 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct
+## 4.92): "the mounted deer and seated trainer retain their upright riding
+## silhouette while travelling below the cliff and then continue apparently
+## unsupported across the cloud floor". With
+## `cloudreach_physical_runtime.json::mounted_drop_no_air_drive` on (or the
+## capture flag), a mount that has been off the floor for `airborne_s` with no
+## walkable floor within the ground probe under it is no longer driven by the
+## stick: its own friction takes the run out of it and it drops instead of
+## galloping on through the air. A hop or an edge flicker (floor within the
+## probe) keeps full control. Recovery, dismount and every rule above are
+## unchanged. Presentation of an existing fall; no save, RPC or rule change.
+const DROP_DRIVE_ARG := "--cloudreach-mount-drop-candidate"
+var _drop_drive_cfg: Variant = null
+
+func _drop_drive_spec() -> Dictionary:
+	if _drop_drive_cfg == null:
+		_drop_drive_cfg = {}
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_physical_runtime.json"))
+		var raw: Variant = (parsed as Dictionary).get("mounted_drop_no_air_drive", {}) if parsed is Dictionary else {}
+		if raw is Dictionary and ((raw as Dictionary).get("enabled") == true \
+				or OS.get_cmdline_user_args().has(DROP_DRIVE_ARG)):
+			_drop_drive_cfg = raw
+	return _drop_drive_cfg
+
+
+func _hold_drive_over_drop() -> void:
+	if not is_mounted() or _mount == null or not _mount.has_method("request_move"):
+		return
+	var spec := _drop_drive_spec()
+	if spec.is_empty() or _airborne_s < float(spec.get("airborne_s", 0.25)):
+		return
+	if not is_nan(_floor_under(_mount)):
+		return
+	_mount.call("request_move", Vector3.ZERO, 0.0)
 
 
 func _watch_mounted_ground(delta: float) -> void:
