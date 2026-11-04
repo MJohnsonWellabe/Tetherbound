@@ -16,36 +16,23 @@ func _json(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
-## The shipped config with every presentation candidate turned OFF, so each
-## overlay is measured on its own (the candidates now ship ON).
-func _all_off() -> Dictionary:
-	var config := _json(RULES.PATH)
-	for key: String in RULES.PRESENTATION_CANDIDATES:
-		(config.presentation[key] as Dictionary)["enabled"] = false
-	return config
-
-
 func _surge_with(keys: Array) -> Dictionary:
-	var config := _all_off()
+	var config := _json(RULES.PATH)
 	for key: String in keys:
 		(config.presentation[key] as Dictionary)["enabled"] = true
 	return config
 
 
-## Visual lane v1/b16 (3 Nov): storm sky and soft rain ship ON with their judged
-## scores; turned OFF they still leave the config identical.
-func test_surge_candidates_ship_on_with_scores_and_are_inert_when_off() -> void:
+func test_surge_candidates_ship_off_and_are_inert() -> void:
 	var config := _json(RULES.PATH)
 	for key: String in RULES.PRESENTATION_CANDIDATES:
 		assert_true(config.presentation.has(key), "%s must be declared" % key)
-		assert_true(bool(config.presentation[key].get("enabled", false)), "%s ships ON (judged gain)" % key)
-		assert_true(str(config.presentation[key].get("_why_on", "")).contains("5.84"), "%s records its mapped score" % key)
-		(config.presentation[key] as Dictionary)["enabled"] = false
+		assert_false(bool(config.presentation[key].get("enabled", true)), "%s ships OFF" % key)
 	assert_eq(RULES.with_presentation_candidates(config), config, "OFF must leave the config identical")
 
 
 func test_storm_sky_on_gives_cloud_form_shafts_and_lift_only_in_presentation() -> void:
-	var base := RULES.with_presentation_candidates(_all_off())
+	var base := _json(RULES.PATH)
 	var on := RULES.with_presentation_candidates(_surge_with(["storm_sky_1101"]))
 	var calm: Dictionary = on.presentation.phases.calm
 	var calm_off: Dictionary = base.presentation.phases.calm
@@ -68,7 +55,7 @@ func test_storm_sky_on_gives_cloud_form_shafts_and_lift_only_in_presentation() -
 
 
 func test_soft_rain_on_softens_and_tints_streaks() -> void:
-	var base := RULES.with_presentation_candidates(_all_off())
+	var base := _json(RULES.PATH)
 	var on := RULES.with_presentation_candidates(_surge_with(["soft_rain_1101"]))
 	var rain: Dictionary = on.presentation.rain
 	assert_true(float(rain.soft_edge) > 0.0, "streak edges must soften")
@@ -111,11 +98,9 @@ func test_shaft_layout_is_deterministic_and_sparse() -> void:
 		"about `chance` of cells carry a shaft (got %.2f)" % share)
 
 
-func test_moss_variation_ships_on_with_its_score_and_sets_nothing_when_off() -> void:
+func test_moss_variation_ships_off_and_sets_nothing() -> void:
 	var finish := _json("res://data/config/stormwood_ground_finish.json")
-	assert_true(bool(finish.moss_variation_1101.get("enabled", false)), "ships ON (judged gain, v1/b16)")
-	assert_true(str(finish.moss_variation_1101.get("_why_on", "")).contains("5.84"), "records its mapped score")
-	(finish.moss_variation_1101 as Dictionary)["enabled"] = false
+	assert_false(bool(finish.moss_variation_1101.get("enabled", true)), "ships OFF")
 	assert_true(COVER.moss_variation_params(finish).is_empty(), "OFF sets no uniform")
 	var code := FileAccess.get_file_as_string("res://shaders/stormwood_ground_cover.gdshader")
 	for zero: String in ["uniform float sw_moss_strength = 0.0;", "uniform float sw_clearing = 0.0;",
