@@ -166,3 +166,22 @@ func test_f38_20_courtyard_foreground_ships_on_clear_of_the_lane() -> void:
 		var x := float((spec.get("at", [0.0, 0.0]) as Array)[0])
 		assert_false(x > 6.5 and x < 9.5, "%s stays out of the walking lane" % spec.get("model", ""))
 		assert_almost_eq(float(spec.get("y_world", 0.0)), 6.17, 0.001, "seated on the courtyard floor")
+
+
+## F38#20 r8: two lit torches flank the outer-works yard's back door, so the
+## doorway is no longer a black slab (CPU 6.50 -> 6.80,
+## quick_judge f38_20-door-torches2).
+func test_f38_20_door_torches_ship_on_with_their_score() -> void:
+	var torches := _cluster("res://data/config/bands/band5_stronghold_approach/props.json", "vm_stronghold_door_torches")
+	var cand: Dictionary = torches.get("candidate", {})
+	assert_true(bool(cand.get("enabled", false)), "door torches ON")
+	assert_true(str(cand.get("_why_on", "")).contains("CPU 6.50 -> 6.80"), "records its CPU score")
+	var props: Array = torches.get("props", [])
+	assert_eq(props.size(), 2, "one torch each side of the door")
+	for prop: Variant in props:
+		var spec: Dictionary = prop
+		assert_eq(str(spec.get("glow", "")), "campfire", "the torch carries the campfire light")
+		assert_true(bool(spec.get("glow_light_only", false)), "Torch_Metal has no Fire surface; the light is the effect")
+		assert_true(bool(spec.get("visual_only", false)), "visual only, no collider")
+		var x := float((spec.get("at", [0.0, 0.0]) as Array)[0])
+		assert_false(x > 6.5 and x < 9.5, "clear of the walking lane to the door")
