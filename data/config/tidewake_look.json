@@ -322,7 +322,7 @@
     "times": {
       "golden": {
         "sun": {
-          "pitch_deg": -8.0,
+          "pitch_deg": -12.0,
           "yaw_deg": 252.0,
           "energy": 1.5,
           "colour": "#ffc27a"
@@ -384,7 +384,7 @@
       },
       "dawn": {
         "sun": {
-          "pitch_deg": -5.0,
+          "pitch_deg": -9.0,
           "yaw_deg": 98.0,
           "energy": 1.15,
           "colour": "#ffb978"
@@ -455,6 +455,7 @@
   "_why_golden_shore_water_on": "tb/vis-tidewake-1104 look r14 (CPU, 3 judges, calibrated r 0.87): golden_sky + shore_water ON together lift F13#5 currents 5.69 -> 5.87 mapped (2 of 3 judges higher); F39#30a 6.02 and F39#30b 5.65 unchanged.",
   "_why_shore_surf_on": "tb/vis-tidewake-1104 look r15 (CPU, 3 judges, calibrated r 0.82): shore_surf + shore_surf_vary ON together lift F39#30a shore 5.86 -> 6.19, F13#5 currents 5.31 -> 5.82 and F39#30b 5.49 -> 5.54 mapped (all three judges higher on F39#30a and F13#5).",
   "_why_first_shore_declutter_on": "tb/vis-tidewake-1104 look r18 (CPU, 3 judges, calibrated r 0.95): dropping the First Shore driftwood and work cluster lifts F39#30a 5.64 -> 5.73 and F39#30b 5.36 -> 5.45 mapped (2 of 3 judges higher, 1 level).",
+  "_why_low_sun_pitch": "tb/vis-tidewake-1104 look r22 (CPU, 3 judges, calibrated r 0.83; all three judges higher on both rows): lighting_candidate golden sun pitch -8 -> -12 deg and dawn -5 -> -9 deg shorten the long terrain shadows (the golden-hour sand stripes); F39#30a 5.98 -> 6.18 and F39#30b 5.59 -> 5.75 mapped.",
   "_why_rain_on": "tb/vis-tidewake-1104 look r9 (CPU, 3 judges, calibrated; all three judges higher on every row): rain_fog + rain_grade + rain_veil ON together lift F39#30a shore 6.09 -> 6.29, F39#30b night/dawn/rain/approach 5.81 -> 6.04 and F39#31 Veilfall 5.29 -> 5.56 mapped; judges: rain streaks and a cool overcast now read as weather.",
   "rain_fog_candidate": {
     "_comment": "close-1024 vv1 and vf4 judges x3: in rain the fog flattens the Veilfall and the sea into one grey-cyan mid-tone and the landmark loses its silhouette. Tidewake sightlines run to kilometres, so the shared rain mist (fog_density_add 0.0055) is scaled to 0.35 here only; rain streaks, grade and wet ground are unchanged. Unjudged; OFF in play.",
