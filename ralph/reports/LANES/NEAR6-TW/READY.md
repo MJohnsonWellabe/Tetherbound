@@ -1,5 +1,10 @@
 # NEAR6-TW lane (tb/near6-tw-1104): Tidewake F39 items scored 5.4–6.0, CPU quick-judged
 
+## Handoff update (15:00 UTC)
+
+- **Second batch (coordinator, 11:45):** F39#24 rest poses ON 5.02 -> 6.69; F39#16 live current seams ON 5.96 -> 6.54 (both in the table below, tests passing). F39#21 is blocked on CPU (victory lifecycle needs continuous rendering; see Blockers). F39#15: one no-change round. F39#3: scene lever already shipped; the remainder is new art.
+- **Harness fixes this batch:** `phase2_capture_creatures.gd` authored-rest wait counts game time (CPU rest captures timed out); quick_judge matches one-off fight moments (win, aftermath) by tag.
+
 ## Handoff (12:00 UTC)
 
 - **Ready to land (ON, judged, tested):** F39#14 swim wake 6.10 -> 6.80; F39#20 fight-ring hide 5.87 -> 6.42; F39#27 Tidewake character rim 6.03 -> 6.23; F39#1 shore sites + built feather 6.37 -> 6.44. The table below has flags, tests and commits. The touched tests and `test_texture_import_policy` pass.
@@ -51,6 +56,9 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 - **r2, F39#2, worse (6.41 -> 5.73), held OFF, item PARKED:** a larger Meshy Veilfall (`hero_landmarks_1101.veilfall` on, 1150 m across, less fog, whiter falls). All three judges read its falls as flat, hard-edged white slabs with pasted green patches, which is worse than the shipping grey crag. This is the second failed round on this arm (VIS-TIDEWAKE r2a was flat). The judges' fix is new art: a tiered, tree-dressed Veilfall with soft, misty falls.
 
 - **r16, F39#16, no visible change, not judged:** the arm edited the current's `restored` state, but the stands show the `live` state, so the long seams were untouched (mean pixel difference 4). r16b targets `current_flow.state_shader.live` (seams 0.3 -> 0.1, more caps and flecks) and the seam wander and gaps.
+
+- **r15, F39#15, no visible change, not judged:** `rest_shoal_dressing_vary` (OFF) varies each shoal's dressing, but at the three route stands the props are too small to change the read (mean diff 4.6–6.8, mostly water motion). The judges' "near-identical tan discs with white rims" are the shoal terrain and its shore-foam ring. That needs per-shoal terrain lobes or a foam-ring change, and the shoals' recovery safety is tied to their heightfield. Round 1 of 2; next idea: per-shoal shape lobes (`shape.major/minor_extension_m`, bearing) with the safe radius checked by test.
+- **F39#3 (named destinations):** the scene lever already ships (`destination_landmarks` + s3–s5, GPU TW1 5.35 -> 6.68). The remaining asks are new art or per-landmark dressing: scale the jetty derrick, cliff-and-falls far islands. Not attempted.
 
 ## Queue
 
