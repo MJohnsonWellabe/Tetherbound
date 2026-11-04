@@ -1,6 +1,6 @@
 # VIS-CLOUDREACH lane (tb/vis-cloudreach-1104), 4 Nov 2026
 
-Status 4 Nov 14:25 UTC: five judged gains ON (P2-105 x2, P2-106, P2-118 x2; +5.98 cumulative CPU mapped); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
+Status 4 Nov 15:10 UTC: six judged gains ON (P2-105 x3, P2-106, P2-118 x2; +7.70 cumulative CPU mapped); origin/main merged (1b2386a9c) and re-imported; now on `tools/visual_judge/quick_judge.py`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
 
 CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `tools/visual_judge`.
 
@@ -17,6 +17,7 @@ CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `
 
 | `data/config/hud.json:catch_card.full_team_line` (new) | F40#18 P2-118 | 3.57 -> **4.98** (merged tree, card ON in both arms) | `tests/test_vis_cloudreach_landed.gd` | see log |
 | `data/config/cloudreach_visual.json:landing_tree_clear` (new) | F40#6 P2-105 | 3.68 -> **5.28** (+1.60; base had the camera inside LandingTree171 on the road-back frame; `tc/VERDICT.md`) | `tests/test_vis_cloudreach_landed.gd` | see log |
+| `cloudreach_physical_runtime.json:mounted_drop_no_air_drive.scramble_after_s` 0.7 -> 0.3 | F40#6 P2-105 | 4.38 -> **6.10** (+1.72; floating mount FIXED 3/3; `sc/VERDICT.md`) | `tests/test_vis_cloudreach_landed.gd`, `smoke_cloudreach_saddle_remount.gd` unchanged: 15:20 run, terrace scramble at 5.8 m PASS, ledge legs PASS, 331 checks with the one known `trainer_ila_lower_ring` failure | see log |
 
 P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coordinator/owner:** the scramble ends an unsurvivable mounted fall sooner than the walker's 100 m recovery (SYSTEMS §8 parity reading); survivable ride-offs are unchanged. Turning the flag off restores strict parity.
 
