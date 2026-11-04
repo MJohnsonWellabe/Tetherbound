@@ -281,3 +281,14 @@ func test_f38_37_east_face_clears_the_foreman_camera_with_its_score() -> void:
 			assert_true(Vector2(float(at[0]), float(at[1])).distance_to(Vector2(392.0, 1792.0)) > 3.5,
 				"east face clear of the foreman's stand")
 	assert_true(found, "WorkedFaceEast still built")
+
+
+## F38#23 relay yard: the undercroft yard-face arch (the frame's black mass,
+## named by tests/probe_camera_pixel.gd) gets a lighter arch finish
+## (mapped 5.90 -> 6.04, qj/f38_23-arch-lift).
+func test_f38_23_relay_arch_lift_ships_on_with_its_score() -> void:
+	var site: Dictionary = _load("res://data/config/tether_relay.json").get("site", {})
+	var arch: Dictionary = ((site.get("support_finish", {}) as Dictionary).get("variants", {}) as Dictionary).get("arch", {})
+	assert_eq(str(arch.get("tint", "")), "#e4d8c2", "lifted arch tint")
+	assert_true(Color(str(arch.get("tint", "#000000"))).get_luminance() > Color("#a0927b").get_luminance() + 0.2, "arch reads lighter than before")
+	assert_true(str(arch.get("_why_tint", "")).contains("5.90 -> 6.04"), "records its CPU score")
