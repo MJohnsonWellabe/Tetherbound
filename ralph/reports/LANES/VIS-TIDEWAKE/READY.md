@@ -88,3 +88,4 @@ Arm: `cause_tidewake.sea` + `horizon`. Calibration r 0.84, RMSE 0.45 (`qj/r2b/VE
 - **No merge of origin/main here:** a depth-1 fetch has no merge base, and `git fetch --deepen=40` ran out of disk (66 MB free). The coordinator's landing PR has to merge this branch with main.
 
 - Container disk: the 21 GB `.git` pack fills the allowance (117 MB free). Godot's `.godot` import cache, captures and judge folders run from `/dev/shm` (RAM). Rewriting the pack to depth 1 was refused by the permission classifier.
+- qj/r7 (12:10): F39#5 re-judged on the batch-11 wake_trail base: base maps 6.20 (CPU, above 6.0). A wake_trail tune (interval 0.12, spacing 0.55, lifetime 2.8, grow 2.6) was flat (6.20 -> 6.14; F39#14 6.89 -> 6.77) and stays OFF.
