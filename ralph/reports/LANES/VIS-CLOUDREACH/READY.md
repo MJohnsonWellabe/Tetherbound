@@ -15,6 +15,8 @@ CPU-only (Godot 4.7 llvmpipe, Low/Compatibility). Scores: mapped CPU Bar A via `
 
 **Smokes (4 Nov 06:48, on the r3b tree):** `smoke_cloudreach_companion_fall` 36 checks, 0 failures. `smoke_cloudreach_saddle_remount` 331 checks, 1 failure: "a later challenge of trainer_ila_lower_ring works" (combat admission refused, the ally overlaps an arrival-route collider). It fails identically with `mounted_drop_no_air_drive` OFF, so the scramble does not cause it; whether it also fails on unmodified main is untested. The first smoke run caught the scramble firing on the survivable causeway ledge; fixed in ea8847741 (the floor probe casts past non-walkable hits and samples a ring), and the ledge checks pass.
 
+| `data/config/hud.json:catch_card.full_team_line` (new) | F40#18 P2-118 | 3.57 -> **4.98** (merged tree, card ON in both arms) | `tests/test_vis_cloudreach_landed.gd` | see log |
+
 P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coordinator/owner:** the scramble ends an unsurvivable mounted fall sooner than the walker's 100 m recovery (SYSTEMS §8 parity reading); survivable ride-offs are unchanged. Turning the flag off restores strict parity.
 
 ## Arms in flight (flag OFF)
@@ -29,7 +31,7 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 ## Tried, no change or not judged
 
 - `cloudreach_visual.json:ground_cover` clumping overlay (F40#1): no visible change at the P2-021 stands; not judged (`qj/qj_clumps/`).
-- `hud.json:catch_card.full_team_line` (F40#18, OFF): first candidate capture lost its catch to an arbitration timing refusal ("not_claimant") on the slow CPU render; one confirming rerun queued.
+- `hud.json:catch_card.full_team_line` (F40#18): the first candidate capture lost its catch to an arbitration timing refusal ("not_claimant") on the slow CPU render; the confirming rerun caught and was judged (shipped ON above).
 
 ## Handed to NEAR6-CR (coordinator, 4 Nov 07:42)
 
