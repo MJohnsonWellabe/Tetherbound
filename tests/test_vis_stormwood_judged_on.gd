@@ -33,3 +33,11 @@ func test_lantern_pools_j1_arms_ship_on() -> void:
 ## j3: F41#8 named silhouettes 4.72 -> 4.96 (offset-map caveat recorded).
 func test_role_accessories_j3_ship_on() -> void:
 	_assert_on(_json("res://data/config/npc_role_accessories.json"), "4.96", "npc_role_accessories")
+
+
+## j4: F41#10 Glass Sink 4.03 -> 5.07.
+func test_glass_sink_j4_arms_ship_on() -> void:
+	_assert_on(_json("res://data/config/hero_landmarks_1101.json").glass_sink, "5.07", "hero_landmarks_1101.glass_sink")
+	var sink := _json("res://data/config/stormwood_glass_sink.json")
+	_assert_on(sink.dark_pool_candidate, "5.07", "dark_pool_candidate")
+	_assert_on(sink.obsidian_1104, "5.07", "obsidian_1104")
