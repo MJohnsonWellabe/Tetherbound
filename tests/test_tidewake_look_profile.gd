@@ -27,9 +27,9 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 			"first_shore_declutter_candidate",
 			"veilfall_formation_relief_fill_candidate",
 				"shore_surf_candidate", "shore_surf_vary_candidate",
-				"swim_candidate", "shore_water_candidate",
+				"swim_candidate",
 				"veilfall_mountain_candidate",
-				"golden_sky_candidate", "current_bands_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
+				"current_bands_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -87,6 +87,13 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
 	assert_true(str(raw.get("_why_shore_dressing_on", "")).contains("6.43"),
 		"the shore dressing's mapped score is recorded in the config")
+	# tb/vis-tidewake-1104 look r14: golden sky + shore water lifted F13#5 CPU
+	# 5.69 -> 5.87 (shore rows unchanged), so they ship ON.
+	for section: String in ["golden_sky_candidate", "shore_water_candidate"]:
+		assert_false(off.has(section), "%s ships on after look r14" % section)
+		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
+	assert_true(str(raw.get("_why_golden_shore_water_on", "")).contains("5.87"),
+		"the golden sky and shore water mapped score is recorded in the config")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
