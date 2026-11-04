@@ -36,9 +36,13 @@ func test_side_readout_ships_on_with_its_score() -> void:
 	assert_true(str(cfg.get("_why_side_on", "")).contains("6.91"), "side readout records its mapped score")
 
 
-func test_calm_seal_off_while_catch_card_off() -> void:
+func test_calm_seal_follows_catch_card() -> void:
 	var orb := preload("res://scripts/combat/orb.gd")
-	assert_true(orb.calm_seal_config().is_empty(), "calm seal glow is read only while hud.json catch_card is enabled (OFF by default)")
+	var hud: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	var card: Dictionary = hud.get("catch_card", {})
+	var seal_on: bool = card.get("enabled") == true and (card.get("calm_seal", {}) as Dictionary).get("enabled") == true
+	assert_eq(not orb.calm_seal_config().is_empty(), seal_on,
+		"calm seal glow is read only while hud.json catch_card is enabled (ON since VIS-CLOUDREACH r2b, 4 Nov)")
 
 
 ## Visual lane (3 Nov): the contrast round 2 (larger primary caption, near-opaque
