@@ -21,6 +21,8 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 
 ## Arms in flight (flag OFF)
 
+- `catching.json:seal_reveal` (new, F40#18 P2-118): on a catch the camera glides to a shallow shot over the sealed orb; quick_judge `qj_reveal` capturing (base = tree with card + full-team line ON). All-biome camera change: if it ships, the Meadows catch rows (P2-059/P2-061) should be re-checked.
+
 | Arm | Items | State |
 |---|---|---|
 | `cloudreach_cause.json:enabled` (earlier cause lane) | F40#1, #4, #2, #6, #11, #7 | **Judged r1: flat or worse, stays OFF** (P2-021 5.24->5.06, P2-022 5.59->5.52, P2-023 5.41->5.16, P2-025 5.88->5.27, P2-105 4.65->4.51, P2-106 5.32->5.39; `r1/`, `r1-ride/`). `meadow_groves` + `cloud_sea` alone, quick_judge on the merged tree (`qj/qj_groves/`): F40#1 6.39 -> 6.16, F40#4 6.47 -> 6.31, F40#7 6.51 -> 6.51; stays OFF. Merged-tree CPU bases: F40#1 6.39, F40#4 6.47, F40#7 6.51 (all above 6.0). |
@@ -29,6 +31,8 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 | (baseline) F40 matrix pieces 3, 4, 7 | F40#0, #19, #21 | **First CPU subset scores (`mx1/`):** day clear 5.45, rain 4.90, night 5.05, mean 5.13 (12 of 384 frames). F40#21: no magenta/placeholder; one judge read the gate's overhanging ledge as floating. |
 
 ## Tried, no change or not judged
+
+- Night moon key light via `cloudreach_visual.json` `time_overrides.night.sun` (F40#19/#0, matrix piece 7): no visible change; a later light layer overrides it (`mx2/`).
 
 - `cloudreach_visual.json:ground_cover` clumping overlay (F40#1): no visible change at the P2-021 stands; not judged (`qj/qj_clumps/`).
 - `hud.json:catch_card.full_team_line` (F40#18): the first candidate capture lost its catch to an arbitration timing refusal ("not_claimant") on the slow CPU render; the confirming rerun caught and was judged (shipped ON above).

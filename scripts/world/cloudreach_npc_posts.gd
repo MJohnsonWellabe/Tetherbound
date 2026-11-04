@@ -101,3 +101,68 @@ static func light_people(people: Node, cfg: Dictionary) -> int:
 		body.add_child(light)
 		count += 1
 	return count
+
+
+## P2-068 / F40#9 round 2 (NEAR6-CR, 4 Nov 2026): `post_role_props` (OFF
+## until judged). Judges asked for "a role prop ... that says who they are":
+## installed-family props (Quaternius fantasy set) stand beside each named
+## post, in the NPC's own facing frame and mostly to its sides so they never
+## stand between an approaching trainer and the NPC. Each prop is seated on
+## the ground via `ground` (world xz -> resolved Vector3). Visual only: no
+## collider, prompt, route or save change. Returns the number placed.
+const BOUNDS := preload("res://scripts/world/building_prefabs.gd")
+const ROLE_PROPS_NAME := "NpcRoleProps"
+
+
+static func role_props_spec(npc_runtime: Dictionary = {}) -> Dictionary:
+	var runtime := npc_runtime if not npc_runtime.is_empty() else _read(NPC_PATH)
+	var raw: Variant = runtime.get("post_role_props", {})
+	return raw if raw is Dictionary and (raw as Dictionary).get("enabled") == true else {}
+
+
+static func place_role_props(parent: Node3D, specs: Array, positions: Dictionary, cfg: Dictionary,
+		ground: Callable) -> int:
+	var old := parent.get_node_or_null(NodePath(ROLE_PROPS_NAME))
+	if old != null:
+		parent.remove_child(old)
+		old.queue_free()
+	if cfg.is_empty():
+		return 0
+	var root := Node3D.new()
+	root.name = ROLE_PROPS_NAME
+	parent.add_child(root)
+	var sets: Dictionary = cfg.get("posts", {})
+	var count := 0
+	for spec: Dictionary in specs:
+		var id := str(spec.get("id", ""))
+		if not sets.has(id) or not positions.has(id):
+			continue
+		var p: Array = positions[id]
+		var at := Vector3(float(p[0]), float(p[1]), float(p[2]))
+		var yaw := deg_to_rad(float(spec.get("facing_deg", 0.0)))
+		var frame := Basis(Vector3.UP, yaw)
+		for prop: Dictionary in sets[id]:
+			var path := str(prop.get("scene", ""))
+			if not ResourceLoader.exists(path):
+				continue
+			var scene := load(path) as PackedScene
+			if scene == null:
+				continue
+			var o: Array = prop.get("offset", [1.6, 0.0, 0.0])
+			var spot := at + frame * Vector3(float(o[0]), 0.0, float(o[2]))
+			var seated: Vector3 = ground.call(spot) if ground.is_valid() else spot
+			if not seated.is_finite() or absf(seated.y - at.y) > float(cfg.get("max_step_m", 1.5)):
+				continue
+			var model := scene.instantiate() as Node3D
+			var bounds: AABB = BOUNDS.new().combined_aabb(model)
+			var factor := float(prop.get("height_m", 1.0)) / maxf(bounds.size.y, 0.01)
+			var anchor := Node3D.new()
+			anchor.name = "%s_%s" % [id, path.get_file().get_basename()]
+			anchor.position = seated + Vector3.UP * float(o[1])
+			anchor.rotation.y = yaw + deg_to_rad(float(prop.get("yaw_deg", 0.0)))
+			root.add_child(anchor)
+			model.scale = Vector3.ONE * factor
+			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+			anchor.add_child(model)
+			count += 1
+	return count

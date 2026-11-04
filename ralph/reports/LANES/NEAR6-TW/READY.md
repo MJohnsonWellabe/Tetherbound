@@ -1,5 +1,14 @@
 # NEAR6-TW lane (tb/near6-tw-1104): Tidewake F39 items scored 5.4–6.0, CPU quick-judged
 
+## Handoff (12:00 UTC)
+
+- **Ready to land (ON, judged, tested):** F39#14 swim wake 6.10 -> 6.80; F39#20 fight-ring hide 5.87 -> 6.42; F39#27 Tidewake character rim 6.03 -> 6.23; F39#1 shore sites + built feather 6.37 -> 6.44. The table below has flags, tests and commits. The touched tests and `test_texture_import_policy` pass.
+- **Held OFF (code stays, inert):** F39#7 `contact_spacing.all_pairs` (worse); F39#19 `hud_subject_fade.roster_floor` (no CPU repro of the fade); F39#6 `creature_pose_settle.tidewake_scope` (worse); F39#4 `shiny_cue.overlay` (flat).
+- **Parked, needing new art or a new idea:** F39#6 faint (the remake Riptusk has no recipe), F39#4 (shiny repaint on secondary regions), F39#2 (Veilfall rebuild).
+- **Open candidates:** F39#7, one more round, from the trainer side: keep the trainer out of the pair's lane. F39#19 needs a GPU-side look at why the roster reads pale.
+- **Harness fixes in `quick_judge.py`:** the Tidewake `water__` frame lookup, and the fight `<trainer>/<tag>-<s.ss>` frame lookup (nearest tell moment).
+- **Runbook:** `runbook/chain*.sh` (step + .done markers in `.artifacts/run`), `ov_*.json` overlays. Every candidate gets a frame pre-check (diff + side-by-side) before judges are spent.
+
 Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. Yardstick: `tools/visual_judge/quick_judge.py` (JUDGE_PROMPT verbatim, 3+ anchor pairs, 3 fresh code-blind judges, calibrate.py), with VIS-TIDEWAKE's `water__` frame-lookup patch applied locally (`runbook/` uses it; not committed here to avoid a conflict with tb/vis-tidewake-1104).
 
 ## Landing-ready flags
@@ -36,6 +45,8 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 
 - **r4 / r4b, F39#4, flat, held OFF, item PARKED:** in r4 the default `shiny_cue.overlay` was too faint to read at the stand on pre-check, so it was not judged. In r4b (energy 1.6, power 1.5, fill 0.2) A and B scored equal for all three judges (`qj/r4b/`). The judges' lever is the shiny repaint itself: Aquaryn's whole-body violet should become a hue shift on secondary regions (shell, bands, plates) over the species pattern. That is a texture repaint, beyond a scene flag.
 - **r20b, F39#20: shipped ON (see table).**
+
+- **r2, F39#2, worse (6.41 -> 5.73), held OFF, item PARKED:** a larger Meshy Veilfall (`hero_landmarks_1101.veilfall` on, 1150 m across, less fog, whiter falls). All three judges read its falls as flat, hard-edged white slabs with pasted green patches, which is worse than the shipping grey crag. This is the second failed round on this arm (VIS-TIDEWAKE r2a was flat). The judges' fix is new art: a tiered, tree-dressed Veilfall with soft, misty falls.
 
 ## Queue
 

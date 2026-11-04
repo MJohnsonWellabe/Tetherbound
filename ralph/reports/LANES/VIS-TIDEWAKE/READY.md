@@ -9,8 +9,9 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `water_mount_presentation.json` `enabled` (sink, bob, no blob shadow, new Aquaryn `wake`) | F39#8 | CPU 4.93 -> 6.09 | `test_uiposes_water_mount.gd::test_ships_on_with_its_judged_score` | this commit |
 | `water_mount_presentation.json` `camera_hide.enabled` | F39#22 | CPU 5.25 -> 6.28 (FIXED 3/3) | same test; `smoke_camera_pass_through.gd` (hidden inside, shown outside) | this commit |
 | `tidewake_look.json` `cause_tidewake.currents.enabled` | F39#17 | CPU 5.54 -> 6.09 | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing`; `smoke_tidewake_b_current_restore.gd` (71 checks, 0 failed) | this commit |
+| `tidewake_look.json` `cause_tidewake.stars.enabled` (+ `world_look.gd` per-time star reset) | F39#30b | CPU 4.77 -> 4.89 (F13#5 5.45 -> 5.84) | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing` | look/r6 |
 
-| `human_water_contact_visual.json` wake trail (ring 2.1 m, 12 trail rings, 2.6 s; values plus `_why_wake_trail_on`) | F39#5 | CPU 5.31 -> 5.63 (r 0.96, all three judges higher) | `test_vis_tidewake_swim_wake.gd` (2 tests); with `test_texture_import_policy`: 4 tests, 0 failed | this commit |
+| ~~`human_water_contact_visual.json` base wake values~~ (withdrawn 11:27, superseded by NEAR6-TW's `wake_trail` in batch 11) | F39#5 | CPU 5.31 -> 5.63 (r4) | the test is removed; this branch's view, config and test now equal batch 11 | this commit |
 
 | `tidewake_look.json`: veilfall_rock_detail, veilfall_formation_relief and veilfall_falls sections ON (out of sections_off; `_why_veilfall_near_on`) | F39#31 | CPU 4.94 -> 5.20 (r 0.96); F39#30 matrix level; F13#5 5.68 -> 5.72 | `test_tidewake_look_profile.gd` (asserts ON plus the score); with veilfall_geometry, tidewake_cause and texture_import_policy: 17 tests, 0 failed | this commit |
 
@@ -47,7 +48,11 @@ F39#1 5.40 -> 5.45, F39#2 5.35 -> 5.19, F39#3 5.45 -> 5.40, F39#15 5.50 -> 5.56.
 
 ## Round 5 (11:15 UTC): unshadowed falls are flat on F39#31, so they stay OFF (`look/r5/VERDICT.md`)
 
-## Batch 11 note (coordinator, 10:49)
+## Batch 11 note (coordinator, 10:49): reconciled 11:27
+
+This branch now carries batch 11's `human_water_contact_visual.json` (base values plus `wake_trail` ON), `human_water_contact_view.gd` and `test_human_water_contact_visual.gd` (8 tests, 0 failed), and drops `test_vis_tidewake_swim_wake.gd`. Next: re-judge F39#5 with ring 2.1 m and interval 0.12 over `wake_trail`.
+
+### Original note
 
 The F39#5 wake (`human_water_contact_visual` base values) was held because NEAR6-TW's `wake_trail` (F39#14 6.10 -> 6.80) overrides them. Once the round-6 capture ends, this branch reverts its base values, drops `test_vis_tidewake_swim_wake.gd`, takes batch 11's `wake_trail` block verbatim, and re-judges F39#5 with ring 2.1 m and interval 0.12 on top of it.
 
