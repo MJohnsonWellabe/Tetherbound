@@ -55,3 +55,12 @@ func test_f38_13_catch_arms_ship_on_with_their_cpu_score() -> void:
 	assert_true(bool(orb.get("enabled", false)), "physical catch orb ON")
 	var card: Dictionary = _load("res://data/config/hud.json").get("catch_card", {})
 	assert_true(bool(card.get("enabled", false)), "catch result card ON")
+
+
+func test_f38_20_yard_fill_reaches_the_whole_courtyard_with_its_score() -> void:
+	var day: Dictionary = _load("res://data/config/stronghold.json").get("courtyard_daylight_candidate", {})
+	assert_true(bool(day.get("enabled", false)), "courtyard daylight ON")
+	var light: Dictionary = day.get("light", {})
+	assert_true(float(light.get("range", 0.0)) >= 52.0, "the fill reaches the courtyard entrance")
+	assert_true(float(light.get("attenuation", 1.0)) <= 0.22, "an even pool, not a steep peak")
+	assert_true(str(day.get("_why_r3_yard_fill", "")).contains("CPU 4.71 -> 5.73"), "r3 records its CPU score")
