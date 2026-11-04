@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F40#18",
+  "a": "/home/user/Tetherbound/.artifacts/qj/qj_reveal/k/sides/F40_18_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/qj_reveal/k/sides/F40_18_cand.jpg",
+  "brief": "1 in-game frame (Cloudreach) for one catalogue subject: full-party catch choice legibility. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom"
+  ]
+ }
+]
