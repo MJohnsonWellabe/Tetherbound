@@ -15,6 +15,8 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813). Items F38#29, #6, #26,
 
 ## Judged flat or worse (stay OFF)
 
+- **F41#15 P2-083: no-op, not judged.** With `camfx fight_fade` ON (F41#20 flip) the three dialogue frames already show Captain Marrow and Officer Nysa unobstructed. Candidate: softer conversation speaker light (`camera.json conversation.speaker_light_candidate` key 0.9 -> 0.45, rim 1.5 -> 1.0) aimed at Marrow's white-blown face. Under 0.2% of pixels changed (mean |diff| < 1/255), so the speaker light is not what blows the face out on CPU; no config change kept. Remaining defect on these frames is Marrow's near-white face (model material) and a pale deck post at the left edge.
+
 - **Round 3** (`qj/F38-6_F38-26_F41-9-9c1d0cc52d13-11041219/`), each item judged on its own frames:
   - **F38#6 P2-033: CPU 5.95 -> 6.15 (+0.20) but treated as flat.** Arm `pickup_grounding.json tier_candidate`. All three judges described the pickups as identical on both sides; the only difference they saw was the distant background creatures in frame 1 (white untextured on one side), which is render variance, not the arm. Good candy is a single sweet in both arms, so the tier shapes never appear in these frames. Stays OFF.
   - **F38#26 P2-020: CPU 5.78 -> 5.78 (flat).** Overlay `creature_grass_clear.json radius_scale` 1.6 -> 2.6 changed nothing visible: the creature-stage frames came out identical, so the clearing does not reach the grass that hides these creatures (midground tufts and tree shadow, creatures small in frame). No config change kept.
