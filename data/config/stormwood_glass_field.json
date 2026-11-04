@@ -25,6 +25,17 @@
   ],
   "_why_scorched_scars": "F10#4 scene-art pass (owner 5860380772): strike scars as terrain-following burnt glass-fused patches with the grass cleared, blackened rock-family lumps and low smoked-glass blades. Enabled for Phase 1b; the old spire clusters remain only as a legacy fallback.",
   "scorched_scars": true,
+  "basalt_crust_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "VIS-STORMWOOD (4 Nov 2026), F41#19 P2-043 (CPU v1/b16 5.45; judges: 'blue glass spikes rise from a flat dark base', 'needs a fix to the slab base itself'). The CPU walk_03 frame shows the fused crust model as a 12 m glossy purple plate under the spikes. On (stormwood_glass_field.gd _basalt_crust): the crust becomes a low basalt mound at 0.42 of the scar width, 0.7 m tall and sunk 0.25 m, matte dark grey with no emission, so the spikes break out of rock on cleared ground. Visual only. OFF until judged.",
+    "footprint": 0.42,
+    "height_m": 0.7,
+    "sink_m": 0.25,
+    "colour": "#45434a",
+    "roughness": 0.86,
+    "specular": 0.2
+  },
   "rock_collar_candidate": {
   "enabled": true,
   "_why": "P2-043 (GPU WD2 1 Nov, 5.75): the spike base is still a flat dark slab, not rooted in rock. On: five installed rock-family stones in cracked basalt grey ring each Meshy spike cluster's foot, half sunk (ring 0.16 and stone height 0.11 of the spike height), and the flat fused scar patch is hidden so the spikes break out of rock on cleared ground. Visual only, colliders removed (stormwood_glass_field.gd _add_rock_collar). OFF until GPU judged.",

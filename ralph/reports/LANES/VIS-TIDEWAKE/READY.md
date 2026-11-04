@@ -14,6 +14,11 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
   - c1 = `tidewake_look.json` cause_tidewake sea, light, currents, horizon, dunes ON; sections shore_surf(_vary), first_shore_declutter, stones, lesson_clusters, golden_sky, veilfall_falls, rain_veil, rain_fog, veilfall_mountain, swim, swim_stroke restored; `water_mount_presentation.json` enabled + new `camera_hide` (P2-109) + new Aquaryn `wake` (P2-108).
 - New flag-off code: `creature_body.gd` camera_hide (`87f017f86`), `water_mount_wake.gd` (P2-108 wake).
 
+## Status 04:21 UTC
+
+- Round 1 base: 5/5 boots captured (routes 30, locations 2, current states 16, swimming 7, mounted swim 17 frames). Candidate boots began at 04:05; the judge packet is due about 05:45.
+- After round 1: merge origin/main, then single-item quick_judge rounds from the cached base. Each judged gain is pushed ON with its score and a READY line as it passes.
+
 ## Plan
 
 - 03:05 UTC: quick_judge is on main (c907b9997). origin/main merges into this branch once round 1's base and candidate captures finish, because a merge mid-round changes the render tree and drops the cached base. From then on, main's `tools/visual_judge/quick_judge.py` replaces the local copy.

@@ -336,15 +336,43 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 	if scene == null:
 		return
 	var crust := scene.instantiate() as Node3D
-	var footprint := float(_shard_finish().get("crust_footprint", 0.9))
-	var height := float(_shard_finish().get("crust_height_m", 0.45))
+	var basalt := _basalt_crust()
+	var footprint := float(basalt.get("footprint", _shard_finish().get("crust_footprint", 0.9)))
+	var height := float(basalt.get("height_m", _shard_finish().get("crust_height_m", 0.45)))
 	# The installed mesh is ~1.89 units wide and ~0.21 tall, centred.
 	var across := radius * 2.0 * footprint / 1.89
 	crust.scale = Vector3(across, height / 0.21, across)
 	crust.rotation.y = float(seed_value % 360) * PI / 180.0
-	crust.position = _local_grounded(centre, height * 0.5 - 0.06)
+	crust.position = _local_grounded(centre, height * 0.5 - 0.06 - float(basalt.get("sink_m", 0.0)))
 	crust.name = "FusedGlassCrust"
+	if not basalt.is_empty():
+		_tint_basalt(crust, basalt)
 	parent.add_child(crust)
+
+
+## F41#19 P2-043 `basalt_crust_1104` (OFF until judged; empty when OFF). CPU
+## judges: "blue glass spikes rise from a flat dark base" and the walk frame
+## shows the fused crust as a 12 m glossy purple plate. On: the crust shrinks
+## to a low mound at the spike foot, sinks, and takes a matte basalt finish
+## so the spikes break out of rock instead of standing on a slab.
+func _basalt_crust() -> Dictionary:
+	var cand: Variant = config.get("basalt_crust_1104", {})
+	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
+
+
+func _tint_basalt(root: Node3D, cfg: Dictionary) -> void:
+	var tint := Color(str(cfg.get("colour", "#45434a")))
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		var visual := node as MeshInstance3D
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as StandardMaterial3D
+			var rock := source.duplicate() as StandardMaterial3D if source != null else StandardMaterial3D.new()
+			rock.albedo_color = tint
+			rock.roughness = float(cfg.get("roughness", 0.86))
+			rock.metallic = 0.0
+			rock.metallic_specular = float(cfg.get("specular", 0.2))
+			rock.emission_enabled = false
+			visual.set_surface_override_material(surface, rock)
 
 
 ## Optional reference-backed fulgurite cluster (shard_finish.crystal_model) at
