@@ -46,6 +46,8 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813; rebuilt on main 60f2df2
 
 ## Judged flat or worse (stay OFF)
 
+- **F39#23 P2-114 round 1: CPU 5.46 -> 4.70 (worse).** Arm: dark outline under the capture ring arcs, arcs x1.35 (`qj/F39-23-49d54adda13f-11041824/`). All three judges: the readout already reads (defect FIXED/PARTIAL on both sides), and the bolder ring now hides the creature being caught. Round 2 (`capture_readout_visual.json ring_style_1104`): the opposite, a thinner (x0.7) and more translucent (x0.55) ring with no outline; the readout keeps its full colour.
+
 - **F38#7 P2-058 catch aim: no arm; camfx fight_fade not implicated.** Base frames on main (CPU ~7 per VIS-MEADOWS r1b) show the target and the player's creature drawn as a pale wireframe silhouette through the trainer in every aim frame. A capture with `camfx.json fight_fade` OFF shows the same silhouette in 01/07/catch_high/catch_low (only the hare's position varies run to run), so the F41#20 fade did not cause it. The silhouette, not the readout, is now the main read problem; its source is not a data flag this lane found. Not pursued further (base already above 6).
 
 - **F41#15 P2-083: no-op, not judged.** With `camfx fight_fade` ON (F41#20 flip) the three dialogue frames already show Captain Marrow and Officer Nysa unobstructed. Candidate: softer conversation speaker light (`camera.json conversation.speaker_light_candidate` key 0.9 -> 0.45, rim 1.5 -> 1.0) aimed at Marrow's white-blown face. Under 0.2% of pixels changed (mean |diff| < 1/255), so the speaker light is not what blows the face out on CPU; no config change kept. Remaining defect on these frames is Marrow's near-white face (model material) and a pale deck post at the left edge.
