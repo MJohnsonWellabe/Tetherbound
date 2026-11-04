@@ -32,6 +32,8 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**FOR #808 (4 Nov ~00:45 UTC): take this branch's head; it fixes two test failures that the storm-light-ON commit `43f47541` causes.** In `tests/test_cause_stormwood_candidates.gd`, `test_storm_sky_on_...` and `test_soft_rain_on_...` failed. Both build their candidate from the shipped config, which now has BOTH candidates ON, so "the sky candidate leaves rain alone" and "the rain candidate leaves phases alone" each saw the other flag applied. The fix: the helper `_surge_with` turns every candidate OFF first, then turns on only the named ones. No assertion is changed. The re-run of that test is queued on the Godot lock, and its result is recorded here when it lands.
+
 **Owner rule, 4 Nov (via the coordinator): every judged improvement ships ON, even below 6.0. Only flat or worse stays OFF.** Applying it to this lane's held items:
 - **F38#2 / Terrapup hold-peak hit react (v1/b15: stage 6.37 -> 6.79):** ships as the held-peak `creature_terrapup_owner1101.glb`. The swap waits for the in-flight rim capture to finish, so its base and candidate keep the same model. The Nightburrow hold was flat and stays OFF.
 - **Already ON by the coordinator in #808:** `hud_lean` (5.30 -> 5.64) and Stormwood rim r1 (5.58 -> 5.98).

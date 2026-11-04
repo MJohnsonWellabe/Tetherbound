@@ -16,8 +16,12 @@ func _json(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
+## Each candidate is tested on its own: start from every candidate OFF (both
+## ship ON since v1/b16), then turn on only the named ones.
 func _surge_with(keys: Array) -> Dictionary:
 	var config := _json(RULES.PATH)
+	for key: String in RULES.PRESENTATION_CANDIDATES:
+		(config.presentation[key] as Dictionary)["enabled"] = false
 	for key: String in keys:
 		(config.presentation[key] as Dictionary)["enabled"] = true
 	return config
