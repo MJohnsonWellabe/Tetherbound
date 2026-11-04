@@ -26,6 +26,8 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 
 ## Arms in flight (flag OFF)
 
+**F40#14 P2-048 (coordinator item 2, 20:50):** no new arm needed. `menu.json:map_region_header` already ships ON with GPU batch 5 (2 Nov) mapped **7.01 -> 7.52** for P2-048 (the 5.87 in the brief is the 28 Oct score from before that arm). The board row needs the GPU High+Medium confirm, not more lane work.
+
 **F40#18 harness fix (20:12, coordinator-directed, commit 564c65f9e):** in Cloudreach, `phase2_capture_catch.gd --seed` now picks the wild species (`pinned_wild()`: skyrill / galecrest / pebbik by seed), places it with `EncounterDirector.spawn_wild` at a fixed arrival-terrace spot (-4, -254), level 30, no wander, and re-seeds the combat manager's catch roll per throw from (seed, throw index). Unit check `tests/test_capture_catch_pinned_wild.gd` (2 tests pass). Re-judging `catch_card.portrait` (`qj_portrait2`), then `resolve_clearance`. Previous note: **Harness gap (F40#18):** `phase2_capture_catch.gd --seed=2042` does not fix the wild spawn or the catch outcome across trees: three Cloudreach catch rounds today paired different species (Galecrest/Skyrill/Pebbik) at different spots, and one round never reached the caught banner. A/B on the catch frame is confounded until the spawn is pinned; this lane is not fixing the harness (CRITERION_DELIVERY) and has moved off P2-118.
 
 
