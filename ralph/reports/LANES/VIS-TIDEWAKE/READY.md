@@ -30,6 +30,17 @@ Round 1 verdict: `qj/r1/VERDICT.md` (calibration r 0.73, RMSE 0.55, confirming).
 - 03:05 UTC: quick_judge is on main (c907b9997). origin/main merges into this branch once round 1's base and candidate captures finish, because a merge mid-round changes the render tree and drops the cached base. From then on, main's `tools/visual_judge/quick_judge.py` replaces the local copy.
 - Container note: a container restart at ~01:55 wiped /dev/shm (import and the first base captures). The chain is now `runbook/resume.sh` (resumable, with .done markers) with a tracked background waiter.
 
+## Round 2a (07:55 UTC): flat, stays OFF
+
+Arm: `hero_landmarks_1101.veilfall`, `cause_tidewake.dunes`, and the shore_surf, shore_surf_vary, stones and lesson_clusters sections. Calibration r 0.95, RMSE 0.37 (`qj/r2a/VERDICT.md`).
+F39#1 5.40 -> 5.45, F39#2 5.35 -> 5.19, F39#3 5.45 -> 5.40, F39#15 5.50 -> 5.56. All flat.
+- Frame diffs change only 2-8% of pixels. The Meshy Veilfall draws only past 1100 m and none of these route stands is that far, so the arm never shows.
+- Every judge asks for the same fixes:
+  - new art: a terraced, green Veilfall with several broad falls and mist at the base;
+  - scene: irregular shallows instead of the rest-shoal disc chain, plus wet-sand, foam, rock and driftwood bands and haze;
+  - new art: hero structures at the destinations.
+- Owner reassignment (coordinator, 07:42): F39#27/#1/#6/#7/#20/#2/#14/#19/#4 move to the NEAR6-TW lane. This lane keeps #3, #15, #16, #17, #5, #8, #22, #24, #21, #30, #31, #32 and F13#5.
+
 ## Harness finding for main's quick_judge.py
 
 - `find_frame` misses every Tidewake route and location frame. Those tools write `water__<stand>__…` files, but job.json ids are `tidewake__<stand>__…`, so F39#1/#2/#3/#15 (and every route row) build no sets. Fix: `runbook/qj_patch.py` part 1 (try `water__` + the id's tail). Main's copy at c907b9997 has the same bug.
