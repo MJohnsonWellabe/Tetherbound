@@ -442,6 +442,19 @@ func _tick_camera_fade(delta: float) -> void:
 		if not inside and fades_when_camera_inside:
 			inside = _camera_fade_extra(model, camera.global_position)
 	var target := CAMERA_FADE_AMOUNT if inside and fades_when_camera_inside else 0.0
+	# P2-109 (tb/vis-tidewake-1104, flag-off): with `camera_hide` on, a body
+	# the camera sits inside is hidden outright (with its blob shadow) and
+	# snaps back when the camera leaves, instead of a see-through ghost and a
+	# detached shadow.
+	if _camera_hide_enabled():
+		_set_camera_hidden(model, target > 0.0)
+		if target > 0.0:
+			_camera_fade = target
+			return
+		if _camera_fade > 0.0:
+			_camera_fade = 0.0
+			CAMERA_FADE.restore(_camera_fade_state)
+			return
 	var next := move_toward(_camera_fade, target, CAMERA_FADE_SPEED * delta)
 	if is_zero_approx(next) and is_zero_approx(_camera_fade):
 		return
@@ -453,6 +466,35 @@ func _tick_camera_fade(delta: float) -> void:
 	var saddle := get_node_or_null(CAMERA_FADE_SADDLE)
 	if saddle != null:
 		CAMERA_FADE.apply(saddle, _camera_fade, _camera_fade_state, eye)
+
+
+const CAMERA_HIDE_CONFIG := "res://data/config/water_mount_presentation.json"
+static var _camera_hide_cfg: Variant = null
+var _camera_hidden := false
+
+
+## water_mount_presentation.json `camera_hide.enabled` (default OFF).
+static func _camera_hide_enabled() -> bool:
+	if _camera_hide_cfg == null:
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CAMERA_HIDE_CONFIG))
+		var row: Variant = raw.get("camera_hide", {}) if raw is Dictionary else {}
+		_camera_hide_cfg = row is Dictionary and bool(row.get("enabled", false))
+	return bool(_camera_hide_cfg)
+
+
+func _set_camera_hidden(model: Node3D, hidden: bool) -> void:
+	if hidden == _camera_hidden:
+		return
+	_camera_hidden = hidden
+	for node: Node3D in [model, get_node_or_null(CAMERA_FADE_SADDLE) as Node3D, get_node_or_null(^"ContactShadow") as Node3D]:
+		if node == null:
+			continue
+		if hidden:
+			node.set_meta("camera_hide_visible", node.visible)
+			node.visible = false
+		elif node.has_meta("camera_hide_visible"):
+			node.visible = bool(node.get_meta("camera_hide_visible"))
+			node.remove_meta("camera_hide_visible")
 
 
 ## A subclass's further reason to fade while the camera is outside the body

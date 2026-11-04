@@ -3,5 +3,10 @@
   "enabled": false,
   "mounts": {
     "water_aquaryn": {"extra_sink_m": 0.9, "bob_amplitude_m": 0.12, "bob_period_s": 1.8, "shadows_off": true}
+  },
+  "camera_hide": {
+    "_why": "P2-109 (F39#22, GPU 5.62: after dismount 'a ghostly translucent mount mesh hovers around the trainer and a large detached dark shadow fills the foreground'). When on, a body the camera sits inside (the follower, or Aquaryn's world body) is hidden outright with its saddle and blob shadow, and snaps back when the camera leaves, instead of the 0.85 dither ghost (creature_body.gd _tick_camera_fade). OFF until judged.",
+    "scope": "local presentation only; no collision, placement, network or save change",
+    "enabled": false
   }
 }
