@@ -15,7 +15,7 @@
 | Batch, calibrate, VERDICT, sheet | `assemble.py` + `calibrate.py` by hand | **< 1 s** (`finish`) |
 | **One A/B round, base cached** | ≈ 17 min of capture plus manual steps (about 1 h per round in the lane, with queues) | **one candidate boot + ~2 min** |
 
-**Host note:** the same single catch boot measured 443–533 s before the container restart and over 900 s after it (exact figure follows) (`lane_bin` run, same command). So the 943–1050 s candidates reflect this host's speed, not the kit; on the pre-restart host a cached-base round is about 8 + 2 = **10 min**.
+**Host note:** the same single catch boot measured 443–533 s before the container restart and 754 s after it, measured by a `lane_bin` re-run of the same command at 03:16 UTC. So capture time depends on the host: the 943–1050 s candidates ran on the slower post-restart container, not slower for any reason in the kit; on the pre-restart host a cached-base round is about 8 + 2 = **10 min**.
 
 **Speed comes only from plumbing:**
 - one boot per tool, with the subsets merged;
