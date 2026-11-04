@@ -5,7 +5,7 @@
   "disabled_rod_calm_multiplier": 1.5,
   "disabled_rod_break_multiplier": 0.6,
   "presentation": {
-    "storm_sky_1101": {
+    "storm_sky_1101": {"_why_rules": "Visual lane, 4 Nov (CI on #808): the overlay broke two phase rules, so Calm takes no sheet glow (Calm has no lightning) and Break ambient is 0.66, below Building 0.70 (Break keeps the darkest ground). Then (same CI run) storm phases take no deck rims (rims mark the aftermath), Calm contrast 0.40 (the aftermath deck stays more defined), Break sun 0.27 (aftermath key light stays over 2.5x Break; the shipped Break is 0.22) and soft rain 2000 near + 1700 far (+800 curtain = 4500, inside the Break rain budget). Calm keeps the shipped deck colour (the deck must darken and saturate Calm > Building > Break). A re-judge of the retuned set is queued.",
       "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
       "scope": "client_presentation",
       "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'flat lilac/purple sky card', 'murky dark brown frames, little value range', 'no shafts or lightning drama'). OFF until GPU judged. The overlay deep-merges into presentation (stormwood_surge_rules.gd with_presentation_candidates): every phase keeps the fixed purple storm sky but its ceiling gains cloud form (contrast, definition, lit rims, thin-spot glow) and faint white-violet sheet glow even in Calm; the storm's sun and ambient cuts ease so the near-black ground and dark creatures separate (composes with stormwood_look.json light_pass_1101); the parked r22 skyline and r34 depth fog switch on for distance layers; and cheap additive light shafts (stormwood_storm_shafts.gd) break through the canopy. Strike, phase timing, shelter and saves are untouched.",
@@ -50,12 +50,11 @@
             "sun_energy_mult": 0.66,
             "ambient_colour": "#a4a6c4",
             "ambient_energy_mult": 0.84,
-            "ceiling_colour": "#5f5889",
-            "ceiling_contrast": 0.45,
+            "ceiling_contrast": 0.4,
             "ceiling_definition": 0.35,
-            "ceiling_rim": 0.22,
+            "ceiling_rim": 0.0,
             "ceiling_thin_glow": 0.06,
-            "sheet_glow": 0.08,
+            "sheet_glow": 0.0,
             "sheet_glow_rate": 0.16,
             "shafts": 0.75
           },
@@ -64,17 +63,17 @@
             "ambient_energy_mult": 0.7,
             "ceiling_contrast": 0.6,
             "ceiling_definition": 0.4,
-            "ceiling_rim": 0.3,
+            "ceiling_rim": 0.0,
             "ceiling_thin_glow": 0.1,
             "sheet_glow": 0.32,
             "shafts": 0.45
           },
           "break": {
-            "sun_energy_mult": 0.38,
-            "ambient_energy_mult": 0.72,
+            "sun_energy_mult": 0.27,
+            "ambient_energy_mult": 0.66,
             "ceiling_contrast": 0.65,
             "ceiling_definition": 0.45,
-            "ceiling_rim": 0.26,
+            "ceiling_rim": 0.0,
             "ceiling_thin_glow": 0.08,
             "shafts": 0.2
           },
@@ -83,7 +82,7 @@
             "ambient_energy_mult": 0.8,
             "ceiling_contrast": 0.55,
             "ceiling_definition": 0.35,
-            "ceiling_rim": 0.45,
+            "ceiling_rim": 0.0,
             "ceiling_thin_glow": 0.22,
             "shafts": 1.0
           }
@@ -107,14 +106,14 @@
           "soft_edge": 1.0,
           "soft_edge_power": 2.2,
           "radial_segments": 6,
-          "max_drops": 2200,
+          "max_drops": 2000,
           "streak_width_m": 0.07,
           "streak_length_m": 1.15,
           "colour": "#a6adc6",
           "alpha": 0.3,
           "scale_min": 0.6,
           "far_layer": {
-            "max_drops": 2000,
+            "max_drops": 1700,
             "streak_width_m": 0.045,
             "streak_length_m": 0.8,
             "alpha": 0.15

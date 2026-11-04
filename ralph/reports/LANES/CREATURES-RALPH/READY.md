@@ -32,6 +32,23 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**FOR #808 (4 Nov ~03:15 UTC): the storm-light set is fixed. Every named test passes with it ON, so it can go back ON.** The CI suite 4 failures had two causes.
+- **(1) Real phase-rule breaks in the `storm_sky_1101` overlay**, now retuned (`_why_rules`):
+  - Calm had a sheet glow (Calm has no lightning), now 0.
+  - Break ambient 0.72 exceeded Building 0.70, now 0.66, so Break keeps the darkest ground.
+  - Storm phases had deck rims, which are reserved for the aftermath, now 0.
+  - Calm contrast 0.45 is now 0.40, so the aftermath deck stays more defined.
+  - Break sun 0.38 is now 0.27, so the aftermath key stays over 2.5x Break. The shipped value is 0.22.
+  - Calm no longer overrides the deck colour, so it darkens and saturates Calm > Building > Break.
+  - `soft_rain_1101` drops: 2000 near + 1700 far + 800 curtain = 4500, inside the Break budget.
+- **(2) Tests that assumed the storm-free config:** `test_stormwood_surge_presentation.gd` `_config()` now reads the effective config (`stormwood_surge_rules.with_presentation_candidates`), the same merge the surge runs. No assertion changed.
+- **Local results, all 0 failed:**
+  - `test_stormwood_surge_presentation` 53 tests / 730 assertions
+  - `test_stormwood_restored_sky` 2/39
+  - `test_cause_stormwood_candidates` 10/68
+  - `test_storm_cams_candidates` 15/54
+- **Effect on the judged look:** the retune trims some of the lift that was judged (v1/b16: F41#5 5.84, F41#2 5.80), so a re-judge of the retuned set is queued.
+
 **FOR #808 (4 Nov ~03:00 UTC): hud_lean fixed, so `smoke_objective_hint_card` passes with hud_lean ON and OFF.**
 - **Cause:** lean `objective_width` 460 moved the objective block's left edge into the centre gutter. The objective hint card measures its width off that edge, so it narrowed, wrapped and ran 10 px into the bottom dock.
 - **Fix, config:** lean `objective_width` returns to 348 (`hud.json` `_why_r4`). The r3 eyebrow row (46) stays.
