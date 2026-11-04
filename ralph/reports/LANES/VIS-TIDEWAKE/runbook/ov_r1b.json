@@ -1,0 +1,15 @@
+{
+ "data/config/creatures_visual.json": {
+  "shiny_cue": {
+   "enabled": true
+  }
+ },
+ "data/config/water_creature_rest_visual.json": {
+  "species": [
+   "torrentoad",
+   "water_torrentoad",
+   "riptusk",
+   "water_riptusk"
+  ]
+ }
+}

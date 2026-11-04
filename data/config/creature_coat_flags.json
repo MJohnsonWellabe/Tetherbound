@@ -577,7 +577,7 @@
     },
     "creatures_ralph_meadowhart_warm": {
       "_why": "Creatures-ralph (2 Nov 2026), Meadowhart remake (GPU batch 5: installed 7.67 -> remake 6.91; judges: 'pale, thin vine-wrapped deer loses value contrast', 'mottled root-veined hide muddies the read'). Warm red-brown coat with a darker saddle and cream belly and throat, vines kept as soft markings (data/creatures/remake_grades.json meadowhart). The hit react's neck and head swing are reduced in the GLB (neck x0.45, head x0.6) so the head no longer collapses into a stoop. r8 CPU three-judge A/B: shipped remake 6.12 -> 6.80 mapped (+0.68), 0.10 short of the 6.9 target, so OFF pending the coordinator (it is a clear gain over the live remake); r9 attempt 2 gained nothing.",
-      "enabled": false,
+      "enabled": true, "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): r8 CPU three-judge A/B shipped remake 6.12 -> 6.80 mapped.",
       "coats": {
         "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101_Image_0_warm.jpg"

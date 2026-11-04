@@ -17,5 +17,13 @@
     "sha256": "3a467a6bd7901c9ca25b9fece8da7933682269ff9dd2497a915c0052391de6f9",
     "disposition": "Superseded pre-faint-revision checkpoint, NOT the installed/accepted model. Preserved for the owner all-work consolidation request. Its hash matches old_sha256 in the committed export-equality evidence. Asset source directory is excluded from engine import by .gdignore.",
     "capture_wrappers": "scratch-capture-clips.gd and scratch-capture-world.gd preserve the original temporary overrides verbatim. Historical paths point to the former scratch export and are not production commands. Current installed validation uses the committed capture-final-world.gd / capture-variants.gd and tools/art_pipeline/capture_creature_clips.gd."
+  },
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/creatures/tetherbound/galecrest/source/rebuild/model.glb"
+    ]
   }
 }

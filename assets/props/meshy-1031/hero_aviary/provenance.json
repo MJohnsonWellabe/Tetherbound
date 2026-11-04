@@ -36,5 +36,14 @@
    "file": "aviary_b.glb",
    "sha256": "8b5c71327149e53701c1ed5a745195187d79fe2bfb3c504b81f1984d2b31fba5"
   }
- ]
+ ],
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/props/meshy-1031/hero_aviary/aviary_a.glb",
+      "assets/props/meshy-1031/hero_aviary/aviary_b.glb"
+    ]
+  }
 }

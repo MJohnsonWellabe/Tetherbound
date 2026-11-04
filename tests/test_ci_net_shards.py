@@ -105,7 +105,9 @@ class RealRepository(unittest.TestCase):
     def test_shards_do_not_wait_for_discovery(self):
         block = CI[CI.index("  verify-multiplayer-shard:\n"):CI.index("  export:\n")]
         header = [l for l in block.split("    steps:")[0].splitlines() if not l.strip().startswith("#")]
-        self.assertIn("    needs: changes", header)
+        # changes, plus the assets-cache prep (CI-SPEED 4 Nov: assets/ comes
+        # from its cache); never a discovery job.
+        self.assertIn("    needs: [changes, assets-cache]", header)
         self.assertNotIn("discover-net-smokes", "\n".join(header))
 
 

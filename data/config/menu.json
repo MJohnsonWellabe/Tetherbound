@@ -12,6 +12,14 @@
     "card_margin": 6,
     "status_near_top": true
   },
+  "release_choice_focus": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-118 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct: unscored, capture blocked): the full-party caught-creature choice panel left the earlier battle HUD visible through its transparent background and put dim choice instructions at the screen bottom. When on, the release ceremony (tab_creatures.gd choose/confirm) raises the shell dim to dim_alpha so the battle HUD no longer reads through, and turns the footer into a bright, larger instruction strip (footer_colour, footer_px). PRESENTATION ONLY. OFF until judged.",
+    "enabled": false,
+    "dim_alpha": 0.9,
+    "footer_colour": "#F2DFA6",
+    "footer_px": 30
+  },
   "map_region_header": {
     "_why": "GPU batch 5 (2 Nov, three code-blind judges): P2-048 7.01 -> 7.52 mapped; ships ON. P2-048 (UIPOSES lane, 1 Nov 2026). GPU item score 28 Oct 5.87: the Cloudreach map showed no region label at all (an almost fully fogged first map), so where the player is could not be read; the old defect was the region label cut after LOWER. When on, the map header names the current region ('You are here: <region>') under the realm title in the warm accent, wrapping rather than truncating (tab_map.gd here_text). PRESENTATION ONLY. OFF until GPU judging.",
     "enabled": true

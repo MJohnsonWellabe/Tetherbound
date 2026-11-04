@@ -596,6 +596,15 @@ func _engage() -> void:
 				if bool(_manager.call("is_fighting")):
 					return
 				await physics_frame
+		# Cloudreach arrival road (GPU item scores 31 Oct, P2-117/P2-118): a
+		# 'Take Good Candy' pickup 1.12 m from the wild wins the interact
+		# offer, so Engage never fires. Take the pickup first, as a player
+		# would, then the wild's offer is the winner.
+		elif winner != null and winner != _director and bool(offer.get("actionable", false)) \
+				and str(offer.get("label", "")).begins_with("Take") \
+				and INPUT_OWNER.current(self) == null and not paused and attempt % 30 == 0:
+			_log("pickup '%s' holds the offer -> taking it first" % str(offer.get("label", "")))
+			await _tap(&"interact")
 		if attempt % 120 == 0:
 			_log("engage waiting: candidate=%s winner=%s offer=%s" % [str(candidate), str(winner), str(offer)])
 			if is_instance_valid(_wild) and _player.global_position.distance_to(_wild.global_position) > 5.5:

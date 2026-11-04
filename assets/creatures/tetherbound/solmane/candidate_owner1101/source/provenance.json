@@ -51,5 +51,13 @@
  },
  "flag": "data/config/creature_model_flags.json:remake_owner1101_solmane",
  "test": "tests/test_creature_model_flags.gd",
- "cpu_capture": "ralph/reports/LANES/REMAKES2/_sheet_owner1101_f36_cpu.png (capture_f36_poses.gd --whole-body --context, flag ON locally, Low/Compatibility; local import used a 1024 px texture size limit for disk, sidecars ship at full size)"
+ "cpu_capture": "ralph/reports/LANES/REMAKES2/_sheet_owner1101_f36_cpu.png (capture_f36_poses.gd --whole-body --context, flag ON locally, Low/Compatibility; local import used a 1024 px texture size limit for disk, sidecars ship at full size)",
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/creatures/tetherbound/solmane/candidate_owner1101/source/solmane_a.glb"
+    ]
+  }
 }

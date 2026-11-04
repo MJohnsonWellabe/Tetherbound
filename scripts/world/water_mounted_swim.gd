@@ -106,6 +106,7 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 		_swim_time += delta
 		origin += MOUNT_PRESENTATION.origin_delta(look, _swim_time)
 		MOUNT_PRESENTATION.set_shadows(actor, not bool(look.get("shadows_off", true)))
+		MOUNT_PRESENTATION.ensure_wake(actor, look)
 	else:
 		MOUNT_PRESENTATION.set_shadows(actor, true)
 	actor.velocity.y = (world.field.water_level() + origin - actor.global_position.y) * float(_rules.human.vertical_follow_rate)

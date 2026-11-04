@@ -31,7 +31,8 @@
   },
   "hud_lean": {
     "_why": "P2-004 round 7 (UI lane, 21 Oct 2026): fewer boxes, not smaller text. Quick bar and action legend lose their backing panels (slots keep their frames, text keeps its outline), the day/time line drops its plate, and assigned quick slots show a larger item icon with key chip and count on one line, so counts are never cut. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
-    "enabled": false,
+    "enabled": true,
+    "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): CPU visual lane v1/b12 F38#19 exploration HUD 5.30 -> 5.64 mapped; the objective hint card now clears the dock under lean (eda956eba, smoke_objective_hint_card passes ON and OFF).",
     "item_icon_px": 52,
     "count_px": 30,
     "assigned_slot_height": 108,
