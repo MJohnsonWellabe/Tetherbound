@@ -54,3 +54,10 @@ func test_early_scramble_is_on_with_its_score() -> void:
 	var spec: Dictionary = _read(PHYSICAL).get("mounted_drop_no_air_drive", {})
 	assert_true(is_equal_approx(float(spec.get("scramble_after_s", 0.0)), 0.3), "P2-105 scramble_after_s ships at 0.3")
 	assert_true(str(spec.get("_scramble_after_s_why_on", "")).contains("4.38 -> 6.10"), "P2-105 early-scramble CPU score recorded")
+
+
+func test_thinner_island_mist_is_on_with_its_score() -> void:
+	var roots: Dictionary = _read(VISUAL).get("island_roots", {})
+	assert_true(is_equal_approx(float(roots.get("mist_core_alpha", 0.0)), 0.45), "P2-106 island mist core ships at 0.45")
+	assert_true(is_equal_approx(float((roots.get("low_mist", {}) as Dictionary).get("mist_below_m", 0.0)), 260.0), "P2-106 low mist collar ships 260 m below")
+	assert_true(str(roots.get("_mist_thin_why_on", "")).contains("6.00 -> 6.43"), "P2-106 mist-thin CPU score recorded")
