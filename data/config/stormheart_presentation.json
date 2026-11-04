@@ -213,6 +213,18 @@
       "arcs": {"count": 4, "seed": 271, "colour": "#ebe6ff", "width_m": 0.16, "segments": 90, "radius_scale": 0.9}
     }
   },
+  "root_floor_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#1: every qj_heart judge reads the Stormheart as 'a dark cylindrical ring with a hole'; the sheet shows the hollow floor carrying the same bright green meadow terrain as outside (hollow_floor already clears the grass tufts). Inside radius_m of the trunk axis the terrain turns to dark damp root loam with a faint radial root grain (stormheart_root_floor.gd). Terrain material only; OFF until judged.",
+    "centre": [-100.0, 5470.0],
+    "radius_m": 40.0,
+    "feather_m": 6.0,
+    "loam_colour": "#211c17",
+    "root_colour": "#3d3024",
+    "roughness": 0.82,
+    "strength": 1.0
+  },
   "hollow_floor": {
     "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#1 Stormheart 3.22 -> 3.94 mapped with deck_light_1101 + hollow_floor + hero_interior.round2.",
     "_why_off": "r17 code-blind CPU round (25 Oct): clearing the hollow's ground cover mapped 5.24 -> 4.75 against r16. OFF.",
