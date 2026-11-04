@@ -2,6 +2,7 @@
 
 ## Taken (coordinator 19:25)
 
+- **r12, F41#12, not judged, held OFF:** `puddle_candidate` renders as flat lavender sky-reflecting discs on the road. VIS-STORMWOOD's READY records the same puddles already judged as flat slabs (3/3, v1/b10), so this repeats a known failure. The remaining F41#12 asks (white-violet lightning instead of a gold decal, edge wear, form) need a road-current shader rework; not tried.
 - **r14s, F41#14, worse (5.57 -> 5.26), held OFF:** tier_candidate at 1.45/1.6/1.75x. The tier read is FIXED, but the enlarged Rare cluster blooms into a flat yellow burst that 3/3 judges call an effect slab. Round 2, r14t: 1.3/1.3/1.05x.
 
 - **F41#12** (charged road, 5.63): judging the existing unjudged `stormwood_road_current.puddle_candidate`.
