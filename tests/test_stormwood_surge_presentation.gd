@@ -7,6 +7,7 @@ extends "res://tests/test_case.gd"
 ## cross-fade jump, strike flashes gated per peer) rather than any one tuning.
 
 const SURGE := preload("res://scripts/world/stormwood_surge.gd")
+const SURGE_RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 const STORMWOOD_LOOK := preload("res://scripts/world/stormwood_look.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const LIGHTNING := preload("res://scripts/world/stormwood_lightning.gd")
@@ -38,8 +39,12 @@ func after_each() -> void:
 	MOTION_PREFS.set_reduced_motion(_saved_reduced_motion)
 
 
+## The config the surge actually runs: the shipped file with its ON presentation
+## candidates merged in (stormwood_surge_rules.gd), so expected values follow
+## the storm-light set when it ships ON.
 func _config() -> Dictionary:
-	return JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_surge.json"))
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_surge.json"))
+	return SURGE_RULES.with_presentation_candidates(raw)
 
 
 func _phase_rows() -> Dictionary:

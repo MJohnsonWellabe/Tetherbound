@@ -95,5 +95,13 @@
    "clip_notes_for_creature_lane": "walk/run drop the body low with long flat leg swings; hit tucks the head and frill down; faint ends belly-up"
   },
   "not_run": "tools/art_pipeline/texture_import_policy.py --apply: it edits Godot .import sidecars, which do not exist under .gdignore"
- }
+ },
+  "archived": {
+    "note": "archived off main (owner, 4 Nov 2026); restore one file with: git checkout tb/meshy-archive -- <path>",
+    "branch": "tb/meshy-archive",
+    "commit": "98879e2e13da4e310811e92f7cb1c62a424590a0",
+    "paths": [
+      "assets/creatures/tetherbound/skyrill/candidate_r10/source/skyrill_r10_meshy.glb"
+    ]
+  }
 }

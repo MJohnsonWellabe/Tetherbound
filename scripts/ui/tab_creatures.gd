@@ -1822,6 +1822,7 @@ func _read_evolve() -> void:
 	_evolution_stage = "glow"
 	menu.call("hold_input", true)
 	menu.call("override_footer", "")
+	_ceremony_focus(false)
 	_list.visible = false
 	_detail_panel.visible = false
 	_sync_detail_column()
@@ -1867,6 +1868,7 @@ func _end_evolution() -> void:
 	_evolution_stage = ""
 	menu.call("hold_input", false)
 	menu.call("override_footer", "")
+	_ceremony_focus(false)
 	_evolution_panel.visible = false
 	_list.visible = true
 	_detail_panel.visible = true
@@ -1984,6 +1986,7 @@ func _maybe_begin_release() -> void:
 	_held = -1
 	menu.call("hold_input", true)
 	menu.call("override_footer", "Up / Down  look them over        A  this one goes free")
+	_ceremony_focus(true)
 	_show_pending_row(true)
 	_fence_choose_focus(true)
 	if _pending_button != null:
@@ -2367,6 +2370,7 @@ func _end_guardian_confirm(land: int) -> void:
 	if menu != null:
 		menu.call("hold_input", false)
 		menu.call("override_footer", "")
+		_ceremony_focus(false)
 	for button: Button in [_guardian_accept, _guardian_decline, _guardian_back, _guardian_confirm_decline]:
 		if button != null and is_instance_valid(button):
 			button.visible = false
@@ -2584,6 +2588,7 @@ func _back_to_choosing() -> void:
 	_sync_detail_column()
 	_show_pending_row(true)
 	menu.call("override_footer", "Up / Down  look them over        A  this one goes free")
+	_ceremony_focus(true)
 	var back: Button = _pending_button if _release_target >= PARTY.MAX_CREATURES \
 		else (_rows[_release_target] as Button)
 	_release_target = -1
@@ -2825,6 +2830,12 @@ func _on_release_completed(release_id: String, result: Dictionary) -> void:
 		say("Your release choice is saved." if str(context.payout_text).is_empty() else "Release saved. " + str(context.payout_text) + " received.")
 
 
+## P2-118: menu.json `release_choice_focus` (game_menu.gd::set_ceremony_focus).
+func _ceremony_focus(on: bool) -> void:
+	if menu != null and menu.has_method("set_ceremony_focus"):
+		menu.call("set_ceremony_focus", on)
+
+
 func _end_release() -> void:
 	_release_stage = ""
 	_release_for = null
@@ -2832,6 +2843,7 @@ func _end_release() -> void:
 	_release_quote = {}
 	menu.call("hold_input", false)
 	menu.call("override_footer", "")
+	_ceremony_focus(false)
 	_farewell_panel.visible = false
 	_detail_panel.visible = true
 	_sync_detail_column()

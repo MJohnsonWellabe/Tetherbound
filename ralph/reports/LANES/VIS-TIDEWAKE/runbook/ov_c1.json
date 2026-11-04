@@ -1,0 +1,49 @@
+{
+ "data/config/tidewake_look.json": {
+  "sections_off": [
+   "current_flow_visual",
+   "night_creature_floor",
+   "dock_village_candidate",
+   "dock_dressing_candidate",
+   "surfaces_candidate",
+   "veilfall_hero_candidate",
+   "veilfall_facade_candidate",
+   "forward_plus_candidate",
+   "veilfall_rock_detail_candidate",
+   "veilfall_formation_relief_candidate",
+   "veilfall_formation_relief_fill_candidate",
+   "rain_grade_candidate",
+   "dune_grass_candidate",
+   "shore_water_candidate",
+   "waterline_declutter_candidate",
+   "current_bands_candidate",
+   "current_tint_candidate",
+   "veilfall_cladding_candidate",
+   "veilfall_buttress_candidate",
+   "beach_groups_candidate"
+  ],
+  "cause_tidewake": {
+   "sea": {
+    "enabled": true
+   },
+   "light": {
+    "enabled": true
+   },
+   "currents": {
+    "enabled": true
+   },
+   "horizon": {
+    "enabled": true
+   },
+   "dunes": {
+    "enabled": true
+   }
+  }
+ },
+ "data/config/water_mount_presentation.json": {
+  "enabled": true,
+  "camera_hide": {
+   "enabled": true
+  }
+ }
+}

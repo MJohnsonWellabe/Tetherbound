@@ -230,6 +230,8 @@ jobs:
             /tools/ci/run_godot_smoke.py
             /tests/test_ci_select_jobs.py
             /tools/ci/select_jobs.py
+            /tests/test_ci_assets_cache.py
+            /tools/ci/assets_cache.py
             # The text the selection's reference scan reads (tools/ci/select_jobs.py
             # SCAN_ROOTS; no media or binary bakes). Must stay in step with it:
             # select_jobs.py selects everything if a REQUIRED_SCAN sentinel is
@@ -270,6 +272,9 @@ jobs:
 
       - name: Verify the suite plan (exact one-time cover, matrix, tiers)
         run: python3 tests/test_ci_suites.py
+
+      - name: Verify the shared assets cache (warm, fallback, stale/tampered rejected)
+        run: python3 tests/test_ci_assets_cache.py
 
       - name: Decide whether anything but documentation changed
         id: filter
@@ -449,6 +454,188 @@ jobs:
           if [ "$FULL" = true ]; then tier=full; elif [ "$CODE" = true ]; then tier=fast; fi
           python3 tools/ci/run_suite.py --list --tier "$tier" --jobs "$JOBS"
 
+  # CI-SPEED (owner, 4 Nov 2026: "Do all the fixes to make the download faster
+  # without losing any meshy assets permanently"). assets/ is ~7 GB (Meshy
+  # creatures and props); every engine job used to pull it from git through
+  # its own blobless checkout -- 4 to 47 min a job on run 41722777593, ~30
+  # jobs at once, one runner out of disk. Now this job fills a chunked Actions
+  # cache (tools/ci/assets_cache.py: 8 chunks keyed by the exact git blob ids
+  # they hold, so a change re-saves ~1 GB, not 7) and every engine job checks
+  # out without /assets/ and restores it with ./.github/actions/restore-assets,
+  # which verifies every file against git and falls back to git on any miss.
+  # Nothing here can fail a run: a failed step leaves engine jobs on that git
+  # fallback. Nothing is deleted from the repository; only stale cache entries
+  # of this same ref are pruned, so the 10 GB cache budget keeps the Godot
+  # editor, templates and import caches.
+  assets-cache:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Free runner disk for building the asset tars
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/ci/
+      - id: plan
+        run: python3 tools/ci/assets_cache.py plan
+      - id: look0
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c0.tar
+          key: ${{ steps.plan.outputs.key0 }}
+          lookup-only: true
+      - id: look1
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c1.tar
+          key: ${{ steps.plan.outputs.key1 }}
+          lookup-only: true
+      - id: look2
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c2.tar
+          key: ${{ steps.plan.outputs.key2 }}
+          lookup-only: true
+      - id: look3
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c3.tar
+          key: ${{ steps.plan.outputs.key3 }}
+          lookup-only: true
+      - id: look4
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c4.tar
+          key: ${{ steps.plan.outputs.key4 }}
+          lookup-only: true
+      - id: look5
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c5.tar
+          key: ${{ steps.plan.outputs.key5 }}
+          lookup-only: true
+      - id: look6
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c6.tar
+          key: ${{ steps.plan.outputs.key6 }}
+          lookup-only: true
+      - id: look7
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c7.tar
+          key: ${{ steps.plan.outputs.key7 }}
+          lookup-only: true
+      - id: build
+        continue-on-error: true
+        # Leaves time to save the chunks it finished; the rest fall back to git.
+        timeout-minutes: 45
+        env:
+          HIT: "${{ steps.look0.outputs.cache-hit == 'true' && '0,' || '' }} ${{ steps.look1.outputs.cache-hit == 'true' && '1,' || '' }} ${{ steps.look2.outputs.cache-hit == 'true' && '2,' || '' }} ${{ steps.look3.outputs.cache-hit == 'true' && '3,' || '' }} ${{ steps.look4.outputs.cache-hit == 'true' && '4,' || '' }} ${{ steps.look5.outputs.cache-hit == 'true' && '5,' || '' }} ${{ steps.look6.outputs.cache-hit == 'true' && '6,' || '' }} ${{ steps.look7.outputs.cache-hit == 'true' && '7,' || '' }}"
+        run: |
+          set -euo pipefail
+          hit="$(echo "$HIT" | tr -d ' ')"
+          echo "chunks already cached: ${hit:-none}"
+          python3 tools/ci/assets_cache.py materialize --cache-dir "$RUNNER_TEMP/ci-assets" --hit "$hit"
+      - if: steps.look0.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c0.tar
+          key: ${{ steps.plan.outputs.key0 }}
+      - if: steps.look1.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c1.tar
+          key: ${{ steps.plan.outputs.key1 }}
+      - if: steps.look2.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c2.tar
+          key: ${{ steps.plan.outputs.key2 }}
+      - if: steps.look3.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c3.tar
+          key: ${{ steps.plan.outputs.key3 }}
+      - if: steps.look4.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c4.tar
+          key: ${{ steps.plan.outputs.key4 }}
+      - if: steps.look5.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c5.tar
+          key: ${{ steps.plan.outputs.key5 }}
+      - if: steps.look6.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c6.tar
+          key: ${{ steps.plan.outputs.key6 }}
+      - if: steps.look7.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/ci-assets/c7.tar
+          key: ${{ steps.plan.outputs.key7 }}
+      - name: Report cache usage; prune this ref's stale assets and import entries
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KEYS: "${{ steps.plan.outputs.key0 }} ${{ steps.plan.outputs.key1 }} ${{ steps.plan.outputs.key2 }} ${{ steps.plan.outputs.key3 }} ${{ steps.plan.outputs.key4 }} ${{ steps.plan.outputs.key5 }} ${{ steps.plan.outputs.key6 }} ${{ steps.plan.outputs.key7 }}"
+        run: |
+          set -uo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/cache/usage" || true
+          echo "Largest cache entries:"
+          gh api "repos/$GITHUB_REPOSITORY/actions/caches?per_page=60&sort=size_in_bytes&direction=desc" \
+            --jq '.actions_caches[] | "\(.size_in_bytes/1048576|floor) MB  \(.ref)  \(.key)  last \(.last_accessed_at)"' || true
+          # Stale = an assets entry of THIS ref whose key is not in the current
+          # plan and was not used in the last hour (an older run on the same ref
+          # may still be restoring it; if it loses the race it falls back to git).
+          cutoff="$(date -u -d '-60 minutes' +%Y-%m-%dT%H:%M:%SZ)"
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/caches?per_page=100&key=assets-&ref=$GITHUB_REF" \
+            --jq ".actions_caches[] | select(.last_accessed_at < \"$cutoff\") | \"\(.id) \(.key)\"" \
+          | while read -r id key; do
+              case " $KEYS " in *" $key "*) continue ;; esac
+              echo "pruning stale $key"
+              gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/caches/$id" || true
+            done
+          # Godot import caches (~2.7 GB each) gain a new key whenever any
+          # .import file changes, and only the newest is ever restored (by
+          # prefix). Keep this ref's newest one; prune its older ones that
+          # nothing used in the last hour, so the assets chunks (~6.3 GB) fit
+          # beside the editor, templates and one import cache.
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/caches?per_page=100&key=import-&ref=$GITHUB_REF&sort=created_at&direction=desc" \
+            --jq '.actions_caches[] | "\(.id) \(.last_accessed_at) \(.key)"' \
+          | tail -n +2 | while read -r id last key; do
+              [[ "$last" < "$cutoff" ]] || continue
+              echo "pruning stale $key"
+              gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/caches/$id" || true
+            done
+
   # CI-SPEED (owner, 2026-10-07): ONE matrix job for every single-process
   # verification job that used to hold its own runner -- the unit-test shards,
   # verify-harvest, -core-verb-shard, -catching, -gate-a-ui-build-shard,
@@ -472,7 +659,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 45.
     timeout-minutes: 75
-    needs: changes
+    needs: [changes, assets-cache]
     if: needs.changes.outputs.suites != '' && needs.changes.outputs.suites != '[]'
     steps:
       - name: Free runner disk for the ~7 GB asset checkout
@@ -491,7 +678,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
-
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       # The named-location ledger test (unit shards) reads eight small,
       # immutable acceptance receipts under ralph/reports, and
       # test_cloudreach_route_ledger reads the F27 route-ledger report for its
@@ -587,7 +777,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 25.
     timeout-minutes: 55
-    needs: changes
+    needs: [changes, assets-cache]
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- vegetation placement data regression; runs on the 8-hourly schedule and on dispatch, not on a full-ci PR.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veg-corridor|'))
 
@@ -617,6 +807,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       - name: Run the corridor vegetation regression checks
         run: |
@@ -649,7 +843,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 30.
     timeout-minutes: 60
-    needs: changes
+    needs: [changes, assets-cache]
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- vegetation/scatter placement data regression; runs on the 8-hourly schedule and on dispatch, not on a full-ci PR.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-scatter-rules|'))
 
@@ -679,6 +873,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       - name: Run the scatter rules regression checks
         run: |
@@ -705,7 +903,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 45.
     timeout-minutes: 75
-    needs: changes
+    needs: [changes, assets-cache]
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-regions-relay|'))
     steps:
       - name: Free runner disk for the ~7 GB asset checkout
@@ -733,6 +931,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       - name: Verify Tidewake land loops walked (reed root, brine terrace)
         if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
@@ -749,7 +951,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 25.
     timeout-minutes: 55
-    needs: changes
+    needs: [changes, assets-cache]
     # This is an investigation probe, not a release gate: it is explicitly
     # allowed to fail and currently repeats a costly whole-world opening drive
     # already covered by the two required opening smoke jobs above. Running it
@@ -788,6 +990,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       - name: Verify the village, material and paid-build continuation (KNOWN RED)
         run: |
@@ -828,7 +1034,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 30.
     timeout-minutes: 60
-    needs: changes
+    needs: [changes, assets-cache]
     # Owner, 2026-10-04: known-red probes run only on the scheduled full
     # tier and on manual dispatch, never on a `full-ci` pull request. They
     # cannot block a merge (continue-on-error), so on a PR they only held two
@@ -852,6 +1058,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       - name: Verify gate_b_continuous (FULL CHAIN — gather route and tail, KNOWN RED)
         run: |
@@ -893,7 +1103,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 30.
     timeout-minutes: 60
-    needs: changes
+    needs: [changes, assets-cache]
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))
     steps:
       - name: Free runner disk for the ~7 GB asset checkout
@@ -912,6 +1122,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - name: Select this shard's net smokes
         id: select
         env:
@@ -963,7 +1177,7 @@ jobs:
     timeout-minutes: 55
     # Export starts with the tests instead of after them; ci-gate still
     # requires every verify job and export == success before a merge.
-    needs: changes
+    needs: [changes, assets-cache]
     if: |
       needs.changes.outputs.code == 'true'
 
@@ -987,7 +1201,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
-
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - name: Cache Godot editor and export templates
         id: cache-godot
         uses: actions/cache@v4
@@ -1098,7 +1315,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 50.
     timeout-minutes: 80
-    needs: changes
+    needs: [changes, assets-cache]
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- six solo world boots (~26 runner-min) walking the offer; the per-participant offer stays gated by the five smoke_net_veridian_* smokes. The rift gate smoke moved to verify-gate-b-core.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veridian-offer|'))
     steps:
@@ -1127,6 +1344,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       # F05 (ACCEPTANCE 6.1, card M4): the Veridian offer answered by a solo
       # player, with room on the belt and at five, accepted and refused, each
@@ -1175,7 +1396,7 @@ jobs:
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 35.
     timeout-minutes: 65
     # A ~15-min job: queued first, on `changes` only (QUEUE ORDER above).
-    needs: changes
+    needs: [changes, assets-cache]
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- a 12.5-min scripted walk; its pieces stay gated by gate-b-core (opening), smoke_net_f18_fixture_teaching, smoke_net_homestead_station_craft and title_load_game.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
     steps:
@@ -1195,6 +1416,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       - name: Verify F18 earned Home Key loop
         run: timeout 1800s godot --headless --path . --script tests/smoke_f18_earned_loop.gd
@@ -1237,7 +1462,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 30.
     timeout-minutes: 60
-    needs: changes
+    needs: [changes, assets-cache]
     # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- rejoin stays gated by smoke_net_reconnect_keeps_character, behind_character_joins_ahead_world, realm_owner_disconnect_mid_fight and veridian_relic_key; the segment handoff checks still gate every run.
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|'))
     steps:
@@ -1257,6 +1482,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       - name: Verify F06 mid-ride rejoin segment ${{ matrix.segment }}
         timeout-minutes: 22
@@ -1312,7 +1541,7 @@ jobs:
     # +30 (3 Nov 2026): the sparse checkout is ~7.1 GB (assets/creatures 2.9 GB,
     # assets/props 2.6 GB) and took 20-45 min a job that day; was 45.
     timeout-minutes: 75
-    needs: changes
+    needs: [changes, assets-cache]
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-unbroken-chains|'))
     continue-on-error: true
     steps:
@@ -1332,6 +1561,10 @@ jobs:
             !/assets_raw/
             !/archive/
             !/tests/fixtures/earned_saves/f49_*/save/
+            # assets/ comes from the shared cache (assets-cache job), verified.
+            !/assets/
+      - name: Restore assets/ from the shared cache (verified against git)
+        uses: ./.github/actions/restore-assets
       - uses: ./.github/actions/setup-godot
       - name: Verify the unbroken F06 mid-ride rejoin scenario
         if: ${{ matrix.chain == 'midride' }}
