@@ -24,7 +24,7 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 | `cloudreach_cause.json:enabled` (earlier cause lane) | F40#1, #4, #2, #6, #11, #7 | **Judged r1: flat or worse, stays OFF** (P2-021 5.24->5.06, P2-022 5.59->5.52, P2-023 5.41->5.16, P2-025 5.88->5.27, P2-105 4.65->4.51, P2-106 5.32->5.39; `r1/`, `r1-ride/`). `meadow_groves` + `cloud_sea` alone, quick_judge on the merged tree (`qj/qj_groves/`): F40#1 6.39 -> 6.16, F40#4 6.47 -> 6.31, F40#7 6.51 -> 6.51; stays OFF. Merged-tree CPU bases: F40#1 6.39, F40#4 6.47, F40#7 6.51 (all above 6.0). |
 | `menu.json:release_choice_focus` (new) | F40#18 P2-118 | Round 2: no visible change (the scored 09-caught-banner frame is before the release ceremony opens); stays OFF. `hud.json:catch_card` judged r2b and shipped ON (above). |
 | `cloudreach_npc_runtime.json:post_readability` (new) | F40#9 P2-068 | **Judged r3: flat, stays OFF** (CPU 5.16 -> 5.20; `r3/`). First CPU score for the item. |
-| (baseline) F40 matrix pieces 3, 7, 51, 83 | F40#0, #19, #21 | Round 4: `capture_cloudreach_f40_matrix.gd --preset=Low`, base vs `--cloudreach-cause-candidate` (CPU subset score, stated as a subset) |
+| (baseline) F40 matrix pieces 3, 4, 7 | F40#0, #19, #21 | **First CPU subset scores (`mx1/`):** day clear 5.45, rain 4.90, night 5.05, mean 5.13 (12 of 384 frames). F40#21: no magenta/placeholder; one judge read the gate's overhanging ledge as floating. |
 
 ## Handed to NEAR6-CR (coordinator, 4 Nov 07:42)
 
