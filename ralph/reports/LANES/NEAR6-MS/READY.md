@@ -1,5 +1,12 @@
 # NEAR6-MS (4 Nov 2026): running status
 
+## Handoff (4 Nov ~23:35 UTC): round 2 UI rows done, parked or blocked
+
+- **State:** branch `tb/near6-ms-1104` = main 569cea75 (#836) plus this report folder (`d597aa83`). Main carries every landing-ready arm from this lane: F38#4 parchment fog (CPU 6.15 -> 7.18) and chart grid (6.81 -> 6.93), F38#9 satchel_focus (7.13 -> 7.36), F39#23 ring style (5.26 -> 5.62). Nothing landing-ready is left on the branch.
+- **Parked:** F38#9 (floor-art retune flat; taller Build thumbnails clip the heading). F38#19 (quiet empty chips flat on a settled stand; the legend sits under the hotbar by owner placement OP21-11, so moving it out of the dock is not a lane call; hiding empty slots breaks the five-visible-bindings rule; the rest of the judges' asks are the stand's orange bedroom and ceiling camera).
+- **Blocked (need the coordinator or the GPU rig):** F38#19 stand settle frames (raise `--hud-settle-frames` to 900 in job.json, then GPU re-score; the CPU settled base is mapped 5.64). F41#21 / F41#16 Hollows victory and loss frames cannot be reached on CPU (about one fight-second per wall-minute); they need the GPU rig or a boundary save placed at the fight's end.
+- **Lane tip:** a local `QJ_JOB=<file>` item definition overrides a job.json stand for both sides without touching the shared yardstick (the cache key includes the launch line). Scores from different batches do not compare (the same menu base mapped 7.13 and 6.34); only within-batch gains count.
+
 ## Round 2 (coordinator, 4 Nov 17:09): UI rows taken
 
 All earlier gains are on main. Branch `tb/near6-ms-1104` now equals main a8320228 (#827) via a merge commit that takes main's tree (`4f47609e`). Items taken (no new art; quick_judge; any judged gain ships ON with its score and tests):
