@@ -12,6 +12,8 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 | `tidewake_look.json` `cause_tidewake.stars.enabled` (+ `world_look.gd` per-time star reset) | F39#30b | CPU 4.77 -> 4.89 (F13#5 5.45 -> 5.84) | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing` | look/r6 |
 | `tidewake_look.json` `cause_tidewake.night.enabled` | F39#30b | CPU 5.67 -> 6.25 (F13#5 6.12 -> 6.35) | `test_tidewake_cause.gd::test_every_part_ships_off_and_off_changes_nothing` | look/r8 |
 | `tidewake_look.json` rain_fog/rain_grade/rain_veil out of `sections_off` | F39#30a/#30b/#31 | CPU 6.09 -> 6.29 / 5.81 -> 6.04 / 5.29 -> 5.56 | `test_tidewake_look_profile.gd::test_shipped_look_is_on_with_unjudged_sections_off` | look/r9 |
+| `tidewake_look.json` lesson_clusters/dune_grass/stones/waterline_declutter out of `sections_off` | F39#30a/#30b, F13#5 | CPU 6.19 -> 6.43 / 5.71 -> 5.88 / 5.81 -> 5.85 | `test_tidewake_look_profile.gd`, `test_tidewake_cause.gd::test_dunes_part_restores_dressing_and_sets_dune_form` | look/r12 |
+| `water_veilfall_falls_visual.json` `geometry.standoff_m` 0.8 -> 3.0 | F39#30b (F39#31 flat) | CPU 5.75 -> 5.85 | `test_tidewake_look_profile.gd::test_veilfall_fall_sheet_clears_the_rock` | look/r12 |
 
 | ~~`human_water_contact_visual.json` base wake values~~ (withdrawn 11:27, superseded by NEAR6-TW's `wake_trail` in batch 11) | F39#5 | CPU 5.31 -> 5.63 (r4) | the test is removed; this branch's view, config and test now equal batch 11 | this commit |
 
