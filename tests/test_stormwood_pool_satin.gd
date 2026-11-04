@@ -30,3 +30,16 @@ func test_rock_value_ships_off_and_darkens_rock_when_on() -> void:
 	var on_tint := Color(str(raw.rock_value_1104.terrain_materials.textures.rock.tint))
 	assert_true(on_tint.get_luminance() < rock_off.get_luminance(), "ON is darker than the shipped rock")
 	assert_false(on_tint.r > on_tint.g * 1.3 and on_tint.r > on_tint.b * 1.3, "no red or oxblood")
+
+
+## F41#4 path_loam_1104: ships OFF; ON darkens and cools the path slot tint
+## (never near-black, never red) and deepens its relief.
+func test_path_loam_ships_off_and_darkens_the_path() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ZONES.CONFIG_PATH))
+	assert_false(bool(raw.path_loam_1104.get("enabled", true)), "ships OFF until judged")
+	var shipped := Color(str(ZONES.finish().terrain_materials.textures.path.tint))
+	var cand := Color(str(raw.path_loam_1104.terrain_materials.textures.path.tint))
+	assert_true(cand.get_luminance() < shipped.get_luminance(), "a darker path")
+	assert_true(cand.get_luminance() > 0.2, "not near-black")
+	assert_false(cand.r > cand.g * 1.4 and cand.r > cand.b * 1.4, "no red or oxblood")
+	assert_true(float(raw.path_loam_1104.terrain_materials.textures.path.normal_depth) > 0.25, "deeper relief")
