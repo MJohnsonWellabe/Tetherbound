@@ -105,6 +105,12 @@
       "push_speed_mps": 14.0
     },
     "named_overrides": {
+      "capacitor_alpha": {
+        "enabled": false,
+        "_why": "VIS-STORMWOOD (4 Nov 2026), F41#3 P2-092 (GPU 5.98; judges: 'Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally'). The judged F41#3 frames are the capacitor_alpha fight, whose Voltarach takes the same broad legs as hollows_alpha; this applies the same full fitted rectangular support and swept correction to that fight only. Every other key is the global default. Presentation spacing only. OFF until judged.",
+        "footprint_shape": "render_box",
+        "push_speed_mps": 28.0
+      },
       "hollows_alpha": {
         "enabled": false,
         "_why": "P2-092 native baseline: broad Voltarach extremities exceed the elliptical footprint, and a post-lunge gap deficit exceeds 6m. Use the full fitted rectangular support and swept correction. Burst/lunge exemption, terrain/arena guards, authored moves and foe yield delay remain unchanged; body-aware reach floors consume the same envelope.",

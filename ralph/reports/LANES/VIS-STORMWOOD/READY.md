@@ -1,6 +1,84 @@
 # VIS-STORMWOOD: READY
 
-**Landing-ready flags: none yet** (first CPU base and candidate are capturing).
+**Landing-ready flags (judged CPU gains, ON, tests assert ON with the score):**
+
+| Item | Flags ON | CPU score | Verdict | Commit | Test |
+|---|---|---|---|---|---|
+| F41#19 Glass Field seam clear r2 | `stormwood_glass_field` `seam_clear_1104` (fissures kept, darkened; whole scar cleared of grass; narrower crust) | **4.77 -> 5.59** (3/3; r1 4.34 -> 5.30 withdrawn for dropping fissures) | `qj/qj_seam2/` | (this push) | `test_stormwood_basalt_crust`, `test_vis_stormwood_judged_on`, `test_stormwood_glass_field_identity` run with it ON |
+| F41#10 Glass Sink obsidian r3 | `stormwood_glass_sink` `obsidian_1104.r3` (satin black glass, no veins or seams) | **3.96 -> 4.38** | `qj/qj_obs3/` | `c072bc54` | `test_stormwood_glass_sink_obsidian`, `test_vis_stormwood_judged_on`, `test_hero_landmarks_1101`, `test_storm_cams_candidates`, `test_stormwood_charged_ground`, `test_stormwood_route_walkability`, `test_stormwood_surge` (all 0 failed with it ON) |
+| F41#10 Glass Sink | `hero_landmarks_1101.glass_sink`, `stormwood_glass_sink` `dark_pool_candidate` + `obsidian_1104` | **4.03 -> 5.07** | `j4/` | `84f06e8a` | `test_vis_stormwood_judged_on`, `test_hero_landmarks_1101`, `test_storm_cams_candidates`, `test_stormwood_glass_sink_obsidian` |
+| F41#1 Stormheart | `stormheart_presentation` `deck_light_1101`, `hollow_floor`, `hero_interior.round2` | **3.22 -> 3.94** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_cause_stormwood_candidates` |
+| F41#4 destinations | `stormwood_lantern_pools` `arrival_pools`, `basin`, `lantern_model`, `glow_fungi`, `grove` | **4.00 -> 4.59** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_stormwood_lantern_pools_grove` |
+| F41#8 named silhouettes | `npc_role_accessories` | **4.72 -> 4.96** (offset-map caveat) | `j3/` | `155cdd39` | `test_vis_stormwood_judged_on` |
+
+**FOR THE COORDINATOR (4 Nov ~08:45 UTC):** seam clear r1 has been withdrawn. r2 is OFF, re-judge queued. Region identity and look tests now run before any flag goes ON. Queued on this head:
+- `test_stormheart_*` (presentation, ancient_trunk, canopy_atlas, split_bark, wayfinding)
+- `test_stormwood_look`, `test_stormwood_crown_overlook`, `test_stormwood_charged_ground`, `test_stormwood_route_walkability`, `test_stormwood_surge`
+- `test_character_appearance_variants`
+- `test_stormwood_struck_sentinel_identity`, `test_stormwood_capacitor_grove_identity`, `test_stormwood_glass_field_identity`
+
+Results: below, all 0 failed.
+
+**Region identity and look tests (4 Nov ~10:45 UTC, head with obsidian r3 ON; seam r2 ON separately passed basalt, judged_on, glass_field_identity 4/73, surge 4/46), all 0 failed:**
+- `test_stormheart_presentation` 7/784
+- `test_stormheart_ancient_trunk` 4/240
+- `test_stormheart_canopy_atlas` 2/10
+- `test_stormheart_split_bark` 3/10
+- `test_stormheart_wayfinding` 3/3952
+- `test_stormwood_look` 8/54
+- `test_stormwood_crown_overlook` 2/526
+- `test_stormwood_charged_ground` 2/7
+- `test_stormwood_route_walkability` 4/37
+- `test_stormwood_surge` 4/46
+- `test_character_appearance_variants` 11/235
+- `test_stormwood_struck_sentinel_identity` 2/23
+- `test_stormwood_capacitor_grove_identity` 2/24
+
+**Tests on the synced head (06:20 UTC, after main merge `9faa85e1` and the j1-j4 commits), all 0 failed:**
+- `test_vis_stormwood_judged_on` 4/25
+- `test_cause_stormwood_candidates` 11/95
+- `test_stormwood_lantern_pools_grove` 3/11
+- `test_stormheart_branching_crown` 2/9
+- `test_stormwood_basalt_crust` 2/5
+- `test_hero_landmarks_1101` 8/76
+- `test_storm_cams_candidates` 15/56
+- `test_stormwood_glass_sink_obsidian` 2/8
+- `test_stormwood_rank_marks` 2/11
+- `test_stormwood_pool_satin` 2/4
+- `test_stormwood_surge_presentation` 53/730
+- `test_stormwood_restored_sky` 2/39
+- `test_texture_import_policy` 2/1591
+
+**Judged flat or worse, stay OFF:**
+- F41#2 `phase_grade_1104` r1: 5.46 -> 5.46. r2 is built.
+- F41#18 rim r2 + `rank_marks_1104`: 4.96 -> 4.99.
+- F41#5 `pool_satin_1104`: 4.13 -> 4.20, and the judges split.
+- F41#9 `stormwood_harvest_hero2`: 4.76 -> 4.59.
+
+- F41#19 `basalt_crust_1104`: 5.25 -> 4.42 (`qj/qj_basalt/`).
+- F41#2 `phase_grade_1104` r2: 4.40 -> 4.23 (`qj/qj_phase2/`). The approach is parked after two flat rounds.
+
+- Stormwood `stormwood_look.foliage_grade_1104` (F41#5, F41#4): flat, 0.00 on both rows (`qj/qj_foliage/`). Both sides render identically: the variant_retint overlay does not reach the visible canopy. The cause needs an engine probe.
+
+**Ownership change (coordinator, 4 Nov ~07:40):** F41#9, F41#20, F41#15 and F41#3 move to lane NEAR6-MS. My OFF arm `combat.contact_spacing.named_overrides.capacitor_alpha` (`ea108029`, `test_capacitor_spacing_override` 1/5) is theirs to judge. quick_judge cannot capture `phase2_capture_stormwood_fights.gd` (the tool refuses output outside its Phase 2 report folder); `tools/visual_judge/lane_bin/run_group.sh` retries under that folder.
+
+- F41#1 `stormheart_presentation.meshy_interior`: flat, 4.91 -> 4.91, identical sides; it does not render at the judged stands (`qj/qj_heart/`).
+- F41#5/#4 `foliage_grade_1104` r2 (texture desaturate/brighten): **worse**, 5.09 -> 4.88 / 5.24 -> 5.02 (`qj/qj_foliage2/`); 3/3 preferred the shipped green ferns over the pale-white candidate. Stays OFF; **parked** (r1 flat, r2 worse).
+- F41#10 `obsidian_1104.r2`: flat, 3.93 -> 4.02 (`qj/qj_obs2/`). The judges read the glowing seams as "a debug wireframe grid".
+- F41#10/F41#4 `stormwood_ground_finish.rock_value_1104`: flat, identical sides (`qj/qj_rock/`). The pale cliff wall is not the terrain rock slot.
+
+**Lesson (this lane):** three arms in a row changed no pixels at the judged stands. Each new arm now needs its effect visible in the frames before it is judged.
+
+**In the queue:**
+- `presentation.height_fog` on F41#5, F41#4 and F41#2 (`qj_hfog`, capturing).
+- F41#10 `obsidian_1104.r3`: no veins, no seams, a satin black-glass pool (`5e72fdf9`).
+- F41#19 seam clear r2 (`qj_seam2`).
+- Region identity and look tests.
+- Unscored baselines: the `capture_stormwood_f10_matrix` calm/break run (F41#22, F41#24).
+
+**Open:**
+- F41#20: Fenn's dialogue frame is black in both arms. The camera sits behind a dark blocker next to Fenn's seat. Moving the seat stales the scatter bake, so this needs an engine probe of the blocker first.
+- Blender is blocked in this session.
 
 **FOR THE COORDINATOR (4 Nov ~02:50 UTC; send_message is refused here, untrusted device):** merged as asked. `ae954029` merges `origin/tb/creatures-ralph` 7568796b: storm-light set ON, `phase_grade_1104` OFF, main's newer CI, routes and docs kept. One commit after it adds the F41#18 `rank_marks_1104` arm (OFF). Tests on this head, all 0 failed:
 - `test_stormwood_surge_presentation` 53 tests / 728 assertions

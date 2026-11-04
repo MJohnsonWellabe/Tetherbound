@@ -20,7 +20,7 @@
     "_why": "P2-030 (F39#4, GPU 5.90, 28 Oct: the shinies 'stand small and pale against bright sand and water with no rim light or shiny sparkle cue'). When on, a shiny body (never an Aspect variant) gets a rim over its finished surfaces and the alpha mote ring (alpha_aura.gd) in pale silver-blue (creature_body.gd _apply_shiny_cue). OFF until judged.",
     "scope": "local presentation only; no catch, spawn, save or network change",
     "enabled": false,
-    "rim_strength": 0.55,
+    "rim_strength": 0.8,
     "motes": true,
     "mote_colour": "#dff3ff",
     "overlay": {

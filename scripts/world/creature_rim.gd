@@ -62,6 +62,13 @@ static func dress_body(body: Node) -> int:
 	if _material == null or body == null:
 		return 0
 	var art: Variant = body.call("model_pivot") if body.has_method("model_pivot") else body
+	# A body leaving the tree (world freed, realm handover) sheds its rim first:
+	# freeing a MeshInstance3D that still wears the overlay logs "Parameter
+	# material is null" from material_get_instance_shader_parameters on every
+	# net/region smoke (CI 4 Nov, batch 6). It is dressed again on re-entry.
+	if not body.tree_exiting.is_connected(undress.bind(body)):
+		body.tree_exiting.connect(undress.bind(body))
+		body.tree_entered.connect(dress_body.bind(body))
 	return dress(art as Node, _material)
 
 

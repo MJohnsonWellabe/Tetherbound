@@ -162,6 +162,8 @@ def _merge(dst, patch):
 def _switch_on(d, dotted):
     keys = [k for k in dotted.split(".") if k]
     o = d
+    # A numeric key indexes a list (e.g. "clusters.6.candidate" in a band props file).
+    keys = [int(k) if k.isdigit() else k for k in keys]
     for k in keys[:-1]:
         o = o[k]
     if keys and o[keys[-1]] is False:
@@ -332,6 +334,9 @@ def run_launch(e, side_key, biome, sha, log, timeout=3000, dry=False):
     # Write where the tool expects its own output (some tools only write under VISUAL/phase2/),
     # then move into the cache: frames never stay in ralph/.
     rel_parent = e["out_parent"].removeprefix("res://") or ".artifacts/qj/tmp"
+    # Some job.json repros carry a Windows checkout path (D:/tetherbound/x04-capture/ralph/...):
+    # keep only the repo-relative part, or a tool that checks its output root refuses to run.
+    rel_parent = re.sub(r"^[A-Za-z]:/(?:[^/]+/)*?(?=ralph/)", "", rel_parent)
     tmp_rel = f"{rel_parent}/qj_{side_key}_{key}"
     tmp = ROOT / tmp_rel
     shutil.rmtree(tmp, ignore_errors=True)

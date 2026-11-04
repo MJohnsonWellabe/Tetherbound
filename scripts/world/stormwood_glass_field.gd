@@ -94,7 +94,8 @@ func _build_cluster(spec: Dictionary) -> void:
 	var clearing := Node3D.new()
 	clearing.name = "ScarGrassClearance"
 	clearing.position = _local_grounded(centre, 0.0)
-	clearing.set_meta("grass_clear_radius", scar_radius * 0.82)
+	var seam := _seam_clear()
+	clearing.set_meta("grass_clear_radius", scar_radius * float(seam.get("grass_clear_fraction", 0.82)))
 	root.add_child(clearing)
 	clearing.add_to_group("grass_clear")
 	_add_fused_lumps(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
@@ -337,7 +338,7 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 		return
 	var crust := scene.instantiate() as Node3D
 	var basalt := _basalt_crust()
-	var footprint := float(basalt.get("footprint", _shard_finish().get("crust_footprint", 0.9)))
+	var footprint := float(basalt.get("footprint", _seam_clear().get("crust_footprint", _shard_finish().get("crust_footprint", 0.9))))
 	var height := float(basalt.get("height_m", _shard_finish().get("crust_height_m", 0.45)))
 	# The installed mesh is ~1.89 units wide and ~0.21 tall, centred.
 	var across := radius * 2.0 * footprint / 1.89
@@ -357,6 +358,18 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 ## so the spikes break out of rock instead of standing on a slab.
 func _basalt_crust() -> Dictionary:
 	var cand: Variant = config.get("basalt_crust_1104", {})
+	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
+
+
+## F41#19 P2-043 `seam_clear_1104` (OFF until judged; empty when OFF). The
+## qj_basalt judges (3/3) preferred the shipped glass crust but called the
+## straight emissive fissure ribbons "a rigid thin white line", saw grass
+## passing through the crust edge and the crust "much wider than the
+## cluster". On: the fissure ribbons stay but turn into dark fused cracks with a
+## faint glow, grass is cleared across the whole scar and the glass crust is
+## narrowed. Visual only.
+func _seam_clear() -> Dictionary:
+	var cand: Variant = config.get("seam_clear_1104", {})
 	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
 
 
@@ -453,6 +466,13 @@ func _glow_material() -> StandardMaterial3D:
 	material.emission_enabled = true
 	material.emission = FISSURE_GLOW
 	material.emission_energy_multiplier = 0.20
+	# seam_clear_1104: the fissures stay (three main and three branches per
+	# impact) but read as dark fused cracks with a faint glow, not a bright line.
+	var seam := _seam_clear()
+	if seam.has("fissure_colour"):
+		material.albedo_color = Color(str(seam.fissure_colour))
+		material.emission = Color(str(seam.get("fissure_glow", seam.fissure_colour)))
+		material.emission_energy_multiplier = float(seam.get("fissure_energy", 0.05))
 	return material
 
 

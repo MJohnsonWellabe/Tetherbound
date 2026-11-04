@@ -499,6 +499,24 @@ func _set_camera_hidden(model: Node3D, hidden: bool) -> void:
 			node.remove_meta("camera_hide_visible")
 
 
+## The shiny finish draws through creature_surface_finish.gdshader overlays,
+## which _rim_light_node (BaseMaterial3D only) never reaches: raise their own
+## rim_amount instead (P2-030 shiny cue).
+func _rim_finish_overlays(node: Node, rim: float) -> void:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		var instance := node as MeshInstance3D
+		for surface in instance.mesh.get_surface_count():
+			var material := instance.get_active_material(surface)
+			while material != null:
+				var finish := material as ShaderMaterial
+				if finish != null and finish.shader == preload("res://shaders/creature_surface_finish.gdshader"):
+					var had: Variant = finish.get_shader_parameter("rim_amount")
+					finish.set_shader_parameter("rim_amount", maxf(rim, float(had) if had != null else 0.0))
+				material = material.next_pass
+	for child in node.get_children():
+		_rim_finish_overlays(child, rim)
+
+
 ## A subclass's further reason to fade while the camera is outside the body
 ## (the follower: covering its trainer). Presentation only.
 func _camera_fade_extra(_model: Node3D, _eye: Vector3) -> bool:
@@ -1163,6 +1181,7 @@ func _apply_shiny_cue() -> void:
 	var rim := float((cue as Dictionary).get("rim_strength", 0.0))
 	if _has_model and rim > 0.0:
 		_rim_light_node(_model, rim, "shiny")
+		_rim_finish_overlays(_model, rim)
 	if bool((cue as Dictionary).get("motes", true)):
 		_shiny_cue = ALPHA_AURA.attach(self, _radius * 1.5, _height, Color(str((cue as Dictionary).get("mote_colour", "#dff3ff"))))
 	# NEAR6-TW (F39#4): `shiny_cue.overlay` (OFF) dresses a shiny's meshes in the

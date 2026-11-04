@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F41#20",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F41-20-afe828ee024f-11040806/k/sides/F41_20_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F41-20-afe828ee024f-11040806/k/sides/F41_20_cand.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: named character dialogue reuse. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Distinct named Stormwood characters use identical dialogue lines"
+  ]
+ }
+]

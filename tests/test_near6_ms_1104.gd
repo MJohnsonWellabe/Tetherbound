@@ -1,0 +1,48 @@
+extends "res://tests/test_case.gd"
+
+## NEAR6-MS lane (4 Nov 2026): arms for items scored 5.4-6.0. Each arm ships
+## OFF until a quick CPU judge shows a gain; a judged gain flips it ON and this
+## file then asserts ON with the "CPU <base> -> <cand>" score in `_why_on`.
+
+const POST_STANCE := preload("res://scripts/characters/post_stance.gd")
+
+
+func _json(path: String) -> Dictionary:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return raw if raw is Dictionary else {}
+
+
+## F38#29 P2-065: the immediate beaten kneel. OFF returns no rows; ON returns
+## the beaten_kneel rows: both knees bent, the hips lowered (fifth value) and
+## the spine, neck and head bowed.
+func test_f38_29_immediate_beaten_stance() -> void:
+	var cfg := _json("res://data/config/npc_post_stances.json")
+	var block: Dictionary = cfg.beaten_trainer_stance.immediate_1104
+	assert_false(bool(block.enabled), "F38#29 immediate kneel ships OFF until judged")
+	assert_eq(POST_STANCE.beaten_stance_immediate(cfg), [], "OFF attaches nothing")
+	var on := cfg.duplicate(true)
+	on.beaten_trainer_stance.immediate_1104.enabled = true
+	var rows: Array = POST_STANCE.beaten_stance_immediate(on)
+	assert_eq(rows, cfg.stances[str(block.stance)], "ON uses the configured stance rows")
+	var bones := {}
+	for row: Array in rows:
+		bones[str(row[0])] = row
+	for bone: String in ["Hips", "LeftLeg", "RightLeg", "Spine", "Head"]:
+		assert_true(bones.has(bone), "the kneel sets %s" % bone)
+	assert_between(float(bones.Hips[4]), 0.2, 0.6, "the hips drop a knee's height, not into the ground")
+	assert_true(float(bones.LeftLeg[1]) > 45.0 and float(bones.RightLeg[1]) > 45.0, "both knees flex (+X)")
+
+
+## F38#29 P2-065 round 2: a trainer beaten without victory lines gets the
+## aftermath push-in for a few seconds. Ships OFF; client presentation only.
+func test_f38_29_silent_victory_shot_ships_off() -> void:
+	var cfg := _json("res://data/config/trainer_aftermath.json")
+	var block: Dictionary = cfg.silent_victory_shot_1104
+	assert_false(bool(block.enabled), "silent victory shot ships OFF until judged")
+	assert_eq(str(block.scope), "client_presentation", "declares its scope")
+	assert_between(float(block.hold_s), 2.0, 8.0, "a short beat, not a held camera")
+	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
+	assert_true(director.contains("if conversation == \"\":\n\t\t_present_silent_victory(speaker)\n\t\treturn"),
+		"only trainers without victory lines take the silent shot")
+	var profiles: Dictionary = _json("res://data/config/camera.json").conversation.profiles
+	assert_true(profiles.has("aftermath"), "it reuses the existing aftermath profile")

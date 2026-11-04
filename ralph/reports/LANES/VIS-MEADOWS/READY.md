@@ -4,11 +4,64 @@ Lane: tb/vis-meadows-1104 (from origin/main 98879e2e1). Scope: the Meadows F38 i
 
 Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the same run on the same stands; tools/visual_judge (JUDGE_PROMPT verbatim, anchor_tiles --pairs 3, three code-blind judges, calibrate.py). Recorded as "CPU <base> -> <cand>". Owner rule 4 Nov: any judged gain ships ON; flat or worse stays OFF.
 
+## Handoff summary (4 Nov 2026, ~08:50 UTC)
+
+**State:** every judged gain is ON on `tb/vis-meadows-1104` with its CPU score in `_why`/`_why_on` and a test in `tests/test_vis_meadows_1104_on.gd`.
+
+**This lane's items, CPU mapped (latest):**
+- F38#13: 7.19
+- F38#33: 6.88
+- F38#17: 6.66
+- F38#22: 6.62 (qj batch)
+- F38#37: 6.52
+- F38#23: 6.38-6.47
+- F38#15: 6.33
+- F38#0: 6.16 (subset)
+- F38#35: 6.09
+- F38#20: 5.75 (qj batch; it gained in four rounds, but each batch maps differently)
+- F38#41: 5.68 (subset)
+- F38#30: 4.23 (parked, needs an owner choice)
+
+Given away: F38#29, #6, #26, #7, #32 to NEAR6-MS. F38#24 ridge, F38#19 HUD and creature rim F38#1/#2 belong to creatures-ralph.
+
+**Lane status (09:30 UTC):** the scene-level levers in this lane's scope are used up. Every remaining ask needs one of these:
+- **New art:** a larger keep seated on a hill with a palisade approach, and volumetric fire instead of flat flame cards.
+- **A shared-tool decision:** F38#35's stale catalogue posts.
+- **A gameplay decision:** F38#30's floating Warrens.
+- **A camera change the rules forbid:** the F38#22 mill wheel is on the far side of the mill from its catalogue stand.
+
+Ready for new items or a Blender new-art assignment.
+
+**Open candidates and recommendations:**
+- F38#20 curtain wall (`vm_stronghold_curtain`, OFF, parked after two attempts): band props do not render from the 500-700 m approach stand. A keep base or palisade has to come from the stronghold's own distant build (`stronghold.gd` hero gatehouse companions).
+- F38#37: `camfx fight_fade` (fade on the speaker-to-lens line) leaves the foreman's overhang frame identical (quick_judge f38_37-fight-fade). Not judged; stays OFF. The item is at 6.52.
+- **F38#35:** the villager post frames (`phase2_capture_dialogue.gd` catalogue view) aim at stale catalogue posts, e.g. Oskar at (25, 4) while the game places him 41.8 m away. The dialogue view already re-seats beside the real body, but the post view does not, so the post-stance arm can never show. Fixing this changes a shared capture tool and every character baseline, so it is a coordinator decision.
+- **F38#20:** the remaining asks are new art: a larger keep seated on a hill, a palisade approach, and real fire instead of flat flame cards.
+- **F38#22:** the mill water is barely in view, and judges ask for a visible mill wheel and banked stream.
+- **F38#23:** the relay deck's back-lit front face reads black. Undercroft lights don't reach it; a face fill light or albedo lift on the deck massing is the next idea.
+- **F38#41:** the old-quarry ruin floor reads as a dark slab. A retint cannot lighten it (multiply only), so a texture swap or sinking the floor is the next idea.
+
+**What worked:** existing OFF arms in one A/B run (r1), then one-item quick_judge rounds (about 15 min of capture). Light changes on the same light (yard fill), keeping the keep's value through the fog (needs a lighter tint), and silent set-dressing villagers placed on the camera side.
+
+**Runbook additions (also in the Notes below):**
+- blob:none commits use `GIT_NO_LAZY_FETCH=1 git write-tree --missing-ok` plus `commit-tree`.
+- The container is reclaimed when no tracked task runs.
+- Tracked background tasks stop at 2 h, so chains must be resumable.
+- quick_judge overlays now index lists (`clusters.N.candidate`).
+- Before turning a flag ON, grep `tests/` for the flag key.
+- Band props on a raised floor need `y_world`.
+- Village set-dressing villagers need no greeting.
+
 ## Landing-ready
 
 - **F38#20 P2-003 Team Tether stronghold: CPU 5.67 -> 6.38** (r1a). ON: `stronghold.json approach_pylons.p2_003_unlit_candidate_enabled` and band5 `wd_stronghold_courtyard` `candidate`; the score is appended to `p2_003_candidate._why_on` (that flag is already ON from #808).
 - **F38#22 P2-006 mill and settlements: CPU 5.67 -> 6.38** (r1a). ON: `meadows_hero_pieces.json clearings_wd`, `meadows_doorstep_seat.json doorstep_seat_enabled`, band1 `wd_village_market` `candidate`.
 - Test: `tests/test_vis_meadows_1104_on.gd` (asserts each ON with "CPU 5.67 -> 6.38"). **Tests PASSED (05:03 UTC, on f992ed15):** `run_tests.gd --only=` test_vis_meadows_1104_on, test_stronghold_arena_conduits, test_meadows_tier1_art_gates, test_trail_camp_arrival_identity, test_village_road_topology, test_stronghold_approach_visual_identity, test_tournament_ground_presentation, test_grandpa_yard_visual_identity, test_rise_visual_identity, test_meadows_banner_*, test_texture_import_policy: **77 tests, 5837 assertions, 0 failed**. The coordinator put these in batch 3 (#811).
+- **F38#20 r3 yard fill: CPU 4.71 -> 5.73 (+1.02)** (quick_judge f38_20-yard-fill, on top of the r1a gains; this batch's anchors map lower than r1a's). `stronghold.json courtyard_daylight_candidate.light` energy 10 -> 12, range 36 -> 52, attenuation 0.4 -> 0.22. This is the same light, so the light budget is unchanged. Test `test_vis_meadows_1104_on.gd::test_f38_20_yard_fill...`. **Tests PASSED:** test_vis_meadows_1104_on, test_meadows_tier1_art_gates, test_stronghold_arena_conduits, test_stronghold_approach_visual_identity, test_texture_import_policy: 26 tests, 1909 assertions, 0 failed. Judges' next ask: the keep reads small and pale on approach, and the courtyard centre is empty.
+- **F38#20 r4 keep through fog: CPU 5.22 -> 5.70 (+0.48; all three judges prefer it)** (quick_judge f38_20-keep-fog-mid). `stronghold.json p2_003_candidate.keep` `fog_disable: true` (new key in `stronghold_hero_gatehouse.gd`, `a8a54cdec`), and `albedo_tint` #66605a -> #b3ab9c. fog_disable alone was +0.15 with split judges (a flat black cut-out), so it did not ship by itself. **Tests PASSED:** the same five files, 27 tests, 1915 assertions, 0 failed. Next ask: seat the keep on a hill with a palisade approach, and dress the courtyard centre.
+- **F38#20 r5 courtyard centre: CPU 5.51 -> 5.75 (+0.24; all three judges prefer it, but calibration is weak this batch: r 0.59, RMSE 0.66)** (quick_judge f38_20-yard-centre2). New band5 cluster `vm_stronghold_courtyard_centre` ON: two visual-only prop groups (Quaternius fantasy family) either side of a clear walking lane, seated on the courtyard floor (y_world 6.17). **Tests PASSED:** test_vis_meadows_1104_on, test_stronghold_approach_visual_identity, test_meadows_tier1_art_gates, test_texture_import_policy, test_meadows_banner_standards_0912.
+- **F38#20 r5 keep crag: CPU 5.87 -> 6.05 (+0.18; all three judges prefer it; anchor RMSE 0.78, over the 0.75 caveat line)** (quick_judge f38_20-crag2). New `stronghold.gd p2_003_gatehouse` hook `p2_003_candidate.add_companions` (empty = no change) places the installed Meshy `meadows_cliff_a` (230 x 112 m) under the keep, behind the last chamber, so the keep stops floating on the skyline. The first try (crag top 50 m up) sat wholly below the ridge and was not judged. Test `test_vis_meadows_1104_on.gd::test_f38_20_keep_crag_ships_on_with_its_score`. **Tests PASSED:** test_vis_meadows_1104_on, test_stronghold_approach_visual_identity, test_meadows_tier1_art_gates, test_stronghold_arena_conduits, test_texture_import_policy: 31 tests, 1964 assertions, 0 failed. Judges' next asks: a lit night keep (it reads black at night despite the window mask on CPU), and the interior floor's empty middle with sprite fires that cast no light.
+- **F38#22 market folk: CPU 6.44 -> 6.62 (+0.18)** (quick_judge f38_22-market-folk2; slope 1.40, r 0.97). `village_npcs.json market_folk` ON (code hook in `village_npcs.gd build()`): four silent villagers from the installed cast at the market stalls. They have no greeting, so no prompt appears and they join the combat bystander group. The first placement, behind the stalls, was flat. Also fixed: the market stall cloth (MI_Banner) read as oxblood, because a red vertex paint survived the tan multiply. The retint now drops the vertex colour (`b7e5a80d6`, with a test). **Tests PASSED:** test_vis_meadows_1104_on, test_village*, test_texture_import_policy: 85 tests, 6377 assertions, 0 failed.
 - Already at 6.0 or above as shipped (no change): F38#17 6.66, F38#37 6.52, F38#35 6.09, F38#23 6.38 (arms flat, OFF).
 
 - **F38#13 P2-059 catch camera: CPU 6.22 -> 7.19; F38#33 P2-061 catch result: CPU 6.02 -> 6.88** (r1b). ON: `catching.json framed_camera.r2`, `camfx.json catch_orb`, `hud.json catch_card`.
@@ -16,9 +69,17 @@ Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the sa
 - r1b tests: `test_vis_meadows_1104_on` (new catch test), `test_camfx_candidates`, `test_uiposes_fly_hang_body` and `test_capture_readout_side` now assert ON with the score and keep their OFF-path checks. **r1b tests PASSED (05:40 UTC):** `--only=` test_vis_meadows_1104_on, test_camfx_candidates, test_uiposes_fly_hang_body, test_capture_readout_side, test_catch_math, test_fly_traversal, test_hud_widgets, test_tutorial_orb_floor, test_texture_import_policy, test_hud_presentation_lifecycle, test_catch_arbitration. The first run had 139 tests and 1 failure: `test_every_camfx_block_ships_off`, which the change was expected to break. It now takes a JUDGED_ON map (catch_orb must be ON with its score; flame and fight_fade must still be OFF). Re-run of the touched files: 23 tests, 118 assertions, 0 failed.
 - r1b flat or already at 6.0 or above as shipped (arms OFF): F38#7 6.99-7.15, F38#6 6.64, F38#32 6.37, F38#29 6.18.
 
+- **Unscored rows now scored (CPU subset, r1c):** F38#0 **6.16** and F38#41 **5.68**, from 14 frames at 2 of 22 sites. A full ≥200-frame matrix needs the GPU rig (CPU takes about 4 min a frame). F38#41's named defect is the old-quarry ruin floor tiles showing through as a dark slab (see r1c VERDICT).
+
+## Scope change (coordinator, 07:42 UTC)
+
+- F38#29, F38#6, F38#26, F38#7 and F38#32 move to lane NEAR6-MS (tb/near6-ms-1104). This lane leaves them alone. Their r1b CPU scores are in r1b/VERDICT.md, for that lane's base.
+
 ## Parked
 
 - **F38#30 Burrow hillside (CPU 4.23): parked after two approaches; needs an owner-level choice.** (1) `capture_stands buried_stand_guard`: frames unchanged. (2) New `hill_shell.skirt` arm (OFF, `3678f7513`): visibly worse (stretched curtains), not judged. Cause, from `tests/probe_warrens_float.gd`: the Warrens chambers and their hill-shell mound are built for a raised site, but the meadow under the route stands is about 18 m lower. The chambers' collider sits at y 21 over ground at about 3, and the shell (about 263 m across, no collider) hangs over walkable grass, so a walking player can stand under the cave. Real fixes are gameplay changes: raise the terrain under the Warrens footprint (Terrain3D sculpt), or give the shell a trimesh collider and keep spawns and routes out of its footprint. Either one changes traversal, so this lane does not make it alone.
+
+- **F38#23 parked (two approaches flat on sight; at 6.38-6.47 it is already above 6):** (2) a shadowless daylight fill aimed at the deck's yard face (quick_judge f38_23-face-fill) barely changes the mass either. The deck needs a material or albedo lift, or new art. (1) Brighter and wider undercroft lights (quick_judge f38_23-undercroft) leave the right-third dark mass unchanged. The camera sees the deck's back-lit front face and legs, not the undercroft. Not judged; config unchanged.
 
 ## In flight
 

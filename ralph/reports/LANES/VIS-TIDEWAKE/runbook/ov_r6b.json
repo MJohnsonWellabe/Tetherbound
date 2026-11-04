@@ -1,0 +1,1 @@
+{"data/config/tidewake_look.json": {"cause_tidewake": {"stars": {"enabled": true, "merge": {"lighting_candidate": {"times": {"night": {"sky": {"star_brightness": 3.2, "star_density": 0.045, "star_scale": 200.0, "top_colour": "#14284a", "horizon_colour": "#2c4c70"}}}}}}}}}
