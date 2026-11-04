@@ -819,6 +819,9 @@ func _sync_npcs() -> void:
 	_people.call("build_specs", _player, specs.filter(func(spec: Dictionary) -> bool: return positions.has(spec["id"])))
 	# P2-068: cloudreach_npc_runtime.json `post_readability` fill light (off unless enabled).
 	NPC_POSTS.light_people(_people, NPC_POSTS.spec(npc_runtime))
+	# P2-068 round 2: `post_role_props` (off unless enabled).
+	NPC_POSTS.place_role_props(self, specs, positions, NPC_POSTS.role_props_spec(npc_runtime),
+		func(spot: Vector3) -> Vector3: return _ground.call(spot) if _ground.is_valid() else spot)
 	if is_instance_valid(_topic_root):
 		remove_child(_topic_root)
 		_topic_root.queue_free()
