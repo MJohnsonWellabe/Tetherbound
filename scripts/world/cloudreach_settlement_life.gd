@@ -307,7 +307,8 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 			var side := Vector3.UP.cross(forward).normalized()
 			# A stand may carry its own layout (a candidate's ground structure
 			# for one camera) instead of the shared pattern.
-			for item: Dictionary in stand.get("pattern", spec.get("stand_pattern", [])):
+			for authored_item: Dictionary in stand.get("pattern", spec.get("stand_pattern", [])):
+				var item := _soften_item(spec, landmark_name, authored_item)
 				var only: Array = item.get("only_stands", [])
 				if not only.is_empty() and not only.has(str(stand.get("id", ""))):
 					continue
@@ -339,7 +340,22 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 					world.call("_apply_tree_palette", model, holder.get_child_count())
 				elif str(item.asset).begins_with("rock") or item.asset == "paving":
 					world.call("apply_stone_palette", model)
-		for building: Dictionary in site.get("buildings", []):
+		# P2-022 / F40#2 (NEAR6-CR): `summit_silhouette` (OFF until judged)
+		# overrides authored building dimensions per asset for one site, so
+		# the imported belvederes can rise beside the 54 m aviary drum. Visual
+		# dimensions only; collision_fraction stays as authored (0 here).
+		var silhouette: Dictionary = spec.get("summit_silhouette", {})
+		var resize: Dictionary = {}
+		if silhouette.get("enabled") == true:
+			resize = (silhouette.get("sites", {}) as Dictionary).get(landmark_name, {})
+		for authored: Dictionary in site.get("buildings", []):
+			var building := authored
+			if resize.has(str(authored.get("asset", ""))):
+				building = authored.duplicate(true)
+				var over: Dictionary = resize[str(authored.get("asset", ""))]
+				for key: String in over:
+					if not key.begins_with("_"):
+						building[key] = over[key]
 			# A cliff-hung piece sits at its authored height (its rock tiers
 			# drop below the rim); everything else snaps to the authored ground.
 			var at := _v3(building.at) if bool(building.get("no_snap", false)) \
@@ -422,6 +438,25 @@ func _lamp_post(world: Node3D, parent: Node3D, post: Dictionary, lamp: Dictionar
 	pole.add_child(light)
 	_lamps.append({"light": light, "material": glow, "energy": float(lamp.get("energy", 3.0)),
 		"glow": float(lamp.get("glow", 4.0)), "day_glow": 0.3})
+
+
+## P2-023 / F40#4 (NEAR6-CR): `shelf_edge_soften` (OFF until judged). The
+## installed cliff_shelf modules show their long, dead-straight extruded edge
+## broadside to the fixed stands. When on, each listed asset at the listed site
+## turns by `yaw_offset_deg` (its shorter, irregular end faces the camera and
+## perspective breaks the line) and sinks by `rise_offset_m`. Visual only.
+static func _soften_item(spec: Dictionary, site_name: String, item: Dictionary) -> Dictionary:
+	var cfg: Dictionary = spec.get("shelf_edge_soften", {})
+	if cfg.get("enabled") != true:
+		return item
+	var per_site: Dictionary = (cfg.get("sites", {}) as Dictionary).get(site_name, {})
+	var over: Variant = per_site.get(str(item.get("asset", "")))
+	if not (over is Dictionary):
+		return item
+	var out := item.duplicate(true)
+	out["yaw"] = float(item.get("yaw", 0.0)) + float((over as Dictionary).get("yaw_offset_deg", 0.0))
+	out["rise_m"] = float(item.get("rise_m", 0.0)) + float((over as Dictionary).get("rise_offset_m", 0.0))
+	return out
 
 
 func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
