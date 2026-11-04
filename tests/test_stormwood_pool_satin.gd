@@ -45,3 +45,15 @@ func test_path_loam_ships_on_and_darkens_the_path() -> void:
 	assert_true(cand.get_luminance() > 0.2, "not near-black")
 	assert_false(cand.r > cand.g * 1.4 and cand.r > cand.b * 1.4, "no red or oxblood")
 	assert_true(float(raw.path_loam_1104.terrain_materials.textures.path.normal_depth) > 0.25, "deeper relief")
+
+
+## F41#5 grass_patch_1104: ships OFF; ON switches the grass shader's colony
+## mode (full contrast and a patch ramp) so clearings open in the carpet.
+func test_grass_patch_ships_off_and_opens_clearings() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ZONES.CONFIG_PATH))
+	assert_false(bool(raw.grass_patch_1104.get("enabled", true)), "ships OFF until judged")
+	assert_false(ZONES.finish().grass.has("clump_patch_start"), "OFF leaves the carpet as shipped")
+	var grass: Dictionary = raw.grass_patch_1104.grass
+	assert_eq(float(grass.clump_contrast), 1.0, "full contrast for true clearings")
+	assert_true(float(grass.clump_patch_start) < float(grass.clump_patch_full), "a ramp from clearing to colony")
+	assert_true(float(grass.clump_patch_start) > 0.0 and float(grass.clump_patch_full) <= 1.0, "within the shader's range")

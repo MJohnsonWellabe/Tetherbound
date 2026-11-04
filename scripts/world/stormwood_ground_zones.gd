@@ -112,7 +112,10 @@ static func finish() -> Dictionary:
 # `path_loam_1104` (VIS-STORMWOOD, OFF until judged): the pale sand-coloured
 # path slot that fills the lower half of every destination close view reads
 # darker and cooler, as damp trodden forest earth.
-const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104", "path_loam_1104"]
+# `grass_patch_1104` (VIS-STORMWOOD, OFF until judged): the grass shader's
+# colony mode (full clump contrast, patch thresholds) breaks the even carpet
+# into grass colonies with true clearings that show the wet moss floor.
+const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104", "path_loam_1104", "grass_patch_1104"]
 
 
 static func _merge_into(target: Dictionary, key: String, value: Variant) -> void:
