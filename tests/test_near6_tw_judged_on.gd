@@ -39,6 +39,16 @@ func test_fight_ring_hide_ships_on() -> void:
 	pickup.free()
 
 
+## r24: F39#24 creature rest poses 5.02 -> 6.69.
+func test_prone_rest_ships_on() -> void:
+	var cfg := _json("res://data/config/water_creature_rest_visual.json")
+	_assert_on(cfg.prone_rest, "6.69", "water_creature_rest_visual.prone_rest")
+	for id: String in ["riptusk", "water_riptusk", "torrentoad", "water_torrentoad"]:
+		assert_true((cfg.prone_rest.species as Array).has(id), "%s rests prone" % id)
+	assert_true(float(cfg.prone_rest.sink_height_frac) > 0.0 and float(cfg.prone_rest.sink_height_frac) <= 0.5,
+		"the settle stays a partial sink")
+
+
 ## The fill uniform defaults to 0, so the Stormwood rim keeps its rim-only look.
 func test_rim_overlay_fill_defaults_off() -> void:
 	var code := FileAccess.get_file_as_string("res://shaders/character_rim_overlay.gdshader")
