@@ -1129,7 +1129,7 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 		["cloud_high_opacity", "high_opacity"],
 		["horizon_haze_height", "haze_height"], ["horizon_haze_strength", "haze_strength"],
 		# tb/vis-tidewake-1104: night star field (shader default 0 = off).
-		["star_brightness", "star_brightness"], ["star_density", "star_density"],
+		["star_brightness", "star_brightness"], ["star_density", "star_density"] ["star_scale", "star_scale"],
 	]:
 		if cfg.has(str(pair[0])):
 			mat.set_shader_parameter(str(pair[1]), float(cfg[str(pair[0])]))
