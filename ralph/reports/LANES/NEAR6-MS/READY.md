@@ -46,6 +46,8 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813; rebuilt on main 60f2df2
 
 ## Judged flat or worse (stay OFF)
 
+- **F41#21 P2-111 / F41#16 P2-110 (Hollows victory and loss): not capturable on this CPU rig.** `phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120` ran about one fight-second per wall-minute on llvmpipe (t=49 s after 50 min), so the base would hit even a 90-minute timeout before the win frame, and the candidate doubles it (UIPOSES saw the same at 40 min). Stopped; `hud.victory_focus` stays OFF and unjudged. These two rows need the GPU rig (or a generated boundary save that starts at the win).
+
 - **F39#23 P2-114 round 1: CPU 5.46 -> 4.70 (worse).** Arm: dark outline under the capture ring arcs, arcs x1.35 (`qj/F39-23-49d54adda13f-11041824/`). All three judges: the readout already reads (defect FIXED/PARTIAL on both sides), and the bolder ring now hides the creature being caught. Round 2 (`capture_readout_visual.json ring_style_1104`): the opposite, a thinner (x0.7) and more translucent (x0.55) ring with no outline; the readout keeps its full colour.
 
 - **F38#7 P2-058 catch aim: no arm; camfx fight_fade not implicated.** Base frames on main (CPU ~7 per VIS-MEADOWS r1b) show the target and the player's creature drawn as a pale wireframe silhouette through the trainer in every aim frame. A capture with `camfx.json fight_fade` OFF shows the same silhouette in 01/07/catch_high/catch_low (only the hare's position varies run to run), so the F41#20 fade did not cause it. The silhouette, not the readout, is now the main read problem; its source is not a data flag this lane found. Not pursued further (base already above 6).
