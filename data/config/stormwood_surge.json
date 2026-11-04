@@ -6,7 +6,7 @@
   "disabled_rod_break_multiplier": 0.6,
   "presentation": {
     "storm_sky_1101": {
-      "enabled": false,
+      "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
       "scope": "client_presentation",
       "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'flat lilac/purple sky card', 'murky dark brown frames, little value range', 'no shafts or lightning drama'). OFF until GPU judged. The overlay deep-merges into presentation (stormwood_surge_rules.gd with_presentation_candidates): every phase keeps the fixed purple storm sky but its ceiling gains cloud form (contrast, definition, lit rims, thin-spot glow) and faint white-violet sheet glow even in Calm; the storm's sun and ambient cuts ease so the near-black ground and dark creatures separate (composes with stormwood_look.json light_pass_1101); the parked r22 skyline and r34 depth fog switch on for distance layers; and cheap additive light shafts (stormwood_storm_shafts.gd) break through the canopy. Strike, phase timing, shelter and saves are untouched.",
       "overlay": {
@@ -99,7 +99,7 @@
       }
     },
     "soft_rain_1101": {
-      "enabled": false,
+      "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
       "scope": "client_presentation",
       "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'rain rendered as sparse white sticks'). OFF until GPU judged. Streaks become wider but soft-edged (the streak shader's soft_edge fades each one across its width by how squarely it faces the camera), longer, denser and tinted toward the storm's lilac-grey instead of white, so rain reads as soft motion-blurred streaks. Near-lens fade, roof suppression, hollow-tree mask and night tint are unchanged.",
       "overlay": {

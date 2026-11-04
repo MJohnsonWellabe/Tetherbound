@@ -32,6 +32,38 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**Scope (coordinator, 4 Nov ~00:30 UTC):** the coordinator archived all three sessions I started at 00:25. The region items belong to its `tb/vis-*-1104` lanes, and I will not start sessions without asking the coordinator first.
+
+This lane covers creatures and poses, UI/HUD and in-flight arms:
+- **Fulgocobra 6.52:** landing-ready.
+- **Storm-light set:** its tests run once the Tidewake overlay reverts.
+- **Rim, ridge and Tidewake recapture:** the creature rim (F38#1/#2/#26), the F38#24 ridge judging and the Tidewake recapture, whose verdicts go to the Tidewake region lane.
+- **Roster rows with a judge-named fix:** F36#56 Nightburrow (partial plates), F36#70 Sparkit, F36#54 Mosshock, F39#24 Torrentoad.
+- **HUD:** F38#19.
+
+Each READY item is pushed as it passes.
+
+**Queue fault found and fixed (3 Nov ~23:30 UTC).**
+- **What happened:** the Tidewake items candidate (`tw_cand`, 22:52) failed its overlay because the camp bed and workbench were already ON. Its partial overlay was left applied. The Tidewake look capture (`twl_base`, 22:52-23:16) then ran with that overlay, so twl is discarded and will be rerun cleanly.
+- **Fixes:**
+  - Every overlay list now drops flags that are already ON. That covers camp props, map paint, house textiles, capture readout and the storm-light set.
+  - `chain.sh` now holds a scene lock from overlay to revert.
+  - `run_group.sh` base launches take the same lock, so no capture runs while another job's overlay is applied.
+- **Caveat:** before the fix, the candidate overlays could overlap other jobs' base launches. The overlays only touch their own biome's configs plus HUD and catch flags, and every verdict above compares rows whose frames those flags do not reach.
+
+**v1/b16 (3 Nov ~23:20 UTC), `43f47541`: Stormwood storm-light set ON vs a fresh base.** `stormwood_surge` storm_sky_1101 + soft_rain_1101, `stormwood_ground_finish` moss_variation_1101 + value_lift_candidate. **F41#5 4.84 -> 5.84, F41#2 5.06 -> 5.80**, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise). **F41#17 Crown Arch is 6.45 as shipped** (6.80 with the set). Fit: slope 1.31, r 0.93, RMSE 0.31. These are floor-raising gains, and F41#5/#2 are still under 6.0. The tests now assert ON with "5.84" (`test_cause_stormwood_candidates.gd`, `test_storm_cams_candidates.gd`). Their run is queued behind the rim tests, so **do not land `43f47541` until READY records it passing.** v1/b15 hold-peak: Terrapup stage 6.37 -> 6.79 (+0.42, under 0.5) and Nightburrow flat, so the GLBs are not kept and pose work is parked.
+
+**New OFF arm `4e606ff6` (3 Nov ~22:25 UTC): creature rim (`creature_rim.json`) for F38#1/#2/#26.** It reuses the Stormwood character rim overlay on each Meadows creature body, applied in `creature_body.gd` after every model build, so creatures built by the capture tool get it too. Tell auras, boss auras and body glows take the overlay slot from the rim and hand it back. With the flag OFF no mesh wears the rim, so those paths are unchanged. `test_creature_rim.gd` passed 3/19 in the subagent's run. Still pending on the Godot lock: `test_combat_vfx`, `test_enemy_pattern_telegraph`, `test_f22_riverwatch_presentation`, `test_storm_cams_candidates`, `test_stormwood_strike_countdown`, `test_tell_aura_overlap`. The flag stays OFF until they pass and the arm is judged. Its capture (fresh base vs rim ON) is queued.
+
+**v1/b14 (3 Nov ~22:15 UTC): pose recipe in the Meadows world frames, exact tie.** F38#1 5.35, F38#2 5.58, F38#26 5.77 on both sides (r 0.97, RMSE 0.32). The GLBs are not kept, and after two rounds without a gain (b7, b14) the recipe is parked. The next lever for these rows is creature rim light and value separation from the tree band, not more animation. F39#6 had no frames in either run.
+
+**Stormwood baseline caveat (3 Nov ~21:20 UTC, v1/b13):** most of `sw_base` was captured 00:43-03:33 UTC, before the Blender Crown Arch and other branch changes. The resumable queue kept those launches. So b10, b11 and b13 compare candidates captured in the afternoon and evening with an early-morning base. No flag was turned ON from them. b13 (storm sky and rain, moss variation, value lift) shows +0.1 to +0.65 on F41#2/#4/#5/#19, all still under 6.0. A fresh base (`swb_base`) is queued before any decision. Clean re-run so far: `test_storm_cams_candidates.gd` **15 tests, 52 assertions, 0 failed**; `test_remake_owner1101_finish.gd` **5 tests, 347 assertions, 0 failed** (Fulgocobra OFF). Fulgocobra is back ON in `bb95db78`; its ON run passed: `test_remake_owner1101_finish.gd` **5 tests, 351 assertions, 0 failed** (asserts ON and "6.52"). `bb95db78` is landing-ready.
+
+**PUSHED WITH TESTS PENDING (3 Nov ~20:00 UTC, coordinator: push hourly):** the capture queue's Stormwood storm-light overlay (`stormwood_ground_finish` value lift, `stormwood_surge`) has been in the working tree since ~17:40. `test_storm_cams_candidates.gd` ran with it applied: 14/15 passed, and `test_stormwood_value_lift_ships_off_and_lifts_when_on` failed because the overlay turns that arm ON (the committed file has it OFF). Not yet re-run clean: `test_storm_cams_candidates.gd`, `test_remake_owner1101_finish.gd`, `test_meadows_ridge_vl.gd` (the subagent ran it: 3/15 pass), and `test_texture_import_policy.gd` (needs the ridge texture reimport). Held OFF until they pass: **Fulgocobra gold vein (judged 6.52; flag OFF, its JUDGED_ON entry removed)**. Already OFF: rim r2, Meadows ridge. The re-run starts automatically when the overlay reverts.
+
+**LANDING-READY GAIN (3 Nov ~17:55 UTC), `a5b28e0f`: F41#13 both halves now ON.** `creatures_ralph_fulgocobra_goldvein` ON: Fulgocobra **CPU 6.06 -> 6.52 mapped** (v1/b12; three judges, linear slope 1.26, r 0.91, RMSE 0.35, confirming batch). Stormraven `creatures_ralph_stormraven_charge` stays ON at 6.72. Test: `test_remake_owner1101_finish.gd` JUDGED_ON "6.52" (run queued with the clean retest). F38#19 `hud_lean` 5.30 -> 5.64 stays OFF: the judges blame the dim interior grade and the camera inside the loft ceiling, not the HUD.
+- New OFF arms: `01a0f479` Stormwood rim r2 (F41#18, energy 1.15 / power 1.7); `15788371` **F38#24 Blender Meadows ridge ring** (`meadows_ridge_vl.json`: one continuous 360 deg ridge that replaces the procedural FarRanges/Foothills rings when ON; 43k tris; reference, 1.80 m scale check and provenance in `assets/props/vl-1103/meadows_ridge/`; `test_meadows_ridge_vl.gd` 3/15). Both are queued for capture.
+
 **LANDING-READY GAINS (3 Nov ~17:25 UTC), `a8918db7` (v1/b9; three judges, linear slope 1.06, r 0.79, RMSE 0.74, confirming batch):**
 - **F39#12 camp creature bed: CPU 5.86 -> 7.02 mapped.** `meshy_camp_props.json` `bed.nest_candidate` ON (Blender r2 straw nest; "reads as a pet bed in all three frames").
 - **F39#13 camp workbench: CPU 6.03 -> 6.56 mapped.** `workbench.vl_candidate` ON (Blender r2 bench turned to face the camp).

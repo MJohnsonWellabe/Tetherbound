@@ -82,6 +82,9 @@ func _ready() -> void:
 	LOCAL_LIGHT_SHADOW_FADE.watch(get_parent())
 	# PERF (F26#5): sub-pixel detail stops drawing; silhouettes keep their reach.
 	DETAIL_CULL.watch(get_parent())
+	# F38#1/#2/#26 creature rim (OFF; data/config/creature_rim.json): on in a
+	# listed realm look (Meadows), off in every other.
+	preload("res://scripts/world/creature_rim.gd").set_realm(realm_look_path)
 	_config = _load()
 	if _config.is_empty():
 		push_warning("art.json missing or unreadable; the scene keeps its authored look")
