@@ -32,6 +32,9 @@ func _surge_with(keys: Array) -> Dictionary:
 func test_surge_candidates_ship_on_with_scores_and_are_inert_when_off() -> void:
 	var config := _json(RULES.PATH)
 	for key: String in RULES.PRESENTATION_CANDIDATES:
+		if key == "phase_grade_1104":
+			(config.presentation[key] as Dictionary)["enabled"] = false
+	for key: String in ["storm_sky_1101", "soft_rain_1101"]:
 		assert_true(config.presentation.has(key), "%s must be declared" % key)
 		assert_true(bool(config.presentation[key].get("enabled", false)), "%s ships ON (judged gain)" % key)
 		assert_true(str(config.presentation[key].get("_why_on", "")).contains("5.84"), "%s records its mapped score" % key)
@@ -131,10 +134,12 @@ func test_moss_variation_on_sets_typed_uniforms_without_red() -> void:
 			assert_false(c.r > c.g * 1.6 and c.r > c.b * 2.0, "no red/oxblood tone: " + key)
 
 
-func test_deck_light_ships_off_and_lays_out_its_rings() -> void:
+## VIS-STORMWOOD j1 (4 Nov): the deck light ships ON with its judged score.
+func test_deck_light_ships_on_and_lays_out_its_rings() -> void:
 	var presentation := _json(PRESENTATION_PATH)
 	var settings: Dictionary = presentation.deck_light_1101
-	assert_false(bool(settings.get("enabled", true)), "ships OFF")
+	assert_true(bool(settings.get("enabled", false)), "ships ON (judged gain)")
+	assert_true(str(settings.get("_why_on", "")).contains("3.94"), "records its mapped score")
 	var poses := DECK_LIGHT.poses(settings)
 	var expected := 0
 	for ring: Dictionary in settings.rings:
@@ -161,3 +166,32 @@ func test_crown_shaft_places_fixed_columns_without_the_camera_grid() -> void:
 	shaft.set_strength(1.0)
 	assert_true(shaft.visible, "positive strength shows it")
 	shaft.free()
+
+
+## VIS-STORMWOOD (4 Nov), F41#2: the per-phase grade lifts Calm into a
+## higher-key sky and drops Building into a lower one, keeping the purple hue,
+## Break's darkest ground and every non-presentation section.
+func test_phase_grade_separates_calm_from_building_and_keeps_break_rules() -> void:
+	var base := _json(RULES.PATH)
+	var off := RULES.with_presentation_candidates(_surge_with(["storm_sky_1101", "soft_rain_1101"]))
+	var on := RULES.with_presentation_candidates(_surge_with(["storm_sky_1101", "soft_rain_1101", "phase_grade_1104"]))
+	var calm_lum := Color(str(on.presentation.phases.calm.sky_horizon)).get_luminance()
+	var building_lum := Color(str(on.presentation.phases.building.sky_horizon)).get_luminance()
+	var off_gap := Color(str(off.presentation.phases.calm.sky_horizon)).get_luminance() \
+		- Color(str(off.presentation.phases.building.sky_horizon)).get_luminance()
+	assert_true(calm_lum - building_lum > off_gap + 0.1, "Calm and Building skies separate")
+	for phase: String in ["calm", "building", "break", "fading"]:
+		var hue := Color(str(on.presentation.phases[phase].sky_top)).h * 360.0
+		assert_true(hue >= 235.0 and hue <= 290.0, "%s sky stays purple (hue %.0f)" % [phase, hue])
+		assert_eq(on.presentation.phases[phase].ambient_colour, off.presentation.phases[phase].ambient_colour, "%s ambient unchanged" % phase)
+	assert_eq(on.presentation.phases.break, off.presentation.phases.break, "Break is untouched")
+	var building_sun := float(on.presentation.phase_readability_candidate.phases.building.sun_energy_mult)
+	assert_true(float(on.presentation.phases.calm.sun_energy_mult) > building_sun, "Calm keys brighter than Building")
+	assert_true(building_sun > float(on.presentation.phases.break.sun_energy_mult), "Break keeps the lowest key light")
+	assert_true(float(on.presentation.phases.calm.sun_energy_mult) <= float(on.presentation.aftermath.all.sun_energy_mult), "the aftermath key stays steadiest")
+	var brk := Color(str(on.presentation.phases.break.ceiling_colour)).get_luminance()
+	assert_true(Color(str(on.presentation.phases.building.ceiling_colour)).get_luminance() > brk, "the Break deck stays darkest")
+	assert_true(Color(str(on.presentation.phases.calm.ceiling_colour)).get_luminance() > brk, "Calm's deck is lighter than Break's")
+	for key: String in base:
+		if key != "presentation":
+			assert_eq(on[key], base[key], "non-presentation section %s must not change" % key)

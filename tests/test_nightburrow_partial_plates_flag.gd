@@ -22,11 +22,13 @@ func _parsed() -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
-func test_arm_ships_off_and_names_its_new_files() -> void:
+## Visual lane v1/b18 (4 Nov): the arm ships ON with its judged score (6.37 -> 6.67).
+func test_arm_ships_on_with_its_score_and_names_its_new_files() -> void:
 	var flags: Dictionary = _parsed().get("flags", {})
 	assert_true(flags.has(FLAG), "the partial-plates arm is declared")
 	var entry: Dictionary = flags.get(FLAG, {})
-	assert_false(bool(entry.get("enabled", true)), "%s ships OFF" % FLAG)
+	assert_true(bool(entry.get("enabled", false)), "%s ships ON (judged gain)" % FLAG)
+	assert_true(str(entry.get("_why_on", "")).contains("6.67"), "it records its mapped score")
 	assert_true(str(entry.get("_why", "")).contains("F36#56"), "its _why names board row F36#56")
 	var spec: Dictionary = (entry.get("coats", {}) as Dictionary).get(LIVE, {})
 	assert_eq(str(spec.get("albedo", "")), ARM_ALBEDO, "the arm maps the live Nightburrow coat to its new albedo")
@@ -36,8 +38,12 @@ func test_arm_ships_off_and_names_its_new_files() -> void:
 	assert_true(ARM_ALBEDO != SHIPPED and ARM_GLOW != SHIPPED, "the arm writes new files, not the shipped ones")
 
 
-func test_off_leaves_the_shipped_coat_path() -> void:
-	var resolved: Dictionary = BODY.parse_coat_flags(_parsed())
+func test_on_resolves_to_the_arm_and_off_leaves_the_shipped_coat_path() -> void:
+	var on: Dictionary = BODY.parse_coat_flags(_parsed()).get(LIVE, {})
+	assert_eq(str(on.get("albedo", "")), ARM_ALBEDO, "ON: Nightburrow resolves to the partial-plates albedo")
+	var parsed := _parsed()
+	(parsed.flags[FLAG] as Dictionary)["enabled"] = false
+	var resolved: Dictionary = BODY.parse_coat_flags(parsed)
 	var spec: Dictionary = resolved.get(LIVE, {})
 	assert_eq(str(spec.get("albedo", "")), SHIPPED, "OFF: Nightburrow still resolves to the shipped coat-lift grade")
 	assert_false(spec.has("emission"), "OFF: the aspect glow map is left to the aspect swap")

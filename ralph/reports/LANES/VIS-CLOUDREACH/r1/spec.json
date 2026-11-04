@@ -1,0 +1,38 @@
+[
+ {
+  "label": "P2-021|base|cand",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r1/P2-021_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r1/P2-021_cand.png",
+  "brief": "Cloudreach plateau views at the sky shrine and realm gate, day",
+  "defects": [
+   "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+  ]
+ },
+ {
+  "label": "P2-023|base|cand",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r1/P2-023_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r1/P2-023_cand.png",
+  "brief": "Cloudreach landform edges at the sky shrine and bridge, day",
+  "defects": [
+   "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges"
+  ]
+ },
+ {
+  "label": "P2-022|base|cand",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r1/P2-022_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r1/P2-022_cand.png",
+  "brief": "Cloudreach summit aviary, day approach and close",
+  "defects": [
+   "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark"
+  ]
+ },
+ {
+  "label": "P2-025|base|cand",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r1/P2-025_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r1/P2-025_cand.png",
+  "brief": "Cloudreach grass and stone finish at the shrine and high perches, day",
+  "defects": [
+   "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites"
+  ]
+ }
+]

@@ -97,6 +97,19 @@
         }
       }
     },
+    "phase_grade_1104": {
+      "enabled": false,
+      "scope": "client_presentation",
+      "_why": "VIS-STORMWOOD (4 Nov 2026), F41#2 P2-042: every CPU judge since v1/b13 (and v1/b16 with the storm-light set ON) says 'Calm and Building still look alike'; the named next lever is a per-phase grade. When enabled this overlay deep-merges after storm_sky_1101 (stormwood_surge_rules.gd PRESENTATION_CANDIDATES): Calm takes a higher-key pale lavender sky with thin cloud breaks and less fog (a resting storm), Building a lower indigo sky, denser fog and heavier rain under its blue-green understory. Hues stay in the purple family, ambient colours, every light energy, strike, timing and the Break rules are unchanged. OFF until judged.",
+      "_why_r2": "VIS-STORMWOOD j2 (4 Nov): r1 judged flat (F41#2 CPU 5.46 -> 5.46, 3/3 'Calm and Building cannot be told apart'): the close stands show little sky. r2 separates them on the ground too: Calm key light 0.70 (the aftermath's, which stays steadier), no fog, light rain and full shafts; Building key 0.34 (still above Break 0.27; ambient 0.70 still above Break 0.66), fog 0.0055 and rain 0.9. OFF until judged.",
+      "overlay": {
+        "phases": {
+          "calm": {"sky_top": "#736f98", "sky_horizon": "#9894b2", "sky_ground_horizon": "#8783a4", "ceiling_colour": "#807ba6", "ceiling_breakup": 0.3, "fog_density_add": 0.0, "rain_amount": 0.18, "sun_energy_mult": 0.7, "shafts": 1.0},
+          "building": {"sky_top": "#4a4474", "sky_horizon": "#615b8a", "sky_ground_horizon": "#57517f", "ceiling_colour": "#675f97", "ceiling_speed": 0.04}
+        },
+        "phase_readability_candidate": {"phases": {"building": {"fog_density_add": 0.0055, "rain_amount": 0.9, "sun_energy_mult": 0.34}}}
+      }
+    },
     "soft_rain_1101": {
       "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
       "scope": "client_presentation",
