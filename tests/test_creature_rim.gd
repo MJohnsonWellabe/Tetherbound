@@ -8,6 +8,8 @@ const RIM := preload("res://scripts/world/creature_rim.gd")
 const TELL_STYLE := preload("res://scripts/combat/tell_style.gd")
 const MEADOWS_LOOK := "res://data/config/meadows_look.json"
 const OTHER_LOOK := "res://data/config/stormwood_look.json"
+## The exit/re-entry test mounts a body under the live root.
+const RUNS_IN_INITIALIZED_TREE := true
 
 
 func after_each() -> void:
@@ -86,3 +88,27 @@ func test_tell_aura_takes_the_rim_slot_and_hands_it_back() -> void:
 	RIM.undress(parts.body)
 	assert_eq(mesh.material_overlay, null, "undressing lifts the rim")
 	(parts.body as Node).free()
+
+
+## CI 4 Nov (batch 6): a body freed while its meshes still wore the rim logged
+## "Parameter material is null" (material_get_instance_shader_parameters) on the
+## net and region smokes. A dressed body sheds the rim as it leaves the tree and
+## is dressed again if it comes back while the rim is on.
+func test_a_body_sheds_the_rim_leaving_the_tree_and_regains_it_on_return() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	RIM.set_realm(MEADOWS_LOOK)
+	assert_true(RIM.active(), "the shipped rim is active in the Meadows")
+	var parts := _body()
+	var body := parts.body as Node3D
+	var mesh := parts.mesh as MeshInstance3D
+	tree.root.add_child(body)
+	assert_eq(RIM.dress_body(body), 1, "the bare body mesh takes the rim")
+	assert_true(RIM.is_rim(mesh.material_overlay), "dressed in the tree")
+	tree.root.remove_child(body)
+	assert_eq(mesh.material_overlay, null, "leaving the tree sheds the rim")
+	assert_false(RIM.is_rim((parts.held as MeshInstance3D).material_overlay), "another overlay is untouched")
+	assert_true((parts.held as MeshInstance3D).material_overlay != null, "and kept")
+	tree.root.add_child(body)
+	assert_true(RIM.is_rim(mesh.material_overlay), "coming back while the rim is on dresses it again")
+	RIM.set_realm(OTHER_LOOK)
+	body.free()
