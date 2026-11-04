@@ -23,6 +23,10 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 
 - **r6, F39#6, flat (5.29 -> 5.29), held OFF:** `uiposes_riptusk_side_faint_prone_rest` cannot reach the shipped Riptusk. It now renders the owner1101 remake, which has no F36 recipe, so A and B were pixel-identical (3/3 judges). The new arm is `creature_pose_settle.json` `tidewake_scope` (CAUSE-POSES settle, scoped to ripplet, riptusk and aquaryn, with the roster master still OFF). It is queued as r6b.
 
+- **r7, F39#7, worse (6.19 -> 5.42), held OFF:** with `contact_spacing.all_pairs` on, all three judges saw Ripplet pressed into Cannonback and the trainer against Ripplet's tail; the base kept clear sand. Round 1 of 2 on this item.
+- **r19, F39#19, not judged (no visible change):** `roster_floor` changed nothing on CPU. The roster region differs by a mean of 0.2–1.2 per pixel, because the subject fade never takes the roster down in these three stands. The arm stays OFF. The pale roster the GPU judges describe needs another cause.
+- **Harness fix (quick_judge `find_frame`):** fight tools write `<trainer>/<tag>-<sss.ss>.png` for `..__fight__<trainer>__<tag>-<sss_ss>` ids, and tell moments drift from run to run. Lookup now takes the same tag nearest in time (within 1 s). Without it, every Venn fight round failed with "no frame pair".
+
 ## Queue
 
 `runbook/chain.sh` (resumable): import, then r6, r27, r14, r19, r7. F39#1/#2 wait for VIS-TIDEWAKE's r2a verdict; F39#4 waits for its shiny round; F39#20 is designed from the r19 base fight frames.
