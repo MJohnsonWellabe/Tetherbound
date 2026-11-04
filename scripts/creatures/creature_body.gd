@@ -3007,6 +3007,23 @@ func play_rest() -> void:
 		_rest_pose_active = true
 		_animator.call("play_terminal", "rest")
 		return
+	# NEAR6-TW (P2-029, F39#24): `prone_rest` (OFF) keeps listed species upright
+	# on their idle pose and settles them belly-down into the bedding instead of
+	# the faint-clip or sideways roll that left them on their backs.
+	var prone: Variant = REST_VISUAL.config().get("prone_rest", {})
+	if prone is Dictionary and bool((prone as Dictionary).get("enabled", false)) \
+			and ((prone as Dictionary).get("species", []) as Array).has(species_id):
+		if _animator != null:
+			_animator.call("tick", 0.0, 0.0, 1.0)
+		if not _has_model:
+			return
+		_rest_pose_pivot_before = _model.transform
+		_rest_pose_config = {"mode": "prone"}
+		_rest_pose_active = true
+		_model.rotate_x(deg_to_rad(float((prone as Dictionary).get("pitch_deg", 0.0))))
+		_model.position = _rest_pose_pivot_before.origin \
+			- Vector3(0.0, _height * clampf(float((prone as Dictionary).get("sink_height_frac", 0.2)), 0.0, 0.5), 0.0)
+		return
 	var look := REST_VISUAL.resolve(species_id, SPECIES.placeholder(species_id))
 	var authored: Variant = look.get("rest_pose", {})
 	if authored is Dictionary and not (authored as Dictionary).is_empty():
