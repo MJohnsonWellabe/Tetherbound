@@ -38,6 +38,8 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**v1/b20 (4 Nov ~15:00 UTC): Mosshock and Sparkit lateral hit arms are worse and stay OFF (in HELD).** F36#54 5.95 -> 5.79; F36#70 6.20 -> 5.75. Sparkit maps at 6.20 as shipped. Mosshock needs new art: its face and elemental trait do not read at stage distance, and its faint is a "rock-like lump". Verdict in `v1/b20/`.
+
 **qj lathit4-f38-2 (4 Nov ~14:00 UTC): Burrowback/Nightburrow lateral hit ships ON.**
 - **Result:** F38#2 creature hurt and movement poses, CPU 6.18 -> 6.40 (+0.22; raw 6.1/5.8/5.6 -> 6.4/6.0/5.6; defect PRESENT -> PARTIAL for two of three judges; calibration r 0.95).
 - **What it is:** flag `creatures_ralph_burrowback_lateral_hit`, a copy of the live nat1024 GLB.
