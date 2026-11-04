@@ -5758,6 +5758,9 @@ func _wild_keep_clear_zones() -> Array[Dictionary]:
 	for raw: Variant in ((MATH.config().get("arena", {}) as Dictionary).get("wild_keep_clear", []) as Array):
 		if not raw is Dictionary:
 			continue
+		# NEAR6-MS F38#32: a zone may ship behind its own flag (default on).
+		if not bool((raw as Dictionary).get("enabled", true)):
+			continue
 		var at: Array = (raw as Dictionary).get("at", []) as Array
 		var radius := float((raw as Dictionary).get("radius_m", 0.0))
 		if at.size() >= 2 and radius > 0.0:
