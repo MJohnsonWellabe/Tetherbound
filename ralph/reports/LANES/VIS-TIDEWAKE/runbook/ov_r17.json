@@ -1,0 +1,1 @@
+{"data/config/tidewake_look.json": {"dunes": {"shadow_push_m": 0.10}, "lighting_candidate": {"times": {"golden": {"sun": {"shadow_normal_bias": 3.0}}, "dawn": {"sun": {"shadow_normal_bias": 3.0}}}}}}
