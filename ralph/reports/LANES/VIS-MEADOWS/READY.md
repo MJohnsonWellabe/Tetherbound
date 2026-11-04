@@ -24,6 +24,14 @@ Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the sa
 
 Given away: F38#29, #6, #26, #7, #32 to NEAR6-MS. F38#24 ridge, F38#19 HUD and creature rim F38#1/#2 belong to creatures-ralph.
 
+**Lane status (09:30 UTC):** the scene-level levers in this lane's scope are used up. Every remaining ask needs one of these:
+- **New art:** a larger keep seated on a hill with a palisade approach, and volumetric fire instead of flat flame cards.
+- **A shared-tool decision:** F38#35's stale catalogue posts.
+- **A gameplay decision:** F38#30's floating Warrens.
+- **A camera change the rules forbid:** the F38#22 mill wheel is on the far side of the mill from its catalogue stand.
+
+Ready for new items or a Blender new-art assignment.
+
 **Open candidates and recommendations:**
 - F38#37: `camfx fight_fade` (fade on the speaker-to-lens line) leaves the foreman's overhang frame identical (quick_judge f38_37-fight-fade). Not judged; stays OFF. The item is at 6.52.
 - **F38#35:** the villager post frames (`phase2_capture_dialogue.gd` catalogue view) aim at stale catalogue posts, e.g. Oskar at (25, 4) while the game places him 41.8 m away. The dialogue view already re-seats beside the real body, but the post view does not, so the post-stance arm can never show. Fixing this changes a shared capture tool and every character baseline, so it is a coordinator decision.
