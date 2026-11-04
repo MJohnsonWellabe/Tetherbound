@@ -1,0 +1,6 @@
+Gj: none
+Xh: "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+Mh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Iy: none
+Uu: "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
+Pj: "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain"

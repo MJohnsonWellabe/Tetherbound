@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.718,
+  "least_squares_slope": 1.034,
+  "method": "linear",
+  "slope": 1.034,
+  "intercept": 0.3898,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.56,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 4.767,
+   "reference": 5.83,
+   "mapped": 5.319,
+   "residual": 0.511
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.5,
+   "reference": 6.75,
+   "mapped": 6.077,
+   "residual": 0.673
+  },
+  "craft:after": {
+   "measured": 6.267,
+   "reference": 7.35,
+   "mapped": 6.87,
+   "residual": 0.48
+  },
+  "craft:before": {
+   "measured": 4.733,
+   "reference": 4.83,
+   "mapped": 5.284,
+   "residual": -0.454
+  },
+  "f36_0_npc:C8B": {
+   "measured": 5.733,
+   "reference": 5.7,
+   "mapped": 6.318,
+   "residual": -0.618
+  },
+  "f36_0_npc:C8A": {
+   "measured": 5.833,
+   "reference": 5.83,
+   "mapped": 6.422,
+   "residual": -0.592
+  }
+ },
+ "candidates": {
+  "F41#19 base": {
+   "measured_mean": 4.867,
+   "mapped_mean": 5.42,
+   "mapped_judges": [
+    4.94,
+    5.77,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#19 cand": {
+   "measured_mean": 4.9,
+   "mapped_mean": 5.46,
+   "mapped_judges": [
+    4.94,
+    5.87,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#5 cand": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.63,
+   "mapped_judges": [
+    5.56,
+    5.56,
+    5.77
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#5 base": {
+   "measured_mean": 4.5,
+   "mapped_mean": 5.04,
+   "mapped_judges": [
+    4.94,
+    5.04,
+    5.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#2 cand": {
+   "measured_mean": 4.9,
+   "mapped_mean": 5.46,
+   "mapped_judges": [
+    5.35,
+    5.46,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#2 base": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.39,
+   "mapped_judges": [
+    5.15,
+    5.15,
+    5.87
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
