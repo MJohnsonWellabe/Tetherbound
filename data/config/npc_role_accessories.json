@@ -1,6 +1,7 @@
 {
  "_comment": "P2-055 named character silhouettes (shared-art lane, 21 Oct 2026). Named roles that share an installed base body (three local_historian, two trader, three wandering_trainer...) each gain one authored silhouette accessory: Meshy batch 2, assets/props/meshy-1020/npc_acc_*, provenance beside each GLB, origin at its grip or attach point. character_model.gd hangs each GLB off the named bone; handheld props rest at the hip so every clip keeps them planted beside the hand. Bodies, faces, names, heights and gameplay are unchanged. OFF until a code-blind PASS.",
- "enabled": false,
+ "enabled": true,
+ "_why_on": "ON (VIS-STORMWOOD j3, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run): F41#8 named silhouettes 4.72 -> 4.96 mapped (3/3 judges score B higher; B frame 1 staff and frame 3 blue hood give individual reads). Caveat: this batch fell back to an offset map (anchor RMSE 0.85)",
  "characters": {
   "rodkeeper_hesk": [
    {

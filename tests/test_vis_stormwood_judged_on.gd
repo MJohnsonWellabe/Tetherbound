@@ -28,3 +28,8 @@ func test_lantern_pools_j1_arms_ship_on() -> void:
 	var cfg := _json("res://data/config/stormwood_lantern_pools.json")
 	for key: String in ["arrival_pools", "basin", "lantern_model", "glow_fungi", "grove"]:
 		_assert_on(cfg[key], "4.59", key)
+
+
+## j3: F41#8 named silhouettes 4.72 -> 4.96 (offset-map caveat recorded).
+func test_role_accessories_j3_ship_on() -> void:
+	_assert_on(_json("res://data/config/npc_role_accessories.json"), "4.96", "npc_role_accessories")

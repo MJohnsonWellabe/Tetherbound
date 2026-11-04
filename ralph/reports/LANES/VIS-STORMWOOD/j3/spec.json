@@ -1,0 +1,38 @@
+[
+ {
+  "label": "F41#8",
+  "a": "/tmp/claude-0/work/judge/j3/k/sides/F41_8_a.jpg",
+  "b": "/tmp/claude-0/work/judge/j3/k/sides/F41_8_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: named character silhouettes. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"
+  ]
+ },
+ {
+  "label": "F41#15",
+  "a": "/tmp/claude-0/work/judge/j3/k/sides/F41_15_a.jpg",
+  "b": "/tmp/claude-0/work/judge/j3/k/sides/F41_15_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: dialogue foreground obstruction. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "F41#18",
+  "a": "/tmp/claude-0/work/judge/j3/k/sides/F41_18_a.jpg",
+  "b": "/tmp/claude-0/work/judge/j3/k/sides/F41_18_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: uniformed character readability. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+  ]
+ },
+ {
+  "label": "F41#20",
+  "a": "/tmp/claude-0/work/judge/j3/k/sides/F41_20_a.jpg",
+  "b": "/tmp/claude-0/work/judge/j3/k/sides/F41_20_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: named character dialogue reuse. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Distinct named Stormwood characters use identical dialogue lines"
+  ]
+ }
+]
