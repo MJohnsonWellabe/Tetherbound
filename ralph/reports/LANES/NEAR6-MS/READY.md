@@ -13,6 +13,8 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813). Items F38#29, #6, #26,
 
 ## Judged flat or worse (stay OFF)
 
+- **F38#29 P2-065 round 1: CPU 6.14 -> 6.22 (+0.08, flat)** (`qj/F38-29-6d8f80b7ac71-11040957/`). Arms: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (beaten kneel) + `art.json grunt_a.clip_candidate`. One judge saw the hunched grunt (PARTIAL); the others saw no change because the grunt is a few pixels tall, behind or beside the player, in all three frames. All three judges asked for a camera beat that frames the defeated trainer. Next idea: a short post-victory shot on the beaten trainer (game presentation, not a capture stand change).
+
 ## Blockers / notes
 
 - Harness note: a plain `git fetch origin <branch>` on this shallow clone pulled a 15 GB temp pack and filled the disk; `git fetch --depth=1 origin <branch>:refs/remotes/origin/<branch>` takes the same branches in seconds.
