@@ -389,11 +389,15 @@ def find_frame(d, fid):
     if m:
         want = float(f"{m.group(3)}.{m.group(4)}")
         best = None
+        hits = []
         for q in Path(d).rglob(f"{m.group(1)}/{m.group(2)}-*.png"):
             mm = re.fullmatch(rf"{re.escape(m.group(2))}-(\d+\.\d+)", q.stem)
-            if mm and (best is None or abs(float(mm.group(1)) - want) < best[0]):
-                best = (abs(float(mm.group(1)) - want), q)
-        if best and best[0] <= 1.0:
+            if mm:
+                hits.append(q)
+                if best is None or abs(float(mm.group(1)) - want) < best[0]:
+                    best = (abs(float(mm.group(1)) - want), q)
+        # A one-off moment (win, aftermath) is that moment whatever second it lands on.
+        if best and (best[0] <= 1.0 or len(hits) == 1):
             return best[1]
     return None
 
