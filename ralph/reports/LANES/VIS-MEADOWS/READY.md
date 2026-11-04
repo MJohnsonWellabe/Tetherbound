@@ -4,6 +4,44 @@ Lane: tb/vis-meadows-1104 (from origin/main 98879e2e1). Scope: the Meadows F38 i
 
 Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the same run on the same stands; tools/visual_judge (JUDGE_PROMPT verbatim, anchor_tiles --pairs 3, three code-blind judges, calibrate.py). Recorded as "CPU <base> -> <cand>". Owner rule 4 Nov: any judged gain ships ON; flat or worse stays OFF.
 
+## Handoff summary (4 Nov 2026, ~08:50 UTC)
+
+**State:** every judged gain is ON on `tb/vis-meadows-1104` with its CPU score in `_why`/`_why_on` and a test in `tests/test_vis_meadows_1104_on.gd`.
+
+**This lane's items, CPU mapped (latest):**
+- F38#13: 7.19
+- F38#33: 6.88
+- F38#17: 6.66
+- F38#22: 6.62 (qj batch)
+- F38#37: 6.52
+- F38#23: 6.38-6.47
+- F38#15: 6.33
+- F38#0: 6.16 (subset)
+- F38#35: 6.09
+- F38#20: 5.75 (qj batch; it gained in four rounds, but each batch maps differently)
+- F38#41: 5.68 (subset)
+- F38#30: 4.23 (parked, needs an owner choice)
+
+Given away: F38#29, #6, #26, #7, #32 to NEAR6-MS. F38#24 ridge, F38#19 HUD and creature rim F38#1/#2 belong to creatures-ralph.
+
+**Open candidates and recommendations:**
+- **F38#35:** the villager post frames (`phase2_capture_dialogue.gd` catalogue view) aim at stale catalogue posts, e.g. Oskar at (25, 4) while the game places him 41.8 m away. The dialogue view already re-seats beside the real body, but the post view does not, so the post-stance arm can never show. Fixing this changes a shared capture tool and every character baseline, so it is a coordinator decision.
+- **F38#20:** the remaining asks are new art: a larger keep seated on a hill, a palisade approach, and real fire instead of flat flame cards.
+- **F38#22:** the mill water is barely in view, and judges ask for a visible mill wheel and banked stream.
+- **F38#23:** the relay deck's back-lit front face reads black. Undercroft lights don't reach it; a face fill light or albedo lift on the deck massing is the next idea.
+- **F38#41:** the old-quarry ruin floor reads as a dark slab. A retint cannot lighten it (multiply only), so a texture swap or sinking the floor is the next idea.
+
+**What worked:** existing OFF arms in one A/B run (r1), then one-item quick_judge rounds (about 15 min of capture). Light changes on the same light (yard fill), keeping the keep's value through the fog (needs a lighter tint), and silent set-dressing villagers placed on the camera side.
+
+**Runbook additions (also in the Notes below):**
+- blob:none commits use `GIT_NO_LAZY_FETCH=1 git write-tree --missing-ok` plus `commit-tree`.
+- The container is reclaimed when no tracked task runs.
+- Tracked background tasks stop at 2 h, so chains must be resumable.
+- quick_judge overlays now index lists (`clusters.N.candidate`).
+- Before turning a flag ON, grep `tests/` for the flag key.
+- Band props on a raised floor need `y_world`.
+- Village set-dressing villagers need no greeting.
+
 ## Landing-ready
 
 - **F38#20 P2-003 Team Tether stronghold: CPU 5.67 -> 6.38** (r1a). ON: `stronghold.json approach_pylons.p2_003_unlit_candidate_enabled` and band5 `wd_stronghold_courtyard` `candidate`; the score is appended to `p2_003_candidate._why_on` (that flag is already ON from #808).
