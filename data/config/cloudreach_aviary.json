@@ -60,6 +60,15 @@
     "segment_count": 32,
     "plinth_height_m": 0.55,
     "plinth_extra_radius_m": 0.35,
+    "terrace": {
+      "_scope": "world_presentation",
+      "_why": "P2-022 / F40#2 (NEAR6-CR, 4 Nov 2026; GPU 5.81): judges read the summit as a small skeletal dome set straight on grass beside a separate court, not a layered stone sanctuary. On: two broad low stepped masonry courses ring the drum outside its plinth (arch gaps left open, no collision; each course sinks into the turf so slopes do not show a lip underneath). OFF until judged.",
+      "enabled": false,
+      "tiers": [
+        {"radius_extra_m": 2.6, "width_m": 4.6, "height_m": 0.42, "sink_m": 0.6},
+        {"radius_extra_m": 5.9, "width_m": 2.4, "height_m": 0.2, "sink_m": 0.6}
+      ]
+    },
     "pier_angles_deg": [55.0, 125.0, 235.0, 305.0],
     "pier_width_m": 3.2,
     "pier_depth_m": 2.4,

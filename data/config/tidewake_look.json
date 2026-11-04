@@ -3,6 +3,8 @@
   "enabled": true,
   "_why_lighting_candidate": "ON (close-1024 lt2, 24 Oct 2026): the Tidewake time-of-day regrade is the first Tidewake item to clear the CPU-provisional bar. Mapped CPU Bar A 6.98 and 7.16 for the same frames judged twice in one confirming batch (mean 7.07, anchors to 7.53, fit slope 1.366, anchor RMSE 0.60), against control 5.84 and round 1 6.34; CPU-PROVISIONAL, a GPU pass is owed before 7.5 is claimed. Night readability measured with tools/frame_stats.py on the shore night frame: near_luma 0.231, against 0.292 shipping and the 0.135-0.222 band art.json's own night contract accepted for Meadows, so night is no less readable than the night this project already ships. Evidence: ralph/reports/TIDEWAKE/close-1024/lt1 and lt2.",
   "_why": "ON by coordinator decision for the 22 Oct wind-down, at exactly the state judged in calibrated batch 2 (ralph/reports/TIDEWAKE/close-1022/b2), mapped CPU Bar A vs shipping control, below the 7.5 bar: F13#5 dock 6.77 vs 3.97 (b1 6.74 vs 5.06); P2-011 named destinations 6.13 vs 3.03 and 6.23 vs 2.88 (best 6.28, b1); P2-026/P2-009 water 4.41 vs 4.36 (b1 5.57 vs 5.37). Parked by the gain rule; GPU confirmation still owed.",
+  "veilfall_falls_unshadowed": {"_why": "F39#31 r3 judges (3/3): the up-close fall sheet shows a dark notch, which is a pine's cast shadow on the falling water. When on, the Veilfall fall columns use their shader with shadows_disabled (water_veilfall_falls.gd _fall_shader). OFF until judged.", "scope": "local presentation only", "enabled": false},
+  "_why_veilfall_near_on": "tb/vis-tidewake-1104 r3 (CPU F39-look + T2-current matrix, 3 code-blind judges, anchors, calibrate r 0.96 RMSE 0.23): veilfall_rock_detail_candidate + veilfall_formation_relief_candidate + veilfall_falls_candidate together lift F39#31 Veilfall CPU 4.94 -> 5.20 mapped; F39#30 matrix level (5.63/5.11 both sides), F13#5 5.68 -> 5.72. Judges still see a dark notch in the up-close fall sheet (next fix). Owner 4 Nov: a judged gain ships ON.",
   "_why_sections_off": "Shipped in this file but OFF in play (settings() drops them; --tidewake-look-candidate restores them for captures): current_flow and current_flow_visual (b4 foam ribbons, unjudged; b3 ribbons 4.96 vs control 4.86), night_creature_floor (white-ghost night creature fix, verified on CPU, never judged at night).",
   "_why_destination_landmarks_candidate": "ON (GPU TW1, 26 Oct 2026; tb/gpu-pass 0290aa105, ralph/reports/GPU-PASS/TIDEWAKE/TW1-destinations-a9f7ee5a1/VERDICT.md): the whole destination landmark stack (base, s3, s4, s5; later layer wins by landmark_id) against no sections, three code-blind judges, mapped: pumps-shore 5.35 -> 6.68 (+1.33), jetty 5.41 -> 6.56 (+1.15), the same on Medium and High; P2-011 PRESENT 3/3 -> PARTIAL. Not met (about 0.9 short): dress each landmark, scale the jetty derrick, remove the mid-water band, cliff-and-falls far islands.",
   "sections_off": [
@@ -15,13 +17,10 @@
     "veilfall_hero_candidate",
     "veilfall_facade_candidate",
     "forward_plus_candidate",
-    "veilfall_rock_detail_candidate",
     "first_shore_declutter_candidate",
-    "veilfall_formation_relief_candidate",
     "veilfall_formation_relief_fill_candidate",
     "shore_surf_candidate",
     "shore_surf_vary_candidate",
-    "veilfall_falls_candidate",
     "rain_fog_candidate",
     "rain_grade_candidate",
     "rain_veil_candidate",
@@ -5361,6 +5360,7 @@
   "_why_current_flow_on": "Cloud yardstick 1 Nov 2026 batch-3 (GPU High, 3 judges, anchors, calibrated): live current P2-066 4.12 -> 5.18, current restoration P2-067 4.12 -> 5.08; ships ON.",
   "cause_tidewake": {
     "_comment": "tb/cause-tidewake (1 Nov 2026, owner: fix shared causes to a mapped High 7.0+). Three parts, each OFF until GPU-judged; an enabled part restores its listed sections_off candidates and merges its `merge` map over this file's top-level sections (tidewake_look_profile.gd cause_parts). Captures may force a part with --tidewake-cause=<part>. Every part reads on Compatibility and Forward+; shader cost is a few texture samples, no scene walks.",
+    "stars": {"_comment": "tb/vis-tidewake-1104 (F39#30 night; r3 judges 3/3: night is a black void with no moon or stars). A sparse star field above the horizon on Tidewake nights (sky_clouds.gdshader star_brightness; shader default 0, so other biomes and times are unchanged). OFF until judged.", "enabled": false, "restore": [], "merge": {"lighting_candidate": {"times": {"night": {"sky": {"star_brightness": 1.6, "star_density": 0.025}}}}}},
     "sea": {
       "_comment": "Judges 1 Nov: flat single-value navy water with a hard light-cyan shallows band; empty horizons. Depth-graded water: turquoise shallows -> teal shelf (mid stop, wandering contour) -> deep blue-teal with broad value patches; the deep keeps some sky fresnel instead of a dead navy; open water hazes toward the sky horizon with range; soft wind slicks (smoother, lighter streaks that glint) and rare small whitecaps give flow; a broken surf line at the sand. Shipping colours stay in the same family (the t2 royal-navy palette lost).",
       "enabled": false,

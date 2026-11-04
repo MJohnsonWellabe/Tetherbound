@@ -26,6 +26,11 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 | `cloudreach_npc_runtime.json:post_readability` (new) | F40#9 P2-068 | **Judged r3: flat, stays OFF** (CPU 5.16 -> 5.20; `r3/`). First CPU score for the item. |
 | (baseline) F40 matrix pieces 3, 4, 7 | F40#0, #19, #21 | **First CPU subset scores (`mx1/`):** day clear 5.45, rain 4.90, night 5.05, mean 5.13 (12 of 384 frames). F40#21: no magenta/placeholder; one judge read the gate's overhanging ledge as floating. |
 
+## Tried, no change or not judged
+
+- `cloudreach_visual.json:ground_cover` clumping overlay (F40#1): no visible change at the P2-021 stands; not judged (`qj/qj_clumps/`).
+- `hud.json:catch_card.full_team_line` (F40#18, OFF): first candidate capture lost its catch to an arbitration timing refusal ("not_claimant") on the slow CPU render; one confirming rerun queued.
+
 ## Handed to NEAR6-CR (coordinator, 4 Nov 07:42)
 
 F40#9, #4, #8, #2, #17 now belong to NEAR6-CR (`tb/near6-cr-1104`). From this lane:

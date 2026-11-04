@@ -653,7 +653,7 @@ func _sync_pickups_and_camps() -> void:
 			continue
 		if _placements.has(id) and is_instance_valid(_placements[id]):
 			continue
-		var at := _resolve(id, RULES.vec(config.get("pickup_overrides", {}).get(id, spec["position"])))
+		var at := _resolve(id, RULES.vec(_pickup_override(id, spec["position"])))
 		if at == Vector3.INF:
 			continue
 		var pickup := CACHE.new()
@@ -1072,6 +1072,17 @@ func _sync_personal_rewards() -> void:
 		reward.global_position = at
 		reward.call("setup", spec)
 		_placements[id] = reward
+
+
+## P2-102 / F40#17 (NEAR6-CR): `rim_pickup_inset` (OFF until judged) moves a
+## pickup that sits on a rim camera stand back onto open crown turf. Same
+## identity, item and claim; only the authored spot changes.
+func _pickup_override(id: String, fallback: Variant) -> Variant:
+	for key: String in ["rim_pickup_in_view", "rim_pickup_inset"]:
+		var inset: Dictionary = config.get(key, {})
+		if inset.get("enabled") == true and (inset.get("pickup_overrides", {}) as Dictionary).has(id):
+			return inset["pickup_overrides"][id]
+	return config.get("pickup_overrides", {}).get(id, fallback)
 
 
 func _resolve(id: String, at: Vector3) -> Vector3:

@@ -9,6 +9,12 @@
       "crown_canopy": {"Leaves_NormalTree": "#5f8676", "Bark_NormalTree": "#6a6354"},
       "storm_fern": {"Leaves": "#5c7660"},
       "storm_bush": {"Leaves_TwistedTree": "#627c68"}
+    },
+    "_why_adjust": "qj_foliage (4 Nov): the tint-only grade was flat (both sides identical): crown_canopy's Leaves_NormalTree and the giant trees' Meshy sheet are bright saturated green textures that no multiply tint can cool. These per-material texture adjusts (vegetation.gd _adjusted_texture) desaturate and darken those sheets; storm_canopy and storm_bush already use the shipped desat55 leaf.",
+    "adjust": {
+      "crown_canopy": {"Leaves_NormalTree": {"saturation": 0.5, "brightness": 0.82}},
+      "giant_canopy": {"Material_0": {"saturation": 0.6, "brightness": 0.85}},
+      "storm_fern": {"Leaves": {"saturation": 0.6, "brightness": 0.85}}
     }
   },
   "enabled": true,

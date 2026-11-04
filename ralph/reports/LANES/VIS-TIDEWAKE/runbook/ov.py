@@ -12,6 +12,7 @@ def merge(a, b):
 if sys.argv[1] == "apply":
     ov = json.load(open(sys.argv[2])); json.dump(list(ov), open(STATE, "w"))
     for f, patch in ov.items():
-        p = f"{ROOT}/{f}"; open(p, "w").write(json.dumps(merge(json.load(open(p)), patch), indent=2) + "\n")
+        p = f"{ROOT}/{f}"; merged = merge(json.load(open(p)), patch)
+        open(p, "w").write(json.dumps(merged, indent=2) + "\n")
 else:
     subprocess.run(["git", "checkout", "--"] + json.load(open(STATE)), cwd=ROOT, check=True)

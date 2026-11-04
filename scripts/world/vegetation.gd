@@ -152,15 +152,25 @@ static func stormwood_foliage_grade(vegetation: Dictionary, look: Dictionary = {
 	if not grade is Dictionary or not bool((grade as Dictionary).get("enabled", false)):
 		return {}
 	var variants := {}
+	var adjusts := {}
 	var layers: Dictionary = vegetation.get("layers", {})
 	var tints_by_layer: Dictionary = (grade as Dictionary).get("layers", {})
+	var adjust_by_layer: Dictionary = (grade as Dictionary).get("adjust", {})
 	for layer_name: String in tints_by_layer:
 		var layer: Variant = layers.get(layer_name)
 		if not layer is Dictionary:
 			continue
 		for model: Variant in (layer as Dictionary).get("models", []):
 			variants[str(model)] = (tints_by_layer[layer_name] as Dictionary).duplicate()
-	return {"variant_retint": variants}
+	# Texture adjusts (saturation, brightness, contrast per material): the
+	# bright leaf sheets stay bright green under any multiply tint.
+	for layer_name: String in adjust_by_layer:
+		var layer: Variant = layers.get(layer_name)
+		if not layer is Dictionary:
+			continue
+		for model: Variant in (layer as Dictionary).get("models", []):
+			adjusts[str(model)] = (adjust_by_layer[layer_name] as Dictionary).duplicate(true)
+	return {"variant_retint": variants, "retexture_adjust": adjusts}
 
 
 ## vegetation.json's global retint map with the presentation overlay on top.
@@ -949,9 +959,14 @@ static func retint_policy(model_path: String, layer: Dictionary, overlay: Dictio
 	if not extra_swaps.is_empty():
 		swaps = swaps.duplicate()
 		swaps.merge(extra_swaps, true)
+	var adjusts: Dictionary = layer.get("retexture_adjust", {})
+	var extra_adjusts: Dictionary = (overlay.get("retexture_adjust", {}) as Dictionary).get(model_path, {})
+	if not extra_adjusts.is_empty():
+		adjusts = adjusts.duplicate()
+		adjusts.merge(extra_adjusts, true)
 	return {"tints": tints, "swaps": swaps,
 		"needs_instance_colour": float(layer.get("colour_jitter", 0.0)) > 0.0,
-		"adjusts": layer.get("retexture_adjust", {})}
+		"adjusts": adjusts}
 
 
 ## Materials, cached by source name so every tree in the meadow shares one.

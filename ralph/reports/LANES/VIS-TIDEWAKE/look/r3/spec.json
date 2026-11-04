@@ -1,0 +1,38 @@
+[
+ {
+  "label": "F39#31",
+  "a": "/dev/shm/artifacts/look_r3/sides/F39_31_base.jpg",
+  "b": "/dev/shm/artifacts/look_r3/sides/F39_31_cand.jpg",
+  "brief": "4 in-game frames (Tidewake) for one catalogue subject: the hero landmark (Veilfall) at distance and up close. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The hero landmark (Veilfall) does not read as the board's towering waterfall mountain at distance and up close"
+  ]
+ },
+ {
+  "label": "F39#30a",
+  "a": "/dev/shm/artifacts/look_r3/sides/F39_30a_base.jpg",
+  "b": "/dev/shm/artifacts/look_r3/sides/F39_30a_cand.jpg",
+  "brief": "4 in-game frames (Tidewake): shore views across day, golden hour and rain. Judge the frames as the game's real look - read at a glance, palette, lighting, depth and fit with the key art and its chapter board.",
+  "defects": [
+   "No flat magenta rings or slabs, placeholder materials, floating bodies or clipping"
+  ]
+ },
+ {
+  "label": "F39#30b",
+  "a": "/dev/shm/artifacts/look_r3/sides/F39_30b_base.jpg",
+  "b": "/dev/shm/artifacts/look_r3/sides/F39_30b_cand.jpg",
+  "brief": "4 in-game frames (Tidewake): night, dawn, rain and the landmark approach. Judge the frames as the game's real look - read at a glance, palette, lighting, depth and fit with the key art and its chapter board.",
+  "defects": [
+   "No flat magenta rings or slabs, placeholder materials, floating bodies or clipping"
+  ]
+ },
+ {
+  "label": "F13#5",
+  "a": "/dev/shm/artifacts/look_r3/sides/F13_5_base.jpg",
+  "b": "/dev/shm/artifacts/look_r3/sides/F13_5_cand.jpg",
+  "brief": "4 in-game frames (Tidewake): currents at the normal camera and the Veilfall at distance. Judge whether currents read as moving water and the landmark reads at distance, as the game's real look, against the chapter board.",
+  "defects": [
+   "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
+  ]
+ }
+]

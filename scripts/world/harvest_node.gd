@@ -159,7 +159,7 @@ func setup(spec: Dictionary) -> void:
 	add_to_group("progression_restore")
 
 	_build_visual(spec)
-	if _model_is_a_soft_occluder():
+	if _model_is_a_soft_occluder() or _water_fight_ring_hidden():
 		add_to_group(FIGHT_RING_OCCLUDER_GROUP)
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
@@ -262,6 +262,21 @@ func _deactivate() -> void:
 ## untouched. Only nodes built from a `bushes`/`deadfall` model join.
 const FIGHT_RING_OCCLUDER_GROUP := "fight_ring_occluder"
 const SOFT_OCCLUDER_LAYERS: Array[String] = ["bushes", "deadfall"]
+
+
+## NEAR6-TW (P2-090, F39#20): `water_resource_models.json` `fight_ring_hide`
+## (OFF) lets listed Tidewake gather nodes (the pale reef stone half-sunk beside
+## the fighters) stand aside inside a fight ring like bushes do. Model only.
+static var _fight_ring_hide_items: Variant = null
+
+
+func _water_fight_ring_hidden() -> bool:
+	if _fight_ring_hide_items == null:
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_resource_models.json"))
+		var block: Variant = (raw as Dictionary).get("fight_ring_hide", {}) if raw is Dictionary else {}
+		_fight_ring_hide_items = (block as Dictionary).get("items", []) \
+			if block is Dictionary and bool((block as Dictionary).get("enabled", false)) else []
+	return (_fight_ring_hide_items as Array).has(_item_id)
 
 
 func _model_is_a_soft_occluder() -> bool:
