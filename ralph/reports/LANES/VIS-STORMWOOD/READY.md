@@ -11,7 +11,7 @@
 | F41#4 destinations | `stormwood_lantern_pools` `arrival_pools`, `basin`, `lantern_model`, `glow_fungi`, `grove` | **4.00 -> 4.59** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_stormwood_lantern_pools_grove` |
 | F41#8 named silhouettes | `npc_role_accessories` | **4.72 -> 4.96** (offset-map caveat) | `j3/` | `155cdd39` | `test_vis_stormwood_judged_on` |
 
-**Now (17:30 UTC):** judging `hud.victory_focus` (UIPOSES arm, OFF, never judged alone) on F41#21 Hollows victory reward tiles (GPU 4.92; defect: the victory line groups with the quickbar). Character rows F41#8/#18 left alone while NEAR6-TW edits the shared character rim shader.
+**F41#21 / F41#16 (Hollows fight result screens) need the GPU queue (4 Nov 18:15 UTC):** I set up a CPU A/B of `hud.victory_focus` (UIPOSES arm, OFF, never judged alone; aimed at F41#21's "victory line groups with the quickbar") but `phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120` reached only t=37 s of fight time in its 50 min timeout on llvmpipe (exit 124, no frames), and the win/loss result frames come after the fight ends. **Please judge `hud.json victory_focus` on F41#21 (and F41#16) on the GPU rig.** Character rows F41#8/#18 left alone while NEAR6-TW edits the shared character rim shader.
 
 **Coordinator (4 Nov 16:44 UTC):** NEAR6-TW takes some of my parked F41 items with fresh approaches and marks them in both READY files. I skip every item it claims and continue on the rest. Parked here and free to take: F41#1 (root floor, arc glow), F41#5/#4 (foliage grade), F41#19 (seat), F41#2 (phase grade), F41#10 wall grade (white wall source unknown). **Claimed by NEAR6-TW (its READY, tb/near6-tw-1104):** the F41#10 pale white wall; skipped here.
 
