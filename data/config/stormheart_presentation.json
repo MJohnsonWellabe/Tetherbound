@@ -220,8 +220,11 @@
     "centre": [-100.0, 5470.0],
     "radius_m": 40.0,
     "feather_m": 6.0,
-    "loam_colour": "#211c17",
-    "root_colour": "#3d3024",
+    "_r2": "r1 (qj_rootfloor, not judged): 30% of pixels changed but the floor read as a mauve radial sunburst (46 spokes, pale brown lit lavender by the storm light). r2: blotchy root mottling instead of spokes, darker cooler loam, a share of the original moss kept in patches.",
+    "loam_colour": "#16150f",
+    "root_colour": "#2b2519",
+    "grain_strength": 0.6,
+    "keep_moss": 0.35,
     "roughness": 0.82,
     "strength": 1.0
   },
