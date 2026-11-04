@@ -12,16 +12,22 @@ func _json(path: String) -> Dictionary:
 	return raw if raw is Dictionary else {}
 
 
-## F38#29 P2-065: the immediate beaten bow. OFF returns no rows; ON returns
-## the deeper dejected stance, which bows only the spine, neck and head.
+## F38#29 P2-065: the immediate beaten kneel. OFF returns no rows; ON returns
+## the beaten_kneel rows: both knees bent, the hips lowered (fifth value) and
+## the spine, neck and head bowed.
 func test_f38_29_immediate_beaten_stance() -> void:
 	var cfg := _json("res://data/config/npc_post_stances.json")
 	var block: Dictionary = cfg.beaten_trainer_stance.immediate_1104
-	assert_false(bool(block.enabled), "F38#29 immediate bow ships OFF until judged")
+	assert_false(bool(block.enabled), "F38#29 immediate kneel ships OFF until judged")
 	assert_eq(POST_STANCE.beaten_stance_immediate(cfg), [], "OFF attaches nothing")
 	var on := cfg.duplicate(true)
 	on.beaten_trainer_stance.immediate_1104.enabled = true
 	var rows: Array = POST_STANCE.beaten_stance_immediate(on)
-	assert_eq(rows, cfg.stances.dejected_strong, "ON uses the dejected_strong rows")
+	assert_eq(rows, cfg.stances[str(block.stance)], "ON uses the configured stance rows")
+	var bones := {}
 	for row: Array in rows:
-		assert_true(str(row[0]) in ["Spine", "neck", "Head"], "only the spine, neck and head bow")
+		bones[str(row[0])] = row
+	for bone: String in ["Hips", "LeftLeg", "RightLeg", "Spine", "Head"]:
+		assert_true(bones.has(bone), "the kneel sets %s" % bone)
+	assert_between(float(bones.Hips[4]), 0.2, 0.6, "the hips drop a knee's height, not into the ground")
+	assert_true(float(bones.LeftLeg[1]) > 45.0 and float(bones.RightLeg[1]) > 45.0, "both knees flex (+X)")
