@@ -13,6 +13,8 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813). Items F38#29, #6, #26,
 
 ## Judged flat or worse (stay OFF)
 
+- **F41#3 P2-092 round 1: CPU 4.70 -> 4.75 (+0.05, flat)** (`qj/F41-3-df06580591bf-11041108/`). Arm: `combat.json contact_spacing.named_overrides.capacitor_alpha` (VIS-STORMWOOD's render-box footprint). The tell-start and impact frames are during a lunge or burst, which the spacing rule exempts by design, so the overlap stays. Judges also mark the fight's daylight-green grade off the Stormwood board. Next idea: the base contact spacing itself is fine at i01; the defect is in the exempt burst, so a change would have to touch the boss's lunge target (stop short of the ally's body), which is combat feel, not presentation.
+
 - **F38#29 P2-065 round 1: CPU 6.14 -> 6.22 (+0.08, flat)** (`qj/F38-29-6d8f80b7ac71-11040957/`). Arms: `npc_post_stances.json beaten_trainer_stance.immediate_1104` (beaten kneel) + `art.json grunt_a.clip_candidate`. One judge saw the hunched grunt (PARTIAL); the others saw no change because the grunt is a few pixels tall, behind or beside the player, in all three frames. All three judges asked for a camera beat that frames the defeated trainer. Next idea: a short post-victory shot on the beaten trainer (game presentation, not a capture stand change).
 
 ## Blockers / notes
