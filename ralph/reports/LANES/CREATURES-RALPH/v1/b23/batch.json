@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f36_0_gap:C1A": [
+   6.0,
+   5.2,
+   5.5
+  ],
+  "f36_0_gap:C1B": [
+   5.0,
+   5.0,
+   5.3
+  ],
+  "f36_0_npc:C2B": [
+   6.7,
+   6.7,
+   6.5
+  ],
+  "f36_0_npc:C2A": [
+   6.7,
+   6.8,
+   6.5
+  ],
+  "craft:before": [
+   5.2,
+   5.4,
+   5.2
+  ],
+  "craft:after": [
+   6.6,
+   6.8,
+   6.9
+  ]
+ },
+ "candidates": {
+  "lift:stormbrush cand": [
+   6.3,
+   5.8,
+   6.6
+  ],
+  "lift:stormbrush base": [
+   6.4,
+   5.6,
+   6.4
+  ],
+  "lift:thundertunnel cand": [
+   6.1,
+   5.3,
+   5.6
+  ],
+  "lift:thundertunnel base": [
+   6.0,
+   5.2,
+   5.4
+  ],
+  "lift:tuskroot base": [
+   6.4,
+   6.1,
+   6.6
+  ],
+  "lift:tuskroot cand": [
+   6.9,
+   6.6,
+   7.2
+  ]
+ }
+}
