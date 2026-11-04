@@ -547,9 +547,15 @@ func _collect_nodes() -> bool:
 	# every finish is refused `not_claimant` (seen in qj_portrait2/2b). This
 	# capture process alone widens the arbiter's test-overridable window.
 	if _pinned_wild:
+		# The director builds its arbiter lazily on the first engagement; build
+		# it now (its own idempotent helper) so the widened window is the one
+		# the fight uses.
+		if _director.has_method("_ensure_encounter_arbiters"):
+			_director.call("_ensure_encounter_arbiters")
 		var arbiter: Variant = _director.get("_catch_arbiter")
 		if arbiter is Object and "window_ms" in (arbiter as Object):
 			(arbiter as Object).set("window_ms", CAPTURE_ARBITRATION_WINDOW_MS)
+			print("cloudreach catch: arbiter window %d ms" % int((arbiter as Object).get("window_ms")))
 	if _wild == null:
 		_wild = _director.call("wild_creature") as Node3D
 	if _wild == null and _biome == "tidewake":
