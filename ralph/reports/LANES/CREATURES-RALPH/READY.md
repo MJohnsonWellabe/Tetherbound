@@ -38,6 +38,12 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**qj rim075-f38-1 (4 Nov ~18:40 UTC): F38#1 re-based at CPU 5.91 on the fixed capture; creature rim at 0.75 is flat, so 1.0 stays.**
+- **Re-base:** raw 5.8/5.6/5.6 on both sides; defect PARTIAL.
+- **What the frames show now:** Terrapup's fainted and resting frames lie down (the resting frame was missing before), and Veridian's faint lies flat.
+- **Judges' remaining defects:** the fainted Terrapup is a dark smudge against dark grass, and Veridian at the resting moment still reads semi-upright or splayed.
+- **Next levers (creatures, per the coordinator's new scope):** a value lift for dark coats in the Meadows, and Veridian's rest pose. NEAR6-MS now owns the UI rows, including F38#19.
+
 **qj shinyplates2-f39-4 (4 Nov ~18:00 UTC): shiny remake textures ship ON.**
 - **Result:** F39#4 shiny creature finish, CPU 5.61 -> 6.76 (+1.15; raw 5.4/5.6/5.6 -> 6.3/6.3/6.4; defect PRESENT -> PARTIAL; calibrate r 0.98). All three judges say the violet-magenta whole-body tint is gone and the shell and plate pattern survives.
 - **Cause:** the Tidewake remakes had no shiny texture of their own, so the shiny swap fell back to the OLD mesh's extracted shiny (different UVs) and wired it into emission as well. On top of that, the shiny surface finish hue-rotated the whole body.
