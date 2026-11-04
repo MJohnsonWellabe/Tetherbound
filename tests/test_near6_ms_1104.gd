@@ -79,3 +79,27 @@ func test_f39_23_ring_style_ships_on() -> void:
 	assert_between(float(ring.width_scale), 0.4, 1.0, "a thinner ring, never a bolder one (round 1 lost)")
 	var reticle := FileAccess.get_file_as_string("res://scripts/ui/capture_reticle.gd")
 	assert_true(reticle.contains("_readout_visual.get(\"ring_style_1104\", {})"), "the reticle reads the flag")
+
+
+## F38#4 P2-002: the Meadows unsurveyed map fog takes warm parchment tones
+## (judged gain); other chapters keep their own tones.
+func test_f38_4_meadows_parchment_fog_ships_on() -> void:
+	var cloud: Dictionary = _json("res://data/config/map.json").fog_veil.cloud_fog
+	assert_true(bool(cloud.enabled), "cloud fog stays on")
+	assert_true(str(cloud._why_meadows_parchment_1104).contains("CPU 6.15 -> 7.18"), "records its score")
+	assert_eq(cloud.tones.meadows, ["#8c8266", "#cfc3a0"], "Meadows fog is parchment, not slate")
+	for tone: String in cloud.tones.meadows:
+		var c := Color(tone)
+		assert_true(c.r >= c.b, "a warm tone, never a cold storm grey (%s)" % tone)
+		assert_false(c.r > 0.5 and c.g < 0.3 and c.b < 0.3, "no red or oxblood (%s)" % tone)
+
+
+## F38#9 P2-001: the satchel focus emphasis ships ON (judged gain) and the
+## Satchel tab reads it.
+func test_f38_9_satchel_focus_ships_on() -> void:
+	var focus: Dictionary = _json("res://data/config/menu.json").satchel_focus
+	assert_true(bool(focus.enabled), "satchel focus ships ON (judged gain)")
+	assert_true(str(focus._why_on).contains("CPU 7.13 -> 7.36"), "records its score")
+	assert_between(float(focus.preview_icon_px), 112.0, 200.0, "the focused icon grows, within the panel")
+	var backpack := preload("res://scripts/ui/tab_backpack.gd")
+	assert_false(backpack.satchel_focus().is_empty(), "the Satchel tab sees the flag on")
