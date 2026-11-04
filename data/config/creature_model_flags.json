@@ -2,7 +2,7 @@
   "_comment": "Candidate creature models, OFF by default (scripts/creatures/creature_species.gd _apply_model_flags). An enabled flag merges its per-species placeholder overrides (model, colourway_source_species, animations, ...) over species.json; keys starting with _ are notes. The GPU judges an arm by flipping enabled. Owner-picked remakes 1 Nov 2026: one flag per species so each closes on its own verdict.",
   "flags": {
     "remake_owner1101_terrapup": {
-      "_why": "Owner-picked remake 1 Nov 2026: lean rottweiler-like large dog, mossy stone plates on spine and head, jade eyes (Meshy 01a197b4-5a12-7537-a376-2d571177853a). Ground patch stripped, dog3 rig recipe at the established 3.20 m, dog3 clip author (every gameplay role), jade-eye emission. Provenance: assets/creatures/tetherbound/terrapup/candidate_owner1101/source/provenance.json.",
+      "_why": "Owner-picked remake 1 Nov 2026: lean rottweiler-like large dog, mossy stone plates on spine and head, jade eyes (Meshy 01a197b4-5a12-7537-a376-2d571177853a). Ground patch stripped, dog3 rig recipe at the established 3.20 m, dog3 clip author (every gameplay role), jade-eye emission. Provenance: assets/creatures/tetherbound/terrapup/candidate_owner1101/source/provenance.json. Hit clip holds its peak recoil to the clip end (tools/art_pipeline/hold_clip.py; visual lane v1/b15, 4 Nov: stage F38#2 CPU 6.37 -> 6.79 mapped, three code-blind judges).",
       "enabled": true,
       "species": {
         "terrapup": {
