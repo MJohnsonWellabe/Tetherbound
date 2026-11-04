@@ -18,3 +18,10 @@ func _assert_on(block: Dictionary, score: String, label: String) -> void:
 func test_anchor_vessel_quiet_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_npc_runtime.json")
 	_assert_on(cfg.world_payoffs.anchor_vessel_quiet, "6.32", "world_payoffs.anchor_vessel_quiet")
+
+
+## F40-17-f201152b7ca0-11041023: F40#17 P2-102 High Perches rim mushroom 5.09 -> 5.72.
+func test_rim_pickup_in_view_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_physical_runtime.json")
+	_assert_on(cfg.rim_pickup_in_view, "5.72", "rim_pickup_in_view")
+	assert_false(bool(cfg.rim_pickup_inset.get("enabled", false)), "round-1 inset (flat 4.57) stays OFF")

@@ -45,6 +45,12 @@ F39#1 5.40 -> 5.45, F39#2 5.35 -> 5.19, F39#3 5.45 -> 5.40, F39#15 5.50 -> 5.56.
   - new art: hero structures at the destinations.
 - Owner reassignment (coordinator, 07:42): F39#27/#1/#6/#7/#20/#2/#14/#19/#4 move to the NEAR6-TW lane. This lane keeps #3, #15, #16, #17, #5, #8, #22, #24, #21, #30, #31, #32 and F13#5.
 
+## Round 5 (11:15 UTC): unshadowed falls are flat on F39#31, so they stay OFF (`look/r5/VERDICT.md`)
+
+## Batch 11 note (coordinator, 10:49)
+
+The F39#5 wake (`human_water_contact_visual` base values) was held because NEAR6-TW's `wake_trail` (F39#14 6.10 -> 6.80) overrides them. Once the round-6 capture ends, this branch reverts its base values, drops `test_vis_tidewake_swim_wake.gd`, takes batch 11's `wake_trail` block verbatim, and re-judges F39#5 with ring 2.1 m and interval 0.12 on top of it.
+
 ## Round 2c (09:45 UTC): swim stroke is a tie; it is already shipped
 
 - F39#5 5.85 -> 5.85; F39#14 6.98 -> 6.98 (r 0.98). Frames differ by under 2% of pixels.

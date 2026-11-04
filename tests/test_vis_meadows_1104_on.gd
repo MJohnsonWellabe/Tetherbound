@@ -112,3 +112,24 @@ func test_f38_22_market_folk_ship_on_silent_with_their_score() -> void:
 		var spec: Dictionary = person
 		assert_false(spec.has("greeting") or spec.has("greeting_when"), "silent set dressing: no prompt, no dialogue")
 		assert_false(preload("res://scripts/world/village_npcs.gd").has_anything_to_say(spec), "nothing to say, so no Greet prompt")
+
+
+## F38#20 r5: the keep rises from a rock crag instead of floating on the
+## skyline (CPU 5.87 -> 6.05, quick_judge f38_20-crag2).
+func test_f38_20_keep_crag_ships_on_with_its_score() -> void:
+	var config := _load("res://data/config/stronghold.json")
+	var gatehouse: Dictionary = preload("res://scripts/world/stronghold.gd").p2_003_gatehouse(config)
+	var crag: Dictionary = {}
+	for companion: Variant in gatehouse.get("companions", []):
+		if companion is Dictionary and str((companion as Dictionary).get("id", "")) == "crag":
+			crag = companion
+	assert_false(crag.is_empty(), "the crag is placed beside the keep")
+	assert_true(str(crag.get("_why_on", "")).contains("CPU 5.87 -> 6.05"), "records its CPU score")
+	assert_true(ResourceLoader.exists(str(crag.get("path", ""))), "the crag model is installed")
+	var offset: Array = crag.get("offset", [])
+	assert_true(float(offset[2]) - 40.0 > 103.0, "the crag's front face stays behind the hall's last chamber")
+	var spire_kept := false
+	for companion: Variant in gatehouse.get("companions", []):
+		if companion is Dictionary and str((companion as Dictionary).get("id", "")) == "spire":
+			spire_kept = true
+	assert_true(spire_kept, "the spire is still placed")

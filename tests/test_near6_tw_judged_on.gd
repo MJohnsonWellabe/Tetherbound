@@ -28,6 +28,17 @@ func test_swim_wake_trail_ships_on() -> void:
 	assert_true(float(loaded.get("trail_grow_to", 1.0)) > 1.0, "trail rings spread as they fade")
 
 
+## r20b: F39#20 fight background ground contact 5.87 -> 6.42.
+func test_fight_ring_hide_ships_on() -> void:
+	var cfg := _json("res://data/config/water_resource_models.json")
+	_assert_on(cfg.fight_ring_hide, "6.42", "water_resource_models.fight_ring_hide")
+	assert_true((cfg.fight_ring_hide.items as Array).has("reef_stone"), "the reef stone stands aside")
+	assert_true(bool(cfg.fight_ring_hide.get("pickups", false)), "world pickups stand aside too")
+	var pickup: Node = preload("res://scripts/world/item_cache_pickup.gd").new()
+	assert_true(pickup.has_method("set_fight_hidden"), "pickups answer combat_arena's hide call")
+	pickup.free()
+
+
 ## The fill uniform defaults to 0, so the Stormwood rim keeps its rim-only look.
 func test_rim_overlay_fill_defaults_off() -> void:
 	var code := FileAccess.get_file_as_string("res://shaders/character_rim_overlay.gdshader")
