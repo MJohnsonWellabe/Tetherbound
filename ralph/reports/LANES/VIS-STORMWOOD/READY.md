@@ -4,7 +4,8 @@
 
 | Item | Flags ON | CPU score | Verdict | Commit | Test |
 |---|---|---|---|---|---|
-| ~~F41#19 seam clear r1~~ | **withdrawn**: r1 dropped the fissure ribbons and broke `test_stormwood_glass_field_identity` (24 fissures expected, got 0; coordinator held it OFF in batch 9). r2 (`e85d4d85`, OFF) keeps every fissure, darkened; re-judge `qj_seam2` queued, then the identity test runs with r2 ON before it is turned on | (r1 4.34 -> 5.30) | `qj/qj_seam/` | `e85d4d85` | `test_stormwood_basalt_crust`, `test_stormwood_glass_field_identity` |
+| F41#19 Glass Field seam clear r2 | `stormwood_glass_field` `seam_clear_1104` (fissures kept, darkened; whole scar cleared of grass; narrower crust) | **4.77 -> 5.59** (3/3; r1 4.34 -> 5.30 withdrawn for dropping fissures) | `qj/qj_seam2/` | (this push) | `test_stormwood_basalt_crust`, `test_vis_stormwood_judged_on`, `test_stormwood_glass_field_identity` run with it ON |
+| F41#10 Glass Sink obsidian r3 | `stormwood_glass_sink` `obsidian_1104.r3` (satin black glass, no veins or seams) | **3.96 -> 4.38** | `qj/qj_obs3/` | `c072bc54` | `test_stormwood_glass_sink_obsidian`, `test_vis_stormwood_judged_on`, `test_hero_landmarks_1101`, `test_storm_cams_candidates`, `test_stormwood_charged_ground`, `test_stormwood_route_walkability`, `test_stormwood_surge` (all 0 failed with it ON) |
 | F41#10 Glass Sink | `hero_landmarks_1101.glass_sink`, `stormwood_glass_sink` `dark_pool_candidate` + `obsidian_1104` | **4.03 -> 5.07** | `j4/` | `84f06e8a` | `test_vis_stormwood_judged_on`, `test_hero_landmarks_1101`, `test_storm_cams_candidates`, `test_stormwood_glass_sink_obsidian` |
 | F41#1 Stormheart | `stormheart_presentation` `deck_light_1101`, `hollow_floor`, `hero_interior.round2` | **3.22 -> 3.94** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_cause_stormwood_candidates` |
 | F41#4 destinations | `stormwood_lantern_pools` `arrival_pools`, `basin`, `lantern_model`, `glow_fungi`, `grove` | **4.00 -> 4.59** | `j1/` | `c1ebc1ff` | `test_vis_stormwood_judged_on`, `test_stormwood_lantern_pools_grove` |
@@ -16,7 +17,22 @@
 - `test_character_appearance_variants`
 - `test_stormwood_struck_sentinel_identity`, `test_stormwood_capacitor_grove_identity`, `test_stormwood_glass_field_identity`
 
-Results land here.
+Results: below, all 0 failed.
+
+**Region identity and look tests (4 Nov ~10:45 UTC, head with obsidian r3 ON; seam r2 ON separately passed basalt, judged_on, glass_field_identity 4/73, surge 4/46), all 0 failed:**
+- `test_stormheart_presentation` 7/784
+- `test_stormheart_ancient_trunk` 4/240
+- `test_stormheart_canopy_atlas` 2/10
+- `test_stormheart_split_bark` 3/10
+- `test_stormheart_wayfinding` 3/3952
+- `test_stormwood_look` 8/54
+- `test_stormwood_crown_overlook` 2/526
+- `test_stormwood_charged_ground` 2/7
+- `test_stormwood_route_walkability` 4/37
+- `test_stormwood_surge` 4/46
+- `test_character_appearance_variants` 11/235
+- `test_stormwood_struck_sentinel_identity` 2/23
+- `test_stormwood_capacitor_grove_identity` 2/24
 
 **Tests on the synced head (06:20 UTC, after main merge `9faa85e1` and the j1-j4 commits), all 0 failed:**
 - `test_vis_stormwood_judged_on` 4/25

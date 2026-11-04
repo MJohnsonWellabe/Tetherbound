@@ -26,7 +26,8 @@
       "vein_fraction": 0.15
     },
     "r3": {
-      "enabled": false,
+      "enabled": true,
+      "_why_on": "ON (VIS-STORMWOOD qj_obs3, 4 Nov 2026): CPU three-judge quick_judge A/B, calibrated slope 1.39, r 0.98, anchor RMSE 0.28: F41#10 Glass Sink 3.96 -> 4.38 mapped (2/3 prefer the plain black glass; the grid is gone).",
       "_why": "VIS-STORMWOOD qj_obs2 (r2 flat, 3.93 -> 4.02; 3/3: the glowing seams read as 'a debug wireframe grid'; asked for 'a black reflective pool'). r3: no glowing veins, seams the colour of the facets so the cells disappear, and a satin black-glass body that keeps a soft near reflection fading out by 160 m. OFF until judged.",
       "seam_colour": "#121824",
       "seam_width": 0.0,
