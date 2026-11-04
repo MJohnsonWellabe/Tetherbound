@@ -20,11 +20,17 @@ func test_every_part_ships_off_and_off_changes_nothing() -> void:
 	var raw := _raw()
 	for part: String in ["sea", "light", "dunes"]:
 		assert_false(bool(raw.cause_tidewake[part].enabled), "%s ships off" % part)
+	# currents ships ON (tb/vis-tidewake-1104 r1: F39#17 CPU 5.54 -> 6.09); the
+	# remaining parts are compared with currents on in both profiles.
+	assert_true(bool(raw.cause_tidewake.currents.enabled), "currents ships on")
+	assert_true(str(raw.cause_tidewake.currents.get("_why_on", "")).contains("6.09"))
 	var shipped := PROFILE.resolve(_raw())
 	var stripped := _raw()
-	stripped.erase("cause_tidewake")
+	var currents: Dictionary = stripped.cause_tidewake.currents
+	stripped.cause_tidewake = {"currents": currents}
 	var expected := PROFILE.resolve(stripped)
 	shipped.erase("cause_tidewake")
+	expected.erase("cause_tidewake")
 	assert_eq(shipped, expected, "off parts leave the in-play profile unchanged")
 	assert_false(shipped.has("cause_light_look"))
 
@@ -69,7 +75,9 @@ func test_parts_compose() -> void:
 
 
 func test_currents_part_strips_restored_paint() -> void:
-	var off := PROFILE.resolve(_raw())
+	var raw_off := _raw()
+	raw_off.cause_tidewake.currents.enabled = false
+	var off := PROFILE.resolve(raw_off)
 	var on := _with(["currents"])
 	assert_true(on.has("current_flow"), "currents brings current_flow into play")
 	var restored: Dictionary = on.current_flow.state_shader.restored
