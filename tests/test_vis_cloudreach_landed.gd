@@ -28,3 +28,9 @@ func test_island_low_mist_is_on_with_its_score() -> void:
 	assert_true(str(low.get("_why_on", "")).contains("4.97 -> 6.03"), "P2-106 CPU score recorded")
 	assert_true(float(low.get("mist_below_m", 0.0)) > float(roots.get("mist_below_m", 0.0)),
 		"the collar sits lower than the base config")
+
+
+func test_catch_card_is_on_with_its_score() -> void:
+	var card: Dictionary = _read("res://data/config/hud.json").get("catch_card", {})
+	assert_true(card.get("enabled") == true, "P2-118 hud.json catch_card ships ON")
+	assert_true(str(card.get("_why_on", "")).contains("3.77 -> 4.61"), "P2-118 CPU score recorded")
