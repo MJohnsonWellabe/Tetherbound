@@ -32,7 +32,7 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 
 ## Status (4 Nov 17:10 UTC)
 
-Seven CPU gains ON (owner/coordinator batch): P2-053 5.87 -> 6.32, P2-102 5.09 -> 5.72, P2-068 5.05 -> 5.25 (the first three landed on main in #818/#820/#823), then P2-022 5.64 -> 6.16, P2-023 5.96 -> 6.27, F40#19 night 5.10 -> 5.84 (plus the earlier P2-023/P2-022 OFF arms recorded above). Zero criteria closed (CPU scores rank only; rows close on the GPU).
+Six CPU gains ON (owner/coordinator batch): P2-053 5.87 -> 6.32, P2-102 5.09 -> 5.72, P2-068 5.05 -> 5.25 (the first three landed on main in #818/#820/#823), then P2-022 5.64 -> 6.16, P2-023 5.96 -> 6.27, F40#19 night 5.10 -> 5.84. Zero criteria closed (CPU scores rank only; rows close on the GPU).
 
 Open for this lane: F40#19 rain (mx1 4.90; judges: rain only desaturates; Cloudreach rain needs a realm-scoped weather hook, not yet built). P2-068 is still under 6 (the NPCs sit 2 m behind the trainer at the capture stand). P2-102 is under 6 (5.72).
 
