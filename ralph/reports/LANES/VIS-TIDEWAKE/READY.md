@@ -45,6 +45,7 @@ F39#1 5.40 -> 5.45, F39#2 5.35 -> 5.19, F39#3 5.45 -> 5.40, F39#15 5.50 -> 5.56.
   - scene: irregular shallows instead of the rest-shoal disc chain, plus wet-sand, foam, rock and driftwood bands and haze;
   - new art: hero structures at the destinations.
 - Owner reassignment (coordinator, 07:42): F39#27/#1/#6/#7/#20/#2/#14/#19/#4 move to the NEAR6-TW lane. This lane keeps #3, #15, #16, #17, #5, #8, #22, #24, #21, #30, #31, #32 and F13#5.
+- Coordinator (11:45): stars landed in batch 13 (#821). F39#16/#15/#3/#24/#21 move to NEAR6-TW. This lane keeps F39#30 (night/matrix), #31 Veilfall, #32 matrix cleanliness, #5 (wake_trail reconcile) and F13#5.
 
 ## Round 5 (11:15 UTC): unshadowed falls are flat on F39#31, so they stay OFF (`look/r5/VERDICT.md`)
 
@@ -87,3 +88,4 @@ Arm: `cause_tidewake.sea` + `horizon`. Calibration r 0.84, RMSE 0.45 (`qj/r2b/VE
 - **No merge of origin/main here:** a depth-1 fetch has no merge base, and `git fetch --deepen=40` ran out of disk (66 MB free). The coordinator's landing PR has to merge this branch with main.
 
 - Container disk: the 21 GB `.git` pack fills the allowance (117 MB free). Godot's `.godot` import cache, captures and judge folders run from `/dev/shm` (RAM). Rewriting the pack to depth 1 was refused by the permission classifier.
+- qj/r7 (12:10): F39#5 re-judged on the batch-11 wake_trail base: base maps 6.20 (CPU, above 6.0). A wake_trail tune (interval 0.12, spacing 0.55, lifetime 2.8, grow 2.6) was flat (6.20 -> 6.14; F39#14 6.89 -> 6.77) and stays OFF.
