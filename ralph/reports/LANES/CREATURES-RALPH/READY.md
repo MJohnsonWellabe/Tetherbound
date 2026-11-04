@@ -32,6 +32,15 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
+**FOR #808 (4 Nov ~03:00 UTC): hud_lean fixed, so `smoke_objective_hint_card` passes with hud_lean ON and OFF.**
+- **Cause:** lean `objective_width` 460 moved the objective block's left edge into the centre gutter. The objective hint card measures its width off that edge, so it narrowed, wrapped and ran 10 px into the bottom dock.
+- **Fix, config:** lean `objective_width` returns to 348 (`hud.json` `_why_r4`). The r3 eyebrow row (46) stays.
+- **Fix, test:** the plate check now reads the HUD's live eyebrow row (`_objective_eyebrow_row()`) instead of the constant.
+- **Local result, `smoke_objective_hint_card`, PASS:**
+  - lean ON: 28 hints fit, tallest card 281 px in band 168-533, 84 px spare; 2-line plate 176 px.
+  - lean OFF: the same, with a 166 px plate.
+- **To land:** take the next head and keep hud_lean ON as #808 had it.
+
 **FOR #808 (4 Nov ~00:45 UTC): take this branch's head; it fixes two test failures that the storm-light-ON commit `43f47541` causes.** In `tests/test_cause_stormwood_candidates.gd`, `test_storm_sky_on_...` and `test_soft_rain_on_...` failed. Both build their candidate from the shipped config, which now has BOTH candidates ON, so "the sky candidate leaves rain alone" and "the rain candidate leaves phases alone" each saw the other flag applied. The fix: the helper `_surge_with` turns every candidate OFF first, then turns on only the named ones. No assertion is changed. Re-run: `test_cause_stormwood_candidates.gd` **10 tests, 68 assertions, 0 failed**.
 
 **Owner rule, 4 Nov (via the coordinator): every judged improvement ships ON, even below 6.0. Only flat or worse stays OFF.** Applying it to this lane's held items:

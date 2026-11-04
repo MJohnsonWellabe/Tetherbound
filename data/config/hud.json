@@ -37,8 +37,9 @@
     "assigned_slot_height": 108,
     "legend_plate_alpha": 0.45,
     "_why_r2": "Round 1 yardstick judges (22 Oct): legend text vanished over pale sand without its box; counts were tiny beside the pad glyph. A soft borderless legend plate and larger, spaced counts.",
-    "objective_width": 460,
+    "objective_width": 348,
     "objective_eyebrow_row": 46,
+    "_why_r4": "Visual lane, 4 Nov (CI on #808): at 460 px the objective block's left edge moved into the centre gutter, so the objective hint card (whose width is measured off that edge) narrowed by ~224 px, wrapped a line more and ran 10 px into the bottom dock in its tallest state (smoke_objective_hint_card). The width returns to the shipped 348 px; the r3 fix (the eyebrow on its own 46 px row) stays.",
     "_why_r3": "Round 2 judges: the MAIN STORY eyebrow collided with the wrapped quest line; a wider card (460) with a gold left-aligned eyebrow on its own 46 px row.",
     "_why_off": "Yardstick round 2: mapped 6.41 vs shipping 6.71 (does not beat shipping); stays OFF."
   },
