@@ -29,6 +29,9 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 
 - **r6b, F39#6, worse on pre-check, held OFF, item PARKED:** the `tidewake_scope` settle leaves Ripplet and Aquaryn standing and Riptusk floating upright at the faint-end moment (`qj/r6b/`). This was round 2 on the item.
 
+- **r20, F39#20, no visible change, not judged:** hiding gather nodes left the frames identical. The judges' "small blue creature-like figure" is the `great_candy` world pickup (blue figure plus highlight ring), 9 m from Venn's fight centre, and it is not a harvest node. The arm now also covers pickups (`fight_ring_hide.pickups`, `item_cache_pickup.gd set_fight_hidden`). Re-queued as r20b.
+- **F39#4:** the new `shiny_cue.overlay` (a pale-gold rim overlay on shiny bodies, OFF) is queued as r4.
+
 ## Queue
 
 `runbook/chain.sh` (resumable): import, then r6, r27, r14, r19, r7. F39#1/#2 wait for VIS-TIDEWAKE's r2a verdict; F39#4 waits for its shiny round; F39#20 is designed from the r19 base fight frames.

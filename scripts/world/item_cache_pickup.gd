@@ -149,6 +149,29 @@ func _deactivate() -> void:
 	queue_free()
 
 
+## NEAR6-TW (P2-090, F39#20): combat_arena hides fight_ring_occluder members
+## inside its ring. A pickup that joined that group (water_scene_pickups.gd,
+## `water_resource_models.json` `fight_ring_hide.pickups`, OFF) hides its art
+## and highlight for the fight; claim state and prompt are untouched. Counted,
+## like harvest_node.gd, so two overlapping rings do not show it early.
+var _fight_hides := 0
+
+
+func set_fight_hidden(hidden: bool) -> void:
+	if _taken:
+		return
+	_fight_hides = maxi(0, _fight_hides + (1 if hidden else -1))
+	var show := _fight_hides == 0
+	for child: Node in get_children():
+		if child is Node3D and child != _prompt:
+			(child as Node3D).visible = show
+	if show:
+		var anchor: Node3D = _presentation_anchor if is_instance_valid(_presentation_anchor) else self
+		PICKUP_GLOW.attach(anchor, _item_colour())
+	else:
+		_detach_visual_glow()
+
+
 ## Move presentation without moving the authored claim/interaction anchor.
 ## The unscaled emitter measures only the scaled item, excluding reward beams.
 func set_visual_offset(offset: Vector3) -> void:
