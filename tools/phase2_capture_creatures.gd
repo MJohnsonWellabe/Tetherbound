@@ -235,6 +235,15 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	body.set_script(BODY)
 	_world.add_child(body)
 	body.call("setup", species, shiny)
+	# Creatures-ralph 4 Nov (reproduced): the art model and its animator are
+	# built on the body's first frame, not inside setup(). Seating and posing
+	# before then were no-ops: play_hit/play_faint/play_rest found no animator,
+	# so "hurt", "fainted" and "resting" stills showed idle, and _seat measured
+	# no model. Wait for the model (bounded) before seating and posing.
+	for _wait in 30:
+		if body.get("_animator") != null or bool(body.get("_has_model")):
+			break
+		await process_frame
 	if scale_factor > 1.0 and body.has_method("apply_size_multiplier"):
 		body.call("apply_size_multiplier", scale_factor)
 	body.global_position = Vector3(subject_x, ground, subject_z)
