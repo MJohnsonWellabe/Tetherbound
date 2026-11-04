@@ -1,0 +1,1 @@
+{"data/config/pickup_grounding.json": {"tier_candidate": {"enabled": true, "items": {"good_candy": {"scale_mult": 1.45}, "great_candy": {"scale_mult": 1.6}, "rare_candy": {"scale_mult": 1.75}}}}}

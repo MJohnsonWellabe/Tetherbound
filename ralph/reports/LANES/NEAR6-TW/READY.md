@@ -1,5 +1,11 @@
 # NEAR6-TW lane (tb/near6-tw-1104): Tidewake F39 items scored 5.4–6.0, CPU quick-judged
 
+## Taken (coordinator 19:25)
+
+- **F41#12** (charged road, 5.63): judging the existing unjudged `stormwood_road_current.puddle_candidate`.
+- **F41#14** (candy tiers, 5.70): `pickup_grounding.tier_candidate` with larger tiers (1.45/1.6/1.75x; the arm had shrunk them, while the judges call them pinhead-sized).
+- **F39#2**: parked here after two failed rounds; new art. **F39#31 and F13#5 are left to VIS-TIDEWAKE**, which has them in flight.
+
 ## Taken from VIS-STORMWOOD (coordinator 16:44)
 
 - **F41#10 Glass Sink: the pale white wall. DONE, ON 4.84 -> 5.36:** the wall was `HollowCrownSilhouette` (stormwood_crown_overlook massif), whose 300 m visibility start sat inside its own 560 m footprint, so stands on the Crown island saw its inner cliff. One judge flags the trunk revealed at the left edge as red-brown; two read it as bark.
