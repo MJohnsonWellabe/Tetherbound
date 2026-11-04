@@ -32,16 +32,16 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - New OFF arm `a1defe43` **F39#13**: a Blender-built 2.6 m plank workbench with a 2.15 m tool board (hammer, saw, tongs, rope coil), vise and lantern post (`meshy_camp_props.json workbench.vl_candidate`); provenance and scale check in `assets/props/vl-1103/camp_workbench/`.
 - New OFF arm `11a1916d` **F41#13 Fulgocobra**: gold-band charge emission (`creatures_ralph_fulgocobra_goldvein`), to be captured with `capture_f36_poses.gd`.
 
-**WORK SPLIT, superseded by the coordinator's region lanes (4 Nov ~00:30 UTC).** I started three sessions at ~00:25. Shortly after, the coordinator started its own region lanes (`tb/vis-{meadows,tidewake,cloudreach,stormwood}-1104`) and narrowed this lane to creatures and poses, UI and HUD, and finishing in-flight arms.
-- **Duplicates stopped:** my Meadows (session_01GPgpLVWzM8XEsyp3wq3xZ1) and Stormwood (session_01GPgpLTDaYg7gMHKr9QQJCo) sessions are stood down, with nothing pushed.
-- **Third session re-scoped:** session_01GPgpLUz2mRNqZuSH9Csfva now covers only the creature roster items F36#70, F36#54, F36#56 and F39#24 Torrentoad, on `tb/visual-roster`.
-- **This lane finishes its in-flight work:**
-  - the Tidewake recapture (tw_cand, then twl); its verdicts are for the Tidewake region lane
-  - the F38#24 ridge judging
-  - the F38#1/#2/#26 creature rim
-  - the storm-light and rim tests
-  - F38#19 HUD
-- **Shared scripts:** in `tools/visual_judge/lane_bin/`.
+**Scope (coordinator, 4 Nov ~00:30 UTC):** the coordinator archived all three sessions I started at 00:25. The region items belong to its `tb/vis-*-1104` lanes, and I will not start sessions without asking the coordinator first.
+
+This lane covers creatures and poses, UI/HUD and in-flight arms:
+- **Fulgocobra 6.52:** landing-ready.
+- **Storm-light set:** its tests run once the Tidewake overlay reverts.
+- **Rim, ridge and Tidewake recapture:** the creature rim (F38#1/#2/#26), the F38#24 ridge judging and the Tidewake recapture, whose verdicts go to the Tidewake region lane.
+- **Roster rows with a judge-named fix:** F36#56 Nightburrow (partial plates), F36#70 Sparkit, F36#54 Mosshock, F39#24 Torrentoad.
+- **HUD:** F38#19.
+
+Each READY item is pushed as it passes.
 
 **Queue fault found and fixed (3 Nov ~23:30 UTC).**
 - **What happened:** the Tidewake items candidate (`tw_cand`, 22:52) failed its overlay because the camp bed and workbench were already ON. Its partial overlay was left applied. The Tidewake look capture (`twl_base`, 22:52-23:16) then ran with that overlay, so twl is discarded and will be rerun cleanly.
