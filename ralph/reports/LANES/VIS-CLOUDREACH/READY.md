@@ -31,6 +31,8 @@ P2-105/P2-106 judged together in r3b (`r3b/VERDICT.md`). **Decision for the coor
 
 ## Tried, no change or not judged
 
+- `cloudreach_look.json:tree_canopy_camera_stops` (F40#6): no visible change at the road-back frames; not judged; OFF (`qj/qj_canopy/`).
+
 - `catching.json:seal_reveal` (F40#18): **worse, CPU 5.63 -> 3.33** (`qj/qj_reveal/`); the raised camera digs into the hillside. Stays OFF. Merged-tree P2-118 base with card + full-team line ON: **5.63**.
 
 - Night moon key light via `cloudreach_visual.json` `time_overrides.night.sun` (F40#19/#0, matrix piece 7): no visible change; a later light layer overrides it (`mx2/`).

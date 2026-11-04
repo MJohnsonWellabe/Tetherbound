@@ -1,0 +1,4 @@
+# Quick judge qj_canopy: F40#6 tree_canopy_camera_stops (not judged)
+
+- Overlay: `cloudreach_look.json:tree_canopy_camera_stops.enabled`. Captured `phase2_capture_cloudreach_ride.gd` on tree `7ff3b7defe3e`, base and candidate (quick_judge `capture`; the job's frame ids no longer match the ride's names now that the shipped scramble recovers the mount at 1.2 s, so pairing is manual).
+- **Result: no visible change.** The road-back frames (`phase2_19_terrace_road_back_01.5s`, `_20_..._03.0s`) are the same on both sides: the camera still sits inside the same canopy. That tree is not one of `cloudreach_look.gd`'s look trees, or the camera pivot itself is inside the crown, so a crown stop cannot pull the arm out. Not judged; stays OFF. A follow-up would need the tree's source (settlement or arrival dressing) or a foliage fade near the camera.
