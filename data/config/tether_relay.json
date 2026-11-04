@@ -1135,7 +1135,8 @@
     "surface_candidate": {
       "enabled": true,
       "r2": {
-        "enabled": false,
+        "enabled": true,
+        "_why_on": "VIS-MEADOWS 4 Nov 2026 (F38#23, quick_judge f38_23-cobble-r2, three code-blind judges, on top of the arch lift): CPU mapped 5.90 -> 6.04 base -> 6.73 / 6.93 this batch, +0.20 (two of three judges prefer the smaller flags; anchor r 0.97). Shipped under the owner any-gain rule.",
         "_candidate": "World dressing P2-013 (OFF until judged; tb/world-dressing). GPU 6.59: an oversized uniform cobble texture. Flags at 2.3x the density (uv 0.22 -> 0.5) and a touch warmer.",
         "uv_scale": 0.5,
         "tint": "#a39885",

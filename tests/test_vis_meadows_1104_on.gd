@@ -292,3 +292,13 @@ func test_f38_23_relay_arch_lift_ships_on_with_its_score() -> void:
 	assert_eq(str(arch.get("tint", "")), "#e4d8c2", "lifted arch tint")
 	assert_true(Color(str(arch.get("tint", "#000000"))).get_luminance() > Color("#a0927b").get_luminance() + 0.2, "arch reads lighter than before")
 	assert_true(str(arch.get("_why_tint", "")).contains("5.90 -> 6.04"), "records its CPU score")
+
+
+## F38#23 relay yard: the smaller cobble flags (`ground_pad.surface_candidate.r2`)
+## ship ON (mapped 6.73 -> 6.93, qj/f38_23-cobble-r2).
+func test_f38_23_relay_cobble_r2_ships_on_with_its_score() -> void:
+	var pad: Dictionary = _load("res://data/config/tether_relay.json").get("ground_pad", {})
+	var r2: Dictionary = ((pad.get("surface_candidate", {}) as Dictionary).get("r2", {}) as Dictionary)
+	assert_true(bool(r2.get("enabled", false)), "smaller flags ON")
+	assert_true(float(r2.get("uv_scale", 0.0)) > 0.4, "flags at the denser scale")
+	assert_true(str(r2.get("_why_on", "")).contains("6.73 / 6.93"), "records its CPU score")
