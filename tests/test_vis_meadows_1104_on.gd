@@ -208,3 +208,27 @@ func test_f38_20_bigger_keep_keeps_its_front_face_with_its_score() -> void:
 	var centre := float((keep.get("offset", [0.0, 0.0, 0.0]) as Array)[2])
 	assert_almost_eq(width, 210.0, 0.001, "keep 210 m wide")
 	assert_almost_eq(centre - width * 0.43 * 0.5, 140.6 - 170.0 * 0.43 * 0.5, 0.2, "front face unchanged, so nothing new reaches the chambers")
+
+
+## F38#15 mount scale (coordinator-approved, presentation only): the carrier
+## art grows so the bird stands clearly taller than the 1.80 m trainer, while
+## flight collision, the seat (feet offset) and the grip bones are unchanged
+## (CPU 6.21 -> 7.08, quick_judge f38_15-mount-scale).
+func test_f38_15_mount_grows_without_moving_collision_or_seat() -> void:
+	var fly := _load("res://data/config/fly_traversal.json")
+	assert_almost_eq(float(fly.get("collision_height_m", 0.0)), 4.5, 0.001, "flight collision height unchanged")
+	var expected := {"galecrest": [3.2, 2.45, ["foot_l", "foot_r"]], "galewisp": [3.0, 2.3, ["leg_lower_l", "leg_lower_r"]]}
+	for id: String in expected:
+		var cap: Dictionary = (fly.get("capabilities", {}) as Dictionary).get(id, {})
+		var want: Array = expected[id]
+		assert_true(bool(cap.get("presentation_scale_enabled", false)), id + " presentation scale ON")
+		assert_almost_eq(float(cap.get("presentation_height_m", 0.0)), float(want[0]), 0.001, id + " art height")
+		assert_true(float(cap.get("presentation_height_m", 0.0)) > 1.8, id + " taller than the trainer")
+		assert_true(str(cap.get("_why_presentation_height", "")).contains("CPU 6.21 -> 7.08"), id + " records its CPU score")
+		assert_almost_eq(float((cap.get("feet_offset", [0, 0, 0]) as Array)[1]), float(want[1]), 0.001, id + " seat (feet offset) unchanged")
+		assert_eq(cap.get("grip_bones", []), want[2], id + " grip bones unchanged")
+		var art: Node3D = preload("res://scripts/player/fly_controller.gd").make_carrier_art(cap)
+		assert_ne(art, null, id + " carrier art builds")
+		if art != null:
+			assert_almost_eq(art.position.y, float(want[1]), 0.001, id + " art hangs from the same offset")
+			art.free()
