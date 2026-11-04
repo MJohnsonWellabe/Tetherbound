@@ -314,7 +314,7 @@
     "grass_role_medium_width_multiplier_max": 2.3,
     "grass_role_tall_width_multiplier_min": 1.5,
     "grass_role_tall_width_multiplier_max": 1.9,
-    "grass_role_tall_route_clearance_m": 2.5,
+    "grass_role_tall_route_clearance_m": 2.5, "grass_role_edge_feather": 0.0, "_grass_role_edge_feather_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026): all three mt judges read the dark oval of taller grass on the arrival terrace as a pasted decal; it is a grass role cell whose hard radius threshold draws a sharp edge. Above 0, cloudreach_grass_roles.gd dithers each tuft's cell radius by up to this much (position-hashed, deterministic), so the cell boundary scatters over a band. Presentation only. 0 (off) until judged.",
     "flower_density_per_m2": 0.055,
     "region_flower_patch_cap": 1800,
     "route_flower_patch_cap": 720,
