@@ -26,8 +26,8 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 			"veilfall_facade_candidate", "forward_plus_candidate",
 			"first_shore_declutter_candidate",
 			"veilfall_formation_relief_fill_candidate",
-				"shore_surf_candidate", "shore_surf_vary_candidate", "rain_fog_candidate",
-				"rain_grade_candidate", "rain_veil_candidate", "swim_candidate", "dune_grass_candidate", "shore_water_candidate",
+				"shore_surf_candidate", "shore_surf_vary_candidate",
+				"swim_candidate", "dune_grass_candidate", "shore_water_candidate",
 				"veilfall_mountain_candidate",
 				"waterline_declutter_candidate", "golden_sky_candidate", "current_bands_candidate", "lesson_clusters_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
@@ -73,6 +73,13 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
 	assert_true(str(raw.get("_why_veilfall_near_on", "")).contains("5.20"),
 		"the Veilfall near sections' mapped score is recorded in the config")
+	# tb/vis-tidewake-1104 look r9: the rain trio lifted F39#30a, F39#30b and
+	# F39#31 together (F39#30b CPU 5.81 -> 6.04), so it ships ON.
+	for section: String in ["rain_fog_candidate", "rain_grade_candidate", "rain_veil_candidate"]:
+		assert_false(off.has(section), "%s ships on after look r9" % section)
+		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
+	assert_true(str(raw.get("_why_rain_on", "")).contains("6.04"),
+		"the rain trio's mapped score is recorded in the config")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
