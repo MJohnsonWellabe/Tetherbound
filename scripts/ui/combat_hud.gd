@@ -2061,6 +2061,7 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	_miss_left = 0.0
 	_catch_verdict_message = false
 	_apply_catch_portrait(cfg, card, success, foe)
+	_apply_catch_party_row(cfg, card, success)
 	if success:
 		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
 		_catch_focus_left = _outcome_left
@@ -2115,6 +2116,66 @@ func _hide_catch_portrait() -> void:
 	var rect := _outcome.get_node_or_null(NodePath(CATCH_PORTRAIT_NAME))
 	if rect != null:
 		(rect as CanvasItem).visible = false
+	var row := _outcome.get_node_or_null(NodePath(CATCH_PARTY_ROW_NAME))
+	if row != null:
+		(row as CanvasItem).visible = false
+
+
+## P2-118 (VIS-CLOUDREACH, 5 Nov 2026): hud.json `catch_card.full_team_line.party_row`
+## (off unless enabled). Every judge of the full-party catch card said "Choose
+## who goes free" points at nothing on screen; with this on, the card shows the
+## five current companions' portraits in a row along its bottom edge, so the
+## choice the next screen asks for is already visible. Presentation only: the
+## release ceremony, its input and the party are unchanged.
+const CATCH_PARTY_ROW_NAME := "CatchPartyRow"
+
+
+func _apply_catch_party_row(cfg: Dictionary, card: StyleBoxFlat, success: bool) -> void:
+	var line: Variant = cfg.get("full_team_line", {})
+	var spec: Variant = (line as Dictionary).get("party_row", {}) if line is Dictionary else {}
+	var row := _outcome.get_node_or_null(NodePath(CATCH_PARTY_ROW_NAME)) as HBoxContainer
+	if not success or not spec is Dictionary or (spec as Dictionary).get("enabled") != true \
+			or (line as Dictionary).get("enabled") != true or not _team_full():
+		if row != null:
+			row.visible = false
+		return
+	var game: Node = get_node_or_null(^"/root/Game")
+	var party_auto: Variant = game.get("party") if game != null else null
+	if party_auto == null:
+		return
+	var px := float((spec as Dictionary).get("px", 64.0))
+	if row == null:
+		row = HBoxContainer.new()
+		row.name = CATCH_PARTY_ROW_NAME
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		_outcome.add_child(row)
+	for child: Node in row.get_children():
+		child.queue_free()
+	row.add_theme_constant_override("separation", int((spec as Dictionary).get("gap_px", 10)))
+	for member: Variant in party_auto.call("members"):
+		var path := CREATURE_PORTRAIT.resolve(str((member as Object).get("species_id"))) if member is Object else ""
+		if path.is_empty() or not ResourceLoader.exists(path):
+			continue
+		var face := TextureRect.new()
+		face.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		face.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		face.custom_minimum_size = Vector2(px, px)
+		face.texture = load(path)
+		row.add_child(face)
+	var pad := float((spec as Dictionary).get("pad_px", 12.0))
+	row.anchor_left = 0.0
+	row.anchor_right = 1.0
+	row.anchor_top = 1.0
+	row.anchor_bottom = 1.0
+	row.offset_left = card.content_margin_left
+	row.offset_right = -card.content_margin_right
+	row.offset_top = -(px + pad)
+	row.offset_bottom = -pad
+	row.visible = true
+	card.content_margin_bottom += px + pad
+	_outcome.offset_bottom = maxf(_outcome.offset_bottom, _outcome.offset_top + px + pad + 120.0)
 
 
 ## P2-110: hud.json `loss_card` (off unless enabled). The loss verdict draws as
