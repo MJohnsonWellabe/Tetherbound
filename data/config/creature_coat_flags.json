@@ -853,6 +853,34 @@
       "coats": {
         "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0_value_lift.png"}
       }
+    },
+    "creatures_ralph_bramblebun_value_lift": {
+      "_why": "Stage value lift for Bramblebun (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b25: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_reedwing_value_lift": {
+      "_why": "Stage value lift for Reedwing (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b25: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_paddlenewt_value_lift": {
+      "_why": "Stage value lift for Paddlenewt (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b25: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. Shared by Riftfrill (same albedo). OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_shadelet_value_lift": {
+      "_why": "Stage value lift for Shadelet (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b25: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_Image_0_value_lift.png"}
+      }
     }
   }
 }
