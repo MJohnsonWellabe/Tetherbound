@@ -34,6 +34,7 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 
 | Flag | Row | CPU base -> cand | Test | Commit |
 |---|---|---|---|---|
+| `water_npc_posts_candidate.json` `enabled` (Resident Nalia posted on the passage floor; Rune's offset parked under `offsets_unjudged`) | F39#29 | CPU 5.54 -> 6.34 (3/3 higher, speaker defect PARTIAL -> FIXED) | `test_near6_tw_judged_on.gd::test_nalia_dialogue_post_ships_on`; with `test_storm_cams_candidates`, `test_texture_import_policy`: 25 tests, 0 failed | qj/r29p |
 | `water_character_rim.json` `enabled` (Tidewake named NPC/trainer rim + front fill) | F39#27 | CPU 6.03 -> 6.23 (3/3 judges higher; anchor RMSE 0.79 caveat) | `tests/test_near6_tw_judged_on.gd` (+ `test_creature_rim`, `test_texture_import_policy`: 7 tests, 0 failed) | this commit |
 | `human_water_contact_visual.json` `wake_trail.enabled` (longer, spreading trail rings) | F39#14 | CPU 6.10 -> 6.80 (3/3 judges higher, RMSE 0.52) | `test_near6_tw_judged_on.gd::test_swim_wake_trail_ships_on`; `test_human_water_contact_visual.gd` idle step now runs past the configured lifetime (13 tests, 0 failed) | this commit |
 | `water_dune_cover.json` `shore_ecology_candidate.shipped_sites` += welcome_bay, horizon_headland, east_beach; `water_ground_cover.json` `built_feather_enabled` | F39#1 | CPU 6.37 -> 6.44 (2 judges higher, 1 equal; RMSE 0.41) | `test_water_dune_cover.gd::test_shipped_shore_site_places_while_the_candidate_stays_off` now lists the judged sites; unjudged islands still never place (15 tests, 0 failed) | this commit |
@@ -86,6 +87,8 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 - **F39#21 (victory hierarchy, `hud.json` `victory_focus`, OFF, unjudged): cannot be captured on CPU.** Its stands (`venn_resolve__win`/`aftermath`, `nerissa_resolve__win`) exist only in `phase2_capture_tidewake_fights.gd --verified-victory-lifecycle` runs. That mode refuses `--render-only-saves` and needs a native 1080p window, so two full trainer fights must render continuously on llvmpipe. job.json's repro also omits the flag, so r21 (ordinary render-only runs: 29 frames, fight resolved at 99 s) wrote no win frames. Better judged on the GPU queue.
 
 - First `--import` on this container takes about 2 h on CPU.
+
+- **r29p, F39#29 (P2-074, GPU 3.54), ON, 5.54 -> 6.34:** the current build already frames Captain Nerissa (dialogue_open and fight_fade, ON). The one remaining failure was Nalia's frame: her post sits about 12 m up the dune wall, so the camera showed the trainer's back. The never-judged `water_npc_posts_candidate` moves her body to the flat passage floor, and she now faces the camera beside the panel. Judges still ask for warmer dune form and more water in shot (scene).
 
 **5 Nov ~00:55 UTC rounds (no judging, pixel pre-check only):**
 - r5g, F41#5 (Stormwood grass, bush and far-cover tints desaturated, `stormwood_ground_finish`): almost no visible change (mean diff 1.6-2.9). The teal ground is the terrain texture, not these tints. Not judged, stays OFF. Handed back to VIS-STORMWOOD (coordinator, 00:15).

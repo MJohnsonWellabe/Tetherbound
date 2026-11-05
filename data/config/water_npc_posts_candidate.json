@@ -1,12 +1,17 @@
 {
   "_comment": "tb/vis-water-sky group 3 (P2-074 Tidewake dialogue speaker visibility, GPU 3.54; P2-073 dialogue framing). Resident Nalia's authored post (shellwatch + [0, 23]) stands about 13 m up the wall of the island's carved dune passage, so her post view shows the trainer facing a sand wall and the dialogue capture finds no stand beside her (DLG_SPEAKER refused). On: water_scene_npcs.gd posts each listed NPC at this island-local offset instead, measured on the passage floor (water_heightfield height_at: 16.5-16.6 m, flat), in front of the post camera. Position of the body only: conversation, prompt, flags and chains unchanged. Preview --watersky-posts-candidate. Trainer Rune (gull_rest + [6, -20]) stands ~5 m down the plateau edge below the crest (dialogue capture: 'no stand beside the body', speaker tiny and far); posted at [-3, -20] on the flat 29.1-29.4 m plateau (water_encounter_runtime_data.gd reads the same override for trainer bodies).",
-  "enabled": false,
+  "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r29p F39#29 P2-074 dialogue speaker visibility CPU 5.54 -> 6.34 (three code-blind judges all higher; speaker defect PARTIAL -> FIXED 3/3). Resident Nalia only; Trainer Rune's offset is kept under offsets_unjudged (not in the judged frames).",
+  "scope": "client_presentation",
+  "enabled": true,
   "offsets": {
     "water_nalia": [
       -9.0,
       0.0,
       25.0
-    ],
+    ]
+  },
+  "_why_offsets_unjudged": "Trainer Rune's post move was not in the r29p frames; it stays OFF until judged on its own dialogue item. Move it into offsets to try it.",
+  "offsets_unjudged": {
     "water_trainer_rune": [
       -3.0,
       0.0,
