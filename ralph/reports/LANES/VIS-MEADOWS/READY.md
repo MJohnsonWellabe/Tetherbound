@@ -4,6 +4,18 @@ Lane: tb/vis-meadows-1104 (from origin/main 98879e2e1). Scope: the Meadows F38 i
 
 Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the same run on the same stands; tools/visual_judge (JUDGE_PROMPT verbatim, anchor_tiles --pairs 3, three code-blind judges, calibrate.py). Recorded as "CPU <base> -> <cand>". Owner rule 4 Nov: any judged gain ships ON; flat or worse stays OFF.
 
+## Lane state, 5 Nov 2026 ~02:50 UTC
+
+**Shipped since the coordinator's 19:25 UTC list (CPU mapped):** F38#41 natural quarry faces (raw 5.80 -> 6.43), F38#37 east face (5.31 -> 6.09), F38#23 arch lift (5.90 -> 6.04) and smaller cobbles (6.73 -> 6.93), F38#33 result clears reticle (6.32 -> 7.11). Every in-scope Meadows item now reads at 6 or above on CPU, except F38#24 and F38#30 (both the floating-Warrens owner decision).
+
+**Decisions this lane needs before its next scene change:**
+1. F38#41: move the second quarry ruin (`old_quarry.json foundations[1]`, (404, 1794)) about 5 m off the catalogue stand. The camera-clipping 'planks' are its wall tops, not the conduit pylon.
+2. F38#23: may visual-only props stand on the relay fight axis? The visible cobble field is the road axis.
+3. F38#33: a capture-tool change so `06-breakout` is photographed while the broke-free card holds (unlocks the `step_back_on_break` arm).
+4. F38#24 / F38#30: the floating Burrow Warrens (owner or terrain).
+
+**Remaining judge asks that need new art:** F38#17 Solene and Hald share one pink model, and their portraits don't match it; F38#20 keep on a hill with a palisade; F38#41 detailed boulders.
+
 ## Handoff summary (4 Nov 2026, ~08:50 UTC)
 
 **State:** every judged gain is ON on `tb/vis-meadows-1104` with its CPU score in `_why`/`_why_on` and a test in `tests/test_vis_meadows_1104_on.gd`.
