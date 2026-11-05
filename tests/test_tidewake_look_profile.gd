@@ -222,3 +222,10 @@ func test_destination_landmarks_ship_with_their_score() -> void:
 	assert_eq(garden_walls, 4, "two stepped terrace walls join the two collided ones")
 	assert_true(str(raw.get("_why_d3_landmarks", "")).contains("5.93"))
 	assert_false("landmark_models" in raw.get("sections_off", []), "landmark models are in play")
+
+
+func test_current_flow_visual_ships_with_its_score() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	assert_false("current_flow_visual" in raw.sections_off, "the current_flow_visual section is in play")
+	assert_false(bool(raw.current_flow_visual.enabled), "in play it turns the grouped current foam off")
+	assert_true(str(raw.get("_why_current_flow_visual_on", "")).contains("6.75"))
