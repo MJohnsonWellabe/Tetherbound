@@ -1,0 +1,23 @@
+{
+ "Lv": {
+  "anchor": false,
+  "label": "F40#18",
+  "A": "/home/user/Tetherbound/.artifacts/qj/qj_cardwide/k/sides/F40_18_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/qj_cardwide/k/sides/F40_18_cand.jpg"
+ },
+ "Ff": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ae": {
+  "anchor": true,
+  "A": "f36_0_npc:C5B",
+  "B": "f36_0_npc:C5A"
+ },
+ "Nk": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ }
+}
