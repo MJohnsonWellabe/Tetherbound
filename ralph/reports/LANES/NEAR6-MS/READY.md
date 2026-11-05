@@ -5,11 +5,18 @@
 | Board row | Item | Board | Status |
 |---|---|---|---|
 | F38#7 | P2-058 catch aim readability | 5.82 | **Landing-ready: CPU 5.93 -> 7.00.** Cause found: the player's own creature stands between the aim camera and the target and is drawn as the fight's 0.6 occlusion dither ghost over the trainer and readout (the composition swing cannot act while the player steers the aim). Arm `combat.json camera.occlusion_fade.aim_hide_1104` (`68b2d369`, OFF): while aiming, an ally hiding the target is hidden with its contact shadow. A/B capturing. |
-| F38#26 | P2-020 creature ground contact | 5.62 | Next. The existing contact shadow (creatures_visual.json) sits on the ground under the grass that buries the feet; radius retune was flat before. |
+| F38#26 | P2-020 creature ground contact | 5.62 | **Blocked: stand artefact (ask below).** No game change made. |
 | F38#6 | P2-033 ground pickup identity | 5.52 | Queued |
 | F41#9 | P2-046 harvest resource identity | 5.40 | Queued (parked earlier; needs a new idea) |
 | F38#32 | P2-035 camp and workshop props | 5.81 | Queued |
 | F41#15 / F41#3 | P2-083 dialogue obstruction / P2-092 actor spacing | 5.90 / 5.98 | Queued |
+
+### F38#26 P2-020 ground contact: the stand never lets the grass clearing engage (for the coordinator)
+
+- The F38#26 stand is `tools/phase2_capture_creatures.gd --biome=meadows --seed=2042 --only=bramblebun,pipwing,mosshell --poses=fainted,idle`. After placing each body it calls `body.set_physics_process(false)` (line 252). `creature_body.gd _update_grass_clear()` runs only from `_physics_process`, and a creature joins the `grass_clear` group only after standing still on the floor for `settle_s` (0.6 s). So on this stand the shipped clearing (`creature_grass_clear.json`, ON) never engages, and the judged frames show grass that a standing creature in play would have cleared.
+- Evidence: my earlier round with `radius_scale` 1.6 -> 2.6 gave byte-identical creature frames (`qj/F38-6_F38-26_F41-9-9c1d0cc52d13-11041219/`), and today's base (`.artifacts/qj/F38-26-base-11050127`, local) shows full grass round every foot.
+- The contact shadow does not help these frames: all three creatures stand in the trees' shade, where a darker blob does not read. Shrinking or moving the camera are ruled out.
+- **Ask:** let the stand engage the clearing as play does: keep physics on for `settle_s` after seating, or add the seated body to the `grass_clear` group with its `grass_clear_radius` meta and set `grass_field.gd clearings_dirty`. Then re-score F38#26 before any further ground-contact change. Not changed here: the stand is the shared yardstick.
 
 ## Handoff (4 Nov ~23:35 UTC): round 2 UI rows done, parked or blocked
 
