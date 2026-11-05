@@ -813,6 +813,13 @@
       "coats": {
         "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0_value_lift.png"}
       }
+    },
+    "creatures_ralph_cindercub_value_lift": {
+      "_why": "Stage value lift for Cindercub's live owner1101 remake (one of the darkest live albedos; creatures_f36_coat_lift targets the old nat1024b texture, not this one). Same recipe as the v1/b21-b23 lifts (Mosshock +0.92, Nightburrow +1.05, Tuskroot +0.59): midtone gamma 0.78, saturation x1.12. Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0_value_lift.png"}
+      }
     }
   }
 }

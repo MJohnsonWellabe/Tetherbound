@@ -66,3 +66,19 @@ func test_seam_seat_ships_off_and_sinks_when_on() -> void:
 	field.config.seam_clear_1104["enabled"] = false
 	assert_eq(field._seam_seat(), {}, "needs seam_clear on")
 	field.free()
+
+
+## F41#19 rock_collar_candidate.footing_1104: ships OFF; ON gives a fuller,
+## wider, taller collar of the same installed rocks.
+func test_footing_ships_off_and_widens_the_collar() -> void:
+	var field := FIELD.new()
+	field.config = _config()
+	var shipped: Dictionary = field._rock_collar()
+	assert_false(bool(field.config.rock_collar_candidate.footing_1104.get("enabled", true)), "ships OFF until judged")
+	assert_false(shipped.has("footing_applied"), "OFF keeps the shipped collar")
+	field.config.rock_collar_candidate.footing_1104["enabled"] = true
+	var on: Dictionary = field._rock_collar()
+	assert_true(int(on.stones) > int(shipped.stones), "more stones")
+	assert_true(float(on.ring_fraction) > float(shipped.ring_fraction), "a wider ring toward the plate rim")
+	assert_true(float(on.stone_height_fraction) > float(shipped.stone_height_fraction), "taller stones")
+	field.free()
