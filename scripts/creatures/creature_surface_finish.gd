@@ -39,6 +39,14 @@ static func apply(model: Node, species: String, shiny: bool, fallback: bool = fa
 	if shiny and not finish.is_empty():
 		for key: String in (config.get("shiny_sheen", {}) as Dictionary):
 			if not finish.has(key): finish[key] = config["shiny_sheen"][key]
+	# F41#13 `charged_1105` (OFF until judged; coordinator 5 Nov): the storm
+	# creatures' accent glow and rim are lifted so their charged markings read
+	# at creature-view distance. Ordinary finishes of the listed species only.
+	var charged: Variant = config.get("charged_1105", {})
+	if not shiny and charged is Dictionary and bool((charged as Dictionary).get("enabled", false)) and not finish.is_empty():
+		var charged_row: Variant = ((charged as Dictionary).get("species", {}) as Dictionary).get(species.trim_prefix("water_"), {})
+		if charged_row is Dictionary:
+			finish.merge(charged_row as Dictionary, true)
 	var candidate := _p2_030_candidate()
 	if not candidate.is_empty() and shiny:
 		var candidate_row: Variant = candidate.get("species", {}).get(species.trim_prefix("water_"), {})
