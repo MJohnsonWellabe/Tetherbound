@@ -20,6 +20,8 @@
 
 - F39#19 `hud_subject_fade.roster_floor` (NEAR6-TW arm, roster never below alpha 0.9): **not judged, no change in the F39#19 frames** (`qj_rosterfloor` 0.5% px). In F39#19's fixed frames (t-000, tell-start, t-003) the roster is fully opaque on CPU, so P2-088 ("fades to pale") does not reproduce there. It does reproduce in the F39#7 frame t-024 (the Venn trainer stands behind the roster and the subject fade takes it pale; cropped in `qj_aside` base). roster_floor addresses exactly that case, at the cost of the panel covering the trainer. **Please judge `roster_floor` on the GPU, or with frames where the trainer passes behind the roster.** Stays OFF.
 
+- F36#29 Innkeeper (Wilhelm) `character_body_flags.json npc_vis_body_innkeeper` (VIS-CREATURES graded albedo, never judged alone; the ledger's 5.83 was a Meshy candidate): **flat**, 6.20 -> 6.20 (`qj/qj_inn/`, manual round from `phase2_capture_dialogue.gd --biome=meadows --subset=wilhelm`; F36#29 has no job.json item, and the catalogue name is Wilhelm, not innkeeper). 3/3 could not tell the sides apart: Wilhelm is tiny in the post frame and half hidden by the campfire in the dialogue frame. Stays OFF. Remaining asks: higher-detail face (new art) and dialogue framing, so the fire stops hiding him (camera, not allowed as a dodge).
+
 **Redirect status (coordinator 22:25), 5 Nov ~00:15 UTC:**
 1. F41#5 grove rings: invisible in the fixed views (real ON bake A/B 0.0% px), reverted.
 2. F41#19 footing: **ON 5.09 -> 5.22** (`468ed635`).
