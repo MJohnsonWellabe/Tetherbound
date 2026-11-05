@@ -5374,12 +5374,10 @@ func _build_gate_path_verge() -> void:
 		# can share its cell with deeper crown/geology surfaces.
 		var y := ground_height_at(x, z, ref_y)
 		if not is_finite(y) or absf(y - ref_y) > 4.0:
-			print("GatePathVerge %s at %.1f,%.1f: ground %.2f, using ref_y" % [item[0], x, z, y])
 			y = ref_y
 		_install_prop_scene(root, ROUTE_DETAIL_SCENES[str(item[0])], "Verge%02d" % index,
 			Vector3(x, y - 0.05, z), float(item[3]), deg_to_rad(float(item[4])))
 		index += 1
-	print("GatePathVerge placed %d" % index)
 
 
 ## Height-normalised install of a packed scene, seated so its base sits at

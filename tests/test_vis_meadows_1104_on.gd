@@ -302,3 +302,14 @@ func test_f38_23_relay_cobble_r2_ships_on_with_its_score() -> void:
 	assert_true(bool(r2.get("enabled", false)), "smaller flags ON")
 	assert_true(float(r2.get("uv_scale", 0.0)) > 0.4, "flags at the denser scale")
 	assert_true(str(r2.get("_why_on", "")).contains("6.73 / 6.93"), "records its CPU score")
+
+
+## F38#33 catch result: the reticle's fading capture-chance readout clears as
+## the result card lands (caught or broke free), mapped 6.32 -> 7.11
+## (qj/f38_33-clear-reticle2).
+func test_f38_33_result_clears_reticle_ships_on_with_its_score() -> void:
+	var card: Dictionary = _load("res://data/config/hud.json").get("catch_card", {})
+	assert_true(bool(card.get("enabled", false)), "catch card ON")
+	assert_true(bool(card.get("result_clears_reticle", false)), "result clears the reticle ON")
+	assert_true(str(card.get("_why_on_result_clears_reticle", "")).contains("6.32 -> 7.11"), "records its CPU score")
+	assert_true(preload("res://scripts/ui/capture_reticle.gd").result_clears_reticle(), "the reticle reads the flag")

@@ -36,5 +36,14 @@
   },
   "route_clear_half_width_m": 4.8,
   "beacon_scale": 1.6,
-  "_beacon_scale_note": "F08#3 night: the judge read the gate beacons as tiny lanterns. Plinth, bowl and flame scale together from the same floor point; light energy/range raised so the approach path pools read at night."
+  "_beacon_scale_note": "F08#3 night: the judge read the gate beacons as tiny lanterns. Plinth, bowl and flame scale together from the same floor point; light energy/range raised so the approach path pools read at night.",
+  "face_uplights": {
+    "_scope": "Realm Gate Crag presentation only (cloudreach gate_lower_cliffs), lights only, no collision",
+    "_why": "NEAR6-CR F40#19 night round 4: all judges ask for the realm gate to read as a lit landmark at night (moonlit pale-stone light on its face). OFF until judged.",
+    "enabled": false,
+    "colour": "#d4e3f2",
+    "energy": 4.0,
+    "range_m": 24.0,
+    "positions": [[-9.0, 4.0, -6.0], [9.0, 4.0, -6.0], [0.0, 16.0, -8.0]]
+  }
 }

@@ -68,3 +68,10 @@ func test_catch_card_portrait_is_on_with_its_score() -> void:
 	assert_true(portrait.get("enabled") == true, "P2-118 catch_card.portrait ships ON")
 	assert_true(str(portrait.get("_why_on", "")).contains("5.91 -> 6.19"), "P2-118 portrait CPU score recorded")
 	assert_true(float(portrait.get("px", 0.0)) > 0.0, "the portrait has a size")
+
+
+func test_catch_card_party_row_is_on_with_its_score() -> void:
+	var line: Dictionary = (_read("res://data/config/hud.json").get("catch_card", {}) as Dictionary).get("full_team_line", {})
+	var row: Dictionary = line.get("party_row", {})
+	assert_true(row.get("enabled") == true, "P2-118 full_team_line.party_row ships ON")
+	assert_true(str(row.get("_why_on", "")).contains("5.58 -> 6.85"), "P2-118 party-row CPU score recorded")

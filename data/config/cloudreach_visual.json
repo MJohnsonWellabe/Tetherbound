@@ -1378,7 +1378,8 @@
   "gate_path_verge": {
     "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only, no collision",
     "_why": "NEAR6-CR F40#19 night round 3: judges flagged a uniform flat lawn; clustered installed bushes, flowers and low rocks along the path edges. OFF until judged. Round 3b (qj F40-19-9025b78edb4e-11042347) rendered Bush_Common red at night (red is Team Tether only): not judged; bushes swapped for flowers and low rocks.",
-    "enabled": false,
+    "enabled": true,
+    "_why_on": "CPU 5.54 -> 5.81 (qj/F40-19-9025b78edb4e-11050024, gate_path_braziers and night_foreground_fill ON in both arms; judges: B adds flower and rock clumps along the path edges, slightly more lived-in)",
     "ref_y": 109.0,
     "items": [
       ["flowers", -8.1, -208.8, 1.0, 20],
