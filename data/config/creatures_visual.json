@@ -1,4 +1,13 @@
 {
+  "alpha_presence_1105": {
+    "_why": "F38#31 P2-019 (NEAR6-MS, 5 Nov 2026): judges read alpha variants as 'a modest size increase without a distinct staged presence beside the trainer'. The alpha aura's seven small pale-gold motes (11% of body radius, 0.7 peak alpha) vanish against bright Meadows grass in the judged frames. When on, the ring carries more, larger, brighter motes in the same colour, rise and orbit (alpha_aura.gd), and the alpha rim strengthens (creature_body.gd _apply_alpha_presence). Presentation only; never a size change. OFF until judged.",
+    "scope": "client_presentation",
+    "enabled": false,
+    "motes": 12,
+    "mote_scale": 0.2,
+    "alpha": 0.95,
+    "rim": 1.0
+  },
 	"rest_faint_settled": {
 		"_why": "F38#1 creature collapse and rest (CPU 5.91, qj rim075-f38-1): judges read Veridian at the resting moment as 'semi-upright' and 'splayed'. A species with no rest of its own (rest_roll_deg 0, no authored or candidate rest) rests via play_terminal(\"rest_faint\"), which replays its faint clip from the start, so a resting creature visibly collapses and is caught mid-fall. When enabled, creature_animator.gd starts that rest at the faint clip's settled end. Presentation only; no state or collision. OFF until judged.",
 		"enabled": false
