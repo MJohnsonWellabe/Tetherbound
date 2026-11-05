@@ -38,7 +38,8 @@
     "card_half_width": 440.0,
     "card_top": -380.0,
     "breakout_seconds": 1.8,
-    "result_clears_reticle": false,
+    "result_clears_reticle": true,
+    "_why_on_result_clears_reticle": "VIS-MEADOWS 5 Nov 2026 (F38#33, quick_judge f38_33-clear-reticle2, three code-blind judges): CPU mapped 6.32 -> 7.11 (+0.79; all three prefer it, defect PRESENT -> PARTIAL; slope 1.40, r 0.95, RMSE 0.26). Caveat: the catch capture is not deterministic run to run; both sides broke free this round, but the base frame also caught the target mid-motion (judges call it a blur), so part of the gain may be timing.",
     "_why_result_clears_reticle": "VIS-MEADOWS 4 Nov 2026 (F38#33, OFF until judged): the 08-caught-verdict frame still shows the reticle's fading '100% CAPTURE CHANCE' readout beside the 'Caught Bramblebun!' card. When on, capture_reticle.gd play_success() and play_break() clear the contract fade so the verdict (caught or broke free) is the only text."
   },
   "hud_lean": {
