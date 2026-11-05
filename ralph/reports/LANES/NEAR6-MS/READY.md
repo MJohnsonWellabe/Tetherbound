@@ -7,7 +7,7 @@ F38#7 (5.93 -> 7.00) is landing in #841. F41#3 stays parked (combat-contract cal
 | Board row | Item | Board | Status |
 |---|---|---|---|
 | F38#21 | P2-005 ground cover | 6.06 | In progress. `grass_field.json meadows_ground_candidate` already ON; base capturing to see whether the repeating white flowers are runtime grass tiers or baked scatter. |
-| F38#8 | P2-119 Fly carrier grip pose | 6.12 | Queued |
+| F38#8 | P2-119 Fly carrier grip pose | 6.12 | **Flat, stays OFF; needs art.** UIPOSES's existing arm `fly_traversal.json hang_pose.body` (legs trail back, knees bent, torso leans) judged CPU 6.18 -> 6.07 (`qj/F38-8-fd74f3f3ea83-11050219/`; raw 6.2/6.0/5.6 -> 6.1/6.0/5.5, defect PRESENT on every side). The flight stand looks at the trainer from the front, so the trailing legs foreshorten and the change barely shows; all three judges ask for a new carry animation (talons on the shoulders or a harness, body angled), which is animation art. |
 | F38#31 | P2-019 alpha rarity read | 6.16 | Queued |
 | F38#25 | P2-018 shiny palette distinction | 6.21 | Queued |
 | F38#14 | P2-060 catch effect finish | 6.23 | Queued |
