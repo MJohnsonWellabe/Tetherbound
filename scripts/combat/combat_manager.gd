@@ -2225,6 +2225,31 @@ func _combat_position(body: Node3D) -> Vector3:
 ##
 ## This is a small, one-off move at the moment the fight opens, not a system
 ## that puppets them around afterwards.
+## F39#7 `trainer_aside.realm_1104` (OFF until judged; coordinator 5 Nov):
+## per-realm trainer offsets merged over the shared ones. Tidewake fight
+## judges see the trainer crowding the pair; this stands them further aside,
+## out of the pair's lane. Presentation of the stand only; the existing
+## arena, support and sweep checks still decide where they may stand.
+static func trainer_aside_for(aside: Dictionary, realm: String) -> Dictionary:
+	var cand: Variant = aside.get("realm_1104", {})
+	if not cand is Dictionary or not bool((cand as Dictionary).get("enabled", false)):
+		return aside
+	var row: Variant = ((cand as Dictionary).get("realms", {}) as Dictionary).get(realm, {})
+	if not row is Dictionary or (row as Dictionary).is_empty():
+		return aside
+	var out := aside.duplicate()
+	for key: String in ["side_m", "side_fraction", "forward_m"]:
+		if (row as Dictionary).has(key):
+			out[key] = (row as Dictionary)[key]
+	return out
+
+
+func _current_realm() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	var realm: Variant = game.get("current_realm") if game != null else null
+	return str(realm) if typeof(realm) == TYPE_STRING else ""
+
+
 func _stand_the_trainer_aside(forward: Vector3) -> void:
 	if _arena == null:
 		return
@@ -2257,7 +2282,7 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 	# F10#6 device profile (code-blind 7-inch judges r2/r3): 1.2 m back toward
 	# the lens stood the trainer in the frame's bottom corners, under the move
 	# grid or the ally card. combat.json `trainer_aside` sets the offsets.
-	var aside: Dictionary = MATH.config().get("trainer_aside", {}) as Dictionary
+	var aside: Dictionary = trainer_aside_for(MATH.config().get("trainer_aside", {}) as Dictionary, _current_realm())
 	var side_fraction := float(aside.get("side_fraction", 0.55))
 	var forward_m := float(aside.get("forward_m", -1.2))
 	# `side_m` (metres) wins over the radius fraction when set: a big arena's
