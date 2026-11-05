@@ -1,0 +1,23 @@
+{
+ "Jn": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Lz": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Fz": {
+  "anchor": false,
+  "label": "F39#15",
+  "A": "/home/user/Tetherbound/.artifacts/qj/s15/k/sides/F39_15_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/s15/k/sides/F39_15_cand.jpg"
+ },
+ "Ha": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ }
+}
