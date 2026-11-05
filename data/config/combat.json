@@ -316,6 +316,12 @@
       "transparency": 0.75,
       "hidden_points": 1,
       "speed": 12.0,
+      "aim_hide_1104": {
+        "_why": "F38#7 P2-058 (NEAR6-MS, 4 Nov 2026): in every Meadows catch-aim frame the player's own creature stands between the camera and the target and is drawn as a 0.6 dither ghost over the trainer and the readout (the composition swing cannot clear it while the player steers the aim). When on, while the trainer is aiming a catch an ally that hides the target is hidden outright with its contact shadow, and returns when the aim ends or the target has been clear for hold_s (combat_manager.gd _update_ally_occlusion_fade). Same idea as water_mount_presentation.json camera_hide (judged gain). OFF until judged.",
+        "scope": "client_presentation",
+        "enabled": false,
+        "hold_s": 0.25
+      },
       "follow_candidate": {
         "enabled": true,
         "_why_on": "ON by owner wind-down direction (22 Oct: land what beats shipping even below the bar). P2-062 r1 mapped 6.11 Bar A vs shipping 5.37 (three code-blind judges, fixed seed-11 Old Bram aftermath, Low/Compatibility llvmpipe; anchor RMSE 0.80 caveat; ralph/reports/LOOK/close-1022/P2-062.md). Below the 6.7 CPU bar: an improvement, not a closure. Judges: the ally now vanishes completely; a lighter partial fade is the next step.",
