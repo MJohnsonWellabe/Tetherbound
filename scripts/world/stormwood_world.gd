@@ -484,3 +484,7 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 		GROUND_ZONES.install(_terrain)
 		# F41#1 root_floor_1104 (stormheart_presentation.json, OFF until judged).
 		preload("res://scripts/world/stormheart_root_floor.gd").install(_terrain)
+		# F41#5 macro_1104 (stormwood_ground_finish.json, OFF until judged).
+		GROUND_ZONES.install_macro(_terrain)
+		# F41#1 floor_lanterns_1104 (stormheart_presentation.json, OFF until judged).
+		preload("res://scripts/world/stormheart_floor_lanterns.gd").install(self)

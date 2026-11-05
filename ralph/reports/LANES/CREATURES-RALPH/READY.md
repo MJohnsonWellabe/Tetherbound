@@ -38,6 +38,17 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**v1/b24 (4 Nov ~00:05 UTC 5 Nov): Cindercub value lift (6.52 -> 7.38) and the existing Voltarach/Brooktail dark lift (Voltarach 5.28 -> 6.04, Brooktail 6.18 -> 6.28) ship ON.**
+- **Flags:** `creatures_ralph_cindercub_value_lift`, plus `remake_owner1101_dark_lift` (CAUSE-REMAKES, 1 Nov, never judged until this round).
+- **Tests:** `test_remake_owner1101_finish` moves `remake_owner1101_dark_lift` from its held-OFF list into `JUDGED_ON`; `test_dark_value_lift_flags` adds Cindercub.
+- **Tally:** value lifts on dark creatures at the stage camera are now eight for eight.
+
+**v1/b23 (4 Nov ~23:05 UTC): stage value lifts ship ON for Tuskroot (6.57 -> 7.16), Thundertunnel (5.64 -> 5.78) and Stormbrush (6.31 -> 6.42).** Three flags `creatures_ralph_{tuskroot,thundertunnel,stormbrush}_value_lift`, judged in one batch (calibrate r 0.92); Ashtusk shares Tuskroot's coat. Test: `tests/test_dark_value_lift_flags.gd`. The value lift is now five for five on dark creatures at the stage camera.
+
+**v1/b22 (4 Nov ~21:50 UTC): Nightburrow value lift ships ON.** F36#56 CPU 6.01 -> 7.06 (+1.05; raw 5.8/6.1/5.8 -> 6.5/6.6/6.6; r 0.99). `creature_coat_flags.json` `creatures_ralph_nightburrow_value_lift` lifts the live partial-plates albedo (midtone gamma 0.78, saturation x1.12) and keeps its glow map. `test_nightburrow_partial_plates_flag` is updated for the lift (no assertion dropped: plates still resolve with the lift OFF). The value lift is now two for two on dark creatures at the stage camera (Mosshock +0.92, Nightburrow +1.05). It was flat at the field camera (Terrapup), where the creature is too small.
+
+**qj terralift-f38-1 (4 Nov ~21:00 UTC): Terrapup value lift is flat on F38#1 and stays OFF.** All three judges scored both sides the same (raw 6.0/5.4/6.0); at the field camera the fainted Terrapup is too small for an albedo lift to register. Judges' F38#1 lever is now contact shadows and settling the bodies into the grass (a ground-contact pass), not coat value. `creatures_ralph_terrapup_value_lift` stays OFF.
+
 **v1/b21 (4 Nov ~20:10 UTC): Mosshock value lift ships ON.** F36#54 CPU 5.63 -> 6.55 (+0.92; raw 5.4/5.6/5.3 -> 6.0/6.1/5.9; defect PRESENT -> PARTIAL; r 0.91). `creature_coat_flags.json` `creatures_ralph_mosshock_value_lift` is a value-lifted albedo (midtone gamma 0.78, saturation x1.12); only the albedo changes, since the `remake_owner1101_glow_read` coat is OFF. Test: `tests/test_mosshock_value_lift_flag.gd`. Mosshock is now above 6.0.
 
 **qj verheaddown-f38-1 (4 Nov ~19:30 UTC): Veridian faint head-down ships ON.**

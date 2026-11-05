@@ -32,13 +32,34 @@ func build(config: Dictionary, visual: Dictionary) -> void:
 	for key: String in visual.water:
 		if key.ends_with("colour"):
 			material.set_shader_parameter(key, Color(str(visual.water[key])))
-		elif not key.begins_with("_") and key not in ["height_texture_spacing_m", "roughness"]:
+		elif not key.begins_with("_") and key not in ["height_texture_spacing_m", "roughness", "night_dim_max", "night_dim_rate"]:
 			material.set_shader_parameter(key, visual.water[key])
 	material.set_shader_parameter("roughness_value", float(visual.water.get("roughness", 0.12)))
 	material.set_shader_parameter("wave_normal_a", _noise(11, 0.05, true))
 	material.set_shader_parameter("wave_normal_b", _noise(12, 0.09, true))
 	material.set_shader_parameter("foam_noise", _noise(13, 0.11, false))
 	material_override = preload("res://scripts/world/water_offshore_material.gd").apply(material)
+	# tb/vis-tidewake-1104: optional night dim. Absent `night_dim_max` keeps the
+	# water exactly as before and never processes.
+	_night_dim_max = clampf(float(visual.water.get("night_dim_max", 0.0)), 0.0, 1.0)
+	_night_dim_rate = maxf(0.01, float(visual.water.get("night_dim_rate", 0.5)))
+	set_process(_night_dim_max > 0.0)
+
+
+var _night_dim_max := 0.0
+var _night_dim_rate := 0.5
+var _night_dim := -1.0
+
+
+## Eases the water's night dim toward the day cycle's dark state. Presentation
+## only: one shader parameter, no physics, save or authority state.
+func _process(delta: float) -> void:
+	var cycle := get_tree().get_first_node_in_group("day_cycle")
+	var target := _night_dim_max if cycle != null and bool(cycle.call("is_dark")) else 0.0
+	_night_dim = target if _night_dim < 0.0 else move_toward(_night_dim, target, _night_dim_rate * delta)
+	var water := material_override as ShaderMaterial
+	if water != null:
+		water.set_shader_parameter("night_dim", _night_dim)
 
 
 func _noise(seed_value: int, frequency: float, normal: bool) -> NoiseTexture2D:

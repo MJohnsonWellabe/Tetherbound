@@ -13,6 +13,18 @@
     {"conversation": "cloudreach_neri_delivery_report", "effect": "cloudreach:side:packs_on_the_wrong_side:report_to_neri", "event": "side:packs_on_the_wrong_side:report_to_neri", "requires_flags": ["causeway_survivors_reconnected", "side_courier_pack_recovered", "side_courier_medicine_delivered"]},
     {"conversation": "cloudreach_aila_final_reward", "effect": "cloudreach:cloudreach_aila_final_reward_complete", "event": "dialogue:cloudreach_aila_final_reward_complete", "requires_flags": ["cloudreach_act_ii_complete", "captain_veyra_defeated", "storm_anchor_network_disabled", "cloudreach_winds_restored"]}
   ],
+  "post_dais": {
+    "_scope": "world_presentation",
+    "_why": "P2-068 / F40#9 round 3 (NEAR6-CR, 4 Nov 2026; CPU 5.25 with post_role_props ON): judges still read the named NPCs as small figures partly hidden behind the trainer. On (scripts/world/cloudreach_npc_posts.gd build_dais): Tavi, Sora and Maela each stand on a low weathered-stone dais (0.45 m, collision) so they rise above the trainer's shoulder line from the approach. Same prompt, dialogue and save.",
+    "enabled": true,
+    "_why_on": "NEAR6-CR quick judge F40-9-bf0f5543f8e6-11042046 (4 Nov 2026, post_role_props ON in both arms): CPU 5.44 -> 5.62 (+0.18), all three judges higher; defect PRESENT -> PARTIAL (1 of 3). Ships ON (owner 4 Nov: any judged CPU gain ships ON). Checked with flag ON: test_cloudreach_cast_dialogue, test_cloudreach_physical_runtime, test_cloudreach_act_one 22 tests 0 failed (config/runtime-unit; no live walk-up smoke run).",
+    "posts": ["young_trainer_tavi", "naturalist_sora", "keeper_maela"],
+    "height_m": 0.4,
+    "sink_m": 0.35,
+    "radius_m": 0.8,
+    "colour": "#5f5c50",
+    "_tune_1": "first capture (qj F40-9-bf0f5543f8e6-11041955, not judged): #a9a491 at 1.15 m rendered as a bright white disc hiding the NPCs' legs; darker weathered stone, smaller footprint."
+  },
   "post_role_props": {
     "_scope": "world_presentation",
     "_why": "P2-068 / F40#9 round 2 (NEAR6-CR, 4 Nov 2026; GPU 5.50, CPU 5.16; VIS-CLOUDREACH r3 fill-light arm flat). All three r3 judges asked for a role prop at each named post that says who the NPC is. On (scripts/world/cloudreach_npc_posts.gd place_role_props): installed Quaternius fantasy props stand beside each post in the NPC's facing frame, mostly to its sides: Tavi a training dummy, weapon stand and shield; Sora a book stand, satchel and specimen crate; Maela a bird cage on a barrel, rope coil and torch. Visual only.",

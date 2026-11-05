@@ -167,7 +167,19 @@ func _add_meshy_spikes(parent: Node3D, centre: Vector2, spec: Dictionary, scar_r
 ## colliders are removed as `_add_fused_lumps` does.
 func _rock_collar() -> Dictionary:
 	var cand: Variant = config.get("rock_collar_candidate", {})
-	return cand if cand is Dictionary else {}
+	if not cand is Dictionary:
+		return {}
+	# F41#19 `footing_1104` (OFF until judged; coordinator redirect 22:25,
+	# installed rock family, visual only, colliders stripped as before): a
+	# fuller, wider, taller ring that buries the crust plate's flat rim.
+	var footing: Variant = (cand as Dictionary).get("footing_1104", {})
+	if footing is Dictionary and bool((footing as Dictionary).get("enabled", false)):
+		var out := (cand as Dictionary).duplicate()
+		for key: String in ["stones", "ring_fraction", "stone_height_fraction", "colour"]:
+			if (footing as Dictionary).has(key):
+				out[key] = (footing as Dictionary)[key]
+		return out
+	return cand
 
 
 func _add_rock_collar(parent: Node3D, at: Vector2, spike_height: float, seed_value: int) -> void:

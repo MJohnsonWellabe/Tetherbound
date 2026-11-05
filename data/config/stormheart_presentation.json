@@ -214,6 +214,22 @@
         "glow_1104": {"enabled": false, "_why_off": "Judged worse (qj_arcglow, 4 Nov 2026): F41#1 5.13 -> 4.85 mapped; 3/3 read the haloed arcs as 'tube-like pink-white chains', 'pipes', 'inflated plastic' and preferred the thin white lines. Parked.", "scope": "client_presentation", "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#1: qj_rootfloor3 judges x3 read the core arcs as 'flat white line strokes, no glow, impact or violet tint'. Hot white-violet core, a wide additive violet halo on every segment and jaggier steps. Natural glow (the trunk's own lightning); hidden on release like the arcs. OFF until judged.", "core_colour": "#f6f2ff", "halo_colour": "#8f7dff", "halo_alpha": 0.35, "halo_width_m": 0.9, "jitter_m": 1.4, "radial_jitter_m": 0.9}}
     }
   },
+  "floor_lanterns_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#1 Stormheart finale (3.94), coordinator redirect 22:25 (lighting and set dressing from installed families): judges read the hollow as a flat-lit plank drum with no warm lanterns or lamp pools (the deck lanterns hang out of the arena views). Eight installed Lantern_Wall posts stand on the hollow floor at the wall foot (40 m from the axis, outside the fight space), each with an amber flame and a warm shadowless light. Visual only: no collider. OFF until judged.",
+    "centre": [-100.0, 5470.0],
+    "count": 8,
+    "radius_m": 40.0,
+    "phase_deg": 22.5,
+    "post_height_m": 2.8,
+    "post_colour": "#5a4630",
+    "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+    "lantern_scale": 1.4,
+    "light_colour": "#ffb15c",
+    "light_energy": 2.4,
+    "light_range_m": 16.0
+  },
   "root_floor_1104": {
     "enabled": false,
     "scope": "client_presentation",

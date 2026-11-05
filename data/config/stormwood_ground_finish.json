@@ -205,6 +205,27 @@
     "bush_item_size": 0.8,
     "_comment": "The three rounded moss lobes reach 0.104m local height; canopy understory remains a separate full-height shrub tier. Harvested plants and all gameplay actors retain their own transforms."
   },
+  "macro_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#5 forest ground layers (5.84): judges read 'a flat green grass carpet'; qj_grass showed the carpet is the terrain wet-moss slot tiling evenly, not grass blades. Stormwood never enables Terrain3D's macro variation (Meadows does, terrain_playground.json). On: two cool moss-tone macro colours at long noise scales lay large darker and lighter drifts over the floor. Shader uniforms only; OFF until judged.",
+    "macro_variation1": "#9aa69a",
+    "macro_variation2": "#d8e2d0",
+    "noise1_scale": 0.012,
+    "noise2_scale": 0.03
+  },
+  "grass_patch_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#5 forest ground layers (5.84): every judge reads the ground as 'a flat green grass carpet', 'uniform carpet', 'even scatter'. The grass shader's colony mode (clump_contrast 1.0 with a clump_patch_start/full ramp, as Tidewake dunes use) leaves true clearings below the start threshold and dense colonies above full, so the wet moss floor shows between grass colonies. Presentation only; OFF until judged.",
+    "grass": {"clump_contrast": 1.0, "clump_patch_start": 0.35, "clump_patch_full": 0.62, "clump_scale": 0.045}
+  },
+  "path_loam_1104": {
+    "enabled": true, "_why_on": "ON (qj_path, 4 Nov 2026): CPU three-judge quick_judge A/B, calibrated slope 0.89, r 0.75, anchor RMSE 0.53: F41#4 named destinations 5.56 -> 5.92 mapped (+0.36; 3/3 prefer the darker wet path: 'sits better with the black pools', 'better value separation from the trainer'). Owner 4 Nov: a judged gain ships ON. CPU ranks only; the row closes on GPU.",
+    "scope": "client_presentation",
+    "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#4 named destinations (4.59; 'several named destinations read as similar grass and trees'): the pale sand path fills the lower half of all three close views and judges call it 'a beach texture' (also in F41#1/#5 frames). The path slot keeps its wet-earth texture but is tinted darker and cooler with deeper relief, so it reads as damp trodden forest earth. Presentation only; OFF until judged.",
+    "terrain_materials": {"textures": {"path": {"tint": "#6e6a5e", "normal_depth": 0.4}}}
+  },
   "rock_value_1104": {
     "enabled": false,
     "scope": "client_presentation",

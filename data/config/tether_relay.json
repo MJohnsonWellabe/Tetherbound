@@ -53,9 +53,10 @@
           "stone_strength": 0.18
         },
         "arch": {
-          "tint": "#a0927b",
+          "tint": "#e4d8c2",
+          "_why_tint": "VIS-MEADOWS 4 Nov 2026 (F38#23, quick_judge f38_23-arch-lift, three code-blind judges): tests/probe_camera_pixel.gd named the relay yard's right-third black mass as the yard_face undercroft arch (this variant overrides the site tint). Tint #a0927b -> #e4d8c2 and macro_strength 0.34 -> 0.2 lift that wall's luma 34 -> 52 by day; mapped Bar A 5.90 -> 6.04 (+0.14), all three judges prefer it.",
           "tile": 2.55,
-          "macro_strength": 0.34,
+          "macro_strength": 0.2,
           "stone_strength": 0.22
         },
         "console": {
@@ -1134,7 +1135,8 @@
     "surface_candidate": {
       "enabled": true,
       "r2": {
-        "enabled": false,
+        "enabled": true,
+        "_why_on": "VIS-MEADOWS 4 Nov 2026 (F38#23, quick_judge f38_23-cobble-r2, three code-blind judges, on top of the arch lift): CPU mapped 5.90 -> 6.04 base -> 6.73 / 6.93 this batch, +0.20 (two of three judges prefer the smaller flags; anchor r 0.97). Shipped under the owner any-gain rule.",
         "_candidate": "World dressing P2-013 (OFF until judged; tb/world-dressing). GPU 6.59: an oversized uniform cobble texture. Flags at 2.3x the density (uv 0.22 -> 0.5) and a touch warmer.",
         "uv_scale": 0.5,
         "tint": "#a39885",

@@ -488,6 +488,9 @@ func _ready() -> void:
 	await _build_step("routes")
 	_build_progression_gates()
 	await _build_step("gates")
+	if not simulation_only:
+		_build_gate_path_braziers()
+		_build_gate_path_verge()
 	_build_bridges()
 	await _build_step("bridges")
 	if bool(_shell_build.call("uses_multiplayer_staging")):
@@ -5325,6 +5328,53 @@ func _summit_gate_post_brazier(root: Node3D, at: Vector3) -> void:
 	light.omni_range = 16.0
 	root.add_child(light)
 
+
+## F40#19 (NEAR6-CR, flag-off): `gate_path_braziers` in cloudreach_visual.json
+## sets manned braziers (the installed summit brazier pair plus a warm light)
+## beside the realm-gate path, so the night frame has a lit focal point instead
+## of a uniform dark foreground. Each [x, z] is seated on the ground.
+func _build_gate_path_braziers() -> void:
+	var cfg: Dictionary = _visual_config.get("gate_path_braziers", {})
+	if cfg.get("enabled") != true:
+		return
+	var root := Node3D.new()
+	root.name = "GatePathBraziers"
+	add_child(root)
+	for point: Variant in cfg.get("points", []):
+		var xz := point as Array
+		if xz.size() < 2:
+			continue
+		var y := ground_height_at(float(xz[0]), float(xz[1]))
+		if not is_finite(y):
+			continue
+		_summit_gate_post_brazier(root, Vector3(float(xz[0]), y, float(xz[1])))
+
+
+
+## F40#19 round 3 (NEAR6-CR, flag-off): `gate_path_verge` in cloudreach_visual.json
+## clusters installed bushes, flowers and low rocks along the realm-gate path
+## edges (each entry [kind, x, z, height_m, yaw_deg], kind from
+## ROUTE_DETAIL_SCENES), breaking the uniform lawn the night judges flagged.
+func _build_gate_path_verge() -> void:
+	var cfg: Dictionary = _visual_config.get("gate_path_verge", {})
+	if cfg.get("enabled") != true:
+		return
+	var root := Node3D.new()
+	root.name = "GatePathVerge"
+	add_child(root)
+	var index := 0
+	for entry: Variant in cfg.get("items", []):
+		var item := entry as Array
+		if item.size() < 5 or not ROUTE_DETAIL_SCENES.has(str(item[0])):
+			continue
+		var x := float(item[1])
+		var z := float(item[2])
+		var y := ground_height_at(x, z)
+		if not is_finite(y):
+			continue
+		_install_prop_scene(root, ROUTE_DETAIL_SCENES[str(item[0])], "Verge%02d" % index,
+			Vector3(x, y - 0.05, z), float(item[3]), deg_to_rad(float(item[4])))
+		index += 1
 
 ## Height-normalised install of a packed scene, seated so its base sits at
 ## `at`. `_place_local_prop` only reaches the fourteen ROUTE_DETAIL_SCENES; this

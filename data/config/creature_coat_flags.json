@@ -491,8 +491,8 @@
       }
     },
     "remake_owner1101_dark_lift": {
-      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage: dark remake bodies (Brooktail, the black river otter; Voltarach) sink into dark ground. The same value lift as creatures_f36_coat_lift (dark low-saturation texels x1.35-1.4 plus 0.03, feathered; eyes, mouth line and the saturated aqua spots and blue sparks keep their pixels), gentle enough to keep the black identity. Pairs with remake_owner1101_glow_read (its emission map applies over the lifted albedo). Script tools/art_pipeline/grade_coat_value.py brooktail_owner1101 voltarach_owner1101.",
-      "enabled": false,
+      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage: dark remake bodies (Brooktail, the black river otter; Voltarach) sink into dark ground. The same value lift as creatures_f36_coat_lift (dark low-saturation texels x1.35-1.4 plus 0.03, feathered; eyes, mouth line and the saturated aqua spots and blue sparks keep their pixels), gentle enough to keep the black identity. Pairs with remake_owner1101_glow_read (its emission map applies over the lifted albedo). Script tools/art_pipeline/grade_coat_value.py brooktail_owner1101 voltarach_owner1101. Visual lane v1/b24 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.93): Voltarach 5.28 -> 6.04 (+0.76, all three judges higher), Brooktail 6.18 -> 6.28 (+0.10, two higher, one tie); ships ON (owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the rows).",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0_coat_lift.jpg"
@@ -773,6 +773,53 @@
       "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_terrapup_value_lift": {
+      "_why": "F38#1 creature collapse and rest (CPU 6.30): all three judges flag the fainted Terrapup as 'a dark smudge against dark grass' with no readable face. Same recipe as creatures_ralph_mosshock_value_lift (F36#54 5.63 -> 6.55): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12); only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_nightburrow_value_lift": {
+      "_why": "F36#56 Nightburrow stage (CPU 6.67 with partial plates ON): judges name 'the dark mid-tone hide and the faint-end blackout'. Same recipe as creatures_ralph_mosshock_value_lift (F36#54 5.63 -> 6.55): a value-lifted copy of the live partial-plates albedo (midtone gamma 0.78, saturation x1.12). It merges over creatures_ralph_nightburrow_partial_plates for the live Nightburrow albedo, so its glow map and energy are kept.",
+      "_why_on": "Visual lane v1/b22 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.99): F36#56 Nightburrow 6.01 -> 7.06 mapped (+1.05; raw 5.8/6.1/5.8 -> 6.5/6.6/6.6; defect PRESENT -> PARTIAL/FIXED). Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": {"albedo": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_value_lift.png"}
+      }
+    },
+    "creatures_ralph_stormbrush_value_lift": {
+      "_why": "Stage value lift for Stormbrush (one of the darkest live remake albedos). Same recipe as creatures_ralph_mosshock_value_lift (F36#54 +0.92) and creatures_ralph_nightburrow_value_lift (F36#56 +1.05): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes.",
+      "_why_on": "Visual lane v1/b23 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.92): Stormbrush stage 6.31 -> 6.42 (+0.11; raw 6.4/5.6/6.4 -> 6.3/5.8/6.6; two judges higher, one 0.1 lower). Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/stormbrush/candidate_owner1101/models/creature_stormbrush_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_thundertunnel_value_lift": {
+      "_why": "Stage value lift for Thundertunnel (one of the darkest live remake albedos). Same recipe as creatures_ralph_mosshock_value_lift (F36#54 +0.92) and creatures_ralph_nightburrow_value_lift (F36#56 +1.05): a value-lifted copy of its shipped velvet albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes.",
+      "_why_on": "Visual lane v1/b23 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.92): Thundertunnel stage 5.64 -> 5.78 (+0.14; raw 6.0/5.2/5.4 -> 6.1/5.3/5.6; all three higher). Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_tuskroot_value_lift": {
+      "_why": "Stage value lift for Tuskroot (one of the darkest live remake albedos). Same recipe as creatures_ralph_mosshock_value_lift (F36#54 +0.92) and creatures_ralph_nightburrow_value_lift (F36#56 +1.05): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes.",
+      "_why_on": "Visual lane v1/b23 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.92): Tuskroot stage 6.57 -> 7.16 (+0.59; raw 6.4/6.1/6.6 -> 6.9/6.6/7.2; all three higher; Ashtusk shares this mesh and coat). Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/tuskroot/candidate_owner1101/models/creature_tuskroot_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_cindercub_value_lift": {
+      "_why": "Stage value lift for Cindercub's live owner1101 remake (one of the darkest live albedos; creatures_f36_coat_lift targets the old nat1024b texture, not this one). Same recipe as the v1/b21-b23 lifts (Mosshock +0.92, Nightburrow +1.05, Tuskroot +0.59): midtone gamma 0.78, saturation x1.12. Only the albedo changes.",
+      "_why_on": "Visual lane v1/b24 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.93): Cindercub stage 6.52 -> 7.38 (+0.86; raw 5.7/6.4/6.0 -> 6.4/6.9/6.6; all three judges higher). Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0_value_lift.png"}
       }
     }
   }

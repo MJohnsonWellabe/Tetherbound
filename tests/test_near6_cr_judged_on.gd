@@ -63,3 +63,16 @@ func test_rain_storm_ships_on() -> void:
 func test_rim_pickup_cluster_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_physical_runtime.json")
 	_assert_on(cfg.rim_pickup_cluster, "6.19", "rim_pickup_cluster")
+
+
+## F40-9-bf0f5543f8e6-11042046: F40#9 P2-068 NPC post dais 5.44 -> 5.62.
+func test_post_dais_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_npc_runtime.json")
+	_assert_on(cfg.post_dais, "5.62", "post_dais")
+
+
+## F40-19-458a13de2967-11042202: F40#19 night gate-path braziers 5.00 -> 5.51.
+func test_gate_path_braziers_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_visual.json")
+	_assert_on(cfg.gate_path_braziers, "5.51", "gate_path_braziers")
+	assert_true(bool(cfg.time_override_arms.night_foreground_fill.get("enabled", false)), "night fill stays ON under the braziers")
