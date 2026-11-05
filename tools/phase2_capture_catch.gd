@@ -74,6 +74,7 @@ const PINNED_WILD_SPECIES := ["skyrill", "galecrest", "pebbik"]
 const PINNED_WILD_XZ := Vector2(-4.0, -254.0)
 const PINNED_WILD_LEVEL := 30
 const CAPTURE_ARBITRATION_WINDOW_MS := 600000
+const PINNED_BANNER_YAW_DEG := 0.0
 var _pinned_wild := false
 var _throw_index := 0
 
@@ -252,6 +253,14 @@ func _run() -> void:
 				"", "", "", "", "08-caught-verdict")
 			if outcome == "success":
 				got_catch = true
+				# F40#18 (VIS-CLOUDREACH, 5 Nov 2026): the resolve shot inherits the
+				# rig yaw of the live fight, so the same pinned catch framed the road
+				# on one run and the creature and cliffs on the next. In the pinned
+				# capture the banner frame is taken from one fixed yaw, the same for
+				# every tree, so A/B rounds judge the card over the same scene.
+				if _pinned_wild and _rig != null:
+					_rig.set("yaw", deg_to_rad(PINNED_BANNER_YAW_DEG))
+					_rig.set("rotation", Vector3(float(_rig.get("pitch")), deg_to_rad(PINNED_BANNER_YAW_DEG), 0.0))
 				for i in 30:
 					await physics_frame
 				await _capture("09-caught-banner")
