@@ -491,8 +491,8 @@
       }
     },
     "remake_owner1101_dark_lift": {
-      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage: dark remake bodies (Brooktail, the black river otter; Voltarach) sink into dark ground. The same value lift as creatures_f36_coat_lift (dark low-saturation texels x1.35-1.4 plus 0.03, feathered; eyes, mouth line and the saturated aqua spots and blue sparks keep their pixels), gentle enough to keep the black identity. Pairs with remake_owner1101_glow_read (its emission map applies over the lifted albedo). Script tools/art_pipeline/grade_coat_value.py brooktail_owner1101 voltarach_owner1101.",
-      "enabled": false,
+      "_why": "CAUSE-REMAKES (1 Nov, OFF until GPU-judged). GPU creature stage: dark remake bodies (Brooktail, the black river otter; Voltarach) sink into dark ground. The same value lift as creatures_f36_coat_lift (dark low-saturation texels x1.35-1.4 plus 0.03, feathered; eyes, mouth line and the saturated aqua spots and blue sparks keep their pixels), gentle enough to keep the black identity. Pairs with remake_owner1101_glow_read (its emission map applies over the lifted albedo). Script tools/art_pipeline/grade_coat_value.py brooktail_owner1101 voltarach_owner1101. Visual lane v1/b24 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.93): Voltarach 5.28 -> 6.04 (+0.76, all three judges higher), Brooktail 6.18 -> 6.28 (+0.10, two higher, one tie); ships ON (owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the rows).",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0_coat_lift.jpg"
@@ -815,8 +815,9 @@
       }
     },
     "creatures_ralph_cindercub_value_lift": {
-      "_why": "Stage value lift for Cindercub's live owner1101 remake (one of the darkest live albedos; creatures_f36_coat_lift targets the old nat1024b texture, not this one). Same recipe as the v1/b21-b23 lifts (Mosshock +0.92, Nightburrow +1.05, Tuskroot +0.59): midtone gamma 0.78, saturation x1.12. Only the albedo changes. OFF until judged.",
-      "enabled": false,
+      "_why": "Stage value lift for Cindercub's live owner1101 remake (one of the darkest live albedos; creatures_f36_coat_lift targets the old nat1024b texture, not this one). Same recipe as the v1/b21-b23 lifts (Mosshock +0.92, Nightburrow +1.05, Tuskroot +0.59): midtone gamma 0.78, saturation x1.12. Only the albedo changes.",
+      "_why_on": "Visual lane v1/b24 (4 Nov, CPU stage frames, three code-blind judges, calibrate.py r 0.93): Cindercub stage 6.52 -> 7.38 (+0.86; raw 5.7/6.4/6.0 -> 6.4/6.9/6.6; all three judges higher). Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0_value_lift.png"}
       }
