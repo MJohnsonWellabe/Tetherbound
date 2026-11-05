@@ -118,3 +118,19 @@ func test_f38_4_chart_grid_ships_on() -> void:
 	assert_false(ink.r > 0.5 and ink.g < 0.3 and ink.b < 0.3, "no red or oxblood ink")
 	var tab := FileAccess.get_file_as_string("res://scripts/ui/tab_map.gd")
 	assert_true(tab.contains("veil.get(\"chart_grid_1104\", {})"), "the map tab reads the flag")
+
+
+## F38#7 P2-058: during a catch aim, an ally that hides the target is hidden
+## outright instead of drawn as the occlusion dither ghost (judged gain).
+func test_f38_7_aim_hide_ships_on() -> void:
+	var fade: Dictionary = _json("res://data/config/combat.json").camera.occlusion_fade
+	var block: Dictionary = fade.aim_hide_1104
+	assert_true(bool(block.enabled), "aim hide ships ON (judged gain)")
+	assert_true(str(block._why_on).contains("CPU 5.93 -> 7.00"), "records its score")
+	assert_eq(str(block.scope), "client_presentation", "declares its scope")
+	assert_between(float(block.hold_s), 0.0, 1.0, "a short hold, not a lingering hide")
+	var manager := FileAccess.get_file_as_string("res://scripts/combat/combat_manager.gd")
+	assert_true(manager.contains("cfg.get(\"aim_hide_1104\", {})"), "the fight reads the flag")
+	assert_true(manager.contains("and is_aiming() and"), "only while a catch is being aimed")
+	assert_true(manager.contains("func _clear_ally_fade() -> void:\n\t_set_ally_aim_hidden(null, false)"),
+		"clearing the fade always restores a hidden ally")
