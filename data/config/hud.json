@@ -38,7 +38,7 @@
     "card_top": -380.0,
     "breakout_seconds": 1.8,
     "result_clears_reticle": false,
-    "_why_result_clears_reticle": "VIS-MEADOWS 4 Nov 2026 (F38#33, OFF until judged): the 08-caught-verdict frame still shows the reticle's fading '100% CAPTURE CHANCE' readout beside the 'Caught Bramblebun!' card. When on, capture_reticle.gd play_success() clears the contract fade so the verdict is the only text."
+    "_why_result_clears_reticle": "VIS-MEADOWS 4 Nov 2026 (F38#33, OFF until judged): the 08-caught-verdict frame still shows the reticle's fading '100% CAPTURE CHANCE' readout beside the 'Caught Bramblebun!' card. When on, capture_reticle.gd play_success() and play_break() clear the contract fade so the verdict (caught or broke free) is the only text."
   },
   "hud_lean": {
     "_why": "P2-004 round 7 (UI lane, 21 Oct 2026): fewer boxes, not smaller text. Quick bar and action legend lose their backing panels (slots keep their frames, text keeps its outline), the day/time line drops its plate, and assigned quick slots show a larger item icon with key chip and count on one line, so counts are never cut. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
