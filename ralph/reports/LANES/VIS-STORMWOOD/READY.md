@@ -15,6 +15,9 @@
 
 **F41#21 / F41#16 (Hollows fight result screens) need the GPU queue (4 Nov 18:15 UTC):** I set up a CPU A/B of `hud.victory_focus` (UIPOSES arm, OFF, never judged alone; aimed at F41#21's "victory line groups with the quickbar") but `phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120` reached only t=37 s of fight time in its 50 min timeout on llvmpipe (exit 124, no frames), and the win/loss result frames come after the fight ends. **Please judge `hud.json victory_focus` on F41#21 (and F41#16) on the GPU rig.** Character rows F41#8/#18 left alone while NEAR6-TW edits the shared character rim shader.
 
+**Reassignment (coordinator 5 Nov 00:40 UTC):** Stormwood items parked (new art or GPU). Now: F39#7 P2-089 Tidewake fight composition (5.65), F39#19 P2-088 Tidewake fight roster contrast (5.78), F36#29 Innkeeper body (5.83). Building on NEAR6-TW's notes (all_pairs worse; roster_floor no CPU change).
+- F39#7 `combat.json trainer_aside.realm_1104` (OFF, `2ff5da7a`): Tidewake (realm `water`) trainer 3.6 m aside instead of 2.4, same depth; judging as `qj_aside`.
+
 **Redirect status (coordinator 22:25), 5 Nov ~00:15 UTC:**
 1. F41#5 grove rings: invisible in the fixed views (real ON bake A/B 0.0% px), reverted.
 2. F41#19 footing: **ON 5.09 -> 5.22** (`468ed635`).
