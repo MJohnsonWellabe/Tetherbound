@@ -586,3 +586,13 @@ Not run yet. The required suite needs every remake imported, which does not fit 
 - `tools/art_pipeline/amplify_clip.py`: exaggerates a clip's rotations.
 - `tools/art_pipeline/grade_regions.py` with `data/creatures/remake_grades.json`: regional coat grade by anatomy map.
 - `tools/art_pipeline/grade_quill_bands.py`: banded quills.
+
+## v1/b25 (4 Nov): Stormraven value lift ON (5.89 -> 6.59 mapped CPU); Fulgocobra, Voltwig and Mirejaw lifts judged flat, stay OFF
+- `creatures_ralph_stormraven_value_lift` is ON, with its score in `_why_on`. The three flat arms record their result in `_judged`.
+- Test: `test_dark_value_lift_flags` (+Stormraven). Ran `test_remake_owner1101_finish`, `test_creature_coat_flags` and `test_texture_import_policy`; all pass.
+- Verdict: `v1/b25/VERDICT.md`. Albedo lift is now exhausted for near-black bodies, so the next arm is face/eye readability.
+
+## v1/b26 (5 Nov): Reedwing (6.04 -> 6.70), Paddlenewt (6.15 -> 6.70) and Shadelet (5.97 -> 6.26) value lifts ON; Bramblebun flat, OFF
+- The three gains ship ON, each with its score in `_why_on`. Riftfrill shares Paddlenewt's albedo, so the lift reaches it too.
+- Test: `test_dark_value_lift_flags`. Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
+- Verdict: `v1/b26/VERDICT.md`. Pose defects the judges name: Shadelet's upright faint tail, and Paddlenewt and Shadelet floating in hit-react mid.

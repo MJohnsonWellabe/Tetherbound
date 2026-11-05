@@ -86,3 +86,8 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 - **F39#21 (victory hierarchy, `hud.json` `victory_focus`, OFF, unjudged): cannot be captured on CPU.** Its stands (`venn_resolve__win`/`aftermath`, `nerissa_resolve__win`) exist only in `phase2_capture_tidewake_fights.gd --verified-victory-lifecycle` runs. That mode refuses `--render-only-saves` and needs a native 1080p window, so two full trainer fights must render continuously on llvmpipe. job.json's repro also omits the flag, so r21 (ordinary render-only runs: 29 frames, fight resolved at 99 s) wrote no win frames. Better judged on the GPU queue.
 
 - First `--import` on this container takes about 2 h on CPU.
+
+**5 Nov ~00:55 UTC rounds (no judging, pixel pre-check only):**
+- r5g, F41#5 (Stormwood grass, bush and far-cover tints desaturated, `stormwood_ground_finish`): almost no visible change (mean diff 1.6-2.9). The teal ground is the terrain texture, not these tints. Not judged, stays OFF. Handed back to VIS-STORMWOOD (coordinator, 00:15).
+- r2f, F39#2 (`water_veilfall.silhouette.far_relief` ON): no visible change. In the P2-010 frames the spire is the near rock composition, inside the 1100 m far handoff, so far-only relief never draws. Not judged, stays OFF.
+- Harness note: do not wrap `quick_judge.py run` in `flock godot.lock`. The tool takes that lock itself, so the run deadlocks with no Godot process (2 h lost).

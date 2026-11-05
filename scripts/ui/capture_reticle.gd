@@ -143,7 +143,8 @@ func play_pulse() -> void:
 func play_success() -> void:
 	_success = {"t": 0.0, "pos": _effect_anchor()}
 	# hud.json catch_card.result_clears_reticle (default off): the contract
-	# fade and its "CAPTURE CHANCE" readout stop as the result card lands, so
+	# fade and its "CAPTURE CHANCE" readout stop as the result card lands (catch
+	# or break-free, see play_break), so
 	# the verdict is the only text on screen.
 	if result_clears_reticle():
 		_contract.clear()
@@ -162,6 +163,9 @@ static func result_clears_reticle() -> bool:
 ## Red/orange arcs scattering outward on a failed catch.
 func play_break() -> void:
 	_break_fx = {"t": 0.0, "pos": _effect_anchor()}
+	if result_clears_reticle():
+		_contract.clear()
+		queue_redraw()
 
 
 ## Wherever the ring last actually was — the contract's landing point once
