@@ -88,6 +88,7 @@ Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. 
 
 - First `--import` on this container takes about 2 h on CPU.
 
+- **F39#18 (P2-073, GPU 5.17), no change needed:** a fresh CPU capture (`qj/r18a`, current build) already frames Daro, Bex and Irva facing the camera at mid-shot beside the panel. The GPU note (tiny backs-to-camera figures) predates the dialogue camera fixes. **FOR THE COORDINATOR: needs a GPU re-score, not a candidate.**
 - **r29p, F39#29 (P2-074, GPU 3.54), ON, 5.54 -> 6.34:** the current build already frames Captain Nerissa (dialogue_open and fight_fade, ON). The one remaining failure was Nalia's frame: her post sits about 12 m up the dune wall, so the camera showed the trainer's back. The never-judged `water_npc_posts_candidate` moves her body to the flat passage floor, and she now faces the camera beside the panel. Judges still ask for warmer dune form and more water in shot (scene).
 
 **5 Nov ~00:55 UTC rounds (no judging, pixel pre-check only):**
