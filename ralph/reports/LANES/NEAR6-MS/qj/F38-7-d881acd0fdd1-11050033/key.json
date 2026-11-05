@@ -1,0 +1,23 @@
+{
+ "Jq": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "El": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Yq": {
+  "anchor": false,
+  "label": "F38#7",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F38-7-d881acd0fdd1-11050033/k/sides/F38_7_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F38-7-d881acd0fdd1-11050033/k/sides/F38_7_cand.jpg"
+ },
+ "Ta": {
+  "anchor": true,
+  "A": "f36_0_npc:C2A",
+  "B": "f36_0_npc:C2B"
+ }
+}
