@@ -6,7 +6,7 @@
 |---|---|---|---|
 | F38#7 | P2-058 catch aim readability | 5.82 | **Landing-ready: CPU 5.93 -> 7.00.** Cause found: the player's own creature stands between the aim camera and the target and is drawn as the fight's 0.6 occlusion dither ghost over the trainer and readout (the composition swing cannot act while the player steers the aim). Arm `combat.json camera.occlusion_fade.aim_hide_1104` (`68b2d369`, OFF): while aiming, an ally hiding the target is hidden with its contact shadow. A/B capturing. |
 | F38#26 | P2-020 creature ground contact | 5.62 | **Blocked: stand artefact (ask below).** No game change made. |
-| F38#6 | P2-033 ground pickup identity | 5.52 | Queued |
+| F38#6 | P2-033 ground pickup identity | 5.52 | **No scene lever; needs art.** Base on main (`.artifacts/qj/F38-6-base-11050136`, local): the three judged pickups already read as distinct objects on CPU (a large wrapped sweet on a find-stone, a pink potion in a basket, a gold sweet pile on a cloth); the recorded 'shared glowing plants, orbs or crates' look is gone. The weakest element is the rare-candy cloth, a near-white sheet that blows out in shade, and it is baked into the Meshy model (`meshy_item_visuals.json items.rare_candy.model`): a material or model change, for an art lane. The tier_candidate arm stays OFF (flat earlier: the judged frames show one item per tier). |
 | F41#9 | P2-046 harvest resource identity | 5.40 | Queued (parked earlier; needs a new idea) |
 | F38#32 | P2-035 camp and workshop props | 5.81 | Queued |
 | F41#15 / F41#3 | P2-083 dialogue obstruction / P2-092 actor spacing | 5.90 / 5.98 | Queued |
