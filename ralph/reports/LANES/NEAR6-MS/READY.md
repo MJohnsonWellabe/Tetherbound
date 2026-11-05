@@ -1,5 +1,20 @@
 # NEAR6-MS (4 Nov 2026): running status
 
+## Round 4 (coordinator, 5 Nov 02:35): low-6 Meadows rows, cheapest judge ask first
+
+F38#7 (5.93 -> 7.00) is landing in #841. F41#3 stays parked (combat-contract call); art-blocked rows are left. None of these rows are VIS-MEADOWS's.
+
+| Board row | Item | Board | Status |
+|---|---|---|---|
+| F38#21 | P2-005 ground cover | 6.06 | In progress. `grass_field.json meadows_ground_candidate` already ON; base capturing to see whether the repeating white flowers are runtime grass tiers or baked scatter. |
+| F38#8 | P2-119 Fly carrier grip pose | 6.12 | Queued |
+| F38#31 | P2-019 alpha rarity read | 6.16 | Queued |
+| F38#25 | P2-018 shiny palette distinction | 6.21 | Queued |
+| F38#14 | P2-060 catch effect finish | 6.23 | Queued |
+| F38#36 | P2-078 dialogue speaker occlusion | 6.26 | Queued |
+| F38#11 | P2-063 shared fight tell and hit effects | 6.29 | Queued |
+| F38#27 | P2-031 settings and binding instructions | 6.32 | Queued |
+
 ## Round 3 (coordinator, 4 Nov 23:40): world items taken
 
 | Board row | Item | Board | Status |
