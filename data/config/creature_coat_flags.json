@@ -821,6 +821,70 @@
       "coats": {
         "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101_Image_0_value_lift.png"}
       }
+    },
+    "creatures_ralph_stormraven_value_lift": {
+      "_why": "Stage value lift for Stormraven (among the darkest live remake albedos). Same recipe as the v1/b21-b24 lifts (eight for eight at the stage camera): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes; it merges with the shipped emission and material coats. OFF until judged.",
+      "_why_on": "v1/b25 (4 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.61 r 0.86): mapped 5.89 -> 6.59 (+0.70); all three judges name a stronger cyan edge read on the head and eye. Judged gain, ships ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_fulgocobra_value_lift": {
+      "_why": "Stage value lift for Fulgocobra (among the darkest live remake albedos). Same recipe as the v1/b21-b24 lifts (eight for eight at the stage camera): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes; it merges with the shipped emission and material coats. OFF until judged.",
+      "_judged": "v1/b25 (4 Nov, CPU stage): mapped 5.78 -> 5.78, flat (judges see no difference). Stays OFF.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_voltwig_value_lift": {
+      "_why": "Stage value lift for Voltwig (among the darkest live remake albedos). Same recipe as the v1/b21-b24 lifts (eight for eight at the stage camera): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes; it merges with the shipped emission and material coats. OFF until judged.",
+      "_judged": "v1/b25 (4 Nov, CPU stage): mapped 6.53 -> 6.59, flat (judges see no difference). Stays OFF.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_mirejaw_value_lift": {
+      "_why": "Stage value lift for Mirejaw (among the darkest live remake albedos). Same recipe as the v1/b21-b24 lifts (eight for eight at the stage camera): a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes; it merges with the shipped emission and material coats. OFF until judged.",
+      "_judged": "v1/b25 (4 Nov, CPU stage): mapped 5.89 -> 5.84, flat (judges see no difference). Stays OFF.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_bramblebun_value_lift": {
+      "_why": "Stage value lift for Bramblebun (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b25: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "_judged": "v1/b26 (5 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.10 r 0.83): mapped 6.78 -> 6.78, flat (mid-brown body was never the dark-body problem). Stays OFF.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_reedwing_value_lift": {
+      "_why": "Stage value lift for Reedwing (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b25: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "_why_on": "v1/b26 (5 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.10 r 0.83): mapped 6.04 -> 6.70 (+0.66); all three judges see the lifted teal separate head, eye and wing from the shadow. Judged gain, ships ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/reedwing/candidate_owner1101/models/creature_reedwing_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_paddlenewt_value_lift": {
+      "_why": "Stage value lift for Paddlenewt (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b25: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. Shared by Riftfrill (same albedo). OFF until judged.",
+      "_why_on": "v1/b26 (5 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.10 r 0.83): mapped 6.15 -> 6.70 (+0.55); all three judges see the face and pale underside read on the brighter teal. Judged gain, ships ON (Riftfrill wears the same albedo).",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_shadelet_value_lift": {
+      "_why": "Stage value lift for Shadelet (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b25: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "_why_on": "v1/b26 (5 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.10 r 0.83): mapped 5.97 -> 6.26 (+0.29); all three judges see the bluer, lifted body bring out the purple markings. Judged gain, ships ON.",
+      "enabled": true,
+      "coats": {
+        "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_Image_0_value_lift.png"}
+      }
     }
   }
 }

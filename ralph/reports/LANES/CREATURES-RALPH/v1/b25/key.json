@@ -1,0 +1,41 @@
+{
+ "Wk": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Ql": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ws": {
+  "anchor": false,
+  "label": "lift:fulgocobra",
+  "A": "/tmp/claude-0/work/judge/lift5/k/sides/fulgocobra_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift5/k/sides/fulgocobra_a.jpg"
+ },
+ "Mz": {
+  "anchor": false,
+  "label": "lift:voltwig",
+  "A": "/tmp/claude-0/work/judge/lift5/k/sides/voltwig_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift5/k/sides/voltwig_b.jpg"
+ },
+ "Si": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ },
+ "Wu": {
+  "anchor": false,
+  "label": "lift:mirejaw",
+  "A": "/tmp/claude-0/work/judge/lift5/k/sides/mirejaw_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift5/k/sides/mirejaw_a.jpg"
+ },
+ "Kc": {
+  "anchor": false,
+  "label": "lift:stormraven",
+  "A": "/tmp/claude-0/work/judge/lift5/k/sides/stormraven_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift5/k/sides/stormraven_b.jpg"
+ }
+}

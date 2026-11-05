@@ -1,0 +1,41 @@
+{
+ "Vh": {
+  "anchor": false,
+  "label": "lift:reedwing",
+  "A": "/tmp/claude-0/work/judge/lift6/k/sides/reedwing_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift6/k/sides/reedwing_a.jpg"
+ },
+ "Ee": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Gt": {
+  "anchor": true,
+  "A": "f36_0_npc:C2B",
+  "B": "f36_0_npc:C2A"
+ },
+ "Py": {
+  "anchor": false,
+  "label": "lift:shadelet",
+  "A": "/tmp/claude-0/work/judge/lift6/k/sides/shadelet_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift6/k/sides/shadelet_b.jpg"
+ },
+ "Ml": {
+  "anchor": false,
+  "label": "lift:bramblebun",
+  "A": "/tmp/claude-0/work/judge/lift6/k/sides/bramblebun_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift6/k/sides/bramblebun_b.jpg"
+ },
+ "Hs": {
+  "anchor": false,
+  "label": "lift:paddlenewt",
+  "A": "/tmp/claude-0/work/judge/lift6/k/sides/paddlenewt_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift6/k/sides/paddlenewt_a.jpg"
+ },
+ "Aa": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}

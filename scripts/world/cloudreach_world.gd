@@ -5363,18 +5363,22 @@ func _build_gate_path_verge() -> void:
 	root.name = "GatePathVerge"
 	add_child(root)
 	var index := 0
+	var ref_y := float(cfg.get("ref_y", 109.0))
 	for entry: Variant in cfg.get("items", []):
 		var item := entry as Array
 		if item.size() < 5 or not ROUTE_DETAIL_SCENES.has(str(item[0])):
 			continue
 		var x := float(item[1])
 		var z := float(item[2])
-		var y := ground_height_at(x, z)
-		if not is_finite(y):
-			continue
+		# Seat on the surface nearest the path height: the lawn beside the path
+		# can share its cell with deeper crown/geology surfaces.
+		var y := ground_height_at(x, z, ref_y)
+		if not is_finite(y) or absf(y - ref_y) > 4.0:
+			y = ref_y
 		_install_prop_scene(root, ROUTE_DETAIL_SCENES[str(item[0])], "Verge%02d" % index,
 			Vector3(x, y - 0.05, z), float(item[3]), deg_to_rad(float(item[4])))
 		index += 1
+
 
 ## Height-normalised install of a packed scene, seated so its base sits at
 ## `at`. `_place_local_prop` only reaches the fourteen ROUTE_DETAIL_SCENES; this

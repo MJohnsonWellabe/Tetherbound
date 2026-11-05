@@ -40,6 +40,20 @@ func build(materials: Dictionary) -> void:
 		_add_beacon(index, (cfg.arrival_beacons as Array)[index] as Dictionary,
 			cfg.get("beacon_light", {}) as Dictionary, materials,
 			float(cfg.get("beacon_scale", 1.0)))
+	# F40#19 (NEAR6-CR, flag-off): `face_uplights` washes the gate's front face
+	# in pale moonlit light so the landmark reads at night.
+	var uplights: Dictionary = cfg.get("face_uplights", {})
+	if uplights.get("enabled") == true:
+		for index in (uplights.get("positions", []) as Array).size():
+			var light := OmniLight3D.new()
+			light.name = "GateFaceUplight%02d" % (index + 1)
+			light.light_color = Color(str(uplights.get("colour", "#d4e3f2")))
+			light.light_energy = float(uplights.get("energy", 3.0))
+			light.omni_range = float(uplights.get("range_m", 20.0))
+			light.shadow_enabled = false
+			light.position = _v3((uplights.positions as Array)[index])
+			light.set_meta("gate_role", "face_uplight")
+			add_child(light)
 
 
 func _add_banners(cfg: Dictionary, materials: Dictionary) -> void:

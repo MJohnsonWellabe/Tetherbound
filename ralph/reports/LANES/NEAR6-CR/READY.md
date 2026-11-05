@@ -16,6 +16,7 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `data/config/cloudreach_visual.json:time_override_arms.night_foreground_fill` | F40#19 (matrix piece 7, night) | 5.10 -> **5.84** | `tests/test_near6_cr_judged_on.gd` | 2d7066c0 |
 | `data/config/cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | 5.64 -> **6.16** | `tests/test_near6_cr_judged_on.gd` | d720ad38 |
 | `data/config/cloudreach_visual.json:gate_path_braziers` | F40#19 (matrix piece 7, night) | 5.00 -> **5.51** (night_foreground_fill ON in both arms; this batch's anchors map lower than the 5.84 round) | `tests/test_near6_cr_judged_on.gd` | 799a0872 |
+| `data/config/cloudreach_visual.json:gate_path_verge` | F40#19 (matrix piece 7, night) | 5.54 -> **5.81** (braziers + night fill ON in both arms) | `tests/test_near6_cr_judged_on.gd` | e9c2160a |
 
 ## Arms in flight (flag OFF)
 
@@ -34,6 +35,7 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | Judged gain (qj/F40-2-edb6d881b763-11041450), ON (above). Judges still ask for a cliff plinth, cloud sea below and lit windows at night. |
 | `cloudreach_f40_items.json:shelf_edge_soften` | F40#4 P2-023 | **Judged worse** (qj/F40-4-24add0c49b36-11041519): CPU 6.35 -> 5.69. Root cause found by a ray probe: the straight-edged pale shelves are the installed `cloudreach_cliff_shelf_edge` modules from the shared `stand_pattern` (P2-021 dressing). Turning and sinking them lost the layered pale strata the judges like; they ask for chamfered, overhanging, eroded lips instead. Stays OFF. Current CPU base for the item on this tree: **6.35**. |
 | `cloudreach_visual.json:gate_path_braziers` | F40#19 night (matrix piece 7) | Round 2 judged gain (qj/F40-19-458a13de2967-11042202), ON (above). Judges still ask for the gate shown whole clear of the HUD (capture stand, not reframed here), a moon/stars/cloud sea night sky and broken-up foreground grass. |
+| `cloudreach_visual.json:gate_path_verge` | F40#19 night (matrix piece 7) | Round 3: first capture showed nothing (no lawn surface indexed beside the path, `ground_height_at` NaN; now seats at `ref_y`). Round 3b capture rendered the installed `Bush_Common` **red** at night (red is Team Tether only), so it was not judged; bushes swapped for flowers and low rocks, then judged gain (qj/F40-19-9025b78edb4e-11050024), ON (above). **Note for owners of route dressing:** `Bush_Common.gltf` reads red under the Cloudreach night grade. |
 | `cloudreach_visual.json:weather_arms.rain_mood` | F40#19 rain (matrix piece 4) | **Judged flat** (qj/F40-19-rain-9079be470ae9-11041657): 5.81 -> 5.81, all three judges saw no difference. Stays OFF. Next idea (round 2): a stronger storm grade (darker sky, wet path sheen, low mist), which the judges asked for. |
 
 ## Status (4 Nov 17:10 UTC)
