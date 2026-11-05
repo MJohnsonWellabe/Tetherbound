@@ -1,5 +1,16 @@
 # NEAR6-MS (4 Nov 2026): running status
 
+## Round 3 (coordinator, 4 Nov 23:40): world items taken
+
+| Board row | Item | Board | Status |
+|---|---|---|---|
+| F38#7 | P2-058 catch aim readability | 5.82 | Cause found: the player's own creature stands between the aim camera and the target and is drawn as the fight's 0.6 occlusion dither ghost over the trainer and readout (the composition swing cannot act while the player steers the aim). Arm `combat.json camera.occlusion_fade.aim_hide_1104` (`68b2d369`, OFF): while aiming, an ally hiding the target is hidden with its contact shadow. A/B capturing. |
+| F38#26 | P2-020 creature ground contact | 5.62 | Next. The existing contact shadow (creatures_visual.json) sits on the ground under the grass that buries the feet; radius retune was flat before. |
+| F38#6 | P2-033 ground pickup identity | 5.52 | Queued |
+| F41#9 | P2-046 harvest resource identity | 5.40 | Queued (parked earlier; needs a new idea) |
+| F38#32 | P2-035 camp and workshop props | 5.81 | Queued |
+| F41#15 / F41#3 | P2-083 dialogue obstruction / P2-092 actor spacing | 5.90 / 5.98 | Queued |
+
 ## Handoff (4 Nov ~23:35 UTC): round 2 UI rows done, parked or blocked
 
 - **State:** branch `tb/near6-ms-1104` = main 569cea75 (#836) plus this report folder (`d597aa83`). Main carries every landing-ready arm from this lane: F38#4 parchment fog (CPU 6.15 -> 7.18) and chart grid (6.81 -> 6.93), F38#9 satchel_focus (7.13 -> 7.36), F39#23 ring style (5.26 -> 5.62). Nothing landing-ready is left on the branch.
