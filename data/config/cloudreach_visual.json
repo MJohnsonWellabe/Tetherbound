@@ -86,6 +86,21 @@
       "overrides": {
         "night": {"environment": {"ambient_energy": 3.4, "ambient_colour": "#5c74bd", "ambient_sky_contribution": 0.12, "exposure": 1.08, "adjustment_saturation": 1.0}}
       }
+    },
+    "night_moon_grade": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR round 5): with the fill, braziers and verge ON all judges now read the ground as day-lit under a night sky; they ask for a cool, darker, less saturated moonlit grade with readable values. Layers after night_foreground_fill (arms apply in order). OFF until judged.",
+      "enabled": false,
+      "overrides": {
+        "night": {
+          "environment": {
+            "ambient_energy": 2.6,
+            "ambient_colour": "#5470c4",
+            "exposure": 1.0,
+            "adjustment_saturation": 0.78
+          }
+        }
+      }
     }
   },
   "time_overrides": {
