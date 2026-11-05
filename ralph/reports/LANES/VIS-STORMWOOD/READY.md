@@ -18,6 +18,8 @@
 **Reassignment (coordinator 5 Nov 00:40 UTC):** Stormwood items parked (new art or GPU). Now: F39#7 P2-089 Tidewake fight composition (5.65), F39#19 P2-088 Tidewake fight roster contrast (5.78), F36#29 Innkeeper body (5.83). Building on NEAR6-TW's notes (all_pairs worse; roster_floor no CPU change).
 - F39#7 `combat.json trainer_aside.realm_1104` (Tidewake trainer 3.6 m aside instead of 2.4): **worse**, 6.57 -> 5.87 (`qj/qj_aside/`). The fight camera follows the trainer side, so the candidate faced the inland dune (no water, flat sand), and 2/3 saw Ripplet pressed into Cannonback. Stays OFF. **Note for the board:** all three judges marked the P2-089 overlap defect FIXED on the current base (the 5.65 GPU score predates the shipped spacing work), so F39#7 may need a fresh GPU baseline rather than another arm. Parked here (both NEAR6-TW all_pairs and this trainer arm made it worse).
 
+- F39#19 `hud_subject_fade.roster_floor` (NEAR6-TW arm, roster never below alpha 0.9): **not judged, no change in the F39#19 frames** (`qj_rosterfloor` 0.5% px). In F39#19's fixed frames (t-000, tell-start, t-003) the roster is fully opaque on CPU, so P2-088 ("fades to pale") does not reproduce there. It does reproduce in the F39#7 frame t-024 (the Venn trainer stands behind the roster and the subject fade takes it pale; cropped in `qj_aside` base). roster_floor addresses exactly that case, at the cost of the panel covering the trainer. **Please judge `roster_floor` on the GPU, or with frames where the trainer passes behind the roster.** Stays OFF.
+
 **Redirect status (coordinator 22:25), 5 Nov ~00:15 UTC:**
 1. F41#5 grove rings: invisible in the fixed views (real ON bake A/B 0.0% px), reverted.
 2. F41#19 footing: **ON 5.09 -> 5.22** (`468ed635`).
