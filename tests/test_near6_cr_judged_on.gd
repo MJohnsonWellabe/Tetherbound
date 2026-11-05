@@ -76,3 +76,11 @@ func test_gate_path_braziers_ships_on() -> void:
 	var cfg := _json("res://data/config/cloudreach_visual.json")
 	_assert_on(cfg.gate_path_braziers, "5.51", "gate_path_braziers")
 	assert_true(bool(cfg.time_override_arms.night_foreground_fill.get("enabled", false)), "night fill stays ON under the braziers")
+
+
+## F40-19-9025b78edb4e-11050024: F40#19 night gate-path verge 5.54 -> 5.81.
+func test_gate_path_verge_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_visual.json")
+	_assert_on(cfg.gate_path_verge, "5.81", "gate_path_verge")
+	for item: Array in cfg.gate_path_verge.items:
+		assert_ne(str(item[0]), "bush", "Bush_Common reads red at night; verge keeps flowers and rocks only")
