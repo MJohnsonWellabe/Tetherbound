@@ -2163,7 +2163,24 @@ func _apply_catch_party_row(cfg: Dictionary, card: StyleBoxFlat, success: bool) 
 		face.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		face.custom_minimum_size = Vector2(px, px)
 		face.texture = load(path)
-		row.add_child(face)
+		var name_px := int((spec as Dictionary).get("name_px", 0))
+		if name_px <= 0:
+			row.add_child(face)
+			continue
+		# `name_px` > 0 (off at 0): each portrait carries its companion's name
+		# under it, so the row reads as five individuals, not five icons.
+		var cell := VBoxContainer.new()
+		cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		cell.add_theme_constant_override("separation", 2)
+		cell.add_child(face)
+		var label := Label.new()
+		var nick := str((member as Object).get("nickname"))
+		label.text = nick if not nick.is_empty() else str((member as Object).get("display_name"))
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.add_theme_font_size_override("font_size", name_px)
+		label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		cell.add_child(label)
+		row.add_child(cell)
 	var pad := float((spec as Dictionary).get("pad_px", 12.0))
 	row.anchor_left = 0.0
 	row.anchor_right = 1.0
@@ -2171,11 +2188,12 @@ func _apply_catch_party_row(cfg: Dictionary, card: StyleBoxFlat, success: bool) 
 	row.anchor_bottom = 1.0
 	row.offset_left = card.content_margin_left
 	row.offset_right = -card.content_margin_right
-	row.offset_top = -(px + pad)
+	var tall := px + (float((spec as Dictionary).get("name_px", 0)) * 1.4 + 2.0 if int((spec as Dictionary).get("name_px", 0)) > 0 else 0.0)
+	row.offset_top = -(tall + pad)
 	row.offset_bottom = -pad
 	row.visible = true
-	card.content_margin_bottom += px + pad
-	_outcome.offset_bottom = maxf(_outcome.offset_bottom, _outcome.offset_top + px + pad + 120.0)
+	card.content_margin_bottom += tall + pad
+	_outcome.offset_bottom = maxf(_outcome.offset_bottom, _outcome.offset_top + tall + pad + 120.0)
 
 
 ## P2-110: hud.json `loss_card` (off unless enabled). The loss verdict draws as
