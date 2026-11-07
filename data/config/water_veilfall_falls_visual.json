@@ -1,10 +1,11 @@
 {
   "_comment": "P2-010 shipping presentation candidate: metre-scale longitudinal/transverse terrain samples keep broad fall triangles against curved shoulders; shallow stream relief breaks the smooth close shell using the existing lit material. Flow colours the connected core and each strand fades into its own plunge distance. Projection pull and minimum angular widening operate only at the far terrain handoff. Physical terrain, traversal, offshore water and installed rock masses are unchanged. Native distance/plateau/close High+Medium capture and Claude verdict remain required.",
   "enabled": true,
+  "_why_standoff_3m": "tb/vis-tidewake-1104 look r12 (CPU, 3 judges, calibrated r 0.79): at 0.8 m a dark rock ridge cut through the Veilfall fall sheet (judges: a black bird/blob on the fall); at 3.0 m it clears it. F39#30b 5.75 -> 5.85, F39#31 5.40 -> 5.40 mapped.",
   "geometry": {
     "sample_step_m": 1.5,
     "cross_sample_step_m": 1.0,
-    "standoff_m": 0.8,
+    "standoff_m": 3.0,
     "stream_relief_m": 0.18,
     "stream_spacing_m": 4.2
   },

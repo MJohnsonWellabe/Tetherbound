@@ -74,6 +74,11 @@ uniform float wave_strength = 0.35;
 uniform vec4 fresnel_colour: source_color = vec4(0.73, 0.78, 0.81, 1.0);
 uniform float fresnel_power = 4.0;
 uniform float fresnel_strength = 0.65;
+// tb/vis-tidewake-1104: a night dim driven by the day cycle (water_surface.gd).
+// 0 keeps every existing look exactly; at 1 the water colour is multiplied by
+// night_tint so the lit shallow band stops reading as neon under a dark sky.
+uniform float night_dim = 0.0;
+uniform vec4 night_tint: source_color = vec4(0.35, 0.45, 0.6, 1.0);
 uniform float roughness_value = 0.12;
 
 // EV5-remainder — the flowing-water variant. The stream ribbon writes its
@@ -242,6 +247,7 @@ void fragment() {
 	// The exact waterline: fade out over the last few centimetres of depth.
 	alpha *= smoothstep(0.0, edge_feather, depth);
 
+	colour *= mix(vec3(1.0), night_tint.rgb, night_dim);
 	ALBEDO = colour;
 	ALPHA = alpha;
 	NORMAL_MAP = wave * 0.5 + vec3(0.5);

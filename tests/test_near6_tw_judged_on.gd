@@ -39,6 +39,36 @@ func test_fight_ring_hide_ships_on() -> void:
 	pickup.free()
 
 
+## r24: F39#24 creature rest poses 5.02 -> 6.69.
+func test_prone_rest_ships_on() -> void:
+	var cfg := _json("res://data/config/water_creature_rest_visual.json")
+	_assert_on(cfg.prone_rest, "6.69", "water_creature_rest_visual.prone_rest")
+	for id: String in ["riptusk", "water_riptusk", "torrentoad", "water_torrentoad"]:
+		assert_true((cfg.prone_rest.species as Array).has(id), "%s rests prone" % id)
+	assert_true(float(cfg.prone_rest.sink_height_frac) > 0.0 and float(cfg.prone_rest.sink_height_frac) <= 0.5,
+		"the settle stays a partial sink")
+
+
+## r16b: F39#16 live current streaks 5.96 -> 6.54.
+func test_live_current_seams_ship_softened() -> void:
+	var flow: Dictionary = _json("res://data/config/tidewake_look.json").current_flow
+	assert_true(str(flow.get("_why_near6_live_seams", "")).contains("6.54"), "records 6.54")
+	assert_almost_eq(float(flow.state_shader.live.seam_opacity), 0.1, 0.0001, "live seams faded")
+	assert_almost_eq(float(flow.shader.seam_wander_m), 9.0, 0.0001, "seams wander")
+
+
+## r10: F41#10 Glass Sink 4.84 -> 5.36 (Crown massif hidden from inside its footprint).
+func test_crown_massif_near_hide_ships_on() -> void:
+	var massif: Dictionary = _json("res://data/config/stormwood_crown_overlook.json").massif
+	_assert_on(massif.near_hide_1104, "5.36", "stormwood_crown_overlook.massif.near_hide_1104")
+	var begin := float(massif.near_hide_1104.visible_from_m)
+	assert_true(begin >= float(massif.width_m) * 0.8, "begins beyond the silhouette's own footprint")
+	var overlook: Array = _json("res://data/config/stormwood_crown_overlook.json").deck.at
+	var at: Array = massif.at
+	assert_true(Vector2(float(overlook[0]) - float(at[0]), float(overlook[1]) - float(at[1])).length() > begin + float(massif.fade_m),
+		"the Crown Overlook still sees the massif")
+
+
 ## The fill uniform defaults to 0, so the Stormwood rim keeps its rim-only look.
 func test_rim_overlay_fill_defaults_off() -> void:
 	var code := FileAccess.get_file_as_string("res://shaders/character_rim_overlay.gdshader")

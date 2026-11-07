@@ -1,0 +1,41 @@
+{
+ "Gw": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Wl": {
+  "anchor": true,
+  "A": "f36_0_npc:C4B",
+  "B": "f36_0_npc:C4A"
+ },
+ "Sp": {
+  "anchor": false,
+  "label": "F39#30b rain",
+  "A": "/dev/shm/artifacts/look_r9/s9/F39_30b_base.jpg",
+  "B": "/dev/shm/artifacts/look_r9/s9/F39_30b_cand.jpg"
+ },
+ "Qs": {
+  "anchor": false,
+  "label": "F39#30a rain",
+  "A": "/dev/shm/artifacts/look_r9/s9/F39_30a_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r9/s9/F39_30a_base.jpg"
+ },
+ "Ua": {
+  "anchor": false,
+  "label": "F39#31 rain",
+  "A": "/dev/shm/artifacts/look_r9/s9/F39_31_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r9/s9/F39_31_base.jpg"
+ },
+ "Sv": {
+  "anchor": false,
+  "label": "F13#5 bands",
+  "A": "/dev/shm/artifacts/look_r9/s10/F13_5_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r9/s10/F13_5_base.jpg"
+ },
+ "Wf": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

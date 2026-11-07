@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9129,
+  "least_squares_slope": 1.5275,
+  "method": "linear",
+  "slope": 1.5275,
+  "intercept": -2.904,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.51,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C4A": {
+   "measured": 6.5,
+   "reference": 6.77,
+   "mapped": 7.025,
+   "residual": -0.255
+  },
+  "f36_0_gap:C4B": {
+   "measured": 6.433,
+   "reference": 7.17,
+   "mapped": 6.923,
+   "residual": 0.247
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.767,
+   "reference": 4.0,
+   "mapped": 4.377,
+   "residual": -0.377
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.5,
+   "reference": 6.53,
+   "mapped": 5.497,
+   "residual": 1.033
+  },
+  "craft:after": {
+   "measured": 6.867,
+   "reference": 7.35,
+   "mapped": 7.585,
+   "residual": -0.235
+  },
+  "craft:before": {
+   "measured": 5.333,
+   "reference": 4.83,
+   "mapped": 5.243,
+   "residual": -0.413
+  }
+ },
+ "candidates": {
+  "F38#15 cand": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.08,
+   "mapped_judges": [
+    6.72,
+    7.18,
+    7.33
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#15 base": {
+   "measured_mean": 5.967,
+   "mapped_mean": 6.21,
+   "mapped_judges": [
+    6.11,
+    6.11,
+    6.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

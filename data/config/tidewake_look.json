@@ -13,25 +13,13 @@
     "dock_village_candidate",
     "dock_dressing_candidate",
     "surfaces_candidate",
-    "stones_candidate",
     "veilfall_hero_candidate",
     "veilfall_facade_candidate",
     "forward_plus_candidate",
-    "first_shore_declutter_candidate",
     "veilfall_formation_relief_fill_candidate",
-    "shore_surf_candidate",
-    "shore_surf_vary_candidate",
-    "rain_fog_candidate",
-    "rain_grade_candidate",
-    "rain_veil_candidate",
     "swim_candidate",
-    "dune_grass_candidate",
-    "shore_water_candidate",
     "veilfall_mountain_candidate",
-    "waterline_declutter_candidate",
-    "golden_sky_candidate",
     "current_bands_candidate",
-    "lesson_clusters_candidate",
     "current_tint_candidate",
     "veilfall_cladding_candidate",
     "veilfall_buttress_candidate",
@@ -334,7 +322,7 @@
     "times": {
       "golden": {
         "sun": {
-          "pitch_deg": -8.0,
+          "pitch_deg": -12.0,
           "yaw_deg": 252.0,
           "energy": 1.5,
           "colour": "#ffc27a"
@@ -396,7 +384,7 @@
       },
       "dawn": {
         "sun": {
-          "pitch_deg": -5.0,
+          "pitch_deg": -9.0,
           "yaw_deg": 98.0,
           "energy": 1.15,
           "colour": "#ffb978"
@@ -463,6 +451,12 @@
       }
     }
   },
+  "_why_shore_dressing_on": "tb/vis-tidewake-1104 look r13 (CPU, 3 judges, calibrated r 0.79): lesson_clusters + dune_grass + stones + waterline_declutter ON together lift F39#30a shore 6.19 -> 6.43, F39#30b 5.71 -> 5.88 and F13#5 5.81 -> 5.85 mapped; judges: the base side scatters pebbles evenly like generator output.",
+  "_why_golden_shore_water_on": "tb/vis-tidewake-1104 look r14 (CPU, 3 judges, calibrated r 0.87): golden_sky + shore_water ON together lift F13#5 currents 5.69 -> 5.87 mapped (2 of 3 judges higher); F39#30a 6.02 and F39#30b 5.65 unchanged.",
+  "_why_shore_surf_on": "tb/vis-tidewake-1104 look r15 (CPU, 3 judges, calibrated r 0.82): shore_surf + shore_surf_vary ON together lift F39#30a shore 5.86 -> 6.19, F13#5 currents 5.31 -> 5.82 and F39#30b 5.49 -> 5.54 mapped (all three judges higher on F39#30a and F13#5).",
+  "_why_first_shore_declutter_on": "tb/vis-tidewake-1104 look r18 (CPU, 3 judges, calibrated r 0.95): dropping the First Shore driftwood and work cluster lifts F39#30a 5.64 -> 5.73 and F39#30b 5.36 -> 5.45 mapped (2 of 3 judges higher, 1 level).",
+  "_why_low_sun_pitch": "tb/vis-tidewake-1104 look r22 (CPU, 3 judges, calibrated r 0.83; all three judges higher on both rows): lighting_candidate golden sun pitch -8 -> -12 deg and dawn -5 -> -9 deg shorten the long terrain shadows (the golden-hour sand stripes); F39#30a 5.98 -> 6.18 and F39#30b 5.59 -> 5.75 mapped.",
+  "_why_rain_on": "tb/vis-tidewake-1104 look r9 (CPU, 3 judges, calibrated; all three judges higher on every row): rain_fog + rain_grade + rain_veil ON together lift F39#30a shore 6.09 -> 6.29, F39#30b night/dawn/rain/approach 5.81 -> 6.04 and F39#31 Veilfall 5.29 -> 5.56 mapped; judges: rain streaks and a cool overcast now read as weather.",
   "rain_fog_candidate": {
     "_comment": "close-1024 vv1 and vf4 judges x3: in rain the fog flattens the Veilfall and the sea into one grey-cyan mid-tone and the landmark loses its silhouette. Tidewake sightlines run to kilometres, so the shared rain mist (fog_density_add 0.0055) is scaled to 0.35 here only; rain streaks, grade and wet ground are unchanged. Unjudged; OFF in play.",
     "fog_density_add_scale": 0.35
@@ -3284,6 +3278,7 @@
     "_why_round5": "r5: the first two buildings flank the approach at +/-8.5 m, 12-13 m back, so the walk down to the pier reads as a short harbour street from the fixed camera."
   },
   "current_flow": {
+    "_why_near6_live_seams": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r16b F39#16 live current streaks CPU 5.96 -> 6.54 (three code-blind judges all higher, guide-lane defect FIXED 3/3). live seam_opacity 0.3 -> 0.1, chop_cap_opacity 0.35 -> 0.45, fleck_amount 0.1 -> 0.16; shader seam_wander_m 5 -> 9, seam_gap 0.45 -> 0.65.",
     "_comment": "F13#5 candidate under this OFF gate. r1: removing the painted rims alone lost the direction read. r2: the lane reads as rougher, darker moving water: standing crests over the lane, a deeper channel tint, bright tapered foam comets, thin chevrons only as a faint secondary hint, and twice the drifting driftwood/kelp with pennant buoys. Flow vectors, strengths and restored state unchanged. r4: chevrons off entirely (judges read every chevron as road paint); foam breaks up more. r5: channel tint back to a faint 0.14 (r4 judges read its hard-edged band as a floating translucent panel). b2 (calibrated batch 1): grouped foam and comets read as an evenly spaced white ladder across the lane; comets 0.35 -> 0.12, chop 0.9 -> 0.6. b2: the installed log floater reads as a grey box; kelp and buoys only until a driftwood asset exists. b3 (calibrated batch 2: road markings FIXED x3 but the lanes no longer read): ungrouped wandering foam ribbons, long and sparse, drifting with the flow; no comets, chevrons or rims; faint tint. b4: kelp floater (a large leaf mesh) read as teal shards and the ribbons were too faint at 0.85/0.7; ribbons at full opacity and density, a little more lane tint; buoys stay. b5 (close-1024, a different approach after b2-b4 lost the read): tide-line seams. An irregular foam seam drifts along both banks where the moving lane meets still sea, small crescent wavelet caps fill the lane, and the ribbon dashes thin to 0.3. b6 (b5 mapped 6.11 vs control 5.64; judges: direction still unclear, straight streaks, no colour shift or chop): seams become foam tongues bright at their downstream heads and fraying upstream, no dashes at all, larger and denser wavelet caps, and a deeper lane tint with a soft wandering edge. r3 (b7 confirming batch: 6.06, direction still the one PRESENT defect; the judges asked for the water itself to say which way): each anchored stake leans 13 degrees downstream and trails a 7 m tapered foam wake from its waterline. Meshy 1024 (tb/meshy-1024 38602bdb0): the drifting floater is a 3.0 m sun-bleached driftwood log (scale 1.58 on its measured 1.9 m) and the stakes are 2.6 m banded spar buoys (scale 1.37 on 1.9 m), replacing the installed log that judges read as a grey box and the small teal marker they read as shards. mc1 (close-1024, confirming batch, r 0.965): the Meshy driftwood and spar buoys scored 5.00/5.06 against r3 5.16 in the same batch, no gain, so the row stays PARKED; and all three judges read r3's stake wakes as stacked translucent vertical glass sheets, an artefact, so the wake is removed (wake_length_m absent) and the stakes keep only their lean. t1 (close-1024 GPU baseline, P2-066 white bars and yellow dashes read as road markings): dashes, comets, chevrons and rims off; softer seams (0.4), smaller wavelet caps jittered, sized and faded per cell so they never form a grid (0.35), faint lane tint. t1b (t1 judges x3: the lane vanishes at night; the pennant buoys read oversized and sharply tilted): foam carries a small moonlit emission (moon_glint 0.12, foam only), and the spar buoys return to their measured 1.9 m at an 8 degree lean. t1c (t1b frames: the loud yellow triangles are the procedural pennant, not the Meshy buoy): a small navy pennant (1.1 x 0.5 m, the buoy brief's colour) on a 1.4 m weathered pole, and moon_glint 0.12 -> 0.3 because 0.12 barely showed. t1d (t1, t2 and t2b judges: the lane reads as a lighter flat slab with straight edges, and foam strokes sit on open water): the flat lane band is off (lane_opacity 0), the channel tint is fainter (0.18 -> 0.12) and the open-water flecks drop (0.25 -> 0.1); the bank seams and wavelet caps carry the lane. t1e (t1d frames: the long straight pale bands are the two bank seams, unbroken from the dock to the horizon): seams break into separate tongues (gap 0.15 -> 0.45), wander more (3 -> 5 m), thinner (1.2 -> 0.9 m) and fainter (0.4 -> 0.3).",
     "state_shader": {
       "live": {
@@ -3292,13 +3287,13 @@
         "chevron_opacity": 0.0,
         "comet_opacity": 0.0,
         "brightness": 1.0,
-        "fleck_amount": 0.1,
+        "fleck_amount": 0.16,
         "opacity": 0.75,
         "streak_density": 0.0,
         "dash_fill": 0.0,
         "lane_opacity": 0.0,
-        "seam_opacity": 0.3,
-        "chop_cap_opacity": 0.35
+        "seam_opacity": 0.1,
+        "chop_cap_opacity": 0.45
       },
       "restored": {
         "seam_opacity": 0.2,
@@ -3308,8 +3303,8 @@
     },
     "shader": {
       "seam_width_m": 0.9,
-      "seam_wander_m": 5.0,
-      "seam_gap": 0.45,
+      "seam_wander_m": 9.0,
+      "seam_gap": 0.65,
       "seam_taper_m": 26.0,
       "moon_glint": 0.3,
       "soft_channel_tint": true,
@@ -3484,6 +3479,14 @@
       }
     ]
   },
+  "rest_shoal_dressing_vary": {
+    "_why": "NEAR6-TW (4 Nov 2026), P2-026 / F39#15 (GPU 4.85): the Veilfall approach reads as a ruler-straight chain of near-identical tan discs. The shipped sandbar dressing is the same props at the same sizes on every shoal (only rotated). When on, each shoal draws its own seeded subset (keep_fraction), size (x1 +/- scale_jitter) and angle offsets, so neighbours differ. Props keep the recovery-centre clearance and have no collision; shoal terrain and safety are unchanged.",
+    "scope": "client presentation: rest-shoal dressing props only",
+    "enabled": false,
+    "keep_fraction": 0.75,
+    "scale_jitter": 0.4,
+    "angle_jitter_deg": 40.0
+  },
   "rest_shoal_dressing": [
     {
       "model": "res://assets/props/meshy-1020/tidewake_current_wake_rocks/tidewake_current_wake_rocks.glb",
@@ -3591,412 +3594,45 @@
     "min_fade": 0.95,
     "drift_per_m": 0.45
   },
+  "_why_d3_landmarks": "tb/vis-tidewake-1104 look/qj-d3 (quick_judge F39#3, CPU, 3 code-blind judges, 3 anchors, calibrate r 0.87): Lantern Cove drift arch 5 -> 8 m with its lantern posts 2.6 -> 3.4 m, and two extra collider-free stepped terrace walls at Drowned Garden (existing walls and their collision unchanged) lift F39#3 named destination read 5.67 -> 5.93 mapped; all three judges preferred it. Owner 4 Nov: a judged gain ships ON.",
   "landmark_models": [
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        6.9,
-        9.3
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_reed_hall_porch/tidewake_reed_hall_porch.glb",
-      "height_m": 4.5,
-      "yaw_deg": 216.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        9.7,
-        13.2
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_woven_reed_hall/tidewake_woven_reed_hall.glb",
-      "height_m": 7.5,
-      "yaw_deg": 216.0,
-      "collider_fraction": [
-        0.85,
-        0.9,
-        0.85
-      ]
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        -21.0,
-        -3.0
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_fisher_hut/tidewake_fisher_hut.glb",
-      "height_m": 5.5,
-      "yaw_deg": 150.0,
-      "collider_fraction": [
-        0.8,
-        0.9,
-        0.8
-      ]
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        -4.0,
-        13.0
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_fisher_hut/tidewake_fisher_hut.glb",
-      "height_m": 5.0,
-      "yaw_deg": 240.0,
-      "collider_fraction": [
-        0.8,
-        0.9,
-        0.8
-      ]
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        8.9,
-        7.6
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
-      "height_m": 3.2,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        -15.0,
-        -6.0
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb",
-      "height_m": 2.2,
-      "yaw_deg": 30.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        -8.0,
-        8.0
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_beach_grass_clump/tidewake_beach_grass_clump.glb",
-      "height_m": 0.9,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "lantern_cove_drift_arch",
-      "offset_xz_m": [
-        4.5,
-        -11.1
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_drift_arch/tidewake_drift_arch.glb",
-      "height_m": 5.0,
-      "yaw_deg": -22.1
-    },
-    {
-      "landmark_id": "lantern_cove_drift_arch",
-      "offset_xz_m": [
-        7.3,
-        -8.9
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
-      "height_m": 2.6,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "lantern_cove_drift_arch",
-      "offset_xz_m": [
-        1.0,
-        -11.5
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
-      "height_m": 2.6,
-      "yaw_deg": 180.0
-    },
-    {
-      "landmark_id": "lantern_cove_drift_arch",
-      "offset_xz_m": [
-        7.7,
-        -7.1
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_beach_grass_clump/tidewake_beach_grass_clump.glb",
-      "height_m": 0.8,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "lantern_cove_drift_arch",
-      "offset_xz_m": [
-        -0.9,
-        -11.1
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.0,
-      "yaw_deg": 60.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        1.7,
-        2.3
-      ],
-      "model": "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf",
-      "height_m": 0.12,
-      "yaw_deg": 20.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        3.1,
-        4.2
-      ],
-      "model": "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf",
-      "height_m": 0.12,
-      "yaw_deg": 65.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        4.5,
-        6.0
-      ],
-      "model": "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf",
-      "height_m": 0.12,
-      "yaw_deg": 5.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        4.6,
-        10.9
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
-      "height_m": 3.0,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        -2.0,
-        12.0
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb",
-      "height_m": 2.2,
-      "yaw_deg": 100.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        0.5,
-        9.5
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_lobster_pots_buoys/tidewake_lobster_pots_buoys.glb",
-      "height_m": 0.8,
-      "yaw_deg": 20.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        -7.0,
-        14.5
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_rowboat/tidewake_rowboat.glb",
-      "height_m": 0.8,
-      "yaw_deg": 60.0
-    },
-    {
-      "landmark_id": "reedhaven_woven_hall",
-      "offset_xz_m": [
-        -1.0,
-        15.5
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_fish_crate_stack/tidewake_fish_crate_stack.glb",
-      "height_m": 1.1,
-      "yaw_deg": -20.0
-    },
-    {
-      "landmark_id": "veilfall_white_cascade",
-      "offset_xz_m": [
-        -2.4,
-        4.3
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_veilfall_entrance_gate/tidewake_veilfall_entrance_gate.glb",
-      "height_m": 7.0,
-      "yaw_deg": 151.0,
-      "sink_m": 0.2
-    },
-    {
-      "landmark_id": "deep_watch_lookout",
-      "offset_xz_m": [
-        -8.1,
-        -12.8
-      ],
-      "model": "res://assets/buildings/quaternius_castle/WatchTowerWRoof.obj",
-      "height_m": 9.5,
-      "yaw_deg": 77.3,
-      "collider_fraction": [
-        0.6,
-        1.0,
-        0.6
-      ],
-      "surfaces": [
-        {
-          "texture": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
-          "tint": "#d9c3a0",
-          "uv_scale": 0.35
-        },
-        {
-          "tint": "#5d7486",
-          "roughness": 0.85
-        }
-      ]
-    },
-    {
-      "landmark_id": "deep_watch_lookout",
-      "offset_xz_m": [
-        -8.7,
-        -8.1
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
-      "height_m": 3.0,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "deep_watch_lookout",
-      "offset_xz_m": [
-        -4.3,
-        -12.3
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb",
-      "height_m": 2.2,
-      "yaw_deg": 19.3
-    },
-    {
-      "landmark_id": "deep_watch_lookout",
-      "offset_xz_m": [
-        -12.1,
-        -13.2
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_fish_crate_stack/tidewake_fish_crate_stack.glb",
-      "height_m": 1.1,
-      "yaw_deg": 30.0
-    },
-    {
-      "landmark_id": "salt_crown_shrine",
-      "offset_xz_m": [
-        10.7,
-        -5.6
-      ],
-      "model": "res://assets/props/meshy-1022/salt_crown_tide_shrine/salt_crown_tide_shrine.glb",
-      "height_m": 5.5,
-      "yaw_deg": -62.4,
-      "collider_fraction": [
-        0.7,
-        0.6,
-        0.7
-      ],
-      "sink_m": 0.1
-    },
-    {
-      "landmark_id": "salt_crown_shrine",
-      "offset_xz_m": [
-        15.6,
-        -3.7
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
-      "height_m": 2.8,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "salt_crown_shrine",
-      "offset_xz_m": [
-        9.2,
-        -8.6
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
-      "height_m": 2.8,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "salt_crown_shrine",
-      "offset_xz_m": [
-        10.4,
-        -2.0
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.0,
-      "yaw_deg": 40.0
-    },
-    {
-      "landmark_id": "salt_crown_shrine",
-      "offset_xz_m": [
-        0.8,
-        -10.8
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_beach_grass_clump/tidewake_beach_grass_clump.glb",
-      "height_m": 0.9,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "salt_crown_return_bell",
-      "offset_xz_m": [
-        5.5,
-        10.0
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dock_shelter/tidewake_dock_shelter.glb",
-      "height_m": 3.6,
-      "yaw_deg": -151.2,
-      "collider_fraction": [
-        0.8,
-        0.9,
-        0.8
-      ]
-    },
-    {
-      "landmark_id": "salt_crown_return_bell",
-      "offset_xz_m": [
-        8.0,
-        4.7
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
-      "height_m": 3.2,
-      "yaw_deg": 0.0
-    },
-    {
-      "landmark_id": "salt_crown_return_bell",
-      "offset_xz_m": [
-        12.6,
-        4.5
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_lobster_pots_buoys/tidewake_lobster_pots_buoys.glb",
-      "height_m": 0.8,
-      "yaw_deg": 10.0
-    },
-    {
-      "landmark_id": "drowned_garden_terraces",
-      "offset_xz_m": [
-        -9.1,
-        -4.1
-      ],
-      "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb",
-      "height_m": 2.5,
-      "yaw_deg": 65.7,
-      "sink_m": 0.3,
-      "collider_fraction": [
-        0.9,
-        0.9,
-        0.8
-      ]
-    },
-    {
-      "landmark_id": "drowned_garden_terraces",
-      "offset_xz_m": [
-        -12.4,
-        -8.9
-      ],
-      "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb",
-      "height_m": 2.5,
-      "yaw_deg": 42.3,
-      "sink_m": 0.3,
-      "collider_fraction": [
-        0.9,
-        0.9,
-        0.8
-      ]
-    }
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [6.9, 9.3], "model": "res://assets/props/meshy-1020/tidewake_reed_hall_porch/tidewake_reed_hall_porch.glb", "height_m": 4.5, "yaw_deg": 216.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [9.7, 13.2], "model": "res://assets/props/meshy-1020/tidewake_woven_reed_hall/tidewake_woven_reed_hall.glb", "height_m": 7.5, "yaw_deg": 216.0, "collider_fraction": [0.85, 0.9, 0.85]},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [-21.0, -3.0], "model": "res://assets/props/meshy-1020/tidewake_fisher_hut/tidewake_fisher_hut.glb", "height_m": 5.5, "yaw_deg": 150.0, "collider_fraction": [0.8, 0.9, 0.8]},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [-4.0, 13.0], "model": "res://assets/props/meshy-1020/tidewake_fisher_hut/tidewake_fisher_hut.glb", "height_m": 5.0, "yaw_deg": 240.0, "collider_fraction": [0.8, 0.9, 0.8]},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [8.9, 7.6], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 3.2, "yaw_deg": 0.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [-15.0, -6.0], "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb", "height_m": 2.2, "yaw_deg": 30.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [-8.0, 8.0], "model": "res://assets/props/meshy-1020/tidewake_beach_grass_clump/tidewake_beach_grass_clump.glb", "height_m": 0.9, "yaw_deg": 0.0},
+    {"landmark_id": "lantern_cove_drift_arch", "offset_xz_m": [4.5, -11.1], "model": "res://assets/props/meshy-1020/tidewake_drift_arch/tidewake_drift_arch.glb", "height_m": 8.0, "yaw_deg": -22.1},
+    {"landmark_id": "lantern_cove_drift_arch", "offset_xz_m": [7.3, -8.9], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 3.4, "yaw_deg": 0.0},
+    {"landmark_id": "lantern_cove_drift_arch", "offset_xz_m": [1.0, -11.5], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 3.4, "yaw_deg": 180.0},
+    {"landmark_id": "lantern_cove_drift_arch", "offset_xz_m": [7.7, -7.1], "model": "res://assets/props/meshy-1020/tidewake_beach_grass_clump/tidewake_beach_grass_clump.glb", "height_m": 0.8, "yaw_deg": 0.0},
+    {"landmark_id": "lantern_cove_drift_arch", "offset_xz_m": [-0.9, -11.1], "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb", "height_m": 1.0, "yaw_deg": 60.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [1.7, 2.3], "model": "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf", "height_m": 0.12, "yaw_deg": 20.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [3.1, 4.2], "model": "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf", "height_m": 0.12, "yaw_deg": 65.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [4.5, 6.0], "model": "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf", "height_m": 0.12, "yaw_deg": 5.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [4.6, 10.9], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 3.0, "yaw_deg": 0.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [-2.0, 12.0], "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb", "height_m": 2.2, "yaw_deg": 100.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [0.5, 9.5], "model": "res://assets/props/meshy-1020/tidewake_lobster_pots_buoys/tidewake_lobster_pots_buoys.glb", "height_m": 0.8, "yaw_deg": 20.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [-7.0, 14.5], "model": "res://assets/props/meshy-1020/tidewake_rowboat/tidewake_rowboat.glb", "height_m": 0.8, "yaw_deg": 60.0},
+    {"landmark_id": "reedhaven_woven_hall", "offset_xz_m": [-1.0, 15.5], "model": "res://assets/props/meshy-1020/tidewake_fish_crate_stack/tidewake_fish_crate_stack.glb", "height_m": 1.1, "yaw_deg": -20.0},
+    {"landmark_id": "veilfall_white_cascade", "offset_xz_m": [-2.4, 4.3], "model": "res://assets/props/meshy-1020/tidewake_veilfall_entrance_gate/tidewake_veilfall_entrance_gate.glb", "height_m": 7.0, "yaw_deg": 151.0, "sink_m": 0.2},
+    {"landmark_id": "deep_watch_lookout", "offset_xz_m": [-8.1, -12.8], "model": "res://assets/buildings/quaternius_castle/WatchTowerWRoof.obj", "height_m": 9.5, "yaw_deg": 77.3, "collider_fraction": [0.6, 1.0, 0.6], "surfaces": [{"texture": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png", "tint": "#d9c3a0", "uv_scale": 0.35}, {"tint": "#5d7486", "roughness": 0.85}]},
+    {"landmark_id": "deep_watch_lookout", "offset_xz_m": [-8.7, -8.1], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 3.0, "yaw_deg": 0.0},
+    {"landmark_id": "deep_watch_lookout", "offset_xz_m": [-4.3, -12.3], "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb", "height_m": 2.2, "yaw_deg": 19.3},
+    {"landmark_id": "deep_watch_lookout", "offset_xz_m": [-12.1, -13.2], "model": "res://assets/props/meshy-1020/tidewake_fish_crate_stack/tidewake_fish_crate_stack.glb", "height_m": 1.1, "yaw_deg": 30.0},
+    {"landmark_id": "salt_crown_shrine", "offset_xz_m": [10.7, -5.6], "model": "res://assets/props/meshy-1022/salt_crown_tide_shrine/salt_crown_tide_shrine.glb", "height_m": 5.5, "yaw_deg": -62.4, "collider_fraction": [0.7, 0.6, 0.7], "sink_m": 0.1},
+    {"landmark_id": "salt_crown_shrine", "offset_xz_m": [15.6, -3.7], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 2.8, "yaw_deg": 0.0},
+    {"landmark_id": "salt_crown_shrine", "offset_xz_m": [9.2, -8.6], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 2.8, "yaw_deg": 0.0},
+    {"landmark_id": "salt_crown_shrine", "offset_xz_m": [10.4, -2.0], "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb", "height_m": 1.0, "yaw_deg": 40.0},
+    {"landmark_id": "salt_crown_shrine", "offset_xz_m": [0.8, -10.8], "model": "res://assets/props/meshy-1020/tidewake_beach_grass_clump/tidewake_beach_grass_clump.glb", "height_m": 0.9, "yaw_deg": 0.0},
+    {"landmark_id": "salt_crown_return_bell", "offset_xz_m": [5.5, 10.0], "model": "res://assets/props/meshy-1020/tidewake_dock_shelter/tidewake_dock_shelter.glb", "height_m": 3.6, "yaw_deg": -151.2, "collider_fraction": [0.8, 0.9, 0.8]},
+    {"landmark_id": "salt_crown_return_bell", "offset_xz_m": [8.0, 4.7], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 3.2, "yaw_deg": 0.0},
+    {"landmark_id": "salt_crown_return_bell", "offset_xz_m": [12.6, 4.5], "model": "res://assets/props/meshy-1020/tidewake_lobster_pots_buoys/tidewake_lobster_pots_buoys.glb", "height_m": 0.8, "yaw_deg": 10.0},
+    {"landmark_id": "drowned_garden_terraces", "offset_xz_m": [-9.1, -4.1], "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb", "height_m": 2.5, "yaw_deg": 65.7, "sink_m": 0.3, "collider_fraction": [0.9, 0.9, 0.8]},
+    {"landmark_id": "drowned_garden_terraces", "offset_xz_m": [-12.4, -8.9], "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb", "height_m": 2.5, "yaw_deg": 42.3, "sink_m": 0.3, "collider_fraction": [0.9, 0.9, 0.8]},
+    {"landmark_id": "drowned_garden_terraces", "offset_xz_m": [-6.4, -1.0], "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb", "height_m": 3.4, "yaw_deg": 65.7, "sink_m": 0.2},
+    {"landmark_id": "drowned_garden_terraces", "offset_xz_m": [-15.0, -12.6], "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb", "height_m": 3.8, "yaw_deg": 42.3, "sink_m": 0.2}
   ],
   "garden_terraces": {
     "_comment": "F39 P2-011 / defect scan: Drowned Garden retaining walls read as flat grey blocks. Under this OFF gate: Meshy tide-rock texture (tb/meshy-props provenance), warmer wet-stone tint, denser vines. Presentation keys only.",

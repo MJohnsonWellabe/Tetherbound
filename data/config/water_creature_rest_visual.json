@@ -8,7 +8,7 @@
  "prone_rest": {
   "_why": "NEAR6-TW (4 Nov 2026), P2-029 / F39#24 (GPU 5.32): Riptusk's rest rolls onto its side or back (generic roll) and Torrentoad's ends on its back with limbs raised (faint-clip rest). When on, the listed species keep their idle pose upright and settle belly-down: lowered by sink_height_frac of their height with a slight forward pitch. stop_rest restores the saved pivot. Presentation only; no collider, catalogue or gameplay change.",
   "scope": "client presentation: rest-pose model pivot of the listed species (beds, camp, rest captures)",
-  "enabled": false,
+  "enabled": true,
   "species": [
    "riptusk",
    "water_riptusk",
@@ -16,6 +16,7 @@
    "water_torrentoad"
   ],
   "sink_height_frac": 0.22,
-  "pitch_deg": 4.0
+  "pitch_deg": 4.0,
+  "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r24 F39#24 CPU 5.02 -> 6.69 (three code-blind judges all higher, defect PRESENT -> FIXED 3/3; calibrated, RMSE 0.47)."
  }
 }

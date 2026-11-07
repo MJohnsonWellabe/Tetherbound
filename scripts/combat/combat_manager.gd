@@ -2225,6 +2225,31 @@ func _combat_position(body: Node3D) -> Vector3:
 ##
 ## This is a small, one-off move at the moment the fight opens, not a system
 ## that puppets them around afterwards.
+## F39#7 `trainer_aside.realm_1104` (OFF until judged; coordinator 5 Nov):
+## per-realm trainer offsets merged over the shared ones. Tidewake fight
+## judges see the trainer crowding the pair; this stands them further aside,
+## out of the pair's lane. Presentation of the stand only; the existing
+## arena, support and sweep checks still decide where they may stand.
+static func trainer_aside_for(aside: Dictionary, realm: String) -> Dictionary:
+	var cand: Variant = aside.get("realm_1104", {})
+	if not cand is Dictionary or not bool((cand as Dictionary).get("enabled", false)):
+		return aside
+	var row: Variant = ((cand as Dictionary).get("realms", {}) as Dictionary).get(realm, {})
+	if not row is Dictionary or (row as Dictionary).is_empty():
+		return aside
+	var out := aside.duplicate()
+	for key: String in ["side_m", "side_fraction", "forward_m"]:
+		if (row as Dictionary).has(key):
+			out[key] = (row as Dictionary)[key]
+	return out
+
+
+func _current_realm() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	var realm: Variant = game.get("current_realm") if game != null else null
+	return str(realm) if typeof(realm) == TYPE_STRING else ""
+
+
 func _stand_the_trainer_aside(forward: Vector3) -> void:
 	if _arena == null:
 		return
@@ -2257,7 +2282,7 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 	# F10#6 device profile (code-blind 7-inch judges r2/r3): 1.2 m back toward
 	# the lens stood the trainer in the frame's bottom corners, under the move
 	# grid or the ally card. combat.json `trainer_aside` sets the offsets.
-	var aside: Dictionary = MATH.config().get("trainer_aside", {}) as Dictionary
+	var aside: Dictionary = trainer_aside_for(MATH.config().get("trainer_aside", {}) as Dictionary, _current_realm())
 	var side_fraction := float(aside.get("side_fraction", 0.55))
 	var forward_m := float(aside.get("forward_m", -1.2))
 	# `side_m` (metres) wins over the radius fraction when set: a big arena's
@@ -3142,6 +3167,22 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 			float(cfg.get("composition_extra_deg", 40.0)))
 		var ease_rate := maxf(float(cfg.get("composition_ease_deg_per_s", 90.0)), 1.0)
 		_camera_rig.call("set_composition_extra", move_toward(current, extra_target, ease_rate * delta))
+	# F38#7 P2-058 (NEAR6-MS, `occlusion_fade.aim_hide_1104`, OFF): during a
+	# catch aim the player steers the camera, so the swing above cannot clear
+	# the target and the ally used to sit over the trainer as a 0.6 dither
+	# ghost. While aiming, an ally that hides the target is hidden outright
+	# (with its contact shadow) and returns when the aim ends or the target
+	# has been clear for `hold_s`. Local presentation only.
+	var aim_cfg: Variant = cfg.get("aim_hide_1104", {})
+	var aim_hide := enabled and aim_cfg is Dictionary and bool((aim_cfg as Dictionary).get("enabled", false)) \
+		and is_aiming() and (column_hidden or (_ally_aim_hidden \
+		and _ally_clear_for < float((aim_cfg as Dictionary).get("hold_s", 0.25))))
+	_set_ally_aim_hidden(model, aim_hide)
+	if aim_hide:
+		if _ally_fade > 0.0 or not _ally_fade_state.is_empty():
+			OCCLUSION_FADE.restore(_ally_fade_state)
+			_ally_fade = 0.0
+		return
 	var target := 0.0
 	if column_hidden and _ally_hidden_for >= float(cfg.get("dither_after_s", 0.2)):
 		target = clampf(float(cfg.get("transparency", 0.6)), 0.0, 0.9)
@@ -3253,7 +3294,35 @@ func _wild_hides_ally(ally_model: Node3D, needed: int) -> bool:
 		wild_model.global_transform, wild_bounds) >= maxi(1, needed)
 
 
+## `aim_hide_1104`: hides or restores the ally's model and contact shadow,
+## remembering each node's own visibility so a restore never shows a node
+## something else had hidden.
+var _ally_aim_hidden := false
+var _ally_aim_hidden_nodes: Array[Node3D] = []
+
+
+func _set_ally_aim_hidden(model: Node3D, hidden: bool) -> void:
+	if hidden == _ally_aim_hidden:
+		return
+	_ally_aim_hidden = hidden
+	if hidden:
+		_ally_aim_hidden_nodes.clear()
+		var shadow: Node3D = null
+		if _ally_body != null and is_instance_valid(_ally_body):
+			shadow = _ally_body.get_node_or_null(^"ContactShadow") as Node3D
+		for node: Node3D in [model, shadow]:
+			if node != null and node.visible:
+				node.visible = false
+				_ally_aim_hidden_nodes.append(node)
+	else:
+		for node: Node3D in _ally_aim_hidden_nodes:
+			if is_instance_valid(node):
+				node.visible = true
+		_ally_aim_hidden_nodes.clear()
+
+
 func _clear_ally_fade() -> void:
+	_set_ally_aim_hidden(null, false)
 	OCCLUSION_FADE.restore(_ally_fade_state)
 	_ally_fade = 0.0
 	_ally_hidden_for = 0.0
@@ -6479,7 +6548,20 @@ func _finish_catch() -> void:
 func _watch_the_orb(orb: Node3D) -> void:
 	if orb == null or _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
-	_camera_rig.call("set_target", orb, CATCH.camera_profile("resolve_camera"))
+	var profile := CATCH.camera_profile("resolve_camera")
+	_camera_rig.call("set_target", orb, profile)
+	# P2-118 (VIS-CLOUDREACH, 4 Nov 2026): catching.json `resolve_clearance`
+	# (off unless enabled). On a slope the resolve arm collapsed into the turf
+	# and the result card played over a frame of blurred grass; pick a pose
+	# whose arm has room before the shot starts. Presentation only.
+	var clear: Dictionary = CATCH.config().get("resolve_clearance", {})
+	if clear.get("enabled") == true and _camera_rig.has_method("clear_arm_pose"):
+		var start := float(profile.get("pitch_start_deg", -16.0))
+		var pitches: Array = [start]
+		for step: Variant in clear.get("pitch_steps_deg", [-26.0, -36.0, -46.0]):
+			pitches.append(float(step))
+		_camera_rig.call("clear_arm_pose", float(clear.get("min_free_fraction", 0.85)),
+			pitches, clear.get("yaw_steps_deg", [0.0, 45.0, -45.0, 90.0, -90.0, 135.0, -135.0, 180.0]))
 
 
 ## One of the catch's three flashes (catching.json `vfx`): strike, caught,

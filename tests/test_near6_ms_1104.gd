@@ -49,3 +49,88 @@ func test_f38_29_silent_victory_shot_ships_on() -> void:
 		"only trainers without victory lines take the silent shot")
 	var profiles: Dictionary = _json("res://data/config/camera.json").conversation.profiles
 	assert_true(profiles.has("aftermath"), "it reuses the existing aftermath profile")
+
+
+## F38#32 P2-035: the trail camp keep-clear zone ships ON (judged gain); a disabled
+## zone is skipped and the Practice Meadow zone (no enabled key) stays on.
+func test_f38_32_trail_camp_keep_clear_ships_on() -> void:
+	var zones: Array = _json("res://data/config/combat.json").arena.wild_keep_clear
+	assert_eq(zones.size(), 2, "the practice zone and the trail camp zone")
+	assert_false(zones[0].has("enabled"), "the Practice Meadow zone keeps its default (on)")
+	var camp: Dictionary = zones[1]
+	assert_eq(str(camp.id), "trail_camp_1104", "the camp zone is named")
+	assert_true(bool(camp.enabled), "the trail camp zone ships ON (judged gain)")
+	assert_true(str(camp._why_on).contains("CPU 5.61 -> 5.81"), "records its score")
+	assert_between(float(camp.radius_m), 6.0, 20.0, "covers the 5.2 m camp floor plus wander room")
+	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
+	assert_true(director.contains("if not bool((raw as Dictionary).get(\"enabled\", true)):\n\t\t\tcontinue"),
+		"a zone with enabled false is skipped")
+
+
+## F39#23 P2-114: the capture ring style ships ON (judged gain); the reticle reads it from
+## the same readout visual config as the readout outline and plate.
+func test_f39_23_ring_style_ships_on() -> void:
+	var cfg := _json("res://data/config/capture_readout_visual.json")
+	var ring: Dictionary = cfg.ring_style_1104
+	assert_true(bool(ring.enabled), "ring style ships ON (judged gain)")
+	assert_true(str(ring._why_on).contains("CPU 5.26 -> 5.62"), "records its score")
+	assert_eq(str(ring.scope), "client_presentation", "declares its scope")
+	assert_between(float(ring.alpha_scale), 0.2, 1.0, "the ring stays visible")
+	assert_between(float(ring.width_scale), 0.4, 1.0, "a thinner ring, never a bolder one (round 1 lost)")
+	var reticle := FileAccess.get_file_as_string("res://scripts/ui/capture_reticle.gd")
+	assert_true(reticle.contains("_readout_visual.get(\"ring_style_1104\", {})"), "the reticle reads the flag")
+
+
+## F38#4 P2-002: the Meadows unsurveyed map fog takes warm parchment tones
+## (judged gain); other chapters keep their own tones.
+func test_f38_4_meadows_parchment_fog_ships_on() -> void:
+	var cloud: Dictionary = _json("res://data/config/map.json").fog_veil.cloud_fog
+	assert_true(bool(cloud.enabled), "cloud fog stays on")
+	assert_true(str(cloud._why_meadows_parchment_1104).contains("CPU 6.15 -> 7.18"), "records its score")
+	assert_eq(cloud.tones.meadows, ["#8c8266", "#cfc3a0"], "Meadows fog is parchment, not slate")
+	for tone: String in cloud.tones.meadows:
+		var c := Color(tone)
+		assert_true(c.r >= c.b, "a warm tone, never a cold storm grey (%s)" % tone)
+		assert_false(c.r > 0.5 and c.g < 0.3 and c.b < 0.3, "no red or oxblood (%s)" % tone)
+
+
+## F38#9 P2-001: the satchel focus emphasis ships ON (judged gain) and the
+## Satchel tab reads it.
+func test_f38_9_satchel_focus_ships_on() -> void:
+	var focus: Dictionary = _json("res://data/config/menu.json").satchel_focus
+	assert_true(bool(focus.enabled), "satchel focus ships ON (judged gain)")
+	assert_true(str(focus._why_on).contains("CPU 7.13 -> 7.36"), "records its score")
+	assert_between(float(focus.preview_icon_px), 112.0, 200.0, "the focused icon grows, within the panel")
+	var backpack := preload("res://scripts/ui/tab_backpack.gd")
+	assert_false(backpack.satchel_focus().is_empty(), "the Satchel tab sees the flag on")
+
+
+## F38#4 P2-002 round 2: the inked chart grid and north mark ship ON (judged
+## gain), Meadows only, and reveal no terrain (drawn as lines, never a texture).
+func test_f38_4_chart_grid_ships_on() -> void:
+	var grid: Dictionary = _json("res://data/config/map.json").fog_veil.chart_grid_1104
+	assert_true(bool(grid.enabled), "chart grid ships ON (judged gain)")
+	assert_true(str(grid._why_on).contains("CPU 6.81 -> 6.93"), "records its score")
+	assert_eq(str(grid.scope), "client_presentation", "declares its scope")
+	assert_eq(grid.realms, ["meadows"], "Meadows only")
+	assert_between(float(grid.alpha), 0.05, 0.4, "a faint ink, not a cage over the map")
+	var ink := Color(str(grid.ink))
+	assert_false(ink.r > 0.5 and ink.g < 0.3 and ink.b < 0.3, "no red or oxblood ink")
+	var tab := FileAccess.get_file_as_string("res://scripts/ui/tab_map.gd")
+	assert_true(tab.contains("veil.get(\"chart_grid_1104\", {})"), "the map tab reads the flag")
+
+
+## F38#7 P2-058: during a catch aim, an ally that hides the target is hidden
+## outright instead of drawn as the occlusion dither ghost (judged gain).
+func test_f38_7_aim_hide_ships_on() -> void:
+	var fade: Dictionary = _json("res://data/config/combat.json").camera.occlusion_fade
+	var block: Dictionary = fade.aim_hide_1104
+	assert_true(bool(block.enabled), "aim hide ships ON (judged gain)")
+	assert_true(str(block._why_on).contains("CPU 5.93 -> 7.00"), "records its score")
+	assert_eq(str(block.scope), "client_presentation", "declares its scope")
+	assert_between(float(block.hold_s), 0.0, 1.0, "a short hold, not a lingering hide")
+	var manager := FileAccess.get_file_as_string("res://scripts/combat/combat_manager.gd")
+	assert_true(manager.contains("cfg.get(\"aim_hide_1104\", {})"), "the fight reads the flag")
+	assert_true(manager.contains("and is_aiming() and"), "only while a catch is being aimed")
+	assert_true(manager.contains("func _clear_ally_fade() -> void:\n\t_set_ally_aim_hidden(null, false)"),
+		"clearing the fade always restores a hidden ally")

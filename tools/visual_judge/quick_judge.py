@@ -46,6 +46,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 JOB = ROOT / "ralph/reports/VISUAL/item-scores/job.json"
+# Extra item definitions (same schema) merged over job.json: rows such as the F40 matrix pieces that
+# the catalogue job does not list (NEAR6-CR, 4 Nov 2026: F40#19 had no quick-judge stand).
+EXTRA_JOB = os.environ.get("QJ_JOB", "")
 ART = ROOT / ".artifacts/qj"
 CACHE = ART / "cache"            # base/candidate launch captures keyed by (tree, overlay, launch)
 BACKUP = ART / "overlay_backup"  # present only while an overlay is applied
@@ -81,14 +84,19 @@ WORLD_CACHE = {"cloudreach": "--ground-cover-cache"}
 # ---------------------------------------------------------------- stand lookup
 
 def load_items(job=JOB):
-    d = json.loads(Path(job).read_text())
-    bs = d["biomes"]
     out = {}
+    for path in [job] + ([ROOT / EXTRA_JOB] if EXTRA_JOB else []):
+        _load_job(Path(path), out)
+    return out
+
+
+def _load_job(path, out):
+    d = json.loads(Path(path).read_text())
+    bs = d["biomes"]
     for biome, b in (bs.items() if isinstance(bs, dict) else enumerate(bs)):
         for it in (b["items"] if isinstance(b, dict) else b):
             out[it["board_row"]] = dict(it, biome=biome)
             out.setdefault(it["item"], out[it["board_row"]])
-    return out
 
 
 def split_repro(repro):
@@ -307,7 +315,8 @@ def command(e, out_res, sha, biome):
         engine += ["--rendering-method", "gl_compatibility"]
     args = e["args"] + e["subsets"] + e["narrow"]
     script_text = (ROOT / e["script"]).read_text(errors="ignore")
-    if "source-commit" in script_text:
+    # The F40 matrix tools take --source-commit through lookdev_capture_bootstrap.gd, not their own text.
+    if "source-commit" in script_text or "capture_lookdev_catalogue" in script_text:
         args.append(f"--source-commit={sha}")
     flag = WORLD_CACHE.get(biome)
     if flag and flag in script_text and not any(a.startswith(flag) for a in args):
@@ -399,6 +408,13 @@ def find_frame(d, fid):
         # A one-off moment (win, aftermath) is that moment whatever second it lands on.
         if best and (best[0] <= 1.0 or len(hits) == 1):
             return best[1]
+    # phase2_capture_realm_flight.gd numbers its frames (02-glide.png) and
+    # the job ids name the moment (meadows__flying__glide).
+    for n in names:
+        for ext in ("png", "jpg"):
+            hits = sorted(Path(d).rglob(f"[0-9][0-9]-{n}.{ext}"))
+            if hits:
+                return hits[0]
     return None
 
 

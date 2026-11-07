@@ -48,6 +48,46 @@
     "horizon_haze_height": 0.15,
     "horizon_haze_strength": 0.42
   },
+  "weather_arms": {
+    "rain_storm": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 rain round 2 (NEAR6-CR, 4 Nov 2026): rain_mood (softer, more colour) judged flat at 5.81 because rain still barely read; the judges asked for a real storm grade: a darker overcast sky, wet surfaces, rain haze in the distance. On: Cloudreach-only rain keys over the shared preset: a darker slate sky and horizon, a dimmer diffuse sun with soft shadows, denser cool fog, a cooler ambient, slightly lower saturation and fully wet ground. Meadows rain is unchanged.",
+      "enabled": true,
+      "_why_on": "NEAR6-CR quick judge F40-19-rain-810b52e4b41d-11041812 (4 Nov 2026, F40 matrix piece 4, realm gate day rain): CPU 5.69 -> 5.80 (+0.11), all three judges a tenth higher; defect still PRESENT. Ships ON (owner 4 Nov: any judged CPU gain ships ON, even small).",
+      "presets": {
+        "rain": {
+          "sun": {"energy_mult": 0.45, "shadow_opacity": 0.12},
+          "sky": {"top_colour": "#3b4a5a", "horizon_colour": "#6f7f8c", "ground_horizon_colour": "#6f7f8c"},
+          "environment": {"ambient_colour": "#6f8496", "ambient_energy_mult": 0.8, "fog_density_add": 0.0085, "fog_colour": "#6e8291", "adjustment_saturation_mult": 0.9},
+          "ground_wetness": 1.0
+        }
+      }
+    },
+    "rain_mood": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU day rain 4.90): all three judges said Cloudreach rain only desaturates the scene. On (scripts/world/cloudreach_weather.gd realm_preset): Cloudreach-only keys over the shared rain preset keep more of the realm's colour and form: stronger diffuse sun with soft shadows, a cooler blue-grey sky and fog with a little less density so the stratified distance layers in haze, a teal-cool ambient and wetter ground. Meadows rain is unchanged. OFF until judged.",
+      "enabled": false,
+      "presets": {
+        "rain": {
+          "sun": {"energy_mult": 0.68, "shadow_opacity": 0.3},
+          "sky": {"top_colour": "#4f6782", "horizon_colour": "#93a6b4", "ground_horizon_colour": "#93a6b4"},
+          "environment": {"ambient_colour": "#7a95ab", "fog_density_add": 0.0042, "fog_colour": "#8aa0b2", "adjustment_saturation_mult": 0.97},
+          "ground_wetness": 0.8
+        }
+      }
+    }
+  },
+  "time_override_arms": {
+    "night_foreground_fill": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU night 5.05): all three judges said night turns the foreground into a black-green mass. The night sun key was found not to reach the frame (VIS-CLOUDREACH mx2), so this arm uses the ambient path the M4 override already proved: a brighter, cooler moonlit ambient with a lighter blue, a slightly higher exposure and a touch more saturation so grass reads as green-blue turf rather than black, while the sky keeps its night colours.",
+      "enabled": true,
+      "_why_on": "NEAR6-CR quick judge F40-19-63afb3c3967f-11041555 (4 Nov 2026, F40 matrix piece 7, realm gate night): CPU 5.10 -> 5.84 (+0.74), all three judges preferred it; defect PRESENT -> PARTIAL. Ships ON (owner 4 Nov: every judged CPU gain ships ON).",
+      "overrides": {
+        "night": {"environment": {"ambient_energy": 3.4, "ambient_colour": "#5c74bd", "ambient_sky_contribution": 0.12, "exposure": 1.08, "adjustment_saturation": 1.0}}
+      }
+    }
+  },
   "time_overrides": {
     "_comment": "Frame-matrix M4, read by cloudreach_world.gd::apply_time_overrides onto this realm's own copy of art.json's time presets (the shared presets, which also drive the Meadows, are untouched; night_end is same_as night and inherits this). The blind judge measured the Cloudreach night route (frame 31) at mean luma 10.5/255 with two-thirds of the frame pure black, and the arrival cliff (frame 30) as a black wedge: under Compatibility only the (1 - ambient_sky_contribution) share of the ambient colour reaches a slope facing away from the moon, and the shared 1.5 x #3d50a3 at 0.2 sky share lands those slopes in ACES's toe. Ambient energy 1.5 -> 2.6, colour one step lighter in the same blue, sky share 0.2 -> 0.15: roughly 2.2x the moon-shadow fill (world_look light_budget ambient 0.46 -> 1.00) while the moon, sky, exposure and saturation stay the shared night's, so the sky stays dark and the moonlit/shadowed split still reads as night. creature_emission_floor 0.22 -> 0.08: the floor adds each plain-PBR creature's own albedo as emission, so a pale creature (Stormcapra, frame 32) glowed at a fixed value that ignored the night; with the ambient raised the creatures are lit by the night itself and keep only a small legibility floor.",
     "night": {
@@ -107,6 +147,8 @@
     "haze_normal_scale": 0.5,
     "haze_emission": 0.12
   },
+  "landing_cover_clear": {"_scope": "world_presentation", "_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026): all three mt judges read a dark oval of grass on the arrival terrace as a pasted decal. A probe found ProceduralGroundCover/CoverPatch094 (469 tufts, 9.4 x 12.1 m at (1.2, 105.5, -260.1)) laid over the region patch CoverPatch037: a route landing's own grass ellipse (cloudreach_world.gd landing pads) doubling the tuft density in a disc. When on, landings whose pad lies within radius_m of a listed point skip that ellipse; the region turf and grass under them stay. Presentation only. OFF until judged.", "enabled": false, "radius_m": 4.0, "near": [[1.2, 105.5, -260.1]]},
+  "landing_tree_clear": {"_scope": "world_presentation", "_why": "P2-105 / F40#6 (VIS-CLOUDREACH lane, 4 Nov 2026; CPU 5.91): judges found the riding camera inside a tree canopy on the arrival terrace road; a probe found it is AuthoredRoutes/LandingTree171 (CommonTree_2, 15 m off the road), and occlusion-only crown stops did not keep the camera out (twice). When on, the named landing trees are not placed. Presentation only (no collider on these trees' routes changes the walkable road). OFF until judged.", "_why_on": "Judged gain ships ON (owner rule): P2-105 CPU mapped 3.68 -> 5.28 (+1.60), three code-blind judges with 3 anchor pairs; the base road-back frame had the camera inside LandingTree171, the candidate shows the rider on the grass with the cloud sea behind (ralph/reports/LANES/VIS-CLOUDREACH/tc/VERDICT.md).", "enabled": true, "names": ["LandingTree171"]},
   "island_roots": {
     "_comment": "CLOUDREACH-ATMOS-0906 (C5), read by cloudreach_world.gd::_mesa. The blind judge on stands 04 and 11: 'A detached chunk of cliff hangs in the sky with pebbles falling from it ... it has no underside, no roots, no mist, no anchor -- it reads as a mesh that lost its parent and is a bug to any player who sees it.' Three literal causes, all fixed against this block: _mesa closes its crown and its four wall bands but never capped the bottom ring, so an airborne LandmarkLedge is an open-ended tube; _build_embedded_rock_shelves placed outcrops up to 97 m below a 72 m mass's own crown, i.e. hanging in the air under it, which is the falling pebbles; and nothing marked the base as high air. A mass counts as airborne when its base sits more than airborne_gap_m above landmass.geology_base_y -- every region CliffMass is built down TO that datum and so never qualifies, which is what keeps this off the buried masses where it would be invisible cost.",
     "enabled": true,
@@ -115,7 +157,7 @@
     "root_depth_max_m": 96.0,
     "root_steps": 5,
     "mist_puffs": 26,
-    "low_mist": {"_scope": "world_presentation", "_why_on": "ON 4 Nov 2026 (VIS-CLOUDREACH r3b, together with cloudreach_physical_runtime.json mounted_drop_no_air_drive): CPU 4.97 -> 6.03 mapped on P2-106 (three code-blind judges, linear r 0.80, anchor RMSE 0.51; puff defect PARTIAL 3/3). ralph/reports/LANES/VIS-CLOUDREACH/r3b/VERDICT.md.", "_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU 5.16, CPU r1 5.32): every judge read the island mist collars beside the arrival terrace as flat white and blue-grey polygon puffs floating as loose foreground cards at the rider's eye level, and asked for soft cloud kept below the cliff lip. When on, the collar keys below merge over the island_roots mist: the collar drops well below each island base and spreads wider, with fewer, broader banks. Presentation only. Judged ON.", "enabled": true, "mist_puffs": 18, "mist_below_m": 170.0, "mist_inner_fraction": 1.15, "mist_spread_fraction": 2.1, "mist_radius_min_fraction": 0.32, "mist_radius_max_fraction": 0.6},
+    "low_mist": {"_scope": "world_presentation", "_why_on": "ON 4 Nov 2026 (VIS-CLOUDREACH r3b, together with cloudreach_physical_runtime.json mounted_drop_no_air_drive): CPU 4.97 -> 6.03 mapped on P2-106 (three code-blind judges, linear r 0.80, anchor RMSE 0.51; puff defect PARTIAL 3/3). ralph/reports/LANES/VIS-CLOUDREACH/r3b/VERDICT.md.", "_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU 5.16, CPU r1 5.32): every judge read the island mist collars beside the arrival terrace as flat white and blue-grey polygon puffs floating as loose foreground cards at the rider's eye level, and asked for soft cloud kept below the cliff lip. When on, the collar keys below merge over the island_roots mist: the collar drops well below each island base and spreads wider, with fewer, broader banks. Presentation only. Judged ON.", "enabled": true, "mist_puffs": 18, "mist_below_m": 260.0, "mist_inner_fraction": 1.15, "mist_spread_fraction": 2.1, "mist_radius_min_fraction": 0.32, "mist_radius_max_fraction": 0.6},
     "mist_inner_fraction": 1.08,
     "mist_spread_fraction": 1.72,
     "mist_below_m": 62.0,
@@ -130,7 +172,7 @@
     "mist_extinction": 6.0,
     "mist_height_fraction": 0.60,
     "mist_edge_alpha": 0.0,
-    "mist_core_alpha": 0.62,
+    "mist_core_alpha": 0.45, "_mist_thin_why_on": "4 Nov 2026 (VIS-CLOUDREACH mt): mist_core_alpha 0.62 -> 0.45 with low_mist.mist_below_m 170 -> 260: P2-106 CPU mapped 6.00 -> 6.43 (three code-blind judges, linear r 0.92, anchor RMSE 0.33; puff defect PRESENT 3/3 -> PARTIAL 3/3; the bank behind the deer at the terrace rim now shows cliff instead of flat white). ralph/reports/LANES/VIS-CLOUDREACH/mt/VERDICT.md.",
     "mist_fade_end": 0.9,
     "mist_radial_segments": 20,
     "mist_rings": 10
@@ -313,7 +355,7 @@
     "grass_role_medium_width_multiplier_max": 2.3,
     "grass_role_tall_width_multiplier_min": 1.5,
     "grass_role_tall_width_multiplier_max": 1.9,
-    "grass_role_tall_route_clearance_m": 2.5,
+    "grass_role_tall_route_clearance_m": 2.5, "grass_role_edge_feather": 0.0, "_grass_role_edge_feather_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026): all three mt judges read the dark oval of taller grass on the arrival terrace as a pasted decal; it is a grass role cell whose hard radius threshold draws a sharp edge. Above 0, cloudreach_grass_roles.gd dithers each tuft's cell radius by up to this much (position-hashed, deterministic), so the cell boundary scatters over a band. Presentation only. 0 (off) until judged.",
     "flower_density_per_m2": 0.055,
     "region_flower_patch_cap": 1800,
     "route_flower_patch_cap": 720,
@@ -1324,6 +1366,38 @@
         "radius_m": 7.0
       },
     {"id": "aviary_finale_road_sightline", "_comment": "F40#4: the Sky Aviary must read from the finale road at ~400 m (frame-matrix row 33 stand) -- three route trees stood on that line. Route trees within half_width_m of the segment are not planted.", "from_xz": [353.9, 5040.8], "to_xz": [100.0, 5350.0], "half_width_m": 9.0}
+    ]
+  },
+  "gate_path_braziers": {
+    "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only",
+    "_why": "NEAR6-CR F40#19 night round 2: judges saw no lit focal point at night; manned braziers beside the gate path. OFF until judged.",
+    "enabled": true,
+    "_why_on": "CPU 5.00 -> 5.51 (qj/F40-19-458a13de2967-11042202, night_foreground_fill ON in both arms; judges: warm lantern pools give the path a focal line, foreground defect FIXED on 2 of 3)",
+    "points": [[-11.6, -206.4], [-17.4, -207.6], [-14.1, -192.4], [-19.9, -193.6]]
+  },
+  "gate_path_verge": {
+    "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only, no collision",
+    "_why": "NEAR6-CR F40#19 night round 3: judges flagged a uniform flat lawn; clustered installed bushes, flowers and low rocks along the path edges. OFF until judged. Round 3b (qj F40-19-9025b78edb4e-11042347) rendered Bush_Common red at night (red is Team Tether only): not judged; bushes swapped for flowers and low rocks.",
+    "enabled": true,
+    "_why_on": "CPU 5.54 -> 5.81 (qj/F40-19-9025b78edb4e-11050024, gate_path_braziers and night_foreground_fill ON in both arms; judges: B adds flower and rock clumps along the path edges, slightly more lived-in)",
+    "ref_y": 109.0,
+    "items": [
+      ["flowers", -8.1, -208.8, 1.0, 20],
+      ["rock_low", -7.0, -209.9, 1.3, 75],
+      ["rock_low", -19.8, -211.0, 0.7, 40],
+      ["flowers", -21.0, -210.2, 1.4, 130],
+      ["flowers", -8.2, -202.7, 1.5, 10],
+      ["rock_low", -7.1, -203.8, 0.6, 200],
+      ["flowers", -21.5, -205.2, 1.0, 95],
+      ["flowers", -22.4, -204.1, 0.9, 250],
+      ["rock", -10.8, -197.1, 1.1, 60],
+      ["flowers", -9.8, -196.0, 0.9, 150],
+      ["flowers", -23.1, -199.4, 1.5, 300],
+      ["rock_low", -22.0, -200.5, 0.6, 15],
+      ["flowers", -11.5, -191.1, 1.0, 80],
+      ["flowers", -10.4, -190.2, 1.3, 220],
+      ["rock_low", -23.3, -193.3, 0.7, 110],
+      ["flowers", -24.3, -192.4, 1.0, 330]
     ]
   }
 }

@@ -62,7 +62,22 @@
       ],
       "_why_realms": "Meadows keeps map_baker's 8 m/px bake (paths, aprons, slope shade): a whole-corridor height survey at chart resolution was blurrier at 16x/32x."
     },
+    "chart_grid_1104": {
+      "_why": "F38#4 P2-002 (NEAR6-MS, 4 Nov 2026): judges still read the unsurveyed parchment as featureless mottle. A faint inked survey grid at a whole-metre spacing (the first of spacings_m at least min_spacing_px apart) and a small north mark make it read as a chart without revealing any terrain (OW3). tab_map.gd _draw_chart_grid. OFF until judged.",
+      "scope": "client_presentation",
+      "_why_on": "CPU 6.81 -> 6.93 (quick judge F38-4-fcb5301c9826-11042108; two judges up, one tied; owner 4 Nov: any judged gain ships ON).",
+      "enabled": true,
+      "realms": ["meadows"],
+      "spacings_m": [25, 50, 100, 250, 500, 1000, 2500],
+      "min_spacing_px": 80.0,
+      "ink": "#4b3b26",
+      "alpha": 0.22,
+      "width_px": 1.5,
+      "north_mark_px": 26.0,
+      "north_alpha": 0.6
+    },
     "cloud_fog": {
+      "_why_meadows_parchment_1104": "F38#4 P2-002 (NEAR6-MS, 4 Nov 2026), scope client_presentation: Meadows unsurveyed fog takes warm parchment tones (#8c8266/#cfc3a0, was slate #22343a/#4a6670) so the map reads as a paper chart in the warm Meadows palette instead of a storm. CPU 6.15 -> 7.18 (quick judge F38-4_F38-9-8b3b7f6af458-11042024). Other chapters unchanged.",
       "enabled": true,
       "frequency": 0.035,
       "tones": {
@@ -71,8 +86,8 @@
           "#3a5361"
         ],
         "meadows": [
-          "#22343a",
-          "#4a6670"
+          "#8c8266",
+          "#cfc3a0"
         ],
         "water": [
           "#14324a",

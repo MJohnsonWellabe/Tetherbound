@@ -63,6 +63,26 @@ var _graphics_capture: Dictionary = {}
 var _breakout_handback_only := false
 var _handback_observations: Array[Dictionary] = []
 
+## F40#18 (VIS-CLOUDREACH, 4 Nov 2026; coordinator-directed reproduced
+## blocker): Cloudreach A/B rounds paired different wild species at different
+## spots and different catch outcomes for the same --seed, because the capture
+## took whichever streamed wild stood nearest. In Cloudreach the seed now picks
+## the species from this list and the capture places that one wild at a fixed
+## arrival-terrace spot (EncounterDirector.spawn_wild, fixed level, no wander),
+## and every throw's catch roll is re-seeded from (seed, throw index).
+const PINNED_WILD_SPECIES := ["skyrill", "galecrest", "pebbik"]
+const PINNED_WILD_XZ := Vector2(-4.0, -254.0)
+const PINNED_WILD_LEVEL := 30
+const CAPTURE_ARBITRATION_WINDOW_MS := 600000
+var _pinned_wild := false
+var _throw_index := 0
+
+
+static func pinned_wild(seed_value: int) -> Dictionary:
+	return {"species": PINNED_WILD_SPECIES[posmod(seed_value, PINNED_WILD_SPECIES.size())],
+		"xz": PINNED_WILD_XZ, "level": PINNED_WILD_LEVEL}
+
+
 var _struck_flag := [false]
 var _shook_flag := [false]
 var _resolved := []  # appended [success] per resolution
@@ -264,6 +284,11 @@ func _one_throw(aim_frame: String, flight_frame: String,
 		for i in 4:
 			await physics_frame
 
+	if _pinned_wild and _manager != null:
+		var roll_rng: Variant = _manager.get("_rng")
+		if roll_rng is RandomNumberGenerator:
+			(roll_rng as RandomNumberGenerator).seed = hash("%d_%d" % [_seed, _throw_index])
+	_throw_index += 1
 	_struck_flag[0] = false
 	_shook_flag[0] = false
 	var resolutions_before := _resolved.size()
@@ -426,13 +451,23 @@ func _leave_the_farmhouse() -> void:
 				start = _wild.global_position + Vector3(0.0, 0.0, 5.0)
 	elif _biome == "cloudreach":
 		var director: Node = _world.get_node(^"CloudreachRuntime").get("director")
-		var nearest := INF
+		var pin := pinned_wild(_seed)
+		var xz: Vector2 = pin["xz"]
+		var spot := Vector3(xz.x, float(_world.call("ground_height_at", xz.x, xz.y)), xz.y)
+		seed(_seed)
+		var placed: Node3D = director.call("spawn_wild", str(pin["species"]), spot,
+			{"name": "CapturePinnedWild", "level": int(pin["level"]), "wander_radius": 0.0, "aggressive": false}) as Node3D
+		if placed != null:
+			_wild = placed
+			_pinned_wild = true
+			print("cloudreach catch: pinned %s at %s (seed %d)" % [pin["species"], placed.global_position, _seed])
+		var nearest := INF if _wild == null else -1.0
 		for candidate: Node3D in (director.call("wild_creatures") as Array[Node3D]):
 			var ground := float(_world.call("ground_height_at", candidate.global_position.x, candidate.global_position.z))
 			if not is_finite(ground) or absf(ground - candidate.global_position.y) > 4.0:
 				continue
 			var distance := candidate.global_position.distance_to(player.global_position)
-			if distance < nearest:
+			if not _pinned_wild and distance < nearest:
 				nearest = distance
 				_wild = candidate
 		if _wild != null:
@@ -440,6 +475,17 @@ func _leave_the_farmhouse() -> void:
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
 	player.global_position = start
 	player.velocity = Vector3.ZERO
+
+
+## F39#9 (VIS-TIDEWAKE, 4 Nov 2026): the Tidewake counterpart of pinned_wild.
+const PINNED_TIDEWAKE_SPECIES := ["cannonback", "torrentoad", "mangrove_monitor"]
+const PINNED_TIDEWAKE_XZ := Vector2(-90.024, 142.573)
+const PINNED_TIDEWAKE_LEVEL := 8
+
+
+static func pinned_tidewake_wild(seed_value: int) -> Dictionary:
+	return {"species": PINNED_TIDEWAKE_SPECIES[posmod(seed_value, PINNED_TIDEWAKE_SPECIES.size())],
+		"xz": PINNED_TIDEWAKE_XZ, "level": PINNED_TIDEWAKE_LEVEL}
 
 
 ## Tidewake wilds only exist once the director streams the neighborhood around
@@ -451,8 +497,23 @@ func _stand_beside_streamed_tidewake_wild() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if player == null or director == null:
 		return
-	var nearest := INF
+	# F39#9 (VIS-TIDEWAKE, 4 Nov 2026): the same reproduced A/B blocker as the
+	# Cloudreach pin above. The seed picks a First Shore species and the capture
+	# places that one wild 5 m ahead of the fixed First Shore start.
+	var pin := pinned_tidewake_wild(_seed)
+	var xz: Vector2 = pin["xz"]
+	seed(_seed)
+	var placed: Node3D = director.call("spawn_wild", str(pin["species"]),
+		Vector3(xz.x, float(_world.call("ground_height_at", xz.x, xz.y)), xz.y),
+		{"name": "CapturePinnedWild", "level": int(pin["level"]), "wander_radius": 0.0, "aggressive": false}) as Node3D
+	if placed != null:
+		_wild = placed
+		_pinned_wild = true
+		print("tidewake catch: pinned %s at %s (seed %d)" % [pin["species"], placed.global_position, _seed])
+	var nearest := INF if _wild == null else -1.0
 	for candidate: Node3D in (director.call("wild_creatures") as Array[Node3D]):
+		if _pinned_wild:
+			break
 		if not is_instance_valid(candidate) or not candidate.visible \
 				or not candidate.is_physics_processing() or bool(candidate.get("engaged")):
 			continue
@@ -506,6 +567,21 @@ func _collect_nodes() -> bool:
 	if _player == null or _manager == null or _director == null or _rig == null:
 		_failures.append("scene is missing the player, camera rig, combat manager or director")
 		return false
+	# F40#18 (VIS-CLOUDREACH, 4 Nov 2026): the catch arbiter's lease is wall-clock
+	# milliseconds (multiplayer.json catch_arbitration_window_ms, 6 s). On CPU
+	# llvmpipe at 1080p the throw-and-wobble outlives it, the claim lapses and
+	# every finish is refused `not_claimant` (seen in qj_portrait2/2b). This
+	# capture process alone widens the arbiter's test-overridable window.
+	if _pinned_wild:
+		# The director builds its arbiter lazily on the first engagement; build
+		# it now (its own idempotent helper) so the widened window is the one
+		# the fight uses.
+		if _director.has_method("_ensure_encounter_arbiters"):
+			_director.call("_ensure_encounter_arbiters")
+		var arbiter: Variant = _director.get("_catch_arbiter")
+		if arbiter is Object and "window_ms" in (arbiter as Object):
+			(arbiter as Object).set("window_ms", CAPTURE_ARBITRATION_WINDOW_MS)
+			print("cloudreach catch: arbiter window %d ms" % int((arbiter as Object).get("window_ms")))
 	if _wild == null:
 		_wild = _director.call("wild_creature") as Node3D
 	if _wild == null and _biome == "tidewake":

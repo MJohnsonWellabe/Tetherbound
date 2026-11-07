@@ -185,3 +185,131 @@ func test_f38_20_door_torches_ship_on_with_their_score() -> void:
 		assert_true(bool(spec.get("visual_only", false)), "visual only, no collider")
 		var x := float((spec.get("at", [0.0, 0.0]) as Array)[0])
 		assert_false(x > 6.5 and x < 9.5, "clear of the walking lane to the door")
+
+
+## F38#20 r9: the approach pylons stand 7 m, so the line leads to the keep
+## without out-topping it in frame (CPU 5.31 -> 5.83,
+## quick_judge f38_20-pylons-low).
+func test_f38_20_approach_pylons_ship_low_with_their_score() -> void:
+	var pylons: Dictionary = _load("res://data/config/stronghold.json").get("approach_pylons", {})
+	assert_almost_eq(float(pylons.get("height", 0.0)), 7.0, 0.001, "pylons lowered to 7 m")
+	assert_true(float(pylons.get("height", 0.0)) > 1.8 * 3.0, "still several times the 1.80 m trainer")
+	assert_almost_eq(float(pylons.get("sag_scale", 0.0)), 1.3, 0.001, "cable sag kept in proportion")
+	assert_true(str(pylons.get("_why_r9_height", "")).contains("CPU 5.31 -> 5.83"), "records its CPU score")
+	assert_eq((pylons.get("list", []) as Array).size(), 15, "every pylon station kept")
+
+
+## F38#20 r10: the keep grows 170 -> 210 m with its front face held, and the
+## crag grows with it (CPU 6.08 -> 6.20, quick_judge f38_20-keep-big).
+func test_f38_20_bigger_keep_keeps_its_front_face_with_its_score() -> void:
+	var keep: Dictionary = (_load("res://data/config/stronghold.json").get("p2_003_candidate", {}) as Dictionary).get("keep", {})
+	assert_true(str(keep.get("_why_r10_size", "")).contains("CPU 6.08 -> 6.20"), "records its CPU score")
+	var width := float(keep.get("width_m", 0.0))
+	var centre := float((keep.get("offset", [0.0, 0.0, 0.0]) as Array)[2])
+	assert_almost_eq(width, 210.0, 0.001, "keep 210 m wide")
+	assert_almost_eq(centre - width * 0.43 * 0.5, 140.6 - 170.0 * 0.43 * 0.5, 0.2, "front face unchanged, so nothing new reaches the chambers")
+
+
+## F38#15 mount scale (coordinator-approved, presentation only): the carrier
+## art grows so the bird stands clearly taller than the 1.80 m trainer, while
+## flight collision, the seat (feet offset) and the grip bones are unchanged
+## (CPU 6.21 -> 7.08, quick_judge f38_15-mount-scale).
+func test_f38_15_mount_grows_without_moving_collision_or_seat() -> void:
+	var fly := _load("res://data/config/fly_traversal.json")
+	assert_almost_eq(float(fly.get("collision_height_m", 0.0)), 4.5, 0.001, "flight collision height unchanged")
+	var expected := {"galecrest": [3.2, 2.45, ["foot_l", "foot_r"]], "galewisp": [3.0, 2.3, ["leg_lower_l", "leg_lower_r"]]}
+	for id: String in expected:
+		var cap: Dictionary = (fly.get("capabilities", {}) as Dictionary).get(id, {})
+		var want: Array = expected[id]
+		assert_true(bool(cap.get("presentation_scale_enabled", false)), id + " presentation scale ON")
+		assert_almost_eq(float(cap.get("presentation_height_m", 0.0)), float(want[0]), 0.001, id + " art height")
+		assert_true(float(cap.get("presentation_height_m", 0.0)) > 1.8, id + " taller than the trainer")
+		assert_true(str(cap.get("_why_presentation_height", "")).contains("CPU 6.21 -> 7.08"), id + " records its CPU score")
+		assert_almost_eq(float((cap.get("feet_offset", [0, 0, 0]) as Array)[1]), float(want[1]), 0.001, id + " seat (feet offset) unchanged")
+		assert_eq(cap.get("grip_bones", []), want[2], id + " grip bones unchanged")
+		var art: Node3D = preload("res://scripts/player/fly_controller.gd").make_carrier_art(cap)
+		assert_ne(art, null, id + " carrier art builds")
+		if art != null:
+			assert_almost_eq(art.position.y, float(want[1]), 0.001, id + " art hangs from the same offset")
+			art.free()
+
+
+## F38#41 old quarry: natural rock worked faces, grey stone and sunk floor
+## tiles (raw Bar A 5.80 -> 6.43, three code-blind judges,
+## qj/f38_41-natural-faces). The worked faces still build and keep their names.
+func test_f38_41_quarry_natural_faces_ship_on_with_their_score() -> void:
+	var quarry := _load("res://data/config/old_quarry.json")
+	var cut: Dictionary = quarry.get("worked_cut", {})
+	assert_true(bool(cut.get("natural_faces", false)), "natural worked faces ON")
+	assert_true(str(cut.get("_why_natural_faces", "")).contains("5.80 -> 6.43"), "records its CPU score")
+	for piece: Variant in cut.get("pieces", []):
+		var p := piece as Dictionary
+		if str(p.get("role", "")) in ["extraction_face", "tool_course", "working_bench"]:
+			var c := Color(str(p.get("colour", "#000000")))
+			assert_true(c.s < 0.15, "%s is grey stone, not tan" % str(p.get("name", "")))
+	var prefabs := _load("res://data/config/building_prefabs.json")
+	var floors := 0
+	for module: Variant in ((((prefabs.get("prefabs", {}) as Dictionary).get("quarry_foundation", {})) as Dictionary).get("modules", []) as Array):
+		if str((module as Dictionary).get("module", "")) == "Floor_UnevenBrick":
+			floors += 1
+			assert_almost_eq(float(((module as Dictionary).get("at", []) as Array)[1]), -0.4, 0.001, "floor tile sunk")
+	assert_eq(floors, 6, "six quarry floor tiles")
+	var builder: Object = preload("res://scripts/world/old_quarry.gd").new()
+	builder.set("_natural_worked_faces", true)
+	var face := builder.call("_textured_wedge", "WorkedFaceWest", Vector3(6.8, 5.2, 4.0),
+		Color("#8f8b82"), "", "", 0.52, 0.78, 0.96) as MeshInstance3D
+	assert_true(face != null and face.mesh != null, "natural worked face builds")
+	if face != null:
+		assert_eq(face.name, "WorkedFaceWest", "keeps its production node name")
+		face.free()
+	builder.free()
+
+
+## F38#37 quarry foreman dialogue: the east worked face moved 3 m back so the
+## dialogue camera no longer sits inside it (mapped 5.31 -> 6.09,
+## qj/f38_37-east-face). The face stays inside the quarry worksite.
+func test_f38_37_east_face_clears_the_foreman_camera_with_its_score() -> void:
+	var cut: Dictionary = _load("res://data/config/old_quarry.json").get("worked_cut", {})
+	assert_true(str(cut.get("_why_east_face_moved", "")).contains("5.31 -> 6.09"), "records its CPU score")
+	var found := false
+	for piece: Variant in cut.get("pieces", []):
+		if str((piece as Dictionary).get("name", "")) == "WorkedFaceEast":
+			found = true
+			var at := (piece as Dictionary).get("at", []) as Array
+			assert_almost_eq(float(at[0]), 391.64, 0.01, "east face x")
+			assert_almost_eq(float(at[1]), 1788.23, 0.01, "east face z")
+			assert_true(Vector2(float(at[0]), float(at[1])).distance_to(Vector2(392.0, 1792.0)) > 3.5,
+				"east face clear of the foreman's stand")
+	assert_true(found, "WorkedFaceEast still built")
+
+
+## F38#23 relay yard: the undercroft yard-face arch (the frame's black mass,
+## named by tests/probe_camera_pixel.gd) gets a lighter arch finish
+## (mapped 5.90 -> 6.04, qj/f38_23-arch-lift).
+func test_f38_23_relay_arch_lift_ships_on_with_its_score() -> void:
+	var site: Dictionary = _load("res://data/config/tether_relay.json").get("site", {})
+	var arch: Dictionary = ((site.get("support_finish", {}) as Dictionary).get("variants", {}) as Dictionary).get("arch", {})
+	assert_eq(str(arch.get("tint", "")), "#e4d8c2", "lifted arch tint")
+	assert_true(Color(str(arch.get("tint", "#000000"))).get_luminance() > Color("#a0927b").get_luminance() + 0.2, "arch reads lighter than before")
+	assert_true(str(arch.get("_why_tint", "")).contains("5.90 -> 6.04"), "records its CPU score")
+
+
+## F38#23 relay yard: the smaller cobble flags (`ground_pad.surface_candidate.r2`)
+## ship ON (mapped 6.73 -> 6.93, qj/f38_23-cobble-r2).
+func test_f38_23_relay_cobble_r2_ships_on_with_its_score() -> void:
+	var pad: Dictionary = _load("res://data/config/tether_relay.json").get("ground_pad", {})
+	var r2: Dictionary = ((pad.get("surface_candidate", {}) as Dictionary).get("r2", {}) as Dictionary)
+	assert_true(bool(r2.get("enabled", false)), "smaller flags ON")
+	assert_true(float(r2.get("uv_scale", 0.0)) > 0.4, "flags at the denser scale")
+	assert_true(str(r2.get("_why_on", "")).contains("6.73 / 6.93"), "records its CPU score")
+
+
+## F38#33 catch result: the reticle's fading capture-chance readout clears as
+## the result card lands (caught or broke free), mapped 6.32 -> 7.11
+## (qj/f38_33-clear-reticle2).
+func test_f38_33_result_clears_reticle_ships_on_with_its_score() -> void:
+	var card: Dictionary = _load("res://data/config/hud.json").get("catch_card", {})
+	assert_true(bool(card.get("enabled", false)), "catch card ON")
+	assert_true(bool(card.get("result_clears_reticle", false)), "result clears the reticle ON")
+	assert_true(str(card.get("_why_on_result_clears_reticle", "")).contains("6.32 -> 7.11"), "records its CPU score")
+	assert_true(preload("res://scripts/ui/capture_reticle.gd").result_clears_reticle(), "the reticle reads the flag")

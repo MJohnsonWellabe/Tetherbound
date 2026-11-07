@@ -9,6 +9,7 @@ const SAFE_RADIUS_M := 6.0
 const SAFE_CLEARANCE_M := 0.05
 
 var _built := false
+var _shoal_index := -1
 
 
 func build(water_world: Node3D, world_config: Dictionary) -> void:
@@ -22,6 +23,7 @@ func build(water_world: Node3D, world_config: Dictionary) -> void:
 	var marker := marker_spec as Dictionary
 	for raw: Variant in world_config.get("rest_shoals", []):
 		if raw is Dictionary:
+			_shoal_index += 1
 			_add_shoal(raw as Dictionary, marker, water_world)
 
 
@@ -84,11 +86,31 @@ func _dress_sandbar(id: String, centre: Vector2, water_world: Node3D) -> void:
 	if not bool(look.get("enabled", false)):
 		return
 	var index := 0
+	# NEAR6-TW (P2-026, F39#15): `rest_shoal_dressing_vary` (OFF) gives each
+	# shoal its own seeded size, angle and prop subset so the chain stops
+	# reading as identical discs. Inert while OFF.
+	var vary: Dictionary = look.get("rest_shoal_dressing_vary", {}) if look.get("rest_shoal_dressing_vary", {}) is Dictionary else {}
+	var varied := bool(vary.get("enabled", false))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = absi(id.hash())
 	for raw: Variant in look.get("rest_shoal_dressing", []):
-		var spec := raw as Dictionary
+		var spec := (raw as Dictionary).duplicate()
 		index += 1
+		if varied:
+			var keep := rng.randf() < float(vary.get("keep_fraction", 1.0))
+			var size := 1.0 + rng.randf_range(-1.0, 1.0) * float(vary.get("scale_jitter", 0.0))
+			var turn := rng.randf_range(-1.0, 1.0) * float(vary.get("angle_jitter_deg", 0.0))
+			if not keep:
+				continue
+			spec["height_m"] = float(spec.get("height_m", 0.8)) * size
+			spec["angle_deg"] = float(spec.get("angle_deg", 0.0)) + turn
 		var angle := deg_to_rad(float(spec.get("angle_deg", 0.0)) + float(id.hash() % 360))
 		var radius := maxf(float(spec.get("radius_m", 8.0)), SAFE_RADIUS_M + 1.0)
+		# `shoal_pick` [n, k] puts an entry on every n-th shoal only (config
+		# order), so neighbouring shoals in one chain wear different silhouettes.
+		var pick: Array = spec.get("shoal_pick", [])
+		if pick.size() == 2 and int(pick[0]) > 0 and posmod(_shoal_index, int(pick[0])) != int(pick[1]):
+			continue
 		var at := centre + Vector2(cos(angle), sin(angle)) * radius
 		var ground := _ground(water_world, at)
 		# Lobed shoals have no fixed shore radius: a wet-fringe rock walks

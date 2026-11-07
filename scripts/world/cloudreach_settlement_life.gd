@@ -307,7 +307,8 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 			var side := Vector3.UP.cross(forward).normalized()
 			# A stand may carry its own layout (a candidate's ground structure
 			# for one camera) instead of the shared pattern.
-			for item: Dictionary in stand.get("pattern", spec.get("stand_pattern", [])):
+			for authored_item: Dictionary in stand.get("pattern", spec.get("stand_pattern", [])):
+				var item := _soften_item(spec, landmark_name, authored_item)
 				var only: Array = item.get("only_stands", [])
 				if not only.is_empty() and not only.has(str(stand.get("id", ""))):
 					continue
@@ -339,7 +340,23 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 					world.call("_apply_tree_palette", model, holder.get_child_count())
 				elif str(item.asset).begins_with("rock") or item.asset == "paving":
 					world.call("apply_stone_palette", model)
-		for building: Dictionary in site.get("buildings", []):
+				_fringe_edges(world, spec, landmark_name, str(item.asset), model, size)
+		# P2-022 / F40#2 (NEAR6-CR): `summit_silhouette` (OFF until judged)
+		# overrides authored building dimensions per asset for one site, so
+		# the imported belvederes can rise beside the 54 m aviary drum. Visual
+		# dimensions only; collision_fraction stays as authored (0 here).
+		var silhouette: Dictionary = spec.get("summit_silhouette", {})
+		var resize: Dictionary = {}
+		if silhouette.get("enabled") == true:
+			resize = (silhouette.get("sites", {}) as Dictionary).get(landmark_name, {})
+		for authored: Dictionary in site.get("buildings", []):
+			var building := authored
+			if resize.has(str(authored.get("asset", ""))):
+				building = authored.duplicate(true)
+				var over: Dictionary = resize[str(authored.get("asset", ""))]
+				for key: String in over:
+					if not key.begins_with("_"):
+						building[key] = over[key]
 			# A cliff-hung piece sits at its authored height (its rock tiers
 			# drop below the rim); everything else snaps to the authored ground.
 			var at := _v3(building.at) if bool(building.get("no_snap", false)) \
@@ -422,6 +439,25 @@ func _lamp_post(world: Node3D, parent: Node3D, post: Dictionary, lamp: Dictionar
 	pole.add_child(light)
 	_lamps.append({"light": light, "material": glow, "energy": float(lamp.get("energy", 3.0)),
 		"glow": float(lamp.get("glow", 4.0)), "day_glow": 0.3})
+
+
+## P2-023 / F40#4 (NEAR6-CR): `shelf_edge_soften` (OFF until judged). The
+## installed cliff_shelf modules show their long, dead-straight extruded edge
+## broadside to the fixed stands. When on, each listed asset at the listed site
+## turns by `yaw_offset_deg` (its shorter, irregular end faces the camera and
+## perspective breaks the line) and sinks by `rise_offset_m`. Visual only.
+static func _soften_item(spec: Dictionary, site_name: String, item: Dictionary) -> Dictionary:
+	var cfg: Dictionary = spec.get("shelf_edge_soften", {})
+	if cfg.get("enabled") != true:
+		return item
+	var per_site: Dictionary = (cfg.get("sites", {}) as Dictionary).get(site_name, {})
+	var over: Variant = per_site.get(str(item.get("asset", "")))
+	if not (over is Dictionary):
+		return item
+	var out := item.duplicate(true)
+	out["yaw"] = float(item.get("yaw", 0.0)) + float((over as Dictionary).get("yaw_offset_deg", 0.0))
+	out["rise_m"] = float(item.get("rise_m", 0.0)) + float((over as Dictionary).get("rise_offset_m", 0.0))
+	return out
 
 
 func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
@@ -618,6 +654,52 @@ func _ground(world: Node3D, parent: Node3D, local: Vector3) -> Vector3:
 
 ## width > 0 fits the footprint to that width independently of the height
 ## (a Meshy building whose proportions miss the brief).
+## P2-023 / F40#4 round 2 (NEAR6-CR): `shelf_edge_fringe` (OFF until judged).
+## Judges keep the pale stratified cliff_shelf modules but call their lips
+## dead-straight extrusions and ask for edge debris and bushes. When on, the
+## listed asset at the listed site gets a fringe of installed bushes and rocks
+## along its top rim, part overhanging the lip, so the silhouette line breaks.
+## Children of the module's own placement; visual only, no collider.
+func _fringe_edges(world: Node3D, spec: Dictionary, site_name: String, asset: String,
+		model: Node3D, height: float) -> void:
+	var cfg: Dictionary = spec.get("shelf_edge_fringe", {})
+	if model == null or cfg.get("enabled") != true:
+		return
+	var per: Variant = ((cfg.get("sites", {}) as Dictionary).get(site_name, {}) as Dictionary).get(asset)
+	if not (per is Dictionary):
+		return
+	var placement := model.get_parent() as Node3D
+	var bounds: AABB = BOUNDS.measure(model)
+	var hx := bounds.size.x * model.scale.x * 0.5
+	var hz := bounds.size.z * model.scale.z * 0.5
+	var spacing := float((per as Dictionary).get("spacing_m", 3.0))
+	var drop := float((per as Dictionary).get("drop_m", 0.4))
+	var out := float((per as Dictionary).get("overhang_m", 0.4))
+	var corners: Array[Vector3] = [Vector3(-hx, 0, -hz), Vector3(hx, 0, -hz), Vector3(hx, 0, hz), Vector3(-hx, 0, hz)]
+	var n := 0
+	for e in 4:
+		var a: Vector3 = corners[e]
+		var b: Vector3 = corners[(e + 1) % 4]
+		var normal := Vector3(b.z - a.z, 0, a.x - b.x).normalized() * -1.0
+		var count := maxi(1, int(a.distance_to(b) / maxf(spacing, 0.5)))
+		for k in count:
+			var t := (float(k) + 0.25 + 0.5 * absf(sin(float(n) * 1.9))) / float(count)
+			var at := a.lerp(b, t) + normal * out * (0.4 + 0.6 * absf(sin(float(n) * 2.7))) \
+				+ Vector3.UP * (height - drop)
+			var rocky := n % 3 == 2
+			var key := "rock_mid" if rocky else "bush"
+			var h := lerpf(float((per as Dictionary).get("height_min_m", 0.9)),
+				float((per as Dictionary).get("height_max_m", 1.8)), absf(sin(float(n) * 3.1)))
+			var piece := _scene(placement, load(str(PROPS[key])) as PackedScene, at, h * (0.7 if rocky else 1.0),
+				float(n) * 47.0)
+			if piece != null:
+				if rocky:
+					world.call("apply_stone_palette", piece)
+				else:
+					world.call("_apply_tree_palette", piece, n)
+			n += 1
+
+
 func _scene(parent: Node3D, packed: PackedScene, at: Vector3, height: float, yaw: float, width := 0.0) -> Node3D:
 	if packed == null:
 		return null

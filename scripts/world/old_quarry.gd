@@ -56,6 +56,7 @@ var _work_lights := 0
 var _foundation_finishes := 0
 var _worked_cut_pieces := 0
 var _arrival_scatter_removed := 0
+var _natural_worked_faces := false
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -112,6 +113,9 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 	var texture_path := str(spec.get("albedo_texture", ""))
 	var normal_path := str(spec.get("normal_texture", ""))
 	var extraction_index := 0
+	# Optional arm (default off): WorkedFace pieces use the installed natural
+	# rock meshes instead of the generated cliff panel.
+	_natural_worked_faces = bool(spec.get("natural_faces", false))
 	_build_worked_floor(world, holder, spec.get("floor", {}), texture_path, normal_path)
 	for raw_piece: Variant in pieces:
 		if not raw_piece is Dictionary:
@@ -532,7 +536,7 @@ func _textured_box(node_name: String, size: Vector3, colour: Color,
 func _textured_wedge(node_name: String, size: Vector3, colour: Color,
 		texture_path: String, normal_path: String, batter_m: float,
 		top_left_scale: float, top_right_scale: float) -> MeshInstance3D:
-	if node_name.begins_with("WorkedFace"):
+	if node_name.begins_with("WorkedFace") and not _natural_worked_faces:
 		return _textured_cliff_panel(node_name, size, colour, texture_path,
 			normal_path, batter_m, top_left_scale, top_right_scale)
 	var natural_rock := _textured_asset_rock(node_name, size, colour,
