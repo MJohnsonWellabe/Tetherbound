@@ -1,7 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## F38#20 (LANE-SW, 7 Nov 2026): the Blender hill the keep crowns. It is placed
-## through the hero-gatehouse companion loader only when keep_hill_1107 is ON,
+## F38#20 (LANE-SW, 7 Nov 2026): the Blender hill the keep crowns and its curtain
+## wall (both ON, CPU 6.38 -> 6.78). Each is placed through the hero-gatehouse
+## companion loader only when its flag is ON,
 ## and it never rises into the hall's footprint or in front of the gate mouth.
 
 const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
@@ -20,21 +21,25 @@ func _has_hill(gatehouse: Dictionary) -> bool:
 	return false
 
 
-func test_keep_hill_ships_off_and_joins_only_when_on() -> void:
+func test_keep_hill_ships_on_with_score_and_joins_only_when_on() -> void:
 	var cfg := _cfg()
 	var hill: Dictionary = cfg.get("keep_hill_1107", {})
 	assert_false(hill.is_empty(), "keep_hill_1107 is declared")
-	assert_false(bool(hill.get("enabled", true)), "keep_hill_1107 ships OFF until judged")
+	assert_true(bool(hill.get("enabled", false)), "keep_hill_1107 ships ON (judged gain)")
+	assert_true(str(hill.get("_why_on", "")).contains("6.38 -> 6.78"), "records its judged score")
+	assert_true(_has_hill(STRONGHOLD.p2_003_gatehouse(cfg)), "ON: the hill joins the keep's companions")
+	hill.enabled = false
 	assert_false(_has_hill(STRONGHOLD.p2_003_gatehouse(cfg)), "OFF: no hill companion")
 	hill.enabled = true
 	assert_true(_has_hill(STRONGHOLD.p2_003_gatehouse(cfg)), "ON: the hill joins the keep's companions")
 
 
-func test_keep_walls_ship_off_and_join_only_when_on() -> void:
+func test_keep_walls_ship_on_with_score_and_join_when_on() -> void:
 	var cfg := _cfg()
 	var walls: Dictionary = cfg.get("keep_walls_1107", {})
 	assert_false(walls.is_empty(), "keep_walls_1107 is declared")
-	assert_false(bool(walls.get("enabled", true)), "keep_walls_1107 ships OFF until judged")
+	assert_true(bool(walls.get("enabled", false)), "keep_walls_1107 ships ON (judged gain)")
+	assert_true(str(walls.get("_why_on", "")).contains("6.38 -> 6.78"), "records its judged score")
 	walls.enabled = true
 	var found := false
 	for companion: Variant in STRONGHOLD.p2_003_gatehouse(cfg).get("companions", []):

@@ -7,5 +7,5 @@
   "textures": "embedded copy of the installed assets/environment/terrain/Rock030_Color.jpg",
   "reference": "ralph/reports/LANES/ITEM-F38-20/_ref_keyart.jpg (walled castle on the hill) and the judges' ask 'walls, palisade, gate and approach dressing readable at distance'",
   "scale_check": "walls 23 m (12.8 x the 1.80 m trainer), towers 34 m, against the 167 m keep; ring 255 x 175 m; nothing inside the hall footprint (tests/test_stronghold_keep_hill.gd)",
-  "flag": "data/config/stronghold.json keep_walls_1107 (OFF until judged)"
+  "flag": "data/config/stronghold.json keep_walls_1107 (ON with keep_hill_1107: CPU 6.38 -> 6.78, LANE-SW r2)"
 }
