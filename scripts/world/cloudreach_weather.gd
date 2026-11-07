@@ -11,6 +11,29 @@ func _ready() -> void:
 		set_process(false)
 		return
 	super._ready()
+	_apply_rain_streak_arm()
+
+
+## F40#19 rain (NEAR6-CR, flag-off): `rain_streaks` in cloudreach_visual.json
+## makes Cloudreach rain read as falling water (denser, longer, brighter
+## streaks) instead of only a desaturated grade. Meadows rain is unchanged.
+func _apply_rain_streak_arm() -> void:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
+	if not raw is Dictionary or _rain == null:
+		return
+	var arm: Dictionary = (raw as Dictionary).get("rain_streaks", {})
+	if arm.get("enabled") != true:
+		return
+	_rain.amount = int(arm.get("amount", RAIN_AMOUNT))
+	var streak := _rain.draw_pass_1 as BoxMesh
+	var size: Array = arm.get("streak_size", [])
+	if streak != null and size.size() == 3:
+		streak.size = Vector3(float(size[0]), float(size[1]), float(size[2]))
+	var colour := Color(str(arm.get("colour", RAIN_COLOUR.to_html())))
+	if streak != null and streak.material is StandardMaterial3D:
+		(streak.material as StandardMaterial3D).albedo_color = colour
+	if _rain.process_material is ParticleProcessMaterial:
+		(_rain.process_material as ParticleProcessMaterial).color = colour
 
 
 func configure_realm_atmosphere(delta: Dictionary) -> void:
