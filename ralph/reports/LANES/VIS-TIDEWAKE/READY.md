@@ -1,5 +1,44 @@
 # VIS-TIDEWAKE lane (tb/vis-tidewake-1104): Tidewake F39 + F13#5, CPU judged
 
+## HANDOFF 7 Nov
+
+**Shipped this lane** (CPU mapped, three code-blind judges; every flag ON with a `_why` and a test):
+
+| Board id | Before -> after | Flag | Commit / verdict |
+|---|---|---|---|
+| F39#16 live current streaks | 6.63 -> 6.75 | `tidewake_look.json` `current_flow_visual` out of `sections_off` (grouped foam off) | 35f3aab86, qj/f16 (landing #843) |
+| F39#3 named destination read | 5.67 -> 5.93 | `tidewake_look.json` `landmark_models`: drift arch 8 m, lantern posts 3.4 m, two collider-free terrace walls | fb16d2a21, qj/d3 (landing #838) |
+| F39#30a/#30b golden + dawn | 5.98 -> 6.18 / 5.59 -> 5.75 | `lighting_candidate` sun pitch -12 / -9 | 4d137ddca, look/r22 |
+| F39#30a/#30b | 5.64 -> 5.73 / 5.36 -> 5.45 | `first_shore_declutter` in play | 3f5342c28, look/r18 |
+| F39#30a, F13#5 | 5.86 -> 6.19 / 5.31 -> 5.82 | `shore_surf` + `shore_surf_vary` in play | c70dea146, look/r15 |
+| F13#5 | 5.69 -> 5.87 | `golden_sky` + `shore_water` in play | look/r14 |
+| F39#30b | 5.75 -> 5.85 | `water_veilfall_falls_visual.json` `standoff_m` 3.0 | look/r12 |
+| F39#30a/#30b, F13#5 | 6.19 -> 6.43 / 5.71 -> 5.88 / 5.81 -> 5.85 | lesson_clusters, dune_grass, stones, waterline_declutter in play | look/r12 |
+| F39#30a/#30b/#31 | 6.09 -> 6.29 / 5.81 -> 6.04 / 5.29 -> 5.56 | rain_fog, rain_grade, rain_veil in play | look/r9 |
+| F39#30b | 5.67 -> 6.25 | `cause_tidewake.night` | look/r8 |
+| F39#30b | 4.77 -> 4.89 | `cause_tidewake.stars` + `world_look.gd` star reset | look/r6 |
+
+Earlier rows (F39#8 mount 4.93 -> 6.09, F39#22 camera_hide 5.25 -> 6.28, F39#17 currents 5.54 -> 6.09, F39#31 Veilfall near 4.94 -> 5.20) are in the table below. Reverted: the F39#12 r1 nest (e0504eee8 -> d42946ad1); main's r2 nest and bench stand.
+
+**Open items** (CPU mapped; the GPU closes rows):
+- F39#28 boss title overlay (GPU 6.02): arm a28 (Heart Chamber crystal z 113 -> 120, against the back wall at 124) — RESULT_A28. Judges' GPU ask: the crystal hides half the arena; flat, evenly lit beach. Next idea: a warm rim/key light on the fighters in the Venn beach fight.
+- F39#9 catch camera distance: pinned base 6.54 CPU (GPU 5.13 came from the old nearest-wild capture). Judges' asks are camera-only (wider aim, strike close-up) plus a visible orb trail. Next: a GPU re-score on the pinned capture; the camera belongs to another lane.
+- F39#16 live currents 6.75: the dashes still sit in even diagonal rows. Next: break the dash rhythm in the flow shader (vary spacing and length along the ribbon).
+- Not started from the 02:35 list: F39#17 (6.09), F39#8 (6.09), F39#10 (6.19), F39#5 (6.20), F39#27 (6.23).
+
+**Parked:**
+- F39#15 Veilfall approach shallows (GPU 4.85): the disc chain is the sheltered-route rest shoals, baked terrain (`data/terrain/water`). The fix needs a terrain re-bake plus a route-safety re-proof (owner/route-lane decision); prop arms on the shoals were flat (s15).
+- F39#2/#31 Veilfall and the storm sky: NEAR6-TW / parked earlier (new art).
+- F39#3 beyond 5.93: judges ask for Veilfall-scale hero architecture (new art).
+
+**OFF arms left in the tree:** `water_rest_shoals.gd` `shoal_pick` selector (inert without data); `tidewake_destination_read.json` (dr flat 5.75 -> 5.84); `meshy_camp_props.json` `workbench.vl_candidate` r1 (main has r2 ON); water shader `night_dim` (r27 flat); `world_look.gd` weather cloud keys (r26 flat). Runbook overlays: `runbook/ov_*.json`.
+
+**Known tool / capture bugs:**
+- `quick_judge.py find_frame` could not resolve fight frames (`<tag>-SSS.SS` files vs `<tag>-SSS_SS` ids; CPU tell times differ). Fix in `runbook/quick_judge_find_frame.patch.py`; please carry it into main's `tools/visual_judge/quick_judge.py`.
+- Venn fight frames: "Gather Reef Stone" still draws over the fight, and the HUD shows the party strip with no hotbar or minimap, so its presentation mode is not "combat" (shared fight HUD, VIS-STORMWOOD's area).
+- `phase2_capture_catch.gd`: the Tidewake wild is now pinned from `--seed` (4024ad7ad, with VIS-CLOUDREACH's pin and arbiter window verbatim).
+- This container cannot merge origin/main: 130 MB disk free, 21 GB pack (fetch pulled 8+ GB and failed). Touched shared files were aligned to the landing base by hand (17369a598, cd1d36013).
+
 Owner rule (4 Nov): any judged CPU gain ships ON; only flat or worse stays OFF. Yardstick: `tools/visual_judge` (JUDGE_PROMPT verbatim, anchors, 3 judges, calibrate), via `quick_judge.py` from tb/judge-kit-1104.
 
 ## Landing-ready flags
