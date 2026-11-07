@@ -22,7 +22,7 @@ n = tile(fbm()); w = tile(fbm(4, 6))
 strata = 0.5 + 0.5 * np.sin(2 * np.pi * (y * 5 + 0.9 * w + 0.3 * n))
 strata = strata * (tile(fbm(3, 3)) > 0.45)
 run = tile(fbm(5, 24)); streak = np.clip((run - 0.6) * 2.5, 0, 1) * np.clip((tile(fbm(3, 5)) - 0.4) * 3, 0, 1)
-v = 0.30 + 0.20 * n + 0.04 * strata - 0.10 * streak
+v = 0.26 + 0.18 * n + 0.04 * strata - 0.09 * streak
 # kept below the far shader's near-white band (luma 0.55+) so only the falls lift to white
 save("veilfall_rock", np.dstack([v * 1.00, v * 0.94, v * 0.84]))
 # moss / ledge turf
@@ -31,7 +31,7 @@ base = np.array([0.36, 0.52, 0.25]); hi = np.array([0.55, 0.66, 0.33])
 save("veilfall_moss", base * (1 - n[..., None] * 0.6) + hi * (n[..., None] * 0.6) - 0.06 * m[..., None])
 # foliage: dark conifer/broadleaf canopy with light dapples
 n = tile(fbm(5, 16)); d = np.clip((tile(fbm(3, 32)) - 0.55) * 4, 0, 1)
-save("veilfall_foliage", np.array([0.20, 0.38, 0.16]) * (0.75 + 0.5 * n[..., None]) + np.array([0.18, 0.24, 0.08]) * d[..., None])
+save("veilfall_foliage", np.array([0.15, 0.30, 0.13]) * (0.75 + 0.5 * n[..., None]) + np.array([0.12, 0.17, 0.05]) * d[..., None])
 # falling water: white with faint blue-grey vertical streaks (streaks run along v)
 s = tile(fbm(4, 32)); streak = 0.5 + 0.5 * np.sin(2 * np.pi * (x * 14 + 0.6 * s))
 w = 0.86 + 0.12 * streak * (0.6 + 0.4 * s)
