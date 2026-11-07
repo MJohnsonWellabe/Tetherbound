@@ -1,0 +1,110 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9172,
+  "least_squares_slope": 1.6937,
+  "method": "linear",
+  "slope": 1.6937,
+  "intercept": -2.8128,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.46,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.333,
+   "reference": 4.0,
+   "mapped": 4.527,
+   "residual": -0.527
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.033,
+   "reference": 6.53,
+   "mapped": 5.712,
+   "residual": 0.818
+  },
+  "craft:after": {
+   "measured": 6.133,
+   "reference": 7.35,
+   "mapped": 7.575,
+   "residual": -0.225
+  },
+  "craft:before": {
+   "measured": 4.667,
+   "reference": 4.83,
+   "mapped": 5.091,
+   "residual": -0.261
+  },
+  "f04_6_r22:control": {
+   "measured": 4.867,
+   "reference": 5.83,
+   "mapped": 5.43,
+   "residual": 0.4
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.767,
+   "reference": 6.75,
+   "mapped": 6.954,
+   "residual": -0.204
+  }
+ },
+ "candidates": {
+  "F38#30 cand": {
+   "measured_mean": 3.733,
+   "mapped_mean": 3.51,
+   "mapped_judges": [
+    3.28,
+    3.62,
+    3.62
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#30 base": {
+   "measured_mean": 3.4,
+   "mapped_mean": 2.95,
+   "mapped_judges": [
+    2.61,
+    3.28,
+    2.95
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#24 cand": {
+   "measured_mean": 3.733,
+   "mapped_mean": 3.51,
+   "mapped_judges": [
+    2.27,
+    4.3,
+    3.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#24 base": {
+   "measured_mean": 3.6,
+   "mapped_mean": 3.28,
+   "mapped_judges": [
+    2.27,
+    4.3,
+    3.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}
