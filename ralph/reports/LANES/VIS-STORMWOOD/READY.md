@@ -15,6 +15,11 @@
 
 **F41#21 / F41#16 (Hollows fight result screens) need the GPU queue (4 Nov 18:15 UTC):** I set up a CPU A/B of `hud.victory_focus` (UIPOSES arm, OFF, never judged alone; aimed at F41#21's "victory line groups with the quickbar") but `phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120` reached only t=37 s of fight time in its 50 min timeout on llvmpipe (exit 124, no frames), and the win/loss result frames come after the fight ends. **Please judge `hud.json victory_focus` on F41#21 (and F41#16) on the GPU rig.** Character rows F41#8/#18 left alone while NEAR6-TW edits the shared character rim shader.
 
+**Low-6 list (coordinator 5 Nov 02:35 UTC):** F41#13 6.52, F41#7 6.58, F41#6 6.76, F41#11 6.78, F38#28 6.09, F38#29 6.18.
+- F38#28: judging the existing Warden ring arm `arena.boundary_per_trainer_candidate` (`qj_ring`).
+- F41#13: `creature_surface_finishes.charged_1105` (OFF, `398bf45d`; Fulgocobra/Stormraven accent glow 0.42/0.36 -> 0.9/0.8, rim up); judging next (`qj_charged`).
+- F41#7 ("every trainer repeats the same generic line, no portrait"): likely already fixed on main. `stormwood_trainers.gd` sets one generic challenge for all, but `stormwood_dialogue_presentation.json` (enabled) overrides it with location-specific lines and a portrait for all 26 trainers. **Needs a fresh baseline, not an arm.**
+
 **FOR THE COORDINATOR (5 Nov ~02:10 UTC), reassigned rows done:**
 - **F39#7:** trainer-aside arm worse (6.57 -> 5.87). The current base already has the P2-089 overlap FIXED (3/3), so a fresh GPU baseline is likely.
 - **F39#19:** the roster fade does not reproduce in its fixed CPU frames. `roster_floor` needs GPU judging or frames where the trainer passes behind the roster (it reproduces in F39#7 t-024).
