@@ -9,8 +9,7 @@
     "hide_children": ["WaterPaddedBolster"],
     "nest_candidate": {
       "_why": "Visual lane (3 Nov 2026), P2-115 / F39#12 (GPU WD2 5.23 on the Meshy ring: 'reads as a fire pit or well'; path 'a raised nest or cushion shape with bedding'). Blender-built raised woven nest (0.82 m rim crest, domed sailcloth cushion, teal blanket draped over the rim, driftwood lashings); provenance assets/props/vl-1103/nest_bed/provenance.json. Same 4.6 m span, same colliders and rest anchor. OFF until judged.",
-      "enabled": true,
-      "_why_on": "tb/vis-tidewake-1104 qj/n12 (quick_judge F39#12, CPU, 3 code-blind judges, 3 anchors, calibrate): the raised woven nest lifts F39#12 authored camp creature bed 5.35 -> 5.98 mapped (raw 5.6/5.9/5.7 -> 6.1/6.5/5.9, all three judges up; defect PRESENT/PARTIAL -> FIXED/PARTIAL). Judges' remaining asks: a mid-warm bedding value that separates from pale sand (the white cushion reads as a mattress) and fully in the camp prop family. Owner 4 Nov: a judged gain ships ON.",
+      "enabled": false,
       "model": "res://assets/props/vl-1103/nest_bed/nest_bed.glb"
     }
   },
