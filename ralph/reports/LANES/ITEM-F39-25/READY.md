@@ -1,5 +1,5 @@
 STATUS: land
-BRANCH: tb/item-f39-25  HEAD: (see the branch tip; this file is in the last commit)
+BRANCH: tb/item-f39-25  HEAD: 92af3af1b9ddefefc99ad59cb9d2e0facc563bf7 (code and flags; this line was added in the next commit)
 
 # ITEM F39#25 P2-032 map active region (LANE-TW)
 
