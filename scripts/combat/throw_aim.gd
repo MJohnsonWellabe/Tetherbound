@@ -27,6 +27,9 @@ signal orb_struck(target: Node3D, offset: float)
 ## The orb landed nowhere. Carries the sentence to show the player, because
 ## "the orb went wide" was printed for every miss regardless of what happened.
 signal orb_missed(message: String)
+## The orb left the trainer's hand (F38#14: the HUD drops a stale breakout
+## card from the previous throw when the next one is released).
+signal orb_released()
 ## A throw was refused, with a reason the HUD can show. "I pressed it and
 ## nothing happened" is otherwise indistinguishable from a dropped input.
 signal throw_refused(reason: String)
@@ -610,6 +613,7 @@ func _release() -> void:
 		"orb_id": _thrown_orb_id,
 	}
 	_orb.call("launch", origin, forward, _speed, _target, ignore)
+	orb_released.emit()
 	# The trainer throws rather than standing there. Their model is on a child
 	# node, so this reaches past the body to the thing that animates.
 	var body: Node = _player.get_node_or_null(^"Model")
