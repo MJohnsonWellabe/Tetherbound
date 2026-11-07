@@ -98,3 +98,13 @@ func test_beacon_approach_is_on_with_its_score() -> void:
 			assert_true(cand.get("enabled") == true, "F40#3 P2-024 beacon approach ships ON")
 			assert_true(str(cand.get("_why_on", "")).contains("5.84 -> 6.46"), "F40#3 beacon CPU score recorded")
 	assert_true(found, "the beacon approach candidate exists")
+
+
+func test_heartstone_is_on_with_its_score() -> void:
+	var found := false
+	for cand: Dictionary in _read("res://data/config/cloudreach_f40_items.json").get("candidates", []):
+		if str(cand.get("preview_arg", "")) == "--cloudreach-f40-heartstone-candidate":
+			found = true
+			assert_true(cand.get("enabled") == true, "F40#7 P2-025 heartstone ships ON")
+			assert_true(str(cand.get("_why_on", "")).contains("5.86 -> 6.00"), "F40#7 heartstone CPU score recorded")
+	assert_true(found, "the heartstone candidate exists")
