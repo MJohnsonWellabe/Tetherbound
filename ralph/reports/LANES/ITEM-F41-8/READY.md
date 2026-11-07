@@ -1,5 +1,5 @@
 STATUS: land
-BRANCH: tb/item-f41-8
+BRANCH: tb/item-f38-17 (carries F38#17 and F41#8 together: tb/item-f41-8 merged in, coordinator 7 Nov)
 HEAD: (this commit; merged origin/main 6f8d0d79 just before writing)
 
 # ITEM F41#8: named character silhouettes (LANE-KIT)
@@ -16,7 +16,7 @@ HEAD: (this commit; merged origin/main 6f8d0d79 just before writing)
 - Same installed local_historian mesh, rig, face and hair; only the olive coat cloth recoloured. No red or oxblood. No Meshy.
 
 ## Tests
-- test_character_appearance_variants.gd 11/11 (record count now staged + 8, counting the two new records).
+- test_character_appearance_variants.gd 11/11 (combined with F38#17: record count staged + 10).
 - test_dialogue_portraits.gd 13/13, test_stormwood_glass_for_bryn.gd 13/13, test_character_body_flags.gd 3/3.
 - JSON parse: character_appearance_variants.json, stormwood_npcs.json.
 

@@ -21,8 +21,8 @@ Scores are CPU mapped; a row closes only on the GPU.
 | F38#17 Solene/Hald | tb/item-f38-17 | land | 5.81 -> 7.32 | lanekit_f38_17_{solene,hald} ON |
 
 ## Merge note
-- tb/item-f41-8 and tb/item-f38-17 each add two character_appearance_variants records, and each moves
-  tests/test_character_appearance_variants.gd to `staged.size() + 8`. Once both land, that line is `staged.size() + 10`.
+- tb/item-f41-8 is merged into tb/item-f38-17 (coordinator, 7 Nov). Land tb/item-f38-17 alone for both rows;
+  the variant count is `staged.size() + 10`.
 
 ## Best next candidates
 - F38#17 straight to the GPU High pass (CPU 7.32; the close-out exception applies).
