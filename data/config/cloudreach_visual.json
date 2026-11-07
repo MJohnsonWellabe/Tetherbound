@@ -1418,7 +1418,8 @@
   "rain_streaks": {
     "_scope": "device_local_presentation (Cloudreach rain only)",
     "_why": "NEAR6-CR F40#19 rain round 3: the recorded defect is that rain only desaturates the scene; after rain_storm (5.80) it is still PRESENT. Denser, longer, brighter streaks so the rain itself reads as falling water. OFF until judged.",
-    "enabled": false,
+    "enabled": true,
+    "_why_on": "CPU 5.48 -> 5.61 (qj/F40-19-rain-7dbc7c42c9d7-11050224, F40 matrix piece 4 day rain, rain_storm ON in both arms): streaks now read as falling water; defect PRESENT,PARTIAL -> PARTIAL. Ships ON (any judged CPU gain ships ON).",
     "amount": 3200,
     "streak_size": [0.045, 1.4, 0.045],
     "colour": "#dce6f0b3"

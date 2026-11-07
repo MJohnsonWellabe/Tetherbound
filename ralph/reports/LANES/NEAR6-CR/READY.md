@@ -17,6 +17,7 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `data/config/cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | 5.64 -> **6.16** | `tests/test_near6_cr_judged_on.gd` | d720ad38 |
 | `data/config/cloudreach_visual.json:gate_path_braziers` | F40#19 (matrix piece 7, night) | 5.00 -> **5.51** (night_foreground_fill ON in both arms; this batch's anchors map lower than the 5.84 round) | `tests/test_near6_cr_judged_on.gd` | 799a0872 |
 | `data/config/cloudreach_visual.json:gate_path_verge` | F40#19 (matrix piece 7, night) | 5.54 -> **5.81** (braziers + night fill ON in both arms) | `tests/test_near6_cr_judged_on.gd` | e9c2160a |
+| `data/config/cloudreach_visual.json:rain_streaks` | F40#19 rain (matrix piece 4) | 5.48 -> **5.61** (rain_storm ON in both arms) | `tests/test_near6_cr_judged_on.gd` | 39247ac8 |
 
 ## Arms in flight (flag OFF)
 

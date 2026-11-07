@@ -1,0 +1,12 @@
+{
+  "_scope": "device_local_presentation: world mushroom pickups (Meadows, Cloudreach, Stormwood share this presentation); interaction, claims and saves unchanged",
+  "_why": "NEAR6-CR F40#16 P2-054 (CPU 6.48): judges still read Speed and Wild Mushroom as one pale cluster silhouette at normal distance. The Wild pickup takes the installed stylized_nature Mushroom_Laetiporus shelf fungus (orange, not red), fitted to the pickup mesh's height. OFF until judged.",
+  "enabled": false,
+  "items": {
+    "wild_mushroom": {
+      "scene": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+      "height_scale": 1.1,
+      "yaw_deg": 30.0
+    }
+  }
+}
