@@ -35,7 +35,7 @@
     "plate_alpha": 0.94,
     "accent_px": 8,
     "calm_seal": {"_why": "P2-061 judges (GPU UI-1): tone down the orb bloom under the result. Sealed orb emission 1.1-2.0 -> 0.6-0.9 and halo 3.0-5.2x at full alpha -> 2.4-3.0x at 0.55 (orb.gd calm_seal_config). Read only while catch_card is enabled.", "enabled": true, "emission": 0.6, "emission_bloom": 0.3, "halo_extra": 0.2, "halo_bloom": 0.6, "halo_alpha": 0.55},
-    "card_half_width": 440.0,
+    "card_half_width": 560.0, "_card_half_width_why_on": "440 -> 560 ON 5 Nov 2026 (VIS-CLOUDREACH qj_cardwide): CPU 5.99 -> 6.74 mapped on F40#18 P2-118 (three code-blind judges all prefer the wider card: the full-team line no longer wraps mid-phrase; linear r 0.97, anchor RMSE 0.27). First round on the pinned catch capture with a fixed banner yaw (commit ce470ed44), so both sides share one scene.",
     "card_top": -380.0,
     "breakout_seconds": 1.8,
     "step_back_on_break": false,

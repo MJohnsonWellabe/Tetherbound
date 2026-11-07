@@ -82,3 +82,9 @@ func test_catch_card_party_names_are_on_with_their_score() -> void:
 	assert_true(int(row.get("name_px", 0)) > 0, "P2-118 party row names ship ON")
 	assert_true(float(row.get("px", 0.0)) >= 96.0, "P2-118 party row portraits ship at 96 px")
 	assert_true(str(row.get("_names_why_on", "")).contains("5.58 -> 6.18"), "P2-118 party-names CPU score recorded")
+
+
+func test_wider_catch_card_is_on_with_its_score() -> void:
+	var card: Dictionary = _read("res://data/config/hud.json").get("catch_card", {})
+	assert_true(float(card.get("card_half_width", 0.0)) >= 560.0, "P2-118 catch card ships at half width 560")
+	assert_true(str(card.get("_card_half_width_why_on", "")).contains("5.99 -> 6.74"), "P2-118 wider-card CPU score recorded")
