@@ -84,3 +84,9 @@ func test_gate_path_verge_ships_on() -> void:
 	_assert_on(cfg.gate_path_verge, "5.81", "gate_path_verge")
 	for item: Array in cfg.gate_path_verge.items:
 		assert_ne(str(item[0]), "bush", "Bush_Common reads red at night; verge keeps flowers and rocks only")
+
+
+## F40-19-rain-7dbc7c42c9d7-11050224: F40#19 rain streaks 5.48 -> 5.61.
+func test_rain_streaks_ships_on() -> void:
+	var cfg := _json("res://data/config/cloudreach_visual.json")
+	_assert_on(cfg.rain_streaks, "5.61", "rain_streaks")
