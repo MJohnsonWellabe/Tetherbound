@@ -1,5 +1,5 @@
 STATUS: land
-BRANCH: tb/item-f39-8  HEAD: (branch tip; this file is in the last commit)
+BRANCH: tb/item-f39-8  HEAD: d41eaa6a0e184e652717ff8fb3552c5fdad1b319 (this line added in the next commit)
 
 # ITEM F39#8 P2-108 Aquaryn mounted-water pose (LANE-TW)
 
