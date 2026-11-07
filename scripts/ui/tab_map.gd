@@ -285,6 +285,7 @@ func build() -> void:
 	_chart_cfg = {}
 	_cloud_fog = {}
 	_chart_grid = {}
+	_keyboard_hint_one_device = false
 	_outside_colour = UITokens.BG_DEEP
 	_road_texture_cache.clear()
 	if veil is Dictionary and veil.get("enabled") == true:
@@ -299,6 +300,7 @@ func build() -> void:
 		_soft_fog = veil.get("soft_fog") == true
 		_ui_font_labels = veil.get("ui_font_labels") == true
 		_glyph_controls = veil.get("glyph_controls") == true
+		_keyboard_hint_one_device = veil.get("keyboard_hint_one_device") == true
 		_region_font = null
 		if veil.has("outside_colour"):
 			_outside_colour = Color(str(veil.get("outside_colour")))
@@ -415,7 +417,16 @@ func _refresh_controls_label() -> void:
 		INPUT_GLYPH.icon("map_zoom_out", px),
 		INPUT_GLYPH.icon("map_zoom_in", px),
 	]
-	if _glyph_controls and INPUT_GLYPH.using_gamepad():
+	if _keyboard_hint_one_device and not INPUT_GLYPH.using_gamepad():
+		# F39#25 P2-032 (LANE-TW): the keyboard row named the pad's A/X beside
+		# the keyboard's [Minus]/[Equal]. Every verb now shows its keyboard
+		# (or mouse) prompt, so the row reads as one device.
+		var key_img := "[img=%dx%d]%s%s[/img]"
+		text = "%s%s Place marker    %s%s Remove marker    %s Zoom out    %s Zoom in" % [
+			INPUT_GLYPH.icon("confirm", px, Color.WHITE, "keyboard"), key_img % [px, px, INPUT_GLYPH.DIR, "mouse_left.png"],
+			INPUT_GLYPH.icon("interact", px, Color.WHITE, "keyboard"), key_img % [px, px, INPUT_GLYPH.DIR, "mouse_right.png"],
+			INPUT_GLYPH.icon("map_zoom_out", px), INPUT_GLYPH.icon("map_zoom_in", px)]
+	elif _glyph_controls and INPUT_GLYPH.using_gamepad():
 		# P2-002 r2: the hint row reads as prompt glyphs at handheld size,
 		# not letters beside 24px trigger chips.
 		var img := "[img=%dx%d]%s%s[/img]"
@@ -1559,6 +1570,8 @@ func _facing_yaw(_world: Node, player: Node3D) -> float:
 ## a faint inked survey grid at a whole-metre spacing and a small north mark,
 ## so the parchment fog reads as a chart. It reveals no terrain (OW3).
 var _chart_grid: Dictionary = {}
+## F39#25 P2-032 (LANE-TW, `fog_veil.keyboard_hint_one_device`, OFF unless enabled).
+var _keyboard_hint_one_device := false
 
 
 func _draw_chart_grid(canvas: Control, map_rect: Rect2) -> void:
@@ -2519,6 +2532,11 @@ static func paint_chart(realm_id: String, world: Node, extent: Dictionary, cfg: 
 	if span.x <= 0.0 or span.y <= 0.0:
 		return null
 	var long_px := float(cfg.get("long_side_px", 360))
+	# F39#25 P2-032 (LANE-TW): a per-realm chart resolution, so Tidewake's
+	# wide sea can paint sharper islands without re-baking the other realms.
+	var by_realm: Variant = cfg.get("long_side_px_by_realm", {})
+	if by_realm is Dictionary and (by_realm as Dictionary).has(realm_id):
+		long_px = float((by_realm as Dictionary)[realm_id])
 	var step := maxf(span.x, span.y) / long_px
 	var w := maxi(8, int(ceil(span.x / step)))
 	var h := maxi(8, int(ceil(span.y / step)))
