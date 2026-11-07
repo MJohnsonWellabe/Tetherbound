@@ -17,7 +17,7 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 - New art is made in Blender, not Meshy (no credits): new meshes, reskins or recombinations of installed assets. Keep the drafted reference, 1.80 m scale check and provenance, and keep the flag OFF until judged. This overrides the 27 Sep "meshes stay with Codex" split.
 
 **Plan:**
-- Five lanes, each on one row. When the row is done, the lane pushes and is archived, and a new lane takes the next row.
+- Five lanes, each on one row at a time; see the decisions below.
 - End of day 8 Nov: GPU re-judge (Medium and High) of every row whose last score is CPU-only or older than its latest landed change. The bar stays 7.5. A GPU score below the CPU score reopens the row.
 
 **Lane brief:**
@@ -37,10 +37,9 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 - Republish the board.
 
 **Blocked (owner, GPU or capture):**
-- F38#30/F38#24 floating Burrow Warrens: owner terrain decision.
 - F39#15 shoals: terrain re-bake plus route re-proof.
 - F41#21/#16 Hollows results: GPU only.
-- F41#3 Capacitor Alpha spacing (+0.05 arm OFF): combat-contract decision.
+- F41#3: spacing stays (owner); visual fix only.
 - F38#19/#26/#31/#33: capture-tool fixes (below).
 - F41#14 candy: the +0.29 arm breaks the rule that rarer candy is bigger.
 
@@ -57,6 +56,8 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
   - Stand creatures keep physics (F38#26).
   - Stand alpha pose calls `set_alpha(true)` (F38#31).
   - Catch capture shoots `06-breakout` while the card holds (F38#33).
+
+**QUEUE: Warrens (owner 7 Nov):** re-seat the F38#30 shell into the terrain (5.10), which also unblocks F38#24 (4.42).
 
 **QUEUE: Blender rows:**
 - F41#1 Stormheart crown and core (3.94).
@@ -83,16 +84,17 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 - F38#38 Missing chip (7.33).
 - Not started: F39#17, #8, #10, #5, #27 and F38#36, #11, #27.
 
-**Coordinator recommendations:**
-1. Feed lanes actionable rows from this QUEUE, not the raw lowest. Most of the lowest rows are blocked or art.
-2. Order by fresh scores. Run the GPU re-judge first if possible; otherwise run a CPU baseline sweep.
-3. Make lane start-up cheap. The next coordinator's first job: in a fresh session with disk room, test and propose (`update_environment`) a Default-environment setup script. It should install Godot 4.7-stable (github.com godotengine releases) to `/usr/local/bin/godot` and portable Blender 4.2.3 LTS (download.blender.org `Blender4.2/blender-4.2.3-linux-x64.tar.xz`) under `/opt`. Both reachable 7 Nov. This saves 20–30 min per lane and avoids the permission prompt that blocked one Blender install. The disk needs about 10 GB for the full import plus Blender. Delete frames after each round.
-4. Or keep five long-lived lanes that pull the next QUEUE row and reset their context between rows: the same Ralph effect, no cold start.
-5. Cap each row at 3 judged rounds or about 3 h, or 5 rounds or about 6 h for art rows. Let one art lane carry related pieces.
-6. Budget the weekly limit. Nine sessions used it in about 3 days (stopped 5 Nov 03:00 UTC until 7 Nov 03:00). Quick-judge rounds are the main cost; drop to three lanes if needed.
-7. Keep landing batched; never open one PR per row. Full CI takes 35–60 min, and overlapping runs starve the runners.
-8. Never put two lanes on rows that edit the same file (`hud.json`, `creature_coat_flags.json`, `tidewake_look.json`, `stormwood_ground_finish.json`). Group rows that share a cause.
-9. Open owner decisions: F38#30 Warrens; F41#3 spacing; whether to land the 288 MB of F49 route saves; rotate the Meshy key.
+**Owner decisions (7 Nov, answered):**
+1. **Lanes:** five lanes. Run them long-lived: each takes the next QUEUE row and resets its context between rows.
+2. **Setup first:** the next coordinator's first job is to test, then propose (`update_environment`), a Default setup script. It installs Godot 4.7-stable to `/usr/local/bin/godot` (github.com releases) and portable Blender 4.2.3 LTS (download.blender.org `Blender4.2/blender-4.2.3-linux-x64.tar.xz`) under `/opt`. Budget about 10 GB of disk per lane, and delete frames after each round.
+3. **Order:** follow the QUEUE order above: quick wins, then Blender rows, then scene rows. Skip blocked rows.
+4. **Cap per row:** 3 judged rounds or about 3 h, or 5 rounds or about 6 h for art rows. Also stop at 7.5 or after two flat rounds.
+5. **GPU re-judge:** stays at end of day 8 Nov. Lanes start now; reorder the QUEUE after the re-judge.
+6. **F38#30 Warrens:** re-seat the hillside shell into the terrain, keeping the entrance and route. This unblocks F38#24, so move both into the QUEUE.
+7. **F41#3:** keep combat spacing unchanged. Fix the look with a fade or clip tweak.
+8. **F49 route saves:** don't commit them to main; a lane re-generates any single save when needed.
+9. **Meshy key:** leave as is.
+10. **Notes:** never put two lanes on rows that share a file (`hud.json`, `creature_coat_flags.json`, `tidewake_look.json`, `stormwood_ground_finish.json`). Keep landing batched, with one full-CI run at a time. Nine sessions used the weekly limit in about 3 days, so watch usage.
 
 **Earlier owner rulings still in force** (full text in Git history):
 - 24 Oct: GPU judging closes visual rows (Medium and High, yardstick, mapped Bar A ≥ 7.5). CPU is for iteration, and the 6.7 CPU-provisional rule is retired. Rows are split per asset and subject, with the bars unchanged.

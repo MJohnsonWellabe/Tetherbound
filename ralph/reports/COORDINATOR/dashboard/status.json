@@ -1661,6 +1661,12 @@
       "before": 5.64,
       "after": 5.69,
       "pr": "consolidated 7 Nov"
+    },
+    {
+      "item": "F38#38 P2-096 craft action hint contrast",
+      "before": 7.17,
+      "after": 7.33,
+      "pr": "consolidated 7 Nov"
     }
   ]
 }
