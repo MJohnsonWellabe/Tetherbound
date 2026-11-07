@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnavictxkvshb"
-path.s3tc="res://.godot/imported/creature_sparkit_owner1101_legs_arc_emission.png-536ffa3c3f2b3e86d4c2a311e641f9b2.s3tc.ctex"
+uid="uid://c4hwaopd54vdm"
+path.s3tc="res://.godot/imported/creature_sparkit_owner1101_legs18_Image_1.jpg-02a1b70063eecda0c39402c59b30a789.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "7872e39bcc9e919e39fb611f3b7c184d"
+"md5": "1d7d6cd99ec827cf265895b8de27daf2"
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs_arc_emission.png"
-dest_files=["res://.godot/imported/creature_sparkit_owner1101_legs_arc_emission.png-536ffa3c3f2b3e86d4c2a311e641f9b2.s3tc.ctex"]
+source_file="res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs18_Image_1.jpg"
+dest_files=["res://.godot/imported/creature_sparkit_owner1101_legs18_Image_1.jpg-02a1b70063eecda0c39402c59b30a789.s3tc.ctex"]
 
 [params]
 

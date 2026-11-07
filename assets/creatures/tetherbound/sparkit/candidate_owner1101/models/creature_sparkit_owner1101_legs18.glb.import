@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://crwbgoo26dvcc"
-path="res://.godot/imported/creature_sparkit_owner1101_legs.glb-57b468c567f90dbce597bae606e6d98a.scn"
+uid="uid://coqy87tckgcp3"
+path="res://.godot/imported/creature_sparkit_owner1101_legs18.glb-7079471609c672821e7824fab5ab667d.scn"
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs.glb"
-dest_files=["res://.godot/imported/creature_sparkit_owner1101_legs.glb-57b468c567f90dbce597bae606e6d98a.scn"]
+source_file="res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs18.glb"
+dest_files=["res://.godot/imported/creature_sparkit_owner1101_legs18.glb-7079471609c672821e7824fab5ab667d.scn"]
 
 [params]
 

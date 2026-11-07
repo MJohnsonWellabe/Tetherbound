@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqxs4ch6o6ood"
-path.s3tc="res://.godot/imported/creature_sparkit_owner1101_legs_normal.jpg-f10a5a9efbe6f850e14316d02cc29cd3.s3tc.ctex"
+uid="uid://d0mhlg1d0ew8u"
+path.s3tc="res://.godot/imported/creature_sparkit_owner1101_legs18_Image_0.jpg-a77f8af6c891aac2946c35a1b51cfcb1.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "2bf48144224de888691b6ead735b47b2"
+"md5": "ed81e3f9d6a1066d0f8f0dc2b93685c7"
 }
 
 [deps]
 
-source_file="res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs_normal.jpg"
-dest_files=["res://.godot/imported/creature_sparkit_owner1101_legs_normal.jpg-f10a5a9efbe6f850e14316d02cc29cd3.s3tc.ctex"]
+source_file="res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs18_Image_0.jpg"
+dest_files=["res://.godot/imported/creature_sparkit_owner1101_legs18_Image_0.jpg-a77f8af6c891aac2946c35a1b51cfcb1.s3tc.ctex"]
 
 [params]
 
