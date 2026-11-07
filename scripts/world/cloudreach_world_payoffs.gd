@@ -456,7 +456,22 @@ func _anchor(id: String, target: Node3D) -> void:
 	teal.emission = Color("#367d87")
 	# P2-053: a quieter glow; the teal hue still tells locked from restored.
 	teal.emission_energy_multiplier = 0.15
-	world.call("_cylinder",bottled,"CompressedWind",Vector3(0,1.8,0),0.12,2.4,teal)
+	var ring_material := teal
+	var column_radius := 0.12
+	# P2-053 / F40#8 (NEAR6-CR): `world_payoffs.anchor_vessel_quiet` (OFF until
+	# judged). The bright teal column and its two teal rings read as a cyan
+	# debug "T" at the Three Bells bridge; on, the rings become bronze cage
+	# bands and the column a thinner, greyed teal with almost no glow.
+	var quiet: Dictionary = config.get("anchor_vessel_quiet", {})
+	if quiet.get("enabled") == true:
+		teal.albedo_color = Color(str(quiet.get("column_colour", "#6f9493")))
+		teal.emission = Color(str(quiet.get("column_emission", "#3f6f72")))
+		teal.emission_energy_multiplier = float(quiet.get("column_emission_energy", 0.05))
+		column_radius = float(quiet.get("column_radius_m", 0.09))
+		ring_material = _material(Color(str(quiet.get("ring_colour", "#7a5f3a"))))
+		ring_material.metallic = float(quiet.get("ring_metallic", 0.6))
+		ring_material.roughness = float(quiet.get("ring_roughness", 0.5))
+	world.call("_cylinder",bottled,"CompressedWind",Vector3(0,1.8,0),column_radius,2.4,teal)
 	for height: float in [0.75,2.85]:
 		var ring := MeshInstance3D.new()
 		var torus := TorusMesh.new()
@@ -466,7 +481,7 @@ func _anchor(id: String, target: Node3D) -> void:
 		torus.ring_segments = 6
 		ring.mesh = torus
 		ring.position.y = height
-		ring.material_override = teal
+		ring.material_override = ring_material
 		bottled.add_child(ring)
 	var wind := Node3D.new()
 	wind.name = "FreedNaturalWind"

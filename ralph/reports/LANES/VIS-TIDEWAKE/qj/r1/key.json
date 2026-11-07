@@ -1,0 +1,77 @@
+{
+ "En": {
+  "anchor": false,
+  "label": "F39#5",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_5_base.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_5_cand.jpg"
+ },
+ "Qb": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Pq": {
+  "anchor": false,
+  "label": "F39#1",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_1_base.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_1_cand.jpg"
+ },
+ "Bq": {
+  "anchor": false,
+  "label": "F39#17",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_17_base.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_17_cand.jpg"
+ },
+ "Cc": {
+  "anchor": true,
+  "A": "f36_0_npc:C8B",
+  "B": "f36_0_npc:C8A"
+ },
+ "Za": {
+  "anchor": false,
+  "label": "F39#3",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_3_cand.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_3_base.jpg"
+ },
+ "Kz": {
+  "anchor": false,
+  "label": "F39#16",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_16_cand.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_16_base.jpg"
+ },
+ "Po": {
+  "anchor": false,
+  "label": "F39#14",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_14_base.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_14_cand.jpg"
+ },
+ "Ev": {
+  "anchor": false,
+  "label": "F39#8",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_8_base.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_8_cand.jpg"
+ },
+ "Wp": {
+  "anchor": false,
+  "label": "F39#2",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_2_base.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_2_cand.jpg"
+ },
+ "Rz": {
+  "anchor": false,
+  "label": "F39#22",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_22_base.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_22_cand.jpg"
+ },
+ "Tv": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Rt": {
+  "anchor": false,
+  "label": "F39#15",
+  "A": "/dev/shm/artifacts/qj/r1/k/sides/F39_15_cand.jpg",
+  "B": "/dev/shm/artifacts/qj/r1/k/sides/F39_15_base.jpg"
+ }
+}

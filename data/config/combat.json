@@ -97,7 +97,20 @@
     "_why_foe_yield_after_s": "The opponent's position is host-authoritative and stays put while the ally resolves the overlap. Only when a deficit outlives this (the ally is pinned by terrain or the ring) does the opponent step back itself. Longer than the ally's own settle time at push_speed_mps. TUNABLE.",
     "foe_yield_after_s": 0.35,
     "foe_yield_share": 1.0,
+    "all_pairs": {
+      "_why": "NEAR6-TW (4 Nov 2026), P2-089 / F39#7 (GPU 5.65): in close Tidewake fights Cannonback and Ripplet stack into one mass or touch. When on, every ally/foe pair uses the hollows_alpha fix (full fitted render-box support instead of the ellipse, faster swept correction). Visible clearance, reach floors, burst/lunge exemption, foe yield and arena guards are unchanged.",
+      "scope": "combat presentation spacing: same numbers solo, host and guest (config read by every peer); no save, transaction or network message",
+      "enabled": false,
+      "footprint_shape": "render_box",
+      "push_speed_mps": 14.0
+    },
     "named_overrides": {
+      "capacitor_alpha": {
+        "enabled": false,
+        "_why": "VIS-STORMWOOD (4 Nov 2026), F41#3 P2-092 (GPU 5.98; judges: 'Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally'). The judged F41#3 frames are the capacitor_alpha fight, whose Voltarach takes the same broad legs as hollows_alpha; this applies the same full fitted rectangular support and swept correction to that fight only. Every other key is the global default. Presentation spacing only. OFF until judged.",
+        "footprint_shape": "render_box",
+        "push_speed_mps": 28.0
+      },
       "hollows_alpha": {
         "enabled": false,
         "_why": "P2-092 native baseline: broad Voltarach extremities exceed the elliptical footprint, and a post-lunge gap deficit exceeds 6m. Use the full fitted rectangular support and swept correction. Burst/lunge exemption, terrain/arena guards, authored moves and foe yield delay remain unchanged; body-aware reach floors consume the same envelope.",
@@ -180,6 +193,12 @@
     "power": 10.4
   },
   "hud_subject_fade": {
+    "roster_floor": {
+      "_why": "NEAR6-TW (4 Nov 2026), P2-088 / F39#19 (GPU 5.78): during active Tidewake combat the left team roster fades to pale low-contrast rows against terrain (the subject fade takes its holder to alpha 0.3). When on, the roster holder never fades below `alpha`. Other panels keep their fade.",
+      "scope": "client-local presentation only (combat HUD); no host authority, save or gameplay state",
+      "enabled": false,
+      "alpha": 0.9
+    },
     "_why_tells_are_subjects": "F22#4 Riverwatch judge (13 Oct): HUD panels clipped the edges of the opponent's tells. While it winds up, its live ground shape counts as a subject, so panels over it fade like they do over the fighters. TUNABLE.",
     "tells_are_subjects": true,
     "fade_commands_strip": true,
@@ -191,7 +210,7 @@
     "rate": 6.0,
     "min_overlap": 0.1
   },
-  "trainer_aside": {
+  "trainer_aside": {"realm_1104": {"enabled": false, "scope": "client_presentation", "_candidate": "VIS-STORMWOOD (5 Nov 2026, coordinator reassignment), F39#7 P2-089 Tidewake fight actor composition (5.65): judges see the trainer crowding the pair. NEAR6-TW r7 found contact_spacing.all_pairs worse (it pressed Ripplet into Cannonback and the trainer against its tail) and proposed the trainer side. Tidewake only (realm id `water`): the trainer stands 3.6 m aside (2.4 shared) at the same depth, out of the pair's lane; arena, support and sweep checks unchanged. OFF until judged.", "realms": {"water": {"side_m": 3.6}}}, 
     "_why": "combat_manager.gd::_stand_the_trainer_aside offsets: side_m metres to the side (side_fraction of the arena radius when side_m is absent) and forward_m along the fight's forward (negative = back toward the lens). F10#6 device profile (UX section 1.4: the HUD must not cover the trainer; code-blind 7-inch judges r2-r4): 0.55 x an 8 m radius = 4.4 m stood the trainer at the frame's edge under the move grid or the left column. 2.4 m at the ally's depth keeps them beside the fight, clear of a Voltarach-wide charge lane, in the frame's clear middle band. forward 0.8 stood them in charge lanes (r3 experiment). TUNABLE.",
     "side_fraction": 0.55,
     "side_m": 2.4,
@@ -221,7 +240,7 @@
     "_comment_wild_keep_clear": "F17/F02 (coordinator ruling 2026-10-04): the objectives send the player to build the home camp, creature beds and sleep at the Practice Meadow beacon (30,-40) -- the exact centre of the practice wild cluster (band1 order 0, radius 15) beside mudsnout order 1070 -- so wild bodies crowded the beds and pulled builders into fights. Wild bodies neither spawn nor settle a wander target inside these zones (same checks as named_trainer_wild_clear_m); members whose disc lies inside are moved just outside. 10 m covers the camp build patch while leaving the practice ring (the catch tests expect wilds near (41,-48), 13.6 m out) populated. encounter_director.gd::_wild_keep_clear_zones. TUNABLE.",
     "_comment_wild_fence_clear": "F02#3 r4 (tb/reproof-earned 2065e48c): after the camp keep-clear the tutorial bramblebun stood ~6 m from the village south fence corner and the piloted fight against it pinned the starter (2 hits dealt, 39 taken; the same corner pinned an earlier probe). Wild bodies neither spawn nor settle a wander target within this many metres of the village boundary outline (village_boundary.json), either side. The original 15 m practice disc already reached within ~3 m of that fence. encounter_director.gd::_clear_of_village_fence. 0 disables. TUNABLE.",
     "wild_fence_clear_m": 7.0,
-    "wild_keep_clear": [{"at": [30.0, -40.0], "radius_m": 10.0, "why": "Practice Meadow camp build site (objectives tournament_build_home beacon)"}],
+    "wild_keep_clear": [{"at": [30.0, -40.0], "radius_m": 10.0, "why": "Practice Meadow camp build site (objectives tournament_build_home beacon)"}, {"id": "trail_camp_1104", "enabled": true, "_why_on": "CPU 5.61 -> 5.81 (NEAR6-MS, 4 Nov 2026: F38#32 P2-035 camp and workshop prop legibility; all three code-blind judges scored the camp without wild creatures higher; ralph/reports/LANES/NEAR6-MS/qj/F38-32-48f121f0ded9-11041358/VERDICT.md). Owner 4 Nov: a judged gain ships ON.", "scope": "world_presentation: wild spawn and wander placement only (host-authoritative, same rule as the other keep-clear zones)", "at": [343.2, 936.4], "radius_m": 14.0, "why": "NEAR6-MS (4 Nov 2026), F38#32 P2-035 camp and workshop prop legibility (board 5.85; judges: crates, barrels, chest and bed sit among a wolf, a rabbit and other creatures). The trail camp (band1 props.json trail_camp camp_floor, radius 5.2 m) is a rest point; wild bodies wander through it and stand among the camp furniture. When enabled, wild bodies neither spawn nor settle a wander target within 14 m of the camp floor centre (encounter_director.gd::_wild_keep_clear_zones skips a zone whose enabled is false). OFF until judged."}],
     "named_trainer_wild_clear_m": 26.0,
     "_comment_trainer_ally_lateral": "F04#2 (round-1 judge B1/D): in a trainer fight the ally opened on the player->opponent line and the camera, behind the ally, looked through it at the opponent. The ally is seated this far beside that line, on the side with room (combat_manager.gd::_place_fighters; realm fights already do the same with REALM_SEAT_LATERAL_M). 0 keeps the in-line formation. TUNABLE.",
     "trainer_ally_lateral_m": 2.4,
@@ -297,6 +316,13 @@
       "transparency": 0.75,
       "hidden_points": 1,
       "speed": 12.0,
+      "aim_hide_1104": {
+        "_why": "F38#7 P2-058 (NEAR6-MS, 4 Nov 2026): in every Meadows catch-aim frame the player's own creature stands between the camera and the target and is drawn as a 0.6 dither ghost over the trainer and the readout (the composition swing cannot clear it while the player steers the aim). When on, while the trainer is aiming a catch an ally that hides the target is hidden outright with its contact shadow, and returns when the aim ends or the target has been clear for hold_s (combat_manager.gd _update_ally_occlusion_fade). Same idea as water_mount_presentation.json camera_hide (judged gain). OFF until judged.",
+        "scope": "client_presentation",
+        "_why_on": "CPU 5.93 -> 7.00 (quick judge F38-7-d881acd0fdd1-11050033; all three judges up, defect PRESENT -> PARTIAL: 'the target is opaque and reads at a glance').",
+        "enabled": true,
+        "hold_s": 0.25
+      },
       "follow_candidate": {
         "enabled": true,
         "_why_on": "ON by owner wind-down direction (22 Oct: land what beats shipping even below the bar). P2-062 r1 mapped 6.11 Bar A vs shipping 5.37 (three code-blind judges, fixed seed-11 Old Bram aftermath, Low/Compatibility llvmpipe; anchor RMSE 0.80 caveat; ralph/reports/LOOK/close-1022/P2-062.md). Below the 6.7 CPU bar: an improvement, not a closure. Judges: the ally now vanishes completely; a lighter partial fade is the next step.",

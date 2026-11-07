@@ -1,0 +1,23 @@
+{
+ "Go": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Yu": {
+  "anchor": false,
+  "label": "F40#17",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F40-17-ade4ecff4c0e-11040935/k/sides/F40_17_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F40-17-ade4ecff4c0e-11040935/k/sides/F40_17_base.jpg"
+ },
+ "Tc": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Nf": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

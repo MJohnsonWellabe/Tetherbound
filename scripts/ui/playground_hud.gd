@@ -1046,6 +1046,7 @@ var _clarity: Dictionary = {}
 ## the payoff owns the frame. Presentation only.
 var _victory_focus: Dictionary = {}
 var _quiet_empty_slots: Dictionary = {}
+var _quiet_empty_chips: Dictionary = {}
 ## P2-004 round 7 (hud.json `hud_lean`, empty = off): fewer boxes, not
 ## smaller text. The quick bar and legend lose their backing panels (slots
 ## keep their own frames, legend text keeps its outline), the day/time line
@@ -2751,6 +2752,8 @@ func _apply_hud_config(config: Dictionary) -> void:
 	_victory_focus = victory_focus if victory_focus is Dictionary and victory_focus.get("enabled") == true else {}
 	var quiet: Variant = config.get("quiet_empty_slots", {})
 	_quiet_empty_slots = quiet if quiet is Dictionary and quiet.get("enabled") == true else {}
+	var quiet_chips: Variant = config.get("quiet_empty_chips_1104", {})
+	_quiet_empty_chips = quiet_chips if quiet_chips is Dictionary and quiet_chips.get("enabled") == true else {}
 	var clarity: Variant = config.get("clarity_pass", {})
 	_clarity = clarity if clarity is Dictionary and clarity.get("enabled") == true else {}
 	var lean: Variant = config.get("hud_lean", {})
@@ -4677,6 +4680,12 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			# Dim the empty slot's contents, not its frame.
 			var dim: bool = id.is_empty() and _clarity.get("key_text_badges") != true
 			_hotbar_slots[i].modulate.a = float(_clarity.get("empty_slot_alpha", 0.45)) if dim else 1.0
+		if not _quiet_empty_chips.is_empty() and i < _hotbar_chips.size():
+			# F38#19 P2-004 (NEAR6-MS, hud.json `quiet_empty_chips_1104`, OFF):
+			# an unassigned slot's whole chip (frame and key) recedes, so the
+			# exploration view carries two bright boxes instead of five. The
+			# five bindings stay visible; an assigned slot is untouched.
+			_hotbar_chips[i].modulate.a = float(_quiet_empty_chips.get("chip_alpha", 0.45)) if id.is_empty() else 1.0
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text
 			_hotbar_slots[i].text = text

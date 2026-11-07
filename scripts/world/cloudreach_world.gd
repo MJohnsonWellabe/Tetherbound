@@ -414,6 +414,14 @@ func _ready() -> void:
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
+		# F40#19 (NEAR6-CR): `time_override_arms.<name>` (each OFF until
+		# judged) layers further realm-only preset overrides through the same
+		# path, so a judged arm ships as a flag instead of a retuned base block.
+		var arms: Dictionary = _visual_config.get("time_override_arms", {})
+		for arm_name: String in arms:
+			var arm: Variant = arms[arm_name]
+			if arm is Dictionary and (arm as Dictionary).get("enabled") == true:
+				apply_time_overrides(local_look.get("times", {}), (arm as Dictionary).get("overrides", {}))
 		# tb/vis-water-sky group 2 (OFF until GPU-judged): warm key, rim,
 		# aerial fog and night fill (data/config/cloudreach_light_candidate.json).
 		var light_candidate := _read_json("res://data/config/cloudreach_light_candidate.json")
@@ -480,6 +488,9 @@ func _ready() -> void:
 	await _build_step("routes")
 	_build_progression_gates()
 	await _build_step("gates")
+	if not simulation_only:
+		_build_gate_path_braziers()
+		_build_gate_path_verge()
 	_build_bridges()
 	await _build_step("bridges")
 	if bool(_shell_build.call("uses_multiplayer_staging")):
@@ -2326,8 +2337,9 @@ func _build_routes() -> void:
 				pad - Vector3.UP * 0.44, landing_size * 0.41 - 0.05, 0.84, landing_top, true).get_child(0).visible = false
 			_add_landing_nature(root, points, i, pad, landing_size,
 				i * 43 + absi(str(spec.get("id", "Route")).hash()))
-			_cover_patches.append({"kind":"ellipse","centre":pad,"half":Vector2.ONE*landing_size*0.40,
-				"inner_clear_fraction":0.38,"seed":i*137+absi(str(spec.id).hash()),"dry":false})
+			if not _landing_cover_cleared(pad):
+				_cover_patches.append({"kind":"ellipse","centre":pad,"half":Vector2.ONE*landing_size*0.40,
+					"inner_clear_fraction":0.38,"seed":i*137+absi(str(spec.id).hash()),"dry":false})
 			# The mesa's crown vertex sits at local y = size.y*0.5 + 0.03, i.e.
 			# pad.y + 0.03 world -- match that here so ground_height_at() (used
 			# by spawns/arrivals) doesn't disagree with the real, solid surface.
@@ -2416,6 +2428,14 @@ func _add_landing_nature(parent: Node3D, points: Array[Vector3], index: int,
 	var side := -1.0 if posmod(seed_value, 2) == 0 else 1.0
 	var tree := NATURE_TREES[posmod(seed_value, NATURE_TREES.size())].instantiate() as Node3D
 	tree.name = "LandingTree%03d" % posmod(seed_value, 1000)
+	# P2-105 (VIS-CLOUDREACH, 4 Nov 2026): cloudreach_visual.json
+	# `landing_tree_clear` (off unless enabled) drops named landing trees whose
+	# crowns the riding camera passes through beside the arrival road.
+	var clear_cfg: Variant = _visual_config.get("landing_tree_clear", {})
+	if clear_cfg is Dictionary and (clear_cfg as Dictionary).get("enabled") == true \
+			and ((clear_cfg as Dictionary).get("names", []) as Array).has(str(tree.name)):
+		tree.free()
+		return
 	tree.position = pad + right * side * landing_size * 0.33 - Vector3.UP * 0.12
 	tree.rotation.y = float(posmod(seed_value * 17, 41)) / 41.0 * TAU
 	tree.rotation.z = deg_to_rad(-0.8 - float(posmod(seed_value, 3)) * 0.6)
@@ -4154,6 +4174,25 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		_cover_patches[index]["clip_rect"] = yard_bounds
 
 
+## P2-106 / F40#11 (VIS-CLOUDREACH, 4 Nov 2026): cloudreach_visual.json
+## `landing_cover_clear` (off unless enabled). A route landing's own grass
+## ellipse laid over the region's planted turf doubles the tuft density in a
+## ~12 m disc, which reads on camera as a dark oval decal on the arrival
+## terrace. Listed landings skip that ellipse; the region cover under them
+## stays. Presentation only: no surface, collider or route change.
+func _landing_cover_cleared(pad: Vector3) -> bool:
+	var cfg: Variant = _visual_config.get("landing_cover_clear", {})
+	if not cfg is Dictionary or (cfg as Dictionary).get("enabled") != true:
+		return false
+	var reach := float((cfg as Dictionary).get("radius_m", 4.0))
+	for raw: Variant in (cfg as Dictionary).get("near", []):
+		if raw is Array and (raw as Array).size() >= 3:
+			var at := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+			if Vector2(at.x - pad.x, at.z - pad.z).length() <= reach and absf(at.y - pad.y) <= 6.0:
+				return true
+	return false
+
+
 func _plant_floor_pocket(parent: Node3D,at: Vector3,half: Vector2,seed_value: int,dry: bool) -> void:
 	_cover_patches.append({"kind":"ellipse","centre":parent.to_global(at),"half":half,
 		"seed":seed_value,"dry":dry,"height_scale":0.62})
@@ -5290,6 +5329,57 @@ func _summit_gate_post_brazier(root: Node3D, at: Vector3) -> void:
 	root.add_child(light)
 
 
+## F40#19 (NEAR6-CR, flag-off): `gate_path_braziers` in cloudreach_visual.json
+## sets manned braziers (the installed summit brazier pair plus a warm light)
+## beside the realm-gate path, so the night frame has a lit focal point instead
+## of a uniform dark foreground. Each [x, z] is seated on the ground.
+func _build_gate_path_braziers() -> void:
+	var cfg: Dictionary = _visual_config.get("gate_path_braziers", {})
+	if cfg.get("enabled") != true:
+		return
+	var root := Node3D.new()
+	root.name = "GatePathBraziers"
+	add_child(root)
+	for point: Variant in cfg.get("points", []):
+		var xz := point as Array
+		if xz.size() < 2:
+			continue
+		var y := ground_height_at(float(xz[0]), float(xz[1]))
+		if not is_finite(y):
+			continue
+		_summit_gate_post_brazier(root, Vector3(float(xz[0]), y, float(xz[1])))
+
+
+
+## F40#19 round 3 (NEAR6-CR, flag-off): `gate_path_verge` in cloudreach_visual.json
+## clusters installed bushes, flowers and low rocks along the realm-gate path
+## edges (each entry [kind, x, z, height_m, yaw_deg], kind from
+## ROUTE_DETAIL_SCENES), breaking the uniform lawn the night judges flagged.
+func _build_gate_path_verge() -> void:
+	var cfg: Dictionary = _visual_config.get("gate_path_verge", {})
+	if cfg.get("enabled") != true:
+		return
+	var root := Node3D.new()
+	root.name = "GatePathVerge"
+	add_child(root)
+	var index := 0
+	var ref_y := float(cfg.get("ref_y", 109.0))
+	for entry: Variant in cfg.get("items", []):
+		var item := entry as Array
+		if item.size() < 5 or not ROUTE_DETAIL_SCENES.has(str(item[0])):
+			continue
+		var x := float(item[1])
+		var z := float(item[2])
+		# Seat on the surface nearest the path height: the lawn beside the path
+		# can share its cell with deeper crown/geology surfaces.
+		var y := ground_height_at(x, z, ref_y)
+		if not is_finite(y) or absf(y - ref_y) > 4.0:
+			y = ref_y
+		_install_prop_scene(root, ROUTE_DETAIL_SCENES[str(item[0])], "Verge%02d" % index,
+			Vector3(x, y - 0.05, z), float(item[3]), deg_to_rad(float(item[4])))
+		index += 1
+
+
 ## Height-normalised install of a packed scene, seated so its base sits at
 ## `at`. `_place_local_prop` only reaches the fourteen ROUTE_DETAIL_SCENES; this
 ## takes any installed scene.
@@ -5886,6 +5976,7 @@ func _mesa(
 		_build_island_mist(root, widest, -size.y * 0.5, seed_value)
 	if label == "CliffMass" or label == "LandmarkLedge" or label.contains("RockShoulder"):
 		_build_embedded_rock_shelves(root, size, seed_value, label)
+	_build_rim_fringe(root, label, top_ring, size, seed_value)
 	if not carved.is_empty():
 		var build_started := Time.get_ticks_usec()
 		_build_carved_crown(root, carved, top_material, collision)
@@ -6594,6 +6685,7 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 		rock.position = seat - rock.basis * bounds.get_center()
 		rock.name = "EmbeddedCliffOutcrop%d" % i
 		parent.add_child(rock)
+		_fringe_outcrop_top(parent, rock, bounds, seed_value + i)
 		for mesh: MeshInstance3D in rock.find_children("*", "MeshInstance3D", true, false):
 			mesh.material_override = _materials["cliff"]
 		_set_geometry_visibility(rock, 1250.0)
@@ -6640,6 +6732,90 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			_apply_tree_palette(tree, seed_value + i)
 			parent.add_child(tree)
 			_set_geometry_visibility(tree, 1050.0)
+
+
+## P2-023 / F40#4 (NEAR6-CR): `geology.rim_fringe` (OFF until judged). The
+## judges call the grassy shelves' crown edges "conspicuous straight extruded
+## edges": a flat turf disc meets a vertical wall on one clean line. When on,
+## a sparse fringe of installed nature-family bushes sits on the crown rim of
+## grassy shelves, shoulders and landmark ledges, nudged outward and down so
+## the turf spills over the lip and the silhouette breaks. Visual only (no
+## collider); CliffMass region rims are left alone.
+func _build_rim_fringe(root: Node3D, label: String, top_ring: Array[Vector3], size: Vector3,
+		seed_value: int) -> void:
+	var cfg: Dictionary = (_visual_config.get("geology", {}) as Dictionary).get("rim_fringe", {})
+	if cfg.get("enabled") != true or top_ring.size() < 6:
+		return
+	if not (label.begins_with("VegetatedGeologicalShelf") or label.contains("RockShoulder") \
+			or label == "LandmarkLedge"):
+		return
+	var step := maxi(1, int(cfg.get("every_nth_vertex", 3)))
+	var limit := int(cfg.get("max_per_mass", 18))
+	var outset := float(cfg.get("outset_m", 0.5))
+	var drop := float(cfg.get("drop_m", 0.35))
+	var h_min := float(cfg.get("height_min_m", 1.4))
+	var h_max := float(cfg.get("height_max_m", 2.6))
+	var scenes: Array[PackedScene] = [ROUTE_DETAIL_SCENES["bush"], ROUTE_DETAIL_SCENES["flowers"]]
+	var holder := Node3D.new()
+	holder.name = "RimFringe"
+	root.add_child(holder)
+	var placed := 0
+	var phase := posmod(seed_value, step)
+	for i in range(phase, top_ring.size(), step):
+		if placed >= limit:
+			break
+		var at: Vector3 = top_ring[i]
+		var outward := Vector3(at.x, 0.0, at.z).normalized()
+		var jitter := 0.5 + 0.5 * sin(float(i) * 2.31 + float(seed_value))
+		var bush := scenes[posmod(i + seed_value, scenes.size())].instantiate() as Node3D
+		var bounds: AABB = BUILDING_PREFABS.new().combined_aabb(bush)
+		var height := lerpf(h_min, h_max, jitter)
+		bush.scale = Vector3.ONE * (height / maxf(bounds.size.y, 0.01))
+		bush.position = at + outward * outset - Vector3.UP * drop
+		bush.rotation.y = float(i) * 1.7 + float(seed_value)
+		holder.add_child(bush)
+		_apply_tree_palette(bush, seed_value + i)
+		_set_geometry_visibility(bush, float(cfg.get("visibility_m", 900.0)))
+		placed += 1
+
+
+## P2-023 round 2: `geology.rim_fringe.outcrops` (OFF until judged). The pale
+## stepped ledge blocks on cliff faces (crag-kit outcrops) carry dead-straight
+## top edges; a sparse fringe of installed bushes along those top edges breaks
+## the line. Visual only.
+func _fringe_outcrop_top(parent: Node3D, rock: Node3D, bounds: AABB, seed_value: int) -> void:
+	var cfg: Dictionary = ((_visual_config.get("geology", {}) as Dictionary).get("rim_fringe", {}) as Dictionary).get("outcrops", {})
+	if cfg.get("enabled") != true:
+		return
+	var spacing := float(cfg.get("spacing_m", 6.0))
+	var limit := int(cfg.get("max_per_outcrop", 12))
+	var h_min := float(cfg.get("height_min_m", 1.2))
+	var h_max := float(cfg.get("height_max_m", 2.2))
+	var drop := float(cfg.get("drop_m", 0.3))
+	var scenes: Array[PackedScene] = [ROUTE_DETAIL_SCENES["bush"], ROUTE_DETAIL_SCENES["flowers"]]
+	var top := bounds.end.y
+	var lo := bounds.position
+	var hi := bounds.end
+	var corners: Array[Vector3] = [Vector3(lo.x, top, lo.z), Vector3(hi.x, top, lo.z), Vector3(hi.x, top, hi.z), Vector3(lo.x, top, hi.z)]
+	var placed := 0
+	for e in 4:
+		var a: Vector3 = rock.transform * corners[e]
+		var b: Vector3 = rock.transform * corners[(e + 1) % 4]
+		var n := maxi(1, int(a.distance_to(b) / maxf(spacing, 1.0)))
+		for k in n:
+			if placed >= limit:
+				return
+			var t := (float(k) + 0.5) / float(n)
+			var jitter := 0.5 + 0.5 * sin(float(placed) * 2.31 + float(seed_value))
+			var bush := scenes[posmod(placed + seed_value, scenes.size())].instantiate() as Node3D
+			var bb: AABB = BUILDING_PREFABS.new().combined_aabb(bush)
+			bush.scale = Vector3.ONE * (lerpf(h_min, h_max, jitter) / maxf(bb.size.y, 0.01))
+			bush.position = a.lerp(b, t) - Vector3.UP * drop
+			bush.rotation.y = float(placed) * 1.7 + float(seed_value)
+			parent.add_child(bush)
+			_apply_tree_palette(bush, seed_value + placed)
+			_set_geometry_visibility(bush, float(cfg.get("visibility_m", 900.0)))
+			placed += 1
 
 
 ## Whether a colliding shelf whose top centre is `top` (global) would stand in

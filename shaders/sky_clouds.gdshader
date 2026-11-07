@@ -203,6 +203,10 @@ uniform float disc_edge : hint_range(0.0, 0.99) = 0.35;
 // this renders exactly as before.
 uniform float sun_glow_falloff : hint_range(4.0, 600.0) = 24.0;
 uniform vec3 sun_colour : source_color = vec3(1.0, 0.96, 0.86);
+// Night star field (tb/vis-tidewake-1104). 0 brightness = off (every preset).
+uniform float star_brightness : hint_range(0.0, 4.0) = 0.0;
+uniform float star_density : hint_range(0.0, 0.2) = 0.02;
+uniform float star_scale = 260.0;
 
 float hash12(vec2 p) {
 	vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -281,6 +285,21 @@ void sky() {
 			? mix(horizon_colour, top_colour, pow(clamp(up, 0.0, 1.0), 0.45))
 			: mix(ground_horizon_colour, ground_bottom_colour, pow(clamp(-up, 0.0, 1.0), 0.5));
 	vec3 colour = base;
+
+	// tb/vis-tidewake-1104 (F39#30 night, r3 judges: "a black void with no
+	// stars or moon"): a sparse star field above the horizon, under the clouds
+	// (they paint over it). `star_brightness` defaults to 0, so every preset
+	// that does not set it renders exactly as before.
+	if (star_brightness > 0.0 && up > 0.0) {
+		vec2 sp = vec2(atan(dir.x, dir.z) * 0.5, asin(clamp(up, 0.0, 1.0))) * star_scale;
+		vec2 cell = floor(sp);
+		float pick = step(1.0 - star_density, hash12(cell));
+		vec2 jitter = vec2(hash12(cell + 17.3), hash12(cell + 41.9)) - 0.5;
+		float d = length(fract(sp) - 0.5 - jitter * 0.6);
+		float tw = 0.6 + 0.4 * hash12(cell + 7.1);
+		colour += vec3(0.86, 0.91, 1.0) * pick * smoothstep(0.16, 0.0, d) * tw
+				* star_brightness * smoothstep(0.0, 0.18, up);
+	}
 
 	if (up > 0.002) {
 		// Shell projection: a deck at `cloud_altitude` above a flat observer.

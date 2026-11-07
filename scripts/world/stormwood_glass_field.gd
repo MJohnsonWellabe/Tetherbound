@@ -94,7 +94,8 @@ func _build_cluster(spec: Dictionary) -> void:
 	var clearing := Node3D.new()
 	clearing.name = "ScarGrassClearance"
 	clearing.position = _local_grounded(centre, 0.0)
-	clearing.set_meta("grass_clear_radius", scar_radius * 0.82)
+	var seam := _seam_clear()
+	clearing.set_meta("grass_clear_radius", scar_radius * float(seam.get("grass_clear_fraction", 0.82)))
 	root.add_child(clearing)
 	clearing.add_to_group("grass_clear")
 	_add_fused_lumps(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
@@ -166,7 +167,19 @@ func _add_meshy_spikes(parent: Node3D, centre: Vector2, spec: Dictionary, scar_r
 ## colliders are removed as `_add_fused_lumps` does.
 func _rock_collar() -> Dictionary:
 	var cand: Variant = config.get("rock_collar_candidate", {})
-	return cand if cand is Dictionary else {}
+	if not cand is Dictionary:
+		return {}
+	# F41#19 `footing_1104` (OFF until judged; coordinator redirect 22:25,
+	# installed rock family, visual only, colliders stripped as before): a
+	# fuller, wider, taller ring that buries the crust plate's flat rim.
+	var footing: Variant = (cand as Dictionary).get("footing_1104", {})
+	if footing is Dictionary and bool((footing as Dictionary).get("enabled", false)):
+		var out := (cand as Dictionary).duplicate()
+		for key: String in ["stones", "ring_fraction", "stone_height_fraction", "colour"]:
+			if (footing as Dictionary).has(key):
+				out[key] = (footing as Dictionary)[key]
+		return out
+	return cand
 
 
 func _add_rock_collar(parent: Node3D, at: Vector2, spike_height: float, seed_value: int) -> void:
@@ -337,13 +350,14 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 		return
 	var crust := scene.instantiate() as Node3D
 	var basalt := _basalt_crust()
-	var footprint := float(basalt.get("footprint", _shard_finish().get("crust_footprint", 0.9)))
-	var height := float(basalt.get("height_m", _shard_finish().get("crust_height_m", 0.45)))
+	var footprint := float(basalt.get("footprint", _seam_clear().get("crust_footprint", _shard_finish().get("crust_footprint", 0.9))))
+	var seat := _seam_seat()
+	var height := float(basalt.get("height_m", seat.get("crust_height_m", _shard_finish().get("crust_height_m", 0.45))))
 	# The installed mesh is ~1.89 units wide and ~0.21 tall, centred.
 	var across := radius * 2.0 * footprint / 1.89
 	crust.scale = Vector3(across, height / 0.21, across)
 	crust.rotation.y = float(seed_value % 360) * PI / 180.0
-	crust.position = _local_grounded(centre, height * 0.5 - 0.06 - float(basalt.get("sink_m", 0.0)))
+	crust.position = _local_grounded(centre, height * 0.5 - 0.06 - float(basalt.get("sink_m", seat.get("sink_m", 0.0))))
 	crust.name = "FusedGlassCrust"
 	if not basalt.is_empty():
 		_tint_basalt(crust, basalt)
@@ -358,6 +372,29 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 func _basalt_crust() -> Dictionary:
 	var cand: Variant = config.get("basalt_crust_1104", {})
 	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
+
+
+## F41#19 P2-043 `seam_clear_1104` (OFF until judged; empty when OFF). The
+## qj_basalt judges (3/3) preferred the shipped glass crust but called the
+## straight emissive fissure ribbons "a rigid thin white line", saw grass
+## passing through the crust edge and the crust "much wider than the
+## cluster". On: the fissure ribbons stay but turn into dark fused cracks with a
+## faint glow, grass is cleared across the whole scar and the glass crust is
+## narrowed. Visual only.
+func _seam_clear() -> Dictionary:
+	var cand: Variant = config.get("seam_clear_1104", {})
+	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
+
+
+## F41#19 `seam_clear_1104.seat_1104` (OFF until judged; needs seam_clear on).
+## qj_seam2 judges (3/3, candidate side) still saw "a flat purple-and-cyan slab
+## lying over the tree root as a thin disc" and "a purple glass plate floating
+## beside the trunk": the crust sits on the ground height sampled at the scar
+## centre, so on roots and slopes its rim lifts clear. On: a thinner crust sunk
+## into the terrain so its rim tucks under the ground. Visual only.
+func _seam_seat() -> Dictionary:
+	var seat: Variant = _seam_clear().get("seat_1104", {})
+	return seat if seat is Dictionary and bool((seat as Dictionary).get("enabled", false)) else {}
 
 
 func _tint_basalt(root: Node3D, cfg: Dictionary) -> void:
@@ -453,6 +490,13 @@ func _glow_material() -> StandardMaterial3D:
 	material.emission_enabled = true
 	material.emission = FISSURE_GLOW
 	material.emission_energy_multiplier = 0.20
+	# seam_clear_1104: the fissures stay (three main and three branches per
+	# impact) but read as dark fused cracks with a faint glow, not a bright line.
+	var seam := _seam_clear()
+	if seam.has("fissure_colour"):
+		material.albedo_color = Color(str(seam.fissure_colour))
+		material.emission = Color(str(seam.get("fissure_glow", seam.fissure_colour)))
+		material.emission_energy_multiplier = float(seam.get("fissure_energy", 0.05))
 	return material
 
 

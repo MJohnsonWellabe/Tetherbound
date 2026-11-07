@@ -1,0 +1,4 @@
+Rr: none
+Qe: "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom"
+Hv: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Zl: none

@@ -485,7 +485,18 @@ func _ride_off_edges_by_input() -> void:
 	body = _riding.call("mount_body")
 	if terrace.recovered and body != null:
 		var last: Dictionary = terrace.drops[terrace.drops.size() - 1]
-		_check(float(last.fell) > 95.0, "the mount fell as far as a walker would before recovery (%.1f m)" % float(last.fell))
+		# cloudreach_physical_runtime.json `mounted_drop_no_air_drive` (ON, VIS-CLOUDREACH
+		# 4 Nov 2026, P2-105): over a drop with no walkable floor within the walker's
+		# 100 m recovery depth, the mount scrambles back after `scramble_after_s`
+		# instead of riding the fall down; the ledge leg above still proves every
+		# survivable ride-off lands with no snap-back.
+		var drop_cfg: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
+			"res://data/config/cloudreach_physical_runtime.json")) as Dictionary).get("mounted_drop_no_air_drive", {})
+		if drop_cfg.get("enabled") == true and float(drop_cfg.get("scramble_after_s", 0.0)) > 0.0:
+			_check(float(last.fell) > 1.0 and float(last.fell) < 95.0,
+				"the mount scrambled back from the unsurvivable drop before falling the walker's depth (%.1f m)" % float(last.fell))
+		else:
+			_check(float(last.fell) > 95.0, "the mount fell as far as a walker would before recovery (%.1f m)" % float(last.fell))
 		_check(body.is_on_floor() and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
 			"after the recovery the mount stands on ground with the rider seated (%s)" % body.global_position)
 	_check_party("edge ride")

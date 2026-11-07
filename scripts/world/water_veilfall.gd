@@ -1009,9 +1009,14 @@ static func _falls_with_candidate(falls_cfg: Dictionary) -> Dictionary:
 			var merged: Dictionary = (overrides.get(id, {}) as Dictionary).duplicate(true)
 			merged.merge((crown_falls[id] as Dictionary).duplicate(true), true)
 			overrides[id] = merged
-	if overrides.is_empty():
+	# tb/vis-tidewake-1104 (flag-off): `veilfall_falls_unshadowed.enabled` builds
+	# the columns without shadow receiving (water_veilfall_falls.gd _fall_shader).
+	var unshadowed := bool((settings.get("veilfall_falls_unshadowed", {}) as Dictionary).get("enabled", false))
+	if overrides.is_empty() and not unshadowed:
 		return falls_cfg
 	var result := falls_cfg.duplicate(true)
+	if unshadowed:
+		result["unshadowed"] = true
 	for column: Dictionary in result.get("columns", []):
 		if overrides.has(str(column.get("id", ""))):
 			column.merge((overrides[str(column.id)] as Dictionary).duplicate(true), true)

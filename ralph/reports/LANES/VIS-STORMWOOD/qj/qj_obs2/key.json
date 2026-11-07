@@ -1,0 +1,23 @@
+{
+ "Ai": {
+  "anchor": false,
+  "label": "F41#10",
+  "A": "/home/user/Tetherbound/.artifacts/qj/qj_obs2/k/sides/F41_10_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/qj_obs2/k/sides/F41_10_cand.jpg"
+ },
+ "Cx": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Mt": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Kj": {
+  "anchor": true,
+  "A": "f36_0_npc:C4B",
+  "B": "f36_0_npc:C4A"
+ }
+}

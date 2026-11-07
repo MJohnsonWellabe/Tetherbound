@@ -57,7 +57,21 @@ static func config() -> Dictionary:
 		if FileAccess.file_exists(PATH):
 			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 			_config = parsed if parsed is Dictionary else {}
+			_config = scoped(_config)
 	return _config
+
+
+## NEAR6-TW (P2-028, F39#6): `tidewake_scope` runs the settle for its listed
+## species only while the roster-wide master `enabled` stays OFF. Inert while OFF.
+static func scoped(cfg: Dictionary) -> Dictionary:
+	var scope: Variant = cfg.get("tidewake_scope", {})
+	if bool(cfg.get("enabled", false)) or not scope is Dictionary \
+			or not bool((scope as Dictionary).get("enabled", false)):
+		return cfg
+	var out := cfg.duplicate()
+	out["enabled"] = true
+	out["only_species"] = (scope as Dictionary).get("species", [])
+	return out
 
 
 ## Tests swap the configuration in and out.
@@ -85,6 +99,8 @@ static func any_enabled(cfg: Dictionary) -> bool:
 
 
 static func excluded(cfg: Dictionary, species_id: String) -> bool:
+	if cfg.has("only_species") and not _listed(cfg.get("only_species", []), species_id):
+		return true
 	return _listed(cfg.get("exclude_species", []), species_id)
 
 

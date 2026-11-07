@@ -1,0 +1,38 @@
+[
+ {
+  "label": "F39#1",
+  "a": "/home/user/Tetherbound/.artifacts/qj/r2a/k/sides/F39_1_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/r2a/k/sides/F39_1_cand.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: shore landforms. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions"
+  ]
+ },
+ {
+  "label": "F39#2",
+  "a": "/home/user/Tetherbound/.artifacts/qj/r2a/k/sides/F39_2_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/r2a/k/sides/F39_2_cand.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: Veilfall silhouette. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks"
+  ]
+ },
+ {
+  "label": "F39#3",
+  "a": "/home/user/Tetherbound/.artifacts/qj/r2a/k/sides/F39_3_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/r2a/k/sides/F39_3_cand.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: named destination read. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces"
+  ]
+ },
+ {
+  "label": "F39#15",
+  "a": "/home/user/Tetherbound/.artifacts/qj/r2a/k/sides/F39_15_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/r2a/k/sides/F39_15_cand.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: Veilfall approach shallows. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows"
+  ]
+ }
+]

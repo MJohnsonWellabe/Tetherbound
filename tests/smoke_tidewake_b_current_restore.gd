@@ -129,12 +129,17 @@ func _look_matches(world: Node3D, restored: bool, label: String) -> void:
 	var want: Dictionary = flow.call("state_parameters", restored)
 	var other: Dictionary = flow.call("state_parameters", not restored)
 	var applied := {}
+	var differing := 0
 	for key: String in want:
 		applied[key] = material.get_shader_parameter(key)
 		check(is_equal_approx(float(applied[key]), float(want[key])),
 			"%s: uniform %s = %.3f (%s set)" % [label, key, float(applied[key]), "restored" if restored else "live"])
-		check(not is_equal_approx(float(want[key]), float(other.get(key, want[key]))),
-			"%s: %s differs between live and restored" % [label, key])
+		if not is_equal_approx(float(want[key]), float(other.get(key, want[key]))):
+			differing += 1
+	# tidewake_look cause_tidewake.currents (ON, F39#17 CPU 5.54 -> 6.09) keeps
+	# the paint keys at 0 in both states, so not every uniform differs; the
+	# visible state swap still has to change the look.
+	check(differing >= 3, "%s: %d look uniforms differ between live and restored" % [label, differing])
 	print("%s LOOK %s" % [label.to_upper(), applied])
 
 

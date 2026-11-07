@@ -1,4 +1,22 @@
 {
+  "foliage_grade_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_why": "VIS-STORMWOOD (4 Nov 2026): CPU judges on nearly every Stormwood row (j1-j4, qj rounds) name 'bright Meadows-style green canopies', 'pale cartoon trunks' and a saturated carpet instead of the board's cool blue-green moss forest. When enabled (vegetation.gd stormwood_foliage_grade), these per-layer material tints replace the shipped ones per model through the variant_retint overlay: canopies go cooler and about a quarter darker, the giant trees' single material (bark and leaves) drops from warm #d8c8ae to cool #9fb0a8, ferns and bushes follow. No placement, bake input, collision or harvest change. OFF until judged.",
+    "layers": {
+      "storm_canopy": {"Leaves_TwistedTree": "#5f857c", "Leaves_NormalTree": "#93a8a2", "Bark_TwistedTree": "#8f8470"},
+      "giant_canopy": {"Material_0": "#9fb0a8"},
+      "crown_canopy": {"Leaves_NormalTree": "#5f8676", "Bark_NormalTree": "#6a6354"},
+      "storm_fern": {"Leaves": "#5c7660"},
+      "storm_bush": {"Leaves_TwistedTree": "#627c68"}
+    },
+    "_why_adjust": "qj_foliage (4 Nov): the tint-only grade was flat (both sides identical): crown_canopy's Leaves_NormalTree and the giant trees' Meshy sheet are bright saturated green textures that no multiply tint can cool. These per-material texture adjusts (vegetation.gd _adjusted_texture) desaturate and darken those sheets; storm_canopy and storm_bush already use the shipped desat55 leaf.",
+    "adjust": {
+      "crown_canopy": {"Leaves_NormalTree": {"saturation": 0.5, "brightness": 0.82}},
+      "giant_canopy": {"Material_0": {"saturation": 0.6, "brightness": 0.85}},
+      "storm_fern": {"Leaves": {"saturation": 0.6, "brightness": 0.85}}
+    }
+  },
   "enabled": true,
   "scope": "client_presentation",
   "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",

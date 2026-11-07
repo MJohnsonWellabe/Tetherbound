@@ -1,0 +1,1 @@
+{"data/config/tidewake_look.json": {"cause_tidewake": {"night": {"merge": {"lighting_candidate": {"times": {"night": {"sun": {"energy": 0.95}, "environment": {"ambient_energy": 0.3, "exposure": 0.84}}}}}}}}}

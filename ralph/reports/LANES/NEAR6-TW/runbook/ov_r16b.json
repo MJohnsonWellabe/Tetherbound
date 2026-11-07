@@ -1,0 +1,1 @@
+{"data/config/tidewake_look.json": {"current_flow": {"state_shader": {"live": {"seam_opacity": 0.1, "chop_cap_opacity": 0.45, "fleck_amount": 0.16}}, "shader": {"seam_wander_m": 9.0, "seam_gap": 0.65}}}}

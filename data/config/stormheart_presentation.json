@@ -210,8 +210,43 @@
       "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#1 Stormheart 3.22 -> 3.94 mapped with deck_light_1101 + hollow_floor + hero_interior.round2.",
       "_candidate": "r27 (OFF until judged; needs hero_interior on). r19 judges x3: the hollow floor reads as 'a dirt disc in a grass ring, an arena, not a living trunk', and the core as 'a bloomed light pillar, not arcing lightning'. Bark roots flow from the wall foot across the floor (entrance split and centre clear); thin white-violet arcs wind up around the core column (natural glow, hidden after the storm is released). Visual only.",
       "roots": {"count": 20, "seed": 27, "start_radius_m": 45.0, "end_radius_m": [11.0, 18.0], "radius_m": [1.9, 0.25], "bark_repeat_m": 4.0},
-      "arcs": {"count": 4, "seed": 271, "colour": "#ebe6ff", "width_m": 0.16, "segments": 90, "radius_scale": 0.9}
+      "arcs": {"count": 4, "seed": 271, "colour": "#ebe6ff", "width_m": 0.16, "segments": 90, "radius_scale": 0.9,
+        "glow_1104": {"enabled": false, "_why_off": "Judged worse (qj_arcglow, 4 Nov 2026): F41#1 5.13 -> 4.85 mapped; 3/3 read the haloed arcs as 'tube-like pink-white chains', 'pipes', 'inflated plastic' and preferred the thin white lines. Parked.", "scope": "client_presentation", "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#1: qj_rootfloor3 judges x3 read the core arcs as 'flat white line strokes, no glow, impact or violet tint'. Hot white-violet core, a wide additive violet halo on every segment and jaggier steps. Natural glow (the trunk's own lightning); hidden on release like the arcs. OFF until judged.", "core_colour": "#f6f2ff", "halo_colour": "#8f7dff", "halo_alpha": 0.35, "halo_width_m": 0.9, "jitter_m": 1.4, "radial_jitter_m": 0.9}}
     }
+  },
+  "floor_lanterns_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#1 Stormheart finale (3.94), coordinator redirect 22:25 (lighting and set dressing from installed families): judges read the hollow as a flat-lit plank drum with no warm lanterns or lamp pools (the deck lanterns hang out of the arena views). Eight installed Lantern_Wall posts stand on the hollow floor at the wall foot (40 m from the axis, outside the fight space), each with an amber flame and a warm shadowless light. Visual only: no collider. OFF until judged.",
+    "centre": [-100.0, 5470.0],
+    "_r2": "r1 (qj_lanterns, not judged): 0.4% px; eight 2.8 m posts with 16 m pools barely read at the arena distances. r2: 12 taller posts, larger lanterns, brighter and wider warm pools on the same ring outside the fight space.",
+    "count": 12,
+    "radius_m": 40.0,
+    "phase_deg": 15.0,
+    "post_height_m": 3.8,
+    "post_colour": "#5a4630",
+    "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+    "lantern_scale": 2.2,
+    "light_colour": "#ffb15c",
+    "light_energy": 5.0,
+    "light_range_m": 26.0
+  },
+  "root_floor_1104": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#1: every qj_heart judge reads the Stormheart as 'a dark cylindrical ring with a hole'; the sheet shows the hollow floor carrying the same bright green meadow terrain as outside (hollow_floor already clears the grass tufts). Inside radius_m of the trunk axis the terrain turns to dark damp root loam with a faint radial root grain (stormheart_root_floor.gd). Terrain material only; OFF until judged.",
+    "centre": [-100.0, 5470.0],
+    "radius_m": 40.0,
+    "feather_m": 6.0,
+    "_r2": "r1 (qj_rootfloor, not judged): 30% of pixels changed but the floor read as a mauve radial sunburst (46 spokes, pale brown lit lavender by the storm light). r2: blotchy root mottling instead of spokes, darker cooler loam, a share of the original moss kept in patches.",
+    "loam_colour": "#16150f",
+    "root_colour": "#2b2519",
+    "grain_strength": 0.6,
+    "_why_off": "r3 judged worse (qj_rootfloor3, 4 Nov 2026): F41#1 4.64 -> 3.83 mapped (3/3 preferred the shipped moss and sand floor; the dark floor read as 'a near-black brown void'). Parked: the judges place the defect in the plank-drum shell and the missing crown and core (new art), not the floor.", "_r3": "r2 (qj_rootfloor2, not judged): dark loam read, but a glossy lavender sheen and regular polka-dot moss. r3: matte (specular 0.08, roughness 0.95, no metal) and moss kept only in large irregular drifts.",
+    "roughness": 0.95,
+    "specular": 0.08,
+    "keep_moss": 0.5,
+    "strength": 1.0
   },
   "hollow_floor": {
     "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#1 Stormheart 3.22 -> 3.94 mapped with deck_light_1101 + hollow_floor + hero_interior.round2.",

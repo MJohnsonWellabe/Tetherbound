@@ -1,0 +1,23 @@
+{
+ "Nc": {
+  "anchor": true,
+  "A": "f36_0_npc:C6B",
+  "B": "f36_0_npc:C6A"
+ },
+ "Ug": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Ye": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Vx": {
+  "anchor": false,
+  "label": "P2-068|base|cand",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r3/P2-068_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/9712a688-04cb-5e13-aa73-4973205c2d94/scratchpad/j/r3/P2-068_cand.png"
+ }
+}

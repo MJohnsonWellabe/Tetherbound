@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F40#19-rain",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F40-19-rain-810b52e4b41d-11041812/k/sides/F40_19-rain_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F40-19-rain-810b52e4b41d-11041812/k/sides/F40_19-rain_cand.jpg",
+  "brief": "4 in-game frames (Cloudreach) for one catalogue subject: Cloudreach realm gate in day rain (F40 matrix piece 4). Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Rain only desaturates the scene"
+  ]
+ }
+]

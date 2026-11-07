@@ -29,6 +29,16 @@ static func load_settings() -> Dictionary:
 	if candidate.has("contact"):
 		loaded = loaded.duplicate()
 		loaded.merge(candidate.contact, true)
+	# NEAR6-TW (P2-072, F39#14): `wake_trail` lengthens the trailing foam and spreads each
+	# ring as it ages so the moving swimmer leaves a visible wake. Inert while OFF.
+	var wake: Variant = loaded.get("wake_trail", {})
+	if wake is Dictionary and bool((wake as Dictionary).get("enabled", false)):
+		loaded = loaded.duplicate()
+		for key: String in ["trail_lifetime_s", "trail_spacing_m", "trail_interval_s", "max_trail_rings"]:
+			if (wake as Dictionary).has(key):
+				loaded[key] = wake[key]
+		loaded["trail_grow_to"] = float((wake as Dictionary).get("grow_to", 1.0))
+		loaded["trail_opacity_scale"] = float((wake as Dictionary).get("trail_opacity_scale", 0.6))
 	return loaded
 
 
@@ -126,7 +136,10 @@ func step_visual(delta: float, packet: Dictionary, body_position: Vector3) -> vo
 			_trail.remove_at(index)
 			continue
 		var remaining := 1.0 - float(entry.age) / lifetime
-		_set_ring(ring, float(entry.phase), remaining * _fade * 0.6)
+		var grow := float(settings.get("trail_grow_to", 1.0))
+		if grow != 1.0:
+			ring.scale = Vector3.ONE * lerpf(1.0, grow, 1.0 - remaining)
+		_set_ring(ring, float(entry.phase), remaining * _fade * float(settings.get("trail_opacity_scale", 0.6)))
 
 
 ## The swimmer's meshes (the model this view hangs under, never the foam

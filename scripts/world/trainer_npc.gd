@@ -448,6 +448,8 @@ func _play_defeat_reaction(body: Node3D) -> void:
 	# slump must still count (review: it was missed and the stand-down fell to
 	# the panel closing, outside the shot).
 	var lines := _watch_victory_lines()
+	# NEAR6-MS F38#29 (npc_post_stances.json immediate_1104, flag): bow at once.
+	POST_STANCE.attach_rows(body, POST_STANCE.beaten_stance_immediate())
 	var clip := str(body.call("clip_for", "defeated", ""))
 	if clip.is_empty():
 		await _until_the_last_victory_line(lines)

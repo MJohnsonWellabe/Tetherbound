@@ -1,0 +1,23 @@
+{
+ "Ar": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "To": {
+  "anchor": false,
+  "label": "F41#10",
+  "A": "/home/user/Tetherbound/.artifacts/qj/r10/k/sides/F41_10_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/r10/k/sides/F41_10_cand.jpg"
+ },
+ "Ua": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ib": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ }
+}

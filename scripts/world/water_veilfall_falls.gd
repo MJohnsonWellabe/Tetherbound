@@ -58,7 +58,8 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	ribbon_mesh.name = "VeilfallFallColumns"
 	ribbon_mesh.mesh = ribbons.commit()
 	ribbon_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	ribbon_mesh.material_override = _material(FALL_SHADER, config.get("column_shader", {}))
+	ribbon_mesh.material_override = _material(_fall_shader(bool(config.get("unshadowed", false))),
+		config.get("column_shader", {}))
 	apply_visual_settings(ribbon_mesh.material_override as ShaderMaterial, visual)
 	(ribbon_mesh.material_override as ShaderMaterial).set_shader_parameter("centre_xz", centre_xz)
 	materials.append(ribbon_mesh.material_override)
@@ -199,6 +200,21 @@ func _spray_mesh(puffs: Array[Dictionary]) -> ArrayMesh:
 			surface.set_normal(Vector3.UP)
 			surface.add_vertex(puff.at)
 	return surface.commit()
+
+
+## F39#31 (tb/vis-tidewake-1104, flag-off): falling water should not carry hard
+## cast shadows (the r3 judges read a pine's shadow on the sheet as a dark tear).
+## With `unshadowed` the column uses the same shader code with shadows_disabled.
+static var _unshadowed_shader: Shader = null
+
+
+static func _fall_shader(unshadowed: bool) -> Shader:
+	if not unshadowed:
+		return FALL_SHADER
+	if _unshadowed_shader == null:
+		_unshadowed_shader = Shader.new()
+		_unshadowed_shader.code = FALL_SHADER.code.replace("render_mode blend_mix,", "render_mode blend_mix, shadows_disabled,")
+	return _unshadowed_shader
 
 
 func _material(shader: Shader, parameters: Dictionary) -> ShaderMaterial:

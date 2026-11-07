@@ -5758,6 +5758,9 @@ func _wild_keep_clear_zones() -> Array[Dictionary]:
 	for raw: Variant in ((MATH.config().get("arena", {}) as Dictionary).get("wild_keep_clear", []) as Array):
 		if not raw is Dictionary:
 			continue
+		# NEAR6-MS F38#32: a zone may ship behind its own flag (default on).
+		if not bool((raw as Dictionary).get("enabled", true)):
+			continue
 		var at: Array = (raw as Dictionary).get("at", []) as Array
 		var radius := float((raw as Dictionary).get("radius_m", 0.0))
 		if at.size() >= 2 and radius > 0.0:
@@ -8896,6 +8899,7 @@ func _finish_trainer_battle(won: bool) -> void:
 func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 	var conversation := str(spec.get("victory_conversation", ""))
 	if conversation == "":
+		_present_silent_victory(speaker)
 		return
 	var panel := get_tree().get_first_node_in_group("dialogue_panel")
 	if panel == null or not panel.has_method("start"):
@@ -8925,6 +8929,29 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 			var delay := float(TRAINER_AFTERMATH.config().get("handover_after_last_line_s", 1.4))
 			_bind_victory_aftermath(panel, shown, _player, delay)
 	panel.call("start", conversation)
+
+
+## NEAR6-MS F38#29 (trainer_aftermath.json `silent_victory_shot_1104`, flag):
+## a trainer beaten with no victory lines got no shot at all, so the camera
+## stayed behind the player and the beaten trainer was a few pixels tall. When
+## on, the same `aftermath` push-in frames them for `hold_s`, then lets go.
+## Client presentation only; no dialogue, reward or state change.
+func _present_silent_victory(speaker: Node3D) -> void:
+	var cfg: Variant = TRAINER_AFTERMATH.config().get("silent_victory_shot_1104", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return
+	if speaker == null or not is_instance_valid(speaker) or not speaker.is_inside_tree():
+		return
+	var push_in := get_tree().get_first_node_in_group("conversation_camera")
+	if push_in == null:
+		return
+	_step_ally_out_of_the_victory_shot(speaker)
+	if not bool(push_in.call("begin", speaker, "aftermath")):
+		return
+	await get_tree().create_timer(float((cfg as Dictionary).get("hold_s", 4.5))).timeout
+	var panel := get_tree().get_first_node_in_group("dialogue_panel")
+	if is_instance_valid(push_in) and (panel == null or not bool(panel.call("is_open"))):
+		push_in.call("end")
 
 
 ## The token fallback can finish before the dialogue. Bound callbacks retain

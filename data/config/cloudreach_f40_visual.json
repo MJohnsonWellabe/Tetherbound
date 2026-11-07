@@ -76,7 +76,7 @@
       "planter_height_m": 0.65,
       "clerestory_light_height_m": 10.5,
       "clerestory_light_range_m": 22.0,
-      "clerestory_light_energy": 1.4
+      "clerestory_light_energy": 1.4, "drum_uplights": {"_scope": "world_presentation", "_why": "P2-022 / F40#2 (NEAR6-CR, 4 Nov 2026; GPU 5.81): judges say the summit aviary's night silhouette stays dark. On: six warm low lights outside the drum (four piers, two throat arches) wash the masonry from below. Lights only. OFF until judged.", "enabled": false, "angles_deg": [55.0, 125.0, 235.0, 305.0, 0.0, 180.0], "radius_m": 31.0, "height_m": 1.2, "colour": "#ffc58e", "energy": 3.0, "range_m": 16.0}
     }
   },
   "capture": {

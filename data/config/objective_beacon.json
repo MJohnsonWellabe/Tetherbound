@@ -1,6 +1,23 @@
 {
   "_comment": "OWNER-0912-WAYFINDING. Presentation tunables for the one Meadows next-objective beacon. The destination itself stays with the objective in data/progression/objectives.json; this file only controls how that destination reads in the world. The original narrow beam remains the complete near treatment. Beyond 180m, one wider depth-independent segment fades into its upper half so the world answer retains a few continuous pixels through ordinary route trees at 500m. TUNABLE.",
   "colour": "#63E8FF",
+  "realm_styles": {
+    "cloudreach": {
+      "_scope": "device_local_presentation",
+      "_why": "P2-053 / F40#8 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct 5.72): judges read the saturated cyan post, ring and beam at the Three Bells bridge and flight aerie as a debug marker competing with the built landmarks. When on, Cloudreach only: a paler, less saturated sky-white teal, a thinner and fainter beam, a smaller dimmer core and a quieter ground ring; the objective, destination and map marker are unchanged. OFF until judged.",
+      "enabled": false,
+      "colour": "#BFEDEA",
+      "beam_opacity": 0.14,
+      "beam_radius_m": 0.55,
+      "beam_halo_opacity_scale": 0.18,
+      "distance_segment_opacity": 0.3,
+      "ground_ring_opacity": 0.42,
+      "ground_ring_width_m": 0.16,
+      "core_radius_m": 0.3,
+      "core_height_m": 2.2,
+      "pulse_amount": 0.1
+    }
+  },
   "beam_height_m": 92.0,
   "beam_radius_m": 0.9,
   "beam_opacity": 0.26,

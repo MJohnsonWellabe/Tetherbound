@@ -13,6 +13,16 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 	parent.add_child(root)
 	if not bool(spec.get("enabled", false)):
 		return root
+	# P2-022 / F40#2 (NEAR6-CR): `towers.silhouette_raise` (OFF until judged)
+	# merges taller, broader belvedere dimensions so the summit reads as a
+	# layered stronghold above the dome's shoulder rather than a lone dome.
+	# Visual only: the towers carry no collision, so no route changes.
+	var raise: Variant = spec.get("silhouette_raise", {})
+	if raise is Dictionary and (raise as Dictionary).get("enabled") == true:
+		spec = spec.duplicate(true)
+		for key: String in (raise as Dictionary):
+			if not key.begins_with("_") and key != "enabled":
+				spec[key] = (raise as Dictionary)[key]
 	var base_y := float(drum.get("height_m", 9.0))
 	var rx := float(drum.get("radius_x_m", 27.0)) + float(drum.get("pier_extra_radius_m", 0.6))
 	var rz := float(drum.get("radius_z_m", 27.0)) + float(drum.get("pier_extra_radius_m", 0.6))
