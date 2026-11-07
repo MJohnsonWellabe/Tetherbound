@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8ym4qs6prcbj"
-path="res://.godot/imported/veilfall_tiered_veilfall_foam.png-d5bd1fc5514b8de11b880a6a256d1780.ctex"
+path.s3tc="res://.godot/imported/veilfall_tiered_veilfall_foam.png-d5bd1fc5514b8de11b880a6a256d1780.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "9168354e7a66b53029837b51e3f9f199"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/blender-1107/veilfall_tiered/veilfall_tiered_veilfall_foam.png"
-dest_files=["res://.godot/imported/veilfall_tiered_veilfall_foam.png-d5bd1fc5514b8de11b880a6a256d1780.ctex"]
+dest_files=["res://.godot/imported/veilfall_tiered_veilfall_foam.png-d5bd1fc5514b8de11b880a6a256d1780.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
