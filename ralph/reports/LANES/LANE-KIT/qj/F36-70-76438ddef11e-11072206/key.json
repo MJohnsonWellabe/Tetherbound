@@ -1,0 +1,23 @@
+{
+ "Jd": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ss": {
+  "anchor": false,
+  "label": "F36#70",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F36-70-76438ddef11e-11072206/k/sides/F36_70_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F36-70-76438ddef11e-11072206/k/sides/F36_70_cand.jpg"
+ },
+ "Ti": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Mr": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}

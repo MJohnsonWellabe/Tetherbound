@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F38#6",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F38-6-6b6bc90bbae7-11072022/k/sides/F38_6_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F38-6-6b6bc90bbae7-11072022/k/sides/F38_6_cand.jpg",
+  "brief": "3 in-game frames (Meadows) for one catalogue subject: ground pickup identity. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+  ]
+ }
+]

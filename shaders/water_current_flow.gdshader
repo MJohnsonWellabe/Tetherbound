@@ -92,6 +92,10 @@ uniform float chop_cap_density = 0.35;
 // head and frays upstream, so a still frame says which way the water runs.
 // Stretch length in metres (0 = untapered seams).
 uniform float seam_taper_m = 0.0;
+// F39#16 (LANE-TW, OFF at 0): the cap cells formed even diagonal rows in
+// perspective. >0 domain-warps the cap grid, staggers each row and varies each
+// cap's length along the flow, so the caps scatter irregularly.
+uniform float cap_scatter = 0.0;
 // t1b: moonlit foam. A small emission on the foam only, so the lane still
 // reads at night; 0 keeps the lit foam exactly.
 uniform float moon_glint = 0.0;
@@ -269,12 +273,20 @@ void fragment() {
 		}
 		// Wavelet caps: small crescent whitecaps, denser toward the lane core.
 		vec2 cap_uv = vec2(across_m, moving_s * 1.6) / max(chop_cap_scale_m, 0.5);
+		float cap_stretch = 1.0;
+		if (cap_scatter > 0.0) {
+			cap_uv += cap_scatter * 2.4 * vec2(noise(cap_uv * 0.37 + vec2(3.1, 0.7)) - 0.5,
+				noise(cap_uv * 0.29 + vec2(8.7, 4.4)) - 0.5);
+			cap_uv.x += cap_scatter * hash(vec2(floor(cap_uv.y), 5.5));
+			cap_stretch = mix(1.0, mix(0.55, 1.7, hash(floor(cap_uv) + vec2(9.3, 1.9))), clamp(cap_scatter, 0.0, 1.0));
+		}
 		vec2 cap_cell = floor(cap_uv);
 		// Each cap is jittered, sized and faded per cell so the field never
 		// reads as a regular grid of arcs.
 		vec2 cap_jitter = vec2(hash(cap_cell + vec2(1.7, 3.3)), hash(cap_cell + vec2(8.1, 2.9))) - 0.5;
 		float cap_size = mix(0.55, 1.0, hash(cap_cell + vec2(6.6, 0.4)));
 		vec2 cap_local = (fract(cap_uv) - 0.5 - cap_jitter * 0.45) / cap_size;
+		cap_local.x /= cap_stretch;
 		float cap_on = step(hash(cap_cell + vec2(4.2, 9.1)), chop_cap_density * (1.0 - across));
 		float crescent = 1.0 - smoothstep(0.04, 0.12, abs(cap_local.y + cap_local.x * cap_local.x * 1.2 - 0.05));
 		crescent *= 1.0 - smoothstep(0.25, 0.42, abs(cap_local.x));
