@@ -75,3 +75,11 @@ func test_rim_overlay_fill_defaults_off() -> void:
 	assert_true(code.contains("uniform float fill_energy = 0.0;"), "fill_energy defaults to 0")
 	var stormwood := _json("res://data/config/stormwood_character_rim.json")
 	assert_false(stormwood.has("fill_energy"), "Stormwood rim sets no fill")
+
+
+## r29p: F39#29 Tidewake dialogue speaker visibility 5.54 -> 6.34 (Nalia posted on the passage floor).
+func test_nalia_dialogue_post_ships_on() -> void:
+	var cfg := _json("res://data/config/water_npc_posts_candidate.json")
+	_assert_on(cfg, "6.34", "water_npc_posts_candidate")
+	assert_true((cfg.offsets as Dictionary).has("water_nalia"), "Nalia is posted")
+	assert_false((cfg.offsets as Dictionary).has("water_trainer_rune"), "Rune's unjudged post stays off")
