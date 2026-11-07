@@ -4,6 +4,13 @@ Lane: tb/vis-meadows-1104 (from origin/main 98879e2e1). Scope: the Meadows F38 i
 
 Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the same run on the same stands; tools/visual_judge (JUDGE_PROMPT verbatim, anchor_tiles --pairs 3, three code-blind judges, calibrate.py). Recorded as "CPU <base> -> <cand>". Owner rule 4 Nov: any judged gain ships ON; flat or worse stays OFF.
 
+## Coordinator answers, 7 Nov 2026 13:20 UTC (after the usage-limit pause)
+
+- Merged origin/main (through #841) at a4fdd0039; the lane's tests pass (46 tests, 0 failed).
+- F38#23 props on the fight axis: **no** (props can block combat). Parked for good.
+- Other placement: only set dressing that never touches a walk route, fight axis or collider. The F38#41 second quarry ruin carries a slab collider, so moving it stays out of scope.
+- **Lane status after these answers:** no scene-level lever is left on this lane's rows. F38#41's remaining ask is the smooth boulders: the band2 `quarry_station` Rock_Medium props (probe-named). They take only a colour `retint`, and a detail or material swap needs a props material hook plus new texture work (new-art scale). F38#33's break-free arm still needs the capture-tool change in decision 3 (unanswered). Ready for new rows, a GPU confirmation pass on this batch, or a Blender new-art assignment.
+
 ## Lane state, 5 Nov 2026 ~02:50 UTC
 
 **Shipped since the coordinator's 19:25 UTC list (CPU mapped):** F38#41 natural quarry faces (raw 5.80 -> 6.43), F38#37 east face (5.31 -> 6.09), F38#23 arch lift (5.90 -> 6.04) and smaller cobbles (6.73 -> 6.93), F38#33 result clears reticle (6.32 -> 7.11). Every in-scope Meadows item now reads at 6 or above on CPU, except F38#24 and F38#30 (both the floating-Warrens owner decision).
