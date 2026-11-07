@@ -27,10 +27,14 @@ func test_nodes_ship_on_with_score_and_hero2_returns_them() -> void:
 	for item: String in SURFACES:
 		var hero := RUNTIME.hero2_for(item)
 		assert_false(hero.is_empty(), "%s: hero while ON" % item)
-		assert_true(str((hero.get("models", [{}]) as Array)[0].get("model", "")).ends_with("_r2.glb"), "%s uses the round-2 Blender node" % item)
+		var model := str((hero.get("models", [{}]) as Array)[0].get("model", ""))
+		assert_true(model.ends_with("_r3.glb") if item == "glowmoss" else model.ends_with("_r2.glb"), "%s uses its latest shipped Blender node (%s)" % [item, model])
 	var r2: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(HERO2)) as Dictionary).get("lane_sw_1107_r2", {})
 	assert_true(bool(r2.get("enabled", false)), "lane_sw_1107_r2 ships ON (judged gain)")
 	assert_true(str(r2.get("_why_on", "")).contains("5.52 -> 6.00"), "r2 records its judged score")
+	var r3: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(HERO2)) as Dictionary).get("lane_sw_1107_r3", {})
+	assert_true(bool(r3.get("enabled", false)), "lane_sw_1107_r3 ships ON (judged gain)")
+	assert_true(str(r3.get("_why_on", "")).contains("4.98 -> 5.65"), "r3 records its judged score")
 
 
 func test_node_models_load_with_named_surfaces_and_no_collider() -> void:
