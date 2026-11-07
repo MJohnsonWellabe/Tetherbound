@@ -1,0 +1,24 @@
+{
+ "HITREACT base": [
+  {
+   "Hit-react poses do not stay grounded: bodies float above their shadow at hit-react mid": "PRESENT"
+  },
+  {
+   "Hit-react poses do not stay grounded: bodies float above their shadow at hit-react mid": "PRESENT"
+  },
+  {
+   "Hit-react poses do not stay grounded: bodies float above their shadow at hit-react mid": "PARTIAL"
+  }
+ ],
+ "HITREACT cand": [
+  {
+   "Hit-react poses do not stay grounded: bodies float above their shadow at hit-react mid": "PRESENT"
+  },
+  {
+   "Hit-react poses do not stay grounded: bodies float above their shadow at hit-react mid": "PRESENT"
+  },
+  {
+   "Hit-react poses do not stay grounded: bodies float above their shadow at hit-react mid": "PARTIAL"
+  }
+ ]
+}
