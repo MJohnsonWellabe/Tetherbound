@@ -1,5 +1,5 @@
 STATUS: parked
-BRANCH: tb/item-f40-2  HEAD: (see the commit that adds this file)
+BRANCH: tb/item-f40-2  HEAD: f291a7b10cb60c10b2374e685963fcaac980821b (READY committed in the next commit)
 
 # F40#2 P2-022 summit aviary (LANE-CR, 7 Nov 2026)
 
