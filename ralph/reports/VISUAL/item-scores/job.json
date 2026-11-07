@@ -694,7 +694,7 @@
      "frames": [
       {
        "id": "meadows__exploration_hud",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_ui.gd -- --biome=meadows --seed=2042 --hud-settle-frames=180 --output=res://ralph/reports/VISUAL/phase2/meadows/ui_repro",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_ui.gd -- --biome=meadows --seed=2042 --hud-settle-frames=900 --output=res://ralph/reports/VISUAL/phase2/meadows/ui_repro",
        "orig_commit": "31dcf4add28cf836ec2bfd8499f5bb5e25df3484",
        "location": "",
        "time": "day",

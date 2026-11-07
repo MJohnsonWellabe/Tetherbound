@@ -5,9 +5,11 @@ extends SceneTree
 ## No world/config/authority change and no FPS/screenshot judgement claim.
 const AURA := preload("res://scripts/creatures/alpha_aura.gd")
 const EXPECTED_CASES := 126
-# Per camera/size/color: 6+6+7+7+6+7+7 visible motes, 8 triangle wedges
-# of 3 vertices each; multiplied by 3 cameras * 3 sizes * 2 colors.
-const EXPECTED_VERTICES := 19872
+# creatures_visual.json `alpha_presence_1105` ships ON (LANE-KIT 7 Nov, F38#31
+# CPU 6.69 -> 6.84): 12 motes per ring instead of 7, 8 triangle wedges of 3
+# vertices each, over 3 cameras * 3 sizes * 2 colors * 7 times. With the arm
+# OFF this was 19872 (6+6+7+7+6+7+7 visible motes per camera/size/colour).
+const EXPECTED_VERTICES := 34560
 
 class OriginalAura extends "res://scripts/creatures/alpha_aura.gd":
 	func _disc(centre: Vector3, right: Vector3, up: Vector3, colour: Color) -> void:
