@@ -1424,7 +1424,7 @@
     {
       "enabled": false,
       "preview_arg": "--cloudreach-f40-strata-cliff-candidate",
-      "_why": "F40#4 P2-023 (LANE-CR, 7 Nov 2026; live CPU 6.27 with shelf_edge_fringe ON): judges ask for sculpted, irregular, stratified rock edges instead of flat-topped mesas with straight extruded walls; the mesas in the Sky Shrine and Heartstone frames are the installed cloudreach_cliff_shelf_edge modules from the shared stand pattern (turning/sinking them judged worse, 6.35 -> 5.69). This arm swaps those four cliff_shelf entries for a new Blender module cloudreach_strata_cliff (nine thin, uneven strata with random insets and overhangs, grass ledges and an uneven stepped top; 23.8 x 11.4 x 8.8 m native, placed at the same 18 m height, rise and yaw; script and scale check in ralph/reports/LANES/ITEM-F40-4/blender/). The fringe is not applied to the new module (its inset top would leave AABB-edge bushes floating); its own ledges carry the edge detail. Stand pattern otherwise unchanged (stone-trail candidate list). Visual only, no collision, no route change. OFF until judged.",
+      "_why": "F40#4 P2-023 (LANE-CR, 7 Nov 2026; live CPU 6.27 with shelf_edge_fringe ON): judges ask for sculpted, irregular, stratified rock edges instead of flat-topped mesas with straight extruded walls; the mesas in the Sky Shrine and Heartstone frames are the installed cloudreach_cliff_shelf_edge modules from the shared stand pattern (turning/sinking them judged worse, 6.35 -> 5.69). This arm swaps those four cliff_shelf entries for a new Blender module cloudreach_strata_cliff (nine thin, uneven strata with random insets and overhangs, grass ledges and an uneven stepped top; 23.8 x 11.4 x 8.8 m native, placed at its visible height (6.5 m for the near pair, 8 m for the far pair, sunk 0.5 m; the cliff_shelf is a 31 m-tall block scaled to 18 m and sunk 12/9 m, so only its top 6-9 m shows; r1a at 18 m swallowed the cameras, self-look, not judged) with the same position and yaw; script and scale check in ralph/reports/LANES/ITEM-F40-4/blender/). The fringe is not applied to the new module (its inset top would leave AABB-edge bushes floating); its own ledges carry the edge detail. Stand pattern otherwise unchanged (stone-trail candidate list). Visual only, no collision, no route change. OFF until judged.",
       "overlay": {
         "stand_pattern": [
           {
@@ -1447,9 +1447,9 @@
             "asset": "strata_cliff",
             "along_m": 24.0,
             "lateral_m": 24.0,
-            "height": 18.0,
+            "height": 6.5,
             "yaw": 90,
-            "rise_m": -12.0,
+            "rise_m": -0.5,
             "scale_min": 0.8,
             "scale_max": 1.2
           },
@@ -1457,9 +1457,9 @@
             "asset": "strata_cliff",
             "along_m": 44.0,
             "lateral_m": 36.0,
-            "height": 18.0,
+            "height": 8.0,
             "yaw": 60,
-            "rise_m": -9.0,
+            "rise_m": -0.5,
             "scale_min": 0.9,
             "scale_max": 1.3
           },
@@ -1501,9 +1501,9 @@
             "asset": "strata_cliff",
             "along_m": 24.0,
             "lateral_m": -24.0,
-            "height": 18.0,
+            "height": 6.5,
             "yaw": -90,
-            "rise_m": -12.0,
+            "rise_m": -0.5,
             "scale_min": 0.8,
             "scale_max": 1.2
           },
@@ -1511,9 +1511,9 @@
             "asset": "strata_cliff",
             "along_m": 44.0,
             "lateral_m": -36.0,
-            "height": 18.0,
+            "height": 8.0,
             "yaw": -60,
-            "rise_m": -9.0,
+            "rise_m": -0.5,
             "scale_min": 0.9,
             "scale_max": 1.3
           },
