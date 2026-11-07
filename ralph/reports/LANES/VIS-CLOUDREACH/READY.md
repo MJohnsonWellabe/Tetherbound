@@ -1,5 +1,41 @@
 # VIS-CLOUDREACH lane (tb/vis-cloudreach-1104), 4 Nov 2026
 
+## HANDOFF 7 Nov
+
+CPU mapped Bar A via `tools/visual_judge` (quick_judge, 3 code-blind judges, 3 anchor pairs, calibrate.py). CPU scores rank only; every row still closes on the GPU (High, then Medium). Branch `tb/vis-cloudreach-1104`; each ON flag has its score in `_why_on` and an assertion in `tests/test_vis_cloudreach_landed.gd` (13 tests pass).
+
+**Shipped (ON):**
+- F40#6 P2-105 terrace ride-off: `cloudreach_physical_runtime.json:mounted_drop_no_air_drive` 4.82 -> 5.91 (570c09678); `cloudreach_visual.json:landing_tree_clear` 3.68 -> 5.28 (66cfbb9a4); `mounted_drop_no_air_drive.scramble_after_s` 0.7 -> 0.3, 4.38 -> 6.10 (00ab238ce).
+- F40#11 P2-106 terrace edge clouds: `cloudreach_visual.json:island_roots.low_mist` 4.97 -> 6.03 (570c09678); `island_roots.mist_core_alpha` 0.45 + `low_mist.mist_below_m` 260, 6.00 -> 6.43 (25735cc15).
+- F40#18 P2-118 full-party catch: `hud.json:catch_card` 3.77 -> 4.61 (3139e3672); `catch_card.full_team_line` 3.57 -> 4.98 (a420dc382); `catch_card.portrait` 5.91 -> 6.19 (3f4b9e260); `full_team_line.party_row` 5.58 -> 6.85 (aef37b975); party row 96 px + names 5.58 -> 6.18 vs the 64 px row (4e7541ef8); `catch_card.card_half_width` 560, 5.99 -> 6.74 (0de6e7ab8).
+- F40#3 P2-024 Windscar Beacon: `cloudreach_f40_items.json` candidate `--cloudreach-wd-beacon-approach` 5.84 -> 6.46 (f8e547bef; one of three frames paired).
+- F40#7 P2-025 grass and stone: candidate `--cloudreach-f40-heartstone-candidate` (Meshy heartstone) 5.86 -> 6.00 (1987939b5; small, unanimous).
+- Harness (F40#18 reproduced blocker): `tools/phase2_capture_catch.gd` pins the Cloudreach catch wild from `--seed` (species, spot, level, catch roll), builds and widens the catch arbiter's wall-clock window, and takes the banner frame from a fixed yaw (564c65f9e, bd004d556, 14b91bd32, ce470ed44); `tests/test_capture_catch_pinned_wild.gd`.
+
+**Open (current CPU score; judges' last asks; next idea):**
+- F40#18 P2-118, 6.74: selection cursor + controller confirm/cancel prompts (those belong to the release ceremony, which owns the input), larger/brighter caught-creature header portrait (`catch_card.portrait.px` 112 -> 140), orb floats with no contact shadow on the banner frame (check `orb.gd` resting height). Pinned capture makes A/B clean now.
+- F40#6 P2-105, 6.10: flat cloud volume behind the terrace, carpet grass, deer and rider small from behind. Next: none cheap; the dark terrace oval is parked (below).
+- F40#11 P2-106, 6.43: remaining puffs still read as separate lumps (PARTIAL); dark oval grass patch; cart floats on the layby slope.
+- F40#3 P2-024, 6.46: tie gate and tower into one landmark (walls, platform, stairs), path through the foreground grass. Next: re-score with all three frames once the location tool captures `broken_skyroad_arch` and `old_wind_observatory`.
+- F40#7 P2-025, 6.00: lawn clumps/edges, pale stratified stone materials with variation for shrine paving and pillars.
+- F40#2 P2-022 (6.16, NEAR6-CR's last score): judges ask cliff plinth, cloud sea below, lit night windows. The unjudged `--cloudreach-f40-stone-ground-candidate` (summit overlook stand) was mid-capture at wind-down and was stopped; next idea is to judge it on F40#2.
+
+**Parked:**
+- F40#1 P2-021 open terrain: groves flat, clumps invisible, ground_cluster -0.31, open-terrain candidate no visible change, stone trail flat (+0.18, split). Needs new art (layered pale-stone shelves and terrace edges at the stands).
+- Dark terrace oval (P2-105/106): two no-change arms (`grass_role_edge_feather`, `landing_cover_clear`); remaining suspects `CloudreachLook/LookGroundCoverFinish/CoverFinishMain037` or a turf-material patch.
+- F40#14 P2-048: no lane work; `menu.json:map_region_header` is ON on main at GPU 7.52 (batch 5); needs only the GPU confirm.
+- F40#21: near-clean on the mx1 subset; one judge in three read the gate ledge as floating (GPU re-score).
+- F40#0 re-score: GPU work.
+
+**OFF arms left in the tree:** `menu.json:release_choice_focus`; `cloudreach_npc_runtime.json:post_readability` (flat); `catching.json:seal_reveal` (worse); `cloudreach_look.json:tree_canopy_camera_stops` (no change); `objective_beacon.json:realm_styles.cloudreach` (handed to NEAR6-CR); `catching.json:resolve_clearance` (no change on the flat pinned spot; acts only on slopes); `cloudreach_visual.json:ground_cover.grass_role_edge_feather` (0); `cloudreach_visual.json:landing_cover_clear`; `cloudreach_f40_items.json` stone-trail candidate (flat).
+
+**Known tool/capture bugs:**
+- `phase2_capture_locations.gd` does not produce `cloudreach__landmark__broken_skyroad_arch__day__approach` or `cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach` (missing on both sides in qj_beacon and qj_heartstone).
+- The catch arbiter window (`multiplayer.json catch_arbitration_window_ms` 6000) is wall-clock; slow CPU captures outlive it and every catch finish is refused `not_claimant` unless the capture widens it (done for the pinned Cloudreach catch only).
+- `smoke_cloudreach_saddle_remount`: one failure, "a later challenge of trainer_ila_lower_ring works", independent of this lane's flags (fails with the scramble OFF too); untested on unmodified main.
+- quick_judge applies its overlay to the config files during the candidate boot; never commit during a capture. The container's disk allowance filled on 7 Nov; delete `.artifacts/qj/cache` between rounds.
+
+
 Status 7 Nov 13:30 UTC (resumed after the 5 Nov usage-limit pause; origin/main 8a9c0d317 merged): thirteen judged gains ON (P2-105 x3, P2-106 x2, P2-118 x6, P2-024, P2-025; +11.79 cumulative CPU mapped). Coordinator 7 Nov list in order: F40#14 (no lane work: `menu.json:map_region_header` is ON on main with GPU batch 5 mapped 7.01 -> 7.52; the board's 5.87 is the 28 Oct pre-arm score, so the row needs only the GPU High+Medium confirm), F40#6, F40#3, F40#2, F40#7. Now: F40#3 P2-024 judging the built, never-judged world-dressing candidate `--cloudreach-wd-beacon-approach` (eagle plinths + strata spires at the Windscar Beacon) as `qj_beacon`. Coordinator messages from this session are refused (untrusted device); this file is the channel.
 
 **Handoff (20:10).** Branch head is landing-ready: every ON flag below has its CPU score in `_why_on` and an assertion in `tests/test_vis_cloudreach_landed.gd` (7 tests pass; `test_texture_import_policy.gd` passes; `smoke_cloudreach_saddle_remount` 331 checks, only the known `trainer_ila_lower_ring` failure, which also fails with the scramble OFF). Current CPU mapped: P2-105 6.10 (from 4.82), P2-106 6.43 (from 4.97), P2-118 4.98 (from 3.77). **Open / parked:** F40#1 lawn carpet parked (groves flat, clumps invisible, cluster -0.31); dark terrace oval parked (two no-change arms; next idea in the table); F40#18 blocked on the catch capture's unpinned spawn (harness gap below); F40#21 near-clean on the mx1 subset (one judge in three read the gate ledge as floating). **Remaining judge asks on P2-105/106:** flat, ungraded day sky (shared Cloudreach sky; a light-grade arm was flat/worse in r1, so it needs a new idea and touches NEAR6-CR's items), cart on the layby slope with a weak contact shadow, deer and rider small from behind. **Runbook:** `QJ_LANE=VIS-CLOUDREACH python3 tools/visual_judge/quick_judge.py run F40#11 --overlay '<json>'` (~35-60 min); ride frames need a manual 2x2 pair (frames 16/17/18_after/19) via `anchor_tiles.py --candidates spec.json --pairs 3 --include craft`, three judges, `calibrate.py`; quick_judge leaves its overlay in the config file mid-run, so never commit during a capture.
