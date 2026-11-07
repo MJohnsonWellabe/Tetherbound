@@ -46,7 +46,7 @@ Largest archived groups:
   - `verify-suite (3)`: 2,319 tests, 0 failed. `test_texture_import_policy` is visible by name in the log.
   - `verify-suite (4)`: 2,451 tests, 0 failed.
   - `test_remake_owner1101_finish` and `test_hero_landmarks_1101` are in `tests/test_*.gd`, which the unit shards run, but their names are not in the log tails I could fetch.
-  - The `ci-gate` aggregator was still queued at 01:17Z.
+  - The `ci-gate` aggregator passed (01:18Z), so the whole fast-tier run is green.
 - **Creature capture smoke:** render.yml run 41750298706, `tools/_capture_creature_roster.gd` at `8f318bb4d`. Passed (script ran; "Fail if the script failed" green).
 - **Spot-check, zero references:** for each of the five archived glbs, `git grep -F <basename>` outside ralph/docs/shots/archive/assets_raw finds only its own provenance.json, which now carries the "archived" note. The five:
   - abyssal_guardian_a.glb
