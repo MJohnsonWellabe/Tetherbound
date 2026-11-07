@@ -596,3 +596,9 @@ Not run yet. The required suite needs every remake imported, which does not fit 
 - The three gains ship ON, each with its score in `_why_on`. Riftfrill shares Paddlenewt's albedo, so the lift reaches it too.
 - Test: `test_dark_value_lift_flags`. Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
 - Verdict: `v1/b26/VERDICT.md`. Pose defects the judges name: Shadelet's upright faint tail, and Paddlenewt and Shadelet floating in hit-react mid.
+
+## v1/b27 (7 Nov): Staticub (6.59 -> 6.80), Riverdrake (6.37 -> 6.69), Riptusk (6.22 -> 6.32), Sirenseal (6.53 -> 6.61) value lifts ON
+- Resumed after the 5 Nov usage-limit pause and merged origin/main (#839).
+- All four ship ON; every judge scored each one higher or equal. Calibration r is 0.51, which is weak; the raw scores are in the verdict.
+- Test: `test_dark_value_lift_flags` (now handles r10 albedos). Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
+- Glimmermoth, Pebbik, Galewisp and Tempestwing arms are committed OFF; their batch is next.

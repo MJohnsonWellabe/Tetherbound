@@ -888,30 +888,62 @@
     },
     "creatures_ralph_riverdrake_value_lift": {
       "_why": "Stage value lift for Riverdrake (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
-      "enabled": false,
+      "_why_on": "v1/b27 (7 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 0.79 r 0.51): mapped 6.37 -> 6.69 (+0.32); all three judges see the brighter blue keep belly and legs out of the shadow. Judged gain, ships ON.",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101_Image_0_value_lift.png"}
       }
     },
     "creatures_ralph_staticub_value_lift": {
       "_why": "Stage value lift for Staticub (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
-      "enabled": false,
+      "_why_on": "v1/b27 (7 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 0.79 r 0.51): mapped 6.59 -> 6.80 (+0.21); all three judges score the warmer, lighter coat higher (face and muzzle separate from the shadow). Judged gain, ships ON.",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_Image_0_value_lift.png"}
       }
     },
     "creatures_ralph_sirenseal_value_lift": {
       "_why": "Stage value lift for Sirenseal (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
-      "enabled": false,
+      "_why_on": "v1/b27 (7 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 0.79 r 0.51): mapped 6.53 -> 6.61 (+0.08); two judges score it higher, one equal, none lower (face and white crest read more cleanly). Small judged gain, ships ON.",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_Image_0_value_lift.png"}
       }
     },
     "creatures_ralph_riptusk_value_lift": {
       "_why": "Stage value lift for Riptusk (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
-      "enabled": false,
+      "_why_on": "v1/b27 (7 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 0.79 r 0.51): mapped 6.22 -> 6.32 (+0.10); all three judges score it 0.1-0.2 higher (blue limbs lift off the shadow). Judged gain, ships ON.",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_glimmermoth_value_lift": {
+      "_why": "Stage value lift for Glimmermoth (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_pebbik_value_lift": {
+      "_why": "Stage value lift for Pebbik (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_galewisp_value_lift": {
+      "_why": "Stage value lift for Galewisp (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_tempestwing_value_lift": {
+      "_why": "Stage value lift for Tempestwing (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0_value_lift.png"}
       }
     }
   }
