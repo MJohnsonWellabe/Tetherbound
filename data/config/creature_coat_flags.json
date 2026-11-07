@@ -954,11 +954,11 @@
       }
     },
     "lanekit_face_read_fulgocobra": {
-      "_why": "Fulgocobra / Mirejaw face read (LANE-KIT, 7 Nov 2026; F36 roster rows 5.78 / 5.84). Judges: near-black heads, the hood/head merges with the backdrop and the face is lost; a whole-body value lift was flat (b25). Face only: the head's triangles are rasterised into a UV mask (ralph/reports/LANES/ITEM-EYES/face_read.py); inside it the albedo gets a midtone gamma lift (0.55, hue kept) and the live emission map (eyes, spots, hood lines, in the creature's element) x3. Nothing outside the head changes; no new floating effect. OFF until judged.",
+      "_why": "Fulgocobra / Mirejaw face read (LANE-KIT, 7 Nov 2026; F36 roster rows 5.78 / 5.84). Judges: near-black heads, the hood/head merges with the backdrop and the face is lost; a whole-body value lift was flat (b25). Face only: the head's triangles are rasterised into a UV mask (ralph/reports/LANES/ITEM-EYES/face_read.py); inside it the albedo gets a midtone gamma lift (0.45 since r2; 0.55 in r1, flat) and the live emission map (eyes, spots, hood lines, in the creature's element) x5 (x3 in r1); r2 adds a material rim light (0.6, tint 0.5) on the whole coat, the judges' named fix. Nothing outside the head changes; no new floating effect. OFF until judged.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
-          "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_face.png",
+          "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_face.png", "rim": 0.6, "rim_tint": 0.5,
           "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_goldvein_face.png",
           "emission_energy": 2.0,
           "roughness": 0.8,
@@ -967,11 +967,11 @@
       }
     },
     "lanekit_face_read_mirejaw": {
-      "_why": "Fulgocobra / Mirejaw face read (LANE-KIT, 7 Nov 2026; F36 roster rows 5.78 / 5.84). Judges: near-black heads, the hood/head merges with the backdrop and the face is lost; a whole-body value lift was flat (b25). Face only: the head's triangles are rasterised into a UV mask (ralph/reports/LANES/ITEM-EYES/face_read.py); inside it the albedo gets a midtone gamma lift (0.55, hue kept) and the live emission map (eyes, spots, hood lines, in the creature's element) x3. Nothing outside the head changes; no new floating effect. OFF until judged.",
+      "_why": "Fulgocobra / Mirejaw face read (LANE-KIT, 7 Nov 2026; F36 roster rows 5.78 / 5.84). Judges: near-black heads, the hood/head merges with the backdrop and the face is lost; a whole-body value lift was flat (b25). Face only: the head's triangles are rasterised into a UV mask (ralph/reports/LANES/ITEM-EYES/face_read.py); inside it the albedo gets a midtone gamma lift (0.45 since r2; 0.55 in r1, flat) and the live emission map (eyes, spots, hood lines, in the creature's element) x5 (x3 in r1); r2 adds a material rim light (0.6, tint 0.5) on the whole coat, the judges' named fix. Nothing outside the head changes; no new floating effect. OFF until judged.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0.jpg": {
-          "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0_face.png",
+          "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_Image_0_face.png", "rim": 0.6, "rim_tint": 0.5,
           "emission": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_arc_emission_face.png"
         }
       }
