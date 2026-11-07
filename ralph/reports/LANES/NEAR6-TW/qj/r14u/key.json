@@ -1,0 +1,23 @@
+{
+ "To": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Rx": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Zy": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Id": {
+  "anchor": false,
+  "label": "F41#14",
+  "A": "/home/user/Tetherbound/.artifacts/qj/r14u/k/sides/F41_14_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/r14u/k/sides/F41_14_base.jpg"
+ }
+}

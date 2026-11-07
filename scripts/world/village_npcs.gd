@@ -78,7 +78,15 @@ func build(player: Node3D, config_path: String = CONFIG_PATH) -> void:
 	var night_default: Variant = (parsed as Dictionary).get("night_light_default", {})
 	_night_light_default = night_default if night_default is Dictionary else {}
 	var listed: Variant = (parsed as Dictionary).get("villagers", (parsed as Dictionary).get("people", []))
-	build_specs(player, listed if listed is Array else [])
+	var specs: Array = (listed as Array).duplicate() if listed is Array else []
+	# F38#22 `market_folk` (VIS-MEADOWS, OFF unless enabled): a few unnamed,
+	# silent villagers working the village market so the square reads as
+	# lived in. No greeting, so _spawn gives them no prompt and they step out
+	# of any fight that opens around them (pure set dressing).
+	var folk: Variant = (parsed as Dictionary).get("market_folk", {})
+	if folk is Dictionary and bool((folk as Dictionary).get("enabled", false)):
+		specs.append_array((folk as Dictionary).get("villagers", []) as Array)
+	build_specs(player, specs)
 
 
 ## Chapter adapters can translate their authored cast into the existing NPC

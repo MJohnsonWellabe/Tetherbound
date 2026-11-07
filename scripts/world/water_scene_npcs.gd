@@ -106,6 +106,7 @@ func build(world: Node3D) -> Dictionary:
 		body.global_position = position
 		body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
 		preload("res://scripts/world/water_named_grass_clearance.gd").apply(body, _world)
+		preload("res://scripts/world/water_character_rim.gd").apply(body)
 		var prompt: Node3D = body.call("add_prompt", "Greet " + str(spec.display_name))
 		prompt.activated.connect(_on_greeted.bind(id))
 		_specs[id] = presentation_spec

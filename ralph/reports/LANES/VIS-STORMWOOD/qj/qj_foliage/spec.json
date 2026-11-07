@@ -1,0 +1,20 @@
+[
+ {
+  "label": "F41#5",
+  "a": "/home/user/Tetherbound/.artifacts/qj/qj_foliage/k/sides/F41_5_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/qj_foliage/k/sides/F41_5_cand.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: forest ground and distance layers. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
+  ]
+ },
+ {
+  "label": "F41#4",
+  "a": "/home/user/Tetherbound/.artifacts/qj/qj_foliage/k/sides/F41_4_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/qj_foliage/k/sides/F41_4_cand.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: named destination identities. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+  ]
+ }
+]

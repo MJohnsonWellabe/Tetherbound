@@ -153,8 +153,16 @@ static func with_obsidian(config: Dictionary) -> Dictionary:
 		return config
 	var out := config.duplicate(true)
 	for key: String in cand:
-		if key != "enabled" and key != "scope" and not key.begins_with("_"):
+		if key != "enabled" and key != "scope" and key != "r2" and key != "r3" and not key.begins_with("_"):
 			out[key] = (cand as Dictionary)[key]
+	# r2 and r3 (each with its own `enabled`, OFF until judged) lay their
+	# keys over r1 in that order.
+	for round: String in ["r2", "r3"]:
+		var over: Variant = (cand as Dictionary).get(round, {})
+		if over is Dictionary and bool((over as Dictionary).get("enabled", false)):
+			for key: String in over:
+				if key != "enabled" and not key.begins_with("_"):
+					out[key] = (over as Dictionary)[key]
 	return out
 
 

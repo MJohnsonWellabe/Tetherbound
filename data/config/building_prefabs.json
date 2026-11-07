@@ -10479,12 +10479,13 @@
     "quarry_foundation": {
       "_why": "SD16, spec §3 Band 2's 'old foundations'. A building the meadow has taken back: a brick floor, one long wall course and two stub returns, all of them the SAME `Wall_UnevenBrick_Straight` the village's own cottages are built from (D24) but SUNK so only the bottom metre stands. That is the whole trick and it is deliberate -- a ruin drawn from the same family as the living buildings is what makes the quarry read as older than the village rather than as a different game's asset pack. Vines on the standing course, brick rubble where the rest of it went.",
       "_comment_sink": "The kit's walls are 3.12m tall with their origin at the base, so y = -2.1 leaves ~1.0m proud and y = -2.45 leaves ~0.67m. Sinking rather than modelling a broken top edge: the kit ships no ruined pieces, and a wall cut off by the ground plane reads as a buried course, which is what an old foundation IS.",
+      "_why_floor_sunk": "VIS-MEADOWS 4 Nov 2026 (F38#41): the six Floor_UnevenBrick tiles sit at y -0.4 (was 0.03) so the floor stops reading as a dark slab; shipped with old_quarry.json worked_cut.natural_faces, raw Bar A 5.80 -> 6.43 (ralph/reports/LANES/VIS-MEADOWS/qj/f38_41-natural-faces).",
       "modules": [
         {
           "module": "Floor_UnevenBrick",
           "at": [
             -2.0,
-            0.03,
+            -0.4,
             -1.0
           ],
           "_why": "the floor slab, 6x4m of it"
@@ -10493,7 +10494,7 @@
           "module": "Floor_UnevenBrick",
           "at": [
             0.0,
-            0.03,
+            -0.4,
             -1.0
           ]
         },
@@ -10501,7 +10502,7 @@
           "module": "Floor_UnevenBrick",
           "at": [
             2.0,
-            0.03,
+            -0.4,
             -1.0
           ]
         },
@@ -10509,7 +10510,7 @@
           "module": "Floor_UnevenBrick",
           "at": [
             -2.0,
-            0.03,
+            -0.4,
             1.0
           ]
         },
@@ -10517,7 +10518,7 @@
           "module": "Floor_UnevenBrick",
           "at": [
             0.0,
-            0.03,
+            -0.4,
             1.0
           ]
         },
@@ -10525,7 +10526,7 @@
           "module": "Floor_UnevenBrick",
           "at": [
             2.0,
-            0.03,
+            -0.4,
             1.0
           ]
         },

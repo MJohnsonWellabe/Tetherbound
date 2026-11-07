@@ -1719,6 +1719,10 @@ func _apply_apparatus_finish(node: Node, finish: Dictionary) -> int:
 	var tint := Color(str(finish.get("albedo_tint", "#ffffff")))
 	var roughness := clampf(float(finish.get("roughness", 0.8)), 0.0, 1.0)
 	var metallic := clampf(float(finish.get("metallic", 0.0)), 0.0, 1.0)
+	# `self_lift` (F38#23, optional, 0 = off): the back-lit apparatus face reads
+	# as a black mass; a faint emission from its own albedo texture keeps the
+	# authored detail readable without adding a light. Clamped low.
+	var self_lift := clampf(float(finish.get("self_lift", 0.0)), 0.0, 0.6)
 	var finished := 0
 	if node is MeshInstance3D:
 		var instance := node as MeshInstance3D
@@ -1731,6 +1735,11 @@ func _apply_apparatus_finish(node: Node, finish: Dictionary) -> int:
 				material.albedo_color = source.albedo_color * tint
 				material.roughness = roughness
 				material.metallic = metallic
+				if self_lift > 0.0:
+					material.emission_enabled = true
+					material.emission = material.albedo_color
+					material.emission_texture = material.albedo_texture
+					material.emission_energy_multiplier = self_lift
 				instance.set_surface_override_material(surface, material)
 				finished += 1
 	for child: Node in node.get_children():

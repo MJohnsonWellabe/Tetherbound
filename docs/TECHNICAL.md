@@ -195,6 +195,9 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 - **Source SHA:** look-dev tools need the full 40-character pushed SHA (`--source-commit`/`--source-sha`, never `-dirty`) and a fresh, absent output dir.
   - Low preset also needs `--low-resolution=1280x720`.
   - Some tools (Cloudreach live fight, high perch) only write under `ralph/reports/VISUAL/phase2/<biome>/`. Move frames to `.artifacts/` afterwards and never commit them.
+- **Creature pose stills (`phase2_capture_creatures.gd`), fixed 4 Nov:** a creature's art model and animator are built on its first frame, not inside `setup()`. Before the fix, `play_hit`/`play_faint`/`play_rest` ran with no animator and `_seat` measured no model, so "hurt", "fainted" and "resting" stills showed idle and floated. The tool now waits (up to 30 frames) for the model before seating and posing. Pose scores captured before this fix (F38#1, F38#2) measured idle frames; re-baseline them. A second fix the same day: "fainted" stills now also wait, in game time, for the faint clip to finish (five CPU frames landed mid-collapse).
+- **`quick_judge.py` takes `godot.lock` and `scene.lock` itself:** never wrap it in `flock` on either, or it deadlocks.
+- **Net smokes (`tools/net/run_net_smoke.sh`):** set `GODOT_BIN` when Godot is not at `~/godot-bin/godot`. The script leaves a `tail -f <run>/SUMMARY.md` running; under an outer `flock` that tail inherits the lock and blocks the next Godot run. Kill it after each smoke.
 - **Matrix and look tools:**
   - `capture_f38_matrix.gd` (Meadows: `--seed=2042 --f38-preset=Low --f38-baseline --times=day --subset=<stand> --output=res://…`)
   - `capture_cloudreach_f40_matrix.gd` (`--piece=N`, where N = stand×8 + time×2 + weather + 1)
@@ -230,7 +233,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 5. **Batch file:** map A/B per set from `key.json`; sides are shuffled per set. Copy each score from the judges' JSON, never from memory. Write `batch.json` as `{"anchors": {id: [j1,j2,j3]}, "candidates": {label: [j1,j2,j3]}}`.
 6. **Calibrate:** `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`. Flag RMSE > 0.75.
 7. **Commit only** VERDICT.md, the batch/key/spec/mapped JSON and one `_sheet*` image under 1.5 MB.
-- **One-item A/B (fast path):** `tools/visual_judge/quick_judge.py run <F row> --overlay <json>` does steps 1–3 for that item's own stands only: one boot per tool, the base cached per tree, and the overlay restored byte-identically. `finish` does steps 5–7. See `tools/visual_judge/README.md`.
+- **One-item A/B (fast path):** `tools/visual_judge/quick_judge.py run <F row> --overlay <json>` does steps 1–3 for that item's own stands only: one boot per tool, the base cached per tree, and the overlay restored byte-identically. `finish` does steps 5–7. See `tools/visual_judge/README.md`. A repro whose `--out=` is a Windows checkout path (`D:/.../ralph/...`) is cut back to its repo-relative `ralph/...` part, so tools that check their output root (Stormwood fights) run.
 - **Reference crops:** `.gitignore` drops `ralph/reports/**/*.jpg` unless the file name starts with `_`. Name Meshy reference crops `_<name>.jpg` (or the coordinator never sees them) and check `git show --stat` after committing.
 - **What CPU scores are good for:** ranking candidates only. CPU mapped ≈ GPU − 0.8, and CPU wins have failed on GPU (P2-016 twice). A candidate goes to the GPU queue only when its expected gain is above 0.5 (owner, 25 Oct).
 

@@ -1,0 +1,35 @@
+{
+ "Yg": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Lf": {
+  "anchor": false,
+  "label": "lift:voltarach",
+  "A": "/tmp/claude-0/work/judge/lift4/k/sides/voltarach_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift4/k/sides/voltarach_a.jpg"
+ },
+ "Ll": {
+  "anchor": false,
+  "label": "lift:brooktail",
+  "A": "/tmp/claude-0/work/judge/lift4/k/sides/brooktail_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift4/k/sides/brooktail_a.jpg"
+ },
+ "Gm": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Bl": {
+  "anchor": false,
+  "label": "lift:cindercub",
+  "A": "/tmp/claude-0/work/judge/lift4/k/sides/cindercub_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift4/k/sides/cindercub_b.jpg"
+ },
+ "Er": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

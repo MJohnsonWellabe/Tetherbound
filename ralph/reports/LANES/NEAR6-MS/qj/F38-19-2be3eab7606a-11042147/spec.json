@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F38#19",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F38-19-2be3eab7606a-11042147/k/sides/F38_19_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F38-19-2be3eab7606a-11042147/k/sides/F38_19_cand.jpg",
+  "brief": "1 in-game frame (Meadows) for one catalogue subject: exploration HUD. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+  ]
+ }
+]

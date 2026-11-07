@@ -5,8 +5,19 @@
   "ring_diameter_m": 1.7,
   "opacity": 0.5,
   "trail_lifetime_s": 1.15,
-  "trail_spacing_m": 0.40,
+  "trail_spacing_m": 0.4,
   "trail_interval_s": 0.16,
   "max_trail_rings": 6,
-  "pause_fade_s": 0.35
+  "pause_fade_s": 0.35,
+  "wake_trail": {
+    "_why": "NEAR6-TW (4 Nov 2026), P2-072 / F39#14 (GPU 5.78): judges see a small foam ring but no trailing wake. When on, trail rings live longer, up to 12, and each spreads to grow_to x its size as it fades, drawing a widening wake behind the moving swimmer. Presentation only.",
+    "scope": "presentation: local and remote human swimmer foam rings; no physics, save or authority state",
+    "enabled": true,
+    "trail_lifetime_s": 2.4,
+    "trail_spacing_m": 0.45,
+    "max_trail_rings": 12,
+    "grow_to": 2.3,
+    "trail_opacity_scale": 0.85,
+    "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r14 F39#14 CPU 6.10 -> 6.80 (three code-blind judges all higher, calibrated, anchor RMSE 0.52; wake defect PRESENT -> PARTIAL; judges note a slightly radial, stamped wake)."
+  }
 }

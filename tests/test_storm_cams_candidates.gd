@@ -12,11 +12,15 @@ func _json(path: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
-func test_glass_sink_dark_pool_is_off_and_inert_by_default() -> void:
+## VIS-STORMWOOD j4 (4 Nov): the dark pool ships ON with its judged score;
+## turned OFF it still leaves the glass unchanged.
+func test_glass_sink_dark_pool_ships_on_and_is_inert_when_off() -> void:
 	var config := _json("res://data/config/stormwood_glass_sink.json")
 	assert_true(config.has("dark_pool_candidate"), "the P2-070 candidate must be declared")
-	assert_false(bool((config["dark_pool_candidate"] as Dictionary).get("enabled", true)),
-		"the candidate ships OFF")
+	assert_true(bool((config["dark_pool_candidate"] as Dictionary).get("enabled", false)),
+		"the candidate ships ON (judged gain)")
+	assert_true(str((config["dark_pool_candidate"] as Dictionary).get("_why_on", "")).contains("5.07"), "records its score")
+	(config["dark_pool_candidate"] as Dictionary)["enabled"] = false
 	var same := GLASS_SINK.with_dark_pool(config)
 	assert_eq(same["glass_colour"], config["glass_colour"], "OFF must not change the glass")
 

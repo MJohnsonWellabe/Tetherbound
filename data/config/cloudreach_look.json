@@ -2,6 +2,7 @@
   "_comment": "CLOUDREACH-LOOK-0906. Tunables for scripts/world/cloudreach_look.gd, the post-build dressing pass over the Meadows-era Cloudreach world. Every number the owner's 2026-09-06 addendum drove (rope rails, mooring, ground-cover finish, trees/stones, settlement recolour) lives here rather than inline in the script, per CLAUDE.md's 'tunables in data/config' rule.",
   "schema_version": 1,
   "seed": 20260906,
+  "tree_canopy_camera_stops": {"_scope": "device_local_presentation", "_why": "P2-105 / F40#6 (VIS-CLOUDREACH lane, 4 Nov 2026; CPU 5.91): all three r3b judges found the riding camera inside a look tree's canopy on the arrival terrace road and asked for the camera to stay out of canopies. When on, each look tree gets an occlusion-only crown sphere (camera arm only, no gameplay collision) sized from its mesh bounds. OFF until judged.", "enabled": false, "crown_from_fraction": 0.45, "radius_scale": 0.9},
   "bridge_rails": {
     "_comment": "Stone decks (broken_stone/ancient_stone) get both a hand and a knee rope from scratch. Rope-family decks (rope_suspension/rope_chain) already carry one sagging rope per edge from cloudreach_world.gd -- only the knee line is added there, bringing every edge to >=2 rails. Posts are added on both edges of every deck regardless; the authored posts only land at each DeckSection's own two endpoints.",
     "post_radius": 0.07,

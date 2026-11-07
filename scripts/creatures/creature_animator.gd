@@ -18,6 +18,7 @@ extends RefCounted
 ## Roles the game asks for. A creature missing one falls back to something it
 ## does have rather than freezing, because a pack with no `walk` is common and a
 ## motionless creature is worse than a slightly wrong one.
+const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const IDLE := "idle"
 const WALK := "walk"
 const RUN := "run"
@@ -214,6 +215,14 @@ func play_terminal(role: String) -> void:
 		return
 	play_once(role)
 	_finished = true
+	# F38#1 (creatures-ralph, 4 Nov; creatures_visual.json `rest_faint_settled`,
+	# OFF): a species with no rest of its own rests on its faint clip. Resting is
+	# not fainting, so start it at the clip's settled end instead of replaying
+	# the collapse (judges read the mid-fall as a leap, legs splayed in the air).
+	if role == "rest_faint" and VISUAL.rest_faint_settled():
+		var clip := _resolve(role)
+		if clip != "" and _player.has_animation(clip):
+			_player.seek(_player.get_animation(clip).length, true)
 
 
 func revive() -> void:

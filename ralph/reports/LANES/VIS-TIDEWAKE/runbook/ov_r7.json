@@ -1,0 +1,1 @@
+{"data/config/human_water_contact_visual.json": {"wake_trail": {"trail_lifetime_s": 2.8, "trail_spacing_m": 0.55, "trail_interval_s": 0.12, "grow_to": 2.6}}}

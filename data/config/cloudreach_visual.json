@@ -162,6 +162,8 @@
     "haze_normal_scale": 0.5,
     "haze_emission": 0.12
   },
+  "landing_cover_clear": {"_scope": "world_presentation", "_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026): all three mt judges read a dark oval of grass on the arrival terrace as a pasted decal. A probe found ProceduralGroundCover/CoverPatch094 (469 tufts, 9.4 x 12.1 m at (1.2, 105.5, -260.1)) laid over the region patch CoverPatch037: a route landing's own grass ellipse (cloudreach_world.gd landing pads) doubling the tuft density in a disc. When on, landings whose pad lies within radius_m of a listed point skip that ellipse; the region turf and grass under them stay. Presentation only. OFF until judged.", "enabled": false, "radius_m": 4.0, "near": [[1.2, 105.5, -260.1]]},
+  "landing_tree_clear": {"_scope": "world_presentation", "_why": "P2-105 / F40#6 (VIS-CLOUDREACH lane, 4 Nov 2026; CPU 5.91): judges found the riding camera inside a tree canopy on the arrival terrace road; a probe found it is AuthoredRoutes/LandingTree171 (CommonTree_2, 15 m off the road), and occlusion-only crown stops did not keep the camera out (twice). When on, the named landing trees are not placed. Presentation only (no collider on these trees' routes changes the walkable road). OFF until judged.", "_why_on": "Judged gain ships ON (owner rule): P2-105 CPU mapped 3.68 -> 5.28 (+1.60), three code-blind judges with 3 anchor pairs; the base road-back frame had the camera inside LandingTree171, the candidate shows the rider on the grass with the cloud sea behind (ralph/reports/LANES/VIS-CLOUDREACH/tc/VERDICT.md).", "enabled": true, "names": ["LandingTree171"]},
   "island_roots": {
     "_comment": "CLOUDREACH-ATMOS-0906 (C5), read by cloudreach_world.gd::_mesa. The blind judge on stands 04 and 11: 'A detached chunk of cliff hangs in the sky with pebbles falling from it ... it has no underside, no roots, no mist, no anchor -- it reads as a mesh that lost its parent and is a bug to any player who sees it.' Three literal causes, all fixed against this block: _mesa closes its crown and its four wall bands but never capped the bottom ring, so an airborne LandmarkLedge is an open-ended tube; _build_embedded_rock_shelves placed outcrops up to 97 m below a 72 m mass's own crown, i.e. hanging in the air under it, which is the falling pebbles; and nothing marked the base as high air. A mass counts as airborne when its base sits more than airborne_gap_m above landmass.geology_base_y -- every region CliffMass is built down TO that datum and so never qualifies, which is what keeps this off the buried masses where it would be invisible cost.",
     "enabled": true,
@@ -170,7 +172,7 @@
     "root_depth_max_m": 96.0,
     "root_steps": 5,
     "mist_puffs": 26,
-    "low_mist": {"_scope": "world_presentation", "_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU 5.16, CPU r1 5.32): every judge read the island mist collars beside the arrival terrace as flat white and blue-grey polygon puffs floating as loose foreground cards at the rider's eye level, and asked for soft cloud kept below the cliff lip. When on, the collar keys below merge over the island_roots mist: the collar drops well below each island base and spreads wider, with fewer, broader banks. Presentation only. OFF until judged.", "enabled": false, "mist_puffs": 18, "mist_below_m": 170.0, "mist_inner_fraction": 1.15, "mist_spread_fraction": 2.1, "mist_radius_min_fraction": 0.32, "mist_radius_max_fraction": 0.6},
+    "low_mist": {"_scope": "world_presentation", "_why_on": "ON 4 Nov 2026 (VIS-CLOUDREACH r3b, together with cloudreach_physical_runtime.json mounted_drop_no_air_drive): CPU 4.97 -> 6.03 mapped on P2-106 (three code-blind judges, linear r 0.80, anchor RMSE 0.51; puff defect PARTIAL 3/3). ralph/reports/LANES/VIS-CLOUDREACH/r3b/VERDICT.md.", "_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU 5.16, CPU r1 5.32): every judge read the island mist collars beside the arrival terrace as flat white and blue-grey polygon puffs floating as loose foreground cards at the rider's eye level, and asked for soft cloud kept below the cliff lip. When on, the collar keys below merge over the island_roots mist: the collar drops well below each island base and spreads wider, with fewer, broader banks. Presentation only. Judged ON.", "enabled": true, "mist_puffs": 18, "mist_below_m": 260.0, "mist_inner_fraction": 1.15, "mist_spread_fraction": 2.1, "mist_radius_min_fraction": 0.32, "mist_radius_max_fraction": 0.6},
     "mist_inner_fraction": 1.08,
     "mist_spread_fraction": 1.72,
     "mist_below_m": 62.0,
@@ -185,7 +187,7 @@
     "mist_extinction": 6.0,
     "mist_height_fraction": 0.60,
     "mist_edge_alpha": 0.0,
-    "mist_core_alpha": 0.62,
+    "mist_core_alpha": 0.45, "_mist_thin_why_on": "4 Nov 2026 (VIS-CLOUDREACH mt): mist_core_alpha 0.62 -> 0.45 with low_mist.mist_below_m 170 -> 260: P2-106 CPU mapped 6.00 -> 6.43 (three code-blind judges, linear r 0.92, anchor RMSE 0.33; puff defect PRESENT 3/3 -> PARTIAL 3/3; the bank behind the deer at the terrace rim now shows cliff instead of flat white). ralph/reports/LANES/VIS-CLOUDREACH/mt/VERDICT.md.",
     "mist_fade_end": 0.9,
     "mist_radial_segments": 20,
     "mist_rings": 10
@@ -368,7 +370,7 @@
     "grass_role_medium_width_multiplier_max": 2.3,
     "grass_role_tall_width_multiplier_min": 1.5,
     "grass_role_tall_width_multiplier_max": 1.9,
-    "grass_role_tall_route_clearance_m": 2.5,
+    "grass_role_tall_route_clearance_m": 2.5, "grass_role_edge_feather": 0.0, "_grass_role_edge_feather_why": "P2-106 / F40#11 (VIS-CLOUDREACH lane, 4 Nov 2026): all three mt judges read the dark oval of taller grass on the arrival terrace as a pasted decal; it is a grass role cell whose hard radius threshold draws a sharp edge. Above 0, cloudreach_grass_roles.gd dithers each tuft's cell radius by up to this much (position-hashed, deterministic), so the cell boundary scatters over a band. Presentation only. 0 (off) until judged.",
     "flower_density_per_m2": 0.055,
     "region_flower_patch_cap": 1800,
     "route_flower_patch_cap": 720,

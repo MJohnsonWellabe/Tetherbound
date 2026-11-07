@@ -1,0 +1,1 @@
+{"data/config/tidewake_look.json": {"lighting_candidate": {"times": {"night": {"sun": {"energy": 1.25, "colour": "#c4d8fa"}, "sky": {"top_colour": "#14284a", "horizon_colour": "#2c4c70", "horizon_haze_colour": "#36597c", "energy": 0.8}, "environment": {"ambient_energy": 0.4, "ambient_colour": "#4a6c94", "exposure": 0.95}}}}}}

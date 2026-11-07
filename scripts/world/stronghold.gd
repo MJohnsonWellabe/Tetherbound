@@ -4731,6 +4731,11 @@ static func p2_003_gatehouse(config: Dictionary) -> Dictionary:
 	for companion: Variant in gatehouse.get("companions", []):
 		if companion is Dictionary and by_id.has(str((companion as Dictionary).get("id", ""))):
 			(companion as Dictionary).merge(by_id[str(companion.id)], true)
+	# `add_companions` (F38#20 r5, OFF unless listed): further pieces placed in
+	# the same frame, e.g. a rock crag under the keep so it no longer floats.
+	var added: Array = gatehouse.get("companions", []) as Array
+	added.append_array(candidate.get("add_companions", []) as Array)
+	gatehouse["companions"] = added
 	return gatehouse
 
 

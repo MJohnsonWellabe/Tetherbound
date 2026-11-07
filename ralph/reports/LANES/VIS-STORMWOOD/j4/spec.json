@@ -1,0 +1,20 @@
+[
+ {
+  "label": "F41#9",
+  "a": "/tmp/claude-0/work/judge/j4/k/sides/F41_9_a.jpg",
+  "b": "/tmp/claude-0/work/judge/j4/k/sides/F41_9_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: harvest resource identity. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+  ]
+ },
+ {
+  "label": "F41#10",
+  "a": "/tmp/claude-0/work/judge/j4/k/sides/F41_10_a.jpg",
+  "b": "/tmp/claude-0/work/judge/j4/k/sides/F41_10_b.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: Glass Sink landmark. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+  ]
+ }
+]

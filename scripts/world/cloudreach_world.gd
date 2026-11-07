@@ -2337,8 +2337,9 @@ func _build_routes() -> void:
 				pad - Vector3.UP * 0.44, landing_size * 0.41 - 0.05, 0.84, landing_top, true).get_child(0).visible = false
 			_add_landing_nature(root, points, i, pad, landing_size,
 				i * 43 + absi(str(spec.get("id", "Route")).hash()))
-			_cover_patches.append({"kind":"ellipse","centre":pad,"half":Vector2.ONE*landing_size*0.40,
-				"inner_clear_fraction":0.38,"seed":i*137+absi(str(spec.id).hash()),"dry":false})
+			if not _landing_cover_cleared(pad):
+				_cover_patches.append({"kind":"ellipse","centre":pad,"half":Vector2.ONE*landing_size*0.40,
+					"inner_clear_fraction":0.38,"seed":i*137+absi(str(spec.id).hash()),"dry":false})
 			# The mesa's crown vertex sits at local y = size.y*0.5 + 0.03, i.e.
 			# pad.y + 0.03 world -- match that here so ground_height_at() (used
 			# by spawns/arrivals) doesn't disagree with the real, solid surface.
@@ -2427,6 +2428,14 @@ func _add_landing_nature(parent: Node3D, points: Array[Vector3], index: int,
 	var side := -1.0 if posmod(seed_value, 2) == 0 else 1.0
 	var tree := NATURE_TREES[posmod(seed_value, NATURE_TREES.size())].instantiate() as Node3D
 	tree.name = "LandingTree%03d" % posmod(seed_value, 1000)
+	# P2-105 (VIS-CLOUDREACH, 4 Nov 2026): cloudreach_visual.json
+	# `landing_tree_clear` (off unless enabled) drops named landing trees whose
+	# crowns the riding camera passes through beside the arrival road.
+	var clear_cfg: Variant = _visual_config.get("landing_tree_clear", {})
+	if clear_cfg is Dictionary and (clear_cfg as Dictionary).get("enabled") == true \
+			and ((clear_cfg as Dictionary).get("names", []) as Array).has(str(tree.name)):
+		tree.free()
+		return
 	tree.position = pad + right * side * landing_size * 0.33 - Vector3.UP * 0.12
 	tree.rotation.y = float(posmod(seed_value * 17, 41)) / 41.0 * TAU
 	tree.rotation.z = deg_to_rad(-0.8 - float(posmod(seed_value, 3)) * 0.6)
@@ -4163,6 +4172,25 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		- Vector2.ONE * 23.8, Vector2.ONE * 47.6)
 	for index in range(first_yard_patch, _cover_patches.size()):
 		_cover_patches[index]["clip_rect"] = yard_bounds
+
+
+## P2-106 / F40#11 (VIS-CLOUDREACH, 4 Nov 2026): cloudreach_visual.json
+## `landing_cover_clear` (off unless enabled). A route landing's own grass
+## ellipse laid over the region's planted turf doubles the tuft density in a
+## ~12 m disc, which reads on camera as a dark oval decal on the arrival
+## terrace. Listed landings skip that ellipse; the region cover under them
+## stays. Presentation only: no surface, collider or route change.
+func _landing_cover_cleared(pad: Vector3) -> bool:
+	var cfg: Variant = _visual_config.get("landing_cover_clear", {})
+	if not cfg is Dictionary or (cfg as Dictionary).get("enabled") != true:
+		return false
+	var reach := float((cfg as Dictionary).get("radius_m", 4.0))
+	for raw: Variant in (cfg as Dictionary).get("near", []):
+		if raw is Array and (raw as Array).size() >= 3:
+			var at := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+			if Vector2(at.x - pad.x, at.z - pad.z).length() <= reach and absf(at.y - pad.y) <= 6.0:
+				return true
+	return false
 
 
 func _plant_floor_pocket(parent: Node3D,at: Vector3,half: Vector2,seed_value: int,dry: bool) -> void:

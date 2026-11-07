@@ -499,6 +499,24 @@ func _set_camera_hidden(model: Node3D, hidden: bool) -> void:
 			node.remove_meta("camera_hide_visible")
 
 
+## The shiny finish draws through creature_surface_finish.gdshader overlays,
+## which _rim_light_node (BaseMaterial3D only) never reaches: raise their own
+## rim_amount instead (P2-030 shiny cue).
+func _rim_finish_overlays(node: Node, rim: float) -> void:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		var instance := node as MeshInstance3D
+		for surface in instance.mesh.get_surface_count():
+			var material := instance.get_active_material(surface)
+			while material != null:
+				var finish := material as ShaderMaterial
+				if finish != null and finish.shader == preload("res://shaders/creature_surface_finish.gdshader"):
+					var had: Variant = finish.get_shader_parameter("rim_amount")
+					finish.set_shader_parameter("rim_amount", maxf(rim, float(had) if had != null else 0.0))
+				material = material.next_pass
+	for child in node.get_children():
+		_rim_finish_overlays(child, rim)
+
+
 ## A subclass's further reason to fade while the camera is outside the body
 ## (the follower: covering its trainer). Presentation only.
 func _camera_fade_extra(_model: Node3D, _eye: Vector3) -> bool:
@@ -1163,8 +1181,17 @@ func _apply_shiny_cue() -> void:
 	var rim := float((cue as Dictionary).get("rim_strength", 0.0))
 	if _has_model and rim > 0.0:
 		_rim_light_node(_model, rim, "shiny")
+		_rim_finish_overlays(_model, rim)
 	if bool((cue as Dictionary).get("motes", true)):
 		_shiny_cue = ALPHA_AURA.attach(self, _radius * 1.5, _height, Color(str((cue as Dictionary).get("mote_colour", "#dff3ff"))))
+	# NEAR6-TW (F39#4): `shiny_cue.overlay` (OFF) dresses a shiny's meshes in the
+	# character rim overlay (fresnel edge + soft fill) so the cue reads at stand
+	# distance; meshes already wearing another overlay are left alone.
+	var overlay: Variant = (cue as Dictionary).get("overlay", {})
+	if _has_model and overlay is Dictionary and bool((overlay as Dictionary).get("enabled", false)):
+		var material: ShaderMaterial = CREATURE_RIM.RIM.overlay(overlay)
+		material.set_shader_parameter("fill_energy", float((overlay as Dictionary).get("fill_energy", 0.0)))
+		CREATURE_RIM.RIM.dress(_model, material, true)
 
 
 ## Keep a named preview's painted coat readable under the same forest light as
@@ -2217,6 +2244,10 @@ static func _texture_for(tex: Texture2D, species: String, suffix: String, kind: 
 	if tex == null:
 		return null
 	var path := tex.resource_path
+	if suffix == "shiny":
+		var remake := VISUAL.shiny_remake_texture(path)
+		if remake != "" and ResourceLoader.exists(remake):
+			return load(remake) as Texture2D
 	var candidate := ""
 	if path != "" and path.ends_with(".png"):
 		candidate = "%s_%s.png" % [path.get_basename(), suffix]
@@ -2979,6 +3010,23 @@ func play_rest() -> void:
 		_rest_pose_pivot_before = _model.transform
 		_rest_pose_active = true
 		_animator.call("play_terminal", "rest")
+		return
+	# NEAR6-TW (P2-029, F39#24): `prone_rest` (OFF) keeps listed species upright
+	# on their idle pose and settles them belly-down into the bedding instead of
+	# the faint-clip or sideways roll that left them on their backs.
+	var prone: Variant = REST_VISUAL.config().get("prone_rest", {})
+	if prone is Dictionary and bool((prone as Dictionary).get("enabled", false)) \
+			and ((prone as Dictionary).get("species", []) as Array).has(species_id):
+		if _animator != null:
+			_animator.call("tick", 0.0, 0.0, 1.0)
+		if not _has_model:
+			return
+		_rest_pose_pivot_before = _model.transform
+		_rest_pose_config = {"mode": "prone"}
+		_rest_pose_active = true
+		_model.rotate_x(deg_to_rad(float((prone as Dictionary).get("pitch_deg", 0.0))))
+		_model.position = _rest_pose_pivot_before.origin \
+			- Vector3(0.0, _height * clampf(float((prone as Dictionary).get("sink_height_frac", 0.2)), 0.0, 0.5), 0.0)
 		return
 	var look := REST_VISUAL.resolve(species_id, SPECIES.placeholder(species_id))
 	var authored: Variant = look.get("rest_pose", {})

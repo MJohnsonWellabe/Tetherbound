@@ -1,7 +1,7 @@
 {
   "scope": "client_presentation",
   "obsidian_1104": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j4, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.30, r 0.91, anchor RMSE 0.57): F41#10 Glass Sink 4.03 -> 5.07 mapped with hero_landmarks_1101.glass_sink + dark_pool_candidate + obsidian_1104 (3/3: 'reads as a dark glass sink', defect PARTIAL).",
     "scope": "client_presentation",
     "_why": "VIS-STORMWOOD (4 Nov 2026), F41#10 P2-070 (GPU 5.06; CPU v1/b10 4.45 -> 4.92 with the hero basin and dark pool, judges: 'still a terrain edge over a tiled plane'; the pale cells are the 0.085 fracture seams plus sky specular). On (stormwood_glass_sink.gd with_obsidian): plates three times larger, near-black indigo obsidian body, seams dark blue with about a third carrying a faint stormglass glow, and the sky mirror cut from 4 m. Terrain shader parameters only. OFF until judged.",
     "glass_colour": "#0a0d14",
@@ -16,7 +16,27 @@
     "far_roughness": 0.82,
     "vein_colour": "#6fb4ff",
     "vein_energy": 0.85,
-    "vein_fraction": 0.35
+    "vein_fraction": 0.35,
+    "r2": {
+      "enabled": false,
+      "_why": "VIS-STORMWOOD j4 (r1 judged 4.03 -> 5.07; 3/3: 'the cell lines are regular and read as computer-generated', 'still a uniform pattern to the horizon'). r2: plates about a third larger, darker seams, and only one plate edge in seven carries a fainter glow, so the floor reads as dark glass with a few live veins rather than a lit grid. OFF until judged.",
+      "fracture_scale": 0.02,
+      "seam_colour": "#142232",
+      "vein_energy": 0.6,
+      "vein_fraction": 0.15
+    },
+    "r3": {
+      "enabled": true,
+      "_why_on": "ON (VIS-STORMWOOD qj_obs3, 4 Nov 2026): CPU three-judge quick_judge A/B, calibrated slope 1.39, r 0.98, anchor RMSE 0.28: F41#10 Glass Sink 3.96 -> 4.38 mapped (2/3 prefer the plain black glass; the grid is gone).",
+      "_why": "VIS-STORMWOOD qj_obs2 (r2 flat, 3.93 -> 4.02; 3/3: the glowing seams read as 'a debug wireframe grid'; asked for 'a black reflective pool'). r3: no glowing veins, seams the colour of the facets so the cells disappear, and a satin black-glass body that keeps a soft near reflection fading out by 160 m. OFF until judged.",
+      "seam_colour": "#121824",
+      "seam_width": 0.0,
+      "vein_energy": 0.0,
+      "roughness": 0.28,
+      "far_fade_m": [30.0, 160.0],
+      "far_specular": 0.06,
+      "far_roughness": 0.7
+    }
   },
   "meshy_rim": {
     "enabled": true,
@@ -103,7 +123,7 @@
   "roughness": 0.31,
   "metallic": 0.18,
   "dark_pool_candidate": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j4, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.30, r 0.91, anchor RMSE 0.57): F41#10 Glass Sink 4.03 -> 5.07 mapped with hero_landmarks_1101.glass_sink + dark_pool_candidate + obsidian_1104 (3/3: 'reads as a dark glass sink', defect PARTIAL).",
     "_why": "P2-070 (GPU WD2 1 Nov, 4.63): judges read the sink floor as an unchanged flat blue-grey plane and asked for a glass floor or black pool. On: near-black obsidian glass with dim fracture seams, and the r34 far fade from 20 m (CPU r1 at 60-260 m still mirrored the pale sky and the pale seams read as a grid) so the floor shows its own dark body instead of mirroring the pale storm sky. Terrain shader parameters only (stormwood_glass_sink.gd with_dark_pool); no geometry, collision or bake input. OFF until GPU judged.",
     "glass_colour": "#0d1719",
     "facet_colour": "#1c2c30",
