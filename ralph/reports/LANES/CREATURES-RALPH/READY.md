@@ -1,5 +1,75 @@
 # CREATURES-RALPH: running status
 
+## HANDOFF 7 Nov
+
+All CPU scores are mapped three-judge Bar A (stage camera unless the row says otherwise). Verdicts are in `v1/bNN/` and `qj/<round>/` beside this file.
+
+**Shipped by this lane (3–7 Nov):**
+
+| Board id | Before → after | Flag | Commit |
+|---|---|---|---|
+| F38#1 creature collapse/rest | 5.53 → 5.84 | `creature_rim.json` energy 1.0 / power 1.8 | 0d6ab6f2 (+ fe9d2120 rim leaves the tree, fixes batch-6 ERRORs) |
+| F38#1 | 6.21 → 6.30 | model `creatures_ralph_veridian_faint_headdown` | 03d0ade6 |
+| F38#2 hurt poses | 6.18 → 6.40 | model `creatures_ralph_burrowback_lateral_hit` | 68886648 |
+| F39#6 | 6.05 → 6.24 | model `creatures_ralph_aquaryn_faint_headdown` | cca96028 |
+| F39#4 shiny | 5.61 → 6.76 | creatures_visual `shiny_remake_textures` | 41e25f1f |
+| F36#54 Mosshock | 5.63 → 6.55 | coat `creatures_ralph_mosshock_value_lift` | 7b4710a8 |
+| F36#56 Nightburrow | 6.01 → 7.06 | coat `creatures_ralph_nightburrow_value_lift` (+ partial_plates) | 56814c38 |
+| F36 (1) Tuskroot / Thundertunnel / Stormbrush | 6.57 → 7.16 / 5.64 → 5.78 / 6.31 → 6.42 | coat `creatures_ralph_<sp>_value_lift` | 227d6f51 |
+| F36 (1) Cindercub / Voltarach / Brooktail | 6.52 → 7.38 / 5.28 → 6.04 / 6.18 → 6.28 | coat `creatures_ralph_cindercub_value_lift`, `remake_owner1101_dark_lift` | 2e1e6b78 |
+| F36 (1) Stormraven | 5.89 → 6.59 | coat `creatures_ralph_stormraven_value_lift` | 04ed4bf4 |
+| F36 (1) Reedwing / Paddlenewt (+Riftfrill) / Shadelet | 6.04 → 6.70 / 6.15 → 6.70 / 5.97 → 6.26 | coat `creatures_ralph_<sp>_value_lift` | 8fa225df |
+| F36 (1) Staticub / Riverdrake / Riptusk / Sirenseal | 6.59 → 6.80 / 6.37 → 6.69 / 6.22 → 6.32 / 6.53 → 6.61 | coat `creatures_ralph_<sp>_value_lift` | 2d2d558e (b27 calibration r 0.51, weak) |
+| F36 (1) Tempestwing | 5.66 → 5.87 | coat `creatures_ralph_tempestwing_value_lift` | 72a5c30d |
+
+Measurement-only re-bases, from capture fixes and not game changes: F39#6 5.29 → 5.86 and F38#1 5.91 → 6.21.
+
+**Open items (current score; the judges' last asks; next concrete idea):**
+
+- **Fulgocobra (5.78) and Mirejaw (5.84), near-black heads.**
+  - Judges' asks: the hood/head merges with the backdrop and the face is lost. The value lift was flat on both (b25).
+  - Next idea: an emission or albedo accent on the eyes and face only. Mask the eye UVs from the albedo and add an emissive eye spot via a coat `emission` map.
+- **Shadelet (6.26).**
+  - Judges' asks: the tail stands rigidly upright in faint, and the body floats above its shadow at hit-react mid.
+  - Next idea: a model-flag clip edit with `ground_clip.py` (hit mid), plus a tail-bone ease-down in the faint with `lateral_recoil.py`-style per-bone rotation.
+- **Paddlenewt (6.70).**
+  - Judges' asks: the faint collapses into a faceless spotted blob, and the body floats at hit-react mid.
+  - Next idea: `ground_clip.py` on hit, and a head-up hold on the faint end (like the Aquaryn/Veridian head-down arms, reversed).
+- **Glimmermoth (5.57) and Tempestwing (5.87).**
+  - Judges' asks: the wings clip through the floor at faint end. Glimmermoth's wings are oversized and glossy.
+  - Next idea: a wing-bone fold in the faint clip to keep the wings above y=0. The Glimmermoth wing size and gloss need new art.
+- **Sirenseal (6.61).**
+  - Judges' asks: the head dips into the floor at faint mid.
+  - Next idea: a head-bone lift in the faint clip.
+- **F38#2 (6.40) and F38#1 (6.30).**
+  - Judges' asks: hit react reads close to idle on several species.
+  - Next idea: extend the lateral-hit recoil (`lateral_recoil.py`, as Burrowback) to the next species the F38#2 set shows.
+
+**Parked:**
+
+- **Riptusk:** full-body tiled stone plates against the "partial plates" rule. Needs new art (a Meshy remake).
+- **Team Tether grunt faces (anchor sets):** low-resolution face and flat eyes. Needs new art; not this lane.
+- **The value lift on light-bodied remakes (albedo value of 0.49 and up):** exhausted. It came out flat or split on Bramblebun, Galewisp, Glimmermoth and Pebbik.
+- **Pebbik value lift:** split (6.92 → 7.05; two judges higher, one lower). Left OFF. Owner decision whether a split counts as a gain.
+- **F41#18 rim r2:** worse (5.10 → 4.98).
+
+**OFF arms left in the tree:**
+
+- Coat flags (all `creatures_ralph_*`):
+  - Value lifts: `terrapup_value_lift`, `fulgocobra_value_lift`, `voltwig_value_lift`, `mirejaw_value_lift`, `bramblebun_value_lift`, `glimmermoth_value_lift`, `pebbik_value_lift`, `galewisp_value_lift`. Each records its judged result in `_judged` or `_why`.
+  - Older lane arms: `mangrove_monitor_scales`, `cragclaw_body_lift`, `burrowback_plates`, `trailpup_coyote`, `tuskroot_brown`, `sparkit_fennec`, `tempestwing_gold`, `ribbonray_lift`, `ripplet_otter`, `aquaryn_r9_scales`, `aquaryn_r9_ramp`, `skyrill_r10_rim`, `tuskroot_rim`, `electric_charge`.
+- Model flags (in HELD): `creatures_ralph_mosshock_lateral_hit` (judged worse, 5.95 → 5.79) and `creatures_ralph_sparkit_lateral_hit` (worse, 6.20 → 5.75).
+- `creatures_visual.json`: `rest_faint_settled` (not measurable on F38#1 frames).
+
+**Known tool and capture bugs:**
+
+- Never wrap `quick_judge.py` in flock. It takes godot.lock and scene.lock itself; wrapping it deadlocks.
+- `run_net_smoke.sh` needs `GODOT_BIN=/usr/local/bin/godot`. It leaves a `tail -f` holding godot.lock, so kill that after each smoke.
+- Stage capture scripts (`/tmp/claude-0/work/bin/q_lift*.sh`, not committed) end with `git checkout -- data/config/creature_coat_flags.json`. Commit new arms before capturing, or the checkout wipes them.
+- Some anchor pairs are identical on both sides (f36_0_npc C3, C5, C6). When one is drawn, calibration r drops (b27 r 0.51); read the raw gains.
+- Captures fixed in `tools/phase2_capture_creatures.gd`: it waits for the model before posing, and fainted stills wait for the faint clip. CPU frames can land after a short clip ends, so hit arms hold the peak with `hold_clip.py`.
+
+
 ## VISUAL LANE (new session, 3 Nov ~00:45 UTC): setup done, batch plan and ETA for the 89 items
 
 **Setup (measured):** fresh disk allowance (about 13 GB free). Godot 4.7-stable at `/usr/local/bin/godot`; the **full** headless import of the whole project is running (no `.gdignore` trimming), so biome, landmark, HUD and fight items can now be captured here. Portable **Blender 4.2.3 LTS** runs from scratch (`blender --version` OK), so new meshes are built here; no Meshy, no GPU.
@@ -596,3 +666,14 @@ Not run yet. The required suite needs every remake imported, which does not fit 
 - The three gains ship ON, each with its score in `_why_on`. Riftfrill shares Paddlenewt's albedo, so the lift reaches it too.
 - Test: `test_dark_value_lift_flags`. Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
 - Verdict: `v1/b26/VERDICT.md`. Pose defects the judges name: Shadelet's upright faint tail, and Paddlenewt and Shadelet floating in hit-react mid.
+
+## v1/b27 (7 Nov): Staticub (6.59 -> 6.80), Riverdrake (6.37 -> 6.69), Riptusk (6.22 -> 6.32), Sirenseal (6.53 -> 6.61) value lifts ON
+- Resumed after the 5 Nov usage-limit pause and merged origin/main (#839).
+- All four ship ON; every judge scored each one higher or equal. Calibration r is 0.51, which is weak; the raw scores are in the verdict.
+- Test: `test_dark_value_lift_flags` (now handles r10 albedos). Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
+- Glimmermoth, Pebbik, Galewisp and Tempestwing arms are committed OFF; their batch is next.
+
+## v1/b28 (7 Nov): Tempestwing value lift ON (5.66 -> 5.87); Pebbik split, Galewisp and Glimmermoth flat, all OFF
+- `creatures_ralph_tempestwing_value_lift` ON (score in `_why_on`). The other three record their results in `_judged`.
+- Test: `test_dark_value_lift_flags`. Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
+- The value lift has run out on the lighter remakes. The lane moves on to the pose defects the judges keep naming: faint wings and heads clipping the floor, hit-mid floating, and upright faint tails.

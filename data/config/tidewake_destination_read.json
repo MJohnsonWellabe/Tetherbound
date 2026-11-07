@@ -1,7 +1,8 @@
 {
   "_why_r2": "r2: the shallow-water walls showed one blank back face and two submerged walls; three walls now step down the sand toward the water in the arrival view (fwd 9/12/15 m), planted face toward the camera; the platform lantern is shorter.",
   "_comment": "World dressing P2-011 (OFF until GPU judged; tb/world-dressing). GPU 4.85 (31 Oct): 'the signal spire is a small brown box on a grass hill, the drift arch a tiny distant hoop and the terraces the flat disc chain'. Installed Meshy families only (meshy-1020/1022, provenance beside each GLB), fitted, grounded and collided like every landmark model (scripts/world/water_landmark_models.gd). Positions screened on the CPU route_day frames: drift arch camera (-295.9, 200.4) facing (0.37, -0.91); signal spire camera (-74.0, 909.9) facing (0.14, -0.97); terraces camera (1114.3, 2218.4) facing (-0.86, 0.47).",
-  "enabled": false,
+  "_why_on": "ON 7 Nov 2026 (coordinator consolidation): VIS-TIDEWAKE qj/dr F39#3 on top of the shipped d3, CPU mapped 5.75 -> 5.84 (split: two judges up, one down). Owner 7 Nov 2026: every judged gain over what is live ships ON (a split or small gain is still a gain).",
+  "enabled": true,
   "height_overrides": [
     {"landmark_id": "lantern_cove_drift_arch", "model_suffix": "tidewake_drift_arch.glb", "height_m": 8.5},
     {"landmark_id": "lantern_cove_drift_arch", "model_suffix": "tidewake_signal_lantern_post.glb", "height_m": 3.2}

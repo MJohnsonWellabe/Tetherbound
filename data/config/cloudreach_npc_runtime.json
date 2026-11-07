@@ -51,6 +51,16 @@
     }
   },
   "world_payoffs": {
+    "anchor_waymark": {
+      "_scope": "Cloudreach Storm Anchor vessels (world_payoffs), presentation only, no collision",
+      "_why": "NEAR6-CR F40#8 P2-053 round 2 (CPU 6.32 with anchor_vessel_quiet): all three judges asked for the route marker as a carved pale-stone waymark with a small gold cap and a restrained cyan inlay instead of a thin flat-colour post. Replaces the column and rings while locked; the restored state and its wind are unchanged. OFF until judged.",
+      "enabled": false,
+      "stone_colour": "#cbc2ab",
+      "cap_colour": "#c9a24a",
+      "base_radius_m": 0.26,
+      "top_radius_m": 0.18,
+      "height_m": 2.6
+    },
     "anchor_vessel_quiet": {
       "_scope": "device_local_presentation",
       "_why": "P2-053 / F40#8 (NEAR6-CR, 4 Nov 2026; GPU 5.72): the saturated cyan post at the Three Bells bridge is the lower-west Storm Anchor's bottled-wind column (scripts/world/cloudreach_world_payoffs.gd _anchor) whose teal column and two teal rings read as a debug T marker competing with the bridge. On: rings become bronze cage bands (the realm's route-post metal), the column thinner and greyed with almost no glow; teal still tells locked from restored. Presentation only.",
@@ -90,7 +100,8 @@
   "post_readability": {
     "_scope": "world_presentation",
     "_why": "P2-068 / F40#9 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct 5.50 mapped): named Cloudreach NPCs read as tiny figures half lost in tall grass, shadow and tree trunks. When on (scripts/world/cloudreach_npc_posts.gd): ground cover is kept off a clear_radius_m disc around every position a named NPC can stand at (flag-independent, so every peer builds the same cover), and each standing NPC gets a soft shadowless warm fill light. Presentation only.",
-    "enabled": false,
+    "_why_on": "ON 7 Nov 2026 (coordinator consolidation): VIS-CLOUDREACH r3 F40#9, CPU mapped 5.16 -> 5.20. Owner 7 Nov 2026: every judged gain over what is live ships ON (a split or small gain is still a gain).",
+    "enabled": true,
     "clear_radius_m": 3.2,
     "fill_light": {"enabled": true, "colour": "#ffe2b8", "energy": 0.7, "range_m": 4.5, "attenuation": 1.2, "offset": [0.0, 1.6, 1.2]}
   },

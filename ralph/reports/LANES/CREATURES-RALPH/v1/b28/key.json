@@ -1,0 +1,41 @@
+{
+ "Ga": {
+  "anchor": false,
+  "label": "lift:pebbik",
+  "A": "/tmp/claude-0/work/judge/lift8/k/sides/pebbik_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift8/k/sides/pebbik_b.jpg"
+ },
+ "Nh": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Cd": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Nk": {
+  "anchor": false,
+  "label": "lift:galewisp",
+  "A": "/tmp/claude-0/work/judge/lift8/k/sides/galewisp_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift8/k/sides/galewisp_b.jpg"
+ },
+ "We": {
+  "anchor": false,
+  "label": "lift:glimmermoth",
+  "A": "/tmp/claude-0/work/judge/lift8/k/sides/glimmermoth_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift8/k/sides/glimmermoth_a.jpg"
+ },
+ "Fq": {
+  "anchor": false,
+  "label": "lift:tempestwing",
+  "A": "/tmp/claude-0/work/judge/lift8/k/sides/tempestwing_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift8/k/sides/tempestwing_a.jpg"
+ },
+ "Qw": {
+  "anchor": true,
+  "A": "f36_0_npc:C5B",
+  "B": "f36_0_npc:C5A"
+ }
+}

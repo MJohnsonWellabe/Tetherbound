@@ -22,12 +22,11 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var off: Array = raw.get("sections_off", [])
 	for section: String in ["night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
-			"veilfall_hero_candidate",
 			"veilfall_facade_candidate", "forward_plus_candidate",
 						"veilfall_formation_relief_fill_candidate",
 				"swim_candidate",
 				"veilfall_mountain_candidate",
-				"current_bands_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
+				"current_bands_candidate", "current_tint_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate", "beach_groups_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar

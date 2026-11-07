@@ -2,45 +2,106 @@
 
 Read first; update in place, under 25KB. No dated status/goal/handoff documents. Evidence: `ralph/reports/<LANE>/`; history: Git, `archive/`.
 
-## 0. Current integration (coordinator: Claude cloud session, owner restart 17 Oct)
+## 0. Coordinator handoff and plan (7 Nov 2026)
 
-**Owner, 24 Oct 2026:** "Yes switch to GPU judging and split the rows." Every visual done/not-done verdict is judged on the GPU rig (Medium and High, yardstick, mapped Bar A ≥ 7.5); CPU captures are for iteration only and no longer close a row (the 6.7 CPU-provisional rule is retired; no row was met on it). Board split (bars unchanged): F36 (0) per priority asset (30), F36 (1) per roster subject (70), F38–F41 (1)/(2) per catalog item; each item counted once, closing on its GPU pass in every biome it touches. Board 250/467 (24 Oct: +Burrowback; +13 from the GPU F36 roster baseline). Owner sheet verdicts: Terrapup is the wrong species ("supposed to be a large dog not a badger", reopened, Meshy redraft); Burrowback and Mosshell good; Trailpup, Bramblebun, Nightburrow and Mudsnout close (one unique touch); Cindercub, Riftfrill, Stormtrail need work; Tidewake sand good, shore cluttered, water next; Hall shafts a bug, rest fine. Stormwood-routes joins Routes.
+Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 
-**Owner, 24 Oct, raise the floor:** visual work runs worst-first: GPU-scored items below 6 to 6, then all to 7, then 7.5 (bar unchanged); unscored areas get a baseline first.
+**State:**
+- Batches #808 to the 7 Nov consolidation: about +66 CPU across 136 gains; about 40 rows crossed 6.0. Ledger and board: https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem, with source in `ralph/reports/COORDINATOR/dashboard/status.json`.
+- CPU scores (llvmpipe, Low/Compat, `tools/visual_judge/`) are provisional and only compare within a batch.
+- The board mixes stale GPU and newer CPU scores.
+- Lane handoffs are the `## HANDOFF 7 Nov` sections in `ralph/reports/LANES/{VIS-MEADOWS,VIS-TIDEWAKE,VIS-CLOUDREACH,VIS-STORMWOOD,NEAR6-MS,NEAR6-TW,NEAR6-CR,CREATURES-RALPH,NET-F48}/READY.md`.
 
-**Owner, 24 Oct, creature touches:** current meshes stay; each species gains light energy, elemental or war-worn touches (CLAUDE.md). GPU Meadows matrix (F38#0/F26#3): no site at 7.5 (best village road 7.09); camera stands inside geometry are the main sink. Cloudreach moved to scene fixes.
+**Owner rules (7 Nov):**
+- Every judged gain over live ships ON, including split or small gains. Only flat, worse, or a gain paid for by another row's loss stays OFF.
+- New art is made in Blender, not Meshy (no credits): new meshes, reskins or recombinations of installed assets. Keep the drafted reference, 1.80 m scale check and provenance, and keep the flag OFF until judged. This overrides the 27 Sep "meshes stay with Codex" split.
 
-**Owner, 22 Oct 2026:** GPU remote started (owner PC, GTX 1060 3 GB, branch `tb/gpu-pass`, evidence `ralph/reports/GPU-PASS/`); visual pause lifted. "Fix the yardstick then get our scores improved til we have a good looking game": every visual verdict uses `tools/visual_judge/` (standard prompt, anchors, `calibrate.py`); done = mapped Bar A ≥ 7.5 (#706). GPU results on the yardstick reopened F10#2 (5.52), F04#6 (5.92), F29#3 (7.00); the standard GPU rejudge reopened P2-095/096 (6.72), P2-018 (5.88/5.94), P2-094 (5.96/5.94) and 15 of 16 F36#0 rows; Ripplet 7.89 did not hold (7.26). F08#3 Cloudreach settlements reopened on GPU (6.57 vs 5.20; CPU was 7.13), settlement life kept ON; F25#4 effect budget met on GPU. Board 250/467 after the 24 Oct split. GPU lane stopped (23 Oct). Routes: "pieces that start with what they need proven by handoffs of runs that end at the right spot"; each seam gets a committed manifest, and there are no chain restarts. Owner: naturalistic creatures are the style; stylised remakes stop.
+**Plan:**
+- Five lanes, each on one row at a time; see the decisions below.
+- End of day 8 Nov: GPU re-judge (Medium and High) of every row whose last score is CPU-only or older than its latest landed change. The bar stays 7.5. A GPU score below the CPU score reopens the row.
 
-**Owner, 22–23 Oct:** wind-down put all work on main. **Lanes:** Routes, Creatures, Meadows, Tidewake, Stormwood, Cloudreach. **Owner 24 Oct, "Just shrink it":** Terrapup ships at 3.20 m to fit fight rooms (never-shrink exception, Terrapup only). Pick-up guide: `ralph/reports/CONSOLIDATION/README.md`; raw outputs: `tb/archive-2026-10-23`.
+**Lane brief:**
+- Branch `tb/item-<row>` from main.
+- The row, its score and source, and the judges' asks, from `ralph/reports/VISUAL/item-scores/` and the handoffs.
+- One-item quick_judge rounds. A gain ships ON with `_why_on`, and any OFF-assert in a test flips to ON with the score.
+- Hard rules: no camera reframing, never shrink creatures, red reserved for Team Tether, never weaken tests, one Godot process at a time.
+- Done at 7.5, after two flat rounds, or when blocked; record the reason when parking.
+- Write READY.md, push, stop.
 
-**Owner kickoff, 20 Oct 2026 (CT):** weekly close plan (https://claude.ai/artifact/Mt9uR8rvJQZvXrBx3ssgG2) runs without the GPU remote: functional first, then Meshy-batched visuals judged on CPU at 6.7 (CPU-provisional; a GPU pass confirms 7.5). F25#4 and F21#5 frame time wait for a GPU. 17 Oct restart lanes closed 0 and were archived; their work is on `tb/routes`, `tb/fights`, `tb/look`, `tb/creatures`, `tb/creature-art`.
+**Coordinator loop (every 25–30 min):**
+- Batch lane gains into one `tb/land-batch-N` PR built with `git merge-tree` and `commit-tree`.
+- Before pushing, check that JSON parses, every OFF `creature_model_flags` entry is in HELD, no test asserts a newly ON flag OFF, and any big deletion is only reformatting.
+- Open the PR with the template body and the `full-ci` label, and subscribe.
+- Run only one full-CI PR at a time; stack the next batch on it.
+- Merge by hand when green. Re-run a failed job once, after a comment.
+- Republish the board.
 
-**Coordinator rulings, 17 Oct:** F36#1 judges fly-grip only for Fly-capable species (SYSTEMS §8), swim/ride only where used in play; other roles read "not a game state", never a pass; bar unchanged. CPU-only evidence never parks a visual item. Meshy key is in the coordinator session only (`tb/creature-art`).
+**Blocked (owner, GPU or capture):**
+- F39#15 shoals: terrain re-bake plus route re-proof.
+- F41#21/#16 Hollows results: GPU only.
+- F41#3: spacing stays (owner); visual fix only.
+- F38#19/#26/#31/#33: capture-tool fixes (below).
+- F41#14 candy: the +0.29 arm breaks the rule that rarer candy is bigger.
 
-**Owner, 16 Oct 2026:** Codex shut down; all lane heads merged in PR #690 with new Meshy assets flag-off.
+**Known CI:**
+- `smoke_net_f48_cut_key` intermittent stale peer: NET-F48 watchdog fix landed. If it recurs, read its handoff.
+- `smoke_water_combat_pause` (#843) and `smoke_water_dismount_state` (#837): one failure each, both passed on re-run.
 
-**Owner, 2 Nov 2026 (F49#0 scope):** "Park the opening join, just finish the training loop. We shouldn't need to do the opening join. Take that out of the requirements. If we prove everything out I don't need it all to be rerun again." F49#0 no longer requires a seam joining the Meadows opening to the generated `relay` boundary: the earned line from `relay` is accepted, with the opening proven by its own pieces (f49_mt_bridge lineage), and nothing is re-earned. Remaining F49#0 work is only the earned-line training loop (meadows_walk_to_mira pieces → training_t2_master → home → kitchen → feed, each seam matched; tb/routes-f49).
+**QUEUE: quick wins first (built but never judged, or one fix away):**
+- Judge these arms: F38#12 orb reward and F38#5 grow-only scale (VIS-MEADOWS), F38#28 arena boundary arms (VIS-STORMWOOD), F39#25 map overlay (NEAR6-TW), F40#2 stone-ground candidate (VIS-CLOUDREACH).
+- F40#12 Cloudreach speaker: unclaimed, base captured.
+- One tooling lane:
+  - Carry VIS-TIDEWAKE's quick_judge `find_frame` patch (`runbook/quick_judge_find_frame.patch.py`) into `tools/visual_judge/quick_judge.py`.
+  - HUD stand settle frames 900 (F38#19).
+  - Stand creatures keep physics (F38#26).
+  - Stand alpha pose calls `set_alpha(true)` (F38#31).
+  - Catch capture shoots `06-breakout` while the card holds (F38#33).
 
-**Owner, 15 Oct 2026 (standing directions, CLAUDE.md top block):** (0) visual bar lowered to 7.5 Bar A (was 8.5; gain/stop rule unchanged); (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves; never full runs. These supersede RD-26's 30-per-night cap, the "only where a scene change can't fix it" limit, ACCEPTANCE F49#0's 4 Oct one-save wording and the 13 Oct coordinator decision requiring earned, matched seams.
+**QUEUE: Warrens (owner 7 Nov):** re-seat the F38#30 shell into the terrain (5.10), which also unblocks F38#24 (4.42).
 
-**Owner direct-run override (14 Oct 8:42 PM CT):** native/GPU proofs run directly from the lane's own pushed checkout (CLAUDE.md standing direction 4); its 14 Oct GPU queue and root turn order were superseded by the 17 Oct restart.
+**QUEUE: Blender rows:**
+- F41#1 Stormheart crown and core (3.94).
+- F41#8 outfit variants (4.96).
+- F38#17 Solene/Hald variant.
+- F40#1 stone shelves (5.29).
+- F41#9 harvest cues (5.40).
+- F36#70 Sparkit legs (5.41).
+- F38#6 pickup cloth (5.52).
+- F39#31/#2 Veilfall (5.56/5.78).
+- F41#14 candy in rarity order (5.70).
+- F40#4 strata edges (6.27).
+- F38#41 boulders.
+- F38#20 keep on a hill.
 
-**Preserved proof limits:** earlier failures, sources and queues stay in preservation-index.md and Git; old queues stopped.
+**QUEUE: scene and shader rows:**
+- Fulgocobra and Mirejaw eye emission (5.78/5.84).
+- Shadelet, Paddlenewt, Glimmermoth and Tempestwing faint clipping and floating hit-react.
+- F40#19 rain wetness (5.61).
+- F40#17 rim turf (6.19).
+- F41#6 telegraph cues (6.76).
+- F41#7 baseline (6.58).
+- F39#16 dash rhythm (6.75).
+- F38#38 Missing chip (7.33).
+- Not started: F39#17, #8, #10, #5, #27 and F38#36, #11, #27.
 
-**Landed baseline/count:** PR#686 merged 14 Oct 2026, 5:05 AM CT as `5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76`; full CI `38544221075`: all 21 relevant jobs plus traceability PASS. PR685/e30 remains historical. Board **233/271**, no closure. Cloudreach software-GL112–127s risks120s realm-ready cap; target≤80s, never raise caps/ENet timeouts. Sparse checkouts required; full~30GB exceeds allowance. Only human playtest/Ally need owner.
+**Owner decisions (7 Nov, answered):**
+1. **Lanes:** five lanes. Run them long-lived: each takes the next QUEUE row and resets its context between rows.
+2. **Setup first:** the next coordinator's first job is to test, then propose (`update_environment`), a Default setup script. It installs Godot 4.7-stable to `/usr/local/bin/godot` (github.com releases) and portable Blender 4.2.3 LTS (download.blender.org `Blender4.2/blender-4.2.3-linux-x64.tar.xz`) under `/opt`. Budget about 10 GB of disk per lane, and delete frames after each round.
+3. **Order:** follow the QUEUE order above: quick wins, then Blender rows, then scene rows. Skip blocked rows.
+4. **Cap per row:** 3 judged rounds or about 3 h, or 5 rounds or about 6 h for art rows. Also stop at 7.5 or after two flat rounds.
+5. **GPU re-judge:** stays at end of day 8 Nov. Lanes start now; reorder the QUEUE after the re-judge.
+6. **F38#30 Warrens:** re-seat the hillside shell into the terrain, keeping the entrance and route. This unblocks F38#24, so move both into the QUEUE.
+7. **F41#3:** keep combat spacing unchanged. Fix the look with a fade or clip tweak.
+8. **F49 route saves:** don't commit them to main; a lane re-generates any single save when needed.
+9. **Meshy key:** leave as is.
+10. **Notes:** never put two lanes on rows that share a file (`hud.json`, `creature_coat_flags.json`, `tidewake_look.json`, `stormwood_ground_finish.json`). Keep landing batched, with one full-CI run at a time. Nine sessions used the weekly limit in about 3 days, so watch usage.
 
-**Owner, 13 Oct 2:10 PM CT:** Claude lanes handed over to Codex (handoffs `ralph/reports/EVIDENCE/HANDOFF-*.md`); agents decide without asking the owner except for the human play pass (F49#1) and the ROG Ally runs.
-No long runs: bounded pieces/matched saves; disclose generated boundaries. Root consolidates one full-ci PR with traceability, then board/STATE. Never weaken/skip/delete tests; docs/ralph/archive inputs need CI materialization. Push hourly; one native writer. Clean safely under standing authorization, preserving active work/shared Git/saves/unique assets/evidence; C~1/D5GiB, physical/commit2GiB floors plus reserves. Never shrink creatures; CREATURES.md before scale changes; no purchases.
-
-
-**Codex creature proof:** source `1f6d7e2108`; Iona/Orsen/Otto retries were used and rejected (no further generations); Solmane wing root and giant fit remain open; Mirejaw 3.55 m fit candidate stays OFF after stage full-bar FAIL. Stormursa support IK2 failed and is parked; side-faint 5+5 is WEAK/full FAIL (proof `c78a3afb7d`, `ralph/reports/F29/stormursa-sidefaint/`); RD-26 ledger: six generations used.
-
-**F38 Meadows historical catalog:** P2-003 matched High/Medium pairs FAIL; unlit-pylon/Dummy candidates OFF. P2-017 standing-stage scale does not prove gameplay scale; Pipwing/Bramblebun apparent scale WEAK, full art bar unmet. Survey354/528 each,353 matched,0/23 catalog IDs matched. Neutral24-pair WEAK/full FAIL. Follow-ups support P2-005/012/014 defects, P2-006 mill only, P2-013 needs targeted views; no closure. Retained evidence: `ralph/reports/F38/{p2-003-rescore,p2-017-stage,service-recapture}/`.
-
-P2-033 clearing/glow and narrow treatments failed; all-preset close/16m/32m review was WEAK/full FAIL, so approach stays PARKED and both flags OFF (`ralph/reports/F38/p2-033-narrow/`). P2-034 Basic Orb Low height candidate remains OFF after teardown failure/no blind identity gain; the order-1029 navy-seam candidate stays OFF and unrendered pending High/Medium review (`ralph/reports/F38/p2-034-orb/`). Fight baseline scan FAIL: foliage/attack-overlay clutter; three blind reads found no half-view ally, but trainer overlap and rail findings differ. Earned-path, four-player and performance acceptance remain unproven. West-wall ivy stays OFF pending review. No F38 catalog row closes (`ralph/reports/F38/service-recapture/fight-v3-blind/`).
-
-**Historical carryovers (not restart queues):** F19D1–D4 PASS; D5 pending-vitals remains OPEN (`ralph/reports/F19/service-detours/`, raw `.artifacts/codex-service-carryovers/F19-D3/road-v4`). P2-092 camera and P2-041 footprint approaches parkedOFF/fullFAIL; retained `ralph/reports/F41/p2-{092,041}-service/`. Giant-fit blindFAIL/OFF (`fc61f705`); GPU memory failure retained; P2-087 unaccepted. All originals preserved; use current fixed restart queues.
+**Earlier owner rulings still in force** (full text in Git history):
+- 24 Oct: GPU judging closes visual rows (Medium and High, yardstick, mapped Bar A ≥ 7.5). CPU is for iteration, and the 6.7 CPU-provisional rule is retired. Rows are split per asset and subject, with the bars unchanged.
+- 24 Oct: raise the floor worst-first: below 6 to 6, then all to 7, then 7.5. Unscored areas get a baseline first.
+- 24 Oct, creature touches: current meshes stay; species gain light energy, elemental or war-worn touches. "Just shrink it": Terrapup ships at 3.20 m (the only exception to never-shrink).
+- 17 Oct: F36#1 judges fly-grip only for Fly-capable species, and swim or ride only where used in play. CPU-only evidence never parks a visual item.
+- 2 Nov, F49#0: "Park the opening join, just finish the training loop." The earned line from `relay` is accepted, and no Meadows-opening seam is required.
 
 **Active owner rulings (4–5 Oct):**
 - Visual target: High/Medium judged to the full bar; Low/Compatibility checked for breakage until the Ally test passes. UI's second check is 1280×720. F36#0 may refine only the identity of installed NPCs.

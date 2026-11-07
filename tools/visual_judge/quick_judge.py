@@ -55,6 +55,9 @@ BACKUP = ART / "overlay_backup"  # present only while an overlay is applied
 LOCKS = Path(os.environ.get("QJ_LOCK_DIR", "/tmp/claude-0/work"))  # shared with lane_bin's locks
 BIOME = {"F38": "Meadows", "F39": "Tidewake", "F40": "Cloudreach", "F41": "Stormwood"}
 SHEET_LIMIT = 1_450_000
+# Pinned anchor set (the v1/b5 batch's; it reproduced b5 within RMSE, 4 Nov). A fixed set keeps one round's
+# mapped level comparable with the next; a random draw moved the level by 0.5-0.9 in the parity check.
+PINNED_ANCHORS = "craft,f10_2_r3_capacitor,f04_6_r22"
 
 # Per-tool narrowing: extra arguments that keep the stage, camera and timings but skip frames the
 # item does not use. Only tools whose own docs say the filter keeps framing are listed.
@@ -487,7 +490,7 @@ def link_tree(src, dst):
                 shutil.copy2(p, q)
 
 
-def packet(rd, seed=None, include="craft", pairs=3):
+def packet(rd, seed=None, include=PINNED_ANCHORS, pairs=3):
     rd = Path(rd)
     st = json.loads((rd / "round.json").read_text())
     k, j = rd / "k", rd / "judge"
@@ -518,8 +521,9 @@ def packet(rd, seed=None, include="craft", pairs=3):
     seed = seed if seed is not None else random.SystemRandom().randrange(1 << 30)
     cmd = [sys.executable, str(HERE / "anchor_tiles.py"), "--out", str(j), "--key", str(k / "key.json"),
            "--candidates", str(k / "spec.json"), "--pairs", str(pairs), "--seed", str(seed)]
-    if include:
-        cmd += ["--include", include]
+    for g in (include or "").split(","):
+        if g:
+            cmd += ["--include", g]
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL)
     link_tree(ROOT / "docs/reference", j / "reference")
     prompt = fill_prompt(j.resolve(), k)
@@ -668,6 +672,7 @@ def main(argv=None):
     s = sub.add_parser("packet")
     s.add_argument("round")
     s.add_argument("--seed", type=int)
+    s.add_argument("--include", default=PINNED_ANCHORS, help=f"anchor groups, comma-separated (default {PINNED_ANCHORS})")
     s = sub.add_parser("finish")
     s.add_argument("round")
     s.add_argument("--report")
@@ -704,7 +709,7 @@ def main(argv=None):
         print("round dir:", rd)
         return
     if a.cmd == "packet":
-        launch, missing = packet(a.round, a.seed)
+        launch, missing = packet(a.round, a.seed, a.include)
         print(launch)
         return
     if a.cmd == "finish":

@@ -1,5 +1,46 @@
 # NEAR6-MS (4 Nov 2026): running status
 
+## HANDOFF 7 Nov
+
+Branch `tb/near6-ms-1104`. All CPU scores are quick_judge mapped (llvmpipe, three code-blind judges, calibrate.py); a row closes only on the GPU.
+
+**Shipped this lane (flag ON):**
+- F41#20 P2-084 dialogue: 4.72 -> 5.64, `camfx.json fight_fade` + `dialogue_open` (on main).
+- F38#29 P2-065 trainer defeated: 5.76 -> 6.18, `npc_post_stances.json beaten_trainer_stance.immediate_1104` + `trainer_aftermath.json silent_victory_shot_1104`, `f4748d0b` (on main).
+- F38#32 P2-035 camp props: 5.61 -> 5.81, `combat.json arena.wild_keep_clear trail_camp_1104`, `773e609b` (on main).
+- F39#23 P2-114 catch HUD contrast: 5.26 -> 5.62, `capture_readout_visual.json ring_style_1104`, `e2da3eae` (on main).
+- F38#4 P2-002 map: 6.15 -> 7.18 Meadows parchment fog tones (`map.json fog_veil.cloud_fog.tones.meadows`, `c84833c5`); 6.81 -> 6.93 `fog_veil.chart_grid_1104`, `2086023c` (on main).
+- F38#9 P2-001 menu shell: 7.13 -> 7.36, `menu.json satchel_focus`, `c84833c5` (on main).
+- F38#7 P2-058 catch aim: 5.93 -> 7.00, `combat.json camera.occlusion_fade.aim_hide_1104`, `ffa17ee1` (on main, #841).
+- F38#21 P2-005 ground cover: 6.11 -> 6.23, flower drifts + stones in `grass_field.json meadows_ground_candidate` (`_why_drifts_1105`), `bbc4a641` + `aa860bf9` (landing in #843).
+
+**Open items:**
+- F38#14 P2-060 catch effect finish (board 6.23). Last judge ask (catalogue): dominant saturated ground ring, flat bright orb, little change between rest and shake. Found: every judged frame (02 in flight, 03 strike, 03 absorbing) still shows the previous throw's "Bramblebun broke free / Weaken it more" card over the new throw. Next: judge the built arm `hud.json catch_card.clear_on_release_1107` (`a58daf1b`, OFF; overlay `["catch_card.clear_on_release_1107"]`); the A/B was stopped for the wind-down before capture finished.
+- F38#36 P2-078, F38#11 P2-063, F38#27 P2-031: not started (02:35 list).
+
+**Parked:**
+- F38#19 P2-004 HUD: capture blocker (stand shoots the opening fade at 180 settle frames; 900 settles) and owner placement (legend under the hotbar, OP21-11); quiet empty chips flat on a settled stand.
+- F38#26 P2-020 ground contact: capture blocker (creature stand turns physics off, so `creature_grass_clear` never engages).
+- F38#31 P2-019 alpha rarity: capture blocker (stand's alpha pose never calls `set_alpha(true)`, so no aura or alpha rim).
+- F38#8 P2-119 Fly grip: new art (carry animation); `hang_pose.body` flat 6.18 -> 6.07.
+- F38#25 P2-018 shiny: new art (hue repaint); `shiny_cue` flat 6.85 -> 6.85 (also flat twice in Tidewake).
+- F38#6 P2-033 pickups: new art (rare-candy cloth is in the Meshy model).
+- F41#9 P2-046 harvest: new art (stormglass copper/glass cues, solid glowmoss model).
+- F41#15 P2-083 dialogue: new art (Marrow's white-blown face material).
+- F41#3 P2-092 actor spacing: owner/combat-contract decision (overlap is inside the boss lunge).
+- F41#21 P2-111 / F41#16 P2-110 Hollows victory/loss: GPU or a boundary save (unreachable on CPU).
+- F38#9 P2-001: two non-gaining layout tries after satchel_focus; needs a content layout idea.
+
+**OFF arms left in the tree (this lane):** `hud.json quiet_empty_chips_1104` (flat); `creatures_visual.json alpha_presence_1105` (unjudgeable on the current stand); `hud.json catch_card.clear_on_release_1107` (not judged). Judged-flat arms from other lanes left OFF: `fly_traversal.json hang_pose.body`, `creatures_visual.json shiny_cue`.
+
+**Known tool or capture bugs:**
+- Creature stand `tools/phase2_capture_creatures.gd`: physics off after seating (no grass clearing) and alpha pose never calls `set_alpha(true)`; asks with line numbers in the F38#26 and F38#31 sections below.
+- UI stand (`phase2_capture_ui.gd`, F38#19): `--hud-settle-frames=180` still under the opening fade on CPU.
+- `tests/smoke_alpha_aura_cached_geometry.gd` fails on main as well (expects a cached-coefficient aura not in this tree); `smoke_alpha_aura_geometry.gd` passes (needs `xvfb-run` and `--rendering-driver opengl3`).
+- Mapped scores differ batch to batch for the same base (menu 7.13 vs 6.34); compare within a batch only.
+- Shallow clone: fetch only with `--depth=1`; merges use `git commit-tree` with main's tree plus the lane's files.
+- `QJ_JOB=<file>` overrides a stand for both sides without touching job.json (cache key includes the launch line).
+
 ## Round 4 (coordinator, 5 Nov 02:35): low-6 Meadows rows, cheapest judge ask first
 
 F38#7 (5.93 -> 7.00) is landing in #841. F41#3 stays parked (combat-contract call); art-blocked rows are left. None of these rows are VIS-MEADOWS's.
@@ -8,8 +49,8 @@ F38#7 (5.93 -> 7.00) is landing in #841. F41#3 stays parked (combat-contract cal
 |---|---|---|---|
 | F38#21 | P2-005 ground cover | 6.06 | **Landing-ready: CPU 6.11 -> 6.23** (small; all three judges +0.1). |
 | F38#8 | P2-119 Fly carrier grip pose | 6.12 | **Flat, stays OFF; needs art.** UIPOSES's existing arm `fly_traversal.json hang_pose.body` (legs trail back, knees bent, torso leans) judged CPU 6.18 -> 6.07 (`qj/F38-8-fd74f3f3ea83-11050219/`; raw 6.2/6.0/5.6 -> 6.1/6.0/5.5, defect PRESENT on every side). The flight stand looks at the trainer from the front, so the trailing legs foreshorten and the change barely shows; all three judges ask for a new carry animation (talons on the shoulders or a harness, body angled), which is animation art. |
-| F38#31 | P2-019 alpha rarity read | 6.16 | Queued |
-| F38#25 | P2-018 shiny palette distinction | 6.21 | Queued |
+| F38#31 | P2-019 alpha rarity read | 6.16 | **Blocked: stand artefact (ask below).** Arm `creatures_visual.json alpha_presence_1105` (`c2f0fee8`, OFF) not judged. |
+| F38#25 | P2-018 shiny palette distinction | 6.21 | **Flat, stays OFF; needs texture art.** `creatures_visual.json shiny_cue` + `overlay` at NEAR6-TW's r4b values (energy 1.6, power 1.5, fill 0.2) judged CPU 6.85 -> 6.85 (`qj/F38-25-d1ea13820403-11071325/`; 6.3/6.3/6.3 both sides, all three judges called the sides identical), matching NEAR6-TW's two flat Tidewake rounds. The stand stages shinies correctly (`setup(species, true)`). The shinies already differ by tone (nightburrow white -> steel-blue, stormtrail blue-grey -> gold); judges ask for a different hue or colour block on the shiny texture, not a lighter tint: a repaint, for an art lane. |
 | F38#14 | P2-060 catch effect finish | 6.23 | Queued |
 | F38#36 | P2-078 dialogue speaker occlusion | 6.26 | Queued |
 | F38#11 | P2-063 shared fight tell and hit effects | 6.29 | Queued |
@@ -25,6 +66,13 @@ F38#7 (5.93 -> 7.00) is landing in #841. F41#3 stays parked (combat-contract cal
 | F41#9 | P2-046 harvest resource identity | 5.40 | **Parked, needs art** (two flat rounds: glowmoss reads as a white blob on CPU; judges want copper/violet-glass cues on the stormglass nodes and a solid moss model). |
 | F38#32 | P2-035 camp and workshop props | 5.81 | **No standalone lever.** The keep-clear gain (5.61 -> 5.81) is on main. In the bonfire frame a leaning log appears to pass through a barrel (band1_lower_meadows/props.json `trail_camp.props`, Barrel [340.9, 934.4] near tree-log [342.4, 933.25]); a single dressing nudge is under the 0.5 bar and lives inside a props list that an overlay cannot patch. Fold it into the next camp dressing pass. |
 | F41#15 / F41#3 | P2-083 dialogue obstruction / P2-092 actor spacing | 5.90 / 5.98 | **F41#15 needs art:** twoshot_v2 and the fight fade are ON and the speakers already read; the remaining defect is Captain Marrow's white-blown face from the model material. **F41#3 needs a combat-feel decision:** the overlap is inside the boss lunge, which contact spacing exempts by design; a lunge stop-short changes fight timing, not presentation, so it is not taken here. |
+
+### F38#31 P2-019 alpha rarity: the stand never marks its alpha as an alpha (for the coordinator)
+
+- The F38#31 stand is `tools/phase2_capture_creatures.gd --biome=meadows --seed=2042 --only=trailpup,brooktail --poses=alpha_idle,idle`. Its `alpha_idle` pose only passes `_alpha_scale(species)` to `apply_size_multiplier` (lines 181-183, 248); it never calls `body.set_alpha(true)`. In play, `encounter_director.gd:1822` calls `set_alpha(true)` on every wild alpha, which attaches the alpha aura (`alpha_aura.gd`, rising gold motes) and the alpha rim (`creature_body.gd _apply_alpha_presence`). So the judged frames show alphas as a bigger animal with none of their presentation, which is exactly the recorded defect ("reads mainly as a modest size increase").
+- Evidence: base and candidate crops of the alpha trailpup are identical with no motes on either side; the A/B with my presence arm ON changed 0.65% of pixels (0.001% by more than 40 levels), `.artifacts/qj/F38-31-01cde1ac0ff1-11050246` (local). No judge round spent.
+- My arm `alpha_presence_1105` (`c2f0fee8`, OFF): 12 motes at 0.2 x body radius, 0.95 peak alpha, alpha rim 1.0; never a size change; warm gold `#ffd479`, no red. With it OFF the aura draws exactly as before (`smoke_alpha_aura_geometry.gd` PASS 126/126 under xvfb). `smoke_alpha_aura_cached_geometry.gd` fails identically before and after the arm (it expects a cached-coefficient aura that this tree does not have): pre-existing, not caused here.
+- **Ask:** in the stand's `alpha_idle` pose, call `body.set_alpha(true)` after setup (as the encounter director does), then re-score F38#31 with the shipped aura, and judge `alpha_presence_1105` on that stand. Not changed here: the stand is the shared yardstick.
 
 ### F38#26 P2-020 ground contact: the stand never lets the grass clearing engage (for the coordinator)
 

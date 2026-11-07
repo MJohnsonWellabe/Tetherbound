@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F40#16",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F40-16-98dc09bfe90b-11071348/k/sides/F40_16_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F40-16-98dc09bfe90b-11071348/k/sides/F40_16_cand.jpg",
+  "brief": "2 in-game frames (Cloudreach) for one catalogue subject: mushroom pickup variants. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+  ]
+ }
+]

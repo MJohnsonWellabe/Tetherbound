@@ -1,5 +1,41 @@
 # NEAR6-CR lane (tb/near6-cr-1104), 4 Nov 2026
 
+## HANDOFF 7 Nov
+
+All scores are mapped CPU Bar A (quick_judge, llvmpipe Low); none closes a row (rows close on the GPU). Every ON flag has a test in `tests/test_near6_cr_judged_on.gd` (14 tests pass) and its verdict under `qj/`.
+
+**Shipped this lane (flag ON)**
+- F40#8 P2-053: `cloudreach_npc_runtime.json:world_payoffs.anchor_vessel_quiet` 5.87 -> 6.32 (4558ec49).
+- F40#17 P2-102: `cloudreach_physical_runtime.json:rim_pickup_in_view` 5.09 -> 5.72 (ec870b02); `rim_pickup_cluster` 5.85 -> 6.19 (caed2863).
+- F40#9 P2-068: `cloudreach_npc_runtime.json:post_role_props` 5.05 -> 5.25 (0e41fe16); `post_dais` 5.44 -> 5.62 (ade5619b; 0.4 m collision dais, Maela walk-up smoke passes).
+- F40#2 P2-022: `cloudreach_f40_items.json:summit_silhouette` 5.64 -> 6.16 (d720ad38).
+- F40#4 P2-023: `cloudreach_f40_items.json:shelf_edge_fringe` 5.96 -> 6.27 (d3ffce66).
+- F40#19 night (matrix piece 7): `cloudreach_visual.json:time_override_arms.night_foreground_fill` 5.10 -> 5.84 (2d7066c0); `gate_path_braziers` 5.00 -> 5.51 (799a0872); `gate_path_verge` 5.54 -> 5.81 (e9c2160a).
+- F40#19 rain (matrix piece 4): `cloudreach_visual.json:weather_arms.rain_storm` 5.69 -> 5.80 (9a918a92); `rain_streaks` 5.48 -> 5.61 (39247ac8).
+- P2053_LINE
+
+**Open items**
+- F40#9 P2-068 (5.62): judges want the NPC clear of the trainer and larger; the capture stand puts the trainer 2 m in front of the post. Next idea: none in scene scope; needs a stand change.
+- F40#17 P2-102 (6.19): defect FIXED on 2 of 3; judges mark "plastic blob mushrooms on low-detail turf". Next idea: rim turf dressing (installed grass/flower clusters) around the cluster.
+- F40#4 P2-023 (6.27): judges ask for sculpted, irregular, stratified rock edges. Next idea: new_art (Meshy shelf lip) or a chamfered kitbash on `cloudreach_cliff_shelf_edge`.
+- F40#19 rain (5.61): defect PARTIAL; judges want wet sheen on path/stone, puddles/splashes, a storm sky without blue gaps and mist at the gate. Next idea: path/stone roughness and darkening under rain (material wetness hook), sky gap removal in the rain preset.
+
+**Parked**
+- F40#19 night (~5.8): two flat rounds (face_uplights 5.71 -> 5.71, night_moon_grade 5.45 -> 5.41). Remaining asks are the gate framed clear of the quest box/minimap (capture camera) and a hero gate (new_art).
+- F40#15 P2-049 (6.36 GPU, defect FIXED): scored frames are a camera hugging a dark wall and an open aerie lawn; camera or new_art.
+- F40#16 P2-054 (6.48): Wild -> installed shelf fungus judged worse (6.47 -> 5.92); the shipped orange Wild already separates by colour. Further gain needs new_art.
+- F40#2 P2-022: the procedural aviary arms were invisible (hidden under the imported Meshy set); Blender install in scratch was refused by the permission classifier (not worked around).
+
+**OFF arms left in the tree** (all judged flat/worse or invisible): `objective_beacon.json:realm_styles.cloudreach`; `cloudreach_physical_runtime.json:rim_pickup_inset`; `cloudreach_aviary.json:drum.terrace`; `cloudreach_f40_visual.json:aviary.sanctuary.drum_uplights`; `cloudreach_aviary.json:towers.silhouette_raise`; `cloudreach_visual.json:geology.rim_fringe` and `.outcrops`; `cloudreach_f40_items.json:shelf_edge_soften`; `cloudreach_visual.json:weather_arms.rain_mood`; `cloudreach_visual.json:time_override_arms.night_moon_grade`; `cloudreach_realm_gate_crag_visual.json:face_uplights`; `data/config/mushroom_pickup_variants.json`.
+
+**Known tool/capture bugs**
+- `git fetch origin main` pulls an ~11.8 GB pack and fills the session disk; use `git fetch --filter=blob:none origin main`.
+- quick_judge writes verdicts to `ralph/reports/VISUAL/quick/` even with `QJ_LANE` set; move them to the lane `qj/` by hand.
+- `ground_height_at` returns NaN beside the realm-gate path (no lawn surface indexed); props there need an explicit `ref_y`.
+- `Bush_Common.gltf` renders red under the Cloudreach night grade (red is Team Tether only); keep it out of night dressing.
+- Waiters using `pgrep -f "<pattern>"` match their own command line; wait on log contents instead.
+- Matrix capture tools need `--biome` and `--source-commit` (quick_judge passes them; logged under Harness fixes).
+
 Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (handed over from VIS-CLOUDREACH). CPU-only (Godot 4.7 llvmpipe, Low/Compatibility); mapped CPU Bar A via `tools/visual_judge/quick_judge.py`.
 
 ## Landing-ready flags (ON, judged CPU gain)
@@ -17,6 +53,7 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `data/config/cloudreach_f40_items.json:summit_silhouette` | F40#2 P2-022 | 5.64 -> **6.16** | `tests/test_near6_cr_judged_on.gd` | d720ad38 |
 | `data/config/cloudreach_visual.json:gate_path_braziers` | F40#19 (matrix piece 7, night) | 5.00 -> **5.51** (night_foreground_fill ON in both arms; this batch's anchors map lower than the 5.84 round) | `tests/test_near6_cr_judged_on.gd` | 799a0872 |
 | `data/config/cloudreach_visual.json:gate_path_verge` | F40#19 (matrix piece 7, night) | 5.54 -> **5.81** (braziers + night fill ON in both arms) | `tests/test_near6_cr_judged_on.gd` | e9c2160a |
+| `data/config/cloudreach_visual.json:rain_streaks` | F40#19 rain (matrix piece 4) | 5.48 -> **5.61** (rain_storm ON in both arms) | `tests/test_near6_cr_judged_on.gd` | 39247ac8 |
 
 ## Arms in flight (flag OFF)
 
@@ -38,6 +75,8 @@ Items: F40#9 P2-068, F40#4 P2-023, F40#8 P2-053, F40#2 P2-022, F40#17 P2-102 (ha
 | `cloudreach_visual.json:gate_path_verge` | F40#19 night (matrix piece 7) | Round 3: first capture showed nothing (no lawn surface indexed beside the path, `ground_height_at` NaN; now seats at `ref_y`). Round 3b capture rendered the installed `Bush_Common` **red** at night (red is Team Tether only), so it was not judged; bushes swapped for flowers and low rocks, then judged gain (qj/F40-19-9025b78edb4e-11050024), ON (above). **Note for owners of route dressing:** `Bush_Common.gltf` reads red under the Cloudreach night grade. |
 | `cloudreach_realm_gate_crag_visual.json:face_uplights` | F40#19 night (matrix piece 7) | **Judged flat** (qj/F40-19-3060ae8a4f11-11050109): 5.71 -> 5.71, all three judges saw the sides as the same (the gate sits under the quest box/minimap at the capture stands). Stays OFF. Judges' consistent ask: a cool, darker, less saturated moonlit grade (the ground now reads day-lit under a night sky). |
 | `cloudreach_visual.json:time_override_arms.night_moon_grade` | F40#19 night (matrix piece 7) | **Judged flat/worse** (qj/F40-19-730be2e9f92c-11050146): 5.45 -> 5.41 (one judge preferred the brighter base). Stays OFF. Second flat round in a row (after face_uplights): **F40#19 night parked** at CPU ~5.8 (fill + braziers + verge ON). Remaining asks are the gate framed clear of the HUD (capture camera, not this lane) and a hero gate (new_art). |
+| `mushroom_pickup_variants.json` (Wild -> installed Mushroom_Laetiporus shelf fungus) | F40#16 P2-054 | **Judged worse** (qj/F40-16-98dc09bfe90b-11071348): CPU 6.47 -> 5.92; all three preferred the shipped orange Wild cluster (defect FIXED there) over the pale cream shelf. Stays OFF. First capture rendered the fungus oversized (fit by height only); refit to its largest extent before judging. |
+| F40#15 P2-049 (no arm) | F40#15 | Base captured 7 Nov (qj F40-15-base-11071400). The GPU yardstick already marks the dark-strip defect FIXED (6.36); the two scored frames are a camera hugging a dark wall (walk_03) and an open aerie lawn at dusk, so the remaining points are camera framing (not this lane) or new_art. Not attempted. |
 | `cloudreach_visual.json:weather_arms.rain_mood` | F40#19 rain (matrix piece 4) | **Judged flat** (qj/F40-19-rain-9079be470ae9-11041657): 5.81 -> 5.81, all three judges saw no difference. Stays OFF. Next idea (round 2): a stronger storm grade (darker sky, wet path sheen, low mist), which the judges asked for. |
 
 ## Status (4 Nov 17:10 UTC)

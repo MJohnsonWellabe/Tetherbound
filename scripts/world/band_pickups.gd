@@ -563,7 +563,9 @@ static func dress(pickup: Node3D, item_id: String, badge: Color, spin_phase: flo
 			glow_scale *= float(visual.get_meta(&"glow_scale", 1.0))
 		PICKUP_GLOW.attach(pickup, badge, -1.0, glow_scale)
 	elif MUSHROOM_LOOK.has(item_id):
-		_dress_mushroom(mesh, MUSHROOM_LOOK[item_id] as Dictionary)
+		var mushroom_look: Dictionary = (MUSHROOM_LOOK[item_id] as Dictionary).duplicate()
+		mushroom_look["item_id"] = item_id
+		_dress_mushroom(mesh, mushroom_look)
 
 
 ## How many tier parts a candy grade carries beyond its body: the crest and

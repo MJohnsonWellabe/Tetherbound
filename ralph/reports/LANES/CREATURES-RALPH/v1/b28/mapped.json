@@ -1,0 +1,160 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8095,
+  "least_squares_slope": 1.2632,
+  "method": "linear",
+  "slope": 1.2632,
+  "intercept": -1.1633,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.611,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C2B": {
+   "measured": 5.333,
+   "reference": 6.9,
+   "mapped": 5.574,
+   "residual": 1.326
+  },
+  "f36_0_gap:C2A": {
+   "measured": 6.467,
+   "reference": 6.83,
+   "mapped": 7.005,
+   "residual": -0.175
+  },
+  "craft:before": {
+   "measured": 5.033,
+   "reference": 4.83,
+   "mapped": 5.195,
+   "residual": -0.365
+  },
+  "craft:after": {
+   "measured": 6.733,
+   "reference": 7.35,
+   "mapped": 7.342,
+   "residual": 0.008
+  },
+  "f36_0_npc:C5B": {
+   "measured": 5.2,
+   "reference": 5.03,
+   "mapped": 5.405,
+   "residual": -0.375
+  },
+  "f36_0_npc:C5A": {
+   "measured": 5.267,
+   "reference": 5.07,
+   "mapped": 5.489,
+   "residual": -0.419
+  }
+ },
+ "candidates": {
+  "lift:pebbik base": {
+   "measured_mean": 6.4,
+   "mapped_mean": 6.92,
+   "mapped_judges": [
+    7.05,
+    6.79,
+    6.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "lift:pebbik cand": {
+   "measured_mean": 6.5,
+   "mapped_mean": 7.05,
+   "mapped_judges": [
+    7.3,
+    7.3,
+    6.54
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "lift:galewisp base": {
+   "measured_mean": 6.567,
+   "mapped_mean": 7.13,
+   "mapped_judges": [
+    7.3,
+    7.3,
+    6.79
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "lift:galewisp cand": {
+   "measured_mean": 6.6,
+   "mapped_mean": 7.17,
+   "mapped_judges": [
+    7.43,
+    7.43,
+    6.67
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "lift:glimmermoth cand": {
+   "measured_mean": 5.333,
+   "mapped_mean": 5.57,
+   "mapped_judges": [
+    5.91,
+    5.66,
+    5.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "lift:glimmermoth base": {
+   "measured_mean": 5.333,
+   "mapped_mean": 5.57,
+   "mapped_judges": [
+    5.91,
+    5.66,
+    5.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "lift:tempestwing cand": {
+   "measured_mean": 5.567,
+   "mapped_mean": 5.87,
+   "mapped_judges": [
+    6.29,
+    5.91,
+    5.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "lift:tempestwing base": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.66,
+   "mapped_judges": [
+    6.04,
+    5.78,
+    5.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

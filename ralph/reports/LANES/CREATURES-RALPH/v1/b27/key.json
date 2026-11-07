@@ -1,0 +1,41 @@
+{
+ "Pc": {
+  "anchor": false,
+  "label": "lift:staticub",
+  "A": "/tmp/claude-0/work/judge/lift7/k/sides/staticub_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift7/k/sides/staticub_a.jpg"
+ },
+ "Xu": {
+  "anchor": false,
+  "label": "lift:sirenseal",
+  "A": "/tmp/claude-0/work/judge/lift7/k/sides/sirenseal_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift7/k/sides/sirenseal_b.jpg"
+ },
+ "Su": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ct": {
+  "anchor": true,
+  "A": "f36_0_npc:C6A",
+  "B": "f36_0_npc:C6B"
+ },
+ "Ny": {
+  "anchor": false,
+  "label": "lift:riverdrake",
+  "A": "/tmp/claude-0/work/judge/lift7/k/sides/riverdrake_b.jpg",
+  "B": "/tmp/claude-0/work/judge/lift7/k/sides/riverdrake_a.jpg"
+ },
+ "Nx": {
+  "anchor": false,
+  "label": "lift:riptusk",
+  "A": "/tmp/claude-0/work/judge/lift7/k/sides/riptusk_a.jpg",
+  "B": "/tmp/claude-0/work/judge/lift7/k/sides/riptusk_b.jpg"
+ },
+ "Bv": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ }
+}
