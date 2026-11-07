@@ -69,7 +69,7 @@
       "scope": "client_presentation",
       "_why_on": "CPU 6.81 -> 6.93 (quick judge F38-4-fcb5301c9826-11042108; two judges up, one tied; owner 4 Nov: any judged gain ships ON).",
       "enabled": true,
-      "realms": ["meadows"],
+      "realms": ["meadows", "water"],
       "spacings_m": [25, 50, 100, 250, 500, 1000, 2500],
       "min_spacing_px": 80.0,
       "ink": "#4b3b26",
@@ -92,8 +92,8 @@
           "#cfc3a0"
         ],
         "water": [
-          "#14324a",
-          "#3d6a85"
+          "#8c8266",
+          "#cfc3a0"
         ],
         "cloudreach": [
           "#3c5468",
@@ -111,7 +111,8 @@
     "ui_font_labels": true,
     "glyph_controls": true,
     "_why_keyboard_hint_one_device": "F39#25 P2-032 (LANE-TW, 7 Nov 2026), scope client_presentation: the keyboard hint row showed the pad's A/X beside keyboard [Minus]/[Equal]; on, every verb shows its keyboard or mouse prompt. tab_map.gd _refresh_controls_label. OFF until judged.",
-    "keyboard_hint_one_device": false,
+    "_why_on_keyboard_hint_1107": "F39#25 r25b (LANE-TW, 7 Nov 2026): CPU 7.38 -> 8.11 mapped (quick judge F39-25-a46982c0a52b-11071809, all three judges up), shipped with Tidewake parchment fog (cloud_fog.tones.water) and the survey grid on water (chart_grid_1104.realms).",
+    "keyboard_hint_one_device": true,
     "_why_enabled_r2": "ON by coordinator decision for the 22 Oct wind-down; P2-002 mapped 6.91 (sets 7.04/6.77) vs control 4.95 (round 2, CPU llvmpipe Low), below the 7.5 bar. Unsurveyed cells stay opaque (OW3)."
   },
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
