@@ -31,6 +31,10 @@ func test_on_sets_zones_and_merges_named_flower_tiers_only() -> void:
 	assert_almost_eq(float(cfg.zone_strength), 0.85)
 	assert_eq((cfg.zone_bare as Array).size(), 2)
 	var flowers: Dictionary = (cfg.cover_tiers as Array).filter(func(r: Dictionary) -> bool: return r.name == "flowers")[0]
-	assert_almost_eq(float(flowers.patch_start), 0.6)
+	# The merged value is the candidate's own (F38#21 drifts moved it 0.6 -> 0.68),
+	# which differs from the shipped row's 0.5, so this still proves the merge.
+	var want := float(cfg.meadows_ground_candidate.tiers.flowers.patch_start)
+	assert_true(not is_equal_approx(want, 0.5), "the candidate changes the shipped value")
+	assert_almost_eq(float(flowers.patch_start), want)
 	assert_eq(int(flowers.count), 12000, "unmentioned tier keys stay")
 	assert_eq(JSON.stringify((cfg.cover_tiers as Array).filter(func(r: Dictionary) -> bool: return r.name == "bushes")), bushes_before)

@@ -1468,7 +1468,7 @@ func _apply_alpha_presence() -> void:
 		_apply_field_separation()
 		return
 	if _has_model:
-		_rim_light_node(_model, ALPHA_RIM_STRENGTH, "alpha")
+		_rim_light_node(_model, float(ALPHA_AURA.presence().get("rim", ALPHA_RIM_STRENGTH)), "alpha")
 	_aura = ALPHA_AURA.attach(self, _radius * 1.5, _height, ALPHA_AURA_COLOUR)
 
 

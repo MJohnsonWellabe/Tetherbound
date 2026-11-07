@@ -327,14 +327,56 @@
     "merge": {
       "zone_strength": 0.85,
       "zone_scale": 0.045,
-      "zone_bare": [0.2, 0.3],
-      "zone_moss": [0.6, 0.74],
+      "zone_bare": [
+        0.2,
+        0.3
+      ],
+      "zone_moss": [
+        0.6,
+        0.74
+      ],
       "zone_moss_shorten": 0.4,
-      "zone_moss_tint": "#f0dca0"
+      "zone_moss_tint": "#f0dca0",
+      "stones": {
+        "enabled": true,
+        "count": 25000,
+        "centre_bias": 0.58,
+        "seed": 771131,
+        "sides": 7,
+        "stone_size": 0.16,
+        "size_jitter": 0.85,
+        "sink": 0.42,
+        "density_gain": 0.9,
+        "clump_scale": 0.16,
+        "clump_contrast": 0.95,
+        "tint_stone": "#8c8377",
+        "tint_jitter": 0.38,
+        "ground_blend": 0.35,
+        "contact_darken": 0.45,
+        "stray_chance": 0.05,
+        "verge_gain": 0.55,
+        "reach_m": 28.0,
+        "ground": [
+          "rock",
+          "path"
+        ]
+      }
     },
     "tiers": {
-      "flowers": {"patch_start": 0.6, "patch_full": 0.74, "density_gain": 2.1},
-      "flowers_gold": {"patch_start": 0.64, "patch_full": 0.78, "density_gain": 1.9}
-    }
+      "flowers": {
+        "patch_start": 0.68,
+        "patch_full": 0.76,
+        "density_gain": 3.2,
+        "drift_contrast": 1.4
+      },
+      "flowers_gold": {
+        "patch_start": 0.6,
+        "patch_full": 0.7,
+        "density_gain": 3.0,
+        "item_size": 0.55,
+        "drift_contrast": 1.4
+      }
+    },
+    "_why_drifts_1105": "F38#21 P2-005 (NEAR6-MS, 5 Nov 2026): lilac flowers in tighter, denser drifts with bare grass between; gold flowers in more, larger drifts so a second colour clusters; larger, more clumped field stones as rock breaks. CPU 6.11 -> 6.23 (quick judge F38-21-db50e927ec7b-11050229; all three judges +0.1, one PRESENT -> PARTIAL)."
   }
 }
