@@ -103,5 +103,5 @@ for n in (1, 2, 3):
     obj.data.materials.clear(); obj.data.materials.append(mat)
     obj.name = "Rock_Medium_%d_q41%s" % (n, "" if VARIANT == "r1" else "_" + VARIANT)
     out = os.path.join(OUT, "Rock_Medium_%d_q41%s.glb" % (n, "" if VARIANT == "r1" else "_" + VARIANT))
-    bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", use_selection=False)
+    bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", use_selection=False, export_image_format=("AUTO" if VARIANT == "r1" else "JPEG"))
     print("ROCK", n, "dims", tuple(round(x, 2) for x in dims0), "->", tuple(round(x, 2) for x in obj.dimensions), "faces", len(obj.data.polygons), out)
