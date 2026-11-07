@@ -1,0 +1,11 @@
+{
+  "asset": "meadows_keep_walls.glb",
+  "row": "F38#20 (P2-003 Team Tether stronghold), round 2",
+  "lane": "LANE-SW, 7 Nov 2026",
+  "source": "Blender 4.2.3 procedural boxes and towers following the keep hill's heightfield (hill_height.py), no Meshy, no downloaded geometry",
+  "script": "ralph/reports/LANES/ITEM-F38-20/build_keep_walls.py (blender -b -P build_keep_walls.py -- <repo root> <out.glb>)",
+  "textures": "embedded copy of the installed assets/environment/terrain/Rock030_Color.jpg",
+  "reference": "ralph/reports/LANES/ITEM-F38-20/_ref_keyart.jpg (walled castle on the hill) and the judges' ask 'walls, palisade, gate and approach dressing readable at distance'",
+  "scale_check": "walls 23 m (12.8 x the 1.80 m trainer), towers 34 m, against the 167 m keep; ring 255 x 175 m; nothing inside the hall footprint (tests/test_stronghold_keep_hill.gd)",
+  "flag": "data/config/stronghold.json keep_walls_1107 (ON with keep_hill_1107: CPU 6.38 -> 6.78, LANE-SW r2)"
+}
