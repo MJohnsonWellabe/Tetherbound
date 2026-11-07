@@ -77,10 +77,12 @@ for i in range(nx_):
         f = bm.faces.new(vs)
         for loop, v in zip(f.loops, vs):
             loop[uv].uv = (v.co.x / 18.0, v.co.y / 18.0)
-        # steep faces take the rock material
-        f.normal_update()
-        f.material_index = 1 if f.normal.z < 0.80 else 0
+bm.normal_update()
 bmesh.ops.reverse_faces(bm, faces=[f for f in bm.faces if f.normal.z < 0])
+for f in bm.faces:
+    # steep faces take the rock material (classified after the faces point up)
+    f.normal_update()
+    f.material_index = 1 if f.normal.z < 0.80 else 0
 
 # rock outcrops on the upper slopes: squashed noisy boulders, half buried
 for k in range(26):
