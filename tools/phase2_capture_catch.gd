@@ -91,9 +91,11 @@ var _resolved := []  # appended [success] per resolution
 ## card a verdict frame photographs, held still from the resolve to the shot.
 var _verdict_hud: Node = null
 var _hold_verdict_card := false
+var _held_outcome_left := 0.0
 
 
 func _init() -> void:
+	process_frame.connect(_top_up_verdict_card)
 	_run.call_deferred()
 
 
@@ -305,6 +307,9 @@ func _one_throw(aim_frame: String, flight_frame: String,
 	_struck_flag[0] = false
 	_shook_flag[0] = false
 	var resolutions_before := _resolved.size()
+	# On CPU the orb can resolve before the shake still is taken, so the hold
+	# is armed from the throw, not from the verdict wait.
+	_hold_verdict_card = verdict_frame != "" and not _breakout_handback_only
 	await _press("combat_orb_release")
 
 	if flight_frame != "":
@@ -363,7 +368,6 @@ func _one_throw(aim_frame: String, flight_frame: String,
 			_failures.append("%s: the orb never shook" % shake_frame)
 
 	# The verdict.
-	_hold_verdict_card = verdict_frame != "" and not _breakout_handback_only
 	waited = 0
 	while _resolved.size() == resolutions_before and waited < 900:
 		await physics_frame
@@ -374,7 +378,9 @@ func _one_throw(aim_frame: String, flight_frame: String,
 		return ""
 	if verdict_frame != "":
 		for i in BEAT_FRAMES:
+			_top_up_verdict_card()
 			await physics_frame
+		_top_up_verdict_card()
 		if _breakout_handback_only:
 			# Observe the existing handback with physics and the camera compositor
 			# live. This diagnoses the paused beat; it never writes camera/body pose.
@@ -623,8 +629,9 @@ func _collect_nodes() -> bool:
 ## plus POSE_FRAMES) is about 0.12 s of the card's 1.8 s hold; on CPU each of
 ## those frames feeds its wall time (often over 0.3 s) into the HUD's _process,
 ## so the card expired before the shot (`_outcome_left` -0.08 s at
-## 06-breakout). Freeze the HUD's tick for the beat only: the frame shows the
-## card exactly as raised, and nothing else in the HUD changes in 0.12 s.
+## 06-breakout). Hold the card's own timer at its raised value through the
+## beat (the HUD keeps processing and drawing normally); a frozen HUD
+## (set_process false) left the card undrawn on CPU.
 func _on_capture_resolved(success: bool, _shakes: int) -> void:
 	_resolved.append(success)
 	if success or not _hold_verdict_card:
@@ -634,13 +641,21 @@ func _on_capture_resolved(success: bool, _shakes: int) -> void:
 		var found := _world.find_children("CombatHUD", "", true, false)
 		_verdict_hud = found[0] if not found.is_empty() else null
 	if _verdict_hud != null:
-		_verdict_hud.set_process(false)
+		_held_outcome_left = float(_verdict_hud.get("_outcome_left"))
+	else:
+		_hold_verdict_card = false
+
+
+## Called on every process frame (SceneTree.process_frame, before the HUD's
+## _process) and on every beat frame, from the resolve to the verdict shot.
+func _top_up_verdict_card() -> void:
+	if _hold_verdict_card and is_instance_valid(_verdict_hud):
+		if float(_verdict_hud.get("_outcome_left")) < _held_outcome_left:
+			_verdict_hud.set("_outcome_left", _held_outcome_left)
 
 
 func _release_verdict_hud() -> void:
 	_hold_verdict_card = false
-	if is_instance_valid(_verdict_hud):
-		_verdict_hud.set_process(true)
 	_verdict_hud = null
 
 

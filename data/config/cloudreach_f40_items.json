@@ -1263,6 +1263,163 @@
         }
       }
     },
-    {"enabled": true, "_why_on": "ON 7 Nov 2026 (VIS-CLOUDREACH qj_beacon): CPU 5.84 -> 6.46 mapped on F40#3 P2-024 (Windscar Beacon approach; three code-blind judges all prefer the strata-spire frame, landmark defect PRESENT -> PARTIAL 3/3; linear r 0.93, anchor RMSE 0.39). One of the row's three frames paired (the skyroad arch and observatory frames did not capture on either side). ralph/reports/LANES/VIS-CLOUDREACH/qj/qj_beacon/VERDICT.md.", "preview_arg": "--cloudreach-wd-beacon-approach", "_why": "World dressing P2-024 (OFF until GPU judged; tb/world-dressing). GPU 6.14 (31 Oct): the Windscar beacon is a lone plain wooden arch before a slim white tower on an empty grass carpet, nowhere near the dense stone landmark language of the Sky Aviary board. Installed Meshy families (meshy-1020, provenance beside each GLB): two eagle statue plinths flank the wind-gate arch and two stratified stone spire clusters frame the approach, positioned on the stand heading (local (0.757, 0.654), arch 15 m out). Lists replace on merge, so the GPU-passed spire entry is repeated unchanged. Visual only, no collision.", "overlay": {"settlements": {"WindscarBeacon": {"buildings": [{"asset": "windscar_beacon_spire", "glb": "res://assets/props/meshy-1024/cloudreach_windscar_beacon_spire/cloudreach_windscar_beacon_spire.glb", "at": [18.16, 0.0, 15.69], "height": 27.0, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_eagle_plinth_l", "glb": "res://assets/props/meshy-1020/cloudreach_eagle_statue_plinth/cloudreach_eagle_statue_plinth.glb", "at": [6.47, 0.0, 10.88], "height": 4.6, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_eagle_plinth_r", "glb": "res://assets/props/meshy-1020/cloudreach_eagle_statue_plinth/cloudreach_eagle_statue_plinth.glb", "at": [11.71, 0.0, 4.82], "height": 4.6, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_strata_l", "glb": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb", "at": [13.15, 0.0, -4.5], "height": 15.0, "yaw": 30.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_strata_r", "glb": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb", "at": [4.37, 0.0, 20.96], "height": 13.0, "yaw": 130.0, "collision_fraction": 0.0, "tint": "#ffffff"}]}}}}
+    {"enabled": true, "_why_on": "ON 7 Nov 2026 (VIS-CLOUDREACH qj_beacon): CPU 5.84 -> 6.46 mapped on F40#3 P2-024 (Windscar Beacon approach; three code-blind judges all prefer the strata-spire frame, landmark defect PRESENT -> PARTIAL 3/3; linear r 0.93, anchor RMSE 0.39). One of the row's three frames paired (the skyroad arch and observatory frames did not capture on either side). ralph/reports/LANES/VIS-CLOUDREACH/qj/qj_beacon/VERDICT.md.", "preview_arg": "--cloudreach-wd-beacon-approach", "_why": "World dressing P2-024 (OFF until GPU judged; tb/world-dressing). GPU 6.14 (31 Oct): the Windscar beacon is a lone plain wooden arch before a slim white tower on an empty grass carpet, nowhere near the dense stone landmark language of the Sky Aviary board. Installed Meshy families (meshy-1020, provenance beside each GLB): two eagle statue plinths flank the wind-gate arch and two stratified stone spire clusters frame the approach, positioned on the stand heading (local (0.757, 0.654), arch 15 m out). Lists replace on merge, so the GPU-passed spire entry is repeated unchanged. Visual only, no collision.", "overlay": {"settlements": {"WindscarBeacon": {"buildings": [{"asset": "windscar_beacon_spire", "glb": "res://assets/props/meshy-1024/cloudreach_windscar_beacon_spire/cloudreach_windscar_beacon_spire.glb", "at": [18.16, 0.0, 15.69], "height": 27.0, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_eagle_plinth_l", "glb": "res://assets/props/meshy-1020/cloudreach_eagle_statue_plinth/cloudreach_eagle_statue_plinth.glb", "at": [6.47, 0.0, 10.88], "height": 4.6, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_eagle_plinth_r", "glb": "res://assets/props/meshy-1020/cloudreach_eagle_statue_plinth/cloudreach_eagle_statue_plinth.glb", "at": [11.71, 0.0, 4.82], "height": 4.6, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_strata_l", "glb": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb", "at": [13.15, 0.0, -4.5], "height": 15.0, "yaw": 30.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_strata_r", "glb": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb", "at": [4.37, 0.0, 20.96], "height": 13.0, "yaw": 130.0, "collision_fraction": 0.0, "tint": "#ffffff"}]}}}},
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-summit-stand-shelves",
+      "_why": "F40#2 P2-022 (LANE-CR, 7 Nov): the stone-ground candidate's SummitEyrieStronghold stand runs from the location target (local 111.3,45.05) toward the dome, so its shelves sat ~35-45 m out and were invisible in the F40#2 approach frames (self-look 7 Nov, not judged). This arm re-keys the same pale strata shelves and scree to the trainer's approach stand (local 140.96,57.06, facing the target), so they break the near lawn in the day and night approach frames, and adds two large strata outcrops flanking the dome base (judges' cliff-plinth ask). Visual only, no collision, no route change. Flag OFF until judged.",
+      "overlay": {
+        "settlements": {
+          "SummitEyrieStronghold": {
+            "stands": [
+              {
+                "id": "f40_summit_approach",
+                "from": [
+                  140.96,
+                  57.06
+                ],
+                "to": [
+                  111.3,
+                  45.05
+                ],
+                "y": 0.0,
+                "pattern": [
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 1.5,
+                    "lateral_m": 4.4,
+                    "height": 3.2,
+                    "yaw": 90,
+                    "rise_m": -1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 5.0,
+                    "lateral_m": -4.6,
+                    "height": 3.6,
+                    "yaw": -70,
+                    "rise_m": -1.4
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 10.0,
+                    "lateral_m": 6.5,
+                    "height": 4.5,
+                    "yaw": 130,
+                    "rise_m": -1.2,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 13.0,
+                    "lateral_m": -7.2,
+                    "height": 4.2,
+                    "yaw": -40,
+                    "rise_m": -1.0,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": -1.5,
+                    "lateral_m": -4.0,
+                    "height": 2.4,
+                    "yaw": 20,
+                    "rise_m": -1.0
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 2.5,
+                    "lateral_m": 6.2,
+                    "height": 1.1,
+                    "yaw": 60
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 8.0,
+                    "lateral_m": -5.6,
+                    "height": 1.2,
+                    "yaw": -20
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 0.5,
+                    "lateral_m": 2.4,
+                    "height": 0.45,
+                    "yaw": 30
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 3.0,
+                    "lateral_m": -2.6,
+                    "height": 0.4,
+                    "yaw": -70
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 3.6,
+                    "lateral_m": 3.0,
+                    "height": 0.35,
+                    "yaw": 110
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 7.0,
+                    "lateral_m": 3.2,
+                    "height": 0.5,
+                    "yaw": 200
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 7.8,
+                    "lateral_m": -3.1,
+                    "height": 0.45,
+                    "yaw": 15
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 11.0,
+                    "lateral_m": 3.6,
+                    "height": 0.55,
+                    "yaw": 75
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 8.0,
+                    "lateral_m": -11.0,
+                    "height": 3.0,
+                    "yaw": -35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 6.0,
+                    "lateral_m": 10.5,
+                    "height": 2.6,
+                    "yaw": 35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 96.0,
+                    "lateral_m": -38.0,
+                    "height": 14.0,
+                    "yaw": -25,
+                    "rise_m": -3.0
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 100.0,
+                    "lateral_m": 40.0,
+                    "height": 12.0,
+                    "yaw": 40,
+                    "rise_m": -3.0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
   ]
 }

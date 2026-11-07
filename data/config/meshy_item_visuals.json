@@ -22,7 +22,8 @@
       "shadow_m": 1.05
     },
     "rare_candy": {
-      "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_rare/candy_rare.glb",
+      "_why_on": "F38#6 P2-033 (LANE-MS, 7 Nov 2026): Blender reskin of the installed Meshy rare-candy pickup, the near-white cloth that blew out in shade now deep blue velvet (gold trim and sweets kept, geometry unchanged; provenance in the model folder). quick_judge F38-6-6b6bc90bbae7-11072022 (ralph/reports/LANES/LANE-MS/qj/): CPU mapped 6.50 -> 6.76 (+0.26), all three judges prefer it. Was model_candy_rare/candy_rare.glb.",
+      "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_rare_cloth_r1/candy_rare_cloth_r1.glb",
       "height_m": 0.9,
       "glow_scale": 0.45,
       "shadow_m": 1.1

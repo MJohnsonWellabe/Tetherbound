@@ -1,0 +1,29 @@
+{
+ "Je": {
+  "anchor": false,
+  "label": "F38#30",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F38-30_F38-24-354ca63271b5-11071915/k/sides/F38_30_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F38-30_F38-24-354ca63271b5-11071915/k/sides/F38_30_base.jpg"
+ },
+ "Ub": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Gj": {
+  "anchor": false,
+  "label": "F38#24",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F38-30_F38-24-354ca63271b5-11071915/k/sides/F38_24_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F38-30_F38-24-354ca63271b5-11071915/k/sides/F38_24_base.jpg"
+ },
+ "Ay": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Fl": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}
