@@ -749,6 +749,25 @@ for _sel, _fid, x in _vitems:
                                        for b, v in _isc.items())
     _vrows.append({"sel": _sel, "cat": _vcat(_fid, x), "name": _short(_sel, x), "st": st, "sc": sc,
                    "src": src, "bk": _bucket(st, sc), "text": str(x.get("text", ""))})
+# CPU scores landed on main (and pending in CI) from status.json score_ledger: the latest
+# landed score per board item overrides the older GPU per-item score in the catalogue.
+import re as _re
+_cpu_landed, _cpu_pending = {}, {}
+for _lst, _dst in ((status.get("score_ledger", []), _cpu_landed), (status.get("score_ledger_pending", []), _cpu_pending)):
+    for _r in _lst:
+        _m = _re.match(r"^(F\d+)#(\d+)", str(_r.get("item", "")))
+        if _m:
+            _dst[f"{_m.group(1)}#{_m.group(2)}"] = (float(_r["after"]), str(_r.get("pr", "")))
+for _r in _vrows:
+    _gpu_src = _r["src"]
+    if _r["sel"] in _cpu_landed and _r["st"] != "met":
+        _v, _pr = _cpu_landed[_r["sel"]]
+        _r["sc"] = [_v]
+        _r["src"] = f"CPU {_v:.2f} landed {_pr}" + (f" (was {_gpu_src})" if _gpu_src else "")
+        _r["bk"] = _bucket(_r["st"], _r["sc"])
+    if _r["sel"] in _cpu_pending:
+        _v, _pr = _cpu_pending[_r["sel"]]
+        _r["src"] += f"; CPU {_v:.2f} in CI {_pr}"
 _bk_order = [k for k, _l, _r in _BUCKETS]
 
 
@@ -841,6 +860,14 @@ visual_tab_html = (
 # A complete document (owner report, 2026-09-30): the board is also served raw by
 # hosts that add no wrapper, where a missing charset turns "·" into "Â·", a missing
 # viewport shrinks the page on phones, and a missing doctype falls into quirks mode.
+_ledger = status.get("score_ledger", [])
+_ledger_gain = sum(float(r["after"]) - float(r["before"]) for r in _ledger)
+_ledger_n = len(_ledger)
+_ledger_cross = sum(1 for r in _ledger if float(r["before"]) < 6.0 <= float(r["after"]))
+_pend = status.get("score_ledger_pending", [])
+_pend_gain = sum(float(r["after"]) - float(r["before"]) for r in _pend)
+_pend_rows = "".join("<tr><td>%s</td><td>%.2f</td><td>%.2f</td><td>+%.2f</td><td>%s (in CI)</td></tr>" % (E(r["item"]), float(r["before"]), float(r["after"]), float(r["after"]) - float(r["before"]), E(r["pr"])) for r in _pend)
+_ledger_rows = "".join("<tr><td>%s</td><td>%.2f</td><td>%.2f</td><td>+%.2f</td><td>%s</td></tr>" % (E(r["item"]), float(r["before"]), float(r["after"]), float(r["after"]) - float(r["before"]), E(r["pr"])) for r in _ledger)
 page = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -972,6 +999,12 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <div class="pane pane-lanes">{active_lanes_html}</div>
   <div class="pane pane-vis">{visual_tab_html}</div>
   <div class="pane pane-acc">
+  <section class="panel"><h2>Visual score landed on main since {E(status.get("score_ledger_since",""))}</h2>
+  <div class="kpis"><div class="kpi"><b>+{_ledger_gain:.2f}</b><span>Cumulative CPU score gained (mapped, three code-blind judges), across {_ledger_n} items. Target: +100 in 24 h.</span></div>
+  <div class="kpi"><b>{_ledger_cross}</b><span>Items crossed 6.0 on CPU in this push</span></div>
+  <div class="kpi"><b>+{_pend_gain:.2f}</b><span>Judged gains in an open PR, waiting on CI ({len(_pend)} items)</span></div></div>
+  <div class="tbl"><table><thead><tr><th>Item</th><th>Before</th><th>After</th><th>Gain</th><th>PR</th></tr></thead><tbody>{_ledger_rows}{_pend_rows}</tbody></table></div>
+  <p class="note">"Criteria met" below counts an item only after it passes the 7.5 bar on the GPU pass, so it moves only when the GPU confirmation runs.</p></section>
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
     <div class="kpi"><b>{len(all_c) - counts["met"]}</b><span>Criteria not done: {_open_by["F36"]} creatures (F36), {_open_by["look"]} biome looks (F38–F41), {_open_by["other"]} everything else</span></div>

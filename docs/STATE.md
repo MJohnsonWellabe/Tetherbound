@@ -7,7 +7,7 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 
 **State:**
-- Batches #808–#846 landed about +65 CPU points across about 130 judged gains, and about 40 rows crossed 6.0. Ledger and board: https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem, with source in `ralph/reports/COORDINATOR/dashboard/status.json`.
+- Batches #808 to the 7 Nov consolidation: about +66 CPU across 136 gains; about 40 rows crossed 6.0. Ledger and board: https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem, with source in `ralph/reports/COORDINATOR/dashboard/status.json`.
 - CPU scores (llvmpipe, Low/Compat, `tools/visual_judge/`) are provisional and only compare within a batch.
 - The board mixes stale GPU and newer CPU scores.
 - Lane handoffs are the `## HANDOFF 7 Nov` sections in `ralph/reports/LANES/{VIS-MEADOWS,VIS-TIDEWAKE,VIS-CLOUDREACH,VIS-STORMWOOD,NEAR6-MS,NEAR6-TW,NEAR6-CR,CREATURES-RALPH,NET-F48}/READY.md`.
