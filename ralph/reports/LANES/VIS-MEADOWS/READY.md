@@ -9,6 +9,7 @@ Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the sa
 - Merged origin/main (through #841) at a4fdd0039; the lane's tests pass (46 tests, 0 failed).
 - F38#23 props on the fight axis: **no** (props can block combat). Parked for good.
 - Other placement: only set dressing that never touches a walk route, fight axis or collider. The F38#41 second quarry ruin carries a slab collider, so moving it stays out of scope.
+- **Lane status after these answers:** no scene-level lever is left on this lane's rows. F38#41's remaining ask is the smooth boulders: the band2 `quarry_station` Rock_Medium props (probe-named). They take only a colour `retint`, and a detail or material swap needs a props material hook plus new texture work (new-art scale). F38#33's break-free arm still needs the capture-tool change in decision 3 (unanswered). Ready for new rows, a GPU confirmation pass on this batch, or a Blender new-art assignment.
 
 ## Lane state, 5 Nov 2026 ~02:50 UTC
 
