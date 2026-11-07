@@ -92,6 +92,7 @@ var _resolved := []  # appended [success] per resolution
 var _verdict_hud: Node = null
 var _hold_verdict_card := false
 var _held_outcome_left := 0.0
+var _held_focus_left := 0.0
 
 
 func _init() -> void:
@@ -642,6 +643,9 @@ func _on_capture_resolved(success: bool, _shakes: int) -> void:
 		_verdict_hud = found[0] if not found.is_empty() else null
 	if _verdict_hud != null:
 		_held_outcome_left = float(_verdict_hud.get("_outcome_left"))
+		# hud.json catch_card.step_back_on_break holds the step-back for the
+		# same card time; hold it too, or the panels return before the shot.
+		_held_focus_left = float(_verdict_hud.get("_catch_focus_left"))
 	else:
 		_hold_verdict_card = false
 
@@ -652,6 +656,8 @@ func _top_up_verdict_card() -> void:
 	if _hold_verdict_card and is_instance_valid(_verdict_hud):
 		if float(_verdict_hud.get("_outcome_left")) < _held_outcome_left:
 			_verdict_hud.set("_outcome_left", _held_outcome_left)
+		if float(_verdict_hud.get("_catch_focus_left")) < _held_focus_left:
+			_verdict_hud.set("_catch_focus_left", _held_focus_left)
 
 
 func _release_verdict_hud() -> void:
