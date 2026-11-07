@@ -1,0 +1,12 @@
+{
+  "asset": "stormheart_root_vault.glb",
+  "row": "F41#1 (P2-037 Stormheart finale)",
+  "lane": "LANE-SW, 7 Nov 2026",
+  "source": "Blender 4.2.3 procedural build, no Meshy, no purchased or downloaded geometry",
+  "script": "ralph/reports/LANES/ITEM-F41-1/build_root_vault.py (blender -b -P build_root_vault.py -- <out.glb> [preview])",
+  "seed": 1107,
+  "reference": "ralph/reports/LANES/ITEM-F41-1/_ref_board_interior.jpg (crop of docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png, 'Interior view - ascend the core': living-wood walls with grain running along the trunk, no plank ceiling)",
+  "scale_check": "ralph/reports/LANES/ITEM-F41-1/_scale_check.jpg (1.80 m trainer capsule at r 30 m under the 5.9 m vault; nothing inside r 44 m hangs below 4.7 m)",
+  "textures": "none embedded; at load the game assigns the installed assets/environment/stylized_nature/Bark_TwistedTree.png bark (vault_bark) and an emissive blue-white (vault_vein)",
+  "flag": "data/config/stormheart_presentation.json root_vault_1107 (ON: CPU 4.75 -> 5.24, LANE-SW r1)"
+}
