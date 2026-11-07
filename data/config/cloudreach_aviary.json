@@ -33,6 +33,7 @@
     "_why": "Original board-backed belvederes extend the four existing drum piers above the walking routes. Open masonry arches, slate hip roofs and finials add the missing architectural silhouette; routes, gates and gameplay collision retain their dimensions.",
     "enabled": true,
     "_disposition": "Enabled by the VISUAL cloudreach lane for F40#4: the re-proof judge asked for a massed drum with turrets, and towers-v2's blind review found the roofed towers give the skyline its destination identity. Judged with the far-plane fix in ralph/reports/VISUAL/cloudreach/F40-4; set false to restore the bare drum.",
+    "silhouette_raise": {"_scope": "world_presentation", "_why": "P2-022 / F40#2 (NEAR6-CR, 4 Nov 2026; GPU 5.81): judges read the summit as a small skeletal dome on grass, not a layered sanctuary; terrace steps and uplights were invisible at the approach distance. On: the four existing belvederes rise from 15 m to 26 m shafts with broader galleries and steeper roofs, so their roofs clear the dome's shoulder (dome apex 36 m) and the skyline reads as drum, towers and dome in layers. Towers carry no collision. Scale: gallery 5.4 m wide and 5 m tall against the 1.80 m trainer (about 2.8 trainer heights), in line with the drum arches. OFF until judged.", "enabled": false, "shaft_height_m": 26.0, "shaft_width_m": 2.6, "shaft_depth_m": 3.2, "gallery_width_m": 5.4, "gallery_height_m": 5.0, "post_width_m": 0.6, "roof_height_m": 6.5},
     "shaft_height_m": 15.0,
     "shaft_width_m": 2.2,
     "shaft_depth_m": 3.0,
@@ -60,6 +61,15 @@
     "segment_count": 32,
     "plinth_height_m": 0.55,
     "plinth_extra_radius_m": 0.35,
+    "terrace": {
+      "_scope": "world_presentation",
+      "_why": "P2-022 / F40#2 (NEAR6-CR, 4 Nov 2026; GPU 5.81): judges read the summit as a small skeletal dome set straight on grass beside a separate court, not a layered stone sanctuary. On: two broad low stepped masonry courses ring the drum outside its plinth (arch gaps left open, no collision; each course sinks into the turf so slopes do not show a lip underneath). OFF until judged.",
+      "enabled": false,
+      "tiers": [
+        {"radius_extra_m": 2.6, "width_m": 4.6, "height_m": 0.42, "sink_m": 0.6},
+        {"radius_extra_m": 5.9, "width_m": 2.4, "height_m": 0.2, "sink_m": 0.6}
+      ]
+    },
     "pier_angles_deg": [55.0, 125.0, 235.0, 305.0],
     "pier_width_m": 3.2,
     "pier_depth_m": 2.4,

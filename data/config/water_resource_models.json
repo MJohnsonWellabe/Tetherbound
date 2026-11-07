@@ -1,4 +1,19 @@
 {
+  "fight_ring_hide": {
+    "_why": "NEAR6-TW (4 Nov 2026), P2-090 / F39#20 (GPU 5.70): in the Venn fight a small pale blob sits half-buried in the sand beside Ripplet: the reef-stone gather node inside the fight ring. When on, gather nodes of the listed Tidewake items join harvest_node's fight_ring_occluder group, so combat_arena hides their model inside the ring for the fight and restores it after (as bushes and deadfall already do). Record, prompt and stock are untouched. `pickups`: world pickups (the candy with its blue figure and highlight ring 9 m from Venn) hide their art and highlight the same way (item_cache_pickup.gd set_fight_hidden).",
+    "scope": "client presentation: harvest node model visibility during a fight; no save, network or gameplay state",
+    "enabled": true,
+    "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r20b F39#20 CPU 5.87 -> 6.42 (three code-blind judges all higher, defect PRESENT -> FIXED 3/3; calibrated, RMSE 0.54).",
+    "items": [
+      "reef_stone",
+      "tide_pearl",
+      "driftwood",
+      "reed_fiber",
+      "tide_bloom",
+      "sluice_metal"
+    ],
+    "pickups": true
+  },
   "resources": {
     "reef_stone": {
       "label": "Gather Reef Stone",

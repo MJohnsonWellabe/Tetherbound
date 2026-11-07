@@ -1,4 +1,21 @@
 {
+	"rest_faint_settled": {
+		"_why": "F38#1 creature collapse and rest (CPU 5.91, qj rim075-f38-1): judges read Veridian at the resting moment as 'semi-upright' and 'splayed'. A species with no rest of its own (rest_roll_deg 0, no authored or candidate rest) rests via play_terminal(\"rest_faint\"), which replays its faint clip from the start, so a resting creature visibly collapses and is caught mid-fall. When enabled, creature_animator.gd starts that rest at the faint clip's settled end. Presentation only; no state or collision. OFF until judged.",
+		"enabled": false
+	},
+	"shiny_remake_textures": {
+		"_why": "F39#4 (CPU 6.21; NEAR6-TW judges: shinies go near-uniform hot magenta, the lever is a colour shift on shell or plates). The remakes have no shiny texture of their own, so the shiny swap fell back to the OLD mesh's extracted shiny (different UVs) and wired it into emission too, so the whole body glowed. When enabled, creature_body._texture_for maps each live remake albedo to its own repaint (tools/art_pipeline/shiny_secondary_shift.py: only the warm secondary band moves, gold on Aquaryn's fins, jade on Cannonback's and Riptusk's plates; value, pattern, primary and glow regions kept), and each glow map to itself so only the glow lines glow. Never red. Presentation only.",
+		"_why_on": "Visual lane qj shinyplates2-f39-4 (4 Nov, CPU, three code-blind judges, calibrate.py): F39#4 shiny creature finish CPU 5.61 -> 6.76 (+1.15; raw 5.4/5.6/5.6 -> 6.3/6.3/6.4; defect PRESENT -> PARTIAL). All three judges: the violet-magenta whole-body tint is gone and shell and plate pattern survive. Judges' next lever: shiny as an accent over each species' own albedo, and keep Aquaryn's pale cyan apart from the water. Owner 4 Nov: every judged gain ships ON; a GPU High pass still closes the row.",
+		"enabled": true,
+		"map": {
+			"res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0.jpg": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_Image_0_shiny_plates.png",
+			"res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0.jpg": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_Image_0_shiny_plates.png",
+			"res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0.jpg": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0_shiny_plates.png",
+			"res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_arc_emission.png": "res://assets/creatures/tetherbound/aquaryn/candidate_r9/models/creature_aquaryn_r9_arc_emission.png",
+			"res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_arc_emission.png": "res://assets/creatures/tetherbound/cannonback/candidate_owner1101/models/creature_cannonback_owner1101_arc_emission.png",
+			"res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_arc_emission.png": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_arc_emission.png"
+		}
+	},
 	"_comment": "tunable -- shiny odds (OF27). OF28 adds per-species base/shiny palettes here or in data/creatures/palettes.json; this file starts with only the roll odds because OF27 is plumbing, not colours.",
 	"shiny_chance": 0.0078,
 	"_comment_phase2_shiny_finish": "P2-030 production authored shiny repaints, default on under the owner's Phase 1 instruction for all thirteen staged species. No shiny odds, save, network or gameplay change. Phase 2 native ordinary/shiny comparisons and visual acceptance remain required.",
@@ -20,8 +37,16 @@
     "_why": "P2-030 (F39#4, GPU 5.90, 28 Oct: the shinies 'stand small and pale against bright sand and water with no rim light or shiny sparkle cue'). When on, a shiny body (never an Aspect variant) gets a rim over its finished surfaces and the alpha mote ring (alpha_aura.gd) in pale silver-blue (creature_body.gd _apply_shiny_cue). OFF until judged.",
     "scope": "local presentation only; no catch, spawn, save or network change",
     "enabled": false,
-    "rim_strength": 0.55,
+    "rim_strength": 0.8,
     "motes": true,
-    "mote_colour": "#dff3ff"
+    "mote_colour": "#dff3ff",
+    "overlay": {
+      "_why": "NEAR6-TW (4 Nov 2026), F39#4 (GPU 5.90): VIS-TIDEWAKE found the rim and motes do not read at the ~8 m stand (r1b/r1b2 identical, never judged). When on (with shiny_cue.enabled), a shiny's meshes also wear the character rim overlay in pale gold with a soft fill, a visible sparkle edge at stand distance. Ordinary bodies and Aspect variants are untouched. No red.",
+      "enabled": false,
+      "colour": "#ffe9b0",
+      "energy": 0.95,
+      "power": 2.0,
+      "fill_energy": 0.1
+    }
   }
 }

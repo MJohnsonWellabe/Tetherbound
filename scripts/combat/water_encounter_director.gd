@@ -679,6 +679,7 @@ func _build_trainers() -> void:
 				continue
 		trainer_nodes[id] = body
 		preload("res://scripts/world/water_named_grass_clearance.gd").apply(body, realm_world)
+		preload("res://scripts/world/water_character_rim.gd").apply(body)
 		var prompt := INTERACTION.new()
 		prompt.name = "WaterChallenge"
 		prompt.configure("Challenge " + str(spec.name), float(encounter_config.get("trainer_prompt_radius_m", 4.2)), false)

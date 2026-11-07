@@ -235,6 +235,15 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	body.set_script(BODY)
 	_world.add_child(body)
 	body.call("setup", species, shiny)
+	# Creatures-ralph 4 Nov (reproduced): the art model and its animator are
+	# built on the body's first frame, not inside setup(). Seating and posing
+	# before then were no-ops: play_hit/play_faint/play_rest found no animator,
+	# so "hurt", "fainted" and "resting" stills showed idle, and _seat measured
+	# no model. Wait for the model (bounded) before seating and posing.
+	for _wait in 30:
+		if body.get("_animator") != null or bool(body.get("_has_model")):
+			break
+		await process_frame
 	if scale_factor > 1.0 and body.has_method("apply_size_multiplier"):
 		body.call("apply_size_multiplier", scale_factor)
 	body.global_position = Vector3(subject_x, ground, subject_z)
@@ -266,6 +275,17 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	for frame in 5:
 		await process_frame
 	var player: AnimationPlayer = (animator as Object).get("_player") as AnimationPlayer if animator is Object else null
+	# Creatures-ralph 4 Nov (reproduced): a "fainted" still is the end state the
+	# player sees, but five CPU frames land mid-collapse in a 1.5 s faint clip
+	# (Veridian read as "splayed" mid-fall). Wait, in game time, for the faint
+	# clip to finish (bounded by wall time).
+	if pose == "fainted" and player != null and not str(player.current_animation).is_empty():
+		var faint_left := player.current_animation_length - player.current_animation_position
+		var waited := 0.0
+		var wall_cap := Time.get_ticks_msec() + 60000
+		while player.is_playing() and waited < faint_left + 0.1 and Time.get_ticks_msec() < wall_cap:
+			await process_frame
+			waited += root.get_process_delta_time()
 	if pose == "idle":
 		print("PHASE2 POSE PLAYER %s player=%s active=%s" % [species,
 			str(player != null), str(player.current_animation) if player != null else ""])
@@ -278,9 +298,13 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		var wait_seconds := 5.0
 		if player != null and not str(player.current_animation).is_empty():
 			wait_seconds = clampf(player.current_animation_length / maxf(absf(player.speed_scale), 0.01) + 2.0, 5.0, 30.0)
-		var deadline := Time.get_ticks_msec() + int(wait_seconds * 1000.0)
-		while bool(body.call("rest_pose_pending")) and Time.get_ticks_msec() < deadline:
+		# Game time, not wall time: on CPU (llvmpipe) a frame takes far longer than
+		# its delta, so a wall-clock deadline expired before the clip could finish.
+		var waited := 0.0
+		var wall_cap := Time.get_ticks_msec() + 300000
+		while bool(body.call("rest_pose_pending")) and waited < wait_seconds and Time.get_ticks_msec() < wall_cap:
 			await process_frame
+			waited += get_root().get_process_delta_time()
 		rest_receipt = body.call("rest_pose_receipt")
 		if bool(rest_receipt.get("pending", false)) or not bool(rest_receipt.get("active", false)):
 			_failures.append("%s resting: authored rest did not complete before capture" % species)

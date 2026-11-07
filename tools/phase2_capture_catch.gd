@@ -486,6 +486,17 @@ func _leave_the_farmhouse() -> void:
 	player.velocity = Vector3.ZERO
 
 
+## F39#9 (VIS-TIDEWAKE, 4 Nov 2026): the Tidewake counterpart of pinned_wild.
+const PINNED_TIDEWAKE_SPECIES := ["cannonback", "torrentoad", "mangrove_monitor"]
+const PINNED_TIDEWAKE_XZ := Vector2(-90.024, 142.573)
+const PINNED_TIDEWAKE_LEVEL := 8
+
+
+static func pinned_tidewake_wild(seed_value: int) -> Dictionary:
+	return {"species": PINNED_TIDEWAKE_SPECIES[posmod(seed_value, PINNED_TIDEWAKE_SPECIES.size())],
+		"xz": PINNED_TIDEWAKE_XZ, "level": PINNED_TIDEWAKE_LEVEL}
+
+
 ## Tidewake wilds only exist once the director streams the neighborhood around
 ## the player, so pick one after that wait: the nearest active, grounded,
 ## unengaged wild (as the Cloudreach branch does), and stand 5 m from it. The
@@ -495,8 +506,23 @@ func _stand_beside_streamed_tidewake_wild() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if player == null or director == null:
 		return
-	var nearest := INF
+	# F39#9 (VIS-TIDEWAKE, 4 Nov 2026): the same reproduced A/B blocker as the
+	# Cloudreach pin above. The seed picks a First Shore species and the capture
+	# places that one wild 5 m ahead of the fixed First Shore start.
+	var pin := pinned_tidewake_wild(_seed)
+	var xz: Vector2 = pin["xz"]
+	seed(_seed)
+	var placed: Node3D = director.call("spawn_wild", str(pin["species"]),
+		Vector3(xz.x, float(_world.call("ground_height_at", xz.x, xz.y)), xz.y),
+		{"name": "CapturePinnedWild", "level": int(pin["level"]), "wander_radius": 0.0, "aggressive": false}) as Node3D
+	if placed != null:
+		_wild = placed
+		_pinned_wild = true
+		print("tidewake catch: pinned %s at %s (seed %d)" % [pin["species"], placed.global_position, _seed])
+	var nearest := INF if _wild == null else -1.0
 	for candidate: Node3D in (director.call("wild_creatures") as Array[Node3D]):
+		if _pinned_wild:
+			break
 		if not is_instance_valid(candidate) or not candidate.visible \
 				or not candidate.is_physics_processing() or bool(candidate.get("engaged")):
 			continue

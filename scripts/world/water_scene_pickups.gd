@@ -3,6 +3,13 @@ extends Node3D
 ## catalogue remains complete when no peer is nearby; scene counts are actual.
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 const CANDY_PRESENTATION := preload("res://scripts/world/candy_pickup_presentation.gd")
+static var RESOURCE_FIGHT_HIDE: Dictionary = _fight_hide_config()
+
+
+static func _fight_hide_config() -> Dictionary:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_resource_models.json"))
+	var block: Variant = (raw as Dictionary).get("fight_ring_hide", {}) if raw is Dictionary else {}
+	return block if block is Dictionary and bool((block as Dictionary).get("enabled", false)) else {}
 const HARVEST := preload("res://scripts/world/harvest_node.gd")
 const PERSONAL := preload("res://scripts/world/water_personal_pickup.gd")
 const DATA := "res://data/config/water_pickups.json"
@@ -257,6 +264,9 @@ func _spawn(row: Dictionary) -> void:
 		node.call("setup", str(row.item_id), "Take " + str(definition.name), str(definition.get("world_model", CRATE)),
 			float(definition.get("world_model_scale", 0.35)), id.trim_prefix("water:"), "water", int(row.get("quantity", 1)))
 		CANDY_PRESENTATION.apply(node, str(row.item_id), definition, id)
+		# NEAR6-TW (F39#20): pickups stand aside inside a fight ring (OFF).
+		if bool(RESOURCE_FIGHT_HIDE.get("pickups", false)):
+			node.add_to_group(preload("res://scripts/world/harvest_node.gd").FIGHT_RING_OCCLUDER_GROUP)
 		# Personal skill-candy grades are marked on the actual black wrapper
 		# by CANDY_PRESENTATION, rather than a floating billboard above it.
 	node.name = id.replace(":", "_")

@@ -48,6 +48,46 @@
     "horizon_haze_height": 0.15,
     "horizon_haze_strength": 0.42
   },
+  "weather_arms": {
+    "rain_storm": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 rain round 2 (NEAR6-CR, 4 Nov 2026): rain_mood (softer, more colour) judged flat at 5.81 because rain still barely read; the judges asked for a real storm grade: a darker overcast sky, wet surfaces, rain haze in the distance. On: Cloudreach-only rain keys over the shared preset: a darker slate sky and horizon, a dimmer diffuse sun with soft shadows, denser cool fog, a cooler ambient, slightly lower saturation and fully wet ground. Meadows rain is unchanged.",
+      "enabled": true,
+      "_why_on": "NEAR6-CR quick judge F40-19-rain-810b52e4b41d-11041812 (4 Nov 2026, F40 matrix piece 4, realm gate day rain): CPU 5.69 -> 5.80 (+0.11), all three judges a tenth higher; defect still PRESENT. Ships ON (owner 4 Nov: any judged CPU gain ships ON, even small).",
+      "presets": {
+        "rain": {
+          "sun": {"energy_mult": 0.45, "shadow_opacity": 0.12},
+          "sky": {"top_colour": "#3b4a5a", "horizon_colour": "#6f7f8c", "ground_horizon_colour": "#6f7f8c"},
+          "environment": {"ambient_colour": "#6f8496", "ambient_energy_mult": 0.8, "fog_density_add": 0.0085, "fog_colour": "#6e8291", "adjustment_saturation_mult": 0.9},
+          "ground_wetness": 1.0
+        }
+      }
+    },
+    "rain_mood": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU day rain 4.90): all three judges said Cloudreach rain only desaturates the scene. On (scripts/world/cloudreach_weather.gd realm_preset): Cloudreach-only keys over the shared rain preset keep more of the realm's colour and form: stronger diffuse sun with soft shadows, a cooler blue-grey sky and fog with a little less density so the stratified distance layers in haze, a teal-cool ambient and wetter ground. Meadows rain is unchanged. OFF until judged.",
+      "enabled": false,
+      "presets": {
+        "rain": {
+          "sun": {"energy_mult": 0.68, "shadow_opacity": 0.3},
+          "sky": {"top_colour": "#4f6782", "horizon_colour": "#93a6b4", "ground_horizon_colour": "#93a6b4"},
+          "environment": {"ambient_colour": "#7a95ab", "fog_density_add": 0.0042, "fog_colour": "#8aa0b2", "adjustment_saturation_mult": 0.97},
+          "ground_wetness": 0.8
+        }
+      }
+    }
+  },
+  "time_override_arms": {
+    "night_foreground_fill": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU night 5.05): all three judges said night turns the foreground into a black-green mass. The night sun key was found not to reach the frame (VIS-CLOUDREACH mx2), so this arm uses the ambient path the M4 override already proved: a brighter, cooler moonlit ambient with a lighter blue, a slightly higher exposure and a touch more saturation so grass reads as green-blue turf rather than black, while the sky keeps its night colours.",
+      "enabled": true,
+      "_why_on": "NEAR6-CR quick judge F40-19-63afb3c3967f-11041555 (4 Nov 2026, F40 matrix piece 7, realm gate night): CPU 5.10 -> 5.84 (+0.74), all three judges preferred it; defect PRESENT -> PARTIAL. Ships ON (owner 4 Nov: every judged CPU gain ships ON).",
+      "overrides": {
+        "night": {"environment": {"ambient_energy": 3.4, "ambient_colour": "#5c74bd", "ambient_sky_contribution": 0.12, "exposure": 1.08, "adjustment_saturation": 1.0}}
+      }
+    }
+  },
   "time_overrides": {
     "_comment": "Frame-matrix M4, read by cloudreach_world.gd::apply_time_overrides onto this realm's own copy of art.json's time presets (the shared presets, which also drive the Meadows, are untouched; night_end is same_as night and inherits this). The blind judge measured the Cloudreach night route (frame 31) at mean luma 10.5/255 with two-thirds of the frame pure black, and the arrival cliff (frame 30) as a black wedge: under Compatibility only the (1 - ambient_sky_contribution) share of the ambient colour reaches a slope facing away from the moon, and the shared 1.5 x #3d50a3 at 0.2 sky share lands those slopes in ACES's toe. Ambient energy 1.5 -> 2.6, colour one step lighter in the same blue, sky share 0.2 -> 0.15: roughly 2.2x the moon-shadow fill (world_look light_budget ambient 0.46 -> 1.00) while the moon, sky, exposure and saturation stay the shared night's, so the sky stays dark and the moonlit/shadowed split still reads as night. creature_emission_floor 0.22 -> 0.08: the floor adds each plain-PBR creature's own albedo as emission, so a pale creature (Stormcapra, frame 32) glowed at a fixed value that ignored the night; with the ambient raised the creatures are lit by the night itself and keep only a small legibility floor.",
     "night": {
@@ -229,7 +269,7 @@
     "ledge_moss_tint": "#4c6b36",
     "ledge_moss_strength": 0.62,
     "ledge_lighten": 0.1,
-    "ledge_normal_threshold": 0.55,
+    "ledge_normal_threshold": 0.55, "rim_fringe": {"_scope": "world_presentation", "_why": "P2-023 / F40#4 (NEAR6-CR, 4 Nov 2026; GPU 5.64): judges call the grassy shelves' crown edges conspicuous straight extruded edges. On (cloudreach_world.gd _build_rim_fringe): a sparse fringe of installed bushes sits on the crown rim of grassy shelves, rock shoulders and landmark ledges, nudged outward and down so turf spills over the lip. Visual only; CliffMass region rims untouched. OFF until judged.", "enabled": false, "every_nth_vertex": 3, "max_per_mass": 18, "outset_m": 0.5, "drop_m": 0.35, "height_min_m": 1.4, "height_max_m": 2.6, "visibility_m": 900.0, "_round1": "qj F40-4-41e840386d6b-11041218 captured: no visible change on the three scored stands (the pale shelves there are not shelf/shoulder mesas). Not judged.", "outcrops": {"_why": "P2-023 round 2 (NEAR6-CR): the pale stepped ledge blocks (crag-kit EmbeddedCliffOutcrop) carry the dead-straight top edges in the scored frames; a sparse installed-bush fringe along their top edges breaks the line. Visual only. OFF until judged.", "enabled": false, "spacing_m": 6.0, "max_per_outcrop": 12, "height_min_m": 1.2, "height_max_m": 2.2, "drop_m": 0.3, "visibility_m": 900.0}},
     "crevice_strength": 0.45,
     "crevice_scale": 0.09,
     "_comment_normal_scale_atmos0906": "CLOUDREACH-ATMOS-0906. NOT part of option A's palette -- no colour here is touched. texture_scale 0.055 is one texture repeat every ~18 m, which is right for the broad albedo planes option A was picked for and badly wrong for the normal map: across a 46 m landmark ledge it stretches one rock normal over the whole face, and the blind judge read the result on the stand-11 spire as 'a dozen bright white-cyan curved scratch lines, swirling across the rock face like chalk ... a UV smear'. normal_scale gives the normal its own frequency (~4.5 m per repeat). Remove the key and the shader falls back to texture_scale, i.e. exactly the shipped look.",
@@ -1326,6 +1366,38 @@
         "radius_m": 7.0
       },
     {"id": "aviary_finale_road_sightline", "_comment": "F40#4: the Sky Aviary must read from the finale road at ~400 m (frame-matrix row 33 stand) -- three route trees stood on that line. Route trees within half_width_m of the segment are not planted.", "from_xz": [353.9, 5040.8], "to_xz": [100.0, 5350.0], "half_width_m": 9.0}
+    ]
+  },
+  "gate_path_braziers": {
+    "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only",
+    "_why": "NEAR6-CR F40#19 night round 2: judges saw no lit focal point at night; manned braziers beside the gate path. OFF until judged.",
+    "enabled": true,
+    "_why_on": "CPU 5.00 -> 5.51 (qj/F40-19-458a13de2967-11042202, night_foreground_fill ON in both arms; judges: warm lantern pools give the path a focal line, foreground defect FIXED on 2 of 3)",
+    "points": [[-11.6, -206.4], [-17.4, -207.6], [-14.1, -192.4], [-19.9, -193.6]]
+  },
+  "gate_path_verge": {
+    "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only, no collision",
+    "_why": "NEAR6-CR F40#19 night round 3: judges flagged a uniform flat lawn; clustered installed bushes, flowers and low rocks along the path edges. OFF until judged. Round 3b (qj F40-19-9025b78edb4e-11042347) rendered Bush_Common red at night (red is Team Tether only): not judged; bushes swapped for flowers and low rocks.",
+    "enabled": true,
+    "_why_on": "CPU 5.54 -> 5.81 (qj/F40-19-9025b78edb4e-11050024, gate_path_braziers and night_foreground_fill ON in both arms; judges: B adds flower and rock clumps along the path edges, slightly more lived-in)",
+    "ref_y": 109.0,
+    "items": [
+      ["flowers", -8.1, -208.8, 1.0, 20],
+      ["rock_low", -7.0, -209.9, 1.3, 75],
+      ["rock_low", -19.8, -211.0, 0.7, 40],
+      ["flowers", -21.0, -210.2, 1.4, 130],
+      ["flowers", -8.2, -202.7, 1.5, 10],
+      ["rock_low", -7.1, -203.8, 0.6, 200],
+      ["flowers", -21.5, -205.2, 1.0, 95],
+      ["flowers", -22.4, -204.1, 0.9, 250],
+      ["rock", -10.8, -197.1, 1.1, 60],
+      ["flowers", -9.8, -196.0, 0.9, 150],
+      ["flowers", -23.1, -199.4, 1.5, 300],
+      ["rock_low", -22.0, -200.5, 0.6, 15],
+      ["flowers", -11.5, -191.1, 1.0, 80],
+      ["flowers", -10.4, -190.2, 1.3, 220],
+      ["rock_low", -23.3, -193.3, 0.7, 110],
+      ["flowers", -24.3, -192.4, 1.0, 330]
     ]
   }
 }

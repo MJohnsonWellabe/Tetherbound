@@ -482,3 +482,9 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 		# P2-070 cause lane LANDMARKS (hero_landmarks_1101.json glass_sink, OFF).
 		preload("res://scripts/world/hero_landmarks_1101.gd").dress_glass_sink(self, _field.config.glass_sink)
 		GROUND_ZONES.install(_terrain)
+		# F41#1 root_floor_1104 (stormheart_presentation.json, OFF until judged).
+		preload("res://scripts/world/stormheart_root_floor.gd").install(_terrain)
+		# F41#5 macro_1104 (stormwood_ground_finish.json, OFF until judged).
+		GROUND_ZONES.install_macro(_terrain)
+		# F41#1 floor_lanterns_1104 (stormheart_presentation.json, OFF until judged).
+		preload("res://scripts/world/stormheart_floor_lanterns.gd").install(self)

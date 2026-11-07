@@ -91,15 +91,31 @@ const TAIL := """
 static func finish() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	var out: Dictionary = parsed if parsed is Dictionary else {}
-	var lift: Variant = out.get("value_lift_candidate", {})
-	if not lift is Dictionary or not bool((lift as Dictionary).get("enabled", false)):
-		return out
-	out = out.duplicate(true)
-	for section: String in (lift as Dictionary):
-		if section == "enabled" or section.begins_with("_") or section == "scope":
+	# Each candidate (its own `enabled`) merges its sections in this order.
+	# `rock_value_1104` (VIS-STORMWOOD, OFF until judged) darkens the
+	# terrain rock slot so cliffs stop reading as pale white walls.
+	var copied := false
+	for key: String in FINISH_CANDIDATES:
+		var cand: Variant = out.get(key, {})
+		if not cand is Dictionary or not bool((cand as Dictionary).get("enabled", false)):
 			continue
-		_merge_into(out, section, (lift as Dictionary)[section])
+		if not copied:
+			out = out.duplicate(true)
+			copied = true
+		for section: String in (cand as Dictionary):
+			if section == "enabled" or section.begins_with("_") or section == "scope":
+				continue
+			_merge_into(out, section, (cand as Dictionary)[section])
 	return out
+
+
+# `path_loam_1104` (VIS-STORMWOOD, OFF until judged): the pale sand-coloured
+# path slot that fills the lower half of every destination close view reads
+# darker and cooler, as damp trodden forest earth.
+# `grass_patch_1104` (VIS-STORMWOOD, OFF until judged): the grass shader's
+# colony mode (full clump contrast, patch thresholds) breaks the even carpet
+# into grass colonies with true clearings that show the wet moss floor.
+const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104", "path_loam_1104", "grass_patch_1104"]
 
 
 static func _merge_into(target: Dictionary, key: String, value: Variant) -> void:
@@ -179,3 +195,30 @@ static func install(terrain: Object) -> void:
 	for key: String in ["pool_roughness", "pool_specular"]:
 		if zones.has(key):
 			material.call("set_shader_param", "sz_" + key, float(zones[key]))
+
+
+## F41#5 `macro_1104` (stormwood_ground_finish.json, OFF until judged). Judges
+## read the Stormwood ground as "a flat green grass carpet": the terrain grass
+## slot (the wet-moss floor texture) tiles evenly because Stormwood's terrain
+## never enables Terrain3D's macro variation. On: two cool moss-tone macro
+## colours at long noise scales lay large darker and lighter drifts across it,
+## as Meadows does (terrain_playground.json). Shader uniforms only; no bake.
+static func macro_variation() -> Dictionary:
+	var cand: Variant = finish().get("macro_1104", {})
+	return cand if cand is Dictionary and bool((cand as Dictionary).get("enabled", false)) else {}
+
+
+static func install_macro(terrain: Object) -> void:
+	var cfg := macro_variation()
+	if cfg.is_empty() or terrain == null:
+		return
+	var material: Object = terrain.get("material")
+	if material == null:
+		return
+	material.call("set_shader_param", "enable_macro_variation", true)
+	for key: String in ["macro_variation1", "macro_variation2"]:
+		if cfg.has(key):
+			material.call("set_shader_param", key, Color(str(cfg[key])))
+	for key: String in ["noise1_scale", "noise2_scale"]:
+		if cfg.has(key):
+			material.call("set_shader_param", key, float(cfg[key]))

@@ -284,6 +284,7 @@ func build() -> void:
 	_soft_fog = false
 	_chart_cfg = {}
 	_cloud_fog = {}
+	_chart_grid = {}
 	_outside_colour = UITokens.BG_DEEP
 	_road_texture_cache.clear()
 	if veil is Dictionary and veil.get("enabled") == true:
@@ -305,6 +306,8 @@ func build() -> void:
 		_chart_cfg = chart if chart is Dictionary and chart.get("enabled") == true else {}
 		var cloud: Variant = veil.get("cloud_fog", {})
 		_cloud_fog = cloud if cloud is Dictionary and cloud.get("enabled") == true else {}
+		var grid: Variant = veil.get("chart_grid_1104", {})
+		_chart_grid = grid if grid is Dictionary and grid.get("enabled") == true else {}
 	_sea_lane_cache.clear()
 	_fog_tex_revision = -1
 	_icon_cache.clear()
@@ -901,6 +904,8 @@ func _draw_map(canvas: Control) -> void:
 	var fog := _fog_texture(map_state)
 	if fog != null:
 		canvas.draw_texture_rect(fog, map_rect, false)
+	if not _chart_grid.is_empty() and (_chart_grid.get("realms", []) as Array).has(_display_realm()):
+		_draw_chart_grid(canvas, map_rect)
 	if _roads_above_fog:
 		_draw_roads(canvas, map_rect)
 
@@ -1550,6 +1555,60 @@ func _facing_yaw(_world: Node, player: Node3D) -> float:
 ## letterboxed to the same non-square aspect (`_draw_map` above), so both
 ## sides of this mapping already agree the world need not be square. Zoom and
 ## pan are applied after that north-up fit, identically to the texture rect.
+## F38#4 P2-002 (NEAR6-MS, `fog_veil.chart_grid_1104`, OFF unless enabled):
+## a faint inked survey grid at a whole-metre spacing and a small north mark,
+## so the parchment fog reads as a chart. It reveals no terrain (OW3).
+var _chart_grid: Dictionary = {}
+
+
+func _draw_chart_grid(canvas: Control, map_rect: Rect2) -> void:
+	var bounds := bounds_for_map(_map_state())
+	var span_x := float(bounds["max_x"]) - float(bounds["min_x"])
+	if span_x <= 0.0 or map_rect.size.x <= 0.0:
+		return
+	var px_per_m := map_rect.size.x / span_x
+	var min_px := float(_chart_grid.get("min_spacing_px", 80.0))
+	var spacing_m := 0.0
+	for step: Variant in _chart_grid.get("spacings_m", [25, 50, 100, 250, 500, 1000, 2500]):
+		spacing_m = float(step)
+		if spacing_m * px_per_m >= min_px:
+			break
+	var step_px := spacing_m * px_per_m
+	if step_px < 4.0:
+		return
+	var ink := Color(str(_chart_grid.get("ink", "#4b3b26")))
+	ink.a = clampf(float(_chart_grid.get("alpha", 0.2)), 0.0, 1.0)
+	var width := float(_chart_grid.get("width_px", 1.5))
+	var size := canvas.size
+	# Lines sit on whole multiples of the spacing in world metres, so the grid
+	# pans with the map instead of sliding over it.
+	var x0 := map_rect.position.x - fposmod(float(bounds["min_x"]), spacing_m) * px_per_m
+	x0 = fposmod(x0, step_px)
+	var y0 := map_rect.position.y - fposmod(float(bounds["min_z"]), spacing_m) * px_per_m
+	y0 = fposmod(y0, step_px)
+	var x := x0
+	while x < size.x:
+		canvas.draw_line(Vector2(x, 0.0), Vector2(x, size.y), ink, width)
+		x += step_px
+	var y := y0
+	while y < size.y:
+		canvas.draw_line(Vector2(0.0, y), Vector2(size.x, y), ink, width)
+		y += step_px
+	var rose_px := float(_chart_grid.get("north_mark_px", 0.0))
+	if rose_px > 0.0:
+		var c := Vector2(size.x - rose_px * 0.9, rose_px * 1.25)
+		var mark := ink
+		mark.a = clampf(float(_chart_grid.get("north_alpha", 0.6)), 0.0, 1.0)
+		var tip := c + Vector2(0.0, -rose_px * 0.75)
+		var tail := c + Vector2(0.0, rose_px * 0.75)
+		var half := rose_px * 0.22
+		canvas.draw_colored_polygon(PackedVector2Array([tip, c + Vector2(half, 0.0), c, c + Vector2(-half, 0.0)]), mark)
+		canvas.draw_polyline(PackedVector2Array([tip, c + Vector2(half, 0.0), tail, c + Vector2(-half, 0.0), tip]), mark, 1.5, true)
+		var font := ThemeDB.fallback_font
+		var fs := int(rose_px * 0.55)
+		canvas.draw_string(font, tip + Vector2(-fs * 0.3, -4.0), "N", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, mark)
+
+
 func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 	var bounds := bounds_for_map(_map_state())
 	var origin := Vector2(float(bounds["min_x"]), float(bounds["min_z"]))

@@ -4412,6 +4412,41 @@ func _configure_transport_timeout(peer_id: int) -> void:
 		int(_cfg("peer_timeout_max_ms", 180_000)))
 
 
+## ENet checks a peer's timeout only when one of its reliable commands'
+## retransmit timer expires, and those timers double without bound
+## (enet protocol.c enet_protocol_check_timeouts). Once a peer dies with the
+## send window full, the next check can land far past `peer_timeout_max_ms`:
+## a hard-killed guest was dropped anywhere from ~135 s to ~270 s
+## (smoke_net_f48_cut_key, intermittent). A ping is a fresh reliable command
+## outside the send window, so its own short timer re-runs that check against
+## the oldest unacknowledged send and the configured maximum holds. Live peers
+## acknowledge it like ENet's own idle ping; no timeout value changes.
+static func ping_transport_peers(peer: MultiplayerPeer, hosting: bool, peer_ids: Array) -> int:
+	if not transport_uses_enet_timeouts(peer):
+		return 0
+	var enet_peer := peer as ENetMultiplayerPeer
+	var pinged := 0
+	for peer_id: Variant in peer_ids:
+		if not timeout_peer_is_physical(hosting, int(peer_id)):
+			continue
+		var transport_peer := enet_peer.get_peer(int(peer_id))
+		if transport_peer != null and transport_peer.get_state() == ENetPacketPeer.STATE_CONNECTED:
+			transport_peer.ping()
+			pinged += 1
+	return pinged
+
+
+func _tick_transport_liveness(delta: float) -> void:
+	var interval := float(_cfg("peer_liveness_ping_s", 1.0))
+	if interval <= 0.0 or not is_active() or not transport_uses_enet_timeouts(_peer):
+		return
+	_liveness_ping_s += delta
+	if _liveness_ping_s < interval:
+		return
+	_liveness_ping_s = 0.0
+	ping_transport_peers(_peer, is_host(), Array(multiplayer.get_peers()))
+
+
 static func timeout_peer_is_physical(hosting: bool, peer_id: int) -> bool:
 	# ENet clients receive logical peer_connected events for fellow clients,
 	# but their only physical remote connection is the server. get_peer() logs
@@ -4439,6 +4474,9 @@ func _on_server_disconnected() -> void:
 
 # --- host clock (D105) -----------------------------------------------------------
 
+var _liveness_ping_s := 0.0
+
+
 func _process(delta: float) -> void:
 	_bind_training_container_guards()
 	if not _mastery_job.is_empty():
@@ -4463,6 +4501,7 @@ func _process(delta: float) -> void:
 			# finish the existing path as _rpc_training_decision does.
 			_finalize_snapshot_receive()
 	_poll_lingering_peer()
+	_tick_transport_liveness(delta)
 	if _closing_frames > 0:
 		if _closing_frames > 1:
 			_closing_frames -= 1

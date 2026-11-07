@@ -9,7 +9,7 @@
     "sink_m": 0.3
   },
   "glass_sink": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON (VIS-STORMWOOD j4, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.30, r 0.91, anchor RMSE 0.57): F41#10 Glass Sink 4.03 -> 5.07 mapped with hero_landmarks_1101.glass_sink + dark_pool_candidate + obsidian_1104 (3/3: 'reads as a dark glass sink', defect PARTIAL).",
     "_why": "P2-070 (GPU 3.19-5.06: 'tiled cell plane meeting a hard grass edge reads as a placeholder void'; judges asked for a shaped bowl with glass material and a rim transition). On: the 1101 Meshy terraced basin ring is set into the sink floor ahead of the reachable Hollow Crown rim stands (approach (841, 2518) and close (812, 2484), both facing 220 deg). Its outer rim touches the island cliff at bearing ~185 deg, r = 245 m, where the cliff stands at rim_top_y, so the rim meets the terrain edge inside the judged frames; the bowl's centre lies on the approach view line, 276 m out. The ring is stretched vertically (height = rim_top_y - floor_y + bury_m) to span the cliff drop; its bottom is buried bury_m under the terrain floor. A dark indigo glass pool disc fills the ring's open centre just above the floor, replacing the checker floor inside the bowl. Visual only: no collider (the sink stays a non-walkable gap).",
     "model": "res://assets/props/meshy-1101/glass_sink_hero/glass_sink_hero.glb",
     "centre_xz": [663.6, 2306.7],
@@ -27,7 +27,7 @@
       "rim_tint": "#8c84c4",
       "rim_strength": 0.35
     },
-    "glow_colour": "#a8dcff",
+    "wall_grade_1104": {"enabled": false, "scope": "client_presentation", "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#10: in the qj_obs3 frames the Meshy sink shell reads as a huge blown-out white wall beside the dark obsidian floor (pale texture plus ice-blue glow 1.1). Dimmer glow and a darker cool tint so the walls read as glass rock. OFF until judged.", "glow_colour": "#7fa6d6", "glow_energy": 0.35, "tint": "#6f7a92", "roughness": 0.55}, "glow_colour": "#a8dcff",
     "glow_energy": 1.1
   },
   "veilfall": {

@@ -1,0 +1,23 @@
+{
+ "Ek": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ },
+ "En": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Li": {
+  "anchor": false,
+  "label": "F38#22",
+  "A": "/home/user/Tetherbound/.artifacts/qj/f38_22-market-folk/k/sides/F38_22_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/f38_22-market-folk/k/sides/F38_22_base.jpg"
+ },
+ "Dx": {
+  "anchor": true,
+  "A": "f36_0_npc:C4A",
+  "B": "f36_0_npc:C4B"
+ }
+}

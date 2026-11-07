@@ -1,0 +1,23 @@
+{
+ "Zq": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Rh": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ad": {
+  "anchor": false,
+  "label": "F38#15",
+  "A": "/home/user/Tetherbound/.artifacts/qj/f38_15-mount-scale/k/sides/F38_15_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/f38_15-mount-scale/k/sides/F38_15_base.jpg"
+ },
+ "Cl": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

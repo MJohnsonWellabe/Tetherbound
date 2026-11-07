@@ -1,0 +1,47 @@
+{
+ "Lp": {
+  "anchor": true,
+  "A": "f36_0_npc:C2A",
+  "B": "f36_0_npc:C2B"
+ },
+ "Jl": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Jg": {
+  "anchor": false,
+  "label": "F39#30b shore",
+  "A": "/dev/shm/artifacts/look_r12/s13/F39_30b_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r12/s13/F39_30b_base.jpg"
+ },
+ "Eu": {
+  "anchor": false,
+  "label": "F39#30a shore",
+  "A": "/dev/shm/artifacts/look_r12/s13/F39_30a_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r12/s13/F39_30a_base.jpg"
+ },
+ "Qs": {
+  "anchor": false,
+  "label": "F39#30b standoff",
+  "A": "/dev/shm/artifacts/look_r12/s12/F39_30b_cand.jpg",
+  "B": "/dev/shm/artifacts/look_r12/s12/F39_30b_base.jpg"
+ },
+ "Ol": {
+  "anchor": false,
+  "label": "F13#5 shore",
+  "A": "/dev/shm/artifacts/look_r12/s13/F13_5_base.jpg",
+  "B": "/dev/shm/artifacts/look_r12/s13/F13_5_cand.jpg"
+ },
+ "Nd": {
+  "anchor": false,
+  "label": "F39#31 standoff",
+  "A": "/dev/shm/artifacts/look_r12/s12/F39_31_base.jpg",
+  "B": "/dev/shm/artifacts/look_r12/s12/F39_31_cand.jpg"
+ },
+ "Pt": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}

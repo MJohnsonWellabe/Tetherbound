@@ -46,6 +46,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 JOB = ROOT / "ralph/reports/VISUAL/item-scores/job.json"
+# Extra item definitions (same schema) merged over job.json: rows such as the F40 matrix pieces that
+# the catalogue job does not list (NEAR6-CR, 4 Nov 2026: F40#19 had no quick-judge stand).
+EXTRA_JOB = os.environ.get("QJ_JOB", "")
 ART = ROOT / ".artifacts/qj"
 CACHE = ART / "cache"            # base/candidate launch captures keyed by (tree, overlay, launch)
 BACKUP = ART / "overlay_backup"  # present only while an overlay is applied
@@ -81,14 +84,19 @@ WORLD_CACHE = {"cloudreach": "--ground-cover-cache"}
 # ---------------------------------------------------------------- stand lookup
 
 def load_items(job=JOB):
-    d = json.loads(Path(job).read_text())
-    bs = d["biomes"]
     out = {}
+    for path in [job] + ([ROOT / EXTRA_JOB] if EXTRA_JOB else []):
+        _load_job(Path(path), out)
+    return out
+
+
+def _load_job(path, out):
+    d = json.loads(Path(path).read_text())
+    bs = d["biomes"]
     for biome, b in (bs.items() if isinstance(bs, dict) else enumerate(bs)):
         for it in (b["items"] if isinstance(b, dict) else b):
             out[it["board_row"]] = dict(it, biome=biome)
             out.setdefault(it["item"], out[it["board_row"]])
-    return out
 
 
 def split_repro(repro):
@@ -162,6 +170,8 @@ def _merge(dst, patch):
 def _switch_on(d, dotted):
     keys = [k for k in dotted.split(".") if k]
     o = d
+    # A numeric key indexes a list (e.g. "clusters.6.candidate" in a band props file).
+    keys = [int(k) if k.isdigit() else k for k in keys]
     for k in keys[:-1]:
         o = o[k]
     if keys and o[keys[-1]] is False:
@@ -305,7 +315,8 @@ def command(e, out_res, sha, biome):
         engine += ["--rendering-method", "gl_compatibility"]
     args = e["args"] + e["subsets"] + e["narrow"]
     script_text = (ROOT / e["script"]).read_text(errors="ignore")
-    if "source-commit" in script_text:
+    # The F40 matrix tools take --source-commit through lookdev_capture_bootstrap.gd, not their own text.
+    if "source-commit" in script_text or "capture_lookdev_catalogue" in script_text:
         args.append(f"--source-commit={sha}")
     flag = WORLD_CACHE.get(biome)
     if flag and flag in script_text and not any(a.startswith(flag) for a in args):
@@ -332,6 +343,9 @@ def run_launch(e, side_key, biome, sha, log, timeout=3000, dry=False):
     # Write where the tool expects its own output (some tools only write under VISUAL/phase2/),
     # then move into the cache: frames never stay in ralph/.
     rel_parent = e["out_parent"].removeprefix("res://") or ".artifacts/qj/tmp"
+    # Some job.json repros carry a Windows checkout path (D:/tetherbound/x04-capture/ralph/...):
+    # keep only the repo-relative part, or a tool that checks its output root refuses to run.
+    rel_parent = re.sub(r"^[A-Za-z]:/(?:[^/]+/)*?(?=ralph/)", "", rel_parent)
     tmp_rel = f"{rel_parent}/qj_{side_key}_{key}"
     tmp = ROOT / tmp_rel
     shutil.rmtree(tmp, ignore_errors=True)
@@ -371,9 +385,34 @@ def find_frame(d, fid):
         names.append(fid.split("__catching__", 1)[1])
     if fid.count("__") >= 2:
         names.append(fid.split("__", 2)[2])
+    if fid.startswith("tidewake__"):  # Tidewake route/location tools write water__<stand> files
+        names.append("water__" + fid.split("__", 1)[1])
     for n in names:
         for ext in ("png", "jpg"):
             hits = sorted(Path(d).rglob(f"{n}.{ext}"))
+            if hits:
+                return hits[0]
+    # Fight tools write <trainer>/<tag>-<sss.ss>.png for ..__fight__<trainer>__<tag>-<sss_ss> ids;
+    # tell moments drift run to run, so take the same tag nearest in time (t- ticks match exactly).
+    m = re.search(r"__fight__([a-z0-9_]+?)__([a-z-]+)-(\d+)_(\d+)$", fid)
+    if m:
+        want = float(f"{m.group(3)}.{m.group(4)}")
+        best = None
+        hits = []
+        for q in Path(d).rglob(f"{m.group(1)}/{m.group(2)}-*.png"):
+            mm = re.fullmatch(rf"{re.escape(m.group(2))}-(\d+\.\d+)", q.stem)
+            if mm:
+                hits.append(q)
+                if best is None or abs(float(mm.group(1)) - want) < best[0]:
+                    best = (abs(float(mm.group(1)) - want), q)
+        # A one-off moment (win, aftermath) is that moment whatever second it lands on.
+        if best and (best[0] <= 1.0 or len(hits) == 1):
+            return best[1]
+    # phase2_capture_realm_flight.gd numbers its frames (02-glide.png) and
+    # the job ids name the moment (meadows__flying__glide).
+    for n in names:
+        for ext in ("png", "jpg"):
+            hits = sorted(Path(d).rglob(f"[0-9][0-9]-{n}.{ext}"))
             if hits:
                 return hits[0]
     return None

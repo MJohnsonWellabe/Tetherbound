@@ -66,3 +66,20 @@ static func build(root: Node3D, spec: Dictionary, arches: Array, materials: Dict
 	glow.omni_range = float(spec.get("clerestory_light_range_m", 22.0))
 	glow.shadow_enabled = false
 	root.add_child(glow)
+	# P2-022 / F40#2 (NEAR6-CR): `drum_uplights` (OFF until judged). Judges
+	# read the summit's night silhouette as dark; warm low lights just outside
+	# each drum pier wash the masonry from below so the stone sanctuary holds
+	# its layered form at night. Lights only: no mesh, collider or route.
+	var up: Dictionary = spec.get("drum_uplights", {})
+	if up.get("enabled") == true:
+		var radius_m := float(up.get("radius_m", 31.0))
+		for raw: Variant in up.get("angles_deg", [55.0, 125.0, 235.0, 305.0]):
+			var theta := deg_to_rad(float(raw))
+			var lamp := OmniLight3D.new()
+			lamp.name = "SanctuaryDrumUplight%d" % int(raw)
+			lamp.position = Vector3(cos(theta) * radius_m, float(up.get("height_m", 1.2)), sin(theta) * radius_m)
+			lamp.light_color = Color(str(up.get("colour", "#ffc58e")))
+			lamp.light_energy = float(up.get("energy", 3.0))
+			lamp.omni_range = float(up.get("range_m", 16.0))
+			lamp.shadow_enabled = false
+			root.add_child(lamp)

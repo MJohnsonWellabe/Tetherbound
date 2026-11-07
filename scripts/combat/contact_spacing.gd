@@ -51,6 +51,13 @@ static func config() -> Dictionary:
 ## Named presentation fixes retain global defaults for every other pair.
 ## Only footprint support and correction speed are overridable here.
 static func config_for_pair(a: Node, b: Node, cfg: Dictionary = config()) -> Dictionary:
+	# NEAR6-TW (P2-089, F39#7): `all_pairs` applies the named overrides' render-box
+	# support and correction speed to every pair. Inert while OFF.
+	var all_pairs: Variant = cfg.get("all_pairs", {})
+	if all_pairs is Dictionary and bool((all_pairs as Dictionary).get("enabled", false)):
+		cfg = cfg.duplicate()
+		for key: String in ["footprint_shape", "push_speed_mps"]:
+			if (all_pairs as Dictionary).has(key): cfg[key] = all_pairs[key]
 	var overrides: Dictionary = cfg.get("named_overrides", {})
 	for actor: Node in [a, b]:
 		if not is_instance_valid(actor): continue

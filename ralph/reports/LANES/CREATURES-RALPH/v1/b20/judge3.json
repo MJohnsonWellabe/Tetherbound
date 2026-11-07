@@ -1,0 +1,6 @@
+{"sets": {
+ "Vs": {"A": {"bar_a": 5.8, "defects": {}}, "B": {"bar_a": 5.8, "defects": {}}},
+ "Zn": {"A": {"bar_a": 5.2, "defects": {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"}}, "B": {"bar_a": 6.6, "defects": {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"}}},
+ "Jq": {"A": {"bar_a": 6.3, "defects": {}}, "B": {"bar_a": 5.0, "defects": {}}},
+ "Tr": {"A": {"bar_a": 5.6, "defects": {"the hit react barely differs from the standing pose": "PARTIAL"}}, "B": {"bar_a": 5.5, "defects": {"the hit react barely differs from the standing pose": "PRESENT"}}},
+ "Up": {"A": {"bar_a": 5.4, "defects": {"the hit react barely differs from the standing pose": "PRESENT"}}, "B": {"bar_a": 5.8, "defects": {"the hit react barely differs from the standing pose": "FIXED"}}}}}

@@ -5,6 +5,12 @@
     "_why": "P2-059 (GPU batch 1, 1 Nov): on the catch result frame 'not even close - weaken it first' was drawn over the 'LT Aim - N orbs' prompt in the same bottom-centre strip, so neither read. When enabled, combat_hud.gd hides the prompt while a miss, refusal or catch-verdict message holds the strip; it returns on the next plain frame. Visual lane CPU v1/ui1c (3 Nov 2026; three code-blind judges, anchors, linear slope 1.51, r 0.81, RMSE 0.69, confirming batch): F39#9 Tidewake catch frames 6.14 -> 6.75 mapped with this flag alone, ON; catches still complete (the full UI arm set broke catch completion, this flag alone does not)."
   },
   "_why_fight_presentation_1025b": "Fights close-1025 ON (coordinator asks after r4/r5 + GPU G3): code-blind CPU r6, 3 fresh judges, mapped, shipped look -> r6: Venn 5.92 -> 6.56, Warden 6.19 -> 6.81, Riverwatch 6.43 -> 7.05, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54 (with the pilot ghost fix ef4591a18); r7 trainer fights (r6 + stagger label + flash drop + a steadier lens, the lens kept OFF): Warden 5.93 -> 6.32, grunt 6.08 -> 5.93. ralph/reports/FIGHTS/close-1024/NOTE.md Here: new_system_screens.combat.panel_scale 0.8.",
+  "quiet_empty_chips_1104": {
+    "_why": "F38#19 P2-004 (NEAR6-MS, 4 Nov 2026): judges score the exploration HUD down for many dark boxed panels. Three of the five quick slots are empty at the start yet draw as full dark boxes with bright keys (clarity_pass skips its empty dimming while key_text_badges is on). When on, an unassigned slot's whole chip, frame and key, draws at chip_alpha; assigned slots are untouched and all five bindings stay visible (playground_hud.gd _update_hotbar). PRESENTATION ONLY. OFF until judged.",
+    "scope": "client_presentation",
+    "enabled": false,
+    "chip_alpha": 0.4
+  },
   "quiet_empty_slots": {
     "_why": "P2-004 (UIPOSES lane, 1 Nov 2026). GPU UI-PAD High 6.45 / MENU-1 6.75: judges ask to replace the placeholder white hotbar glyphs. On the pad path the unassigned quick slots each showed a full-size white d-pad badge. When on, an empty slot keeps its binding glyph (the five visible bindings rule) but drawn at glyph_px with glyph_alpha, so only assigned slots read bright (playground_hud.gd _update_hotbar). PRESENTATION ONLY. OFF until GPU judging.",
     "enabled": false,
@@ -31,7 +37,12 @@
     "calm_seal": {"_why": "P2-061 judges (GPU UI-1): tone down the orb bloom under the result. Sealed orb emission 1.1-2.0 -> 0.6-0.9 and halo 3.0-5.2x at full alpha -> 2.4-3.0x at 0.55 (orb.gd calm_seal_config). Read only while catch_card is enabled.", "enabled": true, "emission": 0.6, "emission_bloom": 0.3, "halo_extra": 0.2, "halo_bloom": 0.6, "halo_alpha": 0.55},
     "card_half_width": 560.0, "_card_half_width_why_on": "440 -> 560 ON 5 Nov 2026 (VIS-CLOUDREACH qj_cardwide): CPU 5.99 -> 6.74 mapped on F40#18 P2-118 (three code-blind judges all prefer the wider card: the full-team line no longer wraps mid-phrase; linear r 0.97, anchor RMSE 0.27). First round on the pinned catch capture with a fixed banner yaw (commit ce470ed44), so both sides share one scene.",
     "card_top": -380.0,
-    "breakout_seconds": 1.8
+    "breakout_seconds": 1.8,
+    "step_back_on_break": false,
+    "_why_step_back_on_break": "VIS-MEADOWS 5 Nov 2026 (F38#33, OFF until judged): all three f38_33-clear-reticle2 judges ask to dim the persistent creature, action and command cards while the result shows. A catch already steps them back; a break-free did not. When on, the broke-free card also steps them back for breakout_seconds, then combat_hud.gd restores each one exactly as it was.",
+    "result_clears_reticle": true,
+    "_why_on_result_clears_reticle": "VIS-MEADOWS 5 Nov 2026 (F38#33, quick_judge f38_33-clear-reticle2, three code-blind judges): CPU mapped 6.32 -> 7.11 (+0.79; all three prefer it, defect PRESENT -> PARTIAL; slope 1.40, r 0.95, RMSE 0.26). Caveat: the catch capture is not deterministic run to run; both sides broke free this round, but the base frame also caught the target mid-motion (judges call it a blur), so part of the gain may be timing.",
+    "_why_result_clears_reticle": "VIS-MEADOWS 4 Nov 2026 (F38#33, OFF until judged): the 08-caught-verdict frame still shows the reticle's fading '100% CAPTURE CHANCE' readout beside the 'Caught Bramblebun!' card. When on, capture_reticle.gd play_success() and play_break() clear the contract fade so the verdict (caught or broke free) is the only text."
   },
   "hud_lean": {
     "_why": "P2-004 round 7 (UI lane, 21 Oct 2026): fewer boxes, not smaller text. Quick bar and action legend lose their backing panels (slots keep their frames, text keeps its outline), the day/time line drops its plate, and assigned quick slots show a larger item icon with key chip and count on one line, so counts are never cut. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",

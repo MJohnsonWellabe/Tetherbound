@@ -792,6 +792,12 @@ func _update_subject_fade(delta: float) -> void:
 		else:
 			# PartyStrip owns its internal draw/fade lifecycle; do not invent a
 			# second row-opacity controller in this no-draw parent holder.
+			# NEAR6-TW (P2-088, F39#19): `roster_floor` keeps the fight roster
+			# above a readable alpha over terrain. Inert while OFF.
+			var roster_floor: Variant = cfg.get("roster_floor", {})
+			if panel == _strip_fader and roster_floor is Dictionary \
+					and bool((roster_floor as Dictionary).get("enabled", false)):
+				level = maxf(level, clampf(float((roster_floor as Dictionary).get("alpha", 1.0)), 0.0, 1.0))
 			panel.modulate.a = level
 
 
@@ -1968,6 +1974,7 @@ func _on_exited(outcome: String) -> void:
 ## back while the card holds; on a breakout they stay, since the fight goes
 ## on. Presentation only; catch odds, timing and party rules are unchanged.
 var _catch_focus_left := 0.0
+var _break_focus_restore: Array = []  ## [CanvasItem, was_visible] for step_back_on_break
 
 
 ## Fight HUD overlap (hud.json `catch_card.raise_message_rows`): the miss and
@@ -2064,6 +2071,18 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 		_step_back_for_catch_focus()
 	else:
 		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
+		# hud.json catch_card.step_back_on_break (default off): the broke-free
+		# card also owns the screen for its own hold, then every panel the
+		# step-back hid comes back exactly as it was (the fight goes on).
+		if bool(cfg.get("step_back_on_break", false)):
+			_break_focus_restore.clear()
+			for c: Variant in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row,
+					_catch_row, _strip_fader, _party_strip, _tether_meter, _orb_cluster,
+					_ultimate_readout, _ultimate_meter, _system_overlay]:
+				if is_instance_valid(c) and c is CanvasItem:
+					_break_focus_restore.append([c, (c as CanvasItem).visible])
+			_catch_focus_left = _outcome_left
+			_step_back_for_catch_focus()
 
 
 ## P2-118 (VIS-CLOUDREACH, 4 Nov 2026): hud.json `catch_card.portrait` (off
@@ -2359,6 +2378,11 @@ func _celebrate_level_up() -> void:
 
 func _tick_outcome(delta: float) -> void:
 	_catch_focus_left = maxf(0.0, _catch_focus_left - delta)
+	if _catch_focus_left <= 0.0 and not _break_focus_restore.is_empty():
+		for entry: Array in _break_focus_restore:
+			if is_instance_valid(entry[0]):
+				(entry[0] as CanvasItem).visible = bool(entry[1])
+		_break_focus_restore.clear()
 	if _outcome_left <= 0.0:
 		_outcome.text = ""
 		_hide_catch_portrait()

@@ -7,8 +7,10 @@ render_mode blend_add, unshaded, depth_draw_never, cull_back, shadows_disabled, 
 uniform vec3 rim_colour : source_color = vec3(0.72, 0.78, 1.0);
 uniform float rim_energy = 0.45;
 uniform float rim_power = 3.0;
+// NEAR6-TW (P2-057): optional soft front fill for backlit figures; 0 keeps the rim-only look.
+uniform float fill_energy = 0.0;
 
 void fragment() {
 	float facing = clamp(dot(normalize(NORMAL), normalize(VIEW)), 0.0, 1.0);
-	ALBEDO = rim_colour * rim_energy * pow(1.0 - facing, rim_power);
+	ALBEDO = rim_colour * (rim_energy * pow(1.0 - facing, rim_power) + fill_energy * facing);
 }
