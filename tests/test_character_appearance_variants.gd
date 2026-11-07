@@ -24,7 +24,8 @@ func test_only_accepted_adair_is_enabled_and_other_records_preserve_base() -> vo
 	var records: Dictionary = config.get("variants", {})
 	var staged := ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
 		"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]
-	assert_eq(records.size(), staged.size() + 6)
+	# + six npc_identity records + two LANE-KIT F41#8 Stormwood coat variants (ON, judged).
+	assert_eq(records.size(), staged.size() + 8)
 	var model_candidate: Dictionary = records.get("npc_identity_water_adair_v1", {})
 	assert_eq(model_candidate.get("enabled"), true)
 	var accepted_id := "npc_identity_water_adair_v1"
