@@ -10,7 +10,7 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 - Batches #808 to the 7 Nov consolidation: about +66 CPU across 136 gains; about 40 rows crossed 6.0. Ledger and board: https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem, with source in `ralph/reports/COORDINATOR/dashboard/status.json`.
 - CPU scores (llvmpipe, Low/Compat, `tools/visual_judge/`) are provisional and only compare within a batch.
 - The board mixes stale GPU and newer CPU scores.
-- Lane handoffs are the `## HANDOFF 7 Nov` sections in `ralph/reports/LANES/{VIS-MEADOWS,VIS-TIDEWAKE,VIS-CLOUDREACH,VIS-STORMWOOD,NEAR6-MS,NEAR6-TW,NEAR6-CR,CREATURES-RALPH,NET-F48}/READY.md`.
+- Old-lane handoffs: `## HANDOFF 7 Nov` in `ralph/reports/LANES/<lane>/READY.md`. From 7 Nov five lanes (LANE-MS/SW/TW/CR/KIT) report per row in `ralph/reports/LANES/ITEM-<ROW>/READY.md`; the Default setup script installs Godot 4.7 and Blender 4.2.3.
 
 **Owner rules (7 Nov):**
 - Every judged gain over live ships ON, including split or small gains. Only flat, worse, or a gain paid for by another row's loss stays OFF.
