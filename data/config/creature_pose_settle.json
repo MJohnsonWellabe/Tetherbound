@@ -4,7 +4,8 @@
  "lanekit_mosshell_scope": {
   "_why": "F38#26 P2-020 (LANE-KIT, 7 Nov 2026; CPU 6.53, GPU 5.43): all three judges read the fainted Mosshell as translucent and not grounded; on a crop it is a belly-up faint floating about half a body above the grass. When on, this file's settle runs for Mosshell only (faint grounded + crumple, which rights a belly-up fall onto the plastron and plants it; hit grounded), while the roster-wide master stays OFF. Presentation only. OFF until judged.",
   "scope": "client presentation: faint/hit clips of the listed species; no state",
-  "enabled": false,
+  "enabled": true,
+  "_why_on": "LANE-KIT 7 Nov 2026, qj F38-26-8ba717064855-11072338: F38#26 CPU mapped 6.27 -> 6.97 (+0.70; raw 5.3 5.6 5.5 -> 5.8 6.0 6.0). All three judges: the fainted Mosshell no longer reads as a pale translucent ghost; it sits as an opaque shell on the ground. Judged gain ships ON.",
   "species": [
    "mosshell"
   ]

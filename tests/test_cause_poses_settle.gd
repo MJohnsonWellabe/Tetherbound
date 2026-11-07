@@ -52,4 +52,7 @@ func test_enabled_scopes_union_their_species_and_master_or_none_change_nothing()
 	var master := {"enabled": true, "lanekit_mosshell_scope": {"enabled": true, "species": ["mosshell"]}}
 	assert_eq(SETTLE.scoped(master), master, "the roster-wide master ignores scopes")
 	var shipped: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/creature_pose_settle.json"))
-	assert_eq(SETTLE.scoped(shipped), shipped, "shipped config: master and every scope OFF")
+	# Shipped: master OFF; lanekit_mosshell_scope ON (F38#26 judged gain), tidewake_scope OFF.
+	var live: Dictionary = SETTLE.scoped(shipped)
+	assert_eq(live.enabled, true)
+	assert_eq(live.only_species, ["mosshell"])
