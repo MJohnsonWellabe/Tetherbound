@@ -8,4 +8,4 @@ Depends on tb/item-capture-fixes (4e3f0cc0): the stand now joins the grass clear
 - Arm `creature_grass_clear.json p2_020_candidate` (radius x2.1) captured on the fixed stand: 0.06% of pixels differ from base, so no judge round spent. Stays OFF (flat).
 - Flags turned ON: none. Tests flipped: none.
 - Judges' remaining asks: (1) the fainted Mosshell (frame 3) renders translucent/ghost-like and does not read as grounded (3/3 judges); (2) creatures read about trainer height and small in frame behind the trainer; (3) value separation from the shaded tree band and a rim light; (4) near-camera grass dominates the lower half.
-- Next idea: find why the fainted Mosshell is translucent on this stand (likely a faint fade/dissolve held at the 0.9 seek; creature presentation, this lane's files), then re-judge. Scale/camera asks are other lanes' files.
+- Next idea: the "translucent" Mosshell is, on a crop, a belly-up faint floating about half a body above the grass with a pale washed shell (no transparency). Same cause family as LANE-KIT row 5 (floating faint/hit-react): fix the faint seat there, then re-judge F38#26. Scale/camera asks are other lanes' files.
