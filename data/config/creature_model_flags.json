@@ -1172,6 +1172,15 @@
         "mosshock": {"model": "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101_lateral_hit.glb"}
       }
     },
+    "lanekit_sparkit_legs_1107": {
+      "_why": "F36#70 Sparkit legs (LANE-KIT, 7 Nov 2026; GPU 5.41): three rounds of judges name 'spindly stick legs'. A Blender copy of the live owner-remake GLB whose leg vertices move outward from their bone axis by one continuous hip-to-paw profile (x1.8 since r3, x1.4 in r2; fading in below the hip and easing off at the paw); rig, weights, all 11 clips, textures and the 1.95 m height unchanged. Script and provenance: ralph/reports/LANES/ITEM-F36-70/thicken_legs.py. OFF until judged.",
+      "_why_on": "LANE-KIT 7 Nov 2026, qj F36-70-76438ddef11e-11072217 (neutral creature stage beside the 1.80 m ruler): F36#70 Sparkit CPU mapped 6.51 -> 6.71 (+0.20; raw 5.6/5.6/5.9 -> 6.0/5.6/6.0, r 0.86; one judge moves the stick-leg defect to PARTIAL). Judged gain ships ON (owner 7 Nov).",
+      "_why_on_r3": "LANE-KIT 7 Nov 2026, qj F36-70-5ab631b5d2af-11072222: the stronger x1.8 profile (paw ease 0.5; creature_sparkit_owner1101_legs18.glb) over the x1.4 arm: CPU mapped 5.91 -> 6.03 (+0.12; every judge +0.1, r 0.85). Judged gain ships ON; row stopped after two rounds gaining under 0.5.",
+      "enabled": true,
+      "species": {
+        "sparkit": {"model": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs18.glb"}
+      }
+    },
     "creatures_ralph_sparkit_lateral_hit": {
       "_why": "F36#70 Sparkit stage poses (CPU 5.56): the hit react barely differs from standing. Same recipe as creatures_ralph_burrowback_lateral_hit (F38#2 gain): a copy of the live remake GLB whose hit clip gets a sideways lean and head toss (tools/art_pipeline/lateral_recoil.py --spec=spine:z:24,neck:y:38,head:z:24) and holds its peak to the clip end (hold_clip.py). Same textures and clips otherwise. OFF until judged.",
       "enabled": false,
