@@ -1,5 +1,5 @@
 STATUS: land
-BRANCH: tb/item-f38-31  HEAD: (this commit; see git log)
+BRANCH: tb/item-f38-31  HEAD: 2c3bb059 (READY commit; the change is this commit)
 
 Depends on tb/item-capture-fixes (4e3f0cc0, branched from it): the base needs the fixed alpha stand.
 
