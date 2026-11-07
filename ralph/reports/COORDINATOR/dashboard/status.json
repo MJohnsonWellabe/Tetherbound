@@ -1,5 +1,5 @@
 {
-  "updated": "12:45 PM CT Sat 7 Nov 2026",
+  "updated": "4:00 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -844,31 +844,31 @@
   "active_lanes": [
     {
       "lane": "LANE-MS · Meadows",
-      "doing": "F38#5 (+0.78/+0.26, CPU 7.40) pulled from #847: grown Bramblebun no longer fit wild cluster 1914 (3 m disc), a CI net-smoke WARNING; lane fixing spawn spacing. F38#12 orb arm -0.80, stays OFF. Then F38#30/#24 Warrens.",
+      "doing": "F38#5 spacing fix built (cluster 1914 radius 3->4 m, centre moved; f48_cut_key passes) but held: it raises a test cap, owner decision pending. Warrens walk_03 stand-guard fix next, then F38#41 quarry rocks (Blender, WIP).",
       "criteria": "F38#12, F38#5, F38#30, F38#24, F38#6, F38#41",
       "next": "~1.5 h (import + first round)"
     },
     {
       "lane": "LANE-SW · Stormwood and arena",
-      "doing": "Judging the F38#28 arena-boundary arms; then F41#1 Stormheart crown and core (Blender).",
+      "doing": "F41#1 Stormheart crown and core: Blender heart cradle, tuning glow and re-capturing.",
       "criteria": "F38#28, F41#1, F38#20, F41#9, F41#14, F41#3, F41#6, F41#7",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-TW · Tidewake and map",
-      "doing": "F39#25 landed in #847 (CPU 7.38 -> 8.11, needs GPU). Now F39#31/#2 Veilfall.",
+      "doing": "F39#16 parked (two flat/worse arms; base may already clear 7.5 on GPU). F39#31 import-policy fix requested. Now F39#17.",
       "criteria": "F39#25, F39#31, F39#2, F39#16",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-CR · Cloudreach",
-      "doing": "Judging the F40#2 stone-ground candidate; tracing the F40#12 missing speaker.",
+      "doing": "F40#1 stone shelves: round 2 (larger landform) capturing.",
       "criteria": "F40#2, F40#12, F40#1, F40#4, F40#19, F40#17",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-KIT · capture fixes, HUD, creatures",
-      "doing": "Capture fixes pushed; F38#31 alpha motes +0.15, held for one cached-smoke flip, lands in batch 2. Next F38#19/#26/#33 rounds.",
+      "doing": "F38#33 catch result +1.45 (conflict with main in the catch tool, lane reconciling). F38#19 HUD capture running.",
       "criteria": "F38#19, F38#26, F38#31, F38#33, F38#38, F36#70, F41#8, F38#17",
       "next": "~2 h"
     }
@@ -1703,7 +1703,37 @@
       "item": "F39#25 map active region",
       "before": 7.38,
       "after": 8.11,
-      "pr": "#847 (land batch 1)"
+      "pr": "#847 (merged 7 Nov)"
+    },
+    {
+      "item": "F38#31 alpha rarity read (12 gold motes)",
+      "before": 6.69,
+      "after": 6.84,
+      "pr": "tb/land-batch-2 (stacked on #847)"
+    },
+    {
+      "item": "F38#30 Burrow Warrens hillside (shell seated 5 m)",
+      "before": 2.95,
+      "after": 3.51,
+      "pr": "#849 (merged 7 Nov)"
+    },
+    {
+      "item": "F38#24 distant mountains (Warrens frames)",
+      "before": 3.28,
+      "after": 3.51,
+      "pr": "#849 (merged 7 Nov)"
+    },
+    {
+      "item": "F38#6 rare-candy pickup cloth (Blender reskin, blue velvet)",
+      "before": 6.5,
+      "after": 6.76,
+      "pr": "#850 (merged 7 Nov)"
+    },
+    {
+      "item": "F38#33 catch result hierarchy (broke-free card steps fight cards back)",
+      "before": 6.53,
+      "after": 7.98,
+      "pr": "land batch 5 (full CI)"
     }
   ]
 }

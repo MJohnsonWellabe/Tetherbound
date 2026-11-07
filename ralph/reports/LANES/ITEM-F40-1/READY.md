@@ -17,21 +17,21 @@ Row F40#1 P2-021. Live 5.29 GPU / 5.86 CPU (VIS-CLOUDREACH stone trail ON). This
 - Wiring: the `strata_terrace` and `strata_landform` keys in `scripts/world/cloudreach_settlement_life.gd` PROPS.
 
 ## Rounds (CPU llvmpipe, Compatibility, quick_judge, three code-blind judges)
-- **r1 `qj/F40-1-r1`: `cloudreach_f40_items.json` candidates[12] `--cloudreach-f40-strata-terrace-candidate`.**
+- **r1 `qj/F40-1-r1`: `cloudreach_f40_items.json` candidates[13] `--cloudreach-f40-strata-terrace-candidate`.**
   - Arm: three terraces on the three scored stands.
   - Mapped 6.17 -> **6.03 (-0.14, flat)**. Raw base 4.9 / 5.7 / 5.4, candidate 4.8 / 5.6 / 5.2. RMSE 0.724.
   - Judges: "stone staircases / flat slabs pasted on the grass"; the defect is PRESENT on both sides. Stays OFF.
   - A pre-judge self-look caught two problems, both fixed before judging:
     - The first texture build read near-white; values were matched to the installed cliffs.
     - The `shrine_walk_a` stand put a terrace 2.8 m from the heartstone camera; that stand was dropped.
-- **r2: candidates[13] `--cloudreach-f40-strata-landform-candidate`. Captured, not judged.**
+- **r2: candidates[14] `--cloudreach-f40-strata-landform-candidate`. Captured, not judged.**
   - The larger landform, placed 5–6 m tall at 11 m and 18 m.
   - In engine it lands low: `_ground` seats each piece where the island falls toward its rim, so it reads like r1's low slabs against the backdrop cliffs. It was not visible at all in the sky-shrine close frame.
   - Parked under the "an approach that fails twice is parked" rule; the same family was also judged -0.73 on F40#2 (scattered stone at the summit stand).
 
 ## Flags
 - ON: none.
-- OFF, left in the tree: `cloudreach_f40_items.json` candidates[12] (r1, flat) and candidates[13] (r2, not judged).
+- OFF, left in the tree: `cloudreach_f40_items.json` candidates[13] (r1, flat) and candidates[14] (r2, not judged).
 - The assets stay installed for a later idea.
 
 ## Tests
@@ -54,5 +54,5 @@ None: no flag turned ON. JSON parse checked; texture import policy check PASS on
 - Retexture the island rim skirt as pale strata (`_build_articulated_settlement_skirt` / mesa skirt material).
 - Try the stone-trail pad OFF as its own A/B; three judges in r1 called it generator output.
 
-## Landing note (coordinator)
-main (#849) landed tb/item-f40-2, which appended its own OFF candidate at `cloudreach_f40_items.json` candidates[12] (summit stand shelves). This branch also appended two OFF candidates after index 11. On merge, keep all three entries, in the order F40#2 summit shelves, F40#1 strata terrace, F40#1 strata landform. All three are OFF, so order has no runtime effect; only the indices in this READY shift by one. `scripts/world/cloudreach_settlement_life.gd` PROPS gains `strata_terrace` and `strata_landform`; tb/item-f40-4 adds `strata_cliff` on the same line, so keep all keys.
+## Landing note
+origin/main (#850) merged into this branch on 7 Nov. The F40#2 summit-shelves candidate stays at candidates[12]; this row's two OFF candidates follow it at [13] (terrace) and [14] (landform). The round verdict `qj/F40-1-r1` used index 12 for the terrace on the pre-merge tree.

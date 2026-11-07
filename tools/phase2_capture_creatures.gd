@@ -10,6 +10,7 @@ const BODY := preload("res://scripts/creatures/creature_body.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const SCENES := {
 	"meadows": "res://scenes/world/meadows_playground.tscn",
 	"water": "res://scenes/world/water_archipelago.tscn",
@@ -246,11 +247,18 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		await process_frame
 	if scale_factor > 1.0 and body.has_method("apply_size_multiplier"):
 		body.call("apply_size_multiplier", scale_factor)
+	# F38#31 capture fix (7 Nov, NEAR6-MS ask): play marks every wild alpha with
+	# set_alpha(true) (encounter_director.gd), which adds its aura and rim. The
+	# stand only scaled the body, so "alpha_idle" showed a bigger animal with
+	# none of the alpha presentation.
+	if pose == "alpha_idle":
+		body.call("set_alpha", true)
 	body.global_position = Vector3(subject_x, ground, subject_z)
 	body.rotation.y = PI
 	body.set_process(false)
 	body.set_physics_process(false)
 	_seat(body, ground)
+	_join_grass_clearing(body)
 	var animator: Variant = body.get("_animator")
 	if pose == "idle":
 		print("PHASE2 POSE RIG %s model=%s animator=%s" % [species,
@@ -340,6 +348,23 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		print("PHASE2 CREATURE %s -> %s" % [frame_id, path])
 	body.queue_free()
 	await process_frame
+
+
+## F38#26 capture fix (7 Nov, NEAR6-MS ask): in play a creature that stands
+## still on the floor for `settle_s` joins the grass clearing
+## (creature_body.gd `_update_grass_clear`, run from `_physics_process`). The
+## stand turns the body's physics off to hold its pose, so the clearing never
+## engaged and the frames showed grass a standing creature would have cleared.
+## Join it exactly as the settled body would, and release it when the body goes.
+func _join_grass_clearing(body: Node3D) -> void:
+	var cfg: Dictionary = BODY.grass_clear_config()
+	if not bool(cfg.get("enabled", false)):
+		return
+	body.set_meta(BODY.GRASS_CLEAR_RADIUS_META, float(body.get("_radius")) * float(cfg.get("radius_scale", 1.6)))
+	body.add_to_group(BODY.GRASS_CLEAR_GROUP)
+	body.set("_grass_clearing", true)
+	GRASS_FIELD.clearings_dirty = true
+	body.tree_exiting.connect(func() -> void: GRASS_FIELD.clearings_dirty = true)
 
 
 ## Let the production AnimationPlayer and animation_finished callbacks run.
