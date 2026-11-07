@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bu8v6k1obin6x"
-path="res://.godot/imported/Rock_Medium_1_q41.glb-65ae8048f929e400fb64212656a2c5a9.scn"
+uid="uid://cjfismkei5gy"
+path="res://.godot/imported/Rock_Medium_1_q41_r2.glb-b7cb4708591a88cf5a80cd2f3989acd3.scn"
 
 [deps]
 
-source_file="res://assets/environment/stylized_nature_q41/Rock_Medium_1_q41.glb"
-dest_files=["res://.godot/imported/Rock_Medium_1_q41.glb-65ae8048f929e400fb64212656a2c5a9.scn"]
+source_file="res://assets/environment/stylized_nature_q41_r2/Rock_Medium_1_q41_r2.glb"
+dest_files=["res://.godot/imported/Rock_Medium_1_q41_r2.glb-b7cb4708591a88cf5a80cd2f3989acd3.scn"]
 
 [params]
 
