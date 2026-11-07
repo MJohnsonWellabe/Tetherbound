@@ -61,3 +61,17 @@ func test_thinner_island_mist_is_on_with_its_score() -> void:
 	assert_true(is_equal_approx(float(roots.get("mist_core_alpha", 0.0)), 0.45), "P2-106 island mist core ships at 0.45")
 	assert_true(is_equal_approx(float((roots.get("low_mist", {}) as Dictionary).get("mist_below_m", 0.0)), 260.0), "P2-106 low mist collar ships 260 m below")
 	assert_true(str(roots.get("_mist_thin_why_on", "")).contains("6.00 -> 6.43"), "P2-106 mist-thin CPU score recorded")
+
+
+func test_catch_card_portrait_is_on_with_its_score() -> void:
+	var portrait: Dictionary = (_read("res://data/config/hud.json").get("catch_card", {}) as Dictionary).get("portrait", {})
+	assert_true(portrait.get("enabled") == true, "P2-118 catch_card.portrait ships ON")
+	assert_true(str(portrait.get("_why_on", "")).contains("5.91 -> 6.19"), "P2-118 portrait CPU score recorded")
+	assert_true(float(portrait.get("px", 0.0)) > 0.0, "the portrait has a size")
+
+
+func test_catch_card_party_row_is_on_with_its_score() -> void:
+	var line: Dictionary = (_read("res://data/config/hud.json").get("catch_card", {}) as Dictionary).get("full_team_line", {})
+	var row: Dictionary = line.get("party_row", {})
+	assert_true(row.get("enabled") == true, "P2-118 full_team_line.party_row ships ON")
+	assert_true(str(row.get("_why_on", "")).contains("5.58 -> 6.85"), "P2-118 party-row CPU score recorded")

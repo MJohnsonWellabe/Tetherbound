@@ -142,11 +142,30 @@ func play_pulse() -> void:
 ## Teal/gold double-ring burst on a successful catch.
 func play_success() -> void:
 	_success = {"t": 0.0, "pos": _effect_anchor()}
+	# hud.json catch_card.result_clears_reticle (default off): the contract
+	# fade and its "CAPTURE CHANCE" readout stop as the result card lands (catch
+	# or break-free, see play_break), so
+	# the verdict is the only text on screen.
+	if result_clears_reticle():
+		_contract.clear()
+		queue_redraw()
+
+
+static func result_clears_reticle() -> bool:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	if not raw is Dictionary:
+		return false
+	var card: Variant = (raw as Dictionary).get("catch_card", {})
+	return card is Dictionary and bool((card as Dictionary).get("enabled", false)) \
+		and bool((card as Dictionary).get("result_clears_reticle", false))
 
 
 ## Red/orange arcs scattering outward on a failed catch.
 func play_break() -> void:
 	_break_fx = {"t": 0.0, "pos": _effect_anchor()}
+	if result_clears_reticle():
+		_contract.clear()
+		queue_redraw()
 
 
 ## Wherever the ring last actually was — the contract's landing point once

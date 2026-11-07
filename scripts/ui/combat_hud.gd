@@ -1974,6 +1974,7 @@ func _on_exited(outcome: String) -> void:
 ## back while the card holds; on a breakout they stay, since the fight goes
 ## on. Presentation only; catch odds, timing and party rules are unchanged.
 var _catch_focus_left := 0.0
+var _break_focus_restore: Array = []  ## [CanvasItem, was_visible] for step_back_on_break
 
 
 ## Fight HUD overlap (hud.json `catch_card.raise_message_rows`): the miss and
@@ -2061,6 +2062,7 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	_miss_left = 0.0
 	_catch_verdict_message = false
 	_apply_catch_portrait(cfg, card, success, foe)
+	_apply_catch_party_row(cfg, card, success)
 	if success:
 		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
 		_catch_focus_left = _outcome_left
@@ -2069,6 +2071,18 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 		_step_back_for_catch_focus()
 	else:
 		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
+		# hud.json catch_card.step_back_on_break (default off): the broke-free
+		# card also owns the screen for its own hold, then every panel the
+		# step-back hid comes back exactly as it was (the fight goes on).
+		if bool(cfg.get("step_back_on_break", false)):
+			_break_focus_restore.clear()
+			for c: Variant in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row,
+					_catch_row, _strip_fader, _party_strip, _tether_meter, _orb_cluster,
+					_ultimate_readout, _ultimate_meter, _system_overlay]:
+				if is_instance_valid(c) and c is CanvasItem:
+					_break_focus_restore.append([c, (c as CanvasItem).visible])
+			_catch_focus_left = _outcome_left
+			_step_back_for_catch_focus()
 
 
 ## P2-118 (VIS-CLOUDREACH, 4 Nov 2026): hud.json `catch_card.portrait` (off
@@ -2115,6 +2129,84 @@ func _hide_catch_portrait() -> void:
 	var rect := _outcome.get_node_or_null(NodePath(CATCH_PORTRAIT_NAME))
 	if rect != null:
 		(rect as CanvasItem).visible = false
+	var row := _outcome.get_node_or_null(NodePath(CATCH_PARTY_ROW_NAME))
+	if row != null:
+		(row as CanvasItem).visible = false
+
+
+## P2-118 (VIS-CLOUDREACH, 5 Nov 2026): hud.json `catch_card.full_team_line.party_row`
+## (off unless enabled). Every judge of the full-party catch card said "Choose
+## who goes free" points at nothing on screen; with this on, the card shows the
+## five current companions' portraits in a row along its bottom edge, so the
+## choice the next screen asks for is already visible. Presentation only: the
+## release ceremony, its input and the party are unchanged.
+const CATCH_PARTY_ROW_NAME := "CatchPartyRow"
+
+
+func _apply_catch_party_row(cfg: Dictionary, card: StyleBoxFlat, success: bool) -> void:
+	var line: Variant = cfg.get("full_team_line", {})
+	var spec: Variant = (line as Dictionary).get("party_row", {}) if line is Dictionary else {}
+	var row := _outcome.get_node_or_null(NodePath(CATCH_PARTY_ROW_NAME)) as HBoxContainer
+	if not success or not spec is Dictionary or (spec as Dictionary).get("enabled") != true \
+			or (line as Dictionary).get("enabled") != true or not _team_full():
+		if row != null:
+			row.visible = false
+		return
+	var game: Node = get_node_or_null(^"/root/Game")
+	var party_auto: Variant = game.get("party") if game != null else null
+	if party_auto == null:
+		return
+	var px := float((spec as Dictionary).get("px", 64.0))
+	if row == null:
+		row = HBoxContainer.new()
+		row.name = CATCH_PARTY_ROW_NAME
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		_outcome.add_child(row)
+	for child: Node in row.get_children():
+		child.queue_free()
+	row.add_theme_constant_override("separation", int((spec as Dictionary).get("gap_px", 10)))
+	for member: Variant in party_auto.call("members"):
+		var path := CREATURE_PORTRAIT.resolve(str((member as Object).get("species_id"))) if member is Object else ""
+		if path.is_empty() or not ResourceLoader.exists(path):
+			continue
+		var face := TextureRect.new()
+		face.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		face.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		face.custom_minimum_size = Vector2(px, px)
+		face.texture = load(path)
+		var name_px := int((spec as Dictionary).get("name_px", 0))
+		if name_px <= 0:
+			row.add_child(face)
+			continue
+		# `name_px` > 0 (off at 0): each portrait carries its companion's name
+		# under it, so the row reads as five individuals, not five icons.
+		var cell := VBoxContainer.new()
+		cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		cell.add_theme_constant_override("separation", 2)
+		cell.add_child(face)
+		var label := Label.new()
+		var nick := str((member as Object).get("nickname"))
+		label.text = nick if not nick.is_empty() else str((member as Object).get("display_name"))
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.add_theme_font_size_override("font_size", name_px)
+		label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		cell.add_child(label)
+		row.add_child(cell)
+	var pad := float((spec as Dictionary).get("pad_px", 12.0))
+	row.anchor_left = 0.0
+	row.anchor_right = 1.0
+	row.anchor_top = 1.0
+	row.anchor_bottom = 1.0
+	row.offset_left = card.content_margin_left
+	row.offset_right = -card.content_margin_right
+	var tall := px + (float((spec as Dictionary).get("name_px", 0)) * 1.4 + 2.0 if int((spec as Dictionary).get("name_px", 0)) > 0 else 0.0)
+	row.offset_top = -(tall + pad)
+	row.offset_bottom = -pad
+	row.visible = true
+	card.content_margin_bottom += tall + pad
+	_outcome.offset_bottom = maxf(_outcome.offset_bottom, _outcome.offset_top + tall + pad + 120.0)
 
 
 ## P2-110: hud.json `loss_card` (off unless enabled). The loss verdict draws as
@@ -2286,6 +2378,11 @@ func _celebrate_level_up() -> void:
 
 func _tick_outcome(delta: float) -> void:
 	_catch_focus_left = maxf(0.0, _catch_focus_left - delta)
+	if _catch_focus_left <= 0.0 and not _break_focus_restore.is_empty():
+		for entry: Array in _break_focus_restore:
+			if is_instance_valid(entry[0]):
+				(entry[0] as CanvasItem).visible = bool(entry[1])
+		_break_focus_restore.clear()
 	if _outcome_left <= 0.0:
 		_outcome.text = ""
 		_hide_catch_portrait()

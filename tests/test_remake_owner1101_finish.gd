@@ -1,21 +1,23 @@
 extends "res://tests/test_case.gd"
 
 ## Cause-lane finish for the owner-rule remakes (1 Nov 2026), all OFF by default:
-## coat flags remake_owner1101_glow_read / _plate_blend / _dark_lift
+## coat flags remake_owner1101_glow_read / _plate_blend
 ## (data/config/creature_coat_flags.json) and scale flags
 ## remake_owner1101_body_line / _judged_short (creature_scale_flags.json).
 ## Off changes nothing; on applies every key; no species shrinks or outgrows its
 ## evolution; the models (and so their clips) are untouched.
+## remake_owner1101_dark_lift was judged a gain (v1/b24, 4 Nov) and now ships ON
+## with the per-species judged flags in JUDGED_ON.
 
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const COAT_PATH := "res://data/config/creature_coat_flags.json"
-const COAT_FLAGS := ["remake_owner1101_glow_read", "remake_owner1101_plate_blend", "remake_owner1101_dark_lift"]
+const COAT_FLAGS := ["remake_owner1101_glow_read", "remake_owner1101_plate_blend"]
 const SCALE_FLAGS := ["remake_owner1101_body_line", "remake_owner1101_judged_short"]
 const REMAKE_DIR := "/candidate_owner1101/models/"
 ## Creatures-ralph coat flags judged on CPU against the shipped remake and kept
 ## ON (2 Nov 2026), with the mapped score each one's _why records.
-const JUDGED_ON := {"creatures_ralph_meadowhart_warm": "6.80", "creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22", "creatures_ralph_cragclaw_body_mid": "6.34", "creatures_ralph_ashtusk_lift": "7.07", "creatures_ralph_thundertunnel_velvet": "5.36", "creatures_ralph_torrentoad_toad": "5.55", "creatures_ralph_skyrill_r10_lift": "6.37", "creatures_ralph_mangrove_monitor_r9_olive": "6.05", "creatures_ralph_stormraven_charge": "6.72", "creatures_ralph_fulgocobra_goldvein": "6.52"}
+const JUDGED_ON := {"creatures_ralph_meadowhart_warm": "6.80", "creatures_ralph_cliffspike_bands": "6.49", "creatures_ralph_cannonback_moss": "6.22", "creatures_ralph_cragclaw_body_mid": "6.34", "creatures_ralph_ashtusk_lift": "7.07", "creatures_ralph_thundertunnel_velvet": "5.36", "creatures_ralph_torrentoad_toad": "5.55", "creatures_ralph_skyrill_r10_lift": "6.37", "creatures_ralph_mangrove_monitor_r9_olive": "6.05", "creatures_ralph_stormraven_charge": "6.72", "creatures_ralph_fulgocobra_goldvein": "6.52", "remake_owner1101_dark_lift": "6.04"}
 
 
 func _json(path: String) -> Dictionary:

@@ -1371,7 +1371,33 @@
   "gate_path_braziers": {
     "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only",
     "_why": "NEAR6-CR F40#19 night round 2: judges saw no lit focal point at night; manned braziers beside the gate path. OFF until judged.",
-    "enabled": false,
+    "enabled": true,
+    "_why_on": "CPU 5.00 -> 5.51 (qj/F40-19-458a13de2967-11042202, night_foreground_fill ON in both arms; judges: warm lantern pools give the path a focal line, foreground defect FIXED on 2 of 3)",
     "points": [[-11.6, -206.4], [-17.4, -207.6], [-14.1, -192.4], [-19.9, -193.6]]
+  },
+  "gate_path_verge": {
+    "_scope": "cloudreach realm gate path (gate_lower_cliffs), visual only, no collision",
+    "_why": "NEAR6-CR F40#19 night round 3: judges flagged a uniform flat lawn; clustered installed bushes, flowers and low rocks along the path edges. OFF until judged. Round 3b (qj F40-19-9025b78edb4e-11042347) rendered Bush_Common red at night (red is Team Tether only): not judged; bushes swapped for flowers and low rocks.",
+    "enabled": true,
+    "_why_on": "CPU 5.54 -> 5.81 (qj/F40-19-9025b78edb4e-11050024, gate_path_braziers and night_foreground_fill ON in both arms; judges: B adds flower and rock clumps along the path edges, slightly more lived-in)",
+    "ref_y": 109.0,
+    "items": [
+      ["flowers", -8.1, -208.8, 1.0, 20],
+      ["rock_low", -7.0, -209.9, 1.3, 75],
+      ["rock_low", -19.8, -211.0, 0.7, 40],
+      ["flowers", -21.0, -210.2, 1.4, 130],
+      ["flowers", -8.2, -202.7, 1.5, 10],
+      ["rock_low", -7.1, -203.8, 0.6, 200],
+      ["flowers", -21.5, -205.2, 1.0, 95],
+      ["flowers", -22.4, -204.1, 0.9, 250],
+      ["rock", -10.8, -197.1, 1.1, 60],
+      ["flowers", -9.8, -196.0, 0.9, 150],
+      ["flowers", -23.1, -199.4, 1.5, 300],
+      ["rock_low", -22.0, -200.5, 0.6, 15],
+      ["flowers", -11.5, -191.1, 1.0, 80],
+      ["flowers", -10.4, -190.2, 1.3, 220],
+      ["rock_low", -23.3, -193.3, 0.7, 110],
+      ["flowers", -24.3, -192.4, 1.0, 330]
+    ]
   }
 }
