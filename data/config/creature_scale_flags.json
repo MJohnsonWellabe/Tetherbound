@@ -17,6 +17,14 @@
         "sparkit": 1.6
       }
     },
+    "creatures_f36_taller_than_trainer_5": {
+      "_why": "F38#5 P2-017 r2 (LANE-MS, 7 Nov 2026, OFF until judged). After batch 4 shipped (CPU 6.59 -> 7.37), two of three judges still read the owl (pipwing) at about trainer height and the otter (brooktail) at or below the trainer's head in the meadows idle scale frames. Grow only: pipwing x1.15 and brooktail x1.15 on top of their earlier batches (flags multiply). Neither has an evolution line to stay under.",
+      "enabled": false,
+      "species": {
+        "pipwing": 1.15,
+        "brooktail": 1.15
+      }
+    },
     "creatures_f36_taller_than_trainer_4": {
       "_why": "P2-017/P2-020 (vis-meadows, 1 Nov, OFF until GPU-judged): today's re-score reads the hare (bramblebun) and the owlet (duskhush) at or below the 1.80 m trainer. Hard rule: creatures taller than the trainer, grow the smaller side. bramblebun x1.3 (left out of batch 1 when its height read FIXED; it no longer does); duskhush a further x1.15 over batch 1's x1.35 (flags multiply, creature_species.gd). Neither has an evolution line to stay under.",
       "_why_on": "F38#5 P2-017 (LANE-MS, 7 Nov 2026): quick_judge round F38-5-40dd78cf633f-11071816 (ralph/reports/LANES/LANE-MS/qj/), CPU mapped 6.59 -> 7.37 (+0.78). All three code-blind judges read bramblebun clearly above the 1.80 m trainer with it ON. Grow only.",
