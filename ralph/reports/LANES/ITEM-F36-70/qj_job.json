@@ -1,0 +1,55 @@
+{
+ "biomes": {
+  "stormwood": {
+   "items": [
+    {
+     "board_row": "F36#70",
+     "item": "F36#70",
+     "subject": "Sparkit (storm fennec) on a neutral stage beside a 1.80 m human ruler: walk cycle and hit react",
+     "defect": "Spindly stick legs: the legs read far too thin for the body",
+     "impact": 10.0,
+     "fix_class": "new_art",
+     "catalog_status": "open",
+     "frames": [
+      {
+       "id": "sparkit-walk-025",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=sparkit --roles=walk,hit --out=res://.artifacts/f36stage/sparkit",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "sparkit-walk-075",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=sparkit --roles=walk,hit --out=res://.artifacts/f36stage/sparkit",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "sparkit-hit-050",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=sparkit --roles=walk,hit --out=res://.artifacts/f36stage/sparkit",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "sparkit-hit-100",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=sparkit --roles=walk,hit --out=res://.artifacts/f36stage/sparkit",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
