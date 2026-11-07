@@ -844,7 +844,7 @@
   "active_lanes": [
     {
       "lane": "LANE-MS · Meadows",
-      "doing": "F38#5 landed in #847 (+0.78, +0.26; CPU 7.40). F38#12 orb arm judged -0.80, stays OFF. Now F38#30/#24 Warrens re-seat.",
+      "doing": "F38#5 (+0.78/+0.26, CPU 7.40) pulled from #847: grown Bramblebun no longer fit wild cluster 1914 (3 m disc), a CI net-smoke WARNING; lane fixing spawn spacing. F38#12 orb arm -0.80, stays OFF. Then F38#30/#24 Warrens.",
       "criteria": "F38#12, F38#5, F38#30, F38#24, F38#6, F38#41",
       "next": "~1.5 h (import + first round)"
     },
@@ -1698,18 +1698,6 @@
       "before": 7.17,
       "after": 7.33,
       "pr": "consolidated 7 Nov"
-    },
-    {
-      "item": "F38#5 creature scale (grow only, batch 4)",
-      "before": 6.59,
-      "after": 7.37,
-      "pr": "#847 (land batch 1)"
-    },
-    {
-      "item": "F38#5 creature scale (grow only, batch 5)",
-      "before": 7.14,
-      "after": 7.4,
-      "pr": "#847 (land batch 1)"
     },
     {
       "item": "F39#25 map active region",
