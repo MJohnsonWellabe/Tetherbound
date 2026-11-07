@@ -1,5 +1,5 @@
 {
-  "updated": "4:45 PM CT Sat 7 Nov 2026",
+  "updated": "5:00 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -1739,7 +1739,25 @@
       "item": "F41#1 Stormheart finale (Blender root vault under the deck)",
       "before": 4.75,
       "after": 5.24,
-      "pr": "land batch 6 (full CI)"
+      "pr": "#852 (merged 7 Nov)"
+    },
+    {
+      "item": "Fulgocobra + Mirejaw face read (head lift, in-element glow, rim)",
+      "before": 6.09,
+      "after": 6.78,
+      "pr": "land batch 7 (full CI)"
+    },
+    {
+      "item": "F36#70 Sparkit legs (geometry-only thicken, r2)",
+      "before": 6.51,
+      "after": 6.71,
+      "pr": "land batch 7 (full CI)"
+    },
+    {
+      "item": "F36#70 Sparkit legs (r3, x1.8 over x1.4)",
+      "before": 5.91,
+      "after": 6.03,
+      "pr": "land batch 7 (full CI)"
     }
   ]
 }
