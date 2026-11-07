@@ -920,6 +920,7 @@
     },
     "creatures_ralph_glimmermoth_value_lift": {
       "_why": "Stage value lift for Glimmermoth (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "_judged": "v1/b28 (7 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.26 r 0.81): mapped 5.57 -> 5.57, flat (every judge equal; the white body was never dark). Stays OFF.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_Image_0_value_lift.png"}
@@ -927,6 +928,7 @@
     },
     "creatures_ralph_pebbik_value_lift": {
       "_why": "Stage value lift for Pebbik (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "_judged": "v1/b28 (7 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.26 r 0.81): mapped 6.92 -> 7.05, split (two judges higher, one lower: paler coat reads washed out). Not a clear gain; stays OFF.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/pebbik/candidate_owner1101/models/creature_pebbik_owner1101_Image_0_value_lift.png"}
@@ -934,6 +936,7 @@
     },
     "creatures_ralph_galewisp_value_lift": {
       "_why": "Stage value lift for Galewisp (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "_judged": "v1/b28 (7 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.26 r 0.81): mapped 7.13 -> 7.17, flat (two judges +0.1, one -0.1). Stays OFF.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/galewisp/candidate_owner1101/models/creature_galewisp_owner1101_Image_0_value_lift.png"}
@@ -941,7 +944,8 @@
     },
     "creatures_ralph_tempestwing_value_lift": {
       "_why": "Stage value lift for Tempestwing (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
-      "enabled": false,
+      "_why_on": "v1/b28 (7 Nov, CPU stage, three code-blind judges, 3 anchor pairs, calibrate.py slope 1.26 r 0.81): mapped 5.66 -> 5.87 (+0.21); all three judges score the lighter head and legs higher. Judged gain, ships ON.",
+      "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_Image_0_value_lift.png"}
       }

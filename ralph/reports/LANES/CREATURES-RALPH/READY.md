@@ -602,3 +602,8 @@ Not run yet. The required suite needs every remake imported, which does not fit 
 - All four ship ON; every judge scored each one higher or equal. Calibration r is 0.51, which is weak; the raw scores are in the verdict.
 - Test: `test_dark_value_lift_flags` (now handles r10 albedos). Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
 - Glimmermoth, Pebbik, Galewisp and Tempestwing arms are committed OFF; their batch is next.
+
+## v1/b28 (7 Nov): Tempestwing value lift ON (5.66 -> 5.87); Pebbik split, Galewisp and Glimmermoth flat, all OFF
+- `creatures_ralph_tempestwing_value_lift` ON (score in `_why_on`). The other three record their results in `_judged`.
+- Test: `test_dark_value_lift_flags`. Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
+- The value lift has run out on the lighter remakes. The lane moves on to the pose defects the judges keep naming: faint wings and heads clipping the floor, hit-mid floating, and upright faint tails.
