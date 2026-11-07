@@ -1,5 +1,5 @@
 {
-  "updated": "5:00 PM CT Sat 7 Nov 2026",
+  "updated": "5:30 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -844,31 +844,31 @@
   "active_lanes": [
     {
       "lane": "LANE-MS · Meadows",
-      "doing": "F38#30b parked (stand guard + narrower shell -0.42: no fix without new art). F38#5 held for owner. Next F38#41 quarry rocks.",
+      "doing": "F38#41 quarry rocks ready; waiting on its origin/main merge. F38#5 held for owner.",
       "criteria": "F38#12, F38#5, F38#30, F38#24, F38#6, F38#41",
       "next": "~1.5 h (import + first round)"
     },
     {
       "lane": "LANE-SW · Stormwood and arena",
-      "doing": "F41#1 Stormheart: Blender root vault ON (+0.49, 4.75 -> 5.24); heart cradle worse, OFF. Merging main so it can land.",
+      "doing": "F38#20 keep on a hill: Blender hill + curtain wall ON (+0.40, 6.38 -> 6.78), stacked in batch 8. Next F41#9 harvest cues.",
       "criteria": "F38#28, F41#1, F38#20, F41#9, F41#14, F41#3, F41#6, F41#7",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-TW · Tidewake and map",
-      "doing": "F39#17 parked (restoration needs a world change, not a shader tweak). Next F39#8.",
+      "doing": "F39#31 Veilfall evidence (import fixed) stacked in batch 8. Now F39#8.",
       "criteria": "F39#25, F39#31, F39#2, F39#16",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-CR · Cloudreach",
-      "doing": "F40#1 parked (Blender strata terrace/landform -0.14 flat). Next F40#4 strata edges.",
+      "doing": "F40#4 parked (Blender strata cliff; conflicts with F40#1 candidate slot, lane re-merging after #853). Next F40#19 rain wetness.",
       "criteria": "F40#2, F40#12, F40#1, F40#4, F40#19, F40#17",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-KIT · capture fixes, HUD, creatures",
-      "doing": "Stacked in batch 7: Fulgocobra/Mirejaw face read +0.69 and Sparkit thicker legs +0.20/+0.12 (geometry-only GLB patch). Next: hit-react/faint seat row.",
+      "doing": "Hit-react grounding parked (flat: the floating read is the lunge pose + sun shadow, needs a per-bone pose edit). Next F41#8 outfit variants.",
       "criteria": "F38#19, F38#26, F38#31, F38#33, F38#38, F36#70, F41#8, F38#17",
       "next": "~2 h"
     }
@@ -1745,19 +1745,25 @@
       "item": "Fulgocobra + Mirejaw face read (head lift, in-element glow, rim)",
       "before": 6.09,
       "after": 6.78,
-      "pr": "land batch 7 (full CI)"
+      "pr": "#853 (merged 7 Nov)"
     },
     {
       "item": "F36#70 Sparkit legs (geometry-only thicken, r2)",
       "before": 6.51,
       "after": 6.71,
-      "pr": "land batch 7 (full CI)"
+      "pr": "#853 (merged 7 Nov)"
     },
     {
       "item": "F36#70 Sparkit legs (r3, x1.8 over x1.4)",
       "before": 5.91,
       "after": 6.03,
-      "pr": "land batch 7 (full CI)"
+      "pr": "#853 (merged 7 Nov)"
+    },
+    {
+      "item": "F38#20 Team Tether keep on a Blender hill + curtain wall",
+      "before": 6.38,
+      "after": 6.78,
+      "pr": "land batch 8 (full CI)"
     }
   ]
 }
