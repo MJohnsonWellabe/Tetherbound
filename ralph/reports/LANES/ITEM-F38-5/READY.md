@@ -1,5 +1,5 @@
-STATUS: blocked
-BLOCKED: needs owner OK to raise the 1914 radius cap 3.0 -> 4.0 (adds farthest member <= 10 m from the spine); f48_cut_key smoke rc 0 with the change; coordinator hold 7 Nov.
+STATUS: land
+APPROVED: owner OK 7 Nov (via coordinator) for the 1914 radius cap 3.0 -> 4.0, 1914 only, farthest member <= 10 m from the road.
 BRANCH: tb/item-f38-5  HEAD: see `git log origin/tb/item-f38-5 -1` (the READY commit; the flag commit is the one before it)
 
 ## Coordinator fix, 7 Nov (smoke_net_f48_cut_key spacing WARNING)
