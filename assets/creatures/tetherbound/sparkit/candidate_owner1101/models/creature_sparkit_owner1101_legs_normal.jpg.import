@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cqxs4ch6o6ood"
-path="res://.godot/imported/creature_sparkit_owner1101_legs_normal.jpg-f10a5a9efbe6f850e14316d02cc29cd3.ctex"
+path.s3tc="res://.godot/imported/creature_sparkit_owner1101_legs_normal.jpg-f10a5a9efbe6f850e14316d02cc29cd3.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2bf48144224de888691b6ead735b47b2"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs_normal.jpg"
-dest_files=["res://.godot/imported/creature_sparkit_owner1101_legs_normal.jpg-f10a5a9efbe6f850e14316d02cc29cd3.ctex"]
+dest_files=["res://.godot/imported/creature_sparkit_owner1101_legs_normal.jpg-f10a5a9efbe6f850e14316d02cc29cd3.s3tc.ctex"]
 
 [params]
 
