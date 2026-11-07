@@ -1,0 +1,55 @@
+{
+ "biomes": {
+  "stormwood": {
+   "items": [
+    {
+     "board_row": "HITREACT",
+     "item": "HITREACT",
+     "subject": "Shadelet, Paddlenewt (hit react mid) and Glimmermoth, Tempestwing (faint end) on a neutral stage beside a 1.80 m human ruler",
+     "defect": "Hurt and faint poses do not stay grounded: bodies float above their shadow at hit-react mid and wings clip through the floor at faint end",
+     "impact": 10.0,
+     "fix_class": "scene",
+     "catalog_status": "open",
+     "frames": [
+      {
+       "id": "shadelet-hit-050",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=shadelet --roles=hit,faint --whole-body --out=res://.artifacts/hrstage/shadelet",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "paddlenewt-hit-050",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=paddlenewt --roles=hit,faint --whole-body --out=res://.artifacts/hrstage/paddlenewt",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "glimmermoth-faint-100",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=glimmermoth --roles=hit,faint --whole-body --out=res://.artifacts/hrstage/glimmermoth",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "tempestwing-faint-100",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=tempestwing --roles=hit,faint --whole-body --out=res://.artifacts/hrstage/tempestwing",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
