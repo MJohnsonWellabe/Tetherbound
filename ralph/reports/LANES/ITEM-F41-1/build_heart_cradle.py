@@ -86,7 +86,11 @@ def prism(base, direction, length, radius, sides=6):
         crys.faces.new((rings[2][i], rings[2][j], tip))
     crys.faces.new(list(reversed(rings[0])))
 
-base_c = at(-0.5, 0.0, 1.2)
+# The deck slab (r 18-44, 6 m) hides 6-16 m of the cleft from the hollow's
+# stands, so the core sits lodged in the cleft above that band (17-31 m),
+# where it shows above the deck railing.
+CORE_Z = 17.0
+base_c = at(-0.5, 0.0, CORE_Z)
 prism(base_c, UP * 1.0 + INWARD * 0.12, 15.0, 1.9)          # the heart
 for i in range(10):
     ang = i * math.tau / 10 + rng.uniform(-0.2, 0.2)
@@ -134,7 +138,7 @@ for i in range(N_ROOTS):
         t = k / n
         z = 0.2 + t * 46.0
         # start splayed on the floor around the crystal, hug it, then braid up the seam
-        hug = math.exp(-((z - 9.0) / 9.0) ** 2)
+        hug = math.exp(-((z - (CORE_Z + 6.0)) / 10.0) ** 2)
         # around the crystal (hug) the roots part to the sides and behind it, leaving the core open to the hollow
         tangent = side_sign * (spread * (1.0 - hug) * (1.0 - t) ** 0.6 + (4.4 + 0.5 * (i // 2)) * hug + 0.7 * math.sin(phase + z * 0.25) * (1.0 - hug))
         inward = (1.6 - 4.0 * t) * (1.0 - hug) - 2.2 * hug - 0.5 * (i % 3)
@@ -145,6 +149,21 @@ for i in range(N_ROOTS):
     if i % 3 == 0:
         vp = [p + INWARD * (rad + 0.04) for p, rad in zip(pts, radii)][4:40]
         tube(veins, vuv, vp, [0.09] * len(vp), sides=5, jag=0.3)
+
+# The cradle bowl: roots that cross under the crystal from one leg to the other,
+# so the core sits held in wood rather than floating in the arch.
+for j in range(5):
+    sgn = -1 if j % 2 == 0 else 1
+    pts, radii = [], []
+    n = 30
+    for k in range(n + 1):
+        t = k / n
+        tang = sgn * (5.2 - 10.4 * t)
+        z = CORE_Z - 4.5 + j * 0.7 + 6.0 * (t - 0.5) ** 2 * 2.0 + 3.0 * (t if sgn > 0 else 1 - t)
+        inward = 0.6 - 0.4 * j + 1.4 * math.sin(math.pi * t)
+        pts.append(keep_out(at(inward, tang, z)))
+        radii.append(0.65 + 0.45 * math.sin(math.pi * t) * 0.5 + 0.25 * abs(t - 0.5) * 2)
+    tube(roots, ruv, pts, radii, sides=9)
 
 objs = []
 for bm, name, material in ((roots, "CradleRoots", M_BARK), (veins, "CradleVeins", M_VEIN), (crys, "CoreCrystal", M_CRYS)):
