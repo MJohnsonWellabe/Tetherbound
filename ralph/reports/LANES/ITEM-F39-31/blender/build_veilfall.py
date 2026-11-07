@@ -188,6 +188,7 @@ def fall(k, a, w_top, w_bot, z_top=None, z_bot=None, steps=16):
         t = i / steps; z = zt + (zb - zt) * t
         tt = min(1.0, max(0.0, (z - z0) / (z1 - z0)))
         w = w_top + (w_bot - w_top) * t
+        w *= 1.0 + 0.22 * noise.noise(Vector((a * 7.0, z / 35.0, k * 3.1)))  # ragged, breaking edges
         row = []
         for s in (-1.0, -0.5, 0.0, 0.5, 1.0):
             aa = a + s * (w * 0.5) / max(r1, 1.0)

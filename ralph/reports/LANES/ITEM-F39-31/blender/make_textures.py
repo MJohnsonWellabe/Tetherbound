@@ -32,10 +32,12 @@ save("veilfall_moss", base * (1 - n[..., None] * 0.6) + hi * (n[..., None] * 0.6
 # foliage: dark conifer/broadleaf canopy with light dapples
 n = tile(fbm(5, 16)); d = np.clip((tile(fbm(3, 32)) - 0.55) * 4, 0, 1)
 save("veilfall_foliage", np.array([0.15, 0.30, 0.13]) * (0.75 + 0.5 * n[..., None]) + np.array([0.12, 0.17, 0.05]) * d[..., None])
-# falling water: white with faint blue-grey vertical streaks (streaks run along v)
-s = tile(fbm(4, 32)); streak = 0.5 + 0.5 * np.sin(2 * np.pi * (x * 14 + 0.6 * s))
-w = 0.86 + 0.12 * streak * (0.6 + 0.4 * s)
-save("veilfall_water", np.dstack([w * 0.93, w * 0.97, w * 1.0]))
+# falling water: white sheets with visible blue-grey vertical striations; the
+# striations carry enough blue chroma to escape the far shader's white lift
+s = tile(fbm(4, 32)); streak = np.clip(0.5 + 0.5 * np.sin(2 * np.pi * (x * 11 + 0.8 * s)), 0, 1) ** 2
+gap = np.clip((tile(fbm(4, 20)) - 0.55) * 3, 0, 1)
+w = 0.92 - 0.30 * streak * (0.5 + 0.5 * s) - 0.18 * gap
+save("veilfall_water", np.dstack([w * 0.86, w * 0.95, np.minimum(1.0, w * 1.05)]))
 # foam / mist
 n = tile(fbm(4, 8)); f = 0.88 + 0.12 * n
 save("veilfall_foam", np.dstack([f * 0.95, f * 0.98, f]))
