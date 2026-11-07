@@ -51,6 +51,16 @@
     }
   },
   "world_payoffs": {
+    "anchor_waymark": {
+      "_scope": "Cloudreach Storm Anchor vessels (world_payoffs), presentation only, no collision",
+      "_why": "NEAR6-CR F40#8 P2-053 round 2 (CPU 6.32 with anchor_vessel_quiet): all three judges asked for the route marker as a carved pale-stone waymark with a small gold cap and a restrained cyan inlay instead of a thin flat-colour post. Replaces the column and rings while locked; the restored state and its wind are unchanged. OFF until judged.",
+      "enabled": false,
+      "stone_colour": "#cbc2ab",
+      "cap_colour": "#c9a24a",
+      "base_radius_m": 0.26,
+      "top_radius_m": 0.18,
+      "height_m": 2.6
+    },
     "anchor_vessel_quiet": {
       "_scope": "device_local_presentation",
       "_why": "P2-053 / F40#8 (NEAR6-CR, 4 Nov 2026; GPU 5.72): the saturated cyan post at the Three Bells bridge is the lower-west Storm Anchor's bottled-wind column (scripts/world/cloudreach_world_payoffs.gd _anchor) whose teal column and two teal rings read as a debug T marker competing with the bridge. On: rings become bronze cage bands (the realm's route-post metal), the column thinner and greyed with almost no glow; teal still tells locked from restored. Presentation only.",

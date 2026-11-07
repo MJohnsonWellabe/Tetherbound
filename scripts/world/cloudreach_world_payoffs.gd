@@ -471,8 +471,59 @@ func _anchor(id: String, target: Node3D) -> void:
 		ring_material = _material(Color(str(quiet.get("ring_colour", "#7a5f3a"))))
 		ring_material.metallic = float(quiet.get("ring_metallic", 0.6))
 		ring_material.roughness = float(quiet.get("ring_roughness", 0.5))
-	world.call("_cylinder",bottled,"CompressedWind",Vector3(0,1.8,0),column_radius,2.4,teal)
-	for height: float in [0.75,2.85]:
+	# P2-053 / F40#8 round 2 (NEAR6-CR): `world_payoffs.anchor_waymark` (OFF
+	# until judged). Judges asked for a carved pale-stone waymark with a small
+	# gold cap and a restrained cyan inlay instead of a thin coloured post.
+	var waymark: Dictionary = config.get("anchor_waymark", {})
+	if waymark.get("enabled") == true:
+		var stone := _material(Color(str(waymark.get("stone_colour", "#cbc2ab"))))
+		stone.roughness = 0.9
+		var gold := _material(Color(str(waymark.get("cap_colour", "#c9a24a"))))
+		gold.metallic = 0.7
+		gold.roughness = 0.4
+		var pillar := MeshInstance3D.new()
+		var shaft := CylinderMesh.new()
+		shaft.bottom_radius = float(waymark.get("base_radius_m", 0.26))
+		shaft.top_radius = float(waymark.get("top_radius_m", 0.18))
+		shaft.height = float(waymark.get("height_m", 2.6))
+		shaft.radial_segments = 6
+		pillar.mesh = shaft
+		pillar.position.y = shaft.height * 0.5
+		pillar.material_override = stone
+		bottled.add_child(pillar)
+		var plinth := MeshInstance3D.new()
+		var base := CylinderMesh.new()
+		base.bottom_radius = shaft.bottom_radius + 0.14
+		base.top_radius = shaft.bottom_radius + 0.08
+		base.height = 0.22
+		base.radial_segments = 6
+		plinth.mesh = base
+		plinth.position.y = 0.11
+		plinth.material_override = stone
+		bottled.add_child(plinth)
+		var cap := MeshInstance3D.new()
+		var cap_mesh := CylinderMesh.new()
+		cap_mesh.bottom_radius = shaft.top_radius + 0.05
+		cap_mesh.top_radius = 0.02
+		cap_mesh.height = 0.34
+		cap_mesh.radial_segments = 6
+		cap.mesh = cap_mesh
+		cap.position.y = shaft.height + 0.17
+		cap.material_override = gold
+		bottled.add_child(cap)
+		var inlay := MeshInstance3D.new()
+		var band := CylinderMesh.new()
+		band.bottom_radius = lerpf(shaft.bottom_radius, shaft.top_radius, 0.72) + 0.012
+		band.top_radius = band.bottom_radius - 0.01
+		band.height = 0.12
+		band.radial_segments = 6
+		inlay.mesh = band
+		inlay.position.y = shaft.height * 0.72
+		inlay.material_override = teal
+		bottled.add_child(inlay)
+	else:
+		world.call("_cylinder",bottled,"CompressedWind",Vector3(0,1.8,0),column_radius,2.4,teal)
+	for height: float in ([] if waymark.get("enabled") == true else [0.75,2.85]):
 		var ring := MeshInstance3D.new()
 		var torus := TorusMesh.new()
 		torus.inner_radius = 0.38
