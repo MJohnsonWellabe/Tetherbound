@@ -1,5 +1,57 @@
 # VIS-STORMWOOD: READY
 
+## HANDOFF 7 Nov
+
+Lane VIS-STORMWOOD, branch `tb/vis-stormwood-1104`. Stopped 7 Nov ~14:20 UTC on the coordinator's wind-down. All scores are CPU quick_judge (llvmpipe, three code-blind judges, mapped Bar A).
+
+**Shipped this lane (ON, tests assert ON):**
+- F41#19 Glass Field seam clear r2: 4.77 -> 5.59, `stormwood_glass_field seam_clear_1104` (pushed 4 Nov, see table below).
+- F41#19 Glass Field footing: 5.09 -> 5.22, `stormwood_glass_field rock_collar_candidate.footing_1104`, `468ed635`.
+- F41#4 named destinations: 5.56 -> 5.92, `stormwood_ground_finish path_loam_1104`, `99ed2852`.
+- F41#10 Glass Sink obsidian r3: 3.96 -> 4.38, `stormwood_glass_sink obsidian_1104.r3`, `c072bc54`.
+- Earlier batch: F41#10 4.03 -> 5.07 (`84f06e8a`), F41#1 3.22 -> 3.94 and F41#4 4.00 -> 4.59 (`c1ebc1ff`), F41#8 4.72 -> 4.96 (`155cdd39`).
+
+**Open items (coordinator low-6 list), each with score, the judges' last asks and the next idea:**
+- F41#13 electric creature finish (6.52; GPU P2-044 4.54). Asks: the Stormraven is a flat blob with no visible lightning; no rim or storm light; the lit cottage and flat sky sink the frame. `charged_1105` r1 (`398bf45d`) changed 0.16% of pixels and was not judged (no visible change). Cause: Stormraven texels are darker than `accent_source_value` 0.52, so almost nothing matches. r2 (`creature_surface_finishes.json charged_1105`, wider match: source value 0.18, energy 1.6) is committed OFF and **not captured**. Next: capture r2. If it is still invisible, park the accent approach: it would be the second failure. The real lever is an authored glow mask (eyes and feather-edge lines) on the Stormraven remake, which is new art.
+- F41#7 named trainer dialogue identity (6.58; GPU 6.43; defect FIXED 3/3). Asks: Captain Marrow's frame is filled by a flat blue banner with a gold bolt that hides the speaker; Senn is pressed against a grey block wall. Next: capture a fresh CPU baseline (`quick_judge.py capture 'F41#7'`), then find the banner prop near Marrow's dialogue stand and move it, or add it to `camera.json conversation.speaker_sight_meshes`.
+- F41#6 named wild danger cues (6.76; GPU defect FIXED 3/3). Asks: heavy HUD columns cover a third of each frame, the player's Sparkit is tiny, and the impact has little real-object effect. Next: in `enemy_pattern_telegraph.gd::_electric_strike`, raise the per-profile cue values (`cue_burst_size_m`, `cue_burst_spark_scale`, scorch) for capacitor_alpha and hollows_alpha. The HUD column weight is the bigger lever, but it is the fight HUD (UI lanes own it).
+- F41#11 named character portrait identity (6.78; GPU 6.98; defect FIXED 3/3). Asks: speakers stand small and front-lit in a flat purple-grey forest with no light shafts or depth grade. The shipped `camera.json conversation.speaker_light_candidate` is ON; VIS-MEADOWS measured that more speaker light gains only 1-3 luma on CPU. Next: a Stormwood dialogue depth grade (fog density and colour while a conversation is up), not more light.
+- F38#28 Warden arena boundary (6.09). Asks: turquoise guide rails cut across the floor and creatures; the ally glows blown-out orange; a pillar in front of the camera half blocks warden_aldis-03. Existing OFF arms, never judged together: `combat.json arena.boundary_per_trainer_candidate` (softer ring) and `stronghold.json p2_064_r2_candidate` (dimmer, cooler torches). Round `qj_ring2` was stopped during its base capture by the wind-down. Next: run it (`quick_judge.py run 'F38#28' --overlay 'data/config/combat.json:arena.boundary_per_trainer_candidate data/config/stronghold.json:p2_064_r2_candidate'`).
+- F38#29 trainer defeated presentation (6.18). NEAR6-MS already landed the beaten kneel and the silent victory shot (5.76 -> 6.18), so 6.18 is the score after that landing. Ask: the grunt is a few pixels tall and the banner does the work. No new idea yet.
+
+**Parked (reason):**
+- F41#1 Stormheart: new art (the judges ask for a new shell or floor; root floor and arc glow both scored worse).
+- F41#5 forest ground: terrain relief and grove masses (macro and grass colony modes were flat or invisible; the foliage grade scored worse twice).
+- F41#19 base: new art (the seat arm was flat).
+- F41#2 Surge phase grade: two flat rounds.
+- F41#10 wall: the pale wall is not the Meshy shell or the terrain rock slot; needs an engine probe or new art.
+- F41#21/#16/#22/#24: GPU only (the Hollows win cannot finish on CPU; the calm matrix needs GPU judging).
+- F39#7: the base already has the overlap fixed; needs a fresh GPU baseline.
+- F39#19: the fade reproduces only on GPU.
+- F36#29 Innkeeper: new face art and framing.
+
+**OFF arms left in the tree:**
+- `creature_surface_finishes.charged_1105` (r2, unjudged).
+- `combat.json trainer_aside.realm_1104` (worse).
+- `stormheart_root_floor root_floor_1104` (worse).
+- `stormheart_tree` arcs `glow_1104` (worse).
+- `seam_clear_1104.seat_1104` (flat).
+- `stormwood_ground_zones` `rock_value_1104` / `grass_patch_1104` / `macro_1104` (flat or invisible).
+- `hero_landmarks_1101 wall_grade` (invisible).
+- `stormwood_character_rim fill_1104` (invisible).
+- `stormwood_surge building_glow_1104` and `glow_low` (invisible).
+- `stormheart_floor_lanterns floor_lanterns_1104` (flat).
+- `stormwood_look.foliage_grade_1104` (worse).
+- `phase_grade_1104` (flat).
+- `rank_marks_1104` (see the arms table below).
+
+**Known tool and capture bugs:**
+- After any merge of main, run `godot --headless --path . --import` before capturing. Without it, 98 newly added textures and GLBs were missing from `.godot/imported`. The Stormraven then rendered pure white, and the first F41#13 round was invalid.
+- `quick_judge.py` takes `godot.lock` and `scene.lock` itself. Wrapping it in an outer `flock` deadlocks it.
+- A stale Stormwood scatter bake fails closed with no forest (`Missing or stale stormwood scatter bake`). Rebake with `scripts/world/bake_stormwood_scatter.gd` after touching the vegetation sources.
+- On a shallow clone, deepen fetches can fill the disk with `tmp_pack` files. Use `--depth 10` only.
+- `send_message` to the coordinator is refused from this device, so READY.md is the channel.
+
 **Landing-ready flags (judged CPU gains, ON, tests assert ON with the score):**
 
 | Item | Flags ON | CPU score | Verdict | Commit | Test |
