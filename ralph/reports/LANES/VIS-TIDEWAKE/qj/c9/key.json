@@ -1,0 +1,23 @@
+{
+ "Jv": {
+  "anchor": false,
+  "label": "F39#9",
+  "A": "/home/user/Tetherbound/.artifacts/qj/c9/k/sides/F39_9_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/c9/k/sides/F39_9_base.jpg"
+ },
+ "Im": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Sg": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Xn": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}
