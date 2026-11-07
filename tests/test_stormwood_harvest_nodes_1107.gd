@@ -1,8 +1,8 @@
 extends "res://tests/test_case.gd"
 
 ## F41#9 (LANE-SW, 7 Nov 2026): the Blender storm-glass, crown and glowmoss
-## harvest nodes. They ship OFF until judged, load with their named material
-## surfaces and carry no collider; hero2_for only returns them when ON.
+## harvest nodes. They ship ON (CPU 5.64 -> 6.31), load with their named
+## material surfaces and carry no collider; hero2_for returns them only when ON.
 
 const RUNTIME := preload("res://scripts/world/stormwood_harvest_runtime.gd")
 const HERO2 := "res://data/config/stormwood_harvest_hero2.json"
@@ -19,12 +19,15 @@ func _lane() -> Dictionary:
 	return (parsed as Dictionary).get("lane_sw_1107", {}) if parsed is Dictionary else {}
 
 
-func test_nodes_ship_off_and_hero2_stays_empty() -> void:
+func test_nodes_ship_on_with_score_and_hero2_returns_them() -> void:
 	var lane := _lane()
 	assert_false(lane.is_empty(), "lane_sw_1107 is declared")
-	assert_false(bool(lane.get("enabled", true)), "lane_sw_1107 ships OFF until judged")
+	assert_true(bool(lane.get("enabled", false)), "lane_sw_1107 ships ON (judged gain)")
+	assert_true(str(lane.get("_why_on", "")).contains("5.64 -> 6.31"), "records its judged score")
 	for item: String in SURFACES:
-		assert_true(RUNTIME.hero2_for(item).is_empty(), "%s: no hero while OFF" % item)
+		var hero := RUNTIME.hero2_for(item)
+		assert_false(hero.is_empty(), "%s: hero while ON" % item)
+		assert_true(str((hero.get("models", [{}]) as Array)[0].get("model", "")).contains("blender-1107"), "%s uses the Blender node" % item)
 
 
 func test_node_models_load_with_named_surfaces_and_no_collider() -> void:

@@ -6,5 +6,5 @@
   "script": "ralph/reports/LANES/ITEM-F41-9/build_harvest_nodes.py (blender -b -P build_harvest_nodes.py -- <out dir> [preview dir])",
   "reference": "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png palette ('Crystal', 'Metal (aged)'), the ART_DIRECTION Stormwood look (copper and glass highlights) and the judges' ask: copper or violet-glass cues on the stormglass nodes, a solid moss model",
   "scale_check": "ralph/reports/LANES/ITEM-F41-9/_scale_check_nodes.jpg: each node about 1 m at authoring scale beside a 1.80 m ruler; in game fitted to 1.6 m (stormglass), 2.6 m (crown) and 0.75 m (glowmoss)",
-  "flag": "data/config/stormwood_harvest_hero2.json lane_sw_1107 (OFF until judged)"
+  "flag": "data/config/stormwood_harvest_hero2.json lane_sw_1107 (ON: CPU 5.64 -> 6.31, LANE-SW r1)"
 }
