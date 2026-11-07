@@ -1172,11 +1172,12 @@
       "species": "bramblebun",
       "count": 3,
       "centre": [
-        275.0,
+        273.96,
         0.0,
-        862.0
+        863.72
       ],
-      "radius": 3.0,
+      "radius": 4.0,
+      "_why_f38_5_spacing": "F38#5 (LANE-MS, 7 Nov 2026): bramblebun ships x1.3 taller (creature_scale_flags.json creatures_f36_taller_than_trainer_4); its measured body radius (~1.27 m) plus the 1.25 m cluster gap needs ~3.5 m between members, and three such bodies did not resolve inside the 3 m disc (encounter_director resolve_cluster_spot warned; full CI smoke_net_f48_cut_key failed on it). Measured by boot: the 3 m disc still warned at five centres; 4 m at this centre does not. Never shrink: the centre moves 2.0 m straight away from the band1 spine (nearest spine point (276.9, 858.9); 3.67 -> 5.67 m) and the disc grows 3 -> 4 m, so the nearest possible member is 1.67 m from the spine centreline (was 0.67 m) and the farthest 9.67 m (inside the 14 m shoulder bound).",
       "habitat": "roadside_sightline",
       "_why_owner_0912_south_trail": "The second fixed shoulder beat in the owner's 2026-09-12 empty pre-camp stretch. It stands only 3.5m from the Long Field spine at arc ~1530, roughly halfway between the fixed Trailpup group above and the camp threshold, so the approach no longer depends on the neighbouring 14-16m ambient discs scattering a member toward the road. The centre clears order 1031's Pipwing disc by about 14m and order 1030's Mudsnout disc by about 27m beyond their combined radii. Bramblebun is peaceful and unconditional; radius 3 keeps the group in the forward road picture. Production road-walk acceptance is still required."
     },
