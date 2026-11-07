@@ -100,7 +100,8 @@
   "post_readability": {
     "_scope": "world_presentation",
     "_why": "P2-068 / F40#9 (VIS-CLOUDREACH lane, 4 Nov 2026; GPU item score 31 Oct 5.50 mapped): named Cloudreach NPCs read as tiny figures half lost in tall grass, shadow and tree trunks. When on (scripts/world/cloudreach_npc_posts.gd): ground cover is kept off a clear_radius_m disc around every position a named NPC can stand at (flag-independent, so every peer builds the same cover), and each standing NPC gets a soft shadowless warm fill light. Presentation only.",
-    "enabled": false,
+    "_why_on": "ON 7 Nov 2026 (coordinator consolidation): VIS-CLOUDREACH r3 F40#9, CPU mapped 5.16 -> 5.20. Owner 7 Nov 2026: every judged gain over what is live ships ON (a split or small gain is still a gain).",
+    "enabled": true,
     "clear_radius_m": 3.2,
     "fill_light": {"enabled": true, "colour": "#ffe2b8", "energy": 0.7, "range_m": 4.5, "attenuation": 1.2, "offset": [0.0, 1.6, 1.2]}
   },

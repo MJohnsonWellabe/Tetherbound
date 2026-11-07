@@ -206,7 +206,7 @@
     "_comment": "The three rounded moss lobes reach 0.104m local height; canopy understory remains a separate full-height shrub tier. Harvested plants and all gameplay actors retain their own transforms."
   },
   "macro_1104": {
-    "enabled": false,
+    "enabled": true, "_why_on": "ON 7 Nov 2026 (coordinator consolidation): VIS-STORMWOOD qj_macro F41#5, CPU mapped 5.31 -> 5.35. Owner 7 Nov 2026: every judged gain over what is live ships ON (a split or small gain is still a gain).",
     "scope": "client_presentation",
     "_candidate": "VIS-STORMWOOD (4 Nov 2026), F41#5 forest ground layers (5.84): judges read 'a flat green grass carpet'; qj_grass showed the carpet is the terrain wet-moss slot tiling evenly, not grass blades. Stormwood never enables Terrain3D's macro variation (Meadows does, terrain_playground.json). On: two cool moss-tone macro colours at long noise scales lay large darker and lighter drifts over the floor. Shader uniforms only; OFF until judged.",
     "macro_variation1": "#9aa69a",

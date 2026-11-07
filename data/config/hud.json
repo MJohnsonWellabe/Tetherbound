@@ -8,7 +8,8 @@
   "quiet_empty_chips_1104": {
     "_why": "F38#19 P2-004 (NEAR6-MS, 4 Nov 2026): judges score the exploration HUD down for many dark boxed panels. Three of the five quick slots are empty at the start yet draw as full dark boxes with bright keys (clarity_pass skips its empty dimming while key_text_badges is on). When on, an unassigned slot's whole chip, frame and key, draws at chip_alpha; assigned slots are untouched and all five bindings stay visible (playground_hud.gd _update_hotbar). PRESENTATION ONLY. OFF until judged.",
     "scope": "client_presentation",
-    "enabled": false,
+    "_why_on": "ON 7 Nov 2026 (coordinator consolidation): NEAR6-MS F38#19 on a settled stand, CPU mapped 5.64 -> 5.69. Owner 7 Nov 2026: every judged gain over what is live ships ON (a split or small gain is still a gain).",
+    "enabled": true,
     "chip_alpha": 0.4
   },
   "quiet_empty_slots": {
