@@ -1,0 +1,10 @@
+{
+  "_comment": "LANE-SW (7 Nov 2026), F41#14 P2-045 candy pickup tiers (Stormwood only; stormwood_pickup_runtime.gd calls scripts/world/stormwood_candy_tiers.gd after the shared candy dressing). Judges: 'Good, Great and Rare use nearly the same green wrapped form and scale'; the earlier scale-only arms either bloomed Rare into a yellow 'effect slab' (r14s) or broke the tier count (r14u). Each tier now gets its own Blender body (assets/props/blender-1107/stormwood_candy, script ralph/reports/LANES/ITEM-F41-14/build_candy_tiers.py): Good a green wrapped oval sweet, Great a longer blue-and-white striped twist, Rare a faceted gold gem-candy on a violet star wrapper. Bodies are not emissive; Rare's highlight glow is reduced so it cannot bloom. Rarer always reads bigger (height_mult on top of the shared tier scale ladder). The ring, crest, sparkles and wings, claim, collider and save are unchanged. Presentation only, per peer. OFF until judged.",
+  "enabled": false,
+  "scope": "client_presentation",
+  "items": {
+    "good_candy": {"model": "res://assets/props/blender-1107/stormwood_candy/candy_good.glb", "height_mult": 1.1},
+    "great_candy": {"model": "res://assets/props/blender-1107/stormwood_candy/candy_great.glb", "height_mult": 1.25},
+    "rare_candy": {"model": "res://assets/props/blender-1107/stormwood_candy/candy_rare.glb", "height_mult": 1.4, "glow_scale": 0.6}
+  }
+}
