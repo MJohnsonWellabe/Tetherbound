@@ -1,5 +1,5 @@
 STATUS: land
-BRANCH: tb/item-f41-1  HEAD: see `git log -1 origin/tb/item-f41-1` (the commit that adds this file)
+BRANCH: tb/item-f41-1  HEAD: see `git log -1 origin/tb/item-f41-1` (merged origin/main at 1e97931b on 7 Nov; test_stormheart_root_vault 0 failed, test_texture_import_policy 0 failed after the merge)
 
 **Row:** F41#1 Stormheart finale (P2-037), Blender row. Live 3.94 (board, VIS-STORMWOOD j1). Lane LANE-SW.
 
