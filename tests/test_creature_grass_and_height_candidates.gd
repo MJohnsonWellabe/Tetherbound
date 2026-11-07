@@ -19,9 +19,10 @@ func test_grass_clear_candidate_off_is_shipped_and_on_widens() -> void:
 	assert_true(bool(on.enabled), "the clearing itself stays on")
 
 
-func test_height_batch_4_ships_off_and_only_grows() -> void:
+func test_height_batch_4_ships_on_and_only_grows() -> void:
 	var flags: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(FLAGS))
 	var batch: Dictionary = flags.flags.creatures_f36_taller_than_trainer_4
-	assert_false(bool(batch.get("enabled", true)), "ships OFF")
+	assert_true(bool(batch.get("enabled", false)), "F38#5 CPU 6.59 -> 7.37: ships ON")
+	assert_true(str(batch.get("_why_on", "")).contains("6.59 -> 7.37"))
 	for id: String in batch.species:
 		assert_true(float(batch.species[id]) >= 1.0, "grow, never shrink: " + id)
