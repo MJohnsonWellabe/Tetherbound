@@ -1,5 +1,13 @@
 # NEAR6-TW lane (tb/near6-tw-1104): Tidewake F39 items scored 5.4–6.0, CPU quick-judged
 
+**FOR THE COORDINATOR (7 Nov ~14:40 UTC): batch 35 `smoke_water_combat_pause` does not reproduce locally.**
+- `godot --headless --path . --script tests/smoke_water_combat_pause.gd`, three runs each, one Godot process at a time:
+  - origin/tb/land-batch-35 `b7f167b7e`: **3/3 pass** (`WATER COMBAT PAUSE OK checks=38`; fight 1 offered after 91-104 swim frames).
+  - origin/main `96f413b47`: **3/3 pass** (fight 1 offered after 96-101 swim frames).
+- No failure means no bisect, and nothing is reverted.
+- None of the four ON changes touches the Engage path. My Nalia post moves one Shellwatch NPC body, not Tidal Cradle. `current_flow_visual` is presentation. The grass candidate is Meadows. The alpha rim/aura hook changes mote count, size and rim strength only.
+- In the CI failure the player had reached within 2 m of the wild (the test stops steering there) while `director._engageable() != wild` or another provider held the arbiter for all 2400 frames. That reads as a timing flake on the CI runner. Suggest one confirming rerun of the job (CLAUDE.md: one rerun for a suspected infrastructure failure). If it fails again, attach the run log and I will dig into the arbiter winner at that site.
+
 ## Taken (coordinator 19:25)
 
 - **r12, F41#12, not judged, held OFF:** `puddle_candidate` renders as flat lavender sky-reflecting discs on the road. VIS-STORMWOOD's READY records the same puddles already judged as flat slabs (3/3, v1/b10), so this repeats a known failure. The remaining F41#12 asks (white-violet lightning instead of a gold decal, edge wear, form) need a road-current shader rework; not tried.
