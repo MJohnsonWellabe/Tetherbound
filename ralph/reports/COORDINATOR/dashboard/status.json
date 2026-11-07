@@ -1,5 +1,5 @@
 {
-  "updated": "2:15 PM CT Sat 7 Nov 2026",
+  "updated": "2:20 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -1715,13 +1715,13 @@
       "item": "F38#30 Burrow Warrens hillside (shell seated 5 m)",
       "before": 2.95,
       "after": 3.51,
-      "pr": "land batch 3 (stacked)"
+      "pr": "land batch 3 (full CI)"
     },
     {
       "item": "F38#24 distant mountains (Warrens frames)",
       "before": 3.28,
       "after": 3.51,
-      "pr": "land batch 3 (stacked)"
+      "pr": "land batch 3 (full CI)"
     }
   ]
 }
