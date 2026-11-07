@@ -87,9 +87,15 @@ static func pinned_wild(seed_value: int) -> Dictionary:
 var _struck_flag := [false]
 var _shook_flag := [false]
 var _resolved := []  # appended [success] per resolution
+## F38#33 capture fix (7 Nov, VIS-MEADOWS decision 3): the HUD whose broke-free
+## card a verdict frame photographs, held still from the resolve to the shot.
+var _verdict_hud: Node = null
+var _hold_verdict_card := false
+var _held_outcome_left := 0.0
 
 
 func _init() -> void:
+	process_frame.connect(_top_up_verdict_card)
 	_run.call_deferred()
 
 
@@ -301,6 +307,9 @@ func _one_throw(aim_frame: String, flight_frame: String,
 	_struck_flag[0] = false
 	_shook_flag[0] = false
 	var resolutions_before := _resolved.size()
+	# On CPU the orb can resolve before the shake still is taken, so the hold
+	# is armed from the throw, not from the verdict wait.
+	_hold_verdict_card = verdict_frame != "" and not _breakout_handback_only
 	await _press("combat_orb_release")
 
 	if flight_frame != "":
@@ -364,11 +373,14 @@ func _one_throw(aim_frame: String, flight_frame: String,
 		await physics_frame
 		waited += 1
 	if _resolved.size() == resolutions_before:
+		_release_verdict_hud()
 		_failures.append("a struck orb never resolved")
 		return ""
 	if verdict_frame != "":
 		for i in BEAT_FRAMES:
+			_top_up_verdict_card()
 			await physics_frame
+		_top_up_verdict_card()
 		if _breakout_handback_only:
 			# Observe the existing handback with physics and the camera compositor
 			# live. This diagnoses the paused beat; it never writes camera/body pose.
@@ -379,6 +391,7 @@ func _one_throw(aim_frame: String, flight_frame: String,
 				await _capture("breakout-handback-settled")
 		else:
 			await _capture_paused(verdict_frame)
+	_release_verdict_hud()
 	# Let the aftermath (breakout pop, camera handback, cooldown) play out.
 	for i in 70:
 		await physics_frame
@@ -607,8 +620,43 @@ func _collect_nodes() -> bool:
 	var throw: Node = _manager.call("throw_aim")
 	throw.connect("orb_struck", func(_t: Node3D, _o: float) -> void: _struck_flag[0] = true)
 	_manager.connect("orb_shook", func(_i: int) -> void: _shook_flag[0] = true)
-	_manager.connect("catch_resolved", func(success: bool, _shakes: int) -> void: _resolved.append(success))
+	_manager.connect("catch_resolved", _on_capture_resolved)
 	return true
+
+
+## The HUD's own handler (connected at game setup, so it runs first) has
+## already raised the broke-free card. At 60 fps the verdict beat (BEAT_FRAMES
+## plus POSE_FRAMES) is about 0.12 s of the card's 1.8 s hold; on CPU each of
+## those frames feeds its wall time (often over 0.3 s) into the HUD's _process,
+## so the card expired before the shot (`_outcome_left` -0.08 s at
+## 06-breakout). Hold the card's own timer at its raised value through the
+## beat (the HUD keeps processing and drawing normally); a frozen HUD
+## (set_process false) left the card undrawn on CPU.
+func _on_capture_resolved(success: bool, _shakes: int) -> void:
+	_resolved.append(success)
+	if success or not _hold_verdict_card:
+		return
+	_verdict_hud = _world.get_node_or_null(^"CombatHUD")
+	if _verdict_hud == null:
+		var found := _world.find_children("CombatHUD", "", true, false)
+		_verdict_hud = found[0] if not found.is_empty() else null
+	if _verdict_hud != null:
+		_held_outcome_left = float(_verdict_hud.get("_outcome_left"))
+	else:
+		_hold_verdict_card = false
+
+
+## Called on every process frame (SceneTree.process_frame, before the HUD's
+## _process) and on every beat frame, from the resolve to the verdict shot.
+func _top_up_verdict_card() -> void:
+	if _hold_verdict_card and is_instance_valid(_verdict_hud):
+		if float(_verdict_hud.get("_outcome_left")) < _held_outcome_left:
+			_verdict_hud.set("_outcome_left", _held_outcome_left)
+
+
+func _release_verdict_hud() -> void:
+	_hold_verdict_card = false
+	_verdict_hud = null
 
 
 func _resting_orb() -> Node3D:

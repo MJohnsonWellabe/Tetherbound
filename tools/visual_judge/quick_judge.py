@@ -418,6 +418,20 @@ def find_frame(d, fid):
             hits = sorted(Path(d).rglob(f"[0-9][0-9]-{n}.{ext}"))
             if hits:
                 return hits[0]
+    # Last resort (VIS-TIDEWAKE F39#28 patch, carried 7 Nov): ids spell "<tag>-SSS_SS" and come from
+    # GPU runs whose beat times can drift past the 1.0 s window above on CPU; the tools write
+    # "<tag>-SSS.SS". Take the same-tag frame nearest in time, whatever the drift.
+    m = re.match(r"^(.*)-(\d+)_(\d+)$", fid.rsplit("__", 1)[-1])
+    if m:
+        tag, want = m.group(1), float(f"{m.group(2)}.{m.group(3)}")
+        best = None
+        for ext in ("png", "jpg"):
+            for hit in Path(d).rglob(f"{tag}-*.{ext}"):
+                t = re.fullmatch(rf"{re.escape(tag)}-(\d+\.\d+)", hit.stem)
+                if t and (best is None or abs(float(t.group(1)) - want) < best[0]):
+                    best = (abs(float(t.group(1)) - want), hit)
+        if best:
+            return best[1]
     return None
 
 
