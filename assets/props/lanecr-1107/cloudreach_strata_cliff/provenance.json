@@ -1,0 +1,12 @@
+{
+  "asset": "cloudreach_strata_cliff",
+  "row": "F40#4 P2-023",
+  "lane": "LANE-CR",
+  "date": "2026-11-07",
+  "source": "Blender 4.2.3 procedural mesh (new art, no Meshy, no purchased or third-party mesh)",
+  "script": "ralph/reports/LANES/ITEM-F40-4/blender/strata_cliff.py (args: <out.glb> <texture_dir> 23 22 r3)",
+  "textures": "ralph/reports/LANES/ITEM-F40-4/blender/strata_textures.py (procedural numpy; strata_side_Color.png pale banded strata, strata_top_r2_Color.png turf ledges), embedded in the GLB and extracted by Godot",
+  "reference": "Drafted from the judges' ask (sculpted, irregular, stratified rock edges instead of flat-topped straight-walled mesas) and the Cloudreach board's pale stratified stone",
+  "scale_check": "ralph/reports/LANES/ITEM-F40-4/blender/_strata_cliff_scale_check.jpg (1.80 m trainer cylinder beside the 23.8 x 11.4 x 8.8 m native mesh); placed at 18 m height like the cliff_shelf it replaces",
+  "flag": "data/config/cloudreach_f40_items.json --cloudreach-f40-strata-cliff-candidate, OFF until judged"
+}
