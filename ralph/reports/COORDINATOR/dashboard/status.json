@@ -1,5 +1,5 @@
 {
-  "updated": "4:35 PM CT Sat 7 Nov 2026",
+  "updated": "4:45 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -844,7 +844,7 @@
   "active_lanes": [
     {
       "lane": "LANE-MS · Meadows",
-      "doing": "F38#5 held for owner (test cap). Warrens walk_03 stand-guard fix; then F38#41 quarry rocks (Blender, WIP).",
+      "doing": "F38#30b parked (stand guard + narrower shell -0.42: no fix without new art). F38#5 held for owner. Next F38#41 quarry rocks.",
       "criteria": "F38#12, F38#5, F38#30, F38#24, F38#6, F38#41",
       "next": "~1.5 h (import + first round)"
     },
@@ -856,7 +856,7 @@
     },
     {
       "lane": "LANE-TW · Tidewake and map",
-      "doing": "F39#31 import policy fixed (re-lands next batch). Now F39#17.",
+      "doing": "F39#17 parked (restoration needs a world change, not a shader tweak). Next F39#8.",
       "criteria": "F39#25, F39#31, F39#2, F39#16",
       "next": "~1.5 h"
     },
@@ -868,7 +868,7 @@
     },
     {
       "lane": "LANE-KIT · capture fixes, HUD, creatures",
-      "doing": "F38#33 in #851. F38#19 parked (6.58), F38#38 parked (base already 7.55 CPU: GPU re-judge candidate). Next F36#70 Sparkit legs.",
+      "doing": "Stacked in batch 7: Fulgocobra/Mirejaw face read +0.69 and Sparkit thicker legs +0.20/+0.12 (geometry-only GLB patch). Next: hit-react/faint seat row.",
       "criteria": "F38#19, F38#26, F38#31, F38#33, F38#38, F36#70, F41#8, F38#17",
       "next": "~2 h"
     }
