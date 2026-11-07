@@ -1,0 +1,23 @@
+{
+ "Ca": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Eh": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Lu": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "So": {
+  "anchor": false,
+  "label": "F38#19",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F38-19-6185f839a40e-11072054/k/sides/F38_19_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F38-19-6185f839a40e-11072054/k/sides/F38_19_base.jpg"
+ }
+}
