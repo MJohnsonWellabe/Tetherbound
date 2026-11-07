@@ -1,5 +1,5 @@
 STATUS: parked
-BRANCH: tb/item-f40-4  HEAD: (see the commit that adds this file)
+BRANCH: tb/item-f40-4  HEAD: 7c2a124645d8ac53042ab996e5a421b54dc9f6a4 (READY committed in the next commit)
 
 # F40#4 P2-023 exposed landform edges: strata edges (LANE-CR, 7 Nov 2026, Blender row)
 
