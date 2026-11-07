@@ -11,3 +11,4 @@ ln -sfn /dev/shm/dotgodot .godot; ln -sfn /dev/shm/artifacts .artifacts
 ln -sfn /dev/shm/cap ralph/reports/VISUAL/phase2/tidewake/vt
 grep -q '^.godot$' .git/info/exclude || printf '.godot\n.artifacts\nralph/reports/VISUAL/phase2/tidewake/vt\ntools/visual_judge/quick_judge.py\n' >> .git/info/exclude
 echo "setup ok"
+python3 /home/user/Tetherbound/ralph/reports/LANES/VIS-TIDEWAKE/runbook/quick_judge_find_frame.patch.py
