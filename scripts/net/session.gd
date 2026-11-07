@@ -4335,6 +4335,8 @@ func _rpc_session_ended(reason: String) -> void:
 
 func _on_peer_connected(peer_id: int) -> void:
 	_configure_transport_timeout(peer_id)
+	if is_host() and timeout_peer_is_physical(true, peer_id):
+		_transport_heard_ms[peer_id] = Time.get_ticks_msec()
 	# Nothing to do until the joiner says hello: the registry row is built from
 	# the character summary, not from an id arriving on its own.
 	print("[session] transport: peer %d connected" % peer_id)
@@ -4342,6 +4344,7 @@ func _on_peer_connected(peer_id: int) -> void:
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	_rejected_disconnect_frames.erase(peer_id)
+	_transport_heard_ms.erase(peer_id)
 	# A joiner whose world snapshot was never acknowledged never played here;
 	# it gets no held seat (it can still rejoin like anyone else).
 	# A character that came back through its own held seat keeps it even if a
@@ -4445,6 +4448,83 @@ func _tick_transport_liveness(delta: float) -> void:
 		return
 	_liveness_ping_s = 0.0
 	ping_transport_peers(_peer, is_host(), Array(multiplayer.get_peers()))
+	if _mode == "client":
+		# The host's silence watchdog below hears this; ENet's own ACKs are
+		# invisible to script. Reliable, so a lossy but live link is never
+		# mistaken for a dead one (unreliable sends are throttled under loss).
+		if bool(_box.get("connected", false)) and multiplayer.multiplayer_peer == _peer:
+			rpc_id(HOST_PEER_ID, "_rpc_transport_alive")
+		return
+	if not is_host():
+		return
+	var now := Time.get_ticks_msec()
+	# A host frame that stalled (a long build) heard nobody meanwhile: restart
+	# every peer's silence clock instead of blaming them for the host's stall.
+	if _liveness_tick_ms > 0 and now - _liveness_tick_ms > int(1000.0 * float(_cfg("peer_liveness_host_stall_s", 5.0))):
+		for heard_id: Variant in _transport_heard_ms.keys():
+			_transport_heard_ms[heard_id] = now
+	_liveness_tick_ms = now
+	var ceiling_ms := int(_cfg("peer_timeout_max_ms", 180_000))
+	for silent_id: int in silent_transport_peers(_transport_heard_ms, Array(multiplayer.get_peers()), true, now, ceiling_ms):
+		print("[session] peer %d silent for %d ms (ceiling %d ms); dropping its transport"
+			% [silent_id, now - int(_transport_heard_ms.get(silent_id, now)), ceiling_ms])
+		_transport_heard_ms.erase(silent_id)
+		drop_transport_peer(_peer, silent_id)
+
+
+## Client -> host, ledger channel, once per `peer_liveness_ping_s`. The host's
+## only script-visible proof that a guest process is still alive.
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_transport_alive() -> void:
+	if not is_host():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	if _transport_heard_ms.has(sender):
+		_transport_heard_ms[sender] = Time.get_ticks_msec()
+
+
+## Physical peers not heard from for `ceiling_ms` (the configured
+## peer_timeout_max_ms). ENet cannot be trusted to enforce that ceiling on a
+## hard-killed peer: it re-checks timeouts only when the OLDEST in-flight
+## reliable command's retransmit timer expires (enet protocol.c: nextTimeout
+## follows the head of sentReliableCommands), and that timer doubles on every
+## resend. Fresh pings queue behind it, so a dead guest stayed CONNECTED for
+## ~264 s when its rto was under ~265 ms (smoke_net_f48_cut_key, CI run
+## 41956342047: state 5 at 200 s, loss 2%). A peer first seen here starts its
+## silence clock now. Pure: the caller drops what this returns.
+static func silent_transport_peers(heard: Dictionary, peer_ids: Array, hosting: bool,
+		now_ms: int, ceiling_ms: int) -> Array:
+	var silent: Array = []
+	if ceiling_ms <= 0:
+		return silent
+	var live := {}
+	for raw_id: Variant in peer_ids:
+		var peer_id := int(raw_id)
+		if not timeout_peer_is_physical(hosting, peer_id):
+			continue
+		live[peer_id] = true
+		if not heard.has(peer_id):
+			heard[peer_id] = now_ms
+		elif now_ms - int(heard[peer_id]) >= ceiling_ms:
+			silent.append(peer_id)
+	for known: Variant in heard.keys():
+		if not live.has(known):
+			heard.erase(known)
+	return silent
+
+
+## Ends one dead peer's ENet link at once. ENetMultiplayerPeer's next poll sees
+## the inactive peer and emits the ordinary peer_disconnected, so the registry
+## row, held seat and realm reconcile run through `_on_peer_disconnected`
+## exactly as for an ENet timeout.
+static func drop_transport_peer(peer: MultiplayerPeer, peer_id: int) -> bool:
+	if not transport_uses_enet_timeouts(peer):
+		return false
+	var transport_peer := (peer as ENetMultiplayerPeer).get_peer(peer_id)
+	if transport_peer == null:
+		return false
+	transport_peer.peer_disconnect_now()
+	return true
 
 
 static func timeout_peer_is_physical(hosting: bool, peer_id: int) -> bool:
@@ -4475,6 +4555,9 @@ func _on_server_disconnected() -> void:
 # --- host clock (D105) -----------------------------------------------------------
 
 var _liveness_ping_s := 0.0
+## Host only: physical peer id -> last `_rpc_transport_alive` (ticks ms).
+var _transport_heard_ms: Dictionary = {}
+var _liveness_tick_ms := 0
 
 
 func _process(delta: float) -> void:
@@ -4790,6 +4873,8 @@ func _restore_character_here(wanted_id: String) -> bool:
 ## torn down exactly as always, but the transport is detached and handed to
 ## `_poll_lingering_peer()` instead of being closed under the goodbye.
 func _teardown(linger_transport: bool = false) -> void:
+	_transport_heard_ms.clear()
+	_liveness_tick_ms = 0
 	if _groom_passive != null: _groom_passive.call("reset")
 	if _owner_passive != null: _owner_passive.call("reset")
 	_owner_passive_altar_original.clear()
