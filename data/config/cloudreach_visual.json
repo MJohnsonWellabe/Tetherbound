@@ -86,6 +86,21 @@
       "overrides": {
         "night": {"environment": {"ambient_energy": 3.4, "ambient_colour": "#5c74bd", "ambient_sky_contribution": 0.12, "exposure": 1.08, "adjustment_saturation": 1.0}}
       }
+    },
+    "night_moon_grade": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 (NEAR6-CR round 5): with the fill, braziers and verge ON all judges now read the ground as day-lit under a night sky; they ask for a cool, darker, less saturated moonlit grade with readable values. Layers after night_foreground_fill (arms apply in order). OFF until judged.",
+      "enabled": false,
+      "overrides": {
+        "night": {
+          "environment": {
+            "ambient_energy": 2.6,
+            "ambient_colour": "#5470c4",
+            "exposure": 1.0,
+            "adjustment_saturation": 0.78
+          }
+        }
+      }
     }
   },
   "time_overrides": {
@@ -1399,5 +1414,13 @@
       ["rock_low", -23.3, -193.3, 0.7, 110],
       ["flowers", -24.3, -192.4, 1.0, 330]
     ]
+  },
+  "rain_streaks": {
+    "_scope": "device_local_presentation (Cloudreach rain only)",
+    "_why": "NEAR6-CR F40#19 rain round 3: the recorded defect is that rain only desaturates the scene; after rain_storm (5.80) it is still PRESENT. Denser, longer, brighter streaks so the rain itself reads as falling water. OFF until judged.",
+    "enabled": false,
+    "amount": 3200,
+    "streak_size": [0.045, 1.4, 0.045],
+    "colour": "#dce6f0b3"
   }
 }

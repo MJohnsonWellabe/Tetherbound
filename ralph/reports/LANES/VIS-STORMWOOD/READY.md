@@ -15,6 +15,13 @@
 
 **F41#21 / F41#16 (Hollows fight result screens) need the GPU queue (4 Nov 18:15 UTC):** I set up a CPU A/B of `hud.victory_focus` (UIPOSES arm, OFF, never judged alone; aimed at F41#21's "victory line groups with the quickbar") but `phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120` reached only t=37 s of fight time in its 50 min timeout on llvmpipe (exit 124, no frames), and the win/loss result frames come after the fight ends. **Please judge `hud.json victory_focus` on F41#21 (and F41#16) on the GPU rig.** Character rows F41#8/#18 left alone while NEAR6-TW edits the shared character rim shader.
 
+**FOR THE COORDINATOR (5 Nov ~02:10 UTC), reassigned rows done:**
+- **F39#7:** trainer-aside arm worse (6.57 -> 5.87). The current base already has the P2-089 overlap FIXED (3/3), so a fresh GPU baseline is likely.
+- **F39#19:** the roster fade does not reproduce in its fixed CPU frames. `roster_floor` needs GPU judging or frames where the trainer passes behind the roster (it reproduces in F39#7 t-024).
+- **F36#29:** graded albedo flat (6.20 -> 6.20). The only other body-flag lever, `day_rim`, is an edge rim that would not read at these sizes. The judges ask for face detail (new art) and dialogue framing, so the row is parked.
+
+No CPU presentation lever left on my rows that I expect to clear +0.5. **Please send the next rows.** A check-in stays armed.
+
 **Reassignment (coordinator 5 Nov 00:40 UTC):** Stormwood items parked (new art or GPU). Now: F39#7 P2-089 Tidewake fight composition (5.65), F39#19 P2-088 Tidewake fight roster contrast (5.78), F36#29 Innkeeper body (5.83). Building on NEAR6-TW's notes (all_pairs worse; roster_floor no CPU change).
 - F39#7 `combat.json trainer_aside.realm_1104` (Tidewake trainer 3.6 m aside instead of 2.4): **worse**, 6.57 -> 5.87 (`qj/qj_aside/`). The fight camera follows the trainer side, so the candidate faced the inland dune (no water, flat sand), and 2/3 saw Ripplet pressed into Cannonback. Stays OFF. **Note for the board:** all three judges marked the P2-089 overlap defect FIXED on the current base (the 5.65 GPU score predates the shipped spacing work), so F39#7 may need a fresh GPU baseline rather than another arm. Parked here (both NEAR6-TW all_pairs and this trainer arm made it worse).
 
