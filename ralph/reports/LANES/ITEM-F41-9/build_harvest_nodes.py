@@ -16,7 +16,14 @@ argv = sys.argv[sys.argv.index("--") + 1:]
 OUT = argv[0]
 PREVIEW = argv[1] if len(argv) > 1 else ""
 
+def lin(hexrgb):
+    # glTF colours are linear; Godot shows them as sRGB, so author from sRGB targets.
+    c = [int(hexrgb[i:i + 2], 16) / 255.0 for i in (1, 3, 5)]
+    return tuple(x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in c)
+
 def material(name, rgb, metallic=0.0, rough=0.8, emit=None, strength=0.0):
+    rgb = lin(rgb) if isinstance(rgb, str) else rgb
+    emit = lin(emit) if isinstance(emit, str) else emit
     m = bpy.data.materials.new(name); m.use_nodes = True
     b = m.node_tree.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (*rgb, 1)
@@ -88,9 +95,9 @@ def preview(path, dist=3.2, h=0.9):
 def glass_node(path, crown, seed, prev):
     reset()
     rng = random.Random(seed)
-    M_GLASS = material("storm_glass", (0.42, 0.33, 0.78), rough=0.12, emit=(0.55, 0.45, 1.0), strength=0.6)
-    M_COPPER = material("storm_copper", (0.72, 0.42, 0.22), metallic=0.85, rough=0.35)
-    M_BASALT = material("storm_basalt", (0.12, 0.12, 0.14), rough=0.9)
+    M_GLASS = material("storm_glass", "#6a54c4", rough=0.12, emit="#7a68e0", strength=0.35)
+    M_COPPER = material("storm_copper", "#b8743c", metallic=0.6, rough=0.4)
+    M_BASALT = material("storm_basalt", "#2a2a30", rough=0.9)
     bm_g = bmesh.new(); bm_c = bmesh.new(); bm_b = bmesh.new()
     # basalt matrix
     lump(bm_b, Vector((0, 0, 0.0)), 0.55 if not crown else 0.7, 0.45, seed, amp=0.35)
@@ -130,10 +137,10 @@ def glass_node(path, crown, seed, prev):
 def moss_node(path, seed, prev):
     reset()
     rng = random.Random(seed)
-    M_MOSS = material("glow_moss", (0.13, 0.32, 0.17), rough=0.95)
-    M_MOSS_DK = material("glow_moss_dark", (0.08, 0.2, 0.11), rough=0.95)
-    M_CAP = material("glow_cap", (0.28, 0.75, 0.62), rough=0.5, emit=(0.32, 0.9, 0.7), strength=0.8)
-    M_STEM = material("glow_stem", (0.7, 0.75, 0.68), rough=0.7)
+    M_MOSS = material("glow_moss", "#2f5a2c", rough=0.95)
+    M_MOSS_DK = material("glow_moss_dark", "#1f3f22", rough=0.95)
+    M_CAP = material("glow_cap", "#3fae8f", rough=0.5, emit="#4fd3a8", strength=0.5)
+    M_STEM = material("glow_stem", "#9aa596", rough=0.7)
     bm_m = bmesh.new(); bm_d = bmesh.new(); bm_c = bmesh.new(); bm_s = bmesh.new()
     lump(bm_m, Vector((0, 0, 0)), 0.6, 0.55, seed, detail=3.0, amp=0.28)
     for k in range(5):
