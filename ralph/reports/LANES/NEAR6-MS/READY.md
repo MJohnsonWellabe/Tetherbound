@@ -4,12 +4,19 @@
 
 | Board row | Item | Board | Status |
 |---|---|---|---|
-| F38#7 | P2-058 catch aim readability | 5.82 | Cause found: the player's own creature stands between the aim camera and the target and is drawn as the fight's 0.6 occlusion dither ghost over the trainer and readout (the composition swing cannot act while the player steers the aim). Arm `combat.json camera.occlusion_fade.aim_hide_1104` (`68b2d369`, OFF): while aiming, an ally hiding the target is hidden with its contact shadow. A/B capturing. |
-| F38#26 | P2-020 creature ground contact | 5.62 | Next. The existing contact shadow (creatures_visual.json) sits on the ground under the grass that buries the feet; radius retune was flat before. |
+| F38#7 | P2-058 catch aim readability | 5.82 | **Landing-ready: CPU 5.93 -> 7.00.** Cause found: the player's own creature stands between the aim camera and the target and is drawn as the fight's 0.6 occlusion dither ghost over the trainer and readout (the composition swing cannot act while the player steers the aim). Arm `combat.json camera.occlusion_fade.aim_hide_1104` (`68b2d369`, OFF): while aiming, an ally hiding the target is hidden with its contact shadow. A/B capturing. |
+| F38#26 | P2-020 creature ground contact | 5.62 | **Blocked: stand artefact (ask below).** No game change made. |
 | F38#6 | P2-033 ground pickup identity | 5.52 | Queued |
 | F41#9 | P2-046 harvest resource identity | 5.40 | Queued (parked earlier; needs a new idea) |
 | F38#32 | P2-035 camp and workshop props | 5.81 | Queued |
 | F41#15 / F41#3 | P2-083 dialogue obstruction / P2-092 actor spacing | 5.90 / 5.98 | Queued |
+
+### F38#26 P2-020 ground contact: the stand never lets the grass clearing engage (for the coordinator)
+
+- The F38#26 stand is `tools/phase2_capture_creatures.gd --biome=meadows --seed=2042 --only=bramblebun,pipwing,mosshell --poses=fainted,idle`. After placing each body it calls `body.set_physics_process(false)` (line 252). `creature_body.gd _update_grass_clear()` runs only from `_physics_process`, and a creature joins the `grass_clear` group only after standing still on the floor for `settle_s` (0.6 s). So on this stand the shipped clearing (`creature_grass_clear.json`, ON) never engages, and the judged frames show grass that a standing creature in play would have cleared.
+- Evidence: my earlier round with `radius_scale` 1.6 -> 2.6 gave byte-identical creature frames (`qj/F38-6_F38-26_F41-9-9c1d0cc52d13-11041219/`), and today's base (`.artifacts/qj/F38-26-base-11050127`, local) shows full grass round every foot.
+- The contact shadow does not help these frames: all three creatures stand in the trees' shade, where a darker blob does not read. Shrinking or moving the camera are ruled out.
+- **Ask:** let the stand engage the clearing as play does: keep physics on for `settle_s` after seating, or add the seated body to the `grass_clear` group with its `grass_clear_radius` meta and set `grass_field.gd clearings_dirty`. Then re-score F38#26 before any further ground-contact change. Not changed here: the stand is the shared yardstick.
 
 ## Handoff (4 Nov ~23:35 UTC): round 2 UI rows done, parked or blocked
 
@@ -62,6 +69,8 @@ Lane: tb/near6-ms-1104 (from origin/main 12e76f2a, #813; rebuilt on main 60f2df2
 - **F38#4 P2-002 map: CPU 6.15 -> 7.18** and **F38#9 P2-001 menu shell: CPU 7.13 -> 7.36** (`qj/F38-4_F38-9-8b3b7f6af458-11042024/`; judged together, each item scored on its own set). ON: `map.json fog_veil.cloud_fog.tones.meadows` takes parchment tones `#8c8266/#cfc3a0` (was slate `#22343a/#4a6670`; reason in `_why_meadows_parchment_1104`); all three judges scored the parchment map higher ("reads as a paper map, fits the warm Meadows"). `menu.json satchel_focus` ON (focused icon 112 -> 150 px on a lit plate, warm name, brighter blurb; `_why_on`); all three judges scored it slightly higher. Tests: `test_near6_ms_1104.gd test_f38_4_meadows_parchment_fog_ships_on`, `test_f38_9_satchel_focus_ships_on`. **Tests passed (21:00 UTC):** test_near6_ms_1104, test_texture_import_policy, test_map_fog, test_map_legibility, test_menu_data, test_menu_text_floors, test_inventory, test_alpha_pins: 113 tests, 3017 assertions, 0 failed.
 
 - **F38#4 P2-002 map round 2: CPU 6.81 -> 6.93** (`qj/F38-4-fcb5301c9826-11042108/`; judged on top of the parchment tones, on main e4081f7a + this branch). ON: `map.json fog_veil.chart_grid_1104` (a faint inked survey grid at a whole-metre spacing and a small north mark over the Meadows map; lines only, no terrain revealed, OW3; `tab_map.gd _draw_chart_grid`). Two judges up (6.1 -> 6.3, 6.3 -> 6.4), one tied; one judge names "a faint grid and a north marker, which helps orientation". Small gain, shipped under the owner's 4 Nov any-gain rule. Remaining judge ask (terrain under the unsurveyed fog) conflicts with OW3 and is not pursued. Test: `test_near6_ms_1104.gd test_f38_4_chart_grid_ships_on`. **Tests passed (21:45 UTC):** test_near6_ms_1104, test_texture_import_policy, test_map_fog, test_map_legibility, test_map_realm_view, test_map_icons: 43 tests, 1768 assertions, 0 failed.
+
+- **F38#7 P2-058 catch aim readability: CPU 5.93 -> 7.00** (`qj/F38-7-d881acd0fdd1-11050033/`; judged on main 569cea75 + this branch). ON: `combat.json camera.occlusion_fade.aim_hide_1104` (`combat_manager.gd _update_ally_occlusion_fade`: while the trainer aims a catch, an ally that hides the target is hidden with its contact shadow instead of drawn as the 0.6 occlusion dither ghost; restored when the aim ends, the target has been clear for 0.25 s, or the fade clears). All three judges up (6.0/6.3/5.6 -> 6.9/7.0/6.4), defect PRESENT 3/3 -> PARTIAL 3/3. Remaining asks: a rim or outline on the target and the plate offset clear of it. Test: `test_near6_ms_1104.gd test_f38_7_aim_hide_ships_on`. **Tests passed (01:40 UTC):** test_near6_ms_1104, test_ally_occlusion_fade, test_texture_import_policy, test_combat_aftermath_focus, test_storm_cams_candidates: 39 tests, 1733 assertions, 0 failed.
 
 ## Arms built (OFF until judged)
 
