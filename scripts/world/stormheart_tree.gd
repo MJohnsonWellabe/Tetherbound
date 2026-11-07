@@ -119,6 +119,8 @@ func build() -> void:
 		_meshy_interior(_presentation.get("meshy_interior", {}))
 	if _presentation_enabled("root_vault_1107"):
 		_root_vault(_presentation.get("root_vault_1107", {}))
+	if _presentation_enabled("heart_cradle_1107"):
+		_heart_cradle(_presentation.get("heart_cradle_1107", {}))
 	if _presentation_enabled("hollow_floor"):
 		# r16 judges: the hollow's floor was the outdoor grass carpet. The
 		# ground-cover tiers (grass_field.gd) keep out of the trunk's own
@@ -156,6 +158,47 @@ func _root_vault(cfg: Dictionary) -> void:
 			var is_vein := source != null and source.resource_name.contains("vein")
 			visual.set_surface_override_material(surface, vein if is_vein else bark)
 	add_child(model)
+
+
+## F41#1 round 2 (LANE-SW, 7 Nov 2026, OFF until judged): the trunk's visible
+## core in the heart cleft, a Blender crystal core held open by braided
+## heartwood roots (tree-local metres, outside the 44 m hollow floor, no
+## collider). It replaces the smaller Meshy CrystalHeart there.
+func _heart_cradle(cfg: Dictionary) -> void:
+	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+	if model == null:
+		return
+	model.name = "HeartCradle1107"
+	var bark := (_bark if _bark != null else _wood).duplicate() as StandardMaterial3D
+	bark.albedo_color = Color(str(cfg.get("bark_tint", "#9b7a5a")))
+	bark.uv1_scale = Vector3.ONE
+	var vein := StandardMaterial3D.new()
+	vein.albedo_color = Color("1d2b44")
+	vein.emission_enabled = true
+	vein.emission = Color(str(cfg.get("vein_colour", "#9fd0ff")))
+	vein.emission_energy_multiplier = float(cfg.get("vein_energy", 1.3))
+	var crystal := StandardMaterial3D.new()
+	crystal.albedo_color = Color(str(cfg.get("crystal_albedo", "#a9c3ff")))
+	crystal.roughness = 0.15
+	crystal.metallic = 0.1
+	crystal.emission_enabled = true
+	crystal.emission = Color(str(cfg.get("crystal_glow", "#bccbff")))
+	crystal.emission_energy_multiplier = float(cfg.get("crystal_glow_energy", 2.2))
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.mesh.surface_get_material(surface)
+			var source_name := source.resource_name if source != null else ""
+			var pick: Material = bark
+			if source_name.contains("crystal"):
+				pick = crystal
+			elif source_name.contains("vein"):
+				pick = vein
+			visual.set_surface_override_material(surface, pick)
+	add_child(model)
+	if bool(cfg.get("hide_meshy_crystal", true)):
+		var meshy := find_child("CrystalHeart", true, false)
+		if meshy is Node3D:
+			(meshy as Node3D).visible = false
 
 
 func _presentation_enabled(key: String) -> bool:

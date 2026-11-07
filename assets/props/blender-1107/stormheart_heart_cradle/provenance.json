@@ -1,0 +1,12 @@
+{
+  "asset": "stormheart_heart_cradle.glb",
+  "row": "F41#1 (P2-037 Stormheart finale), round 2",
+  "lane": "LANE-SW, 7 Nov 2026",
+  "source": "Blender 4.2.3 procedural build, no Meshy, no purchased or downloaded geometry",
+  "script": "ralph/reports/LANES/ITEM-F41-1/build_heart_cradle.py (blender -b -P build_heart_cradle.py -- <out.glb> [preview])",
+  "seed": 11072,
+  "reference": "ralph/reports/LANES/ITEM-F41-1/_ref_board_interior.jpg and docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png ('Lightning crystal', 'Electric roots', glowing core in the split trunk)",
+  "scale_check": "ralph/reports/LANES/ITEM-F41-1/_scale_check_cradle.jpg (1.80 m trainer capsule beside the 16 m crystal core; roots to 46 m; min radius 45.6 m, outside the 44 m hollow floor)",
+  "textures": "none embedded; at load the game assigns the installed Bark_TwistedTree bark (cradle_bark), an emissive blue-white (cradle_vein) and an emissive pale blue-violet crystal (core_crystal)",
+  "flag": "data/config/stormheart_presentation.json heart_cradle_1107 (OFF until judged)"
+}
