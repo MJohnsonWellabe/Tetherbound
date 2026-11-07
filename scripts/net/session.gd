@@ -4439,6 +4439,18 @@ static func ping_transport_peers(peer: MultiplayerPeer, hosting: bool, peer_ids:
 	return pinged
 
 
+## True while `peer_id`'s ENet link can still carry a packet. False once
+## that link is closing or gone (its channel count drops to 0 and ENet refuses
+## every send). A non-ENet transport reports its own connection status.
+static func transport_link_open(peer: MultiplayerPeer, peer_id: int) -> bool:
+	if peer == null or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+		return false
+	if not (peer is ENetMultiplayerPeer):
+		return true
+	var transport_peer := (peer as ENetMultiplayerPeer).get_peer(peer_id)
+	return transport_peer != null and transport_peer.get_state() == ENetPacketPeer.STATE_CONNECTED
+
+
 func _tick_transport_liveness(delta: float) -> void:
 	var interval := float(_cfg("peer_liveness_ping_s", 1.0))
 	if interval <= 0.0 or not is_active() or not transport_uses_enet_timeouts(_peer):
@@ -4452,7 +4464,10 @@ func _tick_transport_liveness(delta: float) -> void:
 		# The host's silence watchdog below hears this; ENet's own ACKs are
 		# invisible to script. Reliable, so a lossy but live link is never
 		# mistaken for a dead one (unreliable sends are throttled under loss).
-		if bool(_box.get("connected", false)) and multiplayer.multiplayer_peer == _peer:
+		# Skip once the link to the host is closing (drop_link, a lost host):
+		# ENet refuses the send with "max channels: 0" and logs an engine error.
+		if bool(_box.get("connected", false)) and multiplayer.multiplayer_peer == _peer \
+				and transport_link_open(_peer, HOST_PEER_ID):
 			rpc_id(HOST_PEER_ID, "_rpc_transport_alive")
 		return
 	if not is_host():

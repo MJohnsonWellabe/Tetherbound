@@ -107,3 +107,27 @@ func test_silent_transport_peers_rules() -> void:
 	assert_eq(SESSION.silent_transport_peers({7: 0}, [7], true, 10_000_000, 0), [], "ceiling 0 disables the watchdog")
 	assert_eq(SESSION.silent_transport_peers({}, [5, 6], false, 0, 500), [], "a client watches no relayed ids")
 	assert_false(SESSION.drop_transport_peer(OfflineMultiplayerPeer.new(), 2), "nothing to drop on a non-ENet transport")
+
+## A guest whose link to the host is closing (drop_link, a lost host) must not
+## send its heartbeat: ENet refuses it with "max channels: 0" and logs an engine
+## error, which failed smoke_net_f20_ending (CI run 42385015210, shard 5).
+func test_heartbeat_link_closed_after_guest_disconnect() -> void:
+	var pair := _pair()
+	assert_true(not pair.is_empty(), "loopback ENet pair connected")
+	if pair.is_empty(): return
+	var server: ENetMultiplayerPeer = pair.server
+	var client: ENetMultiplayerPeer = pair.client
+	assert_true(SESSION.transport_link_open(client, 1), "a connected guest's link to the host is open")
+	client.get_peer(1).peer_disconnect() # what drop_link does
+	assert_false(SESSION.transport_link_open(client, 1), "the link is closed as soon as the guest disconnects")
+	var started := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - started < 500:
+		server.poll()
+		if client.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED:
+			client.poll()
+		OS.delay_msec(5)
+	assert_false(SESSION.transport_link_open(client, 1), "and stays closed after the disconnect completes")
+	assert_false(SESSION.transport_link_open(null, 1), "no transport, no link")
+	assert_true(SESSION.transport_link_open(OfflineMultiplayerPeer.new(), 1) == (OfflineMultiplayerPeer.new().get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED), "a non-ENet transport reports its own status")
+	server.close()
+	client.close()
