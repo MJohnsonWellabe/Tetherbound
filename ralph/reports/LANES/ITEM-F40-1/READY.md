@@ -53,3 +53,6 @@ None: no flag turned ON. JSON parse checked; texture import policy check PASS on
 - Not stand dressing. The terrain itself has to rise: a terrace edit to the island heightfield along the route, or `cloudreach_world.gd` mesa tiers.
 - Retexture the island rim skirt as pale strata (`_build_articulated_settlement_skirt` / mesa skirt material).
 - Try the stone-trail pad OFF as its own A/B; three judges in r1 called it generator output.
+
+## Landing note (coordinator)
+main (#849) landed tb/item-f40-2, which appended its own OFF candidate at `cloudreach_f40_items.json` candidates[12] (summit stand shelves). This branch also appended two OFF candidates after index 11. On merge, keep all three entries, in the order F40#2 summit shelves, F40#1 strata terrace, F40#1 strata landform. All three are OFF, so order has no runtime effect; only the indices in this READY shift by one. `scripts/world/cloudreach_settlement_life.gd` PROPS gains `strata_terrace` and `strata_landform`; tb/item-f40-4 adds `strata_cliff` on the same line, so keep all keys.
