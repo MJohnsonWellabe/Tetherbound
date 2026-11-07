@@ -4735,6 +4735,11 @@ static func p2_003_gatehouse(config: Dictionary) -> Dictionary:
 	# the same frame, e.g. a rock crag under the keep so it no longer floats.
 	var added: Array = gatehouse.get("companions", []) as Array
 	added.append_array(candidate.get("add_companions", []) as Array)
+	# F38#20 (LANE-SW, 7 Nov 2026, OFF until judged): the Blender hill the keep
+	# crowns, so it no longer perches on the horizon line.
+	var hill: Dictionary = config.get("keep_hill_1107", {})
+	if bool(hill.get("enabled", false)) and hill.get("companion", null) is Dictionary:
+		added.append(hill.companion)
 	gatehouse["companions"] = added
 	return gatehouse
 
