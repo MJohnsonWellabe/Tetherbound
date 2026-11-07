@@ -15,6 +15,7 @@ from mathutils import Vector, noise
 argv = sys.argv[sys.argv.index("--") + 1:]
 OUT = argv[0]
 PREVIEW = argv[1] if len(argv) > 1 else ""
+R2 = len(argv) > 2 and argv[2] == "r2"   # round 2: columnar basalt, tufted moss with taller fungi
 
 def lin(hexrgb):
     # glTF colours are linear; Godot shows them as sRGB, so author from sRGB targets.
@@ -100,10 +101,26 @@ def glass_node(path, crown, seed, prev):
     M_BASALT = material("storm_basalt", "#2a2a30", rough=0.9)
     bm_g = bmesh.new(); bm_c = bmesh.new(); bm_b = bmesh.new()
     # basalt matrix
-    lump(bm_b, Vector((0, 0, 0.0)), 0.55 if not crown else 0.7, 0.45, seed, amp=0.35)
-    for k in range(3):
-        a = rng.uniform(0, math.tau)
-        lump(bm_b, Vector((math.cos(a) * 0.45, math.sin(a) * 0.45, 0)), rng.uniform(0.2, 0.3), 0.5, seed + k)
+    if R2:
+        # columnar basalt: a ring of short hexagonal columns of mixed height (reads as basalt, not a blob)
+        R0 = 0.55 if not crown else 0.7
+        cols = [(0.0, 0.0)] + [(math.cos(k * math.tau / 7 + 0.3) * R0 * 0.55, math.sin(k * math.tau / 7 + 0.3) * R0 * 0.55) for k in range(7)] \
+            + [(math.cos(k * math.tau / 11) * R0 * 0.95, math.sin(k * math.tau / 11) * R0 * 0.95) for k in range(11)]
+        for k, (cx, cy) in enumerate(cols):
+            r_out = math.hypot(cx, cy) / (R0 * 0.95)
+            h = (0.32 - 0.2 * r_out) * rng.uniform(0.7, 1.15) * (1.0 if not crown else 1.2)
+            res = bmesh.ops.create_cone(bm_b, segments=6, radius1=R0 * 0.2, radius2=R0 * 0.19, depth=h, cap_ends=True)
+            yaw = rng.uniform(0, 1.0)
+            for v in res["verts"]:
+                x, y = v.co.x, v.co.y
+                v.co.x = x * math.cos(yaw) - y * math.sin(yaw) + cx
+                v.co.y = x * math.sin(yaw) + y * math.cos(yaw) + cy
+                v.co.z += h / 2 - 0.02
+    else:
+        lump(bm_b, Vector((0, 0, 0.0)), 0.55 if not crown else 0.7, 0.45, seed, amp=0.35)
+        for k in range(3):
+            a = rng.uniform(0, math.tau)
+            lump(bm_b, Vector((math.cos(a) * 0.45, math.sin(a) * 0.45, 0)), rng.uniform(0.2, 0.3), 0.5, seed + k)
     # glass prisms
     n = 7 if not crown else 13
     for i in range(n):
@@ -146,11 +163,23 @@ def moss_node(path, seed, prev):
     for k in range(5):
         a = k * math.tau / 5 + rng.uniform(-0.3, 0.3)
         lump(bm_d if k % 2 else bm_m, Vector((math.cos(a) * 0.5, math.sin(a) * 0.5, 0)), rng.uniform(0.22, 0.34), 0.55, seed + k, detail=3.5, amp=0.3)
-    # small bioluminescent caps growing from the cushion
-    for k in range(9):
-        a = rng.uniform(0, math.tau); rr = rng.uniform(0.1, 0.6)
+    if R2:
+        # moss tufts: many small dark bumps break the cushion into a fibrous surface
+        for k in range(46):
+            a = rng.uniform(0, math.tau); rr = rng.uniform(0.0, 0.72)
+            z0 = 0.31 * max(0.0, 1 - (rr / 0.78) ** 2)
+            lump(bm_d if k % 3 == 0 else bm_m, Vector((math.cos(a) * rr, math.sin(a) * rr, z0)), rng.uniform(0.05, 0.1), 0.8, seed + 100 + k, detail=4.0, amp=0.35)
+        M_STONE = material("glow_stone", "#34343a", rough=0.9)
+        bm_st = bmesh.new()
+        for k in range(4):
+            a = k * math.tau / 4 + 0.6
+            lump(bm_st, Vector((math.cos(a) * 0.7, math.sin(a) * 0.7, 0.02)), rng.uniform(0.08, 0.14), 0.7, seed + 200 + k)
+    # small bioluminescent caps growing from the cushion (round 2: fewer, taller, larger)
+    for k in range(9 if not R2 else 7):
+        a = rng.uniform(0, math.tau); rr = rng.uniform(0.1, 0.6) if not R2 else rng.uniform(0.05, 0.45)
         z0 = 0.33 * max(0.0, 1 - (rr / 0.75) ** 2) + 0.02
-        h = rng.uniform(0.06, 0.16); cr = rng.uniform(0.04, 0.08)
+        h = rng.uniform(0.06, 0.16) if not R2 else rng.uniform(0.18, 0.38)
+        cr = rng.uniform(0.04, 0.08) if not R2 else rng.uniform(0.08, 0.14)
         base = Vector((math.cos(a) * rr, math.sin(a) * rr, z0))
         st = bmesh.ops.create_cone(bm_s, segments=6, radius1=cr * 0.3, radius2=cr * 0.25, depth=h, cap_ends=True)
         for v in st["verts"]:
@@ -159,12 +188,16 @@ def moss_node(path, seed, prev):
         for v in cap["verts"]:
             v.co.z = max(v.co.z, 0) * 0.55
             v.co += base + Vector((0, 0, h))
-    export([("Moss", bm_m, [M_MOSS], None), ("MossDark", bm_d, [M_MOSS_DK], None), ("Caps", bm_c, [M_CAP], None), ("Stems", bm_s, [M_STEM], None)], path)
+    parts = [("Moss", bm_m, [M_MOSS], None), ("MossDark", bm_d, [M_MOSS_DK], None), ("Caps", bm_c, [M_CAP], None), ("Stems", bm_s, [M_STEM], None)]
+    if R2:
+        parts.append(("Stones", bm_st, [M_STONE], None))
+    export(parts, path)
     preview(prev, dist=2.6, h=0.5)
 
 os.makedirs(OUT, exist_ok=True)
 P = lambda n: os.path.join(PREVIEW, n) if PREVIEW else ""
-glass_node(os.path.join(OUT, "stormwood_stormglass_node.glb"), False, 9101, P("stormglass.png"))
-glass_node(os.path.join(OUT, "stormwood_stormglass_crown.glb"), True, 9102, P("crown.png"))
-moss_node(os.path.join(OUT, "stormwood_glowmoss_mound.glb"), 9103, P("glowmoss.png"))
+SUF = "_r2" if R2 else ""
+glass_node(os.path.join(OUT, "stormwood_stormglass_node%s.glb" % SUF), False, 9101, P("stormglass.png"))
+glass_node(os.path.join(OUT, "stormwood_stormglass_crown%s.glb" % SUF), True, 9102, P("crown.png"))
+moss_node(os.path.join(OUT, "stormwood_glowmoss_mound%s.glb" % SUF), 9103, P("glowmoss.png"))
 print("HARVEST_OK", OUT)

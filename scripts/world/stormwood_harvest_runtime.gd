@@ -247,7 +247,11 @@ static func hero2_for(item: String) -> Dictionary:
 	# F41#9 (LANE-SW, 7 Nov 2026, OFF until judged): the Blender storm-glass,
 	# crown and glowmoss nodes replace the round-2 items when enabled.
 	var lane: Dictionary = cfg.get("lane_sw_1107", {})
-	if bool(lane.get("enabled", false)):
+	# Round 2 (lane_sw_1107_r2): columnar basalt and a tufted glowmoss.
+	var lane_r2: Dictionary = cfg.get("lane_sw_1107_r2", {})
+	if bool(lane_r2.get("enabled", false)):
+		cfg = lane_r2
+	elif bool(lane.get("enabled", false)):
 		cfg = lane
 	elif not bool(cfg.get("enabled", false)):
 		return {}
