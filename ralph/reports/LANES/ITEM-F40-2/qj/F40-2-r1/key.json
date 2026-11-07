@@ -1,0 +1,23 @@
+{
+ "Rc": {
+  "anchor": false,
+  "label": "F40#2",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F40-2-r1/k/sides/F40_2_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F40-2-r1/k/sides/F40_2_cand.jpg"
+ },
+ "Mh": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ol": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Xq": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}
