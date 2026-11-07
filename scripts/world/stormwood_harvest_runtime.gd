@@ -249,7 +249,11 @@ static func hero2_for(item: String) -> Dictionary:
 	var lane: Dictionary = cfg.get("lane_sw_1107", {})
 	# Round 2 (lane_sw_1107_r2): columnar basalt and a tufted glowmoss.
 	var lane_r2: Dictionary = cfg.get("lane_sw_1107_r2", {})
-	if bool(lane_r2.get("enabled", false)):
+	# Round 3 (lane_sw_1107_r3): the glowmoss on a mossed basalt boulder.
+	var lane_r3: Dictionary = cfg.get("lane_sw_1107_r3", {})
+	if bool(lane_r3.get("enabled", false)):
+		cfg = lane_r3
+	elif bool(lane_r2.get("enabled", false)):
 		cfg = lane_r2
 	elif bool(lane.get("enabled", false)):
 		cfg = lane

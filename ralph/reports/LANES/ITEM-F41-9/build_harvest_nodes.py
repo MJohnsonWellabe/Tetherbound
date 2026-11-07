@@ -15,7 +15,8 @@ from mathutils import Vector, noise
 argv = sys.argv[sys.argv.index("--") + 1:]
 OUT = argv[0]
 PREVIEW = argv[1] if len(argv) > 1 else ""
-R2 = len(argv) > 2 and argv[2] == "r2"   # round 2: columnar basalt, tufted moss with taller fungi
+R3 = len(argv) > 2 and argv[2] == "r3"   # round 3: glowmoss only, boulder + cool moss drape
+R2 = len(argv) > 2 and argv[2] in ("r2", "r3")   # round 2: columnar basalt, tufted moss with taller fungi
 
 def lin(hexrgb):
     # glTF colours are linear; Godot shows them as sRGB, so author from sRGB targets.
@@ -151,6 +152,43 @@ def glass_node(path, crown, seed, prev):
     export([("Glass", bm_g, [M_GLASS], None), ("Copper", bm_c, [M_COPPER], None), ("Basalt", bm_b, [M_BASALT], None)], path)
     preview(prev)
 
+def moss_node_r3(path, seed, prev):
+    # A dark basalt boulder (copper flecks) wearing a cool blue-green moss drape on
+    # its upper half, teal caps from the moss: value separation from lime ground.
+    reset()
+    rng = random.Random(seed)
+    M_ROCK = material("glow_stone", "#2b2b31", rough=0.9)
+    M_COPPER = material("storm_copper", "#b8743c", metallic=0.6, rough=0.4)
+    M_MOSS = material("glow_moss", "#1f4a44", rough=0.95)
+    M_MOSS_DK = material("glow_moss_dark", "#163631", rough=0.95)
+    M_CAP = material("glow_cap", "#46c8a4", rough=0.5, emit="#5fe8bd", strength=0.9)
+    M_STEM = material("glow_stem", "#8f9a8c", rough=0.7)
+    bm_r = bmesh.new(); bm_cu = bmesh.new(); bm_m = bmesh.new(); bm_d = bmesh.new(); bm_c = bmesh.new(); bm_s = bmesh.new()
+    lump(bm_r, Vector((0, 0, 0)), 0.62, 0.85, seed, detail=1.8, amp=0.3)
+    lump(bm_r, Vector((0.5, 0.25, 0)), 0.32, 0.8, seed + 1, detail=2.2, amp=0.3)
+    for k in range(6):
+        a = rng.uniform(0, math.tau)
+        lump(bm_cu, Vector((math.cos(a) * 0.58, math.sin(a) * 0.58, rng.uniform(0.08, 0.25))), rng.uniform(0.05, 0.09), 0.7, seed + 50 + k, amp=0.4)
+    # moss drape: tufts over the boulder's upper half
+    for k in range(70):
+        a = rng.uniform(0, math.tau); rr = rng.uniform(0.0, 0.5)
+        z = 0.53 * math.sqrt(max(0.0, 1 - (rr / 0.62) ** 2))
+        lump(bm_d if k % 3 == 0 else bm_m, Vector((math.cos(a) * rr, math.sin(a) * rr, z)), rng.uniform(0.07, 0.12), 0.75, seed + 100 + k, detail=4.0, amp=0.35)
+    for k in range(7):
+        a = rng.uniform(0, math.tau); rr = rng.uniform(0.0, 0.38)
+        z0 = 0.53 * math.sqrt(max(0.0, 1 - (rr / 0.62) ** 2)) + 0.05
+        h = rng.uniform(0.16, 0.32); cr = rng.uniform(0.08, 0.13)
+        base = Vector((math.cos(a) * rr, math.sin(a) * rr, z0))
+        st = bmesh.ops.create_cone(bm_s, segments=6, radius1=cr * 0.3, radius2=cr * 0.25, depth=h, cap_ends=True)
+        for v in st["verts"]:
+            v.co += base + Vector((0, 0, h / 2))
+        cap = bmesh.ops.create_uvsphere(bm_c, u_segments=10, v_segments=6, radius=cr)
+        for v in cap["verts"]:
+            v.co.z = max(v.co.z, 0) * 0.55
+            v.co += base + Vector((0, 0, h))
+    export([("Rock", bm_r, [M_ROCK], None), ("Copper", bm_cu, [M_COPPER], None), ("Moss", bm_m, [M_MOSS], None), ("MossDark", bm_d, [M_MOSS_DK], None), ("Caps", bm_c, [M_CAP], None), ("Stems", bm_s, [M_STEM], None)], path)
+    preview(prev, dist=2.6, h=0.6)
+
 def moss_node(path, seed, prev):
     reset()
     rng = random.Random(seed)
@@ -196,8 +234,11 @@ def moss_node(path, seed, prev):
 
 os.makedirs(OUT, exist_ok=True)
 P = lambda n: os.path.join(PREVIEW, n) if PREVIEW else ""
-SUF = "_r2" if R2 else ""
-glass_node(os.path.join(OUT, "stormwood_stormglass_node%s.glb" % SUF), False, 9101, P("stormglass.png"))
-glass_node(os.path.join(OUT, "stormwood_stormglass_crown%s.glb" % SUF), True, 9102, P("crown.png"))
-moss_node(os.path.join(OUT, "stormwood_glowmoss_mound%s.glb" % SUF), 9103, P("glowmoss.png"))
+if R3:
+    moss_node_r3(os.path.join(OUT, "stormwood_glowmoss_mound_r3.glb"), 9104, P("glowmoss.png"))
+else:
+    SUF = "_r2" if R2 else ""
+    glass_node(os.path.join(OUT, "stormwood_stormglass_node%s.glb" % SUF), False, 9101, P("stormglass.png"))
+    glass_node(os.path.join(OUT, "stormwood_stormglass_crown%s.glb" % SUF), True, 9102, P("crown.png"))
+    moss_node(os.path.join(OUT, "stormwood_glowmoss_mound%s.glb" % SUF), 9103, P("glowmoss.png"))
 print("HARVEST_OK", OUT)
