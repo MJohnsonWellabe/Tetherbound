@@ -1,5 +1,5 @@
 {
-  "updated": "4:00 PM CT Sat 7 Nov 2026",
+  "updated": "4:10 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -844,31 +844,31 @@
   "active_lanes": [
     {
       "lane": "LANE-MS · Meadows",
-      "doing": "F38#5 spacing fix built (cluster 1914 radius 3->4 m, centre moved; f48_cut_key passes) but held: it raises a test cap, owner decision pending. Warrens walk_03 stand-guard fix next, then F38#41 quarry rocks (Blender, WIP).",
+      "doing": "F38#5 held for owner (test cap). Warrens walk_03 stand-guard fix; then F38#41 quarry rocks (Blender, WIP).",
       "criteria": "F38#12, F38#5, F38#30, F38#24, F38#6, F38#41",
       "next": "~1.5 h (import + first round)"
     },
     {
       "lane": "LANE-SW · Stormwood and arena",
-      "doing": "F41#1 Stormheart crown and core: Blender heart cradle, tuning glow and re-capturing.",
+      "doing": "F41#1 Stormheart: Blender root vault ON (+0.49, 4.75 -> 5.24); heart cradle worse, OFF. Merging main so it can land.",
       "criteria": "F38#28, F41#1, F38#20, F41#9, F41#14, F41#3, F41#6, F41#7",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-TW · Tidewake and map",
-      "doing": "F39#16 parked (two flat/worse arms; base may already clear 7.5 on GPU). F39#31 import-policy fix requested. Now F39#17.",
+      "doing": "F39#31 import policy fixed (re-lands next batch). Now F39#17.",
       "criteria": "F39#25, F39#31, F39#2, F39#16",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-CR · Cloudreach",
-      "doing": "F40#1 stone shelves: round 2 (larger landform) capturing.",
+      "doing": "F40#1 parked (Blender strata terrace/landform -0.14 flat). Next F40#4 strata edges.",
       "criteria": "F40#2, F40#12, F40#1, F40#4, F40#19, F40#17",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-KIT · capture fixes, HUD, creatures",
-      "doing": "F38#33 catch result +1.45 (conflict with main in the catch tool, lane reconciling). F38#19 HUD capture running.",
+      "doing": "F38#33 in #851. F38#19 parked (6.58), F38#38 parked (base already 7.55 CPU: GPU re-judge candidate). Next F36#70 Sparkit legs.",
       "criteria": "F38#19, F38#26, F38#31, F38#33, F38#38, F36#70, F41#8, F38#17",
       "next": "~2 h"
     }
