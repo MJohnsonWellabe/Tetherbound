@@ -1,0 +1,23 @@
+{
+ "Qw": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Uw": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Sv": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Uf": {
+  "anchor": false,
+  "label": "EYES",
+  "A": "/home/user/Tetherbound/.artifacts/qj/EYES-939043818257-11072236/k/sides/EYES_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/EYES-939043818257-11072236/k/sides/EYES_cand.jpg"
+ }
+}

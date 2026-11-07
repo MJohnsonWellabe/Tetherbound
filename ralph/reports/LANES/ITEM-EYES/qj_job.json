@@ -1,0 +1,55 @@
+{
+ "biomes": {
+  "stormwood": {
+   "items": [
+    {
+     "board_row": "EYES",
+     "item": "EYES",
+     "subject": "Fulgocobra (storm king cobra) and Mirejaw (swamp axolotl predator) on a neutral stage beside a 1.80 m human ruler: idle and hit react",
+     "defect": "Near-black heads: the hood/head merges with the backdrop and the face and eyes are lost",
+     "impact": 10.0,
+     "fix_class": "scene",
+     "catalog_status": "open",
+     "frames": [
+      {
+       "id": "fulgocobra-idle-050",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=fulgocobra --roles=idle,hit --whole-body --out=res://.artifacts/eyestage/fulgocobra",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "fulgocobra-hit-100",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=fulgocobra --roles=idle,hit --whole-body --out=res://.artifacts/eyestage/fulgocobra",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "mirejaw-idle-050",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=mirejaw --roles=idle,hit --whole-body --out=res://.artifacts/eyestage/mirejaw",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      },
+      {
+       "id": "mirejaw-hit-100",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=mirejaw --roles=idle,hit --whole-body --out=res://.artifacts/eyestage/mirejaw",
+       "location": "neutral_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "stage",
+       "category": "creatures"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
