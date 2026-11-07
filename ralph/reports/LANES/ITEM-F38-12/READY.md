@@ -1,5 +1,5 @@
 STATUS: parked
-BRANCH: tb/item-f38-12  HEAD: (this commit)
+BRANCH: tb/item-f38-12  HEAD: 8dad7d9393f38f1887331bd8958b92b9760d2560 (the verdict commit; READY sha fix-up follows)
 
 Lane LANE-MS (Meadows). Row F38#12 (P2-034 harvest reward identity), live 6.62 on the board.
 
