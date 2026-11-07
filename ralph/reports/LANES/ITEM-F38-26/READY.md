@@ -1,5 +1,5 @@
 STATUS: parked
-BRANCH: tb/item-f38-26  HEAD: (see git log; READY and verdict only, no game change)
+BRANCH: tb/item-f38-26  HEAD: 966168f8 (READY and verdict only, no game change)
 
 Depends on tb/item-capture-fixes (4e3f0cc0): the stand now joins the grass clearing as a settled creature does.
 
