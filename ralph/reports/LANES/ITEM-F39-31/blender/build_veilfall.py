@@ -28,7 +28,7 @@ def face(verts, mat, uvs):
         loop[uv].uv = t
     return f
 
-def radius_fn(r, cx, cy, seed, rib=0.05, lump=0.26):
+def radius_fn(r, cx, cy, seed, rib=0.11, lump=0.30):
     def fn(a, z):
         p = Vector((math.cos(a) * 1.8, math.sin(a) * 1.8, z / 220.0 + seed))
         l = noise.noise(p) * lump
@@ -52,7 +52,7 @@ def tier(cx, cy, r0, r1, z0, z1, seed, seg=128, rings=14, cap="moss"):
         for j in range(seg):
             a = 2 * math.pi * j / seg
             rr = r * f0(a, z)
-            zz = z + (z1 - z0) * 0.16 * t ** 2 * noise.noise(Vector((math.cos(a) * 2.5, math.sin(a) * 2.5, seed + 5.0)))
+            zz = z + (z1 - z0) * 0.45 * t ** 1.5 * noise.noise(Vector((math.cos(a) * 2.5, math.sin(a) * 2.5, seed + 5.0)))
             row.append(bm.verts.new((cx + math.cos(a) * rr, cy + math.sin(a) * rr, zz)))
         grid.append(row)
     circ = 2 * math.pi * (r0 + r1) * 0.5
@@ -112,6 +112,19 @@ CRAGS = [(-330, -90, 70, 50, 0, 210), (345, -40, 62, 44, 0, 240), (-250, 200, 80
 for k, (x, y, r0, r1, z0, z1) in enumerate(CRAGS):
     tier(x, y, r0, r1, z0, z1, seed=40.0 + k * 2.3, seg=40, rings=10)
 
+# ---- jagged pinnacles: thin crags rising off the ledges and summit (round 2: break the ziggurat)
+bm.normal_update()
+_bvh0 = BVHTree.FromBMesh(bm)
+for k, (cx, cy, r0, r1, z0, z1) in enumerate(TIERS):
+    for _ in range(9 + 3 * k):
+        a = random.uniform(0, 2 * math.pi); rr = r1 * random.uniform(0.55, 0.9)
+        x, y = cx + math.cos(a) * rr, cy + math.sin(a) * rr
+        hit = _bvh0.ray_cast(Vector((x, y, 2000.0)), Vector((0, 0, -1)))
+        if hit[0] is None:
+            continue
+        base = hit[0].z - 10.0; h = random.uniform(40, 105) * (1.25 if k == len(TIERS) - 1 else 1.0)
+        rad = random.uniform(16, 34)
+        tier(x, y, rad, rad * random.uniform(0.5, 0.7), base, base + h, seed=70.0 + k * 9 + _ * 0.7, seg=24, rings=8)
 # ---- tree clumps on every ledge annulus and crag cap, seated by raycast on the built rock
 bm.verts.ensure_lookup_table(); bm.faces.ensure_lookup_table()
 bm.normal_update()
@@ -132,7 +145,7 @@ def ledge_points(cx, cy, rf, r_out, r_in, z, n, front_bias=0.6):
         pts.append((cx + math.cos(a) * rr * rf(a, z) , cy + math.sin(a) * rr * rf(a, z), z))
     return pts
 FRONT = -math.pi / 2
-FALL_BANDS = [(FRONT, 0.16), (FRONT - 0.55, 0.12), (FRONT + 0.62, 0.11), (FRONT + 0.48, 0.12), (FRONT - 0.50, 0.12)]
+FALL_BANDS = [(FRONT, 0.26), (FRONT - 0.55, 0.18), (FRONT + 0.62, 0.17), (FRONT + 0.48, 0.18), (FRONT - 0.50, 0.17)]
 def in_fall(a):
     return any(abs((a - c + math.pi) % (2 * math.pi) - math.pi) < hw for c, hw in FALL_BANDS)
 trees = 0
@@ -206,18 +219,18 @@ def fall(k, a, w_top, w_bot, z_top=None, z_bot=None, steps=16):
                 f.normal_flip()
     # plunge mist: soft white puffs at the fall foot
     foot = rows[-1][2].co
-    for _ in range(3):
-        r = random.uniform(0.25, 0.4) * w_bot
-        off = Vector((random.uniform(-0.5, 0.5) * w_bot, random.uniform(-0.2, 0.3) * w_bot, random.uniform(-2, 8)))
+    for _ in range(9):
+        r = random.uniform(0.12, 0.22) * w_bot
+        off = Vector((random.uniform(-0.7, 0.7) * w_bot, random.uniform(-0.1, 0.4) * w_bot, random.uniform(0, 18)))
         o = foot + off + Vector((math.cos(a), math.sin(a), 0)) * r * 0.4
         blob((o.x, o.y, o.z), r, r * 0.7, r * 0.28, "foam", 2)
 
 # main stepped cascade down the centre of every tier
-for k, w in enumerate((92, 74, 58, 42)):
-    fall(k, FRONT + 0.03 * k, w * 0.7, w)
+for k, w in enumerate((150, 120, 95, 70)):
+    fall(k, FRONT + 0.03 * k, w * 0.75, w)
 # side veils
-fall(0, FRONT - 0.55, 40, 62); fall(0, FRONT + 0.62, 34, 55)
-fall(1, FRONT + 0.48, 28, 44); fall(2, FRONT - 0.50, 24, 36)
+fall(0, FRONT - 0.55, 70, 100); fall(0, FRONT + 0.62, 60, 90)
+fall(1, FRONT + 0.48, 50, 75); fall(2, FRONT - 0.50, 42, 62)
 # sea foam skirt along the front shore
 for _ in range(14):
     a = FRONT + random.gauss(0, 0.7); r = 400 * rfns[0](a, 0.0) + random.uniform(0, 15)
