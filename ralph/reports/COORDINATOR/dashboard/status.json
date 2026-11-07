@@ -1,5 +1,5 @@
 {
-  "updated": "3:35 PM CT Sat 7 Nov 2026",
+  "updated": "4:00 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -1727,7 +1727,13 @@
       "item": "F38#6 rare-candy pickup cloth (Blender reskin, blue velvet)",
       "before": 6.5,
       "after": 6.76,
-      "pr": "land batch 4 (full CI)"
+      "pr": "#850 (merged 7 Nov)"
+    },
+    {
+      "item": "F38#33 catch result hierarchy (broke-free card steps fight cards back)",
+      "before": 6.53,
+      "after": 7.98,
+      "pr": "land batch 5 (full CI)"
     }
   ]
 }
