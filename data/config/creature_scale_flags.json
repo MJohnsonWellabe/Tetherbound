@@ -19,7 +19,8 @@
     },
     "creatures_f36_taller_than_trainer_5": {
       "_why": "F38#5 P2-017 r2 (LANE-MS, 7 Nov 2026, OFF until judged). After batch 4 shipped (CPU 6.59 -> 7.37), two of three judges still read the owl (pipwing) at about trainer height and the otter (brooktail) at or below the trainer's head in the meadows idle scale frames. Grow only: pipwing x1.15 and brooktail x1.15 on top of their earlier batches (flags multiply). Neither has an evolution line to stay under.",
-      "enabled": false,
+      "_why_on": "F38#5 P2-017 r2 (LANE-MS, 7 Nov 2026): quick_judge round F38-5-6a59b14720f3-11071825 (ralph/reports/LANES/LANE-MS/qj/), on top of batch 4 ON, CPU mapped 7.14 -> 7.40 (+0.26). All three code-blind judges preferred it; the owl now reads above the trainer. Grow only.",
+      "enabled": true,
       "species": {
         "pipwing": 1.15,
         "brooktail": 1.15
