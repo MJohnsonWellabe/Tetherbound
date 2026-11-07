@@ -27,6 +27,7 @@ HEAD: (this commit; merged origin/main just before writing)
 - tools/phase2_capture_dialogue.gd hands the panel the same identity (the capture opened the panel directly before).
 
 ## Tests
+- Texture import policy: the four new runtime 3D sidecars set to mode 2 (`texture_import_policy.py --apply`, reimported); `--check` PASS, test_texture_import_policy 2/2.
 - test_character_appearance_variants.gd 11/11 (record count `staged.size() + 10`, all four LANE-KIT records).
 - test_band_content 6/6, test_dialogue_portraits 13/13, test_trainers_data 51/51, test_vis_meadows_1104_on 20/20,
   test_meadows_earned_hall_segment 16/16, test_named_fight_profiles 8/8, test_beaten_trainer_prompt_yields 3/3.

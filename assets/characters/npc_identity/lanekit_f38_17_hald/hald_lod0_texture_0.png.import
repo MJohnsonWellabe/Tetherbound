@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dio1u40fafa6w"
-path="res://.godot/imported/hald_lod0_texture_0.png-308baced8049b770d6543d4229c9c948.ctex"
+path.s3tc="res://.godot/imported/hald_lod0_texture_0.png-308baced8049b770d6543d4229c9c948.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "f76f48bd5d5bca5a3ac240bcde6a9065"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/characters/npc_identity/lanekit_f38_17_hald/hald_lod0_texture_0.png"
-dest_files=["res://.godot/imported/hald_lod0_texture_0.png-308baced8049b770d6543d4229c9c948.ctex"]
+dest_files=["res://.godot/imported/hald_lod0_texture_0.png-308baced8049b770d6543d4229c9c948.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

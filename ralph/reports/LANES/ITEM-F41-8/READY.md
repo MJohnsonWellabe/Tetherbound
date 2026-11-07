@@ -16,6 +16,7 @@ HEAD: (this commit; merged origin/main 6f8d0d79 just before writing)
 - Same installed local_historian mesh, rig, face and hair; only the olive coat cloth recoloured. No red or oxblood. No Meshy.
 
 ## Tests
+- Texture import policy: the four new runtime 3D sidecars set to mode 2 (`texture_import_policy.py --apply`, reimported); `--check` PASS, test_texture_import_policy 2/2.
 - test_character_appearance_variants.gd 11/11 (combined with F38#17: record count staged + 10).
 - test_dialogue_portraits.gd 13/13, test_stormwood_glass_for_bryn.gd 13/13, test_character_body_flags.gd 3/3.
 - JSON parse: character_appearance_variants.json, stormwood_npcs.json.
