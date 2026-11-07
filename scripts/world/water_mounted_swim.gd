@@ -37,6 +37,8 @@ func _physics_process(_delta: float) -> void:
 		return
 	if is_instance_valid(body):
 		MOUNT_PRESENTATION.set_shadows(body, true)
+		if world.local_rig() != null:
+			MOUNT_PRESENTATION.set_shadows(world.local_rig(), true)
 		body.clear_environment_velocity_modifier(&"water_buoyancy")
 		body.remove_meta("water_aquatic")
 		body.set_traversal_pose("")
@@ -63,6 +65,7 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 	var fighting: bool = world.get_node("CombatManager").is_fighting() or director.trainer_battle_active()
 	if depth <= float(_rules.human.exit_depth_m):
 		MOUNT_PRESENTATION.set_shadows(actor, true)
+		MOUNT_PRESENTATION.set_shadows(player, true)
 		actor.set_traversal_pose("ride" if mounted else "")
 		if state.mode != STATE.Mode.LAND:
 			state.leave_water()
@@ -106,9 +109,13 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 		_swim_time += delta
 		origin += MOUNT_PRESENTATION.origin_delta(look, _swim_time)
 		MOUNT_PRESENTATION.set_shadows(actor, not bool(look.get("shadows_off", true)))
+		# F39#8 (LANE-TW, row key `rider_shadows_off`, false unless set): the
+		# seated rider's own shadow fell metres away on the shallow sea floor.
+		MOUNT_PRESENTATION.set_shadows(player, not bool(look.get("rider_shadows_off", false)))
 		MOUNT_PRESENTATION.ensure_wake(actor, look)
 	else:
 		MOUNT_PRESENTATION.set_shadows(actor, true)
+		MOUNT_PRESENTATION.set_shadows(player, true)
 	actor.velocity.y = (world.field.water_level() + origin - actor.global_position.y) * float(_rules.human.vertical_follow_rate)
 	if mounted:
 		if human.state.mode != STATE.Mode.MOUNTED and not fighting:
