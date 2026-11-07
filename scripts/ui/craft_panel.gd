@@ -697,6 +697,13 @@ var _readable_r3 := false
 ## controller face-button glyphs in a footer, 5+ visible rows, and higher
 ## contrast Missing tags and button. craft_presentation.json `readable_r4`.
 var _readable_r4 := false
+## F38#38 (LANE-KIT, 7 Nov 2026; craft_presentation.json `quiet_missing_r5`,
+## OFF until judged): judges call the solid orange Missing badges loud and ask
+## for a teal selection accent. On: Missing is an outlined chip (no fill, the
+## same warning hue for text and border), Ready keeps its fill, and the
+## selected recipe row carries a teal left accent bar whether or not it holds
+## keyboard focus.
+var _quiet_missing_r5 := false
 var _craft_button: Button
 var _craft_button_label: RichTextLabel
 var _row_tags: Array[Label] = []
@@ -717,6 +724,7 @@ func _ready() -> void:
 	_craft_button_on = bool(_presentation.get("craft_button", false))
 	_readable_r3 = bool(_presentation.get("readable_r3", false))
 	_readable_r4 = bool(_presentation.get("readable_r4", false))
+	_quiet_missing_r5 = _readable_r4 and bool(_presentation.get("quiet_missing_r5", false))
 	_build()
 	visible = false
 	# RG4: `input_owner.gd`'s own header has claimed since OW10 that this
@@ -1258,6 +1266,27 @@ static func r4_tag_box(affordable: bool) -> StyleBoxFlat:
 	return box
 
 
+## quiet_missing_r5: the Missing tag as an outline chip; Ready unchanged.
+static func r5_missing_box() -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color(UITokens.DANGER, 0.0)
+	box.border_color = Color(UITokens.DANGER, 0.8)
+	box.set_border_width_all(2)
+	box.set_corner_radius_all(8)
+	box.content_margin_left = 12
+	box.content_margin_right = 12
+	box.content_margin_top = 2
+	box.content_margin_bottom = 2
+	return box
+
+
+## quiet_missing_r5: the selected row's teal left accent bar.
+static func r5_selected_row_box() -> StyleBoxFlat:
+	var box := UITokens.slot_box(true)
+	box.border_width_left = 8
+	return box
+
+
 ## Primary action for the focused recipe: confirm glyph plus "Craft" on a teal
 ## fill, or a greyed "Missing materials" plate the player can read at a glance.
 ## Pressing it crafts the focused row, the same call A on that row makes.
@@ -1427,6 +1456,9 @@ func _craft(id: String) -> void:
 ## Focus moved onto a different row: redraw the hero/detail columns for it.
 func _select(index: int) -> void:
 	_selected = index
+	if _quiet_missing_r5:
+		for i in _rows.size():
+			_rows[i].add_theme_stylebox_override("normal", r5_selected_row_box() if i == index else UITokens.slot_box(false))
 	_describe(index)
 
 
@@ -1448,6 +1480,13 @@ func _poll() -> void:
 				_row_tags[i].add_theme_color_override("font_color", UITokens.BG_DEEP.lerp(Color.BLACK, 0.2))
 				_row_tags[i].remove_theme_color_override("font_outline_color")
 				_row_tags[i].add_theme_constant_override("outline_size", 0)
+				if _quiet_missing_r5 and not affordable:
+					_row_tags[i].add_theme_stylebox_override("normal", r5_missing_box())
+					_row_tags[i].add_theme_color_override("font_color", UITokens.DANGER.lightened(0.15))
+		if _quiet_missing_r5 and i < _rows.size():
+			var row_box := r5_selected_row_box() if i == _selected else UITokens.slot_box(false)
+			_rows[i].add_theme_stylebox_override("normal", row_box)
+			_rows[i].add_theme_stylebox_override("focus", r5_selected_row_box())
 		if i < _cost_labels.size():
 			_cost_labels[i].add_theme_color_override("font_color", colour)
 			if _readable_recipe_rows:

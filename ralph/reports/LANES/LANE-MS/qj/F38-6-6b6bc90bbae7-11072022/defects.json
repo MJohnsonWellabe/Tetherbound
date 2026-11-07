@@ -1,0 +1,24 @@
+{
+ "F38#6 base": [
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  },
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  },
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  }
+ ],
+ "F38#6 cand": [
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "FIXED"
+  },
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  },
+  {
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PARTIAL"
+  }
+ ]
+}

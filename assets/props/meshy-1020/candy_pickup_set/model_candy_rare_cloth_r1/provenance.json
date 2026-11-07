@@ -1,0 +1,13 @@
+{
+ "asset": "candy_rare_cloth_r1.glb",
+ "row": "F38#6 P2-033",
+ "lane": "LANE-MS",
+ "date": "2026-11-07",
+ "kind": "Blender reskin of an installed asset (owner 7 Nov: new art from Blender, not Meshy)",
+ "source": "assets/props/meshy-1020/candy_pickup_set/model_candy_rare/candy_rare.glb (Meshy task 01a15c3f-dc02-777b-8150-fd9f2cd2d9e0, provenance in ../provenance.json)",
+ "script": "ralph/reports/LANES/ITEM-F38-6/blender/candy_rare_cloth_r1.py (Blender 4.2.3 LTS)",
+ "change": "geometry, UVs, normal and metallic-roughness maps unchanged; base-colour texels of the cloth (faces in the lower 47% of height, saturation < 0.42, value > 0.45) recoloured to deep blue velvet #1b375c with their shading kept; gold trim and sweets keep their colours. No red/oxblood.",
+ "reference": "ralph/reports/LANES/ITEM-F38-6/blender/_reference_cloth_r1.jpg (Cycles preview, before top / after bottom, beside a 1.80 m trainer bar)",
+ "scale_check": "pickup fitted in game by meshy_item_visuals.json height_m 0.9 (unchanged); half the 1.80 m trainer, as the shipping model",
+ "flag": "meshy_item_visuals.json items.rare_candy.model points here only when judged a gain"
+}
