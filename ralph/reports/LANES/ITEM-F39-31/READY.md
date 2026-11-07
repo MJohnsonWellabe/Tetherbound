@@ -1,5 +1,5 @@
 STATUS: parked
-BRANCH: tb/item-f39-31  HEAD: c526eea77b52fa22d09beab92986eb8c7c43406f (this line added in the next commit)
+BRANCH: tb/item-f39-31  HEAD: 1c87797b (texture fix; this line added in the next commit)
 
 # ITEM F39#31 and F39#2 Veilfall (LANE-TW, Blender row)
 
