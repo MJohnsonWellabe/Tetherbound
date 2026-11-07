@@ -1,5 +1,54 @@
 # NEAR6-TW lane (tb/near6-tw-1104): Tidewake F39 items scored 5.4–6.0, CPU quick-judged
 
+## HANDOFF 7 Nov
+
+Lane NEAR6-TW (`tb/near6-tw-1104`), CPU quick_judge (llvmpipe, Compatibility). CPU scores rank candidates only; every row still needs its GPU pass.
+
+**Shipped (ON, judged CPU gain, test asserts ON plus score):**
+| Board | Before -> after | Flag | Commit/round |
+|---|---|---|---|
+| F39#29 P2-074 dialogue speakers | 5.54 -> 6.34 | `water_npc_posts_candidate.json` `enabled` (Nalia only; Rune in `offsets_unjudged`) | `949b19b52`, qj/r29p |
+| F39#24 P2-029 rest poses | 5.02 -> 6.69 | `water_creature_rest_visual.json` `prone_rest` | qj/r24 |
+| F39#14 P2-072 swim contact | 6.10 -> 6.80 | `human_water_contact_visual.json` `wake_trail` | qj/r14 |
+| F39#16 P2-066 live currents | 5.96 -> 6.54 | `tidewake_look.json` `current_flow` live seams (`_why_near6_live_seams`) | qj/r16b |
+| F39#20 P2-090 fight background | 5.87 -> 6.42 | `water_resource_models.json` `fight_ring_hide` (+ pickups) | qj/r20b |
+| F39#27 P2-057 named characters | 6.03 -> 6.23 | `water_character_rim.json` `enabled` (+ shader `fill_energy`) | qj/r27 |
+| F39#1 P2-008 shore landforms | 6.37 -> 6.44 | `water_dune_cover` shipped_sites + `water_ground_cover.built_feather_enabled` | qj/r1 |
+| F41#10 P2-070 Glass Sink | 4.84 -> 5.36 | `stormwood_crown_overlook.json` `massif.near_hide_1104` | qj/r10 |
+
+**Open (coordinator 7 Nov list; base frames captured, no candidate judged):**
+- **F39#22** P2-109 Aquaryn dismount (6.28). The current frames (qj/b3922) show the trainer clear on open sand; I saw no obstruction left. Next: read a fresh judge note before building anything.
+- **F39#25** P2-032 map (6.36). GPU ask: "a blurry blue field with one blob island; the hint row mixes keyboard keys with controller buttons". Next: overlay `map.json fog_veil.painted_chart.long_side_px` 512 -> 1024 plus `chart_grid_1104.realms` += water (ready in my scratch as `ov_r25c`, not run). Then make the keyboard branch of `tab_map.gd::_refresh_controls_label` use one device's glyphs; it hard-codes "A"/"X" beside "[Minus]"/"[Equal]".
+- **F39#11** P2-101 (6.42), **F39#20** P2-090 (6.42), **F39#1** P2-008 (6.44): not started this round.
+- **F40#12** P2-076 Cloudreach speaker missing (5.01, unclaimed): base captured in qj/r40a, not inspected or judged.
+- **F39#18** P2-073 (GPU 5.17): already reads on the current build (qj/r18a); needs a GPU re-score only.
+
+**Parked:**
+- F39#2 / F39#31 / F13#5 Veilfall: new art. The near spire is the installed crag composition, and far-only levers do not draw in those frames (r2f, r2m).
+- F41#14 candy tiers: new art. Scale-only rounds gave r14s worse and r14u +0.29.
+- F41#5: handed back to VIS-STORMWOOD. The teal ground is the terrain moss texture, not the tints.
+- F39#6 faint pose: worse twice.
+- F39#4 shiny overlay: flat twice.
+- F39#21 win frames: need a GPU (continuous rendering).
+- F41#12 puddles: flat-slab finding.
+
+**OFF arms left in the tree:**
+- `combat.json` `contact_spacing.all_pairs` (F39#7, worse)
+- `hud_subject_fade.roster_floor` (F39#19, no CPU repro)
+- `creature_pose_settle.json` `tidewake_scope` (F39#6)
+- `creatures_visual.json` `shiny_cue.overlay` (F39#4)
+- `tidewake_look.json` `rest_shoal_dressing_vary` (F39#15, no visible change)
+- `pickup_grounding.json` `tier_candidate` (F41#14)
+- `water_veilfall.json` `silhouette.far_relief` (pre-existing, OFF)
+
+**Tool and capture notes:**
+- Never wrap `quick_judge.py run` in `flock godot.lock`. The tool takes that lock itself and deadlocks with no Godot process.
+- Use `--timeout 1500` per launch.
+- `find_frame` maps `water__` ids and fight ids `__fight__<trainer>__<tag>-<sss_ss>` (fixed on this branch).
+- A container restart kills chains: use resumable `.done` markers.
+- The batch-35 `smoke_water_combat_pause` failure did not reproduce: 3/3 pass on batch 35 and 3/3 on main. It looks like a CI flake.
+
+
 **FOR THE COORDINATOR (7 Nov ~14:40 UTC): batch 35 `smoke_water_combat_pause` does not reproduce locally.**
 - `godot --headless --path . --script tests/smoke_water_combat_pause.gd`, three runs each, one Godot process at a time:
   - origin/tb/land-batch-35 `b7f167b7e`: **3/3 pass** (`WATER COMBAT PAUSE OK checks=38`; fight 1 offered after 91-104 swim frames).
