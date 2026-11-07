@@ -9,6 +9,7 @@ argv = sys.argv[sys.argv.index("--") + 1:]
 out, tex = argv[0], argv[1]
 seed = int(argv[2]) if len(argv) > 2 else 7
 length = float(argv[3]) if len(argv) > 3 else 11.0
+variant = argv[4] if len(argv) > 4 else "r1"
 random.seed(seed)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -45,7 +46,7 @@ def mat(name, factor, rough=0.9, image="strata_side_Color.png"):
 
 # tier materials: warm cream, cool pale grey, buff; moss lip on tops
 mats = [mat("strata_cream", (1.0, 1.0, 1.0, 1)), mat("strata_grey", (0.93, 0.94, 0.95, 1)),
-        mat("strata_buff", (0.98, 0.95, 0.88, 1)), mat("strata_moss", (1.0, 1.0, 1.0, 1), 1.0, "strata_top_Color.png")]
+        mat("strata_buff", (0.98, 0.95, 0.88, 1)), mat("strata_moss", (1.0, 1.0, 1.0, 1), 1.0, "strata_top_Color.png" if variant == "r1" else "strata_top_r2_Color.png")]
 
 bm = bmesh.new()
 tiers = [  # (half length, half depth, height, y offset back, roughness)
@@ -53,9 +54,19 @@ tiers = [  # (half length, half depth, height, y offset back, roughness)
     (length * 0.42, 2.0, 0.65, 0.55, 0.12),
     (length * 0.30, 1.4, 0.55, 1.05, 0.14),
 ]
+if variant == "r2":
+    # r2 (judges r1: "stone staircases / flat slabs pasted on the grass"): a raised
+    # landform instead of steps -- four uneven, rougher tiers that climb to one side,
+    # deeper footprint, taller faces, offsets that do not stack symmetrically.
+    tiers = [
+        (length * 0.5, 4.2, 1.4, 0.0, 0.22),
+        (length * 0.40, 3.4, 1.2, 0.9, 0.26),
+        (length * 0.27, 2.6, 1.5, 2.1, 0.28),
+        (length * 0.15, 1.6, 1.1, 2.6, 0.30),
+    ]
 z = -0.6  # bottom tier starts below ground so it seats into the lawn
 for t, (hx, hy, h, back, rough) in enumerate(tiers):
-    shift = random.uniform(-0.6, 0.6)
+    shift = random.uniform(-0.6, 0.6) if variant == "r1" else length * (0.04 * t + random.uniform(-0.05, 0.05))
     pts = outline(shift, back, hx, hy, 40, rough, seed * 3.1 + t)
     bot = [bm.verts.new((x, y, z)) for x, y in pts]
     # top edge slightly inset and wobbled: chipped, eroded lip

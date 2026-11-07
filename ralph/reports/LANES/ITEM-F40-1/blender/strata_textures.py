@@ -46,4 +46,8 @@ moss = np.array([92, 120, 58]) * (0.85 + 0.3 * fbm(8, 8, seed=5)[..., None])
 stone = np.array([176, 170, 152]) * (0.85 + 0.25 * grain)
 top = np.where(m > 0.70, stone, moss)
 Image.fromarray(np.clip(top, 0, 255).astype(np.uint8)).save(sys.argv[1] + "/strata_top_Color.png")
+# r2 top: lawn-matched turf (judges read r1's mottled tops as slabs), little stone
+moss2 = np.array([104, 138, 52]) * (0.85 + 0.3 * fbm(8, 8, seed=5)[..., None])
+top2 = np.where(m > 0.82, stone, moss2)
+Image.fromarray(np.clip(top2, 0, 255).astype(np.uint8)).save(sys.argv[1] + "/strata_top_r2_Color.png")
 print("ok")
