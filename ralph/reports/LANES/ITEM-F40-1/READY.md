@@ -1,5 +1,5 @@
 STATUS: parked
-BRANCH: tb/item-f40-1  HEAD: (see the commit that adds this file)
+BRANCH: tb/item-f40-1  HEAD: b49392480afd0ddcee1ea70e546e40d7db6fd7a1 (READY committed in the next commit)
 
 # F40#1 P2-021 Cloudreach open terrain: stone shelves (LANE-CR, 7 Nov 2026, Blender row)
 
