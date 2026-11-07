@@ -9,6 +9,7 @@ const SAFE_RADIUS_M := 6.0
 const SAFE_CLEARANCE_M := 0.05
 
 var _built := false
+var _shoal_index := -1
 
 
 func build(water_world: Node3D, world_config: Dictionary) -> void:
@@ -22,6 +23,7 @@ func build(water_world: Node3D, world_config: Dictionary) -> void:
 	var marker := marker_spec as Dictionary
 	for raw: Variant in world_config.get("rest_shoals", []):
 		if raw is Dictionary:
+			_shoal_index += 1
 			_add_shoal(raw as Dictionary, marker, water_world)
 
 
@@ -104,6 +106,11 @@ func _dress_sandbar(id: String, centre: Vector2, water_world: Node3D) -> void:
 			spec["angle_deg"] = float(spec.get("angle_deg", 0.0)) + turn
 		var angle := deg_to_rad(float(spec.get("angle_deg", 0.0)) + float(id.hash() % 360))
 		var radius := maxf(float(spec.get("radius_m", 8.0)), SAFE_RADIUS_M + 1.0)
+		# `shoal_pick` [n, k] puts an entry on every n-th shoal only (config
+		# order), so neighbouring shoals in one chain wear different silhouettes.
+		var pick: Array = spec.get("shoal_pick", [])
+		if pick.size() == 2 and int(pick[0]) > 0 and posmod(_shoal_index, int(pick[0])) != int(pick[1]):
+			continue
 		var at := centre + Vector2(cos(angle), sin(angle)) * radius
 		var ground := _ground(water_world, at)
 		# Lobed shoals have no fixed shore radius: a wet-fringe rock walks

@@ -414,6 +414,14 @@ func _ready() -> void:
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
+		# F40#19 (NEAR6-CR): `time_override_arms.<name>` (each OFF until
+		# judged) layers further realm-only preset overrides through the same
+		# path, so a judged arm ships as a flag instead of a retuned base block.
+		var arms: Dictionary = _visual_config.get("time_override_arms", {})
+		for arm_name: String in arms:
+			var arm: Variant = arms[arm_name]
+			if arm is Dictionary and (arm as Dictionary).get("enabled") == true:
+				apply_time_overrides(local_look.get("times", {}), (arm as Dictionary).get("overrides", {}))
 		# tb/vis-water-sky group 2 (OFF until GPU-judged): warm key, rim,
 		# aerial fog and night fill (data/config/cloudreach_light_candidate.json).
 		var light_candidate := _read_json("res://data/config/cloudreach_light_candidate.json")
@@ -480,6 +488,9 @@ func _ready() -> void:
 	await _build_step("routes")
 	_build_progression_gates()
 	await _build_step("gates")
+	if not simulation_only:
+		_build_gate_path_braziers()
+		_build_gate_path_verge()
 	_build_bridges()
 	await _build_step("bridges")
 	if bool(_shell_build.call("uses_multiplayer_staging")):
@@ -2326,8 +2337,9 @@ func _build_routes() -> void:
 				pad - Vector3.UP * 0.44, landing_size * 0.41 - 0.05, 0.84, landing_top, true).get_child(0).visible = false
 			_add_landing_nature(root, points, i, pad, landing_size,
 				i * 43 + absi(str(spec.get("id", "Route")).hash()))
-			_cover_patches.append({"kind":"ellipse","centre":pad,"half":Vector2.ONE*landing_size*0.40,
-				"inner_clear_fraction":0.38,"seed":i*137+absi(str(spec.id).hash()),"dry":false})
+			if not _landing_cover_cleared(pad):
+				_cover_patches.append({"kind":"ellipse","centre":pad,"half":Vector2.ONE*landing_size*0.40,
+					"inner_clear_fraction":0.38,"seed":i*137+absi(str(spec.id).hash()),"dry":false})
 			# The mesa's crown vertex sits at local y = size.y*0.5 + 0.03, i.e.
 			# pad.y + 0.03 world -- match that here so ground_height_at() (used
 			# by spawns/arrivals) doesn't disagree with the real, solid surface.
@@ -4162,6 +4174,25 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		_cover_patches[index]["clip_rect"] = yard_bounds
 
 
+## P2-106 / F40#11 (VIS-CLOUDREACH, 4 Nov 2026): cloudreach_visual.json
+## `landing_cover_clear` (off unless enabled). A route landing's own grass
+## ellipse laid over the region's planted turf doubles the tuft density in a
+## ~12 m disc, which reads on camera as a dark oval decal on the arrival
+## terrace. Listed landings skip that ellipse; the region cover under them
+## stays. Presentation only: no surface, collider or route change.
+func _landing_cover_cleared(pad: Vector3) -> bool:
+	var cfg: Variant = _visual_config.get("landing_cover_clear", {})
+	if not cfg is Dictionary or (cfg as Dictionary).get("enabled") != true:
+		return false
+	var reach := float((cfg as Dictionary).get("radius_m", 4.0))
+	for raw: Variant in (cfg as Dictionary).get("near", []):
+		if raw is Array and (raw as Array).size() >= 3:
+			var at := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+			if Vector2(at.x - pad.x, at.z - pad.z).length() <= reach and absf(at.y - pad.y) <= 6.0:
+				return true
+	return false
+
+
 func _plant_floor_pocket(parent: Node3D,at: Vector3,half: Vector2,seed_value: int,dry: bool) -> void:
 	_cover_patches.append({"kind":"ellipse","centre":parent.to_global(at),"half":half,
 		"seed":seed_value,"dry":dry,"height_scale":0.62})
@@ -5296,6 +5327,57 @@ func _summit_gate_post_brazier(root: Node3D, at: Vector3) -> void:
 	light.light_energy = 3.0
 	light.omni_range = 16.0
 	root.add_child(light)
+
+
+## F40#19 (NEAR6-CR, flag-off): `gate_path_braziers` in cloudreach_visual.json
+## sets manned braziers (the installed summit brazier pair plus a warm light)
+## beside the realm-gate path, so the night frame has a lit focal point instead
+## of a uniform dark foreground. Each [x, z] is seated on the ground.
+func _build_gate_path_braziers() -> void:
+	var cfg: Dictionary = _visual_config.get("gate_path_braziers", {})
+	if cfg.get("enabled") != true:
+		return
+	var root := Node3D.new()
+	root.name = "GatePathBraziers"
+	add_child(root)
+	for point: Variant in cfg.get("points", []):
+		var xz := point as Array
+		if xz.size() < 2:
+			continue
+		var y := ground_height_at(float(xz[0]), float(xz[1]))
+		if not is_finite(y):
+			continue
+		_summit_gate_post_brazier(root, Vector3(float(xz[0]), y, float(xz[1])))
+
+
+
+## F40#19 round 3 (NEAR6-CR, flag-off): `gate_path_verge` in cloudreach_visual.json
+## clusters installed bushes, flowers and low rocks along the realm-gate path
+## edges (each entry [kind, x, z, height_m, yaw_deg], kind from
+## ROUTE_DETAIL_SCENES), breaking the uniform lawn the night judges flagged.
+func _build_gate_path_verge() -> void:
+	var cfg: Dictionary = _visual_config.get("gate_path_verge", {})
+	if cfg.get("enabled") != true:
+		return
+	var root := Node3D.new()
+	root.name = "GatePathVerge"
+	add_child(root)
+	var index := 0
+	var ref_y := float(cfg.get("ref_y", 109.0))
+	for entry: Variant in cfg.get("items", []):
+		var item := entry as Array
+		if item.size() < 5 or not ROUTE_DETAIL_SCENES.has(str(item[0])):
+			continue
+		var x := float(item[1])
+		var z := float(item[2])
+		# Seat on the surface nearest the path height: the lawn beside the path
+		# can share its cell with deeper crown/geology surfaces.
+		var y := ground_height_at(x, z, ref_y)
+		if not is_finite(y) or absf(y - ref_y) > 4.0:
+			y = ref_y
+		_install_prop_scene(root, ROUTE_DETAIL_SCENES[str(item[0])], "Verge%02d" % index,
+			Vector3(x, y - 0.05, z), float(item[3]), deg_to_rad(float(item[4])))
+		index += 1
 
 
 ## Height-normalised install of a packed scene, seated so its base sits at

@@ -1,0 +1,23 @@
+{
+ "Zj": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Cy": {
+  "anchor": false,
+  "label": "F38#20",
+  "A": "/home/user/Tetherbound/.artifacts/qj/f38_20-keep-wash/k/sides/F38_20_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/f38_20-keep-wash/k/sides/F38_20_base.jpg"
+ },
+ "Xh": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Lb": {
+  "anchor": true,
+  "A": "f36_0_npc:C2B",
+  "B": "f36_0_npc:C2A"
+ }
+}

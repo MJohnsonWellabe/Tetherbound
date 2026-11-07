@@ -47,6 +47,12 @@ func _run() -> void:
 			continue
 		var flat := box.size.y < 0.35 and maxf(box.size.x, box.size.z) > 1.0
 		rows.append([0 if flat else 1, d, "PROBE %s d=%.1f size=%s centre=%s %s" % ["FLAT" if flat else "    ", d, box.size, c, gi.get_path()]])
+	if OS.get_cmdline_user_args().has("--big"):
+		# Rank by AABB volume (largest first) so a big distant mass is not cut by the 60-row cap.
+		for r: Array in rows:
+			var m := RegEx.create_from_string("size=\\(([-0-9.e]+), ([-0-9.e]+), ([-0-9.e]+)\\)").search(r[2])
+			r[1] = -float(m.get_string(1)) * float(m.get_string(2)) * float(m.get_string(3)) if m else 0.0
+			r[0] = 0
 	rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and a[1] < b[1]))
 	for r: Array in rows.slice(0, 60):
 		print(r[2])

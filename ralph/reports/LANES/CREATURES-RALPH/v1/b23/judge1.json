@@ -1,0 +1,6 @@
+{"sets": {"Cc": {"A": {"bar_a": 6.3, "defects": {"the dark body merges with its shadow and the face barely reads": "PARTIAL"}}, "B": {"bar_a": 6.4, "defects": {"the dark body merges with its shadow and the face barely reads": "PARTIAL"}}},
+ "Wg": {"A": {"bar_a": 6.1, "defects": {"the dark body merges with its shadow and the face barely reads": "PARTIAL"}}, "B": {"bar_a": 6.0, "defects": {"the dark body merges with its shadow and the face barely reads": "PARTIAL"}}},
+ "Cn": {"A": {"bar_a": 6.0, "defects": {}}, "B": {"bar_a": 5.0, "defects": {}}},
+ "Sr": {"A": {"bar_a": 6.7, "defects": {}}, "B": {"bar_a": 6.7, "defects": {}}},
+ "Es": {"A": {"bar_a": 5.2, "defects": {}}, "B": {"bar_a": 6.6, "defects": {}}},
+ "Tw": {"A": {"bar_a": 6.4, "defects": {"the dark body merges with its shadow and the face barely reads": "PARTIAL"}}, "B": {"bar_a": 6.9, "defects": {"the dark body merges with its shadow and the face barely reads": "FIXED"}}}}}

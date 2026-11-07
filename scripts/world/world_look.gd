@@ -594,7 +594,11 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 		sun_cfg["shadow_opacity"] = float(sun_over["shadow_opacity"])
 
 	var sky_over: Dictionary = _weather.get("sky", {})
-	for key: String in ["top_colour", "horizon_colour", "ground_horizon_colour"]:
+	# tb/vis-tidewake-1104: a weather sky may also recolour the cloud deck, which
+	# fills most of an overcast frame. No shipped preset sets these keys, so they
+	# change nothing until a weather overlay (e.g. Tidewake rain_grade) does.
+	for key: String in ["top_colour", "horizon_colour", "ground_horizon_colour",
+			"cloud_lit", "cloud_shade", "cloud_base"]:
 		if sky_over.has(key):
 			sky_cfg[key] = sky_over[key]
 

@@ -38,6 +38,68 @@ Judging runs in parallel with the next capture (judges are agents, not Godot). U
 - Fix: `dress_body()` connects `tree_exiting -> undress(body)` and `tree_entered -> dress_body(body)`, so a body sheds the rim before teardown and is re-dressed if it returns while the rim is on. `creature_body.gd` is untouched.
 - Verified: backpack smoke 0 ERRORs (26/26); `test_creature_rim` 4 tests / 29 assertions, 0 failed (new exit/re-entry test). Net f48_cut_key, f18_fixture_teaching and f20_ending plus the overlay tests are running here; results will be appended below.
 
+**v1/b24 (4 Nov ~00:05 UTC 5 Nov): Cindercub value lift (6.52 -> 7.38) and the existing Voltarach/Brooktail dark lift (Voltarach 5.28 -> 6.04, Brooktail 6.18 -> 6.28) ship ON.**
+- **Flags:** `creatures_ralph_cindercub_value_lift`, plus `remake_owner1101_dark_lift` (CAUSE-REMAKES, 1 Nov, never judged until this round).
+- **Tests:** `test_remake_owner1101_finish` moves `remake_owner1101_dark_lift` from its held-OFF list into `JUDGED_ON`; `test_dark_value_lift_flags` adds Cindercub.
+- **Tally:** value lifts on dark creatures at the stage camera are now eight for eight.
+
+**v1/b23 (4 Nov ~23:05 UTC): stage value lifts ship ON for Tuskroot (6.57 -> 7.16), Thundertunnel (5.64 -> 5.78) and Stormbrush (6.31 -> 6.42).** Three flags `creatures_ralph_{tuskroot,thundertunnel,stormbrush}_value_lift`, judged in one batch (calibrate r 0.92); Ashtusk shares Tuskroot's coat. Test: `tests/test_dark_value_lift_flags.gd`. The value lift is now five for five on dark creatures at the stage camera.
+
+**v1/b22 (4 Nov ~21:50 UTC): Nightburrow value lift ships ON.** F36#56 CPU 6.01 -> 7.06 (+1.05; raw 5.8/6.1/5.8 -> 6.5/6.6/6.6; r 0.99). `creature_coat_flags.json` `creatures_ralph_nightburrow_value_lift` lifts the live partial-plates albedo (midtone gamma 0.78, saturation x1.12) and keeps its glow map. `test_nightburrow_partial_plates_flag` is updated for the lift (no assertion dropped: plates still resolve with the lift OFF). The value lift is now two for two on dark creatures at the stage camera (Mosshock +0.92, Nightburrow +1.05). It was flat at the field camera (Terrapup), where the creature is too small.
+
+**qj terralift-f38-1 (4 Nov ~21:00 UTC): Terrapup value lift is flat on F38#1 and stays OFF.** All three judges scored both sides the same (raw 6.0/5.4/6.0); at the field camera the fainted Terrapup is too small for an albedo lift to register. Judges' F38#1 lever is now contact shadows and settling the bodies into the grass (a ground-contact pass), not coat value. `creatures_ralph_terrapup_value_lift` stays OFF.
+
+**v1/b21 (4 Nov ~20:10 UTC): Mosshock value lift ships ON.** F36#54 CPU 5.63 -> 6.55 (+0.92; raw 5.4/5.6/5.3 -> 6.0/6.1/5.9; defect PRESENT -> PARTIAL; r 0.91). `creature_coat_flags.json` `creatures_ralph_mosshock_value_lift` is a value-lifted albedo (midtone gamma 0.78, saturation x1.12); only the albedo changes, since the `remake_owner1101_glow_read` coat is OFF. Test: `tests/test_mosshock_value_lift_flag.gd`. Mosshock is now above 6.0.
+
+**qj verheaddown-f38-1 (4 Nov ~19:30 UTC): Veridian faint head-down ships ON.**
+- **Result:** F38#1 creature collapse and rest, CPU 6.21 -> 6.30 (+0.09; raw 5.7/5.8/5.9 -> 5.8/5.9/5.9; no judge lower; calibrate r 0.93).
+- **Base vs flag:** the base rose from 5.91 because of the capture fix that lets fainted stills finish their clip, not this flag. F38#1 is now above 6.0.
+- **What it is:** flag `creatures_ralph_veridian_faint_headdown`, a copy of the live nat1024 GLB with its faint clip's neck tipped 40 deg and head 30 deg toward the body (`lateral_recoil.py`).
+- **Tests:** new `tests/test_veridian_faint_headdown_flag.gd`; the flag is out of HELD.
+- **Judges' remaining asks:** a contact shadow and value lift for the dark Terrapup on dark grass, and a more limp, settled Veridian.
+
+**F38#1 follow-up (4 Nov ~19:05 UTC): the splayed Veridian is its faint end pose; the rest arm is not measurable on F38#1, so it stays OFF.**
+- **Which frame:** F38#1's catalogue frames are Terrapup fainted, Terrapup resting and Veridian FAINTED. The "semi-upright, splayed" Veridian the judges flag is its faint, not its rest.
+- **Rest arm:** `creatures_visual.json` `rest_faint_settled` (OFF, `test_rest_faint_settled`) starts a faint-clip rest at the clip's settled end. It is correct game-side, but it touches none of F38#1's judged frames (Terrapup rests via the roll path), so its A/B round was identical and not judged. It stays OFF for a future rest item.
+- **Capture fix:** "fainted" stills now wait, in game time, for the faint clip to finish (commit "fainted stills wait for the faint clip to finish"; TECHNICAL 8.1).
+- **Veridian's faint still reads as a leap:** with the full clip played, its END pose is side-lying with legs straight out and antlers up. F38#1's remaining lever is new faint art for Veridian (or a faint-clip pose edit), not a capture or scene change.
+
+**qj rim075-f38-1 (4 Nov ~18:40 UTC): F38#1 re-based at CPU 5.91 on the fixed capture; creature rim at 0.75 is flat, so 1.0 stays.**
+- **Re-base:** raw 5.8/5.6/5.6 on both sides; defect PARTIAL.
+- **What the frames show now:** Terrapup's fainted and resting frames lie down (the resting frame was missing before), and Veridian's faint lies flat.
+- **Judges' remaining defects:** the fainted Terrapup is a dark smudge against dark grass, and Veridian at the resting moment still reads semi-upright or splayed.
+- **Next levers (creatures, per the coordinator's new scope):** a value lift for dark coats in the Meadows, and Veridian's rest pose. NEAR6-MS now owns the UI rows, including F38#19.
+
+**qj shinyplates2-f39-4 (4 Nov ~18:00 UTC): shiny remake textures ship ON.**
+- **Result:** F39#4 shiny creature finish, CPU 5.61 -> 6.76 (+1.15; raw 5.4/5.6/5.6 -> 6.3/6.3/6.4; defect PRESENT -> PARTIAL; calibrate r 0.98). All three judges say the violet-magenta whole-body tint is gone and the shell and plate pattern survives.
+- **Cause:** the Tidewake remakes had no shiny texture of their own, so the shiny swap fell back to the OLD mesh's extracted shiny (different UVs) and wired it into emission as well. On top of that, the shiny surface finish hue-rotated the whole body.
+- **What changed:**
+  - `creatures_visual.json` `shiny_remake_textures` maps each live remake albedo to its own repaint (`tools/art_pipeline/shiny_secondary_shift.py`: only the warm secondary band moves, to gold on Aquaryn's fins and jade on Cannonback's and Riptusk's plates).
+  - Each glow map maps to itself.
+  - A four-line hook in `creature_body._texture_for` reads the map.
+  - `creature_surface_finish.apply` stands down for a shiny already wearing one of these repaints.
+- **Tests:** `test_shiny_remake_textures` (5/48); `test_shiny`, `test_phase2_shiny_finish`, `test_realm_look_overlay` and texture policy pass.
+- **Judges' next lever:** shiny as an accent over each species' own albedo, and keep Aquaryn's pale cyan apart from the water.
+
+**qj headdown-f39-6 (4 Nov ~16:50 UTC): Aquaryn faint head-down ships ON.**
+- **Result:** F39#6 creature faint state, CPU 6.05 -> 6.24 (+0.19; raw 5.6/6.2/5.4 -> 5.6/6.6/5.5; calibrate r 0.86). Two judges see Aquaryn lie lower and more horizontal; one ties.
+- **What it is:** flag `creatures_ralph_aquaryn_faint_headdown`, a copy of the live r9 GLB with its faint clip's neck tipped down 35 deg and head 25 deg (`lateral_recoil.py --spec=neck:x:35,head:x:25 --peak=0.5 --release=1.0`). Same textures and clips.
+- **Tests:** new `tests/test_aquaryn_faint_headdown_flag.gd`.
+- **`test_creature_model_flags` change:** `test_every_owner_remake_ships_on_and_is_the_live_model` now checks each species against its LAST enabled flag (flags merge in order). A later flag must be a variant from the same remake folder. Before, it compared every flag, which fails as soon as one ON arm refines an ON remake. No assertion was dropped.
+
+**qj settle-f39-6 (4 Nov ~16:10 UTC): F39#6 re-based on the fixed capture, and NEAR6-TW's settle arm stays OFF (worse).**
+- **Re-base:** F39#6 creature faint state is CPU 5.86 on real faint frames (was 5.29 on the old capture). That +0.57 is a measurement fix (the capture tool now waits for the model before `play_faint`), not a game change.
+- **Base frames:** Ripplet and Riptusk lie on their sides; all three judges call the defect PARTIAL.
+- **Candidate:** `creature_pose_settle.tidewake_scope` 5.86 -> 5.11; it stands Ripplet up and floats Riptusk. Its third failure on this item, so it stays OFF.
+- **Remaining defect:** only Aquaryn still holds its head and chest up at faint end. Its own faint clip is the next lever.
+- **Also:** the F38#19 HUD frame now waits past the opening fade (`job.json`); the settled frame shows the real exploration HUD, including the "Get up" prompt and action legend. Every earlier F38#19 score was on a dimmed frame. A legend-fade candidate would change onboarding hints, which is a design call, so it is parked.
+
+**Coordinator, batch 16 `smoke_stormwood_spawn_slicing` (4 Nov ~15:05 UTC): not the lateral hit arm.** I ran the smoke locally on this branch, alternating the arm ON and OFF; worst main-thread gap per run:
+- **ON:** 7691 (the first Stormwood boot after a long Meadows capture, a cold cache), then 1730, 1884 and 1789 ms.
+- **OFF:** 1861 and 1682 ms.
+- **Read:** warm runs sit at about 1.7-1.9 s whichever way the flag is set, so the 2000 ms limit has under 0.3 s of headroom on its own. The arm only swaps Burrowback/Nightburrow's model (the same mesh, imported .scn and extracted textures), and the band spawn tables place those species in the Meadows bands. Your 2006 ms reads as that existing thin margin, not a load-time cost.
+- **No warm/cache change made.**
+
 **v1/b20 (4 Nov ~15:00 UTC): Mosshock and Sparkit lateral hit arms are worse and stay OFF (in HELD).** F36#54 5.95 -> 5.79; F36#70 6.20 -> 5.75. Sparkit maps at 6.20 as shipped. Mosshock needs new art: its face and elemental trait do not read at stage distance, and its faint is a "rock-like lump". Verdict in `v1/b20/`.
 
 **qj lathit4-f38-2 (4 Nov ~14:00 UTC): Burrowback/Nightburrow lateral hit ships ON.**
@@ -524,3 +586,13 @@ Not run yet. The required suite needs every remake imported, which does not fit 
 - `tools/art_pipeline/amplify_clip.py`: exaggerates a clip's rotations.
 - `tools/art_pipeline/grade_regions.py` with `data/creatures/remake_grades.json`: regional coat grade by anatomy map.
 - `tools/art_pipeline/grade_quill_bands.py`: banded quills.
+
+## v1/b25 (4 Nov): Stormraven value lift ON (5.89 -> 6.59 mapped CPU); Fulgocobra, Voltwig and Mirejaw lifts judged flat, stay OFF
+- `creatures_ralph_stormraven_value_lift` is ON, with its score in `_why_on`. The three flat arms record their result in `_judged`.
+- Test: `test_dark_value_lift_flags` (+Stormraven). Ran `test_remake_owner1101_finish`, `test_creature_coat_flags` and `test_texture_import_policy`; all pass.
+- Verdict: `v1/b25/VERDICT.md`. Albedo lift is now exhausted for near-black bodies, so the next arm is face/eye readability.
+
+## v1/b26 (5 Nov): Reedwing (6.04 -> 6.70), Paddlenewt (6.15 -> 6.70) and Shadelet (5.97 -> 6.26) value lifts ON; Bramblebun flat, OFF
+- The three gains ship ON, each with its score in `_why_on`. Riftfrill shares Paddlenewt's albedo, so the lift reaches it too.
+- Test: `test_dark_value_lift_flags`. Also ran `test_creature_coat_flags`, `test_remake_owner1101_finish` and `test_texture_import_policy`; all pass.
+- Verdict: `v1/b26/VERDICT.md`. Pose defects the judges name: Shadelet's upright faint tail, and Paddlenewt and Shadelet floating in hit-react mid.

@@ -1,0 +1,46 @@
+{
+ "F38#9 base": [
+  {
+   "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+  },
+  {
+   "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+  },
+  {
+   "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+  }
+ ],
+ "F38#9 cand": [
+  {
+   "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+  },
+  {
+   "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+  },
+  {
+   "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+  }
+ ],
+ "F38#4 base": [
+  {
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+  },
+  {
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PRESENT"
+  },
+  {
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+  }
+ ],
+ "F38#4 cand": [
+  {
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+  },
+  {
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+  },
+  {
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+  }
+ ]
+}

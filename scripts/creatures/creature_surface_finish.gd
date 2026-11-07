@@ -4,6 +4,7 @@ extends RefCounted
 ## Keep the base material for shadows, alpha/rim policy and other next passes.
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const SHADER := preload("res://shaders/creature_surface_finish.gdshader")
+const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const P2_030_CANDIDATE_PATH := "res://data/config/creature_surface_finish_p2_030_candidate.json"
 static var _materials: Dictionary = {}
 static var _copies_by_source: Dictionary = {}
@@ -24,6 +25,10 @@ static func apply(model: Node, species: String, shiny: bool, fallback: bool = fa
 	if model == null: return
 	var config: Dictionary = DATA.json_view("res://data/config/creature_surface_finishes.json")
 	if config.get("enabled") != true: return
+	# F39#4: a shiny already wearing its remake repaint (creatures_visual.json
+	# shiny_remake_textures) IS the shiny; the whole-body hue shift would undo
+	# the secondary-region repaint. Inert while that map is OFF.
+	if shiny and _wears_shiny_remake(model): return
 	var row: Dictionary = config.get("species", {}).get(species.trim_prefix("water_"), {})
 	var mode := "shiny" if shiny else "ordinary"
 	var finish: Dictionary = (row.get(mode, {}) as Dictionary).duplicate(true)
@@ -136,3 +141,23 @@ static func sync_lighting(material: BaseMaterial3D) -> void:
 	var tint := material.emission
 	var gain := material.emission_energy_multiplier * maxf(tint.r, maxf(tint.g, tint.b)) if material.emission_enabled else 0.0
 	overlay.set_shader_parameter("emission_gain", gain)
+
+
+## True when shiny_remake_textures is enabled and a mesh under `model` already
+## wears one of its repaints as its albedo.
+static func _wears_shiny_remake(model: Node) -> bool:
+	var cfg: Variant = VISUAL.config().get("shiny_remake_textures", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return false
+	var repaints: Array = ((cfg as Dictionary).get("map", {}) as Dictionary).values()
+	for node: Node in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := node as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		for surface in mesh.mesh.get_surface_count():
+			var material := mesh.get_active_material(surface) as BaseMaterial3D
+			if material != null and material.albedo_texture != null \
+					and repaints.has(material.albedo_texture.resource_path) \
+					and material.albedo_texture.resource_path.ends_with("_shiny_plates.png"):
+				return true
+	return false

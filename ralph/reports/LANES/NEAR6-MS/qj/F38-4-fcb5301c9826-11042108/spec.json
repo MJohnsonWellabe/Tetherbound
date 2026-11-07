@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F38#4",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F38-4-fcb5301c9826-11042108/k/sides/F38_4_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F38-4-fcb5301c9826-11042108/k/sides/F38_4_cand.jpg",
+  "brief": "1 in-game frame (Meadows) for one catalogue subject: map. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+  ]
+ }
+]

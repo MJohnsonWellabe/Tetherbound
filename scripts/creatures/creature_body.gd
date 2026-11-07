@@ -2244,6 +2244,10 @@ static func _texture_for(tex: Texture2D, species: String, suffix: String, kind: 
 	if tex == null:
 		return null
 	var path := tex.resource_path
+	if suffix == "shiny":
+		var remake := VISUAL.shiny_remake_texture(path)
+		if remake != "" and ResourceLoader.exists(remake):
+			return load(remake) as Texture2D
 	var candidate := ""
 	if path != "" and path.ends_with(".png"):
 		candidate = "%s_%s.png" % [path.get_basename(), suffix]

@@ -332,6 +332,31 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 		spring_length = _distance
 
 
+## P2-118 (VIS-CLOUDREACH, 4 Nov 2026; catching.json `resolve_clearance`,
+## called by combat_manager only when that block is on). Picks the first pose,
+## steeper pitches at the current yaw first and then yaw swings, whose arm has
+## at least `min_fraction` of its length free, so a shot that opens on a slope
+## starts above the ground instead of collapsing the SpringArm into the turf.
+## Returns false (pose unchanged) when no candidate clears.
+func clear_arm_pose(min_fraction: float, pitch_steps_deg: Array, yaw_steps_deg: Array) -> bool:
+	if _target == null or not is_instance_valid(_target):
+		return false
+	var pivot := _world_point(_target) + Vector3.UP * _height
+	var need := _distance * clampf(min_fraction, 0.0, 1.0)
+	for yaw_step: Variant in yaw_steps_deg:
+		var try_yaw := yaw + deg_to_rad(float(yaw_step))
+		for pitch_step: Variant in pitch_steps_deg:
+			var try_pitch := clampf(deg_to_rad(float(pitch_step)), deg_to_rad(_pitch_min), deg_to_rad(_pitch_max))
+			var dir := Basis.from_euler(Vector3(try_pitch, try_yaw, 0.0)).z
+			if _free_distance_behind(pivot, dir, _distance) >= need:
+				yaw = try_yaw
+				pitch = try_pitch
+				rotation = Vector3(pitch, yaw, 0.0)
+				spring_length = _distance
+				return true
+	return false
+
+
 ## Add a soft look-at guard to the current orbit target. CombatManager calls
 ## this immediately after targeting the player's active creature. It is a
 ## separate operation from `set_target()` so throw/catch cameras cannot inherit

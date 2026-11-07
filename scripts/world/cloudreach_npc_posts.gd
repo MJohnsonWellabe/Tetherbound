@@ -166,3 +166,62 @@ static func place_role_props(parent: Node3D, specs: Array, positions: Dictionary
 			anchor.add_child(model)
 			count += 1
 	return count
+
+
+## P2-068 / F40#9 round 3 (NEAR6-CR, 4 Nov 2026): `post_dais` (OFF until
+## judged). Judges keep reading the named NPCs as small figures behind the
+## trainer. When on, each listed post gets a low weathered-stone dais with
+## collision and the NPC stands on it, so the figure rises above the trainer's
+## shoulder line from the approach. The prompt, dialogue and save are unchanged.
+const DAIS_NAME := "NpcPostDais"
+
+
+static func dais_spec(npc_runtime: Dictionary = {}) -> Dictionary:
+	var runtime := npc_runtime if not npc_runtime.is_empty() else _read(NPC_PATH)
+	var raw: Variant = runtime.get("post_dais", {})
+	return raw if raw is Dictionary and (raw as Dictionary).get("enabled") == true else {}
+
+
+static func build_dais(parent: Node3D, positions: Dictionary, cfg: Dictionary) -> int:
+	var old := parent.get_node_or_null(NodePath(DAIS_NAME))
+	if old != null:
+		parent.remove_child(old)
+		old.queue_free()
+	if cfg.is_empty():
+		return 0
+	var root := Node3D.new()
+	root.name = DAIS_NAME
+	parent.add_child(root)
+	var height := float(cfg.get("height_m", 0.45))
+	var sink := float(cfg.get("sink_m", 0.35))
+	var radius := float(cfg.get("radius_m", 1.15))
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(str(cfg.get("colour", "#a9a491")))
+	material.roughness = 0.95
+	var count := 0
+	for id: String in cfg.get("posts", []):
+		if not positions.has(id):
+			continue
+		var p: Array = positions[id]
+		var top := Vector3(float(p[0]), float(p[1]), float(p[2]))
+		var mesh := CylinderMesh.new()
+		mesh.top_radius = radius
+		mesh.bottom_radius = radius * 1.12
+		mesh.height = height + sink
+		mesh.radial_segments = 10
+		var body := StaticBody3D.new()
+		body.name = "Dais_%s" % id
+		body.position = top - Vector3.UP * (height + sink) * 0.5
+		root.add_child(body)
+		var visual := MeshInstance3D.new()
+		visual.mesh = mesh
+		visual.material_override = material
+		body.add_child(visual)
+		var shape := CollisionShape3D.new()
+		var cylinder := CylinderShape3D.new()
+		cylinder.radius = radius
+		cylinder.height = height + sink
+		shape.shape = cylinder
+		body.add_child(shape)
+		count += 1
+	return count

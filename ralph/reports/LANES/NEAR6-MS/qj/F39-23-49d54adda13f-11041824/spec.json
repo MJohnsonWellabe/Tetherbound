@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F39#23",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F39-23-49d54adda13f-11041824/k/sides/F39_23_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F39-23-49d54adda13f-11041824/k/sides/F39_23_cand.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: catch chance HUD contrast. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+  ]
+ }
+]

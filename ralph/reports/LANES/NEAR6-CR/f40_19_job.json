@@ -1,0 +1,101 @@
+{
+ "_why": "NEAR6-CR: F40#19 (F40 matrix, Cloudreach) night piece for quick_judge via QJ_JOB; the catalogue job.json has no F40#19 stand. Defect text from VIS-CLOUDREACH mx1 judges.",
+ "biomes": {
+  "cloudreach": {
+   "items": [
+    {
+     "board_row": "F40#19",
+     "item": "F40#19-night",
+     "subject": "Cloudreach realm gate at night (F40 matrix piece 7)",
+     "defect": "At night the foreground turns into a black-green mass",
+     "impact": 0,
+     "fix_class": "scene",
+     "frames": [
+      {
+       "id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__night__clear",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 --seed=2042 --piece=7 --output=res://ralph/reports/VISUAL/phase2/cloudreach/repro/f40_19",
+       "location": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+       "time": "night",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "named_locations"
+      },
+      {
+       "id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__clear",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 --seed=2042 --piece=7 --output=res://ralph/reports/VISUAL/phase2/cloudreach/repro/f40_19",
+       "location": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+       "time": "night",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "named_locations"
+      },
+      {
+       "id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 --seed=2042 --piece=7 --output=res://ralph/reports/VISUAL/phase2/cloudreach/repro/f40_19",
+       "location": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+       "time": "night",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "named_locations"
+      },
+      {
+       "id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__night__clear",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 --seed=2042 --piece=7 --output=res://ralph/reports/VISUAL/phase2/cloudreach/repro/f40_19",
+       "location": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+       "time": "night",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "named_locations"
+      }
+     ]
+    },
+    {
+     "board_row": "F40#19-rain",
+     "item": "F40#19-rain",
+     "subject": "Cloudreach realm gate in day rain (F40 matrix piece 4)",
+     "defect": "Rain only desaturates the scene",
+     "impact": 0,
+     "fix_class": "scene",
+     "frames": [
+      {
+       "id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 --seed=2042 --piece=4 --output=res://ralph/reports/VISUAL/phase2/cloudreach/repro/f40_19",
+       "location": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+       "time": "day",
+       "phase": "rain",
+       "camera": "normal",
+       "category": "named_locations"
+      },
+      {
+       "id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 --seed=2042 --piece=4 --output=res://ralph/reports/VISUAL/phase2/cloudreach/repro/f40_19",
+       "location": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+       "time": "day",
+       "phase": "rain",
+       "camera": "normal",
+       "category": "named_locations"
+      },
+      {
+       "id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 --seed=2042 --piece=4 --output=res://ralph/reports/VISUAL/phase2/cloudreach/repro/f40_19",
+       "location": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+       "time": "day",
+       "phase": "rain",
+       "camera": "normal",
+       "category": "named_locations"
+      },
+      {
+       "id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 --seed=2042 --piece=4 --output=res://ralph/reports/VISUAL/phase2/cloudreach/repro/f40_19",
+       "location": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+       "time": "day",
+       "phase": "rain",
+       "camera": "normal",
+       "category": "named_locations"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

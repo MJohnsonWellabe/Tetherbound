@@ -147,8 +147,15 @@ static func _massif(world: Node3D, cfg: Dictionary) -> void:
 	holder.position = Vector3(float(at[0]), float(cfg.get("base_y", 60.0)), float(at[1]))
 	holder.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	holder.add_child(model)
+	# NEAR6-TW (F41#10): `near_hide_1104` (OFF) starts the silhouette beyond its
+	# own footprint: at 300 m a camera on the Crown island (Glass Sink stands)
+	# was inside the 560 m mesh and saw its inner cliff face as a pale wall.
+	var visible_from := float(cfg.get("visible_from_m", 300.0))
+	var near_hide: Variant = cfg.get("near_hide_1104", {})
+	if near_hide is Dictionary and bool((near_hide as Dictionary).get("enabled", false)):
+		visible_from = float((near_hide as Dictionary).get("visible_from_m", visible_from))
 	for visual: GeometryInstance3D in model.find_children("*", "GeometryInstance3D", true, false):
-		visual.visibility_range_begin = float(cfg.get("visible_from_m", 300.0))
+		visual.visibility_range_begin = visible_from
 		visual.visibility_range_begin_margin = float(cfg.get("fade_m", 40.0))
 		visual.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
