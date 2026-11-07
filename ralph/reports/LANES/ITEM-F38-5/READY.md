@@ -1,6 +1,24 @@
 STATUS: land
 BRANCH: tb/item-f38-5  HEAD: see `git log origin/tb/item-f38-5 -1` (the READY commit; the flag commit is the one before it)
 
+## Coordinator fix, 7 Nov (smoke_net_f48_cut_key spacing WARNING)
+
+- `origin/main` merged in (no history rewrite).
+- **Cause:** with bramblebun at x1.3 (body radius about 1.27 m, plus the 1.25 m gap), three members need about 3.5 m between them. They did not resolve inside cluster 1914's 3 m disc (`encounter_director.gd` resolve_cluster_spot).
+- **Audit:** a real Meadows boot (`godot --headless --script res://tests/probe_warrens_float.gd`, grep `cannot fit`) found 1914 as the only spacing warning across all bands. I listed every cluster holding bramblebun, duskhush, pipwing or brooktail (about 110 across band1–5), and the boot is what checks them: only 1914 fails.
+- **Search at 3 m:** the 3 m disc still warned at five centres (the original, the 2 m outward move, and +/-3 m along the spine).
+- **Fix** (`data/config/bands/band1_lower_meadows/spawns.json` order 1914, `_why_f38_5_spacing`):
+  - Centre moved 2.0 m straight away from the band1 spine (3.67 -> 5.67 m).
+  - Radius 3 -> 4 m.
+  - Nearest possible member is now 1.67 m from the spine centreline (was 0.67 m); farthest is 9.67 m.
+  - Nothing shrinks.
+- **Test change, flagged for the coordinator:** `tests/test_meadows_south_trail_pulls_0912.gd` capped this sightline group at radius <= 3.0. 1914 now has a cap of 4.0 plus a new, stricter bound: centre distance plus radius <= 10 m from the spine. 1913 (trailpup) keeps the 3.0 cap. This loosens one threshold under your order; drop that one commit if you want a different approach.
+- **Proof:**
+  - Boot: 0 `cannot fit` warnings. The only WARNING left is the engine's `instance_reset_physics_interpolation() is deprecated`.
+  - `GODOT_BIN=/usr/local/bin/godot tools/net/run_net_smoke.sh f48_cut_key --out=<absolute dir>`: rc 0, no FAILURES.
+  - Gotcha: a relative `--out` adds an `XDG_DATA_HOME is a relative path` WARNING and fails the check, so use an absolute path.
+  - Ran test_meadows_south_trail_pulls_0912, test_capture_meadows_0912_wayfinding_and_pulls, test_trail_camp_arrival_identity, test_creature_grass_and_height_candidates and test_remake_owner1101_finish: 26 tests, 626 assertions, 0 failed.
+
 Lane LANE-MS (Meadows). Row F38#5 (P2-017 normal creature scale, grow only). Board 6.19 (GPU 5.16 in item-scores).
 
 All scores are CPU (llvmpipe, Compatibility), from quick_judge with three code-blind judges, anchors pinned, mapped with calibrate.py. Verdicts are in `ralph/reports/LANES/LANE-MS/qj/`.
