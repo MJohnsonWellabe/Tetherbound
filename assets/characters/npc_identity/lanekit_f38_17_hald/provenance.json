@@ -1,0 +1,15 @@
+{
+  "lane": "LANE-KIT",
+  "row": "F38#17",
+  "date": "2026-11-07",
+  "method": "installed-cast recombination, no Meshy, no new mesh",
+  "source_model": "res://assets/characters/captain_b/captain_b_lod0.glb",
+  "source_model_sha256": "63e3a6d780e5e72e1ed96ebd7f1bfd0fca3e04b0bd3dd0ee2c3ce0a3a861d8df",
+  "atlas": "res://assets/characters/captain_b/captain_b_lod0_texture_0_vis1.png",
+  "atlas_sha256": "66a78b06023f36bf0e2946289c9c162cf73816c3ce6f315082e2531e30cc6c0c",
+  "producer": "ralph/reports/LANES/ITEM-F38-17/embed_atlas_glb.py",
+  "output_sha256": "a5179d1e3a58fd918472e7e459473517732e118bca70f8d1631784ad74d8213a",
+  "portrait": "res://assets/ui/portraits/captain_b.png",
+  "scale_check": "height 1.80 m from the rank config (art.json grunt), same as the trainer ruler",
+  "reference": "installed portrait plate assets/ui/portraits/captain_b.png (the same character)"
+}
