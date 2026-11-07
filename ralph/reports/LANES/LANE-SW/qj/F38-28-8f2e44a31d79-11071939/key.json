@@ -1,0 +1,23 @@
+{
+ "Jj": {
+  "anchor": false,
+  "label": "F38#28",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F38-28-8f2e44a31d79-11071939/k/sides/F38_28_cand.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F38-28-8f2e44a31d79-11071939/k/sides/F38_28_base.jpg"
+ },
+ "Mt": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Pu": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Cm": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}
