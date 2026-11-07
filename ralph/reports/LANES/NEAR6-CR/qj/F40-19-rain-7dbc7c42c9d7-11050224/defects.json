@@ -1,0 +1,24 @@
+{
+ "F40#19-rain cand": [
+  {
+   "Rain only desaturates the scene": "PARTIAL"
+  },
+  {
+   "Rain only desaturates the scene": "PARTIAL"
+  },
+  {
+   "Rain only desaturates the scene": "PARTIAL"
+  }
+ ],
+ "F40#19-rain base": [
+  {
+   "Rain only desaturates the scene": "PARTIAL"
+  },
+  {
+   "Rain only desaturates the scene": "PRESENT"
+  },
+  {
+   "Rain only desaturates the scene": "PRESENT"
+  }
+ ]
+}

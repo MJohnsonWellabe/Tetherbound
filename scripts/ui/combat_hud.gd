@@ -393,6 +393,9 @@ func _ready() -> void:
 		_manager.connect("staggered", _on_staggered)
 		if _manager.has_signal("impact_confirmed"):
 			_manager.connect("impact_confirmed", _on_impact_confirmed)
+		var throw_node: Variant = _manager.call("throw_aim") if _manager.has_method("throw_aim") else null
+		if throw_node is Object and (throw_node as Object).has_signal("orb_released"):
+			(throw_node as Object).connect("orb_released", _on_orb_released)
 	_show_fight(false)
 
 
@@ -2008,6 +2011,24 @@ func _catch_card_config() -> Dictionary:
 	return cfg if cfg is Dictionary and (cfg.get("enabled") == true or preview) else {}
 
 
+## F38#14 P2-060 (NEAR6-MS, hud.json `catch_card.clear_on_release_1107`, OFF):
+## a breakout card ("X broke free / Weaken it more") still holding when the
+## next orb is released sat over the new throw's whole flight and strike. When
+## on, releasing an orb ends a breakout card at once; a success card and every
+## other message keep their own hold.
+var _breakout_card_up := false
+
+
+func _on_orb_released() -> void:
+	if not _breakout_card_up:
+		return
+	var cfg := _catch_card_config()
+	var row: Variant = cfg.get("clear_on_release_1107", {})
+	if row is Dictionary and bool((row as Dictionary).get("enabled", false)):
+		_outcome_left = 0.0
+		_catch_focus_left = 0.0
+
+
 func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	var foe: RefCounted = _manager.call("enemy") if _manager != null else null
 	var name := str(foe.display_name) if foe != null else "it"
@@ -2064,6 +2085,7 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	_apply_catch_portrait(cfg, card, success, foe)
 	_apply_catch_party_row(cfg, card, success)
 	if success:
+		_breakout_card_up = false
 		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
 		_catch_focus_left = _outcome_left
 		# The verdict frame itself must already be clear: waiting for the next
@@ -2071,6 +2093,7 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 		_step_back_for_catch_focus()
 	else:
 		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
+		_breakout_card_up = true
 		# hud.json catch_card.step_back_on_break (default off): the broke-free
 		# card also owns the screen for its own hold, then every panel the
 		# step-back hid comes back exactly as it was (the fight goes on).
@@ -2384,6 +2407,7 @@ func _tick_outcome(delta: float) -> void:
 				(entry[0] as CanvasItem).visible = bool(entry[1])
 		_break_focus_restore.clear()
 	if _outcome_left <= 0.0:
+		_breakout_card_up = false
 		_outcome.text = ""
 		_hide_catch_portrait()
 		_outcome.remove_theme_stylebox_override("normal")
