@@ -1,15 +1,30 @@
 # NEAR6-MS (4 Nov 2026): running status
 
+## Round 4 (coordinator, 5 Nov 02:35): low-6 Meadows rows, cheapest judge ask first
+
+F38#7 (5.93 -> 7.00) is landing in #841. F41#3 stays parked (combat-contract call); art-blocked rows are left. None of these rows are VIS-MEADOWS's.
+
+| Board row | Item | Board | Status |
+|---|---|---|---|
+| F38#21 | P2-005 ground cover | 6.06 | In progress. `grass_field.json meadows_ground_candidate` already ON; base capturing to see whether the repeating white flowers are runtime grass tiers or baked scatter. |
+| F38#8 | P2-119 Fly carrier grip pose | 6.12 | **Flat, stays OFF; needs art.** UIPOSES's existing arm `fly_traversal.json hang_pose.body` (legs trail back, knees bent, torso leans) judged CPU 6.18 -> 6.07 (`qj/F38-8-fd74f3f3ea83-11050219/`; raw 6.2/6.0/5.6 -> 6.1/6.0/5.5, defect PRESENT on every side). The flight stand looks at the trainer from the front, so the trailing legs foreshorten and the change barely shows; all three judges ask for a new carry animation (talons on the shoulders or a harness, body angled), which is animation art. |
+| F38#31 | P2-019 alpha rarity read | 6.16 | Queued |
+| F38#25 | P2-018 shiny palette distinction | 6.21 | Queued |
+| F38#14 | P2-060 catch effect finish | 6.23 | Queued |
+| F38#36 | P2-078 dialogue speaker occlusion | 6.26 | Queued |
+| F38#11 | P2-063 shared fight tell and hit effects | 6.29 | Queued |
+| F38#27 | P2-031 settings and binding instructions | 6.32 | Queued |
+
 ## Round 3 (coordinator, 4 Nov 23:40): world items taken
 
 | Board row | Item | Board | Status |
 |---|---|---|---|
 | F38#7 | P2-058 catch aim readability | 5.82 | **Landing-ready: CPU 5.93 -> 7.00.** Cause found: the player's own creature stands between the aim camera and the target and is drawn as the fight's 0.6 occlusion dither ghost over the trainer and readout (the composition swing cannot act while the player steers the aim). Arm `combat.json camera.occlusion_fade.aim_hide_1104` (`68b2d369`, OFF): while aiming, an ally hiding the target is hidden with its contact shadow. A/B capturing. |
 | F38#26 | P2-020 creature ground contact | 5.62 | **Blocked: stand artefact (ask below).** No game change made. |
-| F38#6 | P2-033 ground pickup identity | 5.52 | Queued |
-| F41#9 | P2-046 harvest resource identity | 5.40 | Queued (parked earlier; needs a new idea) |
-| F38#32 | P2-035 camp and workshop props | 5.81 | Queued |
-| F41#15 / F41#3 | P2-083 dialogue obstruction / P2-092 actor spacing | 5.90 / 5.98 | Queued |
+| F38#6 | P2-033 ground pickup identity | 5.52 | **No scene lever; needs art.** Base on main (`.artifacts/qj/F38-6-base-11050136`, local): the three judged pickups already read as distinct objects on CPU (a large wrapped sweet on a find-stone, a pink potion in a basket, a gold sweet pile on a cloth); the recorded 'shared glowing plants, orbs or crates' look is gone. The weakest element is the rare-candy cloth, a near-white sheet that blows out in shade, and it is baked into the Meshy model (`meshy_item_visuals.json items.rare_candy.model`): a material or model change, for an art lane. The tier_candidate arm stays OFF (flat earlier: the judged frames show one item per tier). |
+| F41#9 | P2-046 harvest resource identity | 5.40 | **Parked, needs art** (two flat rounds: glowmoss reads as a white blob on CPU; judges want copper/violet-glass cues on the stormglass nodes and a solid moss model). |
+| F38#32 | P2-035 camp and workshop props | 5.81 | **No standalone lever.** The keep-clear gain (5.61 -> 5.81) is on main. In the bonfire frame a leaning log appears to pass through a barrel (band1_lower_meadows/props.json `trail_camp.props`, Barrel [340.9, 934.4] near tree-log [342.4, 933.25]); a single dressing nudge is under the 0.5 bar and lives inside a props list that an overlay cannot patch. Fold it into the next camp dressing pass. |
+| F41#15 / F41#3 | P2-083 dialogue obstruction / P2-092 actor spacing | 5.90 / 5.98 | **F41#15 needs art:** twoshot_v2 and the fight fade are ON and the speakers already read; the remaining defect is Captain Marrow's white-blown face from the model material. **F41#3 needs a combat-feel decision:** the overlap is inside the boss lunge, which contact spacing exempts by design; a lunge stop-short changes fight timing, not presentation, so it is not taken here. |
 
 ### F38#26 P2-020 ground contact: the stand never lets the grass clearing engage (for the coordinator)
 
