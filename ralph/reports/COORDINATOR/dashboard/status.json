@@ -1,5 +1,5 @@
 {
-  "updated": "12:00 PM CT Sat 7 Nov 2026",
+  "updated": "12:45 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -844,31 +844,31 @@
   "active_lanes": [
     {
       "lane": "LANE-MS · Meadows",
-      "doing": "Setup and import, then judging the built F38#12 orb-reward arm; then F38#5 grow-only scale, F38#30/#24 Warrens re-seat.",
+      "doing": "F38#5 landed in #847 (+0.78, +0.26; CPU 7.40). F38#12 orb arm judged -0.80, stays OFF. Now F38#30/#24 Warrens re-seat.",
       "criteria": "F38#12, F38#5, F38#30, F38#24, F38#6, F38#41",
       "next": "~1.5 h (import + first round)"
     },
     {
       "lane": "LANE-SW · Stormwood and arena",
-      "doing": "Setup and import, then judging the two F38#28 arena-boundary arms; then F41#1 Stormheart crown and core (Blender).",
+      "doing": "Judging the F38#28 arena-boundary arms; then F41#1 Stormheart crown and core (Blender).",
       "criteria": "F38#28, F41#1, F38#20, F41#9, F41#14, F41#3, F41#6, F41#7",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-TW · Tidewake and map",
-      "doing": "Setup and import, then the F39#25 map overlay (1024 px chart, water realm, one-device glyphs); then F39#31/#2 Veilfall (Blender).",
+      "doing": "F39#25 landed in #847 (CPU 7.38 -> 8.11, needs GPU). Now F39#31/#2 Veilfall.",
       "criteria": "F39#25, F39#31, F39#2, F39#16",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-CR · Cloudreach",
-      "doing": "Setup and import, then judging the built F40#2 stone-ground candidate; then the F40#12 missing speaker.",
+      "doing": "Judging the F40#2 stone-ground candidate; tracing the F40#12 missing speaker.",
       "criteria": "F40#2, F40#12, F40#1, F40#4, F40#19, F40#17",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-KIT · capture fixes, HUD, creatures",
-      "doing": "Setup and import, then the owner-queued capture fixes (find_frame, HUD settle, stand physics, alpha pose, catch breakout); then judging F38#19/#26/#31/#33.",
+      "doing": "Capture fixes pushed; F38#31 alpha motes +0.15, held for one cached-smoke flip, lands in batch 2. Next F38#19/#26/#33 rounds.",
       "criteria": "F38#19, F38#26, F38#31, F38#33, F38#38, F36#70, F41#8, F38#17",
       "next": "~2 h"
     }
@@ -1698,6 +1698,24 @@
       "before": 7.17,
       "after": 7.33,
       "pr": "consolidated 7 Nov"
+    },
+    {
+      "item": "F38#5 creature scale (grow only, batch 4)",
+      "before": 6.59,
+      "after": 7.37,
+      "pr": "#847 (land batch 1)"
+    },
+    {
+      "item": "F38#5 creature scale (grow only, batch 5)",
+      "before": 7.14,
+      "after": 7.4,
+      "pr": "#847 (land batch 1)"
+    },
+    {
+      "item": "F39#25 map active region",
+      "before": 7.38,
+      "after": 8.11,
+      "pr": "#847 (land batch 1)"
     }
   ]
 }
