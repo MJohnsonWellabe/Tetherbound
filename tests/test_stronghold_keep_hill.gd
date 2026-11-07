@@ -30,8 +30,29 @@ func test_keep_hill_ships_off_and_joins_only_when_on() -> void:
 	assert_true(_has_hill(STRONGHOLD.p2_003_gatehouse(cfg)), "ON: the hill joins the keep's companions")
 
 
+func test_keep_walls_ship_off_and_join_only_when_on() -> void:
+	var cfg := _cfg()
+	var walls: Dictionary = cfg.get("keep_walls_1107", {})
+	assert_false(walls.is_empty(), "keep_walls_1107 is declared")
+	assert_false(bool(walls.get("enabled", true)), "keep_walls_1107 ships OFF until judged")
+	walls.enabled = true
+	var found := false
+	for companion: Variant in STRONGHOLD.p2_003_gatehouse(cfg).get("companions", []):
+		if companion is Dictionary and str((companion as Dictionary).get("id", "")) == "keep_walls":
+			found = true
+	assert_true(found, "ON: the walls join the keep's companions")
+
+
 func test_keep_hill_stays_under_the_hall_floor_in_its_footprint() -> void:
-	var companion: Dictionary = (_cfg().get("keep_hill_1107", {}) as Dictionary).get("companion", {})
+	_check_footprint("keep_hill_1107")
+
+
+func test_keep_walls_stay_out_of_the_hall_footprint() -> void:
+	_check_footprint("keep_walls_1107")
+
+
+func _check_footprint(key: String) -> void:
+	var companion: Dictionary = (_cfg().get(key, {}) as Dictionary).get("companion", {})
 	var scene := load(str(companion.get("path", ""))) as PackedScene
 	assert_true(scene != null, "hill model loads")
 	if scene == null:
