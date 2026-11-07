@@ -106,13 +106,14 @@ func test_f38_9_satchel_focus_ships_on() -> void:
 
 
 ## F38#4 P2-002 round 2: the inked chart grid and north mark ship ON (judged
-## gain), Meadows only, and reveal no terrain (drawn as lines, never a texture).
+## gain), on Meadows and Tidewake, and reveal no terrain (drawn as lines, never a texture).
 func test_f38_4_chart_grid_ships_on() -> void:
 	var grid: Dictionary = _json("res://data/config/map.json").fog_veil.chart_grid_1104
 	assert_true(bool(grid.enabled), "chart grid ships ON (judged gain)")
 	assert_true(str(grid._why_on).contains("CPU 6.81 -> 6.93"), "records its score")
 	assert_eq(str(grid.scope), "client_presentation", "declares its scope")
-	assert_eq(grid.realms, ["meadows"], "Meadows only")
+	# F39#25 r25b (LANE-TW, 7 Nov): the grid also ships on Tidewake (judged gain).
+	assert_eq(grid.realms, ["meadows", "water"], "Meadows and Tidewake")
 	assert_between(float(grid.alpha), 0.05, 0.4, "a faint ink, not a cage over the map")
 	var ink := Color(str(grid.ink))
 	assert_false(ink.r > 0.5 and ink.g < 0.3 and ink.b < 0.3, "no red or oxblood ink")

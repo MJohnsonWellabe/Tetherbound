@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F39#25",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F39-25-a46982c0a52b-11071809/k/sides/F39_25_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F39-25-a46982c0a52b-11071809/k/sides/F39_25_cand.jpg",
+  "brief": "1 in-game frame (Tidewake) for one catalogue subject: map active region. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab"
+  ]
+ }
+]

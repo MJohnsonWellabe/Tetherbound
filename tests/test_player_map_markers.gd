@@ -92,3 +92,16 @@ func test_map_draw_path_and_controller_legend_expose_both_new_verbs() -> void:
 		"personal pins must be drawn as a distinct full-map marker")
 	assert_true(source.contains("A  Place marker") and source.contains("X  Remove marker"),
 		"the handheld map must say both context-scoped controller verbs on screen")
+
+
+## F39#25 P2-032 (LANE-TW, 7 Nov): the Tidewake parchment fog and the one-device
+## keyboard hint row ship ON (judged gain, CPU 7.38 -> 8.11).
+func test_f39_25_tidewake_chart_and_keyboard_row_ship_on() -> void:
+	var veil: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/map.json")).fog_veil
+	assert_true(bool(veil.keyboard_hint_one_device), "the keyboard hint row uses one device's prompts")
+	assert_true(str(veil._why_on_keyboard_hint_1107).contains("7.38 -> 8.11"), "records its score")
+	assert_eq(veil.cloud_fog.tones.water, ["#8c8266", "#cfc3a0"], "Tidewake fog is parchment")
+	assert_true((veil.chart_grid_1104.realms as Array).has("water"), "Tidewake draws the survey grid")
+	var source := FileAccess.get_file_as_string("res://scripts/ui/tab_map.gd")
+	assert_true(source.contains("_keyboard_hint_one_device and not INPUT_GLYPH.using_gamepad()"),
+		"the keyboard branch no longer prints pad letters")
