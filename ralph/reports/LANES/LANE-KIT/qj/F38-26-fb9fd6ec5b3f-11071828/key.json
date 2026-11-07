@@ -1,0 +1,23 @@
+{
+ "Cj": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Nu": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Lk": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Cp": {
+  "anchor": false,
+  "label": "F38#26",
+  "A": ".artifacts/qj/F38-26-fb9fd6ec5b3f-11071828/k/sides/F38_26_cand.jpg",
+  "B": ".artifacts/qj/F38-26-fb9fd6ec5b3f-11071828/k/sides/F38_26_base.jpg"
+ }
+}
