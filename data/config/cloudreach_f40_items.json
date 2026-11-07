@@ -1267,7 +1267,7 @@
     {
       "enabled": false,
       "preview_arg": "--cloudreach-f40-strata-terrace-candidate",
-      "_why": "F40#1 P2-021 (LANE-CR, 7 Nov 2026; GPU 5.29): judges read the shrine and gate stands as a flat uniform lawn with isolated block mesas and ask for layered pale-stone shelves and terrace edges at the stands (VIS-CLOUDREACH parked the row as new art). New Blender mesh cloudreach_strata_terrace (three stepped, chipped tiers of pale banded strata with a moss lip, 11 x 5.4 x 2.6 m native; script, textures and scale check in ralph/reports/LANES/ITEM-F40-1/blender/) placed as three asymmetric terraces (near left, mid right, far left) on the four P2-021 stands, sunk 0.6 m so the lowest stratum seats in the lawn. The shared stand pattern is otherwise unchanged (stone-trail candidate's list plus these three items). Visual only, no collision, no route change. OFF until judged.",
+      "_why": "F40#1 P2-021 (LANE-CR, 7 Nov 2026; GPU 5.29): judges read the shrine and gate stands as a flat uniform lawn with isolated block mesas and ask for layered pale-stone shelves and terrace edges at the stands (VIS-CLOUDREACH parked the row as new art). New Blender mesh cloudreach_strata_terrace (three stepped, chipped tiers of pale banded strata with a moss lip, 11 x 5.4 x 2.6 m native; script, textures and scale check in ralph/reports/LANES/ITEM-F40-1/blender/) placed as three asymmetric terraces (near left, mid right, far left) on the three scored P2-021 stands (shrine_walk_b, heartstone_approach, gate_landmark_approach; shrine_walk_a left out because its mid terrace landed 2.8 m from the heartstone camera), sunk 0.6 m so the lowest stratum seats in the lawn; r1b textures value-matched to the installed cliffs (the first build read near-white). The shared stand pattern is otherwise unchanged (stone-trail candidate's list plus these three items). Visual only, no collision, no route change. OFF until judged.",
       "overlay": {
         "stand_pattern": [
           {
@@ -1601,7 +1601,6 @@
             "yaw": 95,
             "rise_m": -0.6,
             "only_stands": [
-              "shrine_walk_a",
               "shrine_walk_b",
               "heartstone_approach",
               "gate_landmark_approach"
@@ -1617,7 +1616,6 @@
             "scale_min": 0.9,
             "scale_max": 1.15,
             "only_stands": [
-              "shrine_walk_a",
               "shrine_walk_b",
               "heartstone_approach",
               "gate_landmark_approach"
@@ -1631,7 +1629,6 @@
             "yaw": 70,
             "rise_m": -0.6,
             "only_stands": [
-              "shrine_walk_a",
               "shrine_walk_b",
               "heartstone_approach",
               "gate_landmark_approach"

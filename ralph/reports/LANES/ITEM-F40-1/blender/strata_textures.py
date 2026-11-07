@@ -37,11 +37,13 @@ for cx in rng.integers(0, N, 9):
     w = (np.abs(((np.arange(N) - cx + N // 2) % N) - N // 2) < 2)
     mask = (fbm(1, 3, 2, seed=int(cx))[:, :] > 0.55) & w[None, :]
     img[mask] *= 0.72
+# r1b: value matched to the installed Cloudreach cliffs (first build read near-white in engine)
+img = img * 0.74
 Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)).save(sys.argv[1] + "/strata_side_Color.png")
 # tops: moss-green turf with pale stone showing through
 m = fbm(3, 3, seed=11)[..., None]
-moss = np.array([128, 156, 86]) * (0.85 + 0.3 * fbm(8, 8, seed=5)[..., None])
-stone = np.array([222, 216, 198]) * (0.85 + 0.25 * grain)
-top = np.where(m > 0.62, stone, moss)
+moss = np.array([92, 120, 58]) * (0.85 + 0.3 * fbm(8, 8, seed=5)[..., None])
+stone = np.array([176, 170, 152]) * (0.85 + 0.25 * grain)
+top = np.where(m > 0.70, stone, moss)
 Image.fromarray(np.clip(top, 0, 255).astype(np.uint8)).save(sys.argv[1] + "/strata_top_Color.png")
 print("ok")
