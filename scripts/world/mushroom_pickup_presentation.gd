@@ -76,7 +76,11 @@ static func _swap_silhouette(mesh: MeshInstance3D, item_id: String) -> void:
 		model.free()
 		return
 	var target := mesh.mesh.get_aabb()
-	var factor := target.size.y * float(spec.get("height_scale", 1.0)) / box.size.y
+	# Fit the larger of height and footprint, so a wide shelf fungus does not
+	# outgrow the pickup it replaces.
+	var target_extent := maxf(target.size.y, maxf(target.size.x, target.size.z))
+	var box_extent := maxf(box.size.y, maxf(box.size.x, box.size.z))
+	var factor := target_extent * float(spec.get("height_scale", 1.0)) / box_extent
 	var wrapper := Node3D.new()
 	wrapper.name = "MushroomVariant"
 	wrapper.transform = mesh.transform
