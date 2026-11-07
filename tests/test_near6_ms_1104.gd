@@ -134,3 +134,22 @@ func test_f38_7_aim_hide_ships_on() -> void:
 	assert_true(manager.contains("and is_aiming() and"), "only while a catch is being aimed")
 	assert_true(manager.contains("func _clear_ally_fade() -> void:\n\t_set_ally_aim_hidden(null, false)"),
 		"clearing the fade always restores a hidden ally")
+
+
+## F38#21 P2-005: Meadows flower drifts and stone breaks (judged gain), merged
+## into the ON ground candidate.
+func test_f38_21_flower_drifts_ship_on() -> void:
+	var cand: Dictionary = _json("res://data/config/grass_field.json").meadows_ground_candidate
+	assert_true(bool(cand.enabled), "the Meadows ground candidate stays ON")
+	assert_true(str(cand._why_drifts_1105).contains("CPU 6.11 -> 6.23"), "records its score")
+	var lilac: Dictionary = cand.tiers.flowers
+	var gold: Dictionary = cand.tiers.flowers_gold
+	assert_true(float(lilac.patch_start) < float(lilac.patch_full), "lilac drifts have a soft edge")
+	assert_true(float(gold.patch_start) < float(gold.patch_full), "gold drifts have a soft edge")
+	assert_true(float(lilac.drift_contrast) > 1.0 and float(gold.drift_contrast) > 1.0, "flowers cluster into drifts")
+	var stones: Dictionary = cand.merge.stones
+	assert_true(bool(stones.enabled), "stone breaks stay on")
+	assert_between(float(stones.stone_size), 0.1, 0.3, "field stones, not boulders")
+	var shipped: Dictionary = _json("res://data/config/grass_field.json").stones
+	for key: String in shipped:
+		assert_true(stones.has(key), "the candidate stones block is complete (%s)" % key)

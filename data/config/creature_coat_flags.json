@@ -885,6 +885,34 @@
       "coats": {
         "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_Image_0_value_lift.png"}
       }
+    },
+    "creatures_ralph_riverdrake_value_lift": {
+      "_why": "Stage value lift for Riverdrake (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/riverdrake/candidate_owner1101/models/creature_riverdrake_owner1101_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_staticub_value_lift": {
+      "_why": "Stage value lift for Staticub (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_sirenseal_value_lift": {
+      "_why": "Stage value lift for Sirenseal (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/sirenseal/candidate_r10/models/creature_sirenseal_r10_Image_0_value_lift.png"}
+      }
+    },
+    "creatures_ralph_riptusk_value_lift": {
+      "_why": "Stage value lift for Riptusk (next tier of dark live remake albedos without an albedo arm). Same recipe as v1/b21-b26: a value-lifted copy of the live albedo (midtone gamma 0.78, saturation x1.12). Only the albedo changes. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101_Image_0_value_lift.png"}
+      }
     }
   }
 }

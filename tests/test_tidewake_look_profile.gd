@@ -20,7 +20,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
 	assert_true(bool(raw.enabled), "the judged Tidewake look ships on")
 	var off: Array = raw.get("sections_off", [])
-	for section: String in ["current_flow_visual", "night_creature_floor",
+	for section: String in ["night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
 			"veilfall_hero_candidate",
 			"veilfall_facade_candidate", "forward_plus_candidate",
@@ -114,7 +114,8 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	assert_true(str(raw.get("_why_current_flow_on", "")).contains("5.18"), "the current flow's mapped score is recorded in the config")
 	var base := {"untouched": true}
 	assert_ne(PROFILE.overlay(base, "current_flow", config), base, "the current flow reaches play")
-	assert_eq(PROFILE.overlay(base, "current_flow_visual", config), base, "the unjudged current visual stays out of play")
+	# VIS-TIDEWAKE qj/f16 (5 Nov): current_flow_visual judged 6.63 -> 6.75 and ships in play.
+	assert_ne(PROFILE.overlay(base, "current_flow_visual", config), base, "the judged current visual reaches play")
 	assert_true(bool(config.enabled))
 
 
@@ -222,3 +223,10 @@ func test_destination_landmarks_ship_with_their_score() -> void:
 	assert_eq(garden_walls, 4, "two stepped terrace walls join the two collided ones")
 	assert_true(str(raw.get("_why_d3_landmarks", "")).contains("5.93"))
 	assert_false("landmark_models" in raw.get("sections_off", []), "landmark models are in play")
+
+
+func test_current_flow_visual_ships_with_its_score() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	assert_false("current_flow_visual" in raw.sections_off, "the current_flow_visual section is in play")
+	assert_false(bool(raw.current_flow_visual.enabled), "in play it turns the grouped current foam off")
+	assert_true(str(raw.get("_why_current_flow_visual_on", "")).contains("6.75"))

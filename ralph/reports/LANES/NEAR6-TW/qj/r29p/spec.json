@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F39#29",
+  "a": ".artifacts/qj/r29p/k/sides/F39_29_base.jpg",
+  "b": ".artifacts/qj/r29p/k/sides/F39_29_cand.jpg",
+  "brief": "3 in-game frames (Tidewake) for one catalogue subject: dialogue speaker visibility. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Several named conversations show no identifiable speaker near the dialogue panel"
+  ]
+ }
+]

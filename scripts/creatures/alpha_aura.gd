@@ -48,6 +48,23 @@ const ORBIT_PERIOD := 7.0
 ## round rather than as a polygon.
 const MOTE_SEGMENTS := 8
 
+## F38#31 P2-019 (NEAR6-MS, creatures_visual.json `alpha_presence_1105`,
+## OFF): judges read alphas as "a modest size increase without a distinct
+## staged presence"; the seven small motes vanish against bright grass. When
+## on, the ring carries `motes` motes at `mote_scale` of the body radius and
+## `alpha` peak opacity (same colour, rise and orbit). Read once.
+const PRESENCE_CONFIG := "res://data/config/creatures_visual.json"
+static var _presence_cfg: Variant = null
+
+
+static func presence() -> Dictionary:
+	if _presence_cfg == null:
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(PRESENCE_CONFIG))
+		var row: Variant = raw.get("alpha_presence_1105", {}) if raw is Dictionary else {}
+		_presence_cfg = row if row is Dictionary and bool((row as Dictionary).get("enabled", false)) else {}
+	return _presence_cfg
+
+
 var _colour: Color = Color("#ffd479")
 var _radius: float = 0.6
 var _height: float = 1.0
@@ -124,10 +141,14 @@ func _physics_process(delta: float) -> void:
 
 	_mesh.clear_surfaces()
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
-	for index in MOTES:
+	var boost := presence()
+	var motes: int = clampi(int(boost.get("motes", MOTES)), 1, 24)
+	var mote_scale: float = clampf(float(boost.get("mote_scale", 0.11)), 0.05, 0.3)
+	var peak: float = clampf(float(boost.get("alpha", 0.7)), 0.1, 1.0)
+	for index in motes:
 		# Each mote gets its own phase so the ring never pulses in unison,
 		# which is what would make it read as a telegraph.
-		var offset: float = float(index) / float(MOTES)
+		var offset: float = float(index) / float(motes)
 		var rise: float = fmod(_life / RISE_PERIOD + offset, 1.0)
 		var angle: float = TAU * (offset + _life / ORBIT_PERIOD)
 		# Fade in off the ground and out at the top, so motes appear and vanish
@@ -139,8 +160,8 @@ func _physics_process(delta: float) -> void:
 		var centre := Vector3(cos(angle) * _radius * swell,
 			_height * (0.08 + rise * 0.95),
 			sin(angle) * _radius * swell)
-		var size: float = _radius * 0.11 * (0.6 + 0.4 * fade)
-		var colour := Color(_colour.r, _colour.g, _colour.b, fade * 0.7)
+		var size: float = _radius * mote_scale * (0.6 + 0.4 * fade)
+		var colour := Color(_colour.r, _colour.g, _colour.b, fade * peak)
 		_disc(centre, right * size, up * size, colour)
 	_mesh.surface_end()
 
