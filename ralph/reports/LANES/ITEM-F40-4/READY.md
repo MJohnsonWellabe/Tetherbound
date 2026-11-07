@@ -13,7 +13,7 @@ Row F40#4 P2-023. Live: 6.27 CPU (NEAR6-CR `shelf_edge_fringe` ON). This round's
   - Textures are on the VRAM import policy (check PASS). `scripts/world/cloudreach_settlement_life.gd` PROPS gains `strata_cliff`.
 
 ## Round
-- **Arm:** `cloudreach_f40_items.json` candidates[13] `--cloudreach-f40-strata-cliff-candidate` swaps the four shared stand-pattern `cliff_shelf` modules (the white mesas in the Sky Shrine and Heartstone frames) for the new module.
+- **Arm:** `cloudreach_f40_items.json` candidates[15] `--cloudreach-f40-strata-cliff-candidate` swaps the four shared stand-pattern `cliff_shelf` modules (the white mesas in the Sky Shrine and Heartstone frames) for the new module.
 - **r1a (self-look, not judged):** at the shelf's 18 m height the module (wide and low, unlike the 31 m-tall shelf block, which is sunk 9–12 m) grew to about 49 x 23 m and swallowed both cameras.
 - **r1 `qj/F40-4-r1`:** placed at its visible height (6.5 m and 8 m, sunk 0.5 m).
   - Mapped 7.19 -> **5.98 (-1.21, worse)**. Raw base 5.9 / 6.3 / 6.1, candidate 4.9 / 5.6 / 5.1. RMSE 0.567.
@@ -24,7 +24,7 @@ The procedural stacked-strata family has now failed on F40#1 (flat) and on F40#4
 
 ## Flags
 - ON: none.
-- OFF, left in the tree: candidates[13] (strata cliff).
+- OFF, left in the tree: candidates[15] (strata cliff).
 
 ## Tests
 - `run_tests.gd --only=test_texture_import_policy`: 2 tests, 0 failed (merged tree).
@@ -37,8 +37,7 @@ The procedural stacked-strata family has now failed on F40#1 (flat) and on F40#4
 - `ralph/reports/LANES/ITEM-F40-4/**`
 
 ## Landing note
-- origin/main (#851) is merged in.
-- tb/item-f40-1 also appends two OFF candidates after index 12, and also adds PROPS keys on the same line. When both land, keep every candidate entry and every PROPS key; all are OFF.
+origin/main (#853, with tb/item-f40-1 landed) merged in. The strata cliff moved from candidates[13] (the index used on the pre-merge tree in `qj/F40-4-r1`) to [15], after F40#1's terrace [13] and landform [14]. All are OFF. PROPS keeps `strata_terrace`, `strata_landform` and `strata_cliff`.
 
 ## Judges' remaining asks
 - Rounded, eroded stratified rock masses, not stacked slabs.
