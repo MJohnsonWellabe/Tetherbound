@@ -1,0 +1,12 @@
+{
+  "asset": "cloudreach_strata_landform",
+  "row": "F40#1 P2-021",
+  "lane": "LANE-CR",
+  "date": "2026-11-07",
+  "source": "Blender 4.2.3 procedural mesh (new art, no Meshy, no purchased or third-party mesh)",
+  "script": "ralph/reports/LANES/ITEM-F40-1/blender/strata_terrace.py (args: <out.glb> <texture_dir> 11 14 r2)",
+  "textures": "ralph/reports/LANES/ITEM-F40-1/blender/strata_textures.py (procedural numpy; strata_side_Color.png pale banded strata, strata_top_r2_Color.png lawn-matched turf tops), embedded in the GLB and extracted by Godot",
+  "reference": "Drafted from the judges' ask (layered pale-stone shelves and terrace edges, Cloudreach board 'pale stratified stone') and the installed cloudreach_strata_spire_cluster palette",
+  "scale_check": "ralph/reports/LANES/ITEM-F40-1/blender/_strata_landform_scale_check.jpg (1.80 m trainer cylinder beside the 16.1 x 9.4 x 5.7 m native mesh); placed at 5-6 m height",
+  "flag": "data/config/cloudreach_f40_items.json candidates[13] --cloudreach-f40-strata-landform-candidate, OFF until judged"
+}
