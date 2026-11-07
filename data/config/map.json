@@ -60,6 +60,8 @@
         "cloudreach",
         "stormwood"
       ],
+      "_why_long_side_px_by_realm": "F39#25 P2-032 (LANE-TW, 7 Nov 2026): per-realm chart resolution override (tab_map.gd). Empty until judged; the candidate sets water to 1024.",
+      "long_side_px_by_realm": {},
       "_why_realms": "Meadows keeps map_baker's 8 m/px bake (paths, aprons, slope shade): a whole-corridor height survey at chart resolution was blurrier at 16x/32x."
     },
     "chart_grid_1104": {
@@ -108,6 +110,8 @@
     "outside_colour": "#16242b",
     "ui_font_labels": true,
     "glyph_controls": true,
+    "_why_keyboard_hint_one_device": "F39#25 P2-032 (LANE-TW, 7 Nov 2026), scope client_presentation: the keyboard hint row showed the pad's A/X beside keyboard [Minus]/[Equal]; on, every verb shows its keyboard or mouse prompt. tab_map.gd _refresh_controls_label. OFF until judged.",
+    "keyboard_hint_one_device": false,
     "_why_enabled_r2": "ON by coordinator decision for the 22 Oct wind-down; P2-002 mapped 6.91 (sets 7.04/6.77) vs control 4.95 (round 2, CPU llvmpipe Low), below the 7.5 bar. Unsurveyed cells stay opaque (OW3)."
   },
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
