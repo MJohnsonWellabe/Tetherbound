@@ -4,6 +4,5 @@ for sp in shadelet paddlenewt glimmermoth tempestwing; do
   dst=${src%.glb}_grounded.glb; cp "$src" "$dst"
   python3 tools/art_pipeline/ground_clip.py "$dst" hit --settle
 done
-for sp in glimmermoth tempestwing; do
-  python3 tools/art_pipeline/ground_clip.py assets/creatures/tetherbound/$sp/candidate_owner1101/models/creature_${sp}_owner1101_grounded.glb faint
-done
+# r1 also grounded the winged species' faint on the lowest vertex: the downward wing tip then
+# held the body ~1.5 m in the air (worse than the clip), so faint is left unchanged.
