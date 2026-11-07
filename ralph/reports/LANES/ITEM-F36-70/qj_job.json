@@ -1,0 +1,55 @@
+{
+ "biomes": {
+  "stormwood": {
+   "items": [
+    {
+     "board_row": "F36#70",
+     "item": "F36#70",
+     "subject": "Sparkit (storm fennec) model and poses",
+     "defect": "Spindly stick legs: the legs read far too thin for the body",
+     "impact": 10.0,
+     "fix_class": "new_art",
+     "catalog_status": "open",
+     "frames": [
+      {
+       "id": "stormwood__sparkit__idle",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_creatures.gd -- --biome=stormwood --only=sparkit --seed=2042 --output=res://ralph/reports/VISUAL/phase2/stormwood/creature_repro_sparkit",
+       "location": "capture_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "creatures"
+      },
+      {
+       "id": "stormwood__sparkit__moving",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_creatures.gd -- --biome=stormwood --only=sparkit --seed=2042 --output=res://ralph/reports/VISUAL/phase2/stormwood/creature_repro_sparkit",
+       "location": "capture_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "creatures"
+      },
+      {
+       "id": "stormwood__sparkit__attacking",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_creatures.gd -- --biome=stormwood --only=sparkit --seed=2042 --output=res://ralph/reports/VISUAL/phase2/stormwood/creature_repro_sparkit",
+       "location": "capture_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "creatures"
+      },
+      {
+       "id": "stormwood__sparkit__hurt",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_creatures.gd -- --biome=stormwood --only=sparkit --seed=2042 --output=res://ralph/reports/VISUAL/phase2/stormwood/creature_repro_sparkit",
+       "location": "capture_stage",
+       "time": "day",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "creatures"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
