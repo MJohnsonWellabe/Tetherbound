@@ -37,6 +37,9 @@ const PROPS := {
 	"rock_mid": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
 	"fence": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf",
 	"strata_outcrop": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb",
+	# F40#1 (LANE-CR, 7 Nov): Blender stepped pale-stone strata terrace (ralph/reports/LANES/ITEM-F40-1/blender/).
+	"strata_terrace": "res://assets/props/lanecr-1107/cloudreach_strata_terrace/cloudreach_strata_terrace.glb",
+	"strata_landform": "res://assets/props/lanecr-1107/cloudreach_strata_landform/cloudreach_strata_landform.glb",
 	"cliff_shelf": "res://assets/props/meshy-1020/cloudreach_cliff_shelf_edge/cloudreach_cliff_shelf_edge.glb",
 	"strata_ledge": "res://assets/props/meshy-1024/cloudreach_stratified_overhang/cloudreach_stratified_overhang.glb",
 }
