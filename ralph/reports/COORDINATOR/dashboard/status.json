@@ -1,5 +1,5 @@
 {
-  "updated": "1:15 PM CT Sat 7 Nov 2026",
+  "updated": "1:35 PM CT Sat 7 Nov 2026",
   "headline": [
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
@@ -1703,7 +1703,7 @@
       "item": "F39#25 map active region",
       "before": 7.38,
       "after": 8.11,
-      "pr": "#847 (land batch 1)"
+      "pr": "#847 (merged 7 Nov)"
     },
     {
       "item": "F38#31 alpha rarity read (12 gold motes)",
