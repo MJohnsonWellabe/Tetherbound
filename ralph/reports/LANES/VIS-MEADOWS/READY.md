@@ -1,5 +1,44 @@
 # VIS-MEADOWS (4 Nov 2026): running status
 
+## HANDOFF 7 Nov
+
+Lane VIS-MEADOWS, branch `tb/vis-meadows-1104`. All scores are CPU (llvmpipe, Compatibility) quick_judge rounds with three code-blind judges; nothing is GPU-confirmed. Verdicts are in `qj/<round>/`, and every ON flag has a test in `tests/test_vis_meadows_1104_on.gd` (F38#38's is in `tests/test_uiposes_craft_r4.gd`).
+
+**Shipped this lane (board id, before -> after, flag, commit):**
+- F38#13 catch camera, 6.22 -> 7.19; F38#33 catch result, 6.02 -> 6.88: `catching.json framed_camera.r2`, `camfx.json catch_orb`, `hud.json catch_card` (35a2eb684).
+- F38#15 mount scale, 6.21 -> 7.08: `fly_traversal.json` galecrest/galewisp `presentation_scale_enabled` (0bfad7fd8).
+- F38#20 stronghold: yard fill 4.71 -> 5.73 (df3e7ae2f); keep through fog 5.22 -> 5.70 (523272fdc); courtyard centre 5.51 -> 5.75 (d038e5211); crag 5.87 -> 6.05 (bfd4f96fb); fires 5.87 -> 6.42 (d5ae55f68); foreground 5.36 -> 6.08 (d522f974d); door torches 6.50 -> 6.80 (c313d5485); pylons 5.31 -> 5.83 (35efb1fb3); bigger keep 6.08 -> 6.20 (d97e419bf). Flags are in `stronghold.json` and band5 `props.json`.
+- F38#22 market folk, 6.44 -> 6.62 (36f20ff37).
+- F38#41 natural quarry faces, grey stone, sunk floor tiles, raw 5.80 -> 6.43: `old_quarry.json worked_cut.natural_faces` and `building_prefabs.json quarry_foundation` (6eac744b0).
+- F38#37 quarry east face moved off the foreman dialogue camera, 5.31 -> 6.09: `old_quarry.json` WorkedFaceEast `at` (5f7f18b39).
+- F38#23 relay arch lift, 5.90 -> 6.04: `tether_relay.json site.support_finish.variants.arch` (97fab1357). Smaller cobbles, 6.73 -> 6.93: `ground_pad.surface_candidate.r2` (ab1a8347c).
+- F38#33 result clears reticle, 6.32 -> 7.11: `hud.json catch_card.result_clears_reticle` (d881c0b03). The catch capture is nondeterministic; see the caveat in its `_why`.
+- F38#38 craft hint contrast, 7.17 -> 7.33: `craft_presentation.json readable_r4` (this commit; weak calibration, r 0.59).
+
+**Open items (current score; judges' last ask; next concrete idea):**
+- F38#38 7.33: the solid orange Missing badges are loud. Next: make the r4 Missing chip a quiet text or small chip and add a teal selection accent.
+- F38#33 7.11: the persistent fight cards stay up under a broke-free result. Next: `hud.json catch_card.step_back_on_break` (built, OFF), which needs the capture fix below to be judged.
+- F38#23 6.93: midground props, dirt wear edges, the dusk grade. Props on the fight axis are refused (coordinator); next, a dusk grade or ground wear-band tweak.
+- F38#17 6.70: Solene and Hald share one pink model, and their portraits don't match it (new art).
+- F38#12 (6.62) and F38#5 (6.19): arms `meadows_orb_reward_presentation.json enabled` and `creature_scale_flags.json creatures_f36_taller_than_trainer_4` (grow only) are ready, never judged (wind-down). F38#34 and F38#22 (mill wheel, banked stream) not started.
+
+**Parked (reason):**
+- F38#24 mountains and F38#30 Warrens: the frames are the floating Burrow Warrens (owner or terrain decision). The cause lane's `buried_stand_guard` was flat or worse.
+- F38#41 boulders and camera-clipping wall tops: the boulders need new art or a material hook. The second ruin has a slab collider, so it can't move (coordinator).
+- F38#20 remaining: a keep on a hill with a palisade, real fire (new art). Night windows and the curtain wall were flat.
+- F38#17 courtyard grade and speaker key light: flat.
+- F38#35 post stances: flat at 6.57.
+- F38#15 hang pose: flat.
+
+**OFF arms left in the tree:** `old_quarry.json conduit_head.core` (hook); `tether_relay.gd` apparatus `self_lift`; `hud.json catch_card.step_back_on_break`; `stronghold.json p2_087_grade_candidate`; band3 `props.json relay_station.candidate_props`; `tether_relay.json ground_pad.p2_013_candidate`; `capture_stands.json buried_stand_guard` (cause lane); band5 `vm_stronghold_curtain`; `meadows_orb_reward_presentation.json`; `creature_scale_flags.json creatures_f36_taller_than_trainer_4`.
+
+**Known tool or capture bugs:**
+- `phase2_capture_catch.gd`: the outcome is not deterministic run to run (caught versus broke free at the verdict frames). `06-breakout` is shot after the broke-free card has already expired: `_outcome_left` is -0.08 s at the shot, likely because paused CPU shake renders feed wall time into the HUD's `_process` delta. Fix: hold the HUD timer across the paused captures, or shoot on the resolve frame.
+- `phase2_capture_catch.gd` refuses outputs outside `ralph/reports/VISUAL/phase2/meadows/`.
+- `catalogue_survey --subset=band2_stone_and_root_0` matches nothing; use `--subset=quarry`.
+- New inert probe: `tests/probe_camera_pixel.gd` names the mesh under any pixel of a captured frame from its manifest camera. It found the F38#23 arch, the F38#37 rock and the F38#41 ruin walls.
+
+
 Lane: tb/vis-meadows-1104 (from origin/main 98879e2e1). Scope: the Meadows F38 items in the coordinator brief (briefs-1104/vis_meadows.md), excluding the arms creatures-ralph has in flight (F38#24 ridge, F38#19 HUD, creature rim for F38#1/#2/#26).
 
 Yardstick: CPU llvmpipe Low/Compatibility 1280x720, base and candidate in the same run on the same stands; tools/visual_judge (JUDGE_PROMPT verbatim, anchor_tiles --pairs 3, three code-blind judges, calibrate.py). Recorded as "CPU <base> -> <cand>". Owner rule 4 Nov: any judged gain ships ON; flat or worse stays OFF.
