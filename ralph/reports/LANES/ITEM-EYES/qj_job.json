@@ -13,7 +13,7 @@
      "frames": [
       {
        "id": "fulgocobra-idle-050",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=fulgocobra --roles=idle,hit --out=res://.artifacts/eyestage/fulgocobra",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=fulgocobra --roles=idle,hit --whole-body --out=res://.artifacts/eyestage/fulgocobra",
        "location": "neutral_stage",
        "time": "day",
        "phase": "clear",
@@ -22,7 +22,7 @@
       },
       {
        "id": "fulgocobra-hit-100",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=fulgocobra --roles=idle,hit --out=res://.artifacts/eyestage/fulgocobra",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=fulgocobra --roles=idle,hit --whole-body --out=res://.artifacts/eyestage/fulgocobra",
        "location": "neutral_stage",
        "time": "day",
        "phase": "clear",
@@ -31,7 +31,7 @@
       },
       {
        "id": "mirejaw-idle-050",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=mirejaw --roles=idle,hit --out=res://.artifacts/eyestage/mirejaw",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=mirejaw --roles=idle,hit --whole-body --out=res://.artifacts/eyestage/mirejaw",
        "location": "neutral_stage",
        "time": "day",
        "phase": "clear",
@@ -40,7 +40,7 @@
       },
       {
        "id": "mirejaw-hit-100",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=mirejaw --roles=idle,hit --out=res://.artifacts/eyestage/mirejaw",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/art_pipeline/capture_f36_poses.gd -- --species=mirejaw --roles=idle,hit --whole-body --out=res://.artifacts/eyestage/mirejaw",
        "location": "neutral_stage",
        "time": "day",
        "phase": "clear",
