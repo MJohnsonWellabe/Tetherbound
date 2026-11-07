@@ -1203,6 +1203,24 @@
       "species": {
         "veridian": {"model": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_faint_headdown.glb"}
       }
+    },
+    "lanekit_hitreact_grounded_1107": {
+      "_why": "LANE-KIT 7 Nov 2026, one cause for four roster asks (CREATURES-RALPH open items): Shadelet and Paddlenewt float above their shadow at hit-react mid; Glimmermoth and Tempestwing (faint wing clip noted, not addressed here). Copies of each live remake GLB with tools/art_pipeline/ground_clip.py applied: `hit --settle` (every hit root key lowered/raised so the skinned mesh rests on y=0) on all four. (A first cut also grounded the winged species' faint on the lowest vertex; the downward wing tip then held the body in the air, so faint is unchanged.) Mesh, textures, other clips and sizes unchanged; nothing shrinks. OFF until judged.",
+      "enabled": false,
+      "species": {
+        "shadelet": {
+          "model": "res://assets/creatures/tetherbound/shadelet/candidate_owner1101/models/creature_shadelet_owner1101_grounded.glb"
+        },
+        "paddlenewt": {
+          "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_grounded.glb"
+        },
+        "glimmermoth": {
+          "model": "res://assets/creatures/tetherbound/glimmermoth/candidate_owner1101/models/creature_glimmermoth_owner1101_grounded.glb"
+        },
+        "tempestwing": {
+          "model": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_grounded.glb"
+        }
+      }
     }
   }
 }
