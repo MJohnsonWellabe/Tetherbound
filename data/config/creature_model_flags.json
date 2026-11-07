@@ -1174,7 +1174,8 @@
     },
     "lanekit_sparkit_legs_1107": {
       "_why": "F36#70 Sparkit legs (LANE-KIT, 7 Nov 2026; GPU 5.41): three rounds of judges name 'spindly stick legs'. A Blender copy of the live owner-remake GLB whose leg vertices move outward from their bone axis by one continuous hip-to-paw profile (x1.4, fading in below the hip and easing off at the paw); rig, weights, all 11 clips, textures and the 1.95 m height unchanged. Script and provenance: ralph/reports/LANES/ITEM-F36-70/thicken_legs.py. OFF until judged.",
-      "enabled": false,
+      "_why_on": "LANE-KIT 7 Nov 2026, qj F36-70-76438ddef11e-11072217 (neutral creature stage beside the 1.80 m ruler): F36#70 Sparkit CPU mapped 6.51 -> 6.71 (+0.20; raw 5.6/5.6/5.9 -> 6.0/5.6/6.0, r 0.86; one judge moves the stick-leg defect to PARTIAL). Judged gain ships ON (owner 7 Nov).",
+      "enabled": true,
       "species": {
         "sparkit": {"model": "res://assets/creatures/tetherbound/sparkit/candidate_owner1101/models/creature_sparkit_owner1101_legs.glb"}
       }
