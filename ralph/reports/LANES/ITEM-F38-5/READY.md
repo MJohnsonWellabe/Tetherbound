@@ -1,4 +1,5 @@
-STATUS: land
+STATUS: blocked
+BLOCKED: needs owner OK to raise the 1914 radius cap 3.0 -> 4.0 (adds farthest member <= 10 m from the spine); f48_cut_key smoke rc 0 with the change; coordinator hold 7 Nov.
 BRANCH: tb/item-f38-5  HEAD: see `git log origin/tb/item-f38-5 -1` (the READY commit; the flag commit is the one before it)
 
 ## Coordinator fix, 7 Nov (smoke_net_f48_cut_key spacing WARNING)
@@ -47,3 +48,9 @@ The r2 base maps higher than r1's candidate because each batch maps differently.
   - The quadruped otter and the hare body still read near trainer head height (ears and back line).
 - **Next idea:** rim and value separation on the Meadows creatures (creature_coat_flags owner). The row is at 7.40 CPU and needs only +0.10 for the bar. Ask: put this row in the 8 Nov GPU re-judge.
 - **Smoke note:** brooktail is a starter, and it is 1.15x taller now. On landing, the coordinator may want one `tests/smoke_arena_contain.gd` run. I did not run it here (RD-36); no test references these flags.
+
+## Hold (coordinator, 7 Nov)
+
+- STATUS is blocked until the owner decides on the test-cap change above. The branch carries the 4 m radius, the moved centre and the test change as they are.
+- **No fix with radius <= 3.0 found.** Bramblebun is x1.3, three members need about 3.5 m between centres (body radius about 1.27 m plus the 1.25 m gap), and the seeded resolver did not resolve them at five centres: the original, 2 m out from the spine, and +/-3 m along it. A 3 m disc is geometrically feasible only if all three sit almost exactly on its rim, which the sampler does not find. With no shrinking, the same species and count >= 3, the only fixes are a bigger disc or a resolver change (`encounter_director.gd`, not this lane's file).
+- `origin/main` is merged in (merge, not rebase), per the standing rule.
