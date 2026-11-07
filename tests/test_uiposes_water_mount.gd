@@ -37,3 +37,15 @@ func test_rider_stays_above_sea_at_deepest_bob() -> void:
 	var rider_art := deepest + float(geo.mount_offset[1]) - 0.92
 	assert_true(rider_art > 0.08, "rider art origin %.2f m stays above sea level" % rider_art)
 	assert_true(absf(LOOK.origin_delta(look, 0.0) + float(look.extra_sink_m)) < 0.0001)
+
+
+## F39#8 (LANE-TW, 7 Nov): the rider's own sea-floor shadow is off while
+## mounted-swimming and Aquaryn sits 1.0 m deeper (judged gain, CPU 4.97 -> 6.38).
+func test_f39_8_rider_shadow_and_sink_ship_on() -> void:
+	var look: Dictionary = LOOK.config().mounts.water_aquaryn
+	assert_true(bool(look.rider_shadows_off), "the rider's shadow is off while mounted-swimming")
+	assert_true(absf(float(look.extra_sink_m) - 1.0) < 0.001, "Aquaryn sits 1.0 m deeper")
+	assert_true(str(look._why_on_1107).contains("4.97 -> 6.38"), "records its score")
+	var swim := FileAccess.get_file_as_string("res://scripts/world/water_mounted_swim.gd")
+	assert_true(swim.contains("look.get(\"rider_shadows_off\", false)"), "the swim reads the flag")
+
