@@ -27,7 +27,10 @@ func test_nodes_ship_on_with_score_and_hero2_returns_them() -> void:
 	for item: String in SURFACES:
 		var hero := RUNTIME.hero2_for(item)
 		assert_false(hero.is_empty(), "%s: hero while ON" % item)
-		assert_true(str((hero.get("models", [{}]) as Array)[0].get("model", "")).contains("blender-1107"), "%s uses the Blender node" % item)
+		assert_true(str((hero.get("models", [{}]) as Array)[0].get("model", "")).ends_with("_r2.glb"), "%s uses the round-2 Blender node" % item)
+	var r2: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(HERO2)) as Dictionary).get("lane_sw_1107_r2", {})
+	assert_true(bool(r2.get("enabled", false)), "lane_sw_1107_r2 ships ON (judged gain)")
+	assert_true(str(r2.get("_why_on", "")).contains("5.52 -> 6.00"), "r2 records its judged score")
 
 
 func test_node_models_load_with_named_surfaces_and_no_collider() -> void:
