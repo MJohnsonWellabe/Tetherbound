@@ -20,7 +20,7 @@
    "--hud-settle-frames=900",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F38-19/live/High/meadows__exploration_hud.jpg"
  },
@@ -45,7 +45,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F38-24/live/High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg"
  },
@@ -70,7 +70,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F38-24/live/High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg"
  },
@@ -95,7 +95,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F38-24/live/High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg"
  },
@@ -120,7 +120,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F38-30/live/High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg"
  },
@@ -145,7 +145,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F38-30/live/High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg"
  },
@@ -175,7 +175,7 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-7/live/High/tidewake__fight__venn__t-023_02.jpg"
  },
@@ -205,7 +205,7 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-7/live/High/tidewake__fight__venn__t-024_02.jpg"
  },
@@ -235,7 +235,7 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-7/live/High/tidewake__fight__venn__t-025_02.jpg"
  },
@@ -265,7 +265,7 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-19/live/High/tidewake__fight__venn__t-000_00.jpg"
  },
@@ -295,7 +295,7 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "nearest",
   "path": "F39-19/live/High/tidewake__fight__venn__tell-start-000_48.jpg"
  },
@@ -325,7 +325,7 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-19/live/High/tidewake__fight__venn__t-003_02.jpg"
  },
@@ -355,7 +355,7 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-20/live/High/tidewake__fight__venn__t-000_00.jpg"
  },
@@ -385,10 +385,9 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
-  "match": null,
-  "path": null,
-  "missing_reason": "Not in this capture: the fight's second tell started at 1.12 s, outside the 0.5 s match window for the catalogue's 1.65 s. Nearest frame on disk: venn/tell-start-001.12.png. Tool stopped at its own --max-frames=32 ('Capture rejected: frame_cap', exit 1)."
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
+  "match": "nearest",
+  "path": "F39-20/live/High/tidewake__fight__venn__tell-start-001_65.jpg"
  },
  {
   "row": "F39#20",
@@ -416,7 +415,7 @@
    "--render-only-saves",
    "--seed=2042"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-20/live/High/tidewake__fight__venn__t-016_00.jpg"
  },
@@ -440,7 +439,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-23/live/High/tidewake__catching__catch_low.jpg"
  },
@@ -464,7 +463,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-23/live/High/tidewake__catching__catch_high.jpg"
  },
@@ -488,7 +487,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F39-23/live/High/tidewake__catching__01-aiming-full-health.jpg"
  },
@@ -512,7 +511,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F40-14/live/High/cloudreach__menu_map.jpg"
  },
@@ -537,7 +536,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F41-15/live/High/stormwood__inventory__character__captain_marrow__dialogue.jpg"
  },
@@ -562,7 +561,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F41-15/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg"
  },
@@ -587,7 +586,7 @@
    "--seed=2042",
    "--output={OUT}"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F41-15/live/High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg"
  },
@@ -615,7 +614,7 @@
    "--party-level=42",
    "--input-policy=idle-after-engage"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": null,
   "path": null,
   "missing_reason": "Not in this capture: the fight ended after hollows_alpha-i12 (5 s interval), so there is no i13. hollows_alpha-99-after and 100-aftermath exist."
@@ -644,7 +643,7 @@
    "--party-level=42",
    "--input-policy=idle-after-engage"
   ],
-  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced 14 of them; these now resolve through frame_match.",
+  "note": "Re-pack of section A's same capture (no re-shoot). The first pack matched frame ids to file names exactly, so 16 of 24 were listed null although the capture produced them. Frames now resolve through frame_match, with nearest-time frames within 1 s marked match: nearest.",
   "match": "exact",
   "path": "F41-16/live/High/stormwood__fight__hollows_long__hollows_alpha-99-after.jpg"
  }
