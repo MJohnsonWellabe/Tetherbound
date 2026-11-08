@@ -1,8 +1,8 @@
 {
-  "updated": "5:20 AM CT Sun 8 Nov 2026",
+  "updated": "5:50 AM CT Sun 8 Nov 2026",
   "headline": [
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
-    "Fifteen batch PRs merged (#847-#861); batch 16 ships F39#3 Drowned Garden terrace (+0.64, 3/3). Under the new process: F38#41 +0.53, F38#5 +0.78/+0.26, F38#32 +0.28, F39#3 +0.64, plus the Warrens stand and Hollows loss capture fixes. CPU scores only.",
+    "Sixteen batch PRs merged (#847-#862). Under the new process: F38#41 +0.53, F38#5 +0.78/+0.26, F38#32 +0.28, F39#3 +0.64, plus the Warrens stand and Hollows loss capture fixes. CPU scores only.",
     "GPU re-score queue (no build needed): F40#14 Medium confirm (High 7.52); F38#19, F39#7, F39#9, F39#19 (live fixes postdate their GPU scores); F38#30/#24 (re-seated Warrens stand); F41#16 (first real loss capture); F41#21 victory_focus arm (CPU needs 6-8 h).",
     "Owner 7 Nov: every judged gain over live ships ON; new art is built in Blender (no Meshy credits).",
     "Scores are CPU-provisional; the GPU pass confirms or reopens each row (bar 7.5)."
@@ -1825,15 +1825,14 @@
       "before": 6.58,
       "after": 6.86,
       "pr": "#861 (merged 8 Nov)"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F39#3 Drowned Garden stepped terrace (arrival frame)",
       "before": 6.2,
       "after": 6.84,
-      "pr": "land batch 16 (full CI)"
+      "pr": "#862 (merged 8 Nov)"
     }
-  ]
+  ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": []
 }
