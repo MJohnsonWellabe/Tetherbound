@@ -14,6 +14,7 @@ Lane LANE-MESHY, queue row 12 part (coordinator 8 Nov): F41#16 P2-110 Hollows fi
 ## GPU re-baseline list (from this lane)
 - **F41#16**: re-shoot on the corrected loss stand; live has loss_card ON.
 - **F39#19** (Tidewake fight roster): the roster no longer fades on today's main, so the 28 Oct GPU 5.78 predates the live roster (`ralph/reports/LANES/ITEM-F39-19-ROSTER/READY.md` on tb/item-meshy-recheck-parked).
+- **F41#21 `hud.json victory_focus`** (OFF, presentation only, never judged): judge it as a GPU arm on the F41#21 win stands (`hollows_win` 99-after, `hollows_aftermath` 100-aftermath). On CPU the Hollows fight reached only fight time t=45 s after 41 min of wall time, so one round (2 launches x 2 arms) needs about 6-8 h, past quick_judge's 50 min timeout.
 - **F38#30 / F38#24** (Warrens): score the re-seated walk_03 (`tb/item-f38-30-stands`).
 
 ## Pre-ready check
