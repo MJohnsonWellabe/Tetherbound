@@ -13,13 +13,18 @@ Evidence, not a plan. Each entry checks whether the judges' last complaint for a
 
 Ranked by expected visible gain per hour of build. Updated after batch 6 (8 Nov 21:10 UTC). From batch 6 on, messages to the coordinator were refused (untrusted device), so this table is the channel.
 
+**Coordinator corrections (messages queued 13:28–22:46 UTC, delivered to this session only at 22:52):**
+- **Dropped from the top:** F41#2/F41#22 (phase grade judged twice and lost; the Building glow was invisible, `ITEM-F41-2/READY.md`) and F41#10 (glass spikes plus material +0.04; judges want a sculpted bowl, `ITEM-F41-10/READY.md`). For F41#2/#22 only a new idea counts, e.g. a Building-only horizon rain curtain or cloud wall (code). F41#10 now needs a sculpted sink bowl: Blender terrain art, no Meshy.
+- **No Meshy credits:** every idea in this file reuses installed models, Blender reskins, config or scene changes. None needs newly generated art; the Blender-art ideas (F36#62/#57 newt stance, F38#40 facade, F36#29 face texture, F41#10 bowl) are hand-built in Blender.
+- **F39#9:** the wrong-state catch frames were fixed by `ITEM-F39-9-STAND` (`--stages-on-catch`, landed). The same opt-in should serve F38#14 (Meadows catch).
+- **F40#14:** the capture-stand idea is withdrawn (`ITEM-F40-14-STAND`): the map opens at 32x, where the on-map label is hidden, and that is what a player sees. The defect is real; the fix is the map's default zoom or a label that draws at 32x (UI), not the stand.
+- **Voltarach, Hollows vs capacitor (asked for a file and flag):** both named fights resolve to the same thing. `data/config/stormwood_encounters.json` gives both `hollows_alpha` (line 5707) and `capacitor_alpha` (line 5726) `placeholder_species: voltarach` with no variant, aspect or coat key; `scripts/combat/stormwood_encounter_catalogue.gd` `named_alpha()` builds both the same way (scale 1.0, alpha); the model comes from the one flag `creature_model_flags.json remake_owner1101_voltarach` (`candidate_owner1101/models/creature_voltarach_owner1101.glb`), and both get the same alpha colourway (`four_biome_colourways.json` voltarach `alpha_rules`, storm-indigo/cyan) and `creatures_visual.json alpha_presence_1105` rim. **No wrong asset or per-fight flag.** In this lane's CPU capacitor frames (batch 2) the Voltarach also renders pale cream-white with gold legs, so the pale "armadillo" read is not Hollows-only. Most likely cause: the alpha colourway and alpha rim lifting the charcoal shell (both fights are alphas), plus the bright Hollows glowmoss light. The dark spider on the roster board is the non-alpha look. A check would be a stage still of `voltarach` with and without `set_alpha` (not run here).
+
 **Build rows (defect real, visible and fixable today):**
 
 | # | Row | Fix idea | Fix class | Gain |
 |---|---|---|---|---|
-| 1 | F41#2 + F41#22 Surge phases | Calm, Building and Surge are the same frame at every stand. Building darker/cooler than Calm, Break darkest with a ground flash, Fading lighter than Break (today Fading has the biggest bolts). One fix serves both rows | config | medium-high |
 | 2 | F41#18 Tether uniforms | Officers are no longer dark but carry no faction mark: a Team Tether oxblood sash/collar accent (appearance variant, same mesh; red is Tether-reserved) | config + recolour | medium-high |
-| 3 | F41#10 Glass Sink | Half of every frame is a flat untextured navy plane: dark fused-glass material, glass spikes down the slope, seat the ring | config/material + scene | medium-high |
 | 4 | F41#20 dialogue reuse | Fenn and Oswin share model and portrait image: recolour Oswin plus portrait (the F41#8 recipe) | config + recolour | medium |
 | 5 | F41#24 cleanliness | A flat pinkish-mauve square quad on the ground at the matrix giant stand: find and remove; mushroom caps render as flat cream discs | scene | medium |
 | 6 | F39#6 faint state | Aquaryn's fainted body floats half a body-height above the sand, shadow detached: ground its faint end pose | animation/config | medium |
