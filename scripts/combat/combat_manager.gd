@@ -3643,6 +3643,7 @@ func _face_the_aftermath(fought_at: Variant) -> void:
 ## saving of nothing — the branch is three `is_action_just_pressed` polls — and
 ## it is what made the fight buttons silent rather than merely unavailable.
 func _physics_process(delta: float) -> void:
+	_maintain_companion_aside_exception()
 	match state:
 		State.ACTIVE:
 			_tick_active(delta)
@@ -5039,7 +5040,72 @@ func _step_companion_aside() -> void:
 	to_spot.y = 0.0
 	# The dodge hop clears the frame inside the aim camera's own glide.
 	if to_spot.length() > float(aside.get("arrive_m", 0.35)) and _ally_body.has_method("begin_combat_burst"):
+		# F38#5 (LANE-MESHY, 8 Nov 2026): the hop must not stall against the
+		# trainer's own capsule. A larger opponent holds the companion at a wider
+		# contact spacing, which can put it right behind the trainer; the hop then
+		# pushed into the trainer and finished only when the trainer moved, so the
+		# companion stayed beside the lens (P2-113) and later jumped. The local
+		# trainer is excluded only for the hop; `_maintain_companion_aside_exception`
+		# drops it on every exit path.
+		_set_companion_aside_trainer_exception(true)
 		_ally_body.call("begin_combat_burst", to_spot, to_spot.length(), float(aside.get("hop_seconds", 0.3)))
+
+
+## The (companion, own trainer) pair the aside hop currently ignores; empty
+## when no exception is held. Co-op: only the companion's OWN trainer is
+## excepted (`_player`, the trainer this manager fights for). Other players'
+## trainers keep their collision, so the hop can never pass through someone
+## else's body and a remote peer sees no change.
+var _aside_excepted_ally: PhysicsBody3D = null
+var _aside_excepted_trainer: PhysicsBody3D = null
+
+
+func _set_companion_aside_trainer_exception(on: bool) -> void:
+	if not on:
+		_clear_companion_aside_exception()
+		return
+	var ally := _ally_body as PhysicsBody3D
+	var trainer := _player as PhysicsBody3D
+	if ally == null or trainer == null or not is_instance_valid(ally) or not is_instance_valid(trainer):
+		return
+	if ally == _aside_excepted_ally and trainer == _aside_excepted_trainer:
+		return
+	_clear_companion_aside_exception()
+	ally.add_collision_exception_with(trainer)
+	_aside_excepted_ally = ally
+	_aside_excepted_trainer = trainer
+
+
+func _clear_companion_aside_exception() -> void:
+	if is_instance_valid(_aside_excepted_ally) and is_instance_valid(_aside_excepted_trainer):
+		_aside_excepted_ally.remove_collision_exception_with(_aside_excepted_trainer)
+	_aside_excepted_ally = null
+	_aside_excepted_trainer = null
+
+
+## Every exit path drops the exception: the hop's burst ended, the aim closed,
+## the fight left ACTIVE (won, lost, fled, caught), the companion changed or was
+## recalled/despawned, and (`_exit_tree`) a scene change. Runs every physics tick.
+func _maintain_companion_aside_exception() -> void:
+	if _aside_excepted_ally == null and _aside_excepted_trainer == null:
+		return
+	var keep := state == State.ACTIVE and is_instance_valid(_aside_excepted_ally) \
+		and _aside_excepted_ally == _ally_body and _aside_excepted_trainer == _player \
+		and _throw != null and bool(_throw.call("is_aiming")) \
+		and _aside_excepted_ally.has_method("combat_burst_active") \
+		and bool(_aside_excepted_ally.call("combat_burst_active"))
+	if not keep:
+		_clear_companion_aside_exception()
+
+
+func _exit_tree() -> void:
+	# Scene change or teardown: never leave a companion excepted from its trainer.
+	_clear_companion_aside_exception()
+
+
+func companion_aside_exception_held() -> bool:
+	return is_instance_valid(_aside_excepted_ally) and is_instance_valid(_aside_excepted_trainer) \
+		and _aside_excepted_ally.get_collision_exceptions().has(_aside_excepted_trainer)
 
 
 ## Movement is the dodge. The creature is driven straight from the stick, in camera
@@ -5048,6 +5114,7 @@ func _drive_player_creature() -> void:
 	# A new aim picks a new step-aside spot (see `_step_companion_aside`).
 	if _throw == null or not bool(_throw.call("is_aiming")):
 		_companion_aside_locked = false
+		_set_companion_aside_trainer_exception(false)
 	if _ally_body == null or not combat_input_available():
 		return
 	if _action != Action.READY or _burst_awaiting_host or _move_awaiting_host:

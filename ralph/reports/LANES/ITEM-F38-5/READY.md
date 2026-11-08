@@ -1,6 +1,35 @@
 STATUS: land
+BRANCH: tb/item-f38-5  HEAD: see the commit that adds this section (pushed head)
+
+## LANE-MESHY CI fixes, 8 Nov 2026 (coordinator-approved root causes)
+
+origin/main 3bf4ec80 merged in. The judged scale flags are unchanged; two CI failures are fixed.
+
+**A) `tests/smoke_catching.gd` "the creature moved 4.6-4.8 m on the stick while aiming" (gameplay fix).**
+- Cause (instrumented, not a guess): not the stick and not a collision shove. The P2-113 companion-aside hop (`combat_manager.gd _step_companion_aside`, `begin_combat_burst`) moves the abandoned companion to a spot fixed when the aim opens. With Bramblebun x1.3 the companion holds a wider contact spacing from the foe, so it starts 1.6 m behind its trainer; the hop pushed into the trainer's capsule and stalled (velocity 0, continuous `Player` contact) until the trainer moved, then completed (two bursts, ~12.7 m/s), so the companion sat beside the lens (the P2-113 defect) and then jumped.
+- Fix: during the hop the companion ignores **its own trainer's** collision only (`add_collision_exception_with(_player)`). Co-op: other players' trainers keep their collision (code comment says why). `_maintain_companion_aside_exception()` runs first in every `_physics_process` and drops the exception when the burst ends, the aim closes, the fight leaves ACTIVE (won/lost/fled/caught), the companion changes or is recalled/despawned, or the trainer changes; `_exit_tree()` drops it on scene change (`stormwood_authoritative_fight.gd _exit_tree` now calls `super`).
+- New focused test `tests/test_companion_aside_exception.gd`: held during the hop; gone after the burst ends, after an aim cancel mid-hop, when the fight leaves ACTIVE, when the companion changes, on `_exit_tree`; another trainer is never excepted. 5 tests, 22 assertions, 0 failed.
+- smoke_catching assertion unchanged; it passes ("catching: OK").
+
+**B) `tools/aim_cancel_windup_probe.gd` "legacy stale commit" (probe setup).**
+- Cause: eligibility is `reticle_offset <= body_radius * fraction` (`throw_aim.gd reticle_body_geometry`). The x1.3 foe's allowance (2.155 m) covered the 10 m shift's 2.04 m offset, so the commit stayed eligible.
+- Fix: the disclosed initial shift is 14 m (comment in the probe). Assertions unchanged.
+- `bash tools/ci/verify-earned-aim.sh`, F38#5 ON (x1.3): windup `PHASE_PROOF checks=19 failures=[]`, hud 8/8, eight-tick 5/5, natural-guard 8/8, no ERROR lines. Stale commits ineligible: reticle 2.69-2.86 vs allowance 2.155.
+- Same script with F38#5 OFF (main's `creature_scale_flags.json`, restored afterwards): all four cases pass (19, 8, 5, 8); stale commits ineligible at 2.72-2.86 vs allowance 1.657. The steering-budget (acquisition) checks pass in both.
+
+**Pre-ready check (merged tree):**
+- Unit: every `tests/test_*.gd` that greps `combat_manager`, `_step_companion_aside`, `begin_combat_burst`, `stormwood_authoritative_fight`, `aim_cancel_windup_probe`, `creature_scale_flags` or `companion_aside` (64 files) plus the new test: **551 tests, 8531 assertions, 0 failed**.
+- Smokes that grep `combat_manager.gd` / `_step_companion_aside` / `begin_combat_burst` / `companion_aside`, plus smoke_catching: **pass** smoke_catching, smoke_arena_contain, smoke_audio, smoke_boss, smoke_catch_aim_slowdown, smoke_charger_lunge, smoke_cloudreach_encounters, smoke_combat, smoke_combat_burst, smoke_combat_trainer_staging_clearance, smoke_local_requests, smoke_named_fight_hit_avoid, smoke_playground, smoke_stormwood_finalized_death, smoke_throw_preview_occlusion, smoke_tournament_bracket, smoke_trainer_battle, smoke_trainer_battle_camera, smoke_water_alpha_retirement.
+- **Not caused by this branch** (each re-run with fix A reverted AND with main's scale flags; same result):
+  - smoke_controller_catching ("parsed controller attacks did not naturally weaken the target"), smoke_f23_live_moves (three mounted-HUD Ultimate meter checks), smoke_stronghold_battle_camera (shoulder composition / exploration camera restore): fail on main's flags with the fix reverted too.
+  - smoke_combat_camera (render-corner crop at the 3 m/9 m framing fixture): intermittent on main. It failed 3/3 with the fix, but also 1/3 with the fix reverted (x1.3) and 1/3 with main's flags; the framing distance varies per run (13.7-20.7 m).
+- Co-op net smokes (`tools/net/run_net_smoke.sh`): catch_race, shared_boss, shared_wild_fight, owner_passive_rejoin: all pass (`ALL CHECKS PASSED`).
+- No JSON or creature_model_flags change in this fix.
+
+**Files touched in this fix:** `scripts/combat/combat_manager.gd`, `scripts/combat/stormwood_authoritative_fight.gd`, `tools/aim_cancel_windup_probe.gd`, `tests/test_companion_aside_exception.gd`, this READY.
+
+## Earlier READY (LANE-MS / coordinator, 7 Nov)
 APPROVED: owner OK 7 Nov (via coordinator) for the 1914 radius cap 3.0 -> 4.0, 1914 only, farthest member <= 10 m from the road.
-BRANCH: tb/item-f38-5  HEAD: see `git log origin/tb/item-f38-5 -1` (the READY commit; the flag commit is the one before it)
 
 ## Coordinator fix, 7 Nov (smoke_net_f48_cut_key spacing WARNING)
 
