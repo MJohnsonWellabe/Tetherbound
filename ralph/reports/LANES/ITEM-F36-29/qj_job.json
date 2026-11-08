@@ -1,0 +1,37 @@
+{
+ "_why": "LANE-MESHY 8 Nov: F36#29 on the cast close stand (tools/_capture_character_cast.gd writes a fixed shots/characters dir, so the round is assembled from its two captures).",
+ "biomes": {
+  "meadows": {
+   "items": [
+    {
+     "board_row": "F36#29",
+     "item": "F36#29",
+     "subject": "Innkeeper (Wilhelm) body and face, F36(0) close stand",
+     "defect": "Soft flat face with low-resolution eyes and mouth, blotchy chalky skin, muddy low-contrast materials and a stiff pose",
+     "impact": 0,
+     "fix_class": "material",
+     "frames": [
+      {
+       "id": "f36__innkeeper__front",
+       "repro": "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x800 --script tools/_capture_character_cast.gd",
+       "location": "cast_stage",
+       "time": "studio",
+       "phase": "clear",
+       "camera": "portrait",
+       "category": "character"
+      },
+      {
+       "id": "f36__innkeeper__threequarter",
+       "repro": "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x800 --script tools/_capture_character_cast.gd",
+       "location": "cast_stage",
+       "time": "studio",
+       "phase": "clear",
+       "camera": "portrait",
+       "category": "character"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
