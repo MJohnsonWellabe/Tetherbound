@@ -2240,7 +2240,7 @@
      "frames": [
       {
        "id": "tidewake__fight__venn_resolve__win-141_53",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/venn --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --render-only-saves --seed=2042",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/venn --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle --expected-resolution=1920x1080 --seed=2042",
        "orig_commit": "7565f8f3503114b1181b62ba1977aa6e7369e6e8",
        "location": "water_trainer_venn",
        "time": "day",
@@ -2250,7 +2250,7 @@
       },
       {
        "id": "tidewake__fight__venn_resolve__aftermath-142_53",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/venn --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --render-only-saves --seed=2042",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/venn --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle --expected-resolution=1920x1080 --seed=2042",
        "orig_commit": "7565f8f3503114b1181b62ba1977aa6e7369e6e8",
        "location": "water_trainer_venn",
        "time": "day",
@@ -2260,7 +2260,7 @@
       },
       {
        "id": "tidewake__fight__nerissa_resolve__win-207_25",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_nerissa --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/nerissa --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --render-only-saves --seed=2042",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_nerissa --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/nerissa --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle --expected-resolution=1920x1080 --seed=2042",
        "orig_commit": "7565f8f3503114b1181b62ba1977aa6e7369e6e8",
        "location": "water_trainer_nerissa",
        "time": "day",
@@ -3853,7 +3853,7 @@
      "catalog_status": "open",
      "frames": [
       {
-       "id": "stormwood__fight__hollows_long__hollows_alpha-i13",
+       "id": "stormwood__fight__hollows_long__hollows_alpha-i12",
        "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=120 --interval=5 --seed=2042 --party-level=42 --input-policy=idle-after-engage",
        "orig_commit": "1f9d2ca4b06371d8bff11085f22c56f75c7869d6",
        "location": "hollows_alpha",
