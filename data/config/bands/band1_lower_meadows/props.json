@@ -421,9 +421,10 @@
         },
         {
           "model": "Crate_Wooden",
+          "_why_on_f38_32": "LANE-MESHY F38#32 camp re-dress (8 Nov 2026): stores grouped on the camp floor east of the tent, off the camp_tent stand's foreground. quick_judge redress-r1 (ralph/reports/LANES/ITEM-F38-32/qj/redress-r1/): CPU mapped 6.58 -> 6.86 (+0.28), 3/3 code-blind judges prefer it (noise floor 0.00). Owner 7 Nov: a judged gain ships ON.",
           "at": [
-            340.4,
-            937.2
+            346.4,
+            939.2
           ],
           "yaw_deg": 300.0,
           "scale": 1.0,
@@ -431,9 +432,10 @@
         },
         {
           "model": "Bag",
+          "_why_on_f38_32": "LANE-MESHY F38#32 camp re-dress (8 Nov 2026): stores grouped on the camp floor east of the tent, off the camp_tent stand's foreground. quick_judge redress-r1 (ralph/reports/LANES/ITEM-F38-32/qj/redress-r1/): CPU mapped 6.58 -> 6.86 (+0.28), 3/3 code-blind judges prefer it (noise floor 0.00). Owner 7 Nov: a judged gain ships ON.",
           "at": [
-            340.95,
-            937.75
+            347.0,
+            938.4
           ],
           "yaw_deg": 340.0,
           "scale": 1.0,
@@ -441,9 +443,10 @@
         },
         {
           "model": "Rope_1",
+          "_why_on_f38_32": "LANE-MESHY F38#32 camp re-dress (8 Nov 2026): stores grouped on the camp floor east of the tent, off the camp_tent stand's foreground. quick_judge redress-r1 (ralph/reports/LANES/ITEM-F38-32/qj/redress-r1/): CPU mapped 6.58 -> 6.86 (+0.28), 3/3 code-blind judges prefer it (noise floor 0.00). Owner 7 Nov: a judged gain ships ON.",
           "at": [
-            340.05,
-            936.55
+            345.8,
+            939.9
           ],
           "yaw_deg": 10.0,
           "scale": 1.0,
@@ -463,9 +466,10 @@
         },
         {
           "model": "Barrel",
+          "_why_on_f38_32": "LANE-MESHY F38#32 camp re-dress (8 Nov 2026): stores grouped on the camp floor east of the tent, off the camp_tent stand's foreground. quick_judge redress-r1 (ralph/reports/LANES/ITEM-F38-32/qj/redress-r1/): CPU mapped 6.58 -> 6.86 (+0.28), 3/3 code-blind judges prefer it (noise floor 0.00). Owner 7 Nov: a judged gain ships ON.",
           "at": [
-            340.9,
-            934.4
+            346.9,
+            939.9
           ],
           "yaw_deg": 95.0,
           "scale": 1.0,
