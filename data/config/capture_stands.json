@@ -1,5 +1,12 @@
 {
   "_comment": "Capture-stand rules read by tools/phase2_capture_locations.gd (and phase2_capture_routes.gd, which extends it). Capture tooling only; the game never reads this file.",
+  "inside_collision_reseat": {
+    "_why": "F38#30 / F38#24 (LANE-MESHY, 8 Nov 2026, coordinator-approved capture blocker fix): the Burrow Warrens walk_03 route stand is a seeded random off-route spot inside the solid procedural Bank hill (collision surface ~19 m overhead); debug travel seated the player at terrain height under it, a state play cannot reach, so the frame showed the hill shell's culled underside and floating chamber shells. A stand proven inside solid collision (solid overhead and every horizontal ray blocked) is re-seated on the topmost walkable collision surface at the same xz, same heading and camera rig; if that surface is not walkable the stand is rejected and the next offset/lateral is tried. Stands on reachable ground are never moved. Earns no score credit: re-baseline live on the fixed stands.",
+    "enabled": true,
+    "probe_height_m": 200.0,
+    "enclosure_ray_m": 80.0,
+    "enclosure_rays": 8
+  },
   "buried_stand_guard": {
     "_why": "P2-014 (cause lane tb/cause-meadows, 1 Nov, OFF until GPU-judged): the Burrow Warrens walk_02/walk_03 route stands put the player or the camera inside the Warrens' earth-bank shell (a hollow trimesh: the capsule overlap and the floor ray both start inside it and miss it), so the frame showed 'floating faceted brown slabs' (scored 2-4). On: a terrain stand (not a built floor, not swimming) is rejected when a down ray from window_m over the player stand, or over the settled production camera, hits solid geometry; the stand loop then tries its next offset/lateral, and fallback_offsets_m are appended after the row's own offsets. Frames whose first stand was clear are unchanged.",
     "enabled": false,

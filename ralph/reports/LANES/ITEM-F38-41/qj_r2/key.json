@@ -1,0 +1,23 @@
+{
+ "Tu": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Yt": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Gz": {
+  "anchor": false,
+  "label": "F38#41",
+  "A": "/home/user/Tetherbound/.artifacts/q41/base/meadows__band2_stone_and_root__03__the_old_quarry__day.png",
+  "B": "/home/user/Tetherbound/.artifacts/q41/cand2/meadows__band2_stone_and_root__03__the_old_quarry__day.png"
+ },
+ "Lx": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

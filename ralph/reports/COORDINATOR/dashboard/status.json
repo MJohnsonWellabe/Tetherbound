@@ -1,9 +1,9 @@
 {
-  "updated": "7:40 PM CT Sat 7 Nov 2026",
+  "updated": "2:15 AM CT Sun 8 Nov 2026",
   "headline": [
-    "Owner 7 Nov evening: lanes stopped until the improvement process is fixed (about half of the rows tried gained nothing). All five lanes finished, pushed and were archived; work restarts one row at a time.",
-    "Nine batch PRs merged (#847-#855); batch 10 (F39#10, F41#14, F41#9) in full CI. CPU scores only; GPU re-judge of every changed row is still due.",
-    "Held by CI: F38#5 creature scale (the 1.3x Bramblebun breaks the aim-cancel probe and smoke_catching) and F38#41 quarry boulders (copied rock folder fails two Meadows tests).",
+    "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
+    "Thirteen batch PRs merged (#847-#859): F38#41 (+0.53), F38#5 (+0.78/+0.26, with a companion aside-hop bug fixed) and the Warrens capture-stand fix landed under the new process; batch 14 corrects the Hollows loss capture. CPU scores only.",
+    "GPU re-score queue (no build needed): F40#14 Medium confirm (High 7.52); F38#19, F39#7, F39#9, F39#19 (live fixes postdate their GPU scores); F38#30/#24 (re-seated Warrens stand); F41#16 (first real loss capture); F41#21 victory_focus arm (CPU needs 6-8 h).",
     "Owner 7 Nov: every judged gain over live ships ON; new art is built in Blender (no Meshy credits).",
     "Scores are CPU-provisional; the GPU pass confirms or reopens each row (bar 7.5)."
   ],
@@ -841,8 +841,15 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "No lanes running. Owner 7 Nov evening: all five lanes were archived (8 Nov 00:20-00:47 UTC) pending a better process; next work is one row at a time with the coordinator.",
-  "active_lanes": [],
+  "active_lanes_note": "One lane under the 8 Nov process (diagnose and visibility gates reviewed by the coordinator, a live-vs-live noise floor, every affected test run before READY). More lanes only after a 70%+ hit rate over five rows.",
+  "active_lanes": [
+    {
+      "lane": "LANE-MESHY · re-check judged Meshy pieces",
+      "doing": "Diagnosed 16 rows: landed F38#41, F38#5, Warrens stand fix, Hollows loss capture fix; stopped before judging: ironwood, posts, shell, Veilfall hero, docks, cliffs, Warrens collider, camp worn-earth, Gull Rest spire, roster rows, glass colliders (design says non-colliding); judged and lost: innkeeper. Now: F38#32 camp re-dress (props separated, bigger bonfire).",
+      "criteria": "F38#24, F38#30, F39#2, F39#31, F13#5, F40 P2-023, F38#41, F38#5",
+      "next": "~1 h (import + noise floor)"
+    }
+  ],
   "score_ledger": [
     {
       "item": "F38#4 map",
@@ -1761,57 +1768,56 @@
       "before": 5.47,
       "after": 5.83,
       "pr": "#855 (merged 8 Nov)"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
-    {
-      "item": "F38#41 Old Quarry boulders (Blender recombination)",
-      "before": 6.43,
-      "after": 6.96,
-      "pr": "held: fails CI tests (see #855 comments)"
-    },
-    {
-      "item": "F38#5 creature scale batch 4 (grow only; owner OK for cluster 1914 radius 4 m)",
-      "before": 6.59,
-      "after": 7.37,
-      "pr": "held: fails CI tests (see #855 comments)"
-    },
-    {
-      "item": "F38#5 creature scale batch 5",
-      "before": 7.14,
-      "after": 7.4,
-      "pr": "held: fails CI tests (see #855 comments)"
     },
     {
       "item": "F39#10 Tidewake water depth ramp",
       "before": 7.15,
       "after": 7.25,
-      "pr": "land batch 10 (full CI)"
+      "pr": "#856 (merged 8 Nov)"
     },
     {
       "item": "F41#14 Stormwood candy tier bodies (Blender)",
       "before": 5.83,
       "after": 6.04,
-      "pr": "land batch 10 (full CI)"
+      "pr": "#856 (merged 8 Nov)"
     },
     {
       "item": "F41#9 Stormwood harvest nodes r1 (Blender)",
       "before": 5.64,
       "after": 6.31,
-      "pr": "land batch 10 (full CI)"
+      "pr": "#856 (merged 8 Nov)"
     },
     {
       "item": "F41#9 Stormwood harvest nodes r2",
       "before": 5.52,
       "after": 6.0,
-      "pr": "land batch 10 (full CI)"
+      "pr": "#856 (merged 8 Nov)"
     },
     {
       "item": "F41#9 Stormwood harvest nodes r3",
       "before": 4.98,
       "after": 5.65,
-      "pr": "land batch 10 (full CI)"
+      "pr": "#856 (merged 8 Nov)"
+    },
+    {
+      "item": "F38#41 Old Quarry boulders (Blender recombination)",
+      "before": 6.43,
+      "after": 6.96,
+      "pr": "#857 (merged 8 Nov)"
+    },
+    {
+      "item": "F38#5 creature scale batch 4 (grow only; owner OK for cluster 1914 radius 4 m)",
+      "before": 6.59,
+      "after": 7.37,
+      "pr": "#858 (merged 8 Nov)"
+    },
+    {
+      "item": "F38#5 creature scale batch 5",
+      "before": 7.14,
+      "after": 7.4,
+      "pr": "#858 (merged 8 Nov)"
     }
-  ]
+  ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": []
 }

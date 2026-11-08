@@ -57,6 +57,7 @@ var _foundation_finishes := 0
 var _worked_cut_pieces := 0
 var _arrival_scatter_removed := 0
 var _natural_worked_faces := false
+var _natural_face_models: Array[String] = []
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -116,6 +117,13 @@ func _build_worked_cut(world: Node, raw: Variant) -> void:
 	# Optional arm (default off): WorkedFace pieces use the installed natural
 	# rock meshes instead of the generated cliff panel.
 	_natural_worked_faces = bool(spec.get("natural_faces", false))
+	# F38#41 (LANE-MS): optional `natural_face_models` (res:// paths) replaces
+	# the three installed Rock_Medium variants those faces are fitted from.
+	var models_raw: Variant = spec.get("natural_face_models", [])
+	_natural_face_models.clear()
+	if models_raw is Array:
+		for raw_path: Variant in models_raw:
+			_natural_face_models.append(str(raw_path))
 	_build_worked_floor(world, holder, spec.get("floor", {}), texture_path, normal_path)
 	for raw_piece: Variant in pieces:
 		if not raw_piece is Dictionary:
@@ -557,6 +565,8 @@ func _textured_asset_rock(node_name: String, size: Vector3, colour: Color,
 		"res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
 		"res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
 	]
+	if not _natural_face_models.is_empty():
+		variants = _natural_face_models
 	var path := variants[abs(node_name.hash()) % variants.size()]
 	var packed := load(path) as PackedScene
 	if packed == null:

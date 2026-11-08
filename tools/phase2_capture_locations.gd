@@ -484,7 +484,17 @@ func _capture_row(row: Dictionary) -> void:
 				_reject_stand(row, at, offset, lateral, "ground", "non-finite terrain height", {}, rejected)
 				continue
 			resolved_ground = terrain_ground if bool(row.get("prefer_terrain_ground", false)) else resolve_capture_ground(_player, at.x, at.y, terrain_ground)
+			var reseat := {}
+			if is_equal_approx(resolved_ground, terrain_ground):
+				reseat = _inside_collision_reseat(at, terrain_ground)
+				if reseat.has("failure"):
+					_reject_stand(row, at, offset, lateral, "inside_collision", str(reseat.failure), {}, rejected)
+					continue
+				if reseat.has("top_y"):
+					resolved_ground = float(reseat.top_y)
 			var spec := _capture_support_spec(at, terrain_ground, resolved_ground)
+			if reseat.has("top_y"):
+				spec["inside_collision_reseat"] = reseat
 			var failure := _capture_support_preflight(spec)
 			if not failure.is_empty():
 				_reject_stand(row, at, offset, lateral, "preflight", failure, spec, rejected)
@@ -568,6 +578,8 @@ func _capture_row(row: Dictionary) -> void:
 		record["resolved_ground_y"] = resolved_ground
 		record["selected_stand_xz"] = [at.x, at.y]
 		record["swimming_stand"] = selected_spec.swimming
+		if selected_spec.has("inside_collision_reseat"):
+			record["inside_collision_reseat"] = selected_spec.inside_collision_reseat
 		record["water_surface_y"] = selected_spec.get("water_surface_y", null)
 		record["surface_state"] = _capture_surface_record()
 		record["rejected_stand_candidates"] = rejected.duplicate(true)
@@ -653,6 +665,62 @@ func _capture_support_preflight(spec: Dictionary) -> String:
 		if not overhead.is_empty():
 			return "stand: " + overhead
 	return ""
+
+
+## F38#30 (LANE-MESHY, 8 Nov 2026): `inside_collision_reseat` in capture_stands.json.
+## A terrain stand is proven to sit INSIDE solid collision (a state play cannot
+## reach: the Burrow Warrens walk_03 random stand lands under the Bank hill) when
+## a down ray from `probe_height_m` hits a collider above the stand AND every one
+## of `enclosure_rays` horizontal rays at 1 m (length `enclosure_ray_m`) hits a
+## collider. Only then the stand is re-seated on the topmost collision surface at
+## the same xz, if that surface is walkable (production floor limit); otherwise the
+## stand is rejected and the loop tries its next offset/lateral. A stand on
+## reachable ground is never moved. Returns {} (no change), {top_y, terrain_y,
+## overhead_y, normal_y} (re-seat) or {failure}.
+func _inside_collision_reseat(at: Vector2, terrain: float) -> Dictionary:
+	if _reseat_config.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STAND_GUARD_CONFIG))
+		var cfg: Dictionary = (parsed as Dictionary).get("inside_collision_reseat", {}) if parsed is Dictionary else {}
+		_reseat_config = cfg if bool(cfg.get("enabled", false)) else {"enabled": false}
+	if not bool(_reseat_config.get("enabled", false)) or not is_finite(terrain):
+		return {}
+	var space := _world.get_world_3d().direct_space_state
+	return inside_collision_reseat(space, Vector3(at.x, terrain, at.y),
+		float(_reseat_config.get("probe_height_m", 200.0)),
+		float(_reseat_config.get("enclosure_ray_m", 80.0)),
+		int(_reseat_config.get("enclosure_rays", 8)),
+		_player.floor_max_angle, _player.collision_mask, [_player.get_rid()])
+
+
+var _reseat_config := {}
+
+
+static func inside_collision_reseat(space: PhysicsDirectSpaceState3D, stand: Vector3,
+		probe_height: float, enclosure_length: float, enclosure_rays: int,
+		floor_angle: float, mask: int, exclude: Array) -> Dictionary:
+	if space == null or not stand.is_finite():
+		return {}
+	var excluded: Array[RID] = []
+	excluded.assign(exclude)
+	var down := PhysicsRayQueryParameters3D.create(stand + Vector3.UP * probe_height,
+		stand + Vector3.UP * 0.5, mask, excluded)
+	var top := space.intersect_ray(down)
+	if top.is_empty():
+		return {}
+	var eye := stand + Vector3.UP
+	for i in maxi(1, enclosure_rays):
+		var angle := TAU * float(i) / float(maxi(1, enclosure_rays))
+		var dir := Vector3(cos(angle), 0.0, sin(angle))
+		var ray := PhysicsRayQueryParameters3D.create(eye, eye + dir * enclosure_length, mask, excluded)
+		if space.intersect_ray(ray).is_empty():
+			return {}  # an open side: an overhang or roof, reachable, never moved
+	var position: Vector3 = top.get("position", Vector3.INF)
+	var normal: Vector3 = top.get("normal", Vector3.ZERO)
+	if not position.is_finite() or normal.y < cos(floor_angle):
+		return {"failure": "stand inside solid collision; topmost surface %.2fm up is not walkable (normal y %.2f)" % [
+			position.y - stand.y, normal.y]}
+	return {"top_y": position.y, "terrain_y": stand.y, "overhead_m": position.y - stand.y,
+		"normal_y": normal.y}
 
 
 ## The guard's look-up window in metres, 0.0 while the guard is off.
