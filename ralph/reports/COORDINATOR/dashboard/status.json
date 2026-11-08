@@ -1,5 +1,5 @@
 {
-  "updated": "6:10 PM CT Sat 7 Nov 2026",
+  "updated": "6:05 PM CT Sat 7 Nov 2026",
   "headline": [
     "7 Nov restart: five lanes, eight batch PRs (#847-#854) opened, seven merged; batch 9 stacked. CPU scores only; GPU re-judge of every changed row at end of day 8 Nov.",
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
@@ -1765,55 +1765,55 @@
       "item": "F38#20 Team Tether keep on a Blender hill + curtain wall",
       "before": 6.38,
       "after": 6.78,
-      "pr": "#854 (full CI)"
+      "pr": "#854 (merged 7 Nov)"
     },
     {
       "item": "F38#41 Old Quarry boulders (Blender recombination)",
       "before": 6.43,
       "after": 6.96,
-      "pr": "land batch 9"
+      "pr": "land batch 9 (full CI)"
     },
     {
       "item": "F38#36 Corin dialogue: galecrest cluster moved off the speaker",
       "before": 6.98,
       "after": 7.89,
-      "pr": "land batch 9"
+      "pr": "land batch 9 (full CI)"
     },
     {
       "item": "F39#8 Aquaryn mounted pose (rider shadow off, sink 1.0)",
       "before": 4.97,
       "after": 6.38,
-      "pr": "land batch 9"
+      "pr": "land batch 9 (full CI)"
     },
     {
       "item": "F38#5 creature scale batch 4 (grow only; owner OK for cluster 1914 radius 4 m)",
       "before": 6.59,
       "after": 7.37,
-      "pr": "land batch 9"
+      "pr": "land batch 9 (full CI)"
     },
     {
       "item": "F38#5 creature scale batch 5",
       "before": 7.14,
       "after": 7.4,
-      "pr": "land batch 9"
+      "pr": "land batch 9 (full CI)"
     },
     {
       "item": "F38#26 Mosshell faint seat (pose settle scoped)",
       "before": 6.27,
       "after": 6.97,
-      "pr": "land batch 9"
+      "pr": "land batch 9 (full CI)"
     },
     {
       "item": "F38#17 Solene/Hald installed variant bodies",
       "before": 5.81,
       "after": 7.32,
-      "pr": "next batch (lane re-merging main)"
+      "pr": "land batch 9 (full CI)"
     },
     {
       "item": "F41#8 Bryn/Maud coat variants",
       "before": 5.47,
       "after": 5.83,
-      "pr": "next batch (with F38#17)"
+      "pr": "land batch 9 (full CI)"
     }
   ]
 }
