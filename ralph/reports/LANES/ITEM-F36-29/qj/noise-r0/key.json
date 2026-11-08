@@ -1,0 +1,23 @@
+{
+ "Rm": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Qm": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Su": {
+  "anchor": false,
+  "label": "F36#29",
+  "A": ".artifacts/qj/F36-29-noise-r0/k/sides/F36_29_cand.jpg",
+  "B": ".artifacts/qj/F36-29-noise-r0/k/sides/F36_29_base.jpg"
+ },
+ "Fk": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}
