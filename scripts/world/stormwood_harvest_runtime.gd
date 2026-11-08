@@ -244,7 +244,20 @@ static func hero2_for(item: String) -> Dictionary:
 			if FileAccess.file_exists(HERO2_PATH) else {}
 		_hero2 = parsed if parsed is Dictionary else {}
 	var cfg: Dictionary = _hero2
-	if not bool(cfg.get("enabled", false)):
+	# F41#9 (LANE-SW, 7 Nov 2026, OFF until judged): the Blender storm-glass,
+	# crown and glowmoss nodes replace the round-2 items when enabled.
+	var lane: Dictionary = cfg.get("lane_sw_1107", {})
+	# Round 2 (lane_sw_1107_r2): columnar basalt and a tufted glowmoss.
+	var lane_r2: Dictionary = cfg.get("lane_sw_1107_r2", {})
+	# Round 3 (lane_sw_1107_r3): the glowmoss on a mossed basalt boulder.
+	var lane_r3: Dictionary = cfg.get("lane_sw_1107_r3", {})
+	if bool(lane_r3.get("enabled", false)):
+		cfg = lane_r3
+	elif bool(lane_r2.get("enabled", false)):
+		cfg = lane_r2
+	elif bool(lane.get("enabled", false)):
+		cfg = lane
+	elif not bool(cfg.get("enabled", false)):
 		return {}
 	var row: Variant = (cfg.get("items", {}) as Dictionary).get(item, {})
 	return (row as Dictionary).duplicate(true) if row is Dictionary else {}

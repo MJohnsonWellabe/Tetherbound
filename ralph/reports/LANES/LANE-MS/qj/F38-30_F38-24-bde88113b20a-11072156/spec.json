@@ -1,0 +1,20 @@
+[
+ {
+  "label": "F38#30",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F38-30_F38-24-bde88113b20a-11072156/k/sides/F38_30_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F38-30_F38-24-bde88113b20a-11072156/k/sides/F38_30_cand.jpg",
+  "brief": "2 in-game frames (Meadows) for one catalogue subject: Burrow Warrens hillside. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "F38#24",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F38-30_F38-24-bde88113b20a-11072156/k/sides/F38_24_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F38-30_F38-24-bde88113b20a-11072156/k/sides/F38_24_cand.jpg",
+  "brief": "3 in-game frames (Meadows) for one catalogue subject: distant mountains. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ }
+]

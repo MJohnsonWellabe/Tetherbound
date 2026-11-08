@@ -1,0 +1,84 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.751,
+  "least_squares_slope": 1.0456,
+  "method": "linear",
+  "slope": 1.0456,
+  "intercept": 0.4854,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.761,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.267,
+   "reference": 4.83,
+   "mapped": 5.992,
+   "residual": -1.162
+  },
+  "craft:after": {
+   "measured": 6.667,
+   "reference": 7.35,
+   "mapped": 7.456,
+   "residual": -0.106
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.533,
+   "reference": 6.75,
+   "mapped": 6.271,
+   "residual": 0.479
+  },
+  "f04_6_r22:control": {
+   "measured": 4.833,
+   "reference": 5.83,
+   "mapped": 5.539,
+   "residual": 0.291
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.667,
+   "reference": 6.53,
+   "mapped": 5.365,
+   "residual": 1.165
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.0,
+   "reference": 4.0,
+   "mapped": 4.668,
+   "residual": -0.668
+  }
+ },
+ "candidates": {
+  "F41#9 base": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.64,
+   "mapped_judges": [
+    5.92,
+    5.5,
+    5.5
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#9 cand": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.31,
+   "mapped_judges": [
+    6.34,
+    6.24,
+    6.34
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "anchor residual RMSE 0.76 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}

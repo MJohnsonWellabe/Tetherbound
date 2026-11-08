@@ -1263,6 +1263,1226 @@
         }
       }
     },
-    {"enabled": true, "_why_on": "ON 7 Nov 2026 (VIS-CLOUDREACH qj_beacon): CPU 5.84 -> 6.46 mapped on F40#3 P2-024 (Windscar Beacon approach; three code-blind judges all prefer the strata-spire frame, landmark defect PRESENT -> PARTIAL 3/3; linear r 0.93, anchor RMSE 0.39). One of the row's three frames paired (the skyroad arch and observatory frames did not capture on either side). ralph/reports/LANES/VIS-CLOUDREACH/qj/qj_beacon/VERDICT.md.", "preview_arg": "--cloudreach-wd-beacon-approach", "_why": "World dressing P2-024 (OFF until GPU judged; tb/world-dressing). GPU 6.14 (31 Oct): the Windscar beacon is a lone plain wooden arch before a slim white tower on an empty grass carpet, nowhere near the dense stone landmark language of the Sky Aviary board. Installed Meshy families (meshy-1020, provenance beside each GLB): two eagle statue plinths flank the wind-gate arch and two stratified stone spire clusters frame the approach, positioned on the stand heading (local (0.757, 0.654), arch 15 m out). Lists replace on merge, so the GPU-passed spire entry is repeated unchanged. Visual only, no collision.", "overlay": {"settlements": {"WindscarBeacon": {"buildings": [{"asset": "windscar_beacon_spire", "glb": "res://assets/props/meshy-1024/cloudreach_windscar_beacon_spire/cloudreach_windscar_beacon_spire.glb", "at": [18.16, 0.0, 15.69], "height": 27.0, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_eagle_plinth_l", "glb": "res://assets/props/meshy-1020/cloudreach_eagle_statue_plinth/cloudreach_eagle_statue_plinth.glb", "at": [6.47, 0.0, 10.88], "height": 4.6, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_eagle_plinth_r", "glb": "res://assets/props/meshy-1020/cloudreach_eagle_statue_plinth/cloudreach_eagle_statue_plinth.glb", "at": [11.71, 0.0, 4.82], "height": 4.6, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_strata_l", "glb": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb", "at": [13.15, 0.0, -4.5], "height": 15.0, "yaw": 30.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_strata_r", "glb": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb", "at": [4.37, 0.0, 20.96], "height": 13.0, "yaw": 130.0, "collision_fraction": 0.0, "tint": "#ffffff"}]}}}}
+    {"enabled": true, "_why_on": "ON 7 Nov 2026 (VIS-CLOUDREACH qj_beacon): CPU 5.84 -> 6.46 mapped on F40#3 P2-024 (Windscar Beacon approach; three code-blind judges all prefer the strata-spire frame, landmark defect PRESENT -> PARTIAL 3/3; linear r 0.93, anchor RMSE 0.39). One of the row's three frames paired (the skyroad arch and observatory frames did not capture on either side). ralph/reports/LANES/VIS-CLOUDREACH/qj/qj_beacon/VERDICT.md.", "preview_arg": "--cloudreach-wd-beacon-approach", "_why": "World dressing P2-024 (OFF until GPU judged; tb/world-dressing). GPU 6.14 (31 Oct): the Windscar beacon is a lone plain wooden arch before a slim white tower on an empty grass carpet, nowhere near the dense stone landmark language of the Sky Aviary board. Installed Meshy families (meshy-1020, provenance beside each GLB): two eagle statue plinths flank the wind-gate arch and two stratified stone spire clusters frame the approach, positioned on the stand heading (local (0.757, 0.654), arch 15 m out). Lists replace on merge, so the GPU-passed spire entry is repeated unchanged. Visual only, no collision.", "overlay": {"settlements": {"WindscarBeacon": {"buildings": [{"asset": "windscar_beacon_spire", "glb": "res://assets/props/meshy-1024/cloudreach_windscar_beacon_spire/cloudreach_windscar_beacon_spire.glb", "at": [18.16, 0.0, 15.69], "height": 27.0, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_eagle_plinth_l", "glb": "res://assets/props/meshy-1020/cloudreach_eagle_statue_plinth/cloudreach_eagle_statue_plinth.glb", "at": [6.47, 0.0, 10.88], "height": 4.6, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_eagle_plinth_r", "glb": "res://assets/props/meshy-1020/cloudreach_eagle_statue_plinth/cloudreach_eagle_statue_plinth.glb", "at": [11.71, 0.0, 4.82], "height": 4.6, "yaw": 220.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_strata_l", "glb": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb", "at": [13.15, 0.0, -4.5], "height": 15.0, "yaw": 30.0, "collision_fraction": 0.0, "tint": "#ffffff"}, {"asset": "wd_strata_r", "glb": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb", "at": [4.37, 0.0, 20.96], "height": 13.0, "yaw": 130.0, "collision_fraction": 0.0, "tint": "#ffffff"}]}}}},
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-summit-stand-shelves",
+      "_why": "F40#2 P2-022 (LANE-CR, 7 Nov): the stone-ground candidate's SummitEyrieStronghold stand runs from the location target (local 111.3,45.05) toward the dome, so its shelves sat ~35-45 m out and were invisible in the F40#2 approach frames (self-look 7 Nov, not judged). This arm re-keys the same pale strata shelves and scree to the trainer's approach stand (local 140.96,57.06, facing the target), so they break the near lawn in the day and night approach frames, and adds two large strata outcrops flanking the dome base (judges' cliff-plinth ask). Visual only, no collision, no route change. Flag OFF until judged.",
+      "overlay": {
+        "settlements": {
+          "SummitEyrieStronghold": {
+            "stands": [
+              {
+                "id": "f40_summit_approach",
+                "from": [
+                  140.96,
+                  57.06
+                ],
+                "to": [
+                  111.3,
+                  45.05
+                ],
+                "y": 0.0,
+                "pattern": [
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 1.5,
+                    "lateral_m": 4.4,
+                    "height": 3.2,
+                    "yaw": 90,
+                    "rise_m": -1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 5.0,
+                    "lateral_m": -4.6,
+                    "height": 3.6,
+                    "yaw": -70,
+                    "rise_m": -1.4
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 10.0,
+                    "lateral_m": 6.5,
+                    "height": 4.5,
+                    "yaw": 130,
+                    "rise_m": -1.2,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 13.0,
+                    "lateral_m": -7.2,
+                    "height": 4.2,
+                    "yaw": -40,
+                    "rise_m": -1.0,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": -1.5,
+                    "lateral_m": -4.0,
+                    "height": 2.4,
+                    "yaw": 20,
+                    "rise_m": -1.0
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 2.5,
+                    "lateral_m": 6.2,
+                    "height": 1.1,
+                    "yaw": 60
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 8.0,
+                    "lateral_m": -5.6,
+                    "height": 1.2,
+                    "yaw": -20
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 0.5,
+                    "lateral_m": 2.4,
+                    "height": 0.45,
+                    "yaw": 30
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 3.0,
+                    "lateral_m": -2.6,
+                    "height": 0.4,
+                    "yaw": -70
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 3.6,
+                    "lateral_m": 3.0,
+                    "height": 0.35,
+                    "yaw": 110
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 7.0,
+                    "lateral_m": 3.2,
+                    "height": 0.5,
+                    "yaw": 200
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 7.8,
+                    "lateral_m": -3.1,
+                    "height": 0.45,
+                    "yaw": 15
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 11.0,
+                    "lateral_m": 3.6,
+                    "height": 0.55,
+                    "yaw": 75
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 8.0,
+                    "lateral_m": -11.0,
+                    "height": 3.0,
+                    "yaw": -35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 6.0,
+                    "lateral_m": 10.5,
+                    "height": 2.6,
+                    "yaw": 35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 96.0,
+                    "lateral_m": -38.0,
+                    "height": 14.0,
+                    "yaw": -25,
+                    "rise_m": -3.0
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 100.0,
+                    "lateral_m": 40.0,
+                    "height": 12.0,
+                    "yaw": 40,
+                    "rise_m": -3.0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-strata-terrace-candidate",
+      "_why": "F40#1 P2-021 (LANE-CR, 7 Nov 2026; GPU 5.29): judges read the shrine and gate stands as a flat uniform lawn with isolated block mesas and ask for layered pale-stone shelves and terrace edges at the stands (VIS-CLOUDREACH parked the row as new art). New Blender mesh cloudreach_strata_terrace (three stepped, chipped tiers of pale banded strata with a moss lip, 11 x 5.4 x 2.6 m native; script, textures and scale check in ralph/reports/LANES/ITEM-F40-1/blender/) placed as three asymmetric terraces (near left, mid right, far left) on the three scored P2-021 stands (shrine_walk_b, heartstone_approach, gate_landmark_approach; shrine_walk_a left out because its mid terrace landed 2.8 m from the heartstone camera), sunk 0.6 m so the lowest stratum seats in the lawn; r1b textures value-matched to the installed cliffs (the first build read near-white). The shared stand pattern is otherwise unchanged (stone-trail candidate's list plus these three items). Visual only, no collision, no route change. OFF until judged.",
+      "overlay": {
+        "stand_pattern": [
+          {
+            "asset": "rock_mid",
+            "along_m": 6.0,
+            "lateral_m": 6.5,
+            "height": 0.9,
+            "yaw": 40
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 13.0,
+            "lateral_m": 14.0,
+            "height": 3.2,
+            "yaw": 35,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "cliff_shelf",
+            "along_m": 24.0,
+            "lateral_m": 24.0,
+            "height": 18.0,
+            "yaw": 90,
+            "rise_m": -12.0,
+            "scale_min": 0.8,
+            "scale_max": 1.2
+          },
+          {
+            "asset": "cliff_shelf",
+            "along_m": 44.0,
+            "lateral_m": 36.0,
+            "height": 18.0,
+            "yaw": 60,
+            "rise_m": -9.0,
+            "scale_min": 0.9,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 30.0,
+            "lateral_m": 15.0,
+            "height": 7.0,
+            "yaw": -50,
+            "scale_min": 0.6,
+            "scale_max": 1.5
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 55.0,
+            "lateral_m": 22.0,
+            "height": 12.0,
+            "yaw": 80,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "rock_mid",
+            "along_m": 6.0,
+            "lateral_m": -6.5,
+            "height": 0.9,
+            "yaw": -40
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 13.0,
+            "lateral_m": -14.0,
+            "height": 3.2,
+            "yaw": -35,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "cliff_shelf",
+            "along_m": 24.0,
+            "lateral_m": -24.0,
+            "height": 18.0,
+            "yaw": -90,
+            "rise_m": -12.0,
+            "scale_min": 0.8,
+            "scale_max": 1.2
+          },
+          {
+            "asset": "cliff_shelf",
+            "along_m": 44.0,
+            "lateral_m": -36.0,
+            "height": 18.0,
+            "yaw": -60,
+            "rise_m": -9.0,
+            "scale_min": 0.9,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 30.0,
+            "lateral_m": -15.0,
+            "height": 7.0,
+            "yaw": 50,
+            "scale_min": 0.6,
+            "scale_max": 1.5
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 55.0,
+            "lateral_m": -22.0,
+            "height": 12.0,
+            "yaw": -80,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 95.0,
+            "lateral_m": -38.0,
+            "height": 58.0,
+            "yaw": 20.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 24.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 120.0,
+            "lateral_m": 30.0,
+            "height": 72.0,
+            "yaw": -40.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 32.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 150.0,
+            "lateral_m": -8.0,
+            "height": 48.0,
+            "yaw": 70.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 18.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 2.5,
+            "lateral_m": 0.4,
+            "height": 0.28,
+            "yaw": 0,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 4.6,
+            "lateral_m": -0.5,
+            "height": 0.28,
+            "yaw": 17,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 6.9,
+            "lateral_m": 0.6,
+            "height": 0.28,
+            "yaw": 34,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 9.0,
+            "lateral_m": -0.3,
+            "height": 0.28,
+            "yaw": 51,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 11.4,
+            "lateral_m": 0.5,
+            "height": 0.28,
+            "yaw": 68,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 13.8,
+            "lateral_m": -0.6,
+            "height": 0.28,
+            "yaw": 85,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 5.0,
+            "lateral_m": 3.2,
+            "height": 0.55,
+            "yaw": 115,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 8.5,
+            "lateral_m": -3.4,
+            "height": 0.7,
+            "yaw": 195,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 12.0,
+            "lateral_m": 3.6,
+            "height": 0.5,
+            "yaw": 276,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 15.5,
+            "lateral_m": -3.0,
+            "height": 0.6,
+            "yaw": 356,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "strata_terrace",
+            "along_m": 8.0,
+            "lateral_m": -8.5,
+            "height": 2.3,
+            "yaw": 95,
+            "rise_m": -0.6,
+            "only_stands": [
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach"
+            ]
+          },
+          {
+            "asset": "strata_terrace",
+            "along_m": 13.0,
+            "lateral_m": 10.0,
+            "height": 2.8,
+            "yaw": -80,
+            "rise_m": -0.6,
+            "scale_min": 0.9,
+            "scale_max": 1.15,
+            "only_stands": [
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach"
+            ]
+          },
+          {
+            "asset": "strata_terrace",
+            "along_m": 21.0,
+            "lateral_m": -13.0,
+            "height": 3.4,
+            "yaw": 70,
+            "rise_m": -0.6,
+            "only_stands": [
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-strata-landform-candidate",
+      "_why": "F40#1 P2-021 r2 (LANE-CR, 7 Nov 2026). r1 (candidates[12], strata terrace) was flat, 6.17 -> 6.03: judges read the low three-step terraces as 'stone staircases / flat slabs pasted on the grass' and still asked for layered elevated land and ledges leading the route. r2 is a new Blender landform (same script, variant r2: four uneven, rougher tiers climbing to one side, 16 x 9.4 x 5.7 m native, lawn-matched turf tops; ralph/reports/LANES/ITEM-F40-1/blender/) placed 5-6 m tall flanking the route on the three scored P2-021 stands (left at 11 m, right at 18 m; at least 16 m from every scored camera), sunk 1 m. Visual only, no collision, no route change. OFF until judged.",
+      "overlay": {
+        "stand_pattern": [
+          {
+            "asset": "rock_mid",
+            "along_m": 6.0,
+            "lateral_m": 6.5,
+            "height": 0.9,
+            "yaw": 40
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 13.0,
+            "lateral_m": 14.0,
+            "height": 3.2,
+            "yaw": 35,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "cliff_shelf",
+            "along_m": 24.0,
+            "lateral_m": 24.0,
+            "height": 18.0,
+            "yaw": 90,
+            "rise_m": -12.0,
+            "scale_min": 0.8,
+            "scale_max": 1.2
+          },
+          {
+            "asset": "cliff_shelf",
+            "along_m": 44.0,
+            "lateral_m": 36.0,
+            "height": 18.0,
+            "yaw": 60,
+            "rise_m": -9.0,
+            "scale_min": 0.9,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 30.0,
+            "lateral_m": 15.0,
+            "height": 7.0,
+            "yaw": -50,
+            "scale_min": 0.6,
+            "scale_max": 1.5
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 55.0,
+            "lateral_m": 22.0,
+            "height": 12.0,
+            "yaw": 80,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "rock_mid",
+            "along_m": 6.0,
+            "lateral_m": -6.5,
+            "height": 0.9,
+            "yaw": -40
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 13.0,
+            "lateral_m": -14.0,
+            "height": 3.2,
+            "yaw": -35,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "cliff_shelf",
+            "along_m": 24.0,
+            "lateral_m": -24.0,
+            "height": 18.0,
+            "yaw": -90,
+            "rise_m": -12.0,
+            "scale_min": 0.8,
+            "scale_max": 1.2
+          },
+          {
+            "asset": "cliff_shelf",
+            "along_m": 44.0,
+            "lateral_m": -36.0,
+            "height": 18.0,
+            "yaw": -60,
+            "rise_m": -9.0,
+            "scale_min": 0.9,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 30.0,
+            "lateral_m": -15.0,
+            "height": 7.0,
+            "yaw": 50,
+            "scale_min": 0.6,
+            "scale_max": 1.5
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 55.0,
+            "lateral_m": -22.0,
+            "height": 12.0,
+            "yaw": -80,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 95.0,
+            "lateral_m": -38.0,
+            "height": 58.0,
+            "yaw": 20.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 24.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 120.0,
+            "lateral_m": 30.0,
+            "height": 72.0,
+            "yaw": -40.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 32.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 150.0,
+            "lateral_m": -8.0,
+            "height": 48.0,
+            "yaw": 70.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 18.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 2.5,
+            "lateral_m": 0.4,
+            "height": 0.28,
+            "yaw": 0,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 4.6,
+            "lateral_m": -0.5,
+            "height": 0.28,
+            "yaw": 17,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 6.9,
+            "lateral_m": 0.6,
+            "height": 0.28,
+            "yaw": 34,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 9.0,
+            "lateral_m": -0.3,
+            "height": 0.28,
+            "yaw": 51,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 11.4,
+            "lateral_m": 0.5,
+            "height": 0.28,
+            "yaw": 68,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 13.8,
+            "lateral_m": -0.6,
+            "height": 0.28,
+            "yaw": 85,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 5.0,
+            "lateral_m": 3.2,
+            "height": 0.55,
+            "yaw": 115,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 8.5,
+            "lateral_m": -3.4,
+            "height": 0.7,
+            "yaw": 195,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 12.0,
+            "lateral_m": 3.6,
+            "height": 0.5,
+            "yaw": 276,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 15.5,
+            "lateral_m": -3.0,
+            "height": 0.6,
+            "yaw": 356,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "strata_landform",
+            "along_m": 11.0,
+            "lateral_m": -12.0,
+            "height": 5.0,
+            "yaw": 80,
+            "rise_m": -1.0,
+            "only_stands": [
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach"
+            ]
+          },
+          {
+            "asset": "strata_landform",
+            "along_m": 18.0,
+            "lateral_m": 14.0,
+            "height": 6.0,
+            "yaw": -95,
+            "rise_m": -1.0,
+            "only_stands": [
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-strata-cliff-candidate",
+      "_why": "F40#4 P2-023 (LANE-CR, 7 Nov 2026; live CPU 6.27 with shelf_edge_fringe ON): judges ask for sculpted, irregular, stratified rock edges instead of flat-topped mesas with straight extruded walls; the mesas in the Sky Shrine and Heartstone frames are the installed cloudreach_cliff_shelf_edge modules from the shared stand pattern (turning/sinking them judged worse, 6.35 -> 5.69). This arm swaps those four cliff_shelf entries for a new Blender module cloudreach_strata_cliff (nine thin, uneven strata with random insets and overhangs, grass ledges and an uneven stepped top; 23.8 x 11.4 x 8.8 m native, placed at its visible height (6.5 m for the near pair, 8 m for the far pair, sunk 0.5 m; the cliff_shelf is a 31 m-tall block scaled to 18 m and sunk 12/9 m, so only its top 6-9 m shows; r1a at 18 m swallowed the cameras, self-look, not judged) with the same position and yaw; script and scale check in ralph/reports/LANES/ITEM-F40-4/blender/). The fringe is not applied to the new module (its inset top would leave AABB-edge bushes floating); its own ledges carry the edge detail. Stand pattern otherwise unchanged (stone-trail candidate list). Visual only, no collision, no route change. OFF until judged.",
+      "overlay": {
+        "stand_pattern": [
+          {
+            "asset": "rock_mid",
+            "along_m": 6.0,
+            "lateral_m": 6.5,
+            "height": 0.9,
+            "yaw": 40
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 13.0,
+            "lateral_m": 14.0,
+            "height": 3.2,
+            "yaw": 35,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_cliff",
+            "along_m": 24.0,
+            "lateral_m": 24.0,
+            "height": 6.5,
+            "yaw": 90,
+            "rise_m": -0.5,
+            "scale_min": 0.8,
+            "scale_max": 1.2
+          },
+          {
+            "asset": "strata_cliff",
+            "along_m": 44.0,
+            "lateral_m": 36.0,
+            "height": 8.0,
+            "yaw": 60,
+            "rise_m": -0.5,
+            "scale_min": 0.9,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 30.0,
+            "lateral_m": 15.0,
+            "height": 7.0,
+            "yaw": -50,
+            "scale_min": 0.6,
+            "scale_max": 1.5
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 55.0,
+            "lateral_m": 22.0,
+            "height": 12.0,
+            "yaw": 80,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "rock_mid",
+            "along_m": 6.0,
+            "lateral_m": -6.5,
+            "height": 0.9,
+            "yaw": -40
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 13.0,
+            "lateral_m": -14.0,
+            "height": 3.2,
+            "yaw": -35,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_cliff",
+            "along_m": 24.0,
+            "lateral_m": -24.0,
+            "height": 6.5,
+            "yaw": -90,
+            "rise_m": -0.5,
+            "scale_min": 0.8,
+            "scale_max": 1.2
+          },
+          {
+            "asset": "strata_cliff",
+            "along_m": 44.0,
+            "lateral_m": -36.0,
+            "height": 8.0,
+            "yaw": -60,
+            "rise_m": -0.5,
+            "scale_min": 0.9,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 30.0,
+            "lateral_m": -15.0,
+            "height": 7.0,
+            "yaw": 50,
+            "scale_min": 0.6,
+            "scale_max": 1.5
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 55.0,
+            "lateral_m": -22.0,
+            "height": 12.0,
+            "yaw": -80,
+            "scale_min": 0.7,
+            "scale_max": 1.3
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 95.0,
+            "lateral_m": -38.0,
+            "height": 58.0,
+            "yaw": 20.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 24.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 120.0,
+            "lateral_m": 30.0,
+            "height": 72.0,
+            "yaw": -40.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 32.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "strata_outcrop",
+            "along_m": 150.0,
+            "lateral_m": -8.0,
+            "height": 48.0,
+            "yaw": 70.0,
+            "scale_min": 0.85,
+            "scale_max": 1.15,
+            "void_ok": true,
+            "void_top_m": 18.0,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 2.5,
+            "lateral_m": 0.4,
+            "height": 0.28,
+            "yaw": 0,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 4.6,
+            "lateral_m": -0.5,
+            "height": 0.28,
+            "yaw": 17,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 6.9,
+            "lateral_m": 0.6,
+            "height": 0.28,
+            "yaw": 34,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 9.0,
+            "lateral_m": -0.3,
+            "height": 0.28,
+            "yaw": 51,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 11.4,
+            "lateral_m": 0.5,
+            "height": 0.28,
+            "yaw": 68,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "paving",
+            "along_m": 13.8,
+            "lateral_m": -0.6,
+            "height": 0.28,
+            "yaw": 85,
+            "scale_min": 0.85,
+            "scale_max": 1.2,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 5.0,
+            "lateral_m": 3.2,
+            "height": 0.55,
+            "yaw": 115,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 8.5,
+            "lateral_m": -3.4,
+            "height": 0.7,
+            "yaw": 195,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 12.0,
+            "lateral_m": 3.6,
+            "height": 0.5,
+            "yaw": 276,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          },
+          {
+            "asset": "rock_low",
+            "along_m": 15.5,
+            "lateral_m": -3.0,
+            "height": 0.6,
+            "yaw": 356,
+            "scale_min": 0.8,
+            "scale_max": 1.3,
+            "only_stands": [
+              "shrine_walk_a",
+              "shrine_walk_b",
+              "heartstone_approach",
+              "gate_landmark_approach",
+              "gate_road_approach",
+              "gate_road_close"
+            ]
+          }
+        ]
+      }
+    }
   ]
 }

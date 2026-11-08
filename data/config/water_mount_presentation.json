@@ -4,7 +4,10 @@
   "_why_on": "tb/vis-tidewake-1104 r1 (CPU, quick_judge, 3 code-blind judges, anchors, calibrate r 0.73): F39#8 Aquaryn mounted-water pose CPU 4.93 -> 6.09 mapped (PRESENT 3/3 -> PARTIAL 3/3), with camera_hide and the wake. Owner 4 Nov: a judged gain ships ON.",
   "scope": "local presentation only; no stamina, collision, network or save change",
   "mounts": {
-    "water_aquaryn": {"extra_sink_m": 0.9, "bob_amplitude_m": 0.12, "bob_period_s": 1.8, "shadows_off": true,
+    "water_aquaryn": {"extra_sink_m": 1.0, "bob_amplitude_m": 0.12, "bob_period_s": 1.8, "shadows_off": true,
+"_why_rider_shadows_off": "F39#8 (LANE-TW, 7 Nov 2026): the seated rider's own shadow fell metres away on the shallow sea floor (a detached dark shape in every mounted frame). True turns the rider's cast shadow and blob off while mounted-swimming and restores them on leaving. OFF until judged.",
+"_why_on_1107": "F39#8 (LANE-TW, 7 Nov 2026): rider_shadows_off true + extra_sink_m 0.9 -> 1.0, CPU 4.97 -> 6.38 mapped (+1.41, all three judges up; quick judge F39-8-a298b52340f5-11072308). r1 at sink 1.4 scored 5.41 -> 6.75 but put the rider 0.29 m under the sea at the deepest bob (test_rider_stays_above_sea_at_deepest_bob), so 1.0 ships.",
+"rider_shadows_off": true,
       "_why_wake": "tb/vis-tidewake-1104: GPU 28 Oct: no splash or wake. A 3 m waterline foam ring and a trailing ring wake (water_mount_wake.gd, reusing the judged P2-072 swimmer ring). Rides this file's enabled flag.",
       "wake": {"surface_lift_m": 0.05, "ring_diameter_m": 3.0, "opacity": 0.45, "trail_lifetime_s": 1.8, "trail_spacing_m": 0.9, "trail_interval_s": 0.12, "max_trail_rings": 10, "pause_fade_s": 0.35}}
   },

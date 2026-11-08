@@ -98,6 +98,10 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		assert_true(PROFILE.settings().has(section), "%s reaches play" % section)
 	assert_true(str(raw.get("_why_shore_surf_on", "")).contains("6.19"),
 		"the surf line's mapped score is recorded in the config")
+	# F39#10 (LANE-TW, 8 Nov): the softer shore-water depth ramp ships ON (CPU 7.15 -> 7.25).
+	var shore: Dictionary = raw.shore_water_candidate
+	assert_true(str(shore.get("_why_f39_10_on_1108", "")).contains("7.15 -> 7.25"), "F39#10 records its score")
+	assert_true(absf(float(shore.water.depth_falloff) - 24.0) < 0.001, "F39#10 longer depth ramp ships")
 	# tb/vis-tidewake-1104 look r18: the First Shore declutter lifted F39#30a CPU
 	# 5.64 -> 5.73 and F39#30b 5.36 -> 5.45, so it ships ON.
 	assert_false(off.has("first_shore_declutter_candidate"), "the First Shore declutter ships on after look r18")

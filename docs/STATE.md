@@ -2,98 +2,46 @@
 
 Read first; update in place, under 25KB. No dated status/goal/handoff documents. Evidence: `ralph/reports/<LANE>/`; history: Git, `archive/`.
 
-## 0. Coordinator handoff and plan (7 Nov 2026)
+## 0. Coordinator handoff and plan (8 Nov 2026)
 
 Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 
 **State:**
-- Batches #808 to the 7 Nov consolidation: about +66 CPU across 136 gains; about 40 rows crossed 6.0. Ledger and board: https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem, with source in `ralph/reports/COORDINATOR/dashboard/status.json`.
-- CPU scores (llvmpipe, Low/Compat, `tools/visual_judge/`) are provisional and only compare within a batch.
-- The board mixes stale GPU and newer CPU scores.
-- Lane handoffs are the `## HANDOFF 7 Nov` sections in `ralph/reports/LANES/{VIS-MEADOWS,VIS-TIDEWAKE,VIS-CLOUDREACH,VIS-STORMWOOD,NEAR6-MS,NEAR6-TW,NEAR6-CR,CREATURES-RALPH,NET-F48}/READY.md`.
+- 7 Nov restart: five lanes, batches #847–#856 merged (7–8 Nov). Ledger and board: https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem, source `ralph/reports/COORDINATOR/dashboard/status.json`. Per-row reports: `ralph/reports/LANES/ITEM-<ROW>/READY.md`; old-lane handoffs: `## HANDOFF 7 Nov` in `ralph/reports/LANES/<lane>/READY.md`. The Default setup script installs Godot 4.7 and Blender 4.2.3.
+- CPU scores (llvmpipe, Low/Compat, `tools/visual_judge/`) are provisional and only compare within a batch; the board mixes stale GPU and newer CPU scores. GPU re-judge (High, then Medium) is still due for every row changed since its last GPU score; a GPU score below the CPU score reopens the row.
+- Owner, 7 Nov evening: about half of the rows tried gained nothing, so all five lanes were stopped and archived (8 Nov 00:20–00:47 UTC). Work restarts one lane, one row at a time, under the process below; add lanes only after the hit rate holds at 70%+ over five rows.
 
 **Owner rules (7 Nov):**
 - Every judged gain over live ships ON, including split or small gains. Only flat, worse, or a gain paid for by another row's loss stays OFF.
 - New art is made in Blender, not Meshy (no credits): new meshes, reskins or recombinations of installed assets. Keep the drafted reference, 1.80 m scale check and provenance, and keep the flag OFF until judged. This overrides the 27 Sep "meshes stay with Codex" split.
 
-**Plan:**
-- Five lanes, each on one row at a time; see the decisions below.
-- End of day 8 Nov: GPU re-judge (Medium and High) of every row whose last score is CPU-only or older than its latest landed change. The bar stays 7.5. A GPU score below the CPU score reopens the row.
+**Process (owner, 8 Nov: "continue with the path you think is best"):**
+- Pick worst-first (floor rule), preferring rows where an existing asset (installed packs, OFF Meshy pieces on main, or the archive below) fixes the judges' stated defect.
+- Diagnose before building: the judges' words, crops of today's frames, the object at fault, the planned fix. The coordinator reviews it before any judge round.
+- Visibility check: same stands, live vs arm, one sheet. An invisible change is reworked, not judged.
+- Noise floor: one live-vs-live quick_judge round per session; a gain counts only above max(floor, 0.3).
+- Pre-ready check: run every test that greps a touched file, flag, asset path or folder (code and fixtures), texture policy when textures change, JSON parse, HELD. Paste the output in READY.
+- New art: upgrade or recombine existing meshes (CC0 PBR from Poly Haven/ambientCG, baked wear, partial plates); scratch procedural only for rocks, terrain and hard-surface; render a multi-angle sheet against the reference before judging. No free generator reaches creature quality on CPU (research 8 Nov).
+- Coordinator lands judged gains in `tb/land-batch-N` PRs (merge-tree/commit-tree, pre-push checks, `full-ci`, auto-merge, one full-CI PR at a time).
 
-**Lane brief:**
-- Branch `tb/item-<row>` from main.
-- The row, its score and source, and the judges' asks, from `ralph/reports/VISUAL/item-scores/` and the handoffs.
-- One-item quick_judge rounds. A gain ships ON with `_why_on`, and any OFF-assert in a test flips to ON with the score.
-- Hard rules: no camera reframing, never shrink creatures, red reserved for Team Tether, never weaken tests, one Godot process at a time.
-- Done at 7.5, after two flat rounds, or when blocked; record the reason when parking.
-- Write READY.md, push, stop.
+**Assets on hand:** 140 Meshy GLBs on main (about 97 ON, about 24 wired OFF, 19 unwired incl. an 11-piece Cloudreach town set). `ralph/reports/ARCHIVE/lane-work/ASSETS.tsv` lists 808 archived files (1.1 GB; 21 Meadows Meshy props, about 49 creature candidates); restore one file without deep history from the GitHub blob API (`git/blobs/<blob>`, Accept raw) and check it with `git hash-object`.
 
-**Coordinator loop (every 25–30 min):**
-- Batch lane gains into one `tb/land-batch-N` PR built with `git merge-tree` and `commit-tree`.
-- Before pushing, check that JSON parses, every OFF `creature_model_flags` entry is in HELD, no test asserts a newly ON flag OFF, and any big deletion is only reformatting.
-- Open the PR with the template body and the `full-ci` label, and subscribe.
-- Run only one full-CI PR at a time; stack the next batch on it.
-- Merge by hand when green. Re-run a failed job once, after a comment.
-- Republish the board.
+**Now (LANE-MESHY, one lane):** noise floor; re-check the judged-but-OFF Meshy pieces (Meadows cliffs P2-014 +1.04, Meadows ironwood +0.66, Stormwood junction lantern posts, Cloudreach island shell P2-023); then the Veilfall hero (F39#2/#31), Tidewake dock village (F13#5), Warrens (F38#30/#24, CPU 3.51), F38#41 (rocks back into the original nature folder, tests unchanged) and F38#5 (root-cause two catching proofs that fail at the 1.3x Bramblebun before any test change).
 
-**Blocked (owner, GPU or capture):**
-- F39#15 shoals: terrain re-bake plus route re-proof.
-- F41#21/#16 Hollows results: GPU only.
-- F41#3: spacing stays (owner); visual fix only.
-- F38#19/#26/#31/#33: capture-tool fixes (below).
-- F41#14 candy: the +0.29 arm breaks the rule that rarer candy is bigger.
+**Blocked (owner, GPU or capture):** F39#15 shoals (terrain re-bake plus route re-proof); F41#21/#16 Hollows results (GPU only); F41#3 spacing stays (owner), visual fix only.
 
-**Known CI:**
-- `smoke_net_f48_cut_key` intermittent stale peer: NET-F48 watchdog fix landed. If it recurs, read its handoff.
-- `smoke_water_combat_pause` (#843) and `smoke_water_dismount_state` (#837): one failure each, both passed on re-run.
-
-**QUEUE: quick wins first (built but never judged, or one fix away):**
-- Judge these arms: F38#12 orb reward and F38#5 grow-only scale (VIS-MEADOWS), F38#28 arena boundary arms (VIS-STORMWOOD), F39#25 map overlay (NEAR6-TW), F40#2 stone-ground candidate (VIS-CLOUDREACH).
-- F40#12 Cloudreach speaker: unclaimed, base captured.
-- One tooling lane:
-  - Carry VIS-TIDEWAKE's quick_judge `find_frame` patch (`runbook/quick_judge_find_frame.patch.py`) into `tools/visual_judge/quick_judge.py`.
-  - HUD stand settle frames 900 (F38#19).
-  - Stand creatures keep physics (F38#26).
-  - Stand alpha pose calls `set_alpha(true)` (F38#31).
-  - Catch capture shoots `06-breakout` while the card holds (F38#33).
-
-**QUEUE: Warrens (owner 7 Nov):** re-seat the F38#30 shell into the terrain (5.10), which also unblocks F38#24 (4.42).
-
-**QUEUE: Blender rows:**
-- F41#1 Stormheart crown and core (3.94).
-- F41#8 outfit variants (4.96).
-- F38#17 Solene/Hald variant.
-- F40#1 stone shelves (5.29).
-- F41#9 harvest cues (5.40).
-- F36#70 Sparkit legs (5.41).
-- F38#6 pickup cloth (5.52).
-- F39#31/#2 Veilfall (5.56/5.78).
-- F41#14 candy in rarity order (5.70).
-- F40#4 strata edges (6.27).
-- F38#41 boulders.
-- F38#20 keep on a hill.
-
-**QUEUE: scene and shader rows:**
-- Fulgocobra and Mirejaw eye emission (5.78/5.84).
-- Shadelet, Paddlenewt, Glimmermoth and Tempestwing faint clipping and floating hit-react.
-- F40#19 rain wetness (5.61).
-- F40#17 rim turf (6.19).
-- F41#6 telegraph cues (6.76).
-- F41#7 baseline (6.58).
-- F39#16 dash rhythm (6.75).
-- F38#38 Missing chip (7.33).
-- Not started: F39#17, #8, #10, #5, #27 and F38#36, #11, #27.
+**Known CI:** `smoke_net_f48_cut_key` intermittent stale peer (NET-F48 watchdog fix landed); `smoke_water_combat_pause` and `smoke_water_dismount_state` passed on re-run once each.
 
 **Owner decisions (7 Nov, answered):**
-1. **Lanes:** five lanes. Run them long-lived: each takes the next QUEUE row and resets its context between rows.
+1. **Lanes:** five lanes (superseded 7 Nov evening: one lane, one row at a time, process above).
 2. **Setup first:** the next coordinator's first job is to test, then propose (`update_environment`), a Default setup script. It installs Godot 4.7-stable to `/usr/local/bin/godot` (github.com releases) and portable Blender 4.2.3 LTS (download.blender.org `Blender4.2/blender-4.2.3-linux-x64.tar.xz`) under `/opt`. Budget about 10 GB of disk per lane, and delete frames after each round.
-3. **Order:** follow the QUEUE order above: quick wins, then Blender rows, then scene rows. Skip blocked rows.
+3. **Order:** worst-first, existing assets first (process above). Skip blocked rows.
 4. **Cap per row:** 3 judged rounds or about 3 h, or 5 rounds or about 6 h for art rows. Also stop at 7.5 or after two flat rounds.
 5. **GPU re-judge:** stays at end of day 8 Nov. Lanes start now; reorder the QUEUE after the re-judge.
 6. **F38#30 Warrens:** re-seat the hillside shell into the terrain, keeping the entrance and route. This unblocks F38#24, so move both into the QUEUE.
 7. **F41#3:** keep combat spacing unchanged. Fix the look with a fade or clip tweak.
 8. **F49 route saves:** don't commit them to main; a lane re-generates any single save when needed.
-9. **Meshy key:** leave as is.
+9. **Meshy key:** leave as is. **F38#5 (later 7 Nov):** cluster 1914 may use a 4 m radius (test cap 4.0 for 1914 only, farthest member <= 10 m from the road).
 10. **Notes:** never put two lanes on rows that share a file (`hud.json`, `creature_coat_flags.json`, `tidewake_look.json`, `stormwood_ground_finish.json`). Keep landing batched, with one full-CI run at a time. Nine sessions used the weekly limit in about 3 days, so watch usage.
 
 **Earlier owner rulings still in force** (full text in Git history):
