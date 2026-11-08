@@ -1,0 +1,30 @@
+[
+ {
+  "row": "F41#12",
+  "item": "P2-040",
+  "frame": "stormwood__landmark__lantern_hollow__night__close",
+  "arm": "live",
+  "tree": "be95950b907e5a5a4a6db38cf86b4b7ee0d1aea1",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__landmark__lantern_hollow",
+   "--times=night",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "match": "exact",
+  "path": "F41-12/live/High/stormwood__landmark__lantern_hollow__night__close.jpg",
+  "sky_fraction": 0.07,
+  "lower_edges": 0.2716
+ }
+]
