@@ -1,0 +1,30 @@
+rect wd_terrace_t1_l [1102.88, 2225.13] half 1.11 x 0.65
+rect wd_terrace_t1_c [1104.81, 2226.62] half 1.11 x 0.65
+rect wd_terrace_t1_r [1106.75, 2228.12] half 1.11 x 0.65
+rect wd_terrace_t2_l [1101.09, 2225.83] half 1.55 x 0.94
+rect wd_terrace_t2_c [1103.81, 2227.93] half 1.55 x 0.94
+rect wd_terrace_t2_r [1106.53, 2230.03] half 1.55 x 0.94
+rect wd_terrace_t3_l [1098.91, 2227.05] half 1.99 x 1.18
+rect wd_terrace_t3_c [1102.4, 2229.75] half 1.99 x 1.18
+rect wd_terrace_t3_r [1105.9, 2232.45] half 1.99 x 1.18
+points near the garden: 20 | inside a footprint (+1 m, spine +2 m): 3
+     data/config/debug_teleport_spots.json /biomes[3]/bands[10]/spots[0]/position (1105.458, 2223.33) []
+     data/config/tidewake_destination_read.json /add[4]/position_xz_m (1108.24, 2225.68) []
+HIT  data/config/tidewake_destination_read.json /add[5]/position_xz_m (1104.46, 2224.91) ['wd_terrace_t1_l', 'wd_terrace_t1_c']
+HIT  data/config/tidewake_destination_read.json /add[6]/position_xz_m (1100.68, 2224.14) ['wd_terrace_t2_l']
+     data/config/tidewake_look.json /beach_scene_candidate[52]/position_xz_m (1098.66, 2221.38) []
+HIT  data/config/tidewake_look.json /beach_scene_candidate[53]/position_xz_m (1103.71, 2224.3) ['wd_terrace_t1_l']
+     data/config/tidewake_look.json /beach_scene_candidate[54]/position_xz_m (1126.45, 2211.7) []
+     data/config/tidewake_look.json /beach_groups_candidate[30]/position_xz_m (1090.26, 2218.6) []
+     data/config/tidewake_look.json /beach_groups_candidate[31]/position_xz_m (1092.46, 2212.24) []
+     data/config/water_garden_terraces_blockout.json /landmark_xz (1105.458, 2223.33) []
+     data/config/water_garden_terraces_blockout.json /terraces[0]/at_xz (1120.0, 2207.0) []
+     data/config/water_garden_terraces_blockout.json /terraces[1]/at_xz (1126.0, 2204.0) []
+     data/config/water_garden_terraces_blockout.json /terraces[2]/at_xz (1132.0, 2201.0) []
+     data/config/water_local_chains.json /wayfinding_lures[6]/at_xz (1079.0, 2259.0) []
+     data/config/water_pickups.json /harvest[144]/position (1092.0, 2240.0) []
+     data/config/water_world.json /land_routes[11]/polyline[1] (1078.27026367188, 2248.11572265625) []
+     data/config/water_world.json /land_routes[11]/polyline[2] (1080.0, 2200.0) []
+     data/config/water_world.json /land_routes[11]/polyline[3] (1105.458, 2223.33) []
+     data/config/water_world.json /land_routes[11]/polyline[5] (1078.27026367188, 2248.11572265625) []
+     data/config/water_world.json /landmarks[10]/position (1105.458, 2223.33) []
