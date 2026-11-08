@@ -1,0 +1,18 @@
+# F38#24 / F38#30: the black sky slabs in the Warrens walk_03 frame (cause note, read-only)
+
+LANE-SCOUT, 8 Nov 2026, coordinator request. No game change; LANE-MESHY builds the fix.
+
+## What the frames show
+- GPU High (`tb/gpu-frames-1108` F38-24/live/High, `meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day`, tree be95950b): three flat **pure-black drum shapes** with toothed lower edges hang 15–25 m up across the top of the frame, with black rock chunks and green leaf cards scattered around them in the air, and the green hill shell's underside at top right.
+- **CPU Compatibility shows the same objects**, not a Forward+-only object: `ralph/reports/LANES/ITEM-F38-30-STANDS/_sheet_stands.jpg` (old and new walk_03) has the same floating drums, dark brown with orange patches instead of black, and the same flying leaves and rocks. So it is one scene problem that renders worse on Forward+, not a missing Forward+ material.
+
+## What the objects are
+1. **The drums are the Burrow Warrens chamber boxes seen from outside.** `scripts/world/burrow_warrens.gd` `_build_chambers()` builds the five chambers from `data/config/burrow_warrens.json` `chambers` (mouth, hall, …); each wall carries an outward earth skin, node `ExteriorEarthSkin_<id>` from `_clad_exterior_face()`, coloured by `site.exterior_cladding_colour` (#4a3a2a). These are meant to sit inside the procedural Bank hill.
+2. **The Bank that hid them is turned off.** `burrow_warrens.json` `bank.hill_shell` is enabled with `hide_nodes: ["Bank", "BankCap"]` (applied in `burrow_warrens.gd` around line 3587, and the r2 merge at 3760), so the procedural Bank surface that enclosed the chambers no longer draws. The replacement is the visual-only Meshy shell (`assets/props/meshy-1020/burrow_hill_mound/burrow_hill_mound.glb`, about 247 m across vs the Bank's ~145 m collision). From walk_03 the camera is under the shell's overhang, whose downward faces are culled, so nothing covers the chamber exteriors from below.
+3. **The flying leaves and rocks are the Bank's own surface dressing**, still seated at Bank heights although the Bank is hidden: the `bank` dressing builders in `burrow_warrens.gd` (`_build_bank_rubble()` line 6061, `_build_bank_face_outcrops()` 5948, `_build_bank_crest_trees()` 5832, `_build_bank_roots_and_scrapes()` 5650, plus `skirt_rock_models` / `skirt_flora_models`).
+4. **Why black on GPU and brown on CPU:** the skins face outward and down, under the shell, so on Forward+ High they sit in the shell's real-time shadow with no direct light and render near-black; Low/Compatibility has softer, shorter shadows, so the authored dark brown and the orange patches still show. (Inference from the two renders; not instrumented.)
+
+## Likely fix (smallest first)
+- **Hide what the shell made orphan:** when `hill_shell.enabled`, do not draw the chamber `ExteriorEarthSkin_*` and the outer faces of the chamber walls from outside (only the interiors are ever seen in play), and skip or re-seat the Bank dressing (rubble, outcrops, crest trees, skirt rocks and flora) so it sits on the shell or terrain, not on the hidden Bank. Presentation only; no collider changes. This removes the slabs and the flying debris from every stand outside the hill.
+- **The real fix** (already scoped in `ITEM-F38-30/READY.md` and `ITEM-F38-30B/READY.md`): one hill whose visual equals its collision (Bank height field with the shell's grass and earth treatment), keeping the exterior ring uncovered.
+- Not the fix: shell skirt, smaller shell, unhiding the Bank, the stand guard and a shell collider were all tried and parked (`ITEM-F38-30-STANDS/READY.md` lists them).
