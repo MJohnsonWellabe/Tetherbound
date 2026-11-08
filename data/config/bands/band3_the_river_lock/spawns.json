@@ -526,10 +526,11 @@
       "order": 3037,
       "species": "galecrest",
       "count": 4,
+      "_why_f38_36": "F38#36 P2-078 (LANE-MS, 7 Nov 2026): OWNER-0912 placed Corin (village_npcs.json trader) at (-150, 4232), inside this flock's 8 m disc; four galecrest stood 4-8 m round him and their spread wings filled his dialogue view. Centre moved 23 m further up the far bank, z 4235 -> 4258 (about 26 m from Corin, 55 m from the crossing deck at z 4203, same radius and role). quick_judge F38-36-0cc46557b370-11072314 (ralph/reports/LANES/LANE-MS/qj/): CPU mapped 6.98 -> 7.89 (+0.91), all three code-blind judges prefer it.",
       "centre": [
         -152.0,
         0.0,
-        4235.0
+        4258.0
       ],
       "radius": 8.0,
       "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the aggressor role, in the trench where a 15m gorge gives it real updraft, the river gorge and the Old Mill Crossing.",

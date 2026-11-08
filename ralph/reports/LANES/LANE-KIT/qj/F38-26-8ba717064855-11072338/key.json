@@ -1,0 +1,23 @@
+{
+ "Go": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Nu": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ru": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Vg": {
+  "anchor": false,
+  "label": "F38#26",
+  "A": "/home/user/Tetherbound/.artifacts/qj/F38-26-8ba717064855-11072338/k/sides/F38_26_base.jpg",
+  "B": "/home/user/Tetherbound/.artifacts/qj/F38-26-8ba717064855-11072338/k/sides/F38_26_cand.jpg"
+ }
+}

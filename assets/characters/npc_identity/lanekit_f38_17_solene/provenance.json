@@ -1,0 +1,15 @@
+{
+  "lane": "LANE-KIT",
+  "row": "F38#17",
+  "date": "2026-11-07",
+  "method": "installed-cast recombination, no Meshy, no new mesh",
+  "source_model": "res://assets/characters/officer_b/officer_b_lod0.glb",
+  "source_model_sha256": "7fecb7bcd7a9b852ee2f3ca903e5479454d0768db6892b744d655ddbe72fbf89",
+  "atlas": "res://assets/characters/officer_b/officer_b_lod0_texture_0_vis1.png",
+  "atlas_sha256": "1e01aaa8c2390dac0aca4dcf953263027c4a06a7c5bd7163a09459bdb98a5452",
+  "producer": "ralph/reports/LANES/ITEM-F38-17/embed_atlas_glb.py",
+  "output_sha256": "4a0f12f6ec8b7d53774f301b58c9ae3bbf033fde18af8973b2e4f1218c10d1c6",
+  "portrait": "res://assets/ui/portraits/officer_b.png",
+  "scale_check": "height 1.80 m from the rank config (art.json grunt), same as the trainer ruler",
+  "reference": "installed portrait plate assets/ui/portraits/officer_b.png (the same character)"
+}

@@ -93,7 +93,7 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 6. **F38#30 Warrens:** re-seat the hillside shell into the terrain, keeping the entrance and route. This unblocks F38#24, so move both into the QUEUE.
 7. **F41#3:** keep combat spacing unchanged. Fix the look with a fade or clip tweak.
 8. **F49 route saves:** don't commit them to main; a lane re-generates any single save when needed.
-9. **Meshy key:** leave as is.
+9. **Meshy key:** leave as is. **F38#5 (later 7 Nov):** cluster 1914 may use a 4 m radius (test cap 4.0 for 1914 only, farthest member <= 10 m from the road).
 10. **Notes:** never put two lanes on rows that share a file (`hud.json`, `creature_coat_flags.json`, `tidewake_look.json`, `stormwood_ground_finish.json`). Keep landing batched, with one full-CI run at a time. Nine sessions used the weekly limit in about 3 days, so watch usage.
 
 **Earlier owner rulings still in force** (full text in Git history):

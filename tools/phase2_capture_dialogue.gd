@@ -5,6 +5,8 @@ extends "res://tools/phase2_capture_characters.gd"
 ## is started directly after the post fixture; this records presentation, not
 ## proof that a normal interaction or progress gate is reachable.
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+const TRAINER_NPC := preload("res://scripts/world/trainer_npc.gd")
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 ## A post more than this far from the speaker's live body is a stale catalogue post.
 const POST_RESEAT_M := 6.0
 
@@ -189,7 +191,11 @@ func _capture_row_with_dialogue(row: Dictionary) -> void:
 	# does (encounter_director.gd `_present_trainer_victory`). Framing is the
 	# production camera's; nothing about the shot is changed here.
 	var speaker_note := await _frame_speaker(row)
-	if not bool(panel.call("start", conversation)):
+	# F38#17: hand the panel the identity the game's own trainer node hands it
+	# (trainer_npc.gd with_variant_portrait), so an enabled appearance variant's
+	# plate is captured as play shows it. Empty for every other post.
+	var identity := TRAINER_NPC.with_variant_portrait({}, _trainer_spec(row))
+	if not bool(panel.call("start", conversation, identity)):
 		_failures.append("%s: panel refused %s" % [str(row.frame_id), conversation])
 		panel.visible = false
 		_write_manifest()
@@ -257,6 +263,24 @@ func _settle_dialogue_capture() -> bool:
 	for frame in 7:
 		await process_frame
 	return true
+
+
+## The placed trainer spec for a trainer post (encounter directors'
+## `trainer_specs`, matched by authored id), or {} for any other post.
+func _trainer_spec(row: Dictionary) -> Dictionary:
+	var id := str(row.get("authored_id", ""))
+	if id.is_empty():
+		return {}
+	for node: Node in root.find_children("*", "Node", true, false):
+		var specs: Variant = node.get("trainer_specs") if "trainer_specs" in node else null
+		if specs is Dictionary and (specs as Dictionary).get(id) is Dictionary:
+			return (specs as Dictionary)[id]
+	# Not placed in this state: the authored Meadows trainer table (the same
+	# rows the stronghold and encounter directors place).
+	for raw: Variant in BAND_CONTENT.load_config("res://data/config/trainers.json", "trainers").get("trainers", []):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == id:
+			return raw
+	return {}
 
 
 ## The speaker's body for a character post: matched by authored id, display
