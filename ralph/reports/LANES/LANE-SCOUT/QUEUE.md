@@ -10,22 +10,42 @@ Evidence, not a plan. Each entry checks whether the judges' last complaint for a
 
 ## Best candidates so far
 
-Ranked by expected visible gain per hour of build. Updated after each batch.
+Ranked by expected visible gain per hour of build. Updated after batch 6 (8 Nov 21:10 UTC). From batch 6 on, messages to the coordinator were refused (untrusted device), so this table is the channel.
+
+**Build rows (defect real, visible and fixable today):**
 
 | # | Row | Fix idea | Fix class | Gain |
 |---|---|---|---|---|
-| 1 | F41#2 Surge phases | Building darker/cooler than Calm, Break darkest with the strongest bolts and a ground flash, Fading lighter than Break (today Fading has the biggest bolts) | config | medium-high |
-| 2 | F41#10 Glass Sink | Replace the flat navy sink plane (half of every frame) with a dark fused-glass material; scatter installed glass spikes down the slope from the ring to the edge; seat the ring | config/material + scene | medium-high |
-| 3 | F41#16 Hollows loss | GPU re-shoot on the corrected loss stand (old score judged a win frame) | GPU-only | possibly high |
-| 4 | F38#35 post poses | (downgraded in batch 5: the existing stance arm was judged flat at this frame size) separate villager from trainer at the post | scene | low-medium |
-| 5 | F41#5 forest distance | Mid-distance tree clusters 60–150 m out at the three open stands; cut the mirror flood-plane reflection | scene + config | medium |
-| 6 | F40#14 map label | Capture-stand: shoot the map with Gate/Lower Cliffs surveyed (today 0% surveyed, nothing to judge); widen the "You are here" box | capture-stand + config | medium |
-| 7 | F39#9 catch camera | Capture-stand: absorbing/resting frames show the post-breakout card because the throw is at 0%; weaken first. Hide the ghost chance chip on throw | capture-stand + config | medium |
-| 8 | F41#1 Stormheart | Vary the four identical royal-blue banners (size, spacing, muted storm blue); move the lattice pylon out of the approach sightline | config + scene | medium |
-| 9 | F41#4 destinations | Move one Lantern Pool to the path edge facing the camera, teal water, two lit lantern posts at its rim | scene | medium |
-| 10 | F41#21 Hollows reward | GPU arm `hud.json victory_focus` (OFF, never judged) | GPU-only | medium |
+| 1 | F41#2 + F41#22 Surge phases | Calm, Building and Surge are the same frame at every stand. Building darker/cooler than Calm, Break darkest with a ground flash, Fading lighter than Break (today Fading has the biggest bolts). One fix serves both rows | config | medium-high |
+| 2 | F41#18 Tether uniforms | Officers are no longer dark but carry no faction mark: a Team Tether oxblood sash/collar accent (appearance variant, same mesh; red is Tether-reserved) | config + recolour | medium-high |
+| 3 | F41#10 Glass Sink | Half of every frame is a flat untextured navy plane: dark fused-glass material, glass spikes down the slope, seat the ring | config/material + scene | medium-high |
+| 4 | F41#20 dialogue reuse | Fenn and Oswin share model and portrait image: recolour Oswin plus portrait (the F41#8 recipe) | config + recolour | medium |
+| 5 | F41#24 cleanliness | A flat pinkish-mauve square quad on the ground at the matrix giant stand: find and remove; mushroom caps render as flat cream discs | scene | medium |
+| 6 | F39#6 faint state | Aquaryn's fainted body floats half a body-height above the sand, shadow detached: ground its faint end pose | animation/config | medium |
+| 7 | F38#27 settings | Bindings list shows 3–5 rows above a tall empty band: let it fill the panel; glyphs for the footer tab prompts | UI layout | medium |
+| 8 | F38#37 dialogue rock | Move the foreman's post to the lit quarry mouth; find the flat unlit cyan ringed panel at his post | scene | medium |
+| 9 | F40#19 rain | Rain frames are as dry as clear: wetness term (darker, glossier path/stone/grass) plus low gate mist | config/code | medium |
+| 10 | F41#5 forest distance | Mid-distance groves 60–150 m out at the open stands; cut the mirror flood plane | scene + config | medium |
+| 11 | F41#3 spacing | Dither-fade Voltarach over the ally in the opening exchange (owner-allowed fix) | code/config | medium |
+| 12 | F38#3 fight scale | Trainer standoff so the humans stop overlapping Terrapup's legs | config | medium |
+| 13 | F38#8 fly grip | Bend elbows, trail legs; glide frame at cruise height | config/animation | medium |
+| 14 | F41#1 Stormheart | Vary the four identical banners; move the lattice pylon out of the approach | config + scene | medium |
+| 15 | F41#4 destinations | Bring a Lantern Pool to the path edge with lit lantern posts | scene | medium |
+| 16 | F39#30 / F13#5 night water | Darken the shallows at night (time-of-day input to `water.gdshader`) | code | medium |
 
-Watch: `lantern_hollow__night__close` (F41#12) records hour 23 but renders daylit under the canopy. Check on GPU; if it holds, Stormwood night under canopy is a bigger defect than the road line.
+**Capture-stand bugs (fix before any judging of these rows):**
+- F39#21: job.json repros lack `--verified-victory-lifecycle`, so no win/aftermath frame is ever written. The row can never be scored as it stands.
+- F38#14 / F39#9: the catch tool shows the "broke free" card over frames 02–05 (suspect: the verdict-card hold from ITEM-CAPTURE-FIXES).
+- F40#14: map shot at Surveyed 0%, so no label exists to judge.
+- F40#3: observatory and skyroad-arch stands fail ("no supported production-camera stand").
+- F40#20 / F40#2: the eyrie "close" stand is the same shot as "approach".
+- F13#5: T2-current `swim-brine-day` misses its authored current.
+- F39#11: today's fight ends before the job's t-208/216 frames.
+- F41#23: every catalogue Stormheart stand is inside the hollow (only the F41 matrix stand sees it from outside).
+
+**GPU re-score only (defect gone on today's frames, old score is stale):** F39#29 (3.54, speaker now visible), F41#15 (3.19, banner gone), F41#16 (loss stand fixed), F39#7, F39#20, F39#5, F39#8, F39#22, F39#23, F39#19.
+
+**Watch:** F41#12's night frame (hour 23) renders fully daylit under the Deepwood canopy; check on GPU.
 
 ## Batch 0: rows already diagnosed today (cited, not re-captured)
 
