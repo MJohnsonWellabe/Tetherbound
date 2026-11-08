@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F38#36",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F38-36-0cc46557b370-11072314/k/sides/F38_36_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F38-36-0cc46557b370-11072314/k/sides/F38_36_cand.jpg",
+  "brief": "2 in-game frames (Meadows) for one catalogue subject: dialogue speaker occlusion. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+  ]
+ }
+]
