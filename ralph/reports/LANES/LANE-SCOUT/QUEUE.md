@@ -17,7 +17,7 @@ Ranked by expected visible gain per hour of build. Updated after each batch.
 | 1 | F41#2 Surge phases | Building darker/cooler than Calm, Break darkest with the strongest bolts and a ground flash, Fading lighter than Break (today Fading has the biggest bolts) | config | medium-high |
 | 2 | F41#10 Glass Sink | Replace the flat navy sink plane (half of every frame) with a dark fused-glass material; scatter installed glass spikes down the slope from the ring to the edge; seat the ring | config/material + scene | medium-high |
 | 3 | F41#16 Hollows loss | GPU re-shoot on the corrected loss stand (old score judged a win frame) | GPU-only | possibly high |
-| 4 | F38#35 post poses | Per-NPC role idles from installed clips (Rig_Medium_General: Idle_B, Interact, Use_Item); props already present | installed-asset swap | medium |
+| 4 | F38#35 post poses | (downgraded in batch 5: the existing stance arm was judged flat at this frame size) separate villager from trainer at the post | scene | low-medium |
 | 5 | F41#5 forest distance | Mid-distance tree clusters 60–150 m out at the three open stands; cut the mirror flood-plane reflection | scene + config | medium |
 | 6 | F40#14 map label | Capture-stand: shoot the map with Gate/Lower Cliffs surveyed (today 0% surveyed, nothing to judge); widen the "You are here" box | capture-stand + config | medium |
 | 7 | F39#9 catch camera | Capture-stand: absorbing/resting frames show the post-breakout card because the throw is at 0%; weaken first. Hide the ghost chance chip on throw | capture-stand + config | medium |
@@ -151,14 +151,11 @@ Frames: `quick_judge.py capture <rows>` on c502453d (tree dee9ffb29696), CPU Low
 ### F38#35 P2-050 human post poses (Meadows)
 - Last: 5.88 (board, GPU).
 - Judges: "Oskar, Halda and Lark all stand in the same arms-down idle on bare dirt with no role prop or gesture, small in frame, so the posts read as placeholder NPC spawns" (`meadows/scores-gpu.json`).
-- Still true? **Partly.** The posts now have props: Halda stands at a tournament booth with an awning and a bracket board, Lark beside a path signpost, Oskar by a bench on the village road. But all three still stand in the identical straight arms-down idle, and in the wide frames the trainer stands right beside each NPC (Oskar, Halda) so the two read as one small pair in the middle distance. The dialogue close-ups look good.
-- Fix class: installed-asset swap (per-NPC idle clip) / config.
-- Fix idea: give each post NPC a role idle from clips already installed in `assets/characters/Rig_Medium_General.glb` (Idle_B, Interact, Use_Item; check which NPC rigs share it): Halda Interact at the board, Lark Idle_B with a hand on the signpost, Oskar Use_Item. No new art.
-- Expected gain: medium (the defect is the pose, it is in all three judged frames, and the props are already there to sell it).
-
-## Batch 2: Tidewake look/T2 sets, Stormwood dialogue, fight and matrix (captured 8 Nov 14:26–15:14 UTC)
-
-Tools: `capture_tidewake_f13_5.gd` (F39-look, T2-current; 1280x720 Low), `quick_judge.py capture F41#20 F41#15 F41#18` and `F41#3`, `capture_stormwood_f10_matrix.gd` (calm, surge). Same source and renderer as batch 1.
+- Still true? **Partly.** The posts now have props: Halda stands at a tournament booth with an awning and a bracket board, Lark beside a path signpost, Oskar by a bench on the village road. All three still stand in the same straight arms-down idle, and in the wide frames the trainer stands right beside each NPC (Oskar, Halda), so the two read as one small pair in the middle distance. The dialogue close-ups look good.
+- **Correction (batch 5):** a pose arm already exists and lost. `data/config/npc_post_stances.json` (`enabled: false`, UIPOSES 1 Nov) layers role stances on these villagers; VIS-MEADOWS judged it flat (0.0 from all three judges) after its own post-stand fix, because at the production follow camera the villagers are about 1/6 of frame height and no stance reads (`ralph/reports/LANES/VIS-MEADOWS/READY.md` line 155). A different idle clip faces the same limit.
+- Fix class: scene placement (where the NPC stands relative to the trainer and camera), not pose.
+- Fix idea: separate each villager from the trainer (2–3 m to the side, facing the camera) so the NPC reads as its own figure at its post; stances only after that.
+- Expected gain: low-medium (pose work is proven flat at this frame size).
 
 ### F39#30 The biome frame matrix (Tidewake)
 - Last: 5.75 (board; VIS-TIDEWAKE CPU, F39#30a golden 6.18 / F39#30b 5.75).
@@ -260,9 +257,9 @@ Tools: `quick_judge.py capture F40#9`, `F40#2 F40#3`, `F40#5` and `capture_cloud
 - Last: 5.20 (board); GPU 5.50.
 - Judges: "The named NPCs are tiny mid-ground figures beside the trainer, half lost in tall grass (Tavi frame), shadow (Sora frame) and the tree trunks (keeper frame), with no post props or poses to say who they are" (`cloudreach/scores-gpu.json`).
 - Still true? **Partly.** Props exist now: Tavi stands on a stone pad with a straw training dummy and a wooden rack, Maela beside a stone pedestal on the perch path. But in all three wide frames the NPC is still a small figure right beside the trainer: Tavi's legs are in tall grass, Sora stands in the dark shadow at the foot of the stone arch, Maela is half behind tree trunks. All three use the same arms-down idle. The dialogue close-ups read well.
-- Fix class: scene placement (post spots) plus config (grass clearing at posts) plus the shared idle-clip swap (see F38#35).
-- Fix idea: move Sora 3–4 m out of the arch shadow into the sun, move Maela clear of the trunks to the open side of the pedestal, clear grass in a 2 m disc around Tavi's pad; then give each a role idle.
-- Expected gain: medium (all three judged frames; placement is cheap, pose shared with F38#35).
+- Fix class: scene placement (post spots) plus config (grass clearing at posts). Pose work is proven flat at this frame size (see F38#35's correction).
+- Fix idea: move Sora 3–4 m out of the arch shadow into the sun, move Maela clear of the trunks to the open side of the pedestal, clear grass in a 2 m disc around Tavi's pad. Skip pose work.
+- Expected gain: medium-low (all three judged frames; placement is cheap, but the NPCs stay small at the follow camera).
 
 ### F40#2 P2-022 summit aviary (Cloudreach) — also F40#20 Sky Aviary hero landmark (unscored)
 - Last: 6.16 (board, NEAR6-CR CPU); `ITEM-F40-2/READY.md` parked (stone-ground and scattered-stone arms lost or were invisible).
@@ -349,3 +346,99 @@ Tool: `quick_judge.py capture F39#7 F39#11 F39#20` and `F39#21 F39#28` (`phase2_
 - Fix class: scene placement (move the crystal behind the arena edge or off the fight camera's side) plus config (arena light).
 - Fix idea: move Nerissa's arena crystal to the back wall behind the captain, out of the side the fight camera looks across, and raise the arena fill light.
 - Expected gain: medium-low (one of three frames; the overlay defect itself is fixed).
+
+## Batch 5: Meadows 6.0–6.5 rows (captured 8 Nov 18:37–20:17 UTC)
+
+Tools: `quick_judge.py capture` for F38#37; F38#29 F38#3 F38#11 (`phase2_capture_fights.gd`, south bridge grunt and Warden); F38#25 F38#1 F38#2 (`phase2_capture_creatures.gd`); F38#14 (`phase2_capture_catch.gd`); F38#21 F38#27 (locations, UI); F38#8 (`phase2_capture_realm_flight.gd`). Same source and renderer as batch 1.
+
+### F38#37 P2-079 Meadows dialogue rock obstruction (Meadows)
+- Last: 6.09 (board); GPU 4.64.
+- Judges: "The quarry-foreman frame is a dim brown rock box with a second character cut off at the left edge, and in the Garrick frame a black rock face fills the right third while the camera sits behind the player's head with Garrick not visible at all" (`meadows/scores-gpu.json`).
+- Still true? **Partly.** Garrick's dialogue frame is fixed: Garrick stands in the open with his pitchfork and straw hat against the meadow, no rock face. The foreman's dialogue frame is still a dim brown rock enclosure with the trainer's head cut by the left edge, though the foreman himself is visible.
+- Extra (the same stands' non-dialogue frames, not in this row's set but in the catalogue): at the foreman's post the camera looks past a wooden beam at a **flat, unlit pale-cyan panel wrapped by two black rings** that fills a third of the frame (it reads as a placeholder material); at Garrick's post a large boulder hides Garrick completely from the walk-up camera.
+- Fix class: scene placement (open the foreman's post or move it to the quarry mouth, in daylight).
+- Fix idea: move the foreman's post 4–6 m out to the lit quarry mouth so the dialogue camera sees him against the cut face and sky; find the cyan ringed panel (likely an unlit prop material) and give it its real material or remove it.
+- Expected gain: medium (one of two frames is still the defect; the cyan panel would also hit the Meadows cleanliness row).
+
+### F38#3 P2-062 fight camera and creature scale (Meadows)
+- Last: 6.26 (board, GPU).
+- Judges: "Creatures now tower over the trainers ... but the ally dog takes a third of the frame and the player overlaps its front legs in grunt-02/03, with flat noon light and no atmosphere" (`meadows/scores-gpu.json`).
+- Still true? **Yes.** south_bridge_grunt 01–03 today: the trainer and the grunt both stand in the gap between the boar and Terrapup, at Terrapup's chest and chin, so the two humans overlap the dog's front legs and head in every frame. The light is flat midday.
+- Fix class: config (trainer standoff during wild/trainer fights) or code (fight staging).
+- Fix idea: push both trainers back behind their own creature by a few metres during the exchange (a standoff tunable), so the middle of the frame is creature vs creature.
+- Expected gain: medium (all three judged frames; owner kept combat spacing for F41#3 only, check this applies to trainer stands too).
+
+### F38#11 P2-063 shared fight tell and hit effects (Meadows)
+- Last: 6.29 (board); GPU 6.59.
+- Judges: "tells still live in the small top-right text and the creatures barely change pose between frames" (`meadows/scores-gpu.json`).
+- Still true? **Yes.** Grunt 02/03/05: the tell is the small orange "incoming — move" line under the opponent card; dust puffs show at impact; the boar's pose barely changes across frames (in 05 it has turned away).
+- Fix class: config/code (an in-world tell cue at the attacker).
+- Fix idea: a short ground flash or rim-glow on the attacking creature during its wind-up, so the tell reads in the scene, not in the HUD.
+- Expected gain: low-medium.
+
+### F38#29 P2-065 trainer defeated presentation (Meadows)
+- Last: 6.18 (board; NEAR6-MS CPU, `beaten_trainer_stance.immediate_1104` and `silent_victory_shot_1104` ON).
+- Judges: "the grunt stands in the same neutral pose before and after while the 'Tether Grunt defeated' banner does all the work" (`meadows/scores-gpu.json`).
+- Still true? **Partly.** In today's 99-after the grunt is down on his knees with head bowed (crop confirms the shipped kneel), but he is a small figure between the trainer and Terrapup and a foreground bush covers his legs, so at frame size the kneel barely reads. In a01 the grunt is hidden behind Terrapup's chest. The victory push-in shot (`silent_victory_shot_1104`) is not visible in the captured set.
+- Fix class: capture-stand (the row's frames do not include the aftermath push-in that the shipped arm creates) / GPU-only.
+- Fix idea: re-pick the row's frames to include the silent-victory push-in moment, then re-score on the GPU.
+- Expected gain: low-medium.
+
+### F38#1 P2-015 creature collapse and rest (Meadows)
+- Last: 6.30 (board); GPU 5.93 (captured before the 4 Nov pose-still fix, TECHNICAL §8.1).
+- Judges: "the fainted terrapup is a tiny pale smear indistinguishable from its resting pose and the verdian still reads upright" (`meadows/scores-gpu.json`).
+- Still true? **Partly.** `phase2_capture_creatures.gd` today (Meadows stage, post-fix): Veridian's fainted frame is now lying flat (no longer upright), but renders pale and washed-out, close to a translucent smear. **Terrapup fainted and Terrapup resting are the same lying-on-its-side pose** at this distance, so the two states still cannot be told apart.
+- Stand: every stage frame is wide: the creature is about a sixth of frame height beside the trainer's back, with a dark bush and grass filling the right foreground.
+- Fix class: config/animation choice (a resting pose distinct from the faint: curled or sitting with head up), plus Veridian's faint material (no washout).
+- Fix idea: give resting a curled or sternal (lying upright, head raised) pose for Terrapup so rest and faint differ in silhouette; check why Veridian's fainted body loses its colour (likely the faint desaturation on a pale remake).
+- Expected gain: medium-low (subjects stay small in this stand).
+
+### F38#2 P2-016 creature hurt and movement poses (Meadows)
+- Last: 6.40 (board); GPU 5.52 (also before the 4 Nov fix).
+- Judges: "Nightburrow's hurt and moving frames are hard to tell apart at gameplay size, and the low camera spends half the frame on blown-up foreground grass blades" (`meadows/scores-gpu.json`).
+- Still true? **Yes.** Nightburrow hurt and Nightburrow moving are both front-facing standing poses of the same size; the difference is not readable. Terrapup hurt shows its head dropped but the body flashes pale grey-white. The foreground grass and bush still take the lower right of every frame.
+- Fix class: animation (a stronger hurt recoil) / capture-stand (foreground bush).
+- Fix idea: a bigger hurt recoil for Nightburrow (head thrown back, body sideways) so it differs from its walk at this size.
+- Expected gain: low-medium (CPU wins on P2-016 already failed on GPU twice, TECHNICAL §8.1).
+
+### F38#25 P2-018 shiny palette distinction (Meadows)
+- Last: 6.21 (board); GPU 6.06.
+- Judges: "Shiny Nightburrow's icy pale blue reads clearly against the dark normal form, but the shiny Stormtrail is a small washed-out cream figure with no normal to compare against, and a third of each frame is a near-camera grass carpet" (`meadows/scores-gpu.json`).
+- Still true? **Yes.** Shiny Nightburrow (icy blue) vs normal (brown-white with purple mask) reads well. Shiny Stormtrail is a small pale cream coyote with no normal Stormtrail in the set.
+- Fix class: capture-stand (the set lacks Stormtrail's normal frame) / Blender art (a more distinct Stormtrail shiny palette).
+- Fix idea: give shiny Stormtrail a clearly different hue (not cream; e.g. slate-blue with pale storm markings, no red), and add `stormtrail__idle` to the row so it has a comparison.
+- Expected gain: medium-low.
+
+### F38#14 P2-060 catch effect finish (Meadows)
+- Last: 6.23 (board); GPU 6.06.
+- Judges: "the effect is still a flat translucent yellow bubble and over-bright white orb that change little from strike to absorbing, half-hidden behind the player creature's back" (`meadows/scores-gpu.json`).
+- Today: **capture-stand bug.** In `phase2_capture_catch.gd --biome=meadows`, frames 02-orb-in-flight, 03-strike and 03-absorbing all show the large "Bramblebun broke free / Weaken it more, then throw again" card across the top, and no capture bubble at all; only a small faint orb shows beside Bramblebun in 03-strike. The same tool on Tidewake (batch 1) showed the card on 03-absorbing through 06-breakout and over 07-aiming-weakened. So the broke-free card is on screen in frames that should show the throw and the absorb.
+- Likely cause (to confirm, not proven): the verdict-card hold added for 06-breakout (`ITEM-CAPTURE-FIXES`, `_on_capture_resolved` / `_top_up_verdict_card`, which tops the card's timer up every process frame from the resolve to the verdict shot) keeps a card from an earlier resolve alive into the next throw's frames.
+- Still true? **Can't tell**: the effect is not in today's frames.
+- Fix class: capture-stand bug (catch tool), shared with F39#9 and any row using catch frames 02–05.
+- Fix idea: make sure the held card is released and expired before the next throw's 01–05 frames, then re-shoot both biomes before any effect work.
+- Expected gain: can't tell (would unblock F38#14 and F39#9 scoring).
+
+### F38#21 P2-005 ground cover (Meadows)
+- Last: 6.23 (board); GPU 6.06.
+- Judges: "one even yellow-green grass carpet with evenly sprinkled white flowers and almost no rock, colour clusters or edge-of-grove breaks" (`meadows/scores-gpu.json`).
+- Still true? **Partly.** Stronghold approach is still a broad even green field with evenly spread small shrubs; the Burrow Warrens approach now has the hill shell, a burrow mouth, flower variety and grove edges and reads well; Old Mill close has a path, slope and dense varied foliage.
+- Fix class: scene placement (installed rock and flower-clump clusters).
+- Fix idea: at the stronghold approach, add three or four clustered patches (a rock outcrop with tall grass, a dense flower clump, a darker clover patch) in the mid-ground either side of the path, so the field has clusters instead of an even sprinkle.
+- Expected gain: low-medium (one of three frames still matches the complaint).
+
+### F38#27 P2-031 settings and binding instructions (Meadows)
+- Last: 6.32 (board, GPU).
+- Judges: "tiny grey body text, '[Q] Previous tab [Tab] Next tab' literal key labels and a clipped 'Fighting' section" (`meadows/scores-gpu.json`).
+- Still true? **Partly.** Body text is now white and readable; gamepad glyphs show beside keyboard keys. Still there: the footer reads "[Q] Previous tab  [Tab] Next tab" in literal brackets next to glyph prompts; and the controls list shows only three rows (Walk forward, Walk back, Step left) before "More below", with a tall empty band under it, so most of the panel is blank and the sections below are cut off. Quick bindings shows five rows and the same empty band.
+- Fix class: config/UI layout (list height inside the panel; footer prompt glyphs).
+- Fix idea: let the bindings list fill the panel's height (about twice as many rows visible) and render the footer tab prompts as glyphs (LB/RB) like the rest.
+- Expected gain: medium (both judged frames; it is a layout fix, no art).
+
+### F38#8 P2-119 Fly carrier grip pose (Meadows)
+- Last: 6.12 (board, GPU).
+- Judges: "The sky and Galecrest's silhouette are good, but the rigid ladder-hang pose and the blurred, featureless terrain far below sink it" (`meadows/scores-gpu.json`).
+- Still true? **Yes for the pose.** `phase2_capture_realm_flight.gd` today: in 01-launch and 02-glide the trainer hangs under Galecrest's talons with both arms straight up and legs straight down, a stiff vertical figure. In 02-glide the pair is only a few metres up beside a boulder (the shadow sits well away on the grass), so it reads as standing with arms raised more than flying; the "terrain far below" is not in this frame.
+- Fix class: config/animation (trainer fly-grip pose offsets) plus capture-stand (glide frame taken too early, before altitude).
+- Fix idea: bend the elbows and let the legs trail back with knees bent in the fly-grip pose (bone offsets like `post_stance.gd`), and take the glide frame once the carrier is at cruise height.
+- Expected gain: medium (both frames are the subject; pose and timing are cheap).
