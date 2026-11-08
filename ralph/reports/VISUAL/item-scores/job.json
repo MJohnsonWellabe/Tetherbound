@@ -3854,7 +3854,7 @@
      "frames": [
       {
        "id": "stormwood__fight__hollows_long__hollows_alpha-i13",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=120 --interval=5 --seed=2042",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=120 --interval=5 --seed=2042 --party-level=42 --input-policy=idle-after-engage",
        "orig_commit": "1f9d2ca4b06371d8bff11085f22c56f75c7869d6",
        "location": "hollows_alpha",
        "time": "day",
@@ -3864,7 +3864,7 @@
       },
       {
        "id": "stormwood__fight__hollows_long__hollows_alpha-99-after",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=120 --interval=5 --seed=2042",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=120 --interval=5 --seed=2042 --party-level=42 --input-policy=idle-after-engage",
        "orig_commit": "1f9d2ca4b06371d8bff11085f22c56f75c7869d6",
        "location": "hollows_alpha",
        "time": "day",

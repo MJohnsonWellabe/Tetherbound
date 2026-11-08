@@ -1,0 +1,9 @@
+STATUS: parked
+BRANCH: tb/item-meshy-recheck-parked  HEAD: see origin (READY only; no config change)
+
+Lane LANE-MESHY, queue row 11 (coordinator 8 Nov): F39#3 P2-011 named destination read (board 5.84). Skipped with no round: the queued idea (a 15-20 m Gull Rest signal spire) predates `tidewake_destination_read.json`, which shipped ON on 7 Nov.
+
+- **Gull Rest today** (`water__gull_rest__19__gull_rest_signal_spire__route_day`, main 3bf4ec80, CPU capture, frame not committed): a ~12 m Meshy lattice lookout tower with a thatched roof and teal flags at the left, and the timber-grid signal shaft with a tall lantern pole on the crest. Both read as a destination at the route distance; a taller spire would change one of the row's three frames that already reads.
+- **Latest judged round** (`ralph/reports/LANES/VIS-TIDEWAKE/qj/dr/`, destination_read ON): 5.75 -> 5.84; defect PARTIAL x3 on the candidate (base PARTIAL, PRESENT, PARTIAL). The judges' free-text replies were not committed, so the per-frame complaint is not recorded; only the catalogue defect ("named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces") is.
+- **Where the remaining loss must be:** the other two frames, `tidewake__drowned_garden__21__drowned_garden_terraces__route_day` (the GPU 31 Oct note: "the terraces the flat disc chain") and `tidewake__lantern_cove__17__lantern_cove_drift_arch__route_day` ("the drift arch a tiny distant hoop").
+- **Next idea:** capture those two frames on today's main, then a destination piece for each that reads at the route stand: stepped stone terrace walls for the Drowned Garden in place of the flat disc chain, and a larger drift arch closer to the route sightline at Lantern Cove (scale against the 1.80 m trainer; installed Meshy/Blender families).
