@@ -1,0 +1,23 @@
+{
+ "Ss": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Fw": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Md": {
+  "anchor": false,
+  "label": "F39#3-dg",
+  "A": ".artifacts/qj/F39-3-stack-v2/k/sides/F39_3-dg_base.jpg",
+  "B": ".artifacts/qj/F39-3-stack-v2/k/sides/F39_3-dg_cand.jpg"
+ },
+ "Pa": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}
