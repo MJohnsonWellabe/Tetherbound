@@ -31,6 +31,9 @@ Ranked by expected visible gain per hour of build. Updated after batch 6 (8 Nov 
 | 13 | F38#8 fly grip | Bend elbows, trail legs; glide frame at cruise height | config/animation | medium |
 | 14 | F41#1 Stormheart | Vary the four identical banners; move the lattice pylon out of the approach | config + scene | medium |
 | 15 | F41#4 destinations | Bring a Lantern Pool to the path edge with lit lantern posts | scene | medium |
+| 6a | F36#93 Water Mirejaw faint | Faint body rolls belly-up and floats a body-height above the stage: seat the faint end pose | animation | medium-high |
+| 6a2 | F36#61 Ribbonray hit | A tail piece renders detached on the stage in hit-050: find the split segment (weights or node) | rig | medium |
+| 6a3 | F36#49 Glimmermoth / F36#92 W. Mangrove Monitor / F36#46 Fulgocobra faints | Wings through the floor / faint ends sitting up / faint only droops the head: one faint-clip pass each | animation | medium |
 | 6b | F40#6 rider vanishes | Empty saddle at `terrace_01.0s` (crop-confirmed); find why the rider hides at the edge stop; also fix the drifted frame ids | code + capture-stand | medium-high |
 | 6c | F40#8 route marker | Saturated cyan post behind the trainer in all three frames: wooden/stone post with a small lantern | config | medium |
 | 16 | F39#30 / F13#5 night water | Darken the shallows at night (time-of-day input to `water.gdshader`) | code | medium |
@@ -46,7 +49,7 @@ Ranked by expected visible gain per hour of build. Updated after batch 6 (8 Nov 
 - F40#6 / F40#11: the ride run now writes `terrace_after` / `terrace_road_back_*` instead of the job's `terrace_02.0s` / `terrace_03.0s`.
 - F41#23: every catalogue Stormheart stand is inside the hollow (only the F41 matrix stand sees it from outside).
 
-**GPU re-score only (defect gone on today's frames, old score is stale):** F39#29 (3.54, speaker now visible), F41#15 (3.19, banner gone), F41#16 (loss stand fixed), F39#7, F39#20, F39#5, F39#8, F39#22, F39#23, F39#19, F40#11 (polygon puffs and sliver gone), F40#15.
+**GPU re-score only (defect gone on today's frames, old score is stale):** F39#29 (3.54, speaker now visible), F41#15 (3.19, banner gone), F41#16 (loss stand fixed), F39#7, F39#20, F39#5, F39#8, F39#22, F39#23, F39#19, F40#11 (polygon puffs and sliver gone), F40#15, F36#58 Pebbik, F36#2 Galewisp, F36#68 Skyrill (no visible pose defect today). F36#100 scale: all 70 species stand taller than the 1.80 m trainer (shortest 2.50 m); evidence row, no build.
 
 **Watch:** F41#12's night frame (hour 23) renders fully daylit under the Deepwood canopy; check on GPU.
 
@@ -592,3 +595,38 @@ Tools: `quick_judge.py capture` for F40#6 F40#11 (`phase2_capture_cloudreach_rid
 - Still true? **Yes, as described.** Speed mushroom (pale yellow cap, blue base) and wild mushroom (broad orange cap) are distinct, small, sitting on flat lawn; behind them the angular flat-faced rock slabs fill the upper half.
 - Fix class: scene (a small grass/moss tuft ring at each pickup) / the rock slabs are F40#4's parked landform problem.
 - Expected gain: low.
+
+## Batch 8: F36 creature poses, water variants and the scale rule (captured 8 Nov 22:15–22:19 UTC)
+
+Capture for all F36 pose rows: `tools/art_pipeline/capture_f36_poses.gd --species=<12 land species> --whole-body --context --source-commit=c502453d…` (one boot, about 90 s), CPU Low; frames hit-000…100 and faint-000…100 on the flat stage beside the 1.80 m trainer. The rows' last scores come from the coordinator board (mostly CPU CREATURES-RALPH rounds over the GPU `ralph/reports/CLOUD-JUDGE/ROSTER-1102` baseline, whose per-species judge text was not stored). Where no recorded judge text exists, the complaint column cites the newest lane note.
+
+| Row | Last | Recorded complaint (source) | Today's frames | Still true? | Fix class | Fix idea | Gain |
+|---|---|---|---|---|---|---|---|
+| F36#62 Riftfrill poses | 6.04 | "a hunched, near-bipedal kaiju stance with a shark-like head, where the installed form is a long, low newt. The hit react lifts it off the ground, and the faint frames are a studded bubble-wrap blob" (`CREATURES-RALPH/READY.md`, Paddlenewt/Riftfrill) | Same: upright kaiju crouch; hit-050 lifts the body with both feet off the stage; faint-100 a studded lump | yes | Blender art (remake mesh) | Same mesh as Paddlenewt: one Blender pass (lower, longer newt stance) fixes both rows | medium (two rows), but art-heavy |
+| F36#57 Paddlenewt poses | 6.49 | as Riftfrill (same remake) | Same as Riftfrill: kaiju stance, hit-050 airborne, studded blob faint | yes | Blender art | shared with F36#62 | medium (shared) |
+| F36#66 Shadelet poses | 6.06 | faint clipping and floating hit-react (`ITEM-HITREACT/READY.md`, parked; root-key grounding tried) | hit-050 hovers with all feet off the stage and its shadow apart; in faint-050/100 the tail rises in a tall vertical loop into the air | yes | animation | Fold the tail down in the faint clip and pin the hit-react root so at least one foot stays planted (a new approach; root-key grounding already failed once) | low-medium |
+| F36#58 Pebbik poses | 6.07 | "GLB rest settled, hit hop x0.3" (`CREATURES-RALPH/READY.md` F36#58, CPU 5.98 → 6.07) | Clean: lean fox-dog with green veins; hit flinch grounded; faint lies on its side then rolls belly-up | partly (no visible defect today) | GPU-only | GPU re-score | low |
+| F36#52 Mirejaw poses | 6.39 | near-black head, face lost (`ITEM-EYES/READY.md`, land) | Body reads (dark green with glowing aqua spots). In hit-050 the snout dips through the stage floor; the tail runs through the trainer ruler in every frame (stage placement) | partly | animation (hit-react head height) | Raise the hit-react head key so the jaw stays above ground | low-medium |
+| F36#2 Galewisp model / F36 Galewisp poses | 6.33 | GPU roster 4.99 → 6.96 (1 Nov) | White and pale-blue owl-griffin, good silhouette; hit and faint grounded; faint-100 lies belly down | no visible defect | GPU-only | GPU re-score | low |
+| F36#68 Skyrill poses | 6.33 | rim light and value separation (`CREATURES-RALPH/READY.md`, GPU cr1102c 7.43) | Teal scaled sail-back; poses grounded; faint lies flat | no visible defect | GPU-only | GPU re-score (GPU already 7.43 on an earlier tree) | low |
+| F36#46 Fulgocobra poses | 6.38 | near-black head (`ITEM-EYES`); gold-vein charge ON | The coil never moves: in faint-050/100 only the head and hood droop forward; the hood and head are a black mass with no face | yes | animation (faint clip) | A faint that uncoils the body onto the ground (or at least lowers the raised neck to the floor) so the faint differs from idle | medium |
+| F36#42 Cragclaw poses | 6.40 | GPU roster 6.17 → 5.55 (1 Nov, worse after remake) | hit-050 lifts all feet off the stage (shadow apart); faint-050/100 is the shell alone, legs and head tucked, reading as a boulder | yes | animation | Plant the hit-react; let the head and one claw show in the faint | low-medium |
+| F36#49 Glimmermoth poses | 6.43 | "the wings clip through the floor at faint end. Glimmermoth's wings are oversized and glossy" (`CREATURES-RALPH/READY.md`) | faint-050/100: both wings pass through the stage floor; wings large and glossy blue | yes | animation | Wing-bone fold in the faint clip so the wings stay above y=0 (the lane's own next idea) | medium |
+| F36#80 Thundertunnel poses | 6.47 | value lift 5.64 → 5.78 (CPU); GPU roster 6.62 → 4.72 (1 Nov) | Upright hunched mole; hit-000 and hit-050 nearly identical; faint-100 is a featureless brown lump with no head or face | yes | animation / Blender art | A faint where the head and claws stay visible (fall sideways rather than curling into a ball) | low-medium |
+| F36#61 Ribbonray poses | 6.48 | GPU roster 5.51 → 5.23 | **hit-050: the tail tip renders as a separate piece lying on the stage at the left, detached from the body** (rig weighting or a split mesh); faint lies flat | yes, plus a detached-piece defect | animation/rig | Find the tail segment that separates in the hit-react (weights or a separate mesh node) | medium (a detached body part is a hard defect) |
+| F36#70 Sparkit poses | 6.03 | `ITEM-F36-70/READY.md` (legs thickened, ON) | not in this boot (row cited in batch 0) | – | – | – | – |
+
+### F36#100 Every creature meets the scale rule against the 1.80 m trainer and fight scale is consistent (unscored)
+- Today: `capture_f36_poses.gd --all --scale-only` measured all 70 installed species on the standing stage beside the production trainer (measured 1.80 m). **Every species stands taller than the trainer**; the shortest are Mosshell and Water Mosshell at 2.50 m, Reedwing 2.65 m, then Shadelet, Mirejaw and Thundertunnel at 2.80 m; the tallest is Abyssal Guardian at 7.20 m. No species is under 1.9 m.
+- Fight scale: the tool states "Installed standing stage; no fight-scale claim". In today's fight frames (Meadows grunt and Warden, Stormwood capacitor, Tidewake Venn and Nerissa, Cloudreach Veyra) every creature towers over both trainers and sizes match the stage ratios by eye; nothing looked rescaled in a fight.
+- Still a defect? **No visible scale defect.** The row is evidence-shaped: it needs the stage receipt table plus a fight-scale check, then a GPU look.
+- Fix class: GPU-only / evidence (no build).
+- Expected gain: closes on evidence, not art.
+
+### Water variants (separate boot without `--context`: with it the tool stops at "water_mangrove_monitor: missing swim clip"; frames written anyway)
+
+| Row | Last | Today's frames | Still true? | Fix class | Fix idea | Gain |
+|---|---|---|---|---|---|---|
+| F36#93 Water Mirejaw poses | 6.45 | **faint-050 and faint-100: the body rolls belly-up and floats a full body-height above the stage**, legs in the air, the trainer standing underneath it. Hit frames are fine | yes, a hard floating-body defect | animation (faint root height) | Seat the faint end pose on the ground (root offset / `ground_clip.py` on this remake's faint clip) | medium-high |
+| F36#92 Water Mangrove Monitor poses | 6.24 | Hit frames fine (long low monitor). **faint-100 ends sitting upright** like a dog, head raised, facing the camera, so the faint reads as sitting | yes | animation (faint clip) | A faint that ends lying on its side, like the land Mangrove Monitor recipe (`CREATURES-RALPH` r21) | medium |
+| F36#91 Water Cragclaw poses | 6.32 | hit-000 and hit-050 identical; faint-100 is a crouch facing the camera, not a collapse; the shell is coral orange-red, close to the red reserved for Team Tether; the trainer ruler is hidden behind the body in hit frames | yes | animation; owner check on colour | A collapse to one side in the faint; flag the shell hue for the owner's red rule | low-medium |
