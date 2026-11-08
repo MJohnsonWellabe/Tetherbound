@@ -1,4 +1,4 @@
-STATUS: pending (Tidewake route smokes still running; becomes land when they pass)
+STATUS: land
 BRANCH: tb/item-f39-3  HEAD: see the commit that adds this READY (pushed head)
 
 Lane LANE-MESHY, F39#3 named destination read (idea 3, coordinator 8 Nov): Drowned Garden Terraces.
@@ -40,7 +40,8 @@ Lane LANE-MESHY, F39#3 named destination read (idea 3, coordinator 8 Nov): Drown
 - `run_tests.gd --only=` every test that greps the touched config or the landmark builder: test_tidewake_look_profile, test_water_landmark_destinations, test_water_landmark_trimesh_collision and test_water_look_model_preload. Result: **17 tests, 287 assertions, 0 failed**.
 - test_texture_import_policy and test_creature_model_flags (HELD): **5 tests, 2752 assertions, 0 failed**.
 - `smoke_water_garden_records`: 40 checks, 0 failures.
-- Tidewake route smokes: see the line below.
+- `smoke_tidewake_b_chain_route`: the first run failed 4/250 at Lantern Cove (12, 158), 2.3 km from the garden: Pell's walk stalled at leg 2/9. On main's config it passed 252 checks, 0 failures, and the one confirming rerun on the arm passed **252 checks, 0 failures**. That was a single flaky walk stall.
+- `smoke_tidewake_b_route_depletion`: 134/326 failures (Veilfall harvests yield items, but flag=false). On main's config the result is identical, **134/326**, so the failure is pre-existing and not caused by this change.
 - JSON parse: tidewake_destination_read.json OK.
 
 ## Judges' remaining asks (all three)
