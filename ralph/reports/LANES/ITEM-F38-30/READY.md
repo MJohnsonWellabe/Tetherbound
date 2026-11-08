@@ -1,37 +1,43 @@
-STATUS: land
-BRANCH: tb/item-f38-30  HEAD: a8449da9fcf6d1546afa498762e1e8cbecbebe2f (the gain commit; this READY commit follows it)
+STATUS: parked
+BRANCH: tb/item-f38-30-hill  HEAD: see the commit that adds this READY (pushed head)
 
-Lane LANE-MS (Meadows). Rows F38#30 (P2-012 Burrow Warrens hillside, board 5.10) and F38#24 (P2-014 distant mountains, board 4.42). They share the Warrens walk_02/walk_03 frames. Owner decision 7 Nov: re-seat the floating hillside shell into the terrain, keeping the entrance and the route. Art-row cap.
+Lane LANE-MESHY, F38#30 / F38#24 Burrow Warrens hill (art row, coordinator 8 Nov). No config, code or asset ships. The capture-stand fix landed separately (`tb/item-f38-30-stands`).
 
-**Shipped (CPU, quick_judge `ralph/reports/LANES/LANE-MS/qj/F38-30_F38-24-354ca63271b5-11071915/`, three code-blind judges, calibration r 0.92, RMSE 0.46):**
-- `data/config/burrow_warrens.json:bank.hill_shell.at` y changes from -0.8 to -5.8, with `_why_seat_on` recording the scores.
-  - **F38#30: 2.95 -> 3.51 (+0.56).** All three judges preferred it or tied.
-  - **F38#24: 3.28 -> 3.51 (+0.23).**
-  - This batch maps low against the board's scale (board 5.10 / 4.42); compare within the batch only.
-- Presentation only: no collider, route, save or entrance change. The mouth clip_box is in warrens space and unchanged, and the route frame still shows the shell arch framing the real doorway.
-- Test: new `tests/test_warrens_shell_seat_f38_30.gd`. Ran test_warrens_shell_seat_f38_30 and test_warrens_hill_shell_r2: 3 tests, 11 assertions, 0 failed.
-- Inert probe (not a test): `tests/probe_warrens_shell_seat.gd` prints the shell and Bank bounds in warrens space, the shell's lowest rim per 15 degrees against terrain, and the shell and Bank height over each walk stand.
+## v1: Blender reskin of the live Bank, vertices locked (built, not judged)
+- The live procedural Bank visual mesh was exported in warrens space (headless GLTFDocument).
+- Blender kept every vertex position (a 1 mm weld only), so the existing Bank collider matched exactly. The bake uses installed textures only (`terrain/stylised` meadow_grass, wet_earth, rock_scree and dirt_path), box-projected: grass on gentle slopes, wobbling earth/scree strata bands on steep flanks, AO, and a dirt lip at the slope break.
+- Script: `blender/warrens_bank_hill.py`. Preview script: `blender/render_preview.py`.
+- Preview and 1.80 m scale check: `blender/_v1_preview_scale.jpg`. Baked albedo: `blender/_v1_albedo_small.jpg`.
+- **Why not judged:** the Bank's shape is a union of rectangular chamber boxes with 20-30 m near-vertical walls; the walk_03 collider normal is y 0.26, about 75°. Locked to that shape, the hill reads as a striped mesa or blockout fortress. That is the look judges rejected on F40#1 and #4 ("flat stacked-slab walls with regular strata"), and what LANE-MS saw with the Bank unhidden. The look problem is the shape, and the shape is the collision.
 
-**Diagnosis (probe numbers):**
-- The warrens origin is at world y 3.80, and `_floor_y` is 5.39 (the floor is raised over the highest terrain under the footprint).
-- The shell base was flat at warrens y -0.8 (world 3.0), but the meadow round the site falls to world 0-2. Its front lip therefore hung over the walk route with sky under it (walk_01 and walk_02). Sunk 5 m, the lip meets the grass.
-- **walk_03 is not fixable by the shell.**
-  - Its stand (-352.5, 2635.8) is local (21.4, 15.1), just outside the hall's +x wall, and it is inside both the shell (top 29.1 m over it) and the hidden procedural Bank (top 26.5 m).
-  - The Bank's two-sided collision surface sits 19.25 m over the stand. The capture's terrain-height teleport puts the player in a cavity under the hill.
-  - From there the camera looks up at the chamber shells (floor about world 9.2, roofs about 23), which float over the meadow. The legacy floor and wall box visuals are hidden by `organic_entry_finish.hide_legacy_box_visuals`.
-  - All three judges named these "floating dark blocks" as the dominant defect on both rows.
+## v2 feasibility: a smoothed mound with collision rebuilt (computed, not built)
+- Data: `blender/probe_warrens_feas.gd.txt` (live chamber boxes, terrain and Bank height grid at 2 m in warrens space). Computation: `blender/v2_feasibility.py`.
+- Method:
+  - Required cover is every live Bank plateau cell that reaches the chamber roof + 1.5 m clearance, with the mouth excluded because it is the dug entrance.
+  - The minimal mound with a given maximum flank is the cone dilation of that requirement; its footprint is where it stands above the terrain.
+  - Each exterior-ring point is then checked for whether it would be buried, and by how much horizontal room is missing.
+- Plot (40° flank): `_v2_feasibility_40deg.png`. Brown is mound and current Bank, tan is mound only, blue is current Bank only, dots are required cover, red marks the ring.
 
-**Not shipped / left OFF:**
-- `bank.hill_shell.r2` (detail grain, hide MoundGrowth): captured over the seat and visually identical at these stands, so it was not judged and stays OFF.
-- `capture_stands.json buried_stand_guard` with `window_m` 30: captured only, not judged, and not changed in the tree. The guard now fires ("solid geometry 19.25m overhead"), but both fallback offsets (18 m and 26 m) are also under the hill, so walk_03 is unchanged. It is a cross-cutting capture flag, so it is the coordinator's call.
+| Ring point (warrens local x, z) | side | 35° | 40° | 45° |
+|---|---|---|---|---|
+| burrowback cluster (-14.1, 7.1), r 10 | front-west, beside the mouth | buried, 26.0 m short | 20.4 m short | 15.8 m short |
+| pickup mushroom (-24.7, -0.7) | front-west | 19.6 m short | 13.7 m short | 8.9 m short |
+| prop (5.5, -3.0) | front, at the mouth | 12.9 m short | 7.8 m short | 3.6 m short |
+| harvest node (35.2, 14.3) | east | 21.3 m short | 15.1 m short | 10.1 m short |
+| pickup candy (36.1, 26.2) | east | 17.3 m short | 11.8 m short | 7.3 m short |
+| cluster 2049 (-63.6, 35.4), r 14 | west | 1.8 m short | clear, 5.0 m margin | clear, 9.7 m |
+| cluster (57.3, -0.7) | east-front | clear, 1.5 m | clear, 8.7 m | clear, 14.2 m |
 
-**Judges' remaining asks:**
-- Remove or ground the floating dark slabs (walk_03).
-- No continuous mountain range or blue distance on the stronghold-approach horizon (F38#24 frame 3). A Team Tether keep reads as floating above the horizon there.
-- Flat yellow grass decals.
+- Per side:
+  - **front (mouth side):** fails by 8-20 m at 40°.
+  - **east:** fails by 12-15 m.
+  - **west:** fits at 40° and above.
+  - **back:** no ring points, so it is unconstrained.
+- **It does not fit.** The ring content stands right against the Bank's steep walls. No mound gentler than those walls can cover the chambers without burying five of the seven ring points, and even 45° flanks leave 4-16 m shortfalls. A small local steepening cannot close gaps that large.
 
-**Next idea (needs a decision, so not done here):**
-- The Bank and shell are built from the raised cave floor, not from terrain. Where the meadow dips, the hill's rim floats about 19 m over a walkable cavity beside the hall.
-- The real re-seat is in `burrow_warrens.gd` `_bank_surfaces`: blend each bank vertex's height to the terrain over a rim band (y = lerp(terrain, plane + h, smoothstep(0, band, h))). The rim then meets the ground in both the visual and the collision mesh, closing the cavity, and a matching `fit_to: ["Bank"]` shell follows it.
-- This changes Warrens collision outside the route notch, so it needs `tests/smoke_warrens.gd` and the walked-route probe re-run. That is a collision change, not a presentation flag, so I am handing it to the coordinator rather than taking it under this lane's art cap.
-- With the cavity closed, enable the stand guard (window 30) so the capture stops seating the player inside the hill.
+## What would unlock this row (owner decisions)
+- Move the five front and east ring items (the burrowback cluster, the two pickups, the harvest node and the prop) 10-20 m outward. That is a world-layout change.
+- Or accept steep earth-bank walls as the design, and fix their read with a hand-modelled dug face instead of a height-field reskin. That is new art, keeping today's collision.
+
+## Files
+`ralph/reports/LANES/ITEM-F38-30/**` only.
