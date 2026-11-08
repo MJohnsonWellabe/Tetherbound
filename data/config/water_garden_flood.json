@@ -1,0 +1,38 @@
+{
+  "_why": "F39#3 round 2 (LANE-MESHY, 8 Nov 2026): judges on qj/F39-3-stack-v2 (3 of 3) said the stepped Drowned Garden terrace 'does not read as drowned' and has 'no water among the steps'. When enabled, scripts/world/water_garden_flood.gd lays one still, shallow water sheet (installed water.gdshader) on the flat 28.2-28.4 m crest the terrace stands on: surface_y with cells only where the sampled ground lies min_depth_m to max_depth_m below it, so it never spans a slope. Render only: no collider, water volume, swim/depth query, route, spawn or durable-state change. OFF until judged.",
+  "scope": "client_presentation",
+  "enabled": true,
+  "_why_on": "ON 8 Nov 2026 (LANE-MESHY qj/F39-3-flood-v2, tb/item-f39-3-r2): CPU mapped F39#3 Drowned Garden route_day 6.16 -> 6.30 (+0.14; raw 5.5/5.8/5.2 -> 5.9/5.4/5.5, 2 of 3 judges prefer it, defect PRESENT -> PARTIAL x2; noise floor 0.00). Judges' next ask: foam edge, wet-sand band and depth gradient (it reads as a flat decal). GPU re-baseline owed.",
+  "region_xz": [
+    1096.0,
+    2219.0,
+    1118.0,
+    2238.0
+  ],
+  "mask_centre_xz": [
+    1103.5,
+    2228.5
+  ],
+  "mask_radius_m": 9.0,
+  "shore_m": 1.5,
+  "cell_m": 0.5,
+  "surface_y": 28.5,
+  "min_depth_m": 0.03,
+  "max_depth_m": 0.35,
+  "surface": {
+    "shallow_colour": "#3fb0bd",
+    "deep_colour": "#1d7d93",
+    "fresnel_colour": "#bfdde4",
+    "fresnel_strength": 0.3,
+    "foam_colour": "#eef5f0",
+    "foam_depth": 0.05,
+    "depth_falloff": 0.5,
+    "alpha_shallow": 0.7,
+    "alpha_deep": 0.9,
+    "edge_feather": 0.15,
+    "wave_uv_scale": 0.2,
+    "wave_strength": 0.12,
+    "wave_speed": 0.01,
+    "roughness_value": 0.08
+  }
+}

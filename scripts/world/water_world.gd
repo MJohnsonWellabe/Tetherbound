@@ -119,6 +119,12 @@ func _ready() -> void:
 		add_child(vegetation)
 		vegetation.build(config, field)
 		garden_claude.clear_scatter(vegetation)
+		# F39#3 r2 (water_garden_flood.json, OFF until judged): shallow water on
+		# the Drowned Garden crest. Render only.
+		var garden_flood := preload("res://scripts/world/water_garden_flood.gd").new()
+		garden_flood.name = "WaterGardenFlood"
+		add_child(garden_flood)
+		garden_flood.build(self)
 		_stand_up_ground_cover()
 		var twin_pumps := preload("res://scripts/world/water_sluice_twin_pumps.gd").new()
 		twin_pumps.name = "WaterSluiceTwinPumps"

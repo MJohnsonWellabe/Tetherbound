@@ -1,0 +1,31 @@
+{
+ "_why": "LANE-MESHY 8 Nov: F39#3 arm changes only the Drowned Garden; the round judges that one frame.",
+ "biomes": {
+  "tidewake": {
+   "feature": "F39",
+   "items": [
+    {
+     "board_row": "F39#3-dg",
+     "item": "F39#3-dg",
+     "subject": "Drowned Garden Terraces named destination, Tidewake route arrival view",
+     "defect": "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces",
+     "impact": 80.0,
+     "fix_class": "scene",
+     "catalog_status": "needs_capture",
+     "frames": [
+      {
+       "id": "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_routes.gd -- --biome=water --subset=water__drowned_garden__21__drowned_garden_terraces --seed=2042 --output=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+       "orig_commit": "56f2ec5ec10257f19080931b327e0ab65611b1a1",
+       "location": "water__drowned_garden__21__drowned_garden_terraces",
+       "time": "day",
+       "phase": "clear",
+       "camera": "close",
+       "category": "route_and_terrain"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
