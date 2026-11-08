@@ -13,7 +13,7 @@
         1797.0
       ],
       "_why_q41_r2": "F38#41 (LANE-MS, 7 Nov 2026): Blender quarry boulders r2 (installed Rock_Medium meshes split by 7 bisect planes, light grain, warm-graded Rock030; footprint unchanged; script ralph/reports/LANES/ITEM-F38-41/blender/rock_medium_q41.py, Q41_VARIANT=r2). CPU mapped 6.43 -> 6.96 (+0.53), all three code-blind judges prefer it (ralph/reports/LANES/ITEM-F38-41/qj_r2/).",
-      "model": "res://assets/environment/stylized_nature_q41_r2/Rock_Medium_1_q41_r2.glb",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1_q41_r2.glb",
       "model_scale": 1.15
     },
     {
@@ -26,7 +26,7 @@
         1792.0
       ],
       "_why_q41_r2": "F38#41 (LANE-MS, 7 Nov 2026): Blender quarry boulders r2 (installed Rock_Medium meshes split by 7 bisect planes, light grain, warm-graded Rock030; footprint unchanged; script ralph/reports/LANES/ITEM-F38-41/blender/rock_medium_q41.py, Q41_VARIANT=r2). CPU mapped 6.43 -> 6.96 (+0.53), all three code-blind judges prefer it (ralph/reports/LANES/ITEM-F38-41/qj_r2/).",
-      "model": "res://assets/environment/stylized_nature_q41_r2/Rock_Medium_3_q41_r2.glb",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3_q41_r2.glb",
       "model_scale": 1.05
     },
     {
@@ -39,7 +39,7 @@
         1800.0
       ],
       "_why_q41_r2": "F38#41 (LANE-MS, 7 Nov 2026): Blender quarry boulders r2 (installed Rock_Medium meshes split by 7 bisect planes, light grain, warm-graded Rock030; footprint unchanged; script ralph/reports/LANES/ITEM-F38-41/blender/rock_medium_q41.py, Q41_VARIANT=r2). CPU mapped 6.43 -> 6.96 (+0.53), all three code-blind judges prefer it (ralph/reports/LANES/ITEM-F38-41/qj_r2/).",
-      "model": "res://assets/environment/stylized_nature_q41_r2/Rock_Medium_1_q41_r2.glb",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1_q41_r2.glb",
       "model_scale": 1.25,
       "_why": "hard against the quarry's own cut face, where the working stopped"
     },

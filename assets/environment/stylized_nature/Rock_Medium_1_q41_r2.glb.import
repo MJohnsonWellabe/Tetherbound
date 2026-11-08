@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cjfismkei5gy"
-path="res://.godot/imported/Rock_Medium_1_q41_r2.glb-b7cb4708591a88cf5a80cd2f3989acd3.scn"
+path="res://.godot/imported/Rock_Medium_1_q41_r2.glb-e078bb9ac3be2e61fbce318b16219399.scn"
 
 [deps]
 
-source_file="res://assets/environment/stylized_nature_q41_r2/Rock_Medium_1_q41_r2.glb"
-dest_files=["res://.godot/imported/Rock_Medium_1_q41_r2.glb-b7cb4708591a88cf5a80cd2f3989acd3.scn"]
+source_file="res://assets/environment/stylized_nature/Rock_Medium_1_q41_r2.glb"
+dest_files=["res://.godot/imported/Rock_Medium_1_q41_r2.glb-e078bb9ac3be2e61fbce318b16219399.scn"]
 
 [params]
 

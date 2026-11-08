@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cwr7bmixp4rqj"
-path.s3tc="res://.godot/imported/Rock_Medium_1_q41_r2_Rock030_warm_r2.jpg-4f58820de8b218dfd0df18f35f467dbd.s3tc.ctex"
+path.s3tc="res://.godot/imported/Rock_Medium_1_q41_r2_Rock030_warm_r2.jpg-b3fc816c9af4efc3d5486dfa88f3177b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://assets/environment/stylized_nature_q41_r2/Rock_Medium_1_q41_r2_Rock030_warm_r2.jpg"
-dest_files=["res://.godot/imported/Rock_Medium_1_q41_r2_Rock030_warm_r2.jpg-4f58820de8b218dfd0df18f35f467dbd.s3tc.ctex"]
+source_file="res://assets/environment/stylized_nature/Rock_Medium_1_q41_r2_Rock030_warm_r2.jpg"
+dest_files=["res://.godot/imported/Rock_Medium_1_q41_r2_Rock030_warm_r2.jpg-b3fc816c9af4efc3d5486dfa88f3177b.s3tc.ctex"]
 
 [params]
 

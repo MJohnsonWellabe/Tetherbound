@@ -95,7 +95,7 @@
           "yaw_deg": 55.0,
           "sink_m": 0.03,
           "scale": 0.55,
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "_why": "SITE-DRESSING: cut-face spoil, largest of the set, between the working pile and the conduit head (404,1804) -- what a quarry actually leaves is broken rock, not four identical boulders on a lawn. Same textured Rock_Medium family band1's fire ring already proved through props.gd (environment/nature's own untextured rock pack is the one that fails, per that band's own record)."
         },
         {
@@ -104,7 +104,7 @@
           "yaw_deg": 210.0,
           "sink_m": 0.02,
           "scale": 0.3,
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "_why": "SITE-DRESSING: second spoil piece, deliberately a different model AND a different scale/rotation band from its neighbour -- the two-identical-rocks-at-near-identical-rotation defect this pass exists to fix."
         },
         {
@@ -114,7 +114,7 @@
           "yaw_deg": 340.0,
           "sink_m": 0.02,
           "scale": 0.42,
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "_why": "SITE-DRESSING: spoil at the foot of the north-west foundation (397,1805) -- rubble a crew clearing that ruin's own footing would have piled here, not carried off."
         },
         {
@@ -123,7 +123,7 @@
           "yaw_deg": 95.0,
           "sink_m": 0.02,
           "scale": 0.22,
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "_why": "SITE-DRESSING: smaller chip toward the second foundation (404,1794), the one piece in this set scaled as debris rather than a boulder -- extraction leaves a size gradient, not one repeated stone."
         },
         {
@@ -132,7 +132,7 @@
           "yaw_deg": 165.0,
           "sink_m": 0.03,
           "scale": 0.5,
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "_why": "SITE-DRESSING: closes the working face's own cut-face read -- set behind the crate pile from the approach so the crew reads as having worked INTO the rock, not merely stacked crates on grass beside it."
         }
       ]
@@ -146,7 +146,7 @@
         {
           "name": "OldQuarryCutFaceWest",
           "model": "Rock_Medium_3_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [376.0, 1809.5],
           "yaw_deg": 28.0,
           "sink_m": 1.72,
@@ -159,7 +159,7 @@
         {
           "name": "OldQuarryCutFaceMidWest",
           "model": "Rock_Medium_2_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [378.7, 1807.9],
           "yaw_deg": 202.0,
           "sink_m": 1.84,
@@ -172,7 +172,7 @@
         {
           "name": "OldQuarryCutFaceCentre",
           "model": "Rock_Medium_1_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [381.4, 1806.2],
           "yaw_deg": 104.0,
           "sink_m": 1.92,
@@ -185,7 +185,7 @@
         {
           "name": "OldQuarryCutFaceMidEast",
           "model": "Rock_Medium_3_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [384.1, 1804.5],
           "yaw_deg": 194.0,
           "sink_m": 1.80,
@@ -198,7 +198,7 @@
         {
           "name": "OldQuarryCutFaceEast",
           "model": "Rock_Medium_2_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "_why_b14": "B14: 1.5m west of (386.8,1802.8); the scaled hull reached band2's centreline at (397.9,1803.4) on the leg out of the quarry vertex.",
           "at": [385.3, 1802.8],
           "yaw_deg": 218.0,
@@ -212,7 +212,7 @@
         {
           "name": "OldQuarryCutBenchWest",
           "model": "Rock_Medium_2_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [378.9, 1809.8],
           "yaw_deg": 76.0,
           "sink_m": 0.58,
@@ -225,7 +225,7 @@
         {
           "name": "OldQuarryCutBenchCentre",
           "model": "Rock_Medium_3_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [381.5, 1807.9],
           "yaw_deg": 168.0,
           "sink_m": 0.54,
@@ -238,7 +238,7 @@
         {
           "name": "OldQuarryCutBenchEast",
           "model": "Rock_Medium_1_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [384.1, 1805.8],
           "yaw_deg": 302.0,
           "sink_m": 0.50,
@@ -251,7 +251,7 @@
         {
           "name": "OldQuarryCutBenchToe",
           "model": "Rock_Medium_2_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [386.7, 1803.2],
           "yaw_deg": 36.0,
           "sink_m": 0.44,
@@ -264,7 +264,7 @@
         {
           "name": "OldQuarryLowerLedgeWest",
           "model": "Rock_Medium_1_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [380.4, 1810.2],
           "yaw_deg": 18.0,
           "sink_m": 0.30,
@@ -277,7 +277,7 @@
         {
           "name": "OldQuarryLowerLedgeCentre",
           "model": "Rock_Medium_3_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [383.0, 1807.8],
           "yaw_deg": 196.0,
           "sink_m": 0.28,
@@ -290,7 +290,7 @@
         {
           "name": "OldQuarryLowerLedgeMidEast",
           "model": "Rock_Medium_1_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [385.0, 1805.4],
           "yaw_deg": 318.0,
           "sink_m": 0.27,
@@ -303,7 +303,7 @@
         {
           "name": "OldQuarryLowerLedgeEast",
           "model": "Rock_Medium_2_q41_r2",
-          "dir": "res://assets/environment/stylized_nature_q41_r2",
+          "dir": "res://assets/environment/stylized_nature",
           "at": [386.7, 1803.2],
           "yaw_deg": 42.0,
           "sink_m": 0.25,
