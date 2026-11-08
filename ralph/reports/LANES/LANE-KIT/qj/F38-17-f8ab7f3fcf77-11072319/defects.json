@@ -1,0 +1,24 @@
+{
+ "F38#17 base": [
+  {
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PARTIAL"
+  },
+  {
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+  },
+  {
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PARTIAL"
+  }
+ ],
+ "F38#17 cand": [
+  {
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+  },
+  {
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+  },
+  {
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+  }
+ ]
+}

@@ -295,6 +295,7 @@ func _on_challenged(spec: Dictionary) -> void:
 	var identity: Dictionary = speaker_identity(spec) \
 		if conversation in [NO_USABLE_CREATURE_CONVERSATION, NO_ALLY_DEPLOYED_CONVERSATION,
 			ALREADY_BEATEN_CONVERSATION] else {}
+	identity = with_variant_portrait(identity, spec)
 	if not bool(panel.call("start", conversation, identity)):
 		return
 
@@ -752,6 +753,25 @@ static func below_challenge_level(spec: Dictionary, party: RefCounted) -> bool:
 ## it. A key is left out rather than set to "" when the table has nothing,
 ## which the panel reads as "use the line's own field". Static and pure for
 ## the same reason `conversation_for()` is.
+## F38#17: a trainer whose body is an ENABLED appearance variant wears that
+## variant's paired plate on every line, so the face on the panel is the body
+## in the world (appearance_variants.gd resolves body and plate together, never
+## half). A disabled, unknown or mismatched record resolves nothing and the
+## identity is returned unchanged.
+static func with_variant_portrait(identity: Dictionary, spec: Dictionary) -> Dictionary:
+	if str(spec.get("appearance_variant_id", "")).is_empty():
+		return identity
+	var look := model_config(spec)
+	var portrait := str(look.get("portrait", ""))
+	if str(look.get("appearance_variant_id", "")).is_empty() or portrait.is_empty():
+		return identity
+	var result := identity.duplicate()
+	result["portrait"] = portrait
+	if look.has("portrait_region"):
+		result["portrait_region"] = look["portrait_region"]
+	return result
+
+
 static func speaker_identity(spec: Dictionary) -> Dictionary:
 	var identity := {}
 	var name := str(spec.get("name", ""))
