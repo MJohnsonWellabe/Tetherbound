@@ -1748,7 +1748,7 @@
      "frames": [
       {
        "id": "tidewake__catching__02-orb-in-flight",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_catch.gd -- --biome=tidewake --seed=2042 --output=res://ralph/reports/VISUAL/phase2/tidewake/repro_catching_02-orb-in-flight",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_catch.gd -- --biome=tidewake --seed=2042 --stages-on-catch --output=res://ralph/reports/VISUAL/phase2/tidewake/repro_catching_02-orb-in-flight",
        "orig_commit": "b1e5431f07c3c88dd7ea9b1216c7d64731baf124",
        "location": "",
        "time": "day",
@@ -1758,7 +1758,7 @@
       },
       {
        "id": "tidewake__catching__03-strike",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_catch.gd -- --biome=tidewake --seed=2042 --output=res://ralph/reports/VISUAL/phase2/tidewake/repro_catching_03-strike",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_catch.gd -- --biome=tidewake --seed=2042 --stages-on-catch --output=res://ralph/reports/VISUAL/phase2/tidewake/repro_catching_03-strike",
        "orig_commit": "b1e5431f07c3c88dd7ea9b1216c7d64731baf124",
        "location": "",
        "time": "day",
@@ -1768,7 +1768,7 @@
       },
       {
        "id": "tidewake__catching__03-absorbing",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_catch.gd -- --biome=tidewake --seed=2042 --output=res://ralph/reports/VISUAL/phase2/tidewake/repro_catching_03-absorbing",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_catch.gd -- --biome=tidewake --seed=2042 --stages-on-catch --output=res://ralph/reports/VISUAL/phase2/tidewake/repro_catching_03-absorbing",
        "orig_commit": "b1e5431f07c3c88dd7ea9b1216c7d64731baf124",
        "location": "",
        "time": "day",
