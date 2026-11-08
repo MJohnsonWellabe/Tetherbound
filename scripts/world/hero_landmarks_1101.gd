@@ -196,12 +196,31 @@ static func dress_veilfall(parent: Node3D, silhouette: MeshInstance3D, falls: No
 			for child: Node in silhouette.get_children():
 				if child is GeometryInstance3D and str(child.name).begins_with("Far_"):
 					(child as GeometryInstance3D).visible = false
+	# F39#31/#2 (LANE-TW): the render-only crag heaps (kitbash, tiered, cliff,
+	# ridge, gate composition) kept drawing past the handoff and buried the hero
+	# behind them. Optional: they stop drawing at the same distance. They are
+	# built after this call, so the range is applied deferred.
+	var sibling_from := float(cfg.get("hide_siblings_from_m", 0.0))
+	if sibling_from > 0.0:
+		_hide_siblings.call_deferred(parent, cfg.get("hide_sibling_nodes", []) as Array, sibling_from)
 	var falls_from := float(cfg.get("old_falls_far_hidden_from_m", 0.0))
 	if falls != null and falls_from > 0.0:
 		for visual: GeometryInstance3D in _geometry(falls):
 			if visual.visibility_range_end <= 0.0 or visual.visibility_range_end > falls_from:
 				visual.visibility_range_end = falls_from
 	return root
+
+
+static func _hide_siblings(parent: Node3D, names: Array, from_m: float) -> void:
+	if not is_instance_valid(parent):
+		return
+	for node_name: Variant in names:
+		var sibling := parent.get_node_or_null(NodePath(str(node_name)))
+		if sibling == null:
+			continue
+		for visual: GeometryInstance3D in _geometry(sibling):
+			if visual.visibility_range_end <= 0.0 or visual.visibility_range_end > from_m:
+				visual.visibility_range_end = from_m
 
 
 static func _far_materials(model: Node3D, shader_cfg: Dictionary, centre_xz: Vector2) -> Array[ShaderMaterial]:
