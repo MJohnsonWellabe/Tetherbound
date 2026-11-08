@@ -137,8 +137,16 @@ func test_pre_camp_sightline_groups_are_fixed_peaceful_shoulders() -> void:
 			"the pre-camp visibility fix must stay a peaceful Lower Meadows species")
 		assert_true(int(spec.get("count", 0)) >= 3,
 			"a lone body is not the creature-group cadence the owner asked for")
-		assert_true(float(spec.get("radius", INF)) <= 3.0,
+		# F38#5 (7 Nov 2026, coordinator order): bramblebun grew x1.3, so order
+		# 1914's disc is 4 m with its centre 2 m further off the spine; the
+		# road-picture intent is kept by the farthest member staying inside the
+		# shoulder bound below. Trailpup's 1913 keeps the original 3 m cap.
+		var radius_cap := 4.0 if order == 1914 else 3.0
+		assert_true(float(spec.get("radius", INF)) <= radius_cap,
 			"the fixed sightline group can scatter out of the road picture")
+		if order == 1914:
+			assert_true(_distance_to_spine(_spawn_point(spec)) + float(spec.get("radius", 0.0)) <= 10.0,
+				"cluster 1914's farthest member leaves the road picture")
 		assert_eq(str(spec.get("habitat", "")), "roadside_sightline")
 		for gate in ["table", "time", "weather", "wander_radius"]:
 			assert_false(spec.has(gate),

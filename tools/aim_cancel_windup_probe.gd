@@ -70,7 +70,11 @@ func _windup_case(label: String, residual: bool, cancel: bool, blocked: bool, fp
 	traces.clear()
 	if residual:
 		# Disclosed initial condition only; no pose changes after observation starts.
-		f.player.global_position.x = -10.0
+		# 14 m (was 10 m; F38#5, 8 Nov 2026): the reticle allowance scales with the
+		# target's body radius (reticle_body_geometry), and the x1.3 Bramblebun's
+		# 2.155 m allowance still covered the 10 m shift's 2.04 m offset. At 14 m the
+		# commit is ineligible at both the x1.0 and the x1.3 body size.
+		f.player.global_position.x = -14.0
 	shared_watch = f.opening._watch_throw_commit() if cancel else null
 	var observer := WindupObserver.new()
 	observer.name = "AfterThrowWindupObserver"

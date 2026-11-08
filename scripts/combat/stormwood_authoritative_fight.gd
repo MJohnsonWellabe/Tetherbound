@@ -100,3 +100,4 @@ func stop_opponent() -> void:
 
 func _exit_tree() -> void:
 	stop_opponent()
+	super._exit_tree()  # combat_manager drops the companion-aside collision exception
