@@ -44,6 +44,9 @@
     {
       "order": 9,
       "id": "stronghold_courtyard",
+      "base": "grunt",
+      "appearance_variant_id": "lanekit_f38_17_solene",
+      "_why_appearance_variant_f38_17": "F38#17 (LANE-KIT, 7 Nov 2026): binds this officer to the character_appearance_variants.json record lanekit_f38_17_solene (an installed rank body and its matching plate). `base` grunt is the rank's own default base, so with the record OFF the body is unchanged. Made in the live band config and the band_split_baseline mirror in the same commit.",
       "name": "Warder Solene",
       "_comment": "SG38, spec Sec8 'Courtyard / Hall Approach: trainer fight'. An officer on Sec36's ladder, and the first three-creature team in the building -- the step up from the patrol is a whole extra creature, not just levels, because that is what actually punishes a party of two.",
       "_comment_ow5d": "OW5D relocation, same offset as stronghold_patrol above.",
@@ -93,6 +96,9 @@
     {
       "order": 10,
       "id": "stronghold_elite",
+      "base": "grunt",
+      "appearance_variant_id": "lanekit_f38_17_hald",
+      "_why_appearance_variant_f38_17": "F38#17 (LANE-KIT, 7 Nov 2026): binds this officer to the character_appearance_variants.json record lanekit_f38_17_hald (an installed rank body and its matching plate). `base` grunt is the rank's own default base, so with the record OFF the body is unchanged. Made in the live band config and the band_split_baseline mirror in the same commit.",
       "_why_mirrored_g3_land_0904": "G3-LAND-0904 mirror. G3-FINALE changed this row's identity in the live config (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md, the W- contracts) and did not mirror it, so tests/test_band_content.gd went red at integration. The rule this satisfies is the fixture's own: a deliberate identity move is made TWICE, live config and mirror, in the same commit. Mirrored here by the coordinator at integration rather than reverted, because the change is the point -- the Warden opened at level 16 against an elite fielding 18/19/19, so the chapter's last fight was softer at the front than the one gate the player cannot walk around.",
       "name": "Keeper Hald",
       "_comment": "SG38, spec Sec8 'Tether Chamber Approach: elite trainer'. Captain rank, three creatures of three different types, and the hardest fight before the Warden. His defeat flag is also the ONE door in the complex: data/config/stronghold.json's tether_approach->warden_arena passage is `gated_by_flag: defeated_stronghold_elite`, so he is not a fight the player can walk around. The recovery point sits behind him, which is the order Sec8 asks for -- elite, then rest, then the Warden.",
