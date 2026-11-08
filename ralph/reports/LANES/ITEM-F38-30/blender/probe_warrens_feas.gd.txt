@@ -1,0 +1,32 @@
+extends SceneTree
+const SCENE := "res://scenes/world/meadows_playground.tscn"
+func _init() -> void:
+	call_deferred("_run")
+func _run() -> void:
+	var world := (load(SCENE) as PackedScene).instantiate() as Node3D
+	root.add_child(world)
+	current_scene = world
+	for _i in 60:
+		await physics_frame
+	var w := world.find_child("BurrowWarrens", true, false) as Node3D
+	var out := {"origin": [w.global_position.x, w.global_position.y, w.global_position.z], "yaw_deg": w.rotation_degrees.y,
+		"floor_y": w.get("_floor_y"), "clearance": float(w.call("_bank_cfg").get("clearance_m", 1.5)), "bumps": [], "terrain": [], "bank": [], "mouth_outer_z": w.call("_mouth_outer_z")}
+	for b: Dictionary in w.get("_bank_bumps"):
+		out.bumps.append({"id": str(b.id), "cx": b.cx, "cz": b.cz, "hx": b.half_x, "hz": b.half_z, "top": b.ceiling_top, "p": b.p})
+	# local grid 2 m over [-140,140] x [-80,200]
+	for iz in range(-40, 101):
+		var row_t := []
+		var row_b := []
+		for ix in range(-70, 71):
+			var lx := ix * 2.0
+			var lz := iz * 2.0
+			var g := w.to_global(Vector3(lx, 0, lz))
+			row_t.append(snappedf(float(world.call("ground_height_at", g.x, g.z)) - w.global_position.y, 0.01))
+			row_b.append(snappedf(float(w.call("_bank_height_at", lx, lz)), 0.01))
+		out.terrain.append(row_t)
+		out.bank.append(row_b)
+	var f := FileAccess.open("res://.artifacts/warrens/feas.json", FileAccess.WRITE)
+	f.store_string(JSON.stringify(out))
+	f.close()
+	print("FEAS done bumps=%d" % out.bumps.size())
+	quit(0)
