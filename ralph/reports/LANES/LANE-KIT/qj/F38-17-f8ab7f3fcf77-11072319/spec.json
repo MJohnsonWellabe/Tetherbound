@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F38#17",
+  "a": "/home/user/Tetherbound/.artifacts/qj/F38-17-f8ab7f3fcf77-11072319/k/sides/F38_17_base.jpg",
+  "b": "/home/user/Tetherbound/.artifacts/qj/F38-17-f8ab7f3fcf77-11072319/k/sides/F38_17_cand.jpg",
+  "brief": "3 in-game frames (Meadows) for one catalogue subject: named trainer dialogue subject visibility. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+  ]
+ }
+]

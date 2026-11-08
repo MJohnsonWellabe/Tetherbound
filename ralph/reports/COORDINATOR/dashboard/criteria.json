@@ -1,7 +1,7 @@
 {
- "generated_at": "7 Nov 2026",
- "main_sha": "a8a50e2c9",
- "batch4_sha": "batch 7 #853 merged; batch 8 in full CI",
+ "generated_at": "7 Nov 2026 (evening)",
+ "main_sha": "9ebb2aab5",
+ "batch4_sha": "#855 merged; batch 10 in full CI",
  "rows": [
   {
    "id": "F01",

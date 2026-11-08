@@ -1,0 +1,10 @@
+{
+  "assets": ["candy_good.glb", "candy_great.glb", "candy_rare.glb"],
+  "row": "F41#14 (P2-045 candy pickup tiers)",
+  "lane": "LANE-SW, 7 Nov 2026",
+  "source": "Blender 4.2.3 procedural primitives (wrapped oval, helix-striped twist, faceted gem on a star wrapper), untextured PBR colours from sRGB targets, no emission, no Meshy, no downloads",
+  "script": "ralph/reports/LANES/ITEM-F41-14/build_candy_tiers.py (blender -b -P build_candy_tiers.py -- <out dir> [preview])",
+  "reference": "the installed Meadows candy pickup (assets/props/candy_pickup, a green wrapped sweet) for the Good form and colour; the band_pickups.gd tier colours (green, blue, gold) and the judges' ask that each tier have its own form and that rarer reads bigger",
+  "scale_check": "ralph/reports/LANES/ITEM-F41-14/_scale_check_candy.jpg (the three forms side by side); in game each is fitted to the installed candy body times height_mult 1.1 / 1.25 / 1.4 on top of the tier scale ladder 0.34 / 0.42 / 0.52, so a pickup stays well under the 1.80 m trainer",
+  "flag": "data/config/stormwood_candy_tiers_1107.json enabled (ON: CPU 5.83 -> 6.04, LANE-SW r1)"
+}

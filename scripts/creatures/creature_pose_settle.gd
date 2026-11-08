@@ -63,14 +63,26 @@ static func config() -> Dictionary:
 
 ## NEAR6-TW (P2-028, F39#6): `tidewake_scope` runs the settle for its listed
 ## species only while the roster-wide master `enabled` stays OFF. Inert while OFF.
+## LANE-KIT (F38#26, 7 Nov): any top-level `<name>_scope` block works the same
+## way, and the enabled scopes' species are unioned, so one species can be
+## judged on its own without touching another lane's scope.
 static func scoped(cfg: Dictionary) -> Dictionary:
-	var scope: Variant = cfg.get("tidewake_scope", {})
-	if bool(cfg.get("enabled", false)) or not scope is Dictionary \
-			or not bool((scope as Dictionary).get("enabled", false)):
+	if bool(cfg.get("enabled", false)):
+		return cfg
+	var species: Array = []
+	for key: Variant in cfg:
+		var scope: Variant = cfg[key]
+		if not str(key).ends_with("_scope") or not scope is Dictionary \
+				or not bool((scope as Dictionary).get("enabled", false)):
+			continue
+		for id: Variant in (scope as Dictionary).get("species", []):
+			if not species.has(id):
+				species.append(id)
+	if species.is_empty():
 		return cfg
 	var out := cfg.duplicate()
 	out["enabled"] = true
-	out["only_species"] = (scope as Dictionary).get("species", [])
+	out["only_species"] = species
 	return out
 
 

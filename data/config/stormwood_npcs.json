@@ -83,7 +83,7 @@
       "_why_moved_f11": "Stood exactly under trainer Ivo's Moss Detour and 3 m from the Hollows rod switch. Moved 8 m north-west, still at the Hollows station (9.9 m from the switch), clear of route pickup 06 (7.3 m). Static interaction-spacing audit after F11 run 22."
     },
     {
-      "id": "warden_elect_bryn",
+      "id": "warden_elect_bryn", "appearance_variant_id": "lanekit_f41_8_bryn",
       "name": "Warden-Elect Bryn",
       "region_id": "conductor_run",
       "role": "local_historian",
@@ -148,7 +148,7 @@
       ]
     },
     {
-      "id": "elder_maud",
+      "id": "elder_maud", "appearance_variant_id": "lanekit_f41_8_maud",
       "name": "Elder Maud",
       "region_id": "deepwood",
       "role": "local_historian",
