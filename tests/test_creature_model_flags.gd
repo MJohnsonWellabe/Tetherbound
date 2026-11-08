@@ -16,6 +16,7 @@ var installed: Dictionary
 const HELD := {
 	"creatures_ralph_mosshock_lateral_hit": "the visual lane's F36#54 lateral hit arm is judged (OFF until a CPU gain)",
 	"creatures_ralph_sparkit_lateral_hit": "the visual lane's F36#70 lateral hit arm is judged (OFF until a CPU gain)",
+	"lanekit_hitreact_grounded_1107": "LANE-KIT's grounded hit/faint arm (Shadelet, Paddlenewt, Glimmermoth, Tempestwing) is judged (OFF until a CPU gain)",
 	"remake_owner1101_burrowback": "its aspect variant Nightburrow reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_trailpup": "its aspect variant Stormtrail reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_ashtusk": "it is an aspect variant of Tuskroot and must reuse Tuskroot's mesh, not its own (aspect textures / pose rig follow from tb/cause-remakes)",

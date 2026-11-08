@@ -1,0 +1,11 @@
+{
+  "asset": "meadows_keep_hill.glb",
+  "row": "F38#20 (P2-003 Team Tether stronghold)",
+  "lane": "LANE-SW, 7 Nov 2026",
+  "source": "Blender 4.2.3 procedural heightfield and noise boulders (seed 1107), no Meshy, no downloaded geometry",
+  "script": "ralph/reports/LANES/ITEM-F38-20/build_keep_hill.py (blender -b -P build_keep_hill.py -- <repo root> <out.glb> [preview])",
+  "textures": "embedded copies of the installed assets/environment/terrain/Grass004_Color.jpg and Rock030_Color.jpg (tinted)",
+  "reference": "ralph/reports/LANES/ITEM-F38-20/_ref_keyart.jpg (docs/reference/tetherbound-meadows-keyart.png: the castle crowning a green hill above the meadow) and the judges' repeated ask 'a keep on a hill'",
+  "scale_check": "ralph/reports/LANES/ITEM-F38-20/_scale_check_hill.jpg: 856 x 560 m, crown 78 m above its base (64 m above the hall floor) against a 150 m keep proxy and a 1.80 m trainer capsule on the slope; hall footprint notched under the floor",
+  "flag": "data/config/stronghold.json keep_hill_1107 (ON with keep_walls_1107: CPU 6.38 -> 6.78, LANE-SW r2)"
+}
