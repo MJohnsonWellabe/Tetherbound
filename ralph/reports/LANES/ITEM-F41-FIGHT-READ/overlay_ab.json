@@ -1,0 +1,10 @@
+{
+ "data/config/foliage_camera_visibility.json": [
+  "near_lens_hide"
+ ],
+ "data/config/creature_rim.json": {
+  "realm_scenes": [
+   "res://scenes/world/stormwood.tscn"
+  ]
+ }
+}
