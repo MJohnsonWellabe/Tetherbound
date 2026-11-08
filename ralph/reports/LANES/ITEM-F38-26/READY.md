@@ -1,11 +1,44 @@
-STATUS: parked
-BRANCH: tb/item-f38-26  HEAD: 966168f8 (READY and verdict only, no game change)
+STATUS: land
+BRANCH: tb/item-f38-26
+HEAD: (this commit; merged origin/main just before writing)
 
-Depends on tb/item-capture-fixes (4e3f0cc0): the stand now joins the grass clearing as a settled creature does.
+# ITEM F38#26: P2-020 creature ground contact (Meadows) (LANE-KIT)
 
-- Row: F38#26 P2-020 creature ground contact (Meadows). Live 5.78 CPU (old stand: clearing never engaged) / GPU 5.43.
-- Fixed-stand re-score: CPU mapped **6.53** (raw 6.0/5.6/5.6), round `ralph/reports/LANES/LANE-KIT/qj/F38-26-fb9fd6ec5b3f-11071828/` (r 0.80, RMSE 0.69, confirming). Sides: shipped clearing ON (base) vs `creature_grass_clear.json enabled:false` (the old stand's look). Judged identical (+0.00); crops show the clearing does uncover the hare's feet, but too small at sheet scale to move a score.
-- Arm `creature_grass_clear.json p2_020_candidate` (radius x2.1) captured on the fixed stand: 0.06% of pixels differ from base, so no judge round spent. Stays OFF (flat).
-- Flags turned ON: none. Tests flipped: none.
-- Judges' remaining asks: (1) the fainted Mosshell (frame 3) renders translucent/ghost-like and does not read as grounded (3/3 judges); (2) creatures read about trainer height and small in frame behind the trainer; (3) value separation from the shaded tree band and a rim light; (4) near-camera grass dominates the lower half.
-- Next idea: the "translucent" Mosshell is, on a crop, a belly-up faint floating about half a body above the grass with a pale washed shell (no transparency). Same cause family as LANE-KIT row 5 (floating faint/hit-react): fix the faint seat there, then re-judge F38#26. Scale/camera asks are other lanes' files.
+## Scores
+- Earlier round (parked): fixed-stand re-score, CPU mapped 6.53. The grass-clearing radius arm was flat, so no round was spent on it.
+- This round, qj F38-26-8ba717064855-11072338 (CPU llvmpipe, three code-blind judges, 3 anchors):
+  base 6.27 -> candidate **6.97** (+0.70). Raw 5.3 5.6 5.5 / 5.8 6.0 6.0. Defect PARTIAL,PRESENT -> PARTIAL (3/3).
+- All three judges: the fainted Mosshell (frame 3) is no longer a pale, translucent, floating ghost. It sits as an
+  opaque textured shell on the ground.
+
+## Flag (ON, judged gain)
+- data/config/creature_pose_settle.json `lanekit_mosshell_scope` (`enabled: true`, `_why_on` naming the round and the
+  6.27 -> 6.97 gain). The existing CAUSE-POSES settle (faint grounded + crumple, which rights the belly-up fall onto the
+  plastron and plants it; hit grounded) runs for Mosshell only. The roster-wide master stays OFF and tidewake_scope
+  stays OFF. Presentation only: no state, no mesh, no size change.
+
+## Code
+- scripts/creatures/creature_pose_settle.gd `scoped()`: every enabled top-level `<name>_scope` now unions its species
+  (previously only `tidewake_scope` was read). With the master ON, scopes are ignored as before. With no scope
+  enabled, the config is unchanged.
+
+## Tests
+- test_cause_poses_settle.gd 3/3. The new test covers the scope union, no scope enabled, the master ignoring scopes,
+  and the shipped state (Mosshell only).
+- JSON parse: creature_pose_settle.json. No textures added, so the texture policy is unaffected.
+
+## Files
+- data/config/creature_pose_settle.json, scripts/creatures/creature_pose_settle.gd, tests/test_cause_poses_settle.gd
+- ralph/reports/LANES/LANE-KIT/qj/F38-26-8ba717064855-11072338/
+
+## Flags left OFF
+- creature_grass_clear.json p2_020_candidate (radius x2.1). It was flat in the earlier round.
+
+## Judges' asks (remaining, frames 1-2 and scene)
+- The hare and the owl in frames 1-2 read no taller than the trainer, and they are small and pale behind him. The
+  stand is in creature_scale_flags.json, which is not this lane's file.
+- Grass still covers some feet (defect PARTIAL). Creatures lack rim light, and the foreground bush is distracting.
+
+## Next idea
+- A per-species daylight rim on the two pale stand subjects through the existing coat rim
+  (creature_coat_flags.json, mine), so they separate from bright grass. Expected to be modest; this needs a GPU look first.
