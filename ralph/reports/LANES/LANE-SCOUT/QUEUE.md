@@ -155,3 +155,99 @@ Frames: `quick_judge.py capture <rows>` on c502453d (tree dee9ffb29696), CPU Low
 - Fix class: installed-asset swap (per-NPC idle clip) / config.
 - Fix idea: give each post NPC a role idle from clips already installed in `assets/characters/Rig_Medium_General.glb` (Idle_B, Interact, Use_Item; check which NPC rigs share it): Halda Interact at the board, Lark Idle_B with a hand on the signpost, Oskar Use_Item. No new art.
 - Expected gain: medium (the defect is the pose, it is in all three judged frames, and the props are already there to sell it).
+
+## Batch 2: Tidewake look/T2 sets, Stormwood dialogue, fight and matrix (captured 8 Nov 14:26–15:14 UTC)
+
+Tools: `capture_tidewake_f13_5.gd` (F39-look, T2-current; 1280x720 Low), `quick_judge.py capture F41#20 F41#15 F41#18` and `F41#3`, `capture_stormwood_f10_matrix.gd` (calm, surge). Same source and renderer as batch 1.
+
+### F39#30 The biome frame matrix (Tidewake)
+- Last: 5.75 (board; VIS-TIDEWAKE CPU, F39#30a golden 6.18 / F39#30b 5.75).
+- Judges' last asks (`ralph/reports/LANES/VIS-TIDEWAKE/READY.md`, status 19:45 and look/r26–r27): golden-hour diagonal stripes on the sand (a terrain shadow), a night shallow-water colour (the cyan band does not darken), a rain cloud grade, and a Veilfall rebuild.
+- Today (`capture_tidewake_f13_5.gd`, F39-look set, 11 views, 1280x720 Low):
+  - **Golden stripes: still true.** shore-golden shows hard parallel diagonal shadow bands across the whole beach.
+  - **Night water: still true.** shore-night shows bright cyan shallows and pale grey-white sand under a dark sky; the shore reads as moonlit snow.
+  - Rain: streaks and a darker grade read; blue sky gaps remain in the cloud.
+  - Veilfall: veilfall-vista is the beige crag spire with one white fall and the ring of pale rest-shoal discs in the sea below; veilfall-near puts the camera on grey slab faces with a flat white fall sheet.
+  - **New observation:** in every First Shore view, the exploration HUD hotbar (slots 1–5) and the Map/Satchel/Build legend sit at about 60% frame height over the horizon, island and dock, and the region banner sits over the sky. A bearded NPC is cut by the right edge and a barrel by the bottom edge of the same stand.
+- Fix class: code (night water: a time-of-day input to `water.gdshader`, VIS-TIDEWAKE's own diagnosis), config (golden shadow caster: terrain shadow casting at low sun), owner decision (HUD placement OP21-11), scene placement (move the NPC and barrel off the stand's edges).
+- Fix idea, best single one: darken and desaturate the shallow-water band at night through the time-of-day input to `water.gdshader` (the water nightly reads as the brightest thing in shore-night and is a large share of three night frames across F39#30, F13#5).
+- Expected gain: medium (night is one of four times; the stripes and HUD remain).
+
+### F39#0 Tidewake re-capture and re-score (unscored)
+- This is a process row: re-capture the biome (≥200 frames) on the GPU and re-score its catalogue rows. No build fixes it. GPU-only.
+
+### F13#5 Currents, inhabited docks and Veilfall distance read (T2 matrix)
+- Last: 5.87 (board; VIS-TIDEWAKE CPU look/r14–r15).
+- Judges' last asks (`ITEM-MESHY-RECHECK-PARKED/READY.md` row 6, `NEAR6-TW/READY.md`): the three dock hamlets share one template (same positions, banner, stall), so they read as one copied set; Veilfall needs a towering, tiered, green, misty mountain; current dashes read as even rows.
+- Today (`capture_tidewake_f13_5.gd`, T2-current set): 3 of 4 views captured. **swim-brine-day failed: "Fixed swim view missed the authored current"** (capture-stand bug: the stand no longer lands in its authored current, so that view is missing from any round).
+  - swim-away-day / swim-across-day: a clear swimmer ring and white curved current arcs in pale turquoise water; driftwood logs; the HUD hotbar and legend sit over the water at mid-frame.
+  - swim-away-night: water is saturated bright blue and the beach pale grey-white, the same night-water defect as F39#30.
+  - No dock hamlet is visible from these swim stands.
+- Still true? **Yes** for the night water and Veilfall; the dock half cannot be judged from the surviving swim views.
+- Fix class: capture-stand bug (re-seat swim-brine-day onto its current), then code (night water), scene placement (hamlet layout variety).
+- Fix idea: re-seat swim-brine-day first so the set is complete; then the night shallow-water darkening shared with F39#30.
+- Expected gain: low-medium (the dock and Veilfall halves need layout or new-art work the swim stands do not show).
+
+### F41#15 P2-083 dialogue foreground obstruction (Stormwood)
+- Last: 5.90 (board); GPU 3.19 (28 Oct).
+- Judges: "In both Captain Marrow frames a giant blue lightning-bolt banner fills the screen and the speaker is never seen" (`stormwood/scores-gpu.json`).
+- Still true? **No.** Both Marrow dialogue frames (character and Dynamo Core trainer) now show Marrow centred on the deck with the line box below; no banner in the way. Officer Nysa is staged clearly in the Deepwood.
+- Remaining: Marrow's armour renders as pale pinkish grey with white hair, low contrast against the pale deck (washed out); a vertical wooden post cuts the left edge of both Marrow frames; Marrow and Nysa wear the same armour body.
+- Fix class: GPU-only re-baseline (defect fixed); optional config (Marrow armour value/colour variant).
+- Fix idea: GPU re-score. If it lands under 6, a darker Tether armour variant for Marrow (appearance variant, same mesh).
+- Expected gain: low as a build (the scored defect is gone; the re-score itself should move a lot from 3.19).
+
+### F41#18 P2-056 uniformed character readability (Stormwood)
+- Last: 5.98 (board); GPU 3.91.
+- Judges: "Grunt Lieutenant Dace, Lieutenant Varga and Defector Sable are small dark figures lost against dark green-teal grass, with no rim light or uniform accent to pick them out" (`stormwood/scores-gpu.json`).
+- Still true? **Partly.** They are no longer dark: Dace and Varga wear pale grey-white armour, Sable a light grey outfit. But each is a small figure (about an eighth of frame height) standing right beside the trainer, so officer and trainer read as one pair, and nothing marks rank or faction: no colour accent at all.
+- Fix class: config / installed-asset recolour (appearance variants, the F41#8 recolour tool).
+- Fix idea: a Team Tether oxblood accent on the Tether officers' uniforms (sash, shoulder or collar band; red is reserved for Team Tether, so this is on-brand), stronger for the lieutenants and faded for Defector Sable. Same meshes.
+- Expected gain: medium-high (a faction colour is exactly what the judges asked for, and it reads even at this distance).
+
+### F41#20 P2-084 named character dialogue reuse (Stormwood)
+- Last: 5.64 (board); GPU 6.09 (3/3 FIXED).
+- Judges: "Fenn, Oswin and Elder Maud now each have their own line, but Fenn's frame is a black void (Fenn not on screen), Fenn's and Oswin's portraits look alike (bearded, hooded)" (`stormwood/scores-gpu.json`).
+- Still true? **Partly.** Fenn is on screen today (no void), lines are distinct. But Fenn and Oswin are the same model in the same blue hood and yellow-green coat, and their dialogue portraits are the same image. Elder Maud is distinct.
+- Fix class: config + installed-asset recolour (appearance variant and recoloured portrait, as `ITEM-F41-8` did for Bryn and Maud).
+- Fix idea: give Oswin an appearance variant (different hood and coat colour, no red) and a recoloured portrait plate.
+- Expected gain: medium (two of three frames show the duplicate; the fix is a proven recipe from F41#8).
+
+### F41#3 P2-092 named wild fight actor spacing (Stormwood)
+- Last: 5.98 (board); GPU 5.98.
+- Judges: "in tell1-a-start and tell1-e-impact Sparkit still sits in the boss's leg space ... with a dense left-side HUD, so the scene lacks Palworld's clear fighter separation" (`stormwood/scores-gpu.json`).
+- Still true? **Yes.** capacitor_alpha today: in i01 and tell1-a-start Sparkit's head and forelegs are inside Voltarach's front legs; in tell1-e-impact Sparkit is almost hidden under the boss's body and the purple strike spikes. i10 and tell2 show clean separation, so it is the opening exchange that overlaps.
+- Owner rule (STATE §0, 7 Nov): combat spacing stays; fix the look with a fade or clip tweak.
+- Fix class: code/config (occlusion fade of the boss body when it covers the piloted ally, or an ally outline through the boss).
+- Fix idea: dither-fade Voltarach's leg and body meshes to about 50% where they cover the active ally (the existing foliage camera-visibility fade is the model), so Sparkit reads through the legs in the opening frames.
+- Expected gain: medium (two of three judged frames; spacing itself cannot change).
+
+### F41#22 The biome frame matrix (Stormwood) (unscored)
+- No score yet. Captured `capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,surge --no-aftermath` (production camera stands, CPU Low).
+- What the frames show:
+  - **Calm and Surge are the same frame at every stand** (only rain density changes), the same defect as F41#2: the storm does not read in the matrix.
+  - forest and giant are framed close on huge trunks; the nearest trunk at the forest's right edge is dithered see-through by the camera fade and reads as a ghost pane.
+  - glass is open meadow with small distant crystal clusters; rod_line is the charged road with the lattice pylon.
+- Fix class: config (per-phase sky/light, shared with F41#2).
+- Fix idea: the F41#2 phase grade carries straight into this row (darker, cooler Surge). Fix F41#2 first, then baseline this row on the GPU.
+- Expected gain: medium (from F41#2's fix), baseline needed.
+
+### F41#23 Stormheart tree at distance and up close (unscored, outside view)
+- The matrix stormheart stand is the one outside view: the gnarled grey Stormheart, with its hut deck in the crown, stands behind the trainer at mid distance. It reads as a big old tree but not as the region's hero: it is pale grey, about the height of the near trees in frame, against the flat lilac sky, with no glow, storm or scale cue. The up-close half is the inside-hollow stands (see F41#1).
+- Fix class: scene/config (value and glow on the tree, sky behind it) or capture-stand (a farther stand where it towers over the canopy).
+- Fix idea: darken the Stormheart bark and light its crown with the storm (a few bolts striking the crown, cool rim light), so it is the darkest, tallest and only lit shape on the skyline.
+- Expected gain: medium (baseline first).
+
+### F41#24 No flat magenta rings or slabs, placeholder materials, floating bodies or clipping (Stormwood) (unscored)
+- Seen in today's Stormwood frames:
+  - **giant stand: a flat pinkish-mauve square quad** lies on the dark ground right of the trainer (calm and surge). It reads exactly as a placeholder slab. Worth finding its node.
+  - giant/forest: clusters of pale cream mushroom caps render flat and unlit, so in the frame they read as flat cream discs or slabs.
+  - Glass Sink close: the stone ring's base edge sits above the dark ground (looks unseated).
+  - Struck Sentinel / Stormheart approach: the black-and-gold lattice pylon stands in the trainer's sightline (placement, not clipping).
+  - Heartstone / Glass Field: dark mirror flood planes with hard edges.
+- Fix class: scene placement (find and remove or re-seat the pink quad; seat the ring) and config (mushroom cap shading).
+- Fix idea: identify the pink quad at the giant stand (likely a decal or debug plane) and remove it; that is a direct pass on this row's wording.
+- Expected gain: medium for this row (clean-up items are binary in the judges' eyes).
+
+### F41#0 Stormwood re-capture and re-score (unscored)
+- Process row (GPU re-capture ≥200 frames and re-score). GPU-only; no build. Note the F41 catalogue refuses CPU.
