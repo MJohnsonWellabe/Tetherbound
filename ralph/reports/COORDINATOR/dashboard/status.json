@@ -1,6 +1,7 @@
 {
-  "updated": "5:30 PM CT Sat 7 Nov 2026",
+  "updated": "6:05 PM CT Sat 7 Nov 2026",
   "headline": [
+    "7 Nov restart: five lanes, eight batch PRs (#847-#854) opened, seven merged; batch 9 stacked. CPU scores only; GPU re-judge of every changed row at end of day 8 Nov.",
     "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
     "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
     "Next: five one-row lanes from the QUEUE in docs/STATE.md §0 (quick wins, Blender art rows, scene rows); GPU re-judge end of day 8 Nov.",
@@ -696,6 +697,7 @@
     }
   ],
   "decisions": [
+    "7 Nov (owner): F38#5 approved: cluster 1914 may use a 4 m radius; test cap 4.0 for 1914 only, farthest member within 10 m of the road.",
     "8:30 PM CT Sun 25 Oct 2026 (coordinator): the Fallen Giant hero may be judged now but lands only after it gets a collider; players must not walk through a 45 m log.",
     "7:40 PM CT Sun 25 Oct 2026 (coordinator): Veilfall's judging camera is not reframed away from the faceted gully (players still see it). Cladding retried with raycast seating; terrain reshape allowed with a route walk check. Ashfoot camp safe-zone rule kept (WORLD §5.2).",
     "7:35 PM CT Sun 25 Oct 2026 (coordinator, under the owner's 24 Oct 'light touches' ruling): Terrapup's shoulder plates may go back to coat with a low spine ridge. The ridge tied on CPU, so the current dog stays the GPU candidate.",
@@ -840,35 +842,35 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Five long-lived cloud lanes (7 Nov, owner plan in STATE §0). Each takes its next QUEUE row on tb/item-<row>, runs one-item CPU quick_judge rounds, and writes READY.md; the coordinator lands judged gains in one batch PR every 25-30 min. GPU re-judge of CPU-only rows: end of day 8 Nov.",
+  "active_lanes_note": "Five long-lived cloud lanes since 7 Nov 17:50 UTC (owner plan, STATE §0). LANE-MS and LANE-KIT have finished their QUEUE lists. Coordinator lands judged gains in stacked batch PRs; one full-CI PR at a time.",
   "active_lanes": [
     {
       "lane": "LANE-MS · Meadows",
-      "doing": "F38#41 quarry rocks ready; waiting on its origin/main merge. F38#5 held for owner.",
+      "doing": "QUEUE list done: F38#5 (owner-approved), F38#41, F38#36 in batch 9; F38#30b parked (needs a Bank-matched Blender hill); F38#11/#27 blocked on other lanes' files.",
       "criteria": "F38#12, F38#5, F38#30, F38#24, F38#6, F38#41",
       "next": "~1.5 h (import + first round)"
     },
     {
       "lane": "LANE-SW · Stormwood and arena",
-      "doing": "F38#20 keep on a hill: Blender hill + curtain wall ON (+0.40, 6.38 -> 6.78), stacked in batch 8. Next F41#9 harvest cues.",
+      "doing": "F38#20 keep hill + walls in #854. Next F41#9 harvest cues.",
       "criteria": "F38#28, F41#1, F38#20, F41#9, F41#14, F41#3, F41#6, F41#7",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-TW · Tidewake and map",
-      "doing": "F39#31 Veilfall evidence (import fixed) stacked in batch 8. Now F39#8.",
+      "doing": "F39#8 Aquaryn pose in batch 9; F39#16/#17/#31 parked. Next F39#10.",
       "criteria": "F39#25, F39#31, F39#2, F39#16",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-CR · Cloudreach",
-      "doing": "F40#4 parked (Blender strata cliff; conflicts with F40#1 candidate slot, lane re-merging after #853). Next F40#19 rain wetness.",
+      "doing": "F40#4 strata cliff parked (evidence in batch 9). Next F40#19 rain wetness.",
       "criteria": "F40#2, F40#12, F40#1, F40#4, F40#19, F40#17",
       "next": "~1.5 h"
     },
     {
       "lane": "LANE-KIT · capture fixes, HUD, creatures",
-      "doing": "Hit-react grounding parked (flat: the floating read is the lunge pose + sun shadow, needs a per-bone pose edit). Next F41#8 outfit variants.",
+      "doing": "F38#26 Mosshell faint +0.70 in batch 9; F38#17 + F41#8 re-merging main. Now Shadelet/Glimmermoth per-bone hit pose.",
       "criteria": "F38#19, F38#26, F38#31, F38#33, F38#38, F36#70, F41#8, F38#17",
       "next": "~2 h"
     }
@@ -1593,111 +1595,108 @@
       "before": 6.11,
       "after": 6.23,
       "pr": "#843"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F36 Riverdrake value lift",
       "before": 6.37,
       "after": 6.69,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F36 Staticub value lift",
       "before": 6.59,
       "after": 6.8,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F36 Sirenseal value lift",
       "before": 6.53,
       "after": 6.61,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F36 Riptusk value lift",
       "before": 6.22,
       "after": 6.32,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F36 Tempestwing value lift",
       "before": 5.66,
       "after": 5.87,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F40#19 Cloudreach rain streaks",
       "before": 5.48,
       "after": 5.61,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F40#3 P2-024 Windscar Beacon approach",
       "before": 5.84,
       "after": 6.46,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F36 Voltwig value lift",
       "before": 6.53,
       "after": 6.59,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F36 Pebbik value lift",
       "before": 6.92,
       "after": 7.05,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F36 Galewisp value lift",
       "before": 7.13,
       "after": 7.17,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F39#3 P2-011 Tidewake destination read",
       "before": 5.75,
       "after": 5.84,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F39#31 Veilfall cladding and hero",
       "before": 5.29,
       "after": 5.32,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F40#1 P2-021 Cloudreach stone trail",
       "before": 5.68,
       "after": 5.86,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F40#9 P2-068 Cloudreach post readability",
       "before": 5.16,
       "after": 5.2,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F41#5 P2-039 Stormwood macro variation",
       "before": 5.31,
       "after": 5.35,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F38#19 P2-004 quiet empty quick-slot chips",
       "before": 5.64,
       "after": 5.69,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F38#38 P2-096 craft action hint contrast",
       "before": 7.17,
       "after": 7.33,
-      "pr": "consolidated 7 Nov"
+      "pr": "#846 (merged 7 Nov)"
     },
     {
       "item": "F39#25 map active region",
@@ -1709,7 +1708,7 @@
       "item": "F38#31 alpha rarity read (12 gold motes)",
       "before": 6.69,
       "after": 6.84,
-      "pr": "tb/land-batch-2 (stacked on #847)"
+      "pr": "#848 (merged 7 Nov)"
     },
     {
       "item": "F38#30 Burrow Warrens hillside (shell seated 5 m)",
@@ -1763,7 +1762,58 @@
       "item": "F38#20 Team Tether keep on a Blender hill + curtain wall",
       "before": 6.38,
       "after": 6.78,
-      "pr": "land batch 8 (full CI)"
+      "pr": "#854 (merged 7 Nov)"
+    }
+  ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [
+    {
+      "item": "F38#41 Old Quarry boulders (Blender recombination)",
+      "before": 6.43,
+      "after": 6.96,
+      "pr": "land batch 9 (full CI)"
+    },
+    {
+      "item": "F38#36 Corin dialogue: galecrest cluster moved off the speaker",
+      "before": 6.98,
+      "after": 7.89,
+      "pr": "land batch 9 (full CI)"
+    },
+    {
+      "item": "F39#8 Aquaryn mounted pose (rider shadow off, sink 1.0)",
+      "before": 4.97,
+      "after": 6.38,
+      "pr": "land batch 9 (full CI)"
+    },
+    {
+      "item": "F38#5 creature scale batch 4 (grow only; owner OK for cluster 1914 radius 4 m)",
+      "before": 6.59,
+      "after": 7.37,
+      "pr": "land batch 9 (full CI)"
+    },
+    {
+      "item": "F38#5 creature scale batch 5",
+      "before": 7.14,
+      "after": 7.4,
+      "pr": "land batch 9 (full CI)"
+    },
+    {
+      "item": "F38#26 Mosshell faint seat (pose settle scoped)",
+      "before": 6.27,
+      "after": 6.97,
+      "pr": "land batch 9 (full CI)"
+    },
+    {
+      "item": "F38#17 Solene/Hald installed variant bodies",
+      "before": 5.81,
+      "after": 7.32,
+      "pr": "land batch 9 (full CI)"
+    },
+    {
+      "item": "F41#8 Bryn/Maud coat variants",
+      "before": 5.47,
+      "after": 5.83,
+      "pr": "land batch 9 (full CI)"
     }
   ]
 }
