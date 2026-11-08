@@ -18,13 +18,19 @@ func test_wet_band() -> void:
 	assert_false(FLOOD.wet(INF, 28.15, 28.47), "an unsampled point stays dry")
 
 
-func test_shipped_config_is_off_and_builds_nothing() -> void:
+func test_shipped_config_builds_a_sheet_only_on_the_crest() -> void:
 	var cfg := FLOOD.settings()
-	assert_false(bool(cfg.get("enabled", true)), "OFF until judged")
+	assert_true(bool(cfg.get("enabled", false)), "ON after qj/F39-3-flood-v2")
 	var flood := FLOOD.new()
 	var world := SlopeWorld.new()
-	assert_eq(flood.build(world), 0, "an OFF flood builds no cells")
-	assert_eq(flood.get_child_count(), 0)
+	var cells := flood.build(world)
+	assert_true(cells > 0, "the crest under the mask holds water")
+	assert_eq(flood.get_child_count(), 1, "one water sheet")
+	var mesh := (flood.get_child(0) as MeshInstance3D).mesh
+	var aabb := mesh.get_aabb()
+	assert_true(aabb.position.x >= 1105.0 - float(cfg.max_depth_m) - 0.5,
+		"no cell west of where the slope drops out of the depth band")
+	assert_true(aabb.size.y < 0.001, "the sheet is flat (the engine pads a flat AABB by 1e-5)")
 	flood.free()
 	world.free()
 
