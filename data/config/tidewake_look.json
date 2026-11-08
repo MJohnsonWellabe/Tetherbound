@@ -816,11 +816,12 @@
     "_comment": "close-1024 owner on the GPU lt2 sheet: \"the water maybe could use work\"; judges x3 on every water batch: a hard navy stripe where the shallows jump to deep. The colour route (t2, t2b) lost twice by changing the palette, so this keeps the shipping deep/shallow/fresnel colours exactly and only softens the step: a mid stop between them (#3f8e98 at 3 m), falloff 5 -> 11 m with a gentle band break, and a little more wave relief (0.20 -> 0.30). Unjudged; OFF in play.",
     "water": {
       "mid_colour": "#3f8e98",
-      "mid_depth_m": 3.0,
-      "depth_falloff": 11.0,
-      "depth_band_break_m": 1.0,
+      "mid_depth_m": 6.0,
+      "depth_falloff": 24.0,
+      "depth_band_break_m": 2.2,
       "wave_strength": 0.3
-    }
+    },
+    "_why_f39_10_on_1108": "F39#10 P2-009 (LANE-TW, 8 Nov 2026): mid_depth_m 3 -> 6, depth_falloff 11 -> 24, depth_band_break_m 1.0 -> 2.2 for a longer cyan-to-navy ramp with a wandering band edge. CPU 7.15 -> 7.25 mapped (+0.10, quick judge F39-10-f404e4723b4d-11072351; two judges +0.1, one tied). Small judged gain, ships ON per the lane rule."
   },
   "veilfall_mountain_candidate": [
     {

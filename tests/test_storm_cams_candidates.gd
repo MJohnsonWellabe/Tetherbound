@@ -60,8 +60,11 @@ func test_candy_tiers_differ_in_count_and_size_when_declared() -> void:
 func test_harvest_hero2_is_off_and_gives_crown_its_own_silhouette() -> void:
 	var cfg := _json("res://data/config/stormwood_harvest_hero2.json")
 	assert_false(bool(cfg.get("enabled", true)), "the P2-046 round-2 candidate ships OFF")
-	assert_true(preload("res://scripts/world/stormwood_harvest_runtime.gd").hero2_for("stormglass").is_empty(),
-		"OFF must leave the landed hero in charge")
+	# F41#9 (LANE-SW, 7 Nov 2026): lane_sw_1107 ships ON (CPU 5.64 -> 6.31), so
+	# hero2_for returns its Blender node; the round-2 items stay unused while OFF.
+	var hero: Dictionary = preload("res://scripts/world/stormwood_harvest_runtime.gd").hero2_for("stormglass")
+	assert_true(str((hero.get("models", [{}]) as Array)[0].get("model", "")).contains("blender-1107"),
+		"the shipped lane_sw_1107 node is in charge, not the OFF round-2 items")
 	var items: Dictionary = cfg["items"]
 	var plain: Dictionary = (items["stormglass"]["models"] as Array)[0]
 	var crown: Dictionary = (items["stormglass_crown"]["models"] as Array)[0]
