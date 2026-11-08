@@ -1,9 +1,9 @@
 {
-  "updated": "10:35 PM CT Sat 7 Nov 2026",
+  "updated": "12:40 AM CT Sun 8 Nov 2026",
   "headline": [
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
-    "Eleven batch PRs merged (#847-#857); #857 landed F38#41 (+0.53) under the new process. CPU scores only; GPU re-judge of every changed row is still due.",
-    "Held by CI: F38#5 creature scale (the 1.3x Bramblebun breaks the aim-cancel probe and smoke_catching; root cause in progress).",
+    "Twelve batch PRs merged (#847-#858). Under the new process: F38#41 (+0.53) and F38#5 (+0.78/+0.26, with a real companion aside-hop bug fixed) landed; batch 13 lands the Warrens capture-stand fix. CPU scores only; GPU re-judge still due.",
+    "New-process tally (8 Nov): 13 rows diagnosed, 2 landed plus the Warrens stand fix, 10 stopped before a judge round (already lost, invisible or placement-unsafe), 1 judged and lost (F36#29 innkeeper -0.14). Judge noise inside one round is 0.00; across rounds the same frames moved 0.58.",
     "Owner 7 Nov: every judged gain over live ships ON; new art is built in Blender (no Meshy credits).",
     "Scores are CPU-provisional; the GPU pass confirms or reopens each row (bar 7.5)."
   ],
@@ -845,7 +845,7 @@
   "active_lanes": [
     {
       "lane": "LANE-MESHY · re-check judged Meshy pieces",
-      "doing": "Parked after diagnosis (no rounds spent): ironwood, Stormwood posts, High Perches shell (GPU-failed), Veilfall hero and docks (CPU-lost), Meadows cliffs (invisible or walk-through). Landed F38#41. Now: F38#5 root cause, then Warrens (stand fix done; shell collider arm), then six researched rows.",
+      "doing": "Landed F38#41, F38#5 and the Warrens stand fix; parked after diagnosis: ironwood, posts, shell, Veilfall hero, docks, cliffs, Warrens collider (would bury clusters and pickups), camp worn-earth, Gull Rest spire; judged and lost: innkeeper. Now: F39#19 roster rows, then Hollows win/loss stands, glass spikes, camp re-dress.",
       "criteria": "F38#24, F38#30, F39#2, F39#31, F13#5, F40 P2-023, F38#41, F38#5",
       "next": "~1 h (import + noise floor)"
     }
@@ -1804,21 +1804,20 @@
       "before": 6.43,
       "after": 6.96,
       "pr": "#857 (merged 8 Nov)"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F38#5 creature scale batch 4 (grow only; owner OK for cluster 1914 radius 4 m)",
       "before": 6.59,
       "after": 7.37,
-      "pr": "held: fails CI tests (see #855 comments)"
+      "pr": "#858 (merged 8 Nov)"
     },
     {
       "item": "F38#5 creature scale batch 5",
       "before": 7.14,
       "after": 7.4,
-      "pr": "held: fails CI tests (see #855 comments)"
+      "pr": "#858 (merged 8 Nov)"
     }
-  ]
+  ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": []
 }
