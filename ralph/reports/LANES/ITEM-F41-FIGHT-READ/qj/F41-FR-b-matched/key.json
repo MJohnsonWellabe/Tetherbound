@@ -1,0 +1,23 @@
+{
+ "El": {
+  "anchor": false,
+  "label": "F41-FR",
+  "A": ".artifacts/qj/F41-FR-b-matched/k/sides/F41-FR_base.jpg",
+  "B": ".artifacts/qj/F41-FR-b-matched/k/sides/F41-FR_cand.jpg"
+ },
+ "Lk": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Gn": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Mm": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}

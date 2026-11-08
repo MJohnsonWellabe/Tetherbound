@@ -1,0 +1,320 @@
+{
+ "_why": "LANE-MESHY 8 Nov: Stormwood fight readability A+B (near_lens_hide + creature rim in Stormwood) on hollows_alpha, today's main.",
+ "biomes": {
+  "stormwood": {
+   "feature": "F41",
+   "items": [
+    {
+     "board_row": "F41-FR",
+     "item": "F41-FR",
+     "subject": "Named wild-creature fight in a dense storm forest (Stormwood Hollows): one fight, one-second interval frames (iNN) plus the enemy's telegraphed attacks (tell1/tell2 a-f, start to recovery). Does the fight read on screen - both fighters (the large wild creature and the player's smaller creature) clearly visible, without trunks, roots, canopy or foliage blocking the view, and do the fighters separate from the ground?",
+     "defect": "The player's smaller creature is barely findable at small size and the fighters do not separate from the dark forest floor; trunks or canopy can block the view",
+     "impact": 0,
+     "fix_class": "scene",
+     "frames": [
+      {
+       "id": "stormwood__fight__hollows_alpha-i00",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i01",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i02",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i03",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i04",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i05",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i06",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i07",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i08",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i09",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i10",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i11",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i12",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i13",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i14",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i15",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i16",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i17",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell1-a-start",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell1-b-mid",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell1-c-late",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell1-d-strike",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell1-e-impact",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell1-f-recovery",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell2-a-start",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell2-b-mid",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell2-c-late",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell2-d-strike",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell2-e-impact",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell2-f-recovery",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "capacitor_alpha",
+       "time": "day",
+       "phase": "Calm",
+       "camera": "normal",
+       "category": "systems"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F41-FR",
+  "a": ".artifacts/qj/F41-FR-b-matched/k/sides/F41-FR_base.jpg",
+  "b": ".artifacts/qj/F41-FR-b-matched/k/sides/F41-FR_cand.jpg",
+  "brief": "11 in-game frames () for one catalogue subject: Named wild-creature fight in a dense storm forest (Stormwood Hollows): one fight, one-second interval frames (iNN) plus the enemy's telegraphed attacks (tell1/tell2 a-f, start to recovery). Does the fight read on screen - both fighters (the large wild creature and the player's smaller creature) clearly visible, without trunks, roots, canopy or foliage blocking the view, and do the fighters separate from the ground?. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The player's smaller creature is barely findable at small size and the fighters do not separate from the dark forest floor; trunks or canopy can block the view"
+  ]
+ }
+]

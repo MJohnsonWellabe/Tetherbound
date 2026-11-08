@@ -61,6 +61,13 @@ var _failures: Array[String] = []
 var _start_ms: int = 0
 var _graphics_capture: Dictionary = {}
 var _breakout_handback_only := false
+## F39#9 capture-stand fix (LANE-MESHY 8 Nov): sequence A's full-health throw at
+## forced ~0% odds resolves at once, so its strike/absorbing/resting/shake
+## frames all show the post-breakout card. With `--stages-on-catch` those four
+## stages are taken from sequence B's weakened throw (the real absorb and shake
+## path); sequence A keeps 01-aiming-full-health and 06-breakout. Off by
+## default, so every other row's frames are unchanged.
+var _stages_on_catch := false
 var _handback_observations: Array[Dictionary] = []
 
 ## F40#18 (VIS-CLOUDREACH, 4 Nov 2026; coordinator-directed reproduced
@@ -115,6 +122,8 @@ func _run() -> void:
 			_seed = int(arg.trim_prefix("--seed="))
 		elif arg.begins_with("--biome="):
 			_biome = arg.trim_prefix("--biome=")
+		elif arg == "--stages-on-catch":
+			_stages_on_catch = true
 		elif arg == "--breakout-handback-only":
 			_breakout_handback_only = true
 		elif arg.begins_with("--framed="):
@@ -230,9 +239,10 @@ func _run() -> void:
 		var foe: RefCounted = _manager.call("enemy")
 		foe.hp = foe.max_hp
 		var first := attempt == 0 and not _breakout_handback_only
+		var stages := first and not _stages_on_catch
 		var outcome := await _one_throw("01-aiming-full-health" if first else "",
-			"02-orb-in-flight" if first else "", "03-strike" if first else "",
-			"04-orb-resting" if first else "", "05-orb-shakes" if first else "",
+			"02-orb-in-flight" if stages else "", "03-strike" if stages else "",
+			"04-orb-resting" if stages else "", "05-orb-shakes" if stages else "",
 			"06-breakout")
 		if outcome == "failure":
 			got_failure = true
@@ -256,8 +266,11 @@ func _run() -> void:
 			_top_up()
 			var foe: RefCounted = _manager.call("enemy")
 			foe.hp = foe.max_hp * 0.06
+			var staged := _stages_on_catch and attempt == 0
 			var outcome := await _one_throw("07-aiming-weakened" if attempt == 0 else "",
-				"", "", "", "", "08-caught-verdict")
+				"02-orb-in-flight" if staged else "", "03-strike" if staged else "",
+				"04-orb-resting" if staged else "", "05-orb-shakes" if staged else "",
+				"08-caught-verdict")
 			if outcome == "success":
 				got_catch = true
 				# F40#18 (VIS-CLOUDREACH, 5 Nov 2026): the resolve shot inherits the

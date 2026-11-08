@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F41#10",
+  "a": ".artifacts/qj/F41-10-v4/k/sides/F41_10_base.jpg",
+  "b": ".artifacts/qj/F41-10-v4/k/sides/F41_10_cand.jpg",
+  "brief": "3 in-game frames (Stormwood) for one catalogue subject: Glass Sink landmark. Judge that subject as the game's real look - identity and read at a glance, silhouette, palette, lighting and fit with the key art and its chapter board.",
+  "defects": [
+   "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+  ]
+ }
+]

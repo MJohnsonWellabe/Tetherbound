@@ -1,0 +1,23 @@
+{
+ "Bh": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Mo": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Bv": {
+  "anchor": false,
+  "label": "F41#10",
+  "A": ".artifacts/qj/F41-10-v4/k/sides/F41_10_cand.jpg",
+  "B": ".artifacts/qj/F41-10-v4/k/sides/F41_10_base.jpg"
+ },
+ "Ur": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}
