@@ -36,6 +36,8 @@ Ranked by expected visible gain per hour of build. Updated after batch 6 (8 Nov 
 | 6a3 | F36#49 Glimmermoth / F36#92 W. Mangrove Monitor / F36#46 Fulgocobra faints | Wings through the floor / faint ends sitting up / faint only droops the head: one faint-clip pass each | animation | medium |
 | 6b | F40#6 rider vanishes | Empty saddle at `terrace_01.0s` (crop-confirmed); find why the rider hides at the edge stop; also fix the drifted frame ids | code + capture-stand | medium-high |
 | 6c | F40#8 route marker | Saturated cyan post behind the trainer in all three frames: wooden/stone post with a small lantern | config | medium |
+| 15b | F22#4 Riverwatch | Brooktail half-cropped and dithered see-through by the camera-occluder fade: keep the fade off fighters, pull the camera back for big aces | config/code | medium |
+| 15c | F17#6 Hall | On GPU, judge the four `hall_great_hall.shafts` removed (r9's worst artefact; still configured, invisible on CPU) | config, GPU check | medium-high if still visible |
 | 16 | F39#30 / F13#5 night water | Darken the shallows at night (time-of-day input to `water.gdshader`) | code | medium |
 
 **Capture-stand bugs (fix before any judging of these rows):**
@@ -630,3 +632,49 @@ Capture for all F36 pose rows: `tools/art_pipeline/capture_f36_poses.gd --specie
 | F36#93 Water Mirejaw poses | 6.45 | **faint-050 and faint-100: the body rolls belly-up and floats a full body-height above the stage**, legs in the air, the trainer standing underneath it. Hit frames are fine | yes, a hard floating-body defect | animation (faint root height) | Seat the faint end pose on the ground (root offset / `ground_clip.py` on this remake's faint clip) | medium-high |
 | F36#92 Water Mangrove Monitor poses | 6.24 | Hit frames fine (long low monitor). **faint-100 ends sitting upright** like a dog, head raised, facing the camera, so the faint reads as sitting | yes | animation (faint clip) | A faint that ends lying on its side, like the land Mangrove Monitor recipe (`CREATURES-RALPH` r21) | medium |
 | F36#91 Water Cragclaw poses | 6.32 | hit-000 and hit-050 identical; faint-100 is a crouch facing the camera, not a collapse; the shell is coral orange-red, close to the red reserved for Team Tether; the trainer ruler is hidden behind the body in hit frames | yes | animation; owner check on colour | A collapse to one side in the faint; flag the shell hue for the owner's red rule | low-medium |
+
+## Batch 9: Hall, village road, Riverwatch fight and remaining unscored rows (captured 8 Nov 22:18–22:49 UTC)
+
+Tools: `capture_meadows_look.gd` (F38-look subsets), `visual_judge/capture_camera_set.gd` (F17-6 day views), `art_pipeline/capture_named_fight.gd` (Riverwatch). Same source and renderer as batch 1.
+
+### F17#6 Village and Hall frames pass the new visual bar
+- Last: 6.36 (board; GPU r9 24 Oct, `ralph/reports/GPU-PASS/F17-6/VERDICT.md`).
+- Judges (GPU r9): the four `hall_great_hall.shafts` render on Forward+ as "hard, blown-out white bead-streak bars" in 6 of 10 day views, crossing the trainer in three, named by all three judges as the worst artefact; the grey stone gate-tower exterior reads off-family against the half-timbered cottages; plus the CPU r9 defects (bare courtyard and cold grade, near-field posts, no shrine focal).
+- Today (`tools/visual_judge/capture_camera_set.gd --set=F17-6.json`, 4 day views, CPU Low):
+  - The nave is furnished (benches, tables, hearth, lamps, a long blue runner), and the shrine now has a lit fountain focal with pedestals and candle stands, so the "no shrine focal" defect is gone.
+  - **Shafts: can't tell on CPU** (Compatibility never drew them, which is why CPU r9 scored higher). `data/config/crossing_hall.json` `hall_great_hall` still carries the four `shafts` with `shaft.strength` 0.32, so the GPU artefact may still be live.
+  - **Exterior: still true.** hall-approach shows the tall grey stone gate-tower with blue banners between half-timbered cottages.
+  - New: the stone portal arches along the nave render as heavy near-black slabs at the frame edges in nave-forward and nave-arches-left.
+- Fix class: GPU-only check, then config (remove or soften the shafts) / Blender art (exterior facade).
+- Fix idea: on the GPU, judge `hall_great_hall.shafts` emptied (config only) against live; if the bead bars are still there, that alone is likely the biggest single gain on this row.
+- Expected gain: medium-high if the shafts still render on GPU (can't tell here).
+
+### F38#40 The hero landmark (the village road and Crossing Hall) reads at distance and up close (unscored)
+- Today (`capture_meadows_look.gd`, F38-look village-road, hall-road; plus F17#6 hall-approach):
+  - At distance: village-road frames the Hall at the end of the road between cottages, small but central; it reads as the destination. hall-approach is closer and reads as a grey stone gate tower, off-family against the cottages (F17#6's complaint).
+  - Up close: the hall-road stand puts the camera in the doorway; the door jambs and rune pillars fill both sides and the trainer stands in the opening, so the building itself does not read from this stand.
+- Fix class: capture-stand (a stand 10–15 m before the door) / Blender art (facade family).
+- Expected gain: can't tell until baselined; the facade is the shared lever with F17#6.
+- Capture note: the `meadows-hall` view (Band 5, the Team Tether stronghold hall court) shows the region banner "The Burrow Warrens", a toast left over from the previous stand in the same boot.
+
+### F38#0 Meadows re-capture and re-score (unscored)
+- Process row (GPU re-capture ≥200 frames and re-score). GPU-only.
+
+### F22#4 Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) (unscored here)
+- Last recorded: GPU 22 Oct Riverwatch r13 (`ralph/reports/GPU-PASS/F22-4/VERDICT.md`): Low 6.71, Medium 5.85; Medium showed the captain's Brooktail as a washed-out semi-transparent "ghost" on Forward+.
+- Today, CPU Low, named fights seen across this lane's batches:
+  - **Captain Oreth / Riverwatch** (`art_pipeline/capture_named_fight.gd --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet`): the camera sits so close to Brooktail that it fills half the frame and is cut by the top and right edges (02, t01, 05, 99). **In 05 and 99-after Brooktail's legs and lower body are dithered see-through**, the camera-occluder fade acting on the opponent itself, which is the same "ghost" read the GPU judges called. The 99-after frame still shows a live fight (full HP, "it's open"), so no resolution was captured.
+  - Warden Aldis (batch 5): the burrow arena is dim and warm, both creatures readable; Burrowback and Terrapup well framed.
+  - Captain Nerissa (batch 4): dim hall, the large translucent crystal slab fills a third of the frame (F39#28).
+  - Captain Veyra (batch 3): mostly well framed; one frame behind an arena banner post (F40#5).
+  - Stormwood finale: not captured in this lane (the F10#6 tool needs `--fixed-fps 20` and a long CPU run).
+- Fix class: config/code (exclude the active opponent from the camera-occluder fade; a minimum camera distance for big named aces).
+- Fix idea: keep the occluder fade off creature bodies in fights (it should fade props, not fighters) and pull the fight camera back for aces taller than about 4 m, so Brooktail is whole and solid in frame.
+- Expected gain: medium (Riverwatch is the row's measured fight, and the see-through boss is the defect the GPU judges named).
+
+### F36#8 Mirejaw model (6.13)
+- Covered by the F36#52 frames (batch 8): the remake reads as a dark green crocodilian with glowing aqua spots; the face reads (ITEM-EYES is on the land branch). The only visible defect today is the hit-react snout dipping through the floor.
+- Fix class: GPU-only (model) / animation (hit-react, see F36#52). Expected gain: low.
+
+### Capture tool failure noted
+- `capture_cloudreach_biome_look.gd --chunk=cliffhold --preset=Low` stops with "Cloudreach look did not restore its native capture raster" on CPU (no frames). F40#0's look chunk could not be re-shot here; the F40 rows above use the catalogue tools instead.
