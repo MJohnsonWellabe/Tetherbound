@@ -1,0 +1,55 @@
+{
+ "_why": "LANE-MESHY (8 Nov): P2-014 cliffs on the F38 matrix stand they were placed and judged for (25 Oct CPU art1024, GPU MH), band2_stone_and_root_1 day clear views. The catalogue job's F38#24 stands barely show the cliffs today (cliffs_wd changes 1.6-5.8% of pixels).",
+ "biomes": {
+  "meadows": {
+   "items": [
+    {
+     "board_row": "F38#24m",
+     "item": "P2-014-matrix",
+     "subject": "distant mountains / Burrow bank face (matrix stand)",
+     "defect": "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes",
+     "impact": 36.0,
+     "fix_class": "mesh",
+     "frames": [
+      {
+       "id": "band2_stone_and_root_1__day__clear__approach",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Low --f38-baseline --times=day --subset=band2_stone_and_root_1 --output=res://ralph/reports/VISUAL/phase2/meadows/repro/p2_014_matrix",
+       "location": "band2_stone_and_root_1",
+       "time": "day",
+       "phase": "clear",
+       "camera": "approach",
+       "category": "route_and_terrain"
+      },
+      {
+       "id": "band2_stone_and_root_1__day__clear__gameplay",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Low --f38-baseline --times=day --subset=band2_stone_and_root_1 --output=res://ralph/reports/VISUAL/phase2/meadows/repro/p2_014_matrix",
+       "location": "band2_stone_and_root_1",
+       "time": "day",
+       "phase": "clear",
+       "camera": "gameplay",
+       "category": "route_and_terrain"
+      },
+      {
+       "id": "band2_stone_and_root_1__day__clear__reverse",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Low --f38-baseline --times=day --subset=band2_stone_and_root_1 --output=res://ralph/reports/VISUAL/phase2/meadows/repro/p2_014_matrix",
+       "location": "band2_stone_and_root_1",
+       "time": "day",
+       "phase": "clear",
+       "camera": "reverse",
+       "category": "route_and_terrain"
+      },
+      {
+       "id": "band2_stone_and_root_1__day__clear__detail",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Low --f38-baseline --times=day --subset=band2_stone_and_root_1 --output=res://ralph/reports/VISUAL/phase2/meadows/repro/p2_014_matrix",
+       "location": "band2_stone_and_root_1",
+       "time": "day",
+       "phase": "clear",
+       "camera": "detail",
+       "category": "route_and_terrain"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
