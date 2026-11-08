@@ -1,8 +1,8 @@
 {
-  "updated": "7:40 PM CT Sat 7 Nov 2026",
+  "updated": "8:05 PM CT Sat 7 Nov 2026",
   "headline": [
     "Owner 7 Nov evening: lanes stopped until the improvement process is fixed (about half of the rows tried gained nothing). All five lanes finished, pushed and were archived; work restarts one row at a time.",
-    "Nine batch PRs merged (#847-#855); batch 10 (F39#10, F41#14, F41#9) in full CI. CPU scores only; GPU re-judge of every changed row is still due.",
+    "Ten batch PRs merged (#847-#856), the last on 8 Nov 02:03 UTC; nothing is in flight. CPU scores only; GPU re-judge of every changed row is still due.",
     "Held by CI: F38#5 creature scale (the 1.3x Bramblebun breaks the aim-cancel probe and smoke_catching) and F38#41 quarry boulders (copied rock folder fails two Meadows tests).",
     "Owner 7 Nov: every judged gain over live ships ON; new art is built in Blender (no Meshy credits).",
     "Scores are CPU-provisional; the GPU pass confirms or reopens each row (bar 7.5)."
@@ -1761,6 +1761,36 @@
       "before": 5.47,
       "after": 5.83,
       "pr": "#855 (merged 8 Nov)"
+    },
+    {
+      "item": "F39#10 Tidewake water depth ramp",
+      "before": 7.15,
+      "after": 7.25,
+      "pr": "#856 (merged 8 Nov)"
+    },
+    {
+      "item": "F41#14 Stormwood candy tier bodies (Blender)",
+      "before": 5.83,
+      "after": 6.04,
+      "pr": "#856 (merged 8 Nov)"
+    },
+    {
+      "item": "F41#9 Stormwood harvest nodes r1 (Blender)",
+      "before": 5.64,
+      "after": 6.31,
+      "pr": "#856 (merged 8 Nov)"
+    },
+    {
+      "item": "F41#9 Stormwood harvest nodes r2",
+      "before": 5.52,
+      "after": 6.0,
+      "pr": "#856 (merged 8 Nov)"
+    },
+    {
+      "item": "F41#9 Stormwood harvest nodes r3",
+      "before": 4.98,
+      "after": 5.65,
+      "pr": "#856 (merged 8 Nov)"
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
@@ -1782,36 +1812,6 @@
       "before": 7.14,
       "after": 7.4,
       "pr": "held: fails CI tests (see #855 comments)"
-    },
-    {
-      "item": "F39#10 Tidewake water depth ramp",
-      "before": 7.15,
-      "after": 7.25,
-      "pr": "land batch 10 (full CI)"
-    },
-    {
-      "item": "F41#14 Stormwood candy tier bodies (Blender)",
-      "before": 5.83,
-      "after": 6.04,
-      "pr": "land batch 10 (full CI)"
-    },
-    {
-      "item": "F41#9 Stormwood harvest nodes r1 (Blender)",
-      "before": 5.64,
-      "after": 6.31,
-      "pr": "land batch 10 (full CI)"
-    },
-    {
-      "item": "F41#9 Stormwood harvest nodes r2",
-      "before": 5.52,
-      "after": 6.0,
-      "pr": "land batch 10 (full CI)"
-    },
-    {
-      "item": "F41#9 Stormwood harvest nodes r3",
-      "before": 4.98,
-      "after": 5.65,
-      "pr": "land batch 10 (full CI)"
     }
   ]
 }
