@@ -1,0 +1,51 @@
+import json,math,glob,re
+o=json.load(open('ralph/reports/LANES/ITEM-F39-3/overlay_stack_v2.json'))
+blocks=[a for a in o['data/config/tidewake_destination_read.json']['add'] if a['id'].startswith('wd_terrace_t')]
+W,D,H=1.8891,1.2547,1.5370
+rects=[]
+for b in blocks:
+    f=b['height_m']/H; sx,sz=b.get('stretch_xz',[1,1]); cf=b['collider_fraction']
+    hx=W*f*sx*cf[0]/2; hz=D*f*sz*cf[2]/2; y=math.radians(b['yaw_deg'])
+    rects.append((b['id'],b['position_xz_m'],hx,hz,y))
+def inside(p,m=1.0):
+    hits=[]
+    for id,c,hx,hz,y in rects:
+        dx,dz=p[0]-c[0],p[1]-c[1]
+        lx=dx*math.cos(y)-dz*math.sin(y)   # local x axis = (cos y, -sin y)
+        lz=dx*math.sin(y)+dz*math.cos(y)   # local z axis = (sin y, cos y)
+        if abs(lx)<=hx+m and abs(lz)<=hz+m: hits.append(id)
+    return hits
+def seg_hits(a,b):
+    out=set()
+    n=int(math.dist(a,b)/0.25)+1
+    for i in range(n+1):
+        t=i/n; out|=set(inside((a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t),m=2.0))  # 4 m spine half-width 2
+    return out
+found=[]
+def walk(o,path,file):
+    if isinstance(o,dict):
+        for k,v in o.items(): walk(v,path+'/'+str(k),file)
+    elif isinstance(o,list):
+        nums=all(isinstance(x,(int,float)) for x in o)
+        if nums and len(o) in (2,3):
+            p=(o[0],o[2]) if len(o)==3 else (o[0],o[1])
+            if 1060<p[0]<1140 and 2190<p[1]<2260:
+                h=inside(p)
+                found.append((file,path,p,h))
+        elif all(isinstance(x,list) and len(x) in (2,3) and all(isinstance(y,(int,float)) for y in x) for x in o) and len(o)>1:
+            pts=[(x[0],x[2]) if len(x)==3 else (x[0],x[1]) for x in o]
+            for a,b in zip(pts,pts[1:]):
+                s=seg_hits(a,b)
+                if s: found.append((file,path+' SEGMENT',(a,b),sorted(s)))
+            for i,x in enumerate(o): walk(x,path+f'[{i}]',file)
+        else:
+            for i,x in enumerate(o): walk(x,path+f'[{i}]',file)
+for f in sorted(glob.glob('data/config/**/*.json',recursive=True)):
+    if 'overlay' in f: continue
+    try: j=json.load(open(f))
+    except Exception: continue
+    walk(j,'',f)
+for r in rects: print('rect',r[0],r[1],'half %.2f x %.2f'%(r[2],r[3]))
+hits=[x for x in found if x[3]]
+print('points near the garden:',len(found),'| inside a footprint (+1 m, spine +2 m):',len(hits))
+for x in found: print(('HIT ' if x[3] else '    '),x[0],x[1][:90],x[2],x[3])
