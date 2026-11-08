@@ -1,0 +1,60 @@
+{
+ "_comment": "LANE-MESHY 8 Nov: Voltarach eight-leg read (owner: 'It needs 8 legs'). Hollows fight frames where the wild Voltarach (alpha colourway) is large in frame.",
+ "biomes": {
+  "stormwood": {
+   "items": [
+    {
+     "board_row": "VOLT-8",
+     "item": "VOLT-8",
+     "subject": "Voltarach, the large armoured spider, in a Stormwood fight",
+     "defect": "Voltarach does not read as an eight-legged spider; it reads as a pale armadillo-like body",
+     "impact": 30.0,
+     "fix_class": "creature",
+     "catalog_status": "candidate_off",
+     "frames": [
+      {
+       "id": "stormwood__fight__hollows_alpha-i04",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "hollows_alpha",
+       "time": "day",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "creature"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i08",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "hollows_alpha",
+       "time": "day",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "creature"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-i10",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "hollows_alpha",
+       "time": "day",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "creature"
+      },
+      {
+       "id": "stormwood__fight__hollows_alpha-tell1-d-strike",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/x04-capture/ralph/reports/VISUAL/phase2/stormwood/repro/hollows_alpha --ids=hollows_alpha --seconds=18 --interval=1.0 --seed=2042",
+       "orig_commit": "de0664f4c4a8f8d1f11402262c15a5cb2a6d5a16",
+       "location": "hollows_alpha",
+       "time": "day",
+       "phase": "clear",
+       "camera": "normal",
+       "category": "creature"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
