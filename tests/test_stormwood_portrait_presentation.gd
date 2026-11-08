@@ -12,9 +12,9 @@ func test_enabled_portraits_cover_named_and_side_conversations_without_changing_
 	var settings: Dictionary = _read("res://data/config/stormwood_dialogue_presentation.json").npc_portraits
 	settings.enabled = true
 	CHAPTER.apply_npc_portraits(conversations,actors,settings)
-	var expected := {"Rook":"juno","Lio":"fenn","Elder Maud":"old_perrin",
+	var expected := {"Rook":"juno","Lio":"fenn","Elder Maud":"lanekit_f41_8_maud",
 		"Keeper Ondra":"ada","Rodkeeper Hesk":"old_perrin","Oswin":"corin",
-		"Warden-Elect Bryn":"old_perrin","Archivist Wen":"maren","Tamsin":"bryn",
+		"Warden-Elect Bryn":"lanekit_f41_8_bryn","Archivist Wen":"maren","Tamsin":"bryn",
 		"Fenn":"corin","Neri":"fenn"}
 	var seen := {}
 	for id: String in conversations:
@@ -35,8 +35,10 @@ func test_enabled_portraits_cover_named_and_side_conversations_without_changing_
 		"res://assets/ui/portraits/maren.png","synthetic refusal matches Wen's world body too")
 	var bryn_synthetic := CHAPTER.GLASS_FOR_BRYN.conversations()
 	assert_eq(bryn_synthetic.size(),4,"cover the four later activity registrations")
+	# F41#8 (LANE-KIT, 7 Nov 2026, CPU 5.47 -> 5.83, ships ON): Bryn and Maud wear
+	# their own appearance variants, so their portraits follow those bodies.
 	for id: String in bryn_synthetic:
-		assert_eq(conversations[id].portrait,"res://assets/ui/portraits/old_perrin.png",id)
+		assert_eq(conversations[id].portrait,"res://assets/ui/portraits/lanekit_f41_8_bryn.png",id)
 
 
 func test_disabled_or_missing_plate_preserves_original_conversation() -> void:
