@@ -19,7 +19,7 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 - Pick worst-first (floor rule), preferring rows where an existing asset (installed packs, OFF Meshy pieces on main, or the archive below) fixes the judges' stated defect.
 - Diagnose before building: the judges' words, crops of today's frames, the object at fault, the planned fix. The coordinator reviews it before any judge round.
 - Visibility check: same stands, live vs arm, one sheet. An invisible change is reworked, not judged.
-- Noise floor: one live-vs-live quick_judge round per session; a gain counts only above max(floor, 0.3).
+- Noise floor: one live-vs-live quick_judge round per frame type (cast close stand 8 Nov: 0.00 in-round; the same frames moved 0.58 across rounds, so only in-round deltas count). A gain ships when it exceeds that floor and at least 2 of 3 judges prefer the arm (owner 7 Nov: small gains ship).
 - Pre-ready check: run every test that greps a touched file, flag, asset path or folder (code and fixtures), texture policy when textures change, JSON parse, HELD. Paste the output in READY.
 - New art: upgrade or recombine existing meshes (CC0 PBR from Poly Haven/ambientCG, baked wear, partial plates); scratch procedural only for rocks, terrain and hard-surface; render a multi-angle sheet against the reference before judging. No free generator reaches creature quality on CPU (research 8 Nov).
 - Coordinator lands judged gains in `tb/land-batch-N` PRs (merge-tree/commit-tree, pre-push checks, `full-ci`, auto-merge, one full-CI PR at a time).
