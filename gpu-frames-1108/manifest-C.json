@@ -1,0 +1,102 @@
+[
+ {
+  "row": "F41#21",
+  "item": "P2-111",
+  "frame": "stormwood__fight__hollows_win__hollows_alpha-99-after",
+  "arm": "live",
+  "tree": "be95950b907e5a5a4a6db38cf86b4b7ee0d1aea1",
+  "preset": "High",
+  "tool": "tools/phase2_capture_stormwood_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_stormwood_fights.gd",
+   "--",
+   "--out={OUT}",
+   "--ids=hollows_alpha",
+   "--seconds=120",
+   "--interval=3",
+   "--seed=2042"
+  ],
+  "match": "exact",
+  "path": "F41-21/live/High/stormwood__fight__hollows_win__hollows_alpha-99-after.jpg"
+ },
+ {
+  "row": "F41#21",
+  "item": "P2-111",
+  "frame": "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath",
+  "arm": "live",
+  "tree": "be95950b907e5a5a4a6db38cf86b4b7ee0d1aea1",
+  "preset": "High",
+  "tool": "tools/phase2_capture_stormwood_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_stormwood_fights.gd",
+   "--",
+   "--out={OUT}",
+   "--ids=hollows_alpha",
+   "--seconds=120",
+   "--interval=8",
+   "--seed=2042"
+  ],
+  "match": "exact",
+  "path": "F41-21/live/High/stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath.jpg"
+ },
+ {
+  "row": "F41#21",
+  "item": "P2-111",
+  "frame": "stormwood__fight__hollows_win__hollows_alpha-99-after",
+  "arm": "victory_on",
+  "tree": "2c593b057a710bbcb068b65d2483e3417131ebcf",
+  "preset": "High",
+  "tool": "tools/phase2_capture_stormwood_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_stormwood_fights.gd",
+   "--",
+   "--out={OUT}",
+   "--ids=hollows_alpha",
+   "--seconds=120",
+   "--interval=3",
+   "--seed=2042"
+  ],
+  "match": "exact",
+  "path": "F41-21/victory_on/High/stormwood__fight__hollows_win__hollows_alpha-99-after.jpg"
+ },
+ {
+  "row": "F41#21",
+  "item": "P2-111",
+  "frame": "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath",
+  "arm": "victory_on",
+  "tree": "2c593b057a710bbcb068b65d2483e3417131ebcf",
+  "preset": "High",
+  "tool": "tools/phase2_capture_stormwood_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_stormwood_fights.gd",
+   "--",
+   "--out={OUT}",
+   "--ids=hollows_alpha",
+   "--seconds=120",
+   "--interval=8",
+   "--seed=2042"
+  ],
+  "match": "exact",
+  "path": "F41-21/victory_on/High/stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath.jpg"
+ }
+]
