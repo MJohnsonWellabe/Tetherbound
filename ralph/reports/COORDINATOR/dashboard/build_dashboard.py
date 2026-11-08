@@ -851,10 +851,89 @@ visual_tab_html = (
     f'<div class="kpi"><b>{len(_vrows) - _n_met - _n_bar - _n_close - _n_none}</b><span>Open and below 7.0</span></div>'
     f'<div class="kpi"><b>{_n_none}</b><span>No score of their own yet</span></div>'
     '</div>'
-    + _matrix + _close_html + _stand_html
-    + '<section class="chapter ch-V"><header><h2>Every item, by area</h2></header>' + "".join(_vtabs) + '</section>'
-    + '<details class="frow"><summary><span class="fid">P2</span><span class="ftitle">Catalogue defect detail and owners</span></summary>'
-      '<div class="vtbl">' + visual_html + '</div></details>')
+    + _matrix
+    + '<section class="chapter ch-V"><header><h2>Every item, by area</h2></header>' + "".join(_vtabs) + '</section>')
+
+
+# ---- overview tab (owner 8 Nov: "too much for a high level view of progress") ----
+# One screen: three headline numbers, the visual floor by area on the owner's tier plan
+# (24 Oct: everything to 6, then 7, then 7.5), what is running now, what landed, and
+# what needs the owner. Every figure is computed from the same rows as the other tabs.
+_VSEL = {f"{_f}#{_n}" for _f in ("F36", "F38", "F39", "F40", "F41")
+         for _n in range(len(rows.get(_f, {}).get("criteria", [])))} | set(VISUAL_OTHER)
+_fn = [(f'{r["id"]}#{_n}', x) for r in crit["rows"] for _n, x in enumerate(r.get("criteria", []))
+       if f'{r["id"]}#{_n}' not in _VSEL]
+_fn_met = sum(1 for _s, x in _fn if norm(x.get("status")) == "met")
+_fn_owner = sum(1 for _s, x in _fn if _s in BLOCKED_SEL and norm(x.get("status")) != "met")
+_fn_open = len(_fn) - _fn_met
+_cards = crit.get("chapter_cards", [])
+_cards_met = sum(1 for x in _cards if norm(x.get("status")) == "met")
+_TIERS = [("closed", "Closed", "met", lambda r_: r_["bk"] == "met"),
+          ("t75", "7.5+ (needs both GPU presets)", "b75", lambda r_: r_["bk"] == "b75"),
+          ("t70", "7.0–7.4", "b70", lambda r_: r_["bk"] == "b70"),
+          ("t60", "6.0–6.9", "b60", lambda r_: r_["bk"] == "b60"),
+          ("t00", "Below 6", "b00", lambda r_: r_["bk"] in ("b50", "b00")),
+          ("none", "No score yet", "none", lambda r_: r_["bk"] == "none")]
+_v_closed = sum(1 for r_ in _vrows if r_["bk"] == "met")
+_v_below6 = sum(1 for r_ in _vrows if r_["bk"] in ("b50", "b00"))
+_v_below7 = sum(1 for r_ in _vrows if r_["bk"] in ("b50", "b00", "b60"))
+_v_gpu = sum(1 for r_ in _vrows if r_["bk"] != "none" and str(r_["src"]).startswith("GPU"))
+_v_scored = sum(1 for r_ in _vrows if r_["bk"] != "none")
+_stage = ("Tier 1: raise everything below 6 to 6" if _v_below6 else
+          "Tier 2: raise everything to 7" if _v_below7 else "Tier 3: take everything to 7.5")
+
+
+def _tier_bar(rs):
+    n = max(1, len(rs))
+    return ('<span class="tbar" role="img" aria-label="' + E(", ".join(f"{l}: {sum(1 for r_ in rs if f(r_))}" for _k, l, _b, f in _TIERS)) + '">'
+            + "".join(f'<span class="vseg bk-{b}" style="flex:{sum(1 for r_ in rs if f(r_))}" title="{E(l)}: {sum(1 for r_ in rs if f(r_))}"></span>'
+                      for _k, l, b, f in _TIERS if any(f(r_) for r_ in rs)) + '</span>')
+
+
+_tier_rows = []
+for _ck, _cl, _cid in _VCATS:
+    rs = [r_ for r_ in _vrows if r_["cat"] == _ck]
+    if not rs:
+        continue
+    _b6 = sum(1 for r_ in rs if r_["bk"] in ("b50", "b00"))
+    _cl_n = sum(1 for r_ in rs if r_["bk"] == "met")
+    _lo = min((min(r_["sc"]) for r_ in rs if r_["sc"] and r_["bk"] != "met"), default=None)
+    _tier_rows.append(
+        f'<tr><th scope="row">{E(_cl)}</th><td class="num">{len(rs)}</td><td class="tcell">{_tier_bar(rs)}</td>'
+        f'<td class="num">{_cl_n}</td><td class="num{" warn" if _b6 else ""}">{_b6 or "·"}</td>'
+        f'<td class="num">{f"{_lo:.2f}" if _lo is not None else "—"}</td></tr>')
+_tier_legend = "".join(f'<span class="leg"><span class="bk bk-{b}"></span>{E(l)}</span>' for _k, l, b, _f in _TIERS)
+_ovw_lanes = "".join(
+    f'<li><div class="ln-head"><b>{E(l.get("lane", "").split(" · ")[0])}</b><span class="meta">{E(l.get("lane", "").split(" · ")[1] if " · " in l.get("lane", "") else "")}</span></div>'
+    f'<p>{E(l.get("now") or l.get("doing", ""))}</p><p class="meta">Next: {E(l.get("next", ""))}</p></li>' for l in status.get("active_lanes", []))
+_ovw_landed = "".join(f'<li><b>{E(x.get("pr", ""))}</b> {E(x.get("what", ""))}<span class="meta"> · {E(x.get("when", ""))}</span></li>'
+                      for x in status.get("landed_recent", [])[:5])
+_ovw_needs = status.get("owner_needs", [])
+_needs_txt = "Nothing" if (not _ovw_needs or str(_ovw_needs[0]).startswith("Nothing")) else ""
+overview_html = (
+    '<div class="kpis kpis-3">'
+    f'<div class="kpi"><span class="kpi-l">Game systems</span><b>{_fn_met} / {len(_fn)}</b>{bar(round(100 * _fn_met / max(1, len(_fn))))}'
+    f'<span>criteria met. {_fn_open} open, {_fn_owner} of them owner-only (handheld test, play pass).</span></div>'
+    f'<div class="kpi"><span class="kpi-l">Visual items</span><b>{_v_closed} / {len(_vrows)}</b>{bar(round(100 * _v_closed / max(1, len(_vrows))))}'
+    f'<span>closed at 7.5 on GPU. {_v_below6} still below 6, {_v_below7} below 7.</span></div>'
+    f'<div class="kpi"><span class="kpi-l">Chapter exit cards</span><b>{_cards_met} / {len(_cards)}</b>{bar(round(100 * _cards_met / max(1, len(_cards))))}'
+    '<span>integrated end-of-chapter runs passed.</span></div>'
+    '</div>'
+    '<section class="panel"><div class="ph"><h2>Visual floor by area</h2><span class="stage">' + E(_stage) + '</span></div>'
+    f'<p class="note">Each bar is every visual item in that area, by its latest score (the lower preset where two were judged). '
+    f'{_v_gpu} of {_v_scored} scores are GPU; the rest are CPU, which runs about 0.8 lower. '
+    + E(status.get("gpu_progress", "")) + '</p>'
+    f'<div class="legend">{_tier_legend}</div>'
+    '<div class="tbl"><table class="tiers"><thead><tr><th>Area</th><th class="num">Items</th><th>Spread</th><th class="num">Closed</th><th class="num">Below 6</th><th class="num">Lowest</th></tr></thead>'
+    f'<tbody>{"".join(_tier_rows)}</tbody></table></div></section>'
+    '<div class="two">'
+    f'<section class="panel"><h2>Running now</h2><ul class="lanes">{_ovw_lanes}</ul></section>'
+    '<div class="stackcol">'
+    f'<section class="panel"><h2>Landed recently</h2><ul class="plain">{_ovw_landed}</ul></section>'
+    f'<section class="panel needs"><h2>Needs you</h2><p class="needs-v">{E(_needs_txt) if _needs_txt else ""}</p>'
+    + ("" if _needs_txt else f'<ul class="plain">{li(_ovw_needs)}</ul>')
+    + (f'<p class="meta">{E(str(_ovw_needs[0]).split(". ", 1)[1]) if _needs_txt and ". " in str(_ovw_needs[0]) else ""}</p>')
+    + '</section></div></div>')
 
 
 # A complete document (owner report, 2026-09-30): the board is also served raw by
@@ -952,9 +1031,9 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .tabs{{display:flex;gap:6px;border-bottom:1px solid var(--line)}}
 .tabs label{{font:600 14px Figtree,sans-serif;padding:8px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none}}
 .tabsel{{position:absolute;opacity:0;pointer-events:none}}
-#tab-vis:checked ~ .tabs label[for=tab-vis], #tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
-#tab-vis:focus-visible ~ .tabs label[for=tab-vis], #tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes]{{outline:2px solid var(--accent)}}
-.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-vis:checked ~ .pane-vis, #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes{{display:grid}}
+#tab-ovw:checked ~ .tabs label[for=tab-ovw], #tab-vis:checked ~ .tabs label[for=tab-vis], #tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
+#tab-ovw:focus-visible ~ .tabs label[for=tab-ovw], #tab-vis:focus-visible ~ .tabs label[for=tab-vis], #tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes]{{outline:2px solid var(--accent)}}
+.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-ovw:checked ~ .pane-ovw, #tab-vis:checked ~ .pane-vis, #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes{{display:grid}}
 .gscroll{{overflow-x:auto}} .gantt{{min-width:980px;display:grid;gap:6px}}
 .glane{{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}}
 .gname{{font-weight:600;font-size:13px;display:grid}} .gname .meta{{font-weight:400;font-size:11.5px}}
@@ -976,6 +1055,17 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .t-planned{{--tc:var(--none);--tc-tint:var(--tint-none)}} .t-early{{--tc:var(--block);--tc-tint:var(--tint-block)}}
 .tpill{{display:inline-block;font:600 11px/1 "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.04em;padding:5px 7px;border-radius:5px;background:var(--tc-tint);color:var(--tc);white-space:nowrap}}
 .glegend{{display:flex;flex-wrap:wrap;gap:8px}} td.num{{font-variant-numeric:tabular-nums;text-align:right}}
+.kpis-3{{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}}
+.kpi-l{{font:600 11px/1 "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}}
+.kpi .meter{{grid-area:auto;height:6px;margin-block:2px}} .kpi .meter span{{background:var(--accent)}}
+.ph{{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between}}
+.stage{{font:600 12px "JetBrains Mono",monospace;padding:5px 8px;border-radius:5px;background:var(--tint-partial);color:var(--partial)}}
+.tiers th[scope=row]{{font:600 14px Figtree,sans-serif;color:var(--ink);text-transform:none;letter-spacing:0;white-space:nowrap}}
+.tiers td.num{{font:600 14px "JetBrains Mono",monospace;vertical-align:middle}} .tiers td.warn{{color:var(--fail)}} .tiers th,.tiers td{{vertical-align:middle}}
+.tcell{{width:46%}} .tbar{{display:flex;gap:2px;height:14px;border-radius:4px;overflow:hidden;min-width:140px}}
+ul.lanes{{list-style:none;margin:0;padding:0;display:grid;gap:14px}} ul.lanes li{{display:grid;gap:3px;padding-left:12px;border-left:3px solid var(--prog)}}
+ul.lanes p{{margin:0}} .ln-head{{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}}
+.stackcol{{display:grid;gap:16px;align-content:start}} .needs-v{{margin:0;font:700 22px "Bricolage Grotesque",sans-serif;color:var(--met)}}
 @media (max-width:640px){{
   .frow summary{{grid-template-columns:40px minmax(0,1fr) 44px;grid-template-areas:"id title pct" "id meter meter" "id num num" "id stack stack"}}
   .crits{{padding-left:14px}} .crit dl div{{grid-template-columns:1fr}}
@@ -985,26 +1075,19 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 </head>
 <body>
 <main class="wrap">
-  <input type="radio" name="tab" id="tab-acc" class="tabsel" checked>
-  <input type="radio" name="tab" id="tab-plan" class="tabsel">
-  <input type="radio" name="tab" id="tab-lanes" class="tabsel">
+  <input type="radio" name="tab" id="tab-ovw" class="tabsel" checked>
+  <input type="radio" name="tab" id="tab-acc" class="tabsel">
   <input type="radio" name="tab" id="tab-vis" class="tabsel">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
-  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-vis">Visual catalogue</label><label for="tab-plan">Finish plan</label><label for="tab-lanes">Active lanes</label></nav>
-  <div class="pane pane-plan">{finish_html}<details class="frow"><summary><span class="ftitle">Earlier delivery plan (sprint chart, superseded 31 Oct)</span></summary>{plan_html}</details></div>
-  <div class="pane pane-lanes">{active_lanes_html}</div>
+  <nav class="tabs" aria-label="Board views"><label for="tab-ovw">Overview</label><label for="tab-vis">Visual catalogue</label><label for="tab-acc">Acceptance</label></nav>
+  <div class="pane pane-ovw">{overview_html}</div>
   <div class="pane pane-vis">{visual_tab_html}</div>
   <div class="pane pane-acc">
-  <section class="panel"><h2>Visual score landed on main since {E(status.get("score_ledger_since",""))}</h2>
-  <div class="kpis"><div class="kpi"><b>+{_ledger_gain:.2f}</b><span>Cumulative CPU score gained (mapped, three code-blind judges), across {_ledger_n} items. Target: +100 in 24 h.</span></div>
-  <div class="kpi"><b>{_ledger_cross}</b><span>Items crossed 6.0 on CPU in this push</span></div>
-  <div class="kpi"><b>+{_pend_gain:.2f}</b><span>Judged gains in an open PR, waiting on CI ({len(_pend)} items)</span></div></div>
-  <div class="tbl"><table><thead><tr><th>Item</th><th>Before</th><th>After</th><th>Gain</th><th>PR</th></tr></thead><tbody>{_ledger_rows}{_pend_rows}</tbody></table></div>
-  <p class="note">"Criteria met" below counts an item only after it passes the 7.5 bar on the GPU pass, so it moves only when the GPU confirmation runs.</p></section>
+
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
     <div class="kpi"><b>{len(all_c) - counts["met"]}</b><span>Criteria not done: {_open_by["F36"]} creatures (F36), {_open_by["look"]} biome looks (F38–F41), {_open_by["other"]} everything else</span></div>
@@ -1013,24 +1096,7 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
     <div class="kpi"><b>{counts["failing"] + counts["blocked"]}</b><span>Criteria failing or blocked</span></div>
   </div>
   <div class="legend">{legend}</div>
-  <section class="panel"><h2>This hour</h2><ul class="plain">{li(status.get("headline", []))}</ul></section>
   {''.join(chapter_html)}
-  <section class="panel"><h2>Chapter exit cards</h2><p class="note">Integrated continuous-path gates; required even when every F row passes. Progress = 80% feeder criteria met (weighted) + 20% for the integrated continuous run with its evidence card.</p>
-    <div class="tbl"><table><thead><tr><th>Card</th><th>Progress</th><th>Feeder criteria</th><th>Integrated run</th><th>Note</th></tr></thead><tbody>{cards_tbl}</tbody></table></div></section>
-  <section class="panel"><h2>Release-wide requirements</h2>
-    <div class="tbl"><table><thead><tr><th>Requirement</th><th>Status</th><th>Note</th></tr></thead><tbody>{cc}</tbody></table></div></section>
-  <section class="panel"><h2>Shortcut debt</h2><p class="note">Criteria closed under the relaxed-proof rule, and what each proof skipped. The chapter-exit and release playthroughs must exercise every row; a failure there points at the row. High = a sub-part not proven anywhere else. A passing chapter-card run retires its feeders\u2019 route shortcuts; harness input needs a human play pass; the final four-chapter run retires chapter-boundary fixture starts. <b>{debt_summary}</b></p>
-    <div class="tbl"><table><thead><tr><th>Risk</th><th>Criterion</th><th>Chapter exit</th><th>Criterion text</th><th>Debt kind</th><th>State</th><th>Disclosed shortcuts</th></tr></thead><tbody>{debt_tbl}</tbody></table></div></section>
-  <section class="panel"><h2>Integration batches</h2>
-    <div class="tbl"><table><thead><tr><th>Batch</th><th>SHA</th><th>State</th><th>Contents</th></tr></thead><tbody>{batches}</tbody></table></div></section>
-  <section class="panel"><h2>Lanes</h2>
-    <div class="tbl"><table><thead><tr><th>Lane</th><th>Working on</th><th>Next</th></tr></thead><tbody>{lanes}</tbody></table></div></section>
-  {lane_activity_section}
-  <div class="two">
-    <section class="panel"><h3>Decisions made</h3><ul class="plain">{li(status.get("decisions", []))}</ul></section>
-    <section class="panel"><h3>Needs the owner</h3><ul class="plain">{li(status.get("owner_needs", []))}</ul></section>
-  </div>
-  <p class="note">Status is strict: fixture-only proof counts as partial, visual criteria need a passing code-blind judge verdict, and co-op criteria need two-peer evidence. Percentages are the coordinator's evidence audit, not a measured play-through.</p>
   </div>
 </main>
 </body>
