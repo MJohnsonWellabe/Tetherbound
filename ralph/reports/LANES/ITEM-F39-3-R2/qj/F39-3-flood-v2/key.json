@@ -1,0 +1,23 @@
+{
+ "Va": {
+  "anchor": false,
+  "label": "F39#3-dg",
+  "A": ".artifacts/qj/F39-3-flood-v2/k/sides/F39_3-dg_cand.jpg",
+  "B": ".artifacts/qj/F39-3-flood-v2/k/sides/F39_3-dg_base.jpg"
+ },
+ "Tn": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ft": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ss": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}
