@@ -1,9 +1,9 @@
 {
-  "updated": "7:45 AM CT Sun 8 Nov 2026",
+  "updated": "10:45 AM CT Sun 8 Nov 2026",
   "headline": [
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
     "Seventeen batch PRs merged (#847-#863). Under the new process: F38#41 +0.53, F38#5 +0.78/+0.26, F38#32 +0.28, F39#3 +0.64 and +0.14, plus the Warrens stand and Hollows loss capture fixes. CPU scores only; GPU re-score queued for tonight.",
-    "GPU re-score queue (no build needed): F40#14 Medium confirm (High 7.52); F38#19, F39#7, F39#9, F39#19 (live fixes postdate their GPU scores); F38#30/#24 (re-seated Warrens stand); F41#16 (first real loss capture); F41#21 victory_focus arm (CPU needs 6-8 h).",
+    "GPU re-score queue for tonight (no build needed): F40#14 (Medium; High 7.52), F38#19, F39#7, F39#9 (new catch stand), F39#19, F39#23, F41#15 (speaker now visible; last 3.19), F38#30/#24 (re-seated Warrens stand), F41#16 (real loss), F41#21 victory_focus arm, and today's CPU gains F38#41, F38#5, F38#32, F39#3 x2. Also check: F41#12 night frame renders daylit on CPU; F39#9 absorb timing.",
     "Owner 7 Nov: every judged gain over live ships ON; new art is built in Blender (no Meshy credits).",
     "Scores are CPU-provisional; the GPU pass confirms or reopens each row (bar 7.5)."
   ],
