@@ -1,5 +1,5 @@
 {
-  "updated": "10:45 AM CT Sun 8 Nov 2026",
+  "updated": "2:35 PM CT Sun 8 Nov 2026",
   "headline": [
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
     "Seventeen batch PRs merged (#847-#863). Under the new process: F38#41 +0.53, F38#5 +0.78/+0.26, F38#32 +0.28, F39#3 +0.64 and +0.14, plus the Warrens stand and Hollows loss capture fixes. CPU scores only; GPU re-score queued for tonight.",
@@ -768,10 +768,7 @@
     "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
   ],
   "owner_needs": [
-    "Warrens (lowest row): move 5 items (a prop, a burrowback cluster, 2 pickups, a harvest node) 10-20 m out so a natural 35-40 deg hill fits? Feasibility plot: ralph/reports/LANES/ITEM-F38-30/_v2_feasibility_40deg.png",
-    "Magenta attack telegraphs: replace with grounded effects (judges' top complaint in Stormwood fights) or keep under the telegraph rule?",
-    "Glass Field: stays walk-through by design unless you want collision outside the fight and road corridors.",
-    "GPU re-score queue needs the GPU machine: F40#14, F38#19, F39#7, F39#9, F39#19, F38#30/#24, F41#16, F41#21."
+    "Nothing pending. Coordinator decided 8 Nov (owner: decide, don't ask): Warrens moves five ring items 10-20 m out for a natural hill; magenta telegraphs and dash dust stay; the Glass Field stays non-colliding; GPU frames push to orphan tb/gpu-frames-1108."
   ],
   "four_chapter_run": null,
   "wip": [],
@@ -857,6 +854,12 @@
       "doing": "Captures today's frames for every row below 6.5 (about 100) and writes what is still wrong, the cause, a fix idea and expected gain. No judge rounds, no game changes. Feeds the build lane batch by batch.",
       "criteria": "rows below 6.5 and unscored",
       "next": "~1 h setup, then batches of ~10 rows"
+    },
+    {
+      "lane": "GPU lane · owner's PC",
+      "doing": "Capturing tonight's re-score at High: live re-baseline (10 rows), the F41#21 arm, confirmation of the 12 landed CPU gains, and the F41#12 night check. Frames go to orphan tb/gpu-frames-1108; LANE-SCOUT judges each section in the cloud.",
+      "criteria": "see ralph/reports/COORDINATOR/briefs-1108/gpu_rescore.md",
+      "next": "sections pushed as they finish"
     }
   ],
   "score_ledger": [
