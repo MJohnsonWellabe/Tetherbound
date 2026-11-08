@@ -12,6 +12,9 @@ from mathutils import Vector, Matrix
 argv = sys.argv[sys.argv.index("--") + 1:]
 OUT = argv[0]
 PREVIEW = argv[1] if len(argv) > 1 else ""
+R2 = len(argv) > 2 and argv[2] == "r2"   # round 2: deeper body colours, less-white wrappers
+SUF = "_r2" if R2 else ""
+C = {"good": "#2e8b3a" if R2 else "#4caf50", "good_wrap": "#9ccf8a" if R2 else "#d9f2c8", "great": "#1d4cc8" if R2 else "#2f63d6", "great_stripe": "#d2e0ff" if R2 else "#f2f5ff", "great_wrap": "#6f97f0" if R2 else "#bcd0ff"}
 
 def lin(h):
     c = [int(h[i:i + 2], 16) / 255.0 for i in (1, 3, 5)]
@@ -60,19 +63,19 @@ bm = bmesh.new()
 bmesh.ops.create_uvsphere(bm, u_segments=20, v_segments=12, radius=0.3)
 for v in bm.verts:
     v.co.x *= 1.35; v.co.z = v.co.z * 0.95 + 0.5
-body = obj("good_body", bm, mat("candy_good", "#4caf50"))
+body = obj("good_body", bm, mat("candy_good", C["good"]))
 bm = bmesh.new(); fan_end(bm, 0.38, 1, 0.32); fan_end(bm, -0.38, -1, 0.32)
-ends = obj("good_wrap", bm, mat("candy_good_wrap", "#d9f2c8", rough=0.5), smooth=False)
+ends = obj("good_wrap", bm, mat("candy_good_wrap", C["good_wrap"], rough=0.5), smooth=False)
 for o in (body, ends):
     o.location.x = -2.0
-export(os.path.join(OUT, "candy_good.glb"), [body, ends]); allobjs += [body, ends]
+export(os.path.join(OUT, "candy_good%s.glb" % SUF), [body, ends]); allobjs += [body, ends]
 
 # GREAT: striped twist (longer body, helix stripe), with wrapper ends
 bm = bmesh.new()
 bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=12, radius=0.3)
 for v in bm.verts:
     v.co.x *= 1.9; v.co.z = v.co.z * 1.05 + 0.5
-gbody = obj("great_body", bm, mat("candy_great", "#2f63d6"))
+gbody = obj("great_body", bm, mat("candy_great", C["great"]))
 bm = bmesh.new()
 turns, steps = 4.0, 160
 prev = None
@@ -91,10 +94,10 @@ for k in range(steps + 1):
             q = (s + 1) % 6
             bm.faces.new((prev[s], prev[q], ring[q], ring[s]))
     prev = ring
-stripe = obj("great_stripe", bm, mat("candy_great_stripe", "#f2f5ff", rough=0.4))
+stripe = obj("great_stripe", bm, mat("candy_great_stripe", C["great_stripe"], rough=0.4))
 bm = bmesh.new(); fan_end(bm, 0.55, 1, 0.34); fan_end(bm, -0.55, -1, 0.34)
-gwrap = obj("great_wrap", bm, mat("candy_great_wrap", "#bcd0ff", rough=0.5), smooth=False)
-export(os.path.join(OUT, "candy_great.glb"), [gbody, stripe, gwrap]); allobjs += [gbody, stripe, gwrap]
+gwrap = obj("great_wrap", bm, mat("candy_great_wrap", C["great_wrap"], rough=0.5), smooth=False)
+export(os.path.join(OUT, "candy_great%s.glb" % SUF), [gbody, stripe, gwrap]); allobjs += [gbody, stripe, gwrap]
 
 # RARE: faceted gold gem-candy on a star wrapper
 bm = bmesh.new()
@@ -128,7 +131,7 @@ for i in range(10):
 star = obj("rare_star", bm, mat("candy_rare_wrap", "#7a3fbf", rough=0.45), smooth=False)
 for o in (gem, star):
     o.location.x = 2.0
-export(os.path.join(OUT, "candy_rare.glb"), [gem, star]); allobjs += [gem, star]
+export(os.path.join(OUT, "candy_rare%s.glb" % SUF), [gem, star]); allobjs += [gem, star]
 print("CANDY_OK", OUT)
 
 if PREVIEW:

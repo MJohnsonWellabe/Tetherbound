@@ -22,7 +22,12 @@ static func apply(pickup: Node3D, item_id: String, badge: Color, cfg: Dictionary
 		cfg = config()
 	if not bool(cfg.get("enabled", false)):
 		return false
-	var tier: Variant = (cfg.get("items", {}) as Dictionary).get(item_id, null)
+	var items: Dictionary = cfg.get("items", {})
+	# Round 2 (r2_1108): deeper tier colours and a smaller halo on every tier.
+	var r2: Dictionary = cfg.get("r2_1108", {})
+	if bool(r2.get("enabled", false)):
+		items = r2.get("items", items)
+	var tier: Variant = items.get(item_id, null)
 	if not tier is Dictionary:
 		return false
 	var body := TIERS._first_mesh(pickup)

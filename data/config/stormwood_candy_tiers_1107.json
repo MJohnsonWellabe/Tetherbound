@@ -3,6 +3,11 @@
   "enabled": true,
   "_why_on": "CPU 5.83 -> 6.04 mapped (LANE-SW r1, 7 Nov 2026: F41#14 P2-045, three code-blind judges, 2/3 higher, one FIXED call; ralph/reports/LANES/LANE-SW/qj/F41-14-a3daee699a66-11072346/VERDICT.md). Rarer still reads bigger (test pins it). Owner 4 Nov: a judged gain ships ON.",
   "scope": "client_presentation",
+  "r2_1108": {"enabled": false, "_candidate": "LANE-SW (8 Nov 2026), F41#14 round 2 over the shipped r1 (5.83 -> 6.04). r1 judges: 'the first two tiers are pale green-white and blue-white, close in value at normal camera distance'. Same forms, deeper body colours (Good #2e8b3a, Great #1d4cc8), less-white wrappers, and the shared highlight halo reduced on Good and Great too (glow_scale 0.5) so it stops washing them out. Rare unchanged. When enabled its items replace those below. OFF until judged.", "items": {
+    "good_candy": {"model": "res://assets/props/blender-1107/stormwood_candy/candy_good_r2.glb", "height_mult": 1.1, "glow_scale": 0.5},
+    "great_candy": {"model": "res://assets/props/blender-1107/stormwood_candy/candy_great_r2.glb", "height_mult": 1.25, "glow_scale": 0.5},
+    "rare_candy": {"model": "res://assets/props/blender-1107/stormwood_candy/candy_rare.glb", "height_mult": 1.4, "glow_scale": 0.6}
+  }},
   "items": {
     "good_candy": {"model": "res://assets/props/blender-1107/stormwood_candy/candy_good.glb", "height_mult": 1.1},
     "great_candy": {"model": "res://assets/props/blender-1107/stormwood_candy/candy_great.glb", "height_mult": 1.25},
