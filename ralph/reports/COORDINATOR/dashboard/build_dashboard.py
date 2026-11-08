@@ -851,10 +851,8 @@ visual_tab_html = (
     f'<div class="kpi"><b>{len(_vrows) - _n_met - _n_bar - _n_close - _n_none}</b><span>Open and below 7.0</span></div>'
     f'<div class="kpi"><b>{_n_none}</b><span>No score of their own yet</span></div>'
     '</div>'
-    + _matrix + _close_html + _stand_html
-    + '<section class="chapter ch-V"><header><h2>Every item, by area</h2></header>' + "".join(_vtabs) + '</section>'
-    + '<details class="frow"><summary><span class="fid">P2</span><span class="ftitle">Catalogue defect detail and owners</span></summary>'
-      '<div class="vtbl">' + visual_html + '</div></details>')
+    + _matrix
+    + '<section class="chapter ch-V"><header><h2>Every item, by area</h2></header>' + "".join(_vtabs) + '</section>')
 
 
 # ---- overview tab (owner 8 Nov: "too much for a high level view of progress") ----
@@ -1079,24 +1077,15 @@ ul.lanes p{{margin:0}} .ln-head{{display:flex;flex-wrap:wrap;gap:4px 10px;align-
 <main class="wrap">
   <input type="radio" name="tab" id="tab-ovw" class="tabsel" checked>
   <input type="radio" name="tab" id="tab-acc" class="tabsel">
-  <input type="radio" name="tab" id="tab-plan" class="tabsel">
-  <input type="radio" name="tab" id="tab-lanes" class="tabsel">
   <input type="radio" name="tab" id="tab-vis" class="tabsel">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
-  <nav class="tabs" aria-label="Board views"><label for="tab-ovw">Overview</label><label for="tab-vis">Visual catalogue</label><label for="tab-acc">Acceptance</label><label for="tab-plan">Finish plan</label><label for="tab-lanes">Active lanes</label></nav>
+  <nav class="tabs" aria-label="Board views"><label for="tab-ovw">Overview</label><label for="tab-vis">Visual catalogue</label><label for="tab-acc">Acceptance</label></nav>
   <div class="pane pane-ovw">{overview_html}</div>
-  <div class="pane pane-plan">{finish_html}<details class="frow"><summary><span class="ftitle">Earlier delivery plan (sprint chart, superseded 31 Oct)</span></summary>{plan_html}</details></div>
-  <div class="pane pane-lanes">{active_lanes_html}</div>
-  <div class="pane pane-vis">{visual_tab_html}<details class="frow"><summary><span class="ftitle">CPU score gains landed since {E(status.get("score_ledger_since",""))}</span></summary><div class="vtbl">  <div>
-  <div class="kpis"><div class="kpi"><b>+{_ledger_gain:.2f}</b><span>Cumulative CPU score gained (mapped, three code-blind judges), across {_ledger_n} items. Target: +100 in 24 h.</span></div>
-  <div class="kpi"><b>{_ledger_cross}</b><span>Items crossed 6.0 on CPU in this push</span></div>
-  <div class="kpi"><b>+{_pend_gain:.2f}</b><span>Judged gains in an open PR, waiting on CI ({len(_pend)} items)</span></div></div>
-  <div class="tbl"><table><thead><tr><th>Item</th><th>Before</th><th>After</th><th>Gain</th><th>PR</th></tr></thead><tbody>{_ledger_rows}{_pend_rows}</tbody></table></div>
-  <p class="note">"Criteria met" below counts an item only after it passes the 7.5 bar on the GPU pass, so it moves only when the GPU confirmation runs.</p></div></div></details></div>
+  <div class="pane pane-vis">{visual_tab_html}</div>
   <div class="pane pane-acc">
 
   <div class="kpis">
@@ -1108,22 +1097,6 @@ ul.lanes p{{margin:0}} .ln-head{{display:flex;flex-wrap:wrap;gap:4px 10px;align-
   </div>
   <div class="legend">{legend}</div>
   {''.join(chapter_html)}
-  <section class="panel"><h2>Chapter exit cards</h2><p class="note">Integrated continuous-path gates; required even when every F row passes. Progress = 80% feeder criteria met (weighted) + 20% for the integrated continuous run with its evidence card.</p>
-    <div class="tbl"><table><thead><tr><th>Card</th><th>Progress</th><th>Feeder criteria</th><th>Integrated run</th><th>Note</th></tr></thead><tbody>{cards_tbl}</tbody></table></div></section>
-  <section class="panel"><h2>Release-wide requirements</h2>
-    <div class="tbl"><table><thead><tr><th>Requirement</th><th>Status</th><th>Note</th></tr></thead><tbody>{cc}</tbody></table></div></section>
-  <section class="panel"><h2>Shortcut debt</h2><p class="note">Criteria closed under the relaxed-proof rule, and what each proof skipped. The chapter-exit and release playthroughs must exercise every row; a failure there points at the row. High = a sub-part not proven anywhere else. A passing chapter-card run retires its feeders\u2019 route shortcuts; harness input needs a human play pass; the final four-chapter run retires chapter-boundary fixture starts. <b>{debt_summary}</b></p>
-    <div class="tbl"><table><thead><tr><th>Risk</th><th>Criterion</th><th>Chapter exit</th><th>Criterion text</th><th>Debt kind</th><th>State</th><th>Disclosed shortcuts</th></tr></thead><tbody>{debt_tbl}</tbody></table></div></section>
-  <section class="panel"><h2>Integration batches</h2>
-    <div class="tbl"><table><thead><tr><th>Batch</th><th>SHA</th><th>State</th><th>Contents</th></tr></thead><tbody>{batches}</tbody></table></div></section>
-  <section class="panel"><h2>Lanes</h2>
-    <div class="tbl"><table><thead><tr><th>Lane</th><th>Working on</th><th>Next</th></tr></thead><tbody>{lanes}</tbody></table></div></section>
-  {lane_activity_section}
-  <div class="two">
-    <section class="panel"><h3>Decisions made</h3><ul class="plain">{li(status.get("decisions", []))}</ul></section>
-    <section class="panel"><h3>Needs the owner</h3><ul class="plain">{li(status.get("owner_needs", []))}</ul></section>
-  </div>
-  <p class="note">Status is strict: fixture-only proof counts as partial, visual criteria need a passing code-blind judge verdict, and co-op criteria need two-peer evidence. Percentages are the coordinator's evidence audit, not a measured play-through.</p>
   </div>
 </main>
 </body>
