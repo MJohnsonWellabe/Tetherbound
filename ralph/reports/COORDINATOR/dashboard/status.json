@@ -1,5 +1,5 @@
 {
-  "updated": "7:15 AM CT Sun 8 Nov 2026",
+  "updated": "7:25 AM CT Sun 8 Nov 2026",
   "headline": [
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
     "Sixteen batch PRs merged (#847-#862). Under the new process: F38#41 +0.53, F38#5 +0.78/+0.26, F38#32 +0.28, F39#3 +0.64, plus the Warrens stand and Hollows loss capture fixes. CPU scores only.",
@@ -1840,5 +1840,12 @@
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": []
+  "score_ledger_pending": [
+    {
+      "item": "F39#3 Drowned Garden shallow flood among the terrace tiers (arrival frame)",
+      "before": 6.16,
+      "after": 6.3,
+      "pr": "land batch 17 (full CI)"
+    }
+  ]
 }
