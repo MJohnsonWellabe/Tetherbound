@@ -1,16 +1,17 @@
 extends "res://tests/test_case.gd"
 
 ## F41#14 (LANE-SW, 7 Nov 2026): per-tier Blender candy bodies for Stormwood.
-## Ships OFF until judged; each tier builds its own mesh, and rarer candy is
+## Ships ON (CPU 5.83 -> 6.04); each tier builds its own mesh, and rarer candy is
 ## always fitted taller than the grade below it from the same body footprint.
 
 const TIERS := preload("res://scripts/world/stormwood_candy_tiers.gd")
 
 
-func test_tiers_ship_off() -> void:
+func test_tiers_ship_on_with_score() -> void:
 	var cfg := TIERS.config()
 	assert_false(cfg.is_empty(), "stormwood_candy_tiers_1107.json is declared")
-	assert_false(bool(cfg.get("enabled", true)), "ships OFF until judged")
+	assert_true(bool(cfg.get("enabled", false)), "ships ON (judged gain)")
+	assert_true(str(cfg.get("_why_on", "")).contains("5.83 -> 6.04"), "records its judged score")
 
 
 func test_rarer_candy_is_fitted_bigger_with_its_own_materials() -> void:
