@@ -442,3 +442,61 @@ Tools: `quick_judge.py capture` for F38#37; F38#29 F38#3 F38#11 (`phase2_capture
 - Fix class: config/animation (trainer fly-grip pose offsets) plus capture-stand (glide frame taken too early, before altitude).
 - Fix idea: bend the elbows and let the legs trail back with knees bent in the fly-grip pose (bone offsets like `post_stance.gd`), and take the glide frame once the carrier is at cruise height.
 - Expected gain: medium (both frames are the subject; pose and timing are cheap).
+
+## Batch 6: Tidewake 6.0–6.5 rows (captured 8 Nov 20:17–21:05 UTC)
+
+Tools: `quick_judge.py capture` for F39#5 (swimming), F39#27 F39#29 (dialogue), F39#6 (creatures fainted), F39#22 F39#8 (mounted swim), F39#1 (routes, locations). Same source and renderer as batch 1.
+
+### F39#5 P2-071 surface swimming trainer pose (Tidewake)
+- Last: 6.20 (board); GPU 5.20.
+- Judges: "the trainer is still vertical with both arms thrown up and legs visible below the surface in all three frames, reading as wading or flailing" (`tidewake/scores-gpu.json`).
+- Still true? **Mostly no.** `phase2_capture_swimming.gd` today (entry, surface_west, surface_mid): seen from behind, the trainer lies prone with the head above the water inside a ripple ring and the legs trailing back under the surface; no arms thrown up. The legs show as two pale shapes through the very clear water, and the swimmer is small at the bottom centre of a large flat turquoise plane.
+- Fix class: GPU-only re-baseline; optional config (water clarity near the swimmer, so the submerged legs fade).
+- Fix idea: GPU re-score first. If needed, lower shallow-water transparency at depth so submerged limbs fade out.
+- Expected gain: low as a build (scored defect gone).
+
+### F39#29 P2-074 dialogue speaker visibility (Tidewake)
+- Last: 6.34 (board); GPU 3.54.
+- Judges: "frames 2-3 (Captain Nerissa) have the camera buried in a noisy grey rock face and frame 1 shows only the trainer's back on a bare slope, so no speaker is ever on screen" (`tidewake/scores-gpu.json`).
+- Still true? **No.** All three dialogue frames today show the speaker centred: Resident Nalia in a sand gully with dune grass, and Captain Nerissa (twice) in the lit stone hall with the line box below. No rock face in front of the camera.
+- Remaining: Nerissa wears the same Tether armour body as Stormwood's Captain Marrow and Officer Nysa.
+- Fix class: GPU-only re-baseline.
+- Expected gain: high from the re-score alone (3.54 was a no-speaker frame); low as a build.
+
+### F39#27 P2-057 grass around named characters (Tidewake)
+- Last: 6.23 (board); GPU 5.48 (3/3 FIXED).
+- Judges: "Grass is now sparse ankle tufts so silhouettes are clear, but the characters read as backlit near-black figures on bare sand dunes with no grove/edge structure" (`tidewake/scores-gpu.json`).
+- Still true? **Partly.** Adair, Bren and Corin are now front-lit and readable (not near-black), but each still stands beside the trainer on an empty pale dune slope with a few grass tufts; there is nothing around the post (no hut, nets, driftwood, rocks). The NPC and trainer read as one small pair.
+- Fix class: scene placement (post dressing from installed Tidewake props).
+- Fix idea: dress each post with a small cluster (driftwood, a net rack or crate, a clump of dune grass, a rock) a few metres behind the NPC, and stand the NPC 2–3 m apart from the trainer.
+- Expected gain: medium-low.
+
+### F39#6 P2-028 creature faint state (Tidewake)
+- Last: 6.24 (board); GPU 5.61.
+- Judges: "Ripplet and Aquaryn lie flat and read as down, but Riptusk still sits in an upright crouch with its head raised, and all three are small, low-contrast shapes on the shoreline" (`tidewake/scores-gpu.json`).
+- Still true? **Partly, with a new defect.** `phase2_capture_creatures.gd --biome=water --poses=fainted` today: Riptusk now lies on its side (fixed). **Aquaryn's fainted body floats**: a crop shows it tipped on its back about half a body-height above the sand, with its shadow lying separately on the ground below. Ripplet lies flat but is pale white on pale sand. All three are still small at the shoreline beyond the trainer.
+- Fix class: animation/config (Aquaryn faint grounding, like the 4 Nov pose-still seating and `ground_clip.py` on other remakes).
+- Fix idea: seat Aquaryn's faint end pose on the ground (root offset or ground-clip pass on its faint clip), so its body meets its shadow.
+- Expected gain: medium (a floating body is a hard defect judges always call; one of three frames).
+
+### F39#8 P2-108 Aquaryn mounted-water pose (Tidewake)
+- Last: 6.38 (board); GPU 4.97. Current lane work: `ITEM-F39-8/READY.md` (land).
+- Judges: "Aquaryn standing upright on the water surface in an identical pose across frames 03-05 with no splash or wake and a long hard shadow cast onto the water, so it reads as walking on glass" (`tidewake/scores-gpu.json`).
+- Still true? **Mostly no.** `phase2_capture_tidewake_mounted_swim.gd` today: in 03–05 Aquaryn rides low with its body half under the surface and the rider seated on its back; 04 is a side view of a horizontal swimming body. No hard shadow on the water. Still missing: a wake or splash (only a faint ring), and the submerged legs show as pale shapes through the clear water.
+- Fix class: GPU-only re-baseline; optional VFX (bow wake).
+- Expected gain: low as a build until the GPU re-score.
+
+### F39#22 P2-109 Aquaryn dismount camera obstruction (Tidewake)
+- Last: 6.28 (board); GPU 5.62 (3/3 FIXED).
+- Judges: "a ghostly translucent mount mesh hovers around the trainer and a large detached dark shadow fills the foreground over flat, featureless sand" (`tidewake/scores-gpu.json`).
+- Still true? **No** for the ghost mesh and shadow: frames 11–13 show the trainer alone on the beach with a normal shadow; the companion stands a few metres off. The sand is still flat and empty.
+- Fix class: GPU-only re-baseline.
+- Expected gain: low as a build.
+
+### F39#1 P2-008 shore landforms (Tidewake)
+- Last: 6.44 (board); GPU 5.56.
+- Judges: "repeated smooth sand domes, a hard grass-blade carpet edge in frame 3 and a floating white slab in the water in frame 1 keep the shore from reading layered" (`tidewake/scores-gpu.json`).
+- Still true? **Partly.** Brine Steps walk_03 now has the trainer swimming beside the dock with a rowing boat in the foreground; no floating white slab is visible. First Shore welcome beacon and horizon stones still show the same smooth, featureless sand domes, and the horizon-stones frame still has a hard straight edge where the grass-blade carpet stops on the sand (right side).
+- Fix class: scene placement (break the grass edge with scattered tufts) / terrain (dune form).
+- Fix idea: feather the dune-grass carpet edge with scattered tufts and a few rocks and driftwood along it, so the edge is ragged.
+- Expected gain: low-medium.
