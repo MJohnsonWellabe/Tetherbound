@@ -9,6 +9,7 @@ extends Node3D
 
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 const CANDY_PRESENTATION := preload("res://scripts/world/candy_pickup_presentation.gd")
+const CANDY_TIERS_1107 := preload("res://scripts/world/stormwood_candy_tiers.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 
 const REALM_ID := "stormwood"
@@ -146,6 +147,8 @@ func _mount_pickup(spec: Dictionary) -> void:
 		str(presentation.get("model", "")), scale,
 		id, REALM_ID, int(spec.get("count", 1)))
 	CANDY_PRESENTATION.apply(pickup, item_id, definition, id)
+	# F41#14 (LANE-SW, OFF until judged): per-tier Blender candy bodies.
+	CANDY_TIERS_1107.apply(pickup, item_id, Color(str(definition.get("colour", "#ffffff"))))
 	# Some authored pickup anchors include a 0.35m display offset. Grounded
 	# props opt out visually without moving their identity/interaction anchor.
 	if bool(definition.get("world_model_grounded", false)) and world.has_method("ground_height_at"):
