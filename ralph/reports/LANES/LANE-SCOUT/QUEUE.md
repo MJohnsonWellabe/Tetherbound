@@ -306,3 +306,46 @@ Tools: `quick_judge.py capture F40#9`, `F40#2 F40#3`, `F40#5` and `capture_cloud
 
 ### F40#0 Cloudreach re-capture and re-score (unscored)
 - Process row (GPU re-capture ≥200 frames and re-score). GPU-only.
+
+## Batch 4: Tidewake fights (captured 8 Nov 18:01–18:37 UTC)
+
+Tool: `quick_judge.py capture F39#7 F39#11 F39#20` and `F39#21 F39#28` (`phase2_capture_tidewake_fights.gd`, Venn and Nerissa). Same source and renderer as batch 1.
+
+### F39#7 P2-089 fight actor composition (Tidewake)
+- Last: 5.65 (board, GPU).
+- Judges: "Cannonback and Ripplet still stack into one mass in t-024 and touch in t-023/t-025 on a flat, evenly lit pale beach" (`tidewake/scores-gpu.json`).
+- Still true? **No** for the stacking. `phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn` (READER, level 53) today: in t-023, t-024 and t-025 Ripplet and Cannonback stand about a body-length apart with sand between them; nothing intersects.
+- Remaining: the left "TEAM 5/5" roster is half-faded in these three frames and the trainer stands right behind it, so the HUD covers the trainer; the beach is flat and evenly lit.
+- Fix class: GPU-only re-baseline.
+- Fix idea: GPU re-score; if the roster-over-trainer remains, let the roster fade fully or the trainer stand clear of the left 20% (fight staging).
+- Expected gain: low as a build (scored defect gone).
+
+### F39#20 P2-090 fight background creature ground contact (Tidewake)
+- Last: 6.42 (board); GPU 5.70.
+- Judges: "the pale grey Ripplet barely separates from the pale sand, a small blue-white blob still sits in the sand beside it in frames 1-2" (`tidewake/scores-gpu.json`).
+- Still true? **Mostly no.** t-000, tell-start-001.25 and t-016 today: Ripplet is a saturated teal against the sand and separates clearly; no buried blob beside it. A small blue creature stands whole on the dune crest at top left of t-016.
+- Fix class: GPU-only re-baseline.
+- Expected gain: low as a build.
+
+### F39#11 P2-101 Riverdrake fight ground contact (Tidewake)
+- Last: 6.42 (board).
+- Catalogue defect: "Riverdrake crouch and recoil sink its belly and feet into sand or leave the body hovering above a separate shadow" (`job.json`).
+- Today: **capture-stand drift.** The job's frames are tell-ended-180, t-208 and t-216 of the full Venn fight (`--level=55 --pilot=READER --max-frames=150`), but today's run stops at t-172 (the fight resolves or the `--cap-s=240` budget runs out first), so none of the three moments exist. In the nearest Riverdrake frames (t-164, t-172, tell-ended-100) the Riverdrake stands on the sand with its feet and shadow together.
+- Still true? **No** in the frames reached; the judged moments cannot be re-shot with this repro.
+- Fix class: capture-stand (give the run enough cap to reach t-208/216, or re-pick the frames).
+- Expected gain: low.
+
+### F39#21 P2-103 named fight victory hierarchy (Tidewake) (unscored)
+- Catalogue defect: "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual space" (`job.json`).
+- Today: **capture-stand bug, no frame exists.** The row's three frames (venn_resolve win-141.53 and aftermath-142.53, nerissa_resolve win-207.25) come from `phase2_capture_tidewake_fights.gd` without `--verified-victory-lifecycle`. Without that flag the tool "never invents win/aftermath tags" (line 118), so today's Venn run ends at fight time 91.6 s (fight over, `active=false`) and the Nerissa run at 32 s with no win or aftermath frame. `quick_judge` and the GPU re-judge both read this repro, so this row can never be scored as it stands.
+- Fix class: capture-stand bug (add `--verified-victory-lifecycle` to the three F39#21 repros in `job.json`, like the F41#16 loss-stand fix).
+- Fix idea: fix the repro, re-shoot, then judge whether the reward panel needs the exploration HUD hidden behind it.
+- Expected gain: can't tell (first baseline).
+
+### F39#28 P2-091 fight boss title overlay (Tidewake)
+- Last: 6.02 (board, GPU; 3/3 FIXED).
+- Judges: "The boss card now sits top-right clear of Cannonback, but the Nerissa frame is dominated by a giant translucent blue crystal slab that hides half the arena, and the beach frames stay flat and evenly lit" (`tidewake/scores-gpu.json`).
+- Still true? **Yes** for the crystal: Nerissa t-000 and tell-ended show a tall translucent blue crystal slab filling the right third of the arena, and the arena hall is very dim (dark stone, small lanterns). The card is clear of the creatures in all frames.
+- Fix class: scene placement (move the crystal behind the arena edge or off the fight camera's side) plus config (arena light).
+- Fix idea: move Nerissa's arena crystal to the back wall behind the captain, out of the side the fight camera looks across, and raise the arena fill light.
+- Expected gain: medium-low (one of three frames; the overlay defect itself is fixed).
