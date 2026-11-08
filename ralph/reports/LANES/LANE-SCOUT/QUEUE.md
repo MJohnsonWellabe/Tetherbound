@@ -31,6 +31,8 @@ Ranked by expected visible gain per hour of build. Updated after batch 6 (8 Nov 
 | 13 | F38#8 fly grip | Bend elbows, trail legs; glide frame at cruise height | config/animation | medium |
 | 14 | F41#1 Stormheart | Vary the four identical banners; move the lattice pylon out of the approach | config + scene | medium |
 | 15 | F41#4 destinations | Bring a Lantern Pool to the path edge with lit lantern posts | scene | medium |
+| 6b | F40#6 rider vanishes | Empty saddle at `terrace_01.0s` (crop-confirmed); find why the rider hides at the edge stop; also fix the drifted frame ids | code + capture-stand | medium-high |
+| 6c | F40#8 route marker | Saturated cyan post behind the trainer in all three frames: wooden/stone post with a small lantern | config | medium |
 | 16 | F39#30 / F13#5 night water | Darken the shallows at night (time-of-day input to `water.gdshader`) | code | medium |
 
 **Capture-stand bugs (fix before any judging of these rows):**
@@ -41,9 +43,10 @@ Ranked by expected visible gain per hour of build. Updated after batch 6 (8 Nov 
 - F40#20 / F40#2: the eyrie "close" stand is the same shot as "approach".
 - F13#5: T2-current `swim-brine-day` misses its authored current.
 - F39#11: today's fight ends before the job's t-208/216 frames.
+- F40#6 / F40#11: the ride run now writes `terrace_after` / `terrace_road_back_*` instead of the job's `terrace_02.0s` / `terrace_03.0s`.
 - F41#23: every catalogue Stormheart stand is inside the hollow (only the F41 matrix stand sees it from outside).
 
-**GPU re-score only (defect gone on today's frames, old score is stale):** F39#29 (3.54, speaker now visible), F41#15 (3.19, banner gone), F41#16 (loss stand fixed), F39#7, F39#20, F39#5, F39#8, F39#22, F39#23, F39#19.
+**GPU re-score only (defect gone on today's frames, old score is stale):** F39#29 (3.54, speaker now visible), F41#15 (3.19, banner gone), F41#16 (loss stand fixed), F39#7, F39#20, F39#5, F39#8, F39#22, F39#23, F39#19, F40#11 (polygon puffs and sliver gone), F40#15.
 
 **Watch:** F41#12's night frame (hour 23) renders fully daylit under the Deepwood canopy; check on GPU.
 
@@ -520,3 +523,72 @@ Tools: `quick_judge.py capture` for F39#5 (swimming), F39#27 F39#29 (dialogue), 
 - Fix class: scene placement (break the grass edge with scattered tufts) / terrain (dune form).
 - Fix idea: feather the dune-grass carpet edge with scattered tufts and a few rocks and driftwood along it, so the edge is ragged.
 - Expected gain: low-medium.
+
+## Batch 7: Cloudreach 6.0–6.5 rows (captured 8 Nov 21:05–22:15 UTC)
+
+Tools: `quick_judge.py capture` for F40#6 F40#11 (`phase2_capture_cloudreach_ride.gd`), F40#17 (high perch), F40#7 F40#4 (locations), F40#8 (gaps), F40#15 (routes), F40#16 (world inventory). Same source and renderer as batch 1.
+
+### F40#6 P2-105 mounted terrace edge and cloud crossing (Cloudreach)
+- Last: 6.10 (board); GPU 4.92.
+- Judges: "The rider walking upright on the cloud floor beside flat cloud puffs and a black geometry sliver breaks the world's believability" (`cloudreach/scores-gpu.json`).
+- Today (`phase2_capture_cloudreach_ride.gd --tag=phase2`): the deer mount stops at the terrace lip and the cloud sea stays below; nobody walks on clouds. Clouds are soft white banks; no black sliver in these frames.
+- **New defect: the rider vanishes.** In `phase2_17_terrace_01.0s` (a frame of both F40#6 and F40#11) the deer stands at the edge with an **empty saddle**; a crop confirms no trainer on its back or anywhere in frame. The frames before (16 mounted at edge) and after (18) show the rider seated. In the 28-frame run the rider is on the deer in every other frame checked (ledge 01, 02, 05, 09, 12; terrace 16, 18, 20), so it is one moment: the first second after the terrace edge stop. In ledge 01 the deer also stands with its legs through a paddock fence rail.
+- **Capture drift:** the job's `phase2_18_terrace_02.0s` and `phase2_19_terrace_03.0s` no longer exist; today's run writes `phase2_18_terrace_after` and `phase2_19_terrace_road_back_01.5s`, so `quick_judge` frame lookup cannot match two of the three frames.
+- Still true? **No** for the cloud walk; **a new, worse defect** in the one matched frame.
+- Fix class: code (rider visibility during the edge stop) plus capture-stand (update the frame ids in job.json).
+- Fix idea: find why the rider model hides at the terrace edge stop (likely a dismount/remount or camera-occlusion fade on the rider), then re-pick the frames.
+- Expected gain: medium-high (a missing rider is a glaring defect; the old score was the cloud walk, which is gone).
+
+### F40#11 P2-106 terrace edge clouds (Cloudreach)
+- Last: 6.43 (board); GPU 5.16.
+- Judges: "Hard-edged white polygon puffs and a black sliver over the cliff read as placeholder rather than Valheim-class cloud atmosphere" (`cloudreach/scores-gpu.json`).
+- Still true? **No.** The terrace frames today show soft, layered white cloud banks against the cliff stacks; no hard polygon puffs, no black sliver. Shares the empty-saddle frame and the frame-id drift with F40#6.
+- Fix class: GPU-only re-baseline (after the job.json frame ids are fixed).
+- Expected gain: medium from the re-score; low as a build.
+
+### F40#17 P2-102 High Perches rim mushroom (Cloudreach)
+- Last: 6.19 (board); GPU 5.90.
+- Judges: "No mushroom hangs beyond the rim now, but the night frame crushes the tower and rim to near black, and the griffin's wing presses into the tower wall" (`cloudreach/scores-gpu.json`).
+- Still true? **Partly.** `phase2_capture_cloudreach_high_perch.gd` crown-rim-out: the night frame is now a readable moonlit blue (tower, rim, mushrooms and griffin all visible), not crushed. **The griffin's raised wing still cuts into the tower wall** in both day and night. A dark rock shape fills the bottom-left corner in both.
+- Fix class: scene placement (griffin perch position).
+- Fix idea: move the griffin's perch 1.5–2 m off the tower wall (or turn it so the wing opens away from the wall).
+- Expected gain: low-medium (a visible clip in both frames, cheap to fix).
+
+### F40#7 P2-025 grass and stone finish (Cloudreach)
+- Last: 6.22 (board); GPU 5.87.
+- Judges: "Decent cobble and pillar textures with good sun shadows, but grass through the paving and a flat repeated lawn read unfinished" (`cloudreach/scores-gpu.json`).
+- Still true? **Partly.** Heartstone close: clean cobbles, no grass poking through, but the camera sits against a stone pillar that fills the left third. High Perches and Broken Skyroad Arch approaches: the lawn is one flat, evenly repeated green with uniform blade cards; no colour or height variation.
+- Fix class: config (terrain macro variation on the Cloudreach lawn: two or three tone patches, darker clover, worn patches near paths).
+- Fix idea: add a low-frequency tone variation to the Cloudreach grass material so the lawn breaks into patches.
+- Expected gain: low-medium.
+- Note for F40#3: in this boot the `broken_skyroad_arch__day__approach` stand **did** seat (it failed in batch 3), so that stand is flaky, not dead.
+
+### F40#4 P2-023 exposed landform edges (Cloudreach)
+- Last: 6.27 (board); `ITEM-F40-4/READY.md` parked (strata cliff arms flat).
+- Judges: "Flat-topped mesas with straight extruded walls and a camera jammed against rock read as blockout" (`cloudreach/scores-gpu.json`).
+- Still true? **Partly.** Sky Shrine and Heartstone approaches still show white flat-topped strata mesas with straight vertical walls along the horizon, and a field of loose boulders in the foreground. Three Bells reads well (bridge, bells, layered cliffs). No camera against rock in these three.
+- Fix class: parked (two strata-art rounds lost); needs a new idea.
+- Expected gain: low.
+
+### F40#8 P2-053 bright Cloudreach route markers (Cloudreach)
+- Last: 6.32 (board); GPU 5.72.
+- Judges: "Day/golden/night grading reads well, but the saturated cyan post still pulls the eye from the bridge and looks like a debug marker" (`cloudreach/scores-gpu.json`).
+- Still true? **Yes.** `phase2_capture_cloudreach_gaps.gd` Three Bells close (day, golden, night): a saturated glowing cyan post with a crossbar stands right behind the trainer on the path to the bridge in all three; it is the brightest thing in the night frame. A big tree trunk fills the left third of all three, and a thin black straight line runs diagonally across the grass at lower left (rope or seam; worth a look).
+- Fix class: config (route marker material: colour and emission).
+- Fix idea: make the marker a wooden or stone post with a small warm lantern (or a muted teal accent) instead of a fully emissive cyan pole; keep it readable at night with a modest glow.
+- Expected gain: medium (the marker sits at the centre of all three frames; a config-scale change).
+
+### F40#15 P2-049 floating dark strips (Cloudreach)
+- Last: 6.36 (board, GPU; 3/3 FIXED).
+- Judges: "The strips are gone ... but the large flat-shaded dark rock wall in the summit frame and the flat dusk grade with no aerial perspective" (`cloudreach/scores-gpu.json`).
+- Still true? **Yes for the wall.** Stormward Overlook walk_03 today: a dark, flat-shaded stone wall fills the left 35% of the frame right beside the camera (a seeded walk stand against the summit wall), with the trainer on a narrow grass strip above the cloud sea. Windscar aerie vista dusk: warm dusk grade, trees and the aerie posts, with little depth haze. No dark strips anywhere.
+- Fix class: capture-stand (walk_03 is a seeded off-route stand hugging the wall) / GPU-only for the strips.
+- Fix idea: GPU re-score; if the wall frame still sinks it, treat walk_03 like the Warrens stand (re-seat stands that put solid geometry within 1–2 m of the camera).
+- Expected gain: low as a build.
+
+### F40#16 P2-054 mushroom pickup variants (Cloudreach)
+- Last: 6.48 (board, GPU; 3/3 FIXED).
+- Judges: "both are small, weakly grounded props on flat grass beside blocky untextured-looking rock slabs" (`cloudreach/scores-gpu.json`).
+- Still true? **Yes, as described.** Speed mushroom (pale yellow cap, blue base) and wild mushroom (broad orange cap) are distinct, small, sitting on flat lawn; behind them the angular flat-faced rock slabs fill the upper half.
+- Fix class: scene (a small grass/moss tuft ring at each pickup) / the rock slabs are F40#4's parked landform problem.
+- Expected gain: low.
