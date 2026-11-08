@@ -7,6 +7,7 @@ Evidence, not a plan. Each entry checks whether the judges' last complaint for a
 - "Last score" is the coordinator board's figure. The judges' quote comes from the newest score file named in the entry (the 28 Oct GPU notes are `ralph/reports/VISUAL/item-scores/<biome>/scores-gpu.json`).
 - Fix classes: config / scene placement / installed-asset swap / Blender art / code / capture-stand bug / owner decision / GPU-only.
 - Gain guesses are against the row's own frames only.
+- **Status (8 Nov 22:55 UTC): complete.** Every row on the coordinator's list has an entry (103 rows: 20 cited from today's ITEM READYs, the rest checked on fresh frames). Contact sheets: `_sheet_meadows.jpg`, `_sheet_tidewake.jpg`, `_sheet_cloudreach.jpg`, `_sheet_stormwood.jpg`.
 
 ## Best candidates so far
 
@@ -678,3 +679,14 @@ Tools: `capture_meadows_look.gd` (F38-look subsets), `visual_judge/capture_camer
 
 ### Capture tool failure noted
 - `capture_cloudreach_biome_look.gd --chunk=cliffhold --preset=Low` stops with "Cloudreach look did not restore its native capture raster" on CPU (no frames). F40#0's look chunk could not be re-shot here; the F40 rows above use the catalogue tools instead.
+
+### F39#32 No flat magenta rings or slabs, placeholder materials, floating bodies or clipping (Tidewake) (unscored)
+- Compiled from every Tidewake frame shot today (batches 1, 2, 4 and 6); no extra capture.
+- Seen:
+  - **Floating body:** Aquaryn's fainted body hangs on its back above the sand with a detached shadow (`water__aquaryn__fainted`, see F39#6).
+  - **Ring slabs:** the sheltered-route rest shoals still read as a chain of pale discs with white rims in the sea below Veilfall (veilfall-vista), the F39#15 defect; owner-blocked (terrain re-bake).
+  - Nerissa's arena: a large translucent blue crystal slab fills a third of the fight frame (F39#28).
+  - No magenta, no placeholder materials; the F39#1 floating white slab is gone; the dismount ghost mesh is gone (F39#22).
+- Fix class: animation (Aquaryn faint, shared with F39#6), scene (crystal), owner decision (shoals).
+- Fix idea: ground Aquaryn's faint end pose; that is the one hard "floating body" item on this row's wording.
+- Expected gain: medium for this row once baselined.
