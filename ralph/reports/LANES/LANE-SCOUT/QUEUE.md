@@ -251,3 +251,58 @@ Tools: `capture_tidewake_f13_5.gd` (F39-look, T2-current; 1280x720 Low), `quick_
 
 ### F41#0 Stormwood re-capture and re-score (unscored)
 - Process row (GPU re-capture ≥200 frames and re-score). GPU-only; no build. Note the F41 catalogue refuses CPU.
+
+## Batch 3: Cloudreach dialogue, landmarks, captain fight and matrix (captured 8 Nov 15:14–18:01 UTC)
+
+Tools: `quick_judge.py capture F40#9`, `F40#2 F40#3`, `F40#5` and `capture_cloudreach_f40_matrix.gd --piece=3-7 --source-commit=<sha>`. Same source and renderer as batch 1.
+
+### F40#9 P2-068 named NPC post readability (Cloudreach)
+- Last: 5.20 (board); GPU 5.50.
+- Judges: "The named NPCs are tiny mid-ground figures beside the trainer, half lost in tall grass (Tavi frame), shadow (Sora frame) and the tree trunks (keeper frame), with no post props or poses to say who they are" (`cloudreach/scores-gpu.json`).
+- Still true? **Partly.** Props exist now: Tavi stands on a stone pad with a straw training dummy and a wooden rack, Maela beside a stone pedestal on the perch path. But in all three wide frames the NPC is still a small figure right beside the trainer: Tavi's legs are in tall grass, Sora stands in the dark shadow at the foot of the stone arch, Maela is half behind tree trunks. All three use the same arms-down idle. The dialogue close-ups read well.
+- Fix class: scene placement (post spots) plus config (grass clearing at posts) plus the shared idle-clip swap (see F38#35).
+- Fix idea: move Sora 3–4 m out of the arch shadow into the sun, move Maela clear of the trunks to the open side of the pedestal, clear grass in a 2 m disc around Tavi's pad; then give each a role idle.
+- Expected gain: medium (all three judged frames; placement is cheap, pose shared with F38#35).
+
+### F40#2 P2-022 summit aviary (Cloudreach) — also F40#20 Sky Aviary hero landmark (unscored)
+- Last: 6.16 (board, NEAR6-CR CPU); `ITEM-F40-2/READY.md` parked (stone-ground and scattered-stone arms lost or were invisible).
+- Catalogue defect: "a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark" (`job.json`).
+- Still true? **Partly.** Today the summit is a solid stone sanctuary: blue glass dome, turrets, blue banners, arched door; at night its windows are lit and the facade reads pale against a deep-blue sky (no longer dark). What remains: it is small in every frame (about 15% of frame height on a flat lawn at the end of the path), the court sits apart at the left, and the **"close" stand is effectively the same distance as "approach"** (the two day frames are nearly the same shot), so "up close" is never shown.
+- Fix class: capture-stand (a real close stand at the door) plus config (summit sanctuary scale).
+- Fix idea: re-seat the eyrie "close" stand near the sanctuary forecourt so the dome fills the upper frame; then judge whether a 1.3–1.5x scale on the sanctuary still needs doing for the approach view.
+- Expected gain: medium for F40#20 (the up-close half is currently not captured at all); low-medium for F40#2.
+
+### F40#3 P2-024 architectural landmark read (Cloudreach)
+- Last: 6.46 (board).
+- Catalogue defect: "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail" (`job.json`).
+- Still true? **Can't tell for 2 of 3 frames: capture-stand bug.** `old_wind_observatory__day__approach` and `broken_skyroad_arch__day__approach` fail today with "no supported production-camera stand among 15 candidates", so two of the row's three frames are missing from any round. Windscar Beacon (the one captured) reads well: a tall white tower with a blue roof and a timber gate arch hung with banners, framed by pillar rocks.
+- Fix class: capture-stand bug.
+- Fix idea: add reachable stands for the observatory and skyroad arch (the `--spot` form) before any art.
+- Expected gain: can't tell until the stands work.
+
+### F40#5 P2-112 captain fight camera orientation (Cloudreach)
+- Last: 6.39 (board, GPU).
+- Judges: "edge-cropped creatures, a bare dirt ring and heavy HUD panels keep it short of Palworld's boss-fight finish"; catalogue: "the camera repeatedly faces an empty part of the arena or crops the opponent and ally" (`cloudreach/scores-gpu.json`, `job.json`).
+- Today (`phase2_capture_cloudreach_live_fight.gd`, Captain Veyra, frames written at about the job's times; ids drift by ~12 ticks): most frames now frame Aeriex and the ally together mid-arena with the trainer behind (1722, 2442, 3162, 3342, and 3522/3702 at the job's 3510 moment, a close two-shot of Bramblebun and Aeriex).
+- Still true? **Partly.** live-2802: the camera sits behind a **red-and-cream arena banner post that fills the right half of the frame**, and the piloted Mudsnout is off-screen; only Aeriex and the trainer show. The ring is still bare packed dirt.
+- Fix class: config/code (camera occluder fade for arena dressing, like the foliage camera-visibility fade).
+- Fix idea: add the Cloudreach arena banner posts to the camera-occluder fade so they dither out when between the camera and the fighters.
+- Expected gain: low-medium (one frame of three is obstructed; others are already decent).
+
+### F40#19 The biome frame matrix (Cloudreach)
+- Last: 5.61 (board; NEAR6-CR CPU: rain 5.61, night ~5.8).
+- Judges' last asks (`ralph/reports/LANES/NEAR6-CR/READY.md`): rain needs wet sheen on path and stone, puddles or splashes, a storm sky without blue gaps and mist at the gate; night needs the gate framed clear of the quest box and minimap, and a hero gate.
+- Today (`capture_cloudreach_f40_matrix.gd --piece=3-7`, realm_gate_crag; 16 frames, day/golden × clear/rain × four cameras): the run hit this lane's 66-minute timeout before the night piece, so **night was not re-checked**.
+- Still true? **Yes for rain.** In day rain and golden rain the dirt path, the boulder trail and the grass have the same dry, matte colour as in clear weather; there are no puddles, no sheen and no mist at the gate; only streaks and a greyer sky show it is raining. **Yes for the framing**: in every approach frame the gate arch sits right behind the "MAIN STORY" quest box and minimap at top right.
+- Also: the gameplay/reverse/detail cameras stand on the boulder trail, which fills the lower half as large lumpy grey rocks rather than a path.
+- Fix class: config/code (a rain wetness term on terrain, path and rock: darker albedo, lower roughness) and owner decision (quest box placement).
+- Fix idea: in the rain preset, darken and gloss the path, trail stones and grass (wetness hook), and add low gate mist; judge on the day-rain piece.
+- Expected gain: medium (rain is half the captured matrix; the visual change is large and global).
+
+### F40#21 No flat magenta rings or slabs, placeholder materials, floating bodies or clipping (Cloudreach) (unscored)
+- Seen today across F40#2, #3, #5, #9 and #19 frames: no magenta, no floating bodies. Items worth a look: the boulder trail at the gate reads as loose rubble slabs; the eyrie court sits apart from the sanctuary; in F40#5's live-2802 a foreground arena banner post fills half the frame. The GPU notes for F40#6/#11 (black geometry sliver over the cliff, hard white polygon cloud puffs) were not re-checked yet (ride capture comes in a later batch).
+- Fix class: see F40#6/#11 (later batch).
+- Expected gain: can't tell yet.
+
+### F40#0 Cloudreach re-capture and re-score (unscored)
+- Process row (GPU re-capture ≥200 frames and re-score). GPU-only.
