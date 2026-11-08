@@ -1,9 +1,9 @@
 {
-  "updated": "8:20 PM CT Sat 7 Nov 2026",
+  "updated": "10:35 PM CT Sat 7 Nov 2026",
   "headline": [
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
-    "Ten batch PRs merged (#847-#856), the last on 8 Nov 02:03 UTC; nothing is in flight. CPU scores only; GPU re-judge of every changed row is still due.",
-    "Held by CI: F38#5 creature scale (the 1.3x Bramblebun breaks the aim-cancel probe and smoke_catching) and F38#41 quarry boulders (copied rock folder fails two Meadows tests).",
+    "Eleven batch PRs merged (#847-#857); #857 landed F38#41 (+0.53) under the new process. CPU scores only; GPU re-judge of every changed row is still due.",
+    "Held by CI: F38#5 creature scale (the 1.3x Bramblebun breaks the aim-cancel probe and smoke_catching; root cause in progress).",
     "Owner 7 Nov: every judged gain over live ships ON; new art is built in Blender (no Meshy credits).",
     "Scores are CPU-provisional; the GPU pass confirms or reopens each row (bar 7.5)."
   ],
@@ -845,7 +845,7 @@
   "active_lanes": [
     {
       "lane": "LANE-MESHY · re-check judged Meshy pieces",
-      "doing": "Setup and noise floor, then Meadows cliffs (P2-014, +1.04 on 25 Oct), Meadows ironwood (+0.66), Stormwood junction lantern posts, Cloudreach island shell (P2-023). Then Veilfall hero, Tidewake docks, Warrens, F38#41, F38#5.",
+      "doing": "Parked after diagnosis (no rounds spent): ironwood, Stormwood posts, High Perches shell (GPU-failed), Veilfall hero and docks (CPU-lost), Meadows cliffs (invisible or walk-through). Landed F38#41. Now: F38#5 root cause, then Warrens (stand fix done; shell collider arm), then six researched rows.",
       "criteria": "F38#24, F38#30, F39#2, F39#31, F13#5, F40 P2-023, F38#41, F38#5",
       "next": "~1 h (import + noise floor)"
     }
@@ -1798,16 +1798,16 @@
       "before": 4.98,
       "after": 5.65,
       "pr": "#856 (merged 8 Nov)"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F38#41 Old Quarry boulders (Blender recombination)",
       "before": 6.43,
       "after": 6.96,
-      "pr": "held: fails CI tests (see #855 comments)"
-    },
+      "pr": "#857 (merged 8 Nov)"
+    }
+  ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [
     {
       "item": "F38#5 creature scale batch 4 (grow only; owner OK for cluster 1914 radius 4 m)",
       "before": 6.59,
