@@ -1,10 +1,9 @@
 {
-  "updated": "6:05 PM CT Sat 7 Nov 2026",
+  "updated": "7:40 PM CT Sat 7 Nov 2026",
   "headline": [
-    "7 Nov restart: five lanes, eight batch PRs (#847-#854) opened, seven merged; batch 9 stacked. CPU scores only; GPU re-judge of every changed row at end of day 8 Nov.",
-    "Landed on main since the owner's 4 Nov push: +63.79 CPU score across 120 judged gains; 40 items crossed 6.0. The 7 Nov consolidated PR adds +2.33 across 16 more.",
-    "7 Nov wind-down: all lanes stopped and wrote a HANDOFF in their READY.md; everything is consolidated into one PR to main and lanes are archived.",
-    "Next: five one-row lanes from the QUEUE in docs/STATE.md §0 (quick wins, Blender art rows, scene rows); GPU re-judge end of day 8 Nov.",
+    "Owner 7 Nov evening: lanes stopped until the improvement process is fixed (about half of the rows tried gained nothing). All five lanes finished, pushed and were archived; work restarts one row at a time.",
+    "Nine batch PRs merged (#847-#855); batch 10 (F39#10, F41#14, F41#9) in full CI. CPU scores only; GPU re-judge of every changed row is still due.",
+    "Held by CI: F38#5 creature scale (the 1.3x Bramblebun breaks the aim-cancel probe and smoke_catching) and F38#41 quarry boulders (copied rock folder fails two Meadows tests).",
     "Owner 7 Nov: every judged gain over live ships ON; new art is built in Blender (no Meshy credits).",
     "Scores are CPU-provisional; the GPU pass confirms or reopens each row (bar 7.5)."
   ],
@@ -842,39 +841,8 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Five long-lived cloud lanes since 7 Nov 17:50 UTC (owner plan, STATE §0). LANE-MS and LANE-KIT have finished their QUEUE lists. Coordinator lands judged gains in stacked batch PRs; one full-CI PR at a time.",
-  "active_lanes": [
-    {
-      "lane": "LANE-MS · Meadows",
-      "doing": "QUEUE list done: F38#5 (owner-approved), F38#41, F38#36 in batch 9; F38#30b parked (needs a Bank-matched Blender hill); F38#11/#27 blocked on other lanes' files.",
-      "criteria": "F38#12, F38#5, F38#30, F38#24, F38#6, F38#41",
-      "next": "~1.5 h (import + first round)"
-    },
-    {
-      "lane": "LANE-SW · Stormwood and arena",
-      "doing": "F38#20 keep hill + walls in #854. Next F41#9 harvest cues.",
-      "criteria": "F38#28, F41#1, F38#20, F41#9, F41#14, F41#3, F41#6, F41#7",
-      "next": "~1.5 h"
-    },
-    {
-      "lane": "LANE-TW · Tidewake and map",
-      "doing": "F39#8 Aquaryn pose in batch 9; F39#16/#17/#31 parked. Next F39#10.",
-      "criteria": "F39#25, F39#31, F39#2, F39#16",
-      "next": "~1.5 h"
-    },
-    {
-      "lane": "LANE-CR · Cloudreach",
-      "doing": "F40#4 strata cliff parked (evidence in batch 9). Next F40#19 rain wetness.",
-      "criteria": "F40#2, F40#12, F40#1, F40#4, F40#19, F40#17",
-      "next": "~1.5 h"
-    },
-    {
-      "lane": "LANE-KIT · capture fixes, HUD, creatures",
-      "doing": "F38#26 Mosshell faint +0.70 in batch 9; F38#17 + F41#8 re-merging main. Now Shadelet/Glimmermoth per-bone hit pose.",
-      "criteria": "F38#19, F38#26, F38#31, F38#33, F38#38, F36#70, F41#8, F38#17",
-      "next": "~2 h"
-    }
-  ],
+  "active_lanes_note": "No lanes running. Owner 7 Nov evening: all five lanes were archived (8 Nov 00:20-00:47 UTC) pending a better process; next work is one row at a time with the coordinator.",
+  "active_lanes": [],
   "score_ledger": [
     {
       "item": "F38#4 map",
@@ -1763,6 +1731,36 @@
       "before": 6.38,
       "after": 6.78,
       "pr": "#854 (merged 7 Nov)"
+    },
+    {
+      "item": "F38#36 Corin dialogue: galecrest cluster moved off the speaker",
+      "before": 6.98,
+      "after": 7.89,
+      "pr": "#855 (merged 8 Nov)"
+    },
+    {
+      "item": "F39#8 Aquaryn mounted pose (rider shadow off, sink 1.0)",
+      "before": 4.97,
+      "after": 6.38,
+      "pr": "#855 (merged 8 Nov)"
+    },
+    {
+      "item": "F38#26 Mosshell faint seat (pose settle scoped)",
+      "before": 6.27,
+      "after": 6.97,
+      "pr": "#855 (merged 8 Nov)"
+    },
+    {
+      "item": "F38#17 Solene/Hald installed variant bodies",
+      "before": 5.81,
+      "after": 7.32,
+      "pr": "#855 (merged 8 Nov)"
+    },
+    {
+      "item": "F41#8 Bryn/Maud coat variants",
+      "before": 5.47,
+      "after": 5.83,
+      "pr": "#855 (merged 8 Nov)"
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
@@ -1771,49 +1769,49 @@
       "item": "F38#41 Old Quarry boulders (Blender recombination)",
       "before": 6.43,
       "after": 6.96,
-      "pr": "land batch 9 (full CI)"
-    },
-    {
-      "item": "F38#36 Corin dialogue: galecrest cluster moved off the speaker",
-      "before": 6.98,
-      "after": 7.89,
-      "pr": "land batch 9 (full CI)"
-    },
-    {
-      "item": "F39#8 Aquaryn mounted pose (rider shadow off, sink 1.0)",
-      "before": 4.97,
-      "after": 6.38,
-      "pr": "land batch 9 (full CI)"
+      "pr": "held: fails CI tests (see #855 comments)"
     },
     {
       "item": "F38#5 creature scale batch 4 (grow only; owner OK for cluster 1914 radius 4 m)",
       "before": 6.59,
       "after": 7.37,
-      "pr": "land batch 9 (full CI)"
+      "pr": "held: fails CI tests (see #855 comments)"
     },
     {
       "item": "F38#5 creature scale batch 5",
       "before": 7.14,
       "after": 7.4,
-      "pr": "land batch 9 (full CI)"
+      "pr": "held: fails CI tests (see #855 comments)"
     },
     {
-      "item": "F38#26 Mosshell faint seat (pose settle scoped)",
-      "before": 6.27,
-      "after": 6.97,
-      "pr": "land batch 9 (full CI)"
+      "item": "F39#10 Tidewake water depth ramp",
+      "before": 7.15,
+      "after": 7.25,
+      "pr": "land batch 10 (full CI)"
     },
     {
-      "item": "F38#17 Solene/Hald installed variant bodies",
-      "before": 5.81,
-      "after": 7.32,
-      "pr": "land batch 9 (full CI)"
+      "item": "F41#14 Stormwood candy tier bodies (Blender)",
+      "before": 5.83,
+      "after": 6.04,
+      "pr": "land batch 10 (full CI)"
     },
     {
-      "item": "F41#8 Bryn/Maud coat variants",
-      "before": 5.47,
-      "after": 5.83,
-      "pr": "land batch 9 (full CI)"
+      "item": "F41#9 Stormwood harvest nodes r1 (Blender)",
+      "before": 5.64,
+      "after": 6.31,
+      "pr": "land batch 10 (full CI)"
+    },
+    {
+      "item": "F41#9 Stormwood harvest nodes r2",
+      "before": 5.52,
+      "after": 6.0,
+      "pr": "land batch 10 (full CI)"
+    },
+    {
+      "item": "F41#9 Stormwood harvest nodes r3",
+      "before": 4.98,
+      "after": 5.65,
+      "pr": "land batch 10 (full CI)"
     }
   ]
 }
