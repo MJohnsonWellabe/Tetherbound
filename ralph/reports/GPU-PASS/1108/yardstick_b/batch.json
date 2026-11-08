@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f04_6_r22:r22": [
+   6.0,
+   6.0,
+   5.7
+  ],
+  "f04_6_r22:control": [
+   5.3,
+   5.3,
+   5.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.7,
+   4.6,
+   4.4
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.6,
+   5.2,
+   5.1
+  ],
+  "craft:before": [
+   5.0,
+   5.0,
+   5.0
+  ],
+  "craft:after": [
+   6.8,
+   6.6,
+   6.8
+  ]
+ },
+ "candidates": {
+  "GPU1108 F39#3 live one-sided": [
+   5.9,
+   5.5,
+   5.4
+  ],
+  "GPU1108 F39#8 live one-sided": [
+   5.3,
+   5.4,
+   5.2
+  ],
+  "GPU1108 F38#26 live one-sided": [
+   5.5,
+   5.6,
+   5.3
+  ],
+  "GPU1108 F38#32 live one-sided": [
+   5.4,
+   5.3,
+   5.2
+  ],
+  "GPU1108 F41#14 live one-sided": [
+   5.9,
+   5.8,
+   5.6
+  ],
+  "GPU1108 F41#8 live one-sided": [
+   5.3,
+   5.0,
+   4.9
+  ],
+  "GPU1108 F38#36 live one-sided": [
+   6.8,
+   6.7,
+   6.6
+  ],
+  "GPU1108 F39#10 live one-sided": [
+   6.0,
+   5.7,
+   5.5
+  ],
+  "GPU1108 F38#17 live one-sided": [
+   6.5,
+   6.4,
+   6.4
+  ],
+  "GPU1108 F38#5 live one-sided": [
+   5.6,
+   5.5,
+   5.2
+  ],
+  "GPU1108 F41#9 live one-sided": [
+   5.5,
+   5.6,
+   5.2
+  ],
+  "GPU1108 F38#41 live one-sided": [
+   6.0,
+   6.0,
+   5.9
+  ]
+ }
+}
