@@ -1855,9 +1855,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 20",
-      "what": "F38#37 quarry conduit core gets real glass instead of a flat cyan slab",
-      "when": "8 Nov, in CI"
+      "pr": "#866",
+      "what": "F38#37 quarry conduit core gets real glass instead of a flat cyan slab; new board",
+      "when": "9 Nov 00:10"
     },
     {
       "pr": "#865",
