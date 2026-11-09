@@ -1112,7 +1112,8 @@
     },
     "remake_owner1101_voltarach": {
       "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Voltarach, a large spider creature with long armoured legs, black and gold carapace (Meshy 01a197f5-3ad0-777d-865a-baedfe11982f). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.25 m; emission on the electric-blue sparks and eyes (storm creature). Provenance: assets/creatures/tetherbound/voltarach/candidate_owner1101/source/provenance.json.",
-      "enabled": true,
+      "_why_off": "Owner, 9 Nov 2026: \"It needs 8 legs\" / \"Use the real spider\". The 1 Nov remake mesh does not carry eight clean legs (only about six ground contacts; several curved gold legs never reach the ground) and rode the dog3 four-leg quadruped rig, so in game it read as a pale armadillo. OFF restores species.json's native Voltarach (assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb): a real eight-leg spider rig (leg_1..4 l/r, three segments each; thorax, abdomen, head), 4.25 m, charcoal shell, gold edges, blue facial nodes. Sheet: ralph/reports/LANES/ITEM-VOLTARACH/_sheet_preview.jpg.",
+      "enabled": false,
       "species": {
         "voltarach": {
           "model": "res://assets/creatures/tetherbound/voltarach/candidate_owner1101/models/creature_voltarach_owner1101.glb",
