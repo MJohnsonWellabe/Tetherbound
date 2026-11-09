@@ -1,0 +1,27 @@
+[
+ {
+  "row": "F38#18",
+  "item": "P2-095",
+  "frame": "meadows__system__crafting",
+  "arm": "live",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "Medium",
+  "tool": "tools/phase2_capture_build_systems.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_build_systems.gd",
+   "--",
+   "--biome=meadows",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "match": "exact",
+  "path": "F38-18/live/Medium/meadows__system__crafting.jpg",
+  "sky_fraction": 0.473,
+  "lower_edges": 0.1678
+ }
+]
