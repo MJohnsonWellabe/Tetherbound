@@ -1005,6 +1005,9 @@ var _region_banner_until := 0.0
 ## can never take focus from a menu or a dialogue.
 var _moment_banner: PanelContainer = null
 var _moment_title: Label = null
+## F39#21 hero beat (hud.json victory_focus.hero_card): true while the plate
+## shows a victory receipt in the centred, larger hero layout.
+var _moment_hero := false
 var _moment_detail: Label = null
 var _moment_also: Label = null
 var _moment_separator: MarginContainer = null
@@ -3593,6 +3596,15 @@ func _position_moment_banner() -> void:
 		return
 	var cfg: Dictionary = PROGRESSION_FEED.config().get("banner", {})
 	var canvas := _root.size if _root != null and _root.size.x > 0.0 else Vector2(1920, 1080)
+	if _moment_hero:
+		var rect := hero_card_rect(canvas, _victory_focus.get("hero_card", {}))
+		_moment_banner.anchor_left = 0.0
+		_moment_banner.anchor_right = 0.0
+		_moment_banner.offset_left = rect.position.x
+		_moment_banner.offset_right = rect.end.x
+		_moment_banner.offset_top = rect.position.y
+		_moment_banner.offset_bottom = rect.end.y
+		return
 	var safe := canvas * float(cfg.get("safe_area_fraction", 0.05))
 	# The full-team receipt must leave the creature and the enlarged relay roster
 	# clear. Its own right-hand lane also works with the normal exploration rail.
@@ -3765,6 +3777,7 @@ func _render_moment_events() -> void:
 			has_level = has_level or str(event.get("kind", "")) == "level_up"
 
 	var receipt_accent := _victory_hierarchy_candidate and not receipts.is_empty()
+	_set_moment_hero(not receipts.is_empty() and hero_card_enabled(_victory_focus))
 	_dress_moment_banner("level_up" if has_level and not receipt_accent else "bond_milestone")
 	var rows := PackedStringArray()
 	var used_awards: Dictionary = {}
@@ -3829,6 +3842,41 @@ func _render_moment_events() -> void:
 ## XP sliver and the combat HUD's XP line already use for levelling), a bond
 ## milestone stays WARNING amber (the colour bond wears everywhere else).
 ## The sound cues already differ; this makes the plate agree with them.
+## F39#21 (coordinator, 9 Nov): the shipped victory card (+0.96 GPU) still
+## read as a small top-right toast. With hud.json victory_focus.hero_card ON,
+## a victory receipt takes a centred, larger plate in the upper third: the
+## win is a beat, not a notification. victory_focus already hides the hotbar,
+## exploration rail, party roster and prompt while it shows, so the centred
+## plate crosses no live HUD (the earlier centred plate was dropped for
+## crossing the relay roster before those tiers yielded). Growth-only moments
+## keep the right-hand lane.
+static func hero_card_enabled(focus: Dictionary) -> bool:
+	var hero: Variant = focus.get("hero_card", {})
+	return not focus.is_empty() and hero is Dictionary and (hero as Dictionary).get("enabled") == true
+
+
+static func hero_card_rect(canvas: Vector2, hero: Dictionary) -> Rect2:
+	var width := canvas.x * clampf(float(hero.get("width_fraction", 0.46)), 0.2, 0.9)
+	var height := canvas.y * clampf(float(hero.get("height_fraction", 0.2)), 0.08, 0.6)
+	var top := canvas.y * clampf(float(hero.get("top_fraction", 0.12)), 0.0, 0.6)
+	return Rect2(Vector2((canvas.x - width) * 0.5, top), Vector2(width, height))
+
+
+func _set_moment_hero(on: bool) -> void:
+	_moment_hero = on
+	var hero: Dictionary = _victory_focus.get("hero_card", {}) if on else {}
+	var align := HORIZONTAL_ALIGNMENT_CENTER if on else HORIZONTAL_ALIGNMENT_LEFT
+	for label: Label in [_moment_title, _moment_detail, _moment_also]:
+		if label != null:
+			label.horizontal_alignment = align
+	_moment_title.add_theme_font_size_override("font_size",
+		int(hero.get("title_font", UITokens.FONT_TITLE)) if on else UITokens.FONT_HEADING)
+	_moment_detail.add_theme_font_size_override("font_size",
+		int(hero.get("detail_font", UITokens.FONT_SECTION)) if on else UITokens.FONT_LABEL)
+	_moment_also.add_theme_font_size_override("font_size",
+		int(hero.get("growth_font", UITokens.FONT_BODY)) if on else UITokens.FONT_LABEL)
+
+
 func _dress_moment_banner(kind: String) -> void:
 	var accent: Color = UITokens.TEAL if kind == "level_up" else UITokens.WARNING
 	_moment_banner.add_theme_stylebox_override("panel",
