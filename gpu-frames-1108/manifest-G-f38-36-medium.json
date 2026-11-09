@@ -1,0 +1,80 @@
+[
+ {
+  "row": "F38#36",
+  "item": "P2-078",
+  "frame": "meadows__inventory__character__kell__dialogue",
+  "arm": "live",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "Medium",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_dialogue.gd",
+   "--",
+   "--biome=meadows",
+   "--subset=meadows__inventory__character__kell",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "match": "exact",
+  "path": "F38-36/live/Medium/meadows__inventory__character__kell__dialogue.jpg",
+  "sky_fraction": 0.296,
+  "lower_edges": 0.4207
+ },
+ {
+  "row": "F38#36",
+  "item": "P2-078",
+  "frame": "meadows__inventory__character__corin__dialogue",
+  "arm": "live",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "Medium",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_dialogue.gd",
+   "--",
+   "--biome=meadows",
+   "--subset=meadows__inventory__character__corin",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "match": "exact",
+  "path": "F38-36/live/Medium/meadows__inventory__character__corin__dialogue.jpg",
+  "sky_fraction": 0.115,
+  "lower_edges": 0.3763
+ },
+ {
+  "row": "F38#36",
+  "item": "P2-078",
+  "frame": "meadows__inventory__trainer__captain_field__dialogue",
+  "arm": "live",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "Medium",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_dialogue.gd",
+   "--",
+   "--biome=meadows",
+   "--subset=meadows__inventory__trainer__captain_field",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "match": "exact",
+  "path": "F38-36/live/Medium/meadows__inventory__trainer__captain_field__dialogue.jpg",
+  "sky_fraction": 0.256,
+  "lower_edges": 0.3485
+ }
+]
