@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "tidewake__fight__venn__win.png",
+  "preset": "arm-High",
+  "tree": "61693b5a3b6cb567b0cc296ede5408ab8f7eb2ed",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-lens-ground-clearance-venn/arm-High/tidewake__fight__venn__win.png",
+  "sky_fraction": 0.143,
+  "lower_edges": 0.0645,
+  "script_errors": 0,
+  "note": "live-High = main 61693b5a3. arm-High = live plus camera_rig.gd at 1508bdfae plus ITEM-VENN-PLANE/overlay_lens_ground.json. Forward+/Vulkan, seed 2042; the fight's end position differs between runs. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__aftermath.png",
+  "preset": "arm-High",
+  "tree": "61693b5a3b6cb567b0cc296ede5408ab8f7eb2ed",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-lens-ground-clearance-venn/arm-High/tidewake__fight__venn__aftermath.png",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.0675,
+  "script_errors": 0,
+  "note": "live-High = main 61693b5a3. arm-High = live plus camera_rig.gd at 1508bdfae plus ITEM-VENN-PLANE/overlay_lens_ground.json. Forward+/Vulkan, seed 2042; the fight's end position differs between runs. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__receipt-expired.png",
+  "preset": "arm-High",
+  "tree": "61693b5a3b6cb567b0cc296ede5408ab8f7eb2ed",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-lens-ground-clearance-venn/arm-High/tidewake__fight__venn__receipt-expired.png",
+  "sky_fraction": 0.104,
+  "lower_edges": 0.1492,
+  "script_errors": 0,
+  "note": "live-High = main 61693b5a3. arm-High = live plus camera_rig.gd at 1508bdfae plus ITEM-VENN-PLANE/overlay_lens_ground.json. Forward+/Vulkan, seed 2042; the fight's end position differs between runs. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__win.png",
+  "preset": "live-High",
+  "tree": "61693b5a3b6cb567b0cc296ede5408ab8f7eb2ed",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-lens-ground-clearance-venn/live-High/tidewake__fight__venn__win.png",
+  "sky_fraction": 0.173,
+  "lower_edges": 0.0906,
+  "script_errors": 0,
+  "note": "live-High = main 61693b5a3. arm-High = live plus camera_rig.gd at 1508bdfae plus ITEM-VENN-PLANE/overlay_lens_ground.json. Forward+/Vulkan, seed 2042; the fight's end position differs between runs. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__aftermath.png",
+  "preset": "live-High",
+  "tree": "61693b5a3b6cb567b0cc296ede5408ab8f7eb2ed",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-lens-ground-clearance-venn/live-High/tidewake__fight__venn__aftermath.png",
+  "sky_fraction": 0.171,
+  "lower_edges": 0.1066,
+  "script_errors": 0,
+  "note": "live-High = main 61693b5a3. arm-High = live plus camera_rig.gd at 1508bdfae plus ITEM-VENN-PLANE/overlay_lens_ground.json. Forward+/Vulkan, seed 2042; the fight's end position differs between runs. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__receipt-expired.png",
+  "preset": "live-High",
+  "tree": "61693b5a3b6cb567b0cc296ede5408ab8f7eb2ed",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-lens-ground-clearance-venn/live-High/tidewake__fight__venn__receipt-expired.png",
+  "sky_fraction": 0.141,
+  "lower_edges": 0.1564,
+  "script_errors": 0,
+  "note": "live-High = main 61693b5a3. arm-High = live plus camera_rig.gd at 1508bdfae plus ITEM-VENN-PLANE/overlay_lens_ground.json. Forward+/Vulkan, seed 2042; the fight's end position differs between runs. PNGs as captured."
+ }
+]
