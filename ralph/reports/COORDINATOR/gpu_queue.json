@@ -483,7 +483,7 @@
       "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
       "capture": "live vs arm at High on current main (both arms share one live set)",
       "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
-      "done": false
+      "done": true
     },
     {
       "id": "water-rim-soft",
@@ -502,7 +502,7 @@
       "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
       "capture": "live vs arm at High on current main (both arms share one live set)",
       "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
-      "done": false
+      "done": true
     },
     {
       "id": "occlusion-fade-off-wide",
@@ -523,6 +523,19 @@
       "frames": "job.json dialogue frames of the listed rows (Meadows, Cloudreach, Stormwood dialogue, where the fade won +0.53/+0.62 on 2 Nov)",
       "capture": "live vs arm at High on current main",
       "note": "G-confirm-75-medium.md: fade off gained Tidewake F39#26 +0.34 and F39#29 +0.39 (mean +0.21) but did not fix NPC ghosting. Before shipping it globally, check the other biomes' dialogue rows do not lose what the fade won on 2 Nov.",
+      "done": false
+    },
+    {
+      "id": "confirm-f39-26-medium",
+      "rows": [
+        "F39#26",
+        "F39#18"
+      ],
+      "kind": "confirm",
+      "tree": "current origin/main once batch 28 (water rim soft) lands; until then main + ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_soft.json",
+      "frames": "job.json frames of F39#26 and F39#18",
+      "capture": "live at High AND Medium",
+      "note": "G-water-rim: F39#26 7.52 and F39#18 7.36 at High with the soft rim; a confirming High+Medium pass can close F39#26",
       "done": false
     }
   ],
