@@ -777,8 +777,8 @@
     "F41#1"
    ],
    "branch": "tb/item-storm-light",
-   "head": "3fc43db9ba7f62e44080f519f3f262126ca3da59",
-   "tree": "main plus, from that head: assets/props/blender-1109/stormheart_heart_core/ (GLB, .import, provenance) and scripts/world/stormheart_tree.gd copied in; the new GLB needs an import pass (--import) before capture",
+   "head": "cdb3cbe1b90bf0d2c568570cac59af8d56112cbb",
+   "tree": "main plus, from tb/item-storm-light head cdb3cbe1b90bf0d2c568570cac59af8d56112cbb: assets/props/blender-1109/ (both stormheart_heart_core/ and glass_sink_lip/, with .import files and provenance), scripts/world/stormheart_tree.gd, scripts/world/stormwood_glass_sink.gd and scripts/world/stormwood_world.gd copied in; ONE import pass (--import) serves both storm-core-v2 and glass-sink-lip",
    "overlay_branch": "tb/item-storm-light",
    "overlay": "ralph/reports/LANES/ITEM-STORM-CORE/overlay_heart_core.json",
    "overlay_format": "deep merge",
@@ -789,6 +789,27 @@
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty; confirm the core model loads (not missing/pink)",
    "note": "First free-pipeline asset (Blender procedural, no Meshy): deep-blue Stormheart crystal core with violet seams, sized to sit inside the frame (ITEM-STORM-CORE/ARM.md).",
+   "done": false
+  },
+  {
+   "id": "glass-sink-lip",
+   "kind": "arm",
+   "rows": [
+    "F41#10"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "cdb3cbe1b90bf0d2c568570cac59af8d56112cbb",
+   "tree": "main plus, from tb/item-storm-light head cdb3cbe1b90bf0d2c568570cac59af8d56112cbb: assets/props/blender-1109/ (both stormheart_heart_core/ and glass_sink_lip/, with .import files and provenance), scripts/world/stormheart_tree.gd, scripts/world/stormwood_glass_sink.gd and scripts/world/stormwood_world.gd copied in; ONE import pass (--import) serves both storm-core-v2 and glass-sink-lip",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-SINK-LIP/overlay_lip_ring.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; confirm the slabs load and sit on the ground",
+   "note": "Second free-pipeline asset (Blender procedural plus CC0 ambientCG Rock035): ring of fractured basalt lip slabs with fused-glass tops so the Glass Sink reads as a sunken basin (ITEM-SINK-LIP/ARM.md). Run right after storm-core-v2 on the same import.",
    "done": false
   }
  ],
