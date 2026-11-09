@@ -292,6 +292,28 @@
       "capture": "live (ghost-glow state) vs arm at High",
       "note": "tests whether the imported full-surface emission on the two captain bodies is the real cause (the smaller fix if it wins)",
       "done": false
+    },
+    {
+      "id": "recheck-f39-21",
+      "rows": [
+        "F39#21"
+      ],
+      "kind": "recheck",
+      "tree": "current origin/main (has hud.json victory_focus ON since #868)",
+      "frames": "F39#21 job.json frames (Venn win/aftermath with match: semantic as in F-tidewake-add; Nerissa win frame now that the seat fix may have landed, else skip it)",
+      "capture": "live only at High on current main; judged against the F-tidewake 4.75. Tests whether the shipped victory card already fixes the Tidewake victory hierarchy.",
+      "done": false
+    },
+    {
+      "id": "recheck-f38-1",
+      "rows": [
+        "F38#1"
+      ],
+      "kind": "recheck",
+      "tree": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm)",
+      "frames": "F38#1 job.json frames",
+      "capture": "arm-state only at High; judged against the F-meadows 5.76 (the see-through faint may be the creature rim ghost-glow fixes)",
+      "done": false
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
