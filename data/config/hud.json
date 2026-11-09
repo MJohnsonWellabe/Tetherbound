@@ -20,8 +20,7 @@
   },
   "victory_focus": {
     "_why": "P2-103/P2-111 (UIPOSES lane, 1 Nov 2026). GPU item scores 28 Oct: Tidewake named-fight victory panels sit over the full exploration HUD, roster, hotbar and prompt (P2-103, unscored on main); the Hollows victory line sits in the quickbar's message strip and reads as its reward row, with roster and objective panels crowding (P2-111 4.92). When on, while a Moment banner is up the tiers in `hide` step back (playground_hud.gd victory_focus_mode), and named-trainer acknowledgements route to the victory Moment receipt (trainer_reward_delivery.gd). PRESENTATION ONLY. OFF until GPU judging.",
-    "_why_on": "GPU 1108 section C, 5.61 -> 7.13, 3/3 (F41#21 victory reward tiles: GPU arm round, all three judges preferred the arm; tb/gpu-arm-f41-21-on 2c593b05).",
-    "enabled": true,
+    "enabled": false,
     "route_trainer_receipts": true,
     "hide": ["hotbar", "exploration", "party", "prompt"]
   },
