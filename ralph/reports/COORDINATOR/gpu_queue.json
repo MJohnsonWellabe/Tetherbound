@@ -752,7 +752,7 @@
    "frames": "job.json frames of each row: F41#2 3, F41#3 3, F41#4 3, F41#5 3, F41#12 3, F41#17 1, F41#21 2, F41#15 3 = 21 frames",
    "capture": "live (current main) vs arm at High, seed 2042; check the script-error list is empty and that the overlay merge receipt shows storm_light.enabled and height_fog.enabled true",
    "note": "Owner-approved Stormwood storm-light pass, arm A (ITEM-STORM-LIGHT/ARM.md): violet storm key, violet shadow fill and fog, fighter rim, layered height fog. Config only, no code. Top priority.",
-   "done": false
+   "done": true
   },
   {
    "id": "storm-light-b",
