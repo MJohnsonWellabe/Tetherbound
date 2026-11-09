@@ -811,6 +811,26 @@
    "capture": "live vs arm at High, seed 2042; script-error list empty; confirm the slabs load and sit on the ground",
    "note": "Second free-pipeline asset (Blender procedural plus CC0 ambientCG Rock035): ring of fractured basalt lip slabs with fused-glass tops so the Glass Sink reads as a sunken basin (ITEM-SINK-LIP/ARM.md). Run right after storm-core-v2 on the same import.",
    "done": false
+  },
+  {
+   "id": "storm-light-a2",
+   "kind": "arm",
+   "rows": [
+    "F41#2",
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#15",
+    "F41#17"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_storm_key_a2.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of each row: 3+3+3+3+3+1 = 16",
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt: storm_light.enabled true, height_fog NOT enabled, and confirm storm_light.environment.exposure has a reader (flag it if not)",
+   "note": "Storm-light arm A2 after the split verdict on A: keeps the violet key and fighter rim, drops height fog and the darker grade, lifts ambient/exposure so the forest stands (F41#4/#5) keep their value. Run next after the current section.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
