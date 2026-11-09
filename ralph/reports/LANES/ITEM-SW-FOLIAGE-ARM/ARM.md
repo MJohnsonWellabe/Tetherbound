@@ -28,3 +28,9 @@ It changes no placement, bake input, collision or harvest.
 A CPU quick judge on 4 Nov found the tint-only first version flat. The `adjust` block was added afterwards to reach the bright sheets a multiply tint could not cool. The flag has **not** been GPU-judged with `adjust` in. This arm is that judgement.
 
 **Risk:** a darker canopy could deepen the fight-frame murk (F41#3, "dark low-contrast frames"). F41#3 is in the capture to catch it.
+
+## Capture result (coordinator, 9 Nov): broken, not judged
+
+`G-sw-foliage-grade` (72e9601bf) logged 12 script errors: `Image.adjust_bsc` does not exist in Godot 4.7 (`vegetation.gd:1067`, in the `adjust` path). The arm frames show a partial, broken state and were not judged. The `adjust` path is a code bug for the build lane.
+
+A tint-only re-run (flag on, `adjust` removed) would avoid the call but was judged flat on CPU on 4 Nov. The adjust path needs a code fix before this arm can be judged.
