@@ -29,3 +29,24 @@ This was judged in the `G-floor` batch; see `G-npc-floor.md`.
 - **Veridian fainted:** still a white, wispy shape above the grass.
 
 Judged by LANE-SCOUT, 9 Nov 2026 ~08:20 UTC.
+
+## F39#21 combined score: Venn win and aftermath plus Nerissa win (`G-recheck-nerissa-win`, main d9d79ff93 with the #872 seat fix)
+
+**F39#21 combined, one-sided, GPU High: 5.69 mapped.**
+- **Per judge:** 5.77 / 5.29 / 6.01 (raw 5.4 / 5.0 / 5.6).
+- **Recorded defect:** FIXED (1 judge) or PARTIAL (2). The exploration HUD is gone during the win; only health and food remain.
+- **What pulls the score down:**
+  1. **The Nerissa win frame** (`nerissa_resolve__win-207_25`):
+     - The camera sits inside huge translucent pale-blue light-shaft slabs, with a flat orange or peach box clipping the foreground. All three judges called it an artefact.
+     - A "Put Bramblebun away" prompt sits mid-screen and competes with the reward toast.
+     - This is the coordinator's known "camera behind translucent slabs" issue.
+  2. **The reward is still a small top-right toast** with no centred moment or creature framing (3/3).
+     - One judge also read a doubled slash ("100//100") in the HUD.
+     - None of the three named the known doubled reward text explicitly.
+  3. **The flat grey foreground plane** in the Venn aftermath frame (see above).
+- **Scale note:** this is lower than the Venn-only recheck (6.66) in the paired batch above. The two numbers come from different batch scales: 6.66 was a live-vs-recheck pair, while this is a one-sided score with Nerissa's frame added.
+  - The judges' notes put most of the difference on the Nerissa frame's light-slab artefact.
+  - Against the F-tidewake 4.75, the row is better. It is not near 7.5 until the reward is staged centrally and the Nerissa camera clears the light shafts.
+- **Fit:** slope 1.204, intercept −0.734, r 0.838, anchor RMSE 0.630. Confirming batch; no warnings.
+- **Frames:** 3 in a 2x2 grid at 640x360: Venn win and aftermath from `G-recheck-f39-21` (aa23cda5b, victory_focus on) and the Nerissa win from `G-recheck-nerissa-win` (580fe172, d9d79ff93).
+- **Judged:** three fresh code-blind judges, standard JUDGE_PROMPT, 3 pinned anchor pairs. LANE-SCOUT, 9 Nov 2026 ~09:45 UTC.
