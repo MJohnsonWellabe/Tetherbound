@@ -1,6 +1,7 @@
 {
-  "updated": "2026-11-09 03:45 UTC",
+  "updated": "2026-11-09 04:55 UTC",
   "headline": [
+    "9 Nov night: GPU arm rounds now decide scene changes. Shipped: Marrow albedo (+0.91/+0.95). Shipping next: the ghost-glow fix (creatures no longer render see-through on GPU; F38#28 +0.91, F38#2 +0.67, F38#14 +0.57, F38#7 +0.53). Six parked scene arms are being retested on GPU.",
     "9 Nov: three visual rows closed on GPU Medium and High, the first closes since the re-score: F38#36 dialogue speaker framing (High 7.74 / Medium 8.08), F38#38 craft hint contrast (8.16 / 8.30) and F38#18 craft recipe text (7.95 / 8.19). F38#23 relay yard missed on Medium (7.07).",
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
     "Seventeen batch PRs merged (#847-#863). Under the new process: F38#41 +0.53, F38#5 +0.78/+0.26, F38#32 +0.28, F39#3 +0.64 and +0.14, plus the Warrens stand and Hollows loss capture fixes. CPU scores only; GPU re-score queued for tonight.",
@@ -848,22 +849,22 @@
       "lane": "LANE-MESHY · re-check judged Meshy pieces",
       "doing": "Batch 19 landing: catch-card capture fix (F38#14 stages from the weakened throw) and F39#21 verified victory captures. F41#12 parked (storm look ruling). Now: F38#37 quarry conduit glass, then F38#27, F38#3, Warrens v2, capture bugs F40#3/#20, F40#9, F40#19, F41#24, F41#3.",
       "criteria": "F38#24, F38#30, F39#2, F39#31, F13#5, F40 P2-023, F38#41, F38#5",
-      "next": "ghost-white fix for the GPU",
-      "now": "Next: one fix for the ghost-white characters and creatures on GPU, then the stale catch card, the co-op feast timing bug and the Nerissa fight bug. Warrens sky slabs parked after two no-change attempts; next try identifies the exact objects first."
+      "next": "ghost-glow READY",
+      "now": "Shipping the ghost-glow fix (glow threshold and creature rim), then the Nerissa fight-ring fix, then an albedo arm for the ghost-white Tidewake speakers."
     },
     {
       "lane": "LANE-SCOUT · refresh the queue",
       "doing": "Judging the GPU sections A, C, B (three code-blind judges, anchors, mapped) into ralph/reports/GPU-PASS/1108/, then back to queue refresh.",
       "criteria": "rows below 6.5 and unscored",
-      "next": "Marrow arm scores",
-      "now": "Medium shots judged: three Meadows rows closed. Next: the Veyra re-shoot and the GPU arms (Marrow, then the ghost-white fix) as the PC captures them."
+      "next": "parked-arm verdicts",
+      "now": "Judged: Marrow arms (B ships), ghost-glow (5 rows gain). Now judging six parked scene arms as the PC captures them."
     },
     {
       "lane": "GPU lane · owner's PC",
       "doing": "Queue done: A, C, B, E pushed to tb/gpu-frames-1108 (head 4a4705d0c). Preflight (one frame per tool, 0 nulls/blanks/sky) validating now; every later run starts with it.",
       "criteria": "see ralph/reports/COORDINATOR/briefs-1108/gpu_rescore.md",
-      "next": "F38#36 Medium",
-      "now": "Owner's PC: all 106 rows shot in 2 h. Now the Medium shots for four 7.5+ rows, a Veyra fight re-shoot, then the build lane's arms."
+      "next": "G-f41-13-charged",
+      "now": "Owner's PC: retesting six parked scene arms on GPU (charged glow, aviary windows, Surge building glow, Glass Sink, fight rim, water caps)."
     }
   ],
   "score_ledger": [
@@ -1856,6 +1857,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#871",
+      "what": "Captain Marrow's white face fixed (GPU +0.91 and +0.95, 3 of 3); two Cloudreach capture stands fixed",
+      "when": "9 Nov 04:53"
+    },
+    {
       "pr": "#870",
       "what": "co-op feast feeding race fixed; F38#36, #38, #18 recorded closed",
       "when": "9 Nov 03:43"
@@ -1874,11 +1880,6 @@
       "pr": "#868",
       "what": "Stormwood victory card on (GPU 5.61 to 7.13, 3 of 3 judges); co-op test passed with it",
       "when": "9 Nov 02:01"
-    },
-    {
-      "pr": "#867",
-      "what": "Voltarach back to the real eight-legged spider",
-      "when": "9 Nov 01:20"
     }
   ],
   "gpu_progress": "All four biomes now have fresh GPU High scores (106 rows). Four Meadows rows reach 7.5 at High and are being shot at Medium. The biggest shared defect on GPU: characters and creatures render ghost-white or with a pale see-through rim (every Meadows and Tidewake judge; Marrow's face holds back two Stormwood rows); one fix is being built for all of them. Stormwood's judges ask for a storm-light pass (phase key light, rim light, fog) and fight cameras kept out of foliage.",
