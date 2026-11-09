@@ -1,0 +1,77 @@
+{
+  "_comment": "GPU arm queue (coordinator, 9 Nov). The GPU lane re-reads this file from origin/ccr-99b76ce0-imf8zn after every section and works top to bottom, skipping entries marked done. Config-only arms are captured as overlays on the already-imported main tree (no re-import); an entry with tree != main needs its own import. Capture at High; add Medium only for a row whose High mapped score is 7.5 or above. Push frames to tb/gpu-frames-1108 as section G-<id> with a manifest, and mark nothing here: the coordinator marks entries done.",
+  "after": "section F (all four biomes) finishes",
+  "entries": [
+    {
+      "id": "f38-36-medium",
+      "row": "F38#36",
+      "kind": "medium",
+      "tree": "main",
+      "note": "High 7.74 (GPU-PASS/1108 B.md); Medium closes the row if it also reaches 7.5",
+      "done": false
+    },
+    {
+      "id": "f38-38-medium",
+      "row": "F38#38",
+      "kind": "medium",
+      "tree": "main",
+      "frames": "all row frames (job.json)",
+      "note": "High 8.16 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
+      "done": false
+    },
+    {
+      "id": "f38-18-medium",
+      "row": "F38#18",
+      "kind": "medium",
+      "tree": "main",
+      "frames": "all row frames (job.json)",
+      "note": "High 7.95 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
+      "done": false
+    },
+    {
+      "id": "f38-23-medium",
+      "row": "F38#23",
+      "kind": "medium",
+      "tree": "main",
+      "frames": "all row frames (job.json)",
+      "note": "High 7.58 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
+      "done": false
+    },
+    {
+      "id": "f41-15-arm-a",
+      "row": "F41#15",
+      "kind": "arm",
+      "tree": "main",
+      "overlay_branch": "tb/item-f41-15",
+      "overlay": "ralph/reports/LANES/ITEM-F41-15/overlay_speaker_light.json",
+      "config_file": "data/config/camera.json",
+      "flag": "conversation.speaker_light_candidate key/rim",
+      "frames": [
+        "stormwood__inventory__character__captain_marrow__dialogue",
+        "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+        "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+      ],
+      "capture": "live and arm at High (one shared live set for arms A and B)",
+      "note": "softer chest-height dialogue key (energy 0.9->0.45, offset up 0.9->0.35, rim 1.5->1.0); defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
+      "done": false
+    },
+    {
+      "id": "f41-15-arm-b",
+      "row": "F41#15",
+      "kind": "arm",
+      "tree": "main",
+      "overlay_branch": "tb/item-f41-15",
+      "overlay": "ralph/reports/LANES/ITEM-F41-15/overlay_albedo_grade.json",
+      "config_file": "data/config/character_body_flags.json",
+      "flag": "npc_vis_look_captain_a enabled (albedo only)",
+      "frames": [
+        "stormwood__inventory__character__captain_marrow__dialogue",
+        "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+        "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+      ],
+      "capture": "live and arm at High (one shared live set for arms A and B)",
+      "note": "captain_a albedo grade only; defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
+      "done": false
+    }
+  ]
+}

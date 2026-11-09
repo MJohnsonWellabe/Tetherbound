@@ -8,10 +8,10 @@ const POLICY := preload("res://scripts/ui/hud_presentation_policy.gd")
 const DELIVERY := preload("res://scripts/net/trainer_reward_delivery.gd")
 
 
-func test_victory_focus_ships_off() -> void:
+func test_victory_focus_ships_on() -> void:
 	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
-	assert_false(bool(parsed.victory_focus.enabled), "victory_focus defaults OFF")
-	assert_false(DELIVERY.victory_receipt_routed(), "trainer receipts stay in the message strip while OFF")
+	assert_true(bool(parsed.victory_focus.enabled), "victory_focus ships ON (GPU 1108 section C, 5.61 -> 7.13, 3/3)")
+	assert_true(DELIVERY.victory_receipt_routed(), "with victory_focus ON and route_trainer_receipts true, trainer receipts route to the victory Moment receipt")
 
 
 func test_focus_hides_listed_tiers_only() -> void:
