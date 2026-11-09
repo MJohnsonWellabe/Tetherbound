@@ -768,7 +768,7 @@
    "frames": "job.json frames of F41#3 (3) and F41#21 (2) = 5; then, if time allows, the full hollows_alpha fight sheet: res://tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120 --interval=1 --seed=2042 --out={OUT}",
    "capture": "live (current main) vs arm at High, seed 2042; script-error list empty; receipt shows foliage_camera_visibility line_of_sight_fade.enabled true",
    "note": "Storm-light pass arm B (ITEM-STORM-LIGHT/ARM.md): fight camera kept out of trunks and canopy via the built line-of-sight fade. Config only. Judged separately from arm A.",
-   "done": false
+   "done": true
   },
   {
    "id": "storm-core-v2",
