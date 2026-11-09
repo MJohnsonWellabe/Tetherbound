@@ -23,3 +23,6 @@ The GPU arm round (`ralph/reports/GPU-PASS/1108/G-f41-15.md`) disproves the key-
 - Arm A, with the key light moved up 0.35, energy 0.45 and rim 1.0, made no visible change.
 - Arm B, the `npc_vis_look_captain_a` albedo grade only, removed the blowout: +0.91 on F41#15 and +0.95 on F41#7, 3 of 3 judges preferring it.
 - So the bright albedo on Marrow's head and hair is the main cause, and the line above that rules the flag out is wrong.
+
+## Second correction (9 Nov ~06:20 UTC)
+The arm-B frames behind the first correction were a broken material: literal nulls made `character_model.gd:651` throw. So that correction ("bright albedo is the cause") is withdrawn too. The current lead is `ITEM-NPC-ALBEDO/CAUSE.md`: captain_a keeps the imported full-surface emission (factor 1.0), which the other NPC profiles turn off in `art.json`. `G-f41-15-arm-b-fix` and the npc-emission-off arm will test it.

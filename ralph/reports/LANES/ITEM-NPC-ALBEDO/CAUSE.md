@@ -27,8 +27,9 @@ LANE-SCOUT, 9 Nov 2026, from main ba6778f45 configs and assets. No game files we
    - `art.json` turns the imported emission off (`body_emission_enabled: false`, handled in `character_model.gd` `_shared_variant_material`) for every NPC profile above except captain_a and captain_b.
    - A body that emits its full albedo at factor 1 will bloom under Forward+ High glow. That is the most likely cause of Marrow's white head and Nerissa's pale look. This is an inference: no isolated arm has been run yet.
 2. **The graded vis1 albedos are brighter than the base, not darker**, by 4.5 to 10 luma.
-   - Arm B's win on captain_a (+0.91/+0.95, `G-f41-15.md`) therefore did not come from darkening the albedo.
-   - The mechanism is unconfirmed. The override builds a separate cached material (the albedo path is part of the cache key), so check whether that material reaches the emission opt-out or the `emission_floor` path differently from the default one.
+   - Arm B's win on captain_a (+0.91/+0.95, `G-f41-15.md`) did not come from darkening the albedo.
+   - **Update (GPU lane, ~06:20 UTC):** those arm-B frames were a broken material. Literal nulls made `character_model.gd:651` throw, which likely dropped the imported emission. So that result supports point 1, not the albedo grade. The re-shoot is `G-f41-15-arm-b-fix`.
+   - The original note continued: the mechanism is unconfirmed. The override builds a separate cached material (the albedo path is part of the cache key), so check whether that material reaches the emission opt-out or the `emission_floor` path differently from the default one.
    - The `CAUSE.md` correction in ITEM-F41-15, "bright albedo is the cause", should be read with this in mind.
 3. **The other ghosted NPCs already have emission off.**
    - Two of them, field_researcher (Adair, Iona) and grunt_c (Bex, Irva), already have their vis1 grade ON, together with `day_rim` 0.25.
