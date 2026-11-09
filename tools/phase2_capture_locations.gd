@@ -232,7 +232,14 @@ func _load_plan() -> bool:
 						push_error("phase2 locations: duplicate frame id %s" % frame_id)
 						return false
 					frame_ids[frame_id] = true
+					var row_xz := [parsed_x, parsed_z]
+					var row_heading: Variant = spot.get("view_heading_deg", null)
+					var close_xz := close_position_for(spot) if view_name == "close" else []
+					if not close_xz.is_empty():
+						row_xz = close_xz
+						row_heading = spot.get("close_view_heading_deg", row_heading)
 					_planned.append({
+					"close_position_authored": not close_xz.is_empty(),
 					"frame_id": frame_id,
 					"identity": identity,
 					"biome_id": _biome_id,
@@ -242,8 +249,8 @@ func _load_plan() -> bool:
 					"destination_index": destination_index,
 					"spot_index_in_band": spot_index,
 					"destination_display_name": str(spot.get("display_name", "")),
-					"position_xz": [parsed_x, parsed_z],
-					"view_heading_deg": spot.get("view_heading_deg", null),
+					"position_xz": row_xz,
+					"view_heading_deg": row_heading,
 					"time": time_name,
 					"view": view_name,
 					})
@@ -877,6 +884,24 @@ func _route_forward(destination_index: int) -> Vector2:
 	if current_index == _all_destinations.size() - 1:
 		direction = -direction
 	return direction if direction.length_squared() > 0.0 else Vector2(0.0, 1.0)
+
+
+## F40#20 (LANE-MESHY, 9 Nov 2026): a spot may author `close_position` [x, z]
+## (and optionally `close_view_heading_deg`) in debug_teleport_spots.json. A
+## spot that is an overlook far from its subject (Summit Eyrie stands 120 m
+## from the aviary) otherwise takes its close stands 5-12 m behind the
+## overlook, so "close" repeated the approach shot and up close was never
+## captured. Returns [] when the spot has no valid close position.
+static func close_position_for(spot: Dictionary) -> Array:
+	var value: Variant = spot.get("close_position", null)
+	if not value is Array or (value as Array).size() != 2:
+		return []
+	var parts := value as Array
+	if typeof(parts[0]) not in [TYPE_INT, TYPE_FLOAT] or typeof(parts[1]) not in [TYPE_INT, TYPE_FLOAT]:
+		return []
+	if not is_finite(float(parts[0])) or not is_finite(float(parts[1])):
+		return []
+	return [float(parts[0]), float(parts[1])]
 
 
 func _capture_forward(row: Dictionary) -> Vector2:

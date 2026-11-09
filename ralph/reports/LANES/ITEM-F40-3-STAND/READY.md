@@ -22,3 +22,24 @@ crown's rim and reads a little high over the skirt. That is a limitation of the
 authored spot on a small crown, not hidden by reframing.
 Tests test_capture_jobs_args, test_meadows_cause_flags and
 test_catalogue_capture_stand: 17 tests, 0 failed.
+
+## F40#20 (same branch, also a capture-stand bug fix, no score claim)
+Problem: the Sky Aviary (Summit Eyrie) close frame repeated the approach shot.
+The authored spot is an overlook 120 m from the dome, and close stands are taken
+5-12 m behind the spot, so "close" never got close.
+
+Fix:
+- debug_teleport_spots.json: a spot may author `close_position` [x, z]
+  (optional `close_view_heading_deg`). Summit Eyrie now has close_position
+  [141.7, 5366.9], on the forecourt path 45 m from the dome, same heading -112.04.
+- tools/phase2_capture_locations.gd: close rows use that position (static
+  `close_position_for` validates it), and the planned row records
+  `close_position_authored`. Approach rows and spots without the key are unchanged.
+- Tests: tests/test_catalogue_capture_stand.gd adds parsing and validation cases,
+  plus a check that Summit Eyrie authors a close position.
+
+Check: a CPU probe with an ad-hoc spot at that xz and heading (close view)
+selected a stand and frames the gateway arch, towers and banners up close with the
+trainer on the path. I also probed 30 m (too tight against the drum) and dropped it.
+Tests: 19 tests, 0 failed. The "Parse JSON failed" line in the log comes from
+test_capture_jobs_args feeding deliberately bad JSON.
