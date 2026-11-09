@@ -768,6 +768,16 @@ for _r in _vrows:
     if _r["sel"] in _cpu_pending:
         _v, _pr = _cpu_pending[_r["sel"]]
         _r["src"] += f"; CPU {_v:.2f} in CI {_pr}"
+# Fresh GPU High scores (8-9 Nov re-score, status.json "gpu_scores" from pull_gpu_scores.py)
+# replace every older GPU or CPU figure for their rows.
+_gpu_new = status.get("gpu_scores", {})
+for _r in _vrows:
+    if _r["sel"] in _gpu_new and _r["st"] != "met":
+        _g = _gpu_new[_r["sel"]]
+        _r["sc"] = [float(_g["gpu"])]
+        _r["src"] = f'GPU {float(_g["gpu"]):.2f} · {_g.get("src", "")}'
+        _r["bk"] = _bucket(_r["st"], _r["sc"])
+        _r["fresh"] = True
 _bk_order = [k for k, _l, _r in _BUCKETS]
 
 
@@ -878,6 +888,7 @@ _v_closed = sum(1 for r_ in _vrows if r_["bk"] == "met")
 _v_below6 = sum(1 for r_ in _vrows if r_["bk"] in ("b50", "b00"))
 _v_below7 = sum(1 for r_ in _vrows if r_["bk"] in ("b50", "b00", "b60"))
 _v_gpu = sum(1 for r_ in _vrows if r_["bk"] != "none" and str(r_["src"]).startswith("GPU"))
+_v_fresh = sum(1 for r_ in _vrows if r_.get("fresh"))
 _v_scored = sum(1 for r_ in _vrows if r_["bk"] != "none")
 _stage = ("Tier 1: raise everything below 6 to 6" if _v_below6 else
           "Tier 2: raise everything to 7" if _v_below7 else "Tier 3: take everything to 7.5")
@@ -921,7 +932,7 @@ overview_html = (
     '</div>'
     '<section class="panel"><div class="ph"><h2>Visual floor by area</h2><span class="stage">' + E(_stage) + '</span></div>'
     f'<p class="note">Each bar is every visual item in that area, by its latest score (the lower preset where two were judged). '
-    f'{_v_gpu} of {_v_scored} scores are GPU; the rest are CPU, which runs about 0.8 lower. '
+    f'{_v_gpu} of {_v_scored} scores are GPU ({_v_fresh} re-scored on GPU High on 8–9 Nov); the rest are CPU, which runs about 0.8 lower. '
     + E(status.get("gpu_progress", "")) + '</p>'
     f'<div class="legend">{_tier_legend}</div>'
     '<div class="tbl"><table class="tiers"><thead><tr><th>Area</th><th class="num">Items</th><th>Spread</th><th class="num">Closed</th><th class="num">Below 6</th><th class="num">Lowest</th></tr></thead>'
