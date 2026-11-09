@@ -666,6 +666,23 @@
       "capture": "live vs arm at High",
       "note": "LANE-SCOUT ITEM-SW-FOLIAGE-ARM/ARM.md: existing flag foliage_grade_1104 (cooler, darker, less saturated Stormwood foliage), never GPU-judged INVALID capture: Image.adjust_bsc missing in Godot 4.7 (vegetation.gd:1067); re-shoot after the build lane's fix.",
       "done": true
+    },
+    {
+      "id": "sw-foliage-grade-fixed",
+      "rows": [
+        "F41#5",
+        "F41#8",
+        "F41#3"
+      ],
+      "kind": "arm",
+      "tree": "tb/item-veg-adjust head 2ea565e63332f8b8a1259cd16990d22d28289db5 (or main plus that commit's scripts/world/vegetation.gd changes copied, if cleaner)",
+      "overlay_branch": "tb/item-veg-adjust",
+      "overlay": "ralph/reports/LANES/ITEM-VEG-ADJUST/overlay_foliage_grade.json",
+      "overlay_format": "deep merge",
+      "frames": "same frames as G-sw-foliage-grade (F41#5, F41#8, F41#3 job.json frames)",
+      "capture": "live (current main) vs arm at High; check the script-error list is empty",
+      "note": "Re-shoot of the invalid G-sw-foliage-grade after LANE-MESHY replaced the Godot 3 Image.adjust_bsc call (ITEM-VEG-ADJUST/ARM.md)",
+      "done": false
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
