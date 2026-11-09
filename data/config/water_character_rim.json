@@ -3,8 +3,9 @@
   "scope": "client_presentation: Tidewake named NPC and trainer bodies; no state, collision or other realm",
   "enabled": true,
   "colour": "#fff0d8",
-  "energy": 0.8,
-  "power": 2.2,
-  "fill_energy": 0.14,
-  "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r27 F39#27 CPU 6.03 -> 6.23 (three code-blind judges all higher, calibrated; anchor RMSE 0.79 caveat)."
+  "energy": 0.3,
+  "power": 3.5,
+  "fill_energy": 0.0,
+  "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r27 F39#27 CPU 6.03 -> 6.23 (three code-blind judges all higher, calibrated; anchor RMSE 0.79 caveat).",
+  "_why_soft": "GPU 1108 G-water-rim (9 Nov, three code-blind judges, GPU High, confirming batch; ralph/reports/GPU-PASS/1108/G-water-rim.md on tb/item-scout-1108 143b91bad): the cream additive overlay at energy 0.8 / power 2.2 / fill 0.14 lifted every Tidewake speaker toward the sand colour on Forward+ (the 'ghost' read). Soft rim (energy 0.3, power 3.5, fill 0) kept as a thin edge: F39#18 5.54 -> 7.36, F39#26 5.39 -> 7.52, F39#27 5.34 -> 6.43, F39#29 5.03 -> 6.53, 3/3 on every row (rim off scored the same or slightly lower)."
 }
