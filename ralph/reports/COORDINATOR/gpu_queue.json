@@ -331,6 +331,45 @@
       "capture": "ghost-glow live vs ghost-glow + emission-off at High",
       "note": "emission-off alone brought Marrow's face back but left a pale glowing head; ghost-glow's 1.6 threshold should stop the remaining bloom. Tests the combination that would actually ship. Skipped: G-npc-emission-off already was ghost-glow + emission-off (fa00cbf2c vs live 4f836be4a).",
       "done": true
+    },
+    {
+      "id": "npc-floor-captain",
+      "rows": [
+        "F41#7",
+        "F41#15",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); live = that ghost-glow state (reuse G-npc-albedo's live set if the frames match)",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_captain.json",
+      "config_file": "data/config/npc_ranks.json, data/config/art.json",
+      "flag": "ranks.captain.emission_floor 0.0 plus captain_a/b body_emission_enabled false",
+      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
+      "capture": "ghost-glow live vs arm at High",
+      "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (7e2f414a5): the captain rank adds a white additive emission floor of 0.18 that re-enables emission even with body_emission_enabled false",
+      "done": false
+    },
+    {
+      "id": "npc-floor-ranks",
+      "rows": [
+        "F39#18",
+        "F41#7",
+        "F41#15",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); live = that ghost-glow state (reuse G-npc-albedo's live set if the frames match)",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_ranks.json",
+      "config_file": "data/config/npc_ranks.json, data/config/art.json",
+      "flag": "captain, grunt and officer emission_floor 0.0 plus captain_a/b emission off",
+      "frames": "F39#18 (Bex and Irva grunts) plus the npc-floor-captain frames",
+      "capture": "ghost-glow live vs arm at High",
+      "note": "tests whether the same floor ghosts Team Tether grunts and officers",
+      "done": false
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
