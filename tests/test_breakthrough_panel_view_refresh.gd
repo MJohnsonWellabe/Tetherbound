@@ -72,3 +72,27 @@ func test_list_built_without_a_view_still_rebuilds() -> void:
 	assert_eq(panel.rebuilds, 1)
 	assert_eq(PANEL.view_key({}), "")
 	panel.free(); service.free()
+
+
+## CI #875 (f48_coop_loop, "peer 1 fed its own Pup ()"): "Feed creatures" went
+## back through the service's open(), whose input-owner gate refused while the
+## Session held input after a pending checkpoint; the Kitchen list stayed up.
+## The switch is now in place on the open panel.
+func test_feed_from_kitchen_switches_in_place_without_reopening() -> void:
+	var service := FakeService.new()
+	var panel := _panel(service, {"inventory": []})
+	panel.set("_mode", "cook")
+	panel._open_feed_from_kitchen()
+	assert_eq(str(panel.get("_mode")), "feed", "the open Kitchen panel shows the feed list")
+	assert_eq(panel.rebuilds, 1, "and rebuilds once for it")
+	panel.free(); service.free()
+
+
+func test_feed_switch_waits_for_a_pending_cook() -> void:
+	var service := FakeService.new()
+	var panel := _panel(service, {"inventory": []})
+	panel.set("_mode", "cook")
+	panel.set("_pending_action", "feast_cook")
+	panel._open_feed_from_kitchen()
+	assert_eq(str(panel.get("_mode")), "cook", "a cook still in flight keeps its panel")
+	panel.free(); service.free()
