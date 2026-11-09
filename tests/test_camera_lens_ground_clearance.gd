@@ -66,7 +66,8 @@ func test_off_flag_never_touches_the_arm() -> void:
 	assert_eq(_rig.spring_length, 6.0)
 
 
-func test_shipped_config_declares_the_flag_off() -> void:
+func test_shipped_config_turns_the_fix_on() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
 	var entry: Dictionary = (parsed as Dictionary).camera.get("lens_ground_clearance", {})
-	assert_eq(entry.get("enabled"), false, "ships OFF until judged")
+	assert_eq(entry.get("enabled"), true, "ships ON as a camera bug fix")
+	assert_true(str(entry.get("_why_on", "")).contains("ITEM-VENN-PLANE"), "records its cause")
