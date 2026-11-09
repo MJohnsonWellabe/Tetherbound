@@ -67,6 +67,10 @@
       "_why": "OLD-QUARRY-TERRACE-R33-0913. The retained modeled shift lantern stays with the wagon on the southeast work shoulder and lights the conduit handoff. Paired with the smaller west-face pool, the two practicals reveal distinct work zones without changing global exposure or relighting the forest."
     }
   ],
+  "conduit_head": {
+    "core": {"albedo": "#1d5a63", "emission": "#2aa9bd", "energy": 0.45},
+    "_why": "F38#37 (LANE-MESHY 8 Nov; LANE-SCOUT batch 5): at the quarry foreman's walk-up the conduit termination core (old_quarry.gd _build_conduit_head_station, a primitive CylinderMesh) filled a third of the frame as a flat unlit pale-cyan panel wrapped by black rings: with no conduit_head block it took the code defaults #62dce8 / emission #35c8df at 2.2, which saturates to a shadeless slab (the F38#41 'overexposed white primitive cylinder'). A deep Tether-teal glass albedo with a low emission keeps the live-energy read while the cylinder takes real light and shading. Placeholder-material fix at the source; Tether teal is reserved for Tether machinery, which this is."
+  },
   "arrival_scatter_clear": {
     "at": [389.0, 1790.0],
     "radius_m": 9.0,
