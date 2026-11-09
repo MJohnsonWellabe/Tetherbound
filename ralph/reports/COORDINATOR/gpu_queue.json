@@ -313,7 +313,7 @@
       "tree": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm)",
       "frames": "F38#1 job.json frames",
       "capture": "arm-state only at High; judged against the F-meadows 5.76 (the see-through faint may be the creature rim ghost-glow fixes)",
-      "done": false
+      "done": true
     },
     {
       "id": "marrow-glow-emission",
@@ -349,7 +349,7 @@
       "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
       "capture": "ghost-glow live vs arm at High",
       "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (7e2f414a5): the captain rank adds a white additive emission floor of 0.18 that re-enables emission even with body_emission_enabled false",
-      "done": false
+      "done": true
     },
     {
       "id": "npc-floor-ranks",
@@ -369,6 +369,36 @@
       "frames": "F39#18 (Bex and Irva grunts) plus the npc-floor-captain frames",
       "capture": "ghost-glow live vs arm at High",
       "note": "tests whether the same floor ghosts Team Tether grunts and officers",
+      "done": true
+    },
+    {
+      "id": "fp-exposure-115",
+      "rows": [
+        "F41#7",
+        "F41#15",
+        "F39#18",
+        "F39#26",
+        "F39#29",
+        "F38#28",
+        "F38#2",
+        "F38#23",
+        "F39#10",
+        "F39#3",
+        "F40#2",
+        "F40#12",
+        "F41#12",
+        "F41#17"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "live = main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); reuse existing ghost-glow live frames where they match",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/fp_exposure_115.json",
+      "config_file": "data/config/art.json graphics_presets Medium/High forward_plus_grade",
+      "flag": "exposure_scale 1.333 -> 1.15 (Forward+ only)",
+      "frames": "job.json frames of the listed rows (NPC dialogue, creatures, and one or two scene rows per biome so a global darkening is caught)",
+      "capture": "ghost-glow live vs arm at High",
+      "note": "Second lever named in ITEM-GHOST-GLOW/ARM.md: Forward+ multiplies realm exposure (1.35-1.42) by 1.333 (effective about 1.8-1.9), so pale hair and skin stay hot even with the glow threshold and no emission floor (Marrow). Global change: judge every row; it ships only if it gains overall without scene rows dropping.",
       "done": false
     }
   ],
