@@ -600,7 +600,7 @@
       "frames": "job.json frames of the listed rows",
       "capture": "live vs arm at High",
       "note": "LANE-SCOUT ITEM-SW-RAIN-ARM/ARM.md: soft_rain_1101 widened near streaks to 7 cm (CPU-judged); on GPU they read as solid white bars across characters",
-      "done": false
+      "done": true
     },
     {
       "id": "sw-foliage-grade",
@@ -616,8 +616,8 @@
       "overlay_format": "deep merge",
       "frames": "job.json frames of the listed rows",
       "capture": "live vs arm at High",
-      "note": "LANE-SCOUT ITEM-SW-FOLIAGE-ARM/ARM.md: existing flag foliage_grade_1104 (cooler, darker, less saturated Stormwood foliage), never GPU-judged",
-      "done": false
+      "note": "LANE-SCOUT ITEM-SW-FOLIAGE-ARM/ARM.md: existing flag foliage_grade_1104 (cooler, darker, less saturated Stormwood foliage), never GPU-judged INVALID capture: Image.adjust_bsc missing in Godot 4.7 (vegetation.gd:1067); re-shoot after the build lane's fix.",
+      "done": true
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
