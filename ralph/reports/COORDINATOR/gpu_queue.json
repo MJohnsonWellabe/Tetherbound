@@ -36,6 +36,42 @@
       "frames": "all row frames (job.json)",
       "note": "High 7.58 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
       "done": false
+    },
+    {
+      "id": "f41-15-arm-a",
+      "row": "F41#15",
+      "kind": "arm",
+      "tree": "main",
+      "overlay_branch": "tb/item-f41-15",
+      "overlay": "ralph/reports/LANES/ITEM-F41-15/overlay_speaker_light.json",
+      "config_file": "data/config/camera.json",
+      "flag": "conversation.speaker_light_candidate key/rim",
+      "frames": [
+        "stormwood__inventory__character__captain_marrow__dialogue",
+        "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+        "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+      ],
+      "capture": "live and arm at High (one shared live set for arms A and B)",
+      "note": "softer chest-height dialogue key (energy 0.9->0.45, offset up 0.9->0.35, rim 1.5->1.0); defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
+      "done": false
+    },
+    {
+      "id": "f41-15-arm-b",
+      "row": "F41#15",
+      "kind": "arm",
+      "tree": "main",
+      "overlay_branch": "tb/item-f41-15",
+      "overlay": "ralph/reports/LANES/ITEM-F41-15/overlay_albedo_grade.json",
+      "config_file": "data/config/character_body_flags.json",
+      "flag": "npc_vis_look_captain_a enabled (albedo only)",
+      "frames": [
+        "stormwood__inventory__character__captain_marrow__dialogue",
+        "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+        "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+      ],
+      "capture": "live and arm at High (one shared live set for arms A and B)",
+      "note": "captain_a albedo grade only; defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
+      "done": false
     }
   ]
 }
