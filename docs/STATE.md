@@ -8,7 +8,7 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 
 **State:**
 - 7 Nov restart: five lanes, batches #847–#856 merged (7–8 Nov). Ledger and board: https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem, source `ralph/reports/COORDINATOR/dashboard/status.json`. Per-row reports: `ralph/reports/LANES/ITEM-<ROW>/READY.md`; old-lane handoffs: `## HANDOFF 7 Nov` in `ralph/reports/LANES/<lane>/READY.md`. The Default setup script installs Godot 4.7 and Blender 4.2.3.
-- CPU scores (llvmpipe, Low/Compat, `tools/visual_judge/`) are provisional and only compare within a batch; the board mixes stale GPU and newer CPU scores. GPU re-judge (High, then Medium) is still due for every row changed since its last GPU score; a GPU score below the CPU score reopens the row.
+- CPU scores (llvmpipe, Low/Compat) only rank ideas: on 8 Nov most CPU-landed scene gains did not hold on GPU. Every row has a fresh GPU High score (8-9 Nov, `ralph/reports/GPU-PASS/1108/`). Scene arms (lighting, materials, glow, rims, foliage, water) are judged on GPU only, via the pull queue `ralph/reports/COORDINATOR/gpu_queue.json` on the owner's PC; HUD and framing may still be CPU-judged.
 - Owner, 7 Nov evening: about half of the rows tried gained nothing, so all five lanes were stopped and archived (8 Nov 00:20–00:47 UTC). Work restarts one lane, one row at a time, under the process below; add lanes only after the hit rate holds at 70%+ over five rows.
 
 **Owner rules (7 Nov):**
@@ -37,7 +37,7 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 2. **Setup first:** the next coordinator's first job is to test, then propose (`update_environment`), a Default setup script. It installs Godot 4.7-stable to `/usr/local/bin/godot` (github.com releases) and portable Blender 4.2.3 LTS (download.blender.org `Blender4.2/blender-4.2.3-linux-x64.tar.xz`) under `/opt`. Budget about 10 GB of disk per lane, and delete frames after each round.
 3. **Order:** worst-first, existing assets first (process above). Skip blocked rows.
 4. **Cap per row:** 3 judged rounds or about 3 h, or 5 rounds or about 6 h for art rows. Also stop at 7.5 or after two flat rounds.
-5. **GPU re-judge:** 8 Nov sections A/C/B/E captured on the owner's PC (High, `tb/gpu-frames-1108`); judged by LANE-SCOUT into `ralph/reports/GPU-PASS/1108/`. GPU runs start with `vb_1108.ps1 -Preflight` (one frame per tool, 0 nulls/blanks/sky). Owner 8 Nov on GPU: the creature glow looks fantastic; keep it. F41#12 night stays the storm look (WO-F10-08).
+5. **GPU loop (9 Nov):** capture arms with the overlay merge receipts and a per-arm script-error check (two arms were invalid: a null merge and a missing `Image.adjust_bsc`). Shipped on GPU wins: ghost-glow (#873), charged_1105, Tidewake soft rim (#874, +1.1 to +2.1); closed F38#36/#38/#18, F40#12. Owner 8 Nov: the creature glow looks fantastic; keep it. F41#12 night stays the storm look (WO-F10-08).
 6. **F38#30 Warrens:** re-seat the hillside shell into the terrain, keeping the entrance and route. This unblocks F38#24, so move both into the QUEUE.
 7. **F41#3:** keep combat spacing unchanged. Fix the look with a fade or clip tweak.
 8. **F49 route saves:** don't commit them to main; a lane re-generates any single save when needed.

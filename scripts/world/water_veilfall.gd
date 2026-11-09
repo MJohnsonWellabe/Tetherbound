@@ -763,6 +763,14 @@ func combat_arena_wall_bound_at(x: float, z: float) -> float:
 	return -1.0
 
 
+## F39#21 camera: fights inside the arena_bounds rooms ask CombatManager's fight
+## camera to keep its lens's sight line to both fighters clear of world geometry
+## and of this chamber's camera-only boxes (the containment crystal, the side
+## liners). water_veilfall.json `fight_camera_world_sight`.
+func fight_camera_world_sight_at(x: float, z: float) -> bool:
+	return bool(rules.get("fight_camera_world_sight", false)) and combat_arena_bounds_at(x, z) >= 0.0
+
+
 ## Pure form: the ring radius a room rect affords at interior-local `local`
 ## (x, z), or -1.0 outside it; never below 0.5.
 static func room_arena_bound(local: Vector2, room: Dictionary, side_margin: float, end_margin: float) -> float:
