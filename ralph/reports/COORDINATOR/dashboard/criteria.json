@@ -1,7 +1,7 @@
 {
- "generated_at": "7 Nov 2026 (evening)",
- "main_sha": "972670fae",
- "batch4_sha": "#863 merged; batch 18 in full CI",
+ "generated_at": "8 Nov 2026 23:30 UTC",
+ "main_sha": "#870 merge",
+ "batch4_sha": "none (batch 24 #870 merged)",
  "rows": [
   {
    "id": "F01",
@@ -4160,10 +4160,10 @@
     },
     {
      "text": "F38 (1) top-20 item P2-095 craft recipe text: Long recipe names and material preview lines are clipped in the crafting list \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Cloud yardstick 1 Nov (GPU High frames tb/gpu-frames-1101 8ebb96dd4; three code-blind judges, calibrate.py): craft icons + readable_r3 ON 7.36 vs main 6.80 (+0.56), over 7, lands ON. Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 48, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
+     "status": "met",
+     "evidence": "GPU High 7.95 / Medium 8.19 mapped, three code-blind judges with anchors (ralph/reports/GPU-PASS/1108/G-f38-medium.md and the High section, LANE-SCOUT 9 Nov). Cloud yardstick 1 Nov (GPU High frames tb/gpu-frames-1101 8ebb96dd4; three code-blind judges, calibrate.py): craft icons + readable_r3 ON 7.36 vs main 6.80 (+0.56), over 7, lands ON. Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 48, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
      "gap": "0.14 to 7.5: controller face-button glyph footer, 5+ visible rows, higher-contrast Missing tags.",
-     "note": "Counted once (owner 24 Oct board math): touches meadows, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Closed 9 Nov 2026 on GPU Medium and High (both 7.5 or above).",
      "parent": "F38#1",
      "subject": "P2-095",
      "audit_index": 1,
@@ -4585,10 +4585,10 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-078 dialogue speaker occlusion: Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "GPU High 1 Nov batch-1 dialogue (same fixture both sides), cloud yardstick (ralph/reports/CLOUD-JUDGE/BATCH1-DIALOGUE/): 5.50 -> 6.26, camera twoshot_v2 + speaker light landing ON. Prior: GPU High 1 Nov main frames, cloud yardstick (3 judges, 3 anchor pairs, calibrated; ralph/reports/CLOUD-JUDGE/MEADOWS-MAIN-1101/): 5.26. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 24, lane tb/x04-meadows. Code-blind direct-start dialogue fixture; normal interaction needs reproduction. Both text panels remain readable. Captain Field has a large black-and-white creature occupying the right side; the spea",
+     "status": "met",
+     "evidence": "GPU High 7.74 / Medium 8.08 mapped, three code-blind judges with anchors (ralph/reports/GPU-PASS/1108/G-f38-medium.md and the High section, LANE-SCOUT 9 Nov). GPU High 1 Nov batch-1 dialogue (same fixture both sides), cloud yardstick (ralph/reports/CLOUD-JUDGE/BATCH1-DIALOGUE/): 5.50 -> 6.26, camera twoshot_v2 + speaker light landing ON. Prior: GPU High 1 Nov main frames, cloud yardstick (3 judges, 3 anchor pairs, calibrated; ralph/reports/CLOUD-JUDGE/MEADOWS-MAIN-1101/): 5.26. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 24, lane tb/x04-meadows. Code-blind direct-start dialogue fixture; normal interaction needs reproduction. Both text panels remain readable. Captain Field has a large black-and-white creature occupying the right side; the spea",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Closed 9 Nov 2026 on GPU Medium and High (both 7.5 or above).",
      "parent": "F38#2",
      "subject": "P2-078",
      "audit_index": 2,
@@ -4623,10 +4623,10 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-096 craft action hint contrast: Craft and leave button hints are faint gray on the dark translucent craft panel \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "GPU High 1 Nov main frames, cloud yardstick (3 judges, 3 anchor pairs, calibrated; ralph/reports/CLOUD-JUDGE/MEADOWS-MAIN-1101/): 6.49. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 24, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
+     "status": "met",
+     "evidence": "GPU High 8.16 / Medium 8.30 mapped, three code-blind judges with anchors (ralph/reports/GPU-PASS/1108/G-f38-medium.md and the High section, LANE-SCOUT 9 Nov). GPU High 1 Nov main frames, cloud yardstick (3 judges, 3 anchor pairs, calibrated; ralph/reports/CLOUD-JUDGE/MEADOWS-MAIN-1101/): 6.49. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 24, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Counted once (owner 24 Oct board math): touches meadows, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Closed 9 Nov 2026 on GPU Medium and High (both 7.5 or above).",
      "parent": "F38#2",
      "subject": "P2-096",
      "audit_index": 2,

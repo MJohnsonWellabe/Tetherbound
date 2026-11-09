@@ -533,10 +533,13 @@ func _frames(count: int) -> void:
 
 ## Position plus the world's ground height under it, so a frame whose camera
 ## is below or inside terrain is visible in frames.json without the image.
-func _pose(node: Node3D) -> Array:
-	if not is_instance_valid(node):
+## Untyped on purpose: a typed Node3D parameter rejects a freed body before
+## the validity check runs (Nerissa's last creature leaves at the win, and the
+## lifecycle frame's enemy pose raised a script error).
+func _pose(node) -> Array:
+	if not is_instance_valid(node) or not node is Node3D:
 		return []
-	var at := node.global_position
+	var at: Vector3 = (node as Node3D).global_position
 	var ground := float(current_scene.call("ground_height_at", at.x, at.z)) if current_scene != null and current_scene.has_method("ground_height_at") else NAN
 	return [snappedf(at.x, 0.01), snappedf(at.y, 0.01), snappedf(at.z, 0.01), snappedf(ground, 0.01)]
 

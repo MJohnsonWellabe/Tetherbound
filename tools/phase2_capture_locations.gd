@@ -49,6 +49,13 @@ const SWIM_CONFIG := "res://data/config/water_swimming.json"
 ## terrain stand, or its production camera, that has solid geometry just over
 ## it (the Burrow Warrens earth bank's hollow shell swallowed walk_02/walk_03).
 const STAND_GUARD_CONFIG := "res://data/config/capture_stands.json"
+## F40#3 (LANE-MESHY, 9 Nov 2026): the last two approach offsets are tried only
+## after every wider one fails. Cloudreach's floating crowns (Old Wind
+## Observatory, about 20 m across; Broken Skyroad Arch, about 15 m) have no
+## ground 16-48 m back from the authored spot, so every candidate was refused
+## at travel (ground_height_at is NaN over the void) and the frame was lost.
+## Frames that already found a stand keep it: the order is unchanged.
+const APPROACH_STAND_OFFSETS_M := [32.0, 24.0, 40.0, 16.0, 48.0, 12.0, 8.0]
 const BUILD_TIMEOUT_MSEC := 900000
 const BOOT_SETTLE_FRAMES := 24
 const ARRIVE_FRAMES := 20
@@ -225,7 +232,14 @@ func _load_plan() -> bool:
 						push_error("phase2 locations: duplicate frame id %s" % frame_id)
 						return false
 					frame_ids[frame_id] = true
+					var row_xz := [parsed_x, parsed_z]
+					var row_heading: Variant = spot.get("view_heading_deg", null)
+					var close_xz := close_position_for(spot) if view_name == "close" else []
+					if not close_xz.is_empty():
+						row_xz = close_xz
+						row_heading = spot.get("close_view_heading_deg", row_heading)
 					_planned.append({
+					"close_position_authored": not close_xz.is_empty(),
 					"frame_id": frame_id,
 					"identity": identity,
 					"biome_id": _biome_id,
@@ -235,8 +249,8 @@ func _load_plan() -> bool:
 					"destination_index": destination_index,
 					"spot_index_in_band": spot_index,
 					"destination_display_name": str(spot.get("display_name", "")),
-					"position_xz": [parsed_x, parsed_z],
-					"view_heading_deg": spot.get("view_heading_deg", null),
+					"position_xz": row_xz,
+					"view_heading_deg": row_heading,
 					"time": time_name,
 					"view": view_name,
 					})
@@ -464,7 +478,7 @@ func _capture_row(row: Dictionary) -> void:
 	var selected_spec: Dictionary = {}
 	var rejected: Array[Dictionary] = []
 	var offsets: Array = (row.get("stand_offsets_m",
-		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]) as Array).duplicate()
+		APPROACH_STAND_OFFSETS_M if str(row.view) == "approach" else [5.0, 8.0, 12.0]) as Array).duplicate()
 	for extra: Variant in stand_guard_offsets(STAND_GUARD_CONFIG):
 		if not offsets.has(float(extra)):
 			offsets.append(float(extra))
@@ -870,6 +884,24 @@ func _route_forward(destination_index: int) -> Vector2:
 	if current_index == _all_destinations.size() - 1:
 		direction = -direction
 	return direction if direction.length_squared() > 0.0 else Vector2(0.0, 1.0)
+
+
+## F40#20 (LANE-MESHY, 9 Nov 2026): a spot may author `close_position` [x, z]
+## (and optionally `close_view_heading_deg`) in debug_teleport_spots.json. A
+## spot that is an overlook far from its subject (Summit Eyrie stands 120 m
+## from the aviary) otherwise takes its close stands 5-12 m behind the
+## overlook, so "close" repeated the approach shot and up close was never
+## captured. Returns [] when the spot has no valid close position.
+static func close_position_for(spot: Dictionary) -> Array:
+	var value: Variant = spot.get("close_position", null)
+	if not value is Array or (value as Array).size() != 2:
+		return []
+	var parts := value as Array
+	if typeof(parts[0]) not in [TYPE_INT, TYPE_FLOAT] or typeof(parts[1]) not in [TYPE_INT, TYPE_FLOAT]:
+		return []
+	if not is_finite(float(parts[0])) or not is_finite(float(parts[1])):
+		return []
+	return [float(parts[0]), float(parts[1])]
 
 
 func _capture_forward(row: Dictionary) -> Vector2:

@@ -18,6 +18,11 @@ var _duel_generation := 0
 var _preparing_duel := false
 ## A guest's first view is an async request: the list built empty waits for it.
 var _awaiting_view := false
+## The personal view this list was built from. A guest's view answers
+## asynchronously, and the first one it reads can predate the action that just
+## settled (the cook's dish not yet in its inventory), so a later view that
+## differs must rebuild the list too, not only a list built with no view.
+var _built_view_key := ""
 ## A guest's cook/feed refused only for the moment (its own earlier owner
 ## checkpoint, such as the cook just before this feed, is still settling) is
 ## sent again with the same original intent. Bounded; then the row is released
@@ -86,6 +91,7 @@ func _rebuild() -> void:
 			_button("Retry original transaction", func() -> void: _retry_retained_feast(retained.intent))
 	var state: Dictionary = _service.call("view")
 	_awaiting_view = state.is_empty()
+	_built_view_key = view_key(state)
 	if state.is_empty():
 		_message.text = "Character transaction reconciliation is not ready."
 	elif _mode == "duel":
@@ -306,11 +312,19 @@ func _release_for_retry() -> void:
 	_pending_intent = {}
 	if is_instance_valid(_message): _message.text = "Your earlier action is still saving. Press again to retry."
 
-## The producer's personal view arrived. Rebuild only a list that was built
-## without one; a shown list keeps its buttons (and re-reading cannot loop).
+## The producer's personal view arrived. Rebuild a list that was built without
+## one, or from an older view whose contents differ (the guest race in
+## smoke_net_f48_coop_loop: the feed list was built from the pre-cook view, so
+## its Pup row had no dish to offer and the post-cook view never refreshed it).
+## Never mid-action (completion rebuilds) and never for an identical view, so a
+## shown list keeps its buttons and re-reading cannot loop.
 func view_arrived() -> void:
-	if visible and _awaiting_view and _pending_action.is_empty() and not _preparing_duel:
+	if not visible or not _pending_action.is_empty() or _preparing_duel: return
+	if _awaiting_view or view_key(_service.call("view") if is_instance_valid(_service) else {}) != _built_view_key:
 		_rebuild()
+
+static func view_key(state: Dictionary) -> String:
+	return "" if state.is_empty() else JSON.stringify(state).sha256_text()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and is_cancel(event):
