@@ -1,0 +1,19 @@
+{
+  "data/config/stormwood_surge.json": {
+    "presentation": {
+      "soft_rain_1101": {
+        "overlay": {
+          "rain": {
+            "streak_width_m": 0.03,
+            "streak_length_m": 1.4,
+            "alpha": 0.2,
+            "scale_max": 1.1,
+            "near_fade_m": [3.5, 7.0],
+            "far_layer": {"streak_width_m": 0.025, "alpha": 0.12},
+            "curtain_layer": {"streak_width_m": 0.08, "alpha": 0.08}
+          }
+        }
+      }
+    }
+  }
+}
