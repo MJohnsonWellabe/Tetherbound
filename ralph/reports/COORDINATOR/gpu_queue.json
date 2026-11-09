@@ -583,6 +583,41 @@
       "capture": "live vs arm at High",
       "note": "LANE-SCOUT ITEM-F38-32-ARM/ARM.md: move the trail stores off the camera-to-player line and the bench off the camp bed",
       "done": true
+    },
+    {
+      "id": "sw-rain-thin",
+      "rows": [
+        "F41#11",
+        "F41#17",
+        "F41#20",
+        "F41#8"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "tb/item-scout-1108",
+      "overlay": "ralph/reports/LANES/ITEM-SW-RAIN-ARM/overlay_rain_thin.json",
+      "overlay_format": "deep merge",
+      "frames": "job.json frames of the listed rows",
+      "capture": "live vs arm at High",
+      "note": "LANE-SCOUT ITEM-SW-RAIN-ARM/ARM.md: soft_rain_1101 widened near streaks to 7 cm (CPU-judged); on GPU they read as solid white bars across characters",
+      "done": false
+    },
+    {
+      "id": "sw-foliage-grade",
+      "rows": [
+        "F41#5",
+        "F41#8",
+        "F41#3"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "tb/item-scout-1108",
+      "overlay": "ralph/reports/LANES/ITEM-SW-FOLIAGE-ARM/overlay_foliage_grade_on.json",
+      "overlay_format": "deep merge",
+      "frames": "job.json frames of the listed rows",
+      "capture": "live vs arm at High",
+      "note": "LANE-SCOUT ITEM-SW-FOLIAGE-ARM/ARM.md: existing flag foliage_grade_1104 (cooler, darker, less saturated Stormwood foliage), never GPU-judged",
+      "done": false
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
