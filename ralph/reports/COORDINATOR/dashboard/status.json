@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09 18:30 UTC",
+  "updated": "2026-11-09 19:50 UTC",
   "headline": [
     "9 Nov overnight, GPU-decided: Tidewake character rim softened (speakers no longer ghost-white: F39#18 +1.87, F39#26 +2.13, F39#27 +1.09, F39#29 +1.50, all 3/3), ghost-glow fix (creatures no longer see-through: +0.29 to +0.91 on five rows), Stormwood charged glow (+0.61), victory card confirmed on Tidewake (+0.96), Nerissa fight fixed, four rows closed (F38#36, F38#38, F38#18, F40#12).",
     "9 Nov: three visual rows closed on GPU Medium and High, the first closes since the re-score: F38#36 dialogue speaker framing (High 7.74 / Medium 8.08), F38#38 craft hint contrast (8.16 / 8.30) and F38#18 craft recipe text (7.95 / 8.19). F38#23 relay yard missed on Medium (7.07).",
@@ -849,8 +849,8 @@
       "lane": "LANE-MESHY · re-check judged Meshy pieces",
       "doing": "Batch 19 landing: catch-card capture fix (F38#14 stages from the weakened throw) and F39#21 verified victory captures. F41#12 parked (storm look ruling). Now: F38#37 quarry conduit glass, then F38#27, F38#3, Warrens v2, capture bugs F40#3/#20, F40#9, F40#19, F41#24, F41#3.",
       "criteria": "F38#24, F38#30, F39#2, F39#31, F13#5, F40 P2-023, F38#41, F38#5",
-      "next": "feast race READY",
-      "now": "Fixing the co-op feast timing race at the root (it keeps failing CI intermittently). Its renders now go to the owner's PC (first: the Venn aftermath grey-plane check)."
+      "next": "Venn plane bug fix",
+      "now": "Identifying the Venn aftermath grey plane by ray-pick, then F40#9 NPC posts and the rest; the Stormwood foliage crash is fixed and its arm is on the GPU."
     },
     {
       "lane": "LANE-SCOUT · refresh the queue",
@@ -863,8 +863,8 @@
       "lane": "GPU lane · owner's PC",
       "doing": "Queue done: A, C, B, E pushed to tb/gpu-frames-1108 (head 4a4705d0c). Preflight (one frame per tool, 0 nulls/blanks/sky) validating now; every later run starts with it.",
       "criteria": "see ralph/reports/COORDINATOR/briefs-1108/gpu_rescore.md",
-      "next": "G-check-venn-plane",
-      "now": "Owner's PC: renders the build lane's check captures as well as GPU arms (Venn aftermath grey plane now)."
+      "next": "G-sw-foliage-grade-fixed",
+      "now": "Owner's PC: Stormwood foliage grade re-shoot (crash fixed), then the next arms and checks."
     }
   ],
   "score_ledger": [
@@ -1857,6 +1857,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#877",
+      "what": "co-op feast feeding race fixed at its root (the intermittent CI failure)",
+      "when": "9 Nov 19:47"
+    },
+    {
       "pr": "#876",
       "what": "centred victory hero card (Tidewake +0.71, 3/3) and Nerissa's doubled reward text fixed",
       "when": "9 Nov 18:27"
@@ -1875,11 +1880,6 @@
       "pr": "closed",
       "what": "F40#12 Cloudreach dialogue speaker visibility closed on GPU (High 7.73 / Medium 7.59)",
       "when": "9 Nov 09:37"
-    },
-    {
-      "pr": "#873",
-      "what": "ghost-glow fix ON (no see-through creatures on GPU) and Stormwood charged creature glow ON; Marrow albedo flag reverted",
-      "when": "9 Nov 08:18"
     }
   ],
   "gpu_progress": "All four biomes now have fresh GPU High scores (106 rows). Four Meadows rows reach 7.5 at High and are being shot at Medium. The biggest shared defect on GPU: characters and creatures render ghost-white or with a pale see-through rim (every Meadows and Tidewake judge; Marrow's face holds back two Stormwood rows); one fix is being built for all of them. Stormwood's judges ask for a storm-light pass (phase key light, rim light, fog) and fight cameras kept out of foliage.",
