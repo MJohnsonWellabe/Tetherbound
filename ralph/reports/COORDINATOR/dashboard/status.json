@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-09 04:55 UTC",
+  "updated": "2026-11-09 06:35 UTC",
   "headline": [
-    "9 Nov night: GPU arm rounds now decide scene changes. Shipped: Marrow albedo (+0.91/+0.95). Shipping next: the ghost-glow fix (creatures no longer render see-through on GPU; F38#28 +0.91, F38#2 +0.67, F38#14 +0.57, F38#7 +0.53). Six parked scene arms are being retested on GPU.",
+    "9 Nov night: GPU arm rounds now decide scene changes. Shipping: the ghost-glow fix (creatures no longer render see-through on GPU; F38#28 +0.91, F38#2 +0.67, F38#14 +0.57, F38#7 +0.53) and the Stormwood charged creature glow (F41#13 +0.61). Marrow's albedo flag landed on a GPU round later found invalid (a capture merge bug); it is being re-shot to keep or revert.",
     "9 Nov: three visual rows closed on GPU Medium and High, the first closes since the re-score: F38#36 dialogue speaker framing (High 7.74 / Medium 8.08), F38#38 craft hint contrast (8.16 / 8.30) and F38#18 craft recipe text (7.95 / 8.19). F38#23 relay yard missed on Medium (7.07).",
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
     "Seventeen batch PRs merged (#847-#863). Under the new process: F38#41 +0.53, F38#5 +0.78/+0.26, F38#32 +0.28, F39#3 +0.64 and +0.14, plus the Warrens stand and Hollows loss capture fixes. CPU scores only; GPU re-score queued for tonight.",
@@ -1858,7 +1858,7 @@
   "landed_recent": [
     {
       "pr": "#871",
-      "what": "Captain Marrow's white face fixed (GPU +0.91 and +0.95, 3 of 3); two Cloudreach capture stands fixed",
+      "what": "Captain Marrow albedo grade ON (its GPU round turned out invalid; a re-shoot decides keep or revert); two Cloudreach capture stands fixed",
       "when": "9 Nov 04:53"
     },
     {
