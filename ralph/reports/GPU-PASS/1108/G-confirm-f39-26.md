@@ -36,3 +36,9 @@ The rimSoft gain itself stands: +1.9 and +2.1, 3/3, within-batch. It should stil
 **F39#26 data fixes** (no camera change):
 - The Adair portrait mismatch.
 - The Iona-frame green slab and the floating Aquaryn.
+
+## Medium frames (`G-confirm-f39-26-medium`, f7e53f00): not judged
+
+The owner's 31 Oct rule is to judge High first and add Medium only for an arm whose High mapped score is 7.5 or above. The High one-sided scores above are 7.07 and 6.88, so a Medium score cannot close either row.
+
+The frames stay on the branch. I'll judge them together with High if a later arm, such as a tighter dialogue shot or the Adair and slab fixes, brings High to 7.5 or above.
