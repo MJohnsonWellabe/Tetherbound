@@ -44,3 +44,25 @@ Rain is a secondary complaint on these rows in any case.
   - The black pools read as voids or holes.
   - The trunks are flat pink-brown.
   - The bears are salmon-pink.
+
+## Scout note: next config arms (not pushed)
+
+Scout arms so far:
+
+| Arm | Result |
+|---|---|
+| F41#1 banners | 0.00 (the colour key never rendered) |
+| F38#32 camp | −0.35 |
+| Stormwood rain | flat |
+| Stormwood foliage | broken (`adjust_bsc` code bug) |
+
+None was above the 0.5 bar. The top remaining Stormwood asks are not cleanly config:
+- **Fenn and Oswin share one model and portrait:** an appearance variant needs new art.
+- **The pink bears:** a creature palette change, which is creature art.
+- **The flat magenta telegraphs:** code.
+
+The one config lever left is the black "void" pools: `stormwood_ground_finish.json` `wet_gloss`, currently roughness 0.55 and specular 0.2. On CPU those pools were dulled because they mirrored the sky as lilac slabs; on GPU they now read as black holes. A middle value (about roughness 0.38, specular 0.3) is a candidate. Two things make it low-confidence:
+- I have not confirmed that `wet_gloss` is what renders those pools; `ground_zones` is OFF.
+- The expected gain is under 0.5.
+
+I am holding it unless the coordinator wants it queued. Judging continues as sections land.
