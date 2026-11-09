@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09 19:50 UTC",
+  "updated": "2026-11-09 21:30 UTC",
   "headline": [
     "9 Nov overnight, GPU-decided: Tidewake character rim softened (speakers no longer ghost-white: F39#18 +1.87, F39#26 +2.13, F39#27 +1.09, F39#29 +1.50, all 3/3), ghost-glow fix (creatures no longer see-through: +0.29 to +0.91 on five rows), Stormwood charged glow (+0.61), victory card confirmed on Tidewake (+0.96), Nerissa fight fixed, four rows closed (F38#36, F38#38, F38#18, F40#12).",
     "9 Nov: three visual rows closed on GPU Medium and High, the first closes since the re-score: F38#36 dialogue speaker framing (High 7.74 / Medium 8.08), F38#38 craft hint contrast (8.16 / 8.30) and F38#18 craft recipe text (7.95 / 8.19). F38#23 relay yard missed on Medium (7.07).",
@@ -1857,6 +1857,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "batch 32",
+      "what": "camera keeps its lens at least 1 m off the ground (the Venn aftermath 'grey plane' was a dune face 0.35 m from the lens)",
+      "when": "9 Nov, in CI"
+    },
+    {
       "pr": "#877",
       "what": "co-op feast feeding race fixed at its root (the intermittent CI failure)",
       "when": "9 Nov 19:47"
@@ -1875,11 +1880,6 @@
       "pr": "#874",
       "what": "Tidewake characters no longer ghost-white: character rim softened (GPU +1.09 to +2.13 on four rows, 3 of 3)",
       "when": "9 Nov 10:25"
-    },
-    {
-      "pr": "closed",
-      "what": "F40#12 Cloudreach dialogue speaker visibility closed on GPU (High 7.73 / Medium 7.59)",
-      "when": "9 Nov 09:37"
     }
   ],
   "gpu_progress": "All four biomes now have fresh GPU High scores (106 rows). Four Meadows rows reach 7.5 at High and are being shot at Medium. The biggest shared defect on GPU: characters and creatures render ghost-white or with a pale see-through rim (every Meadows and Tidewake judge; Marrow's face holds back two Stormwood rows); one fix is being built for all of them. Stormwood's judges ask for a storm-light pass (phase key light, rim light, fog) and fight cameras kept out of foliage.",
