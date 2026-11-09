@@ -1,0 +1,37 @@
+[
+ {
+  "row": "F39#21",
+  "item": "P2-103",
+  "frame": "tidewake__fight__nerissa_resolve__win-207_25",
+  "arm": "arm",
+  "tree": "d9d79ff93083111331da64f41b3656ac28470c11",
+  "preset": "High",
+  "tool": "tools/phase2_capture_tidewake_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_tidewake_fights.gd",
+   "--",
+   "--trainer=water_trainer_nerissa",
+   "--out={OUT}",
+   "--interval=8.0",
+   "--max-frames=200",
+   "--level=80",
+   "--pilot=MASHER",
+   "--cap-s=300",
+   "--tells-per-opponent=1",
+   "--hits-per-opponent=1",
+   "--verified-victory-lifecycle",
+   "--expected-resolution=1920x1080",
+   "--seed=2042"
+  ],
+  "note": "arm = main d9d79ff93 plus COORDINATOR/overlays/occlusion_fade_off.json (occlusion_fade.enabled false), --max-frames=200. Published for the win beat, match: semantic. Live is G-recheck-nerissa-win (same tree); the fight is not deterministic, so the camera position can differ.",
+  "match": "semantic",
+  "path": "G-occlusion-fade-off-nerissa/F39-21/arm/High/tidewake__fight__nerissa_resolve__win-207_25.jpg",
+  "sky_fraction": 0.548,
+  "lower_edges": 0.1156
+ }
+]
