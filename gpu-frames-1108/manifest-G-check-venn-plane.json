@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "tidewake__fight__venn__win.png",
+  "preset": "High",
+  "tree": "bdee5774901cf8ec946863735d0d172e1e086f74",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-check-venn-plane/High/tidewake__fight__venn__win.png",
+  "sky_fraction": 0.18,
+  "lower_edges": 0.0658,
+  "script_errors": 0,
+  "note": "head bdee57749, Forward+/Vulkan on GTX 1060 (the entry's CPU opengl3 args dropped, as for all High and Medium captures), --fullscreen, seed 2042. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__aftermath.png",
+  "preset": "High",
+  "tree": "bdee5774901cf8ec946863735d0d172e1e086f74",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-check-venn-plane/High/tidewake__fight__venn__aftermath.png",
+  "sky_fraction": 0.178,
+  "lower_edges": 0.078,
+  "script_errors": 0,
+  "note": "head bdee57749, Forward+/Vulkan on GTX 1060 (the entry's CPU opengl3 args dropped, as for all High and Medium captures), --fullscreen, seed 2042. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__receipt-expired.png",
+  "preset": "High",
+  "tree": "bdee5774901cf8ec946863735d0d172e1e086f74",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-check-venn-plane/High/tidewake__fight__venn__receipt-expired.png",
+  "sky_fraction": 0.162,
+  "lower_edges": 0.1523,
+  "script_errors": 0,
+  "note": "head bdee57749, Forward+/Vulkan on GTX 1060 (the entry's CPU opengl3 args dropped, as for all High and Medium captures), --fullscreen, seed 2042. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__win.png",
+  "preset": "Medium",
+  "tree": "bdee5774901cf8ec946863735d0d172e1e086f74",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-check-venn-plane/Medium/tidewake__fight__venn__win.png",
+  "sky_fraction": 0.154,
+  "lower_edges": 0.0849,
+  "script_errors": 0,
+  "note": "head bdee57749, Forward+/Vulkan on GTX 1060 (the entry's CPU opengl3 args dropped, as for all High and Medium captures), --fullscreen, seed 2042. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__aftermath.png",
+  "preset": "Medium",
+  "tree": "bdee5774901cf8ec946863735d0d172e1e086f74",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-check-venn-plane/Medium/tidewake__fight__venn__aftermath.png",
+  "sky_fraction": 0.152,
+  "lower_edges": 0.0729,
+  "script_errors": 0,
+  "note": "head bdee57749, Forward+/Vulkan on GTX 1060 (the entry's CPU opengl3 args dropped, as for all High and Medium captures), --fullscreen, seed 2042. PNGs as captured."
+ },
+ {
+  "frame": "tidewake__fight__venn__receipt-expired.png",
+  "preset": "Medium",
+  "tree": "bdee5774901cf8ec946863735d0d172e1e086f74",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-check-venn-plane/Medium/tidewake__fight__venn__receipt-expired.png",
+  "sky_fraction": 0.139,
+  "lower_edges": 0.1511,
+  "script_errors": 0,
+  "note": "head bdee57749, Forward+/Vulkan on GTX 1060 (the entry's CPU opengl3 args dropped, as for all High and Medium captures), --fullscreen, seed 2042. PNGs as captured."
+ }
+]
