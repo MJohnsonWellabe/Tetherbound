@@ -1,0 +1,168 @@
+{
+ "_comment": "LANE-SCOUT, 9 Nov 2026: parked, flag-off scene arms worth one GPU live-vs-arm capture, in priority order. Same fields as ralph/reports/COORDINATOR/gpu_queue.json entries on ccr-99b76ce0-imf8zn. overlay is either a committed overlay path or an inline config overlay (file -> keys) to write as a temporary overlay JSON. Capture at High; add Medium only for a row whose High mapped score is 7.5 or above. Branch heads were read at the time of writing.",
+ "entries": [
+  {
+   "id": "f41-13-charged",
+   "row": "F41#13",
+   "kind": "arm",
+   "tree": "main",
+   "overlay_branch": null,
+   "overlay": {
+    "data/config/creature_surface_finishes.json": {
+     "charged_1105": {
+      "enabled": true
+     }
+    }
+   },
+   "config_file": "data/config/creature_surface_finishes.json",
+   "flag": "charged_1105 enabled (Fulgocobra/Stormraven accent glow 0.42/0.36 -> 0.9/0.8, rim up)",
+   "frames": [
+    "stormwood__fulgocobra__idle",
+    "stormwood__stormraven__idle"
+   ],
+   "capture": "live and arm at High",
+   "note": "Parked by VIS-STORMWOOD 5 Nov: CPU changed 0.16% of pixels, so it was never judged. It is an emissive accent, and CPU Low has no glow. On High, glow should make the charge visible, which is the judges' ask on this row (lowest Stormwood row, GPU High 5.59, PRESENT 3/3 'no visible charge glow or eyes'). Best capture it on top of the ghost-glow overlay if that ships, since glow threshold 1.6 decides whether the accent blooms. Priority 1."
+  },
+  {
+   "id": "f40-2-windows",
+   "row": "F40#2",
+   "kind": "arm",
+   "tree": "main",
+   "overlay_branch": null,
+   "overlay": {
+    "data/config/cloudreach_f40_items.json": {
+     "window_night_energy": 2.4
+    }
+   },
+   "config_file": "data/config/cloudreach_f40_items.json",
+   "flag": "window_night_energy 0.8 -> 2.4 (top-level key, summit aviary windows)",
+   "frames": [
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach"
+   ],
+   "capture": "live and arm at High (night frame is the test; day approach as the no-change control)",
+   "note": "ITEM-F40-2 r2, never committed or judged: CPU showed no visible change because window emission does not bloom on CPU Low; the READY says 'it may read on the GPU'. Judges at GPU High (F40#2 6.15) and in F-cloudreach say the night silhouette stays small and dark. Config-only, no import. Priority 2."
+  },
+  {
+   "id": "f41-2-building-glow",
+   "row": "F41#2",
+   "kind": "arm",
+   "tree": "main",
+   "overlay_branch": null,
+   "overlay": {
+    "data/config/stormwood_surge.json": {
+     "presentation": {
+      "building_glow_1104": {
+       "enabled": true
+      }
+     }
+    }
+   },
+   "config_file": "data/config/stormwood_surge.json",
+   "flag": "presentation.building_glow_1104 enabled (Building-phase in-cloud sheet lightning reaching the horizon band, glow_low 0)",
+   "frames": [
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm",
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building",
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break"
+   ],
+   "capture": "live and arm at High",
+   "note": "ITEM-F41-2 (LANE-MESHY) parked it unjudged: on CPU the Building frame changed 0.30% of pixels, the same as run-to-run noise. The sheet lightning is emissive and Forward+ High has glow and volumetric fog, so it may read as the phase cue the judges ask for (F41#2 GPU High 6.10, PRESENT 3/3: Calm, Building and Fading differ only in rain). Check the overlay merges into the presentation block, not the top level. Priority 3."
+  },
+  {
+   "id": "f41-10-glass",
+   "row": "F41#10",
+   "kind": "arm",
+   "tree": "tb/item-f41-10",
+   "needs_import": "yes: scripts/world/stormwood_glass_sink.gd (dress() model lookup fix, fused_glass uniforms); check out the branch head ee01f52c9",
+   "overlay_branch": "tb/item-f41-10",
+   "overlay": {
+    "data/config/stormwood_glass_sink.json": {
+     "meshy_rim": {
+      "shards": {
+       "enabled": true
+      }
+     },
+     "fused_glass": {
+      "enabled": true
+     }
+    }
+   },
+   "config_file": "data/config/stormwood_glass_sink.json",
+   "flag": "meshy_rim.shards and fused_glass (both OFF on the branch)",
+   "frames": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ],
+   "capture": "live (main) and arm (branch head with both flags on) at High",
+   "note": "CPU v4 6.20 -> 6.24 (+0.04, 1/3), parked. On CPU the fused-glass sheen and the glass-spike clusters are dull, roughness-only reads. On Forward+ High, specular, SSR and glow on glass should separate the floor from 'a dark lake' (the F-stormwood ask: 'reads as a crystal ring, not a basin'; GPU High 6.02). Confirm the exact flag keys in the branch config before overlaying; the branch READY names them meshy_rim.shards and fused_glass. Priority 4."
+  },
+  {
+   "id": "f41-fight-rim",
+   "row": "F41#3",
+   "kind": "arm",
+   "tree": "tb/item-f41-fight-read",
+   "needs_import": "yes: scripts/creatures/creature_rim.gd wanted() and world_look.gd scene pass-through (inert without realm_scenes); check out the branch head a280bf51c",
+   "overlay_branch": "tb/item-f41-fight-read",
+   "overlay": "ralph/reports/LANES/ITEM-F41-FIGHT-READ/overlay_b.json",
+   "config_file": "data/config/creature_rim.json",
+   "flag": "realm_scenes = [res://scenes/world/stormwood.tscn] (rim reaches Stormwood fights)",
+   "frames": [
+    "stormwood__fight__capacitor_alpha-i01",
+    "stormwood__fight__capacitor_alpha-tell1-a-start",
+    "stormwood__fight__capacitor_alpha-tell1-e-impact"
+   ],
+   "capture": "live and arm at High; ideally a second arm with the ghost-glow creature rim tone (0.35/3.0) applied as well",
+   "note": "CPU 6.33 -> 6.33 (+0.00, 1/3), and two judges said the rim bleached the pale boss. That CPU rim was the untoned fresnel. G-ghost-glow on GPU shows the toned rim (0.35/3.0) removes the ghost look on creatures (F38#28 +0.91, F38#2 +0.67, 3/3), so a toned rim in Stormwood may separate both fighters without bleaching Voltarach. Use the capacitor stand, which is deterministic (hollows is not). Priority 5."
+  },
+  {
+   "id": "f39-16-cap-scatter",
+   "row": "F39#16",
+   "kind": "arm",
+   "tree": "tb/item-f39-16",
+   "needs_import": "yes: shaders/water_current_flow.gdshader gains uniform cap_scatter (inert at 0); check out the branch head 9c3e9ea08",
+   "overlay_branch": "tb/item-f39-16",
+   "overlay": {
+    "data/config/tidewake_look.json": {
+     "current_flow": {
+      "shader": {
+       "cap_scatter": 1.0,
+       "chop_cap_density": 0.22
+      }
+     }
+    }
+   },
+   "config_file": "data/config/tidewake_look.json",
+   "flag": "current_flow.shader cap_scatter 1.0, chop_cap_density 0.35 -> 0.22 (the r2 values)",
+   "frames": [
+    "tidewake__current_states__S1_live_t0",
+    "tidewake__current_states__S1_live_t1",
+    "tidewake__current_states__S2_live_t0"
+   ],
+   "capture": "live and arm at High",
+   "note": "CPU r2 7.65 -> 7.56 (-0.09, flat), parked. GPU High F-tidewake has F39#16 at 6.88 with the guide lanes FIXED 3/3, but all six judges said the current now barely reads. Scattered, staggered caps are the change most likely to make the flow read. Forward+ water specular and glow change how the caps catch light, so CPU flatness does not carry over. Confirm the shader path of cap_scatter in the branch config. Priority 6."
+  }
+ ],
+ "considered_not_queued": [
+  {
+   "row": "F40#4",
+   "arm": "cloudreach_f40_items.json candidates[15] strata_cliff (tb/item-f40-4)",
+   "why": "CPU -1.21. Judges objected to the procedural stacked-strata shapes and even scatter, which are form, not light, so GPU is unlikely to change the call."
+  },
+  {
+   "row": "F40#2",
+   "arm": "cloudreach_f40_items.json stone-ground and scattered-stone candidates (tb/item-f40-2)",
+   "why": "One was invisible in frame; the other was -0.73 with all judges calling it generator scatter. Same reason as F40#4."
+  },
+  {
+   "row": "F41#2",
+   "arm": "stormwood_surge.json presentation.phase_grade_1104",
+   "why": "Judged twice on CPU (5.46 -> 5.46, 4.40 -> 4.23). A grade is the part of the frame CPU renders closest to GPU, so building_glow_1104 is the better GPU test."
+  },
+  {
+   "row": "F39#17",
+   "arm": "restored-current tint/glint/seam overlays (tb/item-f39-17)",
+   "why": "No visible change at sheet scale on either renderer's terms: the ribbon is narrow and distant. The judges ask for an environmental restored-state change, which needs scene work."
+  }
+ ]
+}
