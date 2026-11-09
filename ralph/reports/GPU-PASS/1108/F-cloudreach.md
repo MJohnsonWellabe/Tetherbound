@@ -64,3 +64,9 @@
   2. Stratified terraces and ledges in place of lawn discs (scene from 2 judges, new_art from 1).
   3. A cliff-built aviary sanctuary (new_art, 2/3).
   4. Camera fixes for fights and dialogue (scene).
+
+## F40#5 re-shot with seed 2043 (`manifest-F-veyra-seed2043.json`, 612c1b95)
+- The Veyra live fight was captured again with `--seed=2043` on the same tree (be95950b, High, nearest-tick frames live-2430, live-3510 and live-3870).
+- **The manifest records `won: false` again, so the fight was lost a second time.** Per the coordinator, a lost re-run is noted, not judged; F40#5 stays at 5.94 from the seed 2042 frames.
+- I looked at the three frames. None shows a defeat card; all are mid-fight, with "HEAVY - get clear", "STRONG - you hit a weakness" and "staggered - punish now" banners and TEAM 5/5.
+- To judge the fight's result frames, F40#5 needs a seed or input on which the fight is won.
