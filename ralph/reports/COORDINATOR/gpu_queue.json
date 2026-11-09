@@ -1,0 +1,7 @@
+{
+  "_comment": "GPU arm queue (coordinator, 9 Nov). The GPU lane re-reads this file from origin/ccr-99b76ce0-imf8zn after every section and works top to bottom, skipping entries marked done. Config-only arms are captured as overlays on the already-imported main tree (no re-import); an entry with tree != main needs its own import. Capture at High; add Medium only for a row whose High mapped score is 7.5 or above. Push frames to tb/gpu-frames-1108 as section G-<id> with a manifest, and mark nothing here: the coordinator marks entries done.",
+  "after": "section F (all four biomes) finishes",
+  "entries": [
+    {"id": "f38-36-medium", "row": "F38#36", "kind": "medium", "tree": "main", "note": "High 7.74 (GPU-PASS/1108 B.md); Medium closes the row if it also reaches 7.5", "done": false}
+  ]
+}
