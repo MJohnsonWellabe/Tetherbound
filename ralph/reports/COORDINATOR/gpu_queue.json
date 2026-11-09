@@ -847,6 +847,22 @@
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows pilot_mark.rim_strength 1.4",
    "note": "Player creature read under the boss (ITEM-PILOT-MARK/ARM.md): pilot rim 0.9 -> 1.4 only, no floor ring (owner 24 Oct). Config only.",
    "done": false
+  },
+  {
+   "id": "voltarach-value",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#21"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-VOLTARACH-BLOOM/overlay_voltarach_value.json",
+   "overlay_format": "deep merge",
+   "frames": "same frames as pilot-mark (F41#3 3, F41#21 2); shoot it in the same session as pilot-mark so one live set serves both arms (live, pilot-mark, voltarach-value), each side twice if the fight tool allows",
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows species.json voltarach.placeholder field_emission 0.35 and field_rim 0.12",
+   "note": "Voltarach blown to near-white gold bloom (ITEM-VOLTARACH-BLOOM/CAUSE.md): the 22 Oct CPU-tuned field_emission 1.5 lifts the dark carapace to white under GPU exposure. One-species config fix.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
