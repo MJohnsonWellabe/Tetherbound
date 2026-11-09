@@ -445,7 +445,7 @@
       "frames": "job.json frames of the three rows",
       "capture": "live only, at High AND Medium (both presets), on current main",
       "note": "G-exposure.md: in the ghost-glow state these map 7.50-7.55 at High (F38#28 7.50, F40#12 7.55, F41#17 7.55); a confirming High+Medium pass on shipped main can close them",
-      "done": false
+      "done": true
     },
     {
       "id": "occlusion-fade-off",
@@ -464,6 +464,27 @@
       "frames": "F39#26, F39#18, F39#29 dialogue stands (job.json) plus the F39#21 Nerissa win frame (--max-frames=200), where the camera sits behind translucent pale-blue slabs",
       "capture": "live vs arm at High on current main",
       "note": "G-npc-floor-go.md: after albedo, emission, rank floor and day rim all came back flat, the dialogue occlusion fade (fade_transparency 0.8) is the strongest remaining suspect for the ghosted Tidewake speakers. Diagnostic arm: occlusion_fade shipped ON on 2 Nov for +0.53/+0.62 on dialogue frames, so a win here would need a narrower fix (e.g. never fade the speaker), not turning it off.",
+      "done": true
+    },
+    {
+      "id": "occlusion-fade-off-wide",
+      "rows": [
+        "F41#7",
+        "F41#11",
+        "F40#12",
+        "F38#35",
+        "F39#4",
+        "F41#20"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/occlusion_fade_off.json",
+      "config_file": "data/config/camera.json",
+      "flag": "occlusion_fade.enabled false",
+      "frames": "job.json dialogue frames of the listed rows (Meadows, Cloudreach, Stormwood dialogue, where the fade won +0.53/+0.62 on 2 Nov)",
+      "capture": "live vs arm at High on current main",
+      "note": "G-confirm-75-medium.md: fade off gained Tidewake F39#26 +0.34 and F39#29 +0.39 (mean +0.21) but did not fix NPC ghosting. Before shipping it globally, check the other biomes' dialogue rows do not lose what the fade won on 2 Nov.",
       "done": false
     }
   ],
