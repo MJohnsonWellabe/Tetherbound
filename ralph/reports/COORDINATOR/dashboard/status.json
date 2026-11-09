@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09 06:35 UTC",
+  "updated": "2026-11-09 07:50 UTC",
   "headline": [
     "9 Nov night: GPU arm rounds now decide scene changes. Shipping: the ghost-glow fix (creatures no longer render see-through on GPU; F38#28 +0.91, F38#2 +0.67, F38#14 +0.57, F38#7 +0.53) and the Stormwood charged creature glow (F41#13 +0.61). Marrow's albedo flag landed on a GPU round later found invalid (a capture merge bug); it is being re-shot to keep or revert.",
     "9 Nov: three visual rows closed on GPU Medium and High, the first closes since the re-score: F38#36 dialogue speaker framing (High 7.74 / Medium 8.08), F38#38 craft hint contrast (8.16 / 8.30) and F38#18 craft recipe text (7.95 / 8.19). F38#23 relay yard missed on Medium (7.07).",
@@ -1857,6 +1857,16 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "batch 27",
+      "what": "ghost-glow fix (no see-through creatures on GPU) and Stormwood charged glow ON; Marrow albedo flag reverted",
+      "when": "9 Nov, in CI"
+    },
+    {
+      "pr": "#872",
+      "what": "Nerissa's Mirejaw can now be sent out (fight ring grows inside walled rooms when there is space)",
+      "when": "9 Nov 07:45"
+    },
+    {
       "pr": "#871",
       "what": "Captain Marrow albedo grade ON (its GPU round turned out invalid; a re-shoot decides keep or revert); two Cloudreach capture stands fixed",
       "when": "9 Nov 04:53"
@@ -1870,16 +1880,6 @@
       "pr": "#869",
       "what": "stale catch card fixed (breakout message clears on the next throw)",
       "when": "9 Nov 03:13"
-    },
-    {
-      "pr": "closed",
-      "what": "F38#36, F38#38 and F38#18 closed at 7.5+ on GPU Medium and High",
-      "when": "9 Nov 03:00"
-    },
-    {
-      "pr": "#868",
-      "what": "Stormwood victory card on (GPU 5.61 to 7.13, 3 of 3 judges); co-op test passed with it",
-      "when": "9 Nov 02:01"
     }
   ],
   "gpu_progress": "All four biomes now have fresh GPU High scores (106 rows). Four Meadows rows reach 7.5 at High and are being shot at Medium. The biggest shared defect on GPU: characters and creatures render ghost-white or with a pale see-through rim (every Meadows and Tidewake judge; Marrow's face holds back two Stormwood rows); one fix is being built for all of them. Stormwood's judges ask for a storm-light pass (phase key light, rim light, fog) and fight cameras kept out of foliage.",
