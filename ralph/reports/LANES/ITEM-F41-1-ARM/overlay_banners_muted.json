@@ -1,0 +1,6 @@
+{
+  "data/config/stormheart_presentation.json": {
+    "built_detail": {"banner_colour": "#34475c", "banner_trim": "#b49a62"},
+    "hero_interior": {"lip_banners": {"count": 5, "phase": 0.6}}
+  }
+}

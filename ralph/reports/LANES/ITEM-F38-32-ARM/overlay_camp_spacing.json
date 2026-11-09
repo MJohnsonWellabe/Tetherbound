@@ -1,0 +1,13 @@
+{
+  "_format": "Path-patch overlay: each key is a JSON path into the named file and its value replaces that one field. List items are addressed by index; nothing else in either file changes.",
+  "data/config/meadows_catalog_presentation.json": {
+    "placements[81].at": [340.6, -0.03, 939.6],
+    "placements[82].at": [340.0, -0.02, 939.0],
+    "placements[83].at": [341.3, -0.02, 940.3],
+    "placements[84].at": [340.2, -0.02, 940.4]
+  },
+  "data/config/bands/band1_lower_meadows/props.json": {
+    "clusters[6].props[2].at": [345.2, 933.0],
+    "clusters[6].props[2].yaw_deg": 200.0
+  }
+}
