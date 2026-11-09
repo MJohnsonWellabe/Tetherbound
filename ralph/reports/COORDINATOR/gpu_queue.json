@@ -831,6 +831,22 @@
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt: storm_light.enabled true, height_fog NOT enabled, and confirm storm_light.environment.exposure has a reader (flag it if not)",
    "note": "Storm-light arm A2 after the split verdict on A: keeps the violet key and fighter rim, drops height fog and the darker grade, lifts ambient/exposure so the forest stands (F41#4/#5) keep their value. Run next after the current section.",
    "done": false
+  },
+  {
+   "id": "pilot-mark",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#21"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-PILOT-MARK/overlay_pilot_mark.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of F41#3 (3) and F41#21 (2); fights are non-deterministic, so if the fight capture tool allows, shoot each side twice so the judges compare like with like",
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows pilot_mark.rim_strength 1.4",
+   "note": "Player creature read under the boss (ITEM-PILOT-MARK/ARM.md): pilot rim 0.9 -> 1.4 only, no floor ring (owner 24 Oct). Config only.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
