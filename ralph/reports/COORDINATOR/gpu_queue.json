@@ -789,7 +789,7 @@
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty; confirm the core model loads (not missing/pink)",
    "note": "First free-pipeline asset (Blender procedural, no Meshy): deep-blue Stormheart crystal core with violet seams, sized to sit inside the frame (ITEM-STORM-CORE/ARM.md).",
-   "done": false
+   "done": true
   },
   {
    "id": "glass-sink-lip",
