@@ -1,0 +1,101 @@
+[
+ {
+  "label": "G F38#35 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F38-35_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F38-35_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: human post poses. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles"
+  ]
+ },
+ {
+  "label": "G F39#4 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-4_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-4_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: shiny creature finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity"
+  ]
+ },
+ {
+  "label": "G F40#12 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F40-12_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F40-12_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+  ]
+ },
+ {
+  "label": "G F41#7 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F41-7_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F41-7_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+  ]
+ },
+ {
+  "label": "G F41#11 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F41-11_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F41-11_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character portrait identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+  ]
+ },
+ {
+  "label": "G F41#15 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F41-15_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F41-15_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G F41#20 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F41-20_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F41-20_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character dialogue reuse. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Distinct named Stormwood characters use identical dialogue lines"
+  ]
+ },
+ {
+  "label": "G F39#18 H live one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-18 H_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-18 H_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+  ]
+ },
+ {
+  "label": "G F39#26 H live one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-26 H_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-26 H_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F39#18 M live one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-18 M_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-18 M_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+  ]
+ },
+ {
+  "label": "G F39#26 M live one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-26 M_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wide_F39-26 M_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ }
+]
