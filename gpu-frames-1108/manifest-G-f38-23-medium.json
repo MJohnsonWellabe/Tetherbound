@@ -1,0 +1,54 @@
+[
+ {
+  "row": "F38#23",
+  "item": "P2-013",
+  "frame": "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+  "arm": "live",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "Medium",
+  "tool": "tools/phase2_capture_routes.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_routes.gd",
+   "--",
+   "--biome=meadows",
+   "--subset=meadows__band3_the_river_lock__05__the_tether_relay",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "match": "exact",
+  "path": "F38-23/live/Medium/meadows__band3_the_river_lock__05__the_tether_relay__route_day.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.018
+ },
+ {
+  "row": "F38#23",
+  "item": "P2-013",
+  "frame": "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk",
+  "arm": "live",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "Medium",
+  "tool": "tools/phase2_capture_routes.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_routes.gd",
+   "--",
+   "--biome=meadows",
+   "--subset=meadows__band3_the_river_lock__05__the_tether_relay",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "match": "exact",
+  "path": "F38-23/live/Medium/meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.0517
+ }
+]
