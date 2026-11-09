@@ -809,8 +809,8 @@
     "stormwood__landmark__glass_sink__golden__approach"
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty; confirm the slabs load and sit on the ground",
-   "note": "Second free-pipeline asset (Blender procedural plus CC0 ambientCG Rock035): ring of fractured basalt lip slabs with fused-glass tops so the Glass Sink reads as a sunken basin (ITEM-SINK-LIP/ARM.md). Run right after storm-core-v2 on the same import.",
-   "done": false
+   "note": "Second free-pipeline asset (Blender procedural plus CC0 ambientCG Rock035): ring of fractured basalt lip slabs with fused-glass tops so the Glass Sink reads as a sunken basin (ITEM-SINK-LIP/ARM.md). Run right after storm-core-v2 on the same import. RESULT: invalid capture, no slab in frame (18 slabs ~87 m apart); requeue as glass-sink-lip-dense once the build lane makes the ring continuous.",
+   "done": true
   },
   {
    "id": "storm-light-a2",
