@@ -60,7 +60,7 @@
       "frames": "all job.json frames of the listed rows, plus one lightning or lantern frame (a Stormwood surge or a Tidewake lantern) to confirm emissive bloom still reads",
       "capture": "live (main import) vs arm (branch import with overlay) at High",
       "priority": "FIRST after the current entry: one global change that may lift rows in every biome; it may supersede the F41#15 arms",
-      "done": false
+      "done": true
     },
     {
       "id": "f41-15-arm-a",
@@ -78,7 +78,7 @@
       ],
       "capture": "live and arm at High (one shared live set for arms A and B)",
       "note": "softer chest-height dialogue key (energy 0.9->0.45, offset up 0.9->0.35, rim 1.5->1.0); defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
-      "done": false
+      "done": true
     },
     {
       "id": "f41-15-arm-b",
@@ -96,7 +96,7 @@
       ],
       "capture": "live and arm at High (one shared live set for arms A and B)",
       "note": "captain_a albedo grade only; defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
-      "done": false
+      "done": true
     }
   ]
 }
