@@ -246,6 +246,23 @@ static func apply_environment(environment: Environment) -> void:
 	environment.ssao_enabled = bool(cfg.get("ssao", false))
 	environment.ssil_enabled = bool(cfg.get("ssil", false))
 	environment.glow_enabled = bool(cfg.get("glow", false))
+	# Ghost-white characters on GPU (9 Nov GPU pass: Tidewake speakers, Meadows
+	# creature rims, Marrow's head): with glow on and the engine's default HDR
+	# threshold (1.0) every pale lit surface above 1.0 blooms. Optional preset
+	# keys tune it; absent keys keep the engine defaults (no change).
+	if cfg.has("glow_hdr_threshold"):
+		environment.glow_hdr_threshold = float(cfg["glow_hdr_threshold"])
+	if cfg.has("glow_hdr_scale"):
+		environment.glow_hdr_scale = float(cfg["glow_hdr_scale"])
+	if cfg.has("glow_intensity"):
+		environment.glow_intensity = float(cfg["glow_intensity"])
+	if cfg.has("glow_bloom"):
+		environment.glow_bloom = float(cfg["glow_bloom"])
+	if cfg.has("glow_blend_mode"):
+		environment.glow_blend_mode = {"additive": Environment.GLOW_BLEND_MODE_ADDITIVE,
+			"screen": Environment.GLOW_BLEND_MODE_SCREEN, "softlight": Environment.GLOW_BLEND_MODE_SOFTLIGHT,
+			"replace": Environment.GLOW_BLEND_MODE_REPLACE, "mix": Environment.GLOW_BLEND_MODE_MIX}.get(
+			str(cfg["glow_blend_mode"]), environment.glow_blend_mode)
 	environment.volumetric_fog_density = float(cfg.get("volumetric_fog_density", 0.0))
 	environment.volumetric_fog_length = float(cfg.get("volumetric_fog_length", 64.0))
 	environment.volumetric_fog_sky_affect = float(cfg.get("volumetric_fog_sky_affect", 0.0))

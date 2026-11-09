@@ -4,7 +4,8 @@
   "enabled": true,
   "_why_on": "Visual lane qj rim10-f38-1-2 (4 Nov, CPU llvmpipe, three code-blind judges, calibrate.py): energy 0.55 -> 1.0 and power 2.6 -> 1.8 ships ON. F38#1 creature collapse and rest CPU 5.53 -> 5.84 (+0.31; all three judges scored the rimmed side higher and named the rim outline separating the body from the grass); F38#2 hurt and movement 5.84 -> 5.81 (flat). The v1/b18 rim at 0.55 was flat at the world camera. Owner 4 Nov: every judged gain ships ON. A GPU High pass still closes the rows.",
   "colour": "#c8d6f2",
-  "energy": 1.0,
-  "power": 1.8,
+  "_why_ghost_glow": "Rim toned 1.0/1.8 -> 0.35/3.0 with the glow threshold, so creatures stop reading see-through pale at GPU Medium/High. GPU 1108 G-ghost-glow (tb/item-scout-1108 4307f806f): F38#28 +0.91 3/3, F38#2 +0.67 3/3, F38#14 +0.57 3/3, F38#7 +0.53 2/3, F41#15 +0.29 3/3, F38#1 recheck +0.47 3/3; mean +0.16 over 11 rows, emissive check passes (lanterns and glows still read). F38#13 -0.62 and F39#18/#26 -0.33 judged mostly capture-composition noise. Coordinator ship decision 9 Nov.",
+  "energy": 0.35,
+  "power": 3.0,
   "realm_looks": ["res://data/config/meadows_look.json"]
 }

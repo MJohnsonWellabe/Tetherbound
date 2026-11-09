@@ -295,7 +295,8 @@
   "npc_vis_look_captain_a": {
    "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
    "_why_on": "GPU 1108 G-f41-15 arm B, F41#15 +0.91 and F41#7 +0.95, 3/3 (albedo grade only; day_rim and idle_relax dropped, arm A no visible change).",
-   "enabled": true,
+   "_why_off": "Reverted 9 Nov: the arm B round was invalid (the capture passed nulls, the body material build crashed and skipped Marrow's emission, which is what the judges liked). The corrected re-shoot G-f41-15-arm-b-fix (c127b3cd7) shows the real albedo-only flag ghost-white, close to live. Marrow parked pending the global Forward+ exposure arm.",
+   "enabled": false,
    "characters": {
     "captain_a": {
      "body_albedo_override": "res://assets/characters/captain_a/captain_a_lod0_texture_0_vis1.png"

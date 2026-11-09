@@ -8,12 +8,11 @@ extends "res://tests/test_case.gd"
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const FLAGS_PATH := "res://data/config/character_body_flags.json"
 ## Looks judged on GPU batch 7 (2 Nov, three code-blind judges, mapped) and kept
-## ON; each one's _why records its score. Later GPU arms record theirs in
-## _why_on (captain_a: GPU 1108 G-f41-15 arm B). Every other flag ships OFF.
+## ON; each one's _why records its score. Every other flag ships OFF.
 const JUDGED_ON := ["npc_vis_look_grunt", "npc_vis_look_farmer", "npc_vis_look_local_historian",
 	"npc_vis_look_lost_traveler", "npc_vis_look_field_researcher", "npc_vis_look_warden",
 	"npc_vis_look_grunt_a", "npc_vis_look_grunt_c", "npc_vis_look_officer_b", "npc_vis_look_officer_a",
-	"npc_vis_look_inn_helper", "npc_vis_look_creature_caretaker", "npc_vis_look_captain_a"]
+	"npc_vis_look_inn_helper", "npc_vis_look_creature_caretaker"]
 
 
 func test_shipped_flags_resolve_and_only_judged_looks_ship_on() -> void:
@@ -26,7 +25,7 @@ func test_shipped_flags_resolve_and_only_judged_looks_ship_on() -> void:
 		var judged_on := flag in JUDGED_ON
 		if judged_on:
 			assert_true(bool(entry.get("enabled", false)), "%s ships ON (judged gain)" % flag)
-			assert_true(str(entry.get("_why", "")).contains("GPU batch 7") or str(entry.get("_why_on", "")).contains("GPU"), "%s records its judged score" % flag)
+			assert_true(str(entry.get("_why", "")).contains("GPU batch 7"), "%s records its judged score" % flag)
 		else:
 			assert_false(bool(entry.get("enabled", true)), "%s ships OFF" % flag)
 		var characters: Dictionary = entry.get("characters", {})
