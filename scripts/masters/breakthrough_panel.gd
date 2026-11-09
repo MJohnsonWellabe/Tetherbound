@@ -197,8 +197,16 @@ func _cook(recipe: String) -> void:
 func _open_feed_from_kitchen() -> void:
 	# Presentation transition only. The same bound service reads the owner's
 	# actual feast stacks and submits the existing typed personal feed action.
-	if _mode != "cook" or not is_instance_valid(_service) or not _service.has_method("open_feed"): return
-	_service.call("open_feed")
+	# Switched in place (CI #875, f48_coop_loop "peer 1 fed its own Pup ()"):
+	# re-entering open() through the service re-checked the input owner, and
+	# right after a cook answered owner_passive_checkpoint_pending the Session
+	# held input, so open() returned silently and the panel stayed on the
+	# Kitchen list with no feed buttons. This panel already owns the open UI.
+	if _mode != "cook" or not visible or not is_instance_valid(_service) or not _pending_action.is_empty(): return
+	_mode = "feed"
+	_source = _service
+	_master = ""
+	_rebuild()
 
 func _retry_retained_feast(original: Dictionary) -> void:
 	if not original.get("recipe_id") is String or not original.get("craft_id") is String: return
