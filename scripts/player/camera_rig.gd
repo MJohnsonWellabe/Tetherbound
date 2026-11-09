@@ -261,6 +261,8 @@ func _load_config() -> void:
 	_base_recover_speed = _recover_speed
 	_collision_margin = float(cfg.get("collision_margin", _collision_margin))
 	_probe_radius = float(cfg.get("collision_probe_radius", _probe_radius))
+	var lens_ground: Variant = cfg.get("lens_ground_clearance", {})
+	_lens_ground = lens_ground if lens_ground is Dictionary and (lens_ground as Dictionary).get("enabled") == true else {}
 	_base_distance = _distance
 	_base_height = _height
 	if _camera != null:
@@ -854,7 +856,57 @@ func _follow(delta: float) -> void:
 	spring_length = move_toward(spring_length, _distance, _recover_speed * delta)
 	# A render-mesh limit clamps at once, like the arm's own collision does.
 	spring_length = minf(spring_length, _body_limit)
+	_keep_lens_off_ground()
 	_fade_occluders(delta, [_target])
+
+
+## F39#21 Venn aftermath (LANE-MESHY, 9 Nov 2026; movement.json
+## camera.lens_ground_clearance, OFF unless enabled): after the fight the
+## exploration lens came to rest 0.35 m above a 42 degree dune face beside
+## the trainer (probe at the GPU pose: camera y 7.06, ground 6.71), and the
+## dune filled the lower frame as a flat grey wedge. SpringArm only shortens
+## for geometry between the pivot and the lens; a slope rising under and
+## beside the lens never counts. While enabled, the arm shortens in `step_m`
+## steps (never below `min_arm_m`) until a downward ray from the lens finds
+## the ground at least `min_m` below it. No pitch, yaw or framing change.
+var _lens_ground: Dictionary = {}
+
+var _lens_ground_probe: Callable = Callable()
+
+func set_lens_ground_probe_for_tests(probe: Callable, config: Dictionary) -> void:
+	_lens_ground_probe = probe
+	_lens_ground = config
+
+func _keep_lens_off_ground() -> void:
+	if _lens_ground.is_empty():
+		return
+	var space: PhysicsDirectSpaceState3D = null
+	if not _lens_ground_probe.is_valid():
+		if not is_inside_tree() or get_world_3d() == null:
+			return
+		space = get_world_3d().direct_space_state
+		if space == null:
+			return
+	var clearance := maxf(0.0, float(_lens_ground.get("min_m", 1.0)))
+	var step := maxf(0.05, float(_lens_ground.get("step_m", 0.25)))
+	var floor_arm := maxf(0.5, float(_lens_ground.get("min_arm_m", 2.0)))
+	var back := global_transform.basis.z.normalized()
+	var excluded: Array[RID] = []
+	if _target is CollisionObject3D:
+		excluded.append((_target as CollisionObject3D).get_rid())
+	var length := spring_length
+	while length > floor_arm:
+		var lens := global_position + back * length
+		var grounded := false
+		if _lens_ground_probe.is_valid():
+			grounded = bool(_lens_ground_probe.call(lens, clearance))
+		else:
+			var query := PhysicsRayQueryParameters3D.create(lens + Vector3.UP * 0.05, lens + Vector3.DOWN * clearance, collision_mask & ~OCCLUSION_ONLY_LAYER, excluded)
+			grounded = not space.intersect_ray(query).is_empty()
+		if not grounded:
+			break
+		length -= step
+	spring_length = maxf(minf(spring_length, length), minf(spring_length, floor_arm))
 
 
 ## camera.json `occlusion_fade` (OFF by default; scripts/player/

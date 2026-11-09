@@ -120,7 +120,8 @@
     "_comment_collision_margin": "How far the spring arm stops short of whatever it hit. The Meadows scatter's trees and rocks collide (scripts/world/vegetation.gd), and are dense enough that a trunk can sit almost directly behind the player; the old 0.3 default then read as the camera buried in bark rather than a normal close-up.",
     "collision_margin": 0.6,
     "_comment_probe": "Radius, in metres, of the ball the spring arm sweeps along itself. A SpringArm3D with no `shape` falls back to a single infinitely thin raycast, which is what shipped: indoors the ray slipped between a chair back and a table edge and drew the camera inside them, and when it did hit something nearer than the margin the arm collapsed to nothing and put the camera in the player's head. Keep it small -- it stands in for the camera's near plane, not for the player, and a large ball shortens the arm for doorframes it would have fitted through.",
-    "collision_probe_radius": 0.25
+    "collision_probe_radius": 0.25,
+    "lens_ground_clearance": {"_why": "F39#21 Venn aftermath (LANE-MESHY 9 Nov): the post-fight lens rested 0.35 m above a 42 degree dune face (probe at GPU G-recheck-f39-21's pose) and the dune filled the lower frame as a flat grey wedge. When enabled the arm shortens in step_m steps (never below min_arm_m) until the ground is at least min_m below the lens (camera_rig.gd _keep_lens_off_ground). Presentation only. OFF until judged.", "enabled": false, "min_m": 1.0, "step_m": 0.25, "min_arm_m": 2.0}
   },
 
   "torch": {
