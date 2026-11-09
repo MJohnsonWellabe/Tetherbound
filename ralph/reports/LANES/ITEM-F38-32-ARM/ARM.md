@@ -41,3 +41,8 @@ No red. No camera or stand change. No change to the rest radius, craft point, cr
 - The stores read as one group by the tent.
 
 The local edit was reverted after the capture; this branch carries no game-file change. The CPU check covers only the camp_tent stand. The camp_bed and bonfire_fire frames were not re-shot, so check them in the GPU capture.
+
+## GPU result (G-scout-arms.md): −0.35, 1/3; not shipped
+
+- **The CPU stand check did not match the GPU stand.** On the GPU capture of main 4af7d07a9, the CAMP threshold board is in the camp_tent frame's foreground on both sides. So "the sign needs no move" is wrong for the GPU stand.
+- **Moving the stores away from the lens made the props read smaller and less legible,** so the arm lost.
