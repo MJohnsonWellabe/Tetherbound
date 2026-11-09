@@ -272,7 +272,7 @@
       "frames": "F39#26, F39#18, F39#29 dialogue stands; F41#20 Fenn; F41#7 and F41#15 Marrow; F39#13 camp frames (job.json frames of those rows)",
       "capture": "live (ghost-glow state) vs arm at High; null in the overlay means remove the key (same merge as ITEM-F41-15 overlay_albedo_grade.json)",
       "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (tb/item-scout-1108 c10819505): ghost-white NPCs on GPU",
-      "done": false
+      "done": true
     },
     {
       "id": "npc-emission-off",
@@ -291,7 +291,7 @@
       "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames); share the live set with npc-albedo",
       "capture": "live (ghost-glow state) vs arm at High",
       "note": "tests whether the imported full-surface emission on the two captain bodies is the real cause (the smaller fix if it wins)",
-      "done": false
+      "done": true
     },
     {
       "id": "recheck-f39-21",
@@ -313,6 +313,23 @@
       "tree": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm)",
       "frames": "F38#1 job.json frames",
       "capture": "arm-state only at High; judged against the F-meadows 5.76 (the see-through faint may be the creature rim ghost-glow fixes)",
+      "done": false
+    },
+    {
+      "id": "marrow-glow-emission",
+      "rows": [
+        "F41#7",
+        "F41#15",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "live = main ba6778f45 plus the ghost-glow change (graphics_prefs.gd copy and glow overlay, as in G-ghost-glow arm)",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
+      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
+      "capture": "ghost-glow live vs ghost-glow + emission-off at High",
+      "note": "emission-off alone brought Marrow's face back but left a pale glowing head; ghost-glow's 1.6 threshold should stop the remaining bloom. Tests the combination that would actually ship.",
       "done": false
     }
   ],
