@@ -82,4 +82,4 @@ Fallback arm, if the off arm wins on F39#18/#26/#29 but loses on F39#27:
 
 camfx.json `fight_fade` is `enabled: true`. Its `_why` says it "turns the same fade on for fight and conversation cameras even if occlusion_fade is off". So an overlay that flips only `camera.json` `occlusion_fade.enabled` still fades occluders along the speaker's chest-to-lens line in dialogue.
 
-The `G-occlusion-fade-off` gains (F39#26 +0.34, F39#29 +0.39) therefore came from a partial change. The overlay itself is not on the frames branch, so I could not check which keys it flipped.
+The `G-occlusion-fade-off` gains (F39#26 +0.34, F39#29 +0.39) therefore came from a partial change. The `G-occlusion-fade-off-nerissa` manifest note confirms the overlay sets only `occlusion_fade.enabled false`, so `fight_fade` stayed on in every arm frame.
