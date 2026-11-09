@@ -1,12 +1,47 @@
 {
-  "row": "F39#21 bug: flat untextured grey plane in the foreground of the Venn aftermath frame (tidewake__fight__venn__resolve__aftermath, about 142 s)",
-  "branch": "tb/item-venn-plane",
-  "head": "bdee5774901cf8ec946863735d0d172e1e086f74",
-  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
-  "args": ["--trainer=water_trainer_venn", "--interval=8.0", "--max-frames=100", "--level=80", "--pilot=MASHER", "--cap-s=300", "--tells-per-opponent=1", "--hits-per-opponent=1", "--verified-victory-lifecycle", "--expected-resolution=1920x1080", "--seed=2042", "--out={OUT}"],
-  "godot_args": ["--rendering-driver", "opengl3", "--resolution", "1920x1080"],
-  "resolution": [1920, 1080],
-  "expected_frames": {"lifecycle": ["tidewake__fight__venn__win.png", "tidewake__fight__venn__aftermath.png", "tidewake__fight__venn__receipt-expired.png"], "fight_observation_about": 20},
-  "presets": ["High", "Medium"],
-  "_why": "CPU cannot produce this frame: on llvmpipe the aftermath draw lands about 6.5 s after the win, past the 6 s reward hold, so the capture's same-receipt check rejects it ('aftermath state invalid after draw'; reproduced twice on main d9d79ff9 and 4af7d07a). The win frame on CPU shows no grey plane. Needed back: the aftermath and receipt-expired PNGs plus manifest.json (camera/player poses) so the plane can be identified and fixed as a bug."
+ "row": "F39#21 bug: flat untextured grey plane in the foreground of the Venn aftermath frame (tidewake__fight__venn__resolve__aftermath, about 142 s)",
+ "branch": "tb/item-venn-plane",
+ "head": "1508bdfae15ccc83a8e976c29410ad0492f1a448",
+ "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+ "args": [
+  "--trainer=water_trainer_venn",
+  "--interval=8.0",
+  "--max-frames=100",
+  "--level=80",
+  "--pilot=MASHER",
+  "--cap-s=300",
+  "--tells-per-opponent=1",
+  "--hits-per-opponent=1",
+  "--verified-victory-lifecycle",
+  "--expected-resolution=1920x1080",
+  "--seed=2042",
+  "--out={OUT}"
+ ],
+ "godot_args": [
+  "--rendering-driver",
+  "opengl3",
+  "--resolution",
+  "1920x1080"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "expected_frames": {
+  "lifecycle": [
+   "tidewake__fight__venn__win.png",
+   "tidewake__fight__venn__aftermath.png",
+   "tidewake__fight__venn__receipt-expired.png"
+  ],
+  "fight_observation_about": 20
+ },
+ "presets": [
+  "High",
+  "Medium"
+ ],
+ "_why": "Identified on CPU without a render (probe at G-recheck-f39-21 pose): the grey wedge is the Terrain dune face 0.35 m under the lens (camera y 7.06, ground 6.71, 42 degree slope); the suspect pale rocks at (790,930) and (1170,1050) are the same dune 2.4 m away. No stray plane, missing material or placeholder. Fix candidate: movement.json camera.lens_ground_clearance.",
+ "overlay": "ralph/reports/LANES/ITEM-VENN-PLANE/overlay_lens_ground.json",
+ "capture_both": "base (overlay off) and candidate (overlay on), same seed",
+ "want_to_see": "the aftermath and receipt-expired frames with the lens ground clearance ON vs OFF: the lower-left dune wedge should be gone and the trainer still framed",
+ "preset": "High"
 }
