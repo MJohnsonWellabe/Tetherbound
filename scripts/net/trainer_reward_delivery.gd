@@ -19,14 +19,24 @@ static func apply(party: RefCounted, game: Node, payload: Dictionary) -> void:
 		# rather than in the quickbar's message strip, where it read as part of
 		# the quick items row.
 		if victory_receipt_routed():
-			var title := str(payload.get("trainer", ""))
 			PROGRESSION_FEED_SCRIPT.push("reward_summary", null, {"name": "Team",
-				"receipt": ("%s's reward: %s" % [title, line]) if not title.is_empty() else line})
+				"receipt": reward_receipt(str(payload.get("trainer", "")), line)})
 			return
 		game.call("push_world_message", line)
 
 
 const PROGRESSION_FEED_SCRIPT := preload("res://scripts/creatures/progression_feed.gd")
+
+
+## The victory receipt for a reward line. encounter_director's
+## `_trainer_reward_line` already writes "<Name>'s reward: ...", so prefixing it
+## again read "Captain Nerissa's reward: Captain Nerissa's reward: 150 Coin, ..."
+## on the routed victory card (GPU G-recheck-nerissa-win). A bare line still
+## gets the trainer's prefix.
+static func reward_receipt(title: String, line: String) -> String:
+	if title.is_empty() or line.contains("'s reward:"):
+		return line
+	return "%s's reward: %s" % [title, line]
 
 
 static func victory_receipt_routed() -> bool:

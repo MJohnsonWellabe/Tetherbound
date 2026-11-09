@@ -1,0 +1,4 @@
+{"data/config/npc_role_accessories.json": {"characters": {"rodkeeper_hesk": [
+  {"name": "rod_staff", "scene": "res://assets/props/meshy-1020/npc_acc_rod_staff/npc_acc_rod_staff.glb", "bone": "root", "offset": [-0.36, 0.782, 0.12], "scale": 0.85},
+  {"name": "wool_cap_scarf", "scene": "res://assets/props/meshy-1020/npc_acc_wool_cap_scarf/npc_acc_wool_cap_scarf.glb", "bone": "Head", "offset": [0.0, 0.17, 0.02], "tint": "#c9935a"}
+]}}}
