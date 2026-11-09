@@ -8,7 +8,7 @@
       "kind": "medium",
       "tree": "main",
       "note": "High 7.74 (GPU-PASS/1108 B.md); Medium closes the row if it also reaches 7.5",
-      "done": false
+      "done": true
     },
     {
       "id": "f38-38-medium",
@@ -17,7 +17,7 @@
       "tree": "main",
       "frames": "all row frames (job.json)",
       "note": "High 8.16 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
-      "done": false
+      "done": true
     },
     {
       "id": "f38-18-medium",
@@ -26,7 +26,7 @@
       "tree": "main",
       "frames": "all row frames (job.json)",
       "note": "High 7.95 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
-      "done": false
+      "done": true
     },
     {
       "id": "f38-23-medium",
@@ -35,6 +35,31 @@
       "tree": "main",
       "frames": "all row frames (job.json)",
       "note": "High 7.58 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
+      "done": true
+    },
+    {
+      "id": "ghost-glow",
+      "rows": [
+        "F38#28",
+        "F38#2",
+        "F38#7",
+        "F38#13",
+        "F39#26",
+        "F39#18",
+        "F39#29",
+        "F41#15",
+        "F41#7"
+      ],
+      "kind": "arm",
+      "tree": "tb/item-ghost-glow",
+      "needs_import": "yes: one small script change (scripts/ui/graphics_prefs.gd reads optional glow keys); check out the branch head",
+      "overlay_branch": "tb/item-ghost-glow",
+      "overlay": "ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json",
+      "config_file": "data/config/art.json graphics_presets (Medium, High glow keys) and data/config/creature_rim.json",
+      "flag": "glow_hdr_threshold 1.6, glow_intensity 0.5, glow_bloom 0; creature_rim energy 0.35 power 3.0",
+      "frames": "all job.json frames of the listed rows, plus one lightning or lantern frame (a Stormwood surge or a Tidewake lantern) to confirm emissive bloom still reads",
+      "capture": "live (main import) vs arm (branch import with overlay) at High",
+      "priority": "FIRST after the current entry: one global change that may lift rows in every biome; it may supersede the F41#15 arms",
       "done": false
     },
     {
