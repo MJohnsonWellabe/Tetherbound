@@ -48,7 +48,8 @@
       ],
       "_why": "CPU cannot produce this frame: on llvmpipe the aftermath draw lands about 6.5 s after the win, past the 6 s reward hold, so the capture's same-receipt check rejects it ('aftermath state invalid after draw'; reproduced twice on main d9d79ff9 and 4af7d07a). The win frame on CPU shows no grey plane. Needed back: the aftermath and receipt-expired PNGs plus manifest.json (camera/player poses) so the plane can be identified and fixed as a bug.",
       "return": "Push the aftermath and receipt-expired PNGs (and win) under G-check-venn-plane/. The tool's manifest.json is a JSON report, so do not push it: instead put the aftermath frame's camera position, camera look direction and player position in your reply message.",
-      "done": false
+      "done": true,
+      "note": "Captured c4ce2ade0; camera landed on another side, plane not in frame. Poses relayed to the build lane for a CPU ray-pick."
     },
     {
       "id": "f38-36-medium",
