@@ -683,7 +683,7 @@
       "frames": "same frames as G-sw-foliage-grade (F41#5, F41#8, F41#3 job.json frames)",
       "capture": "live (current main) vs arm at High; check the script-error list is empty",
       "note": "Re-shoot of the invalid G-sw-foliage-grade after LANE-MESHY replaced the Godot 3 Image.adjust_bsc call (ITEM-VEG-ADJUST/ARM.md)",
-      "done": false
+      "done": true
     },
     {
       "id": "lens-ground-clearance",
@@ -730,7 +730,7 @@
       "frames": "(1) the Venn lifecycle capture as given (win, aftermath, receipt-expired), base vs candidate; (2) because the lens rule touches every exploration camera, also the job.json frames of F39#3, F39#15, F38#3 and F41#5 (slopes, shores, forest) live vs arm",
       "capture": "live (current main) vs arm (scripts from the branch head copied onto main plus the overlay) at High",
       "note": "LANE-MESHY ITEM-VENN-PLANE/ARM.md: the grey wedge is the dune face 0.35 m under the lens; candidate shortens the spring arm until the lens clears ground by 1 m (flag OFF on the branch). Global camera change, so it needs the wider frame set.",
-      "done": false
+      "done": true
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
