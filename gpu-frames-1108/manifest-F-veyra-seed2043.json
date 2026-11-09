@@ -1,0 +1,80 @@
+[
+ {
+  "row": "F40#5",
+  "item": "P2-112",
+  "frame": "cloudreach__fight__veyra_live__live-2430",
+  "arm": "seed2043",
+  "tree": "be95950b907e5a5a4a6db38cf86b4b7ee0d1aea1",
+  "preset": "High",
+  "tool": "tools/phase2_capture_cloudreach_live_fight.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_cloudreach_live_fight.gd",
+   "--",
+   "--output={OUT}",
+   "--seed=2043"
+  ],
+  "note": "Extra run of the Veyra live fight, --seed=2043 instead of 2042; the seed 2042 set is in manifest-F-cloudreach (won=false).",
+  "won": false,
+  "match": "nearest",
+  "path": "F40-5/seed2043/High/cloudreach__fight__veyra_live__live-2430.jpg",
+  "sky_fraction": 0.057,
+  "lower_edges": 0.2938
+ },
+ {
+  "row": "F40#5",
+  "item": "P2-112",
+  "frame": "cloudreach__fight__veyra_live__live-3510",
+  "arm": "seed2043",
+  "tree": "be95950b907e5a5a4a6db38cf86b4b7ee0d1aea1",
+  "preset": "High",
+  "tool": "tools/phase2_capture_cloudreach_live_fight.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_cloudreach_live_fight.gd",
+   "--",
+   "--output={OUT}",
+   "--seed=2043"
+  ],
+  "note": "Extra run of the Veyra live fight, --seed=2043 instead of 2042; the seed 2042 set is in manifest-F-cloudreach (won=false).",
+  "won": false,
+  "match": "nearest",
+  "path": "F40-5/seed2043/High/cloudreach__fight__veyra_live__live-3510.jpg",
+  "sky_fraction": 0.144,
+  "lower_edges": 0.2092
+ },
+ {
+  "row": "F40#5",
+  "item": "P2-112",
+  "frame": "cloudreach__fight__veyra_live__live-3870",
+  "arm": "seed2043",
+  "tree": "be95950b907e5a5a4a6db38cf86b4b7ee0d1aea1",
+  "preset": "High",
+  "tool": "tools/phase2_capture_cloudreach_live_fight.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_cloudreach_live_fight.gd",
+   "--",
+   "--output={OUT}",
+   "--seed=2043"
+  ],
+  "note": "Extra run of the Veyra live fight, --seed=2043 instead of 2042; the seed 2042 set is in manifest-F-cloudreach (won=false).",
+  "won": false,
+  "match": "nearest",
+  "path": "F40-5/seed2043/High/cloudreach__fight__veyra_live__live-3870.jpg",
+  "sky_fraction": 0.099,
+  "lower_edges": 0.1968
+ }
+]
