@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09 01:25 UTC",
+  "updated": "2026-11-09 02:55 UTC",
   "headline": [
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
     "Seventeen batch PRs merged (#847-#863). Under the new process: F38#41 +0.53, F38#5 +0.78/+0.26, F38#32 +0.28, F39#3 +0.64 and +0.14, plus the Warrens stand and Hollows loss capture fixes. CPU scores only; GPU re-score queued for tonight.",
@@ -847,22 +847,22 @@
       "lane": "LANE-MESHY · re-check judged Meshy pieces",
       "doing": "Batch 19 landing: catch-card capture fix (F38#14 stages from the weakened throw) and F39#21 verified victory captures. F41#12 parked (storm look ruling). Now: F38#37 quarry conduit glass, then F38#27, F38#3, Warrens v2, capture bugs F40#3/#20, F40#9, F40#19, F41#24, F41#3.",
       "criteria": "F38#24, F38#30, F39#2, F39#31, F13#5, F40 P2-023, F38#41, F38#5",
-      "next": "victory card fix with co-op test",
-      "now": "Fixing the victory card's co-op bug (it blocked a feast in the two-player test), then the Warrens sky slabs and the pale rim on creatures. Marrow's face fix is waiting for the GPU."
+      "next": "ghost-white fix for the GPU",
+      "now": "Next: one fix for the ghost-white characters and creatures on GPU, then the stale catch card, the co-op feast timing bug and the Nerissa fight bug. Warrens sky slabs parked after two no-change attempts; next try identifies the exact objects first."
     },
     {
       "lane": "LANE-SCOUT · refresh the queue",
       "doing": "Judging the GPU sections A, C, B (three code-blind judges, anchors, mapped) into ralph/reports/GPU-PASS/1108/, then back to queue refresh.",
       "criteria": "rows below 6.5 and unscored",
-      "next": "Tidewake GPU scores",
-      "now": "Meadows judged on GPU (30 rows). Next: Tidewake, Cloudreach and Stormwood as they land, then the GPU arms, plus one test of a GPU-like render in the cloud."
+      "next": "F38#36 Medium score",
+      "now": "All four biomes judged on GPU. Now the Medium shots (F38#36 first; a 7.5 closes it) and the build lane's GPU arms."
     },
     {
       "lane": "GPU lane · owner's PC",
       "doing": "Queue done: A, C, B, E pushed to tb/gpu-frames-1108 (head 4a4705d0c). Preflight (one frame per tool, 0 nulls/blanks/sky) validating now; every later run starts with it.",
       "criteria": "see ralph/reports/COORDINATOR/briefs-1108/gpu_rescore.md",
-      "next": "Tidewake frames",
-      "now": "Owner's PC: Meadows done; shooting Tidewake, Cloudreach, Stormwood, then Medium shots for the four 7.5+ rows and the build lane's arms."
+      "next": "F38#36 Medium",
+      "now": "Owner's PC: all 106 rows shot in 2 h. Now the Medium shots for four 7.5+ rows, a Veyra fight re-shoot, then the build lane's arms."
     }
   ],
   "score_ledger": [
@@ -1855,6 +1855,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#868",
+      "what": "Stormwood victory card on (GPU 5.61 to 7.13, 3 of 3 judges); co-op test passed with it",
+      "when": "9 Nov 02:01"
+    },
+    {
       "pr": "#867",
       "what": "Voltarach back to the real eight-legged spider",
       "when": "9 Nov 01:20"
@@ -1873,24 +1878,9 @@
       "pr": "#864",
       "what": "F39#9 catch-stage capture fix; parked evidence for F41#2, F41#10, F40#14",
       "when": "8 Nov 16:58"
-    },
-    {
-      "pr": "#863",
-      "what": "F39#3 Drowned Garden shallow flood (+0.14 CPU)",
-      "when": "8 Nov 13:41"
-    },
-    {
-      "pr": "#862",
-      "what": "F39#3 Drowned Garden stepped terrace (+0.64 CPU)",
-      "when": "8 Nov 11:45"
-    },
-    {
-      "pr": "#861",
-      "what": "F38#32 camp re-dress (+0.28 CPU)",
-      "when": "8 Nov 09:14"
     }
   ],
-  "gpu_progress": "Fresh GPU High scores so far: 52 rows (Meadows complete, plus 22 re-checked rows). Meadows: three rows reach 7.5 (craft hints 8.16, craft recipe 7.95, relay yard 7.58) and go to Medium next; F38#36 at 7.74 too. Tidewake, Cloudreach and Stormwood are shooting now; each biome replaces its scores here as it is judged.",
+  "gpu_progress": "All four biomes now have fresh GPU High scores (106 rows). Four Meadows rows reach 7.5 at High and are being shot at Medium. The biggest shared defect on GPU: characters and creatures render ghost-white or with a pale see-through rim (every Meadows and Tidewake judge; Marrow's face holds back two Stormwood rows); one fix is being built for all of them. Stormwood's judges ask for a storm-light pass (phase key light, rim light, fog) and fight cameras kept out of foliage.",
   "gpu_scores": {
     "F38#1": {
       "gpu": 5.76,
@@ -2048,25 +2038,105 @@
       "gpu": 7.32,
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
+    "F39#1": {
+      "gpu": 6.42,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
     "F39#10": {
       "gpu": 6.3,
       "src": "GPU High 8-9 Nov (B)"
+    },
+    "F39#12": {
+      "gpu": 6.8,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#13": {
+      "gpu": 6.23,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#14": {
+      "gpu": 6.37,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#15": {
+      "gpu": 6.27,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#16": {
+      "gpu": 6.88,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#17": {
+      "gpu": 6.27,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#18": {
+      "gpu": 6.16,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#19": {
       "gpu": 6.85,
       "src": "GPU High 8-9 Nov (A)"
     },
+    "F39#2": {
+      "gpu": 6.48,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
     "F39#20": {
       "gpu": 6.37,
       "src": "GPU High 8-9 Nov (A)"
+    },
+    "F39#21": {
+      "gpu": 4.75,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#22": {
+      "gpu": 6.19,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#23": {
       "gpu": 6.8,
       "src": "GPU High 8-9 Nov (A)"
     },
+    "F39#24": {
+      "gpu": 7.18,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#25": {
+      "gpu": 7.28,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#26": {
+      "gpu": 6.01,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#27": {
+      "gpu": 6.57,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#28": {
+      "gpu": 7.33,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#29": {
+      "gpu": 6.61,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
     "F39#3": {
       "gpu": 6.1,
       "src": "GPU High 8-9 Nov (B)"
+    },
+    "F39#4": {
+      "gpu": 7.28,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#5": {
+      "gpu": 6.06,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F39#6": {
+      "gpu": 7.18,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#7": {
       "gpu": 6.61,
@@ -2076,9 +2146,101 @@
       "gpu": 5.66,
       "src": "GPU High 8-9 Nov (B)"
     },
+    "F39#9": {
+      "gpu": 6.65,
+      "src": "GPU High 8-9 Nov (F-tidewake)"
+    },
+    "F40#1": {
+      "gpu": 5.9,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#10": {
+      "gpu": 6.74,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#11": {
+      "gpu": 5.5,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#12": {
+      "gpu": 7.17,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#13": {
+      "gpu": 6.19,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
     "F40#14": {
       "gpu": 6.99,
       "src": "GPU High 8-9 Nov (A)"
+    },
+    "F40#15": {
+      "gpu": 6.08,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#16": {
+      "gpu": 6.19,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#17": {
+      "gpu": 6.08,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#18": {
+      "gpu": 7.1,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#2": {
+      "gpu": 6.15,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#3": {
+      "gpu": 5.86,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#4": {
+      "gpu": 6.12,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#5": {
+      "gpu": 5.94,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#6": {
+      "gpu": 5.1,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#7": {
+      "gpu": 6.26,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#8": {
+      "gpu": 5.85,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F40#9": {
+      "gpu": 5.72,
+      "src": "GPU High 8-9 Nov (F-cloudreach)"
+    },
+    "F41#1": {
+      "gpu": 5.78,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#10": {
+      "gpu": 6.02,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#11": {
+      "gpu": 7.34,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#12": {
+      "gpu": 6.6,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#13": {
+      "gpu": 5.59,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#14": {
       "gpu": 6.35,
@@ -2091,6 +2253,50 @@
     "F41#16": {
       "gpu": 6.28,
       "src": "GPU High 8-9 Nov (A)"
+    },
+    "F41#17": {
+      "gpu": 7.03,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#18": {
+      "gpu": 6.1,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#19": {
+      "gpu": 6.56,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#2": {
+      "gpu": 6.1,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#20": {
+      "gpu": 6.99,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#21": {
+      "gpu": 5.78,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#3": {
+      "gpu": 5.78,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#4": {
+      "gpu": 6.37,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#5": {
+      "gpu": 6.06,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#6": {
+      "gpu": 6.8,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
+    },
+    "F41#7": {
+      "gpu": 7.23,
+      "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#8": {
       "gpu": 5.31,
