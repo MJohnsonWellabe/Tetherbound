@@ -12,6 +12,8 @@
   - Live: 6.56 / 6.99 / 6.71 (5.9 / 6.2 / 6.0).
   - Arm: 6.56 / 7.13 / 6.71 (5.9 / 6.3 / 6.0).
 
+**My own look at the night frame (the GPU lane asked for it by eye):** live and arm are almost the same at this distance. The windows are lit on both sides, and the arm's are at most slightly warmer. That agrees with the +0.05.
+
 **What the judges saw:**
 - **Both sides:** a solid blue-glass dome on a pale stone base, with lit windows at night, so the night silhouette now reads. The recorded defect is PARTIAL on both sides.
 - **Still short (all three judges):**

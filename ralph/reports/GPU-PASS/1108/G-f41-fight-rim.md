@@ -1,5 +1,32 @@
 # GPU arm round 1108, G-f41-fight-rim: F41#3 and F41#6 Stormwood fight rim (tb/item-f41-fight-read files): arm and armTone (live vs arm, GPU High, mapped)
 
+## Correction (9 Nov ~06:10 UTC): the "sky regression" below is withdrawn, and the rim is re-judged against live2
+
+The first live run filmed the other side of the fight. That was the GPU lane's caution, and `G-f41-fight-rim-live2` (e8982d7a) confirms it:
+- A second unmodified run of main shows the **same grey-blue tiled sky**, the same distant pylons and the same row of small white creatures as the arm frames.
+- So the tiled sky is a live-world artefact on that side of the Stormwood capacitor arena, not something the arm causes. I was wrong to call it a regression from `world_look.gd`.
+- Treat that tiled sky behind the canopy as its own Stormwood defect. All three judges in both batches called it "a missing skybox".
+
+**Re-judge, live2 vs arm on the two comparable frames (i01, tell1-a-start; batch `G-rim2`):**
+
+| Pair | Live2 | Arm | Gain | Prefer arm | Ship rule |
+|---|---|---|---|---|---|
+| F41#3 arm (rim, overlay_b) | 5.16 | 5.16 | 0.00 | 0/3 (3 level) | No |
+| F41#3 armTone (rim 0.35/3.0) | 5.16 | 5.16 | 0.00 | 0/3 (3 level) | No |
+
+- **Per judge, mapped (raw), identical on every side:** 5.25 / 4.84 / 5.39 (4.9 / 4.6 / 5.0).
+- **Fit:** slope 1.3788, intercept −1.5028, r 0.900, anchor RMSE 0.502. Confirming batch; no warnings.
+
+**Verdict, replacing the one below:**
+- **Neither rim arm ships.** Against the matched control the rim makes no visible difference at this distance, for either strength.
+- F41#6 (tell1-e-impact only) was not re-judged, because its framing differs in every pair.
+- All three judges again say Voltarach is over-bloomed into a gold-white mass that hides its body, eyes and plates. The next lever is cutting its emissive and bloom, not adding rim, which matches the per-species allowance idea in ITEM-F41-FIGHT-READ.
+
+---
+
+## Original round (superseded): its live control showed a different camera side
+
+
 **Verdict:**
 - **Neither arm ships, and the result is confounded.** Both arms lose: F41#3 −0.51 on both arms, F41#6 −0.89 (arm) and −0.99 (armTone), with 0 of 3 judges preferring an arm on any pair.
 - **The loss comes mostly from a sky regression, not the rim.** In every arm frame the purple Stormwood storm sky is replaced by a grey-blue tiled noise texture. I checked i01 for live, arm and armTone myself.

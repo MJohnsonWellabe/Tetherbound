@@ -1,0 +1,108 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9002,
+  "least_squares_slope": 1.3788,
+  "method": "linear",
+  "slope": 1.3788,
+  "intercept": -1.5028,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.502,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 4.933,
+   "reference": 4.83,
+   "mapped": 5.299,
+   "residual": -0.469
+  },
+  "craft:after": {
+   "measured": 6.6,
+   "reference": 7.35,
+   "mapped": 7.598,
+   "residual": -0.248
+  },
+  "f04_6_r22:control": {
+   "measured": 5.167,
+   "reference": 5.83,
+   "mapped": 5.621,
+   "residual": 0.209
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.033,
+   "reference": 6.75,
+   "mapped": 6.816,
+   "residual": -0.066
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.3,
+   "reference": 4.0,
+   "mapped": 4.426,
+   "residual": -0.426
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.1,
+   "reference": 6.53,
+   "mapped": 5.529,
+   "residual": 1.001
+  }
+ },
+ "candidates": {
+  "G F41#3 live-vs-armTone [G-rim2_F41-3_live_for_armTone.png]": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.16,
+   "mapped_judges": [
+    5.25,
+    4.84,
+    5.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 live-vs-armTone [G-rim2_F41-3_armTone.png]": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.16,
+   "mapped_judges": [
+    5.25,
+    4.84,
+    5.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 live-vs-arm [G-rim2_F41-3_live_for_arm.png]": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.16,
+   "mapped_judges": [
+    5.25,
+    4.84,
+    5.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 live-vs-arm [G-rim2_F41-3_arm.png]": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.16,
+   "mapped_judges": [
+    5.25,
+    4.84,
+    5.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
