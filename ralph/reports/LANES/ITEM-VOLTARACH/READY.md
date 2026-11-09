@@ -18,3 +18,6 @@ HEAD: see git log
 
 ## Checks
 - Tests (all that grep voltarach or creature_model_flags, plus texture policy): 47 tests, 3502 assertions, 0 failed.
+
+## Note for the coordinator
+- Your queue says "re-rig at its current 4.25 m". The owner told this lane directly on 9 Nov: "It needs 8 legs", then "Use the real spider". The native model is the real eight-legged spider (your listed fallback), already at the established 4.25 m, so this lands it instead of a re-rig of the remake mesh, which has no eight clean legs to rig.
