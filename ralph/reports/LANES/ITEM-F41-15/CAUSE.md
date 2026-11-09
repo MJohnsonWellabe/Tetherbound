@@ -17,3 +17,9 @@ LANE-SCOUT, 8 Nov 2026, coordinator request. No game change; LANE-MESHY builds t
 - **Config, smallest:** lower `speaker_light_candidate.key.energy` (0.9 to about 0.4–0.5) or move the key down to chest level (offset up 0.9 to about 0.3) so the face sits at the soft edge of its falloff, and/or drop the rim energy (1.5). Check that Nalia, Nerissa and Fenn (who motivated the light) still read on their dim stands.
 - Alternative: give the speaker lights a light cull mask or a lower `light_specular` so hair and skin do not clip, or raise the glow HDR threshold on High so only emissive surfaces bloom.
 - Judge on the GPU (High): the defect is invisible on CPU, so a CPU round cannot see it.
+
+## Correction (9 Nov, GPU arm round)
+The GPU arm round (`ralph/reports/GPU-PASS/1108/G-f41-15.md`) disproves the key-light cause above:
+- Arm A, with the key light moved up 0.35, energy 0.45 and rim 1.0, made no visible change.
+- Arm B, the `npc_vis_look_captain_a` albedo grade only, removed the blowout: +0.91 on F41#15 and +0.95 on F41#7, 3 of 3 judges preferring it.
+- So the bright albedo on Marrow's head and hair is the main cause, and the line above that rules the flag out is wrong.
