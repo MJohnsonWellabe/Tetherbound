@@ -250,6 +250,48 @@
       "note": "CPU r2 7.65 -> 7.56 (-0.09, flat), parked. GPU High F-tidewake has F39#16 at 6.88 with the guide lanes FIXED 3/3, but all six judges said the current now barely reads. Scattered, staggered caps are the change most likely to make the flow read. Forward+ water specular and glow change how the caps catch light, so CPU flatness does not carry over. Confirm the shader path of cap_scatter in the branch config. Priority 6.",
       "done": true,
       "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+    },
+    {
+      "id": "npc-albedo",
+      "rows": [
+        "F39#26",
+        "F39#18",
+        "F39#29",
+        "F41#20",
+        "F41#7",
+        "F41#15",
+        "F39#13"
+      ],
+      "kind": "arm",
+      "tree": "main",
+      "base": "main ba6778f45 PLUS the ghost-glow change (graphics_prefs.gd copy from de6361be6 and overlay ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json, exactly as G-ghost-glow's arm), because ghost-glow ships; live = that ghost-glow arm state",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_albedo.json",
+      "config_file": "data/config/character_body_flags.json",
+      "flag": "npc_vis_look_<profile> albedo-only grades ON (captain_a/b, trader, young_trainer, courier, innkeeper); day_rim and idle_relax stripped from field_researcher and grunt_c",
+      "frames": "F39#26, F39#18, F39#29 dialogue stands; F41#20 Fenn; F41#7 and F41#15 Marrow; F39#13 camp frames (job.json frames of those rows)",
+      "capture": "live (ghost-glow state) vs arm at High; null in the overlay means remove the key (same merge as ITEM-F41-15 overlay_albedo_grade.json)",
+      "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (tb/item-scout-1108 c10819505): ghost-white NPCs on GPU",
+      "done": false
+    },
+    {
+      "id": "npc-emission-off",
+      "rows": [
+        "F41#7",
+        "F41#15",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "main",
+      "base": "main ba6778f45 PLUS the ghost-glow change (graphics_prefs.gd copy from de6361be6 and overlay ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json, exactly as G-ghost-glow's arm), because ghost-glow ships; live = that ghost-glow arm state",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
+      "config_file": "data/config/art.json",
+      "flag": "captain_a and captain_b body_emission_enabled false (no albedo grade)",
+      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames); share the live set with npc-albedo",
+      "capture": "live (ghost-glow state) vs arm at High",
+      "note": "tests whether the imported full-surface emission on the two captain bodies is the real cause (the smaller fix if it wins)",
+      "done": false
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
