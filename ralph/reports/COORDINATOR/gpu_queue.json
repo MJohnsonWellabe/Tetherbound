@@ -753,6 +753,43 @@
    "capture": "live (current main) vs arm at High, seed 2042; check the script-error list is empty and that the overlay merge receipt shows storm_light.enabled and height_fog.enabled true",
    "note": "Owner-approved Stormwood storm-light pass, arm A (ITEM-STORM-LIGHT/ARM.md): violet storm key, violet shadow fill and fog, fighter rim, layered height fog. Config only, no code. Top priority.",
    "done": false
+  },
+  {
+   "id": "storm-light-b",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#21"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_fight_sight.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of F41#3 (3) and F41#21 (2) = 5; then, if time allows, the full hollows_alpha fight sheet: res://tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120 --interval=1 --seed=2042 --out={OUT}",
+   "capture": "live (current main) vs arm at High, seed 2042; script-error list empty; receipt shows foliage_camera_visibility line_of_sight_fade.enabled true",
+   "note": "Storm-light pass arm B (ITEM-STORM-LIGHT/ARM.md): fight camera kept out of trunks and canopy via the built line-of-sight fade. Config only. Judged separately from arm A.",
+   "done": false
+  },
+  {
+   "id": "storm-core-v2",
+   "kind": "arm",
+   "rows": [
+    "F41#1"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "3fc43db9ba7f62e44080f519f3f262126ca3da59",
+   "tree": "main plus, from that head: assets/props/blender-1109/stormheart_heart_core/ (GLB, .import, provenance) and scripts/world/stormheart_tree.gd copied in; the new GLB needs an import pass (--import) before capture",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-CORE/overlay_heart_core.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+    "stormwood__dynamo__12__the_stormheart_tree__day__close",
+    "stormwood__landmark__dynamo_core__day__close"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; confirm the core model loads (not missing/pink)",
+   "note": "First free-pipeline asset (Blender procedural, no Meshy): deep-blue Stormheart crystal core with violet seams, sized to sit inside the frame (ITEM-STORM-CORE/ARM.md).",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
