@@ -302,7 +302,7 @@
       "tree": "current origin/main (has hud.json victory_focus ON since #868)",
       "frames": "F39#21 job.json frames (Venn win/aftermath with match: semantic as in F-tidewake-add; Nerissa win frame now that the seat fix may have landed, else skip it)",
       "capture": "live only at High on current main; judged against the F-tidewake 4.75. Tests whether the shipped victory card already fixes the Tidewake victory hierarchy.",
-      "done": false
+      "done": true
     },
     {
       "id": "recheck-f38-1",
@@ -399,7 +399,7 @@
       "frames": "job.json frames of the listed rows (NPC dialogue, creatures, and one or two scene rows per biome so a global darkening is caught)",
       "capture": "ghost-glow live vs arm at High",
       "note": "Second lever named in ITEM-GHOST-GLOW/ARM.md: Forward+ multiplies realm exposure (1.35-1.42) by 1.333 (effective about 1.8-1.9), so pale hair and skin stay hot even with the glow threshold and no emission floor (Marrow). Global change: judge every row; it ships only if it gains overall without scene rows dropping.",
-      "done": false
+      "done": true
     },
     {
       "id": "npc-floor-grunt-officer",
@@ -419,6 +419,123 @@
       "frames": "job.json frames of the listed rows",
       "capture": "ghost-glow live vs arm at High",
       "note": "G-npc-floor: all-ranks floor off gained F39#18 +0.28 (3/3) and F39#29 +0.14 (2/3) but cost Marrow 0.09-0.14; this keeps the grunt gain without touching captains.",
+      "done": true
+    },
+    {
+      "id": "recheck-nerissa-win",
+      "rows": [
+        "F39#21"
+      ],
+      "kind": "recheck",
+      "tree": "current origin/main (#872 merge: Nerissa seat fix)",
+      "frames": "F39#21 Nerissa win frame (job.json), with --max-frames large enough to reach the win (the lane's repro used --max-frames=200)",
+      "capture": "live only at High on current main",
+      "note": "Nerissa's Mirejaw is admitted since #872; this fills the F39#21 Nerissa null",
+      "done": true
+    },
+    {
+      "id": "confirm-75-ghostglow",
+      "rows": [
+        "F38#28",
+        "F40#12",
+        "F41#17"
+      ],
+      "kind": "confirm",
+      "tree": "current origin/main (ships ghost-glow since #873)",
+      "frames": "job.json frames of the three rows",
+      "capture": "live only, at High AND Medium (both presets), on current main",
+      "note": "G-exposure.md: in the ghost-glow state these map 7.50-7.55 at High (F38#28 7.50, F40#12 7.55, F41#17 7.55); a confirming High+Medium pass on shipped main can close them",
+      "done": true
+    },
+    {
+      "id": "occlusion-fade-off",
+      "rows": [
+        "F39#26",
+        "F39#18",
+        "F39#29",
+        "F39#21"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/occlusion_fade_off.json",
+      "config_file": "data/config/camera.json",
+      "flag": "occlusion_fade.enabled false",
+      "frames": "F39#26, F39#18, F39#29 dialogue stands (job.json) plus the F39#21 Nerissa win frame (--max-frames=200), where the camera sits behind translucent pale-blue slabs",
+      "capture": "live vs arm at High on current main",
+      "note": "G-npc-floor-go.md: after albedo, emission, rank floor and day rim all came back flat, the dialogue occlusion fade (fade_transparency 0.8) is the strongest remaining suspect for the ghosted Tidewake speakers. Diagnostic arm: occlusion_fade shipped ON on 2 Nov for +0.53/+0.62 on dialogue frames, so a win here would need a narrower fix (e.g. never fade the speaker), not turning it off.",
+      "done": true
+    },
+    {
+      "id": "water-rim-off",
+      "rows": [
+        "F39#18",
+        "F39#26",
+        "F39#29",
+        "F39#27"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "tb/item-scout-1108",
+      "overlay": "ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_off.json",
+      "config_file": "data/config/water_character_rim.json",
+      "flag": "enabled false",
+      "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
+      "capture": "live vs arm at High on current main (both arms share one live set)",
+      "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
+      "done": true
+    },
+    {
+      "id": "water-rim-soft",
+      "rows": [
+        "F39#18",
+        "F39#26",
+        "F39#29",
+        "F39#27"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "tb/item-scout-1108",
+      "overlay": "ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_soft.json",
+      "config_file": "data/config/water_character_rim.json",
+      "flag": "energy 0.3, power 3.5, fill_energy 0.0",
+      "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
+      "capture": "live vs arm at High on current main (both arms share one live set)",
+      "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
+      "done": true
+    },
+    {
+      "id": "occlusion-fade-off-wide",
+      "rows": [
+        "F41#7",
+        "F41#11",
+        "F40#12",
+        "F38#35",
+        "F39#4",
+        "F41#20"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/occlusion_fade_off.json",
+      "config_file": "data/config/camera.json",
+      "flag": "occlusion_fade.enabled false",
+      "frames": "job.json dialogue frames of the listed rows (Meadows, Cloudreach, Stormwood dialogue, where the fade won +0.53/+0.62 on 2 Nov)",
+      "capture": "live vs arm at High on current main",
+      "note": "G-confirm-75-medium.md: fade off gained Tidewake F39#26 +0.34 and F39#29 +0.39 (mean +0.21) but did not fix NPC ghosting. Before shipping it globally, check the other biomes' dialogue rows do not lose what the fade won on 2 Nov.",
+      "done": false
+    },
+    {
+      "id": "confirm-f39-26-medium",
+      "rows": [
+        "F39#26",
+        "F39#18"
+      ],
+      "kind": "confirm",
+      "tree": "current origin/main once batch 28 (water rim soft) lands; until then main + ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_soft.json",
+      "frames": "job.json frames of F39#26 and F39#18",
+      "capture": "live at High AND Medium",
+      "note": "G-water-rim: F39#26 7.52 and F39#18 7.36 at High with the soft rim; a confirming High+Medium pass can close F39#26",
       "done": false
     }
   ],
