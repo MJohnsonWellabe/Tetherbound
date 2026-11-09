@@ -400,6 +400,26 @@
       "capture": "ghost-glow live vs arm at High",
       "note": "Second lever named in ITEM-GHOST-GLOW/ARM.md: Forward+ multiplies realm exposure (1.35-1.42) by 1.333 (effective about 1.8-1.9), so pale hair and skin stay hot even with the glow threshold and no emission floor (Marrow). Global change: judge every row; it ships only if it gains overall without scene rows dropping.",
       "done": false
+    },
+    {
+      "id": "npc-floor-grunt-officer",
+      "rows": [
+        "F39#18",
+        "F39#29",
+        "F39#26",
+        "F41#8"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "live = main ba6778f45 plus the ghost-glow change (reuse G-npc-albedo / G-npc-floor live frames where they match)",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_grunt_officer.json",
+      "config_file": "data/config/npc_ranks.json",
+      "flag": "grunt and officer emission_floor 0.0 (captain untouched)",
+      "frames": "job.json frames of the listed rows",
+      "capture": "ghost-glow live vs arm at High",
+      "note": "G-npc-floor: all-ranks floor off gained F39#18 +0.28 (3/3) and F39#29 +0.14 (2/3) but cost Marrow 0.09-0.14; this keeps the grunt gain without touching captains.",
+      "done": false
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
