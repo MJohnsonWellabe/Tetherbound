@@ -1,0 +1,83 @@
+[
+ {
+  "row": "F38#1",
+  "item": "P2-015",
+  "frame": "meadows__terrapup__fainted",
+  "arm": "arm",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "High",
+  "tool": "tools/phase2_capture_creatures.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_creatures.gd",
+   "--",
+   "--biome=meadows",
+   "--only=terrapup",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "arm = main ba6778f45 plus the ghost-glow change. Judge against the F-meadows 5.76.",
+  "match": "exact",
+  "path": "G-recheck-f38-1/F38-1/arm/High/meadows__terrapup__fainted.jpg",
+  "sky_fraction": 0.188,
+  "lower_edges": 0.4263
+ },
+ {
+  "row": "F38#1",
+  "item": "P2-015",
+  "frame": "meadows__terrapup__resting",
+  "arm": "arm",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "High",
+  "tool": "tools/phase2_capture_creatures.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_creatures.gd",
+   "--",
+   "--biome=meadows",
+   "--only=terrapup",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "arm = main ba6778f45 plus the ghost-glow change. Judge against the F-meadows 5.76.",
+  "match": "exact",
+  "path": "G-recheck-f38-1/F38-1/arm/High/meadows__terrapup__resting.jpg",
+  "sky_fraction": 0.188,
+  "lower_edges": 0.4284
+ },
+ {
+  "row": "F38#1",
+  "item": "P2-015",
+  "frame": "meadows__veridian__fainted",
+  "arm": "arm",
+  "tree": "ba6778f45d23a83fa6ff545739efb8474a1ef2d7",
+  "preset": "High",
+  "tool": "tools/phase2_capture_creatures.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_creatures.gd",
+   "--",
+   "--biome=meadows",
+   "--only=veridian",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "arm = main ba6778f45 plus the ghost-glow change. Judge against the F-meadows 5.76.",
+  "match": "exact",
+  "path": "G-recheck-f38-1/F38-1/arm/High/meadows__veridian__fainted.jpg",
+  "sky_fraction": 0.187,
+  "lower_edges": 0.4262
+ }
+]
