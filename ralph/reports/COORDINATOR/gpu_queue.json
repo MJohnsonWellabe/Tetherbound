@@ -60,7 +60,7 @@
       "frames": "all job.json frames of the listed rows, plus one lightning or lantern frame (a Stormwood surge or a Tidewake lantern) to confirm emissive bloom still reads",
       "capture": "live (main import) vs arm (branch import with overlay) at High",
       "priority": "FIRST after the current entry: one global change that may lift rows in every biome; it may supersede the F41#15 arms",
-      "done": false
+      "done": true
     },
     {
       "id": "f41-15-arm-a",
@@ -78,7 +78,7 @@
       ],
       "capture": "live and arm at High (one shared live set for arms A and B)",
       "note": "softer chest-height dialogue key (energy 0.9->0.45, offset up 0.9->0.35, rim 1.5->1.0); defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
-      "done": false
+      "done": true
     },
     {
       "id": "f41-15-arm-b",
@@ -96,7 +96,331 @@
       ],
       "capture": "live and arm at High (one shared live set for arms A and B)",
       "note": "captain_a albedo grade only; defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
+      "done": true
+    },
+    {
+      "id": "f41-13-charged",
+      "row": "F41#13",
+      "kind": "arm",
+      "tree": "main",
+      "overlay_branch": null,
+      "overlay": {
+        "data/config/creature_surface_finishes.json": {
+          "charged_1105": {
+            "enabled": true
+          }
+        }
+      },
+      "config_file": "data/config/creature_surface_finishes.json",
+      "flag": "charged_1105 enabled (Fulgocobra/Stormraven accent glow 0.42/0.36 -> 0.9/0.8, rim up)",
+      "frames": [
+        "stormwood__fulgocobra__idle",
+        "stormwood__stormraven__idle"
+      ],
+      "capture": "live and arm at High",
+      "note": "Parked by VIS-STORMWOOD 5 Nov: CPU changed 0.16% of pixels, so it was never judged. It is an emissive accent, and CPU Low has no glow. On High, glow should make the charge visible, which is the judges' ask on this row (lowest Stormwood row, GPU High 5.59, PRESENT 3/3 'no visible charge glow or eyes'). Best capture it on top of the ghost-glow overlay if that ships, since glow threshold 1.6 decides whether the accent blooms. Priority 1.",
+      "done": true,
+      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+    },
+    {
+      "id": "f40-2-windows",
+      "row": "F40#2",
+      "kind": "arm",
+      "tree": "main",
+      "overlay_branch": null,
+      "overlay": {
+        "data/config/cloudreach_f40_items.json": {
+          "window_night_energy": 2.4
+        }
+      },
+      "config_file": "data/config/cloudreach_f40_items.json",
+      "flag": "window_night_energy 0.8 -> 2.4 (top-level key, summit aviary windows)",
+      "frames": [
+        "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+        "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach"
+      ],
+      "capture": "live and arm at High (night frame is the test; day approach as the no-change control)",
+      "note": "ITEM-F40-2 r2, never committed or judged: CPU showed no visible change because window emission does not bloom on CPU Low; the READY says 'it may read on the GPU'. Judges at GPU High (F40#2 6.15) and in F-cloudreach say the night silhouette stays small and dark. Config-only, no import. Priority 2.",
+      "done": true,
+      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+    },
+    {
+      "id": "f41-2-building-glow",
+      "row": "F41#2",
+      "kind": "arm",
+      "tree": "main",
+      "overlay_branch": null,
+      "overlay": {
+        "data/config/stormwood_surge.json": {
+          "presentation": {
+            "building_glow_1104": {
+              "enabled": true
+            }
+          }
+        }
+      },
+      "config_file": "data/config/stormwood_surge.json",
+      "flag": "presentation.building_glow_1104 enabled (Building-phase in-cloud sheet lightning reaching the horizon band, glow_low 0)",
+      "frames": [
+        "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm",
+        "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building",
+        "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break"
+      ],
+      "capture": "live and arm at High",
+      "note": "ITEM-F41-2 (LANE-MESHY) parked it unjudged: on CPU the Building frame changed 0.30% of pixels, the same as run-to-run noise. The sheet lightning is emissive and Forward+ High has glow and volumetric fog, so it may read as the phase cue the judges ask for (F41#2 GPU High 6.10, PRESENT 3/3: Calm, Building and Fading differ only in rain). Check the overlay merges into the presentation block, not the top level. Priority 3.",
+      "done": true,
+      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+    },
+    {
+      "id": "f41-10-glass",
+      "row": "F41#10",
+      "kind": "arm",
+      "tree": "tb/item-f41-10",
+      "needs_import": "yes: scripts/world/stormwood_glass_sink.gd (dress() model lookup fix, fused_glass uniforms); check out the branch head ee01f52c9",
+      "overlay_branch": "tb/item-f41-10",
+      "overlay": {
+        "data/config/stormwood_glass_sink.json": {
+          "meshy_rim": {
+            "shards": {
+              "enabled": true
+            }
+          },
+          "fused_glass": {
+            "enabled": true
+          }
+        }
+      },
+      "config_file": "data/config/stormwood_glass_sink.json",
+      "flag": "meshy_rim.shards and fused_glass (both OFF on the branch)",
+      "frames": [
+        "stormwood__landmark__glass_sink__day__approach",
+        "stormwood__landmark__glass_sink__day__close",
+        "stormwood__landmark__glass_sink__golden__approach"
+      ],
+      "capture": "live (main) and arm (branch head with both flags on) at High",
+      "note": "CPU v4 6.20 -> 6.24 (+0.04, 1/3), parked. On CPU the fused-glass sheen and the glass-spike clusters are dull, roughness-only reads. On Forward+ High, specular, SSR and glow on glass should separate the floor from 'a dark lake' (the F-stormwood ask: 'reads as a crystal ring, not a basin'; GPU High 6.02). Confirm the exact flag keys in the branch config before overlaying; the branch READY names them meshy_rim.shards and fused_glass. Priority 4.",
+      "done": true,
+      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+    },
+    {
+      "id": "f41-fight-rim",
+      "row": "F41#3",
+      "kind": "arm",
+      "tree": "tb/item-f41-fight-read",
+      "needs_import": "yes: scripts/creatures/creature_rim.gd wanted() and world_look.gd scene pass-through (inert without realm_scenes); check out the branch head a280bf51c",
+      "overlay_branch": "tb/item-f41-fight-read",
+      "overlay": "ralph/reports/LANES/ITEM-F41-FIGHT-READ/overlay_b.json",
+      "config_file": "data/config/creature_rim.json",
+      "flag": "realm_scenes = [res://scenes/world/stormwood.tscn] (rim reaches Stormwood fights)",
+      "frames": [
+        "stormwood__fight__capacitor_alpha-i01",
+        "stormwood__fight__capacitor_alpha-tell1-a-start",
+        "stormwood__fight__capacitor_alpha-tell1-e-impact"
+      ],
+      "capture": "live and arm at High; ideally a second arm with the ghost-glow creature rim tone (0.35/3.0) applied as well",
+      "note": "CPU 6.33 -> 6.33 (+0.00, 1/3), and two judges said the rim bleached the pale boss. That CPU rim was the untoned fresnel. G-ghost-glow on GPU shows the toned rim (0.35/3.0) removes the ghost look on creatures (F38#28 +0.91, F38#2 +0.67, 3/3), so a toned rim in Stormwood may separate both fighters without bleaching Voltarach. Use the capacitor stand, which is deterministic (hollows is not). Priority 5.",
+      "done": true,
+      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+    },
+    {
+      "id": "f39-16-cap-scatter",
+      "row": "F39#16",
+      "kind": "arm",
+      "tree": "tb/item-f39-16",
+      "needs_import": "yes: shaders/water_current_flow.gdshader gains uniform cap_scatter (inert at 0); check out the branch head 9c3e9ea08",
+      "overlay_branch": "tb/item-f39-16",
+      "overlay": {
+        "data/config/tidewake_look.json": {
+          "current_flow": {
+            "shader": {
+              "cap_scatter": 1.0,
+              "chop_cap_density": 0.22
+            }
+          }
+        }
+      },
+      "config_file": "data/config/tidewake_look.json",
+      "flag": "current_flow.shader cap_scatter 1.0, chop_cap_density 0.35 -> 0.22 (the r2 values)",
+      "frames": [
+        "tidewake__current_states__S1_live_t0",
+        "tidewake__current_states__S1_live_t1",
+        "tidewake__current_states__S2_live_t0"
+      ],
+      "capture": "live and arm at High",
+      "note": "CPU r2 7.65 -> 7.56 (-0.09, flat), parked. GPU High F-tidewake has F39#16 at 6.88 with the guide lanes FIXED 3/3, but all six judges said the current now barely reads. Scattered, staggered caps are the change most likely to make the flow read. Forward+ water specular and glow change how the caps catch light, so CPU flatness does not carry over. Confirm the shader path of cap_scatter in the branch config. Priority 6.",
+      "done": true,
+      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+    },
+    {
+      "id": "npc-albedo",
+      "rows": [
+        "F39#26",
+        "F39#18",
+        "F39#29",
+        "F41#20",
+        "F41#7",
+        "F41#15",
+        "F39#13"
+      ],
+      "kind": "arm",
+      "tree": "main",
+      "base": "main ba6778f45 PLUS the ghost-glow change (graphics_prefs.gd copy from de6361be6 and overlay ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json, exactly as G-ghost-glow's arm), because ghost-glow ships; live = that ghost-glow arm state",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_albedo.json",
+      "config_file": "data/config/character_body_flags.json",
+      "flag": "npc_vis_look_<profile> albedo-only grades ON (captain_a/b, trader, young_trainer, courier, innkeeper); day_rim and idle_relax stripped from field_researcher and grunt_c",
+      "frames": "F39#26, F39#18, F39#29 dialogue stands; F41#20 Fenn; F41#7 and F41#15 Marrow; F39#13 camp frames (job.json frames of those rows)",
+      "capture": "live (ghost-glow state) vs arm at High; null in the overlay means remove the key (same merge as ITEM-F41-15 overlay_albedo_grade.json)",
+      "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (tb/item-scout-1108 c10819505): ghost-white NPCs on GPU",
+      "done": true
+    },
+    {
+      "id": "npc-emission-off",
+      "rows": [
+        "F41#7",
+        "F41#15",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "main",
+      "base": "main ba6778f45 PLUS the ghost-glow change (graphics_prefs.gd copy from de6361be6 and overlay ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json, exactly as G-ghost-glow's arm), because ghost-glow ships; live = that ghost-glow arm state",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
+      "config_file": "data/config/art.json",
+      "flag": "captain_a and captain_b body_emission_enabled false (no albedo grade)",
+      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames); share the live set with npc-albedo",
+      "capture": "live (ghost-glow state) vs arm at High",
+      "note": "tests whether the imported full-surface emission on the two captain bodies is the real cause (the smaller fix if it wins)",
+      "done": true
+    },
+    {
+      "id": "recheck-f39-21",
+      "rows": [
+        "F39#21"
+      ],
+      "kind": "recheck",
+      "tree": "current origin/main (has hud.json victory_focus ON since #868)",
+      "frames": "F39#21 job.json frames (Venn win/aftermath with match: semantic as in F-tidewake-add; Nerissa win frame now that the seat fix may have landed, else skip it)",
+      "capture": "live only at High on current main; judged against the F-tidewake 4.75. Tests whether the shipped victory card already fixes the Tidewake victory hierarchy.",
+      "done": false
+    },
+    {
+      "id": "recheck-f38-1",
+      "rows": [
+        "F38#1"
+      ],
+      "kind": "recheck",
+      "tree": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm)",
+      "frames": "F38#1 job.json frames",
+      "capture": "arm-state only at High; judged against the F-meadows 5.76 (the see-through faint may be the creature rim ghost-glow fixes)",
+      "done": true
+    },
+    {
+      "id": "marrow-glow-emission",
+      "rows": [
+        "F41#7",
+        "F41#15",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "live = main ba6778f45 plus the ghost-glow change (graphics_prefs.gd copy and glow overlay, as in G-ghost-glow arm)",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
+      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
+      "capture": "ghost-glow live vs ghost-glow + emission-off at High",
+      "note": "emission-off alone brought Marrow's face back but left a pale glowing head; ghost-glow's 1.6 threshold should stop the remaining bloom. Tests the combination that would actually ship. Skipped: G-npc-emission-off already was ghost-glow + emission-off (fa00cbf2c vs live 4f836be4a).",
+      "done": true
+    },
+    {
+      "id": "npc-floor-captain",
+      "rows": [
+        "F41#7",
+        "F41#15",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); live = that ghost-glow state (reuse G-npc-albedo's live set if the frames match)",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_captain.json",
+      "config_file": "data/config/npc_ranks.json, data/config/art.json",
+      "flag": "ranks.captain.emission_floor 0.0 plus captain_a/b body_emission_enabled false",
+      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
+      "capture": "ghost-glow live vs arm at High",
+      "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (7e2f414a5): the captain rank adds a white additive emission floor of 0.18 that re-enables emission even with body_emission_enabled false",
+      "done": true
+    },
+    {
+      "id": "npc-floor-ranks",
+      "rows": [
+        "F39#18",
+        "F41#7",
+        "F41#15",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); live = that ghost-glow state (reuse G-npc-albedo's live set if the frames match)",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_ranks.json",
+      "config_file": "data/config/npc_ranks.json, data/config/art.json",
+      "flag": "captain, grunt and officer emission_floor 0.0 plus captain_a/b emission off",
+      "frames": "F39#18 (Bex and Irva grunts) plus the npc-floor-captain frames",
+      "capture": "ghost-glow live vs arm at High",
+      "note": "tests whether the same floor ghosts Team Tether grunts and officers",
+      "done": true
+    },
+    {
+      "id": "fp-exposure-115",
+      "rows": [
+        "F41#7",
+        "F41#15",
+        "F39#18",
+        "F39#26",
+        "F39#29",
+        "F38#28",
+        "F38#2",
+        "F38#23",
+        "F39#10",
+        "F39#3",
+        "F40#2",
+        "F40#12",
+        "F41#12",
+        "F41#17"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "live = main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); reuse existing ghost-glow live frames where they match",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/fp_exposure_115.json",
+      "config_file": "data/config/art.json graphics_presets Medium/High forward_plus_grade",
+      "flag": "exposure_scale 1.333 -> 1.15 (Forward+ only)",
+      "frames": "job.json frames of the listed rows (NPC dialogue, creatures, and one or two scene rows per biome so a global darkening is caught)",
+      "capture": "ghost-glow live vs arm at High",
+      "note": "Second lever named in ITEM-GHOST-GLOW/ARM.md: Forward+ multiplies realm exposure (1.35-1.42) by 1.333 (effective about 1.8-1.9), so pale hair and skin stay hot even with the glow threshold and no emission floor (Marrow). Global change: judge every row; it ships only if it gains overall without scene rows dropping.",
+      "done": false
+    },
+    {
+      "id": "npc-floor-grunt-officer",
+      "rows": [
+        "F39#18",
+        "F39#29",
+        "F39#26",
+        "F41#8"
+      ],
+      "kind": "arm",
+      "tree": "main ba6778f45",
+      "base": "live = main ba6778f45 plus the ghost-glow change (reuse G-npc-albedo / G-npc-floor live frames where they match)",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_grunt_officer.json",
+      "config_file": "data/config/npc_ranks.json",
+      "flag": "grunt and officer emission_floor 0.0 (captain untouched)",
+      "frames": "job.json frames of the listed rows",
+      "capture": "ghost-glow live vs arm at High",
+      "note": "G-npc-floor: all-ranks floor off gained F39#18 +0.28 (3/3) and F39#29 +0.14 (2/3) but cost Marrow 0.09-0.14; this keeps the grunt gain without touching captains.",
       "done": false
     }
-  ]
+  ],
+  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
 }

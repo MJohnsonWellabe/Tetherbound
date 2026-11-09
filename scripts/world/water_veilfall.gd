@@ -744,6 +744,25 @@ func combat_arena_bounds_at(x: float, z: float) -> float:
 	return -1.0
 
 
+## F39#21 (LANE-MESHY, 9 Nov 2026): the same room rect measured to its walls,
+## without the authored side/end margins. CombatManager grows a ring past
+## `combat_arena_bounds_at` only to fit rendered bodies that cannot fit
+## otherwise, and only while that ring still clears these walls by the visible
+## clearance (`_room_wall_growth`). -1.0 wherever combat_arena_bounds_at has no opinion.
+func combat_arena_wall_bound_at(x: float, z: float) -> float:
+	if combat_arena_bounds_at(x, z) < 0.0:
+		return -1.0
+	var cfg: Dictionary = rules.get("arena_bounds", {}) as Dictionary
+	var local := Vector2(x - interior.position.x, z - interior.position.z)
+	for room: Dictionary in rules.rooms:
+		if not (cfg.get("rooms", []) as Array).has(room.id):
+			continue
+		var bound := room_arena_bound(local, room, 0.0, 0.0)
+		if bound > 0.0:
+			return bound
+	return -1.0
+
+
 ## Pure form: the ring radius a room rect affords at interior-local `local`
 ## (x, z), or -1.0 outside it; never below 0.5.
 static func room_arena_bound(local: Vector2, room: Dictionary, side_margin: float, end_margin: float) -> float:

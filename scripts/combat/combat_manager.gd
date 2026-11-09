@@ -1169,6 +1169,29 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 				accepted_spots.assign(slid.spots)
 				centre = slid.centre
 				cfg["radius"] = slid.radius
+		# F39#21 (LANE-MESHY, 9 Nov 2026, coordinator-approved option 2): a room
+		# provider's authored margin can cap the ring below the rendered need
+		# where the room's own walls still have space (Veilfall Heart Chamber:
+		# Nerissa's Mirejaw reaches 11.38 m in a ring capped at 10.2 m, 5 m
+		# inside walls that stand about 15 m out), so her second creature could
+		# never be sent out. Only when every path above failed on the rendered
+		# radius alone, the ring grows to the rendered need if the grown ring
+		# still clears the room's measured walls by the visible clearance. The
+		# same measured fit and terrain checks run on the grown ring.
+		if accepted_spots.is_empty() and host_arena.is_empty() and bound >= 0.0 and local_capacity_ok \
+				and str(last_admission_context.get("stage", "")) == "rendered_radius":
+			var room_grown := _room_wall_growth(centre)
+			if room_grown > float(cfg["radius"]):
+				var refused_room := last_admission_context.duplicate(true)
+				if _staged_render_fit(_admitted_spots, centre, room_grown):
+					accepted_spots = _admitted_spots
+				else:
+					accepted_spots = _find_clear_formation(_admitted_spots, centre, room_grown)
+				if accepted_spots.is_empty():
+					last_admission_context = refused_room
+					last_admission_context["room_wall_growth_radius"] = room_grown
+				else:
+					cfg["radius"] = room_grown
 		if accepted_spots.is_empty(): return false
 		_admitted_spots = accepted_spots
 	_arena = ARENA.new()
@@ -1207,6 +1230,37 @@ func _slide_from_capped_room(centre: Vector3, derived_radius: float) -> Dictiona
 		distance += step
 	last_admission_context = refused
 	return {}
+
+
+## See `_open_arena`'s room-wall growth note. The ring radius both rendered
+## bodies need around `centre`, when the room provider measures its walls
+## (`combat_arena_wall_bound_at`, no authored margin) and that ring still
+## clears them by the visible clearance; otherwise -1.0.
+func _room_wall_growth(centre: Vector3) -> float:
+	if _admitted_spots.size() != 2 or not is_instance_valid(_player):
+		return -1.0
+	var host: Node = _player.get_parent()
+	if host == null:
+		return -1.0
+	var footprint := _fighter_render_footprint()
+	var claim := _arena_capacity_at(host, centre, footprint)
+	var source := claim.get("source") as Node
+	if not is_instance_valid(source) or not source.has_method("combat_arena_wall_bound_at"):
+		return -1.0
+	var walls := float(source.call("combat_arena_wall_bound_at", centre.x, centre.z))
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	return room_wall_growth_radius(_admitted_spots[0].distance_to(_admitted_spots[1]), footprint, clearance, walls)
+
+
+## Pure form of `_room_wall_growth`: half the fighter gap plus the rendered
+## footprint plus the visible clearance, if that ring still stands the visible
+## clearance inside the measured walls (and within the 26 m ring cap); else -1.0.
+static func room_wall_growth_radius(gap: float, footprint: float, clearance: float, walls: float) -> float:
+	var need := gap * 0.5 + footprint + clearance
+	if not is_finite(walls) or walls <= 0.0 or not is_finite(need) or need <= 0.0 \
+			or need + clearance > walls or need > 26.0:
+		return -1.0
+	return need
 
 
 ## A failed local start may use the centre of the room both actors occupy.
