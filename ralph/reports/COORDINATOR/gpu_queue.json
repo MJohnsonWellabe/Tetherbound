@@ -399,7 +399,7 @@
       "frames": "job.json frames of the listed rows (NPC dialogue, creatures, and one or two scene rows per biome so a global darkening is caught)",
       "capture": "ghost-glow live vs arm at High",
       "note": "Second lever named in ITEM-GHOST-GLOW/ARM.md: Forward+ multiplies realm exposure (1.35-1.42) by 1.333 (effective about 1.8-1.9), so pale hair and skin stay hot even with the glow threshold and no emission floor (Marrow). Global change: judge every row; it ships only if it gains overall without scene rows dropping.",
-      "done": false
+      "done": true
     },
     {
       "id": "npc-floor-grunt-officer",
@@ -419,7 +419,7 @@
       "frames": "job.json frames of the listed rows",
       "capture": "ghost-glow live vs arm at High",
       "note": "G-npc-floor: all-ranks floor off gained F39#18 +0.28 (3/3) and F39#29 +0.14 (2/3) but cost Marrow 0.09-0.14; this keeps the grunt gain without touching captains.",
-      "done": false
+      "done": true
     },
     {
       "id": "recheck-nerissa-win",
@@ -431,6 +431,38 @@
       "frames": "F39#21 Nerissa win frame (job.json), with --max-frames large enough to reach the win (the lane's repro used --max-frames=200)",
       "capture": "live only at High on current main",
       "note": "Nerissa's Mirejaw is admitted since #872; this fills the F39#21 Nerissa null",
+      "done": false
+    },
+    {
+      "id": "confirm-75-ghostglow",
+      "rows": [
+        "F38#28",
+        "F40#12",
+        "F41#17"
+      ],
+      "kind": "confirm",
+      "tree": "current origin/main (ships ghost-glow since #873)",
+      "frames": "job.json frames of the three rows",
+      "capture": "live only, at High AND Medium (both presets), on current main",
+      "note": "G-exposure.md: in the ghost-glow state these map 7.50-7.55 at High (F38#28 7.50, F40#12 7.55, F41#17 7.55); a confirming High+Medium pass on shipped main can close them",
+      "done": false
+    },
+    {
+      "id": "occlusion-fade-off",
+      "rows": [
+        "F39#26",
+        "F39#18",
+        "F39#29"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "ccr-99b76ce0-imf8zn",
+      "overlay": "ralph/reports/COORDINATOR/overlays/occlusion_fade_off.json",
+      "config_file": "data/config/camera.json",
+      "flag": "occlusion_fade.enabled false",
+      "frames": "F39#26, F39#18, F39#29 dialogue stands (job.json)",
+      "capture": "live vs arm at High on current main",
+      "note": "G-npc-floor-go.md: after albedo, emission, rank floor and day rim all came back flat, the dialogue occlusion fade (fade_transparency 0.8) is the strongest remaining suspect for the ghosted Tidewake speakers. Diagnostic arm: occlusion_fade shipped ON on 2 Nov for +0.53/+0.62 on dialogue frames, so a win here would need a narrower fix (e.g. never fade the speaker), not turning it off.",
       "done": false
     }
   ],
