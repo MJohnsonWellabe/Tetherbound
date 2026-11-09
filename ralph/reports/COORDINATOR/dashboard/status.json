@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-09 03:15 UTC",
+  "updated": "2026-11-09 03:45 UTC",
   "headline": [
     "9 Nov: three visual rows closed on GPU Medium and High, the first closes since the re-score: F38#36 dialogue speaker framing (High 7.74 / Medium 8.08), F38#38 craft hint contrast (8.16 / 8.30) and F38#18 craft recipe text (7.95 / 8.19). F38#23 relay yard missed on Medium (7.07).",
     "Owner 7 Nov evening: lanes stopped until the improvement process was fixed (about half the rows tried gained nothing). 8 Nov: one lane restarts on the new process, starting with Meshy pieces already on main that judges scored as gains.",
@@ -1856,9 +1856,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 24",
+      "pr": "#870",
       "what": "co-op feast feeding race fixed; F38#36, #38, #18 recorded closed",
-      "when": "9 Nov, in CI"
+      "when": "9 Nov 03:43"
     },
     {
       "pr": "#869",
