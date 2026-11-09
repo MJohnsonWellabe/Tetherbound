@@ -329,8 +329,8 @@
       "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
       "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
       "capture": "ghost-glow live vs ghost-glow + emission-off at High",
-      "note": "emission-off alone brought Marrow's face back but left a pale glowing head; ghost-glow's 1.6 threshold should stop the remaining bloom. Tests the combination that would actually ship.",
-      "done": false
+      "note": "emission-off alone brought Marrow's face back but left a pale glowing head; ghost-glow's 1.6 threshold should stop the remaining bloom. Tests the combination that would actually ship. Skipped: G-npc-emission-off already was ghost-glow + emission-off (fa00cbf2c vs live 4f836be4a).",
+      "done": true
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
