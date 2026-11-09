@@ -302,7 +302,7 @@
       "tree": "current origin/main (has hud.json victory_focus ON since #868)",
       "frames": "F39#21 job.json frames (Venn win/aftermath with match: semantic as in F-tidewake-add; Nerissa win frame now that the seat fix may have landed, else skip it)",
       "capture": "live only at High on current main; judged against the F-tidewake 4.75. Tests whether the shipped victory card already fixes the Tidewake victory hierarchy.",
-      "done": false
+      "done": true
     },
     {
       "id": "recheck-f38-1",
@@ -419,6 +419,18 @@
       "frames": "job.json frames of the listed rows",
       "capture": "ghost-glow live vs arm at High",
       "note": "G-npc-floor: all-ranks floor off gained F39#18 +0.28 (3/3) and F39#29 +0.14 (2/3) but cost Marrow 0.09-0.14; this keeps the grunt gain without touching captains.",
+      "done": false
+    },
+    {
+      "id": "recheck-nerissa-win",
+      "rows": [
+        "F39#21"
+      ],
+      "kind": "recheck",
+      "tree": "current origin/main (#872 merge: Nerissa seat fix)",
+      "frames": "F39#21 Nerissa win frame (job.json), with --max-frames large enough to reach the win (the lane's repro used --max-frames=200)",
+      "capture": "live only at High on current main",
+      "note": "Nerissa's Mirejaw is admitted since #872; this fills the F39#21 Nerissa null",
       "done": false
     }
   ],
