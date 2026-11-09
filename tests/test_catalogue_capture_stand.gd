@@ -75,3 +75,24 @@ func test_swimming_requires_expected_waterline_mode_and_living_state() -> void:
 	state.mode = CAPTURE.SWIM_STATE.Mode.HUMAN
 	state.drowning = true
 	assert_false(CAPTURE.capture_surface_failure(spec, state, -0.7, limit, true).is_empty())
+
+
+func test_close_position_is_optional_and_validated() -> void:
+	assert_eq(CAPTURE.close_position_for({}), [])
+	assert_eq(CAPTURE.close_position_for({"close_position": [1.0]}), [])
+	assert_eq(CAPTURE.close_position_for({"close_position": ["a", 2.0]}), [])
+	assert_eq(CAPTURE.close_position_for({"close_position": [INF, 2.0]}), [])
+	assert_eq(CAPTURE.close_position_for({"close_position": [128, 5361.5]}), [128.0, 5361.5])
+
+
+func test_overlook_spots_with_far_subjects_author_a_close_position() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CAPTURE.CATALOGUE_PATH))
+	var found := false
+	for biome: Dictionary in (parsed as Dictionary).get("biomes", []):
+		for band: Dictionary in biome.get("bands", []):
+			for spot: Dictionary in band.get("spots", band.get("destinations", [])):
+				if str(spot.get("display_name", "")) == "Summit Eyrie":
+					found = true
+					assert_false(CAPTURE.close_position_for(spot).is_empty(),
+						"F40#20: the Summit Eyrie overlook needs its own close stand at the forecourt")
+	assert_true(found, "Summit Eyrie spot exists in the catalogue")
