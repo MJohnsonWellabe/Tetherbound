@@ -467,6 +467,44 @@
       "done": true
     },
     {
+      "id": "water-rim-off",
+      "rows": [
+        "F39#18",
+        "F39#26",
+        "F39#29",
+        "F39#27"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "tb/item-scout-1108",
+      "overlay": "ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_off.json",
+      "config_file": "data/config/water_character_rim.json",
+      "flag": "enabled false",
+      "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
+      "capture": "live vs arm at High on current main (both arms share one live set)",
+      "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
+      "done": false
+    },
+    {
+      "id": "water-rim-soft",
+      "rows": [
+        "F39#18",
+        "F39#26",
+        "F39#29",
+        "F39#27"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "tb/item-scout-1108",
+      "overlay": "ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_soft.json",
+      "config_file": "data/config/water_character_rim.json",
+      "flag": "energy 0.3, power 3.5, fill_energy 0.0",
+      "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
+      "capture": "live vs arm at High on current main (both arms share one live set)",
+      "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
+      "done": false
+    },
+    {
       "id": "occlusion-fade-off-wide",
       "rows": [
         "F41#7",
