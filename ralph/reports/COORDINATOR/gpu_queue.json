@@ -48,7 +48,8 @@
       ],
       "_why": "CPU cannot produce this frame: on llvmpipe the aftermath draw lands about 6.5 s after the win, past the 6 s reward hold, so the capture's same-receipt check rejects it ('aftermath state invalid after draw'; reproduced twice on main d9d79ff9 and 4af7d07a). The win frame on CPU shows no grey plane. Needed back: the aftermath and receipt-expired PNGs plus manifest.json (camera/player poses) so the plane can be identified and fixed as a bug.",
       "return": "Push the aftermath and receipt-expired PNGs (and win) under G-check-venn-plane/. The tool's manifest.json is a JSON report, so do not push it: instead put the aftermath frame's camera position, camera look direction and player position in your reply message.",
-      "done": false
+      "done": true,
+      "note": "Captured c4ce2ade0; camera landed on another side, plane not in frame. Poses relayed to the build lane for a CPU ray-pick."
     },
     {
       "id": "f38-36-medium",
@@ -665,6 +666,70 @@
       "frames": "job.json frames of the listed rows",
       "capture": "live vs arm at High",
       "note": "LANE-SCOUT ITEM-SW-FOLIAGE-ARM/ARM.md: existing flag foliage_grade_1104 (cooler, darker, less saturated Stormwood foliage), never GPU-judged INVALID capture: Image.adjust_bsc missing in Godot 4.7 (vegetation.gd:1067); re-shoot after the build lane's fix.",
+      "done": true
+    },
+    {
+      "id": "sw-foliage-grade-fixed",
+      "rows": [
+        "F41#5",
+        "F41#8",
+        "F41#3"
+      ],
+      "kind": "arm",
+      "tree": "tb/item-veg-adjust head 2ea565e63332f8b8a1259cd16990d22d28289db5 (or main plus that commit's scripts/world/vegetation.gd changes copied, if cleaner)",
+      "overlay_branch": "tb/item-veg-adjust",
+      "overlay": "ralph/reports/LANES/ITEM-VEG-ADJUST/overlay_foliage_grade.json",
+      "overlay_format": "deep merge",
+      "frames": "same frames as G-sw-foliage-grade (F41#5, F41#8, F41#3 job.json frames)",
+      "capture": "live (current main) vs arm at High; check the script-error list is empty",
+      "note": "Re-shoot of the invalid G-sw-foliage-grade after LANE-MESHY replaced the Godot 3 Image.adjust_bsc call (ITEM-VEG-ADJUST/ARM.md)",
+      "done": true
+    },
+    {
+      "id": "lens-ground-clearance",
+      "kind": "arm",
+      "rows": [
+        "F39#21",
+        "F39#3",
+        "F39#15",
+        "F38#3",
+        "F41#5"
+      ],
+      "branch": "tb/item-venn-plane",
+      "head": "1508bdfae15ccc83a8e976c29410ad0492f1a448",
+      "overlay_branch": "tb/item-venn-plane",
+      "overlay": "ralph/reports/LANES/ITEM-VENN-PLANE/overlay_lens_ground.json",
+      "overlay_format": "deep merge",
+      "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+      "args": [
+        "--trainer=water_trainer_venn",
+        "--interval=8.0",
+        "--max-frames=100",
+        "--level=80",
+        "--pilot=MASHER",
+        "--cap-s=300",
+        "--tells-per-opponent=1",
+        "--hits-per-opponent=1",
+        "--verified-victory-lifecycle",
+        "--expected-resolution=1920x1080",
+        "--seed=2042",
+        "--out={OUT}"
+      ],
+      "resolution": [
+        1920,
+        1080
+      ],
+      "expected_frames": {
+        "lifecycle": [
+          "tidewake__fight__venn__win.png",
+          "tidewake__fight__venn__aftermath.png",
+          "tidewake__fight__venn__receipt-expired.png"
+        ],
+        "fight_observation_about": 20
+      },
+      "frames": "(1) the Venn lifecycle capture as given (win, aftermath, receipt-expired), base vs candidate; (2) because the lens rule touches every exploration camera, also the job.json frames of F39#3, F39#15, F38#3 and F41#5 (slopes, shores, forest) live vs arm",
+      "capture": "live (current main) vs arm (scripts from the branch head copied onto main plus the overlay) at High",
+      "note": "LANE-MESHY ITEM-VENN-PLANE/ARM.md: the grey wedge is the dune face 0.35 m under the lens; candidate shortens the spring arm until the lens clears ground by 1 m (flag OFF on the branch). Global camera change, so it needs the wider frame set.",
       "done": true
     }
   ],
