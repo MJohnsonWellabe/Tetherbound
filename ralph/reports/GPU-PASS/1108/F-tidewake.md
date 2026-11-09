@@ -61,7 +61,7 @@
 Each of these has its recorded defect FIXED by most or all judges. What stands between them and 7.5 is staging and finish, not the defect itself.
 
 ## Judges' main findings (all three in the batch unless noted)
-- **New on GPU High: named NPCs and speakers render ghost-white and translucent.** All 6 b1/b2 judges named this, and 5 put it in their top changes. It drags down F39#26, F39#18, F39#29, F39#27, F39#13 and F39#22.
+- **New on GPU High: named NPCs and speakers render ghost-white and translucent.** All 6 b1/b2 judges named this, and all 6 put it in their top changes. It drags down F39#26, F39#18, F39#29, F39#27, F39#13 and F39#22.
   - F39#26 and F39#18: Adair, Iona, Rowan, Daro, Bex and Irva look like see-through ghosts.
   - F39#29: Nerissa and Nalia read washed-out.
   - F39#27, F39#13 and F39#22: the NPC is pale.
