@@ -1,0 +1,46 @@
+{
+ "anchors": {
+  "f04_6_r22:r22": [
+   5.6,
+   5.4,
+   5.6
+  ],
+  "f04_6_r22:control": [
+   4.8,
+   4.5,
+   4.8
+  ],
+  "craft:after": [
+   6.5,
+   6.5,
+   6.3
+  ],
+  "craft:before": [
+   4.6,
+   4.6,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.5,
+   4.4,
+   5.1
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.7,
+   3.8,
+   4.3
+  ]
+ },
+ "candidates": {
+  "G F39#21 live-vs-recheck [G-f3921_F39-21_recheck.png]": [
+   5.8,
+   5.5,
+   5.5
+  ],
+  "G F39#21 live-vs-recheck [G-f3921_F39-21_live_for_recheck.png]": [
+   4.9,
+   4.7,
+   4.9
+  ]
+ }
+}
