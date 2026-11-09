@@ -22,7 +22,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-2/live/High/meadows__terrapup__hurt.jpg",
+  "path": "G-ghost-glow/F38-2/live/High/meadows__terrapup__hurt.jpg",
   "sky_fraction": 0.188,
   "lower_edges": 0.421
  },
@@ -49,7 +49,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-2/live/High/meadows__nightburrow__hurt.jpg",
+  "path": "G-ghost-glow/F38-2/live/High/meadows__nightburrow__hurt.jpg",
   "sky_fraction": 0.189,
   "lower_edges": 0.4298
  },
@@ -76,7 +76,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-2/live/High/meadows__nightburrow__moving.jpg",
+  "path": "G-ghost-glow/F38-2/live/High/meadows__nightburrow__moving.jpg",
   "sky_fraction": 0.189,
   "lower_edges": 0.4308
  },
@@ -101,7 +101,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-7/live/High/meadows__catching__01-aiming-full-health.jpg",
+  "path": "G-ghost-glow/F38-7/live/High/meadows__catching__01-aiming-full-health.jpg",
   "sky_fraction": 0.207,
   "lower_edges": 0.5604
  },
@@ -126,7 +126,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-7/live/High/meadows__catching__catch_low.jpg",
+  "path": "G-ghost-glow/F38-7/live/High/meadows__catching__catch_low.jpg",
   "sky_fraction": 0.202,
   "lower_edges": 0.5152
  },
@@ -151,7 +151,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-7/live/High/meadows__catching__catch_high.jpg",
+  "path": "G-ghost-glow/F38-7/live/High/meadows__catching__catch_high.jpg",
   "sky_fraction": 0.208,
   "lower_edges": 0.561
  },
@@ -177,7 +177,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-13/live/High/meadows__catching__03-strike.jpg",
+  "path": "G-ghost-glow/F38-13/live/High/meadows__catching__03-strike.jpg",
   "sky_fraction": 0.058,
   "lower_edges": 0.377
  },
@@ -203,7 +203,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-13/live/High/meadows__catching__03-absorbing.jpg",
+  "path": "G-ghost-glow/F38-13/live/High/meadows__catching__03-absorbing.jpg",
   "sky_fraction": 0.059,
   "lower_edges": 0.3592
  },
@@ -228,7 +228,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-13/live/High/meadows__catching__04-orb-resting.jpg",
+  "path": "G-ghost-glow/F38-13/live/High/meadows__catching__04-orb-resting.jpg",
   "sky_fraction": 0.062,
   "lower_edges": 0.4132
  },
@@ -254,7 +254,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-14/live/High/meadows__catching__03-strike.jpg",
+  "path": "G-ghost-glow/F38-14/live/High/meadows__catching__03-strike.jpg",
   "sky_fraction": 0.058,
   "lower_edges": 0.377
  },
@@ -280,7 +280,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-14/live/High/meadows__catching__03-absorbing.jpg",
+  "path": "G-ghost-glow/F38-14/live/High/meadows__catching__03-absorbing.jpg",
   "sky_fraction": 0.059,
   "lower_edges": 0.3592
  },
@@ -313,7 +313,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-28/live/High/meadows__fights__warden_aldis-03.jpg",
+  "path": "G-ghost-glow/F38-28/live/High/meadows__fights__warden_aldis-03.jpg",
   "sky_fraction": 0.051,
   "lower_edges": 0.21
  },
@@ -346,7 +346,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-28/live/High/meadows__fights__warden_aldis-05.jpg",
+  "path": "G-ghost-glow/F38-28/live/High/meadows__fights__warden_aldis-05.jpg",
   "sky_fraction": 0.04,
   "lower_edges": 0.1944
  },
@@ -379,7 +379,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F38-28/live/High/meadows__fights__warden_aldis-08.jpg",
+  "path": "G-ghost-glow/F38-28/live/High/meadows__fights__warden_aldis-08.jpg",
   "sky_fraction": 0.047,
   "lower_edges": 0.3458
  },
@@ -406,7 +406,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-18/live/High/tidewake__inventory__trainer__water_trainer_daro__dialogue.jpg",
+  "path": "G-ghost-glow/F39-18/live/High/tidewake__inventory__trainer__water_trainer_daro__dialogue.jpg",
   "sky_fraction": 0.417,
   "lower_edges": 0.2194
  },
@@ -433,7 +433,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-18/live/High/tidewake__inventory__trainer__water_trainer_bex__dialogue.jpg",
+  "path": "G-ghost-glow/F39-18/live/High/tidewake__inventory__trainer__water_trainer_bex__dialogue.jpg",
   "sky_fraction": 0.456,
   "lower_edges": 0.2647
  },
@@ -460,7 +460,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-18/live/High/tidewake__inventory__trainer__water_trainer_irva__dialogue.jpg",
+  "path": "G-ghost-glow/F39-18/live/High/tidewake__inventory__trainer__water_trainer_irva__dialogue.jpg",
   "sky_fraction": 0.481,
   "lower_edges": 0.2416
  },
@@ -487,7 +487,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-26/live/High/tidewake__inventory__character__water_adair__dialogue.jpg",
+  "path": "G-ghost-glow/F39-26/live/High/tidewake__inventory__character__water_adair__dialogue.jpg",
   "sky_fraction": 0.484,
   "lower_edges": 0.2248
  },
@@ -514,7 +514,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-26/live/High/tidewake__inventory__character__water_iona__dialogue.jpg",
+  "path": "G-ghost-glow/F39-26/live/High/tidewake__inventory__character__water_iona__dialogue.jpg",
   "sky_fraction": 0.168,
   "lower_edges": 0.2352
  },
@@ -541,7 +541,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-26/live/High/tidewake__inventory__character__water_rowan__dialogue.jpg",
+  "path": "G-ghost-glow/F39-26/live/High/tidewake__inventory__character__water_rowan__dialogue.jpg",
   "sky_fraction": 0.354,
   "lower_edges": 0.2558
  },
@@ -568,7 +568,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-29/live/High/tidewake__inventory__character__water_nalia__dialogue.jpg",
+  "path": "G-ghost-glow/F39-29/live/High/tidewake__inventory__character__water_nalia__dialogue.jpg",
   "sky_fraction": 0.155,
   "lower_edges": 0.2608
  },
@@ -595,7 +595,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-29/live/High/tidewake__inventory__character__water_nerissa__dialogue.jpg",
+  "path": "G-ghost-glow/F39-29/live/High/tidewake__inventory__character__water_nerissa__dialogue.jpg",
   "sky_fraction": 0.463,
   "lower_edges": 0.1658
  },
@@ -622,7 +622,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "biome-alias",
-  "path": "F39-29/live/High/tidewake__inventory__trainer__water_trainer_nerissa__dialogue.jpg",
+  "path": "G-ghost-glow/F39-29/live/High/tidewake__inventory__trainer__water_trainer_nerissa__dialogue.jpg",
   "sky_fraction": 0.482,
   "lower_edges": 0.1512
  },
@@ -651,7 +651,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F41-4/live/High/stormwood__glowmoss_hollows__03__the_lantern_pools__day__close.jpg",
+  "path": "G-ghost-glow/F41-4/live/High/stormwood__glowmoss_hollows__03__the_lantern_pools__day__close.jpg",
   "sky_fraction": 0.051,
   "lower_edges": 0.2891
  },
@@ -678,7 +678,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F41-7/live/High/stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue.jpg",
+  "path": "G-ghost-glow/F41-7/live/High/stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue.jpg",
   "sky_fraction": 0.408,
   "lower_edges": 0.3329
  },
@@ -705,7 +705,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F41-7/live/High/stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue.jpg",
+  "path": "G-ghost-glow/F41-7/live/High/stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue.jpg",
   "sky_fraction": 0.551,
   "lower_edges": 0.3381
  },
@@ -732,7 +732,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F41-7/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "path": "G-ghost-glow/F41-7/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
   "sky_fraction": 0.317,
   "lower_edges": 0.3237
  },
@@ -759,7 +759,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F41-15/live/High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "path": "G-ghost-glow/F41-15/live/High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
   "sky_fraction": 0.277,
   "lower_edges": 0.3665
  },
@@ -786,7 +786,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F41-15/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "path": "G-ghost-glow/F41-15/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
   "sky_fraction": 0.317,
   "lower_edges": 0.3237
  },
@@ -813,7 +813,7 @@
   ],
   "note": "arm = main ba6778f45 plus scripts/ui/graphics_prefs.gd from tb/item-ghost-glow de6361be6 and overlay_glow_threshold.json (glow threshold 1.6, intensity 0.5, bloom 0, creature rim 0.35/3.0). Not a checkout of the branch, which forks from be95950b9. lantern_pools day close is the emissive-bloom check.",
   "match": "exact",
-  "path": "F41-15/live/High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "path": "G-ghost-glow/F41-15/live/High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
   "sky_fraction": 0.305,
   "lower_edges": 0.2946
  },

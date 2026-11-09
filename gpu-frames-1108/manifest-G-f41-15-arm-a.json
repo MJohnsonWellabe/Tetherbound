@@ -22,7 +22,7 @@
   ],
   "note": "armA = main plus ITEM-F41-15/overlay_speaker_light.json (key offset up 0.35, key energy 0.45, rim 1.0). The live set is shared with G-f41-15-arm-b. Nalia, Nerissa and Fenn stands are the dim-stand check.",
   "match": "biome-alias",
-  "path": "F39-29/live/High/tidewake__inventory__character__water_nalia__dialogue.jpg",
+  "path": "G-f41-15-arm-a/F39-29/live/High/tidewake__inventory__character__water_nalia__dialogue.jpg",
   "sky_fraction": 0.153,
   "lower_edges": 0.2551
  },
@@ -49,7 +49,7 @@
   ],
   "note": "armA = main plus ITEM-F41-15/overlay_speaker_light.json (key offset up 0.35, key energy 0.45, rim 1.0). The live set is shared with G-f41-15-arm-b. Nalia, Nerissa and Fenn stands are the dim-stand check.",
   "match": "biome-alias",
-  "path": "F39-29/live/High/tidewake__inventory__character__water_nerissa__dialogue.jpg",
+  "path": "G-f41-15-arm-a/F39-29/live/High/tidewake__inventory__character__water_nerissa__dialogue.jpg",
   "sky_fraction": 0.471,
   "lower_edges": 0.1619
  },
@@ -76,7 +76,7 @@
   ],
   "note": "armA = main plus ITEM-F41-15/overlay_speaker_light.json (key offset up 0.35, key energy 0.45, rim 1.0). The live set is shared with G-f41-15-arm-b. Nalia, Nerissa and Fenn stands are the dim-stand check.",
   "match": "biome-alias",
-  "path": "F39-29/live/High/tidewake__inventory__trainer__water_trainer_nerissa__dialogue.jpg",
+  "path": "G-f41-15-arm-a/F39-29/live/High/tidewake__inventory__trainer__water_trainer_nerissa__dialogue.jpg",
   "sky_fraction": 0.477,
   "lower_edges": 0.1528
  },
@@ -103,7 +103,7 @@
   ],
   "note": "armA = main plus ITEM-F41-15/overlay_speaker_light.json (key offset up 0.35, key energy 0.45, rim 1.0). The live set is shared with G-f41-15-arm-b. Nalia, Nerissa and Fenn stands are the dim-stand check.",
   "match": "exact",
-  "path": "F41-7/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "path": "G-f41-15-arm-a/F41-7/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
   "sky_fraction": 0.29,
   "lower_edges": 0.3412
  },
@@ -130,7 +130,7 @@
   ],
   "note": "armA = main plus ITEM-F41-15/overlay_speaker_light.json (key offset up 0.35, key energy 0.45, rim 1.0). The live set is shared with G-f41-15-arm-b. Nalia, Nerissa and Fenn stands are the dim-stand check.",
   "match": "exact",
-  "path": "F41-15/live/High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "path": "G-f41-15-arm-a/F41-15/live/High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
   "sky_fraction": 0.272,
   "lower_edges": 0.3636
  },
@@ -157,7 +157,7 @@
   ],
   "note": "armA = main plus ITEM-F41-15/overlay_speaker_light.json (key offset up 0.35, key energy 0.45, rim 1.0). The live set is shared with G-f41-15-arm-b. Nalia, Nerissa and Fenn stands are the dim-stand check.",
   "match": "exact",
-  "path": "F41-15/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "path": "G-f41-15-arm-a/F41-15/live/High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
   "sky_fraction": 0.29,
   "lower_edges": 0.3412
  },
@@ -184,7 +184,7 @@
   ],
   "note": "armA = main plus ITEM-F41-15/overlay_speaker_light.json (key offset up 0.35, key energy 0.45, rim 1.0). The live set is shared with G-f41-15-arm-b. Nalia, Nerissa and Fenn stands are the dim-stand check.",
   "match": "exact",
-  "path": "F41-15/live/High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "path": "G-f41-15-arm-a/F41-15/live/High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
   "sky_fraction": 0.314,
   "lower_edges": 0.2743
  },
@@ -211,7 +211,7 @@
   ],
   "note": "armA = main plus ITEM-F41-15/overlay_speaker_light.json (key offset up 0.35, key energy 0.45, rim 1.0). The live set is shared with G-f41-15-arm-b. Nalia, Nerissa and Fenn stands are the dim-stand check.",
   "match": "exact",
-  "path": "F41-20/live/High/stormwood__inventory__character__trader_fenn__dialogue.jpg",
+  "path": "G-f41-15-arm-a/F41-20/live/High/stormwood__inventory__character__trader_fenn__dialogue.jpg",
   "sky_fraction": 0.235,
   "lower_edges": 0.3818
  },
