@@ -1,0 +1,12 @@
+{
+  "row": "F39#21 bug: flat untextured grey plane in the foreground of the Venn aftermath frame (tidewake__fight__venn__resolve__aftermath, about 142 s)",
+  "branch": "tb/item-venn-plane",
+  "head": "bdee5774901cf8ec946863735d0d172e1e086f74",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "args": ["--trainer=water_trainer_venn", "--interval=8.0", "--max-frames=100", "--level=80", "--pilot=MASHER", "--cap-s=300", "--tells-per-opponent=1", "--hits-per-opponent=1", "--verified-victory-lifecycle", "--expected-resolution=1920x1080", "--seed=2042", "--out={OUT}"],
+  "godot_args": ["--rendering-driver", "opengl3", "--resolution", "1920x1080"],
+  "resolution": [1920, 1080],
+  "expected_frames": {"lifecycle": ["tidewake__fight__venn__win.png", "tidewake__fight__venn__aftermath.png", "tidewake__fight__venn__receipt-expired.png"], "fight_observation_about": 20},
+  "presets": ["High", "Medium"],
+  "_why": "CPU cannot produce this frame: on llvmpipe the aftermath draw lands about 6.5 s after the win, past the 6 s reward hold, so the capture's same-receipt check rejects it ('aftermath state invalid after draw'; reproduced twice on main d9d79ff9 and 4af7d07a). The win frame on CPU shows no grey plane. Needed back: the aftermath and receipt-expired PNGs plus manifest.json (camera/player poses) so the plane can be identified and fixed as a bug."
+}
