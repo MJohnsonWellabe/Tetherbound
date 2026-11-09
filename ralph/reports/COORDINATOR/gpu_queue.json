@@ -537,6 +537,22 @@
       "capture": "live at High AND Medium",
       "note": "G-water-rim: F39#26 7.52 and F39#18 7.36 at High with the soft rim; a confirming High+Medium pass can close F39#26 Skipped: one-sided High rescore came in under 7.5 (F39#18 7.07, F39#26 6.88).",
       "done": true
+    },
+    {
+      "id": "f41-8-hesk-cap",
+      "rows": [
+        "F41#8"
+      ],
+      "kind": "arm",
+      "tree": "current origin/main",
+      "overlay_branch": "tb/item-victory-card",
+      "overlay": "ralph/reports/LANES/ITEM-F41-8-ARM/overlay_hesk_cap.json",
+      "config_file": "npc role accessories (see overlay)",
+      "flag": "Hesk gains the installed wool cap and scarf (copper tint)",
+      "frames": "F41#8 job.json frames (Hesk, Maud, Bryn)",
+      "capture": "live vs arm at High",
+      "note": "LANE-MESHY ITEM-F41-8-ARM/ARM.md (903db042f): Hesk and Maud read as the same bare-headed figure; the cap separates them. Config only.",
+      "done": false
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
