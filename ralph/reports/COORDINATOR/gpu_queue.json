@@ -552,7 +552,7 @@
       "frames": "F41#8 job.json frames (Hesk, Maud, Bryn)",
       "capture": "live vs arm at High",
       "note": "LANE-MESHY ITEM-F41-8-ARM/ARM.md (903db042f): Hesk and Maud read as the same bare-headed figure; the cap separates them. Config only.",
-      "done": false
+      "done": true
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
