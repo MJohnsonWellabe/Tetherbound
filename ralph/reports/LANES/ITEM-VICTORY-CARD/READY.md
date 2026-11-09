@@ -1,4 +1,4 @@
-STATUS: in progress (co-op smokes pending; flag ON after the CPU judge)
+STATUS: land (prefix bug fix plus CPU-judged HUD gain)
 BRANCH: tb/item-victory-card
 HEAD: (this commit)
 
@@ -33,3 +33,11 @@ HEAD: (this commit)
 3. F41#8 arm: ralph/reports/LANES/ITEM-F41-8-ARM (GPU).
 4. F38#17/F38#28 red banners: ralph/reports/LANES/ITEM-RED-BANNERS. No change;
    both are Team Tether sites.
+
+Checks with the flag ON:
+- HUD tests: test_victory_hero_card, test_trainer_reward_delivery,
+  test_uiposes_victory_focus, test_progression_feed, test_hud_*,
+  test_gate_f_fight_victory_receipt and the other uiposes/HUD files give
+  166 tests, 0 failed.
+- Co-op smokes: client_trainer_rewards, boss_rewards_each_participant,
+  f27_guest_wild_win and stormwood_hosted_trainers all report ALL CHECKS PASSED.
