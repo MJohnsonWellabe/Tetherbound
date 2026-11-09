@@ -49,6 +49,13 @@ const SWIM_CONFIG := "res://data/config/water_swimming.json"
 ## terrain stand, or its production camera, that has solid geometry just over
 ## it (the Burrow Warrens earth bank's hollow shell swallowed walk_02/walk_03).
 const STAND_GUARD_CONFIG := "res://data/config/capture_stands.json"
+## F40#3 (LANE-MESHY, 9 Nov 2026): the last two approach offsets are tried only
+## after every wider one fails. Cloudreach's floating crowns (Old Wind
+## Observatory, about 20 m across; Broken Skyroad Arch, about 15 m) have no
+## ground 16-48 m back from the authored spot, so every candidate was refused
+## at travel (ground_height_at is NaN over the void) and the frame was lost.
+## Frames that already found a stand keep it: the order is unchanged.
+const APPROACH_STAND_OFFSETS_M := [32.0, 24.0, 40.0, 16.0, 48.0, 12.0, 8.0]
 const BUILD_TIMEOUT_MSEC := 900000
 const BOOT_SETTLE_FRAMES := 24
 const ARRIVE_FRAMES := 20
@@ -464,7 +471,7 @@ func _capture_row(row: Dictionary) -> void:
 	var selected_spec: Dictionary = {}
 	var rejected: Array[Dictionary] = []
 	var offsets: Array = (row.get("stand_offsets_m",
-		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]) as Array).duplicate()
+		APPROACH_STAND_OFFSETS_M if str(row.view) == "approach" else [5.0, 8.0, 12.0]) as Array).duplicate()
 	for extra: Variant in stand_guard_offsets(STAND_GUARD_CONFIG):
 		if not offsets.has(float(extra)):
 			offsets.append(float(extra))
