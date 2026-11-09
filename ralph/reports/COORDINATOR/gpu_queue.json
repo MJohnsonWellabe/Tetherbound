@@ -863,6 +863,25 @@
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows species.json voltarach.placeholder field_emission 0.35 and field_rim 0.12",
    "note": "Voltarach blown to near-white gold bloom (ITEM-VOLTARACH-BLOOM/CAUSE.md): the 22 Oct CPU-tuned field_emission 1.5 lifts the dark carapace to white under GPU exposure. One-species config fix.",
    "done": false
+  },
+  {
+   "id": "f38-3-standoff",
+   "kind": "arm",
+   "rows": [
+    "F38#3"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-f38-3",
+   "overlay": "ralph/reports/LANES/ITEM-F38-3/overlay_meadows_standoff.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "meadows__fights__south_bridge_grunt-01",
+    "meadows__fights__south_bridge_grunt-02",
+    "meadows__fights__south_bridge_grunt-03"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows combat.json trainer_aside.realm_1104.enabled true with meadows side_m 3.8 / forward_m -2.2",
+   "note": "Meadows fight staging (ITEM-F38-3/ARM.md): trainer and grunt stand further out of the creatures' lane so they stay visible beside the large ally. No creature size or camera change. Config only.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
