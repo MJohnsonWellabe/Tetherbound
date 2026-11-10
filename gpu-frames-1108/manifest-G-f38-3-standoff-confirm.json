@@ -2,6 +2,40 @@
  {
   "row": "F38#3",
   "item": "P2-062",
+  "frame": "meadows__fights__south_bridge_grunt-01",
+  "arm": "live",
+  "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
+  "preset": "High",
+  "tool": "tools/phase2_capture_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_fights.gd",
+   "--",
+   "--trainer=south_bridge_grunt,warden_aldis",
+   "--frames=8",
+   "--interval=0.35",
+   "--resolve=won",
+   "--after-frames=6",
+   "--attack",
+   "--tell-frames",
+   "--keep-alive",
+   "--seed=2042",
+   "--out={OUT}"
+  ],
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
+  "match": "exact",
+  "path": "G-f38-3-standoff-confirm/F38-3/live/High/meadows__fights__south_bridge_grunt-01.jpg",
+  "sky_fraction": 0.032,
+  "lower_edges": 0.3109,
+  "camera": "close"
+ },
+ {
+  "row": "F38#3",
+  "item": "P2-062",
   "frame": "meadows__fights__south_bridge_grunt-02",
   "arm": "live",
   "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
@@ -26,11 +60,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-3/live/High/meadows__fights__south_bridge_grunt-02.jpg",
   "sky_fraction": 0.035,
-  "lower_edges": 0.3396
+  "lower_edges": 0.3396,
+  "camera": "close"
  },
  {
   "row": "F38#3",
@@ -59,11 +94,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-3/live/High/meadows__fights__south_bridge_grunt-03.jpg",
   "sky_fraction": 0.037,
-  "lower_edges": 0.2998
+  "lower_edges": 0.2998,
+  "camera": "close"
  },
  {
   "row": "F38#11",
@@ -92,11 +128,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-11/live/High/meadows__fights__south_bridge_grunt-02.jpg",
   "sky_fraction": 0.035,
-  "lower_edges": 0.3396
+  "lower_edges": 0.3396,
+  "camera": "close"
  },
  {
   "row": "F38#11",
@@ -125,11 +162,216 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-11/live/High/meadows__fights__south_bridge_grunt-03.jpg",
   "sky_fraction": 0.037,
-  "lower_edges": 0.2998
+  "lower_edges": 0.2998,
+  "camera": "close"
+ },
+ {
+  "row": "F38#3",
+  "item": "P2-062",
+  "frame": "meadows__fights__south_bridge_grunt-01",
+  "arm": "arm",
+  "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
+  "preset": "High",
+  "tool": "tools/phase2_capture_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_fights.gd",
+   "--",
+   "--trainer=south_bridge_grunt,warden_aldis",
+   "--frames=8",
+   "--interval=0.35",
+   "--resolve=won",
+   "--after-frames=6",
+   "--attack",
+   "--tell-frames",
+   "--keep-alive",
+   "--seed=2042",
+   "--out={OUT}"
+  ],
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). arm camera wide on these frames, caused by the arm",
+  "match": "exact",
+  "path": "G-f38-3-standoff-confirm/F38-3/arm/High/meadows__fights__south_bridge_grunt-01.jpg",
+  "sky_fraction": 0.052,
+  "lower_edges": 0.4488,
+  "camera": "wide_bridge"
+ },
+ {
+  "row": "F38#3",
+  "item": "P2-062",
+  "frame": "meadows__fights__south_bridge_grunt-02",
+  "arm": "arm",
+  "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
+  "preset": "High",
+  "tool": "tools/phase2_capture_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_fights.gd",
+   "--",
+   "--trainer=south_bridge_grunt,warden_aldis",
+   "--frames=8",
+   "--interval=0.35",
+   "--resolve=won",
+   "--after-frames=6",
+   "--attack",
+   "--tell-frames",
+   "--keep-alive",
+   "--seed=2042",
+   "--out={OUT}"
+  ],
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). arm camera wide on these frames, caused by the arm",
+  "match": "exact",
+  "path": "G-f38-3-standoff-confirm/F38-3/arm/High/meadows__fights__south_bridge_grunt-02.jpg",
+  "sky_fraction": 0.051,
+  "lower_edges": 0.4579,
+  "camera": "wide_bridge"
+ },
+ {
+  "row": "F38#3",
+  "item": "P2-062",
+  "frame": "meadows__fights__south_bridge_grunt-03",
+  "arm": "arm",
+  "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
+  "preset": "High",
+  "tool": "tools/phase2_capture_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_fights.gd",
+   "--",
+   "--trainer=south_bridge_grunt,warden_aldis",
+   "--frames=8",
+   "--interval=0.35",
+   "--resolve=won",
+   "--after-frames=6",
+   "--attack",
+   "--tell-frames",
+   "--keep-alive",
+   "--seed=2042",
+   "--out={OUT}"
+  ],
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). arm camera wide on these frames, caused by the arm",
+  "match": "exact",
+  "path": "G-f38-3-standoff-confirm/F38-3/arm/High/meadows__fights__south_bridge_grunt-03.jpg",
+  "sky_fraction": 0.047,
+  "lower_edges": 0.4288,
+  "camera": "wide_bridge"
+ },
+ {
+  "row": "F38#11",
+  "item": "P2-063",
+  "frame": "meadows__fights__south_bridge_grunt-02",
+  "arm": "arm",
+  "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
+  "preset": "High",
+  "tool": "tools/phase2_capture_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_fights.gd",
+   "--",
+   "--trainer=south_bridge_grunt,warden_aldis",
+   "--frames=8",
+   "--interval=0.35",
+   "--resolve=won",
+   "--after-frames=6",
+   "--attack",
+   "--tell-frames",
+   "--keep-alive",
+   "--seed=2042",
+   "--out={OUT}"
+  ],
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). arm camera wide on these frames, caused by the arm",
+  "match": "exact",
+  "path": "G-f38-3-standoff-confirm/F38-11/arm/High/meadows__fights__south_bridge_grunt-02.jpg",
+  "sky_fraction": 0.051,
+  "lower_edges": 0.4579,
+  "camera": "wide_bridge"
+ },
+ {
+  "row": "F38#11",
+  "item": "P2-063",
+  "frame": "meadows__fights__south_bridge_grunt-03",
+  "arm": "arm",
+  "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
+  "preset": "High",
+  "tool": "tools/phase2_capture_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_fights.gd",
+   "--",
+   "--trainer=south_bridge_grunt,warden_aldis",
+   "--frames=8",
+   "--interval=0.35",
+   "--resolve=won",
+   "--after-frames=6",
+   "--attack",
+   "--tell-frames",
+   "--keep-alive",
+   "--seed=2042",
+   "--out={OUT}"
+  ],
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). arm camera wide on these frames, caused by the arm",
+  "match": "exact",
+  "path": "G-f38-3-standoff-confirm/F38-11/arm/High/meadows__fights__south_bridge_grunt-03.jpg",
+  "sky_fraction": 0.047,
+  "lower_edges": 0.4288,
+  "camera": "wide_bridge"
+ },
+ {
+  "row": "F38#3",
+  "item": "P2-062",
+  "frame": "meadows__fights__south_bridge_grunt-01",
+  "arm": "live2",
+  "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
+  "preset": "High",
+  "tool": "tools/phase2_capture_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_fights.gd",
+   "--",
+   "--trainer=south_bridge_grunt,warden_aldis",
+   "--frames=8",
+   "--interval=0.35",
+   "--resolve=won",
+   "--after-frames=6",
+   "--attack",
+   "--tell-frames",
+   "--keep-alive",
+   "--seed=2042",
+   "--out={OUT}"
+  ],
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
+  "match": "exact",
+  "path": "G-f38-3-standoff-confirm/F38-3/live2/High/meadows__fights__south_bridge_grunt-01.jpg",
+  "sky_fraction": 0.037,
+  "lower_edges": 0.3083,
+  "camera": "close"
  },
  {
   "row": "F38#3",
@@ -158,11 +400,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-3/live2/High/meadows__fights__south_bridge_grunt-02.jpg",
   "sky_fraction": 0.035,
-  "lower_edges": 0.3232
+  "lower_edges": 0.3232,
+  "camera": "close"
  },
  {
   "row": "F38#3",
@@ -191,11 +434,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-3/live2/High/meadows__fights__south_bridge_grunt-03.jpg",
   "sky_fraction": 0.036,
-  "lower_edges": 0.2617
+  "lower_edges": 0.2617,
+  "camera": "close"
  },
  {
   "row": "F38#11",
@@ -224,11 +468,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-11/live2/High/meadows__fights__south_bridge_grunt-02.jpg",
   "sky_fraction": 0.035,
-  "lower_edges": 0.3232
+  "lower_edges": 0.3232,
+  "camera": "close"
  },
  {
   "row": "F38#11",
@@ -257,11 +502,46 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-11/live2/High/meadows__fights__south_bridge_grunt-03.jpg",
   "sky_fraction": 0.036,
-  "lower_edges": 0.2617
+  "lower_edges": 0.2617,
+  "camera": "close"
+ },
+ {
+  "row": "F38#3",
+  "item": "P2-062",
+  "frame": "meadows__fights__south_bridge_grunt-01",
+  "arm": "arm2",
+  "tree": "52a6335984be2c4c1d2faf3ff37a965702bb4399",
+  "preset": "High",
+  "tool": "tools/phase2_capture_fights.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_fights.gd",
+   "--",
+   "--trainer=south_bridge_grunt,warden_aldis",
+   "--frames=8",
+   "--interval=0.35",
+   "--resolve=won",
+   "--after-frames=6",
+   "--attack",
+   "--tell-frames",
+   "--keep-alive",
+   "--seed=2042",
+   "--out={OUT}"
+  ],
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). arm camera wide on these frames, caused by the arm",
+  "match": "exact",
+  "path": "G-f38-3-standoff-confirm/F38-3/arm2/High/meadows__fights__south_bridge_grunt-01.jpg",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.4389,
+  "camera": "wide_bridge"
  },
  {
   "row": "F38#3",
@@ -290,11 +570,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-3/arm2/High/meadows__fights__south_bridge_grunt-02.jpg",
   "sky_fraction": 0.021,
-  "lower_edges": 0.3305
+  "lower_edges": 0.3305,
+  "camera": "close"
  },
  {
   "row": "F38#3",
@@ -323,11 +604,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-3/arm2/High/meadows__fights__south_bridge_grunt-03.jpg",
   "sky_fraction": 0.022,
-  "lower_edges": 0.2757
+  "lower_edges": 0.2757,
+  "camera": "close"
  },
  {
   "row": "F38#11",
@@ -356,11 +638,12 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-11/arm2/High/meadows__fights__south_bridge_grunt-02.jpg",
   "sky_fraction": 0.021,
-  "lower_edges": 0.3305
+  "lower_edges": 0.3305,
+  "camera": "close"
  },
  {
   "row": "F38#11",
@@ -389,10 +672,11 @@
    "--seed=2042",
    "--out={OUT}"
   ],
-  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs). LIKE-FOR-LIKE ONLY: the first arm run ended on the wide bridge view on all three frames and arm2 on grunt-01, so this section keeps grunt-02 and grunt-03 from live, live2 and arm2, which share the close behind-trainer angle. Arm re-shoot follows as G-f38-3-standoff-confirm-r2.",
+  "note": "High. CLOSE-OUT confirm. live and live2 = main 52a633598, two runs. arm and arm2 = live plus ITEM-F38-3/overlay_meadows_standoff.json at 7ff252650 (trainer_aside.realm_1104 on; meadows side_m 3.8, forward_m -2.2; realms.water removed), two runs. Controller prompts forced on every side (pad_glyphs).",
   "match": "exact",
   "path": "G-f38-3-standoff-confirm/F38-11/arm2/High/meadows__fights__south_bridge_grunt-03.jpg",
   "sky_fraction": 0.022,
-  "lower_edges": 0.2757
+  "lower_edges": 0.2757,
+  "camera": "close"
  }
 ]
