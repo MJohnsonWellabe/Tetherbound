@@ -1,7 +1,8 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
-    "10 Nov 03:40: F38#27 settings and key-binding menu CLOSED on GPU (High 7.84, Medium 8.25, three judges, confirming batches); landing in batch 34. F38#3 Meadows staging held: the change sends the fight camera wide in most arm frames.",
+    "10 Nov 04:25: storm-light A3 ships (F41#2 Surge phases +0.73, 3/3; F41#17 +0.09; no drops), the first storm-light arm that reached the frame. Glass Sink lip ring (free Blender pipeline) lost -0.68: slabs read as placeholder blocks.",
+    "10 Nov 03:40: F38#27 settings and key-binding menu CLOSED on GPU (High 7.84, Medium 8.25, three judges, confirming batches); landed (#880). F38#3 Meadows staging held: the change sends the fight camera wide in most arm frames.",
     "10 Nov overnight: Voltarach bloom fix won on GPU (+1.04/+1.16, 3/3) and landed (#879). F38#3 Meadows fight staging scored 7.74 at High on its one clean shot (+0.45, 3/3); a close-out confirm (two runs per side, High then Medium) is next on the PC. Free Blender pipeline in use (no Meshy credits): Stormheart core v2 flat, Glass Sink ring re-shooting as a continuous 172-slab ring. Storm-light: arm A was a fog-only result (an older light pass overrode the key light); A3 is being rebuilt to write into that pass.",
     "9 Nov evening: camera lens ground clearance landed (#878). Owner approved the Stormwood storm-light pass: arm A (violet storm key, fog, fighter rim) is first on the GPU; new art now uses a free Blender plus CC0-texture pipeline (no Meshy credits).",
     "9 Nov overnight, GPU-decided: Tidewake character rim softened (speakers no longer ghost-white: F39#18 +1.87, F39#26 +2.13, F39#27 +1.09, F39#29 +1.50, all 3/3), ghost-glow fix (creatures no longer see-through: +0.29 to +0.91 on five rows), Stormwood charged glow (+0.61), victory card confirmed on Tidewake (+0.96), Nerissa fight fixed, four rows closed (F38#36, F38#38, F38#18, F40#12).",
@@ -1860,9 +1861,14 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 34 (in CI)",
-      "what": "settings and key-binding menu closes on GPU (High 7.84, Medium 8.25): key pictures for Tab/Q, no doubled key labels, shorter reset line",
+      "pr": "batch 35 (in CI)",
+      "what": "Stormwood storm key light now actually reaches the screen (violet sun and fighter rim in the light pass that wins): Surge phases +0.73 (3/3), no row drops",
       "when": "10 Nov, in CI"
+    },
+    {
+      "pr": "#880",
+      "what": "settings and key-binding menu closes on GPU (High 7.84, Medium 8.25): key pictures for Tab/Q, no doubled key labels, shorter reset line",
+      "when": "10 Nov 04:09"
     },
     {
       "pr": "#879",
@@ -1878,11 +1884,6 @@
       "pr": "#877",
       "what": "co-op feast feeding race fixed at its root (the intermittent CI failure)",
       "when": "9 Nov 19:47"
-    },
-    {
-      "pr": "#876",
-      "what": "centred victory hero card (Tidewake +0.71, 3/3) and Nerissa's doubled reward text fixed",
-      "when": "9 Nov 18:27"
     }
   ],
   "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
