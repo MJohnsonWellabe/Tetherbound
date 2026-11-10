@@ -1534,6 +1534,58 @@
    "capture": "live (main) vs arm (+ round flecks) at High. Pre-push: the pale lilac notched quad and small patch beside the trainer are gone; flecks read as small round sparkles.",
    "note": "F41#24 last try (ITEM-F41-24): on GPU the notched quad is one 0.67 m sw_glint cell drawn as a whole-cell square; round flecks replace the square cells.",
    "done": true
+  },
+  {
+   "id": "newapproach-wave-crests",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "417076a378d4fa6099082955077afcef5d6c6c46",
+   "tree": "main plus shaders/water_current_flow.gdshader and tools/capture_tidewake_f13_5.gd (the --strip-frames change, merged with main's version) from that head",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WAVES/overlay_crests.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "godot_args": [
+    "--fixed-fps",
+    "20"
+   ],
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--strip-frames=10",
+    "--strip-gap-frames=2",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "frames": "10-frame strips for the three swimmer views, plus a GIF per view and side",
+   "capture": "High, base vs arm, arrow OFF on both (OFF by default on main now). Pre-push: report first if any crest shows as a sharp-edged triangle or shard that pops in and out by day.",
+   "note": "OWNER DESIGN (which way the waves move), second build: the foam ribbon's arcs reshaped into wave crests across the flow with a bright leading edge, advancing at 1.9x lane speed so they overtake the logs. Passed the blind strip bar on CPU. RUN FIRST. RESULT: captured 24c40e196; by day crests break into hard-edged shards that flicker.",
+   "done": true
+  },
+  {
+   "id": "trunk-dither-narrow",
+   "kind": "arm",
+   "rows": [
+    "F41#4",
+    "F41#5"
+   ],
+   "branch": "tb/item-trunk-dither",
+   "head": "26ad2fb1acb44378b7b0fe9ade6ac5448f9a0438",
+   "tree": "current main plus the branch's near_lens_fade narrow_band_1110 code and config block (foliage_camera_visibility.gd and the json block, merged)",
+   "overlay_branch": "tb/item-trunk-dither",
+   "overlay": "ralph/reports/LANES/ITEM-TRUNK-DITHER/overlay_narrow.json",
+   "overlay_format": "deep merge",
+   "frames": "stormwood__deepwood__10__the_fallen_giant__day__close; matrix giant_calm (capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath); PLUS, as a regression check because the fade applies to every Stormwood tree near the lens, the F41#5 job frames (forest stands) and one Stormwood fight frame (capacitor_alpha-i01)",
+   "capture": "live vs arm at High. Pre-push: trunks read solid with at most a thin dither edge at the lens; no trunk covers the trainer or a fighter in any frame.",
+   "note": "F41#4 Fallen Giant trunk dither (ITEM-TRUNK-DITHER/ARM.md): the near-lens fade dissolved trunks over 3-7 m; the arm narrows it to 3-4 m.",
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 531247ece (job frames) and 07591e530 (giant_calm)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

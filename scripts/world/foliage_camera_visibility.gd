@@ -92,6 +92,14 @@ static func apply(mesh: Mesh, model_path: String, layer: Dictionary) -> Mesh:
 ## Presentation only; placements, colliders and the scatter bake are unchanged.
 static func near_lens_fade(mesh: Mesh, model_path: String, realm: String) -> Mesh:
 	var cfg: Dictionary = config().get("near_lens_fade", {})
+	# Fallen Giant trunk dither (LANE-MESHY, 10 Nov; `narrow_band_1110`, OFF
+	# until judged): its band replaces the 3-7 m one, so a trunk dithers over
+	# about 1 m near the lens instead of a 4 m half-dissolved stretch.
+	var narrow: Variant = cfg.get("narrow_band_1110", {})
+	if narrow is Dictionary and bool((narrow as Dictionary).get("enabled", false)):
+		cfg = cfg.duplicate()
+		cfg["invisible_below_m"] = (narrow as Dictionary).get("invisible_below_m", cfg.get("invisible_below_m"))
+		cfg["opaque_above_m"] = (narrow as Dictionary).get("opaque_above_m", cfg.get("opaque_above_m"))
 	if mesh == null or not bool(cfg.get("enabled", false)) or not realm in cfg.get("realms", []) \
 			or not model_path in cfg.get("models", []):
 		return mesh
