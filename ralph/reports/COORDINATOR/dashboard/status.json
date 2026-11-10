@@ -1,6 +1,7 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
+    "10 Nov 04:55: LANE-NEWAPPROACH's first win ships: wind-up dust at ankle height (F38#3 +0.45/+0.29, 3/3 both runs; F38#11 +0.30 r1). The F38#3 trainer standoff lost on the full set (-0.34 to -1.09) because it sends the fight camera wide; dropped.",
     "10 Nov 04:25: storm-light A3 ships (F41#2 Surge phases +0.73, 3/3; F41#17 +0.09; no drops), the first storm-light arm that reached the frame. Glass Sink lip ring (free Blender pipeline) lost -0.68: slabs read as placeholder blocks.",
     "10 Nov 03:40: F38#27 settings and key-binding menu CLOSED on GPU (High 7.84, Medium 8.25, three judges, confirming batches); landed (#880). F38#3 Meadows staging held: the change sends the fight camera wide in most arm frames.",
     "10 Nov overnight: Voltarach bloom fix won on GPU (+1.04/+1.16, 3/3) and landed (#879). F38#3 Meadows fight staging scored 7.74 at High on its one clean shot (+0.45, 3/3); a close-out confirm (two runs per side, High then Medium) is next on the PC. Free Blender pipeline in use (no Meshy credits): Stormheart core v2 flat, Glass Sink ring re-shooting as a continuous 172-slab ring. Storm-light: arm A was a fog-only result (an older light pass overrode the key light); A3 is being rebuilt to write into that pass.",
@@ -1861,6 +1862,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "batch 36 (in CI)",
+      "what": "fight wind-up dust kept at ankle height in an earth tone instead of a chest-high white cloud over both fighters (F38#3 +0.45/+0.29, 3/3 both runs; first LANE-NEWAPPROACH win)",
+      "when": "10 Nov, in CI"
+    },
+    {
       "pr": "#881",
       "what": "Stormwood storm key light now actually reaches the screen (violet sun and fighter rim in the light pass that wins): Surge phases +0.73 (3/3), no row drops",
       "when": "10 Nov 04:49"
@@ -1879,11 +1885,6 @@
       "pr": "#878",
       "what": "camera keeps its lens at least 1 m off the ground (the Venn aftermath 'grey plane' was a dune face 0.35 m from the lens)",
       "when": "9 Nov 21:56"
-    },
-    {
-      "pr": "#877",
-      "what": "co-op feast feeding race fixed at its root (the intermittent CI failure)",
-      "when": "9 Nov 19:47"
     }
   ],
   "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
