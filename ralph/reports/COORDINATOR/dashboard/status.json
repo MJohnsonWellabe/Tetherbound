@@ -1,6 +1,7 @@
 {
-  "updated": "10 Nov 2026 16:05 UTC",
+  "updated": "10 Nov 2026 16:22 UTC",
   "headline": [
+    "10 Nov 16:22: wave cue v3 with the cut fixed did not ship: the softened crests drift diagonally, so swim-away direction fell back to 1/3, and they read as popping white ovals (-0.88); look still won across (+0.64) and at night (+0.58). Crest-shape line parked after four tries. Next: one T2 water cleanup swing (seam band, daylight-lit night, white foam disc), then a different wave technique (flow-mapped normals and soft scrolling foam that outrun the swimmer). Arrow stays (off by default).",
     "10 Nov 16:05: owner's wave-motion current cue, third attempt: crests that outrun the drifting swimmer make swim-away-day read toward the camera 3/3 (0/3 on today's water). Arm A wins the look across (+0.69, 3/3) and at night (+0.16); it loses away-day only to one cut crest in the shader. LANE-NEWAPPROACH is fixing that crest for one more GPU round. Trunk dither fix landed (#890).",
     "10 Nov 15:31: trunk dither fix wins on GPU (Fallen Giant grove 5.00 -> 6.30, +1.30, 3/3; no regression), landed (#890). Next on the grove: the lilac slab (the white quad in that live was pre-#889).",
     "10 Nov 14:55: round ground glints landed (#889): the lilac quad by the trainer at the Fallen Giant is gone (F41#24 +0.74, 3/3). Owner's wave cue v2 (crests across the flow) lost -0.68 to -1.15, 0/3; judges found why: the camera follows the swimmer, who drifts with the water, so slow waves look backwards against the shore. LANE-NEWAPPROACH's v3 must make the waves outrun the shore on screen, proven offline before the GPU. Trunk-fade narrowing is on the GPU.",
