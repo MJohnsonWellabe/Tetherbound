@@ -1584,7 +1584,8 @@
    "frames": "stormwood__deepwood__10__the_fallen_giant__day__close; matrix giant_calm (capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath); PLUS, as a regression check because the fade applies to every Stormwood tree near the lens, the F41#5 job frames (forest stands) and one Stormwood fight frame (capacitor_alpha-i01)",
    "capture": "live vs arm at High. Pre-push: trunks read solid with at most a thin dither edge at the lens; no trunk covers the trainer or a fighter in any frame.",
    "note": "F41#4 Fallen Giant trunk dither (ITEM-TRUNK-DITHER/ARM.md): the near-lens fade dissolved trunks over 3-7 m; the arm narrows it to 3-4 m.",
-   "done": false
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 531247ece (job frames) and 07591e530 (giant_calm)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
