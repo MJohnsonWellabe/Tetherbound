@@ -1,0 +1,60 @@
+[
+ {
+  "row": "F41#17",
+  "item": "P2-041",
+  "frame": "stormwood__landmark__crown_arch__day__close",
+  "arm": "live",
+  "tree": "c18752bfcf7c36745c4a683367f9b96f8bcee75b",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__landmark__crown_arch",
+   "--times=day",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "Eye check (High): the square plinth is gone, replaced by a ragged landing of rounded flagstones stepping down into the ground, with the trainer standing on the stones; the stone is weathered (mottled, ochre lichen flecks); copper bands on each leg and copper straps along the arches read; set-in glass shards are not visible at this camera distance; no red on the arch (red-leading pixels 4.1% arm vs 4.3% live, all from the existing tree trunks). Live base: fbdefd0c1 has the same tree as main 263051eb3 after #886 (a32ba2292). High. CLOSE-OUT. seed 2042. Tree c18752bfc is local only: tb/land-batch-40 fbdefd0c1 (main + shipped Stormwood swing, groves, strength bars) plus crown_arch_r3.glb, its textures and .import files, provenance.json, crown_arch_vl.json and hero_landmarks_1101.gd at tb/item-f41-17-arch 02111ed3f, so one import covers the new GLB. live = that tree (r3_candidate off, renders as fbdefd0c1). arm = plus ITEM-F41-17-ARCH/overlay_arch_r3.json (r3_candidate on).",
+  "match": "exact",
+  "path": "G-f41-17-crown-arch-r3/F41-17/live/High/stormwood__landmark__crown_arch__day__close.jpg",
+  "sky_fraction": 0.378,
+  "lower_edges": 0.2256
+ },
+ {
+  "row": "F41#17",
+  "item": "P2-041",
+  "frame": "stormwood__landmark__crown_arch__day__close",
+  "arm": "arm",
+  "tree": "c18752bfcf7c36745c4a683367f9b96f8bcee75b",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__landmark__crown_arch",
+   "--times=day",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "Eye check (High): the square plinth is gone, replaced by a ragged landing of rounded flagstones stepping down into the ground, with the trainer standing on the stones; the stone is weathered (mottled, ochre lichen flecks); copper bands on each leg and copper straps along the arches read; set-in glass shards are not visible at this camera distance; no red on the arch (red-leading pixels 4.1% arm vs 4.3% live, all from the existing tree trunks). Live base: fbdefd0c1 has the same tree as main 263051eb3 after #886 (a32ba2292). High. CLOSE-OUT. seed 2042. Tree c18752bfc is local only: tb/land-batch-40 fbdefd0c1 (main + shipped Stormwood swing, groves, strength bars) plus crown_arch_r3.glb, its textures and .import files, provenance.json, crown_arch_vl.json and hero_landmarks_1101.gd at tb/item-f41-17-arch 02111ed3f, so one import covers the new GLB. live = that tree (r3_candidate off, renders as fbdefd0c1). arm = plus ITEM-F41-17-ARCH/overlay_arch_r3.json (r3_candidate on).",
+  "match": "exact",
+  "path": "G-f41-17-crown-arch-r3/F41-17/arm/High/stormwood__landmark__crown_arch__day__close.jpg",
+  "sky_fraction": 0.368,
+  "lower_edges": 0.2297
+ }
+]
