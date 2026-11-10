@@ -61,6 +61,21 @@ static func crown_arch_vl_overlay(cfg: Dictionary) -> Dictionary:
 	var r2: Dictionary = (vl as Dictionary).get("r2_candidate", {})
 	if bool(r2.get("enabled", false)) and r2.has("model"):
 		built["model"] = r2["model"]
+	# F41#17 close-out r3 (OFF until judged): weathered stone, more copper and
+	# glass, a landing that beds into the ground. Same passage and legs as r2.
+	var r3: Dictionary = (vl as Dictionary).get("r3_candidate", {})
+	if bool(r3.get("enabled", false)) and r3.has("model"):
+		built["model"] = r3["model"]
+		# r3's landing keys: a darker moss skin and the moss skirt, so the
+		# footing beds into the dark wet ground instead of a square teal edge.
+		var hero: Dictionary = r3.get("hero", {})
+		for key: String in hero:
+			if built.get(key) is Dictionary and hero[key] is Dictionary:
+				var deep := (built[key] as Dictionary).duplicate(true)
+				deep.merge(hero[key] as Dictionary, true)
+				built[key] = deep
+			else:
+				built[key] = hero[key]
 	return built
 
 ## Glass Sink (P2-070): the terraced basin ring set into the sink floor with a

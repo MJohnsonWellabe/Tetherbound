@@ -8,5 +8,15 @@
     "_why": "Visual lane r2 (3 Nov), from the v1/arch1 judges: 'sits on the exposed square slab', 'pale lavender stone loses value against the purple cliff', 'banded/stripy stone'. Same arch in dark grey-blue slate with noise strata (no regular bands), darker moss and verdigris, plus broken mossy flagstones and moss stones over the 9 x 9 m landing so its square edge stops reading as a tile (crown_arch_r2.glb, source/crown_arch_r2.py). Judged (CPU v1/arch2, 3 Nov ~10:15 UTC; three code-blind judges, anchors f36_0_gap:C5, f36_0_npc:C8, craft; linear slope 0.98, r 0.65, RMSE 0.64, confirming batch): r1 5.37 -> r2 6.19 mapped (+0.82), ON. Judges: 'reads as an authored ruin', rubble softens the slab; still asks for copper/glass accents and a less square footprint.",
     "enabled": true,
     "model": "res://assets/props/vl-1103/crown_arch/crown_arch_r2.glb"
+  },
+  "r3_candidate": {
+    "_why": "F41#17 close-out r3 (LANE-MESHY, 10 Nov 2026; OFF until judged). The judges' remaining Crown Arch asks after the swing shipped (7.23): the hard-edged square plinth on the dark pool, uniform unweathered lilac stone, and too few copper or glass accents. Same arch, legs and passage as r2 (crown_arch_r3.glb, source/crown_arch_r3.py, Blender, no Meshy). The stone is weathered with vertical rain streaks and olive-ochre lichen; each leg gains a second copper band and two set-in glass shards, and each arch gains copper straps; the landing's flagstones step down and bed into the ground toward a ragged edge with moss in the gaps; a ring of half-sunk rubble and moss mounds buries the 9 x 9 m footing's square edge. Visual only; the collider, passage trigger and travel axis are unchanged.",
+    "_why_on": "GPU G-f41-17-crown-arch-r3 (10 Nov, LANE-SCOUT 35bfa6426, three code-blind judges, confirming batch): +0.50 on High and Medium, 3/3 each; F41#17 maps 6.77 on both, so the row stays open.",
+    "enabled": true,
+    "model": "res://assets/props/vl-1103/crown_arch/crown_arch_r3.glb",
+    "_why_hero": "Landing keys merged over crown_arch_hero.json when r3 is ON: the 9 x 9 m footing mesh is hidden (its collider, 0.2 m proud, is unchanged) because r3's own landing now carries the feet: flagstones about 0.28 m high over a rounded square that covers the collider, stepping down at a ragged edge under a band of half-sunk rubble and moss. CPU tries recorded in ITEM-F41-17-ARCH/ARM.md: the moss skirt read as a flat blue-violet sheet, and re-skinning the footing as wet earth left an obvious raised square.",
+    "hero": {
+      "hide_slab": true
+    }
   }
 }
