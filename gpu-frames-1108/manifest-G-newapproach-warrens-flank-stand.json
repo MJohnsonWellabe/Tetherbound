@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "arm-High",
+  "tree": "3f2fffb6104f427d27485250b074dde30477359e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-flank-stand/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3181,
+  "script_errors": 0,
+  "note": "High, seed 2042. base = tb/newapproach 3f2fffb61 + ccr a966a910f COORDINATOR/overlays/warrens4_base.json; arm = tree + NEWAPPROACH-WARRENS4/overlay_flank_and_stand.json. walk_03 left out (arm player 5.0 m from (-318, 2642), over the 3 m pre-check)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "3f2fffb6104f427d27485250b074dde30477359e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-flank-stand/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.088,
+  "lower_edges": 0.3699,
+  "script_errors": 0,
+  "note": "High, seed 2042. base = tb/newapproach 3f2fffb61 + ccr a966a910f COORDINATOR/overlays/warrens4_base.json; arm = tree + NEWAPPROACH-WARRENS4/overlay_flank_and_stand.json. walk_03 left out (arm player 5.0 m from (-318, 2642), over the 3 m pre-check)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "3f2fffb6104f427d27485250b074dde30477359e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-flank-stand/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.438,
+  "script_errors": 0,
+  "note": "High, seed 2042. base = tb/newapproach 3f2fffb61 + ccr a966a910f COORDINATOR/overlays/warrens4_base.json; arm = tree + NEWAPPROACH-WARRENS4/overlay_flank_and_stand.json. walk_03 left out (arm player 5.0 m from (-318, 2642), over the 3 m pre-check)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "3f2fffb6104f427d27485250b074dde30477359e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-flank-stand/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3184,
+  "script_errors": 0,
+  "note": "High, seed 2042. base = tb/newapproach 3f2fffb61 + ccr a966a910f COORDINATOR/overlays/warrens4_base.json; arm = tree + NEWAPPROACH-WARRENS4/overlay_flank_and_stand.json. walk_03 left out (arm player 5.0 m from (-318, 2642), over the 3 m pre-check)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "base-High",
+  "tree": "3f2fffb6104f427d27485250b074dde30477359e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-flank-stand/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.083,
+  "lower_edges": 0.3698,
+  "script_errors": 0,
+  "note": "High, seed 2042. base = tb/newapproach 3f2fffb61 + ccr a966a910f COORDINATOR/overlays/warrens4_base.json; arm = tree + NEWAPPROACH-WARRENS4/overlay_flank_and_stand.json. walk_03 left out (arm player 5.0 m from (-318, 2642), over the 3 m pre-check)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "base-High",
+  "tree": "3f2fffb6104f427d27485250b074dde30477359e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-flank-stand/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.439,
+  "script_errors": 0,
+  "note": "High, seed 2042. base = tb/newapproach 3f2fffb61 + ccr a966a910f COORDINATOR/overlays/warrens4_base.json; arm = tree + NEWAPPROACH-WARRENS4/overlay_flank_and_stand.json. walk_03 left out (arm player 5.0 m from (-318, 2642), over the 3 m pre-check)."
+ }
+]
