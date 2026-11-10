@@ -1249,7 +1249,7 @@
    ],
    "capture": "CLOSE-OUT confirm, one-sided: plain main at High AND Medium (no --tidewake-current-candidate flag; the arrow must show because it is ON by default). Pad glyphs on. Pre-push: arrow visible on every frame.",
    "note": "LANE-SCOUT 62b939c4e: the arrow side mapped 7.66 at High (extrapolated on a steep fit), so it needs a confirming batch at High and Medium on plain main.",
-   "done": false
+   "done": true
   },
   {
    "id": "newapproach-t2-flecks",
