@@ -1865,9 +1865,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 39 (in CI)",
+      "pr": "#885",
       "what": "Cloudreach day rain closes to a slate overcast with no blue sky gaps (F40#19 +0.44, 3/3); the gate mist variant lost and is not shipped",
-      "when": "10 Nov, in CI"
+      "when": "10 Nov 08:03"
     },
     {
       "pr": "#884",
