@@ -1751,7 +1751,8 @@
    "frames": "tidewake__fight__nerissa__win, __aftermath (F39#21), __t-000_00 (F39#28)",
    "capture": "High first, Medium only if High maps 7.5+. Base = main (snap ON). Pre-push: on the arm the S-scroll collage blocks at and beside the crystal read as chamber stone; nothing else changes.",
    "note": "Heart Chamber metal-coloured boxes (two crystal plinths, tether box) wore the T_MetalOrnaments railing sheet, which judges named 3/3 as an off-family collage; arm re-skins them in the chamber's rock-trim stone. Breadth swing across F39#21 and F39#28.",
-   "done": false
+   "done": true,
+   "frames_pushed": "321bfa17c (--fixed-fps 20); shipped as batch 47"
   },
   {
    "id": "newapproach-flowfoam-fronts",
@@ -1788,6 +1789,44 @@
    "frames": "swim-away-day, swim-across-day, swim-away-night with 10-frame strips; base (overlay off) vs arm; arrow at shipped default (off). GIFs for all six.",
    "capture": "High only. Pre-push: no line looks ruled, cut or blocky (report before pushing if any); in swim-away-day estimate line speed down-screen vs a log in px per strip frame.",
    "note": "Owner's wave cue, fifth in-water attempt, new technique (no discrete shapes): a train of thin soft swell lines across the lane, scrolling downstream at current speed plus a 2.0 m/s margin; crescent caps off. Offline screen motion: down-screen in both away views, rightward in across. Pass bar for direction: at least 2/3 judges toward-camera at confidence 6+ on swim-away-day.",
+   "done": true,
+   "frames_pushed": "diagnostic only, a5a302f7f (pre-check failed)"
+  },
+  {
+   "id": "newapproach-flowfoam-fronts-v2",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "4b3cfa57aa9f1548a36deb632b980f5aedcc63b1",
+   "tree": "tb/newapproach, main e3afe9a4d merged in (shaders/water_current_flow.gdshader; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-FLOWFOAM/overlay_fronts.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night 10-frame strips; base (overlay off) vs arm; arrow off; GIFs for all six",
+   "capture": "High only. Pre-check first: no straight moving edge in the x 500-720 column of swim-away-day, no ladder of thin lines near the posts, no rectangular patch in swim-across-day. The fronts now use no lattice noise; if a straight moving edge is still there, the noise theory in ARM.md is wrong, so report it. Then the blind direction read on the swim-away-day strip (pass at 2 of 3 toward-camera, confidence 6 or more) and the look judgment.",
+   "note": "Owner's wave cue, fifth attempt v2: swell lines with no lattice noise (sums of sines), fwidth fade against the far-field ladder, softer lane-edge fade; on main with the seam fix. Tests the theory that GPU-unstable hash noise caused the moving straight edges (and the earlier crest cut).",
    "done": false
   }
  ],
