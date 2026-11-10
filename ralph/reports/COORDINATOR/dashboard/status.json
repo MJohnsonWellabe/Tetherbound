@@ -1,5 +1,5 @@
 {
-  "updated": "10 Nov 2026 21:40 UTC",
+  "updated": "10 Nov 2026 21:50 UTC",
   "headline": [
     "10 Nov 20:40: owner's wave-motion current cue, seven GPU rounds today across crests and swell lines. Crest-shape line and across-flow swell lines are both parked (two failures each). Only hard-edged crests at about 4x the log ever read toward-camera (3/3), and those looked like artefacts. One last new technique allowed: streaks along the flow with dashes sliding toward the camera. Arrow stays (off by default, Accessibility). Water cleanup (#892) and plinth stone (#893, in CI) are the day's T2/F39 gains.",
     "10 Nov 20:00: Heart Chamber plinth stone wins on GPU (F39#21 win to 7.06, near the bar; F39#28 +0.74), batch 47 in CI. T2 water cleanup landed (#892) after one net smoke re-run (a Meadows reward read-back failed once and passed on re-run). Next on F39#21: crystal material, rim light on the creature, and pinning the end-of-fight camera before the Medium confirm.",
@@ -2373,8 +2373,8 @@
       "src": "GPU High baseline 10 Nov, main 2ffc97db0 (G-baseline-f41-22-f41-24; 6.01 without the trunk-blocked fight frame)"
     },
     "F38#0": {
-      "gpu": 6.67,
-      "src": "GPU High baseline 10 Nov, main 2ffc97db0, 134 day frames (partial; golden pending)"
+      "gpu": 6.6,
+      "src": "GPU High baseline 10 Nov, main 2ffc97db0, 268 frames day+golden (G-baseline F38#0 full row)"
     }
   }
 }
