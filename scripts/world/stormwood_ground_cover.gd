@@ -133,12 +133,13 @@ func _build_canopy_and_roots() -> void:
 	root_material.set_shader_parameter("sink", 0.0)
 	root_material.set_shader_parameter("sway", 0.0)
 	root_material.set_shader_parameter("normal_soften", 0.1)
-	root_material.set_shader_parameter("tint_wood", Color("3c3929"))
+	var root_shape := root_finish(preload("res://scripts/world/stormwood_ground_zones.gd").finish())
+	root_material.set_shader_parameter("tint_wood", Color(str(root_shape.get("tint_wood", "#3c3929"))))
 	root_material.set_shader_parameter("allowed_base_mask", texture_mask(_terrain_texture_names(), ["grass", "soil", "damp", "forest_floor"]))
 	root_material.set_shader_parameter("field_radius", float(_active_config().get("field_radius", 72.0)))
 	root_material.set_shader_parameter("fade_start", float(_active_config().get("fade_start", 42.0)))
 	_cover_materials.append(root_material)
-	var root_mesh := _canopy_roots()
+	var root_mesh := _canopy_roots(root_shape)
 	for cell: Vector2i in groups:
 		var placements: Array = groups[cell]
 		var mm := MultiMesh.new()
@@ -238,31 +239,46 @@ func _leaf_point(t: float, side: float, length: float, width: float, variant: in
 		(t - 0.45) * length)
 
 
-func _canopy_roots() -> ArrayMesh:
+## F41#24 `root_finish_1110` (stormwood_ground_finish.json, OFF until judged):
+## the shipped root is a 4-facet half tube up to about 7 m long, 0.66 m wide
+## and 0.8 m tall at the largest tree scale, and at the Fallen Giant stand
+## one reads as a flat pale wedge beside the trainer. ON rounds it (arcs,
+## segments), thins and shortens it and sinks it half into the ground.
+static func root_finish(finish: Dictionary) -> Dictionary:
+	var cfg: Variant = finish.get("root_finish_1110", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return {}
+	return cfg as Dictionary
+
+
+func _canopy_roots(shape: Dictionary = {}) -> ArrayMesh:
 	var points := PackedVector3Array()
 	var shades := PackedVector2Array()
+	var arcs := int(shape.get("arcs", 4))
+	var segments := int(shape.get("segments", 7))
 	for root in 3:
 		var angle := float(root) * 2.39996
 		var direction := Vector3(cos(angle), 0.0, sin(angle))
 		var across := Vector3(-direction.z, 0.0, direction.x)
-		for segment in 7:
-			var t0 := float(segment) / 7.0
-			var t1 := float(segment + 1) / 7.0
-			for arc in 4:
-				var a := _root_point(direction, across, t0, arc, root)
-				var b := _root_point(direction, across, t1, arc, root)
-				var c := _root_point(direction, across, t1, arc + 1, root)
-				var d := _root_point(direction, across, t0, arc + 1, root)
+		for segment in segments:
+			var t0 := float(segment) / float(segments)
+			var t1 := float(segment + 1) / float(segments)
+			for arc in arcs:
+				var a := _root_point(direction, across, t0, arc, root, arcs, shape)
+				var b := _root_point(direction, across, t1, arc, root, arcs, shape)
+				var c := _root_point(direction, across, t1, arc + 1, root, arcs, shape)
+				var d := _root_point(direction, across, t0, arc + 1, root, arcs, shape)
 				_append_face(points, shades, a, b, c, Vector2(0.3, 2.0), Vector2(0.3, 2.0), Vector2(0.55, 2.0))
 				_append_face(points, shades, a, c, d, Vector2(0.3, 2.0), Vector2(0.55, 2.0), Vector2(0.55, 2.0))
 	return _forest_mesh(points, shades, true)
 
 
-func _root_point(direction: Vector3, across: Vector3, t: float, arc: int, root: int) -> Vector3:
-	var angle := float(arc) * PI / 4.0
-	var width := 0.22 * pow(1.0 - t, 0.8) + 0.008
-	var centre := direction * (0.12 + t * (1.7 + float(root) * 0.24)) + across * sin(t * PI) * 0.25
-	return centre + across * cos(angle) * width + Vector3.UP * (sin(angle) * width * 1.2 - 0.014)
+func _root_point(direction: Vector3, across: Vector3, t: float, arc: int, root: int, arcs: int = 4, shape: Dictionary = {}) -> Vector3:
+	var angle := float(arc) * PI / float(arcs)
+	var width := float(shape.get("width", 0.22)) * pow(1.0 - t, 0.8) + 0.008
+	var length := float(shape.get("length_scale", 1.0))
+	var centre := direction * (0.12 + t * (1.7 + float(root) * 0.24) * length) + across * sin(t * PI) * 0.25 * length
+	return centre + across * cos(angle) * width + Vector3.UP * (sin(angle) * width * float(shape.get("height_ratio", 1.2)) - float(shape.get("sink", 0.014)))
 
 
 func _wet_soil() -> ArrayMesh:

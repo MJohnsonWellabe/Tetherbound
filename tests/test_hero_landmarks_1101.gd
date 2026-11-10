@@ -201,7 +201,7 @@ func test_crown_arch_vl_ships_on_with_its_score_and_declares_only_model_keys() -
 	assert_true(ResourceLoader.exists(str(vl.get("model", ""))), "crown_arch_vl model is imported")
 	assert_true(float(vl.get("height_m", 0.0)) >= 5.5, "the arch stands at least 5.5 m")
 	for key: String in vl:
-		assert_true(key.begins_with("_") or key in ["enabled", "model", "height_m", "sink_m", "r2_candidate"],
+		assert_true(key.begins_with("_") or key in ["enabled", "model", "height_m", "sink_m", "r2_candidate", "r3_candidate"],
 			"crown_arch_vl declares only model keys, not %s" % key)
 	var landed := CROWN.with_round2(_json("res://data/config/crown_arch_hero.json"))
 	var on := HERO.crown_arch_vl_overlay(landed)
@@ -209,7 +209,11 @@ func test_crown_arch_vl_ships_on_with_its_score_and_declares_only_model_keys() -
 	assert_true(bool(r2.get("enabled", false)), "the r2 arch ships ON (judged gain)")
 	assert_true(str(r2.get("_why", "")).contains("6.19"), "the r2 arch records its mapped score")
 	assert_true(ResourceLoader.exists(str(r2.get("model", ""))), "the r2 arch model is imported")
-	assert_eq(str(on.model), str(r2.model), "ON shows the judged r2 Blender arch")
+	# Since 10 Nov the r3 arch (also judged, +0.50) ships ON over r2 and hides the
+	# square footing mesh (hero.hide_slab); r2 stays declared and judged.
+	var r3: Dictionary = vl.get("r3_candidate", {})
+	var shown: Dictionary = r3 if bool(r3.get("enabled", false)) else r2
+	assert_eq(str(on.model), str(shown.model), "ON shows the latest judged Blender arch")
 	for key: String in landed:
-		if key not in ["model", "height_m", "sink_m"]:
+		if key not in ["model", "height_m", "sink_m"] and not (shown == r3 and key in (r3.get("hero", {}) as Dictionary)):
 			assert_eq(on[key], landed[key], "ON keeps the landed %s" % key)

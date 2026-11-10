@@ -7,5 +7,14 @@
   "scale_check": "source/scale_check.jpg: the arch beside a 1.80 m cylinder (the trainer). Legs at +-2.15 m leave a 3.4 m clear opening on both axes (the passage trigger is 2.2 x 2.5 m); arch spring 3.7 m, apex 5.35 m, crown points to 7.0 m, about 3.9x the trainer.",
   "textures": "Baked from procedural Cycles materials (packed 1024 albedo); glass uses an emissive material",
   "triangles": "about 8k",
-  "flag": "data/config/crown_arch_vl.json (OFF until judged)"
+  "flag": "data/config/crown_arch_vl.json (OFF until judged)",
+  "revisions": [
+    {
+      "asset": "crown_arch_r3.glb",
+      "by": "LANE-MESHY (Claude), 10 Nov 2026, Blender 4.2.3, procedural; no Meshy, no external assets",
+      "source": "source/crown_arch_r3.py (blender -b -P crown_arch_r3.py -- <out.glb> <preview.png>), from crown_arch_r2.py",
+      "reference": "Drafted reference (text), F41#17 close-out from the judges' remaining asks: the same four-legged crowned arch and passage; the stone weathered (vertical rain streaks, olive-ochre lichen patches) instead of one uniform lilac; more copper (a second lower band on each leg, copper straps across each arch) and two pale-blue glass shards set into each leg; the landing's flagstones step down and bed into the ground toward a ragged edge, moss in the gaps, and a ring of half-sunk rubble and moss mounds buries the 9 x 9 m footing's square edge. No red or oxblood.",
+      "scale_check": "source/scale_check_r3.jpg: the arch beside a 1.80 m cylinder (the trainer). Legs, passage and heights are unchanged from r2 (7.0 m tall)."
+    }
+  ]
 }
