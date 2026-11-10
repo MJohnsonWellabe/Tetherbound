@@ -1869,6 +1869,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "batch 43 (in CI)",
+      "what": "Stormwood ground glints are small round sparkles instead of square cells: the lilac quad beside the trainer at the Fallen Giant is gone (F41#24 +0.74, 3/3)",
+      "when": "10 Nov, in CI"
+    },
+    {
       "pr": "#888",
       "what": "Stormwood trunks retinted out of the red family (all four rows gain, 3/3; Crown Arch +1.19); Tidewake current arrow now OFF by default (owner: the in-world cue is the wave motion)",
       "when": "10 Nov 14:01"
@@ -1887,11 +1892,6 @@
       "pr": "#885",
       "what": "Cloudreach day rain closes to a slate overcast with no blue sky gaps (F40#19 +0.44, 3/3); the gate mist variant lost and is not shipped",
       "when": "10 Nov 08:03"
-    },
-    {
-      "pr": "#884",
-      "what": "exploration HUD steps back while a fight result is on screen (loss card, catch card, beaten line): F41#16 loss card 5.34 -> 7.44 (+2.10, 3/3, HUD judged on CPU)",
-      "when": "10 Nov 07:11"
     }
   ],
   "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
