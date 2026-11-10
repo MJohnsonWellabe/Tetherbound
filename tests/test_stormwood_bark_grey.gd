@@ -15,6 +15,9 @@ func test_ships_on_and_off_changes_nothing() -> void:
 	assert_true(bool(look.bark_grey_1110.get("enabled", false)), "bark_grey_1110 ships ON after its judged gain")
 	assert_true(str(look.bark_grey_1110.get("_why_on", "")).contains("G-bark-grey-1110"), "the judged gain is recorded")
 	look.bark_grey_1110.enabled = false
+	# bark_detail_1110 (ON since 10 Nov) merges after this grade; isolate it too.
+	if look.has("bark_detail_1110"):
+		look.bark_detail_1110["enabled"] = false
 	var veg := _json("res://data/config/stormwood_vegetation.json")
 	var off := VEG.stormwood_foliage_grade(veg, look)
 	if not bool(look.foliage_grade_1104.get("enabled", false)):
