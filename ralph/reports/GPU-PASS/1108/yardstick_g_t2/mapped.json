@@ -1,0 +1,108 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.812,
+  "least_squares_slope": 1.2802,
+  "method": "linear",
+  "slope": 1.2802,
+  "intercept": -1.0386,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.673,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 5.067,
+   "reference": 5.83,
+   "mapped": 5.448,
+   "residual": 0.382
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.167,
+   "reference": 6.75,
+   "mapped": 6.856,
+   "residual": -0.106
+  },
+  "craft:after": {
+   "measured": 6.567,
+   "reference": 7.35,
+   "mapped": 7.368,
+   "residual": -0.018
+  },
+  "craft:before": {
+   "measured": 5.233,
+   "reference": 4.83,
+   "mapped": 5.661,
+   "residual": -0.831
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.967,
+   "reference": 6.53,
+   "mapped": 5.32,
+   "residual": 1.21
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.433,
+   "reference": 4.0,
+   "mapped": 4.637,
+   "residual": -0.637
+  }
+ },
+ "candidates": {
+  "G T2 Medium base-vs-arm [G-t2_Medium_base.png]": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.05,
+   "mapped_judges": [
+    6.13,
+    6.13,
+    5.87
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2 Medium base-vs-arm [G-t2_Medium_arm.png]": {
+   "measured_mean": 6.167,
+   "mapped_mean": 6.86,
+   "mapped_judges": [
+    6.9,
+    7.03,
+    6.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2 High base-vs-arm [G-t2_High_arm.png]": {
+   "measured_mean": 6.167,
+   "mapped_mean": 6.86,
+   "mapped_judges": [
+    6.9,
+    7.03,
+    6.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2 High base-vs-arm [G-t2_High_base.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.26,
+   "mapped_judges": [
+    6.39,
+    6.39,
+    6.0
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
