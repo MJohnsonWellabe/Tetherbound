@@ -1862,9 +1862,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 36 (in CI)",
+      "pr": "#882",
       "what": "fight wind-up dust kept at ankle height in an earth tone instead of a chest-high white cloud over both fighters (F38#3 +0.45/+0.29, 3/3 both runs; first LANE-NEWAPPROACH win)",
-      "when": "10 Nov, in CI"
+      "when": "10 Nov 05:22"
     },
     {
       "pr": "#881",
