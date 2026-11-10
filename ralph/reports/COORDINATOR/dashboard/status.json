@@ -2129,8 +2129,8 @@
       "src": "GPU High 8-9 Nov (A)"
     },
     "F39#21": {
-      "gpu": 4.75,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.06,
+      "src": "GPU High 10 Nov (G-nerissa-plinth-stone win, landed #893)"
     },
     "F39#22": {
       "gpu": 6.19,
@@ -2347,6 +2347,14 @@
     "F41#9": {
       "gpu": 5.86,
       "src": "GPU High 8-9 Nov (B)"
+    },
+    "F41#24": {
+      "gpu": 6.3,
+      "src": "GPU High 10 Nov (G-trunk-dither-narrow grove, landed #890)"
+    },
+    "F13#5": {
+      "gpu": 6.28,
+      "src": "GPU High 10 Nov (G-newapproach-t2-cleanup, mean of 3 swim views, landed #892)"
     }
   }
 }
