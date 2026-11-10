@@ -34,6 +34,7 @@ var _frames := 24
 var _interval := 0.5
 var _container: Node = null
 var _resolve_won := false
+var _resolve_lost := false
 var _after_frames := 16
 var _face_trainer := false
 ## `--attack`: tap the pad's combat_quick every in-fight interval, so the
@@ -96,6 +97,8 @@ func _run() -> void:
 			_lens_probe = true
 		elif arg == "--resolve=won":
 			_resolve_won = true
+		elif arg == "--resolve=lost":
+			_resolve_lost = true
 		elif arg == "--face-trainer":
 			_face_trainer = true
 		elif arg == "--attack":
@@ -443,6 +446,14 @@ func _capture_one() -> bool:
 			await _press("interact")
 			for n in 8:
 				await physics_frame
+	if _resolve_lost and bool(_manager.call("is_fighting")):
+		# Evidence for the LOSS RESULT (F41#16 class), disclosed like
+		# `--resolve=won`: the fight is ended through the manager's own
+		# resolve call and the loss card that follows is the production path.
+		_manager.call("_begin_resolve", "lost")
+		for i in 5:
+			await _wait_interval()
+			await _save("l%02d" % (i + 1))
 	for i in 90:
 		await physics_frame
 	await _save("99-after")

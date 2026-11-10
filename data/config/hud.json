@@ -18,6 +18,13 @@
     "glyph_px": 28,
     "glyph_alpha": 0.4
   },
+  "result_focus": {
+    "_why": "LANE-NEWAPPROACH 10 Nov 2026, shared cause for F41#16, F39#21, F41#21, F38#33, F38#14, F40#13, F38#29: a fight's result (loss card, catch card, beaten line) draws after the fight has ended, so the exploration HUD (roster, quickbar, legend, world prompt) is already back underneath it. When on, the tiers in `hide` stand down while combat_hud reports a result on screen and for `after_fight_seconds` after any fight ends (playground_hud.gd _result_beat_active). PRESENTATION ONLY. OFF until judged.",
+    "_why_on": "LANE-SCOUT G-result-focus (10 Nov, menu/HUD-only change judged on CPU frames, three code-blind judges with anchors): F41#16 loss card 5.34 -> 7.44 (+2.10, 3/3). GPU confirm still needed to close F41#16.",
+    "enabled": true,
+    "after_fight_seconds": 1.2,
+    "hide": ["hotbar", "exploration", "party", "prompt", "task", "minimap"]
+  },
   "victory_focus": {
     "_why": "P2-103/P2-111 (UIPOSES lane, 1 Nov 2026). GPU item scores 28 Oct: Tidewake named-fight victory panels sit over the full exploration HUD, roster, hotbar and prompt (P2-103, unscored on main); the Hollows victory line sits in the quickbar's message strip and reads as its reward row, with roster and objective panels crowding (P2-111 4.92). When on, while a Moment banner is up the tiers in `hide` step back (playground_hud.gd victory_focus_mode), and named-trainer acknowledgements route to the victory Moment receipt (trainer_reward_delivery.gd). PRESENTATION ONLY. OFF until GPU judging.",
     "_why_on": "GPU 1108 section C, 5.61 -> 7.13, 3/3 (F41#21 victory reward tiles: GPU arm round, all three judges preferred the arm; tb/gpu-arm-f41-21-on 2c593b05).",

@@ -1048,6 +1048,9 @@ var _clarity: Dictionary = {}
 ## persistent quickbar, legend, roster, creature card and prompt step back so
 ## the payoff owns the frame. Presentation only.
 var _victory_focus: Dictionary = {}
+var _result_focus: Dictionary = {}
+var _result_was_fighting := false
+var _result_linger_until := 0.0
 var _quiet_empty_slots: Dictionary = {}
 var _quiet_empty_chips: Dictionary = {}
 ## P2-004 round 7 (hud.json `hud_lean`, empty = off): fewer boxes, not
@@ -2753,6 +2756,8 @@ func _clarity_value_outline(label: Label) -> void:
 func _apply_hud_config(config: Dictionary) -> void:
 	var victory_focus: Variant = config.get("victory_focus", {})
 	_victory_focus = victory_focus if victory_focus is Dictionary and victory_focus.get("enabled") == true else {}
+	var result_focus: Variant = config.get("result_focus", {})
+	_result_focus = result_focus if result_focus is Dictionary and result_focus.get("enabled") == true else {}
 	var quiet: Variant = config.get("quiet_empty_slots", {})
 	_quiet_empty_slots = quiet if quiet is Dictionary and quiet.get("enabled") == true else {}
 	var quiet_chips: Variant = config.get("quiet_empty_chips_1104", {})
@@ -4080,6 +4085,9 @@ func _apply_presentation_priority() -> void:
 	if moment and not _victory_focus.is_empty():
 		mode = victory_focus_mode(mode, _victory_focus)
 		party_shown = party_shown and bool(mode.party)
+	if _result_beat_active():
+		mode = victory_focus_mode(mode, _result_focus)
+		party_shown = party_shown and bool(mode.party)
 	# This final pass owns visibility after all legacy polling/cache writers.
 	for entry: Array in [[_region_banner,mode.location],[_daytime_label,mode.location],
 		[_objective_block,mode.task],[_hotbar_panel,mode.hotbar],[_exploration_legend,mode.exploration],
@@ -4089,6 +4097,31 @@ func _apply_presentation_priority() -> void:
 	# During combat, enemy plate and telegraphs own the top. In the post-combat
 	# mechanic, one instruction replaces the task card/legend/hotbar cluster.
 	_presentation_allow(_objective_hint_card, (mode.instruction or (mode.exploration and not moment)) and not held)
+
+
+## hud.json `result_focus` (off unless enabled). A fight's result -- the loss
+## card, the catch card, the "beaten" line -- is drawn by combat_hud.gd AFTER
+## the manager has gone inactive, so the policy above has already returned to
+## exploration and the roster, quickbar, legend and world prompt draw under
+## the result. While combat_hud reports a result on screen, and for
+## `after_fight_seconds` after any fight ends (the gap before a victory
+## Moment), the tiers in `hide` stand down. Presentation only.
+func _result_beat_active() -> bool:
+	if _result_focus.is_empty():
+		return false
+	var fighting := _combat_is_running()
+	var now := Time.get_ticks_msec() / 1000.0
+	if _result_was_fighting and not fighting:
+		_result_linger_until = now + float(_result_focus.get("after_fight_seconds", 0.0))
+	_result_was_fighting = fighting
+	if fighting:
+		return false
+	if now < _result_linger_until:
+		return true
+	for node: Node in get_tree().get_nodes_in_group(&"combat_hud"):
+		if node.has_method("result_presenting") and bool(node.call("result_presenting")):
+			return true
+	return false
 
 
 ## hud.json `victory_focus.hide`: which persistent HUD tiers yield while a

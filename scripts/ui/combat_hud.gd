@@ -2261,6 +2261,10 @@ func _apply_loss_card() -> void:
 	_outcome.offset_left = -half
 	_outcome.offset_right = half
 	_outcome.text = str(cfg.get("text", _outcome.text))
+	# `font_px` (absent = unchanged): the card's text was read as tiny at
+	# 1080p (F41#16). The size override is cleared with the card.
+	if cfg.has("font_px"):
+		_outcome.add_theme_font_size_override("font_size", int(cfg.get("font_px")))
 	_outcome_left = maxf(_outcome_left, float(cfg.get("seconds", 3.5)))
 
 
@@ -2278,6 +2282,13 @@ func set_world_presentation_mode(mode: String) -> void:
 	_world_presentation_mode = mode if mode in ["combat", "relays", "exploration"] else "exploration"
 	if _world_presentation_mode == "relays" and is_node_ready():
 		relinquish_result_presentation()
+
+
+## hud.json `result_focus`: true while a fight result (loss card, catch card,
+## "beaten" line) is on screen. The fight has already ended by then, so the
+## exploration HUD asks here before it draws back in under the result.
+func result_presenting() -> bool:
+	return _outcome_left > 0.0 and _outcome != null and not _outcome.text.is_empty()
 
 
 func relinquish_result_presentation() -> void:
