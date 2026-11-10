@@ -1,0 +1,6 @@
+Va: "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+Gp: none
+Vw: "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+Ll: none
+Tm: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Gy: "none"
