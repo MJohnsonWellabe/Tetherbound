@@ -1,0 +1,60 @@
+[
+ {
+  "row": "F41#4",
+  "item": "P2-038",
+  "frame": "stormwood__deepwood__10__the_fallen_giant__day__close",
+  "arm": "live",
+  "tree": "c18752bfcf7c36745c4a683367f9b96f8bcee75b",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__deepwood__10__the_fallen_giant",
+   "--times=day",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "FLAG: A PALE FLAT QUAD REMAINS BESIDE THE TRAINER (not the root). The root fix works: the long mauve wedge from the trainer's feet (the canopy root's flat top facet) is gone, replaced by a small dark rounded root flare. But a separate flat pale lilac-white quad with a notch in it still lies on the ground just right of the trainer, with a smaller lilac patch above it; both are in live too (partly under the old wedge) and are more exposed now. Pushed as is on the coordinator's word (10 Nov); the remaining quad goes back to the build lane. This job frame (the Fallen Giant close, F41#4) is unchanged by the arm (absdiff 0.65). High, seed 2042. F41#24 has no job.json frames; this is F41#4's Fallen Giant close (the same stand), for the 'nothing else changes' check. Tree c18752bfc is local only: tb/land-batch-40 fbdefd0c1 plus inert Crown Arch r3 files. Both sides: stormwood_ground_cover.gd and stormwood_ground_finish.json at tb/item-f41-24-glint 41c224cad (batch 40's json plus root_finish_1110, OFF). arm = plus ITEM-F41-24/overlay_root_finish.json (root_finish_1110 on).",
+  "match": "exact",
+  "path": "G-f41-24-root-finish-giant/F41-4/live/High/stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "sky_fraction": 0.125,
+  "lower_edges": 0.2127
+ },
+ {
+  "row": "F41#4",
+  "item": "P2-038",
+  "frame": "stormwood__deepwood__10__the_fallen_giant__day__close",
+  "arm": "arm",
+  "tree": "c18752bfcf7c36745c4a683367f9b96f8bcee75b",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__deepwood__10__the_fallen_giant",
+   "--times=day",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "FLAG: A PALE FLAT QUAD REMAINS BESIDE THE TRAINER (not the root). The root fix works: the long mauve wedge from the trainer's feet (the canopy root's flat top facet) is gone, replaced by a small dark rounded root flare. But a separate flat pale lilac-white quad with a notch in it still lies on the ground just right of the trainer, with a smaller lilac patch above it; both are in live too (partly under the old wedge) and are more exposed now. Pushed as is on the coordinator's word (10 Nov); the remaining quad goes back to the build lane. This job frame (the Fallen Giant close, F41#4) is unchanged by the arm (absdiff 0.65). High, seed 2042. F41#24 has no job.json frames; this is F41#4's Fallen Giant close (the same stand), for the 'nothing else changes' check. Tree c18752bfc is local only: tb/land-batch-40 fbdefd0c1 plus inert Crown Arch r3 files. Both sides: stormwood_ground_cover.gd and stormwood_ground_finish.json at tb/item-f41-24-glint 41c224cad (batch 40's json plus root_finish_1110, OFF). arm = plus ITEM-F41-24/overlay_root_finish.json (root_finish_1110 on).",
+  "match": "exact",
+  "path": "G-f41-24-root-finish-giant/F41-4/arm/High/stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "sky_fraction": 0.124,
+  "lower_edges": 0.2132
+ }
+]
