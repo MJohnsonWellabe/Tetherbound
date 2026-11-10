@@ -1113,7 +1113,7 @@
    "frames": "same 13 frames as storm-fog-scoped",
    "capture": "Re-shoot the ARM side only and pair it with the held live side from storm-fog-scoped (main + A3; main now carries the same A3 values, so the held live frames stand). Pre-push check: Fallen Giant and Crown Heartstone unchanged vs live; Crown Arch, Glass Field, Lantern Hollow and the phase frames fogged. Then push both sides.",
    "note": "Fog zone fix: the haze at Fallen Giant and Crown Heartstone was the 0.02 ease-out carried over from the previous fogged stand; the fog now snaps off outside the scope.",
-   "done": false
+   "done": true
   },
   {
    "id": "f40-19-rain",
@@ -1136,8 +1136,8 @@
     "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain"
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty. Pre-push check: no blue sky gaps on the arm; a knee-high mist near the gate; the camera not buried in mist.",
-   "note": "Cloudreach day rain (ITEM-F40-19/ARM.md): closed slate overcast plus low gate mist that follows the local player's ground.",
-   "done": false
+   "note": "Cloudreach day rain (ITEM-F40-19/ARM.md): closed slate overcast plus low gate mist that follows the local player's ground. RESULT: pushed sky-only (563c847c6); gate mist not visible on Forward+ High; mist fix pending.",
+   "done": true
   },
   {
    "id": "newapproach-t2-cue",
