@@ -1678,7 +1678,8 @@
    "frames": "swim-away-day, swim-across-day, swim-away-night with 10-frame strips; two sides: base (overlay off) and arm (overlay_crests.json: crest_speed 1.0, margin 1.6). Current arrow OFF on both.",
    "capture": "High only. FIRST in line. Pre-push: look at every swim-away-day arm frame t0-t9 for the straight-cut half-disc and grey rectangle under the near log. If it is still there, push anyway but say so and give the frames, so the lane can chase the next suspects (per-cell row offset, layers after the crest). GIFs for all six.",
    "note": "Wave crests v3 arm A with the crest body rebuilt from Gaussians only (no smoothstep end, noise mask or cell guard). v3 made swim-away-day read toward the camera 3/3 (base 0/3); arm A won across +0.69 and night +0.16 and lost away-day only to the cut crest.",
-   "done": false
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 1305175c7 (60 frames, 6 GIFs); the cut crest is gone"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
