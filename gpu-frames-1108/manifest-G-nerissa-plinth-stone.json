@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "tidewake__fight__nerissa__win.png",
+  "preset": "arm-High",
+  "tree": "f81c7e99451cd480b901d142ef090c324bcceb89",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-plinth-stone/arm-High/tidewake__fight__nerissa__win.png",
+  "sky_fraction": 0.084,
+  "lower_edges": 0.2738,
+  "script_errors": 0,
+  "note": "High, --fixed-fps 20 on both sides, seed 2042, pad glyphs on. base = tb/item-nerissa-room f81c7e994 (main batch 45, snap ON); arm = base + ITEM-NERISSA-PLINTH/overlay_plinth.json (metal_1110 on). win/aftermath (F39#21): --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle. t-000.00 (F39#28): --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves. The end-of-fight camera differs between sides because the fight camera solver reacts to the re-skinned box, not because of timing (fight path matches: Bramblebun on both)."
+ },
+ {
+  "frame": "tidewake__fight__nerissa__aftermath.png",
+  "preset": "arm-High",
+  "tree": "f81c7e99451cd480b901d142ef090c324bcceb89",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-plinth-stone/arm-High/tidewake__fight__nerissa__aftermath.png",
+  "sky_fraction": 0.15,
+  "lower_edges": 0.2151,
+  "script_errors": 0,
+  "note": "High, --fixed-fps 20 on both sides, seed 2042, pad glyphs on. base = tb/item-nerissa-room f81c7e994 (main batch 45, snap ON); arm = base + ITEM-NERISSA-PLINTH/overlay_plinth.json (metal_1110 on). win/aftermath (F39#21): --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle. t-000.00 (F39#28): --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves. The end-of-fight camera differs between sides because the fight camera solver reacts to the re-skinned box, not because of timing (fight path matches: Bramblebun on both)."
+ },
+ {
+  "frame": "t-000.00.png",
+  "preset": "arm-High",
+  "tree": "f81c7e99451cd480b901d142ef090c324bcceb89",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-plinth-stone/arm-High/t-000.00.png",
+  "sky_fraction": 0.454,
+  "lower_edges": 0.1985,
+  "script_errors": 0,
+  "note": "High, --fixed-fps 20 on both sides, seed 2042, pad glyphs on. base = tb/item-nerissa-room f81c7e994 (main batch 45, snap ON); arm = base + ITEM-NERISSA-PLINTH/overlay_plinth.json (metal_1110 on). win/aftermath (F39#21): --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle. t-000.00 (F39#28): --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves. The end-of-fight camera differs between sides because the fight camera solver reacts to the re-skinned box, not because of timing (fight path matches: Bramblebun on both)."
+ },
+ {
+  "frame": "tidewake__fight__nerissa__win.png",
+  "preset": "base-High",
+  "tree": "f81c7e99451cd480b901d142ef090c324bcceb89",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-plinth-stone/base-High/tidewake__fight__nerissa__win.png",
+  "sky_fraction": 0.066,
+  "lower_edges": 0.2282,
+  "script_errors": 0,
+  "note": "High, --fixed-fps 20 on both sides, seed 2042, pad glyphs on. base = tb/item-nerissa-room f81c7e994 (main batch 45, snap ON); arm = base + ITEM-NERISSA-PLINTH/overlay_plinth.json (metal_1110 on). win/aftermath (F39#21): --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle. t-000.00 (F39#28): --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves. The end-of-fight camera differs between sides because the fight camera solver reacts to the re-skinned box, not because of timing (fight path matches: Bramblebun on both)."
+ },
+ {
+  "frame": "tidewake__fight__nerissa__aftermath.png",
+  "preset": "base-High",
+  "tree": "f81c7e99451cd480b901d142ef090c324bcceb89",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-plinth-stone/base-High/tidewake__fight__nerissa__aftermath.png",
+  "sky_fraction": 0.062,
+  "lower_edges": 0.2696,
+  "script_errors": 0,
+  "note": "High, --fixed-fps 20 on both sides, seed 2042, pad glyphs on. base = tb/item-nerissa-room f81c7e994 (main batch 45, snap ON); arm = base + ITEM-NERISSA-PLINTH/overlay_plinth.json (metal_1110 on). win/aftermath (F39#21): --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle. t-000.00 (F39#28): --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves. The end-of-fight camera differs between sides because the fight camera solver reacts to the re-skinned box, not because of timing (fight path matches: Bramblebun on both)."
+ },
+ {
+  "frame": "t-000.00.png",
+  "preset": "base-High",
+  "tree": "f81c7e99451cd480b901d142ef090c324bcceb89",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-plinth-stone/base-High/t-000.00.png",
+  "sky_fraction": 0.44,
+  "lower_edges": 0.2122,
+  "script_errors": 0,
+  "note": "High, --fixed-fps 20 on both sides, seed 2042, pad glyphs on. base = tb/item-nerissa-room f81c7e994 (main batch 45, snap ON); arm = base + ITEM-NERISSA-PLINTH/overlay_plinth.json (metal_1110 on). win/aftermath (F39#21): --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle. t-000.00 (F39#28): --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves. The end-of-fight camera differs between sides because the fight camera solver reacts to the re-skinned box, not because of timing (fight path matches: Bramblebun on both)."
+ }
+]
