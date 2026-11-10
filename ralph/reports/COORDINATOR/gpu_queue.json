@@ -1,737 +1,929 @@
 {
-  "_comment": "GPU arm queue (coordinator, 9 Nov). The GPU lane re-reads this file from origin/ccr-99b76ce0-imf8zn after every section and works top to bottom, skipping entries marked done. Config-only arms are captured as overlays on the already-imported main tree (no re-import); an entry with tree != main needs its own import. Capture at High; add Medium only for a row whose High mapped score is 7.5 or above. Push frames to tb/gpu-frames-1108 as section G-<id> with a manifest, and mark nothing here: the coordinator marks entries done.",
-  "after": "section F (all four biomes) finishes",
-  "entries": [
-    {
-      "id": "check-venn-plane",
-      "kind": "check",
-      "priority": "FIRST (a build is waiting on it)",
-      "row": "F39#21 bug: flat untextured grey plane in the foreground of the Venn aftermath frame (tidewake__fight__venn__resolve__aftermath, about 142 s)",
-      "branch": "tb/item-venn-plane",
-      "head": "bdee5774901cf8ec946863735d0d172e1e086f74",
-      "tool": "res://tools/phase2_capture_tidewake_fights.gd",
-      "args": [
-        "--trainer=water_trainer_venn",
-        "--interval=8.0",
-        "--max-frames=100",
-        "--level=80",
-        "--pilot=MASHER",
-        "--cap-s=300",
-        "--tells-per-opponent=1",
-        "--hits-per-opponent=1",
-        "--verified-victory-lifecycle",
-        "--expected-resolution=1920x1080",
-        "--seed=2042",
-        "--out={OUT}"
-      ],
-      "godot_args": [
-        "--rendering-driver",
-        "opengl3",
-        "--resolution",
-        "1920x1080"
-      ],
-      "resolution": [
-        1920,
-        1080
-      ],
-      "expected_frames": {
-        "lifecycle": [
-          "tidewake__fight__venn__win.png",
-          "tidewake__fight__venn__aftermath.png",
-          "tidewake__fight__venn__receipt-expired.png"
-        ],
-        "fight_observation_about": 20
-      },
-      "presets": [
-        "High",
-        "Medium"
-      ],
-      "_why": "CPU cannot produce this frame: on llvmpipe the aftermath draw lands about 6.5 s after the win, past the 6 s reward hold, so the capture's same-receipt check rejects it ('aftermath state invalid after draw'; reproduced twice on main d9d79ff9 and 4af7d07a). The win frame on CPU shows no grey plane. Needed back: the aftermath and receipt-expired PNGs plus manifest.json (camera/player poses) so the plane can be identified and fixed as a bug.",
-      "return": "Push the aftermath and receipt-expired PNGs (and win) under G-check-venn-plane/. The tool's manifest.json is a JSON report, so do not push it: instead put the aftermath frame's camera position, camera look direction and player position in your reply message.",
-      "done": true,
-      "note": "Captured c4ce2ade0; camera landed on another side, plane not in frame. Poses relayed to the build lane for a CPU ray-pick."
-    },
-    {
-      "id": "f38-36-medium",
-      "row": "F38#36",
-      "kind": "medium",
-      "tree": "main",
-      "note": "High 7.74 (GPU-PASS/1108 B.md); Medium closes the row if it also reaches 7.5",
-      "done": true
-    },
-    {
-      "id": "f38-38-medium",
-      "row": "F38#38",
-      "kind": "medium",
-      "tree": "main",
-      "frames": "all row frames (job.json)",
-      "note": "High 8.16 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
-      "done": true
-    },
-    {
-      "id": "f38-18-medium",
-      "row": "F38#18",
-      "kind": "medium",
-      "tree": "main",
-      "frames": "all row frames (job.json)",
-      "note": "High 7.95 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
-      "done": true
-    },
-    {
-      "id": "f38-23-medium",
-      "row": "F38#23",
-      "kind": "medium",
-      "tree": "main",
-      "frames": "all row frames (job.json)",
-      "note": "High 7.58 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
-      "done": true
-    },
-    {
-      "id": "ghost-glow",
-      "rows": [
-        "F38#28",
-        "F38#2",
-        "F38#7",
-        "F38#13",
-        "F39#26",
-        "F39#18",
-        "F39#29",
-        "F41#15",
-        "F41#7"
-      ],
-      "kind": "arm",
-      "tree": "tb/item-ghost-glow",
-      "needs_import": "yes: one small script change (scripts/ui/graphics_prefs.gd reads optional glow keys); check out the branch head",
-      "overlay_branch": "tb/item-ghost-glow",
-      "overlay": "ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json",
-      "config_file": "data/config/art.json graphics_presets (Medium, High glow keys) and data/config/creature_rim.json",
-      "flag": "glow_hdr_threshold 1.6, glow_intensity 0.5, glow_bloom 0; creature_rim energy 0.35 power 3.0",
-      "frames": "all job.json frames of the listed rows, plus one lightning or lantern frame (a Stormwood surge or a Tidewake lantern) to confirm emissive bloom still reads",
-      "capture": "live (main import) vs arm (branch import with overlay) at High",
-      "priority": "FIRST after the current entry: one global change that may lift rows in every biome; it may supersede the F41#15 arms",
-      "done": true
-    },
-    {
-      "id": "f41-15-arm-a",
-      "row": "F41#15",
-      "kind": "arm",
-      "tree": "main",
-      "overlay_branch": "tb/item-f41-15",
-      "overlay": "ralph/reports/LANES/ITEM-F41-15/overlay_speaker_light.json",
-      "config_file": "data/config/camera.json",
-      "flag": "conversation.speaker_light_candidate key/rim",
-      "frames": [
-        "stormwood__inventory__character__captain_marrow__dialogue",
-        "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
-        "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
-      ],
-      "capture": "live and arm at High (one shared live set for arms A and B)",
-      "note": "softer chest-height dialogue key (energy 0.9->0.45, offset up 0.9->0.35, rim 1.5->1.0); defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
-      "done": true
-    },
-    {
-      "id": "f41-15-arm-b",
-      "row": "F41#15",
-      "kind": "arm",
-      "tree": "main",
-      "overlay_branch": "tb/item-f41-15",
-      "overlay": "ralph/reports/LANES/ITEM-F41-15/overlay_albedo_grade.json",
-      "config_file": "data/config/character_body_flags.json",
-      "flag": "npc_vis_look_captain_a enabled (albedo only)",
-      "frames": [
-        "stormwood__inventory__character__captain_marrow__dialogue",
-        "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
-        "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
-      ],
-      "capture": "live and arm at High (one shared live set for arms A and B)",
-      "note": "captain_a albedo grade only; defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
-      "done": true
-    },
-    {
-      "id": "f41-13-charged",
-      "row": "F41#13",
-      "kind": "arm",
-      "tree": "main",
-      "overlay_branch": null,
-      "overlay": {
-        "data/config/creature_surface_finishes.json": {
-          "charged_1105": {
-            "enabled": true
-          }
-        }
-      },
-      "config_file": "data/config/creature_surface_finishes.json",
-      "flag": "charged_1105 enabled (Fulgocobra/Stormraven accent glow 0.42/0.36 -> 0.9/0.8, rim up)",
-      "frames": [
-        "stormwood__fulgocobra__idle",
-        "stormwood__stormraven__idle"
-      ],
-      "capture": "live and arm at High",
-      "note": "Parked by VIS-STORMWOOD 5 Nov: CPU changed 0.16% of pixels, so it was never judged. It is an emissive accent, and CPU Low has no glow. On High, glow should make the charge visible, which is the judges' ask on this row (lowest Stormwood row, GPU High 5.59, PRESENT 3/3 'no visible charge glow or eyes'). Best capture it on top of the ghost-glow overlay if that ships, since glow threshold 1.6 decides whether the accent blooms. Priority 1.",
-      "done": true,
-      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
-    },
-    {
-      "id": "f40-2-windows",
-      "row": "F40#2",
-      "kind": "arm",
-      "tree": "main",
-      "overlay_branch": null,
-      "overlay": {
-        "data/config/cloudreach_f40_items.json": {
-          "window_night_energy": 2.4
-        }
-      },
-      "config_file": "data/config/cloudreach_f40_items.json",
-      "flag": "window_night_energy 0.8 -> 2.4 (top-level key, summit aviary windows)",
-      "frames": [
-        "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
-        "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach"
-      ],
-      "capture": "live and arm at High (night frame is the test; day approach as the no-change control)",
-      "note": "ITEM-F40-2 r2, never committed or judged: CPU showed no visible change because window emission does not bloom on CPU Low; the READY says 'it may read on the GPU'. Judges at GPU High (F40#2 6.15) and in F-cloudreach say the night silhouette stays small and dark. Config-only, no import. Priority 2.",
-      "done": true,
-      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
-    },
-    {
-      "id": "f41-2-building-glow",
-      "row": "F41#2",
-      "kind": "arm",
-      "tree": "main",
-      "overlay_branch": null,
-      "overlay": {
-        "data/config/stormwood_surge.json": {
-          "presentation": {
-            "building_glow_1104": {
-              "enabled": true
-            }
-          }
-        }
-      },
-      "config_file": "data/config/stormwood_surge.json",
-      "flag": "presentation.building_glow_1104 enabled (Building-phase in-cloud sheet lightning reaching the horizon band, glow_low 0)",
-      "frames": [
-        "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm",
-        "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building",
-        "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break"
-      ],
-      "capture": "live and arm at High",
-      "note": "ITEM-F41-2 (LANE-MESHY) parked it unjudged: on CPU the Building frame changed 0.30% of pixels, the same as run-to-run noise. The sheet lightning is emissive and Forward+ High has glow and volumetric fog, so it may read as the phase cue the judges ask for (F41#2 GPU High 6.10, PRESENT 3/3: Calm, Building and Fading differ only in rain). Check the overlay merges into the presentation block, not the top level. Priority 3.",
-      "done": true,
-      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
-    },
-    {
-      "id": "f41-10-glass",
-      "row": "F41#10",
-      "kind": "arm",
-      "tree": "tb/item-f41-10",
-      "needs_import": "yes: scripts/world/stormwood_glass_sink.gd (dress() model lookup fix, fused_glass uniforms); check out the branch head ee01f52c9",
-      "overlay_branch": "tb/item-f41-10",
-      "overlay": {
-        "data/config/stormwood_glass_sink.json": {
-          "meshy_rim": {
-            "shards": {
-              "enabled": true
-            }
-          },
-          "fused_glass": {
-            "enabled": true
-          }
-        }
-      },
-      "config_file": "data/config/stormwood_glass_sink.json",
-      "flag": "meshy_rim.shards and fused_glass (both OFF on the branch)",
-      "frames": [
-        "stormwood__landmark__glass_sink__day__approach",
-        "stormwood__landmark__glass_sink__day__close",
-        "stormwood__landmark__glass_sink__golden__approach"
-      ],
-      "capture": "live (main) and arm (branch head with both flags on) at High",
-      "note": "CPU v4 6.20 -> 6.24 (+0.04, 1/3), parked. On CPU the fused-glass sheen and the glass-spike clusters are dull, roughness-only reads. On Forward+ High, specular, SSR and glow on glass should separate the floor from 'a dark lake' (the F-stormwood ask: 'reads as a crystal ring, not a basin'; GPU High 6.02). Confirm the exact flag keys in the branch config before overlaying; the branch READY names them meshy_rim.shards and fused_glass. Priority 4.",
-      "done": true,
-      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
-    },
-    {
-      "id": "f41-fight-rim",
-      "row": "F41#3",
-      "kind": "arm",
-      "tree": "tb/item-f41-fight-read",
-      "needs_import": "yes: scripts/creatures/creature_rim.gd wanted() and world_look.gd scene pass-through (inert without realm_scenes); check out the branch head a280bf51c",
-      "overlay_branch": "tb/item-f41-fight-read",
-      "overlay": "ralph/reports/LANES/ITEM-F41-FIGHT-READ/overlay_b.json",
-      "config_file": "data/config/creature_rim.json",
-      "flag": "realm_scenes = [res://scenes/world/stormwood.tscn] (rim reaches Stormwood fights)",
-      "frames": [
-        "stormwood__fight__capacitor_alpha-i01",
-        "stormwood__fight__capacitor_alpha-tell1-a-start",
-        "stormwood__fight__capacitor_alpha-tell1-e-impact"
-      ],
-      "capture": "live and arm at High; ideally a second arm with the ghost-glow creature rim tone (0.35/3.0) applied as well",
-      "note": "CPU 6.33 -> 6.33 (+0.00, 1/3), and two judges said the rim bleached the pale boss. That CPU rim was the untoned fresnel. G-ghost-glow on GPU shows the toned rim (0.35/3.0) removes the ghost look on creatures (F38#28 +0.91, F38#2 +0.67, 3/3), so a toned rim in Stormwood may separate both fighters without bleaching Voltarach. Use the capacitor stand, which is deterministic (hollows is not). Priority 5.",
-      "done": true,
-      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
-    },
-    {
-      "id": "f39-16-cap-scatter",
-      "row": "F39#16",
-      "kind": "arm",
-      "tree": "tb/item-f39-16",
-      "needs_import": "yes: shaders/water_current_flow.gdshader gains uniform cap_scatter (inert at 0); check out the branch head 9c3e9ea08",
-      "overlay_branch": "tb/item-f39-16",
-      "overlay": {
-        "data/config/tidewake_look.json": {
-          "current_flow": {
-            "shader": {
-              "cap_scatter": 1.0,
-              "chop_cap_density": 0.22
-            }
-          }
-        }
-      },
-      "config_file": "data/config/tidewake_look.json",
-      "flag": "current_flow.shader cap_scatter 1.0, chop_cap_density 0.35 -> 0.22 (the r2 values)",
-      "frames": [
-        "tidewake__current_states__S1_live_t0",
-        "tidewake__current_states__S1_live_t1",
-        "tidewake__current_states__S2_live_t0"
-      ],
-      "capture": "live and arm at High",
-      "note": "CPU r2 7.65 -> 7.56 (-0.09, flat), parked. GPU High F-tidewake has F39#16 at 6.88 with the guide lanes FIXED 3/3, but all six judges said the current now barely reads. Scattered, staggered caps are the change most likely to make the flow read. Forward+ water specular and glow change how the caps catch light, so CPU flatness does not carry over. Confirm the shader path of cap_scatter in the branch config. Priority 6.",
-      "done": true,
-      "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
-    },
-    {
-      "id": "npc-albedo",
-      "rows": [
-        "F39#26",
-        "F39#18",
-        "F39#29",
-        "F41#20",
-        "F41#7",
-        "F41#15",
-        "F39#13"
-      ],
-      "kind": "arm",
-      "tree": "main",
-      "base": "main ba6778f45 PLUS the ghost-glow change (graphics_prefs.gd copy from de6361be6 and overlay ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json, exactly as G-ghost-glow's arm), because ghost-glow ships; live = that ghost-glow arm state",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/npc_albedo.json",
-      "config_file": "data/config/character_body_flags.json",
-      "flag": "npc_vis_look_<profile> albedo-only grades ON (captain_a/b, trader, young_trainer, courier, innkeeper); day_rim and idle_relax stripped from field_researcher and grunt_c",
-      "frames": "F39#26, F39#18, F39#29 dialogue stands; F41#20 Fenn; F41#7 and F41#15 Marrow; F39#13 camp frames (job.json frames of those rows)",
-      "capture": "live (ghost-glow state) vs arm at High; null in the overlay means remove the key (same merge as ITEM-F41-15 overlay_albedo_grade.json)",
-      "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (tb/item-scout-1108 c10819505): ghost-white NPCs on GPU",
-      "done": true
-    },
-    {
-      "id": "npc-emission-off",
-      "rows": [
-        "F41#7",
-        "F41#15",
-        "F39#29"
-      ],
-      "kind": "arm",
-      "tree": "main",
-      "base": "main ba6778f45 PLUS the ghost-glow change (graphics_prefs.gd copy from de6361be6 and overlay ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json, exactly as G-ghost-glow's arm), because ghost-glow ships; live = that ghost-glow arm state",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
-      "config_file": "data/config/art.json",
-      "flag": "captain_a and captain_b body_emission_enabled false (no albedo grade)",
-      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames); share the live set with npc-albedo",
-      "capture": "live (ghost-glow state) vs arm at High",
-      "note": "tests whether the imported full-surface emission on the two captain bodies is the real cause (the smaller fix if it wins)",
-      "done": true
-    },
-    {
-      "id": "recheck-f39-21",
-      "rows": [
-        "F39#21"
-      ],
-      "kind": "recheck",
-      "tree": "current origin/main (has hud.json victory_focus ON since #868)",
-      "frames": "F39#21 job.json frames (Venn win/aftermath with match: semantic as in F-tidewake-add; Nerissa win frame now that the seat fix may have landed, else skip it)",
-      "capture": "live only at High on current main; judged against the F-tidewake 4.75. Tests whether the shipped victory card already fixes the Tidewake victory hierarchy.",
-      "done": true
-    },
-    {
-      "id": "recheck-f38-1",
-      "rows": [
-        "F38#1"
-      ],
-      "kind": "recheck",
-      "tree": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm)",
-      "frames": "F38#1 job.json frames",
-      "capture": "arm-state only at High; judged against the F-meadows 5.76 (the see-through faint may be the creature rim ghost-glow fixes)",
-      "done": true
-    },
-    {
-      "id": "marrow-glow-emission",
-      "rows": [
-        "F41#7",
-        "F41#15",
-        "F39#29"
-      ],
-      "kind": "arm",
-      "tree": "main ba6778f45",
-      "base": "live = main ba6778f45 plus the ghost-glow change (graphics_prefs.gd copy and glow overlay, as in G-ghost-glow arm)",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
-      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
-      "capture": "ghost-glow live vs ghost-glow + emission-off at High",
-      "note": "emission-off alone brought Marrow's face back but left a pale glowing head; ghost-glow's 1.6 threshold should stop the remaining bloom. Tests the combination that would actually ship. Skipped: G-npc-emission-off already was ghost-glow + emission-off (fa00cbf2c vs live 4f836be4a).",
-      "done": true
-    },
-    {
-      "id": "npc-floor-captain",
-      "rows": [
-        "F41#7",
-        "F41#15",
-        "F39#29"
-      ],
-      "kind": "arm",
-      "tree": "main ba6778f45",
-      "base": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); live = that ghost-glow state (reuse G-npc-albedo's live set if the frames match)",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_captain.json",
-      "config_file": "data/config/npc_ranks.json, data/config/art.json",
-      "flag": "ranks.captain.emission_floor 0.0 plus captain_a/b body_emission_enabled false",
-      "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
-      "capture": "ghost-glow live vs arm at High",
-      "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (7e2f414a5): the captain rank adds a white additive emission floor of 0.18 that re-enables emission even with body_emission_enabled false",
-      "done": true
-    },
-    {
-      "id": "npc-floor-ranks",
-      "rows": [
-        "F39#18",
-        "F41#7",
-        "F41#15",
-        "F39#29"
-      ],
-      "kind": "arm",
-      "tree": "main ba6778f45",
-      "base": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); live = that ghost-glow state (reuse G-npc-albedo's live set if the frames match)",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_ranks.json",
-      "config_file": "data/config/npc_ranks.json, data/config/art.json",
-      "flag": "captain, grunt and officer emission_floor 0.0 plus captain_a/b emission off",
-      "frames": "F39#18 (Bex and Irva grunts) plus the npc-floor-captain frames",
-      "capture": "ghost-glow live vs arm at High",
-      "note": "tests whether the same floor ghosts Team Tether grunts and officers",
-      "done": true
-    },
-    {
-      "id": "fp-exposure-115",
-      "rows": [
-        "F41#7",
-        "F41#15",
-        "F39#18",
-        "F39#26",
-        "F39#29",
-        "F38#28",
-        "F38#2",
-        "F38#23",
-        "F39#10",
-        "F39#3",
-        "F40#2",
-        "F40#12",
-        "F41#12",
-        "F41#17"
-      ],
-      "kind": "arm",
-      "tree": "main ba6778f45",
-      "base": "live = main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); reuse existing ghost-glow live frames where they match",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/fp_exposure_115.json",
-      "config_file": "data/config/art.json graphics_presets Medium/High forward_plus_grade",
-      "flag": "exposure_scale 1.333 -> 1.15 (Forward+ only)",
-      "frames": "job.json frames of the listed rows (NPC dialogue, creatures, and one or two scene rows per biome so a global darkening is caught)",
-      "capture": "ghost-glow live vs arm at High",
-      "note": "Second lever named in ITEM-GHOST-GLOW/ARM.md: Forward+ multiplies realm exposure (1.35-1.42) by 1.333 (effective about 1.8-1.9), so pale hair and skin stay hot even with the glow threshold and no emission floor (Marrow). Global change: judge every row; it ships only if it gains overall without scene rows dropping.",
-      "done": true
-    },
-    {
-      "id": "npc-floor-grunt-officer",
-      "rows": [
-        "F39#18",
-        "F39#29",
-        "F39#26",
-        "F41#8"
-      ],
-      "kind": "arm",
-      "tree": "main ba6778f45",
-      "base": "live = main ba6778f45 plus the ghost-glow change (reuse G-npc-albedo / G-npc-floor live frames where they match)",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_grunt_officer.json",
-      "config_file": "data/config/npc_ranks.json",
-      "flag": "grunt and officer emission_floor 0.0 (captain untouched)",
-      "frames": "job.json frames of the listed rows",
-      "capture": "ghost-glow live vs arm at High",
-      "note": "G-npc-floor: all-ranks floor off gained F39#18 +0.28 (3/3) and F39#29 +0.14 (2/3) but cost Marrow 0.09-0.14; this keeps the grunt gain without touching captains.",
-      "done": true
-    },
-    {
-      "id": "recheck-nerissa-win",
-      "rows": [
-        "F39#21"
-      ],
-      "kind": "recheck",
-      "tree": "current origin/main (#872 merge: Nerissa seat fix)",
-      "frames": "F39#21 Nerissa win frame (job.json), with --max-frames large enough to reach the win (the lane's repro used --max-frames=200)",
-      "capture": "live only at High on current main",
-      "note": "Nerissa's Mirejaw is admitted since #872; this fills the F39#21 Nerissa null",
-      "done": true
-    },
-    {
-      "id": "confirm-75-ghostglow",
-      "rows": [
-        "F38#28",
-        "F40#12",
-        "F41#17"
-      ],
-      "kind": "confirm",
-      "tree": "current origin/main (ships ghost-glow since #873)",
-      "frames": "job.json frames of the three rows",
-      "capture": "live only, at High AND Medium (both presets), on current main",
-      "note": "G-exposure.md: in the ghost-glow state these map 7.50-7.55 at High (F38#28 7.50, F40#12 7.55, F41#17 7.55); a confirming High+Medium pass on shipped main can close them",
-      "done": true
-    },
-    {
-      "id": "occlusion-fade-off",
-      "rows": [
-        "F39#26",
-        "F39#18",
-        "F39#29",
-        "F39#21"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/occlusion_fade_off.json",
-      "config_file": "data/config/camera.json",
-      "flag": "occlusion_fade.enabled false",
-      "frames": "F39#26, F39#18, F39#29 dialogue stands (job.json) plus the F39#21 Nerissa win frame (--max-frames=200), where the camera sits behind translucent pale-blue slabs",
-      "capture": "live vs arm at High on current main",
-      "note": "G-npc-floor-go.md: after albedo, emission, rank floor and day rim all came back flat, the dialogue occlusion fade (fade_transparency 0.8) is the strongest remaining suspect for the ghosted Tidewake speakers. Diagnostic arm: occlusion_fade shipped ON on 2 Nov for +0.53/+0.62 on dialogue frames, so a win here would need a narrower fix (e.g. never fade the speaker), not turning it off.",
-      "done": true
-    },
-    {
-      "id": "water-rim-off",
-      "rows": [
-        "F39#18",
-        "F39#26",
-        "F39#29",
-        "F39#27"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "tb/item-scout-1108",
-      "overlay": "ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_off.json",
-      "config_file": "data/config/water_character_rim.json",
-      "flag": "enabled false",
-      "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
-      "capture": "live vs arm at High on current main (both arms share one live set)",
-      "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
-      "done": true
-    },
-    {
-      "id": "water-rim-soft",
-      "rows": [
-        "F39#18",
-        "F39#26",
-        "F39#29",
-        "F39#27"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "tb/item-scout-1108",
-      "overlay": "ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_soft.json",
-      "config_file": "data/config/water_character_rim.json",
-      "flag": "energy 0.3, power 3.5, fill_energy 0.0",
-      "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
-      "capture": "live vs arm at High on current main (both arms share one live set)",
-      "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
-      "done": true
-    },
-    {
-      "id": "occlusion-fade-off-wide",
-      "rows": [
-        "F41#7",
-        "F41#11",
-        "F40#12",
-        "F38#35",
-        "F39#4",
-        "F41#20"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "ccr-99b76ce0-imf8zn",
-      "overlay": "ralph/reports/COORDINATOR/overlays/occlusion_fade_off.json",
-      "config_file": "data/config/camera.json",
-      "flag": "occlusion_fade.enabled false",
-      "frames": "job.json dialogue frames of the listed rows (Meadows, Cloudreach, Stormwood dialogue, where the fade won +0.53/+0.62 on 2 Nov)",
-      "capture": "live vs arm at High on current main",
-      "note": "G-confirm-75-medium.md: fade off gained Tidewake F39#26 +0.34 and F39#29 +0.39 (mean +0.21) but did not fix NPC ghosting. Before shipping it globally, check the other biomes' dialogue rows do not lose what the fade won on 2 Nov. Result (G e0075e693): off loses F41#15 -0.19 (0/3), flat elsewhere; not shipped globally. Parked.",
-      "done": true
-    },
-    {
-      "id": "confirm-f39-26-medium",
-      "rows": [
-        "F39#26",
-        "F39#18"
-      ],
-      "kind": "confirm",
-      "tree": "current origin/main once batch 28 (water rim soft) lands; until then main + ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_soft.json",
-      "frames": "job.json frames of F39#26 and F39#18",
-      "capture": "live at High AND Medium",
-      "note": "G-water-rim: F39#26 7.52 and F39#18 7.36 at High with the soft rim; a confirming High+Medium pass can close F39#26 Skipped: one-sided High rescore came in under 7.5 (F39#18 7.07, F39#26 6.88).",
-      "done": true
-    },
-    {
-      "id": "f41-8-hesk-cap",
-      "rows": [
-        "F41#8"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "tb/item-victory-card",
-      "overlay": "ralph/reports/LANES/ITEM-F41-8-ARM/overlay_hesk_cap.json",
-      "config_file": "npc role accessories (see overlay)",
-      "flag": "Hesk gains the installed wool cap and scarf (copper tint)",
-      "frames": "F41#8 job.json frames (Hesk, Maud, Bryn)",
-      "capture": "live vs arm at High",
-      "note": "LANE-MESHY ITEM-F41-8-ARM/ARM.md (903db042f): Hesk and Maud read as the same bare-headed figure; the cap separates them. Config only.",
-      "done": true
-    },
-    {
-      "id": "f41-1-banners",
-      "rows": [
-        "F41#1"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "tb/item-scout-1108",
-      "overlay": "ralph/reports/LANES/ITEM-F41-1-ARM/overlay_banners_muted.json",
-      "overlay_format": "deep merge (standard)",
-      "frames": "F41#1 job.json frames",
-      "capture": "live vs arm at High",
-      "note": "LANE-SCOUT ITEM-F41-1-ARM/ARM.md: muted storm-blue banners with brass trim, five lip banners at an offset phase",
-      "done": true
-    },
-    {
-      "id": "f38-32-camp",
-      "rows": [
-        "F38#32"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "tb/item-scout-1108",
-      "overlay": "ralph/reports/LANES/ITEM-F38-32-ARM/overlay_camp_spacing.json",
-      "overlay_format": "PATH-PATCH: keys like placements[81].at are JSON paths into the named file; each value replaces that one field (list items by index). If your merge tool only does deep merges, apply these paths by hand or with a small path setter, and log the before/after values in the receipt.",
-      "frames": "F38#32 job.json frames (camp_tent, camp_bed, bonfire_fire)",
-      "capture": "live vs arm at High",
-      "note": "LANE-SCOUT ITEM-F38-32-ARM/ARM.md: move the trail stores off the camera-to-player line and the bench off the camp bed",
-      "done": true
-    },
-    {
-      "id": "sw-rain-thin",
-      "rows": [
-        "F41#11",
-        "F41#17",
-        "F41#20",
-        "F41#8"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "tb/item-scout-1108",
-      "overlay": "ralph/reports/LANES/ITEM-SW-RAIN-ARM/overlay_rain_thin.json",
-      "overlay_format": "deep merge",
-      "frames": "job.json frames of the listed rows",
-      "capture": "live vs arm at High",
-      "note": "LANE-SCOUT ITEM-SW-RAIN-ARM/ARM.md: soft_rain_1101 widened near streaks to 7 cm (CPU-judged); on GPU they read as solid white bars across characters",
-      "done": true
-    },
-    {
-      "id": "sw-foliage-grade",
-      "rows": [
-        "F41#5",
-        "F41#8",
-        "F41#3"
-      ],
-      "kind": "arm",
-      "tree": "current origin/main",
-      "overlay_branch": "tb/item-scout-1108",
-      "overlay": "ralph/reports/LANES/ITEM-SW-FOLIAGE-ARM/overlay_foliage_grade_on.json",
-      "overlay_format": "deep merge",
-      "frames": "job.json frames of the listed rows",
-      "capture": "live vs arm at High",
-      "note": "LANE-SCOUT ITEM-SW-FOLIAGE-ARM/ARM.md: existing flag foliage_grade_1104 (cooler, darker, less saturated Stormwood foliage), never GPU-judged INVALID capture: Image.adjust_bsc missing in Godot 4.7 (vegetation.gd:1067); re-shoot after the build lane's fix.",
-      "done": true
-    },
-    {
-      "id": "sw-foliage-grade-fixed",
-      "rows": [
-        "F41#5",
-        "F41#8",
-        "F41#3"
-      ],
-      "kind": "arm",
-      "tree": "tb/item-veg-adjust head 2ea565e63332f8b8a1259cd16990d22d28289db5 (or main plus that commit's scripts/world/vegetation.gd changes copied, if cleaner)",
-      "overlay_branch": "tb/item-veg-adjust",
-      "overlay": "ralph/reports/LANES/ITEM-VEG-ADJUST/overlay_foliage_grade.json",
-      "overlay_format": "deep merge",
-      "frames": "same frames as G-sw-foliage-grade (F41#5, F41#8, F41#3 job.json frames)",
-      "capture": "live (current main) vs arm at High; check the script-error list is empty",
-      "note": "Re-shoot of the invalid G-sw-foliage-grade after LANE-MESHY replaced the Godot 3 Image.adjust_bsc call (ITEM-VEG-ADJUST/ARM.md)",
-      "done": true
-    },
-    {
-      "id": "lens-ground-clearance",
-      "kind": "arm",
-      "rows": [
-        "F39#21",
-        "F39#3",
-        "F39#15",
-        "F38#3",
-        "F41#5"
-      ],
-      "branch": "tb/item-venn-plane",
-      "head": "1508bdfae15ccc83a8e976c29410ad0492f1a448",
-      "overlay_branch": "tb/item-venn-plane",
-      "overlay": "ralph/reports/LANES/ITEM-VENN-PLANE/overlay_lens_ground.json",
-      "overlay_format": "deep merge",
-      "tool": "res://tools/phase2_capture_tidewake_fights.gd",
-      "args": [
-        "--trainer=water_trainer_venn",
-        "--interval=8.0",
-        "--max-frames=100",
-        "--level=80",
-        "--pilot=MASHER",
-        "--cap-s=300",
-        "--tells-per-opponent=1",
-        "--hits-per-opponent=1",
-        "--verified-victory-lifecycle",
-        "--expected-resolution=1920x1080",
-        "--seed=2042",
-        "--out={OUT}"
-      ],
-      "resolution": [
-        1920,
-        1080
-      ],
-      "expected_frames": {
-        "lifecycle": [
-          "tidewake__fight__venn__win.png",
-          "tidewake__fight__venn__aftermath.png",
-          "tidewake__fight__venn__receipt-expired.png"
-        ],
-        "fight_observation_about": 20
-      },
-      "frames": "(1) the Venn lifecycle capture as given (win, aftermath, receipt-expired), base vs candidate; (2) because the lens rule touches every exploration camera, also the job.json frames of F39#3, F39#15, F38#3 and F41#5 (slopes, shores, forest) live vs arm",
-      "capture": "live (current main) vs arm (scripts from the branch head copied onto main plus the overlay) at High",
-      "note": "LANE-MESHY ITEM-VENN-PLANE/ARM.md: the grey wedge is the dune face 0.35 m under the lens; candidate shortens the spring arm until the lens clears ground by 1 m (flag OFF on the branch). Global camera change, so it needs the wider frame set.",
-      "done": true
+ "_comment": "GPU arm queue (coordinator, 9 Nov). The GPU lane re-reads this file from origin/ccr-99b76ce0-imf8zn after every section and works top to bottom, skipping entries marked done. Config-only arms are captured as overlays on the already-imported main tree (no re-import); an entry with tree != main needs its own import. Capture at High; add Medium only for a row whose High mapped score is 7.5 or above. Push frames to tb/gpu-frames-1108 as section G-<id> with a manifest, and mark nothing here: the coordinator marks entries done.",
+ "after": "section F (all four biomes) finishes",
+ "entries": [
+  {
+   "id": "check-venn-plane",
+   "kind": "check",
+   "priority": "FIRST (a build is waiting on it)",
+   "row": "F39#21 bug: flat untextured grey plane in the foreground of the Venn aftermath frame (tidewake__fight__venn__resolve__aftermath, about 142 s)",
+   "branch": "tb/item-venn-plane",
+   "head": "bdee5774901cf8ec946863735d0d172e1e086f74",
+   "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+   "args": [
+    "--trainer=water_trainer_venn",
+    "--interval=8.0",
+    "--max-frames=100",
+    "--level=80",
+    "--pilot=MASHER",
+    "--cap-s=300",
+    "--tells-per-opponent=1",
+    "--hits-per-opponent=1",
+    "--verified-victory-lifecycle",
+    "--expected-resolution=1920x1080",
+    "--seed=2042",
+    "--out={OUT}"
+   ],
+   "godot_args": [
+    "--rendering-driver",
+    "opengl3",
+    "--resolution",
+    "1920x1080"
+   ],
+   "resolution": [
+    1920,
+    1080
+   ],
+   "expected_frames": {
+    "lifecycle": [
+     "tidewake__fight__venn__win.png",
+     "tidewake__fight__venn__aftermath.png",
+     "tidewake__fight__venn__receipt-expired.png"
+    ],
+    "fight_observation_about": 20
+   },
+   "presets": [
+    "High",
+    "Medium"
+   ],
+   "_why": "CPU cannot produce this frame: on llvmpipe the aftermath draw lands about 6.5 s after the win, past the 6 s reward hold, so the capture's same-receipt check rejects it ('aftermath state invalid after draw'; reproduced twice on main d9d79ff9 and 4af7d07a). The win frame on CPU shows no grey plane. Needed back: the aftermath and receipt-expired PNGs plus manifest.json (camera/player poses) so the plane can be identified and fixed as a bug.",
+   "return": "Push the aftermath and receipt-expired PNGs (and win) under G-check-venn-plane/. The tool's manifest.json is a JSON report, so do not push it: instead put the aftermath frame's camera position, camera look direction and player position in your reply message.",
+   "done": true,
+   "note": "Captured c4ce2ade0; camera landed on another side, plane not in frame. Poses relayed to the build lane for a CPU ray-pick."
+  },
+  {
+   "id": "f38-36-medium",
+   "row": "F38#36",
+   "kind": "medium",
+   "tree": "main",
+   "note": "High 7.74 (GPU-PASS/1108 B.md); Medium closes the row if it also reaches 7.5",
+   "done": true
+  },
+  {
+   "id": "f38-38-medium",
+   "row": "F38#38",
+   "kind": "medium",
+   "tree": "main",
+   "frames": "all row frames (job.json)",
+   "note": "High 8.16 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
+   "done": true
+  },
+  {
+   "id": "f38-18-medium",
+   "row": "F38#18",
+   "kind": "medium",
+   "tree": "main",
+   "frames": "all row frames (job.json)",
+   "note": "High 7.95 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
+   "done": true
+  },
+  {
+   "id": "f38-23-medium",
+   "row": "F38#23",
+   "kind": "medium",
+   "tree": "main",
+   "frames": "all row frames (job.json)",
+   "note": "High 7.58 (GPU-PASS/1108 F-meadows.md); Medium closes the row if it also reaches 7.5",
+   "done": true
+  },
+  {
+   "id": "ghost-glow",
+   "rows": [
+    "F38#28",
+    "F38#2",
+    "F38#7",
+    "F38#13",
+    "F39#26",
+    "F39#18",
+    "F39#29",
+    "F41#15",
+    "F41#7"
+   ],
+   "kind": "arm",
+   "tree": "tb/item-ghost-glow",
+   "needs_import": "yes: one small script change (scripts/ui/graphics_prefs.gd reads optional glow keys); check out the branch head",
+   "overlay_branch": "tb/item-ghost-glow",
+   "overlay": "ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json",
+   "config_file": "data/config/art.json graphics_presets (Medium, High glow keys) and data/config/creature_rim.json",
+   "flag": "glow_hdr_threshold 1.6, glow_intensity 0.5, glow_bloom 0; creature_rim energy 0.35 power 3.0",
+   "frames": "all job.json frames of the listed rows, plus one lightning or lantern frame (a Stormwood surge or a Tidewake lantern) to confirm emissive bloom still reads",
+   "capture": "live (main import) vs arm (branch import with overlay) at High",
+   "priority": "FIRST after the current entry: one global change that may lift rows in every biome; it may supersede the F41#15 arms",
+   "done": true
+  },
+  {
+   "id": "f41-15-arm-a",
+   "row": "F41#15",
+   "kind": "arm",
+   "tree": "main",
+   "overlay_branch": "tb/item-f41-15",
+   "overlay": "ralph/reports/LANES/ITEM-F41-15/overlay_speaker_light.json",
+   "config_file": "data/config/camera.json",
+   "flag": "conversation.speaker_light_candidate key/rim",
+   "frames": [
+    "stormwood__inventory__character__captain_marrow__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+    "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+   ],
+   "capture": "live and arm at High (one shared live set for arms A and B)",
+   "note": "softer chest-height dialogue key (energy 0.9->0.45, offset up 0.9->0.35, rim 1.5->1.0); defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
+   "done": true
+  },
+  {
+   "id": "f41-15-arm-b",
+   "row": "F41#15",
+   "kind": "arm",
+   "tree": "main",
+   "overlay_branch": "tb/item-f41-15",
+   "overlay": "ralph/reports/LANES/ITEM-F41-15/overlay_albedo_grade.json",
+   "config_file": "data/config/character_body_flags.json",
+   "flag": "npc_vis_look_captain_a enabled (albedo only)",
+   "frames": [
+    "stormwood__inventory__character__captain_marrow__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+    "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+   ],
+   "capture": "live and arm at High (one shared live set for arms A and B)",
+   "note": "captain_a albedo grade only; defect is GPU-only (glow on Medium/High). Also note if Nalia, Nerissa or Fenn dialogue stands are cheap to add: capture them live vs arm A.",
+   "done": true
+  },
+  {
+   "id": "f41-13-charged",
+   "row": "F41#13",
+   "kind": "arm",
+   "tree": "main",
+   "overlay_branch": null,
+   "overlay": {
+    "data/config/creature_surface_finishes.json": {
+     "charged_1105": {
+      "enabled": true
+     }
     }
-  ],
-  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
+   },
+   "config_file": "data/config/creature_surface_finishes.json",
+   "flag": "charged_1105 enabled (Fulgocobra/Stormraven accent glow 0.42/0.36 -> 0.9/0.8, rim up)",
+   "frames": [
+    "stormwood__fulgocobra__idle",
+    "stormwood__stormraven__idle"
+   ],
+   "capture": "live and arm at High",
+   "note": "Parked by VIS-STORMWOOD 5 Nov: CPU changed 0.16% of pixels, so it was never judged. It is an emissive accent, and CPU Low has no glow. On High, glow should make the charge visible, which is the judges' ask on this row (lowest Stormwood row, GPU High 5.59, PRESENT 3/3 'no visible charge glow or eyes'). Best capture it on top of the ghost-glow overlay if that ships, since glow threshold 1.6 decides whether the accent blooms. Priority 1.",
+   "done": true,
+   "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+  },
+  {
+   "id": "f40-2-windows",
+   "row": "F40#2",
+   "kind": "arm",
+   "tree": "main",
+   "overlay_branch": null,
+   "overlay": {
+    "data/config/cloudreach_f40_items.json": {
+     "window_night_energy": 2.4
+    }
+   },
+   "config_file": "data/config/cloudreach_f40_items.json",
+   "flag": "window_night_energy 0.8 -> 2.4 (top-level key, summit aviary windows)",
+   "frames": [
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach"
+   ],
+   "capture": "live and arm at High (night frame is the test; day approach as the no-change control)",
+   "note": "ITEM-F40-2 r2, never committed or judged: CPU showed no visible change because window emission does not bloom on CPU Low; the READY says 'it may read on the GPU'. Judges at GPU High (F40#2 6.15) and in F-cloudreach say the night silhouette stays small and dark. Config-only, no import. Priority 2.",
+   "done": true,
+   "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+  },
+  {
+   "id": "f41-2-building-glow",
+   "row": "F41#2",
+   "kind": "arm",
+   "tree": "main",
+   "overlay_branch": null,
+   "overlay": {
+    "data/config/stormwood_surge.json": {
+     "presentation": {
+      "building_glow_1104": {
+       "enabled": true
+      }
+     }
+    }
+   },
+   "config_file": "data/config/stormwood_surge.json",
+   "flag": "presentation.building_glow_1104 enabled (Building-phase in-cloud sheet lightning reaching the horizon band, glow_low 0)",
+   "frames": [
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm",
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building",
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break"
+   ],
+   "capture": "live and arm at High",
+   "note": "ITEM-F41-2 (LANE-MESHY) parked it unjudged: on CPU the Building frame changed 0.30% of pixels, the same as run-to-run noise. The sheet lightning is emissive and Forward+ High has glow and volumetric fog, so it may read as the phase cue the judges ask for (F41#2 GPU High 6.10, PRESENT 3/3: Calm, Building and Fading differ only in rain). Check the overlay merges into the presentation block, not the top level. Priority 3.",
+   "done": true,
+   "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+  },
+  {
+   "id": "f41-10-glass",
+   "row": "F41#10",
+   "kind": "arm",
+   "tree": "tb/item-f41-10",
+   "needs_import": "yes: scripts/world/stormwood_glass_sink.gd (dress() model lookup fix, fused_glass uniforms); check out the branch head ee01f52c9",
+   "overlay_branch": "tb/item-f41-10",
+   "overlay": {
+    "data/config/stormwood_glass_sink.json": {
+     "meshy_rim": {
+      "shards": {
+       "enabled": true
+      }
+     },
+     "fused_glass": {
+      "enabled": true
+     }
+    }
+   },
+   "config_file": "data/config/stormwood_glass_sink.json",
+   "flag": "meshy_rim.shards and fused_glass (both OFF on the branch)",
+   "frames": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ],
+   "capture": "live (main) and arm (branch head with both flags on) at High",
+   "note": "CPU v4 6.20 -> 6.24 (+0.04, 1/3), parked. On CPU the fused-glass sheen and the glass-spike clusters are dull, roughness-only reads. On Forward+ High, specular, SSR and glow on glass should separate the floor from 'a dark lake' (the F-stormwood ask: 'reads as a crystal ring, not a basin'; GPU High 6.02). Confirm the exact flag keys in the branch config before overlaying; the branch READY names them meshy_rim.shards and fused_glass. Priority 4.",
+   "done": true,
+   "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+  },
+  {
+   "id": "f41-fight-rim",
+   "row": "F41#3",
+   "kind": "arm",
+   "tree": "tb/item-f41-fight-read",
+   "needs_import": "yes: scripts/creatures/creature_rim.gd wanted() and world_look.gd scene pass-through (inert without realm_scenes); check out the branch head a280bf51c",
+   "overlay_branch": "tb/item-f41-fight-read",
+   "overlay": "ralph/reports/LANES/ITEM-F41-FIGHT-READ/overlay_b.json",
+   "config_file": "data/config/creature_rim.json",
+   "flag": "realm_scenes = [res://scenes/world/stormwood.tscn] (rim reaches Stormwood fights)",
+   "frames": [
+    "stormwood__fight__capacitor_alpha-i01",
+    "stormwood__fight__capacitor_alpha-tell1-a-start",
+    "stormwood__fight__capacitor_alpha-tell1-e-impact"
+   ],
+   "capture": "live and arm at High; ideally a second arm with the ghost-glow creature rim tone (0.35/3.0) applied as well",
+   "note": "CPU 6.33 -> 6.33 (+0.00, 1/3), and two judges said the rim bleached the pale boss. That CPU rim was the untoned fresnel. G-ghost-glow on GPU shows the toned rim (0.35/3.0) removes the ghost look on creatures (F38#28 +0.91, F38#2 +0.67, 3/3), so a toned rim in Stormwood may separate both fighters without bleaching Voltarach. Use the capacitor stand, which is deterministic (hollows is not). Priority 5.",
+   "done": true,
+   "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+  },
+  {
+   "id": "f39-16-cap-scatter",
+   "row": "F39#16",
+   "kind": "arm",
+   "tree": "tb/item-f39-16",
+   "needs_import": "yes: shaders/water_current_flow.gdshader gains uniform cap_scatter (inert at 0); check out the branch head 9c3e9ea08",
+   "overlay_branch": "tb/item-f39-16",
+   "overlay": {
+    "data/config/tidewake_look.json": {
+     "current_flow": {
+      "shader": {
+       "cap_scatter": 1.0,
+       "chop_cap_density": 0.22
+      }
+     }
+    }
+   },
+   "config_file": "data/config/tidewake_look.json",
+   "flag": "current_flow.shader cap_scatter 1.0, chop_cap_density 0.35 -> 0.22 (the r2 values)",
+   "frames": [
+    "tidewake__current_states__S1_live_t0",
+    "tidewake__current_states__S1_live_t1",
+    "tidewake__current_states__S2_live_t0"
+   ],
+   "capture": "live and arm at High",
+   "note": "CPU r2 7.65 -> 7.56 (-0.09, flat), parked. GPU High F-tidewake has F39#16 at 6.88 with the guide lanes FIXED 3/3, but all six judges said the current now barely reads. Scattered, staggered caps are the change most likely to make the flow read. Forward+ water specular and glow change how the caps catch light, so CPU flatness does not carry over. Confirm the shader path of cap_scatter in the branch config. Priority 6.",
+   "done": true,
+   "source": "LANE-SCOUT PARKED-ARMS.json (tb/item-scout-1108 42e03ca5e)"
+  },
+  {
+   "id": "npc-albedo",
+   "rows": [
+    "F39#26",
+    "F39#18",
+    "F39#29",
+    "F41#20",
+    "F41#7",
+    "F41#15",
+    "F39#13"
+   ],
+   "kind": "arm",
+   "tree": "main",
+   "base": "main ba6778f45 PLUS the ghost-glow change (graphics_prefs.gd copy from de6361be6 and overlay ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json, exactly as G-ghost-glow's arm), because ghost-glow ships; live = that ghost-glow arm state",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/npc_albedo.json",
+   "config_file": "data/config/character_body_flags.json",
+   "flag": "npc_vis_look_<profile> albedo-only grades ON (captain_a/b, trader, young_trainer, courier, innkeeper); day_rim and idle_relax stripped from field_researcher and grunt_c",
+   "frames": "F39#26, F39#18, F39#29 dialogue stands; F41#20 Fenn; F41#7 and F41#15 Marrow; F39#13 camp frames (job.json frames of those rows)",
+   "capture": "live (ghost-glow state) vs arm at High; null in the overlay means remove the key (same merge as ITEM-F41-15 overlay_albedo_grade.json)",
+   "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (tb/item-scout-1108 c10819505): ghost-white NPCs on GPU",
+   "done": true
+  },
+  {
+   "id": "npc-emission-off",
+   "rows": [
+    "F41#7",
+    "F41#15",
+    "F39#29"
+   ],
+   "kind": "arm",
+   "tree": "main",
+   "base": "main ba6778f45 PLUS the ghost-glow change (graphics_prefs.gd copy from de6361be6 and overlay ralph/reports/LANES/ITEM-GHOST-GLOW/overlay_glow_threshold.json, exactly as G-ghost-glow's arm), because ghost-glow ships; live = that ghost-glow arm state",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
+   "config_file": "data/config/art.json",
+   "flag": "captain_a and captain_b body_emission_enabled false (no albedo grade)",
+   "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames); share the live set with npc-albedo",
+   "capture": "live (ghost-glow state) vs arm at High",
+   "note": "tests whether the imported full-surface emission on the two captain bodies is the real cause (the smaller fix if it wins)",
+   "done": true
+  },
+  {
+   "id": "recheck-f39-21",
+   "rows": [
+    "F39#21"
+   ],
+   "kind": "recheck",
+   "tree": "current origin/main (has hud.json victory_focus ON since #868)",
+   "frames": "F39#21 job.json frames (Venn win/aftermath with match: semantic as in F-tidewake-add; Nerissa win frame now that the seat fix may have landed, else skip it)",
+   "capture": "live only at High on current main; judged against the F-tidewake 4.75. Tests whether the shipped victory card already fixes the Tidewake victory hierarchy.",
+   "done": true
+  },
+  {
+   "id": "recheck-f38-1",
+   "rows": [
+    "F38#1"
+   ],
+   "kind": "recheck",
+   "tree": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm)",
+   "frames": "F38#1 job.json frames",
+   "capture": "arm-state only at High; judged against the F-meadows 5.76 (the see-through faint may be the creature rim ghost-glow fixes)",
+   "done": true
+  },
+  {
+   "id": "marrow-glow-emission",
+   "rows": [
+    "F41#7",
+    "F41#15",
+    "F39#29"
+   ],
+   "kind": "arm",
+   "tree": "main ba6778f45",
+   "base": "live = main ba6778f45 plus the ghost-glow change (graphics_prefs.gd copy and glow overlay, as in G-ghost-glow arm)",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/npc_emission_off.json",
+   "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
+   "capture": "ghost-glow live vs ghost-glow + emission-off at High",
+   "note": "emission-off alone brought Marrow's face back but left a pale glowing head; ghost-glow's 1.6 threshold should stop the remaining bloom. Tests the combination that would actually ship. Skipped: G-npc-emission-off already was ghost-glow + emission-off (fa00cbf2c vs live 4f836be4a).",
+   "done": true
+  },
+  {
+   "id": "npc-floor-captain",
+   "rows": [
+    "F41#7",
+    "F41#15",
+    "F39#29"
+   ],
+   "kind": "arm",
+   "tree": "main ba6778f45",
+   "base": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); live = that ghost-glow state (reuse G-npc-albedo's live set if the frames match)",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_captain.json",
+   "config_file": "data/config/npc_ranks.json, data/config/art.json",
+   "flag": "ranks.captain.emission_floor 0.0 plus captain_a/b body_emission_enabled false",
+   "frames": "F41#7 and F41#15 Marrow, F39#29 Nerissa (job.json frames)",
+   "capture": "ghost-glow live vs arm at High",
+   "note": "LANE-SCOUT ITEM-NPC-ALBEDO/CAUSE.md (7e2f414a5): the captain rank adds a white additive emission floor of 0.18 that re-enables emission even with body_emission_enabled false",
+   "done": true
+  },
+  {
+   "id": "npc-floor-ranks",
+   "rows": [
+    "F39#18",
+    "F41#7",
+    "F41#15",
+    "F39#29"
+   ],
+   "kind": "arm",
+   "tree": "main ba6778f45",
+   "base": "main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); live = that ghost-glow state (reuse G-npc-albedo's live set if the frames match)",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_ranks.json",
+   "config_file": "data/config/npc_ranks.json, data/config/art.json",
+   "flag": "captain, grunt and officer emission_floor 0.0 plus captain_a/b emission off",
+   "frames": "F39#18 (Bex and Irva grunts) plus the npc-floor-captain frames",
+   "capture": "ghost-glow live vs arm at High",
+   "note": "tests whether the same floor ghosts Team Tether grunts and officers",
+   "done": true
+  },
+  {
+   "id": "fp-exposure-115",
+   "rows": [
+    "F41#7",
+    "F41#15",
+    "F39#18",
+    "F39#26",
+    "F39#29",
+    "F38#28",
+    "F38#2",
+    "F38#23",
+    "F39#10",
+    "F39#3",
+    "F40#2",
+    "F40#12",
+    "F41#12",
+    "F41#17"
+   ],
+   "kind": "arm",
+   "tree": "main ba6778f45",
+   "base": "live = main ba6778f45 plus the ghost-glow change (as in G-ghost-glow arm); reuse existing ghost-glow live frames where they match",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/fp_exposure_115.json",
+   "config_file": "data/config/art.json graphics_presets Medium/High forward_plus_grade",
+   "flag": "exposure_scale 1.333 -> 1.15 (Forward+ only)",
+   "frames": "job.json frames of the listed rows (NPC dialogue, creatures, and one or two scene rows per biome so a global darkening is caught)",
+   "capture": "ghost-glow live vs arm at High",
+   "note": "Second lever named in ITEM-GHOST-GLOW/ARM.md: Forward+ multiplies realm exposure (1.35-1.42) by 1.333 (effective about 1.8-1.9), so pale hair and skin stay hot even with the glow threshold and no emission floor (Marrow). Global change: judge every row; it ships only if it gains overall without scene rows dropping.",
+   "done": true
+  },
+  {
+   "id": "npc-floor-grunt-officer",
+   "rows": [
+    "F39#18",
+    "F39#29",
+    "F39#26",
+    "F41#8"
+   ],
+   "kind": "arm",
+   "tree": "main ba6778f45",
+   "base": "live = main ba6778f45 plus the ghost-glow change (reuse G-npc-albedo / G-npc-floor live frames where they match)",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/npc_floor_grunt_officer.json",
+   "config_file": "data/config/npc_ranks.json",
+   "flag": "grunt and officer emission_floor 0.0 (captain untouched)",
+   "frames": "job.json frames of the listed rows",
+   "capture": "ghost-glow live vs arm at High",
+   "note": "G-npc-floor: all-ranks floor off gained F39#18 +0.28 (3/3) and F39#29 +0.14 (2/3) but cost Marrow 0.09-0.14; this keeps the grunt gain without touching captains.",
+   "done": true
+  },
+  {
+   "id": "recheck-nerissa-win",
+   "rows": [
+    "F39#21"
+   ],
+   "kind": "recheck",
+   "tree": "current origin/main (#872 merge: Nerissa seat fix)",
+   "frames": "F39#21 Nerissa win frame (job.json), with --max-frames large enough to reach the win (the lane's repro used --max-frames=200)",
+   "capture": "live only at High on current main",
+   "note": "Nerissa's Mirejaw is admitted since #872; this fills the F39#21 Nerissa null",
+   "done": true
+  },
+  {
+   "id": "confirm-75-ghostglow",
+   "rows": [
+    "F38#28",
+    "F40#12",
+    "F41#17"
+   ],
+   "kind": "confirm",
+   "tree": "current origin/main (ships ghost-glow since #873)",
+   "frames": "job.json frames of the three rows",
+   "capture": "live only, at High AND Medium (both presets), on current main",
+   "note": "G-exposure.md: in the ghost-glow state these map 7.50-7.55 at High (F38#28 7.50, F40#12 7.55, F41#17 7.55); a confirming High+Medium pass on shipped main can close them",
+   "done": true
+  },
+  {
+   "id": "occlusion-fade-off",
+   "rows": [
+    "F39#26",
+    "F39#18",
+    "F39#29",
+    "F39#21"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/occlusion_fade_off.json",
+   "config_file": "data/config/camera.json",
+   "flag": "occlusion_fade.enabled false",
+   "frames": "F39#26, F39#18, F39#29 dialogue stands (job.json) plus the F39#21 Nerissa win frame (--max-frames=200), where the camera sits behind translucent pale-blue slabs",
+   "capture": "live vs arm at High on current main",
+   "note": "G-npc-floor-go.md: after albedo, emission, rank floor and day rim all came back flat, the dialogue occlusion fade (fade_transparency 0.8) is the strongest remaining suspect for the ghosted Tidewake speakers. Diagnostic arm: occlusion_fade shipped ON on 2 Nov for +0.53/+0.62 on dialogue frames, so a win here would need a narrower fix (e.g. never fade the speaker), not turning it off.",
+   "done": true
+  },
+  {
+   "id": "water-rim-off",
+   "rows": [
+    "F39#18",
+    "F39#26",
+    "F39#29",
+    "F39#27"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "tb/item-scout-1108",
+   "overlay": "ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_off.json",
+   "config_file": "data/config/water_character_rim.json",
+   "flag": "enabled false",
+   "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
+   "capture": "live vs arm at High on current main (both arms share one live set)",
+   "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
+   "done": true
+  },
+  {
+   "id": "water-rim-soft",
+   "rows": [
+    "F39#18",
+    "F39#26",
+    "F39#29",
+    "F39#27"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "tb/item-scout-1108",
+   "overlay": "ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_soft.json",
+   "config_file": "data/config/water_character_rim.json",
+   "flag": "energy 0.3, power 3.5, fill_energy 0.0",
+   "frames": "job.json frames of F39#18, F39#26, F39#29 (dialogue) and F39#27 (the backlit row the rim was made for)",
+   "capture": "live vs arm at High on current main (both arms share one live set)",
+   "note": "LANE-SCOUT CAUSE-TIDEWAKE.md (069e01457): the Tidewake-only additive cream rim overlay (energy 0.8, power 2.2, fill 0.14, unshaded, fog_disabled) lifts every speaker toward the sand colour; shipped on a CPU-only judgement. FIRST in the queue.",
+   "done": true
+  },
+  {
+   "id": "occlusion-fade-off-wide",
+   "rows": [
+    "F41#7",
+    "F41#11",
+    "F40#12",
+    "F38#35",
+    "F39#4",
+    "F41#20"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/occlusion_fade_off.json",
+   "config_file": "data/config/camera.json",
+   "flag": "occlusion_fade.enabled false",
+   "frames": "job.json dialogue frames of the listed rows (Meadows, Cloudreach, Stormwood dialogue, where the fade won +0.53/+0.62 on 2 Nov)",
+   "capture": "live vs arm at High on current main",
+   "note": "G-confirm-75-medium.md: fade off gained Tidewake F39#26 +0.34 and F39#29 +0.39 (mean +0.21) but did not fix NPC ghosting. Before shipping it globally, check the other biomes' dialogue rows do not lose what the fade won on 2 Nov. Result (G e0075e693): off loses F41#15 -0.19 (0/3), flat elsewhere; not shipped globally. Parked.",
+   "done": true
+  },
+  {
+   "id": "confirm-f39-26-medium",
+   "rows": [
+    "F39#26",
+    "F39#18"
+   ],
+   "kind": "confirm",
+   "tree": "current origin/main once batch 28 (water rim soft) lands; until then main + ralph/reports/LANES/ITEM-NPC-ALBEDO/overlays/water_character_rim_soft.json",
+   "frames": "job.json frames of F39#26 and F39#18",
+   "capture": "live at High AND Medium",
+   "note": "G-water-rim: F39#26 7.52 and F39#18 7.36 at High with the soft rim; a confirming High+Medium pass can close F39#26 Skipped: one-sided High rescore came in under 7.5 (F39#18 7.07, F39#26 6.88).",
+   "done": true
+  },
+  {
+   "id": "f41-8-hesk-cap",
+   "rows": [
+    "F41#8"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "tb/item-victory-card",
+   "overlay": "ralph/reports/LANES/ITEM-F41-8-ARM/overlay_hesk_cap.json",
+   "config_file": "npc role accessories (see overlay)",
+   "flag": "Hesk gains the installed wool cap and scarf (copper tint)",
+   "frames": "F41#8 job.json frames (Hesk, Maud, Bryn)",
+   "capture": "live vs arm at High",
+   "note": "LANE-MESHY ITEM-F41-8-ARM/ARM.md (903db042f): Hesk and Maud read as the same bare-headed figure; the cap separates them. Config only.",
+   "done": true
+  },
+  {
+   "id": "f41-1-banners",
+   "rows": [
+    "F41#1"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "tb/item-scout-1108",
+   "overlay": "ralph/reports/LANES/ITEM-F41-1-ARM/overlay_banners_muted.json",
+   "overlay_format": "deep merge (standard)",
+   "frames": "F41#1 job.json frames",
+   "capture": "live vs arm at High",
+   "note": "LANE-SCOUT ITEM-F41-1-ARM/ARM.md: muted storm-blue banners with brass trim, five lip banners at an offset phase",
+   "done": true
+  },
+  {
+   "id": "f38-32-camp",
+   "rows": [
+    "F38#32"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "tb/item-scout-1108",
+   "overlay": "ralph/reports/LANES/ITEM-F38-32-ARM/overlay_camp_spacing.json",
+   "overlay_format": "PATH-PATCH: keys like placements[81].at are JSON paths into the named file; each value replaces that one field (list items by index). If your merge tool only does deep merges, apply these paths by hand or with a small path setter, and log the before/after values in the receipt.",
+   "frames": "F38#32 job.json frames (camp_tent, camp_bed, bonfire_fire)",
+   "capture": "live vs arm at High",
+   "note": "LANE-SCOUT ITEM-F38-32-ARM/ARM.md: move the trail stores off the camera-to-player line and the bench off the camp bed",
+   "done": true
+  },
+  {
+   "id": "sw-rain-thin",
+   "rows": [
+    "F41#11",
+    "F41#17",
+    "F41#20",
+    "F41#8"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "tb/item-scout-1108",
+   "overlay": "ralph/reports/LANES/ITEM-SW-RAIN-ARM/overlay_rain_thin.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of the listed rows",
+   "capture": "live vs arm at High",
+   "note": "LANE-SCOUT ITEM-SW-RAIN-ARM/ARM.md: soft_rain_1101 widened near streaks to 7 cm (CPU-judged); on GPU they read as solid white bars across characters",
+   "done": true
+  },
+  {
+   "id": "sw-foliage-grade",
+   "rows": [
+    "F41#5",
+    "F41#8",
+    "F41#3"
+   ],
+   "kind": "arm",
+   "tree": "current origin/main",
+   "overlay_branch": "tb/item-scout-1108",
+   "overlay": "ralph/reports/LANES/ITEM-SW-FOLIAGE-ARM/overlay_foliage_grade_on.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of the listed rows",
+   "capture": "live vs arm at High",
+   "note": "LANE-SCOUT ITEM-SW-FOLIAGE-ARM/ARM.md: existing flag foliage_grade_1104 (cooler, darker, less saturated Stormwood foliage), never GPU-judged INVALID capture: Image.adjust_bsc missing in Godot 4.7 (vegetation.gd:1067); re-shoot after the build lane's fix.",
+   "done": true
+  },
+  {
+   "id": "sw-foliage-grade-fixed",
+   "rows": [
+    "F41#5",
+    "F41#8",
+    "F41#3"
+   ],
+   "kind": "arm",
+   "tree": "tb/item-veg-adjust head 2ea565e63332f8b8a1259cd16990d22d28289db5 (or main plus that commit's scripts/world/vegetation.gd changes copied, if cleaner)",
+   "overlay_branch": "tb/item-veg-adjust",
+   "overlay": "ralph/reports/LANES/ITEM-VEG-ADJUST/overlay_foliage_grade.json",
+   "overlay_format": "deep merge",
+   "frames": "same frames as G-sw-foliage-grade (F41#5, F41#8, F41#3 job.json frames)",
+   "capture": "live (current main) vs arm at High; check the script-error list is empty",
+   "note": "Re-shoot of the invalid G-sw-foliage-grade after LANE-MESHY replaced the Godot 3 Image.adjust_bsc call (ITEM-VEG-ADJUST/ARM.md)",
+   "done": true
+  },
+  {
+   "id": "lens-ground-clearance",
+   "kind": "arm",
+   "rows": [
+    "F39#21",
+    "F39#3",
+    "F39#15",
+    "F38#3",
+    "F41#5"
+   ],
+   "branch": "tb/item-venn-plane",
+   "head": "1508bdfae15ccc83a8e976c29410ad0492f1a448",
+   "overlay_branch": "tb/item-venn-plane",
+   "overlay": "ralph/reports/LANES/ITEM-VENN-PLANE/overlay_lens_ground.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+   "args": [
+    "--trainer=water_trainer_venn",
+    "--interval=8.0",
+    "--max-frames=100",
+    "--level=80",
+    "--pilot=MASHER",
+    "--cap-s=300",
+    "--tells-per-opponent=1",
+    "--hits-per-opponent=1",
+    "--verified-victory-lifecycle",
+    "--expected-resolution=1920x1080",
+    "--seed=2042",
+    "--out={OUT}"
+   ],
+   "resolution": [
+    1920,
+    1080
+   ],
+   "expected_frames": {
+    "lifecycle": [
+     "tidewake__fight__venn__win.png",
+     "tidewake__fight__venn__aftermath.png",
+     "tidewake__fight__venn__receipt-expired.png"
+    ],
+    "fight_observation_about": 20
+   },
+   "frames": "(1) the Venn lifecycle capture as given (win, aftermath, receipt-expired), base vs candidate; (2) because the lens rule touches every exploration camera, also the job.json frames of F39#3, F39#15, F38#3 and F41#5 (slopes, shores, forest) live vs arm",
+   "capture": "live (current main) vs arm (scripts from the branch head copied onto main plus the overlay) at High",
+   "note": "LANE-MESHY ITEM-VENN-PLANE/ARM.md: the grey wedge is the dune face 0.35 m under the lens; candidate shortens the spring arm until the lens clears ground by 1 m (flag OFF on the branch). Global camera change, so it needs the wider frame set.",
+   "done": true
+  },
+  {
+   "id": "storm-light-a",
+   "kind": "arm",
+   "rows": [
+    "F41#2",
+    "F41#3",
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#17",
+    "F41#21",
+    "F41#15"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_storm_key.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of each row: F41#2 3, F41#3 3, F41#4 3, F41#5 3, F41#12 3, F41#17 1, F41#21 2, F41#15 3 = 21 frames",
+   "capture": "live (current main) vs arm at High, seed 2042; check the script-error list is empty and that the overlay merge receipt shows storm_light.enabled and height_fog.enabled true",
+   "note": "Owner-approved Stormwood storm-light pass, arm A (ITEM-STORM-LIGHT/ARM.md): violet storm key, violet shadow fill and fog, fighter rim, layered height fog. Config only, no code. Top priority.",
+   "done": true
+  },
+  {
+   "id": "storm-light-b",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#21"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_fight_sight.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of F41#3 (3) and F41#21 (2) = 5; then, if time allows, the full hollows_alpha fight sheet: res://tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120 --interval=1 --seed=2042 --out={OUT}",
+   "capture": "live (current main) vs arm at High, seed 2042; script-error list empty; receipt shows foliage_camera_visibility line_of_sight_fade.enabled true",
+   "note": "Storm-light pass arm B (ITEM-STORM-LIGHT/ARM.md): fight camera kept out of trunks and canopy via the built line-of-sight fade. Config only. Judged separately from arm A.",
+   "done": true
+  },
+  {
+   "id": "storm-core-v2",
+   "kind": "arm",
+   "rows": [
+    "F41#1"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "cdb3cbe1b90bf0d2c568570cac59af8d56112cbb",
+   "tree": "main plus, from tb/item-storm-light head cdb3cbe1b90bf0d2c568570cac59af8d56112cbb: assets/props/blender-1109/ (both stormheart_heart_core/ and glass_sink_lip/, with .import files and provenance), scripts/world/stormheart_tree.gd, scripts/world/stormwood_glass_sink.gd and scripts/world/stormwood_world.gd copied in; ONE import pass (--import) serves both storm-core-v2 and glass-sink-lip",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-CORE/overlay_heart_core.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+    "stormwood__dynamo__12__the_stormheart_tree__day__close",
+    "stormwood__landmark__dynamo_core__day__close"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; confirm the core model loads (not missing/pink)",
+   "note": "First free-pipeline asset (Blender procedural, no Meshy): deep-blue Stormheart crystal core with violet seams, sized to sit inside the frame (ITEM-STORM-CORE/ARM.md).",
+   "done": true
+  },
+  {
+   "id": "glass-sink-lip",
+   "kind": "arm",
+   "rows": [
+    "F41#10"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "cdb3cbe1b90bf0d2c568570cac59af8d56112cbb",
+   "tree": "main plus, from tb/item-storm-light head cdb3cbe1b90bf0d2c568570cac59af8d56112cbb: assets/props/blender-1109/ (both stormheart_heart_core/ and glass_sink_lip/, with .import files and provenance), scripts/world/stormheart_tree.gd, scripts/world/stormwood_glass_sink.gd and scripts/world/stormwood_world.gd copied in; ONE import pass (--import) serves both storm-core-v2 and glass-sink-lip",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-SINK-LIP/overlay_lip_ring.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; confirm the slabs load and sit on the ground",
+   "note": "Second free-pipeline asset (Blender procedural plus CC0 ambientCG Rock035): ring of fractured basalt lip slabs with fused-glass tops so the Glass Sink reads as a sunken basin (ITEM-SINK-LIP/ARM.md). Run right after storm-core-v2 on the same import. RESULT: invalid capture, no slab in frame (18 slabs ~87 m apart); requeue as glass-sink-lip-dense once the build lane makes the ring continuous.",
+   "done": true
+  },
+  {
+   "id": "storm-light-a2",
+   "kind": "arm",
+   "rows": [
+    "F41#2",
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#15",
+    "F41#17"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_storm_key_a2.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of each row: 3+3+3+3+3+1 = 16",
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt: storm_light.enabled true, height_fog NOT enabled, and confirm storm_light.environment.exposure has a reader (flag it if not)",
+   "note": "Storm-light arm A2 after the split verdict on A: keeps the violet key and fighter rim, drops height fog and the darker grade, lifts ambient/exposure so the forest stands (F41#4/#5) keep their value. Run next after the current section. RESULT: overlay applied but inert; light_pass_1101 (on) replaces storm_light and the surge sun at runtime. Arm A's visible change was height_fog alone. Rebuild as storm-light-a3 in light_pass_1101.",
+   "done": true
+  },
+  {
+   "id": "f38-23-cobble-r3",
+   "kind": "arm",
+   "rows": [
+    "F38#23"
+   ],
+   "branch": "tb/item-f38-23-cobble",
+   "head": "39fb00578a94f2913944edaad2b09b5f0c18040d",
+   "tree": "main plus scripts/world/tether_relay.gd and data/config/tether_relay.json copied from that head (r3 block lives only in the branch config)",
+   "overlay_branch": "tb/item-f38-23-cobble",
+   "overlay": "ralph/reports/LANES/ITEM-F38-23/overlay_cobble_r3.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+    "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk"
+   ],
+   "capture": "MEDIUM first (the failing side, 7.07), live vs arm, seed 2042; High only if the Medium arm maps 7.5 or above; script-error list empty",
+   "note": "CLOSE-OUT candidate (owner 25 Oct evening: candidates that would close a criterion go first). F38#23 is GPU High 7.58 / Medium 7.07; r3 darkens the overbright yard flags 17% and deepens the joints (ITEM-F38-23/ARM.md). Run next after the current section. Medium captured (G-f38-23-cobble-r3); High pending the Medium score.",
+   "done": true
+  },
+  {
+   "id": "pilot-mark",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#21"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-PILOT-MARK/overlay_pilot_mark.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of F41#3 (3) and F41#21 (2); fights are non-deterministic, so if the fight capture tool allows, shoot each side twice so the judges compare like with like",
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows pilot_mark.rim_strength 1.4",
+   "note": "Player creature read under the boss (ITEM-PILOT-MARK/ARM.md): pilot rim 0.9 -> 1.4 only, no floor ring (owner 24 Oct). Config only.",
+   "done": false
+  },
+  {
+   "id": "voltarach-value",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#21"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-VOLTARACH-BLOOM/overlay_voltarach_value.json",
+   "overlay_format": "deep merge",
+   "frames": "same frames as pilot-mark (F41#3 3, F41#21 2); shoot it in the same session as pilot-mark so one live set serves both arms (live, pilot-mark, voltarach-value), each side twice if the fight tool allows",
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows species.json voltarach.placeholder field_emission 0.35 and field_rim 0.12",
+   "note": "Voltarach blown to near-white gold bloom (ITEM-VOLTARACH-BLOOM/CAUSE.md): the 22 Oct CPU-tuned field_emission 1.5 lifts the dark carapace to white under GPU exposure. One-species config fix.",
+   "done": false
+  },
+  {
+   "id": "f38-3-standoff",
+   "kind": "arm",
+   "rows": [
+    "F38#3"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-f38-3",
+   "overlay": "ralph/reports/LANES/ITEM-F38-3/overlay_meadows_standoff.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "meadows__fights__south_bridge_grunt-01",
+    "meadows__fights__south_bridge_grunt-02",
+    "meadows__fights__south_bridge_grunt-03"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows combat.json trainer_aside.realm_1104.enabled true with meadows side_m 3.8 / forward_m -2.2",
+   "note": "Meadows fight staging (ITEM-F38-3/ARM.md): trainer and grunt stand further out of the creatures' lane so they stay visible beside the large ally. No creature size or camera change. Config only. LANDING NOTE (GPU lane, 9 Nov): enabling realm_1104 also turns on main's existing realms.water row (side 3.6), so a ship must remove the water row (overlay null) or Tidewake (F39#7) moves too; Meadows frames are unaffected, so the capture stands.",
+   "done": false
+  },
+  {
+   "id": "glass-sink-lip-dense",
+   "kind": "arm",
+   "rows": [
+    "F41#10"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "9980aa119c28f9810e4b5b6f5fe3da539cccbca0",
+   "tree": "main plus, from that head: assets/props/blender-1109/glass_sink_lip/ (GLB, texture, .import, provenance), scripts/world/stormwood_glass_sink.gd, scripts/world/stormwood_world.gd and data/config/stormwood_glass_sink.json copied in; import pass needed",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-SINK-LIP/overlay_lip_ring.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; BEFORE pushing, confirm by eye that slabs are visible in at least two of the three frames (otherwise report, don't send for judging)",
+   "note": "Re-shoot of the void glass-sink-lip with a continuous ring: 172 overlapping slabs in a MultiMesh (ITEM-SINK-LIP).",
+   "done": false
+  }
+ ],
+ "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
 }
