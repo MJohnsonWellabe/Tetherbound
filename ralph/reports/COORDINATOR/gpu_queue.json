@@ -2104,6 +2104,26 @@
    "note": "Floor lane: grass grain and ground cover on the Warrens foundation flank (the route_day loss in the ridge batch was a 'smooth low-res grass slab'), plus an explicit open-ground stand for walk_03 at (-318, 2642) heading 231. Also checks that the mouth keep-out (fix for blocked cave ingress, ported into batch 48) does not lose against the judged foundation.",
    "done": true,
    "frames_pushed": "6e47b5a2f (four frames; walk_03 arm 5.0 m from target, intended view)"
+  },
+  {
+   "id": "hollows-giant-trees",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#22"
+   ],
+   "ride_along_rows": [
+    "F38#0 arch_home golden detail (red rule)"
+   ],
+   "branch": "tb/item-hollows-trunk",
+   "head": "1c45229d939c19a3b950da17d7f97e0da3976577",
+   "overlay_branch": "tb/item-hollows-trunk",
+   "overlay": "ralph/reports/LANES/ITEM-HOLLOWS-TRUNK/overlay.json",
+   "overlay_format": "deep merge",
+   "frames": "(1) hollows_alpha full set: capture_named_fights_f10_6.gd --ids=hollows_alpha --camera-view=north --fixture-seed=1042206 --seconds=14 --interval=2 --fixed-fps 20 (as G-check-890); (2) capacitor_alpha, same tool and flags; (3) giant_calm: capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (exploration must be unchanged); (4) arch_home__golden__clear__detail and __gameplay: capture_f38_matrix.gd --seed=2042 --times=golden",
+   "capture": "High, base vs arm, --fixed-fps 20 for the fights. Next in line. Pre-check: no fight frame filled by teal giant-tree bark or roots; giant_calm identical; the Hall nave post reads brown/ochre, not red.",
+   "note": "The teal mass filling Hollows fight frames is the Meshy giant tree (giant_canopy giant_tree_a/b_v1, scarred_trunk), which is on neither near_lens_fade nor line_of_sight_fade. The arm adds them to the fight-only sight fade (exploration unchanged). Ride-along: timber_1110 retints the Hall nave post out of the red family (the arch_home 'red curtain').",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
