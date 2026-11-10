@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "arm-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/arm-High/swim-across-day.jpg",
+  "sky_fraction": 0.125,
+  "lower_edges": 0.1178,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "arm-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/arm-High/swim-away-day.jpg",
+  "sky_fraction": 0.069,
+  "lower_edges": 0.1555,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "arm-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/arm-High/swim-away-night.jpg",
+  "sky_fraction": 0.6,
+  "lower_edges": 0.1554,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "arm-Medium",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/arm-Medium/swim-across-day.jpg",
+  "sky_fraction": 0.119,
+  "lower_edges": 0.1302,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "arm-Medium",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/arm-Medium/swim-away-day.jpg",
+  "sky_fraction": 0.069,
+  "lower_edges": 0.1521,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "arm-Medium",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/arm-Medium/swim-away-night.jpg",
+  "sky_fraction": 0.596,
+  "lower_edges": 0.163,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "base-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/base-High/swim-across-day.jpg",
+  "sky_fraction": 0.102,
+  "lower_edges": 0.137,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "base-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/base-High/swim-away-day.jpg",
+  "sky_fraction": 0.065,
+  "lower_edges": 0.156,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "base-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/base-High/swim-away-night.jpg",
+  "sky_fraction": 0.595,
+  "lower_edges": 0.1731,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "base-Medium",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/base-Medium/swim-across-day.jpg",
+  "sky_fraction": 0.121,
+  "lower_edges": 0.1059,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "base-Medium",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/base-Medium/swim-away-day.jpg",
+  "sky_fraction": 0.067,
+  "lower_edges": 0.1457,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "base-Medium",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cue/base-Medium/swim-away-night.jpg",
+  "sky_fraction": 0.603,
+  "lower_edges": 0.1456,
+  "script_errors": 0,
+  "note": "CARD:T2 / F13#5. capture_tidewake_f13_5.gd with camera set T2-current.json (swim-away-day, swim-across-day, swim-away-night), --capture-size 1920x1080, --source-sha 90886c306. base = main 90886c306 (no code or config change; origin/main e30bd6bb6 differs only in the settings menu and Stormwood A3 light). arm = the same plus the tool's --tidewake-current-candidate flag (tool metadata current_candidate true on arm, false on base). Controller prompts forced on both sides (pad_glyphs). Pre-push check passed: the 'Current' arrow badge shows beside the swimmer on all 6 arm frames and on none of the base frames."
+ }
+]
