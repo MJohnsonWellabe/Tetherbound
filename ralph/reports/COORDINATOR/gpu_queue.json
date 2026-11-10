@@ -1515,7 +1515,7 @@
    "args": "--stands=giant --phases=calm --no-aftermath plus the F41#4 fallen_giant close as a control",
    "capture": "live (main, root finish ON) vs arm (+ moss cushions off) at High. Pre-push: no pale lilac-white notched quad or cream ovals beside the trainer; ground reads as dark wet earth with grass.",
    "note": "F41#24 second part (ITEM-F41-24/ARM.md): the pale notched quad and cream ovals are the moss-cushion cover tier.",
-   "done": false
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
