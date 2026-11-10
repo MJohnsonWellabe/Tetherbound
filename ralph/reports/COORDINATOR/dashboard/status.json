@@ -1,7 +1,7 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
-    "10 Nov 10:30: Stormwood big swing ships (groves + wet earth + fine rain): F41#17 +0.55 to 7.23 (near the bar), F41#5 +0.50, F41#4 +0.27, all 3/3; batch 40.",
+    "10 Nov 10:30: Stormwood big swing ships (groves + wet earth + fine rain): F41#17 +0.55 to 7.23 (near the bar), F41#5 +0.50, F41#4 +0.27, all 3/3; landed (#886) with the Tidewake current strength bars (+0.57).",
     "10 Nov 07:30: F40#19 Cloudreach rain sky ships (closed slate overcast +0.44, 3/3); the mist variant lost -0.86 (floods the foreground). Storm fog scoped parked after two rounds.",
     "10 Nov 06:45: LANE-NEWAPPROACH's third win: result focus (F41#16 loss card 5.34 -> 7.44, +2.10, 3/3), landed (#884); F41#16 needs a GPU confirm to close.",
     "10 Nov 06:10: Tidewake currents arrow passes the T2/F13#5 Medium/High judge (High +0.60, Medium +0.81, 3/3; blind direction 18/18 at confidence 9) and ships ON by default (UX.md), landed (#883). T2 card itself stays open (arm 6.86).",
@@ -1866,9 +1866,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 40 (in CI)",
-      "what": "Stormwood: layered horizon groves, dark olive wet earth instead of glossy black ground, thin near rain (F41#17 +0.55 to 7.23, F41#5 +0.50, F41#4 +0.27, all 3/3)",
-      "when": "10 Nov, in CI"
+      "pr": "#886",
+      "what": "Stormwood: layered horizon groves, dark olive wet earth instead of glossy black ground, thin near rain (F41#17 +0.55 to 7.23, F41#5 +0.50, F41#4 +0.27, all 3/3); Tidewake current strength bars (+0.57)",
+      "when": "10 Nov 11:34"
     },
     {
       "pr": "#885",
