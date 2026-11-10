@@ -1,0 +1,60 @@
+[
+ {
+  "row": "F41#4",
+  "item": "P2-038",
+  "frame": "stormwood__deepwood__10__the_fallen_giant__day__close",
+  "arm": "live",
+  "tree": "ebabb3c2c0d51f631e7025b7bea3a32efa459e5e",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__deepwood__10__the_fallen_giant",
+   "--times=day",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "Eye check: the flat pale lilac notched quad right of the trainer at the Fallen Giant grove is GONE on the arm, and the small lilac patch above it shrinks to a tiny soft dot (quad area mean RGB 38,45,47 live -> 28,34,35 arm, the surrounding wet ground). The cream ovals remain, as expected (moss_cushion_off_1110 left out). This control frame (F41#4 Fallen Giant close) is unchanged by the arm (absdiff 0.67). High, seed 2042. Control: F41#4's Fallen Giant close. live = main ebabb3c2c (root_finish_1110 ON). arm = live plus stormwood_ground_cover.gd and stormwood_ground_cover.gdshader at tb/item-f41-24-glint 9a14b5a53, the fleck_round_1110 block merged into main's stormwood_ground_finish.json, and fleck_round_1110 switched on (moss_cushion_off_1110 left out).",
+  "match": "exact",
+  "path": "G-f41-24-fleck-round-giant/F41-4/live/High/stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "sky_fraction": 0.143,
+  "lower_edges": 0.2128
+ },
+ {
+  "row": "F41#4",
+  "item": "P2-038",
+  "frame": "stormwood__deepwood__10__the_fallen_giant__day__close",
+  "arm": "arm",
+  "tree": "ebabb3c2c0d51f631e7025b7bea3a32efa459e5e",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__deepwood__10__the_fallen_giant",
+   "--times=day",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "Eye check: the flat pale lilac notched quad right of the trainer at the Fallen Giant grove is GONE on the arm, and the small lilac patch above it shrinks to a tiny soft dot (quad area mean RGB 38,45,47 live -> 28,34,35 arm, the surrounding wet ground). The cream ovals remain, as expected (moss_cushion_off_1110 left out). This control frame (F41#4 Fallen Giant close) is unchanged by the arm (absdiff 0.67). High, seed 2042. Control: F41#4's Fallen Giant close. live = main ebabb3c2c (root_finish_1110 ON). arm = live plus stormwood_ground_cover.gd and stormwood_ground_cover.gdshader at tb/item-f41-24-glint 9a14b5a53, the fleck_round_1110 block merged into main's stormwood_ground_finish.json, and fleck_round_1110 switched on (moss_cushion_off_1110 left out).",
+  "match": "exact",
+  "path": "G-f41-24-fleck-round-giant/F41-4/arm/High/stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "sky_fraction": 0.142,
+  "lower_edges": 0.212
+ }
+]
