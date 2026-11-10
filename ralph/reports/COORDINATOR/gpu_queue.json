@@ -2003,6 +2003,39 @@
    "note": "Floor lane: the giant trunks are storm_canopy's Bark_TwistedTree with its texture mapped once over a huge trunk, and light_pass_1101 forces roughness 0.4 / specular 0.42 on every solid material, giving lilac plastic. Arm: world-space tiling bark detail plus matte through the light pass. Also fixes Image.adjust_bsc -> adjust_bcs (an engine-name bug on main).",
    "done": true,
    "frames_pushed": "05637ec3f (umber, not red)"
+  },
+  {
+   "id": "newapproach-warrens-ridge-stand",
+   "kind": "arm",
+   "rows": [
+    "F38#24",
+    "F38#30"
+   ],
+   "branch": "tb/newapproach",
+   "head": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+   "tree": "tb/newapproach (tools/phase2_capture_routes.gd; assets already imported on main: assets/props/vl-1103/meadows_ridge)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_routes.gd",
+     "args": [
+      "--biome=meadows",
+      "--seed=2042",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+      "--frame=meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+      "--preset={PRESET}",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day, meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day, meadows__band2_stone_and_root__04__the_burrow_warrens__route_day, meadows__band5_stronghold_approach__09__stronghold_approach__route_day; PLUS the F38#24 catalogue job frames from the 8 Nov re-score (every Meadows frame scored for F38#24 that shows the horizon), base vs arm, so the ridge is judged where it acts",
+   "capture": "High. Next arm in line. walk_03: slope on the left, open meadow and a continuous layered mountain ridge on the right. Any frame with a horizon: smooth continuous ranges instead of faceted shards. Pre-check: if walk_03's stand lands under the mound's dark overhang (as it did at other headings on CPU), report the manifest positions and do not judge that frame. The stronghold approach route frame is included because it is in the F38#24 set and shows the horizon.",
+   "note": "Floor lane: turns on the visual lane's Blender-built continuous Meadows ridge (meadows_ridge_vl, never judged) in place of the faceted procedural horizon rings, and turns walk_03 to heading 215 so the ridge is in view. Red trees by the Burrow entrance stay red: the owner's recorded call ('I actually really like the red trees').",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
