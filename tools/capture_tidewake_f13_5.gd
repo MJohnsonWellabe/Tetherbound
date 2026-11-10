@@ -517,7 +517,9 @@ func _fixed_views(look: Node) -> void:
 				return
 			var cue_layer := world.get_node_or_null("WaterCurrentCue")
 			var cue_visible: bool = cue_layer != null and cue_layer.get_child(0).is_visible_in_tree()
-			if bool(policy.config().get("enabled", false)) and not cue_visible:
+			# The arrow is an Accessibility option, OFF by default since 10 Nov; only a
+			# default-on arrow must be visible in a required swim view.
+			if bool(policy.config().get("enabled", false)) and policy.preferred(null) and not cue_visible:
 				_fail("Candidate current cue hidden in required swim view: " + str(view.id))
 				return
 			record["swim_mode"] = int(swimming.state.mode)

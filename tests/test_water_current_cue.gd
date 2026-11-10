@@ -14,7 +14,10 @@ func after_each() -> void:
 func test_preference_survives_file_reload_and_preserves_other_accessibility() -> void:
 	var first: RefCounted = KEY_BINDINGS.new(TEST_PATH)
 	first.set("accessibility", {"reduced_motion": true, "look_sensitivity_percent": 135})
-	assert_true(POLICY.preferred(first), "current arrow defaults on when candidate ships")
+	assert_eq(POLICY.preferred(first), POLICY.default_on(), "an unset preference follows the config default")
+	assert_false(POLICY.default_on(), "owner 10 Nov: the arrow is OFF by default, kept in Accessibility")
+	assert_true(POLICY.set_preferred(first, true))
+	assert_true(POLICY.preferred(first), "a player can turn it on")
 	assert_true(POLICY.set_preferred(first, false))
 	var second: RefCounted = KEY_BINDINGS.new(TEST_PATH)
 	assert_eq(int(second.call("load_overrides")), KEY_BINDINGS.LOAD_OK)

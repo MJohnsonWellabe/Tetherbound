@@ -148,28 +148,39 @@ static func stormwood_foliage_grade(vegetation: Dictionary, look: Dictionary = {
 	if look.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STORMWOOD_LOOK_PATH))
 		look = parsed if parsed is Dictionary else {}
-	var grade: Variant = look.get("foliage_grade_1104", {})
-	if not grade is Dictionary or not bool((grade as Dictionary).get("enabled", false)):
-		return {}
+	# Each enabled grade merges per model and per material in this order:
+	# foliage_grade_1104, then F41#17 `bark_grey_1110` (OFF until judged: the
+	# trunks round the Crown Arch rendered salmon to red under the lilac light,
+	# the red family Team Tether reserves).
 	var variants := {}
 	var adjusts := {}
 	var layers: Dictionary = vegetation.get("layers", {})
-	var tints_by_layer: Dictionary = (grade as Dictionary).get("layers", {})
-	var adjust_by_layer: Dictionary = (grade as Dictionary).get("adjust", {})
-	for layer_name: String in tints_by_layer:
-		var layer: Variant = layers.get(layer_name)
-		if not layer is Dictionary:
+	for key: String in ["foliage_grade_1104", "bark_grey_1110"]:
+		var grade: Variant = look.get(key, {})
+		if not grade is Dictionary or not bool((grade as Dictionary).get("enabled", false)):
 			continue
-		for model: Variant in (layer as Dictionary).get("models", []):
-			variants[str(model)] = (tints_by_layer[layer_name] as Dictionary).duplicate()
-	# Texture adjusts (saturation, brightness, contrast per material): the
-	# bright leaf sheets stay bright green under any multiply tint.
-	for layer_name: String in adjust_by_layer:
-		var layer: Variant = layers.get(layer_name)
-		if not layer is Dictionary:
-			continue
-		for model: Variant in (layer as Dictionary).get("models", []):
-			adjusts[str(model)] = (adjust_by_layer[layer_name] as Dictionary).duplicate(true)
+		var tints_by_layer: Dictionary = (grade as Dictionary).get("layers", {})
+		var adjust_by_layer: Dictionary = (grade as Dictionary).get("adjust", {})
+		for layer_name: String in tints_by_layer:
+			var layer: Variant = layers.get(layer_name)
+			if not layer is Dictionary:
+				continue
+			for model: Variant in (layer as Dictionary).get("models", []):
+				var tints: Dictionary = variants.get(str(model), {})
+				tints.merge(tints_by_layer[layer_name] as Dictionary, true)
+				variants[str(model)] = tints
+		# Texture adjusts (saturation, brightness, contrast per material): the
+		# bright leaf sheets stay bright green under any multiply tint.
+		for layer_name: String in adjust_by_layer:
+			var layer: Variant = layers.get(layer_name)
+			if not layer is Dictionary:
+				continue
+			for model: Variant in (layer as Dictionary).get("models", []):
+				var per_material: Dictionary = adjusts.get(str(model), {})
+				per_material.merge((adjust_by_layer[layer_name] as Dictionary).duplicate(true), true)
+				adjusts[str(model)] = per_material
+	if variants.is_empty() and adjusts.is_empty():
+		return {}
 	return {"variant_retint": variants, "retexture_adjust": adjusts}
 
 

@@ -1,6 +1,7 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
+    "10 Nov 13:00: owner direction: the on-screen current arrow is OFF by default (kept in Accessibility); the in-world current cue will be the direction the waves move (LANE-NEWAPPROACH). Grey bark ships (all four Stormwood rows gain); Crown Arch r3 and the root fix landed (#887).",
     "10 Nov 11:55: Crown Arch r3 ships (+0.50 on High and Medium, 3/3; the free Blender pipeline's first win); F41#17 maps 6.77 in that batch, so it stays open, and the judges flag red-family tree trunks as the next blocker.",
     "10 Nov 10:30: Stormwood big swing ships (groves + wet earth + fine rain): F41#17 +0.55 to 7.23 (near the bar), F41#5 +0.50, F41#4 +0.27, all 3/3; landed (#886) with the Tidewake current strength bars (+0.57).",
     "10 Nov 07:30: F40#19 Cloudreach rain sky ships (closed slate overcast +0.44, 3/3); the mist variant lost -0.86 (floods the foreground). Storm fog scoped parked after two rounds.",
@@ -1867,9 +1868,14 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 41 (in CI)",
-      "what": "Crown Arch r3 (Blender, free pipeline): weathered stone with lichen and copper, ragged flagstone landing instead of the square plinth (+0.50 High and Medium, 3/3)",
+      "pr": "batch 42 (in CI)",
+      "what": "Stormwood trunks retinted out of the red family (all four rows gain, 3/3; Crown Arch +1.19); Tidewake current arrow now OFF by default (owner: the in-world cue is the wave motion)",
       "when": "10 Nov, in CI"
+    },
+    {
+      "pr": "#887",
+      "what": "Crown Arch r3 (weathered stone, copper, flagstone landing; +0.50) and the Stormwood canopy root fix (F41#24 +0.82)",
+      "when": "10 Nov 12:51"
     },
     {
       "pr": "#886",
@@ -1885,11 +1891,6 @@
       "pr": "#884",
       "what": "exploration HUD steps back while a fight result is on screen (loss card, catch card, beaten line): F41#16 loss card 5.34 -> 7.44 (+2.10, 3/3, HUD judged on CPU)",
       "when": "10 Nov 07:11"
-    },
-    {
-      "pr": "#883",
-      "what": "Tidewake swimming-current arrow ON by default (GPU High +0.60, Medium +0.81, 3/3; blind direction test 18/18), after five rounds of world-only cues stuck at about 3/10",
-      "when": "10 Nov 06:36"
     }
   ],
   "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",

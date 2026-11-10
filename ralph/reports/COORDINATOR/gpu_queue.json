@@ -1440,7 +1440,31 @@
    "args": "--stands=giant --phases=calm --no-aftermath plus the F41#24 job frames",
    "capture": "live vs arm at High. Pre-push: no flat pale wedge beside the trainer at the Fallen Giant grove; roots read as low dark flares; nothing else changes.",
    "note": "F41#24 cleanliness (ITEM-F41-24/ARM.md): the mauve quad is a shader-placed canopy root's flat top facet catching the lilac sky; root_finish_1110 rounds, narrows, darkens and sinks the roots.",
-   "done": false
+   "done": true
+  },
+  {
+   "id": "bark-grey-1110",
+   "kind": "arm",
+   "rows": [
+    "F41#17",
+    "F41#4",
+    "F41#5"
+   ],
+   "branch": "tb/item-bark-grey",
+   "head": "e07564b9b9e8be452e288811bff819dc13547a9c",
+   "tree": "tb/land-batch-41 head 0934963da (main + Crown Arch r3 + root finish; merges on green; needs the r3 GLB import you already have) plus scripts/world/vegetation.gd and the bark_grey_1110 block of data/config/stormwood_look.json from the bark head (merge the block; don't overwrite the file)",
+   "overlay_branch": "tb/item-bark-grey",
+   "overlay": "ralph/reports/LANES/ITEM-BARK-GREY/overlay_bark.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__landmark__crown_arch__day__close",
+    "stormwood__landmark__crown_heartstone__day__close",
+    "stormwood__landmark__glass_field__day__close",
+    "stormwood__deepwood__10__the_fallen_giant__day__close"
+   ],
+   "capture": "live vs arm at High, seed 2042; Medium on the same frames if the High arm gains (F41#17 is near the bar). Pre-push: no pink, salmon or red-brown trunks; sample trunk RGB at crown_arch (red not above green); foliage unchanged.",
+   "note": "Red-family trunks were the batch-41 judges' top F41#17 blocker (ITEM-BARK-GREY/ARM.md): CommonTree and TwistedTree bark retinted to cool grey-brown through the existing foliage-grade retint; the groves follow.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
