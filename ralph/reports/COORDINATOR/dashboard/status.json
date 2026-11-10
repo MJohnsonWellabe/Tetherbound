@@ -1,7 +1,8 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
-    "10 Nov 06:10: Tidewake currents arrow passes the T2/F13#5 Medium/High judge (High +0.60, Medium +0.81, 3/3; blind direction 18/18 at confidence 9) and ships ON by default (UX.md), batch 37. T2 card itself stays open (arm 6.86).",
+    "10 Nov 06:45: LANE-NEWAPPROACH's third win: result focus (F41#16 loss card 5.34 -> 7.44, +2.10, 3/3), landing in batch 38; F41#16 needs a GPU confirm to close.",
+    "10 Nov 06:10: Tidewake currents arrow passes the T2/F13#5 Medium/High judge (High +0.60, Medium +0.81, 3/3; blind direction 18/18 at confidence 9) and ships ON by default (UX.md), landed (#883). T2 card itself stays open (arm 6.86).",
     "10 Nov 04:55: LANE-NEWAPPROACH's first win ships: wind-up dust at ankle height (F38#3 +0.45/+0.29, 3/3 both runs; F38#11 +0.30 r1). The F38#3 trainer standoff lost on the full set (-0.34 to -1.09) because it sends the fight camera wide; dropped.",
     "10 Nov 04:25: storm-light A3 ships (F41#2 Surge phases +0.73, 3/3; F41#17 +0.09; no drops), the first storm-light arm that reached the frame. Glass Sink lip ring (free Blender pipeline) lost -0.68: slabs read as placeholder blocks.",
     "10 Nov 03:40: F38#27 settings and key-binding menu CLOSED on GPU (High 7.84, Medium 8.25, three judges, confirming batches); landed (#880). F38#3 Meadows staging held: the change sends the fight camera wide in most arm frames.",
@@ -1863,9 +1864,14 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 37 (in CI)",
-      "what": "Tidewake swimming-current arrow ON by default (GPU High +0.60, Medium +0.81, 3/3; blind direction test 18/18), after five rounds of world-only cues stuck at about 3/10",
+      "pr": "batch 38 (in CI)",
+      "what": "exploration HUD steps back while a fight result is on screen (loss card, catch card, beaten line): F41#16 loss card 5.34 -> 7.44 (+2.10, 3/3, HUD judged on CPU)",
       "when": "10 Nov, in CI"
+    },
+    {
+      "pr": "#883",
+      "what": "Tidewake swimming-current arrow ON by default (GPU High +0.60, Medium +0.81, 3/3; blind direction test 18/18), after five rounds of world-only cues stuck at about 3/10",
+      "when": "10 Nov 06:36"
     },
     {
       "pr": "#882",
@@ -1881,11 +1887,6 @@
       "pr": "#880",
       "what": "settings and key-binding menu closes on GPU (High 7.84, Medium 8.25): key pictures for Tab/Q, no doubled key labels, shorter reset line",
       "when": "10 Nov 04:09"
-    },
-    {
-      "pr": "#879",
-      "what": "Voltarach no longer a white-gold blob: dark shell with gold veins and blue eyes (GPU +1.04/+1.16, 3/3); Officer Nysa test shot fixed",
-      "when": "10 Nov 02:03"
     }
   ],
   "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
