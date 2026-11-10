@@ -1,0 +1,6 @@
+Kg: "The upper-center boss title card overlaps part of Cannonback's shell and head in the opening and tell views"
+Kq: none
+Ag: "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+Fq: "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+Vd: none
+Vh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
