@@ -1052,6 +1052,46 @@
    ],
    "capture": "High: live, live2, arm, arm2 (fights vary run to run), pad_glyphs on all; push every frame (no re-shooting to match angles), with a camera note per frame. Receipt: combat.json telegraph.soft_style dust_size_m 0.42, dust_rise_m 0.16, dust_alpha 0.6, dust_colour #9c8763, dust_spacing_m 0.34. If the wind-up footprint can't be seen at all on the arm, report instead of pushing.",
    "note": "LANE-NEWAPPROACH shared cause #2 (NEWAPPROACH-DUST/ARM.md): the wind-up dust is a chest-high near-white cloud over both fighters in every biome; the arm keeps it at ankle height in an earth tone. Config only, CPU reach proof committed.",
+   "done": true
+  },
+  {
+   "id": "storm-fog-scoped",
+   "kind": "arm",
+   "rows": [
+    "F41#17",
+    "F41#2",
+    "F41#12",
+    "F41#4",
+    "F41#5"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "fd269b77e9edea8d3cee19c9c8327d89b70988e2",
+   "tree": "main plus scripts/world/stormwood_surge.gd and data/config/stormwood_surge.json copied from that head",
+   "base_overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_storm_key_a3.json (apply on BOTH sides: A3 ships in batch 35, so the live baseline should include it)",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_height_fog_scoped.json",
+   "overlay_format": "deep merge",
+   "frames": "the arm A frames: job.json frames of F41#17, #2, #12, #4, #5 (13)",
+   "capture": "High: live = main + A3 overlay; arm = main + A3 + scoped fog. Seed 2042, script-error list empty, receipt shows height_fog.enabled and scope.enabled true. Pre-push check: the calm forest stands (F41#4/#5) should be unchanged vs live; the Crown Arch / phase / road frames should show low fog.",
+   "note": "Scoped height fog (ITEM-STORM-LIGHT/ARM_FOG_SCOPED.md): keeps arm A's fog gains (F41#17/#2/#12, +0.27 to +0.31) and removes its forest losses. Released from the hold.",
+   "done": false
+  },
+  {
+   "id": "boss-standoff",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#21"
+   ],
+   "branch": "tb/item-boss-standoff",
+   "head": "ddedeefe0846c407f152d40c8b0a2f752d11b7b8",
+   "tree": "main plus scripts/combat/contact_spacing.gd, scripts/combat/combat_manager.gd and data/config/combat.json copied from that head",
+   "overlay_branch": "tb/item-boss-standoff",
+   "overlay": "ralph/reports/LANES/ITEM-BOSS-STANDOFF/overlay_large_foe_standoff.json",
+   "overlay_format": "deep merge",
+   "frames": "stormwood__fight__capacitor_alpha-i01, -tell1-a-start, -tell1-e-impact, plus one hollows_alpha (Voltarach) fight frame",
+   "capture": "High: live, live2, arm, arm2, pad_glyphs on all; push every frame with a camera note (no re-shooting to match angles). WATCH the camera: the F38#3 trainer-aside change sent the fight camera wide, and this also moves the trainer; record per-frame camera angle so a camera side effect shows. Receipt: contact_spacing.large_foe_standoff enabled.",
+   "note": "Large-foe standoff (ITEM-BOSS-STANDOFF/ARM.md): keeps the ally and trainer outside a big boss's leg span (positioning only, no floor ring). Judges' top F41#3 ask after the Voltarach bloom. Released from the hold.",
    "done": false
   }
  ],
