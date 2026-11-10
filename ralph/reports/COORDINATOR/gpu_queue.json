@@ -829,8 +829,8 @@
    "overlay_format": "deep merge",
    "frames": "job.json frames of each row: 3+3+3+3+3+1 = 16",
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt: storm_light.enabled true, height_fog NOT enabled, and confirm storm_light.environment.exposure has a reader (flag it if not)",
-   "note": "Storm-light arm A2 after the split verdict on A: keeps the violet key and fighter rim, drops height fog and the darker grade, lifts ambient/exposure so the forest stands (F41#4/#5) keep their value. Run next after the current section.",
-   "done": false
+   "note": "Storm-light arm A2 after the split verdict on A: keeps the violet key and fighter rim, drops height fog and the darker grade, lifts ambient/exposure so the forest stands (F41#4/#5) keep their value. Run next after the current section. RESULT: overlay applied but inert; light_pass_1101 (on) replaces storm_light and the surge sun at runtime. Arm A's visible change was height_fog alone. Rebuild as storm-light-a3 in light_pass_1101.",
+   "done": true
   },
   {
    "id": "f38-23-cobble-r3",
