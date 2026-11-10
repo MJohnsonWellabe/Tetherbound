@@ -1,0 +1,84 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7595,
+  "least_squares_slope": 1.0031,
+  "method": "linear",
+  "slope": 1.0031,
+  "intercept": 0.8495,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.75,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.3,
+   "reference": 6.53,
+   "mapped": 5.163,
+   "residual": 1.367
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.833,
+   "reference": 4.0,
+   "mapped": 4.695,
+   "residual": -0.695
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.6,
+   "reference": 6.75,
+   "mapped": 6.467,
+   "residual": 0.283
+  },
+  "f04_6_r22:control": {
+   "measured": 4.9,
+   "reference": 5.83,
+   "mapped": 5.765,
+   "residual": 0.065
+  },
+  "craft:before": {
+   "measured": 4.933,
+   "reference": 4.83,
+   "mapped": 5.798,
+   "residual": -0.968
+  },
+  "craft:after": {
+   "measured": 6.533,
+   "reference": 7.35,
+   "mapped": 7.403,
+   "residual": -0.053
+  }
+ },
+ "candidates": {
+  "G F41#10 live-vs-arm [G-lip_F41-10_arm.png]": {
+   "measured_mean": 5.267,
+   "mapped_mean": 6.13,
+   "mapped_judges": [
+    6.27,
+    6.07,
+    6.07
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#10 live-vs-arm [G-lip_F41-10_live_for_arm.png]": {
+   "measured_mean": 5.267,
+   "mapped_mean": 6.13,
+   "mapped_judges": [
+    6.27,
+    6.07,
+    6.07
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "anchor residual RMSE 0.75 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}
