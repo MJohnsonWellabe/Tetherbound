@@ -1,0 +1,24 @@
+[
+ {
+  "frame": "giant_calm.jpg",
+  "preset": "arm-High",
+  "tree": "ebabb3c2c0d51f631e7025b7bea3a32efa459e5e",
+  "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-trunk-dither-narrow-giant/arm-High/giant_calm.jpg",
+  "sky_fraction": 0.307,
+  "lower_edges": 0.3672,
+  "script_errors": 0,
+  "note": "Eye check: no trunk covers the trainer or a fighter in any frame. giant_calm: the trunk behind the trainer, speckled and half-dissolved over most of its height on live, is solid bark on the arm, with only a thin dither strip at its lower edge (the 1 m band); the trainer stays in front and fully visible. Fight capacitor_alpha-i01: both fighters clear on both sides (absdiff 19.2 comes from the fight being at a different moment, 16 vs 8 commands, not from trees). F41#5 and Fallen Giant job frames barely change (absdiff 0.4-1.5). High, capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (giant_calm). live = main ebabb3c2c. arm = live plus foliage_camera_visibility.gd and foliage_camera_visibility.json at tb/item-trunk-dither 26ad2fb1a (cut from this main; narrow_band_1110 added OFF) and ITEM-TRUNK-DITHER/overlay_narrow.json (on: near-lens trunk fade band 3-7 m -> 3-4 m)."
+ },
+ {
+  "frame": "giant_calm.jpg",
+  "preset": "live-High",
+  "tree": "ebabb3c2c0d51f631e7025b7bea3a32efa459e5e",
+  "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-trunk-dither-narrow-giant/live-High/giant_calm.jpg",
+  "sky_fraction": 0.29,
+  "lower_edges": 0.377,
+  "script_errors": 0,
+  "note": "Eye check: no trunk covers the trainer or a fighter in any frame. giant_calm: the trunk behind the trainer, speckled and half-dissolved over most of its height on live, is solid bark on the arm, with only a thin dither strip at its lower edge (the 1 m band); the trainer stays in front and fully visible. Fight capacitor_alpha-i01: both fighters clear on both sides (absdiff 19.2 comes from the fight being at a different moment, 16 vs 8 commands, not from trees). F41#5 and Fallen Giant job frames barely change (absdiff 0.4-1.5). High, capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (giant_calm). live = main ebabb3c2c. arm = live plus foliage_camera_visibility.gd and foliage_camera_visibility.json at tb/item-trunk-dither 26ad2fb1a (cut from this main; narrow_band_1110 added OFF) and ITEM-TRUNK-DITHER/overlay_narrow.json (on: near-lens trunk fade band 3-7 m -> 3-4 m)."
+ }
+]
