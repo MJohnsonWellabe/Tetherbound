@@ -25,7 +25,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-3/arm/High/stormwood__fight__capacitor_alpha-i01.jpg",
   "sky_fraction": 0.181,
-  "lower_edges": 0.4711
+  "lower_edges": 0.4711,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#3",
@@ -53,7 +54,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-3/arm/High/stormwood__fight__capacitor_alpha-tell1-a-start.jpg",
   "sky_fraction": 0.179,
-  "lower_edges": 0.4486
+  "lower_edges": 0.4486,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#3",
@@ -81,7 +83,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-3/arm/High/stormwood__fight__capacitor_alpha-tell1-e-impact.jpg",
   "sky_fraction": 0.207,
-  "lower_edges": 0.435
+  "lower_edges": 0.435,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#6",
@@ -109,7 +112,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-6/arm/High/stormwood__fight__capacitor_alpha-tell1-e-impact.jpg",
   "sky_fraction": 0.207,
-  "lower_edges": 0.435
+  "lower_edges": 0.435,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#21",
@@ -137,7 +141,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-21/arm/High/stormwood__fight__hollows_win__hollows_alpha-99-after.jpg",
   "sky_fraction": 0.185,
-  "lower_edges": 0.3789
+  "lower_edges": 0.3789,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#21",
@@ -165,7 +170,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-21/arm/High/stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath.jpg",
   "sky_fraction": 0.146,
-  "lower_edges": 0.4609
+  "lower_edges": 0.4609,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#3",
@@ -193,7 +199,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-3/arm2/High/stormwood__fight__capacitor_alpha-i01.jpg",
   "sky_fraction": 0.182,
-  "lower_edges": 0.4724
+  "lower_edges": 0.4724,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#3",
@@ -221,7 +228,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-3/arm2/High/stormwood__fight__capacitor_alpha-tell1-a-start.jpg",
   "sky_fraction": 0.178,
-  "lower_edges": 0.4489
+  "lower_edges": 0.4489,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#3",
@@ -249,7 +257,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-3/arm2/High/stormwood__fight__capacitor_alpha-tell1-e-impact.jpg",
   "sky_fraction": 0.207,
-  "lower_edges": 0.4362
+  "lower_edges": 0.4362,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#6",
@@ -277,7 +286,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-6/arm2/High/stormwood__fight__capacitor_alpha-tell1-e-impact.jpg",
   "sky_fraction": 0.207,
-  "lower_edges": 0.4362
+  "lower_edges": 0.4362,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#21",
@@ -305,7 +315,8 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-21/arm2/High/stormwood__fight__hollows_win__hollows_alpha-99-after.jpg",
   "sky_fraction": 0.159,
-  "lower_edges": 0.4069
+  "lower_edges": 0.4069,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  },
  {
   "row": "F41#21",
@@ -333,6 +344,7 @@
   "match": "exact",
   "path": "G-voltarach-value/F41-21/arm2/High/stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath.jpg",
   "sky_fraction": 0.122,
-  "lower_edges": 0.4386
+  "lower_edges": 0.4386,
+  "input_prompts": "controller (LT Aim, LB Switch, RT Flee) on arm and arm2, checked by eye 9 Nov; captured before pad_glyphs.py, matching G-pilot-mark live and live2"
  }
 ]
