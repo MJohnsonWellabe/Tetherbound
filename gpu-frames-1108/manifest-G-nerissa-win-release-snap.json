@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "nerissa/tidewake__fight__nerissa__win.png",
+  "preset": "arm-High",
+  "tree": "7952052e356ff7abeecdd40f6095fe1a3ec793b0",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-win-release-snap/arm-High/nerissa/tidewake__fight__nerissa__win.png",
+  "sky_fraction": 0.111,
+  "lower_edges": 0.2847,
+  "script_errors": 0,
+  "note": "Eye check: on the arm the win and aftermath are shot from inside the Heart Chamber, behind and above the trainer at moderate range; no wall or crystal sits between lens and trainer, and the lens is not inside geometry (a crystal tip top-left and a dark block bottom-left intrude at the frame edges near the lens without covering the trainer). The mid-fight frame t-040.02 has the same framing on both sides (walls, banner and crystal in the same places; the differences are fight timing). Note on live in this GPU run: the camera was not 20 m back. Live win is close in with a pale crystal slab across the right third of the view, and live aftermath is a tight over-the-shoulder shot. High, phase2_capture_tidewake_fights.gd --trainer=water_trainer_nerissa (entry args), seed 2042, pad glyphs. Tree: tb/item-nerissa-win-camera 7952052e3 on both sides (release_camera_snap_1110 OFF). arm = plus ITEM-NERISSA-WIN/overlay_snap.json (release_camera_snap_1110 true). Frames: nerissa/tidewake__fight__nerissa__win.png, __aftermath.png, and the mid-fight t-040.02.png."
+ },
+ {
+  "frame": "nerissa/tidewake__fight__nerissa__aftermath.png",
+  "preset": "arm-High",
+  "tree": "7952052e356ff7abeecdd40f6095fe1a3ec793b0",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-win-release-snap/arm-High/nerissa/tidewake__fight__nerissa__aftermath.png",
+  "sky_fraction": 0.142,
+  "lower_edges": 0.2708,
+  "script_errors": 0,
+  "note": "Eye check: on the arm the win and aftermath are shot from inside the Heart Chamber, behind and above the trainer at moderate range; no wall or crystal sits between lens and trainer, and the lens is not inside geometry (a crystal tip top-left and a dark block bottom-left intrude at the frame edges near the lens without covering the trainer). The mid-fight frame t-040.02 has the same framing on both sides (walls, banner and crystal in the same places; the differences are fight timing). Note on live in this GPU run: the camera was not 20 m back. Live win is close in with a pale crystal slab across the right third of the view, and live aftermath is a tight over-the-shoulder shot. High, phase2_capture_tidewake_fights.gd --trainer=water_trainer_nerissa (entry args), seed 2042, pad glyphs. Tree: tb/item-nerissa-win-camera 7952052e3 on both sides (release_camera_snap_1110 OFF). arm = plus ITEM-NERISSA-WIN/overlay_snap.json (release_camera_snap_1110 true). Frames: nerissa/tidewake__fight__nerissa__win.png, __aftermath.png, and the mid-fight t-040.02.png."
+ },
+ {
+  "frame": "nerissa/t-040.02.png",
+  "preset": "arm-High",
+  "tree": "7952052e356ff7abeecdd40f6095fe1a3ec793b0",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-win-release-snap/arm-High/nerissa/t-040.02.png",
+  "sky_fraction": 0.205,
+  "lower_edges": 0.2039,
+  "script_errors": 0,
+  "note": "Eye check: on the arm the win and aftermath are shot from inside the Heart Chamber, behind and above the trainer at moderate range; no wall or crystal sits between lens and trainer, and the lens is not inside geometry (a crystal tip top-left and a dark block bottom-left intrude at the frame edges near the lens without covering the trainer). The mid-fight frame t-040.02 has the same framing on both sides (walls, banner and crystal in the same places; the differences are fight timing). Note on live in this GPU run: the camera was not 20 m back. Live win is close in with a pale crystal slab across the right third of the view, and live aftermath is a tight over-the-shoulder shot. High, phase2_capture_tidewake_fights.gd --trainer=water_trainer_nerissa (entry args), seed 2042, pad glyphs. Tree: tb/item-nerissa-win-camera 7952052e3 on both sides (release_camera_snap_1110 OFF). arm = plus ITEM-NERISSA-WIN/overlay_snap.json (release_camera_snap_1110 true). Frames: nerissa/tidewake__fight__nerissa__win.png, __aftermath.png, and the mid-fight t-040.02.png."
+ },
+ {
+  "frame": "nerissa/tidewake__fight__nerissa__win.png",
+  "preset": "live-High",
+  "tree": "7952052e356ff7abeecdd40f6095fe1a3ec793b0",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-win-release-snap/live-High/nerissa/tidewake__fight__nerissa__win.png",
+  "sky_fraction": 0.421,
+  "lower_edges": 0.1834,
+  "script_errors": 0,
+  "note": "Eye check: on the arm the win and aftermath are shot from inside the Heart Chamber, behind and above the trainer at moderate range; no wall or crystal sits between lens and trainer, and the lens is not inside geometry (a crystal tip top-left and a dark block bottom-left intrude at the frame edges near the lens without covering the trainer). The mid-fight frame t-040.02 has the same framing on both sides (walls, banner and crystal in the same places; the differences are fight timing). Note on live in this GPU run: the camera was not 20 m back. Live win is close in with a pale crystal slab across the right third of the view, and live aftermath is a tight over-the-shoulder shot. High, phase2_capture_tidewake_fights.gd --trainer=water_trainer_nerissa (entry args), seed 2042, pad glyphs. Tree: tb/item-nerissa-win-camera 7952052e3 on both sides (release_camera_snap_1110 OFF). arm = plus ITEM-NERISSA-WIN/overlay_snap.json (release_camera_snap_1110 true). Frames: nerissa/tidewake__fight__nerissa__win.png, __aftermath.png, and the mid-fight t-040.02.png."
+ },
+ {
+  "frame": "nerissa/tidewake__fight__nerissa__aftermath.png",
+  "preset": "live-High",
+  "tree": "7952052e356ff7abeecdd40f6095fe1a3ec793b0",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-win-release-snap/live-High/nerissa/tidewake__fight__nerissa__aftermath.png",
+  "sky_fraction": 0.063,
+  "lower_edges": 0.2659,
+  "script_errors": 0,
+  "note": "Eye check: on the arm the win and aftermath are shot from inside the Heart Chamber, behind and above the trainer at moderate range; no wall or crystal sits between lens and trainer, and the lens is not inside geometry (a crystal tip top-left and a dark block bottom-left intrude at the frame edges near the lens without covering the trainer). The mid-fight frame t-040.02 has the same framing on both sides (walls, banner and crystal in the same places; the differences are fight timing). Note on live in this GPU run: the camera was not 20 m back. Live win is close in with a pale crystal slab across the right third of the view, and live aftermath is a tight over-the-shoulder shot. High, phase2_capture_tidewake_fights.gd --trainer=water_trainer_nerissa (entry args), seed 2042, pad glyphs. Tree: tb/item-nerissa-win-camera 7952052e3 on both sides (release_camera_snap_1110 OFF). arm = plus ITEM-NERISSA-WIN/overlay_snap.json (release_camera_snap_1110 true). Frames: nerissa/tidewake__fight__nerissa__win.png, __aftermath.png, and the mid-fight t-040.02.png."
+ },
+ {
+  "frame": "nerissa/t-040.02.png",
+  "preset": "live-High",
+  "tree": "7952052e356ff7abeecdd40f6095fe1a3ec793b0",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-nerissa-win-release-snap/live-High/nerissa/t-040.02.png",
+  "sky_fraction": 0.237,
+  "lower_edges": 0.2203,
+  "script_errors": 0,
+  "note": "Eye check: on the arm the win and aftermath are shot from inside the Heart Chamber, behind and above the trainer at moderate range; no wall or crystal sits between lens and trainer, and the lens is not inside geometry (a crystal tip top-left and a dark block bottom-left intrude at the frame edges near the lens without covering the trainer). The mid-fight frame t-040.02 has the same framing on both sides (walls, banner and crystal in the same places; the differences are fight timing). Note on live in this GPU run: the camera was not 20 m back. Live win is close in with a pale crystal slab across the right third of the view, and live aftermath is a tight over-the-shoulder shot. High, phase2_capture_tidewake_fights.gd --trainer=water_trainer_nerissa (entry args), seed 2042, pad glyphs. Tree: tb/item-nerissa-win-camera 7952052e3 on both sides (release_camera_snap_1110 OFF). arm = plus ITEM-NERISSA-WIN/overlay_snap.json (release_camera_snap_1110 true). Frames: nerissa/tidewake__fight__nerissa__win.png, __aftermath.png, and the mid-fight t-040.02.png."
+ }
+]
