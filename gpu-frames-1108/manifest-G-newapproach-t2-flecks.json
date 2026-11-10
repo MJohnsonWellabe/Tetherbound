@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "arm-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-flecks/arm-High/swim-across-day.jpg",
+  "sky_fraction": 0.121,
+  "lower_edges": 0.1416,
+  "script_errors": 0,
+  "note": "High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 7b38eaa74. arm-High = base plus NEWAPPROACH-T2B/overlay_flecks.json (near_streak_opacity 0.55, range 18 m, lane 0.9 m, fill 0.42). No long lines, dash ladders or horizon marks: the far water matches base (upper-frame absdiff 1.0-2.6). The flecks are short and stay near the swimmer, running with the flow. Flag: several flecks have hard straight cut edges (sheared-rectangle chips, clearest in swim-across-day and swim-away-night) rather than soft ends; in swim-away-day they are sparse and faint. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "arm-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-flecks/arm-High/swim-away-day.jpg",
+  "sky_fraction": 0.069,
+  "lower_edges": 0.1704,
+  "script_errors": 0,
+  "note": "High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 7b38eaa74. arm-High = base plus NEWAPPROACH-T2B/overlay_flecks.json (near_streak_opacity 0.55, range 18 m, lane 0.9 m, fill 0.42). No long lines, dash ladders or horizon marks: the far water matches base (upper-frame absdiff 1.0-2.6). The flecks are short and stay near the swimmer, running with the flow. Flag: several flecks have hard straight cut edges (sheared-rectangle chips, clearest in swim-across-day and swim-away-night) rather than soft ends; in swim-away-day they are sparse and faint. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "arm-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-flecks/arm-High/swim-away-night.jpg",
+  "sky_fraction": 0.57,
+  "lower_edges": 0.1909,
+  "script_errors": 0,
+  "note": "High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 7b38eaa74. arm-High = base plus NEWAPPROACH-T2B/overlay_flecks.json (near_streak_opacity 0.55, range 18 m, lane 0.9 m, fill 0.42). No long lines, dash ladders or horizon marks: the far water matches base (upper-frame absdiff 1.0-2.6). The flecks are short and stay near the swimmer, running with the flow. Flag: several flecks have hard straight cut edges (sheared-rectangle chips, clearest in swim-across-day and swim-away-night) rather than soft ends; in swim-away-day they are sparse and faint. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "base-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-flecks/base-High/swim-across-day.jpg",
+  "sky_fraction": 0.125,
+  "lower_edges": 0.1192,
+  "script_errors": 0,
+  "note": "High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 7b38eaa74. arm-High = base plus NEWAPPROACH-T2B/overlay_flecks.json (near_streak_opacity 0.55, range 18 m, lane 0.9 m, fill 0.42). No long lines, dash ladders or horizon marks: the far water matches base (upper-frame absdiff 1.0-2.6). The flecks are short and stay near the swimmer, running with the flow. Flag: several flecks have hard straight cut edges (sheared-rectangle chips, clearest in swim-across-day and swim-away-night) rather than soft ends; in swim-away-day they are sparse and faint. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "base-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-flecks/base-High/swim-away-day.jpg",
+  "sky_fraction": 0.069,
+  "lower_edges": 0.1548,
+  "script_errors": 0,
+  "note": "High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 7b38eaa74. arm-High = base plus NEWAPPROACH-T2B/overlay_flecks.json (near_streak_opacity 0.55, range 18 m, lane 0.9 m, fill 0.42). No long lines, dash ladders or horizon marks: the far water matches base (upper-frame absdiff 1.0-2.6). The flecks are short and stay near the swimmer, running with the flow. Flag: several flecks have hard straight cut edges (sheared-rectangle chips, clearest in swim-across-day and swim-away-night) rather than soft ends; in swim-away-day they are sparse and faint. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "base-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-flecks/base-High/swim-away-night.jpg",
+  "sky_fraction": 0.599,
+  "lower_edges": 0.155,
+  "script_errors": 0,
+  "note": "High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 7b38eaa74. arm-High = base plus NEWAPPROACH-T2B/overlay_flecks.json (near_streak_opacity 0.55, range 18 m, lane 0.9 m, fill 0.42). No long lines, dash ladders or horizon marks: the far water matches base (upper-frame absdiff 1.0-2.6). The flecks are short and stay near the swimmer, running with the flow. Flag: several flecks have hard straight cut edges (sheared-rectangle chips, clearest in swim-across-day and swim-away-night) rather than soft ends; in swim-away-day they are sparse and faint. Beach creatures differ between sides (wildlife placement, not the arm)."
+ }
+]
