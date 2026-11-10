@@ -1073,8 +1073,8 @@
    "overlay_format": "deep merge",
    "frames": "the arm A frames: job.json frames of F41#17, #2, #12, #4, #5 (13)",
    "capture": "High: live = main + A3 overlay; arm = main + A3 + scoped fog. Seed 2042, script-error list empty, receipt shows height_fog.enabled and scope.enabled true. Pre-push check: the calm forest stands (F41#4/#5) should be unchanged vs live; the Crown Arch / phase / road frames should show low fog.",
-   "note": "Scoped height fog (ITEM-STORM-LIGHT/ARM_FOG_SCOPED.md): keeps arm A's fog gains (F41#17/#2/#12, +0.27 to +0.31) and removes its forest losses. Released from the hold.",
-   "done": false
+   "note": "Scoped height fog (ITEM-STORM-LIGHT/ARM_FOG_SCOPED.md): keeps arm A's fog gains (F41#17/#2/#12, +0.27 to +0.31) and removes its forest losses. Released from the hold. RESULT: held locally; 2 of 6 calm forest frames (Fallen Giant, Crown Heartstone) still fogged. Zone fix pending, then arm-side re-shoot.",
+   "done": true
   },
   {
    "id": "boss-standoff",
@@ -1091,8 +1091,83 @@
    "overlay_format": "deep merge",
    "frames": "stormwood__fight__capacitor_alpha-i01, -tell1-a-start, -tell1-e-impact, plus one hollows_alpha (Voltarach) fight frame",
    "capture": "High: live, live2, arm, arm2, pad_glyphs on all; push every frame with a camera note (no re-shooting to match angles). WATCH the camera: the F38#3 trainer-aside change sent the fight camera wide, and this also moves the trainer; record per-frame camera angle so a camera side effect shows. Receipt: contact_spacing.large_foe_standoff enabled.",
-   "note": "Large-foe standoff (ITEM-BOSS-STANDOFF/ARM.md): keeps the ally and trainer outside a big boss's leg span (positioning only, no floor ring). Judges' top F41#3 ask after the Voltarach bloom. Released from the hold.",
-   "done": false
+   "note": "Large-foe standoff (ITEM-BOSS-STANDOFF/ARM.md): keeps the ally and trainer outside a big boss's leg span (positioning only, no floor ring). Judges' top F41#3 ask after the Voltarach bloom. Released from the hold. RESULT: not judged; with the standoff ON the boss never attacks (holds 11-13 m, no tells). Back to build lane.",
+   "done": true
+  },
+  {
+   "id": "storm-fog-scoped-r2",
+   "kind": "arm",
+   "rows": [
+    "F41#17",
+    "F41#2",
+    "F41#12",
+    "F41#4",
+    "F41#5"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "5669f6472cbb10a92e1f7f9540057c3d86ddb6e3",
+   "tree": "main (now includes A3, #881) plus scripts/world/stormwood_surge.gd and data/config/stormwood_surge.json copied from that head",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_height_fog_scoped.json",
+   "overlay_format": "deep merge",
+   "frames": "same 13 frames as storm-fog-scoped",
+   "capture": "Re-shoot the ARM side only and pair it with the held live side from storm-fog-scoped (main + A3; main now carries the same A3 values, so the held live frames stand). Pre-push check: Fallen Giant and Crown Heartstone unchanged vs live; Crown Arch, Glass Field, Lantern Hollow and the phase frames fogged. Then push both sides.",
+   "note": "Fog zone fix: the haze at Fallen Giant and Crown Heartstone was the 0.02 ease-out carried over from the previous fogged stand; the fog now snaps off outside the scope.",
+   "done": true
+  },
+  {
+   "id": "f40-19-rain",
+   "kind": "arm",
+   "rows": [
+    "F40#19"
+   ],
+   "branch": "tb/item-f40-19-rain",
+   "head": "0b9defd359cc0f3464b20a767876eb3b45c2f282",
+   "tree": "main plus the branch's code changes at that head (scripts/world/world_look.gd, scripts/world/cloudreach_weather.gd and data/config/cloudreach_visual.json; check the diff against its merge base)",
+   "overlay_branch": "tb/item-f40-19-rain",
+   "overlay": "ralph/reports/LANES/ITEM-F40-19/overlay_rain_storm_sky.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+   "args": "--biome=cloudreach --preset=High --seed=2042 --piece=4 --output={OUT}",
+   "frames": [
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty. Pre-push check: no blue sky gaps on the arm; a knee-high mist near the gate; the camera not buried in mist.",
+   "note": "Cloudreach day rain (ITEM-F40-19/ARM.md): closed slate overcast plus low gate mist that follows the local player's ground. RESULT: pushed sky-only (563c847c6); gate mist not visible on Forward+ High; mist fix pending.",
+   "done": true
+  },
+  {
+   "id": "newapproach-t2-cue",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "tree": "main (no code or config change; the arm is the capture tool's --tidewake-current-candidate flag)",
+   "overlay": null,
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "arm_extra_args": [
+    "--tidewake-current-candidate"
+   ],
+   "frames": [
+    "swim-away-day",
+    "swim-across-day",
+    "swim-away-night"
+   ],
+   "capture": "High AND Medium (UX.md line 322), base vs arm; the tool fails closed if the trainer isn't swimming in a current. Pre-push check: a 'Current' arrow badge beside the swimmer on all arm frames, none on base. Pad glyphs on.",
+   "note": "LANE-NEWAPPROACH T2 (NEWAPPROACH-T2/VERDICT.md): the built swimming-current arrow took blind direction reads from 4/9 guesses (readability 2.0) to 9/9 (8.2) on CPU in the first valid swimmer-view frames. UX.md says it ships ON by default once it passes this Medium/High judge.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
