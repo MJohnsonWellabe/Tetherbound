@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F41#17 High live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ca3_High_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ca3_High_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the stormwood biome: the Crown Arch landmark. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+  ]
+ },
+ {
+  "label": "G F41#17 Medium live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ca3_Medium_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ca3_Medium_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the stormwood biome: the Crown Arch landmark. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+  ]
+ }
+]
