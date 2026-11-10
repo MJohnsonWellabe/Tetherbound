@@ -1516,6 +1516,24 @@
    "capture": "live (main, root finish ON) vs arm (+ moss cushions off) at High. Pre-push: no pale lilac-white notched quad or cream ovals beside the trainer; ground reads as dark wet earth with grass.",
    "note": "F41#24 second part (ITEM-F41-24/ARM.md): the pale notched quad and cream ovals are the moss-cushion cover tier.",
    "done": true
+  },
+  {
+   "id": "f41-24-fleck-round",
+   "kind": "arm",
+   "rows": [
+    "F41#24"
+   ],
+   "branch": "tb/item-f41-24-glint",
+   "head": "9a14b5a53813c266b4ac817acde27795c719f2f3",
+   "tree": "current main (root finish ON) plus the branch's fleck_round_1110 changes (stormwood_ground_cover.gd / shader as on the branch, and the fleck_round_1110 block merged into stormwood_ground_finish.json); moss_cushion_off lost (neutral), so do NOT add it: base = main, arm = main + round flecks",
+   "overlay_branch": "tb/item-f41-24-glint",
+   "overlay": "ralph/reports/LANES/ITEM-F41-24/overlay_fleck.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+   "args": "--stands=giant --phases=calm --no-aftermath plus the fallen_giant close control",
+   "capture": "live (main) vs arm (+ round flecks) at High. Pre-push: the pale lilac notched quad and small patch beside the trainer are gone; flecks read as small round sparkles.",
+   "note": "F41#24 last try (ITEM-F41-24): on GPU the notched quad is one 0.67 m sw_glint cell drawn as a whole-cell square; round flecks replace the square cells.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
