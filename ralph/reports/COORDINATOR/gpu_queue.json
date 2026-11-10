@@ -1867,6 +1867,55 @@
    "note": "Wave lines v3: closer, thinner lines visible in near and middle water (front_length 3.2, sharpness 9, gap floor 0.45), uneven spacing, margin 3.2. CPU: middle-water lines about 2x the log at margin 2.4; far lines still slower.",
    "done": true,
    "frames_pushed": "88ac9afeb (for judging; far comb known); diagnostic copy b0e43ba4d"
+  },
+  {
+   "kind": "baseline",
+   "branch": "main",
+   "head": "2ffc97db0 (main after #893)",
+   "overlay": null,
+   "done": false,
+   "id": "baseline-f41-22-stormwood-matrix",
+   "rows": [
+    "F41#22",
+    "F41#24"
+   ],
+   "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+   "args": "F41-look set: stands forest, giant, glass, rod_line, stormheart, the three --custom stands and forest_r, giant_r; phases calm,break plus the Long Storm aftermath (no --no-aftermath); plus capture_named_fights_f10_6.gd --fixed-fps 20 (Hollows Alpha) for the fight row. Grep logs for 'stale'.",
+   "frames": "the full F41 matrix",
+   "capture": "High first (Medium only if any frame maps 7.5+). No arm; one side only. Lowest priority: run only when no arm is waiting.",
+   "note": "Owner floor rule: unscored rows get a GPU baseline first. F41#22 has no score of its own; LANE-SCOUT G-baselines-unscored-rows gives the tool list."
+  },
+  {
+   "kind": "baseline",
+   "branch": "main",
+   "head": "2ffc97db0 (main after #893)",
+   "overlay": null,
+   "done": false,
+   "id": "baseline-f38-0-meadows-recapture",
+   "rows": [
+    "F38#0"
+   ],
+   "tool": "res://tools/capture_f38_matrix.gd",
+   "args": "-- --seed=2042 --f38-preset=High --f38-baseline --output=res://<fresh dir>; plan ralph/reports/R2-F38/capture-definition.json; day and dusk, clear first (about 264 frames clears the 200 floor)",
+   "frames": "22 sites x 4 views x day,dusk x clear",
+   "capture": "High. No arm. Lowest priority, after the F41 matrix; may run overnight in pieces.",
+   "note": "Owner floor rule: F38#0 unscored (needs the 200-frame Meadows re-capture)."
+  },
+  {
+   "kind": "baseline",
+   "branch": "main",
+   "head": "2ffc97db0 (main after #893)",
+   "overlay": null,
+   "done": false,
+   "id": "baseline-f40-0-cloudreach-recapture",
+   "rows": [
+    "F40#0"
+   ],
+   "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+   "args": "--piece=1..96 with --ground-cover-cache; complete union per the tool header",
+   "frames": "12 stands x 4 views x 4 times x 2 weather (384)",
+   "capture": "High first. No arm. Lowest priority, after the Meadows re-capture; overnight in pieces.",
+   "note": "Owner floor rule: F40#0 unscored (needs the Cloudreach re-capture)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
