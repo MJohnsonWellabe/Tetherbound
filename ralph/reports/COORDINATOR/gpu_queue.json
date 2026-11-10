@@ -1404,6 +1404,43 @@
    "capture": "High: base = main + de-pinked swing overlay; arm = base + groves overlay (the delta is groves alone). Run AFTER stormwood-swing-2-depink so its arm frames can serve as this base if the trees match. Pre-push: open stands end in layered groves with gaps (no tree wall, no tree on a road or in the foreground); deepwood frames unchanged.",
    "note": "Stormwood big swing part 2 (ITEM-SW-GROVES/ARM.md): two clumped bands of existing storm trees around four open stands so the flat horizon steps back in depth. MultiMesh, visual only, no colliders, about 1,870 instances. NOTE: stormwood_world.gd (groves install hook) is also needed; the GPU lane copied it.",
    "done": true
+  },
+  {
+   "id": "f41-17-crown-arch-r3",
+   "kind": "arm",
+   "rows": [
+    "F41#17"
+   ],
+   "branch": "tb/item-f41-17-arch",
+   "head": "02111ed3fec27ad8fd1cbc75a916380725f39ab6",
+   "tree": "tb/land-batch-40 head fbdefd0c1 (main + the shipped Stormwood swing, groves and strength bars; it merges on green) PLUS from the arch head: assets/props/vl-1103/crown_arch/crown_arch_r3.glb (+ .import, provenance), scripts/world/hero_landmarks_1101.gd and data/config/crown_arch_vl.json; import pass needed for the new GLB",
+   "overlay_branch": "tb/item-f41-17-arch",
+   "overlay": "ralph/reports/LANES/ITEM-F41-17-ARCH/overlay_arch_r3.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__landmark__crown_arch__day__close"
+   ],
+   "capture": "CLOSE-OUT candidate. High: live (batch-40 tree) vs arm; add Medium on the same pair if the High arm maps 7.5+. Pre-push: no square plinth, weathered stone with copper and glass, feet on the stones, no red.",
+   "note": "Crown Arch r3 (ITEM-F41-17-ARCH/ARM.md), Blender-built, free pipeline: weathering, copper bands and straps, glass shards, and a ragged flagstone landing replacing the square plinth. F41#17 is 7.23 after the swing, 0.27 short of the bar. RUN FIRST.",
+   "done": true
+  },
+  {
+   "id": "f41-24-root-finish",
+   "kind": "arm",
+   "rows": [
+    "F41#24"
+   ],
+   "branch": "tb/item-f41-24-glint",
+   "head": "41c224cad44112f9c344e32f2061f38aa9faf02e",
+   "tree": "tb/land-batch-40 tree (or main once #886 merges) plus the branch's game changes for root_finish_1110 (stormwood_ground_cover.gd, the cover shader if touched, and the root_finish_1110 block of stormwood_ground_finish.json; merge the block, don't overwrite the file, since batch 40 adds wet_earth_1110 there)",
+   "overlay_branch": "tb/item-f41-24-glint",
+   "overlay": "ralph/reports/LANES/ITEM-F41-24/overlay_root_finish.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+   "args": "--stands=giant --phases=calm --no-aftermath plus the F41#24 job frames",
+   "capture": "live vs arm at High. Pre-push: no flat pale wedge beside the trainer at the Fallen Giant grove; roots read as low dark flares; nothing else changes.",
+   "note": "F41#24 cleanliness (ITEM-F41-24/ARM.md): the mauve quad is a shader-placed canopy root's flat top facet catching the lilac sky; root_finish_1110 rounds, narrows, darkens and sinks the roots.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
