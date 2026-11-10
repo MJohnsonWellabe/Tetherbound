@@ -1314,6 +1314,36 @@
    "done": true
   },
   {
+   "id": "stormwood-swing-2-depink",
+   "kind": "arm",
+   "rows": [
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#17"
+   ],
+   "branch": "tb/item-stormwood-ground",
+   "head": "fb1ec6b371c158932baf93dda5c2da072ab3e011",
+   "tree": "main plus the branch's game files at that head (stormwood_ground_zones.gd, stormwood_surge_rules.gd, stormwood_ground_finish.json, stormwood_surge.json; diff against merge base)",
+   "overlay_branch": "tb/item-stormwood-ground",
+   "overlay": "ralph/reports/LANES/ITEM-SW-SWING/overlay_swing.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+    "stormwood__deepwood__09__lantern_hollow__day__close",
+    "stormwood__deepwood__10__the_fallen_giant__day__close",
+    "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+    "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+    "stormwood__landmark__crown_arch__day__close",
+    "stormwood__landmark__crown_heartstone__day__close",
+    "stormwood__landmark__glass_field__day__close",
+    "stormwood__landmark__lantern_hollow__night__close"
+   ],
+   "capture": "ARM side only; reuse the live-High frames from stormwood-swing-1 (same main for these files). Pre-push: ground dark olive grey-brown wet earth, not glossy black and not salmon/mauve/pink (sample crown_arch foreground: red not above green); pools feathered; near rain thin; charged road amber vein readable.",
+   "note": "Swing de-pink after swing-1 lost (-0.23 to -0.41: loam read pink, ground too light). Darker olive wet earth (soil #2f3127, pools #22241f, matte), feathered pools, fine rain kept.",
+   "done": false
+  },
+  {
    "id": "newapproach-clouddeck",
    "kind": "arm",
    "rows": [
