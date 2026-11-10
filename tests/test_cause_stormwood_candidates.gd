@@ -31,8 +31,10 @@ func _surge_with(keys: Array) -> Dictionary:
 ## scores; turned OFF they still leave the config identical.
 func test_surge_candidates_ship_on_with_scores_and_are_inert_when_off() -> void:
 	var config := _json(RULES.PATH)
+	# Every other candidate (phase_grade_1104, and fine_rain_1110 since it shipped ON on
+	# 10 Nov) is switched off too, so this checks only that these two are inert when OFF.
 	for key: String in RULES.PRESENTATION_CANDIDATES:
-		if key == "phase_grade_1104":
+		if key not in ["storm_sky_1101", "soft_rain_1101"]:
 			(config.presentation[key] as Dictionary)["enabled"] = false
 	for key: String in ["storm_sky_1101", "soft_rain_1101"]:
 		assert_true(config.presentation.has(key), "%s must be declared" % key)
