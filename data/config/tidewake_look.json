@@ -2091,6 +2091,10 @@
       "wave_strength": 0.2,
       "fresnel_strength": 0.28,
       "roughness": 0.16,
+      "opaque_depth_m": 1.5,
+      "night_dim_max": 0.55,
+      "night_dim_rate": 0.5,
+      "_why_t2_cleanup_1110": "GPU High judged 10 Nov (LANE-SCOUT G-newapproach-t2-cleanup, tb/item-scout-1108 71adb47d1): swim-across-day 5.65 -> 6.50 (+0.85, 3/3; the straight-edged pale wedges were seabed regions seen through translucent water, now opaque past 1.5 m), swim-away-day +0.32 (3/3; dark seabed smears gone), swim-away-night +0.18 (2/3; the VIS-TIDEWAKE water night dim, built and left off, now on). The arm's softer swimmer ring lost the F39 shore regression (-0.14, 0/3) and is not shipped; opaque depth and night dim left the other shore frames unchanged. night_tint omitted: water_surface.gd passes non-colour keys to the shader raw, so a hex string never reached it.",
       "foam_depth": 0.55,
       "depth_falloff": 5.0
     }
