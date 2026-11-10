@@ -1,5 +1,5 @@
 {
-  "updated": "10 Nov 2026 22:40 UTC",
+  "updated": "10 Nov 2026 22:45 UTC",
   "headline": [
     "10 Nov 22:40: floor lane's second win: Stormwood bark (F41#22 +0.88 to 6.96, F41#24 +0.93 to 7.08, all six sets 3/3), batch 49 in CI. Warrens foundation (batch 48) re-running CI after a test fix. F41#22 leaves the below-6 list.",
     "10 Nov 22:05: floor lane's first win: Warrens foundation removes the floating drums (walk_03 +0.57 on both of the two lowest rows; route_day +0.46), batch 48 in CI. Rows still low (4.11, 3.69): the next lever is a stand that frames the hillside and mountains from open ground, plus a real mountain backdrop. Baselines today: F41#22 5.90, F38#0 6.60, F39#32 6.77, F40#21 7.03, F22#4 7.20; F40#0 capturing.",
@@ -2373,8 +2373,8 @@
       "src": "GPU High baseline, 8 Nov frames (G-baselines-unscored-rows, provisional)"
     },
     "F40#21": {
-      "gpu": 7.03,
-      "src": "GPU High baseline, 8 Nov frames (G-baselines-unscored-rows, provisional)"
+      "gpu": 6.68,
+      "src": "GPU High 10 Nov, matrix scope from the F40#0 capture (was 7.03 provisional on 8 Nov frames)"
     },
     "F22#4": {
       "gpu": 7.2,
@@ -2387,6 +2387,10 @@
     "F38#0": {
       "gpu": 6.6,
       "src": "GPU High baseline 10 Nov, main 2ffc97db0, 268 frames day+golden (G-baseline F38#0 full row)"
+    },
+    "F40#0": {
+      "gpu": 6.58,
+      "src": "GPU High baseline 10 Nov, main 2ffc97db0, 352/384 frames (broken_skyroad_arch stand missing)"
     }
   }
 }
