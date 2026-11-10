@@ -1,6 +1,7 @@
 {
-  "updated": "10 Nov 2026 14:56 UTC",
+  "updated": "10 Nov 2026 15:05 UTC",
   "headline": [
+    "10 Nov 15:05: trunk dither fix wins on GPU (Fallen Giant grove 5.00 -> 6.30, +1.30, 3/3; no regression), batch 44 in CI. Next on the grove: the lilac slab (the white quad in that live was pre-#889).",
     "10 Nov 14:55: round ground glints landed (#889): the lilac quad by the trainer at the Fallen Giant is gone (F41#24 +0.74, 3/3). Owner's wave cue v2 (crests across the flow) lost -0.68 to -1.15, 0/3; judges found why: the camera follows the swimmer, who drifts with the water, so slow waves look backwards against the shore. LANE-NEWAPPROACH's v3 must make the waves outrun the shore on screen, proven offline before the GPU. Trunk-fade narrowing is on the GPU.",
     "10 Nov 14:00: grey bark and arrow-off-by-default landed (#888). Owner's wave-motion current cue: first version indistinguishable from base on GPU; swim-across already reads from the moving water, swim-away does not; LANE-NEWAPPROACH rebuilding with crests across the flow.",
     "10 Nov 13:00: owner direction: the on-screen current arrow is OFF by default (kept in Accessibility); the in-world current cue will be the direction the waves move (LANE-NEWAPPROACH). Grey bark ships (all four Stormwood rows gain); Crown Arch r3 and the root fix landed (#887).",
@@ -1869,6 +1870,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "batch 44 (in CI)",
+      "what": "Stormwood trunks near the camera no longer dissolve into a screen-door dither: the near-lens fade band narrows from 3-7 m to 3-4 m (Fallen Giant grove +1.30, 3/3; no change on F41#3/#4/#5)",
+      "when": "10 Nov, in CI"
+    },
     {
       "pr": "#889",
       "what": "Stormwood ground glints are small round sparkles instead of square cells: the lilac quad beside the trainer at the Fallen Giant is gone (F41#24 +0.74, 3/3)",
