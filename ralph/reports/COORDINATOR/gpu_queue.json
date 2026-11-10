@@ -1935,7 +1935,8 @@
    "frames": "the same 7 frames, main (narrow band ON, already captured 60fda2d4b) vs main + narrow_band_off overlay",
    "capture": "High. FIRST in line (before the Meadows re-capture). Question: in tell3-b-mid and tell4-a-start, does the Deepwood trunk that nearly fills the frame dither away with the old 3-7 m band? If yes, #890 regressed fight framing.",
    "note": "#890 narrowed the near-lens trunk fade from 3-7 m to 3-4 m; its regression check covered only the capacitor_alpha fight frame. The Hollows Alpha baseline shows a trunk nearly filling two fight frames.",
-   "done": false
+   "done": true,
+   "frames_pushed": "1520cfede: yes, #890 blocks 2 fight frames (old band 1); fix = wider fade while a fight camera is active (LANE-MESHY)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
