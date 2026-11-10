@@ -1310,8 +1310,8 @@
     "stormwood__landmark__lantern_hollow__night__close"
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty. Pre-push: path and low ground warm rutted earth instead of glossy black, foreground rain thin; flag any pinkish loam (red/oxblood rule).",
-   "note": "Stormwood big swing part 1 (ITEM-SW-SWING/ARM.md): banked wet-earth ground (no black gloss pools) plus fine faded near rain; the judges' shared 3/3 asks on F41#4/#5/#12/#17.",
-   "done": false
+   "note": "Stormwood big swing part 1 (ITEM-SW-SWING/ARM.md): banked wet-earth ground (no black gloss pools) plus fine faded near rain; the judges' shared 3/3 asks on F41#4/#5/#12/#17. RESULT: captured b85e807e1; loam reads salmon/mauve under lilac sky on five frames; de-pink version requested.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
