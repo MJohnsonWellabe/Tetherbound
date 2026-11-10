@@ -1827,6 +1827,44 @@
    "frames": "swim-away-day, swim-across-day, swim-away-night 10-frame strips; base (overlay off) vs arm; arrow off; GIFs for all six",
    "capture": "High only. Pre-check first: no straight moving edge in the x 500-720 column of swim-away-day, no ladder of thin lines near the posts, no rectangular patch in swim-across-day. The fronts now use no lattice noise; if a straight moving edge is still there, the noise theory in ARM.md is wrong, so report it. Then the blind direction read on the swim-away-day strip (pass at 2 of 3 toward-camera, confidence 6 or more) and the look judgment.",
    "note": "Owner's wave cue, fifth attempt v2: swell lines with no lattice noise (sums of sines), fwidth fade against the far-field ladder, softer lane-edge fade; on main with the seam fix. Tests the theory that GPU-unstable hash noise caused the moving straight edges (and the earlier crest cut).",
+   "done": true,
+   "frames_pushed": "491b5e04a; judged no ship (look +0.26..+0.52 3/3; away direction 0/3)"
+  },
+  {
+   "id": "newapproach-flowfoam-fronts-v3",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "a947d825bc19b85ea3942488e9f012e059dc570f",
+   "tree": "tb/newapproach, main e3afe9a4d merged in (shaders/water_current_flow.gdshader; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-FLOWFOAM/overlay_fronts.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night 10-frame strips; base vs arm; arrow off; GIFs for all six",
+   "capture": "High only. Pre-check: still no straight moving edge, ladder or rectangle. Then measure line speed against the log in swim-away-day in the middle water (rows 400-640 at 1080p), not the far field: CPU showed about 2x the log at a lower margin. Blind direction read on the swim-away-day and swim-away-night strips (pass at 2 of 3 toward-camera, confidence 6 or more). Night: lines should no longer read as an even ruled comb.",
+   "note": "Wave lines v3: closer, thinner lines visible in near and middle water (front_length 3.2, sharpness 9, gap floor 0.45), uneven spacing, margin 3.2. CPU: middle-water lines about 2x the log at margin 2.4; far lines still slower.",
    "done": false
   }
  ],
