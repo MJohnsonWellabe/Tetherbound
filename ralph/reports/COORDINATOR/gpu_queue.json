@@ -1496,8 +1496,8 @@
    ],
    "frames": "10-frame strips (1 s) for swim-away-day, swim-across-day and swim-away-night; plus the tool's --only=currents dock frames on both sides",
    "capture": "High, base (overlay off) vs arm (overlay on), current arrow OFF on both. If the across view shows a streaky smear in the foreground, re-shoot the arm with lane_crest 0 before pushing. Also make a short animated GIF or MP4 per view if you can (judges can't see motion in stills).",
-   "note": "OWNER DESIGN (10 Nov): \"The in world cue should just be which way the waves move.\" The sea's ripples used to scroll in one fixed global direction regardless of the currents; now, in a current lane, they travel with the flow (faster in stronger currents). RUN FIRST.",
-   "done": false
+   "note": "OWNER DESIGN (10 Nov): \"The in world cue should just be which way the waves move.\" The sea's ripples used to scroll in one fixed global direction regardless of the currents; now, in a current lane, they travel with the flow (faster in stronger currents). RUN FIRST. RESULT: captured at lane_crest 0 (dabeb8186 strips + GIFs; docks e674b9cc2); crest 0.3 smeared the across view.",
+   "done": true
   },
   {
    "id": "f41-24-moss-off",
