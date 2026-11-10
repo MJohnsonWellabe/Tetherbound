@@ -979,7 +979,7 @@
    "frames": "job.json frames of F41#17 (1), F41#2 (3), F41#12 (3), F41#4 (3), F41#5 (3) = 13 (the arm A frames)",
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows light_pass_1101 rig.sun #cfc0ff/2.05, environment exposure 1.5, rim #c3b6ff/1.25. Pre-push check: mean luma should rise slightly and the sun should go violet; if frames are identical to live, report instead of pushing.",
    "note": "Storm-light A3 (ITEM-STORM-LIGHT/ARM_A3.md): writes into light_pass_1101, the layer that actually wins; offline probe shows exposure, ambient energy, contrast, sun and rim all reach the Environment (ambient colour does not). No height fog.",
-   "done": false
+   "done": true
   },
   {
    "id": "glass-sink-lip-rim",
@@ -1000,6 +1000,58 @@
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty; push only if slabs show in at least two of three frames (CPU sheet _sheet_lip_cpu.jpg shows two right of the trainer at the approach stand)",
    "note": "Third Glass Sink capture, now proven on CPU first: the dense ring sat at the cliff foot ~60 m under the cameras; seat_on_rim puts it on the island-top rim (ITEM-SINK-LIP/ARM.md).",
+   "done": true
+  },
+  {
+   "id": "newapproach-dust",
+   "kind": "arm",
+   "rows": [
+    "F38#3",
+    "F38#11",
+    "F41#3"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-DUST/overlay_dust.json",
+   "overlay_format": "deep merge",
+   "tools": [
+    {
+     "tool": "res://tools/phase2_capture_fights.gd",
+     "args": [
+      "--trainer=south_bridge_grunt,warden_aldis",
+      "--frames=8",
+      "--interval=0.35",
+      "--resolve=won",
+      "--after-frames=6",
+      "--attack",
+      "--tell-frames",
+      "--keep-alive",
+      "--seed=2042",
+      "--out={OUT}"
+     ]
+    },
+    {
+     "tool": "res://tools/phase2_capture_stormwood_fights.gd",
+     "args": [
+      "--ids=capacitor_alpha",
+      "--seconds=18",
+      "--interval=1.0",
+      "--seed=2042",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": [
+    "meadows__fights__south_bridge_grunt-01",
+    "meadows__fights__south_bridge_grunt-02",
+    "meadows__fights__south_bridge_grunt-03",
+    "meadows__fights__south_bridge_grunt-05",
+    "stormwood__fight__capacitor_alpha-i01",
+    "stormwood__fight__capacitor_alpha-tell1-a-start",
+    "stormwood__fight__capacitor_alpha-tell1-e-impact"
+   ],
+   "capture": "High: live, live2, arm, arm2 (fights vary run to run), pad_glyphs on all; push every frame (no re-shooting to match angles), with a camera note per frame. Receipt: combat.json telegraph.soft_style dust_size_m 0.42, dust_rise_m 0.16, dust_alpha 0.6, dust_colour #9c8763, dust_spacing_m 0.34. If the wind-up footprint can't be seen at all on the arm, report instead of pushing.",
+   "note": "LANE-NEWAPPROACH shared cause #2 (NEWAPPROACH-DUST/ARM.md): the wind-up dust is a chest-high near-white cloud over both fighters in every biome; the arm keeps it at ankle height in an earth tone. Config only, CPU reach proof committed.",
    "done": false
   }
  ],
