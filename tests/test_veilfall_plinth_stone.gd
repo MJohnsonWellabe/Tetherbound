@@ -12,3 +12,9 @@ func test_candidate_declared_and_stone_family() -> void:
 	assert_true(ResourceLoader.exists(str(cand.albedo)) and ResourceLoader.exists(str(cand.normal)), "textures installed")
 	var src := FileAccess.get_file_as_string("res://scripts/world/water_veilfall_interior_dressing.gd")
 	assert_true(src.contains("metal_1110"), "the dressing reads the candidate")
+
+func test_ships_on_with_judged_gain_recorded() -> void:
+	var rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	var cand: Dictionary = rules.interior_dressing.metal_1110
+	assert_true(bool(cand.get("enabled", false)), "plinth stone ships ON after the GPU judge")
+	assert_true(str(cand.get("_why_on", "")).contains("+1.81"), "the judged gain is recorded")
