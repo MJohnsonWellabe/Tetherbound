@@ -865,8 +865,8 @@
    "overlay_format": "deep merge",
    "frames": "job.json frames of F41#3 (3) and F41#21 (2); fights are non-deterministic, so if the fight capture tool allows, shoot each side twice so the judges compare like with like",
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows pilot_mark.rim_strength 1.4",
-   "note": "Player creature read under the boss (ITEM-PILOT-MARK/ARM.md): pilot rim 0.9 -> 1.4 only, no floor ring (owner 24 Oct). Config only.",
-   "done": false
+   "note": "Player creature read under the boss (ITEM-PILOT-MARK/ARM.md): pilot rim 0.9 -> 1.4 only, no floor ring (owner 24 Oct). Config only. RESULT: not attributable (r2 0.00), parked.",
+   "done": true
   },
   {
    "id": "voltarach-value",
@@ -881,8 +881,8 @@
    "overlay_format": "deep merge",
    "frames": "same frames as pilot-mark (F41#3 3, F41#21 2); shoot it in the same session as pilot-mark so one live set serves both arms (live, pilot-mark, voltarach-value), each side twice if the fight tool allows",
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows species.json voltarach.placeholder field_emission 0.35 and field_rim 0.12",
-   "note": "Voltarach blown to near-white gold bloom (ITEM-VOLTARACH-BLOOM/CAUSE.md): the 22 Oct CPU-tuned field_emission 1.5 lifts the dark carapace to white under GPU exposure. One-species config fix.",
-   "done": false
+   "note": "Voltarach blown to near-white gold bloom (ITEM-VOLTARACH-BLOOM/CAUSE.md): the 22 Oct CPU-tuned field_emission 1.5 lifts the dark carapace to white under GPU exposure. One-species config fix. RESULT: ships (+1.04/+1.16, 3/3), batch 33 PR #879.",
+   "done": true
   },
   {
    "id": "f38-3-standoff",
@@ -901,7 +901,7 @@
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows combat.json trainer_aside.realm_1104.enabled true with meadows side_m 3.8 / forward_m -2.2",
    "note": "Meadows fight staging (ITEM-F38-3/ARM.md): trainer and grunt stand further out of the creatures' lane so they stay visible beside the large ally. No creature size or camera change. Config only. LANDING NOTE (GPU lane, 9 Nov): enabling realm_1104 also turns on main's existing realms.water row (side 3.6), so a ship must remove the water row (overlay null) or Tidewake (F39#7) moves too; Meadows frames are unaffected, so the capture stands.",
-   "done": false
+   "done": true
   },
   {
    "id": "glass-sink-lip-dense",
