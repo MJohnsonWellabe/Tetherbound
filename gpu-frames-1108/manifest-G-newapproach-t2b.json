@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "arm-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2b/arm-High/swim-across-day.jpg",
+  "sky_fraction": 0.119,
+  "lower_edges": 0.1335,
+  "script_errors": 0,
+  "note": "FLAG: STREAKS READ AS PAINTED LANE LINES. High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON since #883) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 76c85cac4. arm-High = base plus NEWAPPROACH-T2B/overlay_t2b.json (current_flow.shader near_streak_opacity 0.5, range 38 m, lane 1.3 m, fill 0.4; water_current_cue strength_marks on, 0.6/1.2 m/s). Streaks follow the arrow in every view (along the view in both swim-away frames, left to right in swim-across), but they are long, hard-edged, ruler-straight white lines converging on the horizon, and in the distance they break into a ladder of dashes with T-shaped crossbars: they read as painted lane or running-track markings, not foam. Strength badge: a plate behind the arrow with three bars, one lit, on all three arm frames. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "arm-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2b/arm-High/swim-away-day.jpg",
+  "sky_fraction": 0.069,
+  "lower_edges": 0.1958,
+  "script_errors": 0,
+  "note": "FLAG: STREAKS READ AS PAINTED LANE LINES. High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON since #883) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 76c85cac4. arm-High = base plus NEWAPPROACH-T2B/overlay_t2b.json (current_flow.shader near_streak_opacity 0.5, range 38 m, lane 1.3 m, fill 0.4; water_current_cue strength_marks on, 0.6/1.2 m/s). Streaks follow the arrow in every view (along the view in both swim-away frames, left to right in swim-across), but they are long, hard-edged, ruler-straight white lines converging on the horizon, and in the distance they break into a ladder of dashes with T-shaped crossbars: they read as painted lane or running-track markings, not foam. Strength badge: a plate behind the arrow with three bars, one lit, on all three arm frames. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "arm-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2b/arm-High/swim-away-night.jpg",
+  "sky_fraction": 0.563,
+  "lower_edges": 0.2135,
+  "script_errors": 0,
+  "note": "FLAG: STREAKS READ AS PAINTED LANE LINES. High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON since #883) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 76c85cac4. arm-High = base plus NEWAPPROACH-T2B/overlay_t2b.json (current_flow.shader near_streak_opacity 0.5, range 38 m, lane 1.3 m, fill 0.4; water_current_cue strength_marks on, 0.6/1.2 m/s). Streaks follow the arrow in every view (along the view in both swim-away frames, left to right in swim-across), but they are long, hard-edged, ruler-straight white lines converging on the horizon, and in the distance they break into a ladder of dashes with T-shaped crossbars: they read as painted lane or running-track markings, not foam. Strength badge: a plate behind the arrow with three bars, one lit, on all three arm frames. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "base-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2b/base-High/swim-across-day.jpg",
+  "sky_fraction": 0.112,
+  "lower_edges": 0.119,
+  "script_errors": 0,
+  "note": "FLAG: STREAKS READ AS PAINTED LANE LINES. High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON since #883) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 76c85cac4. arm-High = base plus NEWAPPROACH-T2B/overlay_t2b.json (current_flow.shader near_streak_opacity 0.5, range 38 m, lane 1.3 m, fill 0.4; water_current_cue strength_marks on, 0.6/1.2 m/s). Streaks follow the arrow in every view (along the view in both swim-away frames, left to right in swim-across), but they are long, hard-edged, ruler-straight white lines converging on the horizon, and in the distance they break into a ladder of dashes with T-shaped crossbars: they read as painted lane or running-track markings, not foam. Strength badge: a plate behind the arrow with three bars, one lit, on all three arm frames. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "base-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2b/base-High/swim-away-day.jpg",
+  "sky_fraction": 0.068,
+  "lower_edges": 0.1417,
+  "script_errors": 0,
+  "note": "FLAG: STREAKS READ AS PAINTED LANE LINES. High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON since #883) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 76c85cac4. arm-High = base plus NEWAPPROACH-T2B/overlay_t2b.json (current_flow.shader near_streak_opacity 0.5, range 38 m, lane 1.3 m, fill 0.4; water_current_cue strength_marks on, 0.6/1.2 m/s). Streaks follow the arrow in every view (along the view in both swim-away frames, left to right in swim-across), but they are long, hard-edged, ruler-straight white lines converging on the horizon, and in the distance they break into a ladder of dashes with T-shaped crossbars: they read as painted lane or running-track markings, not foam. Strength badge: a plate behind the arrow with three bars, one lit, on all three arm frames. Beach creatures differ between sides (wildlife placement, not the arm)."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "base-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2b/base-High/swim-away-night.jpg",
+  "sky_fraction": 0.598,
+  "lower_edges": 0.1611,
+  "script_errors": 0,
+  "note": "FLAG: STREAKS READ AS PAINTED LANE LINES. High, capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) --tidewake-current-candidate on both sides. base-High = main 05d86cec8 (arrow ON since #883) plus water_current_flow.gdshader and water_current_cue.gd at tb/newapproach 76c85cac4. arm-High = base plus NEWAPPROACH-T2B/overlay_t2b.json (current_flow.shader near_streak_opacity 0.5, range 38 m, lane 1.3 m, fill 0.4; water_current_cue strength_marks on, 0.6/1.2 m/s). Streaks follow the arrow in every view (along the view in both swim-away frames, left to right in swim-across), but they are long, hard-edged, ruler-straight white lines converging on the horizon, and in the distance they break into a ladder of dashes with T-shaped crossbars: they read as painted lane or running-track markings, not foam. Strength badge: a plate behind the arrow with three bars, one lit, on all three arm frames. Beach creatures differ between sides (wildlife placement, not the arm)."
+ }
+]
