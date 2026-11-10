@@ -41,3 +41,5 @@ All three judges name the arm's three changes as the reason.
 - Stronger cell separation.
 - Fill or drop the empty Reset column.
 - A teal accent on the primary action prompts.
+
+- 10 Nov 03:29 UTC: no Medium frames are on `tb/gpu-frames-1108` (head 136e9af1); the `G-f38-27-close` manifest is High only. I will judge Medium when it lands.
