@@ -959,8 +959,8 @@
     "stormwood__landmark__glass_sink__golden__approach"
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty; BEFORE pushing, confirm by eye that slabs are visible in at least two of the three frames (otherwise report, don't send for judging)",
-   "note": "Re-shoot of the void glass-sink-lip with a continuous ring: 172 overlapping slabs in a MultiMesh (ITEM-SINK-LIP).",
-   "done": false
+   "note": "Re-shoot of the void glass-sink-lip with a continuous ring: 172 overlapping slabs in a MultiMesh (ITEM-SINK-LIP). RESULT: not pushed; no slabs in any arm frame (only rain differs), no load errors. Needs a cloud probe (ring child count and world positions) and a CPU frame showing slabs before any GPU re-run.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
