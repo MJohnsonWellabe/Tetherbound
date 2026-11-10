@@ -339,6 +339,18 @@ static func using_gamepad() -> bool:
 ## Public because the pause menu's footer needs the same answer for a plain
 ## Label that cannot draw a glyph at all — and needs it read off the InputMap
 ## rather than typed out, since the Settings tab lets the player move these.
+## F38#27 (LANE-MESHY 9 Nov): the settings footer spelled its keyboard tab
+## keys as bracketed text ("[Q]", "[Tab]") beside image glyphs for every other
+## action. The keycap glyph for the action's first key when one is installed
+## (keyboard_<name>.png), else the same bracketed name as before.
+static func key_glyph_for_action(action: String, px: int) -> String:
+	var name := key_name_for_action(action)
+	var file := "keyboard_%s.png" % name.to_lower().replace(" ", "_")
+	if ResourceLoader.exists(DIR + file):
+		return "[img=%dx%d]%s%s[/img]" % [px, px, DIR, file]
+	return "[%s]" % name
+
+
 static func key_name_for_action(action: String) -> String:
 	if not InputMap.has_action(action):
 		return action

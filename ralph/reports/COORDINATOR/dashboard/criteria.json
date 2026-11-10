@@ -1,7 +1,7 @@
 {
- "generated_at": "9 Nov 2026 21:57 UTC",
- "main_sha": "#878 merge",
- "batch4_sha": "#878 merged",
+ "generated_at": "10 Nov 2026 02:04 UTC",
+ "main_sha": "#879 merge",
+ "batch4_sha": "#879 merged",
  "rows": [
   {
    "id": "F01",
@@ -3710,10 +3710,10 @@
    "lane": "tb/visual-meadows",
    "pct": 2,
    "counts": {
-    "met": 1,
+    "met": 5,
     "partial": 0,
-    "in_progress": 16,
-    "not_started": 24,
+    "in_progress": 13,
+    "not_started": 23,
     "blocked": 1,
     "failing": 0
    },
@@ -4364,8 +4364,8 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-031 settings and binding instructions: Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan \u2014 fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "GPU 1 Nov 2026 MENU-1, High, yardstick: menu text floors ON 5.62 to 6.12 (+0.50, defect PRESENT to PARTIAL), landed ON with this PR; ralph/reports/GPU-PASS/Q31/MENU1-menu-text-floors/VERDICT.md (tb/gpu-pass 7ae95003e). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Shared menu presentation in two biomes; [Minus] and [Equal] labels are visible in map instructions.",
+     "status": "met",
+     "evidence": "GPU High 7.84 / Medium 8.25 mapped, three code-blind judges with anchors, both confirming batches (ralph/reports/GPU-PASS/1108/G-f38-27-close*.md on tb/item-scout-1108 038a46d59; frames tb/gpu-frames-1108 136e9af17 and c1df34304): keycap glyphs for keyboard tab keys, key chip alone (no duplicated digit), short reset legend (LANE-MESHY tb/item-f38-27-glyphs ed4eb76d4), landed in batch 34. Earlier: GPU 1 Nov 2026 MENU-1, High, yardstick: menu text floors ON 5.62 to 6.12 (+0.50, defect PRESENT to PARTIAL), landed ON with this PR; ralph/reports/GPU-PASS/Q31/MENU1-menu-text-floors/VERDICT.md (tb/gpu-pass 7ae95003e). Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Shared menu presentation in two biomes; [Minus] and [Equal] labels are visible in map instructions.",
      "gap": "1.38 to 7.5: the remaining dense instruction blocks and literal key labels in the map and settings views.",
      "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",

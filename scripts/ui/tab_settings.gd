@@ -785,7 +785,7 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 		var glyph := int(_controls_scan.get("legend_glyph_px", 48))
 		var pad := str(_controls_scan.get("legend_device", "gamepad"))
 		var reset_keys := " (or F10)" if not (MENU_TEXT.on() and pad == "gamepad") else ""
-		line.text = ("%s Change     |     %s Leave it     |     Hold %s + %s" + reset_keys + " for a second and a half: reset every control") % [
+		line.text = ("%s Change     |     %s Leave it     |     Hold %s + %s" + reset_keys + " for 1.5 s: reset all controls") % [
 			INPUT_GLYPH.icon("confirm", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("cancel", glyph, Color.WHITE, pad),
 			INPUT_GLYPH.icon("game_menu", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("map", glyph, Color.WHITE, pad)]
 		list.add_child(line)
@@ -817,6 +817,24 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 		list.add_child(tail)
 
 
+## F38#27 readability (LANE-MESHY, 10 Nov; OFF until judged): menu.json
+## `controls_scan.readability_1110`. Empty when off.
+func _readability() -> Dictionary:
+	var block: Variant = _controls_scan.get("readability_1110", {})
+	return block if block is Dictionary and (block as Dictionary).get("enabled") == true else {}
+
+
+## A filled, bordered binding cell (normal state only; focus keeps the theme's
+## highlight) so the bindings read as buttons, not text floating on navy.
+func _readable_cell_style(read: Dictionary) -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color(str(read.get("cell_fill", "#24404a")))
+	box.border_color = Color(str(read.get("cell_border", "#4e7480")))
+	box.set_border_width_all(int(read.get("cell_border_px", 1)))
+	box.set_corner_radius_all(6)
+	return box
+
+
 ## CLAUDE.md's hard rules: "Controller first." Gamepad reads left of
 ## Keyboard/mouse in both this header and every row `_build_row` builds below
 ## (blind-judge pass caught the table shipping keyboard-first).
@@ -837,6 +855,8 @@ func _column_header() -> Control:
 			cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			cell.add_theme_font_size_override("font_size", MENU_TEXT.read_px(24))
 		cell.add_theme_color_override("font_color", COLOUR_QUIET)
+		if not _readability().is_empty():
+			cell.add_theme_color_override("font_color", Color(str(_readability().get("header_colour", "#d9e3e2"))))
 		cell.text = str(pair[0])
 		row.add_child(cell)
 	return row
@@ -851,6 +871,20 @@ func _build_group(list: VBoxContainer, group: Dictionary, labels: Dictionary) ->
 
 	if not _controls_scan.is_empty():
 		heading.text = str(group.get("name", ""))
+	var read := _readability()
+	if not read.is_empty():
+		# A gap above each group and an accent rule under its name, so the
+		# groups read as sections instead of one continuous wall.
+		var gap := Control.new()
+		gap.custom_minimum_size = Vector2(0, float(read.get("group_gap_px", 18)))
+		list.add_child(gap)
+		list.move_child(gap, heading.get_index())
+		heading.add_theme_font_size_override("font_size", int(read.get("group_font_px", 34)))
+		var rule := ColorRect.new()
+		rule.color = Color(COLOUR_CHANGED, float(read.get("rule_alpha", 0.55)))
+		rule.custom_minimum_size = Vector2(float(read.get("rule_width_px", 420)), 2)
+		rule.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		list.add_child(rule)
 
 	var note := str(group.get("note", ""))
 	# UI-R2 / P2-031: a group's long paragraph (Fighting's ran to five lines)
@@ -865,6 +899,8 @@ func _build_group(list: VBoxContainer, group: Dictionary, labels: Dictionary) ->
 			note_label.add_theme_color_override("font_color", COLOUR_QUIET)
 		note_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		note_label.custom_minimum_size = Vector2(1100, 0)
+		if not read.is_empty():
+			note_label.add_theme_color_override("font_color", Color(str(read.get("note_colour", "#d6e0df"))))
 		note_label.text = note
 		list.add_child(note_label)
 	if not _controls_scan.is_empty():
@@ -904,7 +940,10 @@ func _build_row(action: String, label_text: String) -> Control:
 	# therefore laid out left-to-right in the row) moves.
 	for slot in ["gamepad", "keyboard"]:
 		var cell := Button.new()
-		cell.custom_minimum_size = Vector2(CELL_WIDTH, 52)
+		cell.custom_minimum_size = Vector2(CELL_WIDTH, float(_readability().get("row_height_px", 52)))
+		if not _readability().is_empty():
+			cell.add_theme_stylebox_override("normal", _readable_cell_style(_readability()))
+			cell.add_theme_font_size_override("font_size", int(_readability().get("cell_font_px", 30)))
 		cell.clip_text = true
 		if not _controls_scan.is_empty():
 			cell.add_theme_constant_override("icon_max_width", int(_controls_scan.get("glyph_px", 40)))
@@ -940,6 +979,13 @@ func _build_row(action: String, label_text: String) -> Control:
 		box.content_margin_left = 10.0
 		box.content_margin_top = 2.0
 		box.content_margin_bottom = 2.0
+		var read := _readability()
+		if not read.is_empty():
+			# Every row on an opaque band (the scenery no longer shows through
+			# the list), alternate rows a step lighter, a little more air.
+			box.bg_color = Color(str(read.get("band_odd", "#1e3037")) if _rows.size() % 2 == 1 else str(read.get("band_even", "#172429")))
+			box.content_margin_top = float(read.get("row_pad_px", 5))
+			box.content_margin_bottom = float(read.get("row_pad_px", 5))
 		band.add_theme_stylebox_override("panel", box)
 		name_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		band.add_child(row)
@@ -1265,7 +1311,10 @@ func poll() -> void:
 			cell.text = str(bindings.call("describe", event))
 			if not _controls_scan.is_empty():
 				cell.icon = _glyph_texture(event)
-				if _controls_scan.get("stripes") == true and cell.icon != null and slot == "gamepad":
+				# F38#27 close (judges): "[1] 1" read as a duplicate, so with
+				# `keyboard_chip_only` a keycap chip stands alone like a pad glyph.
+				var chip_only: bool = slot == "gamepad" or _controls_scan.get("keyboard_chip_only") == true
+				if _controls_scan.get("stripes") == true and cell.icon != null and chip_only:
 					# P2-031 r3: a pad button reads as its glyph alone, centred
 					# and large; the name stays only where no glyph exists.
 					cell.text = ""
@@ -1275,7 +1324,8 @@ func poll() -> void:
 				# glyph-only cells regressed quick bindings to tiny icons.
 			cell.add_theme_color_override(
 				"font_color",
-				COLOUR_CHANGED if bool(bindings.call("is_overridden", action, slot)) else COLOUR_DEFAULT
+				COLOUR_CHANGED if bool(bindings.call("is_overridden", action, slot)) else
+					(UITokens.TEXT_PRIMARY if not _readability().is_empty() else COLOUR_DEFAULT)
 			)
 
 

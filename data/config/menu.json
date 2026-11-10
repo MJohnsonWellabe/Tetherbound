@@ -50,7 +50,27 @@
     "row_font_px": 28,
     "stripes": true,
     "stripe_alpha": 0.5,
-    "_why_enabled": "ON by coordinator decision for the 22 Oct wind-down; P2-031 mapped 7.30 vs control 5.72 (round 2), below the 7.5 bar. Since that round: stick-direction arrows redrawn larger and the unchanged Reset cell drawn flat (round-2 judges' asks; unjudged)."
+    "keyboard_chip_only": true,
+    "_why_keyboard_chip_only": "F38#27 close-out (LANE-MESHY, 10 Nov 2026; coordinator, scout 8b43dfbf7: the round-1 keycap glyph base maps 7.81 on CPU, every judge 7.51+; the one remaining ask): a keyboard cell with a keycap chip shows the chip alone, centred and large, as pad cells already do, instead of '[1] 1'. Keys without a keycap image keep their name. The reset legend shortens to 'for 1.5 s: reset all controls'.",
+    "_why_enabled": "ON by coordinator decision for the 22 Oct wind-down; P2-031 mapped 7.30 vs control 5.72 (round 2), below the 7.5 bar. Since that round: stick-direction arrows redrawn larger and the unchanged Reset cell drawn flat (round-2 judges' asks; unjudged).",
+    "readability_1110": {
+      "_why": "F38#27 P2-031 (LANE-MESHY, 10 Nov 2026; GPU 5.89, judges: 'dense gray-on-navy control instructions ... hard to scan'). Base CPU frames: binding cells are dark navy on navy, the list is translucent so the room shows through it, and groups run together. On: every row on an opaque band (alternate rows a step lighter) with more padding; binding cells as filled, bordered buttons with near-white 30 px text; lighter column headers and group notes; a gap above each group and an accent rule under its name. Keycap glyphs (this branch) kept. Menu only; judged on CPU frames. OFF until judged.",
+      "enabled": false,
+      "row_height_px": 60,
+      "row_pad_px": 5,
+      "cell_fill": "#24404a",
+      "cell_border": "#4e7480",
+      "cell_border_px": 1,
+      "cell_font_px": 30,
+      "band_odd": "#22363e",
+      "band_even": "#1a2a30",
+      "header_colour": "#d9e3e2",
+      "note_colour": "#d6e0df",
+      "group_gap_px": 18,
+      "group_font_px": 34,
+      "rule_alpha": 0.55,
+      "rule_width_px": 420
+    }
   },
   "shell_board": {
     "_scope": "device_local_presentation",
