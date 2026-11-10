@@ -1073,8 +1073,8 @@
    "overlay_format": "deep merge",
    "frames": "the arm A frames: job.json frames of F41#17, #2, #12, #4, #5 (13)",
    "capture": "High: live = main + A3 overlay; arm = main + A3 + scoped fog. Seed 2042, script-error list empty, receipt shows height_fog.enabled and scope.enabled true. Pre-push check: the calm forest stands (F41#4/#5) should be unchanged vs live; the Crown Arch / phase / road frames should show low fog.",
-   "note": "Scoped height fog (ITEM-STORM-LIGHT/ARM_FOG_SCOPED.md): keeps arm A's fog gains (F41#17/#2/#12, +0.27 to +0.31) and removes its forest losses. Released from the hold.",
-   "done": false
+   "note": "Scoped height fog (ITEM-STORM-LIGHT/ARM_FOG_SCOPED.md): keeps arm A's fog gains (F41#17/#2/#12, +0.27 to +0.31) and removes its forest losses. Released from the hold. RESULT: held locally; 2 of 6 calm forest frames (Fallen Giant, Crown Heartstone) still fogged. Zone fix pending, then arm-side re-shoot.",
+   "done": true
   },
   {
    "id": "boss-standoff",
@@ -1091,8 +1091,8 @@
    "overlay_format": "deep merge",
    "frames": "stormwood__fight__capacitor_alpha-i01, -tell1-a-start, -tell1-e-impact, plus one hollows_alpha (Voltarach) fight frame",
    "capture": "High: live, live2, arm, arm2, pad_glyphs on all; push every frame with a camera note (no re-shooting to match angles). WATCH the camera: the F38#3 trainer-aside change sent the fight camera wide, and this also moves the trainer; record per-frame camera angle so a camera side effect shows. Receipt: contact_spacing.large_foe_standoff enabled.",
-   "note": "Large-foe standoff (ITEM-BOSS-STANDOFF/ARM.md): keeps the ally and trainer outside a big boss's leg span (positioning only, no floor ring). Judges' top F41#3 ask after the Voltarach bloom. Released from the hold.",
-   "done": false
+   "note": "Large-foe standoff (ITEM-BOSS-STANDOFF/ARM.md): keeps the ally and trainer outside a big boss's leg span (positioning only, no floor ring). Judges' top F41#3 ask after the Voltarach bloom. Released from the hold. RESULT: not judged; with the standoff ON the boss never attacks (holds 11-13 m, no tells). Back to build lane.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
