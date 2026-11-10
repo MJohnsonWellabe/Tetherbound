@@ -3655,7 +3655,31 @@ func _release_camera(fought_at: Variant = null) -> void:
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
 	_camera_rig.call("set_target", _player, {})
+	if _room_asks_camera_sight_at(_player.global_position if _player != null and is_instance_valid(_player) else null) \
+			and _camera_rig.has_method("snap_arm_in"):
+		_camera_rig.call("snap_arm_in")
 	_face_the_aftermath(fought_at)
+
+
+## F39#21 Nerissa win (LANE-MESHY, 10 Nov 2026; GPU G-rescore-f39-21-f41-13
+## win frame "camera inside translucent crystal/building geometry"): a fight
+## that ends with the fight camera far back hands the exploration rig a long
+## arm, which eases in at collision_recover_speed (4 m/s; about 3.7 s from a
+## 20 m fight arm). The win and aftermath frames land in that window, with the
+## lens outside the Heart Chamber looking through its faded walls. In a room
+## that already asks for fight-camera world sight (water_veilfall.json
+## `fight_camera_world_sight`, the same provider #875 uses), release snaps the
+## arm in to the exploration length instead. Elsewhere the glide is unchanged.
+func _room_asks_camera_sight_at(at: Variant) -> bool:
+	if at == null or _player == null or not is_instance_valid(_player):
+		return false
+	var host: Node = _player.get_parent()
+	if host == null:
+		return false
+	var claim := _arena_capacity_at(host, at as Vector3, 0.0)
+	var source := claim.get("source") as Node
+	return is_instance_valid(source) and source.has_method("release_camera_snap_at") \
+		and bool(source.call("release_camera_snap_at", (at as Vector3).x, (at as Vector3).z))
 
 
 ## F04#6: the fight hands the camera back facing wherever the fight's yaw last

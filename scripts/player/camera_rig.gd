@@ -478,6 +478,13 @@ var _impact_nudge_radians := 0.0
 ## combat_manager.gd::_update_combat_top_band). The arm, pivot, yaw and look
 ## pitch are unchanged, so it cannot push the lens into the slope below; the
 ## aim reticle stays the lens's own centre. 0 outside fights.
+## F39#21: pull the arm in to the current target distance at once (never out).
+## CombatManager calls it on release in rooms that ask for camera sight, so the
+## lens does not ease in from a long fight arm through the room's faded walls.
+func snap_arm_in() -> void:
+	spring_length = minf(spring_length, _distance)
+
+
 func set_lens_lift(metres: float) -> void:
 	if _camera != null:
 		_camera.v_offset = metres

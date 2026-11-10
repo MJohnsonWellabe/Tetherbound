@@ -1586,6 +1586,120 @@
    "note": "F41#4 Fallen Giant trunk dither (ITEM-TRUNK-DITHER/ARM.md): the near-lens fade dissolved trunks over 3-7 m; the arm narrows it to 3-4 m.",
    "done": true,
    "frames_pushed": "tb/gpu-frames-1108 531247ece (job frames) and 07591e530 (giant_calm)"
+  },
+  {
+   "id": "newapproach-wave-crests-v3",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "c8b080ef0",
+   "tree": "tb/newapproach (shaders/water_current_flow.gdshader, tools/capture_tidewake_f13_5.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WAVES/overlay_crests.json",
+   "overlay_format": "deep merge",
+   "arm_b_inline_overlay": {
+    "data/config/tidewake_look.json": {
+     "current_flow": {
+      "shader": {
+       "crest_shape": 1.0,
+       "crest_width_m": 4.6,
+       "crest_length_m": 2.6,
+       "crest_speed": 1.0,
+       "crest_margin_m_s": 2.6
+      },
+      "state_shader": {
+       "live": {
+        "chop_cap_opacity": 0.5
+       }
+      }
+     }
+    }
+   },
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night, each with 10-frame strips (_t1.._t9); three sides: base (overlay off), arm A (overlay_crests.json, margin 1.6 = crests 2.2 m/s), arm B (arm_b_inline_overlay, margin 2.6 = crests 3.2 m/s). Current arrow OFF on every side.",
+   "capture": "High only. Pre-push: no crest cut by a straight horizontal or diagonal edge, no outline changing frame to frame (report before pushing if any); in swim-away-day the crests advance down-screen clearly faster than the logs (estimate px per frame for crests vs a log). GIFs of swim-away-day for all three sides.",
+   "note": "Owner design: the in-world current cue is the direction the waves move. Third attempt; the new idea answers LANE-SCOUT's camera-follow finding (the swimmer drifts with the water, so slow crests look backwards against the shore): crest speed gets a margin over the drift. Offline (CPU) the sign is right in both day views but the away margin is only about 1.4x the log on screen, hence arm B with a bigger margin.",
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 0b5b57b6f (90 frames, 9 GIFs); straight-cut half-disc is in the crest shader"
+  },
+  {
+   "id": "newapproach-wave-crests-v3-fixed",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "6a8a44d7e",
+   "tree": "main plus tb/newapproach 6a8a44d7e shaders/water_current_flow.gdshader (as for v3: use main's capture tool with the strip block, since the branch tool demands a visible arrow)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WAVES/overlay_crests.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night with 10-frame strips; two sides: base (overlay off) and arm (overlay_crests.json: crest_speed 1.0, margin 1.6). Current arrow OFF on both.",
+   "capture": "High only. FIRST in line. Pre-push: look at every swim-away-day arm frame t0-t9 for the straight-cut half-disc and grey rectangle under the near log. If it is still there, push anyway but say so and give the frames, so the lane can chase the next suspects (per-cell row offset, layers after the crest). GIFs for all six.",
+   "note": "Wave crests v3 arm A with the crest body rebuilt from Gaussians only (no smoothstep end, noise mask or cell guard). v3 made swim-away-day read toward the camera 3/3 (base 0/3); arm A won across +0.69 and night +0.16 and lost away-day only to the cut crest.",
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 1305175c7 (60 frames, 6 GIFs); the cut crest is gone"
+  },
+  {
+   "id": "nerissa-win-release-snap",
+   "kind": "arm",
+   "rows": [
+    "F39#21"
+   ],
+   "branch": "tb/item-nerissa-win-camera",
+   "head": "7952052e356ff7abeecdd40f6095fe1a3ec793b0",
+   "tree": "tb/item-nerissa-win-camera 7952052e3 (merged with main 14:59; code: camera_rig.snap_arm_in, combat_manager._release_camera, water_veilfall.gd release_camera_snap_at; no assets)",
+   "overlay_branch": "tb/item-nerissa-win-camera",
+   "overlay": "ralph/reports/LANES/ITEM-NERISSA-WIN/overlay_snap.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+   "args": "--trainer=water_trainer_nerissa --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle --expected-resolution=1920x1080 --seed=2042",
+   "frames": "tidewake__fight__nerissa__win and __aftermath (plus one mid-fight frame from the same run on each side as a regression check: the snap must not change fight framing)",
+   "capture": "High first, Medium only if High maps 7.5+ (owner 31 Oct). Pre-push: on the arm the lens is inside the Heart Chamber close behind the trainer, with no wall or crystal between lens and trainer and no lens inside geometry; the mid-fight frame matches base framing.",
+   "note": "F39#21: at the win the fight hands back a far-out camera arm that eases in at 4 m/s, so the win and aftermath frames are shot from about 20 m back through faded chamber walls. The arm snaps the arm in to exploration length on release, in Veilfall arena rooms only. Reproduced on CPU at 1080p.",
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 9ecc4d914 (High; live win was close in with a crystal slab, not 20 m back)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

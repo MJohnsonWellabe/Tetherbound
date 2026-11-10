@@ -33,3 +33,34 @@ func test_sight_mask_includes_the_camera_only_layer() -> void:
 	var layer := int(preload("res://scripts/player/camera_rig.gd").OCCLUSION_ONLY_LAYER)
 	assert_true((0xFFFFFFFF & layer) != 0, "the room sight mask meets camera-only boxes")
 	assert_true((0x7FFFFFFF & layer) == 0, "the default sight mask still skips them")
+
+
+## F39#21 Nerissa win (10 Nov): release snaps a long fight arm in at once in
+## rooms that ask for camera sight, and never lengthens a short arm.
+func test_release_snap_pulls_a_long_arm_in_and_never_out() -> void:
+	var rig: SpringArm3D = preload("res://scripts/player/camera_rig.gd").new()
+	rig.set("_distance", 5.2)
+	rig.spring_length = 20.0
+	rig.call("snap_arm_in")
+	assert_true(absf(rig.spring_length - 5.2) < 0.001, "a long fight arm snaps to the exploration length")
+	rig.spring_length = 3.0
+	rig.call("snap_arm_in")
+	assert_true(absf(rig.spring_length - 3.0) < 0.001, "a collapsed arm is never lengthened")
+	rig.free()
+
+
+func test_release_snap_is_scoped_to_rooms_that_ask_for_sight() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/combat/combat_manager.gd")
+	var at := source.find("func _release_camera(")
+	var body := source.substr(at, source.find("\nfunc ", at + 10) - at)
+	assert_true(body.contains("_room_asks_camera_sight_at(") and body.contains("snap_arm_in"),
+		"release snaps only through the room's ask")
+	assert_true(source.contains("release_camera_snap_at"), "the room's ask is release_camera_snap_at")
+	var rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VEILFALL_CONFIG))
+	assert_true(rules.has("release_camera_snap_1110"), "the release snap is a declared room rule")
+
+
+func test_release_snap_ships_on_with_judged_gain_recorded() -> void:
+	var rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VEILFALL_CONFIG))
+	assert_true(bool(rules.get("release_camera_snap_1110", false)), "the release snap ships ON after the GPU judge")
+	assert_true(str(rules.get("_why_on_release_camera_snap_1110", "")).contains("+1.31"), "the judged gain is recorded")

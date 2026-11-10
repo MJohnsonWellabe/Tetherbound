@@ -771,6 +771,13 @@ func fight_camera_world_sight_at(x: float, z: float) -> bool:
 	return bool(rules.get("fight_camera_world_sight", false)) and combat_arena_bounds_at(x, z) >= 0.0
 
 
+## F39#21 Nerissa win (water_veilfall.json `release_camera_snap_1110`, OFF until
+## judged): in the arena rooms the camera's arm snaps in when a fight releases it,
+## instead of easing in from the far fight arm (win frame shot from ~20 m back).
+func release_camera_snap_at(x: float, z: float) -> bool:
+	return bool(rules.get("release_camera_snap_1110", false)) and combat_arena_bounds_at(x, z) >= 0.0
+
+
 ## Pure form: the ring radius a room rect affords at interior-local `local`
 ## (x, z), or -1.0 outside it; never below 0.5.
 static func room_arena_bound(local: Vector2, room: Dictionary, side_margin: float, end_margin: float) -> float:

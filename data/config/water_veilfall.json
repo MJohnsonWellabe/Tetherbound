@@ -1,4 +1,7 @@
 {
+  "release_camera_snap_1110": true,
+  "_why_on_release_camera_snap_1110": "GPU High judged 10 Nov (LANE-SCOUT G-nerissa-win-release-snap, tb/item-scout-1108 226e2ae1e): Nerissa win 5.32 -> 6.63 (+1.31, 3/3), aftermath 5.06 -> 6.22 (+1.16, 3/3), mid-fight unchanged (0.00). Win stages Bramblebun whole beside the trainer with Nerissa in view instead of a crystal slab over half the frame; aftermath shows creature, trainer and arches instead of the trainer's back. F39#21 stays open (6.63 < 7.5).",
+  "_why_release_camera_snap_1110": "F39#21 Nerissa win (LANE-MESHY, 10 Nov 2026; OFF until judged). GPU G-rescore-f39-21-f41-13: the win frame is shot from far back through faded chamber walls. CPU 1080p on main reproduces the far, high pose (lens ~20 m back, y 46.6): the fight ends with the fight camera far out and the exploration arm only eases in at 4 m/s. ON: in the arena rooms, release snaps the arm in to the exploration length (camera_rig.snap_arm_in, never lengthens). Win and aftermath then frame the trainer inside the chamber. Presentation only.",
   "shell_final_repair": {
     "_comment": "P2-010 final bounded candidate. Presentation-local, no durable state. Missing/false preserves original definitions. Shared near/far masses; no terrain bake. Native visual acceptance pending.",
     "enabled": false,
