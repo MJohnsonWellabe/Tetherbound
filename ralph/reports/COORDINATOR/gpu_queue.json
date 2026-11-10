@@ -1642,6 +1642,43 @@
    "note": "Owner design: the in-world current cue is the direction the waves move. Third attempt; the new idea answers LANE-SCOUT's camera-follow finding (the swimmer drifts with the water, so slow crests look backwards against the shore): crest speed gets a margin over the drift. Offline (CPU) the sign is right in both day views but the away margin is only about 1.4x the log on screen, hence arm B with a bigger margin.",
    "done": true,
    "frames_pushed": "tb/gpu-frames-1108 0b5b57b6f (90 frames, 9 GIFs); straight-cut half-disc is in the crest shader"
+  },
+  {
+   "id": "newapproach-wave-crests-v3-fixed",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "6a8a44d7e",
+   "tree": "main plus tb/newapproach 6a8a44d7e shaders/water_current_flow.gdshader (as for v3: use main's capture tool with the strip block, since the branch tool demands a visible arrow)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WAVES/overlay_crests.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night with 10-frame strips; two sides: base (overlay off) and arm (overlay_crests.json: crest_speed 1.0, margin 1.6). Current arrow OFF on both.",
+   "capture": "High only. FIRST in line. Pre-push: look at every swim-away-day arm frame t0-t9 for the straight-cut half-disc and grey rectangle under the near log. If it is still there, push anyway but say so and give the frames, so the lane can chase the next suspects (per-cell row offset, layers after the crest). GIFs for all six.",
+   "note": "Wave crests v3 arm A with the crest body rebuilt from Gaussians only (no smoothstep end, noise mask or cell guard). v3 made swim-away-day read toward the camera 3/3 (base 0/3); arm A won across +0.69 and night +0.16 and lost away-day only to the cut crest.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
