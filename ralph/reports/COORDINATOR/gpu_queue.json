@@ -1368,8 +1368,8 @@
     "cloudreach__riding__phase2_18_terrace_02.0s"
    ],
    "capture": "live vs arm at High, seed 2042; receipt cloud_sea.deck_soft 1.0. Pre-push: the cloud sea reads soft without square or triangle facets on the arm; if facets remain, report instead of pushing.",
-   "note": "LANE-NEWAPPROACH shared cause: the cloud deck's grazing fade reads each triangle's own normal, so the whole Cloudreach cloud floor looks faceted on GPU (named on all 18 Cloudreach rows). One shader fix.",
-   "done": false
+   "note": "LANE-NEWAPPROACH shared cause: the cloud deck's grazing fade reads each triangle's own normal, so the whole Cloudreach cloud floor looks faceted on GPU (named on all 18 Cloudreach rows). One shader fix. RESULT: not pushed; facets remain and deck_soft adds a small-rectangle patchwork (tile-edge alpha and stacked decks suspected). One retry allowed.",
+   "done": true
   },
   {
    "id": "rescore-f39-21-f41-13",
