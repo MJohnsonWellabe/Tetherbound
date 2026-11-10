@@ -1312,6 +1312,47 @@
    "capture": "live vs arm at High, seed 2042; script-error list empty. Pre-push: path and low ground warm rutted earth instead of glossy black, foreground rain thin; flag any pinkish loam (red/oxblood rule).",
    "note": "Stormwood big swing part 1 (ITEM-SW-SWING/ARM.md): banked wet-earth ground (no black gloss pools) plus fine faded near rain; the judges' shared 3/3 asks on F41#4/#5/#12/#17. RESULT: captured b85e807e1; loam reads salmon/mauve under lilac sky on five frames; de-pink version requested.",
    "done": true
+  },
+  {
+   "id": "newapproach-clouddeck",
+   "kind": "arm",
+   "rows": [
+    "F40#6",
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "6c4709d8f7f26e518f756753d906ef2e1631a43f",
+   "tree": "main plus shaders/cloudreach_cloud_deck.gdshader, scripts/world/cloudreach_world.gd and data/config/cloudreach_visual.json from that head (diff against merge base; cloudreach_visual.json on main now also carries rain_storm_sky from #885, so merge the deck_soft key rather than overwrite)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDDECK/overlay_deck_soft.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+   "args": [
+    "--tag=phase2",
+    "--seed=2042",
+    "--output={OUT}"
+   ],
+   "frames": [
+    "cloudreach__riding__phase2_16_terrace_mounted_at_edge",
+    "cloudreach__riding__phase2_17_terrace_01.0s",
+    "cloudreach__riding__phase2_18_terrace_02.0s"
+   ],
+   "capture": "live vs arm at High, seed 2042; receipt cloud_sea.deck_soft 1.0. Pre-push: the cloud sea reads soft without square or triangle facets on the arm; if facets remain, report instead of pushing.",
+   "note": "LANE-NEWAPPROACH shared cause: the cloud deck's grazing fade reads each triangle's own normal, so the whole Cloudreach cloud floor looks faceted on GPU (named on all 18 Cloudreach rows). One shader fix.",
+   "done": false
+  },
+  {
+   "id": "rescore-f39-21-f41-13",
+   "kind": "check",
+   "rows": [
+    "F39#21",
+    "F41#13"
+   ],
+   "tree": "main as it is now",
+   "frames": "job.json frames of F39#21 and F41#13",
+   "capture": "one-sided re-score at High on current main (no overlay)",
+   "note": "Both scores predate shipped fixes (F39#21 before the hero card #876; F41#13 before charged_1105), per LANE-NEWAPPROACH's floor survey. Re-score before anyone spends more work on them.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
