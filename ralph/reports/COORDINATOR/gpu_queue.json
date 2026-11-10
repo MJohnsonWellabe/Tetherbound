@@ -1700,6 +1700,95 @@
    "note": "F39#21: at the win the fight hands back a far-out camera arm that eases in at 4 m/s, so the win and aftermath frames are shot from about 20 m back through faded chamber walls. The arm snaps the arm in to exploration length on release, in Veilfall arena rooms only. Reproduced on CPU at 1080p.",
    "done": true,
    "frames_pushed": "tb/gpu-frames-1108 9ecc4d914 (High; live win was close in with a crystal slab, not 20 m back)"
+  },
+  {
+   "id": "newapproach-t2-cleanup",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "38d55eb2efe806d972ad566d3959728eb15d2fb2",
+   "tree": "tb/newapproach 38d55eb2e (shaders/water.gdshader opaque_depth_m uniform, default 0; no assets)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-T2-CLEANUP/overlay_cleanup.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night,swim-brine-day",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "T2-current: swim-away-day, swim-across-day, swim-away-night, swim-brine-day. PLUS a regression check, because tidewake_look.json surfaces.water changes every Tidewake sea: three ordinary Tidewake exploration frames from the last GPU re-score that show open sea and shoreline shallows (day), e.g. the F39 dock or shore job frames, base vs arm.",
+   "capture": "High only. Arrow at its shipped default (off) on both sides. Pre-push: in swim-across-day the straight-edged pale wedges, the vertical centre line and the dark diagonal at the right are gone on the arm; in swim-away-night the water is night navy; in the regression frames the shallows still show sand and nothing else changes. If the wedges survive on GPU, report before pushing.",
+   "note": "T2 water cleanup, the three defects every T2 batch named. The seam is the seabed's sparse baked regions showing through translucent water at straight region edges, so water goes opaque past 1.5 m depth. Night: VIS-TIDEWAKE's water night dim switched on. Softer swimmer ring rides along.",
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 8b531c200 (T2 three views; swim-brine-day aborts on both sides: tree current misses the stand) and 1ad4d2e18 (regression)"
+  },
+  {
+   "id": "nerissa-plinth-stone",
+   "kind": "arm",
+   "rows": [
+    "F39#21",
+    "F39#28"
+   ],
+   "branch": "tb/item-nerissa-room",
+   "head": "f81c7e99451cd480b901d142ef090c324bcceb89",
+   "tree": "tb/item-nerissa-room f81c7e994 (main with the snap ON plus water_veilfall_interior_dressing.gd metal_1110; no assets beyond installed T_RockTrim)",
+   "overlay_branch": "tb/item-nerissa-room",
+   "overlay": "ralph/reports/LANES/ITEM-NERISSA-PLINTH/overlay_plinth.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+   "args": "win/aftermath: --trainer=water_trainer_nerissa --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle --expected-resolution=1920x1080 --seed=2042; F39#28 t-000_00: same tool and seed with --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves",
+   "frames": "tidewake__fight__nerissa__win, __aftermath (F39#21), __t-000_00 (F39#28)",
+   "capture": "High first, Medium only if High maps 7.5+. Base = main (snap ON). Pre-push: on the arm the S-scroll collage blocks at and beside the crystal read as chamber stone; nothing else changes.",
+   "note": "Heart Chamber metal-coloured boxes (two crystal plinths, tether box) wore the T_MetalOrnaments railing sheet, which judges named 3/3 as an off-family collage; arm re-skins them in the chamber's rock-trim stone. Breadth swing across F39#21 and F39#28.",
+   "done": false
+  },
+  {
+   "id": "newapproach-flowfoam-fronts",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "d2cf2a84b1b441bada1155a76b88497d72a2345c",
+   "tree": "tb/newapproach d2cf2a84b (shaders/water_current_flow.gdshader front_* uniforms, default off). If the branch's capture tool demands a visible arrow, use main's tool with the strip block as for v3.",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-FLOWFOAM/overlay_fronts.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night with 10-frame strips; base (overlay off) vs arm; arrow at shipped default (off). GIFs for all six.",
+   "capture": "High only. Pre-push: no line looks ruled, cut or blocky (report before pushing if any); in swim-away-day estimate line speed down-screen vs a log in px per strip frame.",
+   "note": "Owner's wave cue, fifth in-water attempt, new technique (no discrete shapes): a train of thin soft swell lines across the lane, scrolling downstream at current speed plus a 2.0 m/s margin; crescent caps off. Offline screen motion: down-screen in both away views, rightward in across. Pass bar for direction: at least 2/3 judges toward-camera at confidence 6+ on swim-away-day.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
