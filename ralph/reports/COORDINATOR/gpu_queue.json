@@ -1464,7 +1464,7 @@
    ],
    "capture": "live vs arm at High, seed 2042; Medium on the same frames if the High arm gains (F41#17 is near the bar). Pre-push: no pink, salmon or red-brown trunks; sample trunk RGB at crown_arch (red not above green); foliage unchanged.",
    "note": "Red-family trunks were the batch-41 judges' top F41#17 blocker (ITEM-BARK-GREY/ARM.md): CommonTree and TwistedTree bark retinted to cool grey-brown through the existing foliage-grade retint; the groves follow.",
-   "done": false
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
