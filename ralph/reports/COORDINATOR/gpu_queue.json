@@ -979,7 +979,7 @@
    "frames": "job.json frames of F41#17 (1), F41#2 (3), F41#12 (3), F41#4 (3), F41#5 (3) = 13 (the arm A frames)",
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows light_pass_1101 rig.sun #cfc0ff/2.05, environment exposure 1.5, rim #c3b6ff/1.25. Pre-push check: mean luma should rise slightly and the sun should go violet; if frames are identical to live, report instead of pushing.",
    "note": "Storm-light A3 (ITEM-STORM-LIGHT/ARM_A3.md): writes into light_pass_1101, the layer that actually wins; offline probe shows exposure, ambient energy, contrast, sun and rim all reach the Environment (ambient colour does not). No height fog.",
-   "done": false
+   "done": true
   },
   {
    "id": "glass-sink-lip-rim",
@@ -1000,7 +1000,7 @@
    ],
    "capture": "live vs arm at High, seed 2042; script-error list empty; push only if slabs show in at least two of three frames (CPU sheet _sheet_lip_cpu.jpg shows two right of the trainer at the approach stand)",
    "note": "Third Glass Sink capture, now proven on CPU first: the dense ring sat at the cliff foot ~60 m under the cameras; seat_on_rim puts it on the island-top rim (ITEM-SINK-LIP/ARM.md).",
-   "done": false
+   "done": true
   },
   {
    "id": "newapproach-dust",
