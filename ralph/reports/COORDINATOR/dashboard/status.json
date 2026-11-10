@@ -1,6 +1,7 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
+    "10 Nov 14:00: grey bark and arrow-off-by-default landed (#888). Owner's wave-motion current cue: first version indistinguishable from base on GPU; swim-across already reads from the moving water, swim-away does not; LANE-NEWAPPROACH rebuilding with crests across the flow.",
     "10 Nov 13:00: owner direction: the on-screen current arrow is OFF by default (kept in Accessibility); the in-world current cue will be the direction the waves move (LANE-NEWAPPROACH). Grey bark ships (all four Stormwood rows gain); Crown Arch r3 and the root fix landed (#887).",
     "10 Nov 11:55: Crown Arch r3 ships (+0.50 on High and Medium, 3/3; the free Blender pipeline's first win); F41#17 maps 6.77 in that batch, so it stays open, and the judges flag red-family tree trunks as the next blocker.",
     "10 Nov 10:30: Stormwood big swing ships (groves + wet earth + fine rain): F41#17 +0.55 to 7.23 (near the bar), F41#5 +0.50, F41#4 +0.27, all 3/3; landed (#886) with the Tidewake current strength bars (+0.57).",
@@ -1868,9 +1869,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 42 (in CI)",
+      "pr": "#888",
       "what": "Stormwood trunks retinted out of the red family (all four rows gain, 3/3; Crown Arch +1.19); Tidewake current arrow now OFF by default (owner: the in-world cue is the wave motion)",
-      "when": "10 Nov, in CI"
+      "when": "10 Nov 14:01"
     },
     {
       "pr": "#887",
