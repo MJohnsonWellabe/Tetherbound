@@ -1865,7 +1865,8 @@
    "frames": "swim-away-day, swim-across-day, swim-away-night 10-frame strips; base vs arm; arrow off; GIFs for all six",
    "capture": "High only. Pre-check: still no straight moving edge, ladder or rectangle. Then measure line speed against the log in swim-away-day in the middle water (rows 400-640 at 1080p), not the far field: CPU showed about 2x the log at a lower margin. Blind direction read on the swim-away-day and swim-away-night strips (pass at 2 of 3 toward-camera, confidence 6 or more). Night: lines should no longer read as an even ruled comb.",
    "note": "Wave lines v3: closer, thinner lines visible in near and middle water (front_length 3.2, sharpness 9, gap floor 0.45), uneven spacing, margin 3.2. CPU: middle-water lines about 2x the log at margin 2.4; far lines still slower.",
-   "done": false
+   "done": true,
+   "frames_pushed": "88ac9afeb (for judging; far comb known); diagnostic copy b0e43ba4d"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
