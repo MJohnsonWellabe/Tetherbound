@@ -1,0 +1,10 @@
+Zt: "none"
+Zm: "none"
+Tp: none
+Or: "none"
+Fy: "none"
+Th: none
+Nm: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Tr: "none"
+Xk: "none"
+Md: "none"
