@@ -1891,7 +1891,7 @@
    "branch": "main",
    "head": "2ffc97db0 (main after #893)",
    "overlay": null,
-   "done": false,
+   "done": true,
    "id": "baseline-f38-0-meadows-recapture",
    "rows": [
     "F38#0"
@@ -1900,14 +1900,15 @@
    "args": "-- --seed=2042 --f38-preset=High --f38-baseline --output=res://<fresh dir>; plan ralph/reports/R2-F38/capture-definition.json; day and dusk, clear first (about 264 frames clears the 200 floor)",
    "frames": "22 sites x 4 views x day,dusk x clear",
    "capture": "High. No arm. Lowest priority, after the F41 matrix; may run overnight in pieces.",
-   "note": "Owner floor rule: F38#0 unscored (needs the 200-frame Meadows re-capture)."
+   "note": "Owner floor rule: F38#0 unscored (needs the 200-frame Meadows re-capture).",
+   "frames_pushed": "a1dd4a893 day + 96bae1525 golden (268); scored 6.60"
   },
   {
    "kind": "baseline",
    "branch": "main",
    "head": "2ffc97db0 (main after #893)",
    "overlay": null,
-   "done": false,
+   "done": true,
    "id": "baseline-f40-0-cloudreach-recapture",
    "rows": [
     "F40#0"
@@ -1916,7 +1917,8 @@
    "args": "--piece=1..96 with --ground-cover-cache; complete union per the tool header",
    "frames": "12 stands x 4 views x 4 times x 2 weather (384)",
    "capture": "High first. No arm. Lowest priority, after the Meadows re-capture; overnight in pieces.",
-   "note": "Owner floor rule: F40#0 unscored (needs the Cloudreach re-capture)."
+   "note": "Owner floor rule: F40#0 unscored (needs the Cloudreach re-capture).",
+   "frames_pushed": "352/384 in 8 sections bf80caeb8..d42d0b457; broken_skyroad_arch stand fails in the tool (LANE-MESHY)"
   },
   {
    "id": "check-890-trunk-in-fight",
