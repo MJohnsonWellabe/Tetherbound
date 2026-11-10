@@ -1467,6 +1467,39 @@
    "done": true
   },
   {
+   "id": "newapproach-waves",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "64dab56f09dae9199bfc95324cff9b3bfe557875",
+   "tree": "main plus shaders/water.gdshader, scripts/world/water_surface.gd and tools/capture_tidewake_f13_5.gd from that head (the tool change adds --strip-frames; merge with main's version of the tool, which now only requires the arrow when it is on by default)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WAVES/overlay_lane_waves.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "godot_args": [
+    "--fixed-fps",
+    "20"
+   ],
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--strip-frames=10",
+    "--strip-gap-frames=2",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "frames": "10-frame strips (1 s) for swim-away-day, swim-across-day and swim-away-night; plus the tool's --only=currents dock frames on both sides",
+   "capture": "High, base (overlay off) vs arm (overlay on), current arrow OFF on both. If the across view shows a streaky smear in the foreground, re-shoot the arm with lane_crest 0 before pushing. Also make a short animated GIF or MP4 per view if you can (judges can't see motion in stills).",
+   "note": "OWNER DESIGN (10 Nov): \"The in world cue should just be which way the waves move.\" The sea's ripples used to scroll in one fixed global direction regardless of the currents; now, in a current lane, they travel with the flow (faster in stronger currents). RUN FIRST.",
+   "done": false
+  },
+  {
    "id": "f41-24-moss-off",
    "kind": "arm",
    "rows": [
