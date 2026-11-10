@@ -1383,6 +1383,27 @@
    "capture": "one-sided re-score at High on current main (no overlay)",
    "note": "Both scores predate shipped fixes (F39#21 before the hero card #876; F41#13 before charged_1105), per LANE-NEWAPPROACH's floor survey. Re-score before anyone spends more work on them.",
    "done": false
+  },
+  {
+   "id": "stormwood-groves",
+   "kind": "arm",
+   "rows": [
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#17"
+   ],
+   "branch": "tb/item-stormwood-ground",
+   "head": "75b98d438b76ddeebe014b12bb07e7151603d546",
+   "tree": "main plus the branch's game files at that head (stormwood_horizon_groves.gd, stormwood_destination_dressing.json, plus the swing part 1 files: stormwood_ground_zones.gd, stormwood_surge_rules.gd, stormwood_ground_finish.json, stormwood_surge.json; diff against merge base)",
+   "base_overlay": "ralph/reports/LANES/ITEM-SW-SWING/overlay_swing.json (the de-pinked swing at this head, on BOTH sides)",
+   "overlay_branch": "tb/item-stormwood-ground",
+   "overlay": "ralph/reports/LANES/ITEM-SW-GROVES/overlay_groves.json",
+   "overlay_format": "deep merge",
+   "frames": "same 9 Stormwood frames as stormwood-swing-1",
+   "capture": "High: base = main + de-pinked swing overlay; arm = base + groves overlay (the delta is groves alone). Run AFTER stormwood-swing-2-depink so its arm frames can serve as this base if the trees match. Pre-push: open stands end in layered groves with gaps (no tree wall, no tree on a road or in the foreground); deepwood frames unchanged.",
+   "note": "Stormwood big swing part 2 (ITEM-SW-GROVES/ARM.md): two clumped bands of existing storm trees around four open stands so the flat horizon steps back in depth. MultiMesh, visual only, no colliders, about 1,870 instances.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
