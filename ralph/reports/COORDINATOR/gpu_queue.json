@@ -1565,8 +1565,8 @@
    ],
    "frames": "10-frame strips for the three swimmer views, plus a GIF per view and side",
    "capture": "High, base vs arm, arrow OFF on both (OFF by default on main now). Pre-push: report first if any crest shows as a sharp-edged triangle or shard that pops in and out by day.",
-   "note": "OWNER DESIGN (which way the waves move), second build: the foam ribbon's arcs reshaped into wave crests across the flow with a bright leading edge, advancing at 1.9x lane speed so they overtake the logs. Passed the blind strip bar on CPU. RUN FIRST.",
-   "done": false
+   "note": "OWNER DESIGN (which way the waves move), second build: the foam ribbon's arcs reshaped into wave crests across the flow with a bright leading edge, advancing at 1.9x lane speed so they overtake the logs. Passed the blind strip bar on CPU. RUN FIRST. RESULT: captured 24c40e196; by day crests break into hard-edged shards that flicker.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
