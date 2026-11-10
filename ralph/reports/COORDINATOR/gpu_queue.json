@@ -1440,7 +1440,7 @@
    "args": "--stands=giant --phases=calm --no-aftermath plus the F41#24 job frames",
    "capture": "live vs arm at High. Pre-push: no flat pale wedge beside the trainer at the Fallen Giant grove; roots read as low dark flares; nothing else changes.",
    "note": "F41#24 cleanliness (ITEM-F41-24/ARM.md): the mauve quad is a shader-placed canopy root's flat top facet catching the lilac sky; root_finish_1110 rounds, narrows, darkens and sinks the roots.",
-   "done": false
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
