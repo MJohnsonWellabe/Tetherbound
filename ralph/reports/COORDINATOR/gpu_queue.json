@@ -1422,7 +1422,7 @@
    ],
    "capture": "CLOSE-OUT candidate. High: live (batch-40 tree) vs arm; add Medium on the same pair if the High arm maps 7.5+. Pre-push: no square plinth, weathered stone with copper and glass, feet on the stones, no red.",
    "note": "Crown Arch r3 (ITEM-F41-17-ARCH/ARM.md), Blender-built, free pipeline: weathering, copper bands and straps, glass shards, and a ragged flagstone landing replacing the square plinth. F41#17 is 7.23 after the swing, 0.27 short of the bar. RUN FIRST.",
-   "done": false
+   "done": true
   },
   {
    "id": "f41-24-root-finish",
