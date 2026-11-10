@@ -923,6 +923,25 @@
    "done": false
   },
   {
+   "id": "f38-27-close",
+   "kind": "confirm",
+   "rows": [
+    "F38#27"
+   ],
+   "branch": "tb/item-f38-27-glyphs",
+   "head": "ed4eb76d498c6f66612fffe909d14457e688998c",
+   "tree": "main plus the branch's game-side changes at that head (git diff 52a633598 ed4eb76d4 -- scripts/ assets/ data/: input_glyph.gd, game_menu.gd, the new keyboard_tab.png keycap and any menu text change); needs an import pass for the new PNG; readability_1110 stays OFF",
+   "overlay": "",
+   "overlay_format": "",
+   "frames": [
+    "meadows__settings_controls",
+    "meadows__quick_bindings"
+   ],
+   "capture": "CLOSE-OUT confirm. High: live (main) vs branch; Medium on the same two frames too (cheap, menus). Script-error list empty; controller prompts on both sides (pad_glyphs).",
+   "note": "F38#27 settings/bindings: the keycap-glyph branch mapped 7.81 on CPU (every judge 7.51+; scout 8b43dfbf7); this adds the judges' last ask (key chip alone, no duplicated digit; short reset legend). GPU High+Medium at 7.5+ closes the row.",
+   "done": false
+  },
+  {
    "id": "glass-sink-lip-dense",
    "kind": "arm",
    "rows": [
