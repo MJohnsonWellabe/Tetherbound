@@ -1222,8 +1222,8 @@
     "swim-away-night"
    ],
    "capture": "High: base (arrow on, overlay off) vs arm (arrow on, overlay on) on the same tree; add Medium if the High arm maps 7.5+. Pre-push: thin streaks near the swimmer running the arrow's way, strength bars on the badge; flag if they read as painted lane lines.",
-   "note": "LANE-NEWAPPROACH T2B (NEWAPPROACH-T2B/ARM.md): the judges' asks after the arrow passed: strength has no cue, and the water near the swimmer disagrees with the arrow. Adds swimmer-scale flow streaks (within 38 m only, dock views unchanged) and strength bars on the badge.",
-   "done": false
+   "note": "LANE-NEWAPPROACH T2B (NEWAPPROACH-T2B/ARM.md): the judges' asks after the arrow passed: strength has no cue, and the water near the swimmer disagrees with the arrow. Adds swimmer-scale flow streaks (within 38 m only, dock views unchanged) and strength bars on the badge. RESULT: captured (cd277a3dc); streaks read as painted lane lines, so not judged; bars to be judged on CPU, streaks reworked.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
