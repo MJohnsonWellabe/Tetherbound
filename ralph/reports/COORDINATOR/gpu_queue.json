@@ -849,8 +849,8 @@
     "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk"
    ],
    "capture": "MEDIUM first (the failing side, 7.07), live vs arm, seed 2042; High only if the Medium arm maps 7.5 or above; script-error list empty",
-   "note": "CLOSE-OUT candidate (owner 25 Oct evening: candidates that would close a criterion go first). F38#23 is GPU High 7.58 / Medium 7.07; r3 darkens the overbright yard flags 17% and deepens the joints (ITEM-F38-23/ARM.md). Run next after the current section.",
-   "done": false
+   "note": "CLOSE-OUT candidate (owner 25 Oct evening: candidates that would close a criterion go first). F38#23 is GPU High 7.58 / Medium 7.07; r3 darkens the overbright yard flags 17% and deepens the joints (ITEM-F38-23/ARM.md). Run next after the current section. Medium captured (G-f38-23-cobble-r3); High pending the Medium score.",
+   "done": true
   },
   {
    "id": "pilot-mark",
