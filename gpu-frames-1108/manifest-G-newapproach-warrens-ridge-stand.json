@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-ridge-stand/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.3688,
+  "script_errors": 0,
+  "note": "High, seed 2042, pad glyphs on. base = tb/newapproach e43aaa7d3; arm = base + NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json (hill foundation, buried_stand_guard, walk_03 heading 215, meadows_ridge_vl). Frames: Burrow Warrens walk_02_day, walk_03_day, route_day; stronghold approach route_day."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "arm-High",
+  "tree": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-ridge-stand/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.317,
+  "script_errors": 0,
+  "note": "High, seed 2042, pad glyphs on. base = tb/newapproach e43aaa7d3; arm = base + NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json (hill foundation, buried_stand_guard, walk_03 heading 215, meadows_ridge_vl). Frames: Burrow Warrens walk_02_day, walk_03_day, route_day; stronghold approach route_day."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "arm-High",
+  "tree": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-ridge-stand/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.057,
+  "lower_edges": 0.0669,
+  "script_errors": 0,
+  "note": "High, seed 2042, pad glyphs on. base = tb/newapproach e43aaa7d3; arm = base + NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json (hill foundation, buried_stand_guard, walk_03 heading 215, meadows_ridge_vl). Frames: Burrow Warrens walk_02_day, walk_03_day, route_day; stronghold approach route_day."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-ridge-stand/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.437,
+  "script_errors": 0,
+  "note": "High, seed 2042, pad glyphs on. base = tb/newapproach e43aaa7d3; arm = base + NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json (hill foundation, buried_stand_guard, walk_03 heading 215, meadows_ridge_vl). Frames: Burrow Warrens walk_02_day, walk_03_day, route_day; stronghold approach route_day."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "base-High",
+  "tree": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-ridge-stand/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.09,
+  "lower_edges": 0.3701,
+  "script_errors": 0,
+  "note": "High, seed 2042, pad glyphs on. base = tb/newapproach e43aaa7d3; arm = base + NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json (hill foundation, buried_stand_guard, walk_03 heading 215, meadows_ridge_vl). Frames: Burrow Warrens walk_02_day, walk_03_day, route_day; stronghold approach route_day."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-ridge-stand/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3186,
+  "script_errors": 0,
+  "note": "High, seed 2042, pad glyphs on. base = tb/newapproach e43aaa7d3; arm = base + NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json (hill foundation, buried_stand_guard, walk_03 heading 215, meadows_ridge_vl). Frames: Burrow Warrens walk_02_day, walk_03_day, route_day; stronghold approach route_day."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-ridge-stand/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.21,
+  "lower_edges": 0.3296,
+  "script_errors": 0,
+  "note": "High, seed 2042, pad glyphs on. base = tb/newapproach e43aaa7d3; arm = base + NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json (hill foundation, buried_stand_guard, walk_03 heading 215, meadows_ridge_vl). Frames: Burrow Warrens walk_02_day, walk_03_day, route_day; stronghold approach route_day."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "base-High",
+  "tree": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-newapproach-warrens-ridge-stand/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.207,
+  "lower_edges": 0.4396,
+  "script_errors": 0,
+  "note": "High, seed 2042, pad glyphs on. base = tb/newapproach e43aaa7d3; arm = base + NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json (hill foundation, buried_stand_guard, walk_03 heading 215, meadows_ridge_vl). Frames: Burrow Warrens walk_02_day, walk_03_day, route_day; stronghold approach route_day."
+ }
+]
