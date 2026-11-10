@@ -1,0 +1,3 @@
+﻿BLANK   8.6 meadows-fights-f312a5\warden_aldis-r05.jpg
+SET meadows-fights-f312a5: 1/72 blank
+blank frames 1 of 106
