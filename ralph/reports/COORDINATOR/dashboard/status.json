@@ -1,7 +1,7 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
-    "10 Nov overnight: Voltarach bloom fix won on GPU (+1.04/+1.16, 3/3) and is landing (#879). F38#3 Meadows fight staging scored 7.74 at High on its one clean shot (+0.45, 3/3); a close-out confirm (two runs per side, High then Medium) is next on the PC. Free Blender pipeline in use (no Meshy credits): Stormheart core v2 flat, Glass Sink ring re-shooting as a continuous 172-slab ring. Storm-light: arm A was a fog-only result (an older light pass overrode the key light); A3 is being rebuilt to write into that pass.",
+    "10 Nov overnight: Voltarach bloom fix won on GPU (+1.04/+1.16, 3/3) and landed (#879). F38#3 Meadows fight staging scored 7.74 at High on its one clean shot (+0.45, 3/3); a close-out confirm (two runs per side, High then Medium) is next on the PC. Free Blender pipeline in use (no Meshy credits): Stormheart core v2 flat, Glass Sink ring re-shooting as a continuous 172-slab ring. Storm-light: arm A was a fog-only result (an older light pass overrode the key light); A3 is being rebuilt to write into that pass.",
     "9 Nov evening: camera lens ground clearance landed (#878). Owner approved the Stormwood storm-light pass: arm A (violet storm key, fog, fighter rim) is first on the GPU; new art now uses a free Blender plus CC0-texture pipeline (no Meshy credits).",
     "9 Nov overnight, GPU-decided: Tidewake character rim softened (speakers no longer ghost-white: F39#18 +1.87, F39#26 +2.13, F39#27 +1.09, F39#29 +1.50, all 3/3), ghost-glow fix (creatures no longer see-through: +0.29 to +0.91 on five rows), Stormwood charged glow (+0.61), victory card confirmed on Tidewake (+0.96), Nerissa fight fixed, four rows closed (F38#36, F38#38, F38#18, F40#12).",
     "9 Nov: three visual rows closed on GPU Medium and High, the first closes since the re-score: F38#36 dialogue speaker framing (High 7.74 / Medium 8.08), F38#38 craft hint contrast (8.16 / 8.30) and F38#18 craft recipe text (7.95 / 8.19). F38#23 relay yard missed on Medium (7.07).",
@@ -1859,9 +1859,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "#879 (in CI)",
+      "pr": "#879",
       "what": "Voltarach no longer a white-gold blob: dark shell with gold veins and blue eyes (GPU +1.04/+1.16, 3/3); Officer Nysa test shot fixed",
-      "when": "10 Nov, in CI"
+      "when": "10 Nov 02:03"
     },
     {
       "pr": "#878",
