@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+  "preset": "arm-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-f40-19-mist/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.jpg",
+  "sky_fraction": 0.42,
+  "lower_edges": 0.1015,
+  "script_errors": 0,
+  "note": "High, capture_cloudreach_f40_matrix.gd --piece=4 --seed=2042 (4 realm_gate_crag day-rain views). live-High = main 90886c306, the same frames as G-f40-19-rain live-High (reused, not re-shot). arm-High = re-shot: live plus world_look.gd, cloudreach_weather.gd and cloudreach_visual.json at tb/item-f40-19-rain b6fc71868 (mist ceiling seated when the weather applies; fog_height_above_ground_m 0.8, fog_height_density 1.1) and ITEM-F40-19/overlay_rain_storm_sky.json (weather_arms.rain_storm_sky on, unchanged). Gate mist now draws: a grey low mist fading with height, the trainer veiled to the shins, bush tops clear; sky closed slate, no blue gaps. Near-opaque at ground level: the grass and path colour is gone in the lower third (lower-third RGB spread live 26-45 vs arm 12-19) and the far ground reads as a flat grey sheet."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.png",
+  "preset": "arm-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-f40-19-mist/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.jpg",
+  "sky_fraction": 0.338,
+  "lower_edges": 0.1174,
+  "script_errors": 0,
+  "note": "High, capture_cloudreach_f40_matrix.gd --piece=4 --seed=2042 (4 realm_gate_crag day-rain views). live-High = main 90886c306, the same frames as G-f40-19-rain live-High (reused, not re-shot). arm-High = re-shot: live plus world_look.gd, cloudreach_weather.gd and cloudreach_visual.json at tb/item-f40-19-rain b6fc71868 (mist ceiling seated when the weather applies; fog_height_above_ground_m 0.8, fog_height_density 1.1) and ITEM-F40-19/overlay_rain_storm_sky.json (weather_arms.rain_storm_sky on, unchanged). Gate mist now draws: a grey low mist fading with height, the trainer veiled to the shins, bush tops clear; sky closed slate, no blue gaps. Near-opaque at ground level: the grass and path colour is gone in the lower third (lower-third RGB spread live 26-45 vs arm 12-19) and the far ground reads as a flat grey sheet."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.png",
+  "preset": "arm-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-f40-19-mist/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.jpg",
+  "sky_fraction": 0.293,
+  "lower_edges": 0.1338,
+  "script_errors": 0,
+  "note": "High, capture_cloudreach_f40_matrix.gd --piece=4 --seed=2042 (4 realm_gate_crag day-rain views). live-High = main 90886c306, the same frames as G-f40-19-rain live-High (reused, not re-shot). arm-High = re-shot: live plus world_look.gd, cloudreach_weather.gd and cloudreach_visual.json at tb/item-f40-19-rain b6fc71868 (mist ceiling seated when the weather applies; fog_height_above_ground_m 0.8, fog_height_density 1.1) and ITEM-F40-19/overlay_rain_storm_sky.json (weather_arms.rain_storm_sky on, unchanged). Gate mist now draws: a grey low mist fading with height, the trainer veiled to the shins, bush tops clear; sky closed slate, no blue gaps. Near-opaque at ground level: the grass and path colour is gone in the lower third (lower-third RGB spread live 26-45 vs arm 12-19) and the far ground reads as a flat grey sheet."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.png",
+  "preset": "arm-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-f40-19-mist/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.jpg",
+  "sky_fraction": 0.481,
+  "lower_edges": 0.1721,
+  "script_errors": 0,
+  "note": "High, capture_cloudreach_f40_matrix.gd --piece=4 --seed=2042 (4 realm_gate_crag day-rain views). live-High = main 90886c306, the same frames as G-f40-19-rain live-High (reused, not re-shot). arm-High = re-shot: live plus world_look.gd, cloudreach_weather.gd and cloudreach_visual.json at tb/item-f40-19-rain b6fc71868 (mist ceiling seated when the weather applies; fog_height_above_ground_m 0.8, fog_height_density 1.1) and ITEM-F40-19/overlay_rain_storm_sky.json (weather_arms.rain_storm_sky on, unchanged). Gate mist now draws: a grey low mist fading with height, the trainer veiled to the shins, bush tops clear; sky closed slate, no blue gaps. Near-opaque at ground level: the grass and path colour is gone in the lower third (lower-third RGB spread live 26-45 vs arm 12-19) and the far ground reads as a flat grey sheet."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+  "preset": "live-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-f40-19-mist/live-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.jpg",
+  "sky_fraction": 0.116,
+  "lower_edges": 0.1043,
+  "script_errors": 0,
+  "note": "High, capture_cloudreach_f40_matrix.gd --piece=4 --seed=2042 (4 realm_gate_crag day-rain views). live-High = main 90886c306, the same frames as G-f40-19-rain live-High (reused, not re-shot). arm-High = re-shot: live plus world_look.gd, cloudreach_weather.gd and cloudreach_visual.json at tb/item-f40-19-rain b6fc71868 (mist ceiling seated when the weather applies; fog_height_above_ground_m 0.8, fog_height_density 1.1) and ITEM-F40-19/overlay_rain_storm_sky.json (weather_arms.rain_storm_sky on, unchanged). Gate mist now draws: a grey low mist fading with height, the trainer veiled to the shins, bush tops clear; sky closed slate, no blue gaps. Near-opaque at ground level: the grass and path colour is gone in the lower third (lower-third RGB spread live 26-45 vs arm 12-19) and the far ground reads as a flat grey sheet."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.png",
+  "preset": "live-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-f40-19-mist/live-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.jpg",
+  "sky_fraction": 0.105,
+  "lower_edges": 0.3029,
+  "script_errors": 0,
+  "note": "High, capture_cloudreach_f40_matrix.gd --piece=4 --seed=2042 (4 realm_gate_crag day-rain views). live-High = main 90886c306, the same frames as G-f40-19-rain live-High (reused, not re-shot). arm-High = re-shot: live plus world_look.gd, cloudreach_weather.gd and cloudreach_visual.json at tb/item-f40-19-rain b6fc71868 (mist ceiling seated when the weather applies; fog_height_above_ground_m 0.8, fog_height_density 1.1) and ITEM-F40-19/overlay_rain_storm_sky.json (weather_arms.rain_storm_sky on, unchanged). Gate mist now draws: a grey low mist fading with height, the trainer veiled to the shins, bush tops clear; sky closed slate, no blue gaps. Near-opaque at ground level: the grass and path colour is gone in the lower third (lower-third RGB spread live 26-45 vs arm 12-19) and the far ground reads as a flat grey sheet."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.png",
+  "preset": "live-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-f40-19-mist/live-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.jpg",
+  "sky_fraction": 0.109,
+  "lower_edges": 0.3212,
+  "script_errors": 0,
+  "note": "High, capture_cloudreach_f40_matrix.gd --piece=4 --seed=2042 (4 realm_gate_crag day-rain views). live-High = main 90886c306, the same frames as G-f40-19-rain live-High (reused, not re-shot). arm-High = re-shot: live plus world_look.gd, cloudreach_weather.gd and cloudreach_visual.json at tb/item-f40-19-rain b6fc71868 (mist ceiling seated when the weather applies; fog_height_above_ground_m 0.8, fog_height_density 1.1) and ITEM-F40-19/overlay_rain_storm_sky.json (weather_arms.rain_storm_sky on, unchanged). Gate mist now draws: a grey low mist fading with height, the trainer veiled to the shins, bush tops clear; sky closed slate, no blue gaps. Near-opaque at ground level: the grass and path colour is gone in the lower third (lower-third RGB spread live 26-45 vs arm 12-19) and the far ground reads as a flat grey sheet."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.png",
+  "preset": "live-High",
+  "tree": "90886c3063c2df4fea2a01e7b2ad8f3060e3f412",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-f40-19-mist/live-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.jpg",
+  "sky_fraction": 0.225,
+  "lower_edges": 0.3491,
+  "script_errors": 0,
+  "note": "High, capture_cloudreach_f40_matrix.gd --piece=4 --seed=2042 (4 realm_gate_crag day-rain views). live-High = main 90886c306, the same frames as G-f40-19-rain live-High (reused, not re-shot). arm-High = re-shot: live plus world_look.gd, cloudreach_weather.gd and cloudreach_visual.json at tb/item-f40-19-rain b6fc71868 (mist ceiling seated when the weather applies; fog_height_above_ground_m 0.8, fog_height_density 1.1) and ITEM-F40-19/overlay_rain_storm_sky.json (weather_arms.rain_storm_sky on, unchanged). Gate mist now draws: a grey low mist fading with height, the trainer veiled to the shins, bush tops clear; sky closed slate, no blue gaps. Near-opaque at ground level: the grass and path colour is gone in the lower third (lower-third RGB spread live 26-45 vs arm 12-19) and the far ground reads as a flat grey sheet."
+ }
+]
