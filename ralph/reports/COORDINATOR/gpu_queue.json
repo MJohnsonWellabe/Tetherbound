@@ -961,6 +961,46 @@
    "capture": "live vs arm at High, seed 2042; script-error list empty; BEFORE pushing, confirm by eye that slabs are visible in at least two of the three frames (otherwise report, don't send for judging)",
    "note": "Re-shoot of the void glass-sink-lip with a continuous ring: 172 overlapping slabs in a MultiMesh (ITEM-SINK-LIP). RESULT: not pushed; no slabs in any arm frame (only rain differs), no load errors. Needs a cloud probe (ring child count and world positions) and a CPU frame showing slabs before any GPU re-run.",
    "done": true
+  },
+  {
+   "id": "storm-light-a3",
+   "kind": "arm",
+   "rows": [
+    "F41#17",
+    "F41#2",
+    "F41#12",
+    "F41#4",
+    "F41#5"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_storm_key_a3.json",
+   "overlay_format": "deep merge",
+   "frames": "job.json frames of F41#17 (1), F41#2 (3), F41#12 (3), F41#4 (3), F41#5 (3) = 13 (the arm A frames)",
+   "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows light_pass_1101 rig.sun #cfc0ff/2.05, environment exposure 1.5, rim #c3b6ff/1.25. Pre-push check: mean luma should rise slightly and the sun should go violet; if frames are identical to live, report instead of pushing.",
+   "note": "Storm-light A3 (ITEM-STORM-LIGHT/ARM_A3.md): writes into light_pass_1101, the layer that actually wins; offline probe shows exposure, ambient energy, contrast, sun and rim all reach the Environment (ambient colour does not). No height fog.",
+   "done": false
+  },
+  {
+   "id": "glass-sink-lip-rim",
+   "kind": "arm",
+   "rows": [
+    "F41#10"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "dbebf021c6242d6f9a81820781109bfbb108acdf",
+   "tree": "main plus, from that head: assets/props/blender-1109/glass_sink_lip/, scripts/world/stormwood_glass_sink.gd, scripts/world/stormwood_world.gd, data/config/stormwood_glass_sink.json; import pass needed (reuse the earlier glass_sink_lip import cache if unchanged)",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-SINK-LIP/overlay_lip_ring.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; push only if slabs show in at least two of three frames (CPU sheet _sheet_lip_cpu.jpg shows two right of the trainer at the approach stand)",
+   "note": "Third Glass Sink capture, now proven on CPU first: the dense ring sat at the cliff foot ~60 m under the cameras; seat_on_rim puts it on the island-top rim (ITEM-SINK-LIP/ARM.md).",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
