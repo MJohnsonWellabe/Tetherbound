@@ -1281,7 +1281,7 @@
    ],
    "capture": "High: base (arrow on, overlay off) vs arm (arrow on, flecks overlay) on the same tree. Pre-push: short soft flecks within about 18 m of the swimmer along the arrow; if any long lines, dash ladders or marks toward the horizon appear, report instead of pushing.",
    "note": "T2B streaks reworked into short noise-broken foam flecks (the first version read as painted lanes, -1.54). Run after t2-arrow-confirm.",
-   "done": false
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
