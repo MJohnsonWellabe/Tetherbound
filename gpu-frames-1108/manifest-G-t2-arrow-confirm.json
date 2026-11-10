@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "main-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-t2-arrow-confirm/main-High/swim-across-day.jpg",
+  "sky_fraction": 0.122,
+  "lower_edges": 0.125,
+  "script_errors": 0,
+  "note": "CLOSE-OUT confirm, one-sided. capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) at High and Medium on plain main 05d86cec8: no --tidewake-current-candidate flag, no overlay, pad glyphs on. The Current arrow (on by default since #883) shows on all six frames: pointing down in both swim-away views, right in swim-across."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "main-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-t2-arrow-confirm/main-High/swim-away-day.jpg",
+  "sky_fraction": 0.069,
+  "lower_edges": 0.1493,
+  "script_errors": 0,
+  "note": "CLOSE-OUT confirm, one-sided. capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) at High and Medium on plain main 05d86cec8: no --tidewake-current-candidate flag, no overlay, pad glyphs on. The Current arrow (on by default since #883) shows on all six frames: pointing down in both swim-away views, right in swim-across."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "main-High",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-t2-arrow-confirm/main-High/swim-away-night.jpg",
+  "sky_fraction": 0.587,
+  "lower_edges": 0.1828,
+  "script_errors": 0,
+  "note": "CLOSE-OUT confirm, one-sided. capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) at High and Medium on plain main 05d86cec8: no --tidewake-current-candidate flag, no overlay, pad glyphs on. The Current arrow (on by default since #883) shows on all six frames: pointing down in both swim-away views, right in swim-across."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "main-Medium",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-t2-arrow-confirm/main-Medium/swim-across-day.jpg",
+  "sky_fraction": 0.122,
+  "lower_edges": 0.1206,
+  "script_errors": 0,
+  "note": "CLOSE-OUT confirm, one-sided. capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) at High and Medium on plain main 05d86cec8: no --tidewake-current-candidate flag, no overlay, pad glyphs on. The Current arrow (on by default since #883) shows on all six frames: pointing down in both swim-away views, right in swim-across."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "main-Medium",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-t2-arrow-confirm/main-Medium/swim-away-day.jpg",
+  "sky_fraction": 0.069,
+  "lower_edges": 0.1506,
+  "script_errors": 0,
+  "note": "CLOSE-OUT confirm, one-sided. capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) at High and Medium on plain main 05d86cec8: no --tidewake-current-candidate flag, no overlay, pad glyphs on. The Current arrow (on by default since #883) shows on all six frames: pointing down in both swim-away views, right in swim-across."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "main-Medium",
+  "tree": "05d86cec8b63e16c78fabeb711f0fec5fa726d7b",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-t2-arrow-confirm/main-Medium/swim-away-night.jpg",
+  "sky_fraction": 0.596,
+  "lower_edges": 0.1661,
+  "script_errors": 0,
+  "note": "CLOSE-OUT confirm, one-sided. capture_tidewake_f13_5.gd --camera-set=T2-current (swim-away-day, swim-across-day, swim-away-night) at High and Medium on plain main 05d86cec8: no --tidewake-current-candidate flag, no overlay, pad glyphs on. The Current arrow (on by default since #883) shows on all six frames: pointing down in both swim-away views, right in swim-across."
+ }
+]
