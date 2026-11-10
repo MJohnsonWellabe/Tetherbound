@@ -1,0 +1,11 @@
+[
+ {
+  "label": "G F41#24 fleck live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fleck_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fleck_arm.png",
+  "brief": "Fixed capture from the game of the trainer standing at a grove beside a fallen giant tree in the stormwood biome. Judge the scene for cleanliness: whether anything reads as a placeholder material, flat untextured geometry, floating or clipping objects, or a rendering bug rather than an authored choice, and whether it reads as the key art's world.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ }
+]
