@@ -2066,7 +2066,8 @@
    "frames": "cloudreach__riding__phase2_16_terrace_mounted_at_edge, cloudreach__riding__phase2_17_terrace_01.0s, cloudreach__riding__phase2_18_terrace_after",
    "capture": "High. Next in line. Pre-check before judging: the large hard-edged slabs in the cloud sea under the terrace on base; gone in the arm. If the slabs are still there with the arm on, report that and do not judge: the hash is then not the cause on the deck.",
    "note": "Floor lane: the Cloudreach cloud deck uses the same sin-based lattice hash that caused GPU-only straight cuts in the wave lines; its cells (190, 92, 44 m) are slab-sized. The arm swaps in a stable hash behind cloud_sea.stable_hash. CPU cannot show the defect, so the GPU pre-check decides.",
-   "done": false
+   "done": true,
+   "frames_pushed": "not judged: slabs survive with stable_hash (not the cause); they appear on the ride back as flat hard-edged sheets under the rider; diagnostic G-newapproach-cloud-hash-diag"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
