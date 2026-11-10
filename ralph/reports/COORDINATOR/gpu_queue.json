@@ -1282,6 +1282,36 @@
    "capture": "High: base (arrow on, overlay off) vs arm (arrow on, flecks overlay) on the same tree. Pre-push: short soft flecks within about 18 m of the swimmer along the arrow; if any long lines, dash ladders or marks toward the horizon appear, report instead of pushing.",
    "note": "T2B streaks reworked into short noise-broken foam flecks (the first version read as painted lanes, -1.54). Run after t2-arrow-confirm.",
    "done": true
+  },
+  {
+   "id": "stormwood-swing-1",
+   "kind": "arm",
+   "rows": [
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#17"
+   ],
+   "branch": "tb/item-stormwood-ground",
+   "head": "11af58cec506d6ee93abc89b1ea4777732a3943c",
+   "tree": "main plus the branch's game files at that head (stormwood_ground_zones.gd, stormwood_surge_rules.gd, stormwood_ground_finish.json, stormwood_surge.json; check the diff against its merge base, additions only)",
+   "overlay_branch": "tb/item-stormwood-ground",
+   "overlay": "ralph/reports/LANES/ITEM-SW-SWING/overlay_swing.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+    "stormwood__deepwood__09__lantern_hollow__day__close",
+    "stormwood__deepwood__10__the_fallen_giant__day__close",
+    "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+    "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+    "stormwood__landmark__crown_arch__day__close",
+    "stormwood__landmark__crown_heartstone__day__close",
+    "stormwood__landmark__glass_field__day__close",
+    "stormwood__landmark__lantern_hollow__night__close"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty. Pre-push: path and low ground warm rutted earth instead of glossy black, foreground rain thin; flag any pinkish loam (red/oxblood rule).",
+   "note": "Stormwood big swing part 1 (ITEM-SW-SWING/ARM.md): banked wet-earth ground (no black gloss pools) plus fine faded near rain; the judges' shared 3/3 asks on F41#4/#5/#12/#17.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
