@@ -1873,7 +1873,7 @@
    "branch": "main",
    "head": "2ffc97db0 (main after #893)",
    "overlay": null,
-   "done": false,
+   "done": true,
    "id": "baseline-f41-22-stormwood-matrix",
    "rows": [
     "F41#22",
@@ -1883,7 +1883,8 @@
    "args": "F41-look set: stands forest, giant, glass, rod_line, stormheart, the three --custom stands and forest_r, giant_r; phases calm,break plus the Long Storm aftermath (no --no-aftermath); plus capture_named_fights_f10_6.gd --fixed-fps 20 (Hollows Alpha) for the fight row. Grep logs for 'stale'.",
    "frames": "the full F41 matrix",
    "capture": "High first (Medium only if any frame maps 7.5+). No arm; one side only. Lowest priority: run only when no arm is waiting.",
-   "note": "Owner floor rule: unscored rows get a GPU baseline first. F41#22 has no score of its own; LANE-SCOUT G-baselines-unscored-rows gives the tool list."
+   "note": "Owner floor rule: unscored rows get a GPU baseline first. F41#22 has no score of its own; LANE-SCOUT G-baselines-unscored-rows gives the tool list.",
+   "frames_pushed": "75cae1eb3 (matrix) and 60fda2d4b (Hollows Alpha fight)"
   },
   {
    "kind": "baseline",
@@ -1916,6 +1917,25 @@
    "frames": "12 stands x 4 views x 4 times x 2 weather (384)",
    "capture": "High first. No arm. Lowest priority, after the Meadows re-capture; overnight in pieces.",
    "note": "Owner floor rule: F40#0 unscored (needs the Cloudreach re-capture)."
+  },
+  {
+   "id": "check-890-trunk-in-fight",
+   "kind": "regression-check",
+   "rows": [
+    "F41#3",
+    "F41#22"
+   ],
+   "branch": "main",
+   "head": "2ffc97db0",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/narrow_band_off.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_named_fights_f10_6.gd",
+   "args": "hollows_alpha, north view, fixture seed 1042206, --fixed-fps 20, 14 s at 2 s (the same run as G-baseline-f41-22-hollows-fight)",
+   "frames": "the same 7 frames, main (narrow band ON, already captured 60fda2d4b) vs main + narrow_band_off overlay",
+   "capture": "High. FIRST in line (before the Meadows re-capture). Question: in tell3-b-mid and tell4-a-start, does the Deepwood trunk that nearly fills the frame dither away with the old 3-7 m band? If yes, #890 regressed fight framing.",
+   "note": "#890 narrowed the near-lens trunk fade from 3-7 m to 3-4 m; its regression check covered only the capacitor_alpha fight frame. The Hollows Alpha baseline shows a trunk nearly filling two fight frames.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
