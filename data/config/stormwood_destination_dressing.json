@@ -37,5 +37,234 @@
     },
     "_geometry": "One intact installed tree, uniform scale. Axial roll precedes fall rotation; pitch is selected against shipping Terrain3D mesh samples. Both root and crown must seat within the support tolerance; otherwise no candidate is mounted. No grounding rocks needed when the tree has two terrain supports.",
     "_reference": "Stormwood Stormheart boards A/B: coherent installed wood/stone, monumental natural silhouette. CPU installed mesh inspection and revised full-footprint audit accompany the candidate; the earlier flat draft lift and distant placement are superseded. Original Bark_DeadTree materials and asset provenance retained."
+  },
+  "groves_1110": {
+    "_why_on_1110": "GPU G-stormwood-groves (10 Nov, LANE-SCOUT 5455a13d1, three code-blind judges, confirming batch): wet earth + fine rain + horizon groves together: F41#17 +0.55 (to 7.23), F41#5 +0.50, F41#4 +0.27, all 3/3; no tree-wall read. The de-pinked wet earth alone was neutral (G-stormwood-swing-2-depink).",
+      "enabled": true,
+    "scope": "client_presentation",
+    "_candidate": "Stormwood swing part 2 (LANE-MESHY, 10 Nov 2026; OFF until judged). F41#4/#5/#12/#17 GPU judges: the open stands end in a flat horizon (fogged far terrain and the painted sky treeline read as one pale slab behind a thin row of trees). Real tree silhouettes in two layered bands round each open stand: clumped near groves of the scatter's storm canopy 150-260 m out and clumped far groves of the giant storm trees 260-450 m out (a low-frequency cluster mask keeps groves and opens gaps, so the bands layer rather than wall the view), so the horizon steps back through near grove, far grove and the sky treeline. Visual only: the scatter's finished render meshes as MultiMeshes, no collider, harvest or durable state, drawing shells only, deterministic per seed. Nothing within route_half_width + route_margin_m of a route, landmark_margin_m of any landmark, seat_margin_m of an authored seat, or below a grove's min_ground_y (crater and Glass Sink).",
+    "seed": 1110,
+    "route_margin_m": 14.0,
+    "landmark_margin_m": 70.0,
+    "seat_margin_m": 12.0,
+    "sector_m": 160.0,
+    "casts_shadow": false,
+    "visibility_range_end_m": 1100.0,
+    "groves": [
+      {
+        "id": "crown",
+        "_stands": "crown_arch, crown_heartstone",
+        "centre": [
+          600,
+          2700
+        ],
+        "min_ground_y": 55.0,
+        "bands": [
+          {
+            "id": "near",
+            "radius_m": [
+              150,
+              260
+            ],
+            "spacing_m": 16,
+            "skip": 0.15,
+            "models": [
+              "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+              "res://assets/environment/stylized_nature/TwistedTree_4.gltf"
+            ],
+            "scale": [
+              2.8,
+              3.6
+            ],
+            "cluster": {
+              "scale_m": 70,
+              "threshold": 0.55
+            }
+          },
+          {
+            "id": "far",
+            "radius_m": [
+              260,
+              450
+            ],
+            "spacing_m": 26,
+            "skip": 0.2,
+            "models": [
+              "res://assets/props/meshy-1020/giant_tree_a/v1/giant_tree_a_v1.glb",
+              "res://assets/props/meshy-1020/giant_tree_b/v1/giant_tree_b_v1.glb"
+            ],
+            "scale": [
+              18.0,
+              24.0
+            ],
+            "height_offset": 0.953,
+            "cluster": {
+              "scale_m": 110,
+              "threshold": 0.45
+            }
+          }
+        ]
+      },
+      {
+        "id": "glass_field",
+        "centre": [
+          -310,
+          5050
+        ],
+        "min_ground_y": 40.0,
+        "bands": [
+          {
+            "id": "near",
+            "radius_m": [
+              150,
+              260
+            ],
+            "spacing_m": 16,
+            "skip": 0.15,
+            "models": [
+              "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+              "res://assets/environment/stylized_nature/TwistedTree_4.gltf"
+            ],
+            "scale": [
+              2.8,
+              3.6
+            ],
+            "cluster": {
+              "scale_m": 70,
+              "threshold": 0.55
+            }
+          },
+          {
+            "id": "far",
+            "radius_m": [
+              260,
+              450
+            ],
+            "spacing_m": 26,
+            "skip": 0.2,
+            "models": [
+              "res://assets/props/meshy-1020/giant_tree_a/v1/giant_tree_a_v1.glb",
+              "res://assets/props/meshy-1020/giant_tree_b/v1/giant_tree_b_v1.glb"
+            ],
+            "scale": [
+              18.0,
+              24.0
+            ],
+            "height_offset": 0.953,
+            "cluster": {
+              "scale_m": 110,
+              "threshold": 0.45
+            }
+          }
+        ]
+      },
+      {
+        "id": "crown_overlook",
+        "centre": [
+          160,
+          1980
+        ],
+        "min_ground_y": 20.0,
+        "bands": [
+          {
+            "id": "near",
+            "radius_m": [
+              150,
+              260
+            ],
+            "spacing_m": 16,
+            "skip": 0.15,
+            "models": [
+              "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+              "res://assets/environment/stylized_nature/TwistedTree_4.gltf"
+            ],
+            "scale": [
+              2.8,
+              3.6
+            ],
+            "cluster": {
+              "scale_m": 70,
+              "threshold": 0.55
+            }
+          },
+          {
+            "id": "far",
+            "radius_m": [
+              260,
+              450
+            ],
+            "spacing_m": 26,
+            "skip": 0.2,
+            "models": [
+              "res://assets/props/meshy-1020/giant_tree_a/v1/giant_tree_a_v1.glb",
+              "res://assets/props/meshy-1020/giant_tree_b/v1/giant_tree_b_v1.glb"
+            ],
+            "scale": [
+              18.0,
+              24.0
+            ],
+            "height_offset": 0.953,
+            "cluster": {
+              "scale_m": 110,
+              "threshold": 0.45
+            }
+          }
+        ]
+      },
+      {
+        "id": "struck_sentinel",
+        "_stands": "struck_sentinel approach (cinder verge)",
+        "centre": [
+          -320,
+          240
+        ],
+        "min_ground_y": 5.0,
+        "bands": [
+          {
+            "id": "near",
+            "radius_m": [
+              150,
+              260
+            ],
+            "spacing_m": 16,
+            "skip": 0.15,
+            "models": [
+              "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+              "res://assets/environment/stylized_nature/TwistedTree_4.gltf"
+            ],
+            "scale": [
+              2.8,
+              3.6
+            ],
+            "cluster": {
+              "scale_m": 70,
+              "threshold": 0.55
+            }
+          },
+          {
+            "id": "far",
+            "radius_m": [
+              260,
+              450
+            ],
+            "spacing_m": 26,
+            "skip": 0.2,
+            "models": [
+              "res://assets/props/meshy-1020/giant_tree_a/v1/giant_tree_a_v1.glb",
+              "res://assets/props/meshy-1020/giant_tree_b/v1/giant_tree_b_v1.glb"
+            ],
+            "scale": [
+              18.0,
+              24.0
+            ],
+            "height_offset": 0.953,
+            "cluster": {
+              "scale_m": 110,
+              "threshold": 0.45
+            }
+          }
+        ]
+      }
+    ]
   }
 }

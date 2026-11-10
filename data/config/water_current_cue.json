@@ -10,5 +10,10 @@
   "foreground": "#f5f4df",
   "background": "#132b3b",
   "label": "Current",
-  "strong_label": "Strong current"
+  "strong_label": "Strong current",
+  "strength_marks": {
+    "_why_on": "LANE-SCOUT G-newapproach-t2-bars (10 Nov, HUD-only change judged on CPU frames, three code-blind judges with anchors): one to three bars behind the arrow show how hard the current pushes; 6.59 -> 7.16 (+0.57, 3/3). The T2 judges had said strength had no cue.",
+    "enabled": true,
+    "speeds_m_s": [0.6, 1.2]
+  }
 }

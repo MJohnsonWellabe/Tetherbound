@@ -11,7 +11,12 @@ func test_pool_satin_ships_off() -> void:
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ZONES.CONFIG_PATH))
 	assert_false(bool(raw.pool_satin_1104.get("enabled", true)), "ships OFF until judged")
 	var zones := ZONES.config()
-	assert_false(zones.has("pool_roughness"), "OFF leaves the shader's own sheen")
+	# Since 10 Nov wet_earth_1110 (ON) carries its own matte pool sheen; with pool_satin OFF
+	# the zones config holds exactly that sheen, and with both OFF it holds none.
+	if bool(raw.wet_earth_1110.get("enabled", false)):
+		assert_eq(float(zones.get("pool_roughness", -1.0)), float(raw.wet_earth_1110.ground_zones.pool_roughness), "wet earth's matte pool sheen, not pool_satin's")
+	else:
+		assert_false(zones.has("pool_roughness"), "OFF leaves the shader's own sheen")
 
 
 func test_pool_satin_values_are_duller_than_the_shipped_sheen() -> void:
@@ -39,7 +44,10 @@ func test_path_loam_ships_on_and_darkens_the_path() -> void:
 	assert_true(bool(raw.path_loam_1104.get("enabled", false)), "ships ON (judged 5.92)")
 	assert_true(str(raw.path_loam_1104.get("_why_on", "")).contains("5.92"), "_why_on cites the judged score")
 	var shipped := Color(str(raw.terrain_materials.textures.path.tint))
-	assert_eq(Color(str(ZONES.finish().terrain_materials.textures.path.tint)), Color(str(raw.path_loam_1104.terrain_materials.textures.path.tint)), "finish() applies the darker path")
+	# wet_earth_1110 (ON since 10 Nov, merged last in FINISH_CANDIDATES) supersedes the path tint;
+	# with it OFF, finish() applies path_loam_1104's darker path.
+	var winner: Dictionary = raw.wet_earth_1110 if bool(raw.wet_earth_1110.get("enabled", false)) else raw.path_loam_1104
+	assert_eq(Color(str(ZONES.finish().terrain_materials.textures.path.tint)), Color(str(winner.terrain_materials.textures.path.tint)), "finish() applies the last enabled path finish")
 	var cand := Color(str(raw.path_loam_1104.terrain_materials.textures.path.tint))
 	assert_true(cand.get_luminance() < shipped.get_luminance(), "a darker path")
 	assert_true(cand.get_luminance() > 0.2, "not near-black")

@@ -165,6 +165,8 @@ func _ready() -> void:
 	_stand_up_ground_cover()
 	_build_landmark_masses()
 	await preload("res://scripts/world/stormwood_destination_dressing.gd").install(self, budget)
+	# Swing part 2 groves_1110 (stormwood_destination_dressing.json, OFF until judged).
+	preload("res://scripts/world/stormwood_horizon_groves.gd").install(self, _vegetation)
 	preload("res://scripts/world/stormwood_lantern_pools.gd").install(self)
 	preload("res://scripts/world/stormwood_ashfoot_exterior.gd").install(self)
 	preload("res://scripts/world/stormwood_crown_overlook.gd").install(self)

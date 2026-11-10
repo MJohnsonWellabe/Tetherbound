@@ -19,7 +19,8 @@ func _init(authored: Dictionary = {}) -> void:
 ## only: strike, phase timing, shelter and save rules never read `presentation`.
 # `building_glow_1104` (VIS-STORMWOOD, OFF until judged): Building shows
 # in-cloud sheet lightning (presentation only; `flashes` stays Break-only).
-const PRESENTATION_CANDIDATES := ["storm_sky_1101", "soft_rain_1101", "phase_grade_1104", "building_glow_1104"]
+## `fine_rain_1110` (LANE-MESHY, OFF until judged) rides after soft_rain_1101.
+const PRESENTATION_CANDIDATES := ["storm_sky_1101", "soft_rain_1101", "phase_grade_1104", "building_glow_1104", "fine_rain_1110"]
 
 
 static func with_presentation_candidates(source: Dictionary) -> Dictionary:
