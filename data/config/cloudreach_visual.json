@@ -63,6 +63,18 @@
         }
       }
     },
+    "rain_storm_sky": {
+      "_scope": "device_local_presentation",
+      "_why": "F40#19 rain (LANE-MESHY, 9 Nov 2026): after rain_storm and rain_streaks the judges still asked for a storm sky without blue gaps and mist at the gate (NEAR6-CR READY, CPU 5.61, defect PARTIAL). Layered with rain_storm: the cloud deck closes to overcast (coverage 0.86, softer edges) in slate cloud colours, and a low height mist 1 m above the ground under the local player (eased; cloudreach_weather.gd _follow_mist_floor, terrain height not player height so flight never lifts it; density 1.1 (GPU F40#19 r1 at 1.0 m / 0.08 drew no mist: Godot height fog adds 1 - exp(-depth x density) below the ceiling, about 8% at 1 m deep; 0.8 m / 1.1 gives about 59% at ground level and none above 0.8 m). Uses the world-look weather keys sky.cloud_coverage/cloud_sharpness and environment.fog_height_above_ground_m/fog_height_density, which no other preset sets. Cloudreach rain only (`scenes`: Tidewake's water_archipelago reuses cloudreach_weather.gd). OFF until judged on the GPU.",
+      "enabled": true,
+      "_why_on": "GPU F40#19 (scout a7a8d1fb3, 10 Nov 2026): the closed slate overcast with no mist scores +0.44, 3/3 judges; the knee-high mist variant lost -0.86, 0/3 (it floods the foreground), so the mist keys are removed and only the cloud deck ships. Cloudreach rain only.",
+      "scenes": ["cloudreach_cliffs"],
+      "presets": {
+        "rain": {
+          "sky": {"cloud_coverage": 0.86, "cloud_sharpness": 1.4, "cloud_lit": "#9ca7b1", "cloud_shade": "#5f6b77", "cloud_base": "#525e69"}
+        }
+      }
+    },
     "rain_mood": {
       "_scope": "device_local_presentation",
       "_why": "F40#19 (NEAR6-CR, 4 Nov 2026; VIS-CLOUDREACH mx1 CPU day rain 4.90): all three judges said Cloudreach rain only desaturates the scene. On (scripts/world/cloudreach_weather.gd realm_preset): Cloudreach-only keys over the shared rain preset keep more of the realm's colour and form: stronger diffuse sun with soft shadows, a cooler blue-grey sky and fog with a little less density so the stratified distance layers in haze, a teal-cool ambient and wetter ground. Meadows rain is unchanged. OFF until judged.",
