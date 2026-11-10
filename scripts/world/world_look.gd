@@ -563,6 +563,39 @@ func apply_time(name: String) -> void:
 ## mid-transition, undoing the smooth sweep this same task just added. Falls
 ## back to apply_time() only when there is no clock to read a live hour from
 ## (e.g. a scene with WorldLook but day_cycle.gd's config failed to load).
+var _weather_height_fog_on := false
+var _weather_fog_above_ground := NAN
+var _weather_fog_floor_y := NAN
+
+
+## True while the active weather asks for a height mist that follows the
+## ground (environment.fog_height_above_ground_m).
+func weather_fog_follows_ground() -> bool:
+	return _weather_height_fog_on and is_finite(_weather_fog_above_ground)
+
+
+## The ground height under the local player, from the weather controller.
+## Moves only the mist ceiling; no full environment re-apply.
+func set_weather_fog_floor(y: float) -> void:
+	_weather_fog_floor_y = y
+	if not weather_fog_follows_ground():
+		return
+	var holder: WorldEnvironment = get_node_or_null(environment_path) as WorldEnvironment
+	if holder == null or holder.environment == null:
+		return
+	var height := _weather_fog_ceiling(0.0)
+	if absf(holder.environment.fog_height - height) > 0.05:
+		holder.environment.fog_height = height
+
+
+func _weather_fog_ceiling(absolute_m: float) -> float:
+	if is_finite(_weather_fog_above_ground) and is_finite(_weather_fog_floor_y):
+		return _weather_fog_floor_y + _weather_fog_above_ground
+	if is_finite(_weather_fog_above_ground):
+		return -100000.0  # no ground reading yet: no mist rather than a wrong one
+	return absolute_m
+
+
 func set_weather(delta: Dictionary) -> void:
 	_weather = delta
 	if _cycle == null:
@@ -601,6 +634,11 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 			"cloud_lit", "cloud_shade", "cloud_base"]:
 		if sky_over.has(key):
 			sky_cfg[key] = sky_over[key]
+	# F40#19 rain (LANE-MESHY): a storm sky may also close the cloud deck so no
+	# blue gaps show through rain. No shipped preset sets these keys.
+	for key: String in ["cloud_coverage", "cloud_sharpness"]:
+		if sky_over.has(key) and float(sky_cfg.get("cloud_coverage", 0.0)) > 0.0:
+			sky_cfg[key] = float(sky_over[key])
 
 	var env_over: Dictionary = _weather.get("environment", {})
 	if env_over.has("ambient_energy_mult"):
@@ -611,6 +649,15 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 		env_cfg["fog_density"] = float(env_cfg.get("fog_density", 0.0016)) + float(env_over["fog_density_add"])
 	if env_over.has("fog_colour"):
 		env_cfg["fog_colour"] = env_over["fog_colour"]
+	# F40#19 rain (LANE-MESHY): low ground mist from a weather preset (world Y of
+	# the fog ceiling and its density). No shipped preset sets these keys.
+	if env_over.has("fog_height_density"):
+		env_cfg["weather_fog_height_m"] = float(env_over.get("fog_height_m", 0.0))
+		env_cfg["weather_fog_height_density"] = float(env_over["fog_height_density"])
+		# Relative ceiling: the weather controller feeds the ground under the
+		# local player through set_weather_fog_floor().
+		if env_over.has("fog_height_above_ground_m"):
+			env_cfg["weather_fog_height_above_ground_m"] = float(env_over["fog_height_above_ground_m"])
 	# F17#6: rain's cooler, flatter grade, on top of the time of day's own.
 	if env_over.has("adjustment_saturation_mult"):
 		env_cfg["adjustment_enabled"] = true
@@ -1249,6 +1296,18 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# the config; presets at energy 1.0 are unchanged.
 	env.fog_light_color = fog_light_colour(cfg, sky_cfg)
 	env.fog_density = float(cfg.get("fog_density", 0.0016))
+	# F40#19 rain: weather height mist. Written only while a weather asks for it,
+	# and cleared once when that weather ends, so other height-fog writers
+	# (stormwood_surge.gd) keep the property the rest of the time.
+	if cfg.has("weather_fog_height_density"):
+		_weather_fog_above_ground = float(cfg.get("weather_fog_height_above_ground_m", NAN))
+		env.fog_height = _weather_fog_ceiling(float(cfg["weather_fog_height_m"]))
+		env.fog_height_density = float(cfg["weather_fog_height_density"])
+		_weather_height_fog_on = true
+	elif _weather_height_fog_on:
+		env.fog_height_density = 0.0
+		_weather_height_fog_on = false
+		_weather_fog_above_ground = NAN
 	# Sky affect at zero, deliberately. Fog that tints the sky produces the hard
 	# grey band the critic found across `03-rise-overlook`, where the terrain rose
 	# out of a white void.

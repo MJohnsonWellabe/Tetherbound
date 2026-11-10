@@ -1168,6 +1168,62 @@
    "capture": "High AND Medium (UX.md line 322), base vs arm; the tool fails closed if the trainer isn't swimming in a current. Pre-push check: a 'Current' arrow badge beside the swimmer on all arm frames, none on base. Pad glyphs on.",
    "note": "LANE-NEWAPPROACH T2 (NEWAPPROACH-T2/VERDICT.md): the built swimming-current arrow took blind direction reads from 4/9 guesses (readability 2.0) to 9/9 (8.2) on CPU in the first valid swimmer-view frames. UX.md says it ships ON by default once it passes this Medium/High judge.",
    "done": true
+  },
+  {
+   "id": "f40-19-mist",
+   "kind": "arm",
+   "rows": [
+    "F40#19"
+   ],
+   "branch": "tb/item-f40-19-rain",
+   "head": "b6fc71868f4b00c758a48e8b72bc3bb096a75364",
+   "tree": "main plus scripts/world/world_look.gd, scripts/world/cloudreach_weather.gd and data/config/cloudreach_visual.json from that head (check the diff against its merge base)",
+   "overlay_branch": "tb/item-f40-19-rain",
+   "overlay": "ralph/reports/LANES/ITEM-F40-19/overlay_rain_storm_sky.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+   "args": "--biome=cloudreach --preset=High --seed=2042 --piece=4 --output={OUT}",
+   "frames": [
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain"
+   ],
+   "capture": "ARM side only; reuse the live-High frames from f40-19-rain (main hasn't changed those files). Pre-push: grey knee-high mist near the gate visible on the arm, no blue sky gaps, camera and trainer not buried.",
+   "note": "Mist fix: the ceiling is now seated when the weather applies (pinned captures froze the weather node, so no mist drew), with height 0.8 m and density 1.1; offline Environment proof and CPU sheet on the branch.",
+   "done": true
+  },
+  {
+   "id": "newapproach-t2b",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "76c85cac42b89ec4e39237aee42db3b3aa6f2d3e",
+   "tree": "main plus shaders/water_current_flow.gdshader and scripts/ui/water_current_cue.gd from that head (main already has the arrow ON since #883)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-T2B/overlay_t2b.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--tidewake-current-candidate",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "frames": [
+    "swim-away-day",
+    "swim-across-day",
+    "swim-away-night"
+   ],
+   "capture": "High: base (arrow on, overlay off) vs arm (arrow on, overlay on) on the same tree; add Medium if the High arm maps 7.5+. Pre-push: thin streaks near the swimmer running the arrow's way, strength bars on the badge; flag if they read as painted lane lines.",
+   "note": "LANE-NEWAPPROACH T2B (NEWAPPROACH-T2B/ARM.md): the judges' asks after the arrow passed: strength has no cue, and the water near the swimmer disagrees with the arrow. Adds swimmer-scale flow streaks (within 38 m only, dock views unchanged) and strength bars on the badge.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

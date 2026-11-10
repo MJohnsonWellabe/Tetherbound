@@ -51,13 +51,57 @@ func _apply_realm_weather() -> void:
 	var look: Node = get_node_or_null(look_path)
 	if look != null and look.has_method("set_weather"):
 		look.call("set_weather", combined_delta(_realm_atmosphere_delta,
-			realm_preset(weather(), _presets.get(weather(), {}))))
+			realm_preset(weather(), _presets.get(weather(), {}), _scene_id())))
+	# Seat the mist ceiling now too, not only from _process: a pinned capture
+	# freezes this node's processing (phase2_capture_locations.gd), and the
+	# GPU F40#19 frames then drew no mist at all (ceiling never left its
+	# "no ground reading" value).
+	_mist_floor_y = NAN
+	_follow_mist_floor()
+
+
+## The world scene this controller runs under (cloudreach_cliffs, or
+## water_archipelago, which reuses this script), for arms scoped by `scenes`.
+func _scene_id() -> String:
+	var parent := get_parent()
+	return parent.scene_file_path.get_file().get_basename() if parent != null else ""
+
+
+var _mist_floor_y := NAN
+
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	_follow_mist_floor()
+
+
+## F40#19 rain mist: a weather `environment.fog_height_above_ground_m` keeps
+## the height-fog ceiling that far above the ground under the local player,
+## eased so cliffs and steps do not pop it. Uses the terrain under the player,
+## not the player's own height, so flying never lifts the mist into the sky.
+func _follow_mist_floor() -> void:
+	var look: Node = get_node_or_null(look_path)
+	if look == null or not look.has_method("set_weather_fog_floor") \
+			or not bool(look.call("weather_fog_follows_ground")):
+		return
+	var player := get_node_or_null(player_path) as Node3D
+	var world := get_parent()
+	if player == null or world == null or not world.has_method("ground_height_at"):
+		return
+	var ground := float(world.call("ground_height_at", player.global_position.x, player.global_position.z))
+	if not is_finite(ground):
+		return
+	_mist_floor_y = ground if not is_finite(_mist_floor_y) else lerpf(_mist_floor_y, ground, MIST_FLOOR_EASE)
+	look.call("set_weather_fog_floor", _mist_floor_y)
+
+
+const MIST_FLOOR_EASE := 0.05
 
 
 ## F40#19 (NEAR6-CR): `cloudreach_visual.json` `weather_arms.<name>` (each OFF
 ## until judged) merge Cloudreach-only keys over a shared weather preset, so the
 ## realm's rain can carry its own mood without touching the Meadows presets.
-static func realm_preset(name: String, preset: Dictionary) -> Dictionary:
+static func realm_preset(name: String, preset: Dictionary, scene_id: String = "") -> Dictionary:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
 	if not raw is Dictionary:
 		return preset
@@ -66,6 +110,10 @@ static func realm_preset(name: String, preset: Dictionary) -> Dictionary:
 	for arm_name: String in arms:
 		var arm: Variant = arms[arm_name]
 		if not (arm is Dictionary) or (arm as Dictionary).get("enabled") != true:
+			continue
+		# An arm may name the world scenes it applies to (this script also runs
+		# Tidewake's water_archipelago); without `scenes` it applies everywhere.
+		if (arm as Dictionary).has("scenes") and not scene_id in ((arm as Dictionary)["scenes"] as Array):
 			continue
 		var over: Variant = ((arm as Dictionary).get("presets", {}) as Dictionary).get(name)
 		if not (over is Dictionary):
