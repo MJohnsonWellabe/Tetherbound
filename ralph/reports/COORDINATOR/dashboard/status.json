@@ -1861,9 +1861,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 35 (in CI)",
+      "pr": "#881",
       "what": "Stormwood storm key light now actually reaches the screen (violet sun and fighter rim in the light pass that wins): Surge phases +0.73 (3/3), no row drops",
-      "when": "10 Nov, in CI"
+      "when": "10 Nov 04:49"
     },
     {
       "pr": "#880",
