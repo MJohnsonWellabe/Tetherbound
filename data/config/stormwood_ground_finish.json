@@ -313,5 +313,18 @@
         "forest_floor"
       ]
     }
-  ]
+  ],
+  "root_finish_1110": {
+    "_why_on": "GPU G-f41-24-root-finish (10 Nov, LANE-SCOUT 3aaa97d83, three code-blind judges): F41#24 +0.82, 3/3; the pale canopy-root slab beside the trainer at the Fallen Giant grove is gone (a separate lilac quad, trunk dither and trainer bloom remain).",
+    "enabled": true,
+    "scope": "client_presentation",
+    "_candidate": "F41#24 (LANE-MESHY, 10 Nov 2026). The 'mauve quad' at the Fallen Giant grove stand is a canopy root (stormwood_ground_cover.gd _canopy_roots, drawn by the cover shader per tree, so a node pick cannot see it): a 4-facet half tube up to about 7 m long, 0.66 m wide and 0.8 m tall at the largest tree scale, which reads as a flat pale wedge. ON: rounder (8 arcs, 10 segments), thinner (width 0.13), shorter (0.7), lower (height ratio 0.8) and sunk 0.05 into the ground, with a darker wood tint. Presentation only.",
+    "arcs": 8,
+    "segments": 10,
+    "width": 0.13,
+    "length_scale": 0.7,
+    "height_ratio": 0.8,
+    "sink": 0.05,
+    "tint_wood": "#2c291f"
+  }
 }
