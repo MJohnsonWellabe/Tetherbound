@@ -1167,7 +1167,7 @@
    ],
    "capture": "High AND Medium (UX.md line 322), base vs arm; the tool fails closed if the trainer isn't swimming in a current. Pre-push check: a 'Current' arrow badge beside the swimmer on all arm frames, none on base. Pad glyphs on.",
    "note": "LANE-NEWAPPROACH T2 (NEWAPPROACH-T2/VERDICT.md): the built swimming-current arrow took blind direction reads from 4/9 guesses (readability 2.0) to 9/9 (8.2) on CPU in the first valid swimmer-view frames. UX.md says it ships ON by default once it passes this Medium/High judge.",
-   "done": false
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
