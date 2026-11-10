@@ -74,4 +74,24 @@ func _load_plan() -> bool:
 			"stand_laterals_m": [2.5, -2.5] if str(item.get("family_type", "")) != "prop" else [0.0, -5.0, 5.0],
 			"camera_pitch_deg": -25.0 if str(item.get("family_type", "")) != "prop" else -12.0,
 		})
+		var heading_override: Variant = stand_heading_override(STAND_GUARD_CONFIG, identity)
+		if heading_override != null:
+			_planned.back()["view_heading_deg"] = float(heading_override)
+			_planned.back()["view_heading_override"] = true
 	return not _planned.is_empty()
+
+
+## `heading_overrides` in capture_stands.json: a reviewed per-frame view
+## heading for an inventory/character stand whose generated heading backs the
+## production camera arm into a structure. null when the frame has none.
+static func stand_heading_override(path: String, identity: String) -> Variant:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary:
+		return null
+	var block: Variant = (parsed as Dictionary).get("heading_overrides", {})
+	if not block is Dictionary or not bool((block as Dictionary).get("enabled", false)):
+		return null
+	var row: Variant = ((block as Dictionary).get("frames", {}) as Dictionary).get(identity)
+	if not row is Dictionary or not (row as Dictionary).has("heading_deg"):
+		return null
+	return float((row as Dictionary)["heading_deg"])

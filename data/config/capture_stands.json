@@ -1,5 +1,12 @@
 {
   "_comment": "Capture-stand rules read by tools/phase2_capture_locations.gd (and phase2_capture_routes.gd, which extends it). Capture tooling only; the game never reads this file.",
+  "heading_overrides": {
+    "_why": "Capture stand fix (LANE-MESHY, 10 Nov 2026): Stormwood trainers carry no authored facing, so tools/phase2_make_character_plan.py gives every one heading 180 and the stand goes 2-8 m north of the post. For Officer Nysa (post (-890, 4482)) that puts the trainer between her and the Deepwood rod station 8 m north at (-890, 4490): the production camera arm (5.2 m) backs into the station, its collision shortens the arm to about 1.6 m and the lens sits inside the station's blue mesh (GPU frame; main062 visual_validation lists the frame as subject_not_isolated). Viewing from the south (heading 0) keeps the arm on the open route and puts the station behind her. Applies to the plain inventory frame and to the dialogue frame, which extends the same plan. Capture tooling only; earns no score credit: re-baseline live.",
+    "enabled": true,
+    "frames": {
+      "stormwood__inventory__trainer__officer_nysa_deepwood_rod": {"heading_deg": 0.0}
+    }
+  },
   "inside_collision_reseat": {
     "_why": "F38#30 / F38#24 (LANE-MESHY, 8 Nov 2026, coordinator-approved capture blocker fix): the Burrow Warrens walk_03 route stand is a seeded random off-route spot inside the solid procedural Bank hill (collision surface ~19 m overhead); debug travel seated the player at terrain height under it, a state play cannot reach, so the frame showed the hill shell's culled underside and floating chamber shells. A stand proven inside solid collision (solid overhead and every horizontal ray blocked) is re-seated on the topmost walkable collision surface at the same xz, same heading and camera rig; if that surface is not walkable the stand is rejected and the next offset/lateral is tried. Stands on reachable ground are never moved. Earns no score credit: re-baseline live on the fixed stands.",
     "enabled": true,
