@@ -1,6 +1,7 @@
 {
-  "updated": "10 Nov 2026 20:08 UTC",
+  "updated": "10 Nov 2026 20:40 UTC",
   "headline": [
+    "10 Nov 20:40: owner's wave-motion current cue, seven GPU rounds today across crests and swell lines. Crest-shape line and across-flow swell lines are both parked (two failures each). Only hard-edged crests at about 4x the log ever read toward-camera (3/3), and those looked like artefacts. One last new technique allowed: streaks along the flow with dashes sliding toward the camera. Arrow stays (off by default, Accessibility). Water cleanup (#892) and plinth stone (#893, in CI) are the day's T2/F39 gains.",
     "10 Nov 20:00: Heart Chamber plinth stone wins on GPU (F39#21 win to 7.06, near the bar; F39#28 +0.74), batch 47 in CI. T2 water cleanup landed (#892) after one net smoke re-run (a Meadows reward read-back failed once and passed on re-run). Next on F39#21: crystal material, rim light on the creature, and pinning the end-of-fight camera before the Medium confirm.",
     "10 Nov 19:30: T2 water cleanup wins on GPU (swim-across 5.65 -> 6.50, +0.85, 3/3; away +0.32; night +0.18); its softer swimmer ring lost a shore check (-0.14) and is left out. Batch 46 in CI. Next T2 tries: the owner's wave cue as soft swell lines (fifth attempt, new technique), queued on the GPU.",
     "10 Nov 17:37: Nerissa victory camera fix wins on GPU (win 5.32 -> 6.63, aftermath 5.06 -> 6.22, both 3/3), landed (#891). F39#21 stays open at 6.63: judges name the crystal edge, off-family carved crates and an unlit blue statue next.",
