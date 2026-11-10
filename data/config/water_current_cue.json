@@ -1,6 +1,8 @@
 {
-  "_comment": "T2/F13#5 swimming-current arrow. ON by default per UX.md line 322 after the Medium/High code-blind review (GPU G-newapproach-t2-cue, 10 Nov, LANE-NEWAPPROACH/LANE-SCOUT, three judges, confirming batch: High +0.60, Medium +0.81, 3/3; blind direction test 18/18 at confidence 9 vs about half guessed without it). Players can turn it off in Accessibility (device-local preference). Process-local --tidewake-current-candidate still forces it on. Device accessibility setting never changes swimming, gear, current strength, world flags or peers.",
+  "_comment": "T2/F13#5 swimming-current arrow, an Accessibility option (default_on false since 10 Nov). Judged per UX.md line 322 after the Medium/High code-blind review (GPU G-newapproach-t2-cue, 10 Nov, LANE-NEWAPPROACH/LANE-SCOUT, three judges, confirming batch: High +0.60, Medium +0.81, 3/3; blind direction test 18/18 at confidence 9 vs about half guessed without it). Players can turn it off in Accessibility (device-local preference). Process-local --tidewake-current-candidate still forces it on. Device accessibility setting never changes swimming, gear, current strength, world flags or peers.",
   "enabled": true,
+  "_why_default_off": "Owner, 10 Nov: \"Did it put an actual arrow on the screen to see the current? That's lame.\" The arrow stays available in Accessibility but is OFF by default; the in-world cue is the water's own wave motion (\"The in world cue should just be which way the waves move.\").",
+  "default_on": false,
   "minimum_speed_m_s": 0.08,
   "strong_speed_m_s": 1.4,
   "offset_px_720": [76.0, -66.0],

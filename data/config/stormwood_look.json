@@ -84,5 +84,15 @@
     ],
     "world_roots": ["Vegetation", "StormwoodGroundCover", "StormheartTree", "Rootgate", "RodfolkSettlements", "StormwoodPockets", "StormwoodRodLine", "StormglassArches", "StormwoodRodStations", "GlassFieldPresentation", "StruckSentinelPresentation", "StormwoodHarvests", "StormwoodCamps"],
     "world_groups": ["placed_building"]
+  },
+  "bark_grey_1110": {
+    "_why_on": "GPU G-bark-grey-1110 (10 Nov, LANE-SCOUT b89fa5feb, three code-blind judges, confirming batch): all four rows gain on High and Medium, 3/3; Crown Arch +1.19. Trunks no longer read red family.",
+    "enabled": true,
+    "scope": "client_presentation",
+    "_candidate": "F41#17 (LANE-MESHY, 10 Nov 2026; OFF until judged). GPU judges (batch 41, Crown Arch r3): the trunks round the arch read pink to salmon, the red family Team Tether reserves. Two sources: the crown_canopy CommonTree_3 bark texture itself is red (Bark_NormalTree.png mean RGB 140, 88, 67), so its #746b5b tint still renders red-brown; the storm_canopy TwistedTree bark (texture mean 84, 76, 72) under #a8977a lands red above green and goes salmon under the lilac light. This retints both barks (the CommonTree tint is cool because its texture is red; a saturation adjust on that sheet rendered the trunks near-white on CPU, so none is used) so their albedo is a cool grey-brown with red no higher than green. The groves_1110 trees use the same meshes and follow. Presentation only (vegetation.gd presentation retint; the scatter bake is untouched).",
+    "layers": {
+      "storm_canopy": {"Bark_TwistedTree": "#98a89c"},
+      "crown_canopy": {"Bark_NormalTree": "#78c2dd"}
+    }
   }
 }

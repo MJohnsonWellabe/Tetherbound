@@ -13,11 +13,18 @@ static func config() -> Dictionary:
 	return parsed
 
 
+## The arrow's default when the player has not chosen (water_current_cue.json
+## `default_on`; absent = on). Owner, 10 Nov: OFF by default, kept in Accessibility.
+static func default_on() -> bool:
+	return bool(config().get("default_on", true))
+
+
 static func preferred(prefs: RefCounted) -> bool:
+	var fallback := default_on()
 	if prefs == null:
-		return true
+		return fallback
 	var table: Variant = prefs.get("accessibility")
-	return bool(table.get(PREF, true)) if table is Dictionary else true
+	return bool(table.get(PREF, fallback)) if table is Dictionary else fallback
 
 
 static func set_preferred(prefs: RefCounted, enabled: bool) -> bool:
