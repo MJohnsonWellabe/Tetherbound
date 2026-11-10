@@ -919,8 +919,8 @@
     "meadows__fights__south_bridge_grunt-03"
    ],
    "capture": "CLOSE-OUT confirm. High: live, live2, arm, arm2 (two runs per side, so staging luck can be separated), pad_glyphs patch on all. Frames must be like-for-like: if the arm camera ends on the wide bridge view, re-run that side until it matches the live angle, or report it. Then Medium on the same layout. Script-error list empty.",
-   "note": "G-f38-3-standoff (scout fc49b69fe): grunt-01 +0.45, 3/3, arm 7.74 High (confirming batch); grunt-02/03 weren't like-for-like. This confirm decides both the ship and the close of F38#3 (live was 7.29 there). Run next.",
-   "done": false
+   "note": "G-f38-3-standoff (scout fc49b69fe): grunt-01 +0.45, 3/3, arm 7.74 High (confirming batch); grunt-02/03 weren't like-for-like. This confirm decides both the ship and the close of F38#3 (live was 7.29 there). Run next. RESULT: full set pushed (High 11e081a01, Medium 3d801a77c); arm sends camera wide in 6/8 of its frames, caused by the arm; ship held until the build lane fixes the camera.",
+   "done": true
   },
   {
    "id": "f38-27-close",
@@ -939,7 +939,7 @@
    ],
    "capture": "CLOSE-OUT confirm. High: live (main) vs branch; Medium on the same two frames too (cheap, menus). Script-error list empty; controller prompts on both sides (pad_glyphs).",
    "note": "F38#27 settings/bindings: the keycap-glyph branch mapped 7.81 on CPU (every judge 7.51+; scout 8b43dfbf7); this adds the judges' last ask (key chip alone, no duplicated digit; short reset legend). GPU High+Medium at 7.5+ closes the row.",
-   "done": false
+   "done": true
   },
   {
    "id": "glass-sink-lip-dense",
