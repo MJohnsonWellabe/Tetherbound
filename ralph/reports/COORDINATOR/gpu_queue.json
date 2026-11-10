@@ -833,6 +833,26 @@
    "done": false
   },
   {
+   "id": "f38-23-cobble-r3",
+   "kind": "arm",
+   "rows": [
+    "F38#23"
+   ],
+   "branch": "tb/item-f38-23-cobble",
+   "head": "39fb00578a94f2913944edaad2b09b5f0c18040d",
+   "tree": "main plus scripts/world/tether_relay.gd and data/config/tether_relay.json copied from that head (r3 block lives only in the branch config)",
+   "overlay_branch": "tb/item-f38-23-cobble",
+   "overlay": "ralph/reports/LANES/ITEM-F38-23/overlay_cobble_r3.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+    "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk"
+   ],
+   "capture": "MEDIUM first (the failing side, 7.07), live vs arm, seed 2042; High only if the Medium arm maps 7.5 or above; script-error list empty",
+   "note": "CLOSE-OUT candidate (owner 25 Oct evening: candidates that would close a criterion go first). F38#23 is GPU High 7.58 / Medium 7.07; r3 darkens the overbright yard flags 17% and deepens the joints (ITEM-F38-23/ARM.md). Run next after the current section.",
+   "done": false
+  },
+  {
    "id": "pilot-mark",
    "kind": "arm",
    "rows": [
