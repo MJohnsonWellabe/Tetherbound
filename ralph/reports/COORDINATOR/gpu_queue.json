@@ -904,6 +904,25 @@
    "done": true
   },
   {
+   "id": "f38-3-standoff-confirm",
+   "kind": "confirm",
+   "rows": [
+    "F38#3"
+   ],
+   "tree": "main",
+   "overlay_branch": "tb/item-f38-3",
+   "overlay": "ralph/reports/LANES/ITEM-F38-3/overlay_meadows_standoff.json",
+   "overlay_format": "deep merge (note: it now carries realms.water: null so the ship is Meadows-only)",
+   "frames": [
+    "meadows__fights__south_bridge_grunt-01",
+    "meadows__fights__south_bridge_grunt-02",
+    "meadows__fights__south_bridge_grunt-03"
+   ],
+   "capture": "CLOSE-OUT confirm. High: live, live2, arm, arm2 (two runs per side, so staging luck can be separated), pad_glyphs patch on all. Frames must be like-for-like: if the arm camera ends on the wide bridge view, re-run that side until it matches the live angle, or report it. Then Medium on the same layout. Script-error list empty.",
+   "note": "G-f38-3-standoff (scout fc49b69fe): grunt-01 +0.45, 3/3, arm 7.74 High (confirming batch); grunt-02/03 weren't like-for-like. This confirm decides both the ship and the close of F38#3 (live was 7.29 there). Run next.",
+   "done": false
+  },
+  {
    "id": "glass-sink-lip-dense",
    "kind": "arm",
    "rows": [
