@@ -1250,6 +1250,38 @@
    "capture": "CLOSE-OUT confirm, one-sided: plain main at High AND Medium (no --tidewake-current-candidate flag; the arrow must show because it is ON by default). Pad glyphs on. Pre-push: arrow visible on every frame.",
    "note": "LANE-SCOUT 62b939c4e: the arrow side mapped 7.66 at High (extrapolated on a steep fit), so it needs a confirming batch at High and Medium on plain main.",
    "done": false
+  },
+  {
+   "id": "newapproach-t2-flecks",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "7b38eaa7488f0ece1c462ff5bf2c0c170e7ccfa0",
+   "tree": "main plus shaders/water_current_flow.gdshader and scripts/ui/water_current_cue.gd from that head",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-T2B/overlay_flecks.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--tidewake-current-candidate",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "frames": [
+    "swim-away-day",
+    "swim-across-day",
+    "swim-away-night"
+   ],
+   "capture": "High: base (arrow on, overlay off) vs arm (arrow on, flecks overlay) on the same tree. Pre-push: short soft flecks within about 18 m of the swimmer along the arrow; if any long lines, dash ladders or marks toward the horizon appear, report instead of pushing.",
+   "note": "T2B streaks reworked into short noise-broken foam flecks (the first version read as painted lanes, -1.54). Run after t2-arrow-confirm.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
