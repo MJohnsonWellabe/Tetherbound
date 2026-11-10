@@ -1937,6 +1937,38 @@
    "note": "#890 narrowed the near-lens trunk fade from 3-7 m to 3-4 m; its regression check covered only the capacitor_alpha fight frame. The Hollows Alpha baseline shows a trunk nearly filling two fight frames.",
    "done": true,
    "frames_pushed": "1520cfede: yes, #890 blocks 2 fight frames (old band 1); fix = wider fade while a fight camera is active (LANE-MESHY)"
+  },
+  {
+   "id": "newapproach-warrens-foundation",
+   "kind": "arm",
+   "rows": [
+    "F38#30",
+    "F38#24"
+   ],
+   "branch": "tb/newapproach",
+   "head": "b2522d3a07afaf398b9f9b2fbd450eb8926e4e7b",
+   "tree": "tb/newapproach, main e3afe9a4d merged in (scripts/world/burrow_warrens.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WARRENS2/overlay_foundation.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_routes.gd",
+     "args": [
+      "--biome=meadows",
+      "--seed=2042",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+      "--preset={PRESET}",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day, meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day, meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+   "capture": "High. FIRST in line, ahead of the remaining baseline pieces (pause Meadows golden or Cloudreach between pieces). walk_03: no floating black chamber drums; the trainer on or beside a closed grassy hillside. Pre-check: if the walk_03 arm frame is blank or the camera is inside geometry, report the manifest's player and camera positions and do not judge. route_day and walk_02 should look as on base apart from a green flank at the right of the mound in route_day. Note the pale patches on the slope in walk_03 (see ARM.md).",
+   "note": "Floor lane: the Warrens chamber shells hang in open air where the meadow falls below the cave floor (floating black drums in walk_03). The arm builds a grassy foundation with collision under them. Rows F38#30 (4.00) and F38#24 (3.67), the two lowest items.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
