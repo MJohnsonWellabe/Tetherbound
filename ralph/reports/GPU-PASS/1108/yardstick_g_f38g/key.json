@@ -1,0 +1,59 @@
+{
+ "Fs": {
+  "anchor": false,
+  "label": "G F38#0 golden village_road+hall_front one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_village_road_hall_front.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_village_road_hall_front.png"
+ },
+ "Zn": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Jw": {
+  "anchor": false,
+  "label": "G F38#0 golden farm_to_hall+band1_lower_meadows_1 one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_farm_to_hall_band1_lower_meadows_1.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_farm_to_hall_band1_lower_meadows_1.png"
+ },
+ "Os": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Dh": {
+  "anchor": false,
+  "label": "G F38#0 golden rain gameplay one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_rain.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_rain.png"
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "G F38#0 golden detail views one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_detail.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_detail.png"
+ },
+ "Zk": {
+  "anchor": false,
+  "label": "G F38#0 golden hall_nave+shrine_room one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_hall_nave_shrine_room.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_hall_nave_shrine_room.png"
+ },
+ "Om": {
+  "anchor": false,
+  "label": "G F38#0 golden band4_upper_meadows_ironwood_0+band5_stronghold_approach_0 one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_band4_upper_meadows_ironwood_0_band5_stronghold_approach_0.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_band4_upper_meadows_ironwood_0_band5_stronghold_approach_0.png"
+ },
+ "Dv": {
+  "anchor": false,
+  "label": "G F38#0 golden band2_stone_and_root_0+band3_the_river_lock_0 one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_band2_stone_and_root_0_band3_the_river_lock_0.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38g_band2_stone_and_root_0_band3_the_river_lock_0.png"
+ },
+ "Pd": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}
