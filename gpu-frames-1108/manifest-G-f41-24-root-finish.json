@@ -1,0 +1,24 @@
+[
+ {
+  "frame": "giant_calm.jpg",
+  "preset": "arm-High",
+  "tree": "c18752bfcf7c36745c4a683367f9b96f8bcee75b",
+  "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-f41-24-root-finish/arm-High/giant_calm.jpg",
+  "sky_fraction": 0.088,
+  "lower_edges": 0.3706,
+  "script_errors": 0,
+  "note": "FLAG: A PALE FLAT QUAD REMAINS BESIDE THE TRAINER (not the root). The root fix works: the long mauve wedge from the trainer's feet (the canopy root's flat top facet) is gone, replaced by a small dark rounded root flare. But a separate flat pale lilac-white quad with a notch in it still lies on the ground just right of the trainer, with a smaller lilac patch above it; both are in live too (partly under the old wedge) and are more exposed now. Pushed as is on the coordinator's word (10 Nov); the remaining quad goes back to the build lane. High, capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (giant_calm; F41#24 has no job.json frames). Tree c18752bfc is local only: tb/land-batch-40 fbdefd0c1 (same tree as main 263051eb3 after #886) plus Crown Arch r3 files that stay inert with r3_candidate off. Both sides: stormwood_ground_cover.gd and stormwood_ground_finish.json at tb/item-f41-24-glint 41c224cad (batch 40's json plus root_finish_1110, OFF). arm = plus ITEM-F41-24/overlay_root_finish.json (root_finish_1110 on)."
+ },
+ {
+  "frame": "giant_calm.jpg",
+  "preset": "live-High",
+  "tree": "c18752bfcf7c36745c4a683367f9b96f8bcee75b",
+  "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-f41-24-root-finish/live-High/giant_calm.jpg",
+  "sky_fraction": 0.085,
+  "lower_edges": 0.358,
+  "script_errors": 0,
+  "note": "FLAG: A PALE FLAT QUAD REMAINS BESIDE THE TRAINER (not the root). The root fix works: the long mauve wedge from the trainer's feet (the canopy root's flat top facet) is gone, replaced by a small dark rounded root flare. But a separate flat pale lilac-white quad with a notch in it still lies on the ground just right of the trainer, with a smaller lilac patch above it; both are in live too (partly under the old wedge) and are more exposed now. Pushed as is on the coordinator's word (10 Nov); the remaining quad goes back to the build lane. High, capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (giant_calm; F41#24 has no job.json frames). Tree c18752bfc is local only: tb/land-batch-40 fbdefd0c1 (same tree as main 263051eb3 after #886) plus Crown Arch r3 files that stay inert with r3_candidate off. Both sides: stormwood_ground_cover.gd and stormwood_ground_finish.json at tb/item-f41-24-glint 41c224cad (batch 40's json plus root_finish_1110, OFF). arm = plus ITEM-F41-24/overlay_root_finish.json (root_finish_1110 on)."
+ }
+]
