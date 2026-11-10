@@ -1093,6 +1093,51 @@
    "capture": "High: live, live2, arm, arm2, pad_glyphs on all; push every frame with a camera note (no re-shooting to match angles). WATCH the camera: the F38#3 trainer-aside change sent the fight camera wide, and this also moves the trainer; record per-frame camera angle so a camera side effect shows. Receipt: contact_spacing.large_foe_standoff enabled.",
    "note": "Large-foe standoff (ITEM-BOSS-STANDOFF/ARM.md): keeps the ally and trainer outside a big boss's leg span (positioning only, no floor ring). Judges' top F41#3 ask after the Voltarach bloom. Released from the hold. RESULT: not judged; with the standoff ON the boss never attacks (holds 11-13 m, no tells). Back to build lane.",
    "done": true
+  },
+  {
+   "id": "storm-fog-scoped-r2",
+   "kind": "arm",
+   "rows": [
+    "F41#17",
+    "F41#2",
+    "F41#12",
+    "F41#4",
+    "F41#5"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "5669f6472cbb10a92e1f7f9540057c3d86ddb6e3",
+   "tree": "main (now includes A3, #881) plus scripts/world/stormwood_surge.gd and data/config/stormwood_surge.json copied from that head",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-STORM-LIGHT/overlay_height_fog_scoped.json",
+   "overlay_format": "deep merge",
+   "frames": "same 13 frames as storm-fog-scoped",
+   "capture": "Re-shoot the ARM side only and pair it with the held live side from storm-fog-scoped (main + A3; main now carries the same A3 values, so the held live frames stand). Pre-push check: Fallen Giant and Crown Heartstone unchanged vs live; Crown Arch, Glass Field, Lantern Hollow and the phase frames fogged. Then push both sides.",
+   "note": "Fog zone fix: the haze at Fallen Giant and Crown Heartstone was the 0.02 ease-out carried over from the previous fogged stand; the fog now snaps off outside the scope.",
+   "done": false
+  },
+  {
+   "id": "f40-19-rain",
+   "kind": "arm",
+   "rows": [
+    "F40#19"
+   ],
+   "branch": "tb/item-f40-19-rain",
+   "head": "0b9defd359cc0f3464b20a767876eb3b45c2f282",
+   "tree": "main plus the branch's code changes at that head (scripts/world/world_look.gd, scripts/world/cloudreach_weather.gd and data/config/cloudreach_visual.json; check the diff against its merge base)",
+   "overlay_branch": "tb/item-f40-19-rain",
+   "overlay": "ralph/reports/LANES/ITEM-F40-19/overlay_rain_storm_sky.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+   "args": "--biome=cloudreach --preset=High --seed=2042 --piece=4 --output={OUT}",
+   "frames": [
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty. Pre-push check: no blue sky gaps on the arm; a knee-high mist near the gate; the camera not buried in mist.",
+   "note": "Cloudreach day rain (ITEM-F40-19/ARM.md): closed slate overcast plus low gate mist that follows the local player's ground.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
