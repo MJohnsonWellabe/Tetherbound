@@ -1,6 +1,7 @@
 {
-  "updated": "2026-11-09 21:30 UTC",
+  "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
+    "10 Nov overnight: Voltarach bloom fix won on GPU (+1.04/+1.16, 3/3) and is landing (#879). F38#3 Meadows fight staging scored 7.74 at High on its one clean shot (+0.45, 3/3); a close-out confirm (two runs per side, High then Medium) is next on the PC. Free Blender pipeline in use (no Meshy credits): Stormheart core v2 flat, Glass Sink ring re-shooting as a continuous 172-slab ring. Storm-light: arm A was a fog-only result (an older light pass overrode the key light); A3 is being rebuilt to write into that pass.",
     "9 Nov evening: camera lens ground clearance landed (#878). Owner approved the Stormwood storm-light pass: arm A (violet storm key, fog, fighter rim) is first on the GPU; new art now uses a free Blender plus CC0-texture pipeline (no Meshy credits).",
     "9 Nov overnight, GPU-decided: Tidewake character rim softened (speakers no longer ghost-white: F39#18 +1.87, F39#26 +2.13, F39#27 +1.09, F39#29 +1.50, all 3/3), ghost-glow fix (creatures no longer see-through: +0.29 to +0.91 on five rows), Stormwood charged glow (+0.61), victory card confirmed on Tidewake (+0.96), Nerissa fight fixed, four rows closed (F38#36, F38#38, F38#18, F40#12).",
     "9 Nov: three visual rows closed on GPU Medium and High, the first closes since the re-score: F38#36 dialogue speaker framing (High 7.74 / Medium 8.08), F38#38 craft hint contrast (8.16 / 8.30) and F38#18 craft recipe text (7.95 / 8.19). F38#23 relay yard missed on Medium (7.07).",
@@ -847,25 +848,25 @@
   "active_lanes_note": "Two lanes (owner 8 Nov): LANE-MESHY builds and judges one row at a time under the 8 Nov process; LANE-SCOUT refreshes the queue from today's frames so the build lane stops spending hours on rows that are already fine or already lost.",
   "active_lanes": [
     {
-      "lane": "LANE-MESHY · re-check judged Meshy pieces",
-      "doing": "Batch 19 landing: catch-card capture fix (F38#14 stages from the weakened throw) and F39#21 verified victory captures. F41#12 parked (storm look ruling). Now: F38#37 quarry conduit glass, then F38#27, F38#3, Warrens v2, capture bugs F40#3/#20, F40#9, F40#19, F41#24, F41#3.",
-      "criteria": "F38#24, F38#30, F39#2, F39#31, F13#5, F40 P2-023, F38#41, F38#5",
-      "next": "Venn plane bug fix",
-      "now": "Identifying the Venn aftermath grey plane by ray-pick, then F40#9 NPC posts and the rest; the Stormwood foliage crash is fixed and its arm is on the GPU."
+      "lane": "LANE-MESHY · build arms (free Blender + CC0 pipeline)",
+      "doing": "Builds config, code and Blender-asset arms; new GPU arms held until its queue is down to two.",
+      "criteria": "F41#1, F41#2-#5, F41#10, F41#12, F41#17, F38#3, F38#23, F38#27, F40#19",
+      "now": "Preparing the F38#3 ship (Meadows-only trainer standoff) and storm-light A3 (key light written into light_pass_1101, proven offline first).",
+      "next": "F38#27 duplicate-digit fix for a close-out confirm; held: F40#19 Cloudreach rain, boss-ally spacing, thin combat dust"
     },
     {
-      "lane": "LANE-SCOUT · refresh the queue",
-      "doing": "Judging the GPU sections A, C, B (three code-blind judges, anchors, mapped) into ralph/reports/GPU-PASS/1108/, then back to queue refresh.",
-      "criteria": "rows below 6.5 and unscored",
-      "next": "F41#8 verdict",
-      "now": "Judging GPU arms as the PC captures them (F41#8 next)."
+      "lane": "LANE-SCOUT · GPU judging",
+      "doing": "Judges each GPU section with three code-blind judges, anchors and calibration; pre-judge render check first.",
+      "criteria": "every GPU arm",
+      "now": "Waiting on the next GPU sections (F38#3 confirm, Glass Sink ring).",
+      "next": "F38#3 confirm at High and Medium"
     },
     {
       "lane": "GPU lane · owner's PC",
-      "doing": "Queue done: A, C, B, E pushed to tb/gpu-frames-1108 (head 4a4705d0c). Preflight (one frame per tool, 0 nulls/blanks/sky) validating now; every later run starts with it.",
-      "criteria": "see ralph/reports/COORDINATOR/briefs-1108/gpu_rescore.md",
-      "next": "G-sw-foliage-grade-fixed",
-      "now": "Owner's PC: Stormwood foliage grade re-shoot (crash fixed), then the next arms and checks."
+      "doing": "Captures live vs arm at High (Medium only for 7.5+), controller prompts locked on both sides.",
+      "criteria": "ralph/reports/COORDINATOR/gpu_queue.json",
+      "now": "F38#3 standoff close-out confirm (two runs per side).",
+      "next": "Glass Sink continuous ring (F41#10)"
     }
   ],
   "score_ledger": [
@@ -1858,6 +1859,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#879 (in CI)",
+      "what": "Voltarach no longer a white-gold blob: dark shell with gold veins and blue eyes (GPU +1.04/+1.16, 3/3); Officer Nysa test shot fixed",
+      "when": "10 Nov, in CI"
+    },
+    {
       "pr": "#878",
       "what": "camera keeps its lens at least 1 m off the ground (the Venn aftermath 'grey plane' was a dune face 0.35 m from the lens)",
       "when": "9 Nov 21:56"
@@ -1876,14 +1882,9 @@
       "pr": "#875",
       "what": "Nerissa fight camera no longer stuck behind the Heart Chamber crystal",
       "when": "9 Nov 17:54"
-    },
-    {
-      "pr": "#874",
-      "what": "Tidewake characters no longer ghost-white: character rim softened (GPU +1.09 to +2.13 on four rows, 3 of 3)",
-      "when": "9 Nov 10:25"
     }
   ],
-  "gpu_progress": "All four biomes now have fresh GPU High scores (106 rows). Four Meadows rows reach 7.5 at High and are being shot at Medium. The biggest shared defect on GPU: characters and creatures render ghost-white or with a pale see-through rim (every Meadows and Tidewake judge; Marrow's face holds back two Stormwood rows); one fix is being built for all of them. Stormwood's judges ask for a storm-light pass (phase key light, rim light, fog) and fight cameras kept out of foliage.",
+  "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
   "gpu_scores": {
     "F38#1": {
       "gpu": 5.76,
