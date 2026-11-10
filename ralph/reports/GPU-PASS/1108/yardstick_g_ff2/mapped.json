@@ -1,0 +1,136 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7312,
+  "least_squares_slope": 0.9678,
+  "method": "linear",
+  "slope": 0.9678,
+  "intercept": 0.8922,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.787,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 5.0,
+   "reference": 5.83,
+   "mapped": 5.731,
+   "residual": 0.099
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.733,
+   "reference": 6.75,
+   "mapped": 6.441,
+   "residual": 0.309
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.433,
+   "reference": 6.53,
+   "mapped": 5.183,
+   "residual": 1.347
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.9,
+   "reference": 4.0,
+   "mapped": 4.667,
+   "residual": -0.667
+  },
+  "craft:before": {
+   "measured": 5.267,
+   "reference": 4.83,
+   "mapped": 5.989,
+   "residual": -1.159
+  },
+  "craft:after": {
+   "measured": 6.6,
+   "reference": 7.35,
+   "mapped": 7.28,
+   "residual": 0.07
+  }
+ },
+ "candidates": {
+  "G ff2 swim-away-night base-vs-arm [G-ff2_swim-away-night_base.png]": {
+   "measured_mean": 5.467,
+   "mapped_mean": 6.18,
+   "mapped_judges": [
+    6.22,
+    6.31,
+    6.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff2 swim-away-night base-vs-arm [G-ff2_swim-away-night_arm.png]": {
+   "measured_mean": 5.8,
+   "mapped_mean": 6.51,
+   "mapped_judges": [
+    6.51,
+    6.7,
+    6.31
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff2 swim-away-day base-vs-arm [G-ff2_swim-away-day_base.png]": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.47,
+   "mapped_judges": [
+    6.51,
+    6.51,
+    6.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff2 swim-away-day base-vs-arm [G-ff2_swim-away-day_arm.png]": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.73,
+   "mapped_judges": [
+    6.8,
+    6.8,
+    6.6
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff2 swim-across-day base-vs-arm [G-ff2_swim-across-day_base.png]": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.34,
+   "mapped_judges": [
+    6.41,
+    6.41,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff2 swim-across-day base-vs-arm [G-ff2_swim-across-day_arm.png]": {
+   "measured_mean": 6.167,
+   "mapped_mean": 6.86,
+   "mapped_judges": [
+    6.7,
+    7.18,
+    6.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "anchor residual RMSE 0.79 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}
