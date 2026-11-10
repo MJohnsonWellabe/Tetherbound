@@ -1,0 +1,53 @@
+{
+ "Ya": {
+  "anchor": false,
+  "label": "G F38#24 stronghold route_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_sh_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_sh_base.png"
+ },
+ "Mv": {
+  "anchor": false,
+  "label": "G F38#30 walk_02_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_walk_02_day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_walk_02_day_arm.png"
+ },
+ "Zh": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Bv": {
+  "anchor": false,
+  "label": "G F38#30 walk_03_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_walk_03_day_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_walk_03_day_base.png"
+ },
+ "Db": {
+  "anchor": false,
+  "label": "G F38#24 walk_02_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_walk_02_day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_walk_02_day_arm.png"
+ },
+ "Xe": {
+  "anchor": false,
+  "label": "G warrens route_day regress base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_rd_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_rd_arm.png"
+ },
+ "Ia": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Bu": {
+  "anchor": false,
+  "label": "G F38#24 walk_03_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_walk_03_day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rs_walk_03_day_arm.png"
+ },
+ "Vo": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}
