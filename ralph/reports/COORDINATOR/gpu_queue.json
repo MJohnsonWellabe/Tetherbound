@@ -1698,7 +1698,8 @@
    "frames": "tidewake__fight__nerissa__win and __aftermath (plus one mid-fight frame from the same run on each side as a regression check: the snap must not change fight framing)",
    "capture": "High first, Medium only if High maps 7.5+ (owner 31 Oct). Pre-push: on the arm the lens is inside the Heart Chamber close behind the trainer, with no wall or crystal between lens and trainer and no lens inside geometry; the mid-fight frame matches base framing.",
    "note": "F39#21: at the win the fight hands back a far-out camera arm that eases in at 4 m/s, so the win and aftermath frames are shot from about 20 m back through faded chamber walls. The arm snaps the arm in to exploration length on release, in Veilfall arena rooms only. Reproduced on CPU at 1080p.",
-   "done": false
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 9ecc4d914 (High; live win was close in with a crystal slab, not 20 m back)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
