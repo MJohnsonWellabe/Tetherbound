@@ -1700,6 +1700,37 @@
    "note": "F39#21: at the win the fight hands back a far-out camera arm that eases in at 4 m/s, so the win and aftermath frames are shot from about 20 m back through faded chamber walls. The arm snaps the arm in to exploration length on release, in Veilfall arena rooms only. Reproduced on CPU at 1080p.",
    "done": true,
    "frames_pushed": "tb/gpu-frames-1108 9ecc4d914 (High; live win was close in with a crystal slab, not 20 m back)"
+  },
+  {
+   "id": "newapproach-t2-cleanup",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "38d55eb2efe806d972ad566d3959728eb15d2fb2",
+   "tree": "tb/newapproach 38d55eb2e (shaders/water.gdshader opaque_depth_m uniform, default 0; no assets)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-T2-CLEANUP/overlay_cleanup.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night,swim-brine-day",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "T2-current: swim-away-day, swim-across-day, swim-away-night, swim-brine-day. PLUS a regression check, because tidewake_look.json surfaces.water changes every Tidewake sea: three ordinary Tidewake exploration frames from the last GPU re-score that show open sea and shoreline shallows (day), e.g. the F39 dock or shore job frames, base vs arm.",
+   "capture": "High only. Arrow at its shipped default (off) on both sides. Pre-push: in swim-across-day the straight-edged pale wedges, the vertical centre line and the dark diagonal at the right are gone on the arm; in swim-away-night the water is night navy; in the regression frames the shallows still show sand and nothing else changes. If the wedges survive on GPU, report before pushing.",
+   "note": "T2 water cleanup, the three defects every T2 batch named. The seam is the seabed's sparse baked regions showing through translucent water at straight region edges, so water goes opaque past 1.5 m depth. Night: VIS-TIDEWAKE's water night dim switched on. Softer swimmer ring rides along.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
