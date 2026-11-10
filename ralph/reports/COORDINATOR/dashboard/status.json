@@ -1,6 +1,7 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
+    "10 Nov 07:30: F40#19 Cloudreach rain sky ships (closed slate overcast +0.44, 3/3); the mist variant lost -0.86 (floods the foreground). Storm fog scoped parked after two rounds.",
     "10 Nov 06:45: LANE-NEWAPPROACH's third win: result focus (F41#16 loss card 5.34 -> 7.44, +2.10, 3/3), landed (#884); F41#16 needs a GPU confirm to close.",
     "10 Nov 06:10: Tidewake currents arrow passes the T2/F13#5 Medium/High judge (High +0.60, Medium +0.81, 3/3; blind direction 18/18 at confidence 9) and ships ON by default (UX.md), landed (#883). T2 card itself stays open (arm 6.86).",
     "10 Nov 04:55: LANE-NEWAPPROACH's first win ships: wind-up dust at ankle height (F38#3 +0.45/+0.29, 3/3 both runs; F38#11 +0.30 r1). The F38#3 trainer standoff lost on the full set (-0.34 to -1.09) because it sends the fight camera wide; dropped.",
@@ -1864,6 +1865,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "batch 39 (in CI)",
+      "what": "Cloudreach day rain closes to a slate overcast with no blue sky gaps (F40#19 +0.44, 3/3); the gate mist variant lost and is not shipped",
+      "when": "10 Nov, in CI"
+    },
+    {
       "pr": "#884",
       "what": "exploration HUD steps back while a fight result is on screen (loss card, catch card, beaten line): F41#16 loss card 5.34 -> 7.44 (+2.10, 3/3, HUD judged on CPU)",
       "when": "10 Nov 07:11"
@@ -1882,11 +1888,6 @@
       "pr": "#881",
       "what": "Stormwood storm key light now actually reaches the screen (violet sun and fighter rim in the light pass that wins): Surge phases +0.73 (3/3), no row drops",
       "when": "10 Nov 04:49"
-    },
-    {
-      "pr": "#880",
-      "what": "settings and key-binding menu closes on GPU (High 7.84, Medium 8.25): key pictures for Tab/Q, no doubled key labels, shorter reset line",
-      "when": "10 Nov 04:09"
     }
   ],
   "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
