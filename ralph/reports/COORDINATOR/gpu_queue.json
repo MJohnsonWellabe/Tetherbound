@@ -1382,7 +1382,7 @@
    "frames": "job.json frames of F39#21 and F41#13",
    "capture": "one-sided re-score at High on current main (no overlay)",
    "note": "Both scores predate shipped fixes (F39#21 before the hero card #876; F41#13 before charged_1105), per LANE-NEWAPPROACH's floor survey. Re-score before anyone spends more work on them.",
-   "done": false
+   "done": true
   },
   {
    "id": "stormwood-groves",
