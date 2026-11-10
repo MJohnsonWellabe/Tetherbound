@@ -1,0 +1,24 @@
+[
+ {
+  "frame": "giant_calm.jpg",
+  "preset": "arm-High",
+  "tree": "ebabb3c2c0d51f631e7025b7bea3a32efa459e5e",
+  "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-f41-24-fleck-round/arm-High/giant_calm.jpg",
+  "sky_fraction": 0.294,
+  "lower_edges": 0.3659,
+  "script_errors": 0,
+  "note": "Eye check: the flat pale lilac notched quad right of the trainer at the Fallen Giant grove is GONE on the arm, and the small lilac patch above it shrinks to a tiny soft dot (quad area mean RGB 38,45,47 live -> 28,34,35 arm, the surrounding wet ground). The cream ovals remain, as expected (moss_cushion_off_1110 left out). High, capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (giant_calm). live = main ebabb3c2c (root_finish_1110 ON; not re-imported, config/scripts/tests only since the imported ded3c30f6). arm = live plus stormwood_ground_cover.gd and stormwood_ground_cover.gdshader at tb/item-f41-24-glint 9a14b5a53, the fleck_round_1110 block (sw_glint_radius_m 0.12) merged into main's stormwood_ground_finish.json and switched on. The branch's stormwood_ground_zones.gd and overlay_fleck.json were left out because they also bring back moss_cushion_off_1110."
+ },
+ {
+  "frame": "giant_calm.jpg",
+  "preset": "live-High",
+  "tree": "ebabb3c2c0d51f631e7025b7bea3a32efa459e5e",
+  "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-f41-24-fleck-round/live-High/giant_calm.jpg",
+  "sky_fraction": 0.29,
+  "lower_edges": 0.3753,
+  "script_errors": 0,
+  "note": "Eye check: the flat pale lilac notched quad right of the trainer at the Fallen Giant grove is GONE on the arm, and the small lilac patch above it shrinks to a tiny soft dot (quad area mean RGB 38,45,47 live -> 28,34,35 arm, the surrounding wet ground). The cream ovals remain, as expected (moss_cushion_off_1110 left out). High, capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (giant_calm). live = main ebabb3c2c (root_finish_1110 ON; not re-imported, config/scripts/tests only since the imported ded3c30f6). arm = live plus stormwood_ground_cover.gd and stormwood_ground_cover.gdshader at tb/item-f41-24-glint 9a14b5a53, the fleck_round_1110 block (sw_glint_radius_m 0.12) merged into main's stormwood_ground_finish.json and switched on. The branch's stormwood_ground_zones.gd and overlay_fleck.json were left out because they also bring back moss_cushion_off_1110."
+ }
+]
