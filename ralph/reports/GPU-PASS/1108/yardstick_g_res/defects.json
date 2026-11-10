@@ -1,0 +1,26 @@
+{
+ "G F41#16 base-vs-arm": {
+  "A": [
+   {
+    "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PRESENT"
+   },
+   {
+    "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PRESENT"
+   },
+   {
+    "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PARTIAL"
+   },
+   {
+    "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PARTIAL"
+   },
+   {
+    "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "FIXED"
+   }
+  ]
+ }
+}

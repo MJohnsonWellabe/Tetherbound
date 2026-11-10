@@ -1,0 +1,11 @@
+[
+ {
+  "label": "G F41#16 base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-res_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-res_arm.png",
+  "brief": "Two in-game frames (stacked) of the screen just after the player's creature loses a wild fight, with the result card on screen, at 1920x1080. Judge the interface on a 7-inch handheld screen: whether the result reads at a glance, what else on screen competes with it, and fit to the game's UI direction.",
+  "defects": [
+   "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown"
+  ]
+ }
+]
