@@ -1,0 +1,13 @@
+{
+ "id": "f38-27-footer-glyphs",
+ "branch": "tb/item-f38-27-glyphs",
+ "head": "750c292a9ffb07da2efb6b71280bf8c651096afe",
+ "overlay": "",
+ "job": "ralph/reports/VISUAL/item-scores/job.json",
+ "rows": ["F38#27"],
+ "frames": ["meadows__settings_controls", "meadows__quick_bindings"],
+ "expected_frame_count": 2,
+ "capture_both": "base = origin/main (no change); candidate = this branch head (code change, no overlay)",
+ "preset": "High (HUD; judge with quick_judge on the PC frames)",
+ "want_to_see": "the settings/menu footer's keyboard tab keys drawn as keycaps (Q and the new Tab keycap) instead of bracketed text, matching the other glyphs"
+}

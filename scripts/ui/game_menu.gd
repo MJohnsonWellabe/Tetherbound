@@ -493,8 +493,8 @@ func _scenic_refresh_footer() -> void:
 		return
 	var px := int(_scenic.get("footer_glyph_px", 40))
 	var pad := INPUT_GLYPH.using_gamepad()
-	var prev := "[img=%dx%d]%sxbox_lb.png[/img]" % [px, px, INPUT_GLYPH.DIR] if pad else "[%s]" % INPUT_GLYPH.key_name_for_action("menu_tab_left")
-	var next := "[img=%dx%d]%sxbox_rb.png[/img]" % [px, px, INPUT_GLYPH.DIR] if pad else "[%s]" % INPUT_GLYPH.key_name_for_action("menu_tab_right")
+	var prev := "[img=%dx%d]%sxbox_lb.png[/img]" % [px, px, INPUT_GLYPH.DIR] if pad else INPUT_GLYPH.key_glyph_for_action("menu_tab_left", px)
+	var next := "[img=%dx%d]%sxbox_rb.png[/img]" % [px, px, INPUT_GLYPH.DIR] if pad else INPUT_GLYPH.key_glyph_for_action("menu_tab_right", px)
 	_scenic_footer.text = "[center]%s Select      %s Close      %s Previous tab      %s Next tab[/center]" % [
 		INPUT_GLYPH.icon("confirm", px), INPUT_GLYPH.icon("cancel", px), prev, next]
 
