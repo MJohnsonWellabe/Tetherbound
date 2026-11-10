@@ -2037,7 +2037,8 @@
    "frames": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day, meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day, meadows__band2_stone_and_root__04__the_burrow_warrens__route_day, meadows__band5_stronghold_approach__09__stronghold_approach__route_day; PLUS the F38#24 catalogue job frames from the 8 Nov re-score (every Meadows frame scored for F38#24 that shows the horizon), base vs arm, so the ridge is judged where it acts",
    "capture": "High. Next arm in line. walk_03: slope on the left, open meadow and a continuous layered mountain ridge on the right. Any frame with a horizon: smooth continuous ranges instead of faceted shards. Pre-check: if walk_03's stand lands under the mound's dark overhang (as it did at other headings on CPU), report the manifest positions and do not judge that frame. The stronghold approach route frame is included because it is in the F38#24 set and shows the horizon.",
    "note": "Floor lane: turns on the visual lane's Blender-built continuous Meadows ridge (meadows_ridge_vl, never judged) in place of the faceted procedural horizon rings, and turns walk_03 to heading 215 so the ridge is in view. Red trees by the Burrow entrance stay red: the owner's recorded call ('I actually really like the red trees').",
-   "done": false
+   "done": true,
+   "frames_pushed": "fdb473cae"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
