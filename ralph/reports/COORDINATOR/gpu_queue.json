@@ -2068,6 +2068,41 @@
    "note": "Floor lane: the Cloudreach cloud deck uses the same sin-based lattice hash that caused GPU-only straight cuts in the wave lines; its cells (190, 92, 44 m) are slab-sized. The arm swaps in a stable hash behind cloud_sea.stable_hash. CPU cannot show the defect, so the GPU pre-check decides.",
    "done": true,
    "frames_pushed": "not judged: slabs survive with stable_hash (not the cause); they appear on the ride back as flat hard-edged sheets under the rider; diagnostic G-newapproach-cloud-hash-diag"
+  },
+  {
+   "id": "newapproach-warrens-flank-stand",
+   "kind": "arm",
+   "rows": [
+    "F38#30",
+    "F38#24"
+   ],
+   "branch": "tb/newapproach",
+   "head": "3f2fffb6104f427d27485250b074dde30477359e",
+   "tree": "tb/newapproach (scripts/world/burrow_warrens.gd, tools/phase2_capture_routes.gd; no assets, no import pass); the mouth keep-out fix is in this tree's burrow_warrens.gd",
+   "base_overlay_branch": "ccr-99b76ce0-imf8zn",
+   "base_overlay": "ralph/reports/COORDINATOR/overlays/warrens4_base.json",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WARRENS4/overlay_flank_and_stand.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_routes.gd",
+     "args": [
+      "--biome=meadows",
+      "--seed=2042",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+      "--frame=meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+      "--preset={PRESET}",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day, meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day, meadows__band2_stone_and_root__04__the_burrow_warrens__route_day, meadows__band5_stronghold_approach__09__stronghold_approach__route_day (control, should not change)",
+   "capture": "High. Next in line. BASE = tree + warrens4_base.json (the shipping state of batches 48 and 50: foundation on with its original tint, stand guard on, ridge on; the keep-out is in the code). ARM = tree + overlay_flank_and_stand.json. route_day: the flank right of the mound reads as grassy ground with grain and some cover, not a smooth slab, and the way into the cave is clear. walk_03: trainer on open ground with the hillside, the road and the mountain ridge in view. Stronghold approach: unchanged from base (control). Pre-check: if walk_03's manifest player position is not within 3 m of (-318, 2642), report it and do not judge that frame.",
+   "note": "Floor lane: grass grain and ground cover on the Warrens foundation flank (the route_day loss in the ridge batch was a 'smooth low-res grass slab'), plus an explicit open-ground stand for walk_03 at (-318, 2642) heading 231. Also checks that the mouth keep-out (fix for blocked cave ingress, ported into batch 48) does not lose against the judged foundation.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
