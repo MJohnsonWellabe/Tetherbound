@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.4,
+   4.5,
+   4.6
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.8,
+   3.8,
+   4.0
+  ],
+  "f04_6_r22:control": [
+   4.8,
+   5.1,
+   5.0
+  ],
+  "f04_6_r22:r22": [
+   5.6,
+   6.0,
+   5.9
+  ],
+  "craft:after": [
+   5.8,
+   6.4,
+   6.6
+  ],
+  "craft:before": [
+   4.3,
+   4.9,
+   4.9
+  ]
+ },
+ "candidates": {
+  "G v3 swim-away-day base-vs-armB [G-v3_swim-away-day_armB.png]": [
+   5.3,
+   5.3,
+   5.2
+  ],
+  "G v3 swim-away-day base-vs-armB [G-v3_swim-away-day_base.png]": [
+   5.6,
+   5.5,
+   5.6
+  ],
+  "G v3 swim-across-day base-vs-armA [G-v3_swim-across-day_base.png]": [
+   5.0,
+   4.8,
+   4.7
+  ],
+  "G v3 swim-across-day base-vs-armA [G-v3_swim-across-day_armA.png]": [
+   5.4,
+   5.4,
+   5.4
+  ],
+  "G v3 swim-away-night base-vs-armA [G-v3_swim-away-night_base.png]": [
+   4.9,
+   5.4,
+   5.3
+  ],
+  "G v3 swim-away-night base-vs-armA [G-v3_swim-away-night_armA.png]": [
+   5.1,
+   5.2,
+   5.7
+  ],
+  "G v3 swim-across-day base-vs-armB [G-v3_swim-across-day_armB.png]": [
+   4.8,
+   5.0,
+   4.8
+  ],
+  "G v3 swim-across-day base-vs-armB [G-v3_swim-across-day_base.png]": [
+   5.2,
+   4.8,
+   4.9
+  ],
+  "G v3 swim-away-night base-vs-armB [G-v3_swim-away-night_armB.png]": [
+   4.8,
+   5.1,
+   5.0
+  ],
+  "G v3 swim-away-night base-vs-armB [G-v3_swim-away-night_base.png]": [
+   5.1,
+   5.5,
+   5.6
+  ],
+  "G v3 swim-away-day base-vs-armA [G-v3_swim-away-day_base.png]": [
+   5.2,
+   5.6,
+   5.3
+  ],
+  "G v3 swim-away-day base-vs-armA [G-v3_swim-away-day_armA.png]": [
+   5.0,
+   4.9,
+   5.0
+  ]
+ }
+}
