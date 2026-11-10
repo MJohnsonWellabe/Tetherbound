@@ -1191,7 +1191,7 @@
    ],
    "capture": "ARM side only; reuse the live-High frames from f40-19-rain (main hasn't changed those files). Pre-push: grey knee-high mist near the gate visible on the arm, no blue sky gaps, camera and trainer not buried.",
    "note": "Mist fix: the ceiling is now seated when the weather applies (pinned captures froze the weather node, so no mist drew), with height 0.8 m and density 1.1; offline Environment proof and CPU sheet on the branch.",
-   "done": false
+   "done": true
   },
   {
    "id": "newapproach-t2b",
