@@ -17,6 +17,7 @@
     "res://assets/environment/stylized_nature/Fern_1.gltf"
   ],
   "near_lens_fade": {
+    "narrow_band_1110": {"enabled": true, "_why_on": "GPU High judged 10 Nov (LANE-SCOUT G-trunk-dither-narrow, tb/item-scout-1108 a001b7994): Fallen Giant grove giant_calm 5.00 -> 6.30 (+1.30, 3/3; the screen-door dither on the trunks is gone, trunks read solid); F41#4, F41#5 and the F41#3 fight frame unchanged (0.00, no trunk over the trainer or a fighter).", "_candidate": "F41#4 Fallen Giant judges: trunks fade with a visible dither pattern as they cross the 3-7 m near-lens band (a 4 m stretch of half-dissolved bark in still frames). ON narrows the band to 3.0-4.0 m: the trunk is still gone right at the lens, solid from 4 m, and the dither covers about 1 m. near_lens_hide (swap near instances into a narrow fade) was tried first on CPU and drew a near trunk opaque over the trainer. Presentation only.", "invisible_below_m": 3.0, "opaque_above_m": 4.0},
     "_why": "F10#2 (coordinator, 13 Oct): the fight camera's lens entered Stormwood bark/canopy reaching past trunk colliders. Every surface of these tree models dithers out near the lens. Presentation only. TUNABLE. Attempt 2 (13 Oct): 1.5/4 m left giant canopies covering half of Capacitor's frames (judge 3/10); widened to 3/7 m and storm bush/fern added.",
     "enabled": true,
     "realms": [
