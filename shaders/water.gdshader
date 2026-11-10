@@ -43,6 +43,11 @@ uniform float mid_depth_m = 0.0;
 uniform float depth_band_break_m = 0.0;
 uniform float alpha_deep = 0.88;
 uniform float alpha_shallow = 0.42;
+// NEWAPPROACH T2 cleanup: above 0, the water turns fully opaque by this depth,
+// so the seabed only shows through at the shoreline. Tidewake bakes seabed
+// terrain in sparse island regions; through translucent water the straight
+// edges where a region stops read as pale wedges across the channel. 0 = off.
+uniform float opaque_depth_m = 0.0;
 // Fade alpha to zero over this many metres of depth right at the shoreline,
 // so the waterline meets the bank as a soft lap rather than an aliased cut.
 uniform float edge_feather = 0.10;
@@ -244,6 +249,9 @@ void fragment() {
 
 	float alpha = mix(alpha_deep, alpha_shallow, shallowness);
 	alpha = max(alpha, foam * 0.85);
+	if (opaque_depth_m > 0.0) {
+		alpha = max(alpha, smoothstep(opaque_depth_m * 0.35, opaque_depth_m, depth));
+	}
 	// The exact waterline: fade out over the last few centimetres of depth.
 	alpha *= smoothstep(0.0, edge_feather, depth);
 
