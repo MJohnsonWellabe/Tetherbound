@@ -1,0 +1,188 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8485,
+  "least_squares_slope": 1.0589,
+  "method": "linear",
+  "slope": 1.0589,
+  "intercept": 0.4694,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.611,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.6,
+   "reference": 6.53,
+   "mapped": 5.34,
+   "residual": 1.19
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.933,
+   "reference": 4.0,
+   "mapped": 4.635,
+   "residual": -0.635
+  },
+  "craft:before": {
+   "measured": 4.633,
+   "reference": 4.83,
+   "mapped": 5.376,
+   "residual": -0.546
+  },
+  "craft:after": {
+   "measured": 6.767,
+   "reference": 7.35,
+   "mapped": 7.635,
+   "residual": -0.285
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.8,
+   "reference": 6.75,
+   "mapped": 6.611,
+   "residual": 0.139
+  },
+  "f04_6_r22:control": {
+   "measured": 4.933,
+   "reference": 5.83,
+   "mapped": 5.693,
+   "residual": 0.137
+  }
+ },
+ "candidates": {
+  "G F38#24 walk_02_day base-vs-arm [G-wf_walk_02_day_arm.png]": {
+   "measured_mean": 3.067,
+   "mapped_mean": 3.72,
+   "mapped_judges": [
+    3.86,
+    3.65,
+    3.65
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_02_day base-vs-arm [G-wf_walk_02_day_base.png]": {
+   "measured_mean": 3.067,
+   "mapped_mean": 3.72,
+   "mapped_judges": [
+    3.86,
+    3.65,
+    3.65
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_02_day base-vs-arm [G-wf_walk_02_day_arm.png]": {
+   "measured_mean": 3.867,
+   "mapped_mean": 4.56,
+   "mapped_judges": [
+    4.49,
+    4.49,
+    4.71
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_02_day base-vs-arm [G-wf_walk_02_day_base.png]": {
+   "measured_mean": 3.867,
+   "mapped_mean": 4.56,
+   "mapped_judges": [
+    4.49,
+    4.49,
+    4.71
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_03_day base-vs-arm [G-wf_walk_03_day_base.png]": {
+   "measured_mean": 2.467,
+   "mapped_mean": 3.08,
+   "mapped_judges": [
+    3.22,
+    2.8,
+    3.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_03_day base-vs-arm [G-wf_walk_03_day_arm.png]": {
+   "measured_mean": 3.0,
+   "mapped_mean": 3.65,
+   "mapped_judges": [
+    3.86,
+    3.22,
+    3.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G route_day regress base-vs-arm [G-wf_route_day_arm.png]": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.4,
+   "mapped_judges": [
+    6.4,
+    6.4,
+    6.4
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G route_day regress base-vs-arm [G-wf_route_day_base.png]": {
+   "measured_mean": 5.167,
+   "mapped_mean": 5.94,
+   "mapped_judges": [
+    5.98,
+    6.08,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_03_day base-vs-arm [G-wf_walk_03_day_base.png]": {
+   "measured_mean": 2.467,
+   "mapped_mean": 3.08,
+   "mapped_judges": [
+    3.22,
+    2.8,
+    3.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_03_day base-vs-arm [G-wf_walk_03_day_arm.png]": {
+   "measured_mean": 3.0,
+   "mapped_mean": 3.65,
+   "mapped_judges": [
+    3.65,
+    3.43,
+    3.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}
