@@ -1969,6 +1969,38 @@
    "capture": "High. FIRST in line, ahead of the remaining baseline pieces (pause Meadows golden or Cloudreach between pieces). walk_03: no floating black chamber drums; the trainer on or beside a closed grassy hillside. Pre-check: if the walk_03 arm frame is blank or the camera is inside geometry, report the manifest's player and camera positions and do not judge. route_day and walk_02 should look as on base apart from a green flank at the right of the mound in route_day. Note the pale patches on the slope in walk_03 (see ARM.md).",
    "note": "Floor lane: the Warrens chamber shells hang in open air where the meadow falls below the cave floor (floating black drums in walk_03). The arm builds a grassy foundation with collision under them. Rows F38#30 (4.00) and F38#24 (3.67), the two lowest items.",
    "done": false
+  },
+  {
+   "id": "newapproach-stormwood-bark",
+   "kind": "arm",
+   "rows": [
+    "F41#22",
+    "F41#24",
+    "F41#4",
+    "F41#5",
+    "F41#17"
+   ],
+   "branch": "tb/newapproach",
+   "head": "34bed949fe9d48aef9064246774bda04a022508b",
+   "tree": "tb/newapproach, main e3afe9a4d merged in (scripts/world/vegetation.gd, scripts/world/stormwood_look.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-BARK/overlay_bark.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+     "args": [
+      "--out={OUT}",
+      "--label=bark",
+      "--stands=forest,giant,glass,rod_line,stormheart",
+      "--phases=calm,break"
+     ]
+    }
+   ],
+   "frames": "the F41#22 matrix frames as in G-baseline-f41-22-stormwood-matrix (stands forest, giant, glass, rod_line, stormheart; calm and break), base vs arm",
+   "capture": "High. FIRST (pause the Cloudreach chain between spans). Giant and forest stands: trunks read as matte, furrowed bark, not smooth lilac plastic. Pre-check: report the trunk colour in the arm (it was dark grey-brown on CPU, red slightly above green); if it reads red or salmon on GPU, do not judge and tell me. Check no tree or log has turned white or black.",
+   "note": "Floor lane: the giant trunks are storm_canopy's Bark_TwistedTree with its texture mapped once over a huge trunk, and light_pass_1101 forces roughness 0.4 / specular 0.42 on every solid material, giving lilac plastic. Arm: world-space tiling bark detail plus matte through the light pass. Also fixes Image.adjust_bsc -> adjust_bcs (an engine-name bug on main).",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
