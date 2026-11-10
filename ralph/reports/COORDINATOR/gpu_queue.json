@@ -1640,7 +1640,8 @@
    "frames": "swim-away-day, swim-across-day, swim-away-night, each with 10-frame strips (_t1.._t9); three sides: base (overlay off), arm A (overlay_crests.json, margin 1.6 = crests 2.2 m/s), arm B (arm_b_inline_overlay, margin 2.6 = crests 3.2 m/s). Current arrow OFF on every side.",
    "capture": "High only. Pre-push: no crest cut by a straight horizontal or diagonal edge, no outline changing frame to frame (report before pushing if any); in swim-away-day the crests advance down-screen clearly faster than the logs (estimate px per frame for crests vs a log). GIFs of swim-away-day for all three sides.",
    "note": "Owner design: the in-world current cue is the direction the waves move. Third attempt; the new idea answers LANE-SCOUT's camera-follow finding (the swimmer drifts with the water, so slow crests look backwards against the shore): crest speed gets a margin over the drift. Offline (CPU) the sign is right in both day views but the away margin is only about 1.4x the log on screen, hence arm B with a bigger margin.",
-   "done": false
+   "done": true,
+   "frames_pushed": "tb/gpu-frames-1108 0b5b57b6f (90 frames, 9 GIFs); straight-cut half-disc is in the crest shader"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
