@@ -1,5 +1,7 @@
 # G-storm-light-a: Stormwood storm-light pass, arm A
 
+> **Correction (coordinator, 10 Nov):** this is in effect a **height_fog-only** verdict. `light_pass_1101` replaces `storm_light` and the surge sun at runtime, so the violet key, fill and fighter rim never reached the frame. The per-row results below measure height fog alone. In particular, the forest-row losses on F41#4 and F41#5 are height fog darkening the stands, and "the fighter rim does not lift the ally" is untested.
+
 Frames: `tb/gpu-frames-1108` 56637b325, manifest `G-storm-light-a`, High, no script errors. Live is main 61693b5a3. The arm is live plus `ITEM-STORM-LIGHT/overlay_storm_key.json` at 4529ecd41: `storm_light` on, a violet key and fill, a fighter rim, and `height_fog` on.
 
 Judged rows: F41#2, #3, #4, #5, #12, #15 and #17, paired. Not judged:

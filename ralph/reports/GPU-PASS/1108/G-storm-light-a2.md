@@ -1,4 +1,6 @@
-# G-storm-light-a2: HELD, not judged (the arm may not have applied)
+# G-storm-light-a2: VOID (the arm applied but was inert)
+
+> **VOID (coordinator, 10 Nov).** The GPU lane confirmed the overlay applied but was inert: `light_pass_1101` replaces `storm_light` and the surge sun at runtime, which matches the unchanged luma below. A rebuilt a3, with the values written into `light_pass_1101` and proven offline to reach the Environment, will be judged when it lands. The pre-judge render check stays standard for every section.
 
 Frames: `tb/gpu-frames-1108` bc21dff4. Live is main 52a633598. The arm is live plus `ITEM-STORM-LIGHT/overlay_storm_key_a2.json` at 17ccc297c: `storm_light` on with `environment.exposure` 1.5, `height_fog` untouched (false). Blank-frame receipts read 0 of 46 on both sides.
 
