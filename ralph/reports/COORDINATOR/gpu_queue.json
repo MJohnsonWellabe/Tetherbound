@@ -1731,6 +1731,26 @@
    "capture": "High only. Arrow at its shipped default (off) on both sides. Pre-push: in swim-across-day the straight-edged pale wedges, the vertical centre line and the dark diagonal at the right are gone on the arm; in swim-away-night the water is night navy; in the regression frames the shallows still show sand and nothing else changes. If the wedges survive on GPU, report before pushing.",
    "note": "T2 water cleanup, the three defects every T2 batch named. The seam is the seabed's sparse baked regions showing through translucent water at straight region edges, so water goes opaque past 1.5 m depth. Night: VIS-TIDEWAKE's water night dim switched on. Softer swimmer ring rides along.",
    "done": false
+  },
+  {
+   "id": "nerissa-plinth-stone",
+   "kind": "arm",
+   "rows": [
+    "F39#21",
+    "F39#28"
+   ],
+   "branch": "tb/item-nerissa-room",
+   "head": "f81c7e99451cd480b901d142ef090c324bcceb89",
+   "tree": "tb/item-nerissa-room f81c7e994 (main with the snap ON plus water_veilfall_interior_dressing.gd metal_1110; no assets beyond installed T_RockTrim)",
+   "overlay_branch": "tb/item-nerissa-room",
+   "overlay": "ralph/reports/LANES/ITEM-NERISSA-PLINTH/overlay_plinth.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+   "args": "win/aftermath: --trainer=water_trainer_nerissa --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle --expected-resolution=1920x1080 --seed=2042; F39#28 t-000_00: same tool and seed with --interval=1.0 --max-frames=40 --level=53 --pilot=READER --cap-s=180 --render-only-saves",
+   "frames": "tidewake__fight__nerissa__win, __aftermath (F39#21), __t-000_00 (F39#28)",
+   "capture": "High first, Medium only if High maps 7.5+. Base = main (snap ON). Pre-push: on the arm the S-scroll collage blocks at and beside the crystal read as chamber stone; nothing else changes.",
+   "note": "Heart Chamber metal-coloured boxes (two crystal plinths, tether box) wore the T_MetalOrnaments railing sheet, which judges named 3/3 as an off-family collage; arm re-skins them in the chamber's rock-trim stone. Breadth swing across F39#21 and F39#28.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
