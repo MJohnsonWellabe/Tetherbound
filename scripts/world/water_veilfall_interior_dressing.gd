@@ -37,8 +37,15 @@ func build(interior: Node3D, rules: Dictionary) -> void:
 		Color(str(colours.get("stone", "#4c5857"))).to_html(false): _masonry(cfg.get("stone", {})),
 		Color(str(colours.get("floor", "#77817a"))).to_html(false): _masonry(cfg.get("floor", {})),
 	}
-	if cfg.has("metal"):
-		skins[Color(str(colours.get("metal", "#697676"))).to_html(false)] = _masonry(cfg.metal)
+	# F39#21 `metal_1110` (OFF until judged): the S-scroll railing texture on the
+	# crystal plinths and the tether box read as an off-family collage (3/3
+	# judges); ON they wear the chamber's own rock-trim stone instead.
+	var metal_skin: Dictionary = cfg.get("metal", {})
+	var plinth: Dictionary = cfg.get("metal_1110", {})
+	if bool(plinth.get("enabled", false)):
+		metal_skin = plinth
+	if not metal_skin.is_empty():
+		skins[Color(str(colours.get("metal", "#697676"))).to_html(false)] = _masonry(metal_skin)
 	if cfg.has("channel_water"):
 		skins[Color(str(colours.get("channel", "#347c89"))).to_html(false)] = _water(cfg.channel_water)
 	receipt["reskinned"] = _reskin(interior, skins)
