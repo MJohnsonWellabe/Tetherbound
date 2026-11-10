@@ -116,13 +116,16 @@
       "enabled": true,
       "scope": "client_presentation",
       "_why": "Stormwood big swing (LANE-MESHY, 10 Nov 2026; judges 3/3 across F41#4/#5/#12/#17: foreground rain reads as thick white rods). The near layer's streaks after soft_rain_1101 are 0.07 m wide, up to 1.35x and fade only within 2.2-4.5 m of the lens, so the nearest drops read as poles. On: thinner, shorter, fainter near streaks capped at 1x, faded out across 4-8 m of view depth. The far and curtain layers are unchanged. Presentation only. OFF until judged.",
+      "_why_ship_1110": "At ship (10 Nov) two rain invariants (tests/test_stormwood_surge_presentation.gd: far streaks shorter than near; drop size varies by at least 0.5) needed the far layer and drop minimum in this arm too: far streaks 0.8 -> 0.6 m and scale_min 0.6 -> 0.45, both toward the finer, fainter rain the judges asked for; the judged near values are unchanged.",
       "overlay": {
         "rain": {
           "streak_width_m": 0.03,
           "streak_length_m": 0.75,
           "alpha": 0.2,
+          "scale_min": 0.45,
           "scale_max": 1.0,
-          "near_fade_m": [4.0, 8.0]
+          "near_fade_m": [4.0, 8.0],
+          "far_layer": {"streak_length_m": 0.6}
         }
       }
     },

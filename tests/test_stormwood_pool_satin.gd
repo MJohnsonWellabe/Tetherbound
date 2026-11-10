@@ -11,7 +11,12 @@ func test_pool_satin_ships_off() -> void:
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ZONES.CONFIG_PATH))
 	assert_false(bool(raw.pool_satin_1104.get("enabled", true)), "ships OFF until judged")
 	var zones := ZONES.config()
-	assert_false(zones.has("pool_roughness"), "OFF leaves the shader's own sheen")
+	# Since 10 Nov wet_earth_1110 (ON) carries its own matte pool sheen; with pool_satin OFF
+	# the zones config holds exactly that sheen, and with both OFF it holds none.
+	if bool(raw.wet_earth_1110.get("enabled", false)):
+		assert_eq(float(zones.get("pool_roughness", -1.0)), float(raw.wet_earth_1110.ground_zones.pool_roughness), "wet earth's matte pool sheen, not pool_satin's")
+	else:
+		assert_false(zones.has("pool_roughness"), "OFF leaves the shader's own sheen")
 
 
 func test_pool_satin_values_are_duller_than_the_shipped_sheen() -> void:
