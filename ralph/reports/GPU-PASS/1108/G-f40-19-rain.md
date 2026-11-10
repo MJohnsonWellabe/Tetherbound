@@ -1,5 +1,7 @@
 # G-f40-19-rain: Cloudreach rain storm sky (F40#19), sky only
 
+> **Superseded (10 Nov):** this verdict used a brief that wrongly named the biome as Stormwood. The sky-only arm was re-judged with a correct Cloudreach brief in `G-f40-19-mist.md`: **+0.44, 3/3 judges preferring it**. That result replaces the −0.16 below.
+
 Frames: `tb/gpu-frames-1108` 563c847c, High, 4 views of `realm_gate_crag` in day rain.
 - **Live:** main 90886c306.
 - **Arm:** live plus `world_look.gd`, `cloudreach_weather.gd` and `cloudreach_visual.json` at tb/item-f40-19-rain 0b9defd35, plus `ITEM-F40-19/overlay_rain_storm_sky.json` (`weather_arms.rain_storm_sky` on).

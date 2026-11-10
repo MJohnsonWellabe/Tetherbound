@@ -1,0 +1,42 @@
+{
+ "G F40#19 live-vs-mist": {
+  "A": [
+   {},
+   {
+    "none": "FIXED"
+   },
+   {
+    "none": "FIXED"
+   }
+  ],
+  "B": [
+   {},
+   {
+    "none": "FIXED"
+   },
+   {
+    "none": "FIXED"
+   }
+  ]
+ },
+ "G F40#19 live-vs-skyonly": {
+  "A": [
+   {},
+   {
+    "none": "FIXED"
+   },
+   {
+    "none": "FIXED"
+   }
+  ],
+  "B": [
+   {},
+   {
+    "none": "FIXED"
+   },
+   {
+    "none": "FIXED"
+   }
+  ]
+ }
+}
