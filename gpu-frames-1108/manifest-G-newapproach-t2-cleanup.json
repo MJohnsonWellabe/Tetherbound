@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "arm-High",
+  "tree": "38d55eb2efe806d972ad566d3959728eb15d2fb2",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cleanup/arm-High/swim-away-day.jpg",
+  "sky_fraction": 0.462,
+  "lower_edges": 0.1449,
+  "script_errors": 0,
+  "note": "High, 1920x1080, T2-current camera set, clear frozen clock, pad glyphs on. base = tb/newapproach 38d55eb2e (arrow off, the branch default); arm = base + NEWAPPROACH-T2-CLEANUP/overlay_cleanup.json (water opaque_depth_m 1.5, night dim 0.55 / #4a6a98, swimmer ring opacity 0.3, trail 0.6). swim-brine-day is missing on BOTH sides: the tool aborts with 'Fixed swim view missed the authored current: swim-brine-day' (current_at below the cue minimum at stand 377.7,-0.7,854.5 on this tree), 2 tries each; the three other views are complete. Regression frames are section G-newapproach-t2-cleanup-regress."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "arm-High",
+  "tree": "38d55eb2efe806d972ad566d3959728eb15d2fb2",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cleanup/arm-High/swim-across-day.jpg",
+  "sky_fraction": 0.452,
+  "lower_edges": 0.119,
+  "script_errors": 0,
+  "note": "High, 1920x1080, T2-current camera set, clear frozen clock, pad glyphs on. base = tb/newapproach 38d55eb2e (arrow off, the branch default); arm = base + NEWAPPROACH-T2-CLEANUP/overlay_cleanup.json (water opaque_depth_m 1.5, night dim 0.55 / #4a6a98, swimmer ring opacity 0.3, trail 0.6). swim-brine-day is missing on BOTH sides: the tool aborts with 'Fixed swim view missed the authored current: swim-brine-day' (current_at below the cue minimum at stand 377.7,-0.7,854.5 on this tree), 2 tries each; the three other views are complete. Regression frames are section G-newapproach-t2-cleanup-regress."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "arm-High",
+  "tree": "38d55eb2efe806d972ad566d3959728eb15d2fb2",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cleanup/arm-High/swim-away-night.jpg",
+  "sky_fraction": 0.634,
+  "lower_edges": 0.1466,
+  "script_errors": 0,
+  "note": "High, 1920x1080, T2-current camera set, clear frozen clock, pad glyphs on. base = tb/newapproach 38d55eb2e (arrow off, the branch default); arm = base + NEWAPPROACH-T2-CLEANUP/overlay_cleanup.json (water opaque_depth_m 1.5, night dim 0.55 / #4a6a98, swimmer ring opacity 0.3, trail 0.6). swim-brine-day is missing on BOTH sides: the tool aborts with 'Fixed swim view missed the authored current: swim-brine-day' (current_at below the cue minimum at stand 377.7,-0.7,854.5 on this tree), 2 tries each; the three other views are complete. Regression frames are section G-newapproach-t2-cleanup-regress."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "base-High",
+  "tree": "38d55eb2efe806d972ad566d3959728eb15d2fb2",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cleanup/base-High/swim-away-day.jpg",
+  "sky_fraction": 0.068,
+  "lower_edges": 0.1446,
+  "script_errors": 0,
+  "note": "High, 1920x1080, T2-current camera set, clear frozen clock, pad glyphs on. base = tb/newapproach 38d55eb2e (arrow off, the branch default); arm = base + NEWAPPROACH-T2-CLEANUP/overlay_cleanup.json (water opaque_depth_m 1.5, night dim 0.55 / #4a6a98, swimmer ring opacity 0.3, trail 0.6). swim-brine-day is missing on BOTH sides: the tool aborts with 'Fixed swim view missed the authored current: swim-brine-day' (current_at below the cue minimum at stand 377.7,-0.7,854.5 on this tree), 2 tries each; the three other views are complete. Regression frames are section G-newapproach-t2-cleanup-regress."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "base-High",
+  "tree": "38d55eb2efe806d972ad566d3959728eb15d2fb2",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cleanup/base-High/swim-across-day.jpg",
+  "sky_fraction": 0.122,
+  "lower_edges": 0.1155,
+  "script_errors": 0,
+  "note": "High, 1920x1080, T2-current camera set, clear frozen clock, pad glyphs on. base = tb/newapproach 38d55eb2e (arrow off, the branch default); arm = base + NEWAPPROACH-T2-CLEANUP/overlay_cleanup.json (water opaque_depth_m 1.5, night dim 0.55 / #4a6a98, swimmer ring opacity 0.3, trail 0.6). swim-brine-day is missing on BOTH sides: the tool aborts with 'Fixed swim view missed the authored current: swim-brine-day' (current_at below the cue minimum at stand 377.7,-0.7,854.5 on this tree), 2 tries each; the three other views are complete. Regression frames are section G-newapproach-t2-cleanup-regress."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "base-High",
+  "tree": "38d55eb2efe806d972ad566d3959728eb15d2fb2",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-newapproach-t2-cleanup/base-High/swim-away-night.jpg",
+  "sky_fraction": 0.595,
+  "lower_edges": 0.1674,
+  "script_errors": 0,
+  "note": "High, 1920x1080, T2-current camera set, clear frozen clock, pad glyphs on. base = tb/newapproach 38d55eb2e (arrow off, the branch default); arm = base + NEWAPPROACH-T2-CLEANUP/overlay_cleanup.json (water opaque_depth_m 1.5, night dim 0.55 / #4a6a98, swimmer ring opacity 0.3, trail 0.6). swim-brine-day is missing on BOTH sides: the tool aborts with 'Fixed swim view missed the authored current: swim-brine-day' (current_at below the cue minimum at stand 377.7,-0.7,854.5 on this tree), 2 tries each; the three other views are complete. Regression frames are section G-newapproach-t2-cleanup-regress."
+ }
+]
