@@ -1,5 +1,7 @@
 # G-f38-3-standoff: Meadows trainer-aside standoff (F38#3)
 
+> **Correction (coordinator, 10 Nov):** the wide bridge-view frames are not capture noise. The GPU lane found that **the arm itself** sends the fight camera to the wide bridge view in 8 of 12 arm frames; live does so in 0 of 12. Excluding grunt-02 and grunt-03 as "not like-for-like" therefore dropped the change's main effect, and the grunt-01-only +0.45 below is **biased and not a verdict on the arm**. F38#3 will be re-scored on the full set, wide arm frames included, once the GPU lane re-pushes them.
+
 Frames: `tb/gpu-frames-1108` da880df9e, High, controller prompts on both sides.
 - **Live:** main 52a633598.
 - **Arm:** live plus `ITEM-F38-3/overlay_meadows_standoff.json` at e5c7548b4 (`trainer_aside.realm_1104` on, Meadows `side_m` 3.8, `forward_m` −2.2).
