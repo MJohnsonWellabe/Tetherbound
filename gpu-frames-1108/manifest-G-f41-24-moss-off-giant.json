@@ -1,0 +1,60 @@
+[
+ {
+  "row": "F41#4",
+  "item": "P2-038",
+  "frame": "stormwood__deepwood__10__the_fallen_giant__day__close",
+  "arm": "live",
+  "tree": "ded3c30f69490e9b5a1d343c7c8b5a5492ba72a4",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__deepwood__10__the_fallen_giant",
+   "--times=day",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "FLAG: THE NOTCHED QUAD REMAINS. moss_cushion_off_1110 removes the cream ovals beside the trainer at the Fallen Giant grove (gone on the arm), but the flat pale lilac-white quad with a notch right of the trainer and the small lilac patch above it remain, same place and shape as live, so that quad is not the moss cushion tier on GPU. Pushed as is on the coordinator's word (10 Nov). This control frame (F41#4 Fallen Giant close) is unchanged by the arm (absdiff 1.16). High, seed 2042. Control: F41#4's Fallen Giant close (F41#24 has no job.json frames). live = main ded3c30f6 (Crown Arch r3 and root_finish_1110 ON). arm = live plus stormwood_ground_zones.gd at tb/item-f41-24-glint 0c17f3350 (moss_cushion_off_1110 in FINISH_CANDIDATES), the branch's moss_cushion_off_1110 block merged into main's stormwood_ground_finish.json, and ITEM-F41-24/overlay_moss_off.json (moss_cushion_off_1110 on).",
+  "match": "exact",
+  "path": "G-f41-24-moss-off-giant/F41-4/live/High/stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "sky_fraction": 0.125,
+  "lower_edges": 0.2127
+ },
+ {
+  "row": "F41#4",
+  "item": "P2-038",
+  "frame": "stormwood__deepwood__10__the_fallen_giant__day__close",
+  "arm": "arm",
+  "tree": "ded3c30f69490e9b5a1d343c7c8b5a5492ba72a4",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=stormwood",
+   "--subset=stormwood__deepwood__10__the_fallen_giant",
+   "--times=day",
+   "--views=close",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "FLAG: THE NOTCHED QUAD REMAINS. moss_cushion_off_1110 removes the cream ovals beside the trainer at the Fallen Giant grove (gone on the arm), but the flat pale lilac-white quad with a notch right of the trainer and the small lilac patch above it remain, same place and shape as live, so that quad is not the moss cushion tier on GPU. Pushed as is on the coordinator's word (10 Nov). This control frame (F41#4 Fallen Giant close) is unchanged by the arm (absdiff 1.16). High, seed 2042. Control: F41#4's Fallen Giant close (F41#24 has no job.json frames). live = main ded3c30f6 (Crown Arch r3 and root_finish_1110 ON). arm = live plus stormwood_ground_zones.gd at tb/item-f41-24-glint 0c17f3350 (moss_cushion_off_1110 in FINISH_CANDIDATES), the branch's moss_cushion_off_1110 block merged into main's stormwood_ground_finish.json, and ITEM-F41-24/overlay_moss_off.json (moss_cushion_off_1110 on).",
+  "match": "exact",
+  "path": "G-f41-24-moss-off-giant/F41-4/arm/High/stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "sky_fraction": 0.124,
+  "lower_edges": 0.2128
+ }
+]
