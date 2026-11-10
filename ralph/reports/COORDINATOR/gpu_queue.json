@@ -2039,6 +2039,34 @@
    "note": "Floor lane: turns on the visual lane's Blender-built continuous Meadows ridge (meadows_ridge_vl, never judged) in place of the faceted procedural horizon rings, and turns walk_03 to heading 215 so the ridge is in view. Red trees by the Burrow entrance stay red: the owner's recorded call ('I actually really like the red trees').",
    "done": true,
    "frames_pushed": "fdb473cae"
+  },
+  {
+   "id": "newapproach-cloud-hash",
+   "kind": "arm",
+   "rows": [
+    "F40#6",
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "1617141219596e51d1421e4f9df062f49a1e88dd",
+   "tree": "tb/newapproach (shaders/cloudreach_cloud_deck.gdshader, scripts/world/cloudreach_world.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDHASH/overlay_cloud_hash.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+     "args": [
+      "--tag=phase2",
+      "--seed=2042",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "cloudreach__riding__phase2_16_terrace_mounted_at_edge, cloudreach__riding__phase2_17_terrace_01.0s, cloudreach__riding__phase2_18_terrace_after",
+   "capture": "High. Next in line. Pre-check before judging: the large hard-edged slabs in the cloud sea under the terrace on base; gone in the arm. If the slabs are still there with the arm on, report that and do not judge: the hash is then not the cause on the deck.",
+   "note": "Floor lane: the Cloudreach cloud deck uses the same sin-based lattice hash that caused GPU-only straight cuts in the wave lines; its cells (190, 92, 44 m) are slab-sized. The arm swaps in a stable hash behind cloud_sea.stable_hash. CPU cannot show the defect, so the GPU pre-check decides.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
