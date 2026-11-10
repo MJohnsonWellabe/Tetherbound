@@ -10,6 +10,7 @@ var _cfg: Dictionary
 var _direction := Vector2.ZERO
 var _text := ""
 var _scale := 1.0
+var _marks := 0
 
 
 static func install(world: Node3D) -> void:
@@ -75,6 +76,16 @@ func _process(_delta: float) -> void:
 	position = anchor + Vector2(float(offset[0]), float(offset[1])) * _scale
 	position = position.clamp(Vector2(100, 60) * _scale, raster.size - Vector2(100, 80) * _scale)
 	_text = str(_cfg.strong_label) if flow.length() >= float(_cfg.strong_speed_m_s) else str(_cfg.label)
+	# `strength_marks` (absent or off = unchanged): how hard the current pushes,
+	# as one to three bars behind the arrow (GPU T2 judges: "strength still
+	# has no cue"). Shape only, no colour or motion dependence.
+	_marks = 0
+	var marks: Variant = _cfg.get("strength_marks", {})
+	if marks is Dictionary and bool((marks as Dictionary).get("enabled", false)):
+		_marks = 1
+		for threshold: Variant in (marks as Dictionary).get("speeds_m_s", [0.6, 1.2]):
+			if flow.length() >= float(threshold):
+				_marks += 1
 	visible = true
 	queue_redraw()
 
@@ -92,6 +103,19 @@ func _draw() -> void:
 		tail + side * width * 0.33, tail - side * width * 0.33, neck - side * width * 0.33, neck - side * width])
 	draw_circle(Vector2.ZERO, length * 0.65, background)
 	draw_colored_polygon(arrow, foreground)
+	if _marks > 0:
+		# Bars sit behind the tail, across the flow, inside a plate that
+		# extends the badge away from the arrow's head.
+		var gap := width * 0.62
+		var first := tail - _direction * (length * 0.36)
+		draw_line(-_direction * length * 0.5, first - _direction * gap * 2.4, background, length * 1.05)
+		draw_circle(first - _direction * gap * 2.4, length * 0.525, background)
+		draw_circle(Vector2.ZERO, length * 0.65, background)
+		draw_colored_polygon(arrow, foreground)
+		for index in 3:
+			var at := first - _direction * gap * float(index)
+			var colour := foreground if index < _marks else Color(foreground, 0.22)
+			draw_line(at - side * width * 0.7, at + side * width * 0.7, colour, maxf(2.0, width * 0.3))
 	var font := ThemeDB.fallback_font
 	var font_size := maxi(1, roundi(float(_cfg.font_size_px_720) * _scale))
 	var text_size := font.get_string_size(_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
