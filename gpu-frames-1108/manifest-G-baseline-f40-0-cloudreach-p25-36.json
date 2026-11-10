@@ -1,0 +1,178 @@
+[
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__approach__dawn__clear.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__approach__dawn__clear.jpg",
+  "sky_fraction": 0.037,
+  "lower_edges": 0.0636,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__approach__dawn__rain.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__approach__dawn__rain.jpg",
+  "sky_fraction": 0.151,
+  "lower_edges": 0.0835,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear.jpg",
+  "sky_fraction": 0.138,
+  "lower_edges": 0.1926,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__rain.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__approach__day__rain.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.1546,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__detail__dawn__clear.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__detail__dawn__clear.jpg",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.0839,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__detail__dawn__rain.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__detail__dawn__rain.jpg",
+  "sky_fraction": 0.146,
+  "lower_edges": 0.102,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__detail__day__clear.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__detail__day__clear.jpg",
+  "sky_fraction": 0.13,
+  "lower_edges": 0.178,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__detail__day__rain.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__detail__day__rain.jpg",
+  "sky_fraction": 0.187,
+  "lower_edges": 0.1748,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__dawn__clear.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__gameplay__dawn__clear.jpg",
+  "sky_fraction": 0.039,
+  "lower_edges": 0.0679,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__dawn__rain.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__gameplay__dawn__rain.jpg",
+  "sky_fraction": 0.156,
+  "lower_edges": 0.0805,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__clear.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__clear.jpg",
+  "sky_fraction": 0.125,
+  "lower_edges": 0.1659,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__rain.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__rain.jpg",
+  "sky_fraction": 0.185,
+  "lower_edges": 0.1531,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__reverse__dawn__clear.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__reverse__dawn__clear.jpg",
+  "sky_fraction": 0.026,
+  "lower_edges": 0.0551,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__reverse__dawn__rain.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__reverse__dawn__rain.jpg",
+  "sky_fraction": 0.172,
+  "lower_edges": 0.0819,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__clear.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__clear.jpg",
+  "sky_fraction": 0.251,
+  "lower_edges": 0.1833,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__rain.png",
+  "preset": "main-High",
+  "tree": "2ffc97db0f525ac25f252d75e4ed48349f6d1463",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-baseline-f40-0-cloudreach-p25-36/main-High/cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__rain.jpg",
+  "sky_fraction": 0.26,
+  "lower_edges": 0.1576,
+  "script_errors": 0,
+  "note": "BASELINE (owner floor rule; F40#0), one side, no arm, High, main 2ffc97db0, --piece=25-36 --ground-cover-cache. PARTIAL: 16 of 48 frames (windscar_ravine_05 windscar_beacon, dawn and day). The 32 broken_causeways_04 broken_skyroad_arch frames FAILED in the tool on main: 'no grounded, open approach/detail point within the bounded fallback' (approach, detail) and 'Game.debug_teleport_to refused destination' (gameplay, reverse); deterministic stand failure, not a GPU fault (tool exit 1)."
+ }
+]
