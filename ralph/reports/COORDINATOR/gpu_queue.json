@@ -1465,6 +1465,75 @@
    "capture": "live vs arm at High, seed 2042; Medium on the same frames if the High arm gains (F41#17 is near the bar). Pre-push: no pink, salmon or red-brown trunks; sample trunk RGB at crown_arch (red not above green); foliage unchanged.",
    "note": "Red-family trunks were the batch-41 judges' top F41#17 blocker (ITEM-BARK-GREY/ARM.md): CommonTree and TwistedTree bark retinted to cool grey-brown through the existing foliage-grade retint; the groves follow.",
    "done": true
+  },
+  {
+   "id": "newapproach-waves",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "64dab56f09dae9199bfc95324cff9b3bfe557875",
+   "tree": "main plus shaders/water.gdshader, scripts/world/water_surface.gd and tools/capture_tidewake_f13_5.gd from that head (the tool change adds --strip-frames; merge with main's version of the tool, which now only requires the arrow when it is on by default)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WAVES/overlay_lane_waves.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "godot_args": [
+    "--fixed-fps",
+    "20"
+   ],
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--strip-frames=10",
+    "--strip-gap-frames=2",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "frames": "10-frame strips (1 s) for swim-away-day, swim-across-day and swim-away-night; plus the tool's --only=currents dock frames on both sides",
+   "capture": "High, base (overlay off) vs arm (overlay on), current arrow OFF on both. If the across view shows a streaky smear in the foreground, re-shoot the arm with lane_crest 0 before pushing. Also make a short animated GIF or MP4 per view if you can (judges can't see motion in stills).",
+   "note": "OWNER DESIGN (10 Nov): \"The in world cue should just be which way the waves move.\" The sea's ripples used to scroll in one fixed global direction regardless of the currents; now, in a current lane, they travel with the flow (faster in stronger currents). RUN FIRST. RESULT: captured at lane_crest 0 (dabeb8186 strips + GIFs; docks e674b9cc2); crest 0.3 smeared the across view.",
+   "done": true
+  },
+  {
+   "id": "f41-24-moss-off",
+   "kind": "arm",
+   "rows": [
+    "F41#24"
+   ],
+   "branch": "tb/item-f41-24-glint",
+   "head": "0c17f335024ecc59ae41f9c1fdf25277781cb411",
+   "tree": "current main (has root_finish ON since #887; grey bark lands with #888) plus the branch's moss_cushion_off_1110 code and config block (merge the block into stormwood_ground_finish.json; don't overwrite it)",
+   "overlay_branch": "tb/item-f41-24-glint",
+   "overlay": "ralph/reports/LANES/ITEM-F41-24/overlay_moss_off.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+   "args": "--stands=giant --phases=calm --no-aftermath plus the F41#4 fallen_giant close as a control",
+   "capture": "live (main, root finish ON) vs arm (+ moss cushions off) at High. Pre-push: no pale lilac-white notched quad or cream ovals beside the trainer; ground reads as dark wet earth with grass.",
+   "note": "F41#24 second part (ITEM-F41-24/ARM.md): the pale notched quad and cream ovals are the moss-cushion cover tier.",
+   "done": true
+  },
+  {
+   "id": "f41-24-fleck-round",
+   "kind": "arm",
+   "rows": [
+    "F41#24"
+   ],
+   "branch": "tb/item-f41-24-glint",
+   "head": "9a14b5a53813c266b4ac817acde27795c719f2f3",
+   "tree": "current main (root finish ON) plus the branch's fleck_round_1110 changes (stormwood_ground_cover.gd / shader as on the branch, and the fleck_round_1110 block merged into stormwood_ground_finish.json); moss_cushion_off lost (neutral), so do NOT add it: base = main, arm = main + round flecks",
+   "overlay_branch": "tb/item-f41-24-glint",
+   "overlay": "ralph/reports/LANES/ITEM-F41-24/overlay_fleck.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+   "args": "--stands=giant --phases=calm --no-aftermath plus the fallen_giant close control",
+   "capture": "live (main) vs arm (+ round flecks) at High. Pre-push: the pale lilac notched quad and small patch beside the trainer are gone; flecks read as small round sparkles.",
+   "note": "F41#24 last try (ITEM-F41-24): on GPU the notched quad is one 0.67 m sw_glint cell drawn as a whole-cell square; round flecks replace the square cells.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

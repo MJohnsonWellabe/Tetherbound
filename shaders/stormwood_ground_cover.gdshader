@@ -240,6 +240,11 @@ uniform float sw_clearing = 0.0;
 uniform float sw_glint = 0.0;
 uniform vec3 sw_glint_copper : source_color = vec3(0.78, 0.52, 0.3);
 uniform vec3 sw_glint_glass : source_color = vec3(0.55, 0.7, 0.95);
+// F41#24 (fleck_round_1110, OFF): a fleck's radius in metres. 0 keeps the
+// shipped look, where a fleck fills its whole 0.67 m grid cell; on a flat wet
+// soil patch that cell read as a glossy lavender square. Above 0 a fleck is a
+// small soft disc at a jittered point inside its cell.
+uniform float sw_glint_radius_m = 0.0;
 uniform float sw_glass_glow = 0.0;
 
 // COPIED VERBATIM from Terrain3D 1.0.2's generated shader, same as the other
@@ -685,6 +690,10 @@ void fragment() {
 			vec2 fleck_cell = floor(v_ground_xz * 1.5);
 			float pick = hash12(fleck_cell + vec2(7.1, 3.3));
 			glint = step(1.0 - sw_glint, pick);
+			if (sw_glint_radius_m > 0.0) {
+				vec2 centre = (fleck_cell + 0.25 + 0.5 * vec2(hash12(fleck_cell + vec2(11.3, 2.9)), hash12(fleck_cell + vec2(4.1, 17.7)))) / 1.5;
+				glint *= 1.0 - smoothstep(sw_glint_radius_m * 0.6, sw_glint_radius_m, length(v_ground_xz - centre));
+			}
 			glass = glint * step(0.5, hash12(fleck_cell + vec2(1.9, 8.7)));
 			leaf = mix(leaf, mix(sw_glint_copper, sw_glint_glass, glass) * 0.6, glint * 0.65);
 		}

@@ -64,10 +64,15 @@ static func moss_variation_params(finish: Dictionary) -> Dictionary:
 	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
 		return {}
 	var out := {}
-	for key: String in (cfg as Dictionary):
+	var merged := (cfg as Dictionary).duplicate()
+	# F41#24 fleck_round_1110 (OFF until judged): round glints, not cell squares.
+	var round_cfg: Variant = finish.get("fleck_round_1110", {})
+	if round_cfg is Dictionary and bool((round_cfg as Dictionary).get("enabled", false)):
+		merged.merge(round_cfg as Dictionary, true)
+	for key: String in merged:
 		if not key.begins_with("sw_"):
 			continue
-		var value: Variant = (cfg as Dictionary)[key]
+		var value: Variant = merged[key]
 		out[key] = Color(str(value)) if value is String else float(value)
 	return out
 
