@@ -1138,6 +1138,36 @@
    "capture": "live vs arm at High, seed 2042; script-error list empty. Pre-push check: no blue sky gaps on the arm; a knee-high mist near the gate; the camera not buried in mist.",
    "note": "Cloudreach day rain (ITEM-F40-19/ARM.md): closed slate overcast plus low gate mist that follows the local player's ground.",
    "done": false
+  },
+  {
+   "id": "newapproach-t2-cue",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "tree": "main (no code or config change; the arm is the capture tool's --tidewake-current-candidate flag)",
+   "overlay": null,
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "arm_extra_args": [
+    "--tidewake-current-candidate"
+   ],
+   "frames": [
+    "swim-away-day",
+    "swim-across-day",
+    "swim-away-night"
+   ],
+   "capture": "High AND Medium (UX.md line 322), base vs arm; the tool fails closed if the trainer isn't swimming in a current. Pre-push check: a 'Current' arrow badge beside the swimmer on all arm frames, none on base. Pad glyphs on.",
+   "note": "LANE-NEWAPPROACH T2 (NEWAPPROACH-T2/VERDICT.md): the built swimming-current arrow took blind direction reads from 4/9 guesses (readability 2.0) to 9/9 (8.2) on CPU in the first valid swimmer-view frames. UX.md says it ships ON by default once it passes this Medium/High judge.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
