@@ -1586,6 +1586,61 @@
    "note": "F41#4 Fallen Giant trunk dither (ITEM-TRUNK-DITHER/ARM.md): the near-lens fade dissolved trunks over 3-7 m; the arm narrows it to 3-4 m.",
    "done": true,
    "frames_pushed": "tb/gpu-frames-1108 531247ece (job frames) and 07591e530 (giant_calm)"
+  },
+  {
+   "id": "newapproach-wave-crests-v3",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "c8b080ef0",
+   "tree": "tb/newapproach (shaders/water_current_flow.gdshader, tools/capture_tidewake_f13_5.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WAVES/overlay_crests.json",
+   "overlay_format": "deep merge",
+   "arm_b_inline_overlay": {
+    "data/config/tidewake_look.json": {
+     "current_flow": {
+      "shader": {
+       "crest_shape": 1.0,
+       "crest_width_m": 4.6,
+       "crest_length_m": 2.6,
+       "crest_speed": 1.0,
+       "crest_margin_m_s": 2.6
+      },
+      "state_shader": {
+       "live": {
+        "chop_cap_opacity": 0.5
+       }
+      }
+     }
+    }
+   },
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night, each with 10-frame strips (_t1.._t9); three sides: base (overlay off), arm A (overlay_crests.json, margin 1.6 = crests 2.2 m/s), arm B (arm_b_inline_overlay, margin 2.6 = crests 3.2 m/s). Current arrow OFF on every side.",
+   "capture": "High only. Pre-push: no crest cut by a straight horizontal or diagonal edge, no outline changing frame to frame (report before pushing if any); in swim-away-day the crests advance down-screen clearly faster than the logs (estimate px per frame for crests vs a log). GIFs of swim-away-day for all three sides.",
+   "note": "Owner design: the in-world current cue is the direction the waves move. Third attempt; the new idea answers LANE-SCOUT's camera-follow finding (the swimmer drifts with the water, so slow crests look backwards against the shore): crest speed gets a margin over the drift. Offline (CPU) the sign is right in both day views but the away margin is only about 1.4x the log on screen, hence arm B with a bigger margin.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
