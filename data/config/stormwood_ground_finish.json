@@ -326,5 +326,12 @@
     "height_ratio": 0.8,
     "sink": 0.05,
     "tint_wood": "#2c291f"
+  },
+  "fleck_round_1110": {
+    "_why_on": "GPU G-f41-24-fleck-round (10 Nov, LANE-SCOUT 0600155b8, three code-blind judges): F41#24 +0.74, 3/3; the pale lilac notched quad beside the trainer at the Fallen Giant grove is gone (it was one glint fleck filling its whole 0.67 m cell).",
+    "enabled": true,
+    "scope": "client_presentation",
+    "_candidate": "F41#24 (LANE-MESHY, 10 Nov 2026): moss_variation_1101's sw_glint fleck filled its whole floor(xz * 1.5) grid cell (0.67 m square) at roughness 0.16, specular 0.75 and stormglass-blue emission, so on a flat wet-soil patch one fleck read as a glossy lavender square reflecting the lilac sky. Each fleck is now a soft disc of sw_glint_radius_m at a jittered point inside its cell; fleck count and colours are unchanged. Presentation only.",
+    "sw_glint_radius_m": 0.12
   }
 }

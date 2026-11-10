@@ -1,6 +1,7 @@
 {
   "updated": "10 Nov 2026 01:45 UTC",
   "headline": [
+    "10 Nov 14:00: grey bark and arrow-off-by-default landed (#888). Owner's wave-motion current cue: first version indistinguishable from base on GPU; swim-across already reads from the moving water, swim-away does not; LANE-NEWAPPROACH rebuilding with crests across the flow.",
     "10 Nov 13:00: owner direction: the on-screen current arrow is OFF by default (kept in Accessibility); the in-world current cue will be the direction the waves move (LANE-NEWAPPROACH). Grey bark ships (all four Stormwood rows gain); Crown Arch r3 and the root fix landed (#887).",
     "10 Nov 11:55: Crown Arch r3 ships (+0.50 on High and Medium, 3/3; the free Blender pipeline's first win); F41#17 maps 6.77 in that batch, so it stays open, and the judges flag red-family tree trunks as the next blocker.",
     "10 Nov 10:30: Stormwood big swing ships (groves + wet earth + fine rain): F41#17 +0.55 to 7.23 (near the bar), F41#5 +0.50, F41#4 +0.27, all 3/3; landed (#886) with the Tidewake current strength bars (+0.57).",
@@ -1868,9 +1869,14 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 42 (in CI)",
-      "what": "Stormwood trunks retinted out of the red family (all four rows gain, 3/3; Crown Arch +1.19); Tidewake current arrow now OFF by default (owner: the in-world cue is the wave motion)",
+      "pr": "batch 43 (in CI)",
+      "what": "Stormwood ground glints are small round sparkles instead of square cells: the lilac quad beside the trainer at the Fallen Giant is gone (F41#24 +0.74, 3/3)",
       "when": "10 Nov, in CI"
+    },
+    {
+      "pr": "#888",
+      "what": "Stormwood trunks retinted out of the red family (all four rows gain, 3/3; Crown Arch +1.19); Tidewake current arrow now OFF by default (owner: the in-world cue is the wave motion)",
+      "when": "10 Nov 14:01"
     },
     {
       "pr": "#887",
@@ -1886,11 +1892,6 @@
       "pr": "#885",
       "what": "Cloudreach day rain closes to a slate overcast with no blue sky gaps (F40#19 +0.44, 3/3); the gate mist variant lost and is not shipped",
       "when": "10 Nov 08:03"
-    },
-    {
-      "pr": "#884",
-      "what": "exploration HUD steps back while a fight result is on screen (loss card, catch card, beaten line): F41#16 loss card 5.34 -> 7.44 (+2.10, 3/3, HUD judged on CPU)",
-      "when": "10 Nov 07:11"
     }
   ],
   "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
