@@ -1,0 +1,9 @@
+Yx: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Ov: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Pu: "none"
+Sz: none
+Bw: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Sk: none
+It: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Rc: "none"
+Yh: "none"
