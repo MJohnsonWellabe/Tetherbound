@@ -1402,8 +1402,8 @@
    "overlay_format": "deep merge",
    "frames": "same 9 Stormwood frames as stormwood-swing-1",
    "capture": "High: base = main + de-pinked swing overlay; arm = base + groves overlay (the delta is groves alone). Run AFTER stormwood-swing-2-depink so its arm frames can serve as this base if the trees match. Pre-push: open stands end in layered groves with gaps (no tree wall, no tree on a road or in the foreground); deepwood frames unchanged.",
-   "note": "Stormwood big swing part 2 (ITEM-SW-GROVES/ARM.md): two clumped bands of existing storm trees around four open stands so the flat horizon steps back in depth. MultiMesh, visual only, no colliders, about 1,870 instances.",
-   "done": false
+   "note": "Stormwood big swing part 2 (ITEM-SW-GROVES/ARM.md): two clumped bands of existing storm trees around four open stands so the flat horizon steps back in depth. MultiMesh, visual only, no colliders, about 1,870 instances. NOTE: stormwood_world.gd (groves install hook) is also needed; the GPU lane copied it.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
