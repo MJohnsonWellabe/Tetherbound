@@ -1465,6 +1465,24 @@
    "capture": "live vs arm at High, seed 2042; Medium on the same frames if the High arm gains (F41#17 is near the bar). Pre-push: no pink, salmon or red-brown trunks; sample trunk RGB at crown_arch (red not above green); foliage unchanged.",
    "note": "Red-family trunks were the batch-41 judges' top F41#17 blocker (ITEM-BARK-GREY/ARM.md): CommonTree and TwistedTree bark retinted to cool grey-brown through the existing foliage-grade retint; the groves follow.",
    "done": true
+  },
+  {
+   "id": "f41-24-moss-off",
+   "kind": "arm",
+   "rows": [
+    "F41#24"
+   ],
+   "branch": "tb/item-f41-24-glint",
+   "head": "0c17f335024ecc59ae41f9c1fdf25277781cb411",
+   "tree": "current main (has root_finish ON since #887; grey bark lands with #888) plus the branch's moss_cushion_off_1110 code and config block (merge the block into stormwood_ground_finish.json; don't overwrite it)",
+   "overlay_branch": "tb/item-f41-24-glint",
+   "overlay": "ralph/reports/LANES/ITEM-F41-24/overlay_moss_off.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+   "args": "--stands=giant --phases=calm --no-aftermath plus the F41#4 fallen_giant close as a control",
+   "capture": "live (main, root finish ON) vs arm (+ moss cushions off) at High. Pre-push: no pale lilac-white notched quad or cream ovals beside the trainer; ground reads as dark wet earth with grass.",
+   "note": "F41#24 second part (ITEM-F41-24/ARM.md): the pale notched quad and cream ovals are the moss-cushion cover tier.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
