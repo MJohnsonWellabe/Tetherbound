@@ -111,6 +111,21 @@
         "phase_readability_candidate": {"phases": {"building": {"fog_density_add": 0.0055, "rain_amount": 0.9, "sun_energy_mult": 0.34}}}
       }
     },
+    "fine_rain_1110": {
+      "_why_on_1110": "GPU G-stormwood-groves (10 Nov, LANE-SCOUT 5455a13d1, three code-blind judges, confirming batch): wet earth + fine rain + horizon groves together: F41#17 +0.55 (to 7.23), F41#5 +0.50, F41#4 +0.27, all 3/3; no tree-wall read. The de-pinked wet earth alone was neutral (G-stormwood-swing-2-depink).",
+      "enabled": true,
+      "scope": "client_presentation",
+      "_why": "Stormwood big swing (LANE-MESHY, 10 Nov 2026; judges 3/3 across F41#4/#5/#12/#17: foreground rain reads as thick white rods). The near layer's streaks after soft_rain_1101 are 0.07 m wide, up to 1.35x and fade only within 2.2-4.5 m of the lens, so the nearest drops read as poles. On: thinner, shorter, fainter near streaks capped at 1x, faded out across 4-8 m of view depth. The far and curtain layers are unchanged. Presentation only. OFF until judged.",
+      "overlay": {
+        "rain": {
+          "streak_width_m": 0.03,
+          "streak_length_m": 0.75,
+          "alpha": 0.2,
+          "scale_max": 1.0,
+          "near_fade_m": [4.0, 8.0]
+        }
+      }
+    },
     "soft_rain_1101": {
       "enabled": true, "_why_on": "ON (visual lane v1/b16, 3 Nov 2026): swc storm-light set (storm_sky_1101 + soft_rain_1101 + moss_variation_1101 + value_lift_candidate) vs a fresh same-branch base (swb_base), three code-blind judges, linear slope 1.31, r 0.93, anchor RMSE 0.31: F41#5 forest ground 4.84 -> 5.84, F41#2 surge phases 5.06 -> 5.80, F41#17 6.45 -> 6.80, F41#19 5.32 -> 5.45, F41#4 5.54 -> 5.58, F41#1 4.88 -> 4.71 (noise).",
       "scope": "client_presentation",

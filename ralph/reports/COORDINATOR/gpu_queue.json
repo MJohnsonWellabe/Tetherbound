@@ -1222,8 +1222,188 @@
     "swim-away-night"
    ],
    "capture": "High: base (arrow on, overlay off) vs arm (arrow on, overlay on) on the same tree; add Medium if the High arm maps 7.5+. Pre-push: thin streaks near the swimmer running the arrow's way, strength bars on the badge; flag if they read as painted lane lines.",
-   "note": "LANE-NEWAPPROACH T2B (NEWAPPROACH-T2B/ARM.md): the judges' asks after the arrow passed: strength has no cue, and the water near the swimmer disagrees with the arrow. Adds swimmer-scale flow streaks (within 38 m only, dock views unchanged) and strength bars on the badge.",
-   "done": false
+   "note": "LANE-NEWAPPROACH T2B (NEWAPPROACH-T2B/ARM.md): the judges' asks after the arrow passed: strength has no cue, and the water near the swimmer disagrees with the arrow. Adds swimmer-scale flow streaks (within 38 m only, dock views unchanged) and strength bars on the badge. RESULT: captured (cd277a3dc); streaks read as painted lane lines, so not judged; bars to be judged on CPU, streaks reworked.",
+   "done": true
+  },
+  {
+   "id": "t2-arrow-confirm",
+   "kind": "confirm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "tree": "main as it is now (the swimming-current arrow is ON by default since #883); no flags, no overlay",
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "frames": [
+    "swim-away-day",
+    "swim-across-day",
+    "swim-away-night"
+   ],
+   "capture": "CLOSE-OUT confirm, one-sided: plain main at High AND Medium (no --tidewake-current-candidate flag; the arrow must show because it is ON by default). Pad glyphs on. Pre-push: arrow visible on every frame.",
+   "note": "LANE-SCOUT 62b939c4e: the arrow side mapped 7.66 at High (extrapolated on a steep fit), so it needs a confirming batch at High and Medium on plain main.",
+   "done": true
+  },
+  {
+   "id": "newapproach-t2-flecks",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "7b38eaa7488f0ece1c462ff5bf2c0c170e7ccfa0",
+   "tree": "main plus shaders/water_current_flow.gdshader and scripts/ui/water_current_cue.gd from that head",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-T2B/overlay_flecks.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_tidewake_f13_5.gd",
+   "args": [
+    "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+    "--views=swim-away-day,swim-across-day,swim-away-night",
+    "--preset={PRESET}",
+    "--capture-size=1920x1080",
+    "--tidewake-current-candidate",
+    "--source-sha={SHA}",
+    "--out={OUT}"
+   ],
+   "frames": [
+    "swim-away-day",
+    "swim-across-day",
+    "swim-away-night"
+   ],
+   "capture": "High: base (arrow on, overlay off) vs arm (arrow on, flecks overlay) on the same tree. Pre-push: short soft flecks within about 18 m of the swimmer along the arrow; if any long lines, dash ladders or marks toward the horizon appear, report instead of pushing.",
+   "note": "T2B streaks reworked into short noise-broken foam flecks (the first version read as painted lanes, -1.54). Run after t2-arrow-confirm.",
+   "done": true
+  },
+  {
+   "id": "stormwood-swing-1",
+   "kind": "arm",
+   "rows": [
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#17"
+   ],
+   "branch": "tb/item-stormwood-ground",
+   "head": "11af58cec506d6ee93abc89b1ea4777732a3943c",
+   "tree": "main plus the branch's game files at that head (stormwood_ground_zones.gd, stormwood_surge_rules.gd, stormwood_ground_finish.json, stormwood_surge.json; check the diff against its merge base, additions only)",
+   "overlay_branch": "tb/item-stormwood-ground",
+   "overlay": "ralph/reports/LANES/ITEM-SW-SWING/overlay_swing.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+    "stormwood__deepwood__09__lantern_hollow__day__close",
+    "stormwood__deepwood__10__the_fallen_giant__day__close",
+    "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+    "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+    "stormwood__landmark__crown_arch__day__close",
+    "stormwood__landmark__crown_heartstone__day__close",
+    "stormwood__landmark__glass_field__day__close",
+    "stormwood__landmark__lantern_hollow__night__close"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty. Pre-push: path and low ground warm rutted earth instead of glossy black, foreground rain thin; flag any pinkish loam (red/oxblood rule).",
+   "note": "Stormwood big swing part 1 (ITEM-SW-SWING/ARM.md): banked wet-earth ground (no black gloss pools) plus fine faded near rain; the judges' shared 3/3 asks on F41#4/#5/#12/#17. RESULT: captured b85e807e1; loam reads salmon/mauve under lilac sky on five frames; de-pink version requested.",
+   "done": true
+  },
+  {
+   "id": "stormwood-swing-2-depink",
+   "kind": "arm",
+   "rows": [
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#17"
+   ],
+   "branch": "tb/item-stormwood-ground",
+   "head": "fb1ec6b371c158932baf93dda5c2da072ab3e011",
+   "tree": "main plus the branch's game files at that head (stormwood_ground_zones.gd, stormwood_surge_rules.gd, stormwood_ground_finish.json, stormwood_surge.json; diff against merge base)",
+   "overlay_branch": "tb/item-stormwood-ground",
+   "overlay": "ralph/reports/LANES/ITEM-SW-SWING/overlay_swing.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+    "stormwood__deepwood__09__lantern_hollow__day__close",
+    "stormwood__deepwood__10__the_fallen_giant__day__close",
+    "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+    "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+    "stormwood__landmark__crown_arch__day__close",
+    "stormwood__landmark__crown_heartstone__day__close",
+    "stormwood__landmark__glass_field__day__close",
+    "stormwood__landmark__lantern_hollow__night__close"
+   ],
+   "capture": "ARM side only; reuse the live-High frames from stormwood-swing-1 (same main for these files). Pre-push: ground dark olive grey-brown wet earth, not glossy black and not salmon/mauve/pink (sample crown_arch foreground: red not above green); pools feathered; near rain thin; charged road amber vein readable.",
+   "note": "Swing de-pink after swing-1 lost (-0.23 to -0.41: loam read pink, ground too light). Darker olive wet earth (soil #2f3127, pools #22241f, matte), feathered pools, fine rain kept.",
+   "done": true
+  },
+  {
+   "id": "newapproach-clouddeck",
+   "kind": "arm",
+   "rows": [
+    "F40#6",
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "6c4709d8f7f26e518f756753d906ef2e1631a43f",
+   "tree": "main plus shaders/cloudreach_cloud_deck.gdshader, scripts/world/cloudreach_world.gd and data/config/cloudreach_visual.json from that head (diff against merge base; cloudreach_visual.json on main now also carries rain_storm_sky from #885, so merge the deck_soft key rather than overwrite)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDDECK/overlay_deck_soft.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+   "args": [
+    "--tag=phase2",
+    "--seed=2042",
+    "--output={OUT}"
+   ],
+   "frames": [
+    "cloudreach__riding__phase2_16_terrace_mounted_at_edge",
+    "cloudreach__riding__phase2_17_terrace_01.0s",
+    "cloudreach__riding__phase2_18_terrace_02.0s"
+   ],
+   "capture": "live vs arm at High, seed 2042; receipt cloud_sea.deck_soft 1.0. Pre-push: the cloud sea reads soft without square or triangle facets on the arm; if facets remain, report instead of pushing.",
+   "note": "LANE-NEWAPPROACH shared cause: the cloud deck's grazing fade reads each triangle's own normal, so the whole Cloudreach cloud floor looks faceted on GPU (named on all 18 Cloudreach rows). One shader fix. RESULT: not pushed; facets remain and deck_soft adds a small-rectangle patchwork (tile-edge alpha and stacked decks suspected). One retry allowed.",
+   "done": true
+  },
+  {
+   "id": "rescore-f39-21-f41-13",
+   "kind": "check",
+   "rows": [
+    "F39#21",
+    "F41#13"
+   ],
+   "tree": "main as it is now",
+   "frames": "job.json frames of F39#21 and F41#13",
+   "capture": "one-sided re-score at High on current main (no overlay)",
+   "note": "Both scores predate shipped fixes (F39#21 before the hero card #876; F41#13 before charged_1105), per LANE-NEWAPPROACH's floor survey. Re-score before anyone spends more work on them.",
+   "done": true
+  },
+  {
+   "id": "stormwood-groves",
+   "kind": "arm",
+   "rows": [
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#17"
+   ],
+   "branch": "tb/item-stormwood-ground",
+   "head": "75b98d438b76ddeebe014b12bb07e7151603d546",
+   "tree": "main plus the branch's game files at that head (stormwood_horizon_groves.gd, stormwood_destination_dressing.json, plus the swing part 1 files: stormwood_ground_zones.gd, stormwood_surge_rules.gd, stormwood_ground_finish.json, stormwood_surge.json; diff against merge base)",
+   "base_overlay": "ralph/reports/LANES/ITEM-SW-SWING/overlay_swing.json (the de-pinked swing at this head, on BOTH sides)",
+   "overlay_branch": "tb/item-stormwood-ground",
+   "overlay": "ralph/reports/LANES/ITEM-SW-GROVES/overlay_groves.json",
+   "overlay_format": "deep merge",
+   "frames": "same 9 Stormwood frames as stormwood-swing-1",
+   "capture": "High: base = main + de-pinked swing overlay; arm = base + groves overlay (the delta is groves alone). Run AFTER stormwood-swing-2-depink so its arm frames can serve as this base if the trees match. Pre-push: open stands end in layered groves with gaps (no tree wall, no tree on a road or in the foreground); deepwood frames unchanged.",
+   "note": "Stormwood big swing part 2 (ITEM-SW-GROVES/ARM.md): two clumped bands of existing storm trees around four open stands so the flat horizon steps back in depth. MultiMesh, visual only, no colliders, about 1,870 instances. NOTE: stormwood_world.gd (groves install hook) is also needed; the GPU lane copied it.",
+   "done": true
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

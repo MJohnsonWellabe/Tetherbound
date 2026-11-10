@@ -39,7 +39,10 @@ func test_path_loam_ships_on_and_darkens_the_path() -> void:
 	assert_true(bool(raw.path_loam_1104.get("enabled", false)), "ships ON (judged 5.92)")
 	assert_true(str(raw.path_loam_1104.get("_why_on", "")).contains("5.92"), "_why_on cites the judged score")
 	var shipped := Color(str(raw.terrain_materials.textures.path.tint))
-	assert_eq(Color(str(ZONES.finish().terrain_materials.textures.path.tint)), Color(str(raw.path_loam_1104.terrain_materials.textures.path.tint)), "finish() applies the darker path")
+	# wet_earth_1110 (ON since 10 Nov, merged last in FINISH_CANDIDATES) supersedes the path tint;
+	# with it OFF, finish() applies path_loam_1104's darker path.
+	var winner: Dictionary = raw.wet_earth_1110 if bool(raw.wet_earth_1110.get("enabled", false)) else raw.path_loam_1104
+	assert_eq(Color(str(ZONES.finish().terrain_materials.textures.path.tint)), Color(str(winner.terrain_materials.textures.path.tint)), "finish() applies the last enabled path finish")
 	var cand := Color(str(raw.path_loam_1104.terrain_materials.textures.path.tint))
 	assert_true(cand.get_luminance() < shipped.get_luminance(), "a darker path")
 	assert_true(cand.get_luminance() > 0.2, "not near-black")
