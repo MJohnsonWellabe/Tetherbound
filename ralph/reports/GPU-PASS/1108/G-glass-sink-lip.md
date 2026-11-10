@@ -1,4 +1,8 @@
-# G-glass-sink-lip: Glass Sink lip ring (F41#10)
+# G-glass-sink-lip: Glass Sink lip ring (F41#10) — VOID
+
+> **VOID (coordinator, 10 Nov).** The GPU lane reports that no lip-ring slab appears in any of the three frames: 18 slabs about 87 m apart, and all three stands fall between them. Identical raw scores were therefore expected and say nothing about the asset. The result below is kept only as a record and is **not** a verdict on the lip ring. The build lane is making the ring continuous, to be requeued as `glass-sink-lip-dense`.
+>
+> The 0.3–4.7% pixel difference was this tell; I should have stopped there. In future I will check the GPU lane's capture note and any "don't judge yet" flag before judging.
 
 Frames: `tb/gpu-frames-1108` 14585eb1, High. Live is main 52a633598. The arm is live plus the blender-1109 assets, the same three scripts and two config files at cdb3cbe1b, plus `ITEM-SINK-LIP/overlay_lip_ring.json` (`lip_ring_1109` on).
 
@@ -37,7 +41,7 @@ The recorded defect ("an abrupt unmarked terrain edge over a uniform checker-tex
 
 Two judges class this as scene work, one as new art. A ring at the current lip does not reach it from these camera stands.
 
-**Verdict: flat, so do not ship.** This parks the lip-ring idea for F41#10.
+~~Verdict: flat, so do not ship. This parks the lip-ring idea for F41#10.~~ Withdrawn: VOID, see the top of this file. The arm was not in frame.
 
 ## Recurring (both sides, 3/3)
 The Stormwood fight anchor shows the same faults as before:
