@@ -902,6 +902,27 @@
    "capture": "live vs arm at High, seed 2042; script-error list empty; receipt shows combat.json trainer_aside.realm_1104.enabled true with meadows side_m 3.8 / forward_m -2.2",
    "note": "Meadows fight staging (ITEM-F38-3/ARM.md): trainer and grunt stand further out of the creatures' lane so they stay visible beside the large ally. No creature size or camera change. Config only. LANDING NOTE (GPU lane, 9 Nov): enabling realm_1104 also turns on main's existing realms.water row (side 3.6), so a ship must remove the water row (overlay null) or Tidewake (F39#7) moves too; Meadows frames are unaffected, so the capture stands.",
    "done": false
+  },
+  {
+   "id": "glass-sink-lip-dense",
+   "kind": "arm",
+   "rows": [
+    "F41#10"
+   ],
+   "branch": "tb/item-storm-light",
+   "head": "9980aa119c28f9810e4b5b6f5fe3da539cccbca0",
+   "tree": "main plus, from that head: assets/props/blender-1109/glass_sink_lip/ (GLB, texture, .import, provenance), scripts/world/stormwood_glass_sink.gd, scripts/world/stormwood_world.gd and data/config/stormwood_glass_sink.json copied in; import pass needed",
+   "overlay_branch": "tb/item-storm-light",
+   "overlay": "ralph/reports/LANES/ITEM-SINK-LIP/overlay_lip_ring.json",
+   "overlay_format": "deep merge",
+   "frames": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ],
+   "capture": "live vs arm at High, seed 2042; script-error list empty; BEFORE pushing, confirm by eye that slabs are visible in at least two of the three frames (otherwise report, don't send for judging)",
+   "note": "Re-shoot of the void glass-sink-lip with a continuous ring: 172 overlapping slabs in a MultiMesh (ITEM-SINK-LIP).",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
