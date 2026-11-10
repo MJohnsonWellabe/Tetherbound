@@ -1680,6 +1680,25 @@
    "note": "Wave crests v3 arm A with the crest body rebuilt from Gaussians only (no smoothstep end, noise mask or cell guard). v3 made swim-away-day read toward the camera 3/3 (base 0/3); arm A won across +0.69 and night +0.16 and lost away-day only to the cut crest.",
    "done": true,
    "frames_pushed": "tb/gpu-frames-1108 1305175c7 (60 frames, 6 GIFs); the cut crest is gone"
+  },
+  {
+   "id": "nerissa-win-release-snap",
+   "kind": "arm",
+   "rows": [
+    "F39#21"
+   ],
+   "branch": "tb/item-nerissa-win-camera",
+   "head": "7952052e356ff7abeecdd40f6095fe1a3ec793b0",
+   "tree": "tb/item-nerissa-win-camera 7952052e3 (merged with main 14:59; code: camera_rig.snap_arm_in, combat_manager._release_camera, water_veilfall.gd release_camera_snap_at; no assets)",
+   "overlay_branch": "tb/item-nerissa-win-camera",
+   "overlay": "ralph/reports/LANES/ITEM-NERISSA-WIN/overlay_snap.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+   "args": "--trainer=water_trainer_nerissa --interval=8.0 --max-frames=100 --level=80 --pilot=MASHER --cap-s=300 --tells-per-opponent=1 --hits-per-opponent=1 --verified-victory-lifecycle --expected-resolution=1920x1080 --seed=2042",
+   "frames": "tidewake__fight__nerissa__win and __aftermath (plus one mid-fight frame from the same run on each side as a regression check: the snap must not change fight framing)",
+   "capture": "High first, Medium only if High maps 7.5+ (owner 31 Oct). Pre-push: on the arm the lens is inside the Heart Chamber close behind the trainer, with no wall or crystal between lens and trainer and no lens inside geometry; the mid-fight frame matches base framing.",
+   "note": "F39#21: at the win the fight hands back a far-out camera arm that eases in at 4 m/s, so the win and aftermath frames are shot from about 20 m back through faded chamber walls. The arm snaps the arm in to exploration length on release, in Veilfall arena rooms only. Reproduced on CPU at 1080p.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
