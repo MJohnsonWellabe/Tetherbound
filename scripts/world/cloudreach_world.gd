@@ -898,6 +898,28 @@ func _build_materials() -> void:
 		mist.set_shader_parameter("cloud_base", Color(str(island_cfg.get("mist_base_colour", "#8095a8"))))
 		mist.set_shader_parameter("extinction", float(island_cfg.get("mist_extinction", 6.0)))
 		_materials["island_mist"] = mist
+	elif str(island_cfg.get("mist_style", "flat")) == "cumulus_cards":
+		# F40#11 (GPU High 5.50): the volume banks beside a terrace lip draw as
+		# flat white lumps with a hard outline. This style (OFF until judged)
+		# draws each bank as a few camera-facing cards of the installed cumulus
+		# texture. The cards fade out against solid ground and near the camera,
+		# so they never cut a hard line on a cliff or show as a flat sprite.
+		var card := StandardMaterial3D.new()
+		card.albedo_texture = load("res://assets/environment/cloudreach/cloud_bank_v1.png") as Texture2D
+		card.albedo_color = Color(str(island_cfg.get("mist_card_tint", "#e8eef4")))
+		card.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		card.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+		card.billboard_keep_scale = true
+		card.cull_mode = BaseMaterial3D.CULL_DISABLED
+		card.roughness = 1.0
+		card.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+		card.proximity_fade_enabled = true
+		card.proximity_fade_distance = float(island_cfg.get("mist_card_ground_fade_m", 8.0))
+		var near_fade: Array = island_cfg.get("mist_card_near_fade_m", [6.0, 22.0])
+		card.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_PIXEL_ALPHA
+		card.distance_fade_min_distance = float(near_fade[0])
+		card.distance_fade_max_distance = float(near_fade[1])
+		_materials["island_mist"] = card
 	elif str(island_cfg.get("mist_style", "flat")) == "soft_bank":
 		# P2-106: an opaque emissive collar read as flat white decagons cut
 		# out of the sky. The soft bank is lit, darker underneath and fades
@@ -6118,8 +6140,14 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 	if count == 0:
 		return
 	var volume_bank := str(cfg.get("mist_style", "flat")) == "volume_bank"
+	var cards := str(cfg.get("mist_style", "flat")) == "cumulus_cards"
+	var per_puff := maxi(1, int(cfg.get("mist_cards_per_puff", 3))) if cards else 1
 	var puff_mesh: PrimitiveMesh
-	if volume_bank:
+	if cards:
+		var quad := QuadMesh.new()
+		quad.size = Vector2(2.0, 1.0)
+		puff_mesh = quad
+	elif volume_bank:
 		var box := BoxMesh.new()
 		box.size = Vector3.ONE * 2.0
 		puff_mesh = box
@@ -6134,9 +6162,12 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
 	multi.mesh = puff_mesh
-	multi.instance_count = count
+	multi.instance_count = count * per_puff
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value * 97 + 13
+	var card_rng := RandomNumberGenerator.new()
+	card_rng.seed = seed_value * 131 + 7
+	var card_width := float(cfg.get("mist_card_width_fraction", 1.5))
 	var spread := float(cfg.get("mist_spread_fraction", 1.35))
 	var inner := maxf(1.0, float(cfg.get("mist_inner_fraction", 1.05)))
 	var below := float(cfg.get("mist_below_m", 26.0))
@@ -6157,6 +6188,17 @@ func _build_island_mist(parent: Node3D, radius: float, base_y: float, seed_value
 		var puff := radius * rng.randf_range(puff_min, puff_max)
 		var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
 		basis = basis.scaled(Vector3(puff, puff * height_fraction, puff * rng.randf_range(0.7, 1.05)))
+		if cards:
+			# The same bank centres as the volumes (same rng draws above), each
+			# drawn as overlapping cards scattered inside the bank's footprint.
+			for c in per_puff:
+				var size := puff * card_width * card_rng.randf_range(0.7, 1.0)
+				var at := Vector3(cos(angle) * r, y, sin(angle) * r) + Vector3(
+					card_rng.randf_range(-0.55, 0.55) * puff, card_rng.randf_range(-0.2, 0.2) * puff,
+					card_rng.randf_range(-0.55, 0.55) * puff)
+				multi.set_instance_transform(i * per_puff + c,
+					Transform3D(Basis.IDENTITY.scaled(Vector3.ONE * size), at))
+			continue
 		multi.set_instance_transform(i, Transform3D(basis,
 			Vector3(cos(angle) * r, y, sin(angle) * r)))
 	var node := MultiMeshInstance3D.new()
