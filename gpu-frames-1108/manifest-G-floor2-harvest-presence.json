@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__inventory__harvest__stormglass.jpg",
+  "preset": "arm-High",
+  "tree": "c7612681b7f537bb5c671f94ee5df2377f641aa1",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence/arm-High/stormwood__inventory__harvest__stormglass.jpg",
+  "sky_fraction": 0.105,
+  "lower_edges": 0.2681,
+  "script_errors": 0,
+  "note": "F41#9 (P2-046). High, tb/floor2 c7612681b, phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (stormwood_harvest_hero2.json floor2_presence on: nodes grow, satellite copies, emission, violet/teal ground light). Judged: stormglass, glowmoss. NOT judged: stormglass_crown (a satellite cluster stands at the trainer's feet with its prisms in front of the trainer's left leg and a clipped-white glare blob on the leg). Pre-check on the two: trainer whole, not inside a node or satellite; prisms keep their violet (violet px 0.43 -> 1.47%, clipped white 0.04%); red <= 0.04%. No distinct violet ground pool visible; glowmoss teal ground tint barely distinguishable from base."
+ },
+ {
+  "frame": "stormwood__inventory__harvest__glowmoss.jpg",
+  "preset": "arm-High",
+  "tree": "c7612681b7f537bb5c671f94ee5df2377f641aa1",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence/arm-High/stormwood__inventory__harvest__glowmoss.jpg",
+  "sky_fraction": 0.219,
+  "lower_edges": 0.2797,
+  "script_errors": 0,
+  "note": "F41#9 (P2-046). High, tb/floor2 c7612681b, phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (stormwood_harvest_hero2.json floor2_presence on: nodes grow, satellite copies, emission, violet/teal ground light). Judged: stormglass, glowmoss. NOT judged: stormglass_crown (a satellite cluster stands at the trainer's feet with its prisms in front of the trainer's left leg and a clipped-white glare blob on the leg). Pre-check on the two: trainer whole, not inside a node or satellite; prisms keep their violet (violet px 0.43 -> 1.47%, clipped white 0.04%); red <= 0.04%. No distinct violet ground pool visible; glowmoss teal ground tint barely distinguishable from base."
+ },
+ {
+  "frame": "stormwood__inventory__harvest__stormglass.jpg",
+  "preset": "base-High",
+  "tree": "c7612681b7f537bb5c671f94ee5df2377f641aa1",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence/base-High/stormwood__inventory__harvest__stormglass.jpg",
+  "sky_fraction": 0.097,
+  "lower_edges": 0.2495,
+  "script_errors": 0,
+  "note": "F41#9 (P2-046). High, tb/floor2 c7612681b, phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (stormwood_harvest_hero2.json floor2_presence on: nodes grow, satellite copies, emission, violet/teal ground light). Judged: stormglass, glowmoss. NOT judged: stormglass_crown (a satellite cluster stands at the trainer's feet with its prisms in front of the trainer's left leg and a clipped-white glare blob on the leg). Pre-check on the two: trainer whole, not inside a node or satellite; prisms keep their violet (violet px 0.43 -> 1.47%, clipped white 0.04%); red <= 0.04%. No distinct violet ground pool visible; glowmoss teal ground tint barely distinguishable from base."
+ },
+ {
+  "frame": "stormwood__inventory__harvest__glowmoss.jpg",
+  "preset": "base-High",
+  "tree": "c7612681b7f537bb5c671f94ee5df2377f641aa1",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence/base-High/stormwood__inventory__harvest__glowmoss.jpg",
+  "sky_fraction": 0.215,
+  "lower_edges": 0.2774,
+  "script_errors": 0,
+  "note": "F41#9 (P2-046). High, tb/floor2 c7612681b, phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (stormwood_harvest_hero2.json floor2_presence on: nodes grow, satellite copies, emission, violet/teal ground light). Judged: stormglass, glowmoss. NOT judged: stormglass_crown (a satellite cluster stands at the trainer's feet with its prisms in front of the trainer's left leg and a clipped-white glare blob on the leg). Pre-check on the two: trainer whole, not inside a node or satellite; prisms keep their violet (violet px 0.43 -> 1.47%, clipped white 0.04%); red <= 0.04%. No distinct violet ground pool visible; glowmoss teal ground tint barely distinguishable from base."
+ }
+]
