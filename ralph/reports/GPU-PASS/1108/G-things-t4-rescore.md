@@ -83,6 +83,6 @@ Read changes against the board as indicative (about ±0.3). The board scores com
 - **Height:** every creature is taller than the trainer. Sparkit's back is still below the trainer's head (1/3).
 
 **Pose re-score across all 37 rows:**
-- **Up:** 18 rows moved up by 0.25 or more.
+- **Up:** 16 rows moved up by 0.25 or more.
 - **Closed:** stormbrush.
 - **Meeting the bar at High:** solmane.
