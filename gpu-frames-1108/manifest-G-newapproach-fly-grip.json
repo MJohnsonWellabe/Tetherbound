@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "01-launch.png",
+  "preset": "armA-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_realm_flight.gd",
+  "path": "G-newapproach-fly-grip/armA-High/01-launch.png",
+  "sky_fraction": 0.153,
+  "lower_edges": 0.0325,
+  "script_errors": 0,
+  "note": "F38#8. High, main e1c941cbd (config only), phase2_capture_realm_flight.gd --biome=meadows --seed=2042. base = main as is. armA = plus tb/newapproach 6ee6f3b0c NEWAPPROACH-FLYGRIP2/overlay_elbow_bend.json (hang_pose upper_lateral 2.2, forearm_lateral -0.25, body on). Frames meadows__flying__launch (01-launch) and __glide (02-glide). Pre-check A: hands grip the bird's lower legs just above the feet in both frames, no gap; talons beside the shoulders, not through head or shoulders. Overlay B (shoulder grip) failed the pre-check and is in the diagnostic section G-newapproach-fly-grip-B-diag."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "armA-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_realm_flight.gd",
+  "path": "G-newapproach-fly-grip/armA-High/02-glide.png",
+  "sky_fraction": 0.15,
+  "lower_edges": 0.0311,
+  "script_errors": 0,
+  "note": "F38#8. High, main e1c941cbd (config only), phase2_capture_realm_flight.gd --biome=meadows --seed=2042. base = main as is. armA = plus tb/newapproach 6ee6f3b0c NEWAPPROACH-FLYGRIP2/overlay_elbow_bend.json (hang_pose upper_lateral 2.2, forearm_lateral -0.25, body on). Frames meadows__flying__launch (01-launch) and __glide (02-glide). Pre-check A: hands grip the bird's lower legs just above the feet in both frames, no gap; talons beside the shoulders, not through head or shoulders. Overlay B (shoulder grip) failed the pre-check and is in the diagnostic section G-newapproach-fly-grip-B-diag."
+ },
+ {
+  "frame": "01-launch.png",
+  "preset": "base-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_realm_flight.gd",
+  "path": "G-newapproach-fly-grip/base-High/01-launch.png",
+  "sky_fraction": 0.155,
+  "lower_edges": 0.0332,
+  "script_errors": 0,
+  "note": "F38#8. High, main e1c941cbd (config only), phase2_capture_realm_flight.gd --biome=meadows --seed=2042. base = main as is. armA = plus tb/newapproach 6ee6f3b0c NEWAPPROACH-FLYGRIP2/overlay_elbow_bend.json (hang_pose upper_lateral 2.2, forearm_lateral -0.25, body on). Frames meadows__flying__launch (01-launch) and __glide (02-glide). Pre-check A: hands grip the bird's lower legs just above the feet in both frames, no gap; talons beside the shoulders, not through head or shoulders. Overlay B (shoulder grip) failed the pre-check and is in the diagnostic section G-newapproach-fly-grip-B-diag."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "base-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_realm_flight.gd",
+  "path": "G-newapproach-fly-grip/base-High/02-glide.png",
+  "sky_fraction": 0.154,
+  "lower_edges": 0.0322,
+  "script_errors": 0,
+  "note": "F38#8. High, main e1c941cbd (config only), phase2_capture_realm_flight.gd --biome=meadows --seed=2042. base = main as is. armA = plus tb/newapproach 6ee6f3b0c NEWAPPROACH-FLYGRIP2/overlay_elbow_bend.json (hang_pose upper_lateral 2.2, forearm_lateral -0.25, body on). Frames meadows__flying__launch (01-launch) and __glide (02-glide). Pre-check A: hands grip the bird's lower legs just above the feet in both frames, no gap; talons beside the shoulders, not through head or shoulders. Overlay B (shoulder grip) failed the pre-check and is in the diagnostic section G-newapproach-fly-grip-B-diag."
+ }
+]
