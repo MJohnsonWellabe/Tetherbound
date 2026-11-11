@@ -45,6 +45,10 @@ var _column_lights: Array[OmniLight3D] = []
 var _column_energy := Vector2.ZERO
 var _column_cooled := 0.12
 var _core_arc_holder: Node3D
+var _heartwood_core: StandardMaterial3D
+var _heartwood_core_energy := 2.4
+var _heartwood_cooled := 0.15
+var _heartwood_lights: Array[OmniLight3D] = []
 
 func build() -> void:
 	_wood = StandardMaterial3D.new()
@@ -64,6 +68,7 @@ func build() -> void:
 	_ramp("CoreLanding",ascent_point(1)-Vector3.RIGHT*0.8,ascent_point(1)+Vector3.RIGHT*4,8)
 	# The upper chamber is reached from the arena along the inside east trunk.
 	_ramp("CrownStair",Vector3(34,CORE_HEIGHT,0),Vector3(-16,CORE_HEIGHT+24,0),6)
+	_heartwood_body(_read_presentation())
 	if simulation_only:
 		set_process(false)
 		return
@@ -121,6 +126,8 @@ func build() -> void:
 		_root_vault(_presentation.get("root_vault_1107", {}))
 	if _presentation_enabled("heart_cradle_1107"):
 		_heart_cradle(_presentation.get("heart_cradle_1107", {}))
+	if _presentation_enabled("heartwood_1111"):
+		_heartwood(_presentation.get("heartwood_1111", {}))
 	if _presentation_enabled("hollow_floor"):
 		# r16 judges: the hollow's floor was the outdoor grass carpet. The
 		# ground-cover tiers (grass_field.gd) keep out of the trunk's own
@@ -199,6 +206,92 @@ func _heart_cradle(cfg: Dictionary) -> void:
 		var meshy := find_child("CrystalHeart", true, false)
 		if meshy is Node3D:
 			(meshy as Node3D).visible = false
+
+
+## F41#1 (LANE-BELOW6, 11 Nov 2026, OFF until GPU-judged): the trunk's living
+## core on the hollow's axis, where the ground stands look. Every earlier core
+## sat in the wall cleft (r 45 m and beyond, behind the deck slab) or was a bare
+## light tube. This is a Blender heartwood: a faceted lightning core (natural
+## glow, cools with the release) inside an open cage of braided roots that
+## flare over the floor and open above into an inner crown of limbs, all inside
+## the 18 m deck opening and clear of the ascent ramp. The flat core arcs that
+## wound round the empty axis are hidden while it is on.
+func _heartwood(cfg: Dictionary) -> void:
+	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+	if model == null:
+		return
+	model.name = "Heartwood1111"
+	var centre: Array = cfg.get("centre", [0.0, 5.0])
+	model.position = Vector3(float(centre[0]), 0.0, float(centre[1]))
+	var bark := (_bark if _bark != null else _wood).duplicate() as StandardMaterial3D
+	bark.albedo_color = Color(str(cfg.get("bark_tint", "#9b7a5a")))
+	bark.uv1_scale = Vector3.ONE
+	var vein := StandardMaterial3D.new()
+	vein.albedo_color = Color("1d2b44")
+	vein.emission_enabled = true
+	vein.emission = Color(str(cfg.get("vein_colour", "#9fd0ff")))
+	vein.emission_energy_multiplier = float(cfg.get("vein_energy", 1.6))
+	_heartwood_core = StandardMaterial3D.new()
+	_heartwood_core.albedo_color = Color(str(cfg.get("core_albedo", "#7f9cff")))
+	_heartwood_core.roughness = 0.25
+	_heartwood_core.rim_enabled = true
+	_heartwood_core.rim = 0.25
+	_heartwood_core.emission_enabled = true
+	_heartwood_core.emission = Color(str(cfg.get("core_glow", "#a8c4ff")))
+	_heartwood_core_energy = float(cfg.get("core_glow_energy", 2.4))
+	_heartwood_core.emission_energy_multiplier = _heartwood_core_energy
+	_heartwood_cooled = float(cfg.get("cooled_scale", 0.15))
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.mesh.surface_get_material(surface)
+			var source_name := source.resource_name if source != null else ""
+			var pick: Material = bark
+			if source_name.contains("core"):
+				pick = _heartwood_core
+				visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			elif source_name.contains("vein"):
+				pick = vein
+				visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			visual.set_surface_override_material(surface, pick)
+	add_child(model)
+	for y: Variant in cfg.get("light_heights_m", [3.0, 14.0, 34.0]):
+		var light := OmniLight3D.new()
+		light.name = "HeartwoodLight"
+		light.position = model.position + Vector3(0.0, float(y), 0.0)
+		light.light_color = Color(str(cfg.get("light_colour", "#a9c8ff")))
+		light.light_energy = float(cfg.get("light_energy", 2.0))
+		light.omni_range = float(cfg.get("light_range_m", 26.0))
+		light.shadow_enabled = false
+		add_child(light)
+		_heartwood_lights.append(light)
+	if bool(cfg.get("hide_core_arcs", true)) and _core_arc_holder != null:
+		_core_arc_holder.queue_free()
+		_core_arc_holder = null
+	set_core_released(_core_released)
+
+
+## The heartwood's optional body (`body_enabled`, OFF): a cylinder on the hollow
+## axis so nobody walks through the root cage, built on simulation shells too.
+## It stays off until the tree's pinned physics contract is changed on purpose.
+func _heartwood_body(presentation: Dictionary) -> void:
+	var cfg: Dictionary = presentation.get("heartwood_1111", {})
+	if not bool(presentation.get("enabled", false)) or not bool(cfg.get("enabled", false)):
+		return
+	# Off by default: the tree's physical shapes are pinned byte-identical
+	# with and without its presentation (test_stormheart_ancient_trunk.gd).
+	if not bool(cfg.get("body_enabled", false)):
+		return
+	var centre: Array = cfg.get("centre", [0.0, 5.0])
+	var body := StaticBody3D.new()
+	body.name = "HeartwoodBody"
+	var shape := CylinderShape3D.new()
+	shape.radius = float(cfg.get("body_radius_m", 4.6))
+	shape.height = float(cfg.get("body_height_m", 14.0))
+	var collider := CollisionShape3D.new()
+	collider.shape = shape
+	body.position = Vector3(float(centre[0]), shape.height * 0.5, float(centre[1]))
+	body.add_child(collider)
+	add_child(body)
 
 
 func _presentation_enabled(key: String) -> bool:
@@ -1954,6 +2047,10 @@ func set_core_released(released: bool) -> void:
 			light.visible = not released
 	if _core_arc_holder != null:
 		_core_arc_holder.visible = not released
+	if _heartwood_core != null:
+		_heartwood_core.emission_energy_multiplier = _heartwood_core_energy * (_heartwood_cooled if released else 1.0)
+		for light: OmniLight3D in _heartwood_lights:
+			light.visible = not released
 	if _core_material == null:
 		return
 	var settings: Dictionary = _presentation.core_finish

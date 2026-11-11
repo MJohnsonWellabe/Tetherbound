@@ -1,0 +1,12 @@
+{
+  "asset": "stormheart_heartwood.glb",
+  "row": "F41#1 (P2-037 Stormheart finale)",
+  "lane": "LANE-BELOW6, 11 Nov 2026",
+  "source": "Blender 4.2.3 procedural build, no Meshy, no purchased or downloaded geometry",
+  "script": "ralph/reports/LANES/BELOW6-HEARTWOOD/build_heartwood.py (blender -b -P build_heartwood.py -- <out.glb> [preview])",
+  "seed": 11111,
+  "reference": "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png (interior view: a glowing core on the hollow's axis; 'Lightning crystal', 'Electric roots')",
+  "scale_check": "ralph/reports/LANES/BELOW6-HEARTWOOD/_scale_check.jpg (1.80 m trainer capsule at the foot of the root cage; core 3.5 m across at the floor, to 96 m; roots flare 10-13 m; limbs open from 30 m, max radius 14.8 m, inside the 18 m deck opening)",
+  "textures": "none embedded; at load the game assigns the installed Bark_TwistedTree bark (heartwood_bark), an emissive blue-white (heartwood_vein) and an emissive pale blue crystal (heartwood_core)",
+  "flag": "data/config/stormheart_presentation.json heartwood_1111 (OFF until GPU-judged)"
+}

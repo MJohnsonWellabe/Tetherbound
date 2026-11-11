@@ -1016,6 +1016,18 @@
           "roughness": 0.85, "specular": 0.3
         }
       }
+    },
+    "below6_floor_thundertunnel": {
+      "_why": "LANE-BELOW6 (11 Nov 2026), F36#80 Thundertunnel 5.92 (GPU G-things-t4-rescore: 'flat pinkish-tan flesh material; white cracks read as mud fissures', 3/3). Graded from the value-lift coat that ships: the tan goes to a cool brown-grey mole velvet with its fur strokes kept, and the thin pale cracks become blue-white storm lines with an emission map (the one elemental trait). Supersedes creatures_ralph_thundertunnel_value_lift when on. Script tools/art_pipeline/grade_remakes_floor.py thundertunnel. The disc eye and the faceless faint are mesh and pose and are not addressed.",
+      "enabled": true,
+      "_why_on": "ON (GPU High G-below6, 11 Nov 2026; ralph/reports/GPU-PASS/1108/G-below6-thundertunnel-heartwood.md on tb/item-scout-1108 4515bd926): F36#80 Thundertunnel 4.63 -> 6.04 (+1.41), 3/3 prefer the arm, flat pinkish-tan flesh PRESENT -> FIXED 3/3, no loss. Owner 4 Nov: a judged gain ships ON.",
+      "coats": {
+        "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_value_lift_floor1.png",
+          "emission": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_value_lift_floor1_glow.png", "emission_energy": 1.6,
+          "roughness": 0.88, "specular": 0.25
+        }
+      }
     }
   }
 }
