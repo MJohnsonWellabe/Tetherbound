@@ -3019,7 +3019,8 @@
    "capture": "High, one side, no arm; push 7 species per section so LANE-SCOUT can judge 7 per batch.",
    "note": "LANE-SCOUT recommends re-scoring all: sample moved 4/6 up (+0.40 to +1.14) and found 2 regressed remakes.",
    "done": true,
-   "frames_pushed": "G-rescore-tier2-b2-a 3e31d870e (7 species, 75 frames); G-rescore-tier2-b2-b 1c2bfd173 (6 species, 70 frames; 4 water variants lack swim clips). With LANE-SCOUT."
+   "frames_pushed": "G-rescore-tier2-b2-a 3e31d870e (7 species, 75 frames); G-rescore-tier2-b2-b 1c2bfd173 (6 species, 70 frames; 4 water variants lack swim clips). With LANE-SCOUT.",
+   "verdict": "G-rescore-tier2-batch-2 (tb/item-scout-1108 0756a82f3): 4 up (Stormbrush 7.68), 3 level, 6 down (5 below 6)."
   },
   {
    "id": "f40-0-skyroad-arch-recapture",
@@ -3034,6 +3035,20 @@
    "frames": "broken_causeways__04__broken_skyroad_arch: 4 views x 4 times x 2 weather",
    "capture": "High, one side. Completes the F40#0 matrix (352 -> 384 frames). Then LANE-SCOUT folds them into the F40#0 row figure.",
    "note": "Unblocked by #909 (stand on the arch crown)."
+  },
+  {
+   "id": "f36-72-stormbrush-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#72"
+   ],
+   "branch": "main",
+   "head": "current main",
+   "overlay": null,
+   "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context stormbrush at MEDIUM, as in G-rescore-tier2-b2-a",
+   "frames": "stormbrush hit and faint 000-100",
+   "capture": "Medium, one side. LANE-SCOUT: closes at 7.5+ mapped (High 7.68).",
+   "note": "Close-out."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
