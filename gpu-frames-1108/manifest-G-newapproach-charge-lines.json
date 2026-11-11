@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "7d54c3874a379083df3505ee3b0fe25cb3a390f1",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.164,
+  "lower_edges": 0.3382,
+  "script_errors": 0,
+  "note": "High, tb/newapproach 7d54c3874, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (the G-recheck-1111 command plus sparkit). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines.json (charged_lines_1111: accent kept to the texture's own scale and feather lines for fulgocobra and stormraven). F41#13: fulgocobra idle, stormraven idle; sparkit idle is the no-loss control (not in charged_lines_1111). Pre-check: no white bloom on the arm (stormraven's base halo is gone), control unchanged, no new red; motion crawl not testable from stills."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "7d54c3874a379083df3505ee3b0fe25cb3a390f1",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.165,
+  "lower_edges": 0.3384,
+  "script_errors": 0,
+  "note": "High, tb/newapproach 7d54c3874, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (the G-recheck-1111 command plus sparkit). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines.json (charged_lines_1111: accent kept to the texture's own scale and feather lines for fulgocobra and stormraven). F41#13: fulgocobra idle, stormraven idle; sparkit idle is the no-loss control (not in charged_lines_1111). Pre-check: no white bloom on the arm (stormraven's base halo is gone), control unchanged, no new red; motion crawl not testable from stills."
+ },
+ {
+  "frame": "stormwood__sparkit__idle.jpg",
+  "preset": "arm-High",
+  "tree": "7d54c3874a379083df3505ee3b0fe25cb3a390f1",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines/arm-High/stormwood__sparkit__idle.jpg",
+  "sky_fraction": 0.164,
+  "lower_edges": 0.3402,
+  "script_errors": 0,
+  "note": "High, tb/newapproach 7d54c3874, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (the G-recheck-1111 command plus sparkit). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines.json (charged_lines_1111: accent kept to the texture's own scale and feather lines for fulgocobra and stormraven). F41#13: fulgocobra idle, stormraven idle; sparkit idle is the no-loss control (not in charged_lines_1111). Pre-check: no white bloom on the arm (stormraven's base halo is gone), control unchanged, no new red; motion crawl not testable from stills."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "7d54c3874a379083df3505ee3b0fe25cb3a390f1",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.164,
+  "lower_edges": 0.3389,
+  "script_errors": 0,
+  "note": "High, tb/newapproach 7d54c3874, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (the G-recheck-1111 command plus sparkit). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines.json (charged_lines_1111: accent kept to the texture's own scale and feather lines for fulgocobra and stormraven). F41#13: fulgocobra idle, stormraven idle; sparkit idle is the no-loss control (not in charged_lines_1111). Pre-check: no white bloom on the arm (stormraven's base halo is gone), control unchanged, no new red; motion crawl not testable from stills."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "7d54c3874a379083df3505ee3b0fe25cb3a390f1",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.165,
+  "lower_edges": 0.3378,
+  "script_errors": 0,
+  "note": "High, tb/newapproach 7d54c3874, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (the G-recheck-1111 command plus sparkit). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines.json (charged_lines_1111: accent kept to the texture's own scale and feather lines for fulgocobra and stormraven). F41#13: fulgocobra idle, stormraven idle; sparkit idle is the no-loss control (not in charged_lines_1111). Pre-check: no white bloom on the arm (stormraven's base halo is gone), control unchanged, no new red; motion crawl not testable from stills."
+ },
+ {
+  "frame": "stormwood__sparkit__idle.jpg",
+  "preset": "base-High",
+  "tree": "7d54c3874a379083df3505ee3b0fe25cb3a390f1",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines/base-High/stormwood__sparkit__idle.jpg",
+  "sky_fraction": 0.164,
+  "lower_edges": 0.3391,
+  "script_errors": 0,
+  "note": "High, tb/newapproach 7d54c3874, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (the G-recheck-1111 command plus sparkit). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines.json (charged_lines_1111: accent kept to the texture's own scale and feather lines for fulgocobra and stormraven). F41#13: fulgocobra idle, stormraven idle; sparkit idle is the no-loss control (not in charged_lines_1111). Pre-check: no white bloom on the arm (stormraven's base halo is gone), control unchanged, no new red; motion crawl not testable from stills."
+ }
+]
