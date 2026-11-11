@@ -8,6 +8,7 @@
 | F36#52 Mirejaw, F36#30 Abyssal Guardian hit reactions | `BELOW6-HITS` (two clip flags, config only) | **ready for GPU**; one capture command, judge per species. |
 | F36#86 Voltarach, F36#61 Ribbonray | landed | PR #910 (6.50, 6.90). |
 | F36#94 Water Mosshell | won | 4.65 -> 6.67; LANE-THINGS lands it. |
+| F41#1 core follow-up | `BELOW6-COREV2` (`heartwood_1111.core_v2`, OFF) | **parked, not sent** after three CPU looks: facet contrast works, arc lines keep drawing a horizontal white line (`NOT-SENT.md`). |
 | F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | not sent: no visible change on CPU (`NOT-SENT.md`). |
 | F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` | not sent (`NOT-SENT.md`). |
 | F36#88 Water Abyssal Guardian | none | material lever spent; a new mesh is the judges' ask: parked without Meshy. |
