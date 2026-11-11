@@ -2761,6 +2761,25 @@
    "done": true,
    "frames_pushed": "G-floor2-warrens-meadow-match aba474097: pre-checks pass (hillside grass, mouth unchanged, red trees kept). With LANE-SCOUT.",
    "verdict": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): SHIP. F38#30 5.23->6.02 (+0.79, 3/3); F38#24 no loss. Red entrance bushes flagged by judges: owner keeps them red."
+  },
+  {
+   "id": "newapproach-cloud-sea",
+   "kind": "arm",
+   "rows": [
+    "F40#11",
+    "F40#6"
+   ],
+   "branch": "tb/newapproach",
+   "head": "3c9e04cf9 (request); code at 2078f6442",
+   "tree": "current main (with #904) plus from tb/newapproach 2078f6442: scripts/world/cloudreach_world.gd, shaders/cloudreach_cloud_sea_soft.gdshader and shaders/cloudreach_cloud_card.gdshader with .uid files. KEEP MAIN's cloudreach_cloud_deck.gdshader on both sides.",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDSEA/overlay_cloud_sea.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-CLOUDSEA/CAPTURE.json",
+   "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
+   "frames": "16, 17, 18 (F40#11); 17, 18, 27, 28 (F40#6)",
+   "capture": "High. Pre-check: base floor shows the faceted patches and the arm does not (if base is already smooth, the tree is wrong); arm keeps billows with blue shadows, not clipped white; cards floor-white with form; no hard line at the cliff base. Then LANE-SCOUT on F40#11 and F40#6 briefs.",
+   "note": "New idea: soft cloud-sea material with an integer hash (the faceting looks like the sin-hash corner mismatch on the judging GPU) plus floor-lit cards."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
