@@ -3314,7 +3314,8 @@
    "job": "res://tools/phase2_capture_dialogue.gd --seed=2042, one run per biome: --biome=meadows, --biome=tidewake (water), --biome=cloudreach, --biome=stormwood; every post",
    "capture": "High, one side. Check manifest.json: conversation_camera_blend 1.0 and conversation_camera_blend_timed_out false on every frame; report any timeout.",
    "priority": "high: re-bases every dialogue row; LANE-THINGS' T6 conversation-shot arm waits on these frames",
-   "note": "Earlier dialogue frames were shot mid camera blend (0.41-0.93) and are not comparable. Push as G-dialogue-recapture-<biome>."
+   "note": "Earlier dialogue frames were shot mid camera blend (0.41-0.93) and are not comparable. Push as G-dialogue-recapture-<biome>.",
+   "done": "G-dialogue-recapture-meadows 1c7b2f364, -tidewake b54c9c6c5, -cloudreach 21dbbc238, -stormwood 750106556 (all blend 1.0)"
   },
   {
    "id": "things-toys-ui",
