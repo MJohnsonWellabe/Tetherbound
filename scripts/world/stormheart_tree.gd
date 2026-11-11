@@ -327,6 +327,79 @@ func add_approach(start: Vector3) -> void:
 	# Meet the deck at its outer edge: ending farther inside leaves the
 	# rising ramp below the ring's vertical fascia at first contact.
 	_ramp("OuterWorksApproach",to_local(start),Vector3(0,6,-OUTER_WORKS_OUTER_RADIUS),10)
+	if not simulation_only and _presentation_enabled("ramp_body_1112"):
+		_ramp_body(to_local(start), Vector3(0,6,-OUTER_WORKS_OUTER_RADIUS), 10.0,
+			_presentation.get("ramp_body_1112", {}))
+
+
+## F41#1 (LANE-BELOW6, 12 Nov 2026, OFF until GPU-judged): the entrance ramp is
+## one paper-thin quad, so from beside or below it the stand sees its underside
+## as an orange sheet (3/3 judges: "an untextured placeholder slab"). This
+## gives it a body: plank skirts from each edge down into the ground, an edge
+## beam, and timber posts along both sides. Visual only: the ramp's own
+## collision quad is untouched and nothing here has a collider.
+func _ramp_body(start: Vector3, finish: Vector3, width: float, cfg: Dictionary) -> void:
+	var holder := Node3D.new()
+	holder.name = "RampBody1112"
+	add_child(holder)
+	var along := finish - start
+	var side := Vector3(along.z, 0, -along.x).normalized() * width * 0.5
+	var sink := float(cfg.get("sink_m", 2.0))
+	var material: Material = _cut_wood if _cut_wood != null else _wood
+	var timber := _wood.duplicate() as StandardMaterial3D
+	timber.albedo_color = Color(str(cfg.get("timber_colour", "#6f5238")))
+	timber.uv1_triplanar = true
+	timber.uv1_scale = Vector3.ONE * 0.5
+	var vertices := PackedVector3Array()
+	var uv := PackedVector2Array()
+	var steps := maxi(2, int(cfg.get("skirt_steps", 12)))
+	var floor_y := start.y - sink
+	for edge: float in [-1.0, 1.0]:
+		for i in steps:
+			var p := start.lerp(finish, float(i) / steps) + side * edge
+			var q := start.lerp(finish, float(i + 1) / steps) + side * edge
+			var pb := Vector3(p.x, floor_y, p.z)
+			var qb := Vector3(q.x, floor_y, q.z)
+			# face outward on both sides
+			var quad: Array[Vector3] = [p, q, qb, pb] if edge < 0.0 else [q, p, pb, qb]
+			var u0 := float(i) / steps * along.length() * 0.25
+			var u1 := float(i + 1) / steps * along.length() * 0.25
+			var corners_uv: Array[Vector2] = [Vector2(u0, 0), Vector2(u1, 0), Vector2(u1, (q.y - floor_y) * 0.25), Vector2(u0, (p.y - floor_y) * 0.25)]
+			if edge > 0.0:
+				corners_uv = [Vector2(u1, 0), Vector2(u0, 0), Vector2(u0, (p.y - floor_y) * 0.25), Vector2(u1, (q.y - floor_y) * 0.25)]
+			for index in [0, 1, 2, 0, 2, 3]:
+				vertices.append(quad[index])
+				uv.append(corners_uv[index])
+	var mesh := ArrayMesh.new()
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_TEX_UV] = uv
+	var normals := PackedVector3Array()
+	for i in range(0, vertices.size(), 3):
+		var n := (vertices[i + 2] - vertices[i]).cross(vertices[i + 1] - vertices[i]).normalized()
+		for unused in 3:
+			normals.append(n)
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var skirts := MeshInstance3D.new()
+	skirts.name = "Skirts"
+	skirts.mesh = mesh
+	skirts.material_override = material
+	holder.add_child(skirts)
+	var post_every := float(cfg.get("post_every_m", 9.5))
+	var post_size := float(cfg.get("post_width_m", 0.55))
+	var rail := float(cfg.get("post_above_m", 1.1))
+	var count := maxi(2, int(along.length() / post_every))
+	for edge: float in [-1.0, 1.0]:
+		for i in count + 1:
+			var p := start.lerp(finish, float(i) / count) + side * edge * (1.0 + post_size / width)
+			var height := p.y + rail - floor_y
+			_visual_box(holder, "Post", Vector3(p.x, floor_y + height * 0.5, p.z), Vector3(post_size, height, post_size), timber)
+		var a := start + side * edge
+		var b := finish + side * edge
+		var beam := _visual_box(holder, "EdgeBeam", (a + b) * 0.5 + Vector3.UP * 0.05, Vector3(0.4, 0.4, a.distance_to(b)), timber)
+		beam.look_at_from_position(beam.position, b + Vector3.UP * 0.05, Vector3.UP)
 
 func ascent_point(fraction: float) -> Vector3:
 	var t := clampf(fraction,0,1)
