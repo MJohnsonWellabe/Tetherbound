@@ -2564,7 +2564,8 @@
    "capture": "High, after floor2-creature-ruler-depth-r3. Pre-check: at night, is B's stone marker the brightest thing in frame? Then LANE-SCOUT judges A vs base and B vs base on F40#8's brief; ship the better side only.",
    "note": "Coordinator read the CPU sheet: removing LandingTree926 opens the bridge, bells and cliff; A exposes the cyan Storm Anchor column (the 8 Nov defect), B replaces it with a pale stone obelisk.",
    "done": true,
-   "frames_pushed": "G-newapproach-bridge-view 4b5648a93 on main e2138671a: base, A, B; trunk gone on A and B; A reveals the saturated cyan post (peak 250); B's waymark not the brightest at night (mean 86, max 172). With LANE-SCOUT."
+   "frames_pushed": "G-newapproach-bridge-view 4b5648a93 on main e2138671a: base, A, B; trunk gone on A and B; A reveals the saturated cyan post (peak 250); B's waymark not the brightest at night (mean 86, max 172). With LANE-SCOUT.",
+   "verdict": "G-newapproach-bridge-view (tb/item-scout-1108 248db8b0a): SHIP B. F40#8 5.29->6.77 (+1.48, 3/3); A alone +0.44 (reveals cyan post)."
   },
   {
    "id": "floor2-creature-ruler-depth-r3-medium",
