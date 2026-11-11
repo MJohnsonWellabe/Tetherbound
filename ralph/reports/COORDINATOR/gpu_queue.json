@@ -2712,7 +2712,9 @@
    "job": "phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042 --preset=High; base and arm",
    "frames": "harvest stormglass, stormglass_crown, glowmoss",
    "capture": "High. Pre-check: trainer whole and not inside any node or satellite; say whether a coloured ground pool shows; if the storm-glass prisms clip to white, report and do not judge; nothing red. Then LANE-SCOUT on F41#9's brief.",
-   "note": "Bolder version (satellite ring) per the over-0.5 rule; ~130 shadowless lights realm-wide, Ally cost unmeasured (check before landing)."
+   "note": "Bolder version (satellite ring) per the over-0.5 rule; ~130 shadowless lights realm-wide, Ally cost unmeasured (check before landing).",
+   "done": true,
+   "frames_pushed": "G-floor2-harvest-presence 8333275fc: stormglass and glowmoss pass; crown HELD (satellite in front of trainer's leg, glare). No visible ground pool. With LANE-SCOUT; lane adds satellite keep-out and drops the lights."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
