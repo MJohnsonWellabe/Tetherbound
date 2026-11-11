@@ -2757,7 +2757,9 @@
    "job": "phase2_capture_routes.gd --biome=meadows --seed=2042 --frame=...walk_02_day --frame=...walk_03_day --frame=...route_day --preset=High (use the row's usual route capture args if they differ); base and arm",
    "frames": "burrow_warrens walk_02_day, walk_03_day, route_day",
    "capture": "High. Pre-check: cave mouth and earth surround unchanged; no tuft floating or in the mouth; hillside visibly different from base (else report). The red trees at the entrance stay red (owner note). Then LANE-SCOUT on F38#30's brief.",
-   "note": "Third idea on F38#30: the mound shell takes the meadow's grass sheet on up-facing faces (cause shown by false-colour capture)."
+   "note": "Third idea on F38#30: the mound shell takes the meadow's grass sheet on up-facing faces (cause shown by false-colour capture).",
+   "done": true,
+   "frames_pushed": "G-floor2-warrens-meadow-match aba474097: pre-checks pass (hillside grass, mouth unchanged, red trees kept). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
