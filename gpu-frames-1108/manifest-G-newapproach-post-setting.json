@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "cloudreach__inventory__character__keeper_maela.jpg",
+  "preset": "base-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/base-High/cloudreach__inventory__character__keeper_maela.jpg",
+  "sky_fraction": 0.074,
+  "lower_edges": 0.2026,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__naturalist_sora.jpg",
+  "preset": "base-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/base-High/cloudreach__inventory__character__naturalist_sora.jpg",
+  "sky_fraction": 0.1,
+  "lower_edges": 0.098,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "preset": "base-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/base-High/cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "sky_fraction": 0.163,
+  "lower_edges": 0.4053,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__keeper_maela.jpg",
+  "preset": "focus-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/focus-High/cloudreach__inventory__character__keeper_maela.jpg",
+  "sky_fraction": 0.061,
+  "lower_edges": 0.2069,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__naturalist_sora.jpg",
+  "preset": "focus-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/focus-High/cloudreach__inventory__character__naturalist_sora.jpg",
+  "sky_fraction": 0.116,
+  "lower_edges": 0.1369,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "preset": "focus-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/focus-High/cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3318,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__keeper_maela.jpg",
+  "preset": "focusset-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/focusset-High/cloudreach__inventory__character__keeper_maela.jpg",
+  "sky_fraction": 0.058,
+  "lower_edges": 0.2247,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__naturalist_sora.jpg",
+  "preset": "focusset-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/focusset-High/cloudreach__inventory__character__naturalist_sora.jpg",
+  "sky_fraction": 0.107,
+  "lower_edges": 0.1465,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "preset": "focusset-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/focusset-High/cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "sky_fraction": 0.162,
+  "lower_edges": 0.3554,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__keeper_maela.jpg",
+  "preset": "setonly-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/setonly-High/cloudreach__inventory__character__keeper_maela.jpg",
+  "sky_fraction": 0.074,
+  "lower_edges": 0.2136,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__naturalist_sora.jpg",
+  "preset": "setonly-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/setonly-High/cloudreach__inventory__character__naturalist_sora.jpg",
+  "sky_fraction": 0.101,
+  "lower_edges": 0.1135,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ },
+ {
+  "frame": "cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "preset": "setonly-High",
+  "tree": "fb4ff2c0e8a4943a233cfeab29caae18b274bf1d",
+  "tool": "res://tools/phase2_capture_characters.gd",
+  "path": "G-newapproach-post-setting/setonly-High/cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "sky_fraction": 0.163,
+  "lower_edges": 0.4191,
+  "script_errors": 0,
+  "note": "F40#9, four sides (post-focus camera held for an owner decision; setting measured both ways). High, tb/newapproach fb4ff2c0e, phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela. base = tree as is. focus = + NEWAPPROACH-POSTFOCUS/overlay_post_focus.json. focusset = + NEWAPPROACH-POSTSET/overlay_post_setting.json (post_focus on; post_readability fill 0.7 -> 1.3; role props; round-stone dais; Sora moved). setonly = the same setting overlay + local overlay camera.json post_focus.enabled false. Judge focus/focusset/setonly vs base. Pre-check: camera_rig_spring_length 3.6 on focus and focusset, 5.2 on base and setonly (all frames); red <=0.04%, clipped white 0% on every frame (NPC pale clothing holds). Note: in focusset keeper_maela the fill light leaves a warm oval hotspot on the tree trunk beside the trainer."
+ }
+]
