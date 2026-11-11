@@ -9,7 +9,7 @@ LANE-SCOUT, 11 Nov 2026, coordinator request. Read-only; no game files changed.
   - F38: 19; F39: 22; F40: 9; F41: 11;
   - 3 others: F04#6, F08#3 and F17#6.
 - **Board scores already out of date** (GPU-PASS/1108 reports dated after 10 Nov):
-  - **F38:** #5 has closed; #31 is 7.20; #26 is 6.85; #8 is 7.14; #30 is 6.02.
+  - **F38:** #5 has closed; #27 has closed (High 7.84, Medium 8.25); #31 is 7.20; #26 is 6.85; #8 is 7.14; #30 is 6.02.
   - **F39:** #6 is 7.79 High / 7.46 Medium; #30 is 6.70.
   - **F40:** #5 is 7.06; #8 is 6.77; #6 is 6.33; #11 is 6.97; #9 set-only is 6.48.
   - **F41:** #13 is 6.66; #9 is 6.81; #3 is 6.23.
@@ -56,7 +56,7 @@ LANE-SCOUT, 11 Nov 2026, coordinator request. Read-only; no game files changed.
 | 7 | **Clear the stale "broke free" message when the chance plate shows** (small code fix) | F40#13 6.19 | 0 | +0.5–0.8 | small |
 | 8 | **Single visible bugs** (scene / config) | F39#13 6.23 (black square sprites by the bench, 3/3); F38#22 6.10 (broken first glyph of "TRAIL CAMP", 3/3); F40#15 6.08 (dark strip still in the F40#8 bridge frames) | 0 each | +0.3–0.6 each | small each |
 | 9 | **Capture stand shows no subject** (capture-stand only) | F39#22 6.19 (Aquaryn in no frame; defect FIXED 3/3) | 0 | +0.5 | small |
-| 10 | **UI readability** (config / UI) | F38#27 settings 6.32 (tiny grey rows, literal key names); F38#10 menu panels 6.58; F38#38 6.49 | 3 | +0.3 each | medium |
+| 10 | **UI readability** (config / UI) | F38#10 menu panels 6.58; F38#38 6.49 | 2 | +0.3 each | medium |
 | 11 | **Cloudreach terraces**: stratified ledges in place of lawn discs with extruded rims (scene; new art per 1 of 3 judges) | F40#4 6.12, F40#7 6.26 (plus F40#6 6.33 and F40#11 6.97, already on the cloud-sea arm) | 4 | +0.3–0.5 | medium-large |
 | 12 | **Tidewake current payoff**: break up the identical oval sandbars, make the current readable (scene) | F39#17 6.27, F39#16 6.88, F39#14 6.37 (stamped foam wake), F39#15 6.27 (disc chain) | 4 | +0.3 | medium |
 | 13 | **New art: landmarks** (Meshy) | F39#2 Veilfall 6.48, F39#3 6.10, F39#15; F41#10 Glass Sink 6.02; F40#2 aviary 6.15; F38#20 stronghold 6.02 | 2–3 per landmark | +0.5–1.0 | large |
