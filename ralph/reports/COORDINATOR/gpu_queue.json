@@ -2235,6 +2235,75 @@
    "capture": "High, --fixed-fps 20 on both sides so the ride frames line up. Next in line. Pre-check on the two road_back frames first: on base, the flat slab with a straight horizontal top behind the cloud; in the arm it should be gone. Report what slab or ribbon edges remain in the arm, if any, and anything new showing below the cloud where the box was. If the slabs are gone or clearly reduced, judge F40#6 and F40#11.",
    "note": "Cloud deck cause found on CPU: cloudreach_world.gd _build_cloud_sea() builds an opaque, flat, unshaded realm-wide box (CloudSea) at the lowest height, kept for the kill plane; from a rim it reads as a flat slab with a ruler-straight top. The arm stops drawing its mesh (node and kill plane unchanged).",
    "done": false
+  },
+  {
+   "id": "floor2-creature-ruler-depth",
+   "kind": "arm",
+   "rows": [
+    "F38#5",
+    "F38#26",
+    "F38#31"
+   ],
+   "no_loss_rows": [
+    "F39#6",
+    "F39#24"
+   ],
+   "branch": "tb/floor2",
+   "head": "06ddb072a1ef17f7e59bf6b793d497d238985482",
+   "tree": "tb/floor2 (tools/phase2_capture_creatures.gd, data/config/capture_stands.json, shaders/water_mount_bow_wake.gdshader and scripts/world/water_mount_wake.gd for the other arm; no assets, no import pass beyond one new shader)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STAGE/overlay_ruler_depth.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_creatures.gd",
+     "args": [
+      "--biome=meadows",
+      "--only=bramblebun,pipwing,brooktail,trailpup,mosshell",
+      "--poses=idle,alpha_idle,fainted",
+      "--seed=2042",
+      "--preset={PRESET}",
+      "--output={OUT}/meadows"
+     ]
+    },
+    {
+     "tool": "res://tools/phase2_capture_creatures.gd",
+     "args": [
+      "--biome=water",
+      "--only=aquaryn",
+      "--poses=idle,fainted,resting",
+      "--seed=2042",
+      "--preset={PRESET}",
+      "--output={OUT}/water"
+     ]
+    },
+    {
+     "tool": "res://tools/phase2_capture_creatures.gd",
+     "args": [
+      "--biome=cloudreach",
+      "--only=galewisp",
+      "--poses=idle,hurt",
+      "--seed=2042",
+      "--preset={PRESET}",
+      "--output={OUT}/cloudreach"
+     ]
+    },
+    {
+     "tool": "res://tools/phase2_capture_creatures.gd",
+     "args": [
+      "--biome=stormwood",
+      "--only=sparkit",
+      "--poses=idle,hurt",
+      "--seed=2042",
+      "--preset={PRESET}",
+      "--output={OUT}/stormwood"
+     ]
+    }
+   ],
+   "frames": "meadows__brooktail__idle; meadows__pipwing__idle; meadows__bramblebun__idle; meadows__mosshell__fainted; meadows__trailpup__alpha_idle; meadows__trailpup__idle; meadows__brooktail__alpha_idle; water__aquaryn__idle, water__aquaryn__fainted, water__aquaryn__resting (no-loss check: F39#6, F39#24); cloudreach__galewisp__idle, cloudreach__galewisp__hurt (no-loss check); stormwood__sparkit__idle, stormwood__sparkit__hurt (no-loss check)",
+   "capture": "High. After newapproach-cloud-plane. The tool only writes under res://.artifacts/phase2/ or res://ralph/reports/VISUAL/phase2/, so {OUT} must start with one of those. Arm: each creature stands beside the trainer and draws clearly taller than the trainer; feet and contact shadow readable; alpha coyote and alpha otter a visible size step above their normal frames; subject and trainer both fully in frame. Pre-check: each arm manifest has creature_ruler_depth true and trainer_to_subject_xz_m under 5 for every frame; each base manifest has it false and 7 or more. If any arm subject is cut by a frame edge or hides the trainer, report it and do not judge that frame.",
+   "note": "LANE-FLOOR2: the creature pose stage stood every subject 7-12 m beyond the trainer, so perspective drew a 2.9 m creature at 0.68x the 1.80 m trainer. The flag (capture tooling only) stands the subject beside the trainer so true scale reads. Coordinator-approved as a capture-stand fix. Rows F38#5 (5.86), F38#26 (5.91), F38#31 (5.85); cross-biome no-loss frames.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
