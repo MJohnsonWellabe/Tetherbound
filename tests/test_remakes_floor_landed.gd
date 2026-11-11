@@ -2,8 +2,8 @@ extends "res://tests/test_case.gd"
 
 ## F36#86 Voltarach and F36#61 Ribbonray (LANE-BELOW6 landing, 11 Nov 2026).
 ## GPU High G-remakes-floor1: Voltarach 5.15 -> 6.50, Ribbonray 5.02 -> 6.90,
-## 3/3 each. The two coat grades and Ribbonray's grounded hit ship ON and cite
-## that verdict; the Abyssal Guardian grade stays OFF until it is judged.
+## 3/3 each. G-below6-abyssal-matte: Abyssal Guardian 5.22 -> 5.77, 3/3. The
+## three coat grades and Ribbonray's grounded hit ship ON and cite their verdicts.
 
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const COAT_PATH := "res://data/config/creature_coat_flags.json"
@@ -50,7 +50,15 @@ func test_ribbonray_grounded_hit_ships_on() -> void:
 	assert_eq(float(hit.get("position", 1.0)), 0.5)
 
 
-func test_abyssal_grade_stays_off_until_judged() -> void:
+func test_abyssal_matte_hide_ships_on() -> void:
 	var entry: Dictionary = _flags(COAT_PATH).get("remakes_floor_abyssal_guardian", {})
-	assert_false(entry.is_empty(), "the Abyssal Guardian grade is declared")
-	assert_false(bool(entry.get("enabled", true)), "and ships OFF until GPU-judged")
+	assert_true(bool(entry.get("enabled", false)), "the Abyssal Guardian matte hide ships ON (judged gain)")
+	var why := str(entry.get("_why_on", ""))
+	assert_true(why.contains("G-below6-abyssal-matte.md"), "it cites its GPU verdict")
+	assert_true(why.contains("5.22 -> 5.77"), "and the land form's judged score")
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(COAT_PATH))
+	var resolved: Dictionary = BODY.parse_coat_flags(parsed)
+	var land: Dictionary = resolved.get(
+		"res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_Image_0.jpg", {})
+	assert_true(str(land.get("albedo", "")).ends_with("_floor1.png"), "the land form wears the matte floor1 hide")
+	assert_eq(float(land.get("roughness", 0.0)), 0.86)
