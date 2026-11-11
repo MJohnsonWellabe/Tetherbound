@@ -2560,6 +2560,28 @@
    "frames": "three_bells_bridge close day, golden, night (3 per side)",
    "capture": "High, after floor2-creature-ruler-depth-r3. Pre-check: at night, is B's stone marker the brightest thing in frame? Then LANE-SCOUT judges A vs base and B vs base on F40#8's brief; ship the better side only.",
    "note": "Coordinator read the CPU sheet: removing LandingTree926 opens the bridge, bells and cliff; A exposes the cyan Storm Anchor column (the 8 Nov defect), B replaces it with a pale stone obelisk."
+  },
+  {
+   "id": "floor2-dawn-haze-storm-grade",
+   "kind": "arm",
+   "rows": [
+    "F39#30"
+   ],
+   "no_loss_rows": [
+    "F39#31 (veilfall rain views)",
+    "F13#5"
+   ],
+   "branch": "tb/floor2",
+   "head": "5589958a6",
+   "tree": "main (config overlay only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-DAWNRAIN/CAPTURE.json",
+   "job": "capture_tidewake_f13_5.gd F39-look camera set 1920x1080 High, views lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain, shore-day, shore-golden; base and arm",
+   "frames": "7 per side",
+   "capture": "High, after newapproach-bridge-view (lower priority: F39#30 is already above 6, below-6 arms go first). Pre-check: rain not near-black, dawn not a flat orange wash with no far dune.",
+   "note": "Dawn black horizon band (unhazed deep sea) and rain storm grade (cloud deck colours)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
