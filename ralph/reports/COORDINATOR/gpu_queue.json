@@ -2980,7 +2980,9 @@
    "job": "(a) the Tidewake dialogue frames for F39#18, F39#26, F39#27 and F39#29 as in G-confirm-f39-26 (one-sided, main has the soft rim); (b) tools/art_pipeline/capture_f36_poses.gd --whole-body --context for the six sample species (skyrill, fulgocobra, cragclaw, glimmermoth, ribbonray, veridian), as the 24 Oct roster capture did",
    "frames": "as the rows' last judged frame sets",
    "capture": "High, one side, no arm. After floor2-camp-r2. Then LANE-SCOUT re-scores: the dialogue rows on their briefs, and the six pose rows to decide whether to re-score all ~20 pre-1-Nov pose rows.",
-   "note": "LANE-SCOUT LOW-HANGING-6TO7 items #1 and #2 (re-score only, no code)."
+   "note": "LANE-SCOUT LOW-HANGING-6TO7 items #1 and #2 (re-score only, no code).",
+   "done": true,
+   "frames_pushed": "G-rescore-tier2-dialogue 0bed8ee41 (12 frames); G-rescore-tier2-f36 8442aba2a (65 frames). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
