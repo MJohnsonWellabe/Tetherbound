@@ -2540,7 +2540,9 @@
    "job": "same four phase2_capture_creatures.gd runs as round 2 (meadows, water, cloudreach, stormwood), seed 2042, High, base and arm",
    "frames": "as CAPTURE.json; include aquaryn fainted and galewisp idle this time if they pass",
    "capture": "High. Pre-check per arm frame from the manifest: in_frame true, overlaps_trainer false, contact_depth_vs_trainer_feet_m >= 0; and by eye, feet on the trainer's ground line. Report the readout columns per judged frame. Then LANE-SCOUT on the same briefs.",
-   "note": "Round 3 = ground-contact rule (no contact nearer the lens than the trainer's feet). Expected gains lower than round 2 but over +0.5 per row."
+   "note": "Round 3 = ground-contact rule (no contact nearer the lens than the trainer's feet). Expected gains lower than round 2 but over +0.5 per row.",
+   "done": true,
+   "frames_pushed": "G-floor2-creature-ruler-depth-r3 34865ea78: all 18 pairs, pre-checks pass (contact >= 0 everywhere, whole, clear of trainer); Meadows feet lower in frame from the slope. Stormraven 1.97x, sparkit 1.74x the trainer. With LANE-SCOUT."
   },
   {
    "id": "newapproach-bridge-view",
