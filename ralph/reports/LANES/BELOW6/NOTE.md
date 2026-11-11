@@ -3,7 +3,7 @@
 ## State (11 Nov 2026, 23:10 UTC)
 | Row | Arm | Status |
 |---|---|---|
-| F41#1 Stormheart, F36#80 Thundertunnel | landing | **READY TO LAND: `tb/below6-heartwood-thundertunnel-land`** (1ac181b28, cut from origin/main 8df122a83). GPU High: Stormheart 4.29 -> 5.66 (close-only 5.95), Thundertunnel 4.63 -> 6.04, 3/3 each. Both flags ON with `_why_on`, two pinning test files, 55 tests / 7860 assertions pass. READY on that branch, STATUS: land. **Read its "One difference from the judged arm":** the heartwood's axis collider ships OFF because it broke the tree's pinned physics tests; players can walk into the root cage. |
+| F41#1 Stormheart, F36#80 Thundertunnel | landing | **in PR #912** (coordinator; one older test, `test_dark_value_lift_flags.gd`, pinned the texture this replaces and was fixed there). Was `tb/below6-heartwood-thundertunnel-land` (1ac181b28, cut from origin/main 8df122a83). GPU High: Stormheart 4.29 -> 5.66 (close-only 5.95), Thundertunnel 4.63 -> 6.04, 3/3 each. Both flags ON with `_why_on`, two pinning test files, 55 tests / 7860 assertions pass. READY on that branch, STATUS: land. **Read its "One difference from the judged arm":** the heartwood's axis collider ships OFF because it broke the tree's pinned physics tests; players can walk into the root cage. |
 | F36#30 Abyssal Guardian matte hide | landing | PR #911 (5.22 -> 5.77). |
 | F36#52 Mirejaw, F36#30 Abyssal Guardian hit reactions | `BELOW6-HITS` (two clip flags, config only) | **ready for GPU**; one capture command, judge per species. |
 | F36#86 Voltarach, F36#61 Ribbonray | landed | PR #910 (6.50, 6.90). |
@@ -13,7 +13,7 @@
 | F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` | not sent (`NOT-SENT.md`). |
 | F36#88 Water Abyssal Guardian | none | material lever spent; a new mesh is the judges' ask: parked without Meshy. |
 | F40#1 Cloudreach open terrain (5.90) | none | looked at, nothing built: eight dressing candidates already failed; the untried lever is raising the island crown itself (`cloudreach_world.gd _mesa`), a multi-hour terrain change with route and collision risk. |
-| F36#29 innkeeper (Wilhelm) | none | **needs a GPU baseline, not new art.** The ledger's 5.83 was an old Meshy candidate's score; the live body scored 6.20 (`VIS-STORMWOOD/qj/qj_inn`) and 7.36 (`ITEM-F36-29/qj/noise-r0`) on CPU. |
+| F36#29 innkeeper (Wilhelm) | `BELOW6-INNKEEPER-BASE/CAPTURE.json` (baseline, one side, main, High) | **baseline request pushed.** Correction to my earlier line: a GPU number does exist, 5.90 at Medium from the F36(0) NPC face round (`ITEM-F36-29/READY.md`); the 5.83 was a Meshy candidate (VIS-STORMWOOD READY). CPU on the shipped body: 7.36 (cast stand), 6.20 (dialogue). No GPU High score exists. Two grade arms are parked; the judges' ask is a face-texture refinement. |
 | F41#8 (5.31) | `tb/item-f41-8-bodies` | rides with LANE-PLACES' storm-light pass |
 | F39#8 (5.66) | none | parked (no new idea) |
 
