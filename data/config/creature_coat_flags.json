@@ -1014,6 +1014,29 @@
           "roughness": 0.85, "specular": 0.3
         }
       }
+    },
+    "below6_floor_thundertunnel": {
+      "_why": "LANE-BELOW6 (11 Nov 2026), F36#80 Thundertunnel 5.92 (GPU G-things-t4-rescore: 'flat pinkish-tan flesh material; white cracks read as mud fissures', 3/3). Graded from the value-lift coat that ships: the tan goes to a cool brown-grey mole velvet with its fur strokes kept, and the thin pale cracks become blue-white storm lines with an emission map (the one elemental trait). Supersedes creatures_ralph_thundertunnel_value_lift when on. Script tools/art_pipeline/grade_remakes_floor.py thundertunnel. The disc eye and the faceless faint are mesh and pose and are not addressed. OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_value_lift_floor1.png",
+          "emission": "res://assets/creatures/tetherbound/thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_value_lift_floor1_glow.png", "emission_energy": 1.6,
+          "roughness": 0.88, "specular": 0.25
+        }
+      }
+    },
+    "below6_floor_fulgocobra": {
+      "_why": "LANE-BELOW6 (11 Nov 2026), F36#46 Fulgocobra 5.87 (GPU G-things-faint base: the near-black body sinks into the stage; the copper-brown neck plates sit near the reserved red). Graded from the face coat that ships: blacks lift to blue-charcoal with their scale detail and the copper plates move to the gold of the body bands. Keeps lanekit_face_read_fulgocobra's rim, gold-vein glow and matte values, and supersedes it when on. Script tools/art_pipeline/grade_remakes_floor.py fulgocobra. The raised hood in the faint is LANE-THINGS'. OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_face_floor1.png",
+          "rim": 0.6, "rim_tint": 0.5,
+          "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_glow_goldvein_face.png", "emission_energy": 1.3,
+          "roughness": 0.8, "specular": 0.25
+        }
+      }
     }
   }
 }
