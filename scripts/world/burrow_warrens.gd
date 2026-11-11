@@ -336,6 +336,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	await _build_breathe(build_budget)
 	_build_bank()
 	_build_hill_shell()
+	_build_hill_foundation()
 	await _build_breathe(build_budget)
 	_build_bank_mouth()
 	await _build_breathe(build_budget)
@@ -3752,6 +3753,184 @@ void fragment() {
 ## P2-012 r2 (vis-meadows, OFF until GPU-judged): `bank.hill_shell.r2`, when
 ## enabled, merges over the shipped hill shell (its `hide_nodes` adds to the
 ## shell's own list rather than replacing it). Off: the shipped shell exactly.
+## `bank.hill_shell.foundation` (OFF until judged). The warrens floor is one
+## level, and on the hill's east and back sides the meadow falls several
+## metres below it, so the excavated chamber shells hang in open air under
+## the decorative mound's overhang and a player can walk beneath them. This
+## closes that gap with ONE grass surface: over every chamber shell that
+## stands above low ground it rises to the shell's roof, and from there it
+## falls at `slope` until it meets the terrain. It is only built where the
+## terrain is below the cave floor (`floor_gap_m`), so it can never cross a
+## passage, the mouth or a chamber interior; it carries collision, so the
+## ground under the shells is inside the hill instead of reachable.
+func _build_hill_foundation() -> void:
+	var cfg: Dictionary = hill_shell_config(_config).get("foundation", {})
+	if not bool(cfg.get("enabled", false)) or _world == null or not _world.has_method("ground_height_at"):
+		return
+	var boxes: Array[AABB] = []
+	for raw: Node in find_children("ExcavatedCavernTerrain_*", "MeshInstance3D", true, false):
+		var shell := raw as MeshInstance3D
+		if shell.mesh != null:
+			boxes.append(_chain_to_self(shell) * shell.mesh.get_aabb())
+	if boxes.is_empty():
+		return
+	var margin := float(cfg.get("margin_m", 1.5))
+	var slope := maxf(0.2, float(cfg.get("slope", 1.1)))
+	var step := maxf(1.0, float(cfg.get("step_m", 2.0)))
+	var floor_gap := float(cfg.get("floor_gap_m", 1.5))
+	var sink := float(cfg.get("sink_m", 0.4))
+	var swell_m := float(cfg.get("swell_m", 0.9))
+	var keep_out: Dictionary = cfg.get("keep_out", {})
+	var keep_min_raw: Array = keep_out.get("min", [-13.0, -70.0])
+	var keep_max_raw: Array = keep_out.get("max", [13.0, 18.0])
+	var keep_min := Vector2(float(keep_min_raw[0]), float(keep_min_raw[1]))
+	var keep_max := Vector2(float(keep_max_raw[0]), float(keep_max_raw[1]))
+	var skin := float(cfg.get("skin_m", 0.35))
+	var skin_band := float(cfg.get("skin_band_m", 2.5))
+	var floor_y := INF
+	var roof_y := -INF
+	var area := Rect2()
+	for index in boxes.size():
+		var box := boxes[index]
+		floor_y = minf(floor_y, box.position.y)
+		roof_y = maxf(roof_y, box.end.y)
+		var foot := Rect2(box.position.x, box.position.z, box.size.x, box.size.z)
+		area = foot if index == 0 else area.merge(foot)
+	var reach := (roof_y + margin - floor_y + float(cfg.get("max_drop_m", 14.0))) / slope
+	area = area.grow(reach)
+	var nx := int(ceil(area.size.x / step)) + 1
+	var nz := int(ceil(area.size.y / step)) + 1
+	var tops := PackedFloat32Array()
+	var grounds := PackedFloat32Array()
+	tops.resize(nx * nz)
+	grounds.resize(nx * nz)
+	for iz in nz:
+		for ix in nx:
+			var x := area.position.x + ix * step
+			var z := area.position.y + iz * step
+			var top := -INF
+			for box: AABB in boxes:
+				# Round footprint (the shells are drums), so the fall-off is a
+				# cone with no straight ridges; a low sine swell breaks the
+				# even slope without any step.
+				var centre := Vector2(box.position.x + box.size.x * 0.5, box.position.z + box.size.z * 0.5)
+				var radius := maxf(box.size.x, box.size.z) * 0.5
+				var outside_m := maxf(0.0, Vector2(x, z).distance_to(centre) - radius)
+				var swell := swell_m * (sin(x * 0.11 + z * 0.07) + 0.6 * sin(x * 0.23 - z * 0.19 + 1.3))
+				top = maxf(top, box.end.y + margin + swell - slope * outside_m)
+			var world_point := global_transform * Vector3(x, 0.0, z)
+			var ground := to_local(Vector3(world_point.x,
+				float(_world.call("ground_height_at", world_point.x, world_point.z)), world_point.z)).y
+			tops[iz * nx + ix] = top
+			grounds[iz * nx + ix] = ground
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var uv_scale := float(cfg.get("uv_scale", 0.27))
+	var cover_points: Array[Vector3] = []
+	var cells := 0
+	for iz in nz - 1:
+		for ix in nx - 1:
+			var ids := [iz * nx + ix, iz * nx + ix + 1, (iz + 1) * nx + ix, (iz + 1) * nx + ix + 1]
+			var above := false
+			var outside := true
+			for id: int in ids:
+				above = above or tops[id] > grounds[id] + 0.05
+				outside = outside and grounds[id] < floor_y - floor_gap
+			if not above or not outside:
+				continue
+			# The mouth arch, its approach and the mouth chamber stay exactly
+			# as built: no surface and no collision inside this box (warrens
+			# local x,z). The cave floor here stands above the terrain, so the
+			# below-floor test alone let the surface cross the way in.
+			var cell_x := area.position.x + (ix + 0.5) * step
+			var cell_z := area.position.y + (iz + 0.5) * step
+			if cell_x > keep_min.x and cell_x < keep_max.x and cell_z > keep_min.y and cell_z < keep_max.y:
+				continue
+			cells += 1
+			var corners: Array[Vector3] = []
+			for id: int in ids:
+				var cx := area.position.x + (id % nx) * step
+				var cz := area.position.y + int(id / nx) * step
+				# Near its foot the surface rides a thin skin over the terrain
+				# instead of cutting through it (which showed as slivers of
+				# meadow in the slope); only the outermost ring dives under.
+				var y := tops[id]
+				if y < grounds[id] + skin:
+					y = grounds[id] + skin if y > grounds[id] - skin_band else grounds[id] - sink
+				corners.append(Vector3(cx, y, cz))
+			cover_points.append((corners[0] + corners[1] + corners[2] + corners[3]) * 0.25)
+			for order: int in [0, 1, 2, 1, 3, 2]:
+				st.set_uv(Vector2(corners[order].x, corners[order].z) * uv_scale)
+				st.add_vertex(corners[order])
+	if cells == 0:
+		return
+	st.index()
+	st.generate_normals()
+	var mesh := st.commit()
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = GRASS_ALBEDO
+	material.albedo_color = Color(str(cfg.get("tint", "#b3ae96")))
+	material.roughness = 1.0
+	# `grain` (OFF by default): judges read the plain flank as "a large smooth
+	# low-res grass slab". The meadow sheet is laid in world space at meadow
+	# scale with its normal map, and the same sheet at a much larger scale is
+	# multiplied over it so the repeat does not show as a grid.
+	var grain: Dictionary = cfg.get("grain", {})
+	if bool(grain.get("enabled", false)):
+		material.uv1_triplanar = true
+		material.uv1_world_triplanar = true
+		var fine := float(grain.get("fine_scale", 0.27))
+		material.uv1_scale = Vector3(fine, fine, fine)
+		material.normal_enabled = true
+		material.normal_texture = GRASS_NORMAL
+		material.normal_scale = float(grain.get("normal_scale", 1.2))
+		material.detail_enabled = true
+		material.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+		material.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
+		material.uv2_triplanar = true
+		material.uv2_world_triplanar = true
+		var broad := float(grain.get("broad_scale", 0.031))
+		material.uv2_scale = Vector3(broad, broad, broad)
+		material.detail_albedo = GRASS_ALBEDO
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var foundation := MeshInstance3D.new()
+	foundation.name = "HillFoundation"
+	foundation.mesh = mesh
+	foundation.material_override = material
+	add_child(foundation)
+	# `cover` (OFF by default): tufts and bushes from the installed nature pack
+	# stood on the surface, so the flank carries ground cover like the meadow.
+	var cover: Dictionary = cfg.get("cover", {})
+	var cover_models: Array = cover.get("models", [])
+	if bool(cover.get("enabled", false)) and not cover_models.is_empty() and not cover_points.is_empty():
+		var rng := RandomNumberGenerator.new()
+		rng.seed = int(cover.get("seed", 4821))
+		var scale_range: Array = cover.get("scale", [0.9, 1.5])
+		for _index in int(cover.get("count", 80)):
+			var packed_cover := load("res://assets/environment/stylized_nature/%s.gltf" % str(
+				cover_models[rng.randi() % cover_models.size()])) as PackedScene
+			if packed_cover == null:
+				continue
+			var tuft := packed_cover.instantiate() as Node3D
+			if tuft == null:
+				continue
+			tuft.position = cover_points[rng.randi() % cover_points.size()] + Vector3(
+				rng.randf_range(-0.6, 0.6), -0.08, rng.randf_range(-0.6, 0.6))
+			tuft.rotation.y = rng.randf_range(0.0, TAU)
+			tuft.scale = Vector3.ONE * rng.randf_range(float(scale_range[0]), float(scale_range[1]))
+			foundation.add_child(tuft)
+			_dress_skirt_flora(tuft)
+	if bool(cfg.get("collision", true)):
+		var body := StaticBody3D.new()
+		body.name = "HillFoundationBody"
+		var shape := CollisionShape3D.new()
+		var trimesh := mesh.create_trimesh_shape()
+		trimesh.backface_collision = true
+		shape.shape = trimesh
+		body.add_child(shape)
+		foundation.add_child(body)
+
+
 static func hill_shell_config(config: Dictionary) -> Dictionary:
 	var cfg: Dictionary = ((config.get("bank", {}) as Dictionary).get("hill_shell", {}) as Dictionary).duplicate(true)
 	var r2: Dictionary = cfg.get("r2", {})

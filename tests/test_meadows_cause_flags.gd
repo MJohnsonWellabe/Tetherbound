@@ -50,7 +50,8 @@ func test_all_three_ship_off_and_off_changes_nothing() -> void:
 	var cfg := _shipping()
 	assert_false(bool(cfg.cause_light.get("enabled", true)), "cause_light ships OFF")
 	assert_false(bool(cfg.cause_ground.get("enabled", true)), "cause_ground ships OFF")
-	assert_false(bool(_shipping(STANDS).buried_stand_guard.get("enabled", true)), "stand guard ships OFF")
+	# buried_stand_guard ships ON since 10 Nov with the Warrens foundation (capture tooling only).
+	assert_true(bool(_shipping(STANDS).buried_stand_guard.get("enabled", false)), "stand guard ships ON with the Warrens foundation")
 	var base := _base_look()
 	assert_eq(LOOK.cause_light_look(base, CONFIG), base)
 	assert_true(LOOK.cause_ground_viewport(CONFIG).is_empty())
@@ -59,8 +60,10 @@ func test_all_three_ship_off_and_off_changes_nothing() -> void:
 	var before := JSON.stringify(grass)
 	GRASS.apply_meadows_cause_ground(grass, CONFIG)
 	assert_eq(JSON.stringify(grass), before)
-	assert_almost_eq(CAPTURE.stand_guard_window(STANDS), 0.0)
-	assert_true(CAPTURE.stand_guard_offsets(STANDS).is_empty())
+	# The stand guard ships ON (10 Nov, Warrens foundation): the shipped file
+	# reads its authored window and fallback offsets.
+	assert_almost_eq(CAPTURE.stand_guard_window(STANDS), 8.0)
+	assert_eq(CAPTURE.stand_guard_offsets(STANDS), [18.0, 26.0])
 
 
 func test_light_on_warms_day_key_cools_fill_and_keeps_golden() -> void:
