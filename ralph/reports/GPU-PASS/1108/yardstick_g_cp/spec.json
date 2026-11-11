@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F40#6 cloud-plane base-vs-arm",
+  "a": "G-cp_6_base.png",
+  "b": "G-cp_6_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: mounted terrace edge and cloud crossing (four moments of one ride). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor"
+  ]
+ },
+ {
+  "label": "G F40#11 cloud-plane base-vs-arm",
+  "a": "G-cp_11_base.png",
+  "b": "G-cp_11_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: terrace edge clouds (three moments of one ride). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor"
+  ]
+ }
+]
