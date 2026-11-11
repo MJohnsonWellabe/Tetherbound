@@ -3018,6 +3018,20 @@
    "note": "LANE-SCOUT recommends re-scoring all: sample moved 4/6 up (+0.40 to +1.14) and found 2 regressed remakes.",
    "done": true,
    "frames_pushed": "G-rescore-tier2-b2-a 3e31d870e (7 species, 75 frames); G-rescore-tier2-b2-b 1c2bfd173 (6 species, 70 frames; 4 water variants lack swim clips). With LANE-SCOUT."
+  },
+  {
+   "id": "f40-0-skyroad-arch-recapture",
+   "kind": "baseline",
+   "rows": [
+    "F40#0"
+   ],
+   "branch": "main",
+   "head": "3a514ef5c (after #909)",
+   "overlay": null,
+   "job": "res://tools/capture_cloudreach_f40_matrix.gd --piece=29..36 with --ground-cover-cache, as the 10 Nov F40#0 baseline (pieces 29-36 are the 32 broken_skyroad_arch frames)",
+   "frames": "broken_causeways__04__broken_skyroad_arch: 4 views x 4 times x 2 weather",
+   "capture": "High, one side. Completes the F40#0 matrix (352 -> 384 frames). Then LANE-SCOUT folds them into the F40#0 row figure.",
+   "note": "Unblocked by #909 (stand on the arch crown)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
