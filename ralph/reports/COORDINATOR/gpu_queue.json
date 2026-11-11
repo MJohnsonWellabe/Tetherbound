@@ -2512,7 +2512,9 @@
    "job": "capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080 --preset=High --views=shore-day,shore-golden,shore-night,lesson-dune,lesson-dawn,shore-rain; base and arm",
    "frames": "shore-golden, lesson-dawn (arm); shore-day, lesson-dune, shore-night, shore-rain (controls)",
    "capture": "High, after the bow wake r2. Pre-check on BASE first: do golden and dawn show regular dark bands about a metre apart on the sand? If not, stop and report (nothing to fix). The base frames also serve as a GPU baseline for F39#30, which has only a CPU score.",
-   "note": "Cause found on CPU: ripple normal relief at low sun (not cast shadow)."
+   "note": "Cause found on CPU: ripple normal relief at low sun (not cast shadow).",
+   "done": true,
+   "frames_pushed": "G-floor2-sand-ripple-relief 3fcb19b91 on main 9ee887352: base shows the bands (strong at dawn, fainter at golden); arm removes them at dawn, much fainter at golden; controls unchanged. With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
