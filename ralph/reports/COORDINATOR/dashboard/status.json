@@ -1,6 +1,7 @@
 {
   "updated": "11 Nov 2026 18:35 UTC",
   "headline": [
+    "11 Nov 18:40: owner decision: mounts will not refuse fatal drops (F40#6 refuse_drop stays off).",
     "11 Nov 18:35: owner: archive the two old LANE-NEWAPPROACH sessions (done), keep the rest going, start moving 6-7 rows up a tier with the low-hanging fruit first. LANE-MESHY resumed (skyroad arch stand, five below-6 new-art rows, Aquaryn faint pose, campfire). Tier-2 plan: re-capture every creature pose frame on the new stage (about 30 F36 pose rows were scored on the old stage), a shared dialogue-occluder fade for six dialogue rows (LANE-NEWAPPROACH), LANE-SCOUT ranking the 135 rows in 6-7 by gain per effort.",
     "11 Nov 17:55: LANE-MESHY list when restarted (owner decision pending): F41#8 Stormwood trio silhouettes, F40#3 Cloudreach landmark art, F40#1 Realm Gate Crag landform, F41#1 Stormheart crown and core, F36#29 innkeeper body, skyroad arch Fly fix (32 F40#0 frames), Aquaryn faint pose authored for its rig (F39#6 Medium 7.46), Trail Camp campfire (F38#32), camp sign beam off oxblood.",
     "11 Nov 17:23: #908 landed Aquaryn's folded-leg faint: F39#6 High 7.79, Medium 7.46 (0.04 short of closing). Below 6: 6, all new art except F39#8 (parked).",
@@ -747,6 +748,7 @@
     }
   ],
   "decisions": [
+    "11 Nov 18:40, owner: NO to F40#6 refuse_drop (a mount refusing a fatal drop). The flag stays off and is not to be proposed again; F40#6 stays at 6.33 and moves by other means.",
     "7 Nov (owner): F38#5 approved: cluster 1914 may use a 4 m radius; test cap 4.0 for 1914 only, farthest member within 10 m of the road.",
     "8:30 PM CT Sun 25 Oct 2026 (coordinator): the Fallen Giant hero may be judged now but lands only after it gets a collider; players must not walk through a 45 m log.",
     "7:40 PM CT Sun 25 Oct 2026 (coordinator): Veilfall's judging camera is not reframed away from the faceted gully (players still see it). Cladding retried with raycast seating; terrain reshape allowed with a route walk check. Ashfoot camp safe-zone rule kept (WORLD §5.2).",
@@ -820,7 +822,6 @@
   ],
   "owner_needs": [
     "11 Nov: F40#9 post focus camera (flag-off): no longer needed for the row. The post setting alone takes F40#9 to 6.48, and the camera adds nothing measurable on top of it (G-newapproach-post-setting). Coordinator recommends leaving it off; say if you want it anyway.",
-    "11 Nov: F40#6 refuse_drop (LANE-NEWAPPROACH, flag-off, gameplay): a mount refuses to ride off a drop with no floor within 100 m ('Your mount won't take that drop'); survivable ledges are ridden off as before. F40#6's judged frames are the 3 s after riding off the arrival terrace edge; every look arm left that defect PRESENT, judges ask for 'clamped pathing or an authored drop'. Today the game recovers the mount in about half a second with no loss. Turn it on?",
     "Nothing pending. Keep the PC on and awake overnight for the GPU run."
   ],
   "four_chapter_run": null,
