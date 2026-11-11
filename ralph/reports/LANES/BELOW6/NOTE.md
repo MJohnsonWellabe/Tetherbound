@@ -16,7 +16,7 @@
 | F41#8 (5.31) | `tb/item-f41-8-bodies` | rides with LANE-PLACES' storm-light pass |
 | F39#8 (5.66) | none | parked (no new idea) |
 
-**Next on F41#1 (judges):** (1) the two approach stands look into a bark wall with an orange wood-grain slab at the left: check whether that slab is a real untextured mesh (game defect) and propose a stand that frames the crown and core, as its own change; (2) the core reads as a flat gradient slab: internal arcs, bloom falloff, light on the bark. **Next on Thundertunnel:** the lines as glowing veins, a faint with the head out of the curl.
+**Next on F41#1:** the orange slab in the approach frames is the entrance ramp's underside (a real game defect); stand screening and a two-part proposal are in `BELOW6-STORMHEART-STAND/PROPOSAL.md` (**coordinator: please read and say go or no**). Then the core: internal arcs, bloom falloff, light on the bark. **Next on Thundertunnel:** the lines as glowing veins, a faint with the head out of the curl.
 
 **For LANE-THINGS:** Voltarach's hit is recipe-driven; a clip flag cannot reach it (captured, identical frames).
 
