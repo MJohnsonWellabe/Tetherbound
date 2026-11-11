@@ -3380,6 +3380,32 @@
    "capture": "High, base (overlay off) and arm (overlay on)",
    "priority": "below 6: Mirejaw 5.28 (main stage), Abyssal 5.77",
    "note": "Mirejaw grounded hit (rotation x0.45) plus Abyssal bowed flinch. Pre-check: Mirejaw hit 050 head up, no pale gaping jaw, no grey blade; Abyssal hit 050 a crouched flinch clearly unlike standing."
+  },
+  {
+   "id": "places-stormlight",
+   "kind": "arm",
+   "rows": [
+    "F41#2",
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#19",
+    "F41#8",
+    "F41#6",
+    "F41#13"
+   ],
+   "branch": "tb/places",
+   "head": "038f0fdeb",
+   "tree": "tb/places 038f0fdeb (both sides on this tree; flags off renders as main; may need one import for new scripts and shaders)",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-STORMLIGHT/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-STORMLIGHT/CAPTURE.json (per-row tool and frames)",
+   "job": "per CAPTURE.json rows: tools/phase2_capture_storm_phases.gd for F41#2 (calm, building, break), tools/phase2_capture_locations.gd --biome=stormwood --seed=2042 for the stands, and the F41#8 dialogue or inventory frames listed there",
+   "capture": "High, base (overlay off) and arm (overlay on), seed 2042",
+   "pre_check": "reject if white fog glare at the Glass Field, a blown specular blot on wet ground, or near ground hidden by mist",
+   "priority": "P1 shared cause for seven Stormwood rows plus F41#8 (below 6, 5.31) riding along",
+   "note": "LANE-PLACES first arm: storm_phase_1111 (layered sky darkening per phase, bolts with a key light, a shaft-culling bug fix, mist banks) plus distinct_bodies_1111. After below6-hits."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
