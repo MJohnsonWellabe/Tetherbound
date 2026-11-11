@@ -2779,7 +2779,25 @@
    "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
    "frames": "16, 17, 18 (F40#11); 17, 18, 27, 28 (F40#6)",
    "capture": "High. Pre-check: base floor shows the faceted patches and the arm does not (if base is already smooth, the tree is wrong); arm keeps billows with blue shadows, not clipped white; cards floor-white with form; no hard line at the cliff base. Then LANE-SCOUT on F40#11 and F40#6 briefs.",
-   "note": "New idea: soft cloud-sea material with an integer hash (the faceting looks like the sin-hash corner mismatch on the judging GPU) plus floor-lit cards."
+   "note": "New idea: soft cloud-sea material with an integer hash (the faceting looks like the sin-hash corner mismatch on the judging GPU) plus floor-lit cards.",
+   "done": true,
+   "result": "Pre-check: floor facets GONE (base faceted, arm smooth, billows hold, no clip); cards FAIL (blue, 5x floor saturation). Diag G-newapproach-cloud-sea-diag. Re-run soft_sea only (no mist_card_shading) for judging."
+  },
+  {
+   "id": "newapproach-cloud-sea-only",
+   "kind": "arm",
+   "rows": [
+    "F40#11",
+    "F40#6"
+   ],
+   "branch": "tb/newapproach",
+   "head": "2078f6442",
+   "tree": "same as newapproach-cloud-sea (main + 3 lane files, MAIN's deck shader)",
+   "overlay": "overlay_cloud_sea.json WITHOUT island_roots.mist_card_shading (soft_sea only)",
+   "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High",
+   "frames": "16,17,18 (F40#11); 17,18,27,28 (F40#6)",
+   "capture": "High; pre-checks (1),(2),(4); then LANE-SCOUT.",
+   "note": "Measures the floor alone while card shading is fixed."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
