@@ -2325,6 +2325,24 @@
    "note": "F41#13: the charged accent painted almost the whole stormraven body (charged_1105 widened the hue range), so it read as a pale-blue blob. The arm keeps the accent only on the texture's own scale and feather edges (accent_line) and lowers the glow, matching the judges' ask and the owner's 1 Nov creature rule.",
    "done": true,
    "frames_pushed": "395ccec66 (pre-check passed; raven marks speckled, motion untested)"
+  },
+  {
+   "id": "newapproach-charge-lines-r2",
+   "kind": "arm",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/newapproach",
+   "head": "this commit (branch head)",
+   "tree": "tb/newapproach (shaders/creature_surface_finish.gdshader, scripts/creatures/creature_surface_finish.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CHARGELINES/overlay_charge_lines_r2.json",
+   "overlay_format": "deep merge",
+   "job": "The same job and frames as G-recheck-1111 for F41#13 (fulgocobra and stormraven idle frames), plus one other storm creature frame from that set as a no-loss control.",
+   "frames": "fulgocobra idle, stormraven idle, sparkit idle (control); base vs arm (same command as G-newapproach-charge-lines)",
+   "capture": "High. Next in line. Round 2 (attempt 2 of 2; a loss parks F41#13). Stormraven: a dark bird that separates from the Stormwood ground, with bright saturated cyan feather-edge lines and lit cyan eyes, a soft white-violet rim, no whole-body white aura. Fulgocobra: gold bands at about base brightness with scale borders visible, its blue arc lines and eyes brighter, a soft rim. Pre-check before judging: if the raven is still too dark to read against the grass, or blooms to white, report which. The control creature must look the same on both sides. No red.",
+   "note": "F41#13 round 2 (last try before parking): same line mask, brighter saturated cyan lines, eye emission via glow-map boost, white-violet rim; cobra glow back near base.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
