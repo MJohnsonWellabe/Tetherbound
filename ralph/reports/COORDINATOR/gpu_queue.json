@@ -2542,7 +2542,8 @@
    "capture": "High. Pre-check per arm frame from the manifest: in_frame true, overlaps_trainer false, contact_depth_vs_trainer_feet_m >= 0; and by eye, feet on the trainer's ground line. Report the readout columns per judged frame. Then LANE-SCOUT on the same briefs.",
    "note": "Round 3 = ground-contact rule (no contact nearer the lens than the trainer's feet). Expected gains lower than round 2 but over +0.5 per row.",
    "done": true,
-   "frames_pushed": "G-floor2-creature-ruler-depth-r3 34865ea78: all 18 pairs, pre-checks pass (contact >= 0 everywhere, whole, clear of trainer); Meadows feet lower in frame from the slope. Stormraven 1.97x, sparkit 1.74x the trainer. With LANE-SCOUT."
+   "frames_pushed": "G-floor2-creature-ruler-depth-r3 34865ea78: all 18 pairs, pre-checks pass (contact >= 0 everywhere, whole, clear of trainer); Meadows feet lower in frame from the slope. Stormraven 1.97x, sparkit 1.74x the trainer. With LANE-SCOUT.",
+   "verdict": "G-floor2-creature-ruler-depth-r3 (tb/item-scout-1108 3fe1c4396): SHIP. F38#5 5.80->7.77 (FIXED 3/3), F38#31 5.80->7.20, F38#26 5.44->6.85, no-loss A +1.80, B +1.58, 3/3 everywhere; no judge reads nearness. F38#5 needs Medium."
   },
   {
    "id": "newapproach-bridge-view",
@@ -2562,6 +2563,23 @@
    "frames": "three_bells_bridge close day, golden, night (3 per side)",
    "capture": "High, after floor2-creature-ruler-depth-r3. Pre-check: at night, is B's stone marker the brightest thing in frame? Then LANE-SCOUT judges A vs base and B vs base on F40#8's brief; ship the better side only.",
    "note": "Coordinator read the CPU sheet: removing LandingTree926 opens the bridge, bells and cliff; A exposes the cyan Storm Anchor column (the 8 Nov defect), B replaces it with a pale stone obelisk."
+  },
+  {
+   "id": "floor2-creature-ruler-depth-r3-medium",
+   "kind": "close-out",
+   "rows": [
+    "F38#5"
+   ],
+   "branch": "tb/floor2",
+   "head": "aac9c84a3",
+   "tree": "tb/floor2 (same tree as r3)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STAGE/overlay_ruler_depth.json",
+   "overlay_format": "deep merge",
+   "job": "phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042 --preset=Medium, base and arm",
+   "frames": "F38#5 set: bramblebun, brooktail, pipwing, trailpup idle",
+   "capture": "Medium (F38#5 mapped 7.77 at High). Same pre-check (contact >= 0). Then LANE-SCOUT on the F38#5 brief; closes at 7.5+ mapped on Medium.",
+   "note": "Runs right after the bridge view, before the dawn/rain arm."
   },
   {
    "id": "floor2-dawn-haze-storm-grade",
