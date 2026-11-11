@@ -3015,7 +3015,9 @@
    "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context per species, as in G-rescore-tier2-f36 (hit and faint 000-100; ride where the species has it)",
    "frames": "as G-rescore-tier2-f36; LANE-SCOUT crops 560,200 1000x640 at 1080p",
    "capture": "High, one side, no arm; push 7 species per section so LANE-SCOUT can judge 7 per batch.",
-   "note": "LANE-SCOUT recommends re-scoring all: sample moved 4/6 up (+0.40 to +1.14) and found 2 regressed remakes."
+   "note": "LANE-SCOUT recommends re-scoring all: sample moved 4/6 up (+0.40 to +1.14) and found 2 regressed remakes.",
+   "done": true,
+   "frames_pushed": "G-rescore-tier2-b2-a 3e31d870e (7 species, 75 frames); G-rescore-tier2-b2-b 1c2bfd173 (6 species, 70 frames; 4 water variants lack swim clips). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
