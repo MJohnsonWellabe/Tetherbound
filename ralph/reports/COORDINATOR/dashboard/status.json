@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 01:05 UTC",
+  "updated": "11 Nov 2026 01:32 UTC",
   "headline": [
+    "11 Nov 01:31: all five floor-lane landings of the night are on main: #894 Warrens foundation (cave mouth kept clear), #895 Stormwood bark, #896 Meadows ridge, #897 giant trees in the fight fade plus Hall timber out of the red family, #898 Warrens walk_03 stand. Below-6 count 37 -> 27 with nothing unscored. Next on the GPU: the Cloudreach cause package for the five Cloudreach rows just under 6.",
     "11 Nov 00:40: Warrens foundation landed (#894, with the cave-mouth keep-out). Batch 51 (#897, giant trees in the fight fade) and batch 52 (#898, walk_03 open-ground stand) in CI. Tonight on main so far: #894 Warrens foundation, #895 Stormwood bark, #896 Meadows ridge.",
     "11 Nov 00:20: giant trees in the fight fade win (Hollows +1.09, F41#3 to 5.89), batch 51 in CI, with the Hall timber red-rule fix. Landed tonight: Stormwood bark (#895), Meadows ridge (#896). Warrens foundation (#894) is on its last CI run; the walk_03 stand follows.",
     "10 Nov 23:30: Warrens walk_03 open-ground stand wins big (F38#24 +2.47, F38#30 +1.28, 3/3): the old stand was a random spot on the slope showing neither subject. Rows to 6.01 and 5.38 once it lands. The flank grass texture lost twice and is parked. The stronghold approach (the ridge) holds at 7.51. Warrens batch 48 re-running CI with the cave-mouth keep-out fix.",
@@ -1888,9 +1889,9 @@
       "when": "11 Nov 01:04"
     },
     {
-      "pr": "batch 51 (#897, in CI)",
+      "pr": "#897",
       "what": "Stormwood fights: the giant Deepwood trees dither out of the fight camera like every other tree (Hollows Alpha +1.09, 3/3; F41#3 5.29 -> 5.89); Hall nave post retinted out of the red family (arch_home +0.24, 3/3)",
-      "when": "11 Nov, in CI"
+      "when": "11 Nov 01:31"
     },
     {
       "pr": "#896",
