@@ -1,0 +1,54 @@
+[
+ {
+  "frame": "mounted-swim-06-mounted.png",
+  "preset": "arm-High",
+  "tree": "3cf3a24d5583cb2ba6332393e31efd6564625ecf",
+  "tool": "res://tools/phase2_capture_tidewake_mounted_swim.gd",
+  "path": "G-floor2-bow-wake-diag/arm-High/mounted-swim-06-mounted.png",
+  "sky_fraction": 0.545,
+  "lower_edges": 0.0459,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-bow-wake, F39#8; marked failed). High, tb/floor2 3cf3a24d5, phase2_capture_tidewake_mounted_swim.gd --seed=2042. base = tree as is; arm = plus FLOOR2-BOWWAKE/overlay_bow_wake.json (water_aquaryn.wake.bow_wake.enabled true). mounted-swim-06-mounted = the moving frame (03-05 near-still). crops/ = 3x nearest crop of frame px 900-1300 x 650-950 inside the V on both sides (added by hand; the sky check flags a water-only crop). Arm: V arms correct, interior filled with hard-edged white cells whose edges follow a world-space grid in perspective (horizontal rows, converging slanted sides), on/off per cell."
+ },
+ {
+  "frame": "mounted-swim-06-mounted.png",
+  "preset": "base-High",
+  "tree": "3cf3a24d5583cb2ba6332393e31efd6564625ecf",
+  "tool": "res://tools/phase2_capture_tidewake_mounted_swim.gd",
+  "path": "G-floor2-bow-wake-diag/base-High/mounted-swim-06-mounted.png",
+  "sky_fraction": 0.56,
+  "lower_edges": 0.0305,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-bow-wake, F39#8; marked failed). High, tb/floor2 3cf3a24d5, phase2_capture_tidewake_mounted_swim.gd --seed=2042. base = tree as is; arm = plus FLOOR2-BOWWAKE/overlay_bow_wake.json (water_aquaryn.wake.bow_wake.enabled true). mounted-swim-06-mounted = the moving frame (03-05 near-still). crops/ = 3x nearest crop of frame px 900-1300 x 650-950 inside the V on both sides (added by hand; the sky check flags a water-only crop). Arm: V arms correct, interior filled with hard-edged white cells whose edges follow a world-space grid in perspective (horizontal rows, converging slanted sides), on/off per cell."
+ },
+ {
+  "frame": "mounted-swim-06-interior-3x.png",
+  "preset": "arm-High",
+  "tree": "3cf3a24d5583cb2ba6332393e31efd6564625ecf",
+  "tool": "crop of mounted-swim-06-mounted.png",
+  "path": "G-floor2-bow-wake-diag/arm-High/crops/mounted-swim-06-interior-3x.png",
+  "crop_box_px": [
+   900,
+   650,
+   1300,
+   950
+  ],
+  "scale": "3x nearest",
+  "note": "Diagnostic crop inside the V, added by hand (the sky check flags a water-only crop as sky)."
+ },
+ {
+  "frame": "mounted-swim-06-interior-3x.png",
+  "preset": "base-High",
+  "tree": "3cf3a24d5583cb2ba6332393e31efd6564625ecf",
+  "tool": "crop of mounted-swim-06-mounted.png",
+  "path": "G-floor2-bow-wake-diag/base-High/crops/mounted-swim-06-interior-3x.png",
+  "crop_box_px": [
+   900,
+   650,
+   1300,
+   950
+  ],
+  "scale": "3x nearest",
+  "note": "Diagnostic crop inside the V, added by hand (the sky check flags a water-only crop as sky)."
+ }
+]
