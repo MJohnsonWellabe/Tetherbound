@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "meadows__bramblebun__idle.jpg",
+  "preset": "arm-Medium",
+  "tree": "aac9c84a3ac541f7a1ebdd8c085363c09864859a",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-creature-ruler-depth-r3-medium/arm-Medium/meadows__bramblebun__idle.jpg",
+  "sky_fraction": 0.191,
+  "lower_edges": 0.4455,
+  "script_errors": 0,
+  "note": "F38#5 Medium close-out (High won 7.77 in round 3). Medium, tb/floor2 aac9c84a3, phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042. base = creature_ruler_depth off (7.3-7.5 m); arm = plus FLOOR2-STAGE/overlay_ruler_depth.json. Arm readout (contact_depth_vs_trainer_feet_m | behind_plane_m | feet_screen_y | trainer_feet_screen_y): bramblebun 0.02 | 1.37 | 0.801 | 0.723; trailpup 0.02 | 1.00 | 0.791 | 0.723; brooktail 0.02 | 3.02 | 0.828 | 0.723; pipwing 0.02 | 1.02 | 0.794 | 0.723. All in_frame, no trainer overlap; Meadows hillside slope as at High."
+ },
+ {
+  "frame": "meadows__brooktail__idle.jpg",
+  "preset": "arm-Medium",
+  "tree": "aac9c84a3ac541f7a1ebdd8c085363c09864859a",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-creature-ruler-depth-r3-medium/arm-Medium/meadows__brooktail__idle.jpg",
+  "sky_fraction": 0.193,
+  "lower_edges": 0.4537,
+  "script_errors": 0,
+  "note": "F38#5 Medium close-out (High won 7.77 in round 3). Medium, tb/floor2 aac9c84a3, phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042. base = creature_ruler_depth off (7.3-7.5 m); arm = plus FLOOR2-STAGE/overlay_ruler_depth.json. Arm readout (contact_depth_vs_trainer_feet_m | behind_plane_m | feet_screen_y | trainer_feet_screen_y): bramblebun 0.02 | 1.37 | 0.801 | 0.723; trailpup 0.02 | 1.00 | 0.791 | 0.723; brooktail 0.02 | 3.02 | 0.828 | 0.723; pipwing 0.02 | 1.02 | 0.794 | 0.723. All in_frame, no trainer overlap; Meadows hillside slope as at High."
+ },
+ {
+  "frame": "meadows__pipwing__idle.jpg",
+  "preset": "arm-Medium",
+  "tree": "aac9c84a3ac541f7a1ebdd8c085363c09864859a",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-creature-ruler-depth-r3-medium/arm-Medium/meadows__pipwing__idle.jpg",
+  "sky_fraction": 0.201,
+  "lower_edges": 0.4371,
+  "script_errors": 0,
+  "note": "F38#5 Medium close-out (High won 7.77 in round 3). Medium, tb/floor2 aac9c84a3, phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042. base = creature_ruler_depth off (7.3-7.5 m); arm = plus FLOOR2-STAGE/overlay_ruler_depth.json. Arm readout (contact_depth_vs_trainer_feet_m | behind_plane_m | feet_screen_y | trainer_feet_screen_y): bramblebun 0.02 | 1.37 | 0.801 | 0.723; trailpup 0.02 | 1.00 | 0.791 | 0.723; brooktail 0.02 | 3.02 | 0.828 | 0.723; pipwing 0.02 | 1.02 | 0.794 | 0.723. All in_frame, no trainer overlap; Meadows hillside slope as at High."
+ },
+ {
+  "frame": "meadows__trailpup__idle.jpg",
+  "preset": "arm-Medium",
+  "tree": "aac9c84a3ac541f7a1ebdd8c085363c09864859a",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-creature-ruler-depth-r3-medium/arm-Medium/meadows__trailpup__idle.jpg",
+  "sky_fraction": 0.189,
+  "lower_edges": 0.4476,
+  "script_errors": 0,
+  "note": "F38#5 Medium close-out (High won 7.77 in round 3). Medium, tb/floor2 aac9c84a3, phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042. base = creature_ruler_depth off (7.3-7.5 m); arm = plus FLOOR2-STAGE/overlay_ruler_depth.json. Arm readout (contact_depth_vs_trainer_feet_m | behind_plane_m | feet_screen_y | trainer_feet_screen_y): bramblebun 0.02 | 1.37 | 0.801 | 0.723; trailpup 0.02 | 1.00 | 0.791 | 0.723; brooktail 0.02 | 3.02 | 0.828 | 0.723; pipwing 0.02 | 1.02 | 0.794 | 0.723. All in_frame, no trainer overlap; Meadows hillside slope as at High."
+ },
+ {
+  "frame": "meadows__bramblebun__idle.jpg",
+  "preset": "base-Medium",
+  "tree": "aac9c84a3ac541f7a1ebdd8c085363c09864859a",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-creature-ruler-depth-r3-medium/base-Medium/meadows__bramblebun__idle.jpg",
+  "sky_fraction": 0.189,
+  "lower_edges": 0.4534,
+  "script_errors": 0,
+  "note": "F38#5 Medium close-out (High won 7.77 in round 3). Medium, tb/floor2 aac9c84a3, phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042. base = creature_ruler_depth off (7.3-7.5 m); arm = plus FLOOR2-STAGE/overlay_ruler_depth.json. Arm readout (contact_depth_vs_trainer_feet_m | behind_plane_m | feet_screen_y | trainer_feet_screen_y): bramblebun 0.02 | 1.37 | 0.801 | 0.723; trailpup 0.02 | 1.00 | 0.791 | 0.723; brooktail 0.02 | 3.02 | 0.828 | 0.723; pipwing 0.02 | 1.02 | 0.794 | 0.723. All in_frame, no trainer overlap; Meadows hillside slope as at High."
+ },
+ {
+  "frame": "meadows__brooktail__idle.jpg",
+  "preset": "base-Medium",
+  "tree": "aac9c84a3ac541f7a1ebdd8c085363c09864859a",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-creature-ruler-depth-r3-medium/base-Medium/meadows__brooktail__idle.jpg",
+  "sky_fraction": 0.19,
+  "lower_edges": 0.4513,
+  "script_errors": 0,
+  "note": "F38#5 Medium close-out (High won 7.77 in round 3). Medium, tb/floor2 aac9c84a3, phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042. base = creature_ruler_depth off (7.3-7.5 m); arm = plus FLOOR2-STAGE/overlay_ruler_depth.json. Arm readout (contact_depth_vs_trainer_feet_m | behind_plane_m | feet_screen_y | trainer_feet_screen_y): bramblebun 0.02 | 1.37 | 0.801 | 0.723; trailpup 0.02 | 1.00 | 0.791 | 0.723; brooktail 0.02 | 3.02 | 0.828 | 0.723; pipwing 0.02 | 1.02 | 0.794 | 0.723. All in_frame, no trainer overlap; Meadows hillside slope as at High."
+ },
+ {
+  "frame": "meadows__pipwing__idle.jpg",
+  "preset": "base-Medium",
+  "tree": "aac9c84a3ac541f7a1ebdd8c085363c09864859a",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-creature-ruler-depth-r3-medium/base-Medium/meadows__pipwing__idle.jpg",
+  "sky_fraction": 0.19,
+  "lower_edges": 0.4514,
+  "script_errors": 0,
+  "note": "F38#5 Medium close-out (High won 7.77 in round 3). Medium, tb/floor2 aac9c84a3, phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042. base = creature_ruler_depth off (7.3-7.5 m); arm = plus FLOOR2-STAGE/overlay_ruler_depth.json. Arm readout (contact_depth_vs_trainer_feet_m | behind_plane_m | feet_screen_y | trainer_feet_screen_y): bramblebun 0.02 | 1.37 | 0.801 | 0.723; trailpup 0.02 | 1.00 | 0.791 | 0.723; brooktail 0.02 | 3.02 | 0.828 | 0.723; pipwing 0.02 | 1.02 | 0.794 | 0.723. All in_frame, no trainer overlap; Meadows hillside slope as at High."
+ },
+ {
+  "frame": "meadows__trailpup__idle.jpg",
+  "preset": "base-Medium",
+  "tree": "aac9c84a3ac541f7a1ebdd8c085363c09864859a",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-creature-ruler-depth-r3-medium/base-Medium/meadows__trailpup__idle.jpg",
+  "sky_fraction": 0.189,
+  "lower_edges": 0.451,
+  "script_errors": 0,
+  "note": "F38#5 Medium close-out (High won 7.77 in round 3). Medium, tb/floor2 aac9c84a3, phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042. base = creature_ruler_depth off (7.3-7.5 m); arm = plus FLOOR2-STAGE/overlay_ruler_depth.json. Arm readout (contact_depth_vs_trainer_feet_m | behind_plane_m | feet_screen_y | trainer_feet_screen_y): bramblebun 0.02 | 1.37 | 0.801 | 0.723; trailpup 0.02 | 1.00 | 0.791 | 0.723; brooktail 0.02 | 3.02 | 0.828 | 0.723; pipwing 0.02 | 1.02 | 0.794 | 0.723. All in_frame, no trainer overlap; Meadows hillside slope as at High."
+ }
+]
