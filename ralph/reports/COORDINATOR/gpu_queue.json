@@ -2883,6 +2883,24 @@
    "note": "Near-bar close-out (Medium 7.46). The faint-fold landing waits to batch with this.",
    "done": true,
    "result": "Pre-check FAILED (attempt 1): drop_deg 40 drives the forefeet through the torso (claw tips out of the flank). Diag G-floor2-aquaryn-faint-flat-diag 874cda1c8. Faint fold landed alone as #908."
+  },
+  {
+   "id": "floor2-camp-hero",
+   "kind": "arm",
+   "rows": [
+    "F38#32"
+   ],
+   "branch": "tb/floor2",
+   "head": "1078a130a",
+   "tree": "tb/floor2 1078a130a (props.gd, trail_camp_roadside_threshold.gd, props.json, capture_stands.json; installed assets only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-CAMP/overlay_camp_hero.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-CAMP/CAPTURE.json",
+   "job": "phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --preset=High, subsets camp_tent, camp_bed, bonfire_fire; base and arm",
+   "frames": "camp_tent, camp_bed, bonfire_fire",
+   "capture": "High. Pre-check: sign lettering reads correctly from either side, props not overlapping (tent vs bed), nothing red (camp props, owner red rule). The bonfire frame's stand moves (heading 90) so its gain is partly staging: LANE-SCOUT to report the bonfire frame separately. Then judge on F38#32's brief.",
+   "note": "6-to-7 tier (6.37)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
