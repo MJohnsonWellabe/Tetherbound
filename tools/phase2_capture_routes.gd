@@ -64,6 +64,22 @@ func _load_plan() -> bool:
 			"walk_seed": rng.seed, "walk_step": 0,
 			"walk_offset_xz": [0.0, 0.0]}, true)
 		_planned.append(vista_row)
+	# A reviewed per-frame view heading (capture_stands.json `heading_overrides`,
+	# the block the inventory tool already reads): a seeded walk stand whose
+	# route heading stares into a slope can be turned to face open ground.
+	var stands: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/capture_stands.json"))
+	var headings: Dictionary = {}
+	if stands is Dictionary and bool(((stands as Dictionary).get("heading_overrides", {}) as Dictionary).get("enabled", false)):
+		headings = ((stands as Dictionary).heading_overrides as Dictionary).get("frames", {})
+	for row: Dictionary in _planned:
+		var heading_row: Variant = headings.get(str(row.frame_id))
+		if heading_row is Dictionary and (heading_row as Dictionary).has("heading_deg"):
+			row["view_heading_deg"] = float((heading_row as Dictionary).heading_deg)
+		# `position_xz` on the same row: an explicit reviewed stand for a seeded
+		# walk frame whose random spot is no longer open ground.
+		if heading_row is Dictionary and (heading_row as Dictionary).get("position_xz") is Array \
+				and ((heading_row as Dictionary).position_xz as Array).size() == 2:
+			row["position_xz"] = [float(heading_row.position_xz[0]), float(heading_row.position_xz[1])]
 	var requested: Array[String] = []
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--frame="):
