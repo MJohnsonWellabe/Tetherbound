@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "01-launch.png",
+  "preset": "armB-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_realm_flight.gd",
+  "path": "G-newapproach-fly-grip-B-diag/armB-High/01-launch.png",
+  "sky_fraction": 0.152,
+  "lower_edges": 0.0364,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (F38#8 overlay B). High, main e1c941cbd. base = main as is; armB = plus tb/newapproach 6ee6f3b0c NEWAPPROACH-FLYGRIP2/overlay_shoulder_grip.json (upper_lateral 5.0, forearm_lateral -1.4, body on). Pre-check FAILED: the hands clasp the sides and back of the trainer's head (hands-behind-head read), not the bird; gap between hands and feet in launch and glide; talon tips overlap the elbows."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "armB-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_realm_flight.gd",
+  "path": "G-newapproach-fly-grip-B-diag/armB-High/02-glide.png",
+  "sky_fraction": 0.149,
+  "lower_edges": 0.0336,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (F38#8 overlay B). High, main e1c941cbd. base = main as is; armB = plus tb/newapproach 6ee6f3b0c NEWAPPROACH-FLYGRIP2/overlay_shoulder_grip.json (upper_lateral 5.0, forearm_lateral -1.4, body on). Pre-check FAILED: the hands clasp the sides and back of the trainer's head (hands-behind-head read), not the bird; gap between hands and feet in launch and glide; talon tips overlap the elbows."
+ },
+ {
+  "frame": "01-launch.png",
+  "preset": "base-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_realm_flight.gd",
+  "path": "G-newapproach-fly-grip-B-diag/base-High/01-launch.png",
+  "sky_fraction": 0.155,
+  "lower_edges": 0.0332,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (F38#8 overlay B). High, main e1c941cbd. base = main as is; armB = plus tb/newapproach 6ee6f3b0c NEWAPPROACH-FLYGRIP2/overlay_shoulder_grip.json (upper_lateral 5.0, forearm_lateral -1.4, body on). Pre-check FAILED: the hands clasp the sides and back of the trainer's head (hands-behind-head read), not the bird; gap between hands and feet in launch and glide; talon tips overlap the elbows."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "base-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_realm_flight.gd",
+  "path": "G-newapproach-fly-grip-B-diag/base-High/02-glide.png",
+  "sky_fraction": 0.154,
+  "lower_edges": 0.0322,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (F38#8 overlay B). High, main e1c941cbd. base = main as is; armB = plus tb/newapproach 6ee6f3b0c NEWAPPROACH-FLYGRIP2/overlay_shoulder_grip.json (upper_lateral 5.0, forearm_lateral -1.4, body on). Pre-check FAILED: the hands clasp the sides and back of the trainer's head (hands-behind-head read), not the bird; gap between hands and feet in launch and glide; talon tips overlap the elbows."
+ }
+]
