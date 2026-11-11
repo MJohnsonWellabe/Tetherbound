@@ -21,3 +21,4 @@ Columns: file | rows | result.
 - G-dialogue-recapture-tidewake-cloudreach.md | F39#18, F39#26, F39#29, F40#10, F40#12 | new baseline: 7.12, 6.94, 7.03, 6.77, 7.25; Tidewake ≈6.64, Cloudreach ≈7.26
 - G-dialogue-recapture-stormwood.md | F41#7, F41#11, F41#15, F41#20 | new baseline: 6.24, 6.91, 4.49, 6.41; Stormwood ≈6.25. All fall: Marrow's head bloom, creature occlusion, reused models
 - G-things-toys-ui.md | F40#13, F38#6, F40#16, F38#3, F38#11, F41#3 | SPLIT: catch_card ships F40#13 6.88 → 7.62 (3/3, capture Medium); meshy pickup tone_down LOSES F38#6 −0.84 (0/3), drop it; mushroom and dust level
+- G-below6-hits.md | F36#52, F36#30 | SPLIT: Mirejaw hit ships 5.72 → 6.32 (3/3); Abyssal flinch −0.25 (1/3), adds a white foot-block artefact, do not ship
