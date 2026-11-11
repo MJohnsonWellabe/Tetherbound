@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 14:41 UTC",
+  "updated": "11 Nov 2026 15:56 UTC",
   "headline": [
+    "11 Nov 15:56: #906 landed a soft lit cloud-sea material for Cloudreach: the faceted cloud floor (a sine-hash corner mismatch on the judging GPU) becomes rolling billows with blue creases. F40#11 6.97, F40#6 6.33 (was the lowest row). Below 6: 7, of which five need new art.",
     "11 Nov 14:41: #905 landed the Stormwood harvest presence (F41#9 6.81: the storm-glass crown now 'the strongest single subject in the batch') and the Warrens mound meadow match (F38#30 6.02: the stretched mound shell takes the meadow's own grass). Below 6: 8.",
     "11 Nov 13:31: #904 landed Cloudreach island mist as cumulus cloud cards: F40#11 5.26 -> 5.99 (3/3), just under 6. Next arm retints them to the cloud floor's white and replaces the faceted floor with a soft lit cloud-sea material. Below 6: 10.",
     "11 Nov 12:40: #903 landed authored Cloudreach NPC posts: role structures (Tavi's training yard, Sora's study, Maela's cages), cobbled post caps, a key light with shadow, Sora moved clear of the wall. F40#9 5.32 -> 6.48 (3/3) with today's camera. Below 6: 10.",
@@ -2262,8 +2263,8 @@
       "src": "GPU High 8-9 Nov (F-cloudreach)"
     },
     "F40#11": {
-      "gpu": 5.99,
-      "src": "G-newapproach-edge-cards (tb/item-scout-1108 0a154f5d7): island mist as cumulus cards, 5.26 -> 5.99 (3/3); landed #904. Next: retint to floor white + soft cloud-sea material."
+      "gpu": 6.97,
+      "src": "G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88): soft lit cloud sea, 6.17 -> 6.97 (3/3); landed #906 (with #904's cumulus cards). Near-bar: card colour fix next."
     },
     "F40#12": {
       "gpu": 7.17,
@@ -2310,8 +2311,8 @@
       "src": "G-recheck-f40-5 (LANE-SCOUT, tb/item-scout-1108 d4e4bf712), one-sided on main e1c941cbd at High: fight dust no longer covers the exchange after #882; frame 1 still crops the boar and half-hides Sparkit behind the team HUD (2/3). Close-out candidate (25 Oct exception)."
     },
     "F40#6": {
-      "gpu": 5.1,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 6.33,
+      "src": "G-newapproach-cloud-sea-only: soft lit cloud sea, 5.61 -> 6.33 (3/3); landed #906. Remaining defect: mount upright over open cloud (refuse_drop, owner decision)."
     },
     "F40#7": {
       "gpu": 6.26,
