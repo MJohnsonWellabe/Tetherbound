@@ -2234,7 +2234,8 @@
    "frames": "phase2_16_terrace_mounted_at_edge, phase2_17_terrace_01.0s, phase2_18_terrace_after, phase2_27_terrace_road_back_13.5s, phase2_28_terrace_road_back_15.0s",
    "capture": "High, --fixed-fps 20 on both sides so the ride frames line up. Next in line. Pre-check on the two road_back frames first: on base, the flat slab with a straight horizontal top behind the cloud; in the arm it should be gone. Report what slab or ribbon edges remain in the arm, if any, and anything new showing below the cloud where the box was. If the slabs are gone or clearly reduced, judge F40#6 and F40#11.",
    "note": "Cloud deck cause found on CPU: cloudreach_world.gd _build_cloud_sea() builds an opaque, flat, unshaded realm-wide box (CloudSea) at the lowest height, kept for the kill plane; from a rim it reads as a flat slab with a ruler-straight top. The arm stops drawing its mesh (node and kill plane unchanged).",
-   "done": false
+   "done": true,
+   "frames_pushed": "3f00e867c (slab gone; sheet ribbons remain)"
   },
   {
    "id": "floor2-creature-ruler-depth",
