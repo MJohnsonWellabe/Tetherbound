@@ -361,7 +361,9 @@ func _ramp_body(start: Vector3, finish: Vector3, width: float, cfg: Dictionary) 
 			var pb := Vector3(p.x, floor_y, p.z)
 			var qb := Vector3(q.x, floor_y, q.z)
 			# face outward on both sides
-			var quad: Array[Vector3] = [p, q, qb, pb] if edge < 0.0 else [q, p, pb, qb]
+			var quad: Array[Vector3] = [p, q, qb, pb]
+			if edge > 0.0:
+				quad = [q, p, pb, qb]
 			var u0 := float(i) / steps * along.length() * 0.25
 			var u1 := float(i + 1) / steps * along.length() * 0.25
 			var corners_uv: Array[Vector2] = [Vector2(u0, 0), Vector2(u1, 0), Vector2(u1, (q.y - floor_y) * 0.25), Vector2(u0, (p.y - floor_y) * 0.25)]
