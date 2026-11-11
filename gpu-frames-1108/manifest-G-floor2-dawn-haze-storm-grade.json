@@ -1,0 +1,156 @@
+[
+ {
+  "frame": "lesson-dawn.jpg",
+  "preset": "arm-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/arm-High/lesson-dawn.jpg",
+  "sky_fraction": 0.024,
+  "lower_edges": 0.1117,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "lesson-rain.jpg",
+  "preset": "arm-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/arm-High/lesson-rain.jpg",
+  "sky_fraction": 0.358,
+  "lower_edges": 0.1029,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "shore-day.jpg",
+  "preset": "arm-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/arm-High/shore-day.jpg",
+  "sky_fraction": 0.351,
+  "lower_edges": 0.2756,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "shore-golden.jpg",
+  "preset": "arm-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/arm-High/shore-golden.jpg",
+  "sky_fraction": 0.038,
+  "lower_edges": 0.2746,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "shore-rain.jpg",
+  "preset": "arm-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/arm-High/shore-rain.jpg",
+  "sky_fraction": 0.422,
+  "lower_edges": 0.3576,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "veilfall-rain.jpg",
+  "preset": "arm-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/arm-High/veilfall-rain.jpg",
+  "sky_fraction": 0.494,
+  "lower_edges": 0.1521,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "veilfall-vista-rain.jpg",
+  "preset": "arm-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/arm-High/veilfall-vista-rain.jpg",
+  "sky_fraction": 0.747,
+  "lower_edges": 0.127,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "lesson-dawn.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/base-High/lesson-dawn.jpg",
+  "sky_fraction": 0.024,
+  "lower_edges": 0.12,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "lesson-rain.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/base-High/lesson-rain.jpg",
+  "sky_fraction": 0.188,
+  "lower_edges": 0.116,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "shore-day.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/base-High/shore-day.jpg",
+  "sky_fraction": 0.349,
+  "lower_edges": 0.2787,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "shore-golden.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/base-High/shore-golden.jpg",
+  "sky_fraction": 0.037,
+  "lower_edges": 0.2767,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "shore-rain.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/base-High/shore-rain.jpg",
+  "sky_fraction": 0.27,
+  "lower_edges": 0.3834,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "veilfall-rain.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/base-High/veilfall-rain.jpg",
+  "sky_fraction": 0.356,
+  "lower_edges": 0.2327,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ },
+ {
+  "frame": "veilfall-vista-rain.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-dawn-haze-storm-grade/base-High/veilfall-vista-rain.jpg",
+  "sky_fraction": 0.461,
+  "lower_edges": 0.2846,
+  "script_errors": 0,
+  "note": "F39#30. High 1920x1080, main e2138671a (#900), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json, 7 views. base = main as is; arm = plus tb/floor2 5589958a6 FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json (lighting_candidate dawn fog 0.0004 -> 0.004; rain_grade_candidate sun 0.32 -> 0.18, grey storm sky, cooler ambient, saturation x0.72; rain_veil_candidate finer streaks). Arm views: lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain; controls: shore-day, shore-golden. Pre-check: rain not near-black (mean luma 69-130, as base); dawn keeps the far dune, the hard black strip between near water and sky is now soft warm haze; controls identical except a different wild creature spawn at the shore edge."
+ }
+]
