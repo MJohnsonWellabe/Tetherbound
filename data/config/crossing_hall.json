@@ -686,6 +686,7 @@
         "normal_scale": 0.3,
         "roughness": 0.95
       },
+      "timber_1110": {"enabled": true, "_why_on": "GPU High judged 11 Nov (LANE-SCOUT G-hollows-giant-trees): arch_home golden detail and gameplay 6.13 -> 6.37 (+0.24, 3/3); judges read the base post as salmon or orange-red and the arm's as brown wood (red rule).", "scope": "client_presentation", "_candidate": "Red rule audit (coordinator, 10 Nov; LANE-MESHY, OFF until judged). Meadows arch_home golden detail (3/3): what judges call a dark red curtain filling the right third is the Hall's own timber nave post (HallTimberFrame, Corner_Exterior_Wood, MI_WoodTrim). The source sheet is red-brown (about hue 20 degrees under the #b7a58b multiply) and golden light pushes it into the red family Team Tether reserves. ON lowers red and lifts green in the multiply so the same wood lands near hue 29 (ochre-brown, the village family) at about the same value. Day and night copies inherit it; no other material changes. Presentation only.", "color": "#9eb38c"},
       "timber": {
         "color": "#b7a58b",
         "normal_scale": 0.55,

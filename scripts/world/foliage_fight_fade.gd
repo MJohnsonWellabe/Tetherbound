@@ -60,7 +60,7 @@ func has_materials() -> bool:
 ## on for only those realms (F22#4: the Meadows Riverwatch draw on its own).
 static func configured(realm: String, config: Dictionary) -> bool:
 	var on: bool = bool(config.get("enabled", false)) or realm in config.get("enabled_realms", [])
-	return on and realm in config.get("realms", []) and not config.get("models", []).is_empty()
+	return on and realm in config.get("realms", []) and not models(config).is_empty()
 
 
 ## F22#4: `realm_trainers` limits a realm's fight presentation (sight lines,
@@ -76,7 +76,22 @@ static func allows_fight(realm: String, config: Dictionary, trainer_id: String) 
 
 
 static func eligible(model: String, realm: String, config: Dictionary) -> bool:
-	return configured(realm, config) and model in config.get("models", [])
+	return configured(realm, config) and model in models(config)
+
+
+## F41#3 / F41#22 (LANE-MESHY, 10 Nov; `giant_trees_1110`, OFF until judged):
+## the Deepwood's Meshy giant trees and scarred trunks were on neither fade
+## list, so at Hollows Alpha the fight camera could sit inside their spreading
+## root mass (only the 3.5 m trunk collides) and draw a frame of teal bark.
+## ON adds them to this fight-only fade; exploration keeps its look.
+static func models(config: Dictionary) -> Array:
+	var listed: Array = config.get("models", []).duplicate()
+	var giants: Variant = config.get("giant_trees_1110", {})
+	if giants is Dictionary and bool((giants as Dictionary).get("enabled", false)):
+		for model: Variant in (giants as Dictionary).get("models", []):
+			if not model in listed:
+				listed.append(model)
+	return listed
 
 
 ## Refuse unknown generated layouts instead of silently losing source features.

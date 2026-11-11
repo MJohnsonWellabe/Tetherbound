@@ -707,6 +707,14 @@ func _apply_waymark_materials() -> void:
 		if treatment.is_empty() or not cfg.has(treatment):
 			continue
 		var spec: Dictionary = cfg[treatment]
+		# Red rule (LANE-MESHY, 10 Nov; `timber_1110`, OFF until judged): the
+		# red-brown WoodTrim sheet under the warm multiply read as a red
+		# curtain at golden hour (arch_home detail, 3/3). ON swaps the tint
+		# for one that lands the same wood on ochre-brown.
+		var ochre: Dictionary = cfg.get("timber_1110", {})
+		if treatment == "timber" and bool(ochre.get("enabled", false)):
+			spec = spec.duplicate()
+			spec.merge(ochre, true)
 		var material_name := "MI_WoodTrim" if treatment == "timber" else "MI_UnevenBrick"
 		for surface in mesh.mesh.get_surface_count():
 			var source := mesh.get_active_material(surface) as StandardMaterial3D
