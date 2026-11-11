@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "cloudreach__inventory__pickup__speed_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=cloudreach (3 mushroom subsets)",
+  "path": "G-toys-pickups-cloudreach/arm-High/cloudreach__inventory__pickup__speed_mushroom.jpg",
+  "sky_fraction": 0.006,
+  "lower_edges": 0.1449,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#16/#17."
+ },
+ {
+  "frame": "cloudreach__inventory__pickup__stamina_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=cloudreach (3 mushroom subsets)",
+  "path": "G-toys-pickups-cloudreach/arm-High/cloudreach__inventory__pickup__stamina_mushroom.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.3634,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#16/#17."
+ },
+ {
+  "frame": "cloudreach__inventory__pickup__wild_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=cloudreach (3 mushroom subsets)",
+  "path": "G-toys-pickups-cloudreach/arm-High/cloudreach__inventory__pickup__wild_mushroom.jpg",
+  "sky_fraction": 0.021,
+  "lower_edges": 0.1079,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#16/#17."
+ },
+ {
+  "frame": "cloudreach__inventory__pickup__speed_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=cloudreach (3 mushroom subsets)",
+  "path": "G-toys-pickups-cloudreach/base-High/cloudreach__inventory__pickup__speed_mushroom.jpg",
+  "sky_fraction": 0.006,
+  "lower_edges": 0.1435,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#16/#17."
+ },
+ {
+  "frame": "cloudreach__inventory__pickup__stamina_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=cloudreach (3 mushroom subsets)",
+  "path": "G-toys-pickups-cloudreach/base-High/cloudreach__inventory__pickup__stamina_mushroom.jpg",
+  "sky_fraction": 0.075,
+  "lower_edges": 0.3607,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#16/#17."
+ },
+ {
+  "frame": "cloudreach__inventory__pickup__wild_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=cloudreach (3 mushroom subsets)",
+  "path": "G-toys-pickups-cloudreach/base-High/cloudreach__inventory__pickup__wild_mushroom.jpg",
+  "sky_fraction": 0.021,
+  "lower_edges": 0.1071,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#16/#17."
+ }
+]
