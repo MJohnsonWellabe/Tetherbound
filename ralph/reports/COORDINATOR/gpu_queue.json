@@ -2818,7 +2818,9 @@
    "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 --preset=High; base and arm",
    "frames": "aquaryn idle, resting, fainted",
    "capture": "High. Pre-check: resting body on its shadow, whole in frame, visibly different from base; idle and fainted match base. Then LANE-SCOUT on F39#6's brief as in G-stage-r3-f41-13-f39-6. If High maps 7.5+, queue Medium.",
-   "note": "Near-bar close-out (7.24 -> needs +0.26), allowed under the 25 Oct exception."
+   "note": "Near-bar close-out (7.24 -> needs +0.26), allowed under the 25 Oct exception.",
+   "done": true,
+   "frames_pushed": "G-floor2-aquaryn-settled-rest d6d0f5a1b: pre-checks pass (settled rest on its shadow; idle and fainted unchanged). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
