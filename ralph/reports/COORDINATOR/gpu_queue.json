@@ -2940,6 +2940,23 @@
    "frames": "camp_tent, camp_bed, bonfire_fire (+ bonfire at planned stand, arm only, as a sign check)",
    "capture": "After newapproach-card-white. High. Pre-check: nothing red, the sign reads correctly from the planned stand, gate timber brown with grain. LANE-SCOUT: report tent+bed (game only) and bonfire separately.",
    "note": "Camp attempt 2 (attempt 1 lost on the game-only frames)."
+  },
+  {
+   "id": "rebaseline-creature-poses-stage",
+   "kind": "baseline",
+   "rows": [
+    "F36 (1) creature pose rows in 6-7 (about 30)",
+    "F38#1",
+    "F38#2",
+    "F38#15"
+   ],
+   "branch": "main",
+   "head": "0058b0d6c (current main, creature_ruler_depth ON since #901)",
+   "overlay": null,
+   "job": "phase2_capture_creatures.gd --seed=2042 --preset=High, one run per biome: --biome=meadows, --biome=water, --biome=cloudreach, --biome=stormwood (full roster, all poses); output under res://.artifacts/phase2/",
+   "frames": "every creature pose frame the tool writes, per biome",
+   "capture": "High, one side (no arm). After floor2-camp-r2. Pre-check: manifests show creature_ruler_depth ON and contact >= 0. Push per biome as it completes for LANE-SCOUT to re-score the F36 (1) pose rows.",
+   "note": "Pose rows were scored on the old stage (creatures drew ~0.7x their height). TECHNICAL 8.1 says re-baseline them. Tier-2 low-hanging fruit: possible gains with no code."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
