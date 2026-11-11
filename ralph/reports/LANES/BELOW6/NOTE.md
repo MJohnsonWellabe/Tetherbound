@@ -8,7 +8,7 @@
 | F36#94 Water Mosshell | won | 4.65 -> 6.67; LANE-THINGS lands it. |
 | F41#1 Stormheart finale (5.78) | `BELOW6-HEARTWOOD` | **on the GPU** |
 | F36#80 Thundertunnel (5.92) | `BELOW6-THUNDERTUNNEL` | **on the GPU** |
-| F36#52 Mirejaw (5.28) | `BELOW6-MIREJAW` (`creature_clip_flags.json below6_mirejaw_hit`, OFF, config only) | **prepared; queue when a slot frees.** CPU base and arm captured: the hit becomes a readable flinch, no pale gaping jaw, no grey tail blade. |
+| F36#52 Mirejaw (5.28) | `BELOW6-MIREJAW` (`creature_clip_flags.json below6_mirejaw_hit`, OFF, config only) | **ready for GPU** (Abyssal returned, two in flight). CPU base and arm captured: the hit becomes a readable flinch, no pale gaping jaw, no grey tail blade. |
 | F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | **not sent**: no visible change on CPU (`NOT-SENT.md`). |
 | F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` | **not sent**: the dome is out of frame at the observatory and small at the beacon (`NOT-SENT.md`, with what the frames suggest instead). |
 | F36#88 Water Abyssal Guardian | none | material lever spent (level on GPU). Leaves the tier at 6.32 once the stage fix lands; the judges' remaining ask (a scaled sea serpent) is a new mesh: parked without Meshy. |
