@@ -2146,7 +2146,8 @@
    "frames": "base vs arm on both jobs",
    "capture": "High. Next in line. Pre-check before judging, because this package has never been seen on GPU: no black or missing geometry; cliffs pale but not white or icy; no shimmer on the cliff courses at distance; cloud below the rims reads as cloud, not fog; no grove tree standing inside a landmark composition. If any of those fails, name the part (pale_strata, cloud_sea, light_grade, meadow_groves) so it can be dropped with its own flag and the rest re-sent.",
    "note": "Floor lane: turns on the never-rendered Cloudreach cause package (cloudreach_cause.json: pale_strata, cloud_sea, light_grade, meadow_groves; route_boulders false), which answers the three batch-wide causes the F-cloudreach judges named. Targets the five Cloudreach rows just under 6 (F40#1 5.90, F40#3 5.86, F40#8 5.85, F40#9 5.72) and the F40#0 matrix (6.58).",
-   "done": false
+   "done": true,
+   "frames_pushed": "not pushed: pre-check failed on cloud_sea (flat translucent slab with hard edges at keeper_maela; straight edge at realm_gate_crag); other three parts passed"
   },
   {
    "id": "recheck-f40-3-f38-32-f41-13",
@@ -2162,6 +2163,27 @@
    "frames": "One-sided re-score captures on main, no arm: (1) F40#3 architectural landmark frames from the F-cloudreach re-score (the closer capture stands landed in batch 25 / #871 and were never re-judged); (2) F38#32 camp spacing frames from the B section; (3) F41#13 fulgocobra and stormraven idle frames as in G-rescore-f39-21-f41-13",
    "capture": "High. After the Cloudreach cause arm and before any further baseline pieces.",
    "note": "ROW-AUDIT-1111 cheapest re-captures: F40#3's new stand was never re-judged; F38#32 re-measured 6.24 live with no change (scale scatter); F41#13 has landed verdicts at 6.14 and 5.00 that disagree.",
+   "done": false
+  },
+  {
+   "id": "newapproach-cloudreach-cause-no-cloudsea",
+   "kind": "arm",
+   "rows": [
+    "F40#1",
+    "F40#3",
+    "F40#8",
+    "F40#9",
+    "F40#0"
+   ],
+   "branch": "tb/newapproach",
+   "head": "186b3e534",
+   "tree": "tb/newapproach 186b3e534 (as the full-package capture)",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/cloudreach_cause_no_cloudsea.json",
+   "overlay_format": "deep merge",
+   "job": "Same two jobs as newapproach-cloudreach-cause: (1) the F-cloudreach job frames for F40#1, #3, #8, #9 (21 per side); (2) the F40#0 matrix pieces 1-24 (96 per side). BASE: reuse the base frames you already captured for newapproach-cloudreach-cause if the tree is identical; ARM: new capture with this overlay.",
+   "capture": "High. After recheck-f40-3-f38-32-f41-13. Pre-check: no hard-edged slab or straight cloud edge anywhere (cloud_sea is off, so the deck should be as base); the pale tan soil rims noted last time are expected (pale_strata), call them out for the judges.",
+   "note": "The full cause package failed the GPU pre-check on cloud_sea only (a flat translucent slab with hard edges at keeper_maela). This drops cloud_sea and keeps pale_strata (route_boulders off), light_grade and meadow_groves, all of which passed.",
    "done": false
   }
  ],
