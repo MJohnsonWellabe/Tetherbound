@@ -2691,7 +2691,9 @@
    "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
    "frames": "phase2_16_terrace_mounted_at_edge, phase2_17_terrace_01.0s, phase2_18_terrace_02.0s",
    "capture": "High. Pre-check: no straight quad edge or hard line against the cliff; no flat-sprite pop as the mount passes; not pasted-on at 1080p. Then LANE-SCOUT on F40#11's brief.",
-   "note": "New idea (island mist volume banks -> cumulus cards), not the parked deck-shader line."
+   "note": "New idea (island mist volume banks -> cumulus cards), not the parked deck-shader line.",
+   "done": true,
+   "frames_pushed": "G-newapproach-edge-cards b013a69c9 on main 5b0f2c924: no quad edges or pop; cards crisper than the surrounding sea (possible pasted-on read). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
