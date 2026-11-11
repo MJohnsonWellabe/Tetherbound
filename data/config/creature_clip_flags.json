@@ -241,6 +241,24 @@
           }
         }
       }
+    },
+    "below6_flinch_abyssal_voltarach": {
+      "_why": "LANE-BELOW6 (11 Nov 2026). GPU 11 Nov, both 3/3 on the arm side: F36#30 Abyssal Guardian (5.77) and F36#86 Voltarach (6.50) 'the hit is almost identical to standing'. The recoil is exaggerated (rotation x1.9) with the feet kept near the ground (position x0.6), the hook that landed for cindercub and trailpup (CO16 +0.28 to +0.32). OFF until GPU-judged.",
+      "enabled": false,
+      "species": {
+        "abyssal_guardian": {
+          "hit": {
+            "rotation": 1.9,
+            "position": 0.6
+          }
+        },
+        "voltarach": {
+          "hit": {
+            "rotation": 1.9,
+            "position": 0.6
+          }
+        }
+      }
     }
   }
 }
