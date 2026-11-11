@@ -1,0 +1,11 @@
+[
+ {
+  "label": "G F38#5 ruler-depth-r3 Medium base-vs-arm",
+  "a": "G-rd3m_base.png",
+  "b": "G-rd3m_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: normal creature scale (4 creature views). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+  ]
+ }
+]
