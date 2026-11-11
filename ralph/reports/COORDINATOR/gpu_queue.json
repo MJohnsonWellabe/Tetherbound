@@ -2904,6 +2904,24 @@
    "done": true,
    "frames_pushed": "G-floor2-camp-hero 13a6d2ac4: pre-checks pass (no overlap, no red on arm, fire now in view). Base's sign beam is dark crimson (red-rule ride-along for LANE-MESHY's list). With LANE-SCOUT.",
    "verdict": "G-floor2-camp-hero (tb/item-scout-1108 57a0c813b): DO NOT SHIP. Tent+bed -0.44 (0/3, scaled flame card); bonfire stand +1.68. Next: declutter + single-sided sign + beam off oxblood + stand, no scale-up. Fire = new art."
+  },
+  {
+   "id": "newapproach-card-white",
+   "kind": "close-out",
+   "rows": [
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "6b835a144",
+   "tree": "current main (soft_sea and cumulus_cards ON after #906) plus from tb/newapproach 6b835a144: shaders/cloudreach_cloud_card.gdshader with .uid, and cloudreach_world.gd's mist_card_shading block",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CARDWHITE/overlay_card_white.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-CARDWHITE/CAPTURE.json",
+   "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
+   "frames": "16, 17, 18",
+   "capture": "High. Pre-check frame 17: card saturation under 0.10 (floor ~0.05), value at or above the floor's, cards keep form (not see-through ghosts), cool tint on undersides only. Then LANE-SCOUT on F40#11.",
+   "note": "Near-bar close-out (F40#11 6.97); card shading attempt 2. Request sent 15:24, missed by the coordinator until 18:15."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
