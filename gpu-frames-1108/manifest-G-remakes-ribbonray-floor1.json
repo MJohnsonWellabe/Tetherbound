@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "ribbonray-faint-000.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-faint-000.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0516,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-025.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-faint-025.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0536,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-050.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-faint-050.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.056,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-075.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-faint-075.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0552,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-100.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-faint-100.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0534,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-000.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-hit-000.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0532,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-025.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-hit-025.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0526,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-050.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-hit-050.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0532,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-075.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-hit-075.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0534,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-100.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/arm-High/ribbonray-hit-100.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0532,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-000.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-faint-000.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.051,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-025.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-faint-025.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0532,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-050.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-faint-050.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0559,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-075.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-faint-075.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0545,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-faint-100.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-faint-100.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0527,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-000.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-hit-000.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0521,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-025.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-hit-025.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0485,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-050.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-hit-050.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0486,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-075.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-hit-075.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.052,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "ribbonray-hit-100.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context",
+  "path": "G-remakes-ribbonray-floor1/base-High/ribbonray-hit-100.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0521,
+  "script_errors": 0,
+  "note": "F36#61, High. base = tb/remakes ac738b144 (flags OFF = main's magenta Ribbonray); arm = + REMAKES-RIBBONRAY/overlay.json (navy floor1 coat + remakes_floor_ribbonray_hit clip blend). Neutral stage: sky heuristic bypassed after an eye check."
+ }
+]
