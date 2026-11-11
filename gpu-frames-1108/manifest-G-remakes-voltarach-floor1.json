@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "voltarach-faint-000.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-faint-000.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.061,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-025.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-faint-025.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0595,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-050.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-faint-050.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.059,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-075.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-faint-075.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0606,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-100.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-faint-100.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0603,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-000.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-hit-000.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.061,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-025.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-hit-025.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.061,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-050.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-hit-050.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.061,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-075.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-hit-075.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0611,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-100.png",
+  "preset": "arm-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/arm-High/voltarach-hit-100.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.061,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-000.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-faint-000.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.063,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-025.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-faint-025.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0615,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-050.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-faint-050.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0598,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-075.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-faint-075.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0618,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-faint-100.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-faint-100.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0619,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-000.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-hit-000.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.063,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-025.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-hit-025.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0633,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-050.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-hit-050.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0632,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-075.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-hit-075.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0633,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "voltarach-hit-100.png",
+  "preset": "base-High",
+  "tree": "ac738b144cbbfe82357f9d2afe5fe5cf9aa36b8d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context",
+  "path": "G-remakes-voltarach-floor1/base-High/voltarach-hit-100.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.063,
+  "script_errors": 0,
+  "note": "F36#86, High. base = tb/remakes ac738b144 (remakes_floor_voltarach OFF = the native spider main ships); arm = + REMAKES-VOLTARACH/overlay.json (charcoal floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ }
+]
