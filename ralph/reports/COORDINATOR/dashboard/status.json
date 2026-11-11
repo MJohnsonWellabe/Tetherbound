@@ -2475,16 +2475,16 @@
       "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Skyrill poses; 0.03 under the bar"
     },
     "F36#42": {
-      "gpu": 6.94,
-      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Cragclaw poses"
+      "gpu": 7.51,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Cragclaw 6.84 -> 7.51 (3/3); High bar met, Medium queued"
     },
     "F36#49": {
       "gpu": 6.9,
       "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Glimmermoth poses"
     },
     "F36#46": {
-      "gpu": 6.78,
-      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Fulgocobra poses"
+      "gpu": 5.87,
+      "src": "G-things-faint base (fixed stage): Fulgocobra 5.87; faint arm level (-0.05); hood stays raised, near-black body sinks into stage"
     },
     "F36#85": {
       "gpu": 6.33,
@@ -2499,16 +2499,16 @@
       "src": "CLOSED: High 7.68 + Medium 7.75 (G-f36-72-stormbrush-medium)"
     },
     "F36#91": {
-      "gpu": 6.92,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Water Cragclaw poses"
+      "gpu": 6.51,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Water Cragclaw 5.43 (game clip) -> 6.51 (3/3)"
     },
     "F36#60": {
       "gpu": 7.26,
       "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Reedwing poses"
     },
     "F36#38": {
-      "gpu": 7.21,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Cannonback poses"
+      "gpu": 7.07,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Cannonback 6.74 -> 7.07 (3/3)"
     },
     "F36#78": {
       "gpu": 6.84,
@@ -2523,28 +2523,100 @@
       "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Water Mangrove Monitor poses"
     },
     "F36#50": {
-      "gpu": 6.25,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Mangrove Monitor poses; trainer inside the tail"
+      "gpu": 6.98,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Mangrove Monitor 6.51 -> 6.98 (3/3)"
     },
     "F36#88": {
-      "gpu": 5.85,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Water Abyssal Guardian poses; neck up in faint, spindly"
+      "gpu": 6.32,
+      "src": "G-things-faint (2): Water Abyssal Guardian on the game-resolved clip (stage fix lands with the faint arm) 6.32; was 5.85 on the raw clip (5.62 noswitch in the same batch)"
     },
     "F36#93": {
-      "gpu": 5.52,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Water Mirejaw poses; belly-up floating faint"
+      "gpu": 7.39,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Water Mirejaw 6.37 (game clip) -> 7.39 (3/3)"
     },
     "F36#94": {
       "gpu": 5.81,
       "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Water Mosshell poses; inverted turtle, floating rider"
     },
     "F36#30": {
-      "gpu": 5.54,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Abyssal Guardian poses; glossy vinyl, toy-like"
+      "gpu": 6.56,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Abyssal Guardian 5.62 -> 6.56 (3/3)"
     },
     "F36#86": {
       "gpu": 6.5,
       "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, arm ships (not yet landed): Voltarach charcoal coat, 5.15 -> 6.50 (+1.35, 3/3); face still unreadable"
+    },
+    "F36#52": {
+      "gpu": 6.98,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler)"
+    },
+    "F36#69": {
+      "gpu": 7.63,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Solmane; High bar met, Medium queued"
+    },
+    "F36#58": {
+      "gpu": 7.47,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Pebbik"
+    },
+    "F36#35": {
+      "gpu": 7.31,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Breezetail"
+    },
+    "F36#75": {
+      "gpu": 7.22,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormtrail"
+    },
+    "F36#40": {
+      "gpu": 7.02,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Cliffspike"
+    },
+    "F36#36": {
+      "gpu": 6.9,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Brooktail"
+    },
+    "F36#33": {
+      "gpu": 6.9,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Ashtusk"
+    },
+    "F36#87": {
+      "gpu": 6.78,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Voltwig"
+    },
+    "F36#54": {
+      "gpu": 6.68,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Mosshock"
+    },
+    "F36#70": {
+      "gpu": 6.6,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Sparkit"
+    },
+    "F36#44": {
+      "gpu": 6.53,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Duskhush"
+    },
+    "F36#83": {
+      "gpu": 6.53,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Trailpup"
+    },
+    "F36#74": {
+      "gpu": 6.37,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormraven"
+    },
+    "F36#57": {
+      "gpu": 6.34,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Paddlenewt"
+    },
+    "F36#62": {
+      "gpu": 6.3,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Riftfrill"
+    },
+    "F36#66": {
+      "gpu": 6.15,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Shadelet"
+    },
+    "F36#80": {
+      "gpu": 5.92,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Thundertunnel; flat flesh material, faceless-ball faint"
     }
   }
 }
