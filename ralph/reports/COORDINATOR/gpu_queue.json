@@ -2125,6 +2125,28 @@
    "note": "The teal mass filling Hollows fight frames is the Meshy giant tree (giant_canopy giant_tree_a/b_v1, scarred_trunk), which is on neither near_lens_fade nor line_of_sight_fade. The arm adds them to the fight-only sight fade (exploration unchanged). Ride-along: timber_1110 retints the Hall nave post out of the red family (the arch_home 'red curtain').",
    "done": true,
    "frames_pushed": "ffe0f840f (63/side; no teal-filled fight frame on the arm; giant_calm unchanged; post hue 26)"
+  },
+  {
+   "id": "newapproach-cloudreach-cause",
+   "kind": "arm",
+   "rows": [
+    "F40#1",
+    "F40#3",
+    "F40#8",
+    "F40#9",
+    "F40#0"
+   ],
+   "branch": "tb/newapproach",
+   "head": "186b3e534db0690343d3ee7a6b35accddcec1500",
+   "tree": "tb/newapproach (scripts/world/cloudreach_world.gd; the cause package code and config are already on main, off)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDCAUSE/overlay_cause.json",
+   "overlay_format": "deep merge",
+   "job": "(1) the 8 Nov F-cloudreach re-score job frames for F40#1, F40#3, F40#8 and F40#9 (same tools and seeds; ralph/reports/LANES/CAUSE-CLOUDREACH/MANIFEST.json lists them); (2) a SAMPLE of the F40#0 matrix: capture_cloudreach_f40_matrix.gd pieces 1-24 with --ground-cover-cache (about 96 frames), not the full 384",
+   "frames": "base vs arm on both jobs",
+   "capture": "High. Next in line. Pre-check before judging, because this package has never been seen on GPU: no black or missing geometry; cliffs pale but not white or icy; no shimmer on the cliff courses at distance; cloud below the rims reads as cloud, not fog; no grove tree standing inside a landmark composition. If any of those fails, name the part (pale_strata, cloud_sea, light_grade, meadow_groves) so it can be dropped with its own flag and the rest re-sent.",
+   "note": "Floor lane: turns on the never-rendered Cloudreach cause package (cloudreach_cause.json: pale_strata, cloud_sea, light_grade, meadow_groves; route_boulders false), which answers the three batch-wide causes the F-cloudreach judges named. Targets the five Cloudreach rows just under 6 (F40#1 5.90, F40#3 5.86, F40#8 5.85, F40#9 5.72) and the F40#0 matrix (6.58).",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
