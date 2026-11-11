@@ -2466,7 +2466,8 @@
    "capture": "High, base and arm. Pre-check from the manifest ruler_depth_fit (in_frame true, overlaps_trainer false, depth_vs_trainer_m >= 0) AND by eye: coordinator saw on the CPU sheet that Meadows subjects' feet sit well below the trainer's feet in frame (hare, alpha coyote, turtle). If on the GPU frames a subject's ground contact is clearly nearer the lens than the trainer's on flat ground, report it rather than judge, even if the manifest says 0 m. Say whether stormraven and sparkit read taller than the trainer.",
    "note": "Round 1 won (+1.4 to +1.8, 3/3) but was held for depth flattery; this is the depth-plane revision.",
    "done": true,
-   "frames_pushed": "G-floor2-creature-ruler-depth-r2 751b0657d: 16 of 18 pairs; held by eye: aquaryn fainted (cut left edge), galewisp idle (claws 10% below boots). Meadows contacts 10-15% below trainer's feet (slope vs nearness unresolved); landing waits for a ground-contact depth readout from LANE-FLOOR2. Sparkit and stormraven read taller than the trainer."
+   "frames_pushed": "G-floor2-creature-ruler-depth-r2 751b0657d: 16 of 18 pairs; held by eye: aquaryn fainted (cut left edge), galewisp idle (claws 10% below boots). Meadows contacts 10-15% below trainer's feet (slope vs nearness unresolved); landing waits for a ground-contact depth readout from LANE-FLOOR2. Sparkit and stormraven read taller than the trainer.",
+   "verdict": "G-floor2-creature-ruler-depth-r2 (tb/item-scout-1108 0636c1ae1): SHIP on scores, F38#5 5.14->8.00, F38#31 5.04->7.17, F38#26 4.88->6.39, no-loss sets gain, 3/3 everywhere. HELD by coordinator: Meadows subjects still read nearer the lens (scout's own read; judges a/b on F38#31). Landing waits on the ground-contact depth rule (d99b594a3) re-capture."
   },
   {
    "id": "floor2-aquaryn-bow-wake-r2",
@@ -2488,6 +2489,28 @@
    "frames": "judge 06-08 (moving beat) paired base vs arm; 03-05 shown; 11-13 control",
    "capture": "High. Pre-check on a 3x crop inside the V of frame 06: no hard-edged cells; else report and do not judge. Attempt 2 on this approach (two fails parks it).",
    "note": "Round 1 failed pre-check on world-grid tiles (likely sin-hash corner mismatch on NVIDIA)."
+  },
+  {
+   "id": "floor2-sand-ripple-relief",
+   "kind": "arm",
+   "rows": [
+    "F39#30"
+   ],
+   "also_rows": [
+    "F13#5",
+    "F39#3 (golden/dawn frames)"
+   ],
+   "branch": "tb/floor2",
+   "head": "c092a2309",
+   "tree": "main (config overlay only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-SANDSTRIPES/overlay_ripple_relief.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-SANDSTRIPES/CAPTURE.json",
+   "job": "capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080 --preset=High --views=shore-day,shore-golden,shore-night,lesson-dune,lesson-dawn,shore-rain; base and arm",
+   "frames": "shore-golden, lesson-dawn (arm); shore-day, lesson-dune, shore-night, shore-rain (controls)",
+   "capture": "High, after the bow wake r2. Pre-check on BASE first: do golden and dawn show regular dark bands about a metre apart on the sand? If not, stop and report (nothing to fix). The base frames also serve as a GPU baseline for F39#30, which has only a CPU score.",
+   "note": "Cause found on CPU: ripple normal relief at low sun (not cast shadow)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
