@@ -12,13 +12,25 @@ const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wal
 const LANTERN_NATIVE_HEIGHT_M := 1.3370076
 const LANTERN_TARGET_HEIGHT_M := 0.50
 
+## Set before `build`. Label3D draws both faces by default; the lettering is
+## wider than the board, so its ends showed mirrored from behind the sign.
+var single_sided_labels := false
+## Set before `build`. Empty keeps the shipped look. Otherwise the timber is
+## this plain weathered-wood colour, with no red cast (red and oxblood are
+## Team Tether's).
+var wood_tint := ""
+
 
 func build(at: Vector3, yaw_deg: float = 0.0) -> void:
 	position = at
 	rotation.y = deg_to_rad(yaw_deg)
 	var wood := StandardMaterial3D.new()
-	wood.albedo_color = Color("#68472b")
-	wood.albedo_texture = WOOD_ALBEDO
+	wood.albedo_color = Color("#68472b") if wood_tint.is_empty() else Color(wood_tint)
+	# The trim sheet's albedo is banded red-brown and slate; with a tint set
+	# the timber takes the plain colour and keeps the sheet's grain (normal,
+	# roughness) only.
+	if wood_tint.is_empty():
+		wood.albedo_texture = WOOD_ALBEDO
 	wood.normal_enabled = true
 	wood.normal_texture = WOOD_NORMAL
 	wood.roughness_texture = WOOD_ROUGHNESS
@@ -75,6 +87,7 @@ func _label(node_name: String, at: Vector3, yaw_deg: float) -> void:
 	label.position = at
 	label.rotation.y = deg_to_rad(yaw_deg)
 	label.no_depth_test = false
+	label.double_sided = not single_sided_labels
 	add_child(label)
 
 
