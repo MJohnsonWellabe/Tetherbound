@@ -2695,6 +2695,24 @@
    "done": true,
    "frames_pushed": "G-newapproach-edge-cards b013a69c9 on main 5b0f2c924: no quad edges or pop; cards crisper than the surrounding sea (possible pasted-on read). With LANE-SCOUT.",
    "verdict": "G-newapproach-edge-cards (tb/item-scout-1108 0a154f5d7): SHIP +0.73 (3/3), F40#11 5.26->5.99. Cards read lavender-grey/pasted (3/3); next: retint to floor white + soft lit cloud-sea material."
+  },
+  {
+   "id": "floor2-harvest-presence",
+   "kind": "arm",
+   "rows": [
+    "F41#9"
+   ],
+   "branch": "tb/floor2",
+   "head": "c7612681b",
+   "tree": "tb/floor2 c7612681b (stormwood_harvest_runtime.gd, stormwood_harvest_hero2.json; no assets)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-HARVEST/overlay_presence.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-HARVEST/CAPTURE.json",
+   "job": "phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042 --preset=High; base and arm",
+   "frames": "harvest stormglass, stormglass_crown, glowmoss",
+   "capture": "High. Pre-check: trainer whole and not inside any node or satellite; say whether a coloured ground pool shows; if the storm-glass prisms clip to white, report and do not judge; nothing red. Then LANE-SCOUT on F41#9's brief.",
+   "note": "Bolder version (satellite ring) per the over-0.5 rule; ~130 shadowless lights realm-wide, Ally cost unmeasured (check before landing)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
