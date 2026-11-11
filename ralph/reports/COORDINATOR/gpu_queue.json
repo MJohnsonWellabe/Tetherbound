@@ -3125,6 +3125,35 @@
    "request": "ralph/reports/LANES/THINGS/NOTE.md on tb/things (T4)",
    "priority": "6-7 band; no code. Rows not scored since the 1 Nov remakes went ON. Results below 6 go to LANE-BELOW6; judges naming an ungrounded faint feed LANE-THINGS T1.",
    "note": "trailpup 6.64, solmane 6.68, cliffspike 6.72, voltwig 6.79, stormtrail 6.82, duskhush 6.85, breezetail 6.89, stormraven 6.94 (CPU), ashtusk 6.96"
+  },
+  {
+   "id": "things-faint",
+   "kind": "arm",
+   "rows": [
+    "F36#93",
+    "F36#88",
+    "F36#30",
+    "F36#42",
+    "F36#91",
+    "F36#38",
+    "F36#46",
+    "F36#50",
+    "F36#92",
+    "mirejaw"
+   ],
+   "branch": "tb/things",
+   "head": "5cb2084c3",
+   "tree": "tb/things 5cb2084c3 for BOTH sides (its capture_f36_poses.gd adds --game-clips and --clear-ruler; main's tool lacks them). Base = overlay off (all lane flags off, so game behaviour equals main); arm = overlay on.",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FAINT/overlay_faint_ground.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-FAINT/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mirejaw,water_abyssal_guardian,abyssal_guardian,mirejaw,cragclaw,water_cragclaw,cannonback,fulgocobra,mangrove_monitor,water_mangrove_monitor --whole-body --context --game-clips --clear-ruler --roles=hit,faint --out={OUT}",
+   "frames": "per species: hit 000, hit 050, faint 050, faint 100; crop 560,200 1000x640",
+   "capture": "High, base and arm, same command and switches",
+   "also": "if a slot allows, one extra base without --game-clips/--clear-ruler for water_mirejaw and water_abyssal_guardian (stage fix alone)",
+   "priority": "three below-6 rows (F36#93 5.52, F36#88 5.85, F36#30 5.54) plus six 6-7 rows in one arm",
+   "note": "Shared faint-grounding fix (LANE-THINGS T1). Also exposes a stage fault: the pose stage played raw clips, not the game-resolved clip, so earlier water-form faint frames were of a faint no fight plays."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
