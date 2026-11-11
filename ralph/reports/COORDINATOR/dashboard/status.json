@@ -2348,8 +2348,8 @@
       "src": "G-newapproach-post-setting (tb/item-scout-1108 22102b6be): authored posts with today's camera, 5.32 -> 6.48 (3/3); landed #903"
     },
     "F41#1": {
-      "gpu": 5.78,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 5.66,
+      "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, arm ships (not yet landed): Stormheart heartwood core 4.29 -> 5.66 (+1.37, 3/3; batch scale lower than the 5.78 board); close-only 5.95; approach stands face a bark wall"
     },
     "F41#10": {
       "gpu": 6.02,
@@ -2620,8 +2620,8 @@
       "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Shadelet"
     },
     "F36#80": {
-      "gpu": 5.92,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Thundertunnel; flat flesh material, faceless-ball faint"
+      "gpu": 6.04,
+      "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, arm ships (not yet landed): Thundertunnel coat 4.63 -> 6.04 (+1.41, 3/3)"
     }
   }
 }
