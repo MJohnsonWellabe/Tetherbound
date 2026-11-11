@@ -1,0 +1,12 @@
+Qq: "about trainer height"
+Dw: "none"
+Ib: none
+Fy: "none"
+Ae: "neon-green camo pattern swallows face and form"; "about trainer height"
+Nr: "low, at trainer height"; "body passes through the trainer in faint end"; "stretched dark bar on the tail"
+Ls: "below the trainer's height"; "flat mustard material"; "faint tail passes through the trainer"
+Ar: "near-black with no rim light"; "silhouette dissolves"
+Na: "glossy dark purple"; "back below the trainer's head"
+Hk: none
+Et: "chest-high to the trainer"; "crest vanishes in faint"; "stray tail spike"
+Ex: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
