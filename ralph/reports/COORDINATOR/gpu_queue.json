@@ -2714,7 +2714,8 @@
    "capture": "High. Pre-check: trainer whole and not inside any node or satellite; say whether a coloured ground pool shows; if the storm-glass prisms clip to white, report and do not judge; nothing red. Then LANE-SCOUT on F41#9's brief.",
    "note": "Bolder version (satellite ring) per the over-0.5 rule; ~130 shadowless lights realm-wide, Ally cost unmeasured (check before landing).",
    "done": true,
-   "frames_pushed": "G-floor2-harvest-presence 8333275fc: stormglass and glowmoss pass; crown HELD (satellite in front of trainer's leg, glare). No visible ground pool. With LANE-SCOUT; lane adds satellite keep-out and drops the lights."
+   "frames_pushed": "G-floor2-harvest-presence 8333275fc: stormglass and glowmoss pass; crown HELD (satellite in front of trainer's leg, glare). No visible ground pool. With LANE-SCOUT; lane adds satellite keep-out and drops the lights.",
+   "verdict": "G-floor2-harvest-presence (tb/item-scout-1108 3165aa268): SHIP +1.62 (3/3), F41#9 5.56->7.18 on 2 of 3 frames. Landing version (keep-out, no lights) needs a confirming 3-frame capture."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
