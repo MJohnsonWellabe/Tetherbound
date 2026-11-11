@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "a651204b1692ebc1d9459079d32f1c0dbc24fa70",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines-r2/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.163,
+  "lower_edges": 0.3399,
+  "script_errors": 0,
+  "note": "F41#13 round 2. High, tb/newapproach a651204b1, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (same command as G-newapproach-charge-lines). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines_r2.json (line mask kept; brighter saturated cyan lines, glow-map boost for arcs and eyes, white-violet rim; cobra glow back near base). sparkit idle is the no-loss control. Pre-check: raven separates from the grass with cyan lines and no white bloom (soft cyan glow at head and shoulders); control unchanged; no red."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "a651204b1692ebc1d9459079d32f1c0dbc24fa70",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines-r2/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.167,
+  "lower_edges": 0.3355,
+  "script_errors": 0,
+  "note": "F41#13 round 2. High, tb/newapproach a651204b1, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (same command as G-newapproach-charge-lines). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines_r2.json (line mask kept; brighter saturated cyan lines, glow-map boost for arcs and eyes, white-violet rim; cobra glow back near base). sparkit idle is the no-loss control. Pre-check: raven separates from the grass with cyan lines and no white bloom (soft cyan glow at head and shoulders); control unchanged; no red."
+ },
+ {
+  "frame": "stormwood__sparkit__idle.jpg",
+  "preset": "arm-High",
+  "tree": "a651204b1692ebc1d9459079d32f1c0dbc24fa70",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines-r2/arm-High/stormwood__sparkit__idle.jpg",
+  "sky_fraction": 0.165,
+  "lower_edges": 0.3392,
+  "script_errors": 0,
+  "note": "F41#13 round 2. High, tb/newapproach a651204b1, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (same command as G-newapproach-charge-lines). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines_r2.json (line mask kept; brighter saturated cyan lines, glow-map boost for arcs and eyes, white-violet rim; cobra glow back near base). sparkit idle is the no-loss control. Pre-check: raven separates from the grass with cyan lines and no white bloom (soft cyan glow at head and shoulders); control unchanged; no red."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "a651204b1692ebc1d9459079d32f1c0dbc24fa70",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines-r2/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.164,
+  "lower_edges": 0.3384,
+  "script_errors": 0,
+  "note": "F41#13 round 2. High, tb/newapproach a651204b1, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (same command as G-newapproach-charge-lines). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines_r2.json (line mask kept; brighter saturated cyan lines, glow-map boost for arcs and eyes, white-violet rim; cobra glow back near base). sparkit idle is the no-loss control. Pre-check: raven separates from the grass with cyan lines and no white bloom (soft cyan glow at head and shoulders); control unchanged; no red."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "a651204b1692ebc1d9459079d32f1c0dbc24fa70",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines-r2/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.166,
+  "lower_edges": 0.3368,
+  "script_errors": 0,
+  "note": "F41#13 round 2. High, tb/newapproach a651204b1, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (same command as G-newapproach-charge-lines). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines_r2.json (line mask kept; brighter saturated cyan lines, glow-map boost for arcs and eyes, white-violet rim; cobra glow back near base). sparkit idle is the no-loss control. Pre-check: raven separates from the grass with cyan lines and no white bloom (soft cyan glow at head and shoulders); control unchanged; no red."
+ },
+ {
+  "frame": "stormwood__sparkit__idle.jpg",
+  "preset": "base-High",
+  "tree": "a651204b1692ebc1d9459079d32f1c0dbc24fa70",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-newapproach-charge-lines-r2/base-High/stormwood__sparkit__idle.jpg",
+  "sky_fraction": 0.164,
+  "lower_edges": 0.3406,
+  "script_errors": 0,
+  "note": "F41#13 round 2. High, tb/newapproach a651204b1, phase2_capture_creatures.gd --biome=stormwood --seed=2042 (same command as G-newapproach-charge-lines). base = tree as is (charged_1105 on, as shipped). arm = plus NEWAPPROACH-CHARGELINES/overlay_charge_lines_r2.json (line mask kept; brighter saturated cyan lines, glow-map boost for arcs and eyes, white-violet rim; cobra glow back near base). sparkit idle is the no-loss control. Pre-check: raven separates from the grass with cyan lines and no white bloom (soft cyan glow at head and shoulders); control unchanged; no red."
+ }
+]
