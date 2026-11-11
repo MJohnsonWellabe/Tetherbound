@@ -1,0 +1,20 @@
+{
+ "id": "floor2-dawn-haze-storm-grade",
+ "kind": "arm",
+ "branch": "tb/floor2",
+ "head": "see `git log -1 origin/tb/floor2`",
+ "tree": "main (with the sand ripple landing) is enough: the arm is a config overlay only",
+ "overlay": "ralph/reports/LANES/FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json",
+ "overlay_format": "deep merge",
+ "job": [
+  {"tool": "res://tools/capture_tidewake_f13_5.gd",
+   "args": ["--out={OUT}", "--camera-set=res://tools/visual_judge/camera_sets/F39-look.json", "--source-sha={SHA}", "--capture-size=1920x1080", "--preset={PRESET}",
+    "--views=lesson-dawn,shore-rain,lesson-rain,veilfall-rain,veilfall-vista-rain,shore-day,shore-golden"]}
+ ],
+ "rows": ["F39#30"],
+ "frames": ["lesson-dawn", "shore-rain", "lesson-rain", "veilfall-rain (F39#31 control: no loss)", "veilfall-vista-rain (F39#31 control: no loss)", "shore-day (control: unchanged)", "shore-golden (control: unchanged)"],
+ "expected_frame_count": 7,
+ "capture_both": "base = main as it is; arm = overlay on",
+ "preset": "High",
+ "want_to_see": "Dawn: no hard black band between the near water and the sky; the far sea fades into the warm horizon and the sun's glare is not a white blob on a black strip. Rain: a closed grey storm deck with some cloud structure, a dim cool scene and fine streaks, not white cumulus over a lit beach. Controls: shore-day and shore-golden identical to base. Pre-check: if the arm's rain frames are near-black or the dawn frame is a flat orange wash with no far dune visible, report it and do not judge."
+}

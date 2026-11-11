@@ -391,7 +391,7 @@
           "ambient_colour": "#9d8ca0",
           "exposure": 0.72,
           "fog_colour": "#dfa97f",
-          "fog_density": 0.0004,
+          "fog_density": 0.004,
           "aerial_perspective": 0.78,
           "adjustment_brightness": 1.0,
           "adjustment_contrast": 1.1,
@@ -446,18 +446,28 @@
     "_comment": "close-1024 vv1 and vf4 judges x3: in rain the fog flattens the Veilfall and the sea into one grey-cyan mid-tone and the landmark loses its silhouette. Tidewake sightlines run to kilometres, so the shared rain mist (fog_density_add 0.0055) is scaled to 0.35 here only; rain streaks, grade and wet ground are unchanged. Unjudged; OFF in play.",
     "fog_density_add_scale": 0.35
   },
+  "_why_dawn_fog_1111": "LANE-SCOUT G-floor2-dawn-haze-storm-grade (GPU High, tb/item-scout-1108 5d0858f3b, 11 Nov 2026): F39#30 row 6.12 -> 6.70 (+0.58, every set 3/3), 'rain under a lit noon sky' FIXED 3/3, controls no loss, and F39#31 Veilfall 5.56 -> 6.02 (3/3). Dawn fog 0.0004 -> 0.004 so the unlit deep sea beyond the shallows fades into the warm horizon. Two of three judges still see a dark band at dawn; the sun disc on the sand is the remaining ask.",
+  "_why_storm_grade_1111": "LANE-SCOUT G-floor2-dawn-haze-storm-grade (GPU High, tb/item-scout-1108 5d0858f3b, 11 Nov 2026): F39#30 row 6.12 -> 6.70 (+0.58, every set 3/3), 'rain under a lit noon sky' FIXED 3/3, controls no loss, and F39#31 Veilfall 5.56 -> 6.02 (3/3). The rain sky is almost all cloud deck, which the gradient-only grade never touched (VIS-TIDEWAKE r23/r24 flat). Storm grade: sun 0.32 -> 0.18, a closed grey deck with structure (cloud colours, coverage 0.88, sharpness 0.5), cooler dimmer ambient 0.75 -> 0.62 and saturation x0.72.",
+  "_why_rain_streaks_1111": "LANE-SCOUT G-floor2-dawn-haze-storm-grade (GPU High, tb/item-scout-1108 5d0858f3b, 11 Nov 2026): F39#30 row 6.12 -> 6.70 (+0.58, every set 3/3), 'rain under a lit noon sky' FIXED 3/3, controls no loss, and F39#31 Veilfall 5.56 -> 6.02 (3/3). Far rain streaks 0.12 m at 0.6 alpha -> 0.07 m at 0.3 alpha: fine rain, not opaque white bars.",
   "rain_grade_candidate": {
     "_comment": "close-1024 rf1 judges x3: with the lighter Tidewake mist the rain no longer reads as rain (faint streaks under a bright cumulus sky, crisp light). An overcast grade over the rain preset in Tidewake only: darker slate sky, the sun at 0.32 of its energy (preset 0.5) and slightly darker ambient. Layered on rain_fog_candidate. Unjudged; OFF in play.",
     "sun": {
-      "energy_mult": 0.32
+      "energy_mult": 0.18
     },
     "sky": {
       "top_colour": "#3f5260",
       "horizon_colour": "#6f818b",
-      "ground_horizon_colour": "#6f818b"
+      "ground_horizon_colour": "#6f818b",
+      "cloud_lit": "#a2adb4",
+      "cloud_shade": "#515d66",
+      "cloud_base": "#3c4750",
+      "cloud_coverage": 0.88,
+      "cloud_sharpness": 0.5
     },
     "environment": {
-      "ambient_energy_mult": 0.75
+      "ambient_energy_mult": 0.62,
+      "ambient_colour": "#8494a0",
+      "adjustment_saturation_mult": 0.72
     }
   },
   "golden_sky_candidate": {
@@ -801,10 +811,10 @@
     "lifetime_s": 2.4,
     "fall_speed_m_s": 24.0,
     "streak_size_m": [
-      0.12,
+      0.07,
       5.0
     ],
-    "colour": "#d4dde699"
+    "colour": "#c3ced84d"
   },
   "dune_grass_candidate": {
     "_comment": "close-1024 T4 (dw1, t4, t4c judges x3: beach grass in even, comb-like rows). A toggle-off probe proved the tufts are the water_ground_cover grass field. Inside a colony the shader keeps every lattice point (density_gain 1.1, clamped to 1), so tufts stand on the lattice in rows. density 0.6 makes the keep random inside colonies, and the bare gaps widen (dune_gap 0.43/0.60 -> 0.36/0.50). Unjudged; OFF in play.",
