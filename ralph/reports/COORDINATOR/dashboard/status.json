@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 16:49 UTC",
+  "updated": "11 Nov 2026 17:23 UTC",
   "headline": [
+    "11 Nov 17:23: #908 landed Aquaryn's folded-leg faint: F39#6 High 7.79, Medium 7.46 (0.04 short of closing). Below 6: 6, all new art except F39#8 (parked).",
     "11 Nov 16:49: #907 landed Aquaryn's settled resting pose (it used to rest by rolling its standing pose onto its side): F39#6 6.75 -> 7.47 High. Its faint fold then judged High 7.79 / Medium 7.46, 0.04 short of closing; a forelimb fold is the close-out. Below 6: 6 (five new art, one parked).",
     "11 Nov 15:56: #906 landed a soft lit cloud-sea material for Cloudreach: the faceted cloud floor (a sine-hash corner mismatch on the judging GPU) becomes rolling billows with blue creases. F40#11 6.97, F40#6 6.33 (was the lowest row). Below 6: 6, of which five need new art (F41#8, F40#3, F41#1, F40#1, F36#29) and one is parked (F39#8).",
     "11 Nov 14:41: #905 landed the Stormwood harvest presence (F41#9 6.81: the storm-glass crown now 'the strongest single subject in the batch') and the Warrens mound meadow match (F38#30 6.02: the stretched mound shell takes the meadow's own grass). Below 6: 8.",
@@ -2240,8 +2241,8 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#6": {
-      "gpu": 7.47,
-      "src": "G-floor2-aquaryn-settled-rest (tb/item-scout-1108 ee82bdaee): Aquaryn settled rest, 6.75 -> 7.47 High (3/3); landed #907. Faint fold judged next: High 7.79, Medium 7.46 (0.04 short); forelimb fold close-out in progress."
+      "gpu": 7.46,
+      "src": "Faint fold landed #908: High 7.79 (G-floor2-aquaryn-faint-fold, 3/3, defect FIXED 3/3), Medium 7.46 (0.04 short). Forelimb flattening parked after two tries (needs an authored pose for the rig)."
     },
     "F39#7": {
       "gpu": 6.61,
