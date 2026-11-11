@@ -2186,6 +2186,25 @@
    "capture": "High. After recheck-f40-3-f38-32-f41-13. Pre-check: no hard-edged slab or straight cloud edge anywhere (cloud_sea is off, so the deck should be as base); the pale tan soil rims noted last time are expected (pale_strata), call them out for the judges.",
    "note": "The full cause package failed the GPU pre-check on cloud_sea only (a flat translucent slab with hard edges at keeper_maela). This drops cloud_sea and keeps pale_strata (route_boulders off), light_grade and meadow_groves, all of which passed.",
    "done": false
+  },
+  {
+   "id": "newapproach-cloud-soft-precheck",
+   "kind": "precheck",
+   "rows": [
+    "F40#6",
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+   "tree": "tb/newapproach (shaders/cloudreach_cloud_deck.gdshader, scripts/world/cloudreach_world.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json",
+   "overlay_format": "deep merge",
+   "job": "Two small sets, each with the overlay off and on. (1) The cause-package pre-check frames that showed the slab: keeper_maela perch and realm_gate_crag close, with the raised deck (add the user arg --cloudreach-cause-cloud_sea on both sides). (2) tools/phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, frames road_back_13.5s and road_back_15.0s, no raised deck.",
+   "frames": "(1) keeper_maela perch and realm_gate_crag close with --cloudreach-cause-cloud_sea on both sides; (2) phase2 ride road_back_13.5s and road_back_15.0s",
+   "capture": "High, overlay off vs on. After newapproach-cloudreach-cause-no-cloudsea. PRE-CHECK ONLY, no judging: are the hard horizontal top, the straight diagonal edges against the cliffs, the vertical edge at the pillar and the ribbon-like planes on the ride back softened or gone with the overlay on? Also report anything new: cloud missing under the rims, banding, or a shader error on Forward+.",
+   "note": "Soft deck intersection (cloud_sea.soft_intersect_m): the deck alpha fades in front of solid ground, aimed at the hard slab edges the cause package showed and the ride-back slabs behind F40#6 (5.10) and F40#11 (5.50). PRE-CHECK only; push as a diagnostic section with the GPU lane's read.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
