@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "stormwood__fulgocobra__hurt.jpg",
+  "preset": "arm-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/arm-High/stormwood__fulgocobra__hurt.jpg",
+  "sky_fraction": 0.176,
+  "lower_edges": 0.3622,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.176,
+  "lower_edges": 0.3616,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__sparkit__hurt.jpg",
+  "preset": "arm-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/arm-High/stormwood__sparkit__hurt.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.3594,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__sparkit__idle.jpg",
+  "preset": "arm-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/arm-High/stormwood__sparkit__idle.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.3583,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__stormraven__hurt.jpg",
+  "preset": "arm-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/arm-High/stormwood__stormraven__hurt.jpg",
+  "sky_fraction": 0.181,
+  "lower_edges": 0.3507,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.175,
+  "lower_edges": 0.346,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__hurt.jpg",
+  "preset": "base-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/base-High/stormwood__fulgocobra__hurt.jpg",
+  "sky_fraction": 0.171,
+  "lower_edges": 0.3722,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.171,
+  "lower_edges": 0.3736,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__sparkit__hurt.jpg",
+  "preset": "base-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/base-High/stormwood__sparkit__hurt.jpg",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.3573,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__sparkit__idle.jpg",
+  "preset": "base-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/base-High/stormwood__sparkit__idle.jpg",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.3569,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__stormraven__hurt.jpg",
+  "preset": "base-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/base-High/stormwood__stormraven__hurt.jpg",
+  "sky_fraction": 0.179,
+  "lower_edges": 0.3621,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "8c831ccd492143b941376aa0f6bc9e86c011cc2b",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-storm-glow-lines/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.174,
+  "lower_edges": 0.3555,
+  "script_errors": 0,
+  "note": "F41#13. High, tb/floor2 8c831ccd4 (round 3 creature stage ON in the tree, as #901 - creature_ruler_depth true on both sides per the manifests), phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042. base = tree as is; arm = plus FLOOR2-STORMGLOW/overlay_lines_not_wash.json (charged_1105 stormraven accent_energy 1.6 -> 0.4, accent_source_value 0.18 -> 0.52, rim 0.4 -> 0.25; fulgocobra accent_energy 1.4 -> 0.46; fulgocobra coat emission_energy 2.0 -> 1.3). Pre-check: arm raven idle/hurt white 1.2/1.5% (base 12.8/12.7%), cyan about 0%, saturated blue 31/38% (base 13/19%), median value 0.44 (base 0.47) - not washed, not lost against the ground; no red; sparkit identical (mean diff about 1.1, rain/grass noise)."
+ }
+]
