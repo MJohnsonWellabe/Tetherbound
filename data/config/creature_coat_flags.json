@@ -981,8 +981,9 @@
       }
     },
     "remakes_floor_voltarach": {
-      "_why": "LANE-REMAKES (11 Nov 2026), F36#86 Voltarach poses (GPU 8 Nov 5.11: 'chrome-gold statue', face lost, 3/3; the native eight-leg spider ships again since 9 Nov and carried the same defect on 24 Oct). Board: charcoal shell, thin gold lightning cracks, blue eyes. Wide gold fields and the gold halo go to dark bronze, only thin crack cores stay gold, the charcoal lifts a step, the roughness map is replaced by a matte shell value, and the storm trait is lit: blue eyes plus the thin cracks (emission map). Stronger than creatures_vis_coat_voltarach/creatures_vis_glow_voltarach, which it supersedes when on. Script tools/art_pipeline/grade_remakes_floor.py voltarach. OFF until GPU-judged.",
-      "enabled": false,
+      "_why": "LANE-REMAKES (11 Nov 2026), F36#86 Voltarach poses (GPU 8 Nov 5.11: 'chrome-gold statue', face lost, 3/3; the native eight-leg spider ships again since 9 Nov and carried the same defect on 24 Oct). Board: charcoal shell, thin gold lightning cracks, blue eyes. Wide gold fields and the gold halo go to dark bronze, only thin crack cores stay gold, the charcoal lifts a step, the roughness map is replaced by a matte shell value, and the storm trait is lit: blue eyes plus the thin cracks (emission map). Stronger than creatures_vis_coat_voltarach/creatures_vis_glow_voltarach, which it supersedes when on. Script tools/art_pipeline/grade_remakes_floor.py voltarach.",
+      "enabled": true,
+      "_why_on": "ON (GPU High G-remakes-floor1, 11 Nov 2026; ralph/reports/GPU-PASS/1108/G-remakes-floor1-ribbonray-voltarach.md on tb/item-scout-1108 e9012a32d): F36#86 Voltarach 5.15 -> 6.50 (+1.35), 3/3 prefer the arm, no loss, no red. Owner 4 Nov: a judged gain ships ON.",
       "coats": {
         "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_floor1.png",
@@ -1006,8 +1007,9 @@
       }
     },
     "remakes_floor_ribbonray": {
-      "_why": "LANE-REMAKES (11 Nov 2026), F36#61 Ribbonray poses 5.68 (GPU 8 Nov: 'the whole body is saturated magenta and reads as an effect, not a believable animal', 3/3; two judges ask for a natural navy and cyan ray). Its reference board is a blue-headed ray with blue-violet wings. Magenta and mauve texels turn to deep ocean blue (dark scales navy, pale skin soft blue-lilac); the cyan eyes keep their pixels; matte hide. Script tools/art_pipeline/grade_remakes_floor.py ribbonray. OFF until GPU-judged.",
-      "enabled": false,
+      "_why": "LANE-REMAKES (11 Nov 2026), F36#61 Ribbonray poses 5.68 (GPU 8 Nov: 'the whole body is saturated magenta and reads as an effect, not a believable animal', 3/3; two judges ask for a natural navy and cyan ray). Its reference board is a blue-headed ray with blue-violet wings. Magenta and mauve texels turn to deep ocean blue (dark scales navy, pale skin soft blue-lilac); the cyan eyes keep their pixels; matte hide. Script tools/art_pipeline/grade_remakes_floor.py ribbonray.",
+      "enabled": true,
+      "_why_on": "ON (GPU High G-remakes-floor1, 11 Nov 2026; ralph/reports/GPU-PASS/1108/G-remakes-floor1-ribbonray-voltarach.md on tb/item-scout-1108 e9012a32d): F36#61 Ribbonray 5.02 -> 6.90 (+1.88), 3/3 prefer the arm, no loss, no red. Owner 4 Nov: a judged gain ships ON.",
       "coats": {
         "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0_floor1.png",

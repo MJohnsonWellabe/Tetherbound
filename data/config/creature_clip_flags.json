@@ -218,8 +218,9 @@
       }
     },
     "remakes_floor_ribbonray_hit": {
-      "_why": "LANE-REMAKES (11 Nov 2026), F36#61 Ribbonray (GPU 8 Nov: 'tail tip floating detached on the floor in the hit frame'). CPU frames and the skin weights show no skinning fault: the hit clip pitches the body upright, the tail swings under the stage floor and only its curled tip re-emerges. The hit's rotation is scaled down so the tail stays above the ground and the ray keeps its low stance. OFF until GPU-judged.",
-      "enabled": false,
+      "_why": "LANE-REMAKES (11 Nov 2026), F36#61 Ribbonray (GPU 8 Nov: 'tail tip floating detached on the floor in the hit frame'). CPU frames and the skin weights show no skinning fault: the hit clip pitches the body upright, the tail swings under the stage floor and only its curled tip re-emerges. The hit's rotation is scaled down so the tail stays above the ground and the ray keeps its low stance.",
+      "enabled": true,
+      "_why_on": "ON (GPU High G-remakes-floor1, 11 Nov 2026; ralph/reports/GPU-PASS/1108/G-remakes-floor1-ribbonray-voltarach.md on tb/item-scout-1108 e9012a32d): F36#61 Ribbonray 5.02 -> 6.90 (+1.88) with the navy coat; airborne hit PARTIAL -> FIXED 3/3, tail tip attached, 3/3 prefer the arm, no loss, no red. Owner 4 Nov: a judged gain ships ON.",
       "species": {
         "ribbonray": {
           "hit": {

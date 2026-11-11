@@ -1,17 +1,22 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
-## State (11 Nov 2026, 21:45 UTC)
+## State (11 Nov 2026, 22:35 UTC)
 | Row | Arm | Status |
 |---|---|---|
-| F36#86 Voltarach, F36#61 Ribbonray | landing | **READY TO LAND: `tb/below6-remakes-land`** (1fe7abd3, cut from origin/main 3a514ef5). Voltarach 5.15 -> 6.50, Ribbonray 5.02 -> 6.90 (GPU High, 3/3). Three flags ON with `_why_on`, Abyssal OFF, `tests/test_remakes_floor_landed.gd`, 56 tests / 8987 assertions pass. `ralph/reports/LANES/BELOW6-REMAKES-LAND/READY.md` on that branch, STATUS: land. |
-| F36#30 Abyssal Guardian, F36#88 water form | `BELOW6-ABYSSAL` | **on the GPU** |
-| F36#94 Water Mosshell ride and swim | `NEWAPPROACH-TRAVELPOSE` on `tb/newapproach` | **on the GPU** |
-| F41#1 Stormheart finale (5.78) | `BELOW6-HEARTWOOD` | **ready for GPU, next in line** when one of the two above returns. CPU base and arm captured; sheet and ARM.md in the folder. Adds one static body on the hollow axis (see ARM.md). |
-| F36#80 Thundertunnel (5.92) | `BELOW6-THUNDERTUNNEL` (`below6_floor_thundertunnel`, OFF) | grade built (cool brown-grey velvet, blue-white storm lines with emission); CPU pose capture next |
-| F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` (`below6_floor_fulgocobra`, OFF) | grade built (blacks to blue-charcoal, copper plates to gold); CPU pose capture next |
-| F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` (LANE-MESHY's `landmark_crowns_1111`, OFF) | CPU OFF/ON capture queued after the creature captures. I expect little from the judged frames (observatory tower cut off below the dome; beacon far and small). |
-| F36#52 Mirejaw hit-frame smear | none yet | to look at after the captures above (pale translucent jaw and a translucent shape by the trainer in the hit frame) |
-| F40#1, F36#29, F41#8, F39#8 | none | not started / handover / parked, as before |
+| F36#30 Abyssal Guardian | landing | **READY TO LAND: `tb/below6-abyssal-land`** (66017e943, cut from origin/main 8df122a83). GPU High 5.22 -> 5.77 (+0.55, 3/3); water form level. One flag ON with `_why_on`, pinning test updated, 21 tests / 3919 assertions pass. `ralph/reports/LANES/BELOW6-ABYSSAL-LAND/READY.md` on that branch, STATUS: land. |
+| F36#86 Voltarach, F36#61 Ribbonray | landed | PR #910 (6.50 and 6.90). Out of the below-6 tier. |
+| F36#94 Water Mosshell | won | 4.65 -> 6.67; LANE-THINGS lands it. |
+| F41#1 Stormheart finale (5.78) | `BELOW6-HEARTWOOD` | **on the GPU** |
+| F36#80 Thundertunnel (5.92) | `BELOW6-THUNDERTUNNEL` | **on the GPU** |
+| F36#52 Mirejaw (5.28) | `BELOW6-MIREJAW` (`creature_clip_flags.json below6_mirejaw_hit`, OFF, config only) | **prepared; queue when a slot frees.** CPU base and arm captured: the hit becomes a readable flinch, no pale gaping jaw, no grey tail blade. |
+| F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | **not sent**: no visible change on CPU (`NOT-SENT.md`). |
+| F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` | **not sent**: the dome is out of frame at the observatory and small at the beacon (`NOT-SENT.md`, with what the frames suggest instead). |
+| F36#88 Water Abyssal Guardian | none | material lever spent (level on GPU). Leaves the tier at 6.32 once the stage fix lands; the judges' remaining ask (a scaled sea serpent) is a new mesh: parked without Meshy. |
+| F40#1 (5.90), F36#29 (CPU only) | none | not started |
+| F41#8 (5.31) | `tb/item-f41-8-bodies` | rides with LANE-PLACES' storm-light pass |
+| F39#8 (5.66) | none | parked (no new idea) |
+
+**Lane checkout:** `creature_coat_flags.json`, `creature_clip_flags.json` and `tests/test_remakes_floor_landed.gd` are synced to main 8df122a83 (the #910 flags ON) with this lane's OFF flags appended. The branch is not otherwise merged with main (shallow checkout).
 
 **Meshy:** owner, 11 Nov ("We don't have meshy credits"): no generations. None were made by this lane; credits spent: 0. New art here is Blender or installed families.
 
