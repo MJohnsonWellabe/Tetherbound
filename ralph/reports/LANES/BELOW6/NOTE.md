@@ -3,10 +3,12 @@
 ## State (11 Nov 2026, 20:40 UTC)
 | Row | Arm | Status |
 |---|---|---|
-| F36#86 Voltarach (5.11) | `BELOW6-VOLTARACH` | **ready for GPU, High first** |
-| F36#94 Water Mosshell ride and swim (5.81) | `NEWAPPROACH-TRAVELPOSE` on `tb/newapproach` (1833b8a9) | already on the GPU (sent by LANE-NEWAPPROACH); counted as this lane's second arm |
-| F36#61 Ribbonray (5.68) | `BELOW6-RIBBONRAY` | prepared; queue when either arm above returns |
-| F36#30 Abyssal Guardian (5.54), F36#88 water form (5.85) | `BELOW6-ABYSSAL` | prepared; third in line |
+| F36#86 Voltarach (5.11) | `REMAKES-VOLTARACH` on `tb/remakes` ac738b144 (same content as `BELOW6-VOLTARACH`) | **on the GPU** (queued by the coordinator) |
+| F36#61 Ribbonray (5.68) | `REMAKES-RIBBONRAY` on `tb/remakes` (same as `BELOW6-RIBBONRAY`) | **on the GPU** |
+| F36#94 Water Mosshell ride and swim (5.81) | `NEWAPPROACH-TRAVELPOSE` on `tb/newapproach` (1833b8a9) | **on the GPU** |
+| F36#30 Abyssal Guardian (5.54), F36#88 water form (5.85) | `BELOW6-ABYSSAL` | prepared; **not queued** until two of the three above return |
+| F41#1 Stormheart finale (5.78) | `BELOW6-HEARTWOOD` (flag `stormheart_presentation.json heartwood_1111`, OFF) | built, test written; CPU base and arm capture pending (first import running). **Not sent.** |
+| F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` (LANE-MESHY's `landmark_crowns_1111`, carried over, OFF) | CPU OFF/ON capture pending. From the judged frames I expect little: the observatory frame cuts the tower off below the dome, the beacon is far and small. |
 
 The three creature arms are LANE-REMAKES' work carried over unchanged (files taken from `tb/remakes` ac738b144; folders renamed REMAKES-* to BELOW6-*). All flag-off. One import of this branch serves all three (new `*_floor1*.png` textures, different species). I looked at the three CPU sheets: each shows a clear change in the named defect (gold fields to charcoal with thin cracks; magenta to navy with the tail attached in the hit; less saturated navy with a cream belly).
 
