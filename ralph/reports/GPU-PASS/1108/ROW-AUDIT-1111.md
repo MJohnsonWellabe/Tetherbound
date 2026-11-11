@@ -54,3 +54,13 @@ Rules used:
   - F38#32: a later live re-measure gave 6.24 with no change, which suggests scale scatter. A confirming one-sided re-score would settle it.
   - F41#13: settle the 6.14 against 5.00 disagreement.
 - **Medium:** no row here has a Medium verdict. F38#28, cited by the coordinator, is not on this list; its confirm batch gave High 7.54 / Medium 6.99 (`G-confirm-75*.md`).
+
+## Update 11 Nov: `G-recheck-1111` (one-sided, main e1c941cbd, GPU High, confirming batch)
+
+| Row | Re-score | Above 6? | Replaces |
+|---|---|---|---|
+| F38#32 | **6.37** | **yes** | 8 Nov 5.66 |
+| F40#3 | 5.65 | no | 8 Nov 5.86 (the #871 stands do not lift it) |
+| F41#13 | 5.14 | no | settles the 6.14 vs 5.00 disagreement at about 5.1 |
+
+**Below-6 count after the recheck: 21** (20 if F41#3 is taken at its best). See `G-recheck-1111.md`.

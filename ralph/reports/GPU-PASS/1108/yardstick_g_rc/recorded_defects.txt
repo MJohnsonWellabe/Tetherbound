@@ -1,0 +1,6 @@
+He: "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail"
+Hv: none
+Xx: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Al: "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+En: none
+Ny: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
