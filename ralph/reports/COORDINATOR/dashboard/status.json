@@ -1,5 +1,5 @@
 {
-  "updated": "11 Nov 2026 02:01 UTC",
+  "updated": "11 Nov 2026 02:20 UTC",
   "headline": [
     "11 Nov 02:00: row audit (LANE-SCOUT ROW-AUDIT-1111) brings the board up to date: F41#21 7.13, F40#19 6.66, F38#1 6.58, F41#15 6.33 and F38#28 (7.54 High / 6.99 Medium) were already above 6 from earlier landed fixes; F41#13 drops to 5.00 (disputed). Below 6: 22. Three cheap re-captures queued (F40#3 new stand, F38#32 confirm, F41#13 confirm).",
     "11 Nov 01:40: owner asked for a third build lane: LANE-FLOOR2 takes the creature cluster and the never-attempted below-6 rows; LANE-NEWAPPROACH keeps Cloudreach and the stuck rows; LANE-MESHY does F39#21 close-out, then new art (innkeeper body, named silhouettes). Every below-6 row now has an owner.",
@@ -2069,8 +2069,8 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#32": {
-      "gpu": 5.66,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 6.37,
+      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: camp tent, bed, bonfire"
     },
     "F38#33": {
       "gpu": 7.32,
@@ -2281,8 +2281,8 @@
       "src": "GPU High 8-9 Nov (F-cloudreach)"
     },
     "F40#3": {
-      "gpu": 5.86,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 5.65,
+      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art"
     },
     "F40#4": {
       "gpu": 6.12,
@@ -2325,8 +2325,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#13": {
-      "gpu": 5.0,
-      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): latest one-sided re-score on main (a landed paired verdict gave 6.14; disputed, re-score queued)"
+      "gpu": 5.14,
+      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: settles the 6.14 vs 5.00 dispute at about 5.1"
     },
     "F41#14": {
       "gpu": 6.35,
