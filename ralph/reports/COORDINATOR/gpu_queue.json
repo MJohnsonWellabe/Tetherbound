@@ -2147,6 +2147,22 @@
    "capture": "High. Next in line. Pre-check before judging, because this package has never been seen on GPU: no black or missing geometry; cliffs pale but not white or icy; no shimmer on the cliff courses at distance; cloud below the rims reads as cloud, not fog; no grove tree standing inside a landmark composition. If any of those fails, name the part (pale_strata, cloud_sea, light_grade, meadow_groves) so it can be dropped with its own flag and the rest re-sent.",
    "note": "Floor lane: turns on the never-rendered Cloudreach cause package (cloudreach_cause.json: pale_strata, cloud_sea, light_grade, meadow_groves; route_boulders false), which answers the three batch-wide causes the F-cloudreach judges named. Targets the five Cloudreach rows just under 6 (F40#1 5.90, F40#3 5.86, F40#8 5.85, F40#9 5.72) and the F40#0 matrix (6.58).",
    "done": false
+  },
+  {
+   "id": "recheck-f40-3-f38-32-f41-13",
+   "kind": "baseline",
+   "rows": [
+    "F40#3",
+    "F38#32",
+    "F41#13"
+   ],
+   "branch": "main",
+   "head": "e1c941cbd (main after #897)",
+   "overlay": null,
+   "frames": "One-sided re-score captures on main, no arm: (1) F40#3 architectural landmark frames from the F-cloudreach re-score (the closer capture stands landed in batch 25 / #871 and were never re-judged); (2) F38#32 camp spacing frames from the B section; (3) F41#13 fulgocobra and stormraven idle frames as in G-rescore-f39-21-f41-13",
+   "capture": "High. After the Cloudreach cause arm and before any further baseline pieces.",
+   "note": "ROW-AUDIT-1111 cheapest re-captures: F40#3's new stand was never re-judged; F38#32 re-measured 6.24 live with no change (scale scatter); F41#13 has landed verdicts at 6.14 and 5.00 that disagree.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
