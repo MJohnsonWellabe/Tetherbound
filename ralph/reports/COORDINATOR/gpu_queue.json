@@ -2361,6 +2361,37 @@
    "note": "LANE-NEWAPPROACH: the judged F41#3 defect (Sparkit jammed into Voltarach's forelegs) was scored on the old remake model; on current main a CPU run shows Sparkit 9.4 m clear to the side. The row may be stale; re-score before any new arm.",
    "done": true,
    "frames_pushed": "30df95d22 (G-recheck-f41-3)"
+  },
+  {
+   "id": "newapproach-bridge-beacon-precheck",
+   "kind": "precheck",
+   "rows": [
+    "F40#8"
+   ],
+   "branch": "tb/newapproach",
+   "head": "8abf81def4ead214d3d3018cdca5f062981ac431",
+   "tree": "main (config only; no code, no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-BRIDGEBEAM/CAPTURE.json (at 0621699e0)",
+   "job": "res://tools/phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night --preset=High --output={OUT}; overlay off and on",
+   "frames": "three_bells_bridge day and night close (2 per side)",
+   "capture": "High, pre-check only, no judging: push both sides and say whether an objective beam is in the base frames at all and whether the overlay changes it.",
+   "note": "LANE-NEWAPPROACH sweep: the only unjudged off candidate that might move F40#8 (5.85)."
+  },
+  {
+   "id": "recheck-f40-5-captain-fight",
+   "kind": "baseline",
+   "rows": [
+    "F40#5"
+   ],
+   "branch": "main",
+   "head": "main (after #898)",
+   "overlay": null,
+   "frames": "F40#5 captain fight frames as in the 8 Nov judging, one side on current main. The fight dust was retuned in #882 on 10 Nov, after that score (judges' main complaint: dust covering the exchange in frames 1 and 3). Use a seed on which the fight is won; if the fixture loses, try one other seed and say which.",
+   "capture": "High, one side, no arm. After the bridge pre-check.",
+   "note": "LANE-NEWAPPROACH sweep: F40#5 (5.94) needs a re-capture, not an arm."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
