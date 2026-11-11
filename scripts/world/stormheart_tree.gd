@@ -270,11 +270,16 @@ func _heartwood(cfg: Dictionary) -> void:
 	set_core_released(_core_released)
 
 
-## The heartwood's body: a cylinder on the hollow axis so nobody walks through
-## the root cage. Built on simulation shells too (same floor for every peer).
+## The heartwood's optional body (`body_enabled`, OFF): a cylinder on the hollow
+## axis so nobody walks through the root cage, built on simulation shells too.
+## It stays off until the tree's pinned physics contract is changed on purpose.
 func _heartwood_body(presentation: Dictionary) -> void:
 	var cfg: Dictionary = presentation.get("heartwood_1111", {})
 	if not bool(presentation.get("enabled", false)) or not bool(cfg.get("enabled", false)):
+		return
+	# Off by default: the tree's physical shapes are pinned byte-identical
+	# with and without its presentation (test_stormheart_ancient_trunk.gd).
+	if not bool(cfg.get("body_enabled", false)):
 		return
 	var centre: Array = cfg.get("centre", [0.0, 5.0])
 	var body := StaticBody3D.new()

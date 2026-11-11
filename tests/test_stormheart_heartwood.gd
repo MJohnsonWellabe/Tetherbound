@@ -3,8 +3,8 @@ extends "res://tests/test_case.gd"
 ## F41#1 (LANE-BELOW6, 11 Nov 2026): the Blender heartwood on the hollow's axis
 ## is declared OFF until GPU-judged, its model carries named bark, vein and core
 ## surfaces, and above the floor flare it stays inside the 18 m deck opening
-## (clear of the ascent ramp at r 22-30 m). With the flag on, the tree gains one
-## static body on the axis, on simulation shells too; with it off, none.
+## (clear of the ascent ramp at r 22-30 m). The optional axis body (body_enabled) is OFF,
+## so the tree's physical shapes do not change.
 
 const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
@@ -20,7 +20,8 @@ func test_heartwood_declared_off_until_judged() -> void:
 	var cfg := _cfg()
 	assert_false(cfg.is_empty(), "heartwood_1111 must be declared")
 	assert_false(bool(cfg.get("enabled", true)), "heartwood_1111 ships OFF until GPU-judged")
-	assert_true(str(cfg.get("scope", "")).begins_with("shared_world"), "the axis body is shared world state")
+	assert_eq(str(cfg.get("scope", "")), "client_presentation")
+	assert_false(bool(cfg.get("body_enabled", true)), "the optional axis body stays OFF: the tree's physics are pinned")
 
 
 func test_heartwood_model_surfaces_and_clearances() -> void:
@@ -50,7 +51,7 @@ func test_axis_body_follows_the_flag() -> void:
 	var tree := STORMHEART.new()
 	tree.simulation_only = true
 	tree.build()
-	var expected := 1 if bool(_cfg().get("enabled", false)) else 0
+	var expected := 1 if bool(_cfg().get("enabled", false)) and bool(_cfg().get("body_enabled", false)) else 0
 	assert_eq(tree.find_children("HeartwoodBody", "StaticBody3D", true, false).size(), expected,
-		"the axis body exists exactly when heartwood_1111 is on")
+		"the axis body exists only when heartwood_1111 and its body_enabled are both on")
 	tree.free()
