@@ -2609,6 +2609,24 @@
    "note": "Dawn black horizon band (unhazed deep sea) and rain storm grade (cloud deck colours).",
    "done": true,
    "frames_pushed": "G-floor2-dawn-haze-storm-grade 90d3b0348: pre-checks pass (rain grey storm deck not near-black; dawn haze replaces the black strip, far dune reads; controls unchanged). With LANE-SCOUT."
+  },
+  {
+   "id": "floor2-storm-glow-lines",
+   "kind": "arm",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/floor2",
+   "head": "8c831ccd4",
+   "tree": "tb/floor2 8c831ccd4 (has the round 3 stage ON, same as #901; other floor2 work is flag-off). Use it until #901 lands; after that main is enough.",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STORMGLOW/overlay_lines_not_wash.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-STORMGLOW/CAPTURE.json",
+   "job": "phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042 --preset=High, output under res://.artifacts/phase2/; base and arm",
+   "frames": "stormraven idle, fulgocobra idle (arm); sparkit idle (control); stormraven hurt, fulgocobra hurt (no-loss)",
+   "capture": "High. Pre-check: arm raven not mostly white or cyan, and not lost dark against the ground; else report. Check that the stage log shows creature_ruler_depth enabled on BOTH sides. Then LANE-SCOUT on F41#13's brief.",
+   "note": "Removes the charged_1105 whole-body wash (94% of the raven's texture emitting) in favour of the species' own line/eye masks, per the owner's 1 Nov one-trait rule."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
