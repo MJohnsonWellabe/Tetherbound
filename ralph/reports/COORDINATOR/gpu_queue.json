@@ -2440,6 +2440,31 @@
    "note": "LANE-FLOOR2: the flat white foam disc under Aquaryn is the named defect 3/3; expected +0.5 to +0.8.",
    "done": true,
    "result": "Pre-check FAILED (not judged): V shape right in frame 06, but axis-aligned hard-edged white tiles inside the V (interior noise). 03-05 near-still. Diagnostic G-floor2-bow-wake-diag. Attempt 1."
+  },
+  {
+   "id": "floor2-creature-ruler-depth-r2",
+   "kind": "arm",
+   "rows": [
+    "F38#5",
+    "F38#26",
+    "F38#31"
+   ],
+   "no_loss_rows": [
+    "F39#6",
+    "F39#24",
+    "galewisp and sparkit frames"
+   ],
+   "branch": "tb/floor2",
+   "head": "c46704750",
+   "tree": "tb/floor2 (tools/phase2_capture_creatures.gd, data/config/capture_stands.json; capture tooling only, plus the bow-wake shader which stays off)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STAGE/overlay_ruler_depth.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-STAGE/CAPTURE.json and ARM.md (round 2)",
+   "job": "phase2_capture_creatures.gd four runs (meadows 5 species idle,alpha_idle,fainted; water aquaryn idle,fainted,resting; cloudreach galewisp idle,hurt; stormwood sparkit,stormraven,fulgocobra idle,hurt), seed 2042, High, output under res://ralph/reports/VISUAL/phase2/ or res://.artifacts/phase2/",
+   "frames": "the 24 listed in CAPTURE.json",
+   "capture": "High, base and arm. Pre-check from the manifest ruler_depth_fit (in_frame true, overlaps_trainer false, depth_vs_trainer_m >= 0) AND by eye: coordinator saw on the CPU sheet that Meadows subjects' feet sit well below the trainer's feet in frame (hare, alpha coyote, turtle). If on the GPU frames a subject's ground contact is clearly nearer the lens than the trainer's on flat ground, report it rather than judge, even if the manifest says 0 m. Say whether stormraven and sparkit read taller than the trainer.",
+   "note": "Round 1 won (+1.4 to +1.8, 3/3) but was held for depth flattery; this is the depth-plane revision."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
