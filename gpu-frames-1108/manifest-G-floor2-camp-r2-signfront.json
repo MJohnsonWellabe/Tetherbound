@@ -1,0 +1,13 @@
+[
+ {
+  "frame": "meadows__inventory__prop__bonfire_fire.jpg",
+  "preset": "armsignfront-High",
+  "tree": "7ab45702119bb5a24e4465a951552706f55f18ab",
+  "tool": "res://tools/phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --subset=meadows__inventory__prop__bonfire_fire",
+  "path": "G-floor2-camp-r2-signfront/armsignfront-High/meadows__inventory__prop__bonfire_fire.jpg",
+  "sky_fraction": 0.049,
+  "lower_edges": 0.3252,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC for floor2-camp-r2 (coordinator yes): trail_camp on + bonfire_fire heading 180 (local overlay), looking south across the fire at the TRAIL CAMP gate's front. Sign check only; not a judged arm."
+ }
+]
