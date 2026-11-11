@@ -1,0 +1,63 @@
+[
+ {
+  "label": "G F36(1) abyssal_guardian faint base-vs-arm",
+  "a": "G-faint_abyssal_guardian_base.png",
+  "b": "G-faint_abyssal_guardian_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: abyssal_guardian - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "glossy vinyl-blue skin, toy-like",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) cannonback faint base-vs-arm",
+  "a": "G-faint_cannonback_base.png",
+  "b": "G-faint_cannonback_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: cannonback - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "brass-gear machinery shell reads as kitbash",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) water_cragclaw faint base-vs-arm",
+  "a": "G-faint_water_cragclaw_base.png",
+  "b": "G-faint_water_cragclaw_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: water_cragclaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "faint poses the same as standing",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) mangrove_monitor faint base-vs-arm",
+  "a": "G-faint_mangrove_monitor_base.png",
+  "b": "G-faint_mangrove_monitor_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: mangrove_monitor - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "low contrast against the stage",
+   "faint lies flat with the trainer inside the tail",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) mirejaw faint base-vs-arm",
+  "a": "G-faint_mirejaw_base.png",
+  "b": "G-faint_mirejaw_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: mirejaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "body passes through the trainer in faint end",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) water_abyssal_guardian noswitch-vs-base",
+  "a": "G-faint_water_abyssal_guardian_basenoswitch.png",
+  "b": "G-faint_water_abyssal_guardian_base.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: water_abyssal_guardian - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "thin and spindly",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ }
+]
