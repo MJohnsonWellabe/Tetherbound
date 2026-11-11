@@ -2491,8 +2491,8 @@
       "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Veridian poses; contorted faint neck, tiny rider"
     },
     "F36#61": {
-      "gpu": 5.68,
-      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Ribbonray poses; reads as a magenta effect, detached tail tip; remake needed"
+      "gpu": 6.9,
+      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, arm ships (not yet landed): Ribbonray navy coat plus hit clip blend, 5.02 -> 6.90 (+1.88, 3/3)"
     },
     "F36#72": {
       "gpu": 7.75,
@@ -2543,8 +2543,8 @@
       "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Abyssal Guardian poses; glossy vinyl, toy-like"
     },
     "F36#86": {
-      "gpu": 5.11,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Voltarach poses; chrome-gold statue, face lost"
+      "gpu": 6.5,
+      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, arm ships (not yet landed): Voltarach charcoal coat, 5.15 -> 6.50 (+1.35, 3/3); face still unreadable"
     }
   }
 }
