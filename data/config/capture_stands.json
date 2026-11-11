@@ -4,7 +4,8 @@
     "_why": "Capture stand fix (LANE-MESHY, 10 Nov 2026): Stormwood trainers carry no authored facing, so tools/phase2_make_character_plan.py gives every one heading 180 and the stand goes 2-8 m north of the post. For Officer Nysa (post (-890, 4482)) that puts the trainer between her and the Deepwood rod station 8 m north at (-890, 4490): the production camera arm (5.2 m) backs into the station, its collision shortens the arm to about 1.6 m and the lens sits inside the station's blue mesh (GPU frame; main062 visual_validation lists the frame as subject_not_isolated). Viewing from the south (heading 0) keeps the arm on the open route and puts the station behind her. Applies to the plain inventory frame and to the dialogue frame, which extends the same plan. Capture tooling only; earns no score credit: re-baseline live.",
     "enabled": true,
     "frames": {
-      "stormwood__inventory__trainer__officer_nysa_deepwood_rod": {"heading_deg": 0.0}
+      "stormwood__inventory__trainer__officer_nysa_deepwood_rod": {"heading_deg": 0.0},
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day": {"heading_deg": 231.0, "position_xz": [-318.0, 2642.0], "_why": "F38#30 / F38#24 (LANE-NEWAPPROACH, 10 Nov; GPU High judged, LANE-SCOUT G-newapproach-warrens-flank-stand, tb/item-scout-1108 b8b138bdb): the seeded walk_03 stand had fallen on the Warrens foundation slope, showing neither the hillside nor the mountains. This reviewed open-ground stand frames the hillside, the road and the ridge: F38#24 walk_03 4.16 -> 6.63 (+2.47, 3/3), F38#30 4.24 -> 5.52 (+1.28, 3/3). Capture tooling only."}
     }
   },
   "inside_collision_reseat": {
