@@ -763,11 +763,11 @@ for _r in _vrows:
     if _r["sel"] in _cpu_landed and _r["st"] != "met":
         _v, _pr = _cpu_landed[_r["sel"]]
         _r["sc"] = [_v]
-        _r["src"] = f"CPU {_v:.2f} landed {_pr}" + (f" (was {_gpu_src})" if _gpu_src else "")
+        _r["src"] = f"{_v:.2f} landed {_pr}" + (f" (was {_gpu_src})" if _gpu_src else "")
         _r["bk"] = _bucket(_r["st"], _r["sc"])
     if _r["sel"] in _cpu_pending:
         _v, _pr = _cpu_pending[_r["sel"]]
-        _r["src"] += f"; CPU {_v:.2f} in CI {_pr}"
+        _r["src"] += f"; {_v:.2f} in CI {_pr}"
 # Fresh GPU High scores (8-9 Nov re-score, status.json "gpu_scores" from pull_gpu_scores.py)
 # replace every older GPU or CPU figure for their rows.
 _gpu_new = status.get("gpu_scores", {})

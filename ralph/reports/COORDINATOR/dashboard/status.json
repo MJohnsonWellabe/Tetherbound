@@ -1,6 +1,7 @@
 {
   "updated": "11 Nov 2026 20:25 UTC",
   "headline": [
+    "11 Nov 23:25: landed #910 (Voltarach 6.50, Ribbonray 6.90, Trail Camp 6.91, dialogue capture fix). In CI: #911 Abyssal matte; #912 Stormheart core, Thundertunnel 6.04 and the Windows download fix (the .pck had passed GitHub's 2 GiB asset limit, so latest had no zip); #913 grounded faints for 7 rows, Water Mosshell 6.67, Galewisp 7.44. Closed: F36#69 Solmane (Medium 8.04). Dialogue rows re-based on the fixed camera blend; F41#15 falls to 4.49. Judging next: toys and UI, Mirejaw and Abyssal hits, Stormwood storm light.",
     "11 Nov 20:25: lane restructure (owner): LANE-BELOW6, LANE-THINGS, LANE-PLACES + GPU lane + LANE-SCOUT. Current build lanes are writing handoffs. PR #910 (dialogue capture blend fix + Trail Camp F38#32 6.91) in CI.",
     "11 Nov 20:16: lanes LANE-FLOOR2, LANE-NEWAPPROACH and LANE-REMAKES stopped at 19:35 on the weekly usage limit; owner reset it and all lanes are resumed. New LANE-STORMWOOD takes the Stormwood storm-light pass (8 F41 rows incl. F41#8). Lanes: FLOOR2 (camp landing, faint grounding, dust/pickups), NEWAPPROACH (dialogue blend fix, Water Mosshell ride, conversation shot, Cloudreach rain), REMAKES (Voltarach, Abyssal Guardian x2, Ribbonray materials), MESHY (new art below 6), STORMWOOD, SCOUT (judging), GPU lane.",
     "11 Nov 19:22: F36#72 Stormbrush poses CLOSES at 7.5 (High 7.68, Medium 7.75) on a plain re-score of the 1 Nov remake. New LANE-REMAKES takes the regressed remakes' materials (Voltarach, Abyssal Guardian x2, Ribbonray); LANE-FLOOR2 the shared faint grounding (Water Mirejaw, Water Abyssal Guardian); LANE-NEWAPPROACH the Water Mosshell ride.",
@@ -1924,10 +1925,107 @@
       "before": 6.16,
       "after": 6.3,
       "pr": "#863 (merged 8 Nov)"
+    },
+    {
+      "item": "F38#32 Trail Camp",
+      "before": 6.26,
+      "after": 6.91,
+      "pr": "#910"
+    },
+    {
+      "item": "F36#86 Voltarach coat",
+      "before": 5.15,
+      "after": 6.5,
+      "pr": "#910"
+    },
+    {
+      "item": "F36#61 Ribbonray coat and hit",
+      "before": 5.02,
+      "after": 6.9,
+      "pr": "#910"
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [],
+  "score_ledger_pending": [
+    {
+      "item": "F36#30 Abyssal Guardian matte hide",
+      "before": 5.22,
+      "after": 5.77,
+      "pr": "#911"
+    },
+    {
+      "item": "F36#80 Thundertunnel coat",
+      "before": 4.63,
+      "after": 6.04,
+      "pr": "#912"
+    },
+    {
+      "item": "F41#1 Stormheart heartwood core",
+      "before": 4.29,
+      "after": 5.66,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#42 Cragclaw grounded faint",
+      "before": 6.84,
+      "after": 7.51,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#93 Water Mirejaw faint and game clip",
+      "before": 5.52,
+      "after": 7.39,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#91 Water Cragclaw grounded faint",
+      "before": 5.43,
+      "after": 6.51,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#30 Abyssal Guardian grounded faint",
+      "before": 5.62,
+      "after": 6.56,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#50 Mangrove Monitor grounded faint",
+      "before": 6.51,
+      "after": 6.98,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#38 Cannonback grounded faint",
+      "before": 6.74,
+      "after": 7.07,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#52 Mirejaw grounded faint (fixed stage)",
+      "before": 6.7,
+      "after": 6.98,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#94 Water Mosshell ride and swim",
+      "before": 4.65,
+      "after": 6.67,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#48 Galewisp fly grip",
+      "before": 6.35,
+      "after": 7.44,
+      "pr": "#913"
+    },
+    {
+      "item": "F36#88 Water Abyssal Guardian on the game clip",
+      "before": 5.85,
+      "after": 6.32,
+      "pr": "#913"
+    }
+  ],
   "landed_recent": [
     {
       "pr": "#910",
