@@ -3339,7 +3339,8 @@
    "job": "per row, as CAPTURE.json lists: phase2_capture_world_inventory.gd --biome=meadows and --biome=cloudreach (pickups); phase2_capture_catch.gd --biome=cloudreach (catch frames 06-09); capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames; the G-recheck-f41-3 capture",
    "capture": "High, base (overlay off) and arm (overlay on), both on tb/things",
    "priority": "6-7 band, one config tree across seven rows (T8 dust, T9 toy pickups, T10 stale catch card)",
-   "note": "LANE-THINGS arm 2. After dialogue-recapture-all-biomes."
+   "note": "LANE-THINGS arm 2. After dialogue-recapture-all-biomes.",
+   "done": "G-toys-* (verdict G-things-toys-ui.md, LANE-SCOUT b4439ea2b): catch card ships F40#13 7.62; pickup tone_down loses; rest level"
   },
   {
    "id": "below6-mirejaw-hit",
@@ -3435,6 +3436,20 @@
    "capture": "High, one side",
    "request": "ralph/reports/LANES/BELOW6-INNKEEPER-BASE/CAPTURE.json on tb/below6",
    "note": "No GPU High score exists on the shipped innkeeper body (GPU Medium 5.90 on a matched camera, CPU 7.36 on this stand). Says whether F36#29 is below 6 at all. Cheap; fit between arms."
+  },
+  {
+   "id": "f40-13-catch-card-medium",
+   "kind": "close-out",
+   "rows": [
+    "F40#13"
+   ],
+   "branch": "tb/things",
+   "head": "22ff3cd1f or later",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-TOYS-UI/overlay_toys_ui.json (arm side; only catch_card.clear_on_aim_1112 matters for this row)",
+   "job": "tools/phase2_capture_catch.gd --biome=cloudreach (frames 06-breakout and 07-aiming-weakened), as in G-toys-catch",
+   "capture": "MEDIUM, arm side only",
+   "note": "Close-out: High 7.62 (G-things-toys-ui.md, b4439ea2b). Closes at Medium 7.5+ once the flag lands."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

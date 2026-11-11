@@ -2395,8 +2395,8 @@
       "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline"
     },
     "F40#13": {
-      "gpu": 6.19,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 7.62,
+      "src": "G-things-toys-ui (LANE-SCOUT b4439ea2b), GPU High: catch card clears on aim 6.88 -> 7.62 (+0.74, 3/3); arm not yet landed; Medium queued"
     },
     "F40#14": {
       "gpu": 6.99,
