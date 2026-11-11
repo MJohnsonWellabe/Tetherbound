@@ -1,22 +1,24 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
-## State (11 Nov 2026, 22:35 UTC)
+## State (11 Nov 2026, 23:10 UTC)
 | Row | Arm | Status |
 |---|---|---|
-| F36#30 Abyssal Guardian | landing | **READY TO LAND: `tb/below6-abyssal-land`** (66017e943, cut from origin/main 8df122a83). GPU High 5.22 -> 5.77 (+0.55, 3/3); water form level. One flag ON with `_why_on`, pinning test updated, 21 tests / 3919 assertions pass. `ralph/reports/LANES/BELOW6-ABYSSAL-LAND/READY.md` on that branch, STATUS: land. |
-| F36#86 Voltarach, F36#61 Ribbonray | landed | PR #910 (6.50 and 6.90). Out of the below-6 tier. |
+| F41#1 Stormheart, F36#80 Thundertunnel | landing | **READY TO LAND: `tb/below6-heartwood-thundertunnel-land`** (1ac181b28, cut from origin/main 8df122a83). GPU High: Stormheart 4.29 -> 5.66 (close-only 5.95), Thundertunnel 4.63 -> 6.04, 3/3 each. Both flags ON with `_why_on`, two pinning test files, 55 tests / 7860 assertions pass. READY on that branch, STATUS: land. **Read its "One difference from the judged arm":** the heartwood's axis collider ships OFF because it broke the tree's pinned physics tests; players can walk into the root cage. |
+| F36#30 Abyssal Guardian matte hide | landing | PR #911 (5.22 -> 5.77). |
+| F36#52 Mirejaw, F36#30 Abyssal Guardian hit reactions | `BELOW6-HITS` (two clip flags, config only) | **ready for GPU**; one capture command, judge per species. |
+| F36#86 Voltarach, F36#61 Ribbonray | landed | PR #910 (6.50, 6.90). |
 | F36#94 Water Mosshell | won | 4.65 -> 6.67; LANE-THINGS lands it. |
-| F41#1 Stormheart finale (5.78) | `BELOW6-HEARTWOOD` | **on the GPU** |
-| F36#80 Thundertunnel (5.92) | `BELOW6-THUNDERTUNNEL` | **on the GPU** |
-| F36#52 Mirejaw (5.28) | `BELOW6-MIREJAW` (`creature_clip_flags.json below6_mirejaw_hit`, OFF, config only) | **ready for GPU** (Abyssal returned, two in flight). CPU base and arm captured: the hit becomes a readable flinch, no pale gaping jaw, no grey tail blade. |
-| F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | **not sent**: no visible change on CPU (`NOT-SENT.md`). |
-| F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` | **not sent**: the dome is out of frame at the observatory and small at the beacon (`NOT-SENT.md`, with what the frames suggest instead). |
-| F36#88 Water Abyssal Guardian | none | material lever spent (level on GPU). Leaves the tier at 6.32 once the stage fix lands; the judges' remaining ask (a scaled sea serpent) is a new mesh: parked without Meshy. |
-| F40#1 Cloudreach open terrain (5.90) | none | **looked at, nothing built.** CPU base frames captured (six, today's tree): flat lawn, a same-size cobble pad under the trainer, the brown rim skirt across the Realm Gate Crag approach. Eight dressing candidates for this row are already OFF or flat in `cloudreach_f40_items.json` (groves, clumps, sage grass, stone ground, strata terrace, strata landform...), so another prop at the stands repeats a failed approach. The untried lever is the island crown itself (`cloudreach_world.gd _mesa` / the carved crown): a real rise with collision along the gate approach. That is a multi-hour terrain change with route and collision risk; I have not started it and will only do so after the arms in flight return. |
-| F36#29 innkeeper (Wilhelm) | none | **needs a GPU baseline, not new art.** The ledger's 5.83 was the score of an old Meshy candidate, not the body that ships (VIS-STORMWOOD READY, 5 Nov). The live innkeeper scored 6.20 on dialogue frames (`VIS-STORMWOOD/qj/qj_inn`) and 7.36 on the F36(0) close stand (`ITEM-F36-29/qj/noise-r0`), both CPU. Two grade arms were flat or worse and are parked. Coordinator: please add the F36(0) innkeeper stand to a GPU High baseline; if it lands at 6 or above the row is not in this tier. |
-| F36#30 Abyssal flinch | `BELOW6-FLINCH` (`below6_flinch_abyssal`, OFF) | captured, **held as a rider** (my estimate +0.2 to +0.4): the hit becomes a grounded bowed crouch. **For LANE-THINGS: Voltarach's hit is recipe-driven; the clip-flag route is a no-op for it.** |
+| F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | not sent: no visible change on CPU (`NOT-SENT.md`). |
+| F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` | not sent (`NOT-SENT.md`). |
+| F36#88 Water Abyssal Guardian | none | material lever spent; a new mesh is the judges' ask: parked without Meshy. |
+| F40#1 Cloudreach open terrain (5.90) | none | looked at, nothing built: eight dressing candidates already failed; the untried lever is raising the island crown itself (`cloudreach_world.gd _mesa`), a multi-hour terrain change with route and collision risk. |
+| F36#29 innkeeper (Wilhelm) | none | **needs a GPU baseline, not new art.** The ledger's 5.83 was an old Meshy candidate's score; the live body scored 6.20 (`VIS-STORMWOOD/qj/qj_inn`) and 7.36 (`ITEM-F36-29/qj/noise-r0`) on CPU. |
 | F41#8 (5.31) | `tb/item-f41-8-bodies` | rides with LANE-PLACES' storm-light pass |
 | F39#8 (5.66) | none | parked (no new idea) |
+
+**Next on F41#1 (judges):** (1) the two approach stands look into a bark wall with an orange wood-grain slab at the left: check whether that slab is a real untextured mesh (game defect) and propose a stand that frames the crown and core, as its own change; (2) the core reads as a flat gradient slab: internal arcs, bloom falloff, light on the bark. **Next on Thundertunnel:** the lines as glowing veins, a faint with the head out of the curl.
+
+**For LANE-THINGS:** Voltarach's hit is recipe-driven; a clip flag cannot reach it (captured, identical frames).
 
 **Lane checkout:** `creature_coat_flags.json`, `creature_clip_flags.json` and `tests/test_remakes_floor_landed.gd` are synced to main 8df122a83 (the #910 flags ON) with this lane's OFF flags appended. The branch is not otherwise merged with main (shallow checkout).
 

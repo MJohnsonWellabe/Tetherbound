@@ -1,4 +1,4 @@
-STATUS: ready for GPU (High first): the Abyssal arm has returned, so two are in flight (heartwood, Thundertunnel)
+STATUS: superseded by BELOW6-HITS (same flag, sent together with the Abyssal flinch)
 ROW: F36#52 Mirejaw poses (GPU High 5.28 on main's stage; 6.70 base on the fixed stage in G-things-faint)
 BRANCH: tb/below6 (config only, no import)
 OVERLAY: ralph/reports/LANES/BELOW6-MIREJAW/overlay.json (`creature_clip_flags.json below6_mirejaw_hit`)
