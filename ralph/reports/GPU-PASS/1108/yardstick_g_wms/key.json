@@ -1,0 +1,23 @@
+{
+ "Vp": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Gr": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Fx": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Mu": {
+  "anchor": false,
+  "label": "G F36(1) water_mosshell game-clip one-sided",
+  "A": "G-wms_water_mosshell.png",
+  "B": "G-wms_water_mosshell.png"
+ }
+}
