@@ -28,6 +28,8 @@ void fragment() {
 	ROUGHNESS = 0.18;
 	SPECULAR = 0.6;
 	EMISSION = glow_colour * energy * (0.3 + 0.9 * facet)
-		+ glow_colour * energy * 1.6 * edge
+		// only upright facets lift at the edge: the ledges between crystal
+		// segments face up or down and would light as a white band
+		+ glow_colour * energy * 0.9 * edge * (1.0 - smoothstep(0.25, 0.6, abs(facet_n.y)))
 		+ vec3(0.85, 0.92, 1.0) * arc_energy * max(arc, arc2);
 }
