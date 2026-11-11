@@ -2733,7 +2733,9 @@
    "job": "phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042 --preset=High; base and arm",
    "frames": "stormglass, stormglass_crown, glowmoss",
    "capture": "High. Pre-check: trainer whole in all three, no copy at the feet or in front of the legs, no clipped-white glare on the crown. Then LANE-SCOUT: row figure over all three frames vs base, and whether stormglass/glowmoss hold against G-floor2-harvest-presence.",
-   "note": "Confirms the landing version before the F41#9 landing."
+   "note": "Confirms the landing version before the F41#9 landing.",
+   "done": true,
+   "frames_pushed": "G-floor2-harvest-presence-confirm 8e1ff92e1: all three frames pass (trainer clear, no crown glare, violet holds). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
