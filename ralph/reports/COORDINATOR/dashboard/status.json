@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 18:35 UTC",
+  "updated": "11 Nov 2026 19:00 UTC",
   "headline": [
+    "11 Nov 19:00: tier-2 re-score batch 1 (no code, current main): Skyrill 6.33 -> 7.47, Cragclaw 6.94, Glimmermoth 6.90, Fulgocobra 6.78, F39#18 dialogue 7.06, F39#26 6.49; fell: Ribbonray 5.68 (its remake reads as a magenta effect; now below 6), Veridian 6.33, F39#29 6.41, F39#27 6.16. Next: a shared faint fix folding wings, sails, hoods and antlers down with the body; re-score the other ~14 pose rows.",
     "11 Nov 18:40: owner decision: mounts will not refuse fatal drops (F40#6 refuse_drop stays off).",
     "11 Nov 18:35: owner: archive the two old LANE-NEWAPPROACH sessions (done), keep the rest going, start moving 6-7 rows up a tier with the low-hanging fruit first. LANE-MESHY resumed (skyroad arch stand, five below-6 new-art rows, Aquaryn faint pose, campfire). Tier-2 plan: re-capture every creature pose frame on the new stage (about 30 F36 pose rows were scored on the old stage), a shared dialogue-occluder fade for six dialogue rows (LANE-NEWAPPROACH), LANE-SCOUT ranking the 135 rows in 6-7 by gain per effort.",
     "11 Nov 17:55: LANE-MESHY list when restarted (owner decision pending): F41#8 Stormwood trio silhouettes, F40#3 Cloudreach landmark art, F40#1 Realm Gate Crag landform, F41#1 Stormheart crown and core, F36#29 innkeeper body, skyroad arch Fly fix (32 F40#0 frames), Aquaryn faint pose authored for its rig (F39#6 Medium 7.46), Trail Camp campfire (F38#32), camp sign beam off oxblood.",
@@ -2180,8 +2181,8 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#18": {
-      "gpu": 6.16,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.06,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: dialogue framing; soft rim on main"
     },
     "F39#19": {
       "gpu": 6.85,
@@ -2216,20 +2217,20 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#26": {
-      "gpu": 6.01,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.49,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: dialogue obstruction"
     },
     "F39#27": {
-      "gpu": 6.57,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.16,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: grass defect FIXED; bare flat dunes now"
     },
     "F39#28": {
       "gpu": 7.33,
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#29": {
-      "gpu": 6.61,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.41,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: speaker visibility; Nerissa small and half hidden"
     },
     "F39#3": {
       "gpu": 6.1,
@@ -2458,6 +2459,30 @@
     "F39#31": {
       "gpu": 6.02,
       "src": "G-floor2-dawn-haze-storm-grade: Veilfall rain views 5.56 -> 6.02 (3/3); landed #902. Judges want new art (cliffs, mist at the fall, terraces)."
+    },
+    "F36#68": {
+      "gpu": 7.47,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Skyrill poses; 0.03 under the bar"
+    },
+    "F36#42": {
+      "gpu": 6.94,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Cragclaw poses"
+    },
+    "F36#49": {
+      "gpu": 6.9,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Glimmermoth poses"
+    },
+    "F36#46": {
+      "gpu": 6.78,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Fulgocobra poses"
+    },
+    "F36#85": {
+      "gpu": 6.33,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Veridian poses; contorted faint neck, tiny rider"
+    },
+    "F36#61": {
+      "gpu": 5.68,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Ribbonray poses; reads as a magenta effect, detached tail tip; remake needed"
     }
   }
 }
