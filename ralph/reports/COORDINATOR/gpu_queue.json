@@ -3339,6 +3339,25 @@
    "capture": "High, base (overlay off) and arm (overlay on), both on tb/things",
    "priority": "6-7 band, one config tree across seven rows (T8 dust, T9 toy pickups, T10 stale catch card)",
    "note": "LANE-THINGS arm 2. After dialogue-recapture-all-biomes."
+  },
+  {
+   "id": "below6-mirejaw-hit",
+   "kind": "arm",
+   "rows": [
+    "F36#52"
+   ],
+   "branch": "tb/below6",
+   "head": "795cd62b6",
+   "tree": "tb/below6 795cd62b6 (config only; the tb/below6 import from cbc867f80 already covers it)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-MIREJAW/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-MIREJAW/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=mirejaw --whole-body --context --out={OUT}",
+   "frames": "hit and faint 000-100; crop 560,200 1000x640",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "F36#52 was 5.28 on main's stage (6.70 on the fixed stage)",
+   "note": "below6_mirejaw_hit: hit rotation x0.45, position x0.5 (Ribbonray's grounded-hit hook). The 'pale translucent jaw' and grey tail smear are the hit clip pitching the head to the floor and swinging the tail through the stage."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
