@@ -3194,6 +3194,48 @@
    "want_to_see": "water mosshell upright in ride and swim with the rider seated on its back; galewisp fly_grip with the trainer hanging from its legs clear of the floor, nothing cut off",
    "priority": "F36#94 is below 6 (5.81); the ride frames are its named defect (rider hovering 1 m over a belly-side shell, confirmed again in G-water-mosshell-gameclips-rescore)",
    "note": "Sent by LANE-NEWAPPROACH before archiving but missed by the watcher; queued 11 Nov 21:15. The fault is in the pose stage (a faint recipe clip pivot leaked into ride and swim), not the game."
+  },
+  {
+   "id": "cragclaw-faint-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#42"
+   ],
+   "branch": "tb/things",
+   "head": "5cb2084c3",
+   "tree": "tb/things 5cb2084c3 (script/config only)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FAINT/overlay_faint_ground.json",
+   "overlay_format": "deep merge",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=cragclaw --whole-body --context --game-clips --clear-ruler --roles=hit,faint --out={OUT}",
+   "capture": "MEDIUM, arm side only (overlay on)",
+   "note": "Close-out: G-things-faint arm High 7.51 (LANE-SCOUT 58bf5187a). Closes at Medium 7.5+."
+  },
+  {
+   "id": "solmane-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#69"
+   ],
+   "branch": "main",
+   "head": "3a514ef5c",
+   "overlay": null,
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context --out={OUT}",
+   "capture": "MEDIUM, one side, main as in G-things-t4-rescore-b",
+   "note": "Close-out: High 7.63 (G-things-t4-rescore, LANE-SCOUT f4ffb5e64). Closes at Medium 7.5+."
+  },
+  {
+   "id": "water-mangrove-monitor-gameclips-rescore",
+   "kind": "baseline",
+   "rows": [
+    "F36#92"
+   ],
+   "branch": "tb/things",
+   "head": "5cb2084c3",
+   "overlay": null,
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler --out={OUT}",
+   "capture": "High, one side (flags off)",
+   "note": "Corrected re-score on the game-resolved clip; excluded from the THINGS-FAINT overlay so G-things-faint did not judge it. The GPU lane saw its faint 100 lying on its back, legs up."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
