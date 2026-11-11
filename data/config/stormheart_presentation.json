@@ -276,6 +276,12 @@
     "light_range_m": 26.0,
     "hide_core_arcs": true,
     "body_enabled": false,
+    "core_v2": {
+      "enabled": false,
+      "_candidate": "LANE-BELOW6 (11 Nov 2026), F41#1 after the heartwood landed at 5.66 (GPU High; judges: the core is 'a flat gradient slab, hard edges', asks for internal arcs, bloom falloff and light cast onto the bark). A core shader (scripts/world/stormheart_heartwood_core.gdshader): each crystal facet takes its own value, the silhouette edge lifts, and thin arcs wind slowly up inside the crystal (hidden after the release); the three core lights rise from 2.0 to 5.0 so the roots' inner faces take the blue. Needs heartwood_1111 on. OFF until GPU-judged.",
+      "arc_energy": 3.0,
+      "light_energy": 5.0
+    },
     "body_radius_m": 4.6,
     "body_height_m": 14.0
   },

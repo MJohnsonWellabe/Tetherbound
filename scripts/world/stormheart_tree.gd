@@ -26,6 +26,7 @@ const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const CORE_COLUMN_SHADER := preload("res://scripts/world/stormheart_core_column.gdshader")
 const CORE_COLUMN_BODY_SHADER := preload("res://scripts/world/stormheart_core_column_core.gdshader")
+const HEARTWOOD_CORE_SHADER := preload("res://scripts/world/stormheart_heartwood_core.gdshader")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -47,6 +48,8 @@ var _column_cooled := 0.12
 var _core_arc_holder: Node3D
 var _heartwood_core: StandardMaterial3D
 var _heartwood_core_energy := 2.4
+var _heartwood_core_shader: ShaderMaterial
+var _heartwood_arc_energy := 3.0
 var _heartwood_cooled := 0.15
 var _heartwood_lights: Array[OmniLight3D] = []
 
@@ -241,13 +244,27 @@ func _heartwood(cfg: Dictionary) -> void:
 	_heartwood_core_energy = float(cfg.get("core_glow_energy", 2.4))
 	_heartwood_core.emission_energy_multiplier = _heartwood_core_energy
 	_heartwood_cooled = float(cfg.get("cooled_scale", 0.15))
+	# core_v2 (OFF until GPU-judged): per-facet value, a lifted silhouette edge
+	# and slow internal arcs instead of one flat gradient; stronger light on
+	# the roots. The body material above stays the fallback.
+	var v2: Dictionary = cfg.get("core_v2", {})
+	var core_material: Material = _heartwood_core
+	if bool(v2.get("enabled", false)):
+		_heartwood_core_shader = ShaderMaterial.new()
+		_heartwood_core_shader.shader = HEARTWOOD_CORE_SHADER
+		_heartwood_core_shader.set_shader_parameter("body_colour", Color(str(cfg.get("core_albedo", "#3566d6"))))
+		_heartwood_core_shader.set_shader_parameter("glow_colour", Color(str(cfg.get("core_glow", "#4f7dff"))))
+		_heartwood_core_shader.set_shader_parameter("energy", _heartwood_core_energy)
+		_heartwood_arc_energy = float(v2.get("arc_energy", 3.0))
+		_heartwood_core_shader.set_shader_parameter("arc_energy", _heartwood_arc_energy)
+		core_material = _heartwood_core_shader
 	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
 		for surface in visual.mesh.get_surface_count():
 			var source := visual.mesh.surface_get_material(surface)
 			var source_name := source.resource_name if source != null else ""
 			var pick: Material = bark
 			if source_name.contains("core"):
-				pick = _heartwood_core
+				pick = core_material
 				visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			elif source_name.contains("vein"):
 				pick = vein
@@ -259,7 +276,7 @@ func _heartwood(cfg: Dictionary) -> void:
 		light.name = "HeartwoodLight"
 		light.position = model.position + Vector3(0.0, float(y), 0.0)
 		light.light_color = Color(str(cfg.get("light_colour", "#a9c8ff")))
-		light.light_energy = float(cfg.get("light_energy", 2.0))
+		light.light_energy = float(v2.get("light_energy", 5.0)) if bool(v2.get("enabled", false)) else float(cfg.get("light_energy", 2.0))
 		light.omni_range = float(cfg.get("light_range_m", 26.0))
 		light.shadow_enabled = false
 		add_child(light)
@@ -2049,6 +2066,9 @@ func set_core_released(released: bool) -> void:
 		_core_arc_holder.visible = not released
 	if _heartwood_core != null:
 		_heartwood_core.emission_energy_multiplier = _heartwood_core_energy * (_heartwood_cooled if released else 1.0)
+		if _heartwood_core_shader != null:
+			_heartwood_core_shader.set_shader_parameter("energy", _heartwood_core_energy * (_heartwood_cooled if released else 1.0))
+			_heartwood_core_shader.set_shader_parameter("arc_energy", 0.0 if released else _heartwood_arc_energy)
 		for light: OmniLight3D in _heartwood_lights:
 			light.visible = not released
 	if _core_material == null:
