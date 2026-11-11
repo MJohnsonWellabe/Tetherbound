@@ -2057,8 +2057,8 @@
       "src": "G-floor2-creature-ruler-depth-r3: 5.44 -> 6.85 (3/3), landed #901"
     },
     "F38#27": {
-      "gpu": 5.89,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.84,
+      "src": "CLOSED 10 Nov: High 7.84, Medium 8.25 (G-f38-27-close, G-f38-27-close-medium on tb/item-scout-1108 038a46d59); the 5.89 entry was stale (spotted by LANE-FLOOR2)"
     },
     "F38#28": {
       "gpu": 6.99,
