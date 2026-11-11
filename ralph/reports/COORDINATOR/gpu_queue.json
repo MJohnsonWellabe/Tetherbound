@@ -2543,7 +2543,7 @@
    "note": "Round 3 = ground-contact rule (no contact nearer the lens than the trainer's feet). Expected gains lower than round 2 but over +0.5 per row.",
    "done": true,
    "frames_pushed": "G-floor2-creature-ruler-depth-r3 34865ea78: all 18 pairs, pre-checks pass (contact >= 0 everywhere, whole, clear of trainer); Meadows feet lower in frame from the slope. Stormraven 1.97x, sparkit 1.74x the trainer. With LANE-SCOUT.",
-   "verdict": "G-floor2-creature-ruler-depth-r3 (tb/item-scout-1108 3fe1c4396): SHIP. F38#5 5.80->7.77 (FIXED 3/3), F38#31 5.80->7.20, F38#26 5.44->6.85, no-loss A +1.80, B +1.58, 3/3 everywhere; no judge reads nearness. F38#5 needs Medium."
+   "verdict": "G-floor2-creature-ruler-depth-r3 (tb/item-scout-1108 3fe1c4396): SHIP. F38#5 5.80->7.77 (FIXED 3/3), F38#31 5.80->7.20, F38#26 5.44->6.85, no-loss A +1.80, B +1.58, 3/3 everywhere; no judge reads nearness. F38#5 needs Medium. Extra (G-stage-r3-f41-13-f39-6, 9d64ad5cf): F41#13 5.64->6.46 (3/3), F39#6 6.03->7.24 (3/3) from the stage alone."
   },
   {
    "id": "newapproach-bridge-view",
