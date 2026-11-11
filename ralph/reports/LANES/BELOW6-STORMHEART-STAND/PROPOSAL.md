@@ -1,3 +1,5 @@
+> **CORRECTION, 12 Nov 2026 (LANE-BELOW6): the orange slab is NOT the entrance ramp.** I built the ramp body and the approach frame did not change. The slab is the south split's exposed inner wood (`stormheart_split_bark.gd exposed_material`, an orange trim atlas under a tint), which the stand sits beside. Forcing it grey changes exactly that slab (`BELOW6-RAMP/_sheet_cpu_base_vs_aged_heartwood.jpg`). The game fix is therefore `split_bark_finish.aged_heartwood_1112` (flag-off, built), not the ramp body. The ramp is still a paper-thin quad, and `ramp_body_1112` (flag-off, built, tested) dresses it, but no judged frame shows it. Item 2 below is superseded by this; the stand screening and item 1 stand.
+
 # F41#1 approach stands: what they show, and a proposal (LANE-BELOW6, 11 Nov 2026). NOT A CHANGE YET.
 
 ## What the two approach frames show today

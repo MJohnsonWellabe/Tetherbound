@@ -17,7 +17,7 @@
 | F41#8 (5.31) | `tb/item-f41-8-bodies` | rides with LANE-PLACES' storm-light pass |
 | F39#8 (5.66) | none | parked (no new idea) |
 
-**Next on F41#1:** the orange slab in the approach frames is the entrance ramp's underside (a real game defect); stand screening and a two-part proposal are in `BELOW6-STORMHEART-STAND/PROPOSAL.md` (**coordinator: please read and say go or no**). Then the core: internal arcs, bloom falloff, light on the bark. **Next on Thundertunnel:** the lines as glowing veins, a faint with the head out of the curl.
+**Next on F41#1 (CORRECTED 12 Nov):** the orange slab in the approach frames is **not** the entrance ramp, as I first wrote; it is the south split's exposed inner wood. The fix is `split_bark_finish.aged_heartwood_1112` (flag-off, built, CPU-checked: `BELOW6-RAMP/ARM.md`). The ramp body the coordinator asked for is also built and tested flag-off (`ramp_body_1112`), but no judged frame shows the ramp. **Waiting for the GPU's stand-screening frames** to pick the new approach stand and send one arm. Core follow-up parked (`BELOW6-COREV2`). **Next on Thundertunnel:** the lines as glowing veins, a faint with the head out of the curl.
 
 **For LANE-THINGS:** Voltarach's hit is recipe-driven; a clip flag cannot reach it (captured, identical frames).
 
