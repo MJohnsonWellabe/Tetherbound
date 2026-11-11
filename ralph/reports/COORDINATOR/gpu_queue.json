@@ -3055,6 +3055,44 @@
    "note": "Close-out.",
    "done": true,
    "frames_pushed": "G-f36-72-stormbrush-medium f835c10d5. With LANE-SCOUT."
+  },
+  {
+   "id": "remakes-voltarach-floor1",
+   "kind": "arm",
+   "rows": [
+    "F36#86"
+   ],
+   "branch": "tb/remakes",
+   "head": "ac738b144",
+   "tree": "tb/remakes ac738b144 (needs one import: new *_floor1*.png textures; one imported tree serves the Voltarach, Ribbonray and Abyssal arms)",
+   "overlay_branch": "tb/remakes",
+   "overlay": "ralph/reports/LANES/REMAKES-VOLTARACH/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/REMAKES-VOLTARACH/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "standing (hit 000), hit 050, faint 050, faint 100; crop 560,200 1000x640",
+   "capture": "High, base (main, overlay off) and arm (overlay on), same command",
+   "priority": "below-6 floor row; owned now by LANE-BELOW6 (REMAKES handed off)",
+   "note": "Voltarach 5.11 (chrome-gold statue, face lost). Base re-baselines the native eight-leg spider main ships since 9 Nov."
+  },
+  {
+   "id": "remakes-ribbonray-floor1",
+   "kind": "arm",
+   "rows": [
+    "F36#61"
+   ],
+   "branch": "tb/remakes",
+   "head": "ac738b144",
+   "tree": "tb/remakes ac738b144 (needs one import: new *_floor1*.png textures; one imported tree serves the Voltarach, Ribbonray and Abyssal arms)",
+   "overlay_branch": "tb/remakes",
+   "overlay": "ralph/reports/LANES/REMAKES-RIBBONRAY/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/REMAKES-RIBBONRAY/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "standing (hit 000), hit 050, faint 050, faint 100; crop 560,200 1000x640",
+   "capture": "High, base (main, overlay off) and arm (overlay on), same command",
+   "priority": "below-6 floor row; owned now by LANE-BELOW6 (REMAKES handed off)",
+   "note": "Ribbonray 5.68 (all-magenta; tail tip detached under the floor in hit frames)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
