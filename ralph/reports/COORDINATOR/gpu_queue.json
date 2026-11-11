@@ -2902,7 +2902,8 @@
    "capture": "High. Pre-check: sign lettering reads correctly from either side, props not overlapping (tent vs bed), nothing red (camp props, owner red rule). The bonfire frame's stand moves (heading 90) so its gain is partly staging: LANE-SCOUT to report the bonfire frame separately. Then judge on F38#32's brief.",
    "note": "6-to-7 tier (6.37).",
    "done": true,
-   "frames_pushed": "G-floor2-camp-hero 13a6d2ac4: pre-checks pass (no overlap, no red on arm, fire now in view). Base's sign beam is dark crimson (red-rule ride-along for LANE-MESHY's list). With LANE-SCOUT."
+   "frames_pushed": "G-floor2-camp-hero 13a6d2ac4: pre-checks pass (no overlap, no red on arm, fire now in view). Base's sign beam is dark crimson (red-rule ride-along for LANE-MESHY's list). With LANE-SCOUT.",
+   "verdict": "G-floor2-camp-hero (tb/item-scout-1108 57a0c813b): DO NOT SHIP. Tent+bed -0.44 (0/3, scaled flame card); bonfire stand +1.68. Next: declutter + single-sided sign + beam off oxblood + stand, no scale-up. Fire = new art."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
