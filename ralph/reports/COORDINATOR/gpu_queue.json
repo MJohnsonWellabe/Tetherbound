@@ -3001,7 +3001,9 @@
    "job": "tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset for elder_maud, rodkeeper_hesk, warden_elect_bryn inventory character frames; base and arm",
    "frames": "stormwood inventory character: elder_maud, rodkeeper_hesk, warden_elect_bryn",
    "capture": "High (Medium only if High reaches 7.5). BEFORE rescore-tier2-batch-2 (below-6 row first). Pre-check: three visibly different bodies; nothing red. Then LANE-SCOUT on F41#8's brief.",
-   "note": "Below-6 row. Hesk -> alpha_tracker body, Bryn -> lost_traveler body; Maud unchanged."
+   "note": "Below-6 row. Hesk -> alpha_tracker body, Bryn -> lost_traveler body; Maud unchanged.",
+   "done": true,
+   "frames_pushed": "G-meshy-f41-8-distinct-bodies 9faf56418: three distinct bodies, nothing red. With LANE-SCOUT."
   },
   {
    "id": "rescore-tier2-batch-2",
