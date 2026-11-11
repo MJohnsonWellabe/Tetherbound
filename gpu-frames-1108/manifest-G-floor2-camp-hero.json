@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "meadows__inventory__prop__bonfire_fire.jpg",
+  "preset": "arm-High",
+  "tree": "1078a130a331abe547fbd03bb6e5ad4144ba29a2",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-camp-hero/arm-High/meadows__inventory__prop__bonfire_fire.jpg",
+  "sky_fraction": 0.123,
+  "lower_edges": 0.4361,
+  "script_errors": 0,
+  "note": "F38#32 (6.37). High, tb/floor2 1078a130a, phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --subset camp_tent / camp_bed / bonfire_fire (one boot). base = tree as is; arm = plus FLOOR2-CAMP/overlay_camp_hero.json (props.json hero_candidates.trail_camp on: tent 1.55x, bonfire 0.9x, stone ring 1.6x, rope/bag/fern/clover dropped, single-sided sign; capture_stands.json heading_overrides bonfire_fire heading 90). Pre-check: bigger tent clear behind the bedroll (no overlap); red <= 0.09% on the arm (base bonfire 0.84% is the dark crimson sign beam in the foreground). Bonfire frame: base camera faced the back of the TRAIL CAMP sign (mirrored letters) with the fire off-subject; arm heading 90 puts the camp and the fire at frame centre (fire just behind and right of the trainer, partly occluded); the sign is small at the left showing its blank back - no mirrored text, but no arm frame shows the sign's front."
+ },
+ {
+  "frame": "meadows__inventory__prop__camp_bed.jpg",
+  "preset": "arm-High",
+  "tree": "1078a130a331abe547fbd03bb6e5ad4144ba29a2",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-camp-hero/arm-High/meadows__inventory__prop__camp_bed.jpg",
+  "sky_fraction": 0.137,
+  "lower_edges": 0.4278,
+  "script_errors": 0,
+  "note": "F38#32 (6.37). High, tb/floor2 1078a130a, phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --subset camp_tent / camp_bed / bonfire_fire (one boot). base = tree as is; arm = plus FLOOR2-CAMP/overlay_camp_hero.json (props.json hero_candidates.trail_camp on: tent 1.55x, bonfire 0.9x, stone ring 1.6x, rope/bag/fern/clover dropped, single-sided sign; capture_stands.json heading_overrides bonfire_fire heading 90). Pre-check: bigger tent clear behind the bedroll (no overlap); red <= 0.09% on the arm (base bonfire 0.84% is the dark crimson sign beam in the foreground). Bonfire frame: base camera faced the back of the TRAIL CAMP sign (mirrored letters) with the fire off-subject; arm heading 90 puts the camp and the fire at frame centre (fire just behind and right of the trainer, partly occluded); the sign is small at the left showing its blank back - no mirrored text, but no arm frame shows the sign's front."
+ },
+ {
+  "frame": "meadows__inventory__prop__camp_tent.jpg",
+  "preset": "arm-High",
+  "tree": "1078a130a331abe547fbd03bb6e5ad4144ba29a2",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-camp-hero/arm-High/meadows__inventory__prop__camp_tent.jpg",
+  "sky_fraction": 0.163,
+  "lower_edges": 0.3191,
+  "script_errors": 0,
+  "note": "F38#32 (6.37). High, tb/floor2 1078a130a, phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --subset camp_tent / camp_bed / bonfire_fire (one boot). base = tree as is; arm = plus FLOOR2-CAMP/overlay_camp_hero.json (props.json hero_candidates.trail_camp on: tent 1.55x, bonfire 0.9x, stone ring 1.6x, rope/bag/fern/clover dropped, single-sided sign; capture_stands.json heading_overrides bonfire_fire heading 90). Pre-check: bigger tent clear behind the bedroll (no overlap); red <= 0.09% on the arm (base bonfire 0.84% is the dark crimson sign beam in the foreground). Bonfire frame: base camera faced the back of the TRAIL CAMP sign (mirrored letters) with the fire off-subject; arm heading 90 puts the camp and the fire at frame centre (fire just behind and right of the trainer, partly occluded); the sign is small at the left showing its blank back - no mirrored text, but no arm frame shows the sign's front."
+ },
+ {
+  "frame": "meadows__inventory__prop__bonfire_fire.jpg",
+  "preset": "base-High",
+  "tree": "1078a130a331abe547fbd03bb6e5ad4144ba29a2",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-camp-hero/base-High/meadows__inventory__prop__bonfire_fire.jpg",
+  "sky_fraction": 0.113,
+  "lower_edges": 0.344,
+  "script_errors": 0,
+  "note": "F38#32 (6.37). High, tb/floor2 1078a130a, phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --subset camp_tent / camp_bed / bonfire_fire (one boot). base = tree as is; arm = plus FLOOR2-CAMP/overlay_camp_hero.json (props.json hero_candidates.trail_camp on: tent 1.55x, bonfire 0.9x, stone ring 1.6x, rope/bag/fern/clover dropped, single-sided sign; capture_stands.json heading_overrides bonfire_fire heading 90). Pre-check: bigger tent clear behind the bedroll (no overlap); red <= 0.09% on the arm (base bonfire 0.84% is the dark crimson sign beam in the foreground). Bonfire frame: base camera faced the back of the TRAIL CAMP sign (mirrored letters) with the fire off-subject; arm heading 90 puts the camp and the fire at frame centre (fire just behind and right of the trainer, partly occluded); the sign is small at the left showing its blank back - no mirrored text, but no arm frame shows the sign's front."
+ },
+ {
+  "frame": "meadows__inventory__prop__camp_bed.jpg",
+  "preset": "base-High",
+  "tree": "1078a130a331abe547fbd03bb6e5ad4144ba29a2",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-camp-hero/base-High/meadows__inventory__prop__camp_bed.jpg",
+  "sky_fraction": 0.136,
+  "lower_edges": 0.4356,
+  "script_errors": 0,
+  "note": "F38#32 (6.37). High, tb/floor2 1078a130a, phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --subset camp_tent / camp_bed / bonfire_fire (one boot). base = tree as is; arm = plus FLOOR2-CAMP/overlay_camp_hero.json (props.json hero_candidates.trail_camp on: tent 1.55x, bonfire 0.9x, stone ring 1.6x, rope/bag/fern/clover dropped, single-sided sign; capture_stands.json heading_overrides bonfire_fire heading 90). Pre-check: bigger tent clear behind the bedroll (no overlap); red <= 0.09% on the arm (base bonfire 0.84% is the dark crimson sign beam in the foreground). Bonfire frame: base camera faced the back of the TRAIL CAMP sign (mirrored letters) with the fire off-subject; arm heading 90 puts the camp and the fire at frame centre (fire just behind and right of the trainer, partly occluded); the sign is small at the left showing its blank back - no mirrored text, but no arm frame shows the sign's front."
+ },
+ {
+  "frame": "meadows__inventory__prop__camp_tent.jpg",
+  "preset": "base-High",
+  "tree": "1078a130a331abe547fbd03bb6e5ad4144ba29a2",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-camp-hero/base-High/meadows__inventory__prop__camp_tent.jpg",
+  "sky_fraction": 0.162,
+  "lower_edges": 0.3217,
+  "script_errors": 0,
+  "note": "F38#32 (6.37). High, tb/floor2 1078a130a, phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --subset camp_tent / camp_bed / bonfire_fire (one boot). base = tree as is; arm = plus FLOOR2-CAMP/overlay_camp_hero.json (props.json hero_candidates.trail_camp on: tent 1.55x, bonfire 0.9x, stone ring 1.6x, rope/bag/fern/clover dropped, single-sided sign; capture_stands.json heading_overrides bonfire_fire heading 90). Pre-check: bigger tent clear behind the bedroll (no overlap); red <= 0.09% on the arm (base bonfire 0.84% is the dark crimson sign beam in the foreground). Bonfire frame: base camera faced the back of the TRAIL CAMP sign (mirrored letters) with the fire off-subject; arm heading 90 puts the camp and the fire at frame centre (fire just behind and right of the trainer, partly occluded); the sign is small at the left showing its blank back - no mirrored text, but no arm frame shows the sign's front."
+ }
+]
