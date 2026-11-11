@@ -23,13 +23,14 @@ BRANCH: tb/newapproach-postset-land (cut from origin/main e6fdca29)
 **Not in this landing:** `camera_rig.gd` and the `camera.json post_focus` block. The post camera added nothing measurable on top of the setting and stays flag-off on `tb/newapproach` for the owner's decision. The new test asserts `post_focus` is not enabled.
 
 ## Tests run (11 Nov, with the baked config)
-One unit run, `--only=` the six files: 46 tests, 1059 assertions, 0 failed.
+One unit run, `--only=` the five files: 46 tests, 1059 assertions, 0 failed.
 - `test_post_setting_landed` (new, 5 tests)
 - `test_near6_cr_judged_on`
 - `test_vis_cloudreach_landed`
 - `test_cloudreach_route_cadence`
 - `test_cloudreach_route_ledger`
-- `test_bridge_view_landed`
+
+Not run: `test_bridge_view_landed` (it is on main but not in the lane checkout the tests ran in; this branch does not change the values it pins).
 
 `tests/smoke_cloudreach_physical_placements.gd`, headless, on its own: "223 checked, 0 failures", exit 0, with Sora at her new position.
 
