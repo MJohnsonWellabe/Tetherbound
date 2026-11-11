@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "water_mosshell-faint-000.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-faint-000.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0521,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-faint-025.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-faint-025.jpg",
+  "sky_fraction": 0.953,
+  "lower_edges": 0.051,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-faint-050.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-faint-050.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0496,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-faint-075.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-faint-075.jpg",
+  "sky_fraction": 0.964,
+  "lower_edges": 0.0448,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-faint-100.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-faint-100.jpg",
+  "sky_fraction": 0.969,
+  "lower_edges": 0.0435,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-hit-000.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-hit-000.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0521,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-hit-025.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-hit-025.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0495,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-hit-050.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-hit-050.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0497,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-hit-075.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-hit-075.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0526,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-hit-100.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-hit-100.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.052,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-ride-000.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-ride-000.jpg",
+  "sky_fraction": 0.966,
+  "lower_edges": 0.044,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-ride-025.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-ride-025.jpg",
+  "sky_fraction": 0.967,
+  "lower_edges": 0.0442,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-ride-050.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-ride-050.jpg",
+  "sky_fraction": 0.966,
+  "lower_edges": 0.044,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-ride-075.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-ride-075.jpg",
+  "sky_fraction": 0.966,
+  "lower_edges": 0.0436,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-ride-100.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-ride-100.jpg",
+  "sky_fraction": 0.966,
+  "lower_edges": 0.044,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-swim-000.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-swim-000.jpg",
+  "sky_fraction": 0.969,
+  "lower_edges": 0.0199,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-swim-025.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-swim-025.jpg",
+  "sky_fraction": 0.97,
+  "lower_edges": 0.0186,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-swim-050.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-swim-050.jpg",
+  "sky_fraction": 0.97,
+  "lower_edges": 0.0192,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-swim-075.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-swim-075.jpg",
+  "sky_fraction": 0.969,
+  "lower_edges": 0.0202,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mosshell-swim-100.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mosshell-gameclips-rescore/main-High/water_mosshell-swim-100.jpg",
+  "sky_fraction": 0.969,
+  "lower_edges": 0.0199,
+  "script_errors": 0,
+  "note": "One side on tb/things 5cb2084c3 (flags off), High; hit, faint, ride and swim 000-100. Neutral stage: sky heuristic bypassed after an eye check."
+ }
+]
