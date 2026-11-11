@@ -2986,6 +2986,24 @@
    "frames_pushed": "G-rescore-tier2-dialogue 0bed8ee41 (12 frames); G-rescore-tier2-f36 8442aba2a (65 frames). With LANE-SCOUT."
   },
   {
+   "id": "meshy-f41-8-distinct-bodies",
+   "kind": "arm",
+   "rows": [
+    "F41#8"
+   ],
+   "branch": "tb/item-f41-8-bodies",
+   "head": "c1733ce49",
+   "tree": "tb/item-f41-8-bodies c1733ce49 (stormwood_chapter.gd distinct_bodies; installed cast bodies only)",
+   "overlay_branch": "tb/item-f41-8-bodies",
+   "overlay": "ralph/reports/LANES/MESHY-F41-8-BODIES/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/MESHY-F41-8-BODIES/CAPTURE.json",
+   "job": "tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset for elder_maud, rodkeeper_hesk, warden_elect_bryn inventory character frames; base and arm",
+   "frames": "stormwood inventory character: elder_maud, rodkeeper_hesk, warden_elect_bryn",
+   "capture": "High (Medium only if High reaches 7.5). BEFORE rescore-tier2-batch-2 (below-6 row first). Pre-check: three visibly different bodies; nothing red. Then LANE-SCOUT on F41#8's brief.",
+   "note": "Below-6 row. Hesk -> alpha_tracker body, Bryn -> lost_traveler body; Maud unchanged."
+  },
+  {
    "id": "rescore-tier2-batch-2",
    "kind": "baseline",
    "rows": [
