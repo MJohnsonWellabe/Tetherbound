@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "lesson-dawn.jpg",
+  "preset": "arm-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/arm-High/lesson-dawn.jpg",
+  "sky_fraction": 0.024,
+  "lower_edges": 0.1193,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "lesson-dune.jpg",
+  "preset": "arm-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/arm-High/lesson-dune.jpg",
+  "sky_fraction": 0.192,
+  "lower_edges": 0.1421,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "shore-day.jpg",
+  "preset": "arm-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/arm-High/shore-day.jpg",
+  "sky_fraction": 0.349,
+  "lower_edges": 0.279,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "shore-golden.jpg",
+  "preset": "arm-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/arm-High/shore-golden.jpg",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.2764,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "shore-night.jpg",
+  "preset": "arm-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/arm-High/shore-night.jpg",
+  "sky_fraction": 0.516,
+  "lower_edges": 0.2858,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "shore-rain.jpg",
+  "preset": "arm-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/arm-High/shore-rain.jpg",
+  "sky_fraction": 0.267,
+  "lower_edges": 0.3873,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "lesson-dawn.jpg",
+  "preset": "base-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/base-High/lesson-dawn.jpg",
+  "sky_fraction": 0.024,
+  "lower_edges": 0.1544,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "lesson-dune.jpg",
+  "preset": "base-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/base-High/lesson-dune.jpg",
+  "sky_fraction": 0.193,
+  "lower_edges": 0.1431,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "shore-day.jpg",
+  "preset": "base-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/base-High/shore-day.jpg",
+  "sky_fraction": 0.351,
+  "lower_edges": 0.2759,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "shore-golden.jpg",
+  "preset": "base-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/base-High/shore-golden.jpg",
+  "sky_fraction": 0.038,
+  "lower_edges": 0.3023,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "shore-night.jpg",
+  "preset": "base-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/base-High/shore-night.jpg",
+  "sky_fraction": 0.516,
+  "lower_edges": 0.3094,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ },
+ {
+  "frame": "shore-rain.jpg",
+  "preset": "base-High",
+  "tree": "9ee887352d4f55352e7b35fd1b07285c32bfa090",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-floor2-sand-ripple-relief/base-High/shore-rain.jpg",
+  "sky_fraction": 0.265,
+  "lower_edges": 0.3927,
+  "script_errors": 0,
+  "note": "F39#30 (also F13#5; F39#3 golden/dawn). High 1920x1080, main 9ee887352 (#899), capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080. base = main as is (also the first GPU baseline for F39#30). arm = plus tb/floor2 c092a2309 FLOOR2-SANDSTRIPES/overlay_ripple_relief.json (tidewake_look.json dunes.normal_strength 0.14 -> 0.035, ripple_strength 0.009 -> 0.03). Arm frames: shore-golden, lesson-dawn; controls: shore-day, lesson-dune, shore-night, shore-rain. Base pre-check: regular dark bands about a metre apart across the sand at lesson-dawn (strong) and shore-golden (fainter) - present. Arm read: dawn bands gone (soft fine ripple); golden bands much fainter, faint regular stripes remain near the trainer; controls' sand unchanged. Wild creature spawn at the right/shore edge differs base vs arm (not the overlay); shore-rain differs by rain streaks only."
+ }
+]
