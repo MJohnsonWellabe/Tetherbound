@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "south_bridge_grunt-01.png",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames (--fixed-fps 20)",
+  "path": "G-toys-dust-f38/arm-High/south_bridge_grunt-01.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.2764,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#3/#11 frames 01, 02, 03, 05."
+ },
+ {
+  "frame": "south_bridge_grunt-02.png",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames (--fixed-fps 20)",
+  "path": "G-toys-dust-f38/arm-High/south_bridge_grunt-02.png",
+  "sky_fraction": 0.03,
+  "lower_edges": 0.2762,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#3/#11 frames 01, 02, 03, 05."
+ },
+ {
+  "frame": "south_bridge_grunt-03.png",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames (--fixed-fps 20)",
+  "path": "G-toys-dust-f38/arm-High/south_bridge_grunt-03.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.3034,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#3/#11 frames 01, 02, 03, 05."
+ },
+ {
+  "frame": "south_bridge_grunt-05.png",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames (--fixed-fps 20)",
+  "path": "G-toys-dust-f38/arm-High/south_bridge_grunt-05.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.3299,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#3/#11 frames 01, 02, 03, 05."
+ },
+ {
+  "frame": "south_bridge_grunt-01.png",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames (--fixed-fps 20)",
+  "path": "G-toys-dust-f38/base-High/south_bridge_grunt-01.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.2767,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#3/#11 frames 01, 02, 03, 05."
+ },
+ {
+  "frame": "south_bridge_grunt-02.png",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames (--fixed-fps 20)",
+  "path": "G-toys-dust-f38/base-High/south_bridge_grunt-02.png",
+  "sky_fraction": 0.03,
+  "lower_edges": 0.2758,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#3/#11 frames 01, 02, 03, 05."
+ },
+ {
+  "frame": "south_bridge_grunt-03.png",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames (--fixed-fps 20)",
+  "path": "G-toys-dust-f38/base-High/south_bridge_grunt-03.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.3035,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#3/#11 frames 01, 02, 03, 05."
+ },
+ {
+  "frame": "south_bridge_grunt-05.png",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames (--fixed-fps 20)",
+  "path": "G-toys-dust-f38/base-High/south_bridge_grunt-05.png",
+  "sky_fraction": 0.032,
+  "lower_edges": 0.3306,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#3/#11 frames 01, 02, 03, 05."
+ }
+]
