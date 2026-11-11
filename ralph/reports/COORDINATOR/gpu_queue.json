@@ -2647,7 +2647,9 @@
    "job": "phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela --preset=High; base and arm",
    "frames": "tavi, sora, maela inventory character frames",
    "capture": "High. Pre-check: manifest camera_rig_spring_length about 3.6 on the arm (5.2 on base); if 5.2 on both, the focus did not engage, do not judge. Then LANE-SCOUT on F40#9's brief.",
-   "note": "Gameplay camera change (flag-off); coordinator tells the owner before it lands."
+   "note": "Gameplay camera change (flag-off); coordinator tells the owner before it lands.",
+   "done": true,
+   "frames_pushed": "G-newapproach-post-focus f0bcfe69b: focus engaged (spring 3.60 arm vs 5.20 base on all three); NPC larger beside the trainer. With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
