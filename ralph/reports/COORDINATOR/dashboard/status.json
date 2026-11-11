@@ -811,7 +811,7 @@
     "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
   ],
   "owner_needs": [
-    "11 Nov: F40#9 post focus camera (LANE-NEWAPPROACH, flag-off): when the player stands still at a Cloudreach named post with its prompt up, the play camera eases in (5.2 m to 3.6 m) and slides toward the NPC; releases on any input, never in fights. GPU +0.71 (3/3), F40#9 5.02 -> 5.73. Land it? (changes how the camera behaves in play)",
+    "11 Nov: F40#9 post focus camera (flag-off): no longer needed for the row. The post setting alone takes F40#9 to 6.48, and the camera adds nothing measurable on top of it (G-newapproach-post-setting). Coordinator recommends leaving it off; say if you want it anyway.",
     "11 Nov: F40#6 refuse_drop (LANE-NEWAPPROACH, flag-off, gameplay): a mount refuses to ride off a drop with no floor within 100 m ('Your mount won't take that drop'); survivable ledges are ridden off as before. F40#6's judged frames are the 3 s after riding off the arrival terrace edge; every look arm left that defect PRESENT, judges ask for 'clamped pathing or an authored drop'. Today the game recovers the mount in about half a second with no loss. Turn it on?",
     "Nothing pending. Keep the PC on and awake overnight for the GPU run."
   ],

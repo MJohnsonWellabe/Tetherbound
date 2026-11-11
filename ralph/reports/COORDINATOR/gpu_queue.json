@@ -2672,7 +2672,8 @@
    "capture": "High. Pre-check: spring length 3.6 with focus, 5.2 without; nothing red; key light not blowing out the NPCs. LANE-SCOUT judges focus+setting vs focus-only (the lane's pair) and setting-only vs plain base.",
    "note": "Post focus itself is held for the owner.",
    "done": true,
-   "frames_pushed": "G-newapproach-post-setting 04e5b4474: four sides; pre-checks pass (focus engages only with focus, no red, no blowout); warm hotspot on a trunk in focusset Maela. With LANE-SCOUT."
+   "frames_pushed": "G-newapproach-post-setting 04e5b4474: four sides; pre-checks pass (focus engages only with focus, no red, no blowout); warm hotspot on a trunk in focusset Maela. With LANE-SCOUT.",
+   "verdict": "G-newapproach-post-setting (tb/item-scout-1108 22102b6be): setting +1.16 (3/3) both ways; setonly 6.48 clears 6 without the post camera. Post camera adds nothing measurable on top. Land setonly."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
