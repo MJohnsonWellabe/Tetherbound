@@ -2656,7 +2656,7 @@
     },
     "F36#52": {
       "gpu": 6.98,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler)"
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler); G-below6-hits (LANE-SCOUT 65306ecd0): grounded hit 5.72 -> 6.32 on main's stage (+0.60, 3/3), arm not yet landed"
     },
     "F36#69": {
       "gpu": 8.04,
