@@ -3259,7 +3259,8 @@
    "frames": "hit and faint 000-100; crop 560,200 1000x640",
    "capture": "High, base (overlay off) and arm (overlay on), same command",
    "priority": "below-6 material swing (glossy vinyl-blue, toy-like PRESENT 3/3 on the faint arm too); gloss only shows on GPU",
-   "note": "LANE-BELOW6 (carried from REMAKES). Material only; the faint fix is a separate landing (THINGS-FAINT)."
+   "note": "LANE-BELOW6 (carried from REMAKES). Material only; the faint fix is a separate landing (THINGS-FAINT).",
+   "done": "G-below6-abyssal-matte 420ed4abc (judging)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
