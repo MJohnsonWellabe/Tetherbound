@@ -38,7 +38,13 @@
     "grain_wander_height_m": 18.0,
     "exposed_wood_repeat_m": 7.0,
     "exposed_wood_tint": "#a8997b",
-    "fracture_depth_m": 0.65
+    "fracture_depth_m": 0.65,
+    "aged_heartwood_1112": {
+      "enabled": false,
+      "_candidate": "LANE-BELOW6 (12 Nov 2026), F41#1: both approach frames stand beside the south split and the split's exposed wood fills their left edge as 'an orange wood-grain slab that reads as an untextured placeholder' (3/3, about 0.3 on the row). The exposed-wood shader multiplies an orange trim atlas, so a tint alone cannot take it off orange. ON greys the grain (weathering 0.75) under a pale heartwood tint, so the fracture reads as aged split timber beside the lavender-grey bark. Shader parameter only. OFF until GPU-judged.",
+      "weathering": 0.75,
+      "tint": "#b3a892"
+    }
   },
   "built_detail": {
     "enabled": true,

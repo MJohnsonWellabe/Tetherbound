@@ -52,6 +52,6 @@ func test_ramp_collision_is_unchanged_and_the_body_has_no_collider() -> void:
 	assert_true(holder != null, "the body is built when the flag is on")
 	if holder != null:
 		assert_eq(holder.find_children("*", "CollisionObject3D", true, false).size(), 0, "the body adds no collider")
-		assert_true(holder.find_children("Post", "MeshInstance3D", true, false).size() >= 8, "posts line both sides")
+		assert_true(holder.find_children("Post*", "MeshInstance3D", true, false).size() >= 8, "posts line both sides")
 	_free_tree(plain)
 	_free_tree(dressed)

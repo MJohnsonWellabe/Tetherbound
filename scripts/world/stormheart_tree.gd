@@ -397,10 +397,10 @@ func _ramp_body(start: Vector3, finish: Vector3, width: float, cfg: Dictionary) 
 		for i in count + 1:
 			var p := start.lerp(finish, float(i) / count) + side * edge * (1.0 + post_size / width)
 			var height := p.y + rail - floor_y
-			_visual_box(holder, "Post", Vector3(p.x, floor_y + height * 0.5, p.z), Vector3(post_size, height, post_size), timber)
+			_visual_box(holder, "Post%s%d" % ["West" if edge < 0.0 else "East", i], Vector3(p.x, floor_y + height * 0.5, p.z), Vector3(post_size, height, post_size), timber)
 		var a := start + side * edge
 		var b := finish + side * edge
-		var beam := _visual_box(holder, "EdgeBeam", (a + b) * 0.5 + Vector3.UP * 0.05, Vector3(0.4, 0.4, a.distance_to(b)), timber)
+		var beam := _visual_box(holder, "EdgeBeam%s" % ("West" if edge < 0.0 else "East"), (a + b) * 0.5 + Vector3.UP * 0.05, Vector3(0.4, 0.4, a.distance_to(b)), timber)
 		beam.look_at_from_position(beam.position, b + Vector3.UP * 0.05, Vector3.UP)
 
 func ascent_point(fraction: float) -> Vector3:
