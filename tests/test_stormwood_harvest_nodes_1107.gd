@@ -37,6 +37,34 @@ func test_nodes_ship_on_with_score_and_hero2_returns_them() -> void:
 	assert_true(str(r3.get("_why_on", "")).contains("4.98 -> 5.65"), "r3 records its judged score")
 
 
+func test_floor2_presence_ships_on_as_judged() -> void:
+	# F41#9 (LANE-FLOOR2, 11 Nov 2026): larger nodes ringed by small copies of
+	# themselves. G-floor2-harvest-presence-confirm, GPU High 5.81 -> 6.81, 3/3.
+	var presence: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(HERO2)) as Dictionary).get("floor2_presence", {})
+	assert_true(bool(presence.get("enabled", false)), "floor2_presence ships ON (judged gain)")
+	assert_true(str(presence.get("_why_on", "")).contains("5.81 -> 6.81"), "records its judged score")
+	var lane_models := {}
+	for item: String in SURFACES:
+		var row: Dictionary = RUNTIME.presence_for(item)
+		assert_true(float(row.get("height_scale", 1.0)) > 1.0, "%s grows" % item)
+		for key: String in row:
+			assert_false(key.begins_with("light_"), "%s: no ground light ships (%s)" % [item, key])
+		var satellites: Dictionary = row.get("satellites", {})
+		assert_true(int(satellites.get("count", 0)) >= 5, "%s has its ring of copies" % item)
+		# Keep-out: the copies ring inside the node's own footprint, never on
+		# the ground a player stands on beside it.
+		var of_main := float(satellites.get("ring_of_main", 0.0))
+		assert_true(of_main > 0.0 and of_main <= 1.0, "%s copies stay on the node's base (%.2f)" % [item, of_main])
+		var models: Array = RUNTIME.hero2_for(item).get("models", [])
+		assert_eq(models.size(), 2, "%s: the node and its copies" % item)
+		var copies: Dictionary = models[1]
+		assert_eq(str(copies.get("model", "")), str((models[0] as Dictionary).get("model", "")), "%s copies are the node's own model" % item)
+		assert_true(bool(copies.get("no_collision", false)), "%s copies carry no collider" % item)
+		assert_true(float((copies.height_m as Array)[1]) < float(((models[0] as Dictionary).height_m as Array)[0]) * 0.6, "%s copies are clearly smaller" % item)
+		lane_models[item] = models
+	assert_eq(lane_models.size(), 3, "all three judged nodes are covered")
+
+
 func test_node_models_load_with_named_surfaces_and_no_collider() -> void:
 	var items: Dictionary = _lane().get("items", {})
 	for item: String in SURFACES:

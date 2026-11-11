@@ -260,7 +260,52 @@ static func hero2_for(item: String) -> Dictionary:
 	elif not bool(cfg.get("enabled", false)):
 		return {}
 	var row: Variant = (cfg.get("items", {}) as Dictionary).get(item, {})
-	return (row as Dictionary).duplicate(true) if row is Dictionary else {}
+	var out: Dictionary = (row as Dictionary).duplicate(true) if row is Dictionary else {}
+	# F41#9 (LANE-FLOOR2, `floor2_presence`, OFF until GPU-judged): grow the
+	# chosen node and its clearing by the item's `height_scale`.
+	var presence := presence_for(item)
+	var grow := float(presence.get("height_scale", 1.0))
+	if not out.is_empty() and grow > 1.0:
+		for entry: Variant in out.get("models", []):
+			if entry is Dictionary and (entry as Dictionary).get("height_m") is Array:
+				var heights: Array = (entry as Dictionary)["height_m"]
+				for index in heights.size():
+					heights[index] = float(heights[index]) * grow
+				if (entry as Dictionary).has("sink_m"):
+					(entry as Dictionary)["sink_m"] = float((entry as Dictionary)["sink_m"]) * grow
+		if out.has("clear_radius_m"):
+			out["clear_radius_m"] = float(out["clear_radius_m"]) * grow
+	# `satellites`: smaller copies of the node's own model ringed round it, so
+	# the resource reads as a deposit breaking through the ground rather than
+	# one prop on a lawn. The clearing widens to hold them.
+	var satellites: Variant = presence.get("satellites", {})
+	var models: Array = out.get("models", [])
+	if not out.is_empty() and satellites is Dictionary and int((satellites as Dictionary).get("count", 0)) > 0 and not models.is_empty():
+		var first: Dictionary = models[0]
+		var tall := float((first.get("height_m", [1.0, 1.0]) as Array)[0])
+		var scale: Array = (satellites as Dictionary).get("height_frac", [0.25, 0.5])
+		var ring := float((satellites as Dictionary).get("ring_m", 3.0))
+		# `ring_of_main`: the ring is a fraction of the node's own footprint
+		# radius, so every copy stands half inside the node's base and none
+		# lands on ground a player stands on beside it.
+		models.append({"model": first.get("model", ""), "count": int((satellites as Dictionary).count), "ring_m": ring,
+			"ring_of_main": float((satellites as Dictionary).get("ring_of_main", 0.0)),
+			"height_m": [tall * float(scale[0]), tall * float(scale[1])], "sink_m": float(first.get("sink_m", 0.05)) * 0.5,
+			"shadow": bool(first.get("shadow", true)), "no_collision": true})
+		out["models"] = models
+		out["clear_radius_m"] = maxf(float(out.get("clear_radius_m", 0.0)), ring + 0.8)
+	return out
+
+
+## F41#9 `floor2_presence` row for one item, or {} while the flag is off.
+static func presence_for(item: String) -> Dictionary:
+	if _hero2 == null:
+		hero2_for("")
+	var presence: Variant = (_hero2 as Dictionary).get("floor2_presence", {})
+	if not presence is Dictionary or not bool((presence as Dictionary).get("enabled", false)):
+		return {}
+	var row: Variant = ((presence as Dictionary).get("items", {}) as Dictionary).get(item, {})
+	return row if row is Dictionary else {}
 
 
 static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
@@ -294,6 +339,37 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
 	if hero_on and _hero_models(node, root, hero, ground_height) and bool(hero.get("replace_model", false)):
 		spec["kind"] = ""
 		spec["replace_model"] = true
+	# F41#9 `floor2_presence`: the node's own material colours the ground
+	# around it (violet under storm-glass, teal under glowmoss), so the named
+	# resource reads from a distance on the dark wet Stormwood floor. A small
+	# shadowless light that fades out with distance; presentation only.
+	var presence := presence_for(item)
+	# The node's own glowing surfaces (the glass prisms, the fungus caps: the
+	# materials the Blender build already marks emissive) glow strongly enough
+	# to read in a storm. Non-emissive surfaces (basalt, copper, moss) are left.
+	if hero_on and float(presence.get("emission_energy", 0.0)) > 0.0:
+		for visual: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
+			for surface in visual.mesh.get_surface_count():
+				var source := visual.get_active_material(surface) as BaseMaterial3D
+				if source == null or not source.emission_enabled:
+					continue
+				var lit := source.duplicate() as BaseMaterial3D
+				lit.emission_energy_multiplier = maxf(source.emission_energy_multiplier, float(presence.emission_energy))
+				visual.set_surface_override_material(surface, lit)
+	if hero_on and presence.has("light_colour"):
+		var lamp := OmniLight3D.new()
+		lamp.name = "HarvestGlow"
+		lamp.light_color = Color(str(presence.light_colour))
+		lamp.light_energy = float(presence.get("light_energy", 1.0))
+		lamp.omni_range = float(presence.get("light_range_m", 5.0))
+		lamp.omni_attenuation = float(presence.get("light_attenuation", 1.4))
+		lamp.shadow_enabled = false
+		lamp.light_specular = 0.2
+		lamp.distance_fade_enabled = true
+		lamp.distance_fade_begin = float(presence.get("light_fade_begin_m", 45.0))
+		lamp.distance_fade_length = float(presence.get("light_fade_length_m", 15.0))
+		lamp.position = Vector3(0.0, float(presence.get("light_height_m", 1.0)), 0.0)
+		root.add_child(lamp)
 	var glow := StandardMaterial3D.new()
 	var colour := Color(str(spec.get("colour", "#ffffff")))
 	# A darker body under a softer glow keeps the hue: albedo and emission both
@@ -405,6 +481,7 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
 static func _hero_models(node: Node3D, root: Node3D, hero: Dictionary, ground_height: Callable) -> bool:
 	var placed := false
 	var seed_value := absi(str(node.name).hash()) % 1009
+	var main_radius := 0.0
 	for raw: Variant in hero.get("models", []):
 		if not raw is Dictionary:
 			continue
@@ -416,7 +493,9 @@ static func _hero_models(node: Node3D, root: Node3D, hero: Dictionary, ground_he
 			if model == null:
 				break
 			var t := float((index * 7 + seed_value) % 11) / 10.0
-			HERO_PROP.fit_height(model, lerpf(float(heights[0]), float(heights[1]), t), float(entry.get("sink_m", 0.05)))
+			var bounds: AABB = HERO_PROP.fit_height(model, lerpf(float(heights[0]), float(heights[1]), t), float(entry.get("sink_m", 0.05)))
+			if main_radius <= 0.0:
+				main_radius = maxf(bounds.size.x, bounds.size.z) * 0.5 * model.scale.x
 			# P2-046 round 3 (stormwood_harvest_hero2.json): `squash_y` flattens
 			# a rock into a mound and `tint` recolours it (a moss mound in
 			# place of the glowmoss decal disc). Absent keys change nothing.
@@ -435,11 +514,16 @@ static func _hero_models(node: Node3D, root: Node3D, hero: Dictionary, ground_he
 						visual.set_surface_override_material(surface, tinted)
 				for body: Node in model.find_children("*", "CollisionObject3D", true, false):
 					body.queue_free()
+			if bool(entry.get("no_collision", false)):
+				for body: Node in model.find_children("*", "CollisionObject3D", true, false):
+					body.queue_free()
 			if entry.has("glow_colour"):
 				HERO_PROP.glow(model, Color(str(entry.glow_colour)), float(entry.get("glow_energy", 1.0)))
 			var seat := Node3D.new()
 			seat.name = "HeroModel%d" % index
 			var ring := float(entry.get("ring_m", 0.0))
+			if float(entry.get("ring_of_main", 0.0)) > 0.0 and main_radius > 0.0:
+				ring = main_radius * float(entry.ring_of_main)
 			var angle := TAU * float(index) / float(count) + float(seed_value) * 0.37
 			var at := Vector3(cos(angle) * ring, 0.0, sin(angle) * ring) if count > 1 or ring > 0.0 else Vector3.ZERO
 			if ground_height.is_valid() and node.is_inside_tree():

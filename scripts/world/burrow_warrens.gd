@@ -3651,6 +3651,9 @@ func _build_hill_shell() -> void:
 				centre.z - fitted.get_center().z + float(offset[2]))
 			print("[warrens] hill shell fit: target %s, shell scale %s, holder %s" % [target, model.scale, holder.position])
 	var clip: Dictionary = cfg.get("clip_box", {})
+	# `meadow_match` (F38#30, OFF until judged): see the shader and
+	# `_build_hill_shell_cover`.
+	var meadow: Dictionary = cfg.get("meadow_match", {})
 	if not clip.is_empty():
 		var shader := Shader.new()
 		shader.code = """shader_type spatial;
@@ -3662,6 +3665,13 @@ uniform sampler2D detail_tex : source_color, filter_linear_mipmap, repeat_enable
 uniform float detail_uv_per_m = 0.5;
 uniform float detail_mix = 0.0;
 uniform vec4 detail_tint : source_color = vec4(1.0);
+uniform sampler2D meadow_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform float meadow_mix = 0.0;
+uniform float meadow_uv_per_m = 0.27;
+uniform float meadow_broad_per_m = 0.031;
+uniform vec4 meadow_tint : source_color = vec4(1.0);
+uniform float meadow_normal_start = 0.15;
+uniform float meadow_normal_full = 0.6;
 uniform float skirt_drop_m = 0.0;
 uniform float skirt_normal_start = -0.05;
 uniform float skirt_normal_full = -0.45;
@@ -3701,6 +3711,20 @@ void fragment() {
 		vec3 detailed = base * (0.55 + 0.9 * luma) * mix(vec3(1.0), d / max(luma, 0.001), 0.35) * detail_tint.rgb;
 		base = mix(base, detailed, detail_mix * w.y + detail_mix * 0.6 * (1.0 - w.y));
 	}
+	if (meadow_mix > 0.0) {
+		// meadow_match: faces that look up wear the meadow's own grass sheet,
+		// in world space at the meadow's tiling, so the mound reads as the
+		// same hill as the ground round it; steep faces keep the shell's earth.
+		vec3 mw = pow(abs(world_normal), vec3(4.0));
+		mw /= max(mw.x + mw.y + mw.z, 0.0001);
+		vec3 mp = world_pos * meadow_uv_per_m;
+		vec3 fine = texture(meadow_tex, mp.zy).rgb * mw.x + texture(meadow_tex, mp.xz).rgb * mw.y
+			+ texture(meadow_tex, mp.xy).rgb * mw.z;
+		vec3 broad = texture(meadow_tex, world_pos.xz * meadow_broad_per_m).rgb;
+		float broad_luma = dot(broad, vec3(0.299, 0.587, 0.114));
+		vec3 grass = fine * meadow_tint.rgb * mix(1.0, broad_luma * 2.2, 0.35);
+		base = mix(base, grass, meadow_mix * smoothstep(meadow_normal_start, meadow_normal_full, world_normal.y));
+	}
 	ALBEDO = base;
 	ROUGHNESS = 0.95;
 }
@@ -3731,6 +3755,14 @@ void fragment() {
 					material.set_shader_parameter("detail_uv_per_m", float(cfg.get("detail_uv_per_m", 0.5)))
 					material.set_shader_parameter("detail_mix", float(cfg.get("detail_mix", 0.0)))
 					material.set_shader_parameter("detail_tint", Color(str(cfg.get("detail_tint", "#ffffff"))))
+				if bool(meadow.get("enabled", false)):
+					material.set_shader_parameter("meadow_tex", GRASS_ALBEDO)
+					material.set_shader_parameter("meadow_mix", float(meadow.get("mix", 1.0)))
+					material.set_shader_parameter("meadow_uv_per_m", float(meadow.get("uv_per_m", 0.27)))
+					material.set_shader_parameter("meadow_tint", Color(str(meadow.get("tint", "#ffffff"))))
+					var facing: Array = meadow.get("normal_up", [0.15, 0.6])
+					material.set_shader_parameter("meadow_normal_start", float(facing[0]))
+					material.set_shader_parameter("meadow_normal_full", float(facing[1]))
 				material.set_shader_parameter("clip_min", Vector3(minf(a.x, b.x), minf(a.y, b.y), minf(a.z, b.z)))
 				material.set_shader_parameter("clip_max", Vector3(maxf(a.x, b.x), maxf(a.y, b.y), maxf(a.z, b.z)))
 				var skirt: Dictionary = cfg.get("skirt", {})
@@ -3748,6 +3780,73 @@ void fragment() {
 					material.set_shader_parameter("skirt_normal_start", float(skirt.get("normal_start", -0.05)))
 					material.set_shader_parameter("skirt_normal_full", float(skirt.get("normal_full", -0.45)))
 				mesh.set_surface_override_material(i, material)
+	if bool(meadow.get("enabled", false)):
+		_build_hill_shell_cover(model, meadow, clip)
+
+
+## `meadow_match.cover`: grass tufts from the installed nature pack stood on
+## the mound's up-facing faces, above the terrain and clear of the mouth's
+## clip box, so the hillside carries the meadow's ground cover. No collision.
+func _build_hill_shell_cover(model: Node3D, meadow: Dictionary, clip: Dictionary) -> void:
+	var cover: Dictionary = meadow.get("cover", {})
+	var models: Array = cover.get("models", [])
+	if int(cover.get("count", 0)) <= 0 or models.is_empty():
+		return
+	var clip_min := Vector3(-INF, -INF, -INF)
+	var clip_max := Vector3(-INF, -INF, -INF)
+	if not clip.is_empty() and str(clip.get("space", "model")) == "warrens":
+		var pad := float(cover.get("mouth_pad_m", 1.5))
+		clip_min = Vector3(float(clip.min[0]), float(clip.min[1]), float(clip.min[2])) - Vector3.ONE * pad
+		clip_max = Vector3(float(clip.max[0]), float(clip.max[1]), float(clip.max[2])) + Vector3.ONE * pad
+	var min_up := float(cover.get("min_up", 0.7))
+	var can_ground := _world != null and _world.has_method("ground_height_at") and is_inside_tree()
+	var spots: Array[Vector3] = []
+	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		var to_self := _chain_to_self(mesh)
+		var faces := mesh.mesh.get_faces()
+		for face in range(0, faces.size() - 2, 3):
+			var a := to_self * faces[face]
+			var b := to_self * faces[face + 1]
+			var c := to_self * faces[face + 2]
+			var normal := (c - a).cross(b - a).normalized()
+			if absf(normal.y) < min_up:
+				continue
+			var centre := (a + b + c) / 3.0
+			if centre.x > clip_min.x and centre.x < clip_max.x and centre.y > clip_min.y and centre.y < clip_max.y \
+					and centre.z > clip_min.z and centre.z < clip_max.z:
+				continue
+			if can_ground:
+				var world_at := to_global(centre)
+				var ground := float(_world.call("ground_height_at", world_at.x, world_at.z))
+				if is_finite(ground) and world_at.y < ground + 0.15:
+					continue
+			spots.append(centre)
+	if spots.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "HillShellCover"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cover.get("seed", 3830))
+	var scale_range: Array = cover.get("scale", [0.9, 1.5])
+	for _index in int(cover.count):
+		var packed_cover := load("res://assets/environment/stylized_nature/%s.gltf" % str(
+			models[rng.randi() % models.size()])) as PackedScene
+		if packed_cover == null:
+			continue
+		var tuft := packed_cover.instantiate() as Node3D
+		if tuft == null:
+			continue
+		tuft.position = spots[rng.randi() % spots.size()] + Vector3(0.0, -0.06, 0.0)
+		tuft.rotation.y = rng.randf_range(0.0, TAU)
+		tuft.scale = Vector3.ONE * rng.randf_range(float(scale_range[0]), float(scale_range[1]))
+		for body: Node in tuft.find_children("*", "CollisionObject3D", true, false):
+			body.queue_free()
+		holder.add_child(tuft)
+		_dress_skirt_flora(tuft)
 
 
 ## P2-012 r2 (vis-meadows, OFF until GPU-judged): `bank.hill_shell.r2`, when
