@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "water__aquaryn__fainted.jpg",
+  "preset": "arm-High",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/arm-High/water__aquaryn__fainted.jpg",
+  "sky_fraction": 0.305,
+  "lower_edges": 0.1666,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__idle.jpg",
+  "preset": "arm-High",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/arm-High/water__aquaryn__idle.jpg",
+  "sky_fraction": 0.291,
+  "lower_edges": 0.1617,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__resting.jpg",
+  "preset": "arm-High",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/arm-High/water__aquaryn__resting.jpg",
+  "sky_fraction": 0.306,
+  "lower_edges": 0.1436,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__fainted.jpg",
+  "preset": "arm-Medium",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/arm-Medium/water__aquaryn__fainted.jpg",
+  "sky_fraction": 0.305,
+  "lower_edges": 0.1677,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__idle.jpg",
+  "preset": "arm-Medium",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/arm-Medium/water__aquaryn__idle.jpg",
+  "sky_fraction": 0.291,
+  "lower_edges": 0.163,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__resting.jpg",
+  "preset": "arm-Medium",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/arm-Medium/water__aquaryn__resting.jpg",
+  "sky_fraction": 0.308,
+  "lower_edges": 0.1456,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__fainted.jpg",
+  "preset": "base-High",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/base-High/water__aquaryn__fainted.jpg",
+  "sky_fraction": 0.306,
+  "lower_edges": 0.1701,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__idle.jpg",
+  "preset": "base-High",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/base-High/water__aquaryn__idle.jpg",
+  "sky_fraction": 0.291,
+  "lower_edges": 0.1623,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__resting.jpg",
+  "preset": "base-High",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/base-High/water__aquaryn__resting.jpg",
+  "sky_fraction": 0.306,
+  "lower_edges": 0.144,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__fainted.jpg",
+  "preset": "base-Medium",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/base-Medium/water__aquaryn__fainted.jpg",
+  "sky_fraction": 0.306,
+  "lower_edges": 0.1711,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__idle.jpg",
+  "preset": "base-Medium",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/base-Medium/water__aquaryn__idle.jpg",
+  "sky_fraction": 0.291,
+  "lower_edges": 0.1634,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ },
+ {
+  "frame": "water__aquaryn__resting.jpg",
+  "preset": "base-Medium",
+  "tree": "bc0c29f0d640b709bbad7b015a2cf43cdc53eb16",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-flat-diag/base-Medium/water__aquaryn__resting.jpg",
+  "sky_fraction": 0.307,
+  "lower_edges": 0.1457,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-faint-flat, F39#6). tb/floor2 bc0c29f0d (#907 merged), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042, High and Medium. base = + FLOOR2-AQUAFAINT/overlay_faint_fold.json; arm = + FLOOR2-AQUAFLAT/overlay_faint_flat.json (faint_fold drop_deg 40). FAIL on fainted: forefeet inside the torso with two claw tips poking out of the mid-flank; lower limbs merge into the belly underside with a loose sliver below; sheared stretched limb geometry at the top of the flank. Passes: nothing above the torso, head not buried; idle and resting match base."
+ }
+]
