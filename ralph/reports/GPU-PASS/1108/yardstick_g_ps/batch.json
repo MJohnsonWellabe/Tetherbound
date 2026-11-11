@@ -1,0 +1,56 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.5,
+   5.6,
+   5.2
+  ],
+  "craft:after": [
+   6.9,
+   7.0,
+   6.8
+  ],
+  "f36_0_npc:C1B": [
+   7.1,
+   6.8,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   7.1,
+   6.7,
+   6.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.5,
+   4.5,
+   4.3
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.2,
+   5.3,
+   4.9
+  ]
+ },
+ "candidates": {
+  "G F40#9 post-setting focus-vs-focusset [G-ps_focusset.png]": [
+   6.3,
+   6.0,
+   6.0
+  ],
+  "G F40#9 post-setting focus-vs-focusset [G-ps_focus.png]": [
+   5.3,
+   5.2,
+   5.0
+  ],
+  "G F40#9 post-setting base-vs-setonly [G-ps_base.png]": [
+   5.3,
+   5.2,
+   5.0
+  ],
+  "G F40#9 post-setting base-vs-setonly [G-ps_setonly.png]": [
+   6.3,
+   6.0,
+   6.0
+  ]
+ }
+}
