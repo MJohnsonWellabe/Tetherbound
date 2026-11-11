@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 02:20 UTC",
+  "updated": "11 Nov 2026 02:40 UTC",
   "headline": [
+    "11 Nov 02:40: Cloudreach cause package parked after two tries (full package failed the GPU pre-check on cloud_sea; without it, pale_strata's flat tan cut faces lost F40#1 -0.13 and F40#3 -0.16). Re-checks: F38#32 6.37 (above 6), F40#3 5.65, F41#13 5.14. Below 6: 21. Next: cloud-deck soft edges pre-check (F40#6/#11), F40#8 cyan beam and foreground trunk.",
     "11 Nov 02:00: row audit (LANE-SCOUT ROW-AUDIT-1111) brings the board up to date: F41#21 7.13, F40#19 6.66, F38#1 6.58, F41#15 6.33 and F38#28 (7.54 High / 6.99 Medium) were already above 6 from earlier landed fixes; F41#13 drops to 5.00 (disputed). Below 6: 22. Three cheap re-captures queued (F40#3 new stand, F38#32 confirm, F41#13 confirm).",
     "11 Nov 01:40: owner asked for a third build lane: LANE-FLOOR2 takes the creature cluster and the never-attempted below-6 rows; LANE-NEWAPPROACH keeps Cloudreach and the stuck rows; LANE-MESHY does F39#21 close-out, then new art (innkeeper body, named silhouettes). Every below-6 row now has an owner.",
     "11 Nov 01:31: all five floor-lane landings of the night are on main: #894 Warrens foundation (cave mouth kept clear), #895 Stormwood bark, #896 Meadows ridge, #897 giant trees in the fight fade plus Hall timber out of the red family, #898 Warrens walk_03 stand. Below-6 count 37 -> 27 with nothing unscored. Next on the GPU: the Cloudreach cause package for the five Cloudreach rows just under 6.",
