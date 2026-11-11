@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "water__aquaryn__fainted.jpg",
+  "preset": "arm-Medium",
+  "tree": "7a2899f56166c5a6ebd5878330c09151aa859019",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-fold-medium/arm-Medium/water__aquaryn__fainted.jpg",
+  "sky_fraction": 0.306,
+  "lower_edges": 0.1712,
+  "script_errors": 0,
+  "note": "F39#6 Medium close-out (High won 7.79). MEDIUM, tb/floor2 7a2899f56, phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 (creature stage on in the tree). base = + FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json; arm = + FLOOR2-AQUAFAINT/overlay_faint_fold.json. Pre-check: fainted differs (mean diff 6.2) - grounded, upper limbs folded over the flank, lower limbs tucked with claws on the sand; head on the sand (not buried), belly just above its shadow (not sunk), no limb twisted or through the body; idle and resting match base (0.75 / 0.78)."
+ },
+ {
+  "frame": "water__aquaryn__idle.jpg",
+  "preset": "arm-Medium",
+  "tree": "7a2899f56166c5a6ebd5878330c09151aa859019",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-fold-medium/arm-Medium/water__aquaryn__idle.jpg",
+  "sky_fraction": 0.292,
+  "lower_edges": 0.163,
+  "script_errors": 0,
+  "note": "F39#6 Medium close-out (High won 7.79). MEDIUM, tb/floor2 7a2899f56, phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 (creature stage on in the tree). base = + FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json; arm = + FLOOR2-AQUAFAINT/overlay_faint_fold.json. Pre-check: fainted differs (mean diff 6.2) - grounded, upper limbs folded over the flank, lower limbs tucked with claws on the sand; head on the sand (not buried), belly just above its shadow (not sunk), no limb twisted or through the body; idle and resting match base (0.75 / 0.78)."
+ },
+ {
+  "frame": "water__aquaryn__resting.jpg",
+  "preset": "arm-Medium",
+  "tree": "7a2899f56166c5a6ebd5878330c09151aa859019",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-fold-medium/arm-Medium/water__aquaryn__resting.jpg",
+  "sky_fraction": 0.307,
+  "lower_edges": 0.1458,
+  "script_errors": 0,
+  "note": "F39#6 Medium close-out (High won 7.79). MEDIUM, tb/floor2 7a2899f56, phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 (creature stage on in the tree). base = + FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json; arm = + FLOOR2-AQUAFAINT/overlay_faint_fold.json. Pre-check: fainted differs (mean diff 6.2) - grounded, upper limbs folded over the flank, lower limbs tucked with claws on the sand; head on the sand (not buried), belly just above its shadow (not sunk), no limb twisted or through the body; idle and resting match base (0.75 / 0.78)."
+ },
+ {
+  "frame": "water__aquaryn__fainted.jpg",
+  "preset": "base-Medium",
+  "tree": "7a2899f56166c5a6ebd5878330c09151aa859019",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-fold-medium/base-Medium/water__aquaryn__fainted.jpg",
+  "sky_fraction": 0.3,
+  "lower_edges": 0.1622,
+  "script_errors": 0,
+  "note": "F39#6 Medium close-out (High won 7.79). MEDIUM, tb/floor2 7a2899f56, phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 (creature stage on in the tree). base = + FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json; arm = + FLOOR2-AQUAFAINT/overlay_faint_fold.json. Pre-check: fainted differs (mean diff 6.2) - grounded, upper limbs folded over the flank, lower limbs tucked with claws on the sand; head on the sand (not buried), belly just above its shadow (not sunk), no limb twisted or through the body; idle and resting match base (0.75 / 0.78)."
+ },
+ {
+  "frame": "water__aquaryn__idle.jpg",
+  "preset": "base-Medium",
+  "tree": "7a2899f56166c5a6ebd5878330c09151aa859019",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-fold-medium/base-Medium/water__aquaryn__idle.jpg",
+  "sky_fraction": 0.291,
+  "lower_edges": 0.1634,
+  "script_errors": 0,
+  "note": "F39#6 Medium close-out (High won 7.79). MEDIUM, tb/floor2 7a2899f56, phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 (creature stage on in the tree). base = + FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json; arm = + FLOOR2-AQUAFAINT/overlay_faint_fold.json. Pre-check: fainted differs (mean diff 6.2) - grounded, upper limbs folded over the flank, lower limbs tucked with claws on the sand; head on the sand (not buried), belly just above its shadow (not sunk), no limb twisted or through the body; idle and resting match base (0.75 / 0.78)."
+ },
+ {
+  "frame": "water__aquaryn__resting.jpg",
+  "preset": "base-Medium",
+  "tree": "7a2899f56166c5a6ebd5878330c09151aa859019",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-faint-fold-medium/base-Medium/water__aquaryn__resting.jpg",
+  "sky_fraction": 0.308,
+  "lower_edges": 0.1459,
+  "script_errors": 0,
+  "note": "F39#6 Medium close-out (High won 7.79). MEDIUM, tb/floor2 7a2899f56, phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 (creature stage on in the tree). base = + FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json; arm = + FLOOR2-AQUAFAINT/overlay_faint_fold.json. Pre-check: fainted differs (mean diff 6.2) - grounded, upper limbs folded over the flank, lower limbs tucked with claws on the sand; head on the sand (not buried), belly just above its shadow (not sunk), no limb twisted or through the body; idle and resting match base (0.75 / 0.78)."
+ }
+]
