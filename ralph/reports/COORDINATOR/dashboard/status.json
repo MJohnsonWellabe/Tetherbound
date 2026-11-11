@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 19:25 UTC",
+  "updated": "11 Nov 2026 19:22 UTC",
   "headline": [
+    "11 Nov 19:22: F36#72 Stormbrush poses CLOSES at 7.5 (High 7.68, Medium 7.75) on a plain re-score of the 1 Nov remake. New LANE-REMAKES takes the regressed remakes' materials (Voltarach, Abyssal Guardian x2, Ribbonray); LANE-FLOOR2 the shared faint grounding (Water Mirejaw, Water Abyssal Guardian); LANE-NEWAPPROACH the Water Mosshell ride.",
     "11 Nov 19:25: capture fault found (LANE-NEWAPPROACH, confirmed by the GPU lane from manifests): phase2_capture_dialogue.gd shoots before the conversation camera finishes its 0.45 s blend at GPU frame rates. 9 of 11 Tidewake dialogue frames today were 0.56-0.93 blended, and the 9 Nov captures too; base and arm were often shot at different blend points. Tool fix in progress; every dialogue row gets a re-capture on it before any dialogue verdict counts.",
     "11 Nov 19:12: tier-2 re-score batch 2 (13 pose rows on current main): Stormbrush 7.68 (meets the bar at High; Medium next), Reedwing 7.26, Cannonback 7.21, Water Cragclaw 6.92. Five remakes regressed below 6: Voltarach 5.11 (chrome statue), Abyssal Guardian 5.54, Water Mirejaw 5.52 (belly-up faint), Water Mosshell 5.81 (floating rider), Water Abyssal Guardian 5.85. Their old scores were for meshes that no longer ship. Floor rule: these go first (shared faint grounding fix, travel-pose fixes, remakes).",
     "11 Nov 19:00: tier-2 re-score batch 1 (no code, current main): Skyrill 6.33 -> 7.47, Cragclaw 6.94, Glimmermoth 6.90, Fulgocobra 6.78, F39#18 dialogue 7.06, F39#26 6.49; fell: Ribbonray 5.68 (its remake reads as a magenta effect; now below 6), Veridian 6.33, F39#29 6.41, F39#27 6.16. Next: a shared faint fix folding wings, sails, hoods and antlers down with the body; re-score the other ~14 pose rows.",
@@ -2487,8 +2488,8 @@
       "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Ribbonray poses; reads as a magenta effect, detached tail tip; remake needed"
     },
     "F36#72": {
-      "gpu": 7.68,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Stormbrush poses; meets the bar at High, Medium next"
+      "gpu": 7.75,
+      "src": "CLOSED: High 7.68 + Medium 7.75 (G-f36-72-stormbrush-medium)"
     },
     "F36#91": {
       "gpu": 6.92,

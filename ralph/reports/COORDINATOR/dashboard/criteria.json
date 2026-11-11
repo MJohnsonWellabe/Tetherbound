@@ -2501,9 +2501,9 @@
    "lane": "tb/creature-art",
    "pct": 29,
    "counts": {
-    "met": 30,
+    "met": 31,
     "partial": 0,
-    "in_progress": 72,
+    "in_progress": 71,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -3315,8 +3315,8 @@
     },
     {
      "text": "F36 (1) stormbrush: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
-     "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): stormbrush mapped 6.82 (tier 6-7). CPU whole-roster round r5: mapped 6.59 (ralph/reports/CREATURES/close-1024/roster/r5/; later b-rounds in roster/verdict.md).",
+     "status": "met",
+     "evidence": "CLOSED 11 Nov 2026: GPU High 7.68 (G-rescore-tier2-batch-2, tb/item-scout-1108 0756a82f3) and Medium 7.75 (G-f36-72-stormbrush-medium, f36c8acdc), both confirming batches, on main with the 1 Nov remake (capture_f36_poses.gd --whole-body --context).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
