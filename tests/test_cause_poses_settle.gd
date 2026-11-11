@@ -65,3 +65,13 @@ func test_enabled_scopes_union_their_species_and_master_or_none_change_nothing()
 	assert_true(bool(rest.get("rest_only", false)), "the faint and hit clips are kept")
 	assert_eq(rest.get("species", []), ["aquaryn"])
 	assert_true(str(rest.get("_why_on", "")).contains("6.75 -> 7.47"), "records its judged score")
+	# faint_fold ships ON for Aquaryn (G-floor2-aquaryn-faint-fold, GPU High
+	# 7.79, 3/3): its own faint with the limbs folded in and the body planted.
+	var fold: Dictionary = (shipped as Dictionary).get("faint_fold", {})
+	assert_true(bool(fold.get("enabled", false)), "faint_fold ships ON")
+	assert_eq(fold.get("species", []), ["aquaryn"])
+	assert_true(str(fold.get("_why_on", "")).contains("7.79"), "records its judged score")
+	assert_almost_eq(float(fold.get("upper_deg", 0.0)), 50.0, 0.0001, "the judged limb swing")
+	assert_almost_eq(float(fold.get("lower_deg", 0.0)), 60.0, 0.0001, "the judged lower-limb fold")
+	assert_almost_eq(float(fold.get("sink_frac", 0.0)), 0.1, 0.0001, "the judged sink")
+	assert_false(fold.has("drop_deg"), "the limb drop is a later arm, not shipped")

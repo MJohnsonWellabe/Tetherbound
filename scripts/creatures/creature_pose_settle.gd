@@ -157,6 +157,21 @@ static func apply(body: Node3D, model: Node3D, player: AnimationPlayer, clips: D
 			var edited: Animation = settle_faint(rig, source, settings) if role == "faint" else settle_hit(rig, source, settings)
 			if edited != null:
 				baked[role] = edited
+		# F39#6 `faint_fold` (OFF until judged): the listed species keep their
+		# own faint (head, trunk and roll) but the limbs go slack and the body
+		# is planted on the ground. Replaces any settled faint baked above.
+		var fold_cfg: Variant = settings.get("faint_fold", {})
+		if fold_cfg is Dictionary and bool((fold_cfg as Dictionary).get("enabled", false)) \
+				and _listed((fold_cfg as Dictionary).get("species", []), species_id) and sources["faint"] != null:
+			var folded := (sources["faint"] as Animation).duplicate(true) as Animation
+			rig.fold_limbs(folded, fold_cfg as Dictionary)
+			var plant := {"enabled": true, "samples": settings.get("samples", 11), "faint": {
+				"grounded": {"enabled": true, "sink_frac": float((fold_cfg as Dictionary).get("sink_frac", 0.02)), "recentre": false,
+					"limb_sink_frac": float((fold_cfg as Dictionary).get("limb_sink_frac", 0.5))},
+				"face_camera": {"enabled": true, "exclude_species": [species_id.trim_prefix("water_")]}}}
+			var planted: Animation = settle_faint(rig, folded, plant)
+			baked["faint"] = planted if planted != null else folded
+			baked["fold"] = true
 		# F39#6 `settled_rest` (OFF until judged): a rest of its own for the
 		# listed species, baked from the same faint clip: the body lies down
 		# belly to the ground like the settled faint, with the head kept up.
@@ -201,7 +216,7 @@ static func apply(body: Node3D, model: Node3D, player: AnimationPlayer, clips: D
 				player.add_animation_library(RESTS, rest_library)
 				clips["rest_faint"] = "%s/faint" % RESTS
 				changed = true
-		if rest_only:
+		if rest_only and not (role == "faint" and baked.has("fold")):
 			continue
 		_replace(player, name, edited)
 		replaced.append(name)
@@ -932,6 +947,70 @@ class Rig:
 				var value: Quaternion = animation.track_get_key_value(track, key)
 				animation.track_set_key_value(track, key, (Quaternion.IDENTITY.slerp(local_swing, r) * value).normalized())
 		bone_tracks.erase(animation.get_instance_id())
+
+	## `faint_fold`: slack limbs. Each upper limb bone swings toward the trunk
+	## (front legs back, hind legs forward) and its first child folds back on
+	## it, ramped in over the clip's end, so a body lying on its side no longer
+	## holds four straight legs out in the air. Head, trunk and roll are kept.
+	func fold_limbs(animation: Animation, cfg: Dictionary) -> void:
+		var t_end := animation.length
+		var to_body := _pivot(pivot_rotation(animation, t_end), pivot_position(animation, t_end)) * to_model
+		var globals := global_poses(animation, t_end)
+		var trunk_bone := skeleton.find_bone("pelvis")
+		var chest_bone := skeleton.find_bone("thorax")
+		if trunk_bone < 0:
+			trunk_bone = chest_bone
+		if trunk_bone < 0:
+			return
+		var middle := (to_body * globals[trunk_bone]).origin
+		if chest_bone >= 0 and chest_bone != trunk_bone:
+			middle = (middle + (to_body * globals[chest_bone]).origin) * 0.5
+		var start := float(cfg.get("ramp_start", 0.4))
+		var tracks := _bone_tracks(animation)
+		for bone in skeleton.get_bone_count():
+			var name := str(skeleton.get_bone_name(bone)).to_lower()
+			if name.contains("wing") or not (name.contains("upper") or (name.begins_with("leg_") and name.ends_with("_1"))):
+				continue
+			var child := -1
+			for other in skeleton.get_bone_count():
+				if skeleton.get_bone_parent(other) == bone:
+					child = other
+					break
+			if child < 0:
+				continue
+			var root_at := (to_body * globals[bone]).origin
+			var along := ((to_body * globals[child]).origin - root_at)
+			if along.length() < 0.0001:
+				continue
+			along = along.normalized()
+			# Front limbs fold toward the tail, hind limbs toward the head.
+			var toward := -forward if (root_at - middle).dot(forward) > 0.0 else forward
+			var axis := along.cross(toward)
+			if axis.length() < 0.05:
+				continue
+			axis = axis.normalized()
+			var axis_skeleton := (to_body.basis.inverse() * axis).normalized()
+			_swing_bone(animation, tracks, globals, bone, Quaternion(axis_skeleton, deg_to_rad(float(cfg.get("upper_deg", 50.0)))), start)
+			_swing_bone(animation, tracks, globals, child, Quaternion(axis_skeleton, -deg_to_rad(float(cfg.get("lower_deg", 60.0)))), start)
+		bone_tracks.erase(animation.get_instance_id())
+
+	func _swing_bone(animation: Animation, tracks: Dictionary, globals: Array, bone: int, swing: Quaternion, start: float) -> void:
+		var track: int = (tracks.get(bone, {}) as Dictionary).get(Animation.TYPE_ROTATION_3D, -1)
+		if track < 0 or animation.track_get_key_count(track) == 0:
+			return
+		var parent := skeleton.get_bone_parent(bone)
+		var parent_rotation: Quaternion = (globals[parent] as Transform3D).basis.get_rotation_quaternion() if parent >= 0 else Quaternion.IDENTITY
+		var local_swing := (parent_rotation.inverse() * swing * parent_rotation).normalized()
+		for phase: float in [start, (start + 1.0) * 0.5, 1.0]:
+			var t := phase * animation.length
+			if animation.track_find_key(track, t, Animation.FIND_MODE_APPROX) < 0:
+				animation.rotation_track_insert_key(track, t, animation.rotation_track_interpolate(track, t))
+		for key in animation.track_get_key_count(track):
+			var r := _smooth((animation.track_get_key_time(track, key) / animation.length - start) / maxf(1.0 - start, 0.05))
+			if r <= 0.0:
+				continue
+			var value: Quaternion = animation.track_get_key_value(track, key)
+			animation.track_set_key_value(track, key, (Quaternion.IDENTITY.slerp(local_swing, r) * value).normalized())
 
 	## Lift the neck so the head at the clip's end sits at least
 	## `min_elevation_deg` above level, ramped in over the clip's end.
