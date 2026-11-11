@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.0,
+   5.5,
+   5.0
+  ],
+  "craft:after": [
+   6.8,
+   6.9,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.6,
+   6.9,
+   6.9
+  ],
+  "f36_0_npc:C1B": [
+   6.6,
+   6.9,
+   6.9
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   5.0,
+   4.6
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.1,
+   4.5,
+   4.0
+  ]
+ },
+ "candidates": {
+  "G F38#32 camp-hero tb base-vs-arm [G-ch_tb_base.png]": [
+   5.8,
+   6.3,
+   6.0
+  ],
+  "G F38#32 camp-hero tb base-vs-arm [G-ch_tb_arm.png]": [
+   5.2,
+   6.1,
+   5.6
+  ],
+  "G F38#32 camp-hero fire base-vs-arm [G-ch_fire_arm.png]": [
+   6.2,
+   6.6,
+   6.2
+  ],
+  "G F38#32 camp-hero fire base-vs-arm [G-ch_fire_base.png]": [
+   4.5,
+   5.1,
+   4.8
+  ],
+  "G F38#32 camp-hero row base-vs-arm [G-ch_row_arm.png]": [
+   5.7,
+   6.3,
+   5.8
+  ],
+  "G F38#32 camp-hero row base-vs-arm [G-ch_row_base.png]": [
+   5.2,
+   5.7,
+   5.5
+  ]
+ }
+}
