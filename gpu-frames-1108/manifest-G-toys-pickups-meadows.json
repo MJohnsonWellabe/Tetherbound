@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "meadows__inventory__pickup__good_candy.jpg",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=meadows (4 pickup subsets)",
+  "path": "G-toys-pickups-meadows/arm-High/meadows__inventory__pickup__good_candy.jpg",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.4246,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#6."
+ },
+ {
+  "frame": "meadows__inventory__pickup__great_candy.jpg",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=meadows (4 pickup subsets)",
+  "path": "G-toys-pickups-meadows/arm-High/meadows__inventory__pickup__great_candy.jpg",
+  "sky_fraction": 0.071,
+  "lower_edges": 0.2967,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#6."
+ },
+ {
+  "frame": "meadows__inventory__pickup__potion_small.jpg",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=meadows (4 pickup subsets)",
+  "path": "G-toys-pickups-meadows/arm-High/meadows__inventory__pickup__potion_small.jpg",
+  "sky_fraction": 0.058,
+  "lower_edges": 0.423,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#6."
+ },
+ {
+  "frame": "meadows__inventory__pickup__rare_candy.jpg",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=meadows (4 pickup subsets)",
+  "path": "G-toys-pickups-meadows/arm-High/meadows__inventory__pickup__rare_candy.jpg",
+  "sky_fraction": 0.01,
+  "lower_edges": 0.1795,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#6."
+ },
+ {
+  "frame": "meadows__inventory__pickup__good_candy.jpg",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=meadows (4 pickup subsets)",
+  "path": "G-toys-pickups-meadows/base-High/meadows__inventory__pickup__good_candy.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.4282,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#6."
+ },
+ {
+  "frame": "meadows__inventory__pickup__great_candy.jpg",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=meadows (4 pickup subsets)",
+  "path": "G-toys-pickups-meadows/base-High/meadows__inventory__pickup__great_candy.jpg",
+  "sky_fraction": 0.071,
+  "lower_edges": 0.2978,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#6."
+ },
+ {
+  "frame": "meadows__inventory__pickup__potion_small.jpg",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=meadows (4 pickup subsets)",
+  "path": "G-toys-pickups-meadows/base-High/meadows__inventory__pickup__potion_small.jpg",
+  "sky_fraction": 0.056,
+  "lower_edges": 0.4219,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#6."
+ },
+ {
+  "frame": "meadows__inventory__pickup__rare_candy.jpg",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_world_inventory.gd --biome=meadows (4 pickup subsets)",
+  "path": "G-toys-pickups-meadows/base-High/meadows__inventory__pickup__rare_candy.jpg",
+  "sky_fraction": 0.012,
+  "lower_edges": 0.1937,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F38#6."
+ }
+]
