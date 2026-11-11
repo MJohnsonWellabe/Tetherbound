@@ -2393,7 +2393,9 @@
    "overlay": null,
    "frames": "F40#5 captain fight frames as in the 8 Nov judging, one side on current main. The fight dust was retuned in #882 on 10 Nov, after that score (judges' main complaint: dust covering the exchange in frames 1 and 3). Use a seed on which the fight is won; if the fixture loses, try one other seed and say which.",
    "capture": "High, one side, no arm. After the bridge pre-check.",
-   "note": "LANE-NEWAPPROACH sweep: F40#5 (5.94) needs a re-capture, not an arm."
+   "note": "LANE-NEWAPPROACH sweep: F40#5 (5.94) needs a re-capture, not an arm.",
+   "done": true,
+   "frames_pushed": "G-recheck-f40-5 38970534b (tb/gpu-frames-1108), seed 2042, 38 frames; judged frames map to live-2491/3571/3931 (rounds 1-2, won). Fixture loses round 3 vs galecrest on seeds 2042 and 2043."
   },
   {
    "id": "newapproach-fly-grip",
