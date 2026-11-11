@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 20:16 UTC",
+  "updated": "11 Nov 2026 20:25 UTC",
   "headline": [
+    "11 Nov 20:25: lane restructure (owner): LANE-BELOW6, LANE-THINGS, LANE-PLACES + GPU lane + LANE-SCOUT. Current build lanes are writing handoffs. PR #910 (dialogue capture blend fix + Trail Camp F38#32 6.91) in CI.",
     "11 Nov 20:16: lanes LANE-FLOOR2, LANE-NEWAPPROACH and LANE-REMAKES stopped at 19:35 on the weekly usage limit; owner reset it and all lanes are resumed. New LANE-STORMWOOD takes the Stormwood storm-light pass (8 F41 rows incl. F41#8). Lanes: FLOOR2 (camp landing, faint grounding, dust/pickups), NEWAPPROACH (dialogue blend fix, Water Mosshell ride, conversation shot, Cloudreach rain), REMAKES (Voltarach, Abyssal Guardian x2, Ribbonray materials), MESHY (new art below 6), STORMWOOD, SCOUT (judging), GPU lane.",
     "11 Nov 19:22: F36#72 Stormbrush poses CLOSES at 7.5 (High 7.68, Medium 7.75) on a plain re-score of the 1 Nov remake. New LANE-REMAKES takes the regressed remakes' materials (Voltarach, Abyssal Guardian x2, Ribbonray); LANE-FLOOR2 the shared faint grounding (Water Mirejaw, Water Abyssal Guardian); LANE-NEWAPPROACH the Water Mosshell ride.",
     "11 Nov 19:25: capture fault found (LANE-NEWAPPROACH, confirmed by the GPU lane from manifests): phase2_capture_dialogue.gd shoots before the conversation camera finishes its 0.45 s blend at GPU frame rates. 9 of 11 Tidewake dialogue frames today were 0.56-0.93 blended, and the 9 Nov captures too; base and arm were often shot at different blend points. Tool fix in progress; every dialogue row gets a re-capture on it before any dialogue verdict counts.",
@@ -753,6 +754,7 @@
     }
   ],
   "decisions": [
+    "11 Nov 20:25, owner: consolidate build lanes to one Fable lane for every row below 6 (LANE-BELOW6, uses Meshy for new art) and two Fable lanes for the 6-7 band (LANE-THINGS: creatures, characters, poses, UI, dialogue; LANE-PLACES: world, terrain, light, weather), each attacking shared causes that lift several rows. GPU lane stays; LANE-SCOUT stays as judge. FLOOR2, NEWAPPROACH, REMAKES, STORMWOOD and MESHY write handoffs and are archived.",
     "11 Nov 18:40, owner: NO to F40#6 refuse_drop (a mount refusing a fatal drop). The flag stays off and is not to be proposed again; F40#6 stays at 6.33 and moves by other means.",
     "7 Nov (owner): F38#5 approved: cluster 1914 may use a 4 m radius; test cap 4.0 for 1914 only, farthest member within 10 m of the road.",
     "8:30 PM CT Sun 25 Oct 2026 (coordinator): the Fallen Giant hero may be judged now but lands only after it gets a collider; players must not walk through a 45 m log.",
