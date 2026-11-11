@@ -2467,7 +2467,7 @@
    "note": "Round 1 won (+1.4 to +1.8, 3/3) but was held for depth flattery; this is the depth-plane revision.",
    "done": true,
    "frames_pushed": "G-floor2-creature-ruler-depth-r2 751b0657d: 16 of 18 pairs; held by eye: aquaryn fainted (cut left edge), galewisp idle (claws 10% below boots). Meadows contacts 10-15% below trainer's feet (slope vs nearness unresolved); landing waits for a ground-contact depth readout from LANE-FLOOR2. Sparkit and stormraven read taller than the trainer.",
-   "verdict": "G-floor2-creature-ruler-depth-r2 (tb/item-scout-1108 0636c1ae1): SHIP on scores, F38#5 5.14->8.00, F38#31 5.04->7.17, F38#26 4.88->6.39, no-loss sets gain, 3/3 everywhere. HELD by coordinator: Meadows subjects still read nearer the lens (scout's own read; judges a/b on F38#31). Landing waits on the ground-contact depth rule (d99b594a3) re-capture."
+   "verdict": "G-floor2-creature-ruler-depth-r2 (tb/item-scout-1108 0636c1ae1): SHIP on scores, F38#5 5.14->8.00, F38#31 5.04->7.17, F38#26 4.88->6.39, no-loss sets gain, 3/3 everywhere. HELD by coordinator: Meadows subjects still read nearer the lens (scout's own read; judges a/b on F38#31). Landing waits on the ground-contact depth rule (d99b594a3) re-capture. Readout (FLOOR2-STAGE/ARM.md at aac9c84a3): every Meadows contact was 1.0-3.9 m nearer the lens than the trainer's feet; round 2 will NOT land."
   },
   {
    "id": "floor2-aquaryn-bow-wake-r2",
@@ -2515,6 +2515,32 @@
    "note": "Cause found on CPU: ripple normal relief at low sun (not cast shadow).",
    "done": true,
    "frames_pushed": "G-floor2-sand-ripple-relief 3fcb19b91 on main 9ee887352: base shows the bands (strong at dawn, fainter at golden); arm removes them at dawn, much fainter at golden; controls unchanged. With LANE-SCOUT."
+  },
+  {
+   "id": "floor2-creature-ruler-depth-r3",
+   "kind": "arm",
+   "rows": [
+    "F38#5",
+    "F38#26",
+    "F38#31"
+   ],
+   "no_loss_rows": [
+    "F39#6",
+    "F39#24",
+    "galewisp",
+    "Stormwood sparkit/stormraven/fulgocobra"
+   ],
+   "branch": "tb/floor2",
+   "head": "aac9c84a3",
+   "tree": "tb/floor2 (tools/phase2_capture_creatures.gd, data/config/capture_stands.json; capture tooling only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STAGE/overlay_ruler_depth.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-STAGE/CAPTURE.json (round 3)",
+   "job": "same four phase2_capture_creatures.gd runs as round 2 (meadows, water, cloudreach, stormwood), seed 2042, High, base and arm",
+   "frames": "as CAPTURE.json; include aquaryn fainted and galewisp idle this time if they pass",
+   "capture": "High. Pre-check per arm frame from the manifest: in_frame true, overlaps_trainer false, contact_depth_vs_trainer_feet_m >= 0; and by eye, feet on the trainer's ground line. Report the readout columns per judged frame. Then LANE-SCOUT on the same briefs.",
+   "note": "Round 3 = ground-contact rule (no contact nearer the lens than the trainer's feet). Expected gains lower than round 2 but over +0.5 per row."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
