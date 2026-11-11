@@ -3279,7 +3279,8 @@
    "frames": "hit and faint 000-100; crop 560,200 1000x640",
    "capture": "High, base (overlay off) and arm (overlay on)",
    "priority": "below 6 (5.92)",
-   "note": "Flat pinkish-tan flesh, white mud-fissure cracks (3/3). Arm: cool brown-grey velvet with thin lit blue-white storm lines."
+   "note": "Flat pinkish-tan flesh, white mud-fissure cracks (3/3). Arm: cool brown-grey velvet with thin lit blue-white storm lines.",
+   "done": "G-below6-thundertunnel-coat 050a6fbab (judging)"
   },
   {
    "id": "below6-heartwood",
@@ -3298,7 +3299,8 @@
    "frames": "the_stormheart_tree day approach and close; dynamo_core day close",
    "capture": "High, base (overlay off) and arm (overlay on)",
    "priority": "below 6 (5.78)",
-   "note": "No core or crown in view, flat white lightning strokes (3/3 every round). Arm: a Blender heartwood (crystal core in braided bark roots) on the hollow axis. Pre-check: core blooms without washing out the roots; no white zig-zag strokes."
+   "note": "No core or crown in view, flat white lightning strokes (3/3 every round). Arm: a Blender heartwood (crystal core in braided bark roots) on the hollow axis. Pre-check: core blooms without washing out the roots; no white zig-zag strokes.",
+   "done": "G-below6-heartwood b1b75f1af (judging)"
   },
   {
    "id": "dialogue-recapture-all-biomes",
