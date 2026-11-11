@@ -2880,7 +2880,9 @@
    "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 at High AND Medium; base and arm",
    "frames": "aquaryn idle, resting, fainted",
    "capture": "High and Medium. Pre-check: no limb or claw above the torso; no limb visibly through the body (report claw tips at the flank); head not buried; idle and resting match base. Then LANE-SCOUT on F39#6 at both presets; closes at 7.5+ on both.",
-   "note": "Near-bar close-out (Medium 7.46). The faint-fold landing waits to batch with this."
+   "note": "Near-bar close-out (Medium 7.46). The faint-fold landing waits to batch with this.",
+   "done": true,
+   "result": "Pre-check FAILED (attempt 1): drop_deg 40 drives the forefeet through the torso (claw tips out of the flank). Diag G-floor2-aquaryn-faint-flat-diag 874cda1c8. Faint fold landed alone as #908."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
