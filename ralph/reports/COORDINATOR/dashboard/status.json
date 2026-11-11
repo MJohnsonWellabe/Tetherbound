@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 05:10 UTC",
+  "updated": "11 Nov 2026 06:00 UTC",
   "headline": [
+    "11 Nov 06:00: #899 landed the Fly grip pose (F38#8 6.26 -> 7.14, 3/3): the trainer now hangs from Galecrest's talons with bent elbows and trailing knees. Below 6: 18. Aquaryn bow wake (F39#8) failed its GPU pre-check (hard world-grid tiles inside the V); LANE-FLOOR2 is fixing the interior.",
     "11 Nov 05:10: F40#5 Cloudreach captain fight re-scored at 7.06 on main (was 5.94): the #882 dust retune cleared the exchange. Off the below-6 list and now a 7.5 close-out candidate (frame 1 framing). F40#8 bridge beacon style ruled out by a GPU pre-check (no objective beam in the frames). F38#8 Fly grip pose arm on the GPU now.",
     "11 Nov 04:22: F41#3 named wild fight re-scored at 6.23 on main (native Voltarach plus the giant-tree fight fade from #897): off the below-6 list. Spacing defect still present (Sparkit tucked among the forelegs). Below 6: 20.",
     "11 Nov 04:08: F41#13 charge lines parked after two losses (-0.62, -0.49): line-only glow can't separate a dark body from dark Stormwood ground; judges point to a lighter, rim-lit body and the Stormwood creature-stand ground. LANE-FLOOR2 revising the creature stage to the trainer's depth plane (raven scale checked there too).",
@@ -2124,8 +2125,8 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#8": {
-      "gpu": 5.46,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.14,
+      "src": "G-newapproach-fly-grip (LANE-SCOUT, tb/item-scout-1108 88b1dc8ba): elbow bend plus trailing legs, base 6.26 -> 7.14 (+0.88, 3/3), landed #899. Close-out note: arms still straight up to the talons, no lean or swing."
     },
     "F38#9": {
       "gpu": 7.32,
