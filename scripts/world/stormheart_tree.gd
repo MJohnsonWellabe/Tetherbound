@@ -235,7 +235,7 @@ func _heartwood(cfg: Dictionary) -> void:
 	_heartwood_core.albedo_color = Color(str(cfg.get("core_albedo", "#7f9cff")))
 	_heartwood_core.roughness = 0.25
 	_heartwood_core.rim_enabled = true
-	_heartwood_core.rim = 0.6
+	_heartwood_core.rim = 0.25
 	_heartwood_core.emission_enabled = true
 	_heartwood_core.emission = Color(str(cfg.get("core_glow", "#a8c4ff")))
 	_heartwood_core_energy = float(cfg.get("core_glow_energy", 2.4))

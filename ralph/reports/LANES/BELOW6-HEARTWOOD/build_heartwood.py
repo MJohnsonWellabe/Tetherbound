@@ -53,7 +53,11 @@ def tube(bm, uvl, pts, radii, sides=10, jag=0.1, cap=False):
             length += (p - prev).length
         prev = p
         tdir = (pts[min(k + 1, len(pts) - 1)] - pts[max(k - 1, 0)]).normalized()
-        ref = Vector((0, 0, 1)) if abs(tdir.z) < 0.9 else Vector((1, 0, 0))
+        # one steady reference (radial) along the whole tube: no ring flip, no kink
+        ref = Vector((p.x, p.y, 0.0))
+        ref = ref.normalized() if ref.length > 0.05 else Vector((1, 0, 0))
+        if abs(tdir.dot(ref)) > 0.97:
+            ref = Vector((0, 0, 1))
         side = tdir.cross(ref).normalized()
         up = side.cross(tdir).normalized()
         ring = [bm.verts.new(p + (side * math.cos(s * math.tau / sides) + up * math.sin(s * math.tau / sides))
@@ -119,7 +123,7 @@ for j in range(6):
         rr = 1.75 * (1.0 - 0.55 * t) * 1.06 + 0.06
         pts.append(pol(a0 + rng.uniform(-0.35, 0.35) + zf * 0.05 * (1 if j % 2 else -1), rr, zf))
         zf += rng.uniform(0.9, 2.2)
-    tube(veins, vuv, pts, [0.07] * len(pts), sides=4, jag=0.25)
+    tube(veins, vuv, pts, [0.05] * len(pts), sides=4, jag=0.25)
 
 # ---- braided heartwood roots: floor flare, climbing cage, inner crown ----
 N = 6
@@ -135,9 +139,9 @@ for i in range(N):
     n = 80
     for k in range(n + 1):
         t = k / n
-        z = -0.9 + (top + 0.9) * t ** 1.7      # dense samples near the floor
+        z = -2.6 + (top + 2.6) * t ** 1.7      # dense samples near the floor; tips buried
         # floor flare: wide at the floor, pulled in to the cage by 7 m
-        f = math.exp(-(z + 0.9) / 2.6)
+        f = math.exp(-(z + 2.6) / 3.1)
         r = CAGE_R + (flare - CAGE_R) * f
         # cage: slight waist and wander
         r += 0.35 * math.sin(z * 0.21 + i)
@@ -152,6 +156,8 @@ for i in range(N):
         rad = 1.0 * (1.0 - 0.45 * min(max(z, 0) / peel, 1.0))
         if z > peel:
             rad *= 1.0 - 0.72 * (z - peel) / (top - peel)
+        if z < 0.0:
+            rad *= max(0.35, 1.0 + z / 4.0)                           # taper into the ground
         radii.append(max(rad, 0.22))
     tube(roots, ruv, pts, radii, cap=True)
     if i % 2 == 0:
@@ -159,10 +165,10 @@ for i in range(N):
         for p, rad in list(zip(pts, radii))[14:66]:
             out = Vector((p.x, p.y, 0)).normalized()
             vp.append(p + out * (rad + 0.05))
-        tube(veins, vuv, vp, [0.085] * len(vp), sides=5, jag=0.3)
+        tube(veins, vuv, vp, [0.05] * len(vp), sides=5, jag=0.3)
     # a side branch off each limb
     if top - peel > 26:
-        k0 = int(n * ((peel + (top - peel) * 0.45 + 0.9) / (top + 0.9)) ** (1 / 1.7))
+        k0 = int(n * ((peel + (top - peel) * 0.45 + 2.6) / (top + 2.6)) ** (1 / 1.7))
         start = pts[k0]
         out = Vector((start.x, start.y, 0)).normalized()
         tang = Vector((-out.y, out.x, 0)) * (1 if i % 2 else -1)
