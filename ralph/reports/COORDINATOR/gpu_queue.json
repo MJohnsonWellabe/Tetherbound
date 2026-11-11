@@ -3299,6 +3299,20 @@
    "capture": "High, base (overlay off) and arm (overlay on)",
    "priority": "below 6 (5.78)",
    "note": "No core or crown in view, flat white lightning strokes (3/3 every round). Arm: a Blender heartwood (crystal core in braided bark roots) on the hollow axis. Pre-check: core blooms without washing out the roots; no white zig-zag strokes."
+  },
+  {
+   "id": "dialogue-recapture-all-biomes",
+   "kind": "baseline",
+   "rows": [
+    "every F38-F41 (2) dialogue and character row, e.g. F39#18, F39#26, F39#27, F39#29, F38#16, F38#36, F40#10, F40#12, F41 dialogue rows"
+   ],
+   "branch": "main",
+   "head": "8df122a83 (PR #910 merged: dialogue capture waits for the conversation camera blend)",
+   "overlay": null,
+   "job": "res://tools/phase2_capture_dialogue.gd --seed=2042, one run per biome: --biome=meadows, --biome=tidewake (water), --biome=cloudreach, --biome=stormwood; every post",
+   "capture": "High, one side. Check manifest.json: conversation_camera_blend 1.0 and conversation_camera_blend_timed_out false on every frame; report any timeout.",
+   "priority": "high: re-bases every dialogue row; LANE-THINGS' T6 conversation-shot arm waits on these frames",
+   "note": "Earlier dialogue frames were shot mid camera blend (0.41-0.93) and are not comparable. Push as G-dialogue-recapture-<biome>."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

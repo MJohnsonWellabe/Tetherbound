@@ -1930,6 +1930,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#910",
+      "what": "Batch 64: dialogue capture waits for the camera blend; Trail Camp (F38#32 6.91); Voltarach (F36#86 6.50) and Ribbonray (F36#61 6.90) coats",
+      "when": "22:10 UTC Wed 11 Nov 2026"
+    },
+    {
       "pr": "#898",
       "what": "Burrow Warrens walk_03 gets a reviewed open-ground capture stand showing the hillside, road and ridge (F38#24 +2.47, F38#30 +1.28, 3/3; capture tooling only)",
       "when": "11 Nov 01:04"
@@ -2103,8 +2108,8 @@
       "src": "G-floor2-creature-ruler-depth-r3 (tb/item-scout-1108 3fe1c4396): 5.80 -> 7.20 (3/3), landed #901"
     },
     "F38#32": {
-      "gpu": 6.37,
-      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: camp tent, bed, bonfire"
+      "gpu": 6.91,
+      "src": "G-floor2-camp-r2 (LANE-SCOUT ebb0ebcc3): Trail Camp declutter, one-faced sign, plain gate wood, bonfire stand fixed; 6.26 -> 6.91; LANDED on main 8df122a83 via #910"
     },
     "F38#33": {
       "gpu": 7.32,
@@ -2492,7 +2497,7 @@
     },
     "F36#61": {
       "gpu": 6.9,
-      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, arm ships (not yet landed): Ribbonray navy coat plus hit clip blend, 5.02 -> 6.90 (+1.88, 3/3)"
+      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, LANDED on main 8df122a83 via #910: Ribbonray navy coat plus hit clip blend, 5.02 -> 6.90 (+1.88, 3/3)"
     },
     "F36#72": {
       "gpu": 7.75,
@@ -2544,7 +2549,7 @@
     },
     "F36#86": {
       "gpu": 6.5,
-      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, arm ships (not yet landed): Voltarach charcoal coat, 5.15 -> 6.50 (+1.35, 3/3); face still unreadable"
+      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, LANDED on main 8df122a83 via #910: Voltarach charcoal coat, 5.15 -> 6.50 (+1.35, 3/3); face still unreadable"
     },
     "F36#52": {
       "gpu": 6.98,
