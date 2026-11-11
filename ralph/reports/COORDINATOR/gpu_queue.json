@@ -2921,7 +2921,9 @@
    "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
    "frames": "16, 17, 18",
    "capture": "High. Pre-check frame 17: card saturation under 0.10 (floor ~0.05), value at or above the floor's, cards keep form (not see-through ghosts), cool tint on undersides only. Then LANE-SCOUT on F40#11.",
-   "note": "Near-bar close-out (F40#11 6.97); card shading attempt 2. Request sent 15:24, missed by the coordinator until 18:15."
+   "note": "Near-bar close-out (F40#11 6.97); card shading attempt 2. Request sent 15:24, missed by the coordinator until 18:15.",
+   "done": true,
+   "result": "Pre-check FAILED (attempt 2): cards flat lavender cut-outs, value below floor, no form, tint over whole card. Card shading PARKED after two fails. Not pushed."
   },
   {
    "id": "floor2-camp-r2",
@@ -2956,7 +2958,27 @@
    "job": "phase2_capture_creatures.gd --seed=2042 --preset=High, one run per biome: --biome=meadows, --biome=water, --biome=cloudreach, --biome=stormwood (full roster, all poses); output under res://.artifacts/phase2/",
    "frames": "every creature pose frame the tool writes, per biome",
    "capture": "High, one side (no arm). After floor2-camp-r2. Pre-check: manifests show creature_ruler_depth ON and contact >= 0. Push per biome as it completes for LANE-SCOUT to re-score the F36 (1) pose rows.",
-   "note": "Pose rows were scored on the old stage (creatures drew ~0.7x their height). TECHNICAL 8.1 says re-baseline them. Tier-2 low-hanging fruit: possible gains with no code."
+   "note": "Pose rows were scored on the old stage (creatures drew ~0.7x their height). TECHNICAL 8.1 says re-baseline them. Tier-2 low-hanging fruit: possible gains with no code.",
+   "done": true,
+   "result": "CANCELLED by coordinator: wrong tool. F36 (1) pose rows use tools/art_pipeline/capture_f36_poses.gd, not phase2_capture_creatures.gd (LANE-SCOUT LOW-HANGING-6TO7). Replaced by rescore-tier2-batch-1."
+  },
+  {
+   "id": "rescore-tier2-batch-1",
+   "kind": "baseline",
+   "rows": [
+    "F39#18",
+    "F39#26",
+    "F39#27",
+    "F39#29",
+    "F36 (1) sample: Skyrill, Fulgocobra, Cragclaw, Glimmermoth, Ribbonray, Veridian poses"
+   ],
+   "branch": "main",
+   "head": "current main (fetch)",
+   "overlay": null,
+   "job": "(a) the Tidewake dialogue frames for F39#18, F39#26, F39#27 and F39#29 as in G-confirm-f39-26 (one-sided, main has the soft rim); (b) tools/art_pipeline/capture_f36_poses.gd --whole-body --context for the six sample species (skyrill, fulgocobra, cragclaw, glimmermoth, ribbonray, veridian), as the 24 Oct roster capture did",
+   "frames": "as the rows' last judged frame sets",
+   "capture": "High, one side, no arm. After floor2-camp-r2. Then LANE-SCOUT re-scores: the dialogue rows on their briefs, and the six pose rows to decide whether to re-score all ~20 pre-1-Nov pose rows.",
+   "note": "LANE-SCOUT LOW-HANGING-6TO7 items #1 and #2 (re-score only, no code)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
