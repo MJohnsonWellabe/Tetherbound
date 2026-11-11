@@ -1,16 +1,29 @@
 extends "res://tests/test_case.gd"
 
-## P2-119 UIPOSES candidate: fly_traversal hang_pose.body ships OFF; when on,
-## the legs trail back with bent knees and the torso leans forward.
+## P2-119: fly_traversal hang_pose (elbow bend plus hang_pose.body) ships ON
+## since 11 Nov 2026 (GPU High 6.26 -> 7.14, G-newapproach-fly-grip). When on,
+## the legs trail back with bent knees and the torso leans forward; an explicit
+## off block poses nothing.
 
 const TRAINER := preload("res://scripts/player/trainer_model.gd")
 const FLY := preload("res://scripts/player/fly_controller.gd")
 
 
-func test_hang_body_ships_off() -> void:
-	var body: Dictionary = FLY.hang_pose().get("body", {})
-	assert_false(body.is_empty(), "hang_pose.body is authored")
-	assert_false(bool(body.get("enabled", true)), "hang_pose.body defaults OFF")
+func test_hang_pose_ships_on_with_its_verdict() -> void:
+	var pose: Dictionary = FLY.hang_pose()
+	var body: Dictionary = pose.get("body", {})
+	assert_true(bool(body.get("enabled", false)), "hang_pose.body ships ON")
+	assert_true(float(pose.get("upper_lateral", 0.0)) > 1.5, "upper arms aim outward so the elbows bend")
+	assert_true(float(pose.get("forearm_lateral", 1.0)) < 0.0, "forearms aim back in toward the grip")
+	assert_true(str(pose.get("_why_on", "")).contains("6.26 -> 7.14"), "hang_pose records its GPU verdict")
+
+
+func test_body_block_off_is_read_as_off() -> void:
+	# trainer_model.gd::_apply_fly_hang gates the body rotations on this exact
+	# read; an absent or false flag keeps the legs and torso at rest.
+	for off: Dictionary in [{}, {"body": {}}, {"body": {"enabled": false, "hip_extension_deg": 22.0}}]:
+		var body: Variant = off.get("body", {})
+		assert_false(body is Dictionary and bool((body as Dictionary).get("enabled", false)), "an off or absent body block stays off")
 
 
 func test_trailing_legs_and_forward_lean() -> void:
