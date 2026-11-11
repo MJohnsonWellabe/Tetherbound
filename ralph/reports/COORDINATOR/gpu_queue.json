@@ -2801,6 +2801,24 @@
    "done": true,
    "frames_pushed": "G-newapproach-cloud-sea-only fe749ec0a on main 63d6abd25: pre-checks pass (floor facets gone, billows, no clip, no cliff line). With LANE-SCOUT.",
    "verdict": "G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88): SHIP. F40#11 6.17->6.97 (+0.80, 3/3); F40#6 5.61->6.33 (+0.72, 3/3)."
+  },
+  {
+   "id": "floor2-aquaryn-settled-rest",
+   "kind": "close-out",
+   "rows": [
+    "F39#6"
+   ],
+   "branch": "tb/floor2",
+   "head": "b8ab0b384",
+   "tree": "tb/floor2 b8ab0b384 (creature_pose_settle.gd, creature_body.gd, creature_pose_settle.json; creature stage ON as on main)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-AQUAPOSE/CAPTURE.json",
+   "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 --preset=High; base and arm",
+   "frames": "aquaryn idle, resting, fainted",
+   "capture": "High. Pre-check: resting body on its shadow, whole in frame, visibly different from base; idle and fainted match base. Then LANE-SCOUT on F39#6's brief as in G-stage-r3-f41-13-f39-6. If High maps 7.5+, queue Medium.",
+   "note": "Near-bar close-out (7.24 -> needs +0.26), allowed under the 25 Oct exception."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
