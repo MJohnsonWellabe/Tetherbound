@@ -2922,6 +2922,24 @@
    "frames": "16, 17, 18",
    "capture": "High. Pre-check frame 17: card saturation under 0.10 (floor ~0.05), value at or above the floor's, cards keep form (not see-through ghosts), cool tint on undersides only. Then LANE-SCOUT on F40#11.",
    "note": "Near-bar close-out (F40#11 6.97); card shading attempt 2. Request sent 15:24, missed by the coordinator until 18:15."
+  },
+  {
+   "id": "floor2-camp-r2",
+   "kind": "arm",
+   "rows": [
+    "F38#32"
+   ],
+   "branch": "tb/floor2",
+   "head": "7ab457021",
+   "tree": "tb/floor2 7ab457021 (props.gd, trail_camp_roadside_threshold.gd, props.json, capture_stands.json)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-CAMP/overlay_camp_hero.json (attempt 2: declutter, single-sided sign, plain wood gate, bonfire stand 90)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-CAMP/CAPTURE.json",
+   "job": "phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --preset=High, subsets camp_tent, camp_bed, bonfire_fire; base and arm. PLUS one extra arm frame: bonfire_fire with the overlay but heading_overrides for it removed (planned stand), to show the fixed sign and gate from where the old camera stood.",
+   "frames": "camp_tent, camp_bed, bonfire_fire (+ bonfire at planned stand, arm only, as a sign check)",
+   "capture": "After newapproach-card-white. High. Pre-check: nothing red, the sign reads correctly from the planned stand, gate timber brown with grain. LANE-SCOUT: report tent+bed (game only) and bonfire separately.",
+   "note": "Camp attempt 2 (attempt 1 lost on the game-only frames)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
