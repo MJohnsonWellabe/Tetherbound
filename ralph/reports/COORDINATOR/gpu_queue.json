@@ -2417,6 +2417,27 @@
    "note": "Coordinator read the CPU sheet: A turns the rigid upright V into bent elbows and tucked knees; B can read as hands behind the head.",
    "done": true,
    "frames_pushed": "A for judging: G-newapproach-fly-grip f98199652 (tb/gpu-frames-1108). B failed the pre-check (hands behind the head, gap to the feet): diagnostic only, 268dc208d. Both overlay runs log 'double Jump denied' at (-25,1300) after the judged frames; lane to explain before landing."
+  },
+  {
+   "id": "floor2-aquaryn-bow-wake",
+   "kind": "arm",
+   "rows": [
+    "F39#8"
+   ],
+   "no_loss_rows": [
+    "F39#22 (frames 11-13, dismount control)"
+   ],
+   "branch": "tb/floor2",
+   "head": "3cf3a24d5",
+   "tree": "tb/floor2 (scripts/world/water_mount_wake.gd, shaders/water_mount_bow_wake.gdshader, data/config/water_mount_presentation.json; one new shader, no assets, no import pass beyond the shader)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-BOWWAKE/overlay_bow_wake.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-BOWWAKE/CAPTURE.json and ARM.md",
+   "job": "res://tools/phase2_capture_tidewake_mounted_swim.gd --seed=2042 --preset=High --output=res://ralph/reports/VISUAL/phase2/tidewake/<fresh dir> (the tool only writes under that folder); base and overlay on, same tree",
+   "frames": "mounted-swim 03, 04, 05 (arm) plus 11, 12, 13 (control, F39#22)",
+   "capture": "High. Pre-check: a V wake must show in the moving frames (if 03-05 are near-still, use 06-08 and say which); if it draws as hard straight lines or a solid white wedge, report rather than send for judging. Coordinator note from the CPU sheet: the wild creature on the shore differed between base and arm on CPU (spawn difference), so say if the control frames differ for that reason.",
+   "note": "LANE-FLOOR2: the flat white foam disc under Aquaryn is the named defect 3/3; expected +0.5 to +0.8."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
