@@ -3034,6 +3034,11 @@ func play_rest() -> void:
 		_begin_authored_rest_pose(authored as Dictionary, look)
 		return
 	var roll := float(look.get("rest_roll_deg", DEFAULT_REST_ROLL_DEG))
+	# F39#6 `settled_rest` (creature_pose_settle.json, OFF until judged): a
+	# species with a baked rest of its own lies down on that clip instead of
+	# being rolled onto its side in its standing pose.
+	if POSE_SETTLE.has_settled_rest(self, _animator):
+		roll = 0.0
 	if roll == 0.0:
 		if _animator != null:
 			_animator.call("play_terminal", "rest_faint")
