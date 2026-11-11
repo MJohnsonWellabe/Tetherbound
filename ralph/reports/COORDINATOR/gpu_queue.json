@@ -2649,7 +2649,8 @@
    "capture": "High. Pre-check: manifest camera_rig_spring_length about 3.6 on the arm (5.2 on base); if 5.2 on both, the focus did not engage, do not judge. Then LANE-SCOUT on F40#9's brief.",
    "note": "Gameplay camera change (flag-off); coordinator tells the owner before it lands.",
    "done": true,
-   "frames_pushed": "G-newapproach-post-focus f0bcfe69b: focus engaged (spring 3.60 arm vs 5.20 base on all three); NPC larger beside the trainer. With LANE-SCOUT."
+   "frames_pushed": "G-newapproach-post-focus f0bcfe69b: focus engaged (spring 3.60 arm vs 5.20 base on all three); NPC larger beside the trainer. With LANE-SCOUT.",
+   "verdict": "G-newapproach-post-focus (tb/item-scout-1108 07d0145af): +0.71 (5.02->5.73, 3/3). HELD for owner decision (play-camera behaviour). Row still below 6; next arm: authored posts, Sora re-stage, post lighting on top of focus."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
