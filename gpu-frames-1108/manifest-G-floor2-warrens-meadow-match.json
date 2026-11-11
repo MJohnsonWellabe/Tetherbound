@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "b8e9112a60436d4c1098fb5a222c516744a9f189",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-floor2-warrens-meadow-match/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.084,
+  "lower_edges": 0.3736,
+  "script_errors": 0,
+  "note": "F38#30. High, tb/floor2 b8e9112a6, phase2_capture_routes.gd --biome=meadows --seed=2042, Burrow Warrens frames walk_02_day, walk_03_day, route_day (the row's usual route args). base = tree as is; arm = plus FLOOR2-WARRENS/overlay_meadow_match.json (burrow_warrens.json bank.hill_shell.meadow_match on: meadow grass sheet on up-facing hill faces + nature-pack tufts, 1.5 m mouth pad). Pre-check: hillside visibly differs (smooth flat green shell -> textured meadow grass; mean diff 7.5-9.0); cave mouth and its brown earth rim unchanged (route_day arch identical; walk_02 lip around the opening still brown); no tuft floats or stands in the mouth; red entrance trees still red. Note: in walk_02 the hill's lower earth band left of the mouth is partly greened on its upper faces; wild creature spawn differs in walk_03 (badgers base, rock-shelled creatures arm)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "arm-High",
+  "tree": "b8e9112a60436d4c1098fb5a222c516744a9f189",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-floor2-warrens-meadow-match/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3205,
+  "script_errors": 0,
+  "note": "F38#30. High, tb/floor2 b8e9112a6, phase2_capture_routes.gd --biome=meadows --seed=2042, Burrow Warrens frames walk_02_day, walk_03_day, route_day (the row's usual route args). base = tree as is; arm = plus FLOOR2-WARRENS/overlay_meadow_match.json (burrow_warrens.json bank.hill_shell.meadow_match on: meadow grass sheet on up-facing hill faces + nature-pack tufts, 1.5 m mouth pad). Pre-check: hillside visibly differs (smooth flat green shell -> textured meadow grass; mean diff 7.5-9.0); cave mouth and its brown earth rim unchanged (route_day arch identical; walk_02 lip around the opening still brown); no tuft floats or stands in the mouth; red entrance trees still red. Note: in walk_02 the hill's lower earth band left of the mouth is partly greened on its upper faces; wild creature spawn differs in walk_03 (badgers base, rock-shelled creatures arm)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "arm-High",
+  "tree": "b8e9112a60436d4c1098fb5a222c516744a9f189",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-floor2-warrens-meadow-match/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.2485,
+  "script_errors": 0,
+  "note": "F38#30. High, tb/floor2 b8e9112a6, phase2_capture_routes.gd --biome=meadows --seed=2042, Burrow Warrens frames walk_02_day, walk_03_day, route_day (the row's usual route args). base = tree as is; arm = plus FLOOR2-WARRENS/overlay_meadow_match.json (burrow_warrens.json bank.hill_shell.meadow_match on: meadow grass sheet on up-facing hill faces + nature-pack tufts, 1.5 m mouth pad). Pre-check: hillside visibly differs (smooth flat green shell -> textured meadow grass; mean diff 7.5-9.0); cave mouth and its brown earth rim unchanged (route_day arch identical; walk_02 lip around the opening still brown); no tuft floats or stands in the mouth; red entrance trees still red. Note: in walk_02 the hill's lower earth band left of the mouth is partly greened on its upper faces; wild creature spawn differs in walk_03 (badgers base, rock-shelled creatures arm)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "base-High",
+  "tree": "b8e9112a60436d4c1098fb5a222c516744a9f189",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-floor2-warrens-meadow-match/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.085,
+  "lower_edges": 0.3671,
+  "script_errors": 0,
+  "note": "F38#30. High, tb/floor2 b8e9112a6, phase2_capture_routes.gd --biome=meadows --seed=2042, Burrow Warrens frames walk_02_day, walk_03_day, route_day (the row's usual route args). base = tree as is; arm = plus FLOOR2-WARRENS/overlay_meadow_match.json (burrow_warrens.json bank.hill_shell.meadow_match on: meadow grass sheet on up-facing hill faces + nature-pack tufts, 1.5 m mouth pad). Pre-check: hillside visibly differs (smooth flat green shell -> textured meadow grass; mean diff 7.5-9.0); cave mouth and its brown earth rim unchanged (route_day arch identical; walk_02 lip around the opening still brown); no tuft floats or stands in the mouth; red entrance trees still red. Note: in walk_02 the hill's lower earth band left of the mouth is partly greened on its upper faces; wild creature spawn differs in walk_03 (badgers base, rock-shelled creatures arm)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "b8e9112a60436d4c1098fb5a222c516744a9f189",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-floor2-warrens-meadow-match/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3194,
+  "script_errors": 0,
+  "note": "F38#30. High, tb/floor2 b8e9112a6, phase2_capture_routes.gd --biome=meadows --seed=2042, Burrow Warrens frames walk_02_day, walk_03_day, route_day (the row's usual route args). base = tree as is; arm = plus FLOOR2-WARRENS/overlay_meadow_match.json (burrow_warrens.json bank.hill_shell.meadow_match on: meadow grass sheet on up-facing hill faces + nature-pack tufts, 1.5 m mouth pad). Pre-check: hillside visibly differs (smooth flat green shell -> textured meadow grass; mean diff 7.5-9.0); cave mouth and its brown earth rim unchanged (route_day arch identical; walk_02 lip around the opening still brown); no tuft floats or stands in the mouth; red entrance trees still red. Note: in walk_02 the hill's lower earth band left of the mouth is partly greened on its upper faces; wild creature spawn differs in walk_03 (badgers base, rock-shelled creatures arm)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "b8e9112a60436d4c1098fb5a222c516744a9f189",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-floor2-warrens-meadow-match/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.075,
+  "lower_edges": 0.2462,
+  "script_errors": 0,
+  "note": "F38#30. High, tb/floor2 b8e9112a6, phase2_capture_routes.gd --biome=meadows --seed=2042, Burrow Warrens frames walk_02_day, walk_03_day, route_day (the row's usual route args). base = tree as is; arm = plus FLOOR2-WARRENS/overlay_meadow_match.json (burrow_warrens.json bank.hill_shell.meadow_match on: meadow grass sheet on up-facing hill faces + nature-pack tufts, 1.5 m mouth pad). Pre-check: hillside visibly differs (smooth flat green shell -> textured meadow grass; mean diff 7.5-9.0); cave mouth and its brown earth rim unchanged (route_day arch identical; walk_02 lip around the opening still brown); no tuft floats or stands in the mouth; red entrance trees still red. Note: in walk_02 the hill's lower earth band left of the mouth is partly greened on its upper faces; wild creature spawn differs in walk_03 (badgers base, rock-shelled creatures arm)."
+ }
+]
