@@ -2448,8 +2448,8 @@
       "src": "GPU High baseline 10 Nov, main 2ffc97db0, 268 frames day+golden (G-baseline F38#0 full row)"
     },
     "F40#0": {
-      "gpu": 6.58,
-      "src": "GPU High baseline 10 Nov, main 2ffc97db0, 352/384 frames (broken_skyroad_arch stand missing)"
+      "gpu": 6.54,
+      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads."
     },
     "F40#19": {
       "gpu": 6.66,
