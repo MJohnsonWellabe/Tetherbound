@@ -2822,6 +2822,25 @@
    "done": true,
    "frames_pushed": "G-floor2-aquaryn-settled-rest d6d0f5a1b: pre-checks pass (settled rest on its shadow; idle and fainted unchanged). With LANE-SCOUT.",
    "verdict": "G-floor2-aquaryn-settled-rest (tb/item-scout-1108 ee82bdaee): SHIP +0.72 (3/3), F39#6 6.75->7.47 at High (0.03 under). Next: grounded faint."
+  },
+  {
+   "id": "floor2-aquaryn-faint-fold",
+   "kind": "close-out",
+   "rows": [
+    "F39#6"
+   ],
+   "branch": "tb/floor2",
+   "head": "7a2899f56 (request at 54298c95e)",
+   "tree": "tb/floor2 7a2899f56 (creature_pose_settle.gd, creature_body.gd, creature_pose_settle.json; stage ON)",
+   "overlay_branch": "tb/floor2",
+   "overlay_base": "ralph/reports/LANES/FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json (base = the settled rest landing in #907)",
+   "overlay": "ralph/reports/LANES/FLOOR2-AQUAFAINT/overlay_faint_fold.json (arm = rest + faint fold)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-AQUAFAINT/CAPTURE.json",
+   "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 --preset=High; base and arm",
+   "frames": "aquaryn idle, resting, fainted",
+   "capture": "High. Pre-check: fainted head not buried, body not half-sunk, no limb twisted or through the body, differs from base; idle and resting match base. Then LANE-SCOUT on F39#6; if 7.5+ at High, queue Medium.",
+   "note": "Near-bar close-out (7.47, needs +0.03)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
