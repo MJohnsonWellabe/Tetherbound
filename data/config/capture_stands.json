@@ -21,5 +21,24 @@
     "_why_on": "10 Nov 2026 (coordinator, with the Warrens foundation): with the foundation on, every usual walk_03 stand is correctly inside the hill, so the guard's fallback offsets seat the stand on open ground. Capture tooling only.",
     "window_m": 8.0,
     "fallback_offsets_m": [18.0, 26.0]
+  },
+  "creature_ruler_depth": {
+    "_candidate": "F38#5 / F38#26 / F38#31 (LANE-FLOOR2, 11 Nov 2026). tools/phase2_capture_creatures.gd stood each subject max(7, height x 1.8) m BEYOND the trainer, while the production camera sits about 5 m behind the trainer. A 2.9 m hare therefore drew from 12 m against a 1.80 m trainer at 5 m and came out at about 0.68x the trainer's height on screen; GPU 1108 judges read 'the hound, owl and hare only about the trainer's height' although every one is 2.4-4.6 m tall in the world. On: the subject stands beside the trainer on the trainer's own depth plane (the plane through the trainer facing the camera), side = height x 0.55 clamped 2-4.5 m, so ruler and subject compare as their real heights do. Round 1 (ahead = height x 1.3 - 3) won on GPU (F38#5 +1.83, F38#31 +1.44, F38#26 +1.39, 3/3) but its geometry let larger subjects flatter themselves, so this is the depth-plane revision the coordinator asked for. Camera, trainer, lens and world are untouched; no creature changes size. Capture tooling only; the game never reads this file. It moves every creature pose frame in all four biomes.",
+    "enabled": true,
+    "_why_on": "LANE-SCOUT G-floor2-creature-ruler-depth-r3 (GPU High, tb/item-scout-1108 3fe1c4396, 11 Nov 2026), round 3 (ground-contact rule): F38#5 5.80 -> 7.77 (defect FIXED 3/3), F38#31 -> 7.20, F38#26 -> 6.85, no-loss sets +1.80 and +1.58, three code-blind judges 3/3 on every set, and no judge reads any nearness. Rounds 1 and 2 scored higher but stood subjects nearer the lens than the trainer (measured: ground contact 1.0-3.9 m nearer in round 2), so they were not landed. Capture tooling only.",
+    "ahead_per_height": 0.0,
+    "ahead_less_m": 0.0,
+    "ahead_min_m": 0.0,
+    "ahead_max_m": 0.0,
+    "side_per_height": 0.55,
+    "side_min_m": 2.0,
+    "side_max_m": 4.5,
+    "_fit": "Fit rule (coordinator, 11 Nov): with the posed subject in place, while its projected bounds overlap the trainer it steps fit_step_side_m further SIDEWAYS along the depth plane. A subject too big for the frame at the trainer's depth (cut top or bottom, or cut at the side) steps fit_step_behind_m AWAY from the lens, which can only understate it, never past where it would draw under fit_min_ratio x the trainer's height; it never moves toward the camera. Bounds come from the POSED mesh (skinned vertices through the live skeleton), so faint, rest and hurt clips are measured where they are drawn. Contact rule: the subject's nearest ground contact (posed vertices within fit_contact_band_m of its lowest point) is never nearer the lens than the trainer's feet; it steps back by exactly the shortfall. Each frame's manifest records ruler_depth_fit, including contact_depth_vs_trainer_feet_m, lens_to_trainer_feet_m, lens_to_contact_m, contact_ground_y, trainer_ground_y and the two feet screen heights.",
+    "fit_max_steps": 16,
+    "fit_step_side_m": 0.4,
+    "fit_step_behind_m": 1.0,
+    "fit_margin": 0.03,
+    "fit_min_ratio": 1.15,
+    "fit_contact_band_m": 0.25
   }
 }

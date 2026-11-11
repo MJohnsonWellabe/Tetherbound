@@ -54,12 +54,13 @@
     "anchor_waymark": {
       "_scope": "Cloudreach Storm Anchor vessels (world_payoffs), presentation only, no collision",
       "_why": "NEAR6-CR F40#8 P2-053 round 2 (CPU 6.32 with anchor_vessel_quiet): all three judges asked for the route marker as a carved pale-stone waymark with a small gold cap and a restrained cyan inlay instead of a thin flat-colour post. Replaces the column and rings while locked; the restored state and its wind are unchanged. OFF until judged.",
-      "enabled": false,
-      "stone_colour": "#cbc2ab",
-      "cap_colour": "#c9a24a",
+      "enabled": true,
+      "_why_on": "GPU High, G-newapproach-bridge-view (tb/item-scout-1108 248db8b0a), 11 Nov 2026: F40#8 5.29 -> 6.77 mapped (+1.48, 3/3 prefer), defect FIXED for 2 of 3 judges. With the bridge view opened (landing_tree_clear LandingTree926) the cyan column stood in plain sight; the stone waymark replaces it at every locked anchor. Darker, shorter stone than the first candidate (#cbc2ab, 2.6 m), which read brighter than the post at night on CPU. Judges' follow-ups: carving, weathering, moss and a night lantern glow.",
+      "stone_colour": "#8c8676",
+      "cap_colour": "#a8873f",
       "base_radius_m": 0.26,
       "top_radius_m": 0.18,
-      "height_m": 2.6
+      "height_m": 2.1
     },
     "anchor_vessel_quiet": {
       "_scope": "device_local_presentation",
