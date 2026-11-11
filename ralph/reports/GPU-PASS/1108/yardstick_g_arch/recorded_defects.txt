@@ -1,0 +1,11 @@
+Ae: "none"
+Xy: "none"
+Ng: "none"
+Xv: "none"
+Fo: none
+Mg: "none"
+Kk: "none"
+Mf: "none"
+Nn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Er: "none"
+Hr: none
