@@ -3315,6 +3315,30 @@
    "capture": "High, one side. Check manifest.json: conversation_camera_blend 1.0 and conversation_camera_blend_timed_out false on every frame; report any timeout.",
    "priority": "high: re-bases every dialogue row; LANE-THINGS' T6 conversation-shot arm waits on these frames",
    "note": "Earlier dialogue frames were shot mid camera blend (0.41-0.93) and are not comparable. Push as G-dialogue-recapture-<biome>."
+  },
+  {
+   "id": "things-toys-ui",
+   "kind": "arm",
+   "rows": [
+    "F38#6",
+    "F40#16",
+    "F40#17",
+    "F40#13",
+    "F38#3",
+    "F38#11",
+    "F41#3"
+   ],
+   "branch": "tb/things",
+   "head": "22ff3cd1f",
+   "tree": "tb/things 22ff3cd1f (script/config only; flags off renders as main)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-TOYS-UI/overlay_toys_ui.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-TOYS-UI/CAPTURE.json (per-row tool and frames)",
+   "job": "per row, as CAPTURE.json lists: phase2_capture_world_inventory.gd --biome=meadows and --biome=cloudreach (pickups); phase2_capture_catch.gd --biome=cloudreach (catch frames 06-09); capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames; the G-recheck-f41-3 capture",
+   "capture": "High, base (overlay off) and arm (overlay on), both on tb/things",
+   "priority": "6-7 band, one config tree across seven rows (T8 dust, T9 toy pickups, T10 stale catch card)",
+   "note": "LANE-THINGS arm 2. After dialogue-recapture-all-biomes."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
