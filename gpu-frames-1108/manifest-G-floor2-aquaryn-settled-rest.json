@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "water__aquaryn__fainted.jpg",
+  "preset": "arm-High",
+  "tree": "b8ab0b38461d1212a2c87123912db907cbeebe61",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-settled-rest/arm-High/water__aquaryn__fainted.jpg",
+  "sky_fraction": 0.301,
+  "lower_edges": 0.1603,
+  "script_errors": 0,
+  "note": "F39#6 close-out. High, tb/floor2 b8ab0b384 (creature stage on in the tree, as on main: creature_ruler_depth true both sides), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042. base = tree as is; arm = plus FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json (creature_pose_settle.json floor2_aquaryn_scope + settled_rest on; rest_only). Pre-check: arm resting is a settled crouch - chest and belly on the sand over its shadow, feet planted, snout lowered (base floats on its side with a belly-to-shadow gap, claws up); whole in frame (in_frame true, no trainer overlap); idle and fainted match base (mean diff 2.4 / 2.7, noise)."
+ },
+ {
+  "frame": "water__aquaryn__idle.jpg",
+  "preset": "arm-High",
+  "tree": "b8ab0b38461d1212a2c87123912db907cbeebe61",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-settled-rest/arm-High/water__aquaryn__idle.jpg",
+  "sky_fraction": 0.291,
+  "lower_edges": 0.1622,
+  "script_errors": 0,
+  "note": "F39#6 close-out. High, tb/floor2 b8ab0b384 (creature stage on in the tree, as on main: creature_ruler_depth true both sides), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042. base = tree as is; arm = plus FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json (creature_pose_settle.json floor2_aquaryn_scope + settled_rest on; rest_only). Pre-check: arm resting is a settled crouch - chest and belly on the sand over its shadow, feet planted, snout lowered (base floats on its side with a belly-to-shadow gap, claws up); whole in frame (in_frame true, no trainer overlap); idle and fainted match base (mean diff 2.4 / 2.7, noise)."
+ },
+ {
+  "frame": "water__aquaryn__resting.jpg",
+  "preset": "arm-High",
+  "tree": "b8ab0b38461d1212a2c87123912db907cbeebe61",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-settled-rest/arm-High/water__aquaryn__resting.jpg",
+  "sky_fraction": 0.307,
+  "lower_edges": 0.1443,
+  "script_errors": 0,
+  "note": "F39#6 close-out. High, tb/floor2 b8ab0b384 (creature stage on in the tree, as on main: creature_ruler_depth true both sides), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042. base = tree as is; arm = plus FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json (creature_pose_settle.json floor2_aquaryn_scope + settled_rest on; rest_only). Pre-check: arm resting is a settled crouch - chest and belly on the sand over its shadow, feet planted, snout lowered (base floats on its side with a belly-to-shadow gap, claws up); whole in frame (in_frame true, no trainer overlap); idle and fainted match base (mean diff 2.4 / 2.7, noise)."
+ },
+ {
+  "frame": "water__aquaryn__fainted.jpg",
+  "preset": "base-High",
+  "tree": "b8ab0b38461d1212a2c87123912db907cbeebe61",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-settled-rest/base-High/water__aquaryn__fainted.jpg",
+  "sky_fraction": 0.301,
+  "lower_edges": 0.1601,
+  "script_errors": 0,
+  "note": "F39#6 close-out. High, tb/floor2 b8ab0b384 (creature stage on in the tree, as on main: creature_ruler_depth true both sides), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042. base = tree as is; arm = plus FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json (creature_pose_settle.json floor2_aquaryn_scope + settled_rest on; rest_only). Pre-check: arm resting is a settled crouch - chest and belly on the sand over its shadow, feet planted, snout lowered (base floats on its side with a belly-to-shadow gap, claws up); whole in frame (in_frame true, no trainer overlap); idle and fainted match base (mean diff 2.4 / 2.7, noise)."
+ },
+ {
+  "frame": "water__aquaryn__idle.jpg",
+  "preset": "base-High",
+  "tree": "b8ab0b38461d1212a2c87123912db907cbeebe61",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-settled-rest/base-High/water__aquaryn__idle.jpg",
+  "sky_fraction": 0.29,
+  "lower_edges": 0.1624,
+  "script_errors": 0,
+  "note": "F39#6 close-out. High, tb/floor2 b8ab0b384 (creature stage on in the tree, as on main: creature_ruler_depth true both sides), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042. base = tree as is; arm = plus FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json (creature_pose_settle.json floor2_aquaryn_scope + settled_rest on; rest_only). Pre-check: arm resting is a settled crouch - chest and belly on the sand over its shadow, feet planted, snout lowered (base floats on its side with a belly-to-shadow gap, claws up); whole in frame (in_frame true, no trainer overlap); idle and fainted match base (mean diff 2.4 / 2.7, noise)."
+ },
+ {
+  "frame": "water__aquaryn__resting.jpg",
+  "preset": "base-High",
+  "tree": "b8ab0b38461d1212a2c87123912db907cbeebe61",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-floor2-aquaryn-settled-rest/base-High/water__aquaryn__resting.jpg",
+  "sky_fraction": 0.303,
+  "lower_edges": 0.1538,
+  "script_errors": 0,
+  "note": "F39#6 close-out. High, tb/floor2 b8ab0b384 (creature stage on in the tree, as on main: creature_ruler_depth true both sides), phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042. base = tree as is; arm = plus FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json (creature_pose_settle.json floor2_aquaryn_scope + settled_rest on; rest_only). Pre-check: arm resting is a settled crouch - chest and belly on the sand over its shadow, feet planted, snout lowered (base floats on its side with a belly-to-shadow gap, claws up); whole in frame (in_frame true, no trainer overlap); idle and fainted match base (mean diff 2.4 / 2.7, noise)."
+ }
+]
