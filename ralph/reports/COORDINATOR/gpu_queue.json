@@ -3210,7 +3210,8 @@
    "overlay_format": "deep merge",
    "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=cragclaw --whole-body --context --game-clips --clear-ruler --roles=hit,faint --out={OUT}",
    "capture": "MEDIUM, arm side only (overlay on)",
-   "note": "Close-out: G-things-faint arm High 7.51 (LANE-SCOUT 58bf5187a). Closes at Medium 7.5+."
+   "note": "Close-out: G-things-faint arm High 7.51 (LANE-SCOUT 58bf5187a). Closes at Medium 7.5+.",
+   "done": "G-cragclaw-faint-medium 2ec3fc87c (judging)"
   },
   {
    "id": "solmane-medium",
@@ -3223,7 +3224,8 @@
    "overlay": null,
    "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context --out={OUT}",
    "capture": "MEDIUM, one side, main as in G-things-t4-rescore-b",
-   "note": "Close-out: High 7.63 (G-things-t4-rescore, LANE-SCOUT f4ffb5e64). Closes at Medium 7.5+."
+   "note": "Close-out: High 7.63 (G-things-t4-rescore, LANE-SCOUT f4ffb5e64). Closes at Medium 7.5+.",
+   "done": "G-solmane-medium 347eec615 (judging)"
   },
   {
    "id": "water-mangrove-monitor-gameclips-rescore",
@@ -3237,7 +3239,7 @@
    "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler --out={OUT}",
    "capture": "High, one side (flags off)",
    "note": "Corrected re-score on the game-resolved clip; excluded from the THINGS-FAINT overlay so G-things-faint did not judge it. The GPU lane saw its faint 100 lying on its back, legs up.",
-   "done": "not needed: LANE-SCOUT scored it from the G-things-faint base side (G-water-gameclip-rescores.md, bc028142f): 6.72"
+   "done": "G-water-mangrove-monitor-gameclips-rescore b7a256c4c (captured before the skip; judging: all-roles faint lies belly down)"
   },
   {
    "id": "below6-abyssal-matte",
