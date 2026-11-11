@@ -16,12 +16,14 @@ void vertex() {
 
 void fragment() {
 	vec3 facet_n = normalize(cross(dFdx(world_pos), dFdy(world_pos)));
-	float facet = fract(sin(dot(floor(facet_n * 5.0 + 0.5), vec3(12.9898, 78.233, 37.719))) * 43758.5453);
+	// continuous in the facet normal: no speckle where a quantised hash would flip
+	float facet = 0.5 + 0.5 * sin(dot(facet_n, vec3(7.1, 3.3, 5.7)));
 	float edge = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 2.5);
 	float angle = atan(world_pos.z - axis_xz.y, world_pos.x - axis_xz.x);
-	float wind = world_pos.y * 0.55 + 2.2 * sin(angle * 2.0 + world_pos.y * 0.31) - TIME * 0.6;
-	float arc = smoothstep(0.965, 1.0, abs(sin(wind)));
-	float arc2 = smoothstep(0.975, 1.0, abs(sin(wind * 0.63 + angle * 3.0 + 1.7)));
+	// near-vertical wavering lines: the angle term dominates, height only bends them
+	float wind = angle * 2.0 + 1.3 * sin(world_pos.y * 0.42) + 0.5 * sin(world_pos.y * 1.9 + 1.0) - TIME * 0.35;
+	float arc = smoothstep(0.9965, 1.0, abs(sin(wind)));
+	float arc2 = smoothstep(0.9975, 1.0, abs(sin(wind * 1.5 + world_pos.y * 0.21 + 1.7)));
 	ALBEDO = body_colour * (0.5 + 0.7 * facet);
 	ROUGHNESS = 0.18;
 	SPECULAR = 0.6;
