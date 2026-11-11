@@ -2799,7 +2799,8 @@
    "capture": "High; pre-checks (1),(2),(4); then LANE-SCOUT.",
    "note": "Measures the floor alone while card shading is fixed.",
    "done": true,
-   "frames_pushed": "G-newapproach-cloud-sea-only fe749ec0a on main 63d6abd25: pre-checks pass (floor facets gone, billows, no clip, no cliff line). With LANE-SCOUT."
+   "frames_pushed": "G-newapproach-cloud-sea-only fe749ec0a on main 63d6abd25: pre-checks pass (floor facets gone, billows, no clip, no cliff line). With LANE-SCOUT.",
+   "verdict": "G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88): SHIP. F40#11 6.17->6.97 (+0.80, 3/3); F40#6 5.61->6.33 (+0.72, 3/3)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
