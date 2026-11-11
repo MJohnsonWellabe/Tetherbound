@@ -3093,6 +3093,38 @@
    "capture": "High, base (main, overlay off) and arm (overlay on), same command",
    "priority": "below-6 floor row; owned now by LANE-BELOW6 (REMAKES handed off)",
    "note": "Ribbonray 5.68 (all-magenta; tail tip detached under the floor in hit frames)."
+  },
+  {
+   "id": "things-t4-rescore-a",
+   "kind": "baseline",
+   "rows": [
+    "F36 (1) pose rows: sparkit, riftfrill, shadelet, pebbik, mirejaw, thundertunnel, paddlenewt, mosshock, brooktail"
+   ],
+   "branch": "main",
+   "head": "current main (fetch)",
+   "overlay": null,
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=sparkit,riftfrill,shadelet,pebbik,mirejaw,thundertunnel,paddlenewt,mosshock,brooktail --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "standing (hit 000), hit 050, faint 050, faint 100 per species; crop 560,200 1000x640 (as G-rescore-tier2-f36)",
+   "capture": "High, one side (re-score, no arm)",
+   "request": "ralph/reports/LANES/THINGS/NOTE.md on tb/things (T4)",
+   "priority": "6-7 band; no code. Rows not scored since the 1 Nov remakes went ON. Results below 6 go to LANE-BELOW6; judges naming an ungrounded faint feed LANE-THINGS T1.",
+   "note": "lowest first: sparkit 6.03 (CPU), riftfrill 6.04, shadelet 6.06, pebbik 6.07 (CPU), mirejaw 6.23, thundertunnel 6.47, paddlenewt 6.49, mosshock 6.55 (CPU), brooktail 6.63"
+  },
+  {
+   "id": "things-t4-rescore-b",
+   "kind": "baseline",
+   "rows": [
+    "F36 (1) pose rows: trailpup, solmane, cliffspike, voltwig, stormtrail, duskhush, breezetail, stormraven, ashtusk"
+   ],
+   "branch": "main",
+   "head": "current main (fetch)",
+   "overlay": null,
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=trailpup,solmane,cliffspike,voltwig,stormtrail,duskhush,breezetail,stormraven,ashtusk --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "standing (hit 000), hit 050, faint 050, faint 100 per species; crop 560,200 1000x640 (as G-rescore-tier2-f36)",
+   "capture": "High, one side (re-score, no arm)",
+   "request": "ralph/reports/LANES/THINGS/NOTE.md on tb/things (T4)",
+   "priority": "6-7 band; no code. Rows not scored since the 1 Nov remakes went ON. Results below 6 go to LANE-BELOW6; judges naming an ungrounded faint feed LANE-THINGS T1.",
+   "note": "trailpup 6.64, solmane 6.68, cliffspike 6.72, voltwig 6.79, stormtrail 6.82, duskhush 6.85, breezetail 6.89, stormraven 6.94 (CPU), ashtusk 6.96"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
