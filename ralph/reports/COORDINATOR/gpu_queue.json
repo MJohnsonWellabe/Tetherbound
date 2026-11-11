@@ -2394,6 +2394,25 @@
    "frames": "F40#5 captain fight frames as in the 8 Nov judging, one side on current main. The fight dust was retuned in #882 on 10 Nov, after that score (judges' main complaint: dust covering the exchange in frames 1 and 3). Use a seed on which the fight is won; if the fixture loses, try one other seed and say which.",
    "capture": "High, one side, no arm. After the bridge pre-check.",
    "note": "LANE-NEWAPPROACH sweep: F40#5 (5.94) needs a re-capture, not an arm."
+  },
+  {
+   "id": "newapproach-fly-grip",
+   "kind": "arm",
+   "rows": [
+    "F38#8"
+   ],
+   "branch": "tb/newapproach",
+   "head": "6ee6f3b0c (request; tree = main, config only)",
+   "tree": "main (config only; no code, no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-FLYGRIP2/overlay_elbow_bend.json",
+   "overlay_b": "ralph/reports/LANES/NEWAPPROACH-FLYGRIP2/overlay_shoulder_grip.json (second arm side, same job)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-FLYGRIP2/CAPTURE.json and ARM.md",
+   "job": "res://tools/phase2_capture_realm_flight.gd --biome=meadows --seed=2042 --preset=High --output={OUT}; base, overlay A, overlay B",
+   "frames": "meadows__flying__launch, meadows__flying__glide (2 per side)",
+   "capture": "High first. Pre-check: the bird's feet still meet the hands in both frames, and with B the talons don't cut into the shoulders or hair. Then to LANE-SCOUT for judging on F38#8's brief (A vs base, B vs base); ship whichever wins more, not both.",
+   "note": "Coordinator read the CPU sheet: A turns the rigid upright V into bent elbows and tucked knees; B can read as hands behind the head."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
