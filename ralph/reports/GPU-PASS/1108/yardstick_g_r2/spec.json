@@ -1,0 +1,100 @@
+[
+ {
+  "label": "G F39#18 rescore main",
+  "a": "G-r2_F39-18.png",
+  "b": "G-r2_F39-18.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+  ]
+ },
+ {
+  "label": "G F39#26 rescore main",
+  "a": "G-r2_F39-26.png",
+  "b": "G-r2_F39-26.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F39#27 rescore main",
+  "a": "G-r2_F39-27.png",
+  "b": "G-r2_F39-27.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: grass around named characters. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views"
+  ]
+ },
+ {
+  "label": "G F39#29 rescore main",
+  "a": "G-r2_F39-29.png",
+  "b": "G-r2_F39-29.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named conversations show no identifiable speaker near the dialogue panel"
+  ]
+ },
+ {
+  "label": "G F36(1) skyrill rescore main",
+  "a": "G-r2_skyrill.png",
+  "b": "G-r2_skyrill.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: skyrill - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "chrome-mirror skin",
+   "faint keeps head and sail up"
+  ]
+ },
+ {
+  "label": "G F36(1) fulgocobra rescore main",
+  "a": "G-r2_fulgocobra.png",
+  "b": "G-r2_fulgocobra.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: fulgocobra - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "dark brown body on the stage",
+   "hood stays up in the faint"
+  ]
+ },
+ {
+  "label": "G F36(1) cragclaw rescore main",
+  "a": "G-r2_cragclaw.png",
+  "b": "G-r2_cragclaw.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: cragclaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "plasticky salmon skin",
+   "faint pose the same as standing"
+  ]
+ },
+ {
+  "label": "G F36(1) glimmermoth rescore main",
+  "a": "G-r2_glimmermoth.png",
+  "b": "G-r2_glimmermoth.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: glimmermoth - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "stays upright through the faint",
+   "pale body merges with the background",
+   "barely trainer height"
+  ]
+ },
+ {
+  "label": "G F36(1) ribbonray rescore main",
+  "a": "G-r2_ribbonray.png",
+  "b": "G-r2_ribbonray.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: ribbonray - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "neon-magenta emissive ribbons read as an effect",
+   "hit reaction goes airborne"
+  ]
+ },
+ {
+  "label": "G F36(1) veridian rescore main",
+  "a": "G-r2_veridian.png",
+  "b": "G-r2_veridian.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, ride; faint mid, faint end, ride). Catalogue subject: veridian - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "contorted neck in the faint mid pose",
+   "noisy moss texture",
+   "rider looks tiny"
+  ]
+ }
+]

@@ -1,0 +1,77 @@
+{
+ "Bd": {
+  "anchor": false,
+  "label": "G F39#26 rescore main",
+  "A": "G-r2_F39-26.png",
+  "B": "G-r2_F39-26.png"
+ },
+ "Eo": {
+  "anchor": false,
+  "label": "G F36(1) glimmermoth rescore main",
+  "A": "G-r2_glimmermoth.png",
+  "B": "G-r2_glimmermoth.png"
+ },
+ "Zy": {
+  "anchor": false,
+  "label": "G F39#27 rescore main",
+  "A": "G-r2_F39-27.png",
+  "B": "G-r2_F39-27.png"
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "G F39#18 rescore main",
+  "A": "G-r2_F39-18.png",
+  "B": "G-r2_F39-18.png"
+ },
+ "Zh": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Lu": {
+  "anchor": false,
+  "label": "G F39#29 rescore main",
+  "A": "G-r2_F39-29.png",
+  "B": "G-r2_F39-29.png"
+ },
+ "Jx": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Br": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Gv": {
+  "anchor": false,
+  "label": "G F36(1) skyrill rescore main",
+  "A": "G-r2_skyrill.png",
+  "B": "G-r2_skyrill.png"
+ },
+ "Nj": {
+  "anchor": false,
+  "label": "G F36(1) cragclaw rescore main",
+  "A": "G-r2_cragclaw.png",
+  "B": "G-r2_cragclaw.png"
+ },
+ "Ab": {
+  "anchor": false,
+  "label": "G F36(1) fulgocobra rescore main",
+  "A": "G-r2_fulgocobra.png",
+  "B": "G-r2_fulgocobra.png"
+ },
+ "Fs": {
+  "anchor": false,
+  "label": "G F36(1) veridian rescore main",
+  "A": "G-r2_veridian.png",
+  "B": "G-r2_veridian.png"
+ },
+ "Sg": {
+  "anchor": false,
+  "label": "G F36(1) ribbonray rescore main",
+  "A": "G-r2_ribbonray.png",
+  "B": "G-r2_ribbonray.png"
+ }
+}
