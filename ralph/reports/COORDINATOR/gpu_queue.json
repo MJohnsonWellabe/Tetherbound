@@ -2464,7 +2464,9 @@
    "job": "phase2_capture_creatures.gd four runs (meadows 5 species idle,alpha_idle,fainted; water aquaryn idle,fainted,resting; cloudreach galewisp idle,hurt; stormwood sparkit,stormraven,fulgocobra idle,hurt), seed 2042, High, output under res://ralph/reports/VISUAL/phase2/ or res://.artifacts/phase2/",
    "frames": "the 24 listed in CAPTURE.json",
    "capture": "High, base and arm. Pre-check from the manifest ruler_depth_fit (in_frame true, overlaps_trainer false, depth_vs_trainer_m >= 0) AND by eye: coordinator saw on the CPU sheet that Meadows subjects' feet sit well below the trainer's feet in frame (hare, alpha coyote, turtle). If on the GPU frames a subject's ground contact is clearly nearer the lens than the trainer's on flat ground, report it rather than judge, even if the manifest says 0 m. Say whether stormraven and sparkit read taller than the trainer.",
-   "note": "Round 1 won (+1.4 to +1.8, 3/3) but was held for depth flattery; this is the depth-plane revision."
+   "note": "Round 1 won (+1.4 to +1.8, 3/3) but was held for depth flattery; this is the depth-plane revision.",
+   "done": true,
+   "frames_pushed": "G-floor2-creature-ruler-depth-r2 751b0657d: 16 of 18 pairs; held by eye: aquaryn fainted (cut left edge), galewisp idle (claws 10% below boots). Meadows contacts 10-15% below trainer's feet (slope vs nearness unresolved); landing waits for a ground-contact depth readout from LANE-FLOOR2. Sparkit and stormraven read taller than the trainer."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
