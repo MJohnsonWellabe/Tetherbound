@@ -1,0 +1,33 @@
+{
+ "row": "F36#86 Voltarach poses (GPU 8 Nov 5.11, scored on the 1 Nov remake that the owner switched off on 9 Nov; main now ships the native eight-leg spider)",
+ "branch": "tb/below6",
+ "head": "see git log (tb/below6 tip)",
+ "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+ "args": [
+  "--species=voltarach",
+  "--whole-body",
+  "--context",
+  "--out={OUT}"
+ ],
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "crop": "560,200 1000x640 at 1080p (as G-rescore-tier2-f36)",
+ "tiles": "standing (hit 000), hit 050, faint 050, faint 100",
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-VOLTARACH/overlay.json",
+ "capture_both": "base (main as it is, overlay off) and arm (overlay on), same command",
+ "needs_import": "yes: new graded textures (*_floor1*.png) ship on the branch",
+ "_why": "Chrome-gold statue, face lost (3/3). The gold is painted into the albedo; material values alone moved nothing in CO-F36-7. Arm: wide gold fields to dark bronze, thin gold cracks kept, charcoal lifted, matte shell, blue eyes and cracks lit.",
+ "want_to_see": "a charcoal spider with thin gold lightning cracks and lit blue eyes instead of a gold-flooded statue; base re-baselines the native spider on the 11 Nov stage"
+}

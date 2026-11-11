@@ -216,6 +216,18 @@
           }
         }
       }
+    },
+    "remakes_floor_ribbonray_hit": {
+      "_why": "LANE-REMAKES (11 Nov 2026), F36#61 Ribbonray (GPU 8 Nov: 'tail tip floating detached on the floor in the hit frame'). CPU frames and the skin weights show no skinning fault: the hit clip pitches the body upright, the tail swings under the stage floor and only its curled tip re-emerges. The hit's rotation is scaled down so the tail stays above the ground and the ray keeps its low stance. OFF until GPU-judged.",
+      "enabled": false,
+      "species": {
+        "ribbonray": {
+          "hit": {
+            "rotation": 0.4,
+            "position": 0.5
+          }
+        }
+      }
     }
   }
 }
