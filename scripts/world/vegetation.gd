@@ -155,7 +155,9 @@ static func stormwood_foliage_grade(vegetation: Dictionary, look: Dictionary = {
 	var variants := {}
 	var adjusts := {}
 	var layers: Dictionary = vegetation.get("layers", {})
-	for key: String in ["foliage_grade_1104", "bark_grey_1110"]:
+	# `bark_detail_1110` (OFF until judged) carries no tints, only per-material
+	# detail keys in `adjust` (see `_retint`: a world-space bark layer).
+	for key: String in ["foliage_grade_1104", "bark_grey_1110", "bark_detail_1110"]:
 		var grade: Variant = look.get(key, {})
 		if not grade is Dictionary or not bool((grade as Dictionary).get("enabled", false)):
 			continue
@@ -1042,7 +1044,7 @@ func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_in
 ## the bible asks for ("deeper cooler greens under tree cover") needs a
 ## non-zero blue channel, which only a texture edit can supply.
 ##
-## `Image.adjust_bsc` does that edit in engine code at load time on a copy
+## `Image.adjust_bcs` does that edit in engine code at load time on a copy
 ## of the imported image: no new asset on disk, the pack's own leaf shapes,
 ## alpha untouched. One derived texture per (source, settings) pair, cached,
 ## so every material sharing the same adjustment shares one texture. Per
@@ -1075,7 +1077,7 @@ func _adjusted_texture(base: Texture2D, adjust: Dictionary) -> Texture2D:
 			push_warning("retexture_adjust: %s could not be decompressed; left as imported" % base.resource_path)
 			return base
 	image.convert(Image.FORMAT_RGBA8)
-	image.adjust_bsc(brightness, contrast, saturation)
+	image.adjust_bcs(brightness, contrast, saturation)
 	image.generate_mipmaps()
 	var derived := ImageTexture.create_from_image(image)
 	# VP3-FIX (pale-mint canopy regression). A `create_from_image()` texture
@@ -1164,13 +1166,44 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 		if not adjust.is_empty():
 			material.albedo_texture = _adjusted_texture(material.albedo_texture, adjust)
 		material.normal_texture = standard.normal_texture
+		# F41#22 bark detail (adjust keys `detail_albedo`, `detail_normal`,
+		# `detail_scale`): the Meshy giant trees are one baked texture stretched
+		# over a trunk 25 times its authored size, which reads as smooth painted
+		# plastic. A tiling bark layer is multiplied over it in WORLD space
+		# (triplanar on UV2), so its grain stays tree-bark sized whatever the
+		# instance scale, and the baked texture underneath keeps its own UVs.
+		# `matte`: bark is not glossy. A smooth specular lobe over a stretched
+		# texture is what reads as painted plastic under the storm light.
+		if bool(adjust.get("matte", false)):
+			material.roughness = 1.0
+			material.metallic_specular = float(adjust.get("matte_specular", 0.05))
+			material.set_meta(&"stormwood_bark", true)
+		var detail_albedo := str(adjust.get("detail_albedo", ""))
+		var detail_normal := str(adjust.get("detail_normal", ""))
+		if (detail_albedo != "" and ResourceLoader.exists(detail_albedo)) or (detail_normal != "" and ResourceLoader.exists(detail_normal)):
+			material.detail_enabled = true
+			material.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+			material.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
+			material.uv2_triplanar = true
+			material.uv2_world_triplanar = true
+			var detail_scale := float(adjust.get("detail_scale", 0.35))
+			material.uv2_scale = Vector3(detail_scale, detail_scale, detail_scale)
+			if detail_albedo != "" and ResourceLoader.exists(detail_albedo):
+				# `detail_contrast` / `detail_brightness` push the tiling sheet's
+				# furrows apart so they survive the multiply at trunk distance.
+				material.detail_albedo = _adjusted_texture(load(detail_albedo) as Texture2D, {
+					"contrast": float(adjust.get("detail_contrast", 1.0)),
+					"brightness": float(adjust.get("detail_brightness", 1.0))})
+			if detail_normal != "" and ResourceLoader.exists(detail_normal):
+				material.detail_normal = load(detail_normal) as Texture2D
+				material.normal_enabled = true
 		# Foliage packs carry per-vertex tint; dropping it flattens the canopy
 		# variation the pack authored. A jittered layer forces it on regardless
 		# of the source's own default — MultiMesh per-instance colour multiplies
 		# through this same channel, and an untouched model cannot be assumed to
 		# already have it enabled.
 		material.vertex_color_use_as_albedo = standard.vertex_color_use_as_albedo or needs_instance_colour
-		material.normal_enabled = standard.normal_enabled
+		material.normal_enabled = standard.normal_enabled or material.detail_normal != null
 		material.albedo_color = Color(colour) if colour != "" else Color.WHITE
 		# Foliage is alpha-cut, not blended: leaves are cards with holes in them,
 		# and alpha blending would sort them against each other every frame for
