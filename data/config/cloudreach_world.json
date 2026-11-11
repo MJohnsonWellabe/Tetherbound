@@ -216,7 +216,7 @@
       "category": "major",
       "silhouette": true,
       "visible_from_region_ids": ["gate_lower_cliffs", "broken_causeways"],
-      "requires_traversal": "ground",
+      "requires_traversal": false,
       "requires_unlock": ""
     },
     {

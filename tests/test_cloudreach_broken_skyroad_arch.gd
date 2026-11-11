@@ -59,9 +59,14 @@ func test_broken_arch_catalogue_no_longer_stands_between_the_old_slabs() -> void
 				if str(spot.get("display_name", "")) == "Broken Skyroad Arch":
 					found = spot
 	assert_false(found.is_empty())
-	assert_eq(found.get("position", []), [365.0, 1925.0])
+	# Coordinator, 11 Nov: the arch crown is an isolated ~26 m disc (x 338..362, z 1924..1948,
+	# h 480) that ground and Fly cannot reliably reach, so the catalogue stand stands ON the
+	# crown, looking up the same sight line at the arch. The landmark claims no traversal.
+	assert_eq(found.get("position", []), [357.0, 1933.0])
 	assert_almost_eq(float(found.get("view_heading_deg", 0.0)), -42.0, 0.01)
-	assert_true(Vector2(365.0, 1925.0).distance_to(Vector2(350.0, 1940.0)) > 20.0)
+	var stand := Vector2(357.0, 1933.0)
+	assert_true(stand.x >= 338.0 and stand.x <= 362.0 and stand.y >= 1924.0 and stand.y <= 1948.0,
+		"the catalogue stand is on the measured crown disc")
 
 
 func test_cloudreach_world_mounts_dedicated_broken_arch_presentation() -> void:
