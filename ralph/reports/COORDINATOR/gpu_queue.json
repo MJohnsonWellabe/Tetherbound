@@ -3358,7 +3358,28 @@
    "frames": "hit and faint 000-100; crop 560,200 1000x640",
    "capture": "High, base (overlay off) and arm (overlay on)",
    "priority": "F36#52 was 5.28 on main's stage (6.70 on the fixed stage)",
-   "note": "below6_mirejaw_hit: hit rotation x0.45, position x0.5 (Ribbonray's grounded-hit hook). The 'pale translucent jaw' and grey tail smear are the hit clip pitching the head to the floor and swinging the tail through the stage."
+   "note": "below6_mirejaw_hit: hit rotation x0.45, position x0.5 (Ribbonray's grounded-hit hook). The 'pale translucent jaw' and grey tail smear are the hit clip pitching the head to the floor and swinging the tail through the stage.",
+   "done": "superseded by below6-hits (same Mirejaw overlay plus the Abyssal flinch)"
+  },
+  {
+   "id": "below6-hits",
+   "kind": "arm",
+   "rows": [
+    "F36#52",
+    "F36#30"
+   ],
+   "branch": "tb/below6",
+   "head": "8e1931604",
+   "tree": "tb/below6 8e1931604 (config only; no import needed)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-HITS/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-HITS/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=mirejaw,abyssal_guardian --whole-body --context --out={OUT}",
+   "frames": "hit and faint 000-100 per species; crop 560,200 1000x640; judge each species as its own set",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "below 6: Mirejaw 5.28 (main stage), Abyssal 5.77",
+   "note": "Mirejaw grounded hit (rotation x0.45) plus Abyssal bowed flinch. Pre-check: Mirejaw hit 050 head up, no pale gaping jaw, no grey blade; Abyssal hit 050 a crouched flinch clearly unlike standing."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
