@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 04:10 UTC",
+  "updated": "11 Nov 2026 04:22 UTC",
   "headline": [
+    "11 Nov 04:22: F41#3 named wild fight re-scored at 6.23 on main (native Voltarach plus the giant-tree fight fade from #897): off the below-6 list. Spacing defect still present (Sparkit tucked among the forelegs). Below 6: 20.",
     "11 Nov 04:08: F41#13 charge lines parked after two losses (-0.62, -0.49): line-only glow can't separate a dark body from dark Stormwood ground; judges point to a lighter, rim-lit body and the Stormwood creature-stand ground. LANE-FLOOR2 revising the creature stage to the trainer's depth plane (raven scale checked there too).",
     "11 Nov 03:50: LANE-FLOOR2's creature stage wins big on GPU (F38#5 5.62 -> 7.45, F38#31 -> 7.28, F38#26 -> 6.80, all 3/3; controls gain) but larger subjects stood nearer the camera than the trainer, so perspective flattered scale. Held for one revision: subjects on the trainer's own depth plane, stepped sideways to fit. Re-capture next; lands if the gain holds.",
     "11 Nov 03:35: overnight consolidation (owner): LANE-MESHY paused until morning; the two Fable lanes (LANE-NEWAPPROACH on F41#13, LANE-FLOOR2 on the creature stage then the Aquaryn wake) keep building; judging and the GPU run as arms arrive.",
@@ -2370,8 +2371,8 @@
       "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): C.md victory_on, landed batch 25"
     },
     "F41#3": {
-      "gpu": 5.89,
-      "src": "GPU High 11 Nov (G-hollows-giant-trees, Hollows + Capacitor; batch 51 #897)"
+      "gpu": 6.23,
+      "src": "G-recheck-f41-3 (LANE-SCOUT, tb/item-scout-1108 6422e1c4f), one-sided on main e1c941cbd: native Voltarach + giant-tree fade; spacing defect still PRESENT 3/3"
     },
     "F41#4": {
       "gpu": 6.37,
