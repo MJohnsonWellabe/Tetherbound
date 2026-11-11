@@ -1943,16 +1943,16 @@
       "before": 5.02,
       "after": 6.9,
       "pr": "#910"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F36#30 Abyssal Guardian matte hide",
       "before": 5.22,
       "after": 5.77,
       "pr": "#911"
-    },
+    }
+  ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [
     {
       "item": "F36#80 Thundertunnel coat",
       "before": 4.63,
@@ -2027,6 +2027,11 @@
     }
   ],
   "landed_recent": [
+    {
+      "pr": "#911",
+      "what": "Batch 65: Abyssal Guardian matte hide ON (F36#30 5.22 -> 5.77, 3/3); knife-swing smoke flake confirmed by one re-run",
+      "when": "23:27 UTC Wed 11 Nov 2026"
+    },
     {
       "pr": "#910",
       "what": "Batch 64: dialogue capture waits for the camera blend; Trail Camp (F38#32 6.91); Voltarach (F36#86 6.50) and Ribbonray (F36#61 6.90) coats",
@@ -2643,7 +2648,7 @@
     },
     "F36#30": {
       "gpu": 6.56,
-      "src": "G-things-faint arm 6.56 (faint grounding, fixed stage); plus G-below6-abyssal-matte (LANE-SCOUT 44f5b38be) matte hide on main's stage 5.22 -> 5.77 (+0.55, 3/3), expected to stack; neither landed yet"
+      "src": "G-things-faint arm 6.56 (faint grounding, fixed stage); plus G-below6-abyssal-matte (LANE-SCOUT 44f5b38be) matte hide on main's stage 5.22 -> 5.77 (+0.55, 3/3), expected to stack; matte LANDED #911; faint in #913"
     },
     "F36#86": {
       "gpu": 6.5,
