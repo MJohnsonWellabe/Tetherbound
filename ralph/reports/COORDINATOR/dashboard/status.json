@@ -1,5 +1,5 @@
 {
-  "updated": "11 Nov 2026 00:40 UTC",
+  "updated": "11 Nov 2026 01:05 UTC",
   "headline": [
     "11 Nov 00:40: Warrens foundation landed (#894, with the cave-mouth keep-out). Batch 51 (#897, giant trees in the fight fade) and batch 52 (#898, walk_03 open-ground stand) in CI. Tonight on main so far: #894 Warrens foundation, #895 Stormwood bark, #896 Meadows ridge.",
     "11 Nov 00:20: giant trees in the fight fade win (Hollows +1.09, F41#3 to 5.89), batch 51 in CI, with the Hall timber red-rule fix. Landed tonight: Stormwood bark (#895), Meadows ridge (#896). Warrens foundation (#894) is on its last CI run; the walk_03 stand follows.",
@@ -1883,9 +1883,9 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 52 (#898, in CI)",
+      "pr": "#898",
       "what": "Burrow Warrens walk_03 gets a reviewed open-ground capture stand showing the hillside, road and ridge (F38#24 +2.47, F38#30 +1.28, 3/3; capture tooling only)",
-      "when": "11 Nov, in CI"
+      "when": "11 Nov 01:04"
     },
     {
       "pr": "batch 51 (#897, in CI)",
