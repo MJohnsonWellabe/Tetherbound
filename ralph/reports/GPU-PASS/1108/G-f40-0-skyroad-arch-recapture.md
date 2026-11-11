@@ -57,4 +57,4 @@ The arch adds nothing new. Its weak points are the baseline's top two causes:
 1. the rain grade and streak rendering;
 2. the empty plateau without Cloudreach landmarks or a cloud sea.
 
-A rain-grade fix would lift 4 of these 8 sheets, and the 1-in-8 rain share of the full matrix.
+A rain-grade fix would lift 4 of these 8 sheets. Half of the full 384-frame matrix is rain, while the 10 Nov sample judged only 1 rain sheet in 7, so the sampled 6.58 likely flatters the matrix.
