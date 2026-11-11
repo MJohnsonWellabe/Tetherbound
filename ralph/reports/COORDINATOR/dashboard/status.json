@@ -2528,7 +2528,7 @@
     },
     "F36#88": {
       "gpu": 6.32,
-      "src": "G-things-faint (2): Water Abyssal Guardian on the game-resolved clip (stage fix lands with the faint arm) 6.32; was 5.85 on the raw clip (5.62 noswitch in the same batch)"
+      "src": "G-things-faint (2) game-clip base 6.32 (stage fix lands with THINGS-FAINT); matte arm level 0.00 (G-below6-abyssal-matte): material lever spent, remake needs Meshy"
     },
     "F36#93": {
       "gpu": 7.39,
@@ -2540,7 +2540,7 @@
     },
     "F36#30": {
       "gpu": 6.56,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Abyssal Guardian 5.62 -> 6.56 (3/3)"
+      "src": "G-things-faint arm 6.56 (faint grounding, fixed stage); plus G-below6-abyssal-matte (LANE-SCOUT 44f5b38be) matte hide on main's stage 5.22 -> 5.77 (+0.55, 3/3), expected to stack; neither landed yet"
     },
     "F36#86": {
       "gpu": 6.5,
