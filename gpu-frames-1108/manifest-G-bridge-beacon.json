@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "off-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-bridge-beacon/off-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.149,
+  "lower_edges": 0.3304,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging (newapproach-bridge-beacon-precheck, F40#8). High, main e1c941cbd (remote main; #898 not landed), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night. off = main as is; on = plus tb/newapproach 8abf81def NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json (objective_beacon.json realm_styles.cloudreach.enabled true). Requested: broken_causeways__03 day and night close; the substring subset also captured the landmark__three_bells_bridge stand (included). Read: no objective beam (beam, core or ground ring) in any frame on either side; bright-cyan pixels 0% day, about 0.01% night on both sides; differences are grass motion and a slight camera shift only."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "preset": "off-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-bridge-beacon/off-High/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.285,
+  "lower_edges": 0.2906,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging (newapproach-bridge-beacon-precheck, F40#8). High, main e1c941cbd (remote main; #898 not landed), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night. off = main as is; on = plus tb/newapproach 8abf81def NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json (objective_beacon.json realm_styles.cloudreach.enabled true). Requested: broken_causeways__03 day and night close; the substring subset also captured the landmark__three_bells_bridge stand (included). Read: no objective beam (beam, core or ground ring) in any frame on either side; bright-cyan pixels 0% day, about 0.01% night on both sides; differences are grass motion and a slight camera shift only."
+ },
+ {
+  "frame": "cloudreach__landmark__three_bells_bridge__day__close.jpg",
+  "preset": "off-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-bridge-beacon/off-High/cloudreach__landmark__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.187,
+  "lower_edges": 0.0941,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging (newapproach-bridge-beacon-precheck, F40#8). High, main e1c941cbd (remote main; #898 not landed), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night. off = main as is; on = plus tb/newapproach 8abf81def NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json (objective_beacon.json realm_styles.cloudreach.enabled true). Requested: broken_causeways__03 day and night close; the substring subset also captured the landmark__three_bells_bridge stand (included). Read: no objective beam (beam, core or ground ring) in any frame on either side; bright-cyan pixels 0% day, about 0.01% night on both sides; differences are grass motion and a slight camera shift only."
+ },
+ {
+  "frame": "cloudreach__landmark__three_bells_bridge__night__close.jpg",
+  "preset": "off-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-bridge-beacon/off-High/cloudreach__landmark__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.272,
+  "lower_edges": 0.0988,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging (newapproach-bridge-beacon-precheck, F40#8). High, main e1c941cbd (remote main; #898 not landed), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night. off = main as is; on = plus tb/newapproach 8abf81def NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json (objective_beacon.json realm_styles.cloudreach.enabled true). Requested: broken_causeways__03 day and night close; the substring subset also captured the landmark__three_bells_bridge stand (included). Read: no objective beam (beam, core or ground ring) in any frame on either side; bright-cyan pixels 0% day, about 0.01% night on both sides; differences are grass motion and a slight camera shift only."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "on-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-bridge-beacon/on-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.154,
+  "lower_edges": 0.3249,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging (newapproach-bridge-beacon-precheck, F40#8). High, main e1c941cbd (remote main; #898 not landed), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night. off = main as is; on = plus tb/newapproach 8abf81def NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json (objective_beacon.json realm_styles.cloudreach.enabled true). Requested: broken_causeways__03 day and night close; the substring subset also captured the landmark__three_bells_bridge stand (included). Read: no objective beam (beam, core or ground ring) in any frame on either side; bright-cyan pixels 0% day, about 0.01% night on both sides; differences are grass motion and a slight camera shift only."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "preset": "on-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-bridge-beacon/on-High/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.284,
+  "lower_edges": 0.3016,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging (newapproach-bridge-beacon-precheck, F40#8). High, main e1c941cbd (remote main; #898 not landed), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night. off = main as is; on = plus tb/newapproach 8abf81def NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json (objective_beacon.json realm_styles.cloudreach.enabled true). Requested: broken_causeways__03 day and night close; the substring subset also captured the landmark__three_bells_bridge stand (included). Read: no objective beam (beam, core or ground ring) in any frame on either side; bright-cyan pixels 0% day, about 0.01% night on both sides; differences are grass motion and a slight camera shift only."
+ },
+ {
+  "frame": "cloudreach__landmark__three_bells_bridge__day__close.jpg",
+  "preset": "on-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-bridge-beacon/on-High/cloudreach__landmark__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.182,
+  "lower_edges": 0.0932,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging (newapproach-bridge-beacon-precheck, F40#8). High, main e1c941cbd (remote main; #898 not landed), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night. off = main as is; on = plus tb/newapproach 8abf81def NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json (objective_beacon.json realm_styles.cloudreach.enabled true). Requested: broken_causeways__03 day and night close; the substring subset also captured the landmark__three_bells_bridge stand (included). Read: no objective beam (beam, core or ground ring) in any frame on either side; bright-cyan pixels 0% day, about 0.01% night on both sides; differences are grass motion and a slight camera shift only."
+ },
+ {
+  "frame": "cloudreach__landmark__three_bells_bridge__night__close.jpg",
+  "preset": "on-High",
+  "tree": "e1c941cbde9b631a428b428b383ba8407f12a9dd",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-bridge-beacon/on-High/cloudreach__landmark__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.286,
+  "lower_edges": 0.0988,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging (newapproach-bridge-beacon-precheck, F40#8). High, main e1c941cbd (remote main; #898 not landed), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night. off = main as is; on = plus tb/newapproach 8abf81def NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json (objective_beacon.json realm_styles.cloudreach.enabled true). Requested: broken_causeways__03 day and night close; the substring subset also captured the landmark__three_bells_bridge stand (included). Read: no objective beam (beam, core or ground ring) in any frame on either side; bright-cyan pixels 0% day, about 0.01% night on both sides; differences are grass motion and a slight camera shift only."
+ }
+]
