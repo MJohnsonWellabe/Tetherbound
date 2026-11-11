@@ -3053,7 +3053,7 @@
    "frames": "stormbrush hit and faint 000-100",
    "capture": "Medium, one side. LANE-SCOUT: closes at 7.5+ mapped (High 7.68).",
    "note": "Close-out.",
-   "done": true,
+   "done": "G-f36-72-stormbrush-medium f835c10d5 (F36#72 closed, High 7.68 / Medium 7.75)",
    "frames_pushed": "G-f36-72-stormbrush-medium f835c10d5. With LANE-SCOUT."
   },
   {
@@ -3073,7 +3073,8 @@
    "frames": "standing (hit 000), hit 050, faint 050, faint 100; crop 560,200 1000x640",
    "capture": "High, base (main, overlay off) and arm (overlay on), same command",
    "priority": "below-6 floor row; owned now by LANE-BELOW6 (REMAKES handed off)",
-   "note": "Voltarach 5.11 (chrome-gold statue, face lost). Base re-baselines the native eight-leg spider main ships since 9 Nov."
+   "note": "Voltarach 5.11 (chrome-gold statue, face lost). Base re-baselines the native eight-leg spider main ships since 9 Nov.",
+   "done": "G-remakes-voltarach-floor1 2a9b685ad (judging: LANE-SCOUT)"
   },
   {
    "id": "remakes-ribbonray-floor1",
@@ -3092,7 +3093,8 @@
    "frames": "standing (hit 000), hit 050, faint 050, faint 100; crop 560,200 1000x640",
    "capture": "High, base (main, overlay off) and arm (overlay on), same command",
    "priority": "below-6 floor row; owned now by LANE-BELOW6 (REMAKES handed off)",
-   "note": "Ribbonray 5.68 (all-magenta; tail tip detached under the floor in hit frames)."
+   "note": "Ribbonray 5.68 (all-magenta; tail tip detached under the floor in hit frames).",
+   "done": "G-remakes-ribbonray-floor1 9c6d71c8e (judging: LANE-SCOUT)"
   },
   {
    "id": "things-t4-rescore-a",
@@ -3108,7 +3110,8 @@
    "capture": "High, one side (re-score, no arm)",
    "request": "ralph/reports/LANES/THINGS/NOTE.md on tb/things (T4)",
    "priority": "6-7 band; no code. Rows not scored since the 1 Nov remakes went ON. Results below 6 go to LANE-BELOW6; judges naming an ungrounded faint feed LANE-THINGS T1.",
-   "note": "lowest first: sparkit 6.03 (CPU), riftfrill 6.04, shadelet 6.06, pebbik 6.07 (CPU), mirejaw 6.23, thundertunnel 6.47, paddlenewt 6.49, mosshock 6.55 (CPU), brooktail 6.63"
+   "note": "lowest first: sparkit 6.03 (CPU), riftfrill 6.04, shadelet 6.06, pebbik 6.07 (CPU), mirejaw 6.23, thundertunnel 6.47, paddlenewt 6.49, mosshock 6.55 (CPU), brooktail 6.63",
+   "done": "G-things-t4-rescore-a 32de092b2 (judging: LANE-SCOUT)"
   },
   {
    "id": "things-t4-rescore-b",
@@ -3124,7 +3127,8 @@
    "capture": "High, one side (re-score, no arm)",
    "request": "ralph/reports/LANES/THINGS/NOTE.md on tb/things (T4)",
    "priority": "6-7 band; no code. Rows not scored since the 1 Nov remakes went ON. Results below 6 go to LANE-BELOW6; judges naming an ungrounded faint feed LANE-THINGS T1.",
-   "note": "trailpup 6.64, solmane 6.68, cliffspike 6.72, voltwig 6.79, stormtrail 6.82, duskhush 6.85, breezetail 6.89, stormraven 6.94 (CPU), ashtusk 6.96"
+   "note": "trailpup 6.64, solmane 6.68, cliffspike 6.72, voltwig 6.79, stormtrail 6.82, duskhush 6.85, breezetail 6.89, stormraven 6.94 (CPU), ashtusk 6.96",
+   "done": "G-things-t4-rescore-b 35bd6ae29 (judging: LANE-SCOUT)"
   },
   {
    "id": "things-faint",
