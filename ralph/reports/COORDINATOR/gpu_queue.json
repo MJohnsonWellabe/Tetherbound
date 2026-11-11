@@ -2693,7 +2693,8 @@
    "capture": "High. Pre-check: no straight quad edge or hard line against the cliff; no flat-sprite pop as the mount passes; not pasted-on at 1080p. Then LANE-SCOUT on F40#11's brief.",
    "note": "New idea (island mist volume banks -> cumulus cards), not the parked deck-shader line.",
    "done": true,
-   "frames_pushed": "G-newapproach-edge-cards b013a69c9 on main 5b0f2c924: no quad edges or pop; cards crisper than the surrounding sea (possible pasted-on read). With LANE-SCOUT."
+   "frames_pushed": "G-newapproach-edge-cards b013a69c9 on main 5b0f2c924: no quad edges or pop; cards crisper than the surrounding sea (possible pasted-on read). With LANE-SCOUT.",
+   "verdict": "G-newapproach-edge-cards (tb/item-scout-1108 0a154f5d7): SHIP +0.73 (3/3), F40#11 5.26->5.99. Cards read lavender-grey/pasted (3/3); next: retint to floor white + soft lit cloud-sea material."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
