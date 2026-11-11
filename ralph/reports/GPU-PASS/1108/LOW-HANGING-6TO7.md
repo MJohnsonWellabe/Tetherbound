@@ -71,3 +71,30 @@ LANE-SCOUT, 11 Nov 2026, coordinator request. Read-only; no game files changed.
 3. **Put #7, #8 and #9 under the close-out exception.** They are small fixes, so they ride inside the #3/#4/#6 arms rather than standing alone.
 4. **Give the big floor-raising swing to #5,** the Stormwood storm light: 7 rows share it, and it is a scene change.
 5. **Leave #13–#15 for the Meshy lane.**
+
+## Update, 11 Nov evening: today's re-scores
+See `CLUSTERS-6TO7.md` for the THINGS/PLACES split. The rows above that changed:
+
+**#1, Tidewake dialogue re-score:** done (`G-rescore-tier2-batch-1.md`).
+- F39#18 7.06, F39#26 6.49, F39#29 6.41, F39#27 6.16.
+- The coordinator reports a dialogue blend fault. Re-capture all dialogue once the fix lands.
+
+**#2, pose re-score:** 19 rows done (batches 1 and 2). The mean change is −0.15.
+- **Up:**
+  - stormbrush, **closed** (7.68 High, 7.75 Medium);
+  - skyrill 7.47;
+  - reedwing 7.26;
+  - cannonback 7.21;
+  - cragclaw 6.94;
+  - water cragclaw 6.92.
+- **Down, now below 6:** voltarach 5.11, water mirejaw 5.52, abyssal guardian 5.54, ribbonray 5.68, water mosshell 5.81, water abyssal guardian 5.85.
+- **Shared cause:** ungrounded faints (10 of 19 rows), then broken travel poses and the tail around the trainer.
+- **Still to re-score:** 18 pose rows (T4) and the 10 model rows.
+
+**#11, Cloudreach:** F40#0 over all 384 frames is 6.54. The skyroad arch scored 6.05, with rain sheets at 5.45–5.74.
+
+**#5, Stormwood:** see `STORMWOOD-LIGHT-ASKS.md`. A3 key light and groves are shipped; four approaches are parked.
+
+**Other rows:**
+- F38#32 camp r2 at 6.91 (passes; game frames level).
+- F41#8 distinct bodies: +0.29, flag-off, to ride inside the Stormwood light pass.
