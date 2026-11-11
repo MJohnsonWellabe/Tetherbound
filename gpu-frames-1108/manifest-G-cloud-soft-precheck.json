@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "crag/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "off-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/off-High/crag/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.253,
+  "lower_edges": 0.1239,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "maela/cloudreach__inventory__character__keeper_maela.jpg",
+  "preset": "off-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/off-High/maela/cloudreach__inventory__character__keeper_maela.jpg",
+  "sky_fraction": 0.094,
+  "lower_edges": 0.205,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "maela/cloudreach__inventory__character__keeper_maela__dialogue.jpg",
+  "preset": "off-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/off-High/maela/cloudreach__inventory__character__keeper_maela__dialogue.jpg",
+  "sky_fraction": 0.207,
+  "lower_edges": 0.2411,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "ride/phase2_27_terrace_road_back_13.5s.png",
+  "preset": "off-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/off-High/ride/phase2_27_terrace_road_back_13.5s.jpg",
+  "sky_fraction": 0.194,
+  "lower_edges": 0.0255,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "ride/phase2_28_terrace_road_back_15.0s.png",
+  "preset": "off-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/off-High/ride/phase2_28_terrace_road_back_15.0s.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.0443,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "crag/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "on-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/on-High/crag/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.254,
+  "lower_edges": 0.1225,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "maela/cloudreach__inventory__character__keeper_maela.jpg",
+  "preset": "on-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/on-High/maela/cloudreach__inventory__character__keeper_maela.jpg",
+  "sky_fraction": 0.101,
+  "lower_edges": 0.2063,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "maela/cloudreach__inventory__character__keeper_maela__dialogue.jpg",
+  "preset": "on-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/on-High/maela/cloudreach__inventory__character__keeper_maela__dialogue.jpg",
+  "sky_fraction": 0.213,
+  "lower_edges": 0.2415,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "ride/phase2_27_terrace_road_back_13.5s.png",
+  "preset": "on-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/on-High/ride/phase2_27_terrace_road_back_13.5s.jpg",
+  "sky_fraction": 0.194,
+  "lower_edges": 0.0254,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ },
+ {
+  "frame": "ride/phase2_28_terrace_road_back_15.0s.png",
+  "preset": "on-High",
+  "tree": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+  "tool": "res://tools/phase2_capture_dialogue.gd + phase2_capture_locations.gd + phase2_capture_cloudreach_ride.gd",
+  "path": "G-cloud-soft-precheck/on-High/ride/phase2_28_terrace_road_back_15.0s.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.0442,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC pre-check, not for judging. High, tb/newapproach 758437f99. off = tree as is; on = plus NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json (cloudreach_visual.json cloud_sea.soft_intersect_m 30). maela + crag: --cloudreach-cause-cloud_sea on both sides (raised deck), seed 2042, --ground-cover-cache. ride: phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20 both sides, road_back_13.5s and 15.0s only. Read: the fade clears the deck only where solid ground is within 30 m behind it; the slab's hard top, its diagonal outline and the ride-back ribbon planes are unchanged."
+ }
+]
