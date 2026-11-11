@@ -19,6 +19,8 @@ func test_foliage_grade_ships_off_and_adds_no_overlay() -> void:
 	# so this checks only that foliage_grade_1104 OFF adds nothing.
 	if look.has("bark_grey_1110"):
 		look.bark_grey_1110["enabled"] = false
+	if look.has("bark_detail_1110"):
+		look.bark_detail_1110["enabled"] = false
 	var vegetation := _json("res://data/config/stormwood_vegetation.json")
 	assert_eq(VEGETATION.stormwood_foliage_grade(vegetation, look), {}, "OFF adds no overlay")
 
@@ -30,6 +32,8 @@ func test_foliage_grade_on_covers_each_layer_model_with_cool_tints() -> void:
 	# retints the same bark materials.
 	if look.has("bark_grey_1110"):
 		look.bark_grey_1110["enabled"] = false
+	if look.has("bark_detail_1110"):
+		look.bark_detail_1110["enabled"] = false
 	var vegetation := _json("res://data/config/stormwood_vegetation.json")
 	var overlay := VEGETATION.stormwood_foliage_grade(vegetation, look)
 	var variants: Dictionary = overlay.variant_retint

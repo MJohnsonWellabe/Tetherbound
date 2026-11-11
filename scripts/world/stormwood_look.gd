@@ -293,6 +293,16 @@ func adapt_material(source: Material) -> Material:
 		material.specular_mode = BaseMaterial3D.SPECULAR_SCHLICK_GGX
 		material.metallic_specular = float(cfg.foliage_specular) \
 			if original.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR else float(cfg.solid_specular)
+		# F41#22 bark (vegetation.gd `matte` adjust, OFF until judged): a bark
+		# material keeps its own tiling bark layer and stays matte. The shared
+		# gloss above is what made the giant trunks read as painted plastic.
+		if original.has_meta(&"stormwood_bark"):
+			material.roughness = 1.0
+			material.metallic_specular = original.metallic_specular
+			if original.detail_enabled:
+				material.detail_albedo = original.detail_albedo
+				material.detail_normal = original.detail_normal
+				material.uv2_scale = original.uv2_scale
 		result = material
 	elif source is ShaderMaterial:
 		var original := source as ShaderMaterial
