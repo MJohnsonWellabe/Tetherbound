@@ -3791,6 +3791,7 @@
     ]
   },
   "dunes": {
+    "_why_ripple_relief_1111": "ON 11 Nov 2026 (F39#30, LANE-FLOOR2 FLOOR2-SANDSTRIPES; GPU High G-floor2-sand-ripple-relief on tb/item-scout-1108 48b7553fc): normal_strength 0.14 -> 0.035 and ripple_strength 0.009 -> 0.03. At a low sun the 8-degree ripple normal tilt turned every lee face near-black, drawing hard regular stripes across the sand at dawn and golden hour; the ripple tint now carries the pattern. Dawn and golden 5.75 -> 6.29 (+0.54, 3/3), controls +0.19, F39#30 5.85 -> 6.16, F13#5 golden/dawn +0.34 (3/3).",
     "sand_colour": "#c4ae89",
     "wet_colour": "#7a6a52",
     "wet_height_m": 1.4,
@@ -3798,8 +3799,8 @@
     "texture_strength": 0.85,
     "face_shade_strength": 0.12,
     "ripple_scale": 10.0,
-    "ripple_strength": 0.009,
-    "normal_strength": 0.14
+    "ripple_strength": 0.03,
+    "normal_strength": 0.035
   },
   "offshore": {
     "specular": 0.18,
