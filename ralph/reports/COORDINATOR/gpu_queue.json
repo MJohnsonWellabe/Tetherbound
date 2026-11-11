@@ -3380,7 +3380,8 @@
    "frames": "hit and faint 000-100 per species; crop 560,200 1000x640; judge each species as its own set",
    "capture": "High, base (overlay off) and arm (overlay on)",
    "priority": "below 6: Mirejaw 5.28 (main stage), Abyssal 5.77",
-   "note": "Mirejaw grounded hit (rotation x0.45) plus Abyssal bowed flinch. Pre-check: Mirejaw hit 050 head up, no pale gaping jaw, no grey blade; Abyssal hit 050 a crouched flinch clearly unlike standing."
+   "note": "Mirejaw grounded hit (rotation x0.45) plus Abyssal bowed flinch. Pre-check: Mirejaw hit 050 head up, no pale gaping jaw, no grey blade; Abyssal hit 050 a crouched flinch clearly unlike standing.",
+   "done": "G-below6-hits b4afac81a (judging)"
   },
   {
    "id": "places-stormlight",
