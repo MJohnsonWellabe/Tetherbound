@@ -52,7 +52,16 @@ func test_enabled_scopes_union_their_species_and_master_or_none_change_nothing()
 	var master := {"enabled": true, "lanekit_mosshell_scope": {"enabled": true, "species": ["mosshell"]}}
 	assert_eq(SETTLE.scoped(master), master, "the roster-wide master ignores scopes")
 	var shipped: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/creature_pose_settle.json"))
-	# Shipped: master OFF; lanekit_mosshell_scope ON (F38#26 judged gain), tidewake_scope OFF.
+	# Shipped: master OFF; lanekit_mosshell_scope ON (F38#26 judged gain);
+	# floor2_aquaryn_scope ON (F39#6, G-floor2-aquaryn-settled-rest, GPU High
+	# 6.75 -> 7.47, 3/3); tidewake_scope OFF.
 	var live: Dictionary = SETTLE.scoped(shipped)
 	assert_eq(live.enabled, true)
-	assert_eq(live.only_species, ["mosshell"])
+	assert_eq(live.only_species, ["mosshell", "aquaryn"])
+	# The Aquaryn scope ships with settled_rest in rest_only mode: its own
+	# faint and hit clips stay, and only its rest is the baked lie-down.
+	var rest: Dictionary = (shipped as Dictionary).get("settled_rest", {})
+	assert_true(bool(rest.get("enabled", false)), "settled_rest ships ON")
+	assert_true(bool(rest.get("rest_only", false)), "the faint and hit clips are kept")
+	assert_eq(rest.get("species", []), ["aquaryn"])
+	assert_true(str(rest.get("_why_on", "")).contains("6.75 -> 7.47"), "records its judged score")

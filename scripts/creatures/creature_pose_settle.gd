@@ -44,6 +44,7 @@ const PATH := "res://data/config/creature_pose_settle.json"
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const META := "pose_settle_installed"
 const ORIGINALS := &"pose_settle_original"
+const RESTS := &"pose_settle_rest"
 
 const CACHE_LIMIT := 96
 static var _cache: Dictionary = {}
@@ -156,10 +157,33 @@ static func apply(body: Node3D, model: Node3D, player: AnimationPlayer, clips: D
 			var edited: Animation = settle_faint(rig, source, settings) if role == "faint" else settle_hit(rig, source, settings)
 			if edited != null:
 				baked[role] = edited
+		# F39#6 `settled_rest` (OFF until judged): a rest of its own for the
+		# listed species, baked from the same faint clip: the body lies down
+		# belly to the ground like the settled faint, with the head kept up.
+		var rest_cfg: Variant = settings.get("settled_rest", {})
+		if rest_cfg is Dictionary and bool((rest_cfg as Dictionary).get("enabled", false)) \
+				and _listed((rest_cfg as Dictionary).get("species", []), species_id) and sources["faint"] != null:
+			var rest_settings := settings.duplicate(true)
+			var rest_faint: Dictionary = rest_settings.get("faint", {})
+			var rest_crumple: Dictionary = rest_faint.get("crumple", {})
+			rest_crumple["keep_head_up"] = true
+			var forced: Array = (rest_crumple.get("species", []) as Array).duplicate()
+			if not forced.has(species_id.trim_prefix("water_")):
+				forced.append(species_id.trim_prefix("water_"))
+			rest_crumple["species"] = forced
+			rest_faint["crumple"] = rest_crumple
+			rest_settings["faint"] = rest_faint
+			var rested: Animation = settle_faint(rig, sources["faint"], rest_settings)
+			if rested != null:
+				baked["rest"] = rested
 		if _cache.size() >= CACHE_LIMIT:
 			_cache.clear()
 		_cache[key] = baked
 	var changed := false
+	# `settled_rest.rest_only`: the species keeps its own faint and hit clips
+	# and takes only the baked rest.
+	var rest_only := baked.has("rest") and bool((settings.get("settled_rest", {}) as Dictionary).get("rest_only", false))
+	var replaced: Array[String] = []
 	for role: String in ["faint", "hit"]:
 		if not baked.has(role):
 			continue
@@ -169,16 +193,37 @@ static func apply(body: Node3D, model: Node3D, player: AnimationPlayer, clips: D
 			# Bed rests finish the installed faint; keep them on the original.
 			_keep_original(player, sources[role])
 			clips["rest_faint"] = "%s/faint" % ORIGINALS
+			if baked.has("rest"):
+				var rest_library := AnimationLibrary.new()
+				rest_library.add_animation(&"faint", (baked["rest"] as Animation).duplicate(true))
+				if player.has_animation_library(RESTS):
+					player.remove_animation_library(RESTS)
+				player.add_animation_library(RESTS, rest_library)
+				clips["rest_faint"] = "%s/faint" % RESTS
+				changed = true
+		if rest_only:
+			continue
 		_replace(player, name, edited)
+		replaced.append(name)
 		changed = true
 	if changed:
 		body.set_meta(META, true)
 		var settled: Array = clips.get("pivot_clips", [])
-		for role: String in ["faint", "hit"]:
-			if str(clips.get(role, "")) not in settled:
-				settled.append(str(clips.get(role, "")))
+		for name: String in replaced:
+			if name not in settled:
+				settled.append(name)
+		if str(clips.get("rest_faint", "")).begins_with(str(RESTS)) and str(clips.rest_faint) not in settled:
+			settled.append(str(clips.rest_faint))
 		clips["pivot_clips"] = settled
 	return clips
+
+
+## True when `apply` installed a baked rest clip on this body's animator.
+static func has_settled_rest(body: Node, animator: Object) -> bool:
+	if body == null or animator == null or not bool(body.get_meta(META, false)):
+		return false
+	var clips: Variant = animator.get("_clips")
+	return clips is Dictionary and str((clips as Dictionary).get("rest_faint", "")).begins_with(str(RESTS))
 
 
 static func _cache_key(model: Node3D, skeleton: Skeleton3D, clips: Dictionary, sources: Dictionary,
@@ -324,7 +369,11 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 			var after: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
 			fold["_inverted"] = after is Vector3 and (after as Vector3).y > 0.0 and not keep
 			rig.splay_limbs(animation, end, rotations[-1], positions[-1], fold)
-		_drop_head(rig, animation, end, rotations[-1], positions[-1], crumple, limbed)
+		# `keep_head_up` (the settled rest): the body lies down but the head
+		# stays where the clip leaves it, so a rest reads as lying awake and
+		# not as the collapsed faint.
+		if not bool(crumple.get("keep_head_up", false)):
+			_drop_head(rig, animation, end, rotations[-1], positions[-1], crumple, limbed)
 	else:
 		if not lift.is_empty() and limbed:
 			# The face stays visible on a side-lying body.
@@ -387,7 +436,9 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	animation.set_meta("settle_faint", {"forward": rig.forward,
 		"centre": Vector3(rig.standing_centre.x, 0.0, rig.standing_centre.y),
 		"rotations": rotations.duplicate(), "positions": positions.duplicate(), "times": times,
-		"roll_deg": rad_to_deg(roll), "side": side_sign, "crumple": crumples})
+		"roll_deg": rad_to_deg(roll), "side": side_sign, "crumple": crumples,
+		# faint.face_camera.exclude_species: these keep the direction they fell in.
+		"no_turn": _listed(_section(cfg, "faint", "face_camera").get("exclude_species", []), rig.species_id)})
 	return animation
 
 
@@ -406,6 +457,8 @@ static func face_camera(model: Node3D, player: AnimationPlayer, clip: String, ca
 	if not animation.has_meta("settle_faint"):
 		return 0.0
 	var baked: Dictionary = animation.get_meta("settle_faint")
+	if bool(baked.get("no_turn", false)):
+		return 0.0
 	var parent := model.get_parent() as Node3D
 	if parent == null:
 		return 0.0
