@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "thundertunnel-faint-000.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-faint-000.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0511,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-025.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-faint-025.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0527,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-050.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-faint-050.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0501,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-075.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-faint-075.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0506,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-100.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-faint-100.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0506,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-000.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-hit-000.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0507,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-025.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-hit-025.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0528,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-050.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-hit-050.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0529,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-075.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-hit-075.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0515,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-100.png",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/arm-High/thundertunnel-hit-100.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0506,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-000.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-faint-000.jpg",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0505,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-025.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-faint-025.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0504,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-050.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-faint-050.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0493,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-075.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-faint-075.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.05,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-faint-100.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-faint-100.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0497,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-000.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-hit-000.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0505,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-025.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-hit-025.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0515,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-050.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-hit-050.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0516,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-075.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-hit-075.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0506,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "thundertunnel-hit-100.png",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context",
+  "path": "G-below6-thundertunnel-coat/base-High/thundertunnel-hit-100.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0504,
+  "script_errors": 0,
+  "note": "F36#80, High. base = tb/below6 cbc867f80 (flags off); arm = + BELOW6-THUNDERTUNNEL/overlay.json (below6_floor_thundertunnel: value_lift_floor1 coat + glow). Neutral stage: sky heuristic bypassed after an eye check."
+ }
+]
