@@ -2736,6 +2736,27 @@
    "note": "Confirms the landing version before the F41#9 landing.",
    "done": true,
    "frames_pushed": "G-floor2-harvest-presence-confirm 8e1ff92e1: all three frames pass (trainer clear, no crown glare, violet holds). With LANE-SCOUT."
+  },
+  {
+   "id": "floor2-warrens-meadow-match",
+   "kind": "arm",
+   "rows": [
+    "F38#30"
+   ],
+   "also_rows": [
+    "F38#24 (walk_03 also frames the distant mountains)"
+   ],
+   "branch": "tb/floor2",
+   "head": "b8e9112a6",
+   "tree": "tb/floor2 b8e9112a6 (burrow_warrens.gd, burrow_warrens.json; installed textures and nature pack only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-WARRENS/overlay_meadow_match.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-WARRENS/CAPTURE.json",
+   "job": "phase2_capture_routes.gd --biome=meadows --seed=2042 --frame=...walk_02_day --frame=...walk_03_day --frame=...route_day --preset=High (use the row's usual route capture args if they differ); base and arm",
+   "frames": "burrow_warrens walk_02_day, walk_03_day, route_day",
+   "capture": "High. Pre-check: cave mouth and earth surround unchanged; no tuft floating or in the mouth; hillside visibly different from base (else report). The red trees at the entrance stay red (owner note). Then LANE-SCOUT on F38#30's brief.",
+   "note": "Third idea on F38#30: the mound shell takes the meadow's grass sheet on up-facing faces (cause shown by false-colour capture)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
