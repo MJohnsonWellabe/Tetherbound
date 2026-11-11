@@ -2305,6 +2305,24 @@
    "capture": "High. After newapproach-cloud-plane. The tool only writes under res://.artifacts/phase2/ or res://ralph/reports/VISUAL/phase2/, so {OUT} must start with one of those. Arm: each creature stands beside the trainer and draws clearly taller than the trainer; feet and contact shadow readable; alpha coyote and alpha otter a visible size step above their normal frames; subject and trainer both fully in frame. Pre-check: each arm manifest has creature_ruler_depth true and trainer_to_subject_xz_m under 5 for every frame; each base manifest has it false and 7 or more. If any arm subject is cut by a frame edge or hides the trainer, report it and do not judge that frame.",
    "note": "LANE-FLOOR2: the creature pose stage stood every subject 7-12 m beyond the trainer, so perspective drew a 2.9 m creature at 0.68x the 1.80 m trainer. The flag (capture tooling only) stands the subject beside the trainer so true scale reads. Coordinator-approved as a capture-stand fix. Rows F38#5 (5.86), F38#26 (5.91), F38#31 (5.85); cross-biome no-loss frames.",
    "done": false
+  },
+  {
+   "id": "newapproach-charge-lines",
+   "kind": "arm",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/newapproach",
+   "head": "7d54c3874a379083df3505ee3b0fe25cb3a390f1",
+   "tree": "tb/newapproach (shaders/creature_surface_finish.gdshader, scripts/creatures/creature_surface_finish.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CHARGELINES/overlay_charge_lines.json",
+   "overlay_format": "deep merge",
+   "job": "The same job and frames as G-recheck-1111 for F41#13 (fulgocobra and stormraven idle frames), plus one other storm creature frame from that set as a no-loss control.",
+   "frames": "G-recheck-1111's F41#13 frames (fulgocobra idle, stormraven idle) plus one other storm creature as a control; base vs arm",
+   "capture": "High. After floor2-creature-ruler-depth. Stormraven: a dark bird with glowing cyan feather edges, feathers readable, not a pale-blue blob. Fulgocobra: gold bands with visible scale borders and hood plates. Pre-check: if either creature blooms to white or the lines sparkle or crawl in motion, report it before judging. The control creature must look the same on both sides. No red.",
+   "note": "F41#13: the charged accent painted almost the whole stormraven body (charged_1105 widened the hue range), so it read as a pale-blue blob. The arm keeps the accent only on the texture's own scale and feather edges (accent_line) and lowers the glow, matching the judges' ask and the owner's 1 Nov creature rule.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
