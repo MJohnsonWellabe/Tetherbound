@@ -2519,8 +2519,8 @@
       "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Galewisp poses; fly-grip carries nothing"
     },
     "F36#92": {
-      "gpu": 6.26,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Water Mangrove Monitor poses"
+      "gpu": 6.72,
+      "src": "G-water-gameclip-rescores (LANE-SCOUT, tb/item-scout-1108 bc028142f), one-sided on the game-resolved clip (stage fix lands with THINGS-FAINT), GPU High: Water Mangrove Monitor 6.26 -> 6.72; faint lies belly-up, forelimbs in the air"
     },
     "F36#50": {
       "gpu": 6.98,
@@ -2535,8 +2535,8 @@
       "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Water Mirejaw 6.37 (game clip) -> 7.39 (3/3)"
     },
     "F36#94": {
-      "gpu": 5.81,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Water Mosshell poses; inverted turtle, floating rider"
+      "gpu": 6.09,
+      "src": "G-water-gameclip-rescores (LANE-SCOUT, tb/item-scout-1108 bc028142f), one-sided on the game-resolved clip (stage fix lands with THINGS-FAINT), GPU High: Water Mosshell 5.81 -> 6.09; ride and swim unchanged (travel-pose arm judging)"
     },
     "F36#30": {
       "gpu": 6.56,

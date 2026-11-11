@@ -3236,7 +3236,8 @@
    "overlay": null,
    "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler --out={OUT}",
    "capture": "High, one side (flags off)",
-   "note": "Corrected re-score on the game-resolved clip; excluded from the THINGS-FAINT overlay so G-things-faint did not judge it. The GPU lane saw its faint 100 lying on its back, legs up."
+   "note": "Corrected re-score on the game-resolved clip; excluded from the THINGS-FAINT overlay so G-things-faint did not judge it. The GPU lane saw its faint 100 lying on its back, legs up.",
+   "done": "not needed: LANE-SCOUT scored it from the G-things-faint base side (G-water-gameclip-rescores.md, bc028142f): 6.72"
   },
   {
    "id": "below6-abyssal-matte",
