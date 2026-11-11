@@ -2582,7 +2582,9 @@
    "job": "phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042 --preset=Medium, base and arm",
    "frames": "F38#5 set: bramblebun, brooktail, pipwing, trailpup idle",
    "capture": "Medium (F38#5 mapped 7.77 at High). Same pre-check (contact >= 0). Then LANE-SCOUT on the F38#5 brief; closes at 7.5+ mapped on Medium.",
-   "note": "Runs right after the bridge view, before the dawn/rain arm."
+   "note": "Runs right after the bridge view, before the dawn/rain arm.",
+   "done": true,
+   "verdict": "G-floor2-creature-ruler-depth-r3-medium (tb/item-scout-1108 9ffa5de74): F38#5 Medium 7.71 (High 7.77) -> CLOSES once #901 lands."
   },
   {
    "id": "floor2-dawn-haze-storm-grade",
