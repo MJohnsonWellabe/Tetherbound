@@ -2342,7 +2342,8 @@
    "frames": "fulgocobra idle, stormraven idle, sparkit idle (control); base vs arm (same command as G-newapproach-charge-lines)",
    "capture": "High. Next in line. Round 2 (attempt 2 of 2; a loss parks F41#13). Stormraven: a dark bird that separates from the Stormwood ground, with bright saturated cyan feather-edge lines and lit cyan eyes, a soft white-violet rim, no whole-body white aura. Fulgocobra: gold bands at about base brightness with scale borders visible, its blue arc lines and eyes brighter, a soft rim. Pre-check before judging: if the raven is still too dark to read against the grass, or blooms to white, report which. The control creature must look the same on both sides. No red.",
    "note": "F41#13 round 2 (last try before parking): same line mask, brighter saturated cyan lines, eye emission via glow-map boost, white-violet rim; cobra glow back near base.",
-   "done": false
+   "done": true,
+   "frames_pushed": "b494466c3 (r2 pre-check passed)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
