@@ -2840,7 +2840,9 @@
    "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 --preset=High; base and arm",
    "frames": "aquaryn idle, resting, fainted",
    "capture": "High. Pre-check: fainted head not buried, body not half-sunk, no limb twisted or through the body, differs from base; idle and resting match base. Then LANE-SCOUT on F39#6; if 7.5+ at High, queue Medium.",
-   "note": "Near-bar close-out (7.47, needs +0.03)."
+   "note": "Near-bar close-out (7.47, needs +0.03).",
+   "done": true,
+   "frames_pushed": "G-floor2-aquaryn-faint-fold cc9c26af1: pre-checks pass (faint grounded, limbs folded, head on sand). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
