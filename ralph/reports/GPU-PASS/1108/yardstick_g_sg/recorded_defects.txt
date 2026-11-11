@@ -1,0 +1,6 @@
+Ft: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Qs: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Hg: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Zi: none
+Dp: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Gg: none
