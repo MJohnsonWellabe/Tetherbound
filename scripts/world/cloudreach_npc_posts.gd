@@ -94,7 +94,9 @@ static func light_people(people: Node, cfg: Dictionary) -> int:
 		light.light_energy = float(light_cfg.get("energy", 0.7))
 		light.omni_range = float(light_cfg.get("range_m", 4.5))
 		light.omni_attenuation = float(light_cfg.get("attenuation", 1.2))
-		light.shadow_enabled = false
+		# F40#9 scene arm: `fill_light.shadow` (absent = off) lets the post's
+		# key light cast the figure's grounding shadow.
+		light.shadow_enabled = light_cfg.get("shadow") == true
 		light.light_specular = 0.2
 		var offset: Array = light_cfg.get("offset", [0.0, 1.6, 1.2])
 		light.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
@@ -217,6 +219,33 @@ static func build_dais(parent: Node3D, positions: Dictionary, cfg: Dictionary) -
 		visual.mesh = mesh
 		visual.material_override = material
 		body.add_child(visual)
+		# F40#9 scene arm: `cap_scene` (absent = the bare disc) lays an
+		# installed paving piece over the disc top, sized to it, so the post
+		# reads as set stone, not a primitive. Visual only.
+		var cap_path := str(cfg.get("cap_scene", ""))
+		if not cap_path.is_empty() and ResourceLoader.exists(cap_path):
+			var cap_scene := load(cap_path) as PackedScene
+			if cap_scene != null:
+				var cap := cap_scene.instantiate() as Node3D
+				var cap_box: AABB = BOUNDS.new().combined_aabb(cap)
+				var across := maxf(maxf(cap_box.size.x, cap_box.size.z), 0.01)
+				var cap_scale := radius * 2.0 * float(cfg.get("cap_overhang", 1.12)) / across
+				cap.scale = Vector3.ONE * cap_scale
+				cap.position = Vector3(-cap_box.get_center().x * cap_scale,
+					(height + sink) * 0.5 - cap_box.position.y * cap_scale - 0.02, -cap_box.get_center().z * cap_scale)
+				# `cap_tint` multiplies the piece's own albedo so pale paving
+				# sits with the disc's stone instead of reading white.
+				if cfg.has("cap_tint"):
+					var tint := Color(str(cfg.get("cap_tint")))
+					for part: Node in cap.find_children("*", "MeshInstance3D", true, false):
+						var mesh_part := part as MeshInstance3D
+						for surface in mesh_part.mesh.get_surface_count() if mesh_part.mesh != null else 0:
+							var source := mesh_part.get_active_material(surface)
+							if source is BaseMaterial3D:
+								var tinted := source.duplicate() as BaseMaterial3D
+								tinted.albedo_color = tinted.albedo_color * tint
+								mesh_part.set_surface_override_material(surface, tinted)
+				body.add_child(cap)
 		var shape := CollisionShape3D.new()
 		var cylinder := CylinderShape3D.new()
 		cylinder.radius = radius
