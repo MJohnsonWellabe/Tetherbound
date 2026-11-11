@@ -3261,6 +3261,44 @@
    "priority": "below-6 material swing (glossy vinyl-blue, toy-like PRESENT 3/3 on the faint arm too); gloss only shows on GPU",
    "note": "LANE-BELOW6 (carried from REMAKES). Material only; the faint fix is a separate landing (THINGS-FAINT).",
    "done": "G-below6-abyssal-matte 420ed4abc (judging)"
+  },
+  {
+   "id": "below6-thundertunnel-coat",
+   "kind": "arm",
+   "rows": [
+    "F36#80"
+   ],
+   "branch": "tb/below6",
+   "head": "cbc867f80",
+   "tree": "tb/below6 cbc867f80 (one import covers this and below6-heartwood: new *_value_lift_floor1*.png textures and stormheart_heartwood.glb)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-THUNDERTUNNEL/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-THUNDERTUNNEL/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "hit and faint 000-100; crop 560,200 1000x640",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "below 6 (5.92)",
+   "note": "Flat pinkish-tan flesh, white mud-fissure cracks (3/3). Arm: cool brown-grey velvet with thin lit blue-white storm lines."
+  },
+  {
+   "id": "below6-heartwood",
+   "kind": "arm",
+   "rows": [
+    "F41#1"
+   ],
+   "branch": "tb/below6",
+   "head": "cbc867f80",
+   "tree": "tb/below6 cbc867f80 (same import as below6-thundertunnel-coat)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-HEARTWOOD/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-HEARTWOOD/CAPTURE.json",
+   "job": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042 --output={OUT}",
+   "frames": "the_stormheart_tree day approach and close; dynamo_core day close",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "below 6 (5.78)",
+   "note": "No core or crown in view, flat white lightning strokes (3/3 every round). Arm: a Blender heartwood (crystal core in braided bark roots) on the hollow axis. Pre-check: core blooms without washing out the roots; no white zig-zag strokes."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
