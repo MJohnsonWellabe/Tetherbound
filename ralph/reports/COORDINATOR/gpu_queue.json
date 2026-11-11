@@ -2716,6 +2716,24 @@
    "done": true,
    "frames_pushed": "G-floor2-harvest-presence 8333275fc: stormglass and glowmoss pass; crown HELD (satellite in front of trainer's leg, glare). No visible ground pool. With LANE-SCOUT; lane adds satellite keep-out and drops the lights.",
    "verdict": "G-floor2-harvest-presence (tb/item-scout-1108 3165aa268): SHIP +1.62 (3/3), F41#9 5.56->7.18 on 2 of 3 frames. Landing version (keep-out, no lights) needs a confirming 3-frame capture."
+  },
+  {
+   "id": "floor2-harvest-presence-confirm",
+   "kind": "confirm",
+   "rows": [
+    "F41#9"
+   ],
+   "branch": "tb/floor2",
+   "head": "f79383083",
+   "tree": "tb/floor2 f79383083 (landing version: satellites on the node's own footprint with keep-out, ground lights dropped)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-HARVEST/overlay_presence.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-HARVEST/CAPTURE.json (confirm)",
+   "job": "phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042 --preset=High; base and arm",
+   "frames": "stormglass, stormglass_crown, glowmoss",
+   "capture": "High. Pre-check: trainer whole in all three, no copy at the feet or in front of the legs, no clipped-white glare on the crown. Then LANE-SCOUT: row figure over all three frames vs base, and whether stormglass/glowmoss hold against G-floor2-harvest-presence.",
+   "note": "Confirms the landing version before the F41#9 landing."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
