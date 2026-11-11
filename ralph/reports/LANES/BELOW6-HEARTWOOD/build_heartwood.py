@@ -109,6 +109,18 @@ for i in range(7):
         core.faces.new((ring0[s], ring0[t2], ring1[t2], ring1[s]))
         core.faces.new((ring1[s], ring1[t2], tip))
 
+# jagged lightning filaments crawling up the crystal (vein material, bright)
+for j in range(6):
+    a0 = j * math.tau / 6 + 0.5
+    pts = []
+    zf = 0.3
+    while zf < 46.0:
+        t = zf / CORE_TOP
+        rr = 1.75 * (1.0 - 0.55 * t) * 1.06 + 0.06
+        pts.append(pol(a0 + rng.uniform(-0.35, 0.35) + zf * 0.05 * (1 if j % 2 else -1), rr, zf))
+        zf += rng.uniform(0.9, 2.2)
+    tube(veins, vuv, pts, [0.07] * len(pts), sides=4, jag=0.25)
+
 # ---- braided heartwood roots: floor flare, climbing cage, inner crown ----
 N = 6
 CAGE_R = 3.7          # cage radius around the core (the core is 1.75 m)
