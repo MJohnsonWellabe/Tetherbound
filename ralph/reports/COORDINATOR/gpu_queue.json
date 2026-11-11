@@ -3035,7 +3035,9 @@
    "job": "res://tools/capture_cloudreach_f40_matrix.gd --piece=29..36 with --ground-cover-cache, as the 10 Nov F40#0 baseline (pieces 29-36 are the 32 broken_skyroad_arch frames)",
    "frames": "broken_causeways__04__broken_skyroad_arch: 4 views x 4 times x 2 weather",
    "capture": "High, one side. Completes the F40#0 matrix (352 -> 384 frames). Then LANE-SCOUT folds them into the F40#0 row figure.",
-   "note": "Unblocked by #909 (stand on the arch crown)."
+   "note": "Unblocked by #909 (stand on the arch crown).",
+   "done": true,
+   "frames_pushed": "G-f40-0-skyroad-arch-recapture cd874ab2c: 32 arch frames (pieces 25-32), 0 failures; F40#0 matrix now 384. With LANE-SCOUT."
   },
   {
    "id": "f36-72-stormbrush-medium",
@@ -3049,7 +3051,9 @@
    "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context stormbrush at MEDIUM, as in G-rescore-tier2-b2-a",
    "frames": "stormbrush hit and faint 000-100",
    "capture": "Medium, one side. LANE-SCOUT: closes at 7.5+ mapped (High 7.68).",
-   "note": "Close-out."
+   "note": "Close-out.",
+   "done": true,
+   "frames_pushed": "G-f36-72-stormbrush-medium f835c10d5. With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
