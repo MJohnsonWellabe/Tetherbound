@@ -2984,6 +2984,20 @@
    "note": "LANE-SCOUT LOW-HANGING-6TO7 items #1 and #2 (re-score only, no code).",
    "done": true,
    "frames_pushed": "G-rescore-tier2-dialogue 0bed8ee41 (12 frames); G-rescore-tier2-f36 8442aba2a (65 frames). With LANE-SCOUT."
+  },
+  {
+   "id": "rescore-tier2-batch-2",
+   "kind": "baseline",
+   "rows": [
+    "remaining pre-1-Nov F36 (1) pose rows (~14): abyssal guardian, cannonback, galewisp, mangrove monitor, reedwing, stormbrush, tempestwing, voltarach and the water_* variants (water abyssal guardian, cragclaw, mangrove monitor, mirejaw, mosshell)"
+   ],
+   "branch": "main",
+   "head": "current main (fetch)",
+   "overlay": null,
+   "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context per species, as in G-rescore-tier2-f36 (hit and faint 000-100; ride where the species has it)",
+   "frames": "as G-rescore-tier2-f36; LANE-SCOUT crops 560,200 1000x640 at 1080p",
+   "capture": "High, one side, no arm; push 7 species per section so LANE-SCOUT can judge 7 per batch.",
+   "note": "LANE-SCOUT recommends re-scoring all: sample moved 4/6 up (+0.40 to +1.14) and found 2 regressed remakes."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
