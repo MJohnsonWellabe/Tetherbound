@@ -1,0 +1,36 @@
+[
+ {
+  "label": "G F39-30-arm sand-ripple base-vs-arm",
+  "a": "G-sr_F39-30-arm_base.png",
+  "b": "G-sr_F39-30-arm_arm.png",
+  "brief": "Fixed captures from the game of the Tidewake biome frame matrix: a dawn lesson view (above) and a golden-hour shore view (below). Judge how this biome looks in the game - whether it reads as the key art's world, with believable form, material, light and staging, and passes as a finished game's view.",
+  "defects": [
+   "Hard, regularly spaced dark diagonal stripes cross the sand at golden hour and dawn"
+  ]
+ },
+ {
+  "label": "G F39-30-ctl sand-ripple base-vs-arm",
+  "a": "G-sr_F39-30-ctl_base.png",
+  "b": "G-sr_F39-30-ctl_arm.png",
+  "brief": "Fixed captures from the game of the Tidewake biome frame matrix: shore by day, a dune lesson view, shore at night and shore in rain. Judge how this biome looks in the game - whether it reads as the key art's world, with believable form, material, light and staging, and passes as a finished game's view.",
+  "defects": [
+   "Hard, regularly spaced dark diagonal stripes cross the sand at golden hour and dawn"
+  ]
+ },
+ {
+  "label": "G F13-5 sand-ripple base-vs-arm",
+  "a": "G-sr_F13-5_base.png",
+  "b": "G-sr_F13-5_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: currents, inhabited docks and Veilfall distance read (dawn above, golden hour below). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ },
+ {
+  "label": "G F39-3 sand-ripple base-vs-arm",
+  "a": "G-sr_F39-3_base.png",
+  "b": "G-sr_F39-3_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named destination read (dawn above, golden hour below). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces"
+  ]
+ }
+]
