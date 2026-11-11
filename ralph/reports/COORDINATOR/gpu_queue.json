@@ -2735,7 +2735,8 @@
    "capture": "High. Pre-check: trainer whole in all three, no copy at the feet or in front of the legs, no clipped-white glare on the crown. Then LANE-SCOUT: row figure over all three frames vs base, and whether stormglass/glowmoss hold against G-floor2-harvest-presence.",
    "note": "Confirms the landing version before the F41#9 landing.",
    "done": true,
-   "frames_pushed": "G-floor2-harvest-presence-confirm 8e1ff92e1: all three frames pass (trainer clear, no crown glare, violet holds). With LANE-SCOUT."
+   "frames_pushed": "G-floor2-harvest-presence-confirm 8e1ff92e1: all three frames pass (trainer clear, no crown glare, violet holds). With LANE-SCOUT.",
+   "verdict": "G-floor2-harvest-presence-confirm (tb/item-scout-1108 df24a8ab4): SHIP. F41#9 row 5.81->6.81 (+1.00, 3/3) over all three frames. Landing branch requested."
   },
   {
    "id": "floor2-warrens-meadow-match",
