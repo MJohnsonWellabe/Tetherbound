@@ -2630,6 +2630,24 @@
    "note": "Removes the charged_1105 whole-body wash (94% of the raven's texture emitting) in favour of the species' own line/eye masks, per the owner's 1 Nov one-trait rule.",
    "done": true,
    "verdict": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): SHIP. F41#13 +0.64 idle and hurt (3/3), control identical; row 6.66."
+  },
+  {
+   "id": "newapproach-post-focus",
+   "kind": "arm",
+   "rows": [
+    "F40#9"
+   ],
+   "branch": "tb/newapproach",
+   "head": "09fc4e0ba",
+   "tree": "tb/newapproach 09fc4e0ba (camera_rig.gd, cloudreach_physical_runtime.gd, camera.json post_focus; no assets)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-POSTFOCUS/overlay_post_focus.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-POSTFOCUS/CAPTURE.json",
+   "job": "phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela --preset=High; base and arm",
+   "frames": "tavi, sora, maela inventory character frames",
+   "capture": "High. Pre-check: manifest camera_rig_spring_length about 3.6 on the arm (5.2 on base); if 5.2 on both, the focus did not engage, do not judge. Then LANE-SCOUT on F40#9's brief.",
+   "note": "Gameplay camera change (flag-off); coordinator tells the owner before it lands."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
