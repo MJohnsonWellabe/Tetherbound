@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "solmane-faint-000.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-faint-000.jpg",
+  "sky_fraction": 0.945,
+  "lower_edges": 0.0783,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-faint-025.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-faint-025.jpg",
+  "sky_fraction": 0.94,
+  "lower_edges": 0.075,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-faint-050.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-faint-050.jpg",
+  "sky_fraction": 0.938,
+  "lower_edges": 0.0827,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-faint-075.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-faint-075.jpg",
+  "sky_fraction": 0.939,
+  "lower_edges": 0.0897,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-faint-100.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-faint-100.jpg",
+  "sky_fraction": 0.939,
+  "lower_edges": 0.0891,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-hit-000.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-hit-000.jpg",
+  "sky_fraction": 0.94,
+  "lower_edges": 0.0768,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-hit-025.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-hit-025.jpg",
+  "sky_fraction": 0.928,
+  "lower_edges": 0.085,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-hit-050.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-hit-050.jpg",
+  "sky_fraction": 0.928,
+  "lower_edges": 0.0848,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-hit-075.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-hit-075.jpg",
+  "sky_fraction": 0.933,
+  "lower_edges": 0.0802,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "solmane-hit-100.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context",
+  "path": "G-solmane-medium/main-Medium/solmane-hit-100.jpg",
+  "sky_fraction": 0.94,
+  "lower_edges": 0.0768,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, one side on main 3a514ef5c (High 7.63). Neutral stage: sky heuristic bypassed after an eye check."
+ }
+]
