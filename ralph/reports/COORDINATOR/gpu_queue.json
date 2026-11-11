@@ -2344,6 +2344,22 @@
    "note": "F41#13 round 2 (last try before parking): same line mask, brighter saturated cyan lines, eye emission via glow-map boost, white-violet rim; cobra glow back near base.",
    "done": true,
    "frames_pushed": "b494466c3 (r2 pre-check passed)"
+  },
+  {
+   "id": "recheck-f41-3-native-voltarach",
+   "kind": "baseline",
+   "rows": [
+    "F41#3"
+   ],
+   "branch": "main",
+   "head": "e1c941cbd",
+   "overlay": null,
+   "tool": "res://tools/capture_named_fights_f10_6.gd",
+   "args": "--ids=capacitor_alpha --camera-view=north --fixture-seed=1042206 --seconds=14 --interval=2, --fixed-fps 20; and the same with --ids=hollows_alpha",
+   "frames": "F41#3's catalogue fight frames (capacitor_alpha i01, tell1 start/strike/impact; hollows as in G-hollows-giant-trees), one-sided on current main (native eight-leg Voltarach, giant-tree fight fade landed in #897)",
+   "capture": "High, one side, no arm. Next in line.",
+   "note": "LANE-NEWAPPROACH: the judged F41#3 defect (Sparkit jammed into Voltarach's forelegs) was scored on the old remake model; on current main a CPU run shows Sparkit 9.4 m clear to the side. The row may be stale; re-score before any new arm.",
+   "done": false
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
