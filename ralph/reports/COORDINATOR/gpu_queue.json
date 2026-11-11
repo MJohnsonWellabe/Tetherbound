@@ -3421,6 +3421,20 @@
    "request": "ralph/reports/LANES/BELOW6-STORMHEART-STAND/PROPOSAL.md on tb/below6",
    "want_to_see": "which spot shows the trunk base, the gate and as much crown as possible against the storm sky; note any wild creature blocking the view",
    "note": "Screen for a new F41#1 approach stand; the current stand faces a bark wall from 5 m. Lands only with the ramp-body game fix LANE-BELOW6 is building. Cheap; run when the GPU is otherwise between arms."
+  },
+  {
+   "id": "innkeeper-baseline",
+   "kind": "baseline",
+   "rows": [
+    "F36#29"
+   ],
+   "branch": "main",
+   "head": "current main",
+   "overlay": null,
+   "job": "res://tools/_capture_character_cast.gd (no args; writes res://shots/characters/<slug>-front.png and -threequarter.png for the cast) at 1920x1080 forward_plus; keep innkeeper-front and innkeeper-threequarter only",
+   "capture": "High, one side",
+   "request": "ralph/reports/LANES/BELOW6-INNKEEPER-BASE/CAPTURE.json on tb/below6",
+   "note": "No GPU High score exists on the shipped innkeeper body (GPU Medium 5.90 on a matched camera, CPU 7.36 on this stand). Says whether F36#29 is below 6 at all. Cheap; fit between arms."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
