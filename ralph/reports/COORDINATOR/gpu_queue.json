@@ -2163,7 +2163,8 @@
    "frames": "One-sided re-score captures on main, no arm: (1) F40#3 architectural landmark frames from the F-cloudreach re-score (the closer capture stands landed in batch 25 / #871 and were never re-judged); (2) F38#32 camp spacing frames from the B section; (3) F41#13 fulgocobra and stormraven idle frames as in G-rescore-f39-21-f41-13",
    "capture": "High. After the Cloudreach cause arm and before any further baseline pieces.",
    "note": "ROW-AUDIT-1111 cheapest re-captures: F40#3's new stand was never re-judged; F38#32 re-measured 6.24 live with no change (scale scatter); F41#13 has landed verdicts at 6.14 and 5.00 that disagree.",
-   "done": false
+   "done": true,
+   "frames_pushed": "9ce07c9bb (G-recheck-1111, 9 frames)"
   },
   {
    "id": "newapproach-cloudreach-cause-no-cloudsea",
