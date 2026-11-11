@@ -2414,7 +2414,9 @@
    "job": "res://tools/phase2_capture_realm_flight.gd --biome=meadows --seed=2042 --preset=High --output={OUT}; base, overlay A, overlay B",
    "frames": "meadows__flying__launch, meadows__flying__glide (2 per side)",
    "capture": "High first. Pre-check: the bird's feet still meet the hands in both frames, and with B the talons don't cut into the shoulders or hair. Then to LANE-SCOUT for judging on F38#8's brief (A vs base, B vs base); ship whichever wins more, not both.",
-   "note": "Coordinator read the CPU sheet: A turns the rigid upright V into bent elbows and tucked knees; B can read as hands behind the head."
+   "note": "Coordinator read the CPU sheet: A turns the rigid upright V into bent elbows and tucked knees; B can read as hands behind the head.",
+   "done": true,
+   "frames_pushed": "A for judging: G-newapproach-fly-grip f98199652 (tb/gpu-frames-1108). B failed the pre-check (hands behind the head, gap to the feet): diagnostic only, 268dc208d. Both overlay runs log 'double Jump denied' at (-25,1300) after the judged frames; lane to explain before landing."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
