@@ -2123,7 +2123,8 @@
    "frames": "(1) hollows_alpha full set: capture_named_fights_f10_6.gd --ids=hollows_alpha --camera-view=north --fixture-seed=1042206 --seconds=14 --interval=2 --fixed-fps 20 (as G-check-890); (2) capacitor_alpha, same tool and flags; (3) giant_calm: capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (exploration must be unchanged); (4) arch_home__golden__clear__detail and __gameplay: capture_f38_matrix.gd --seed=2042 --times=golden",
    "capture": "High, base vs arm, --fixed-fps 20 for the fights. Next in line. Pre-check: no fight frame filled by teal giant-tree bark or roots; giant_calm identical; the Hall nave post reads brown/ochre, not red.",
    "note": "The teal mass filling Hollows fight frames is the Meshy giant tree (giant_canopy giant_tree_a/b_v1, scarred_trunk), which is on neither near_lens_fade nor line_of_sight_fade. The arm adds them to the fight-only sight fade (exploration unchanged). Ride-along: timber_1110 retints the Hall nave post out of the red family (the arch_home 'red curtain').",
-   "done": false
+   "done": true,
+   "frames_pushed": "ffe0f840f (63/side; no teal-filled fight frame on the arm; giant_calm unchanged; post hue 26)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
