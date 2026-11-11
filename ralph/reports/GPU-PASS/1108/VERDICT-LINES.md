@@ -18,3 +18,4 @@ Columns: file | rows | result.
 - G-below6-abyssal-matte.md | F36#30, F36#88 | F36#30 ship (+0.55 → 5.77); F36#88 level, so split the landing
 - G-below6-thundertunnel-heartwood.md | F36#80, F41#1 | ship (+1.41 → 6.04; +1.37 → 5.66, close-only 5.95)
 - G-dialogue-recapture-meadows.md | F38#16, F38#17, F38#36, F38#37 | new baseline: 6.25, 6.58, 7.11, 6.87; mean 6.60
+- G-dialogue-recapture-tidewake-cloudreach.md | F39#18, F39#26, F39#29, F40#10, F40#12 | new baseline: 7.12, 6.94, 7.03, 6.77, 7.25; Tidewake ≈6.64, Cloudreach ≈7.26
