@@ -2606,7 +2606,9 @@
    "job": "capture_tidewake_f13_5.gd F39-look camera set 1920x1080 High, views lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain, shore-day, shore-golden; base and arm",
    "frames": "7 per side",
    "capture": "High, after newapproach-bridge-view (lower priority: F39#30 is already above 6, below-6 arms go first). Pre-check: rain not near-black, dawn not a flat orange wash with no far dune.",
-   "note": "Dawn black horizon band (unhazed deep sea) and rain storm grade (cloud deck colours)."
+   "note": "Dawn black horizon band (unhazed deep sea) and rain storm grade (cloud deck colours).",
+   "done": true,
+   "frames_pushed": "G-floor2-dawn-haze-storm-grade 90d3b0348: pre-checks pass (rain grey storm deck not near-black; dawn haze replaces the black strip, far dune reads; controls unchanged). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
