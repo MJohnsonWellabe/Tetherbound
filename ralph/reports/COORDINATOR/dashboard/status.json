@@ -2196,8 +2196,8 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#18": {
-      "gpu": 7.06,
-      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: dialogue framing; soft rim on main"
+      "gpu": 7.12,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline"
     },
     "F39#19": {
       "gpu": 6.85,
@@ -2232,8 +2232,8 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#26": {
-      "gpu": 6.49,
-      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: dialogue obstruction"
+      "gpu": 6.94,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline"
     },
     "F39#27": {
       "gpu": 6.16,
@@ -2244,8 +2244,8 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#29": {
-      "gpu": 6.41,
-      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: speaker visibility; Nerissa small and half hidden"
+      "gpu": 7.03,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline"
     },
     "F39#3": {
       "gpu": 6.1,
@@ -2280,16 +2280,16 @@
       "src": "GPU High 8-9 Nov (F-cloudreach)"
     },
     "F40#10": {
-      "gpu": 6.74,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 6.77,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline"
     },
     "F40#11": {
       "gpu": 6.97,
       "src": "G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88): soft lit cloud sea, 6.17 -> 6.97 (3/3); landed #906 (with #904's cumulus cards). Near-bar: card colour fix next."
     },
     "F40#12": {
-      "gpu": 7.17,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 7.25,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline"
     },
     "F40#13": {
       "gpu": 6.19,
@@ -2356,8 +2356,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#11": {
-      "gpu": 7.34,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.91,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: portrait identity"
     },
     "F41#12": {
       "gpu": 6.6,
@@ -2372,8 +2372,8 @@
       "src": "GPU High 8-9 Nov (B)"
     },
     "F41#15": {
-      "gpu": 6.33,
-      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): median of four on-main measures 5.88-6.67"
+      "gpu": 4.49,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: foreground obstruction: Officer Nysa hidden behind a creature (PRESENT 3/3); Marrow's head bloom"
     },
     "F41#16": {
       "gpu": 6.28,
@@ -2396,8 +2396,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#20": {
-      "gpu": 6.99,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.41,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: dialogue reuse; Fenn and Oswin share one model"
     },
     "F41#21": {
       "gpu": 7.13,
@@ -2420,8 +2420,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#7": {
-      "gpu": 7.23,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.24,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: named trainer identity; Marrow's head blown white"
     },
     "F41#8": {
       "gpu": 5.31,
