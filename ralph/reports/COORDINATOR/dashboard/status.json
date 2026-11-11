@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 13:31 UTC",
+  "updated": "11 Nov 2026 14:41 UTC",
   "headline": [
+    "11 Nov 14:41: #905 landed the Stormwood harvest presence (F41#9 6.81: the storm-glass crown now 'the strongest single subject in the batch') and the Warrens mound meadow match (F38#30 6.02: the stretched mound shell takes the meadow's own grass). Below 6: 8.",
     "11 Nov 13:31: #904 landed Cloudreach island mist as cumulus cloud cards: F40#11 5.26 -> 5.99 (3/3), just under 6. Next arm retints them to the cloud floor's white and replaces the faceted floor with a soft lit cloud-sea material. Below 6: 10.",
     "11 Nov 12:40: #903 landed authored Cloudreach NPC posts: role structures (Tavi's training yard, Sora's study, Maela's cages), cobbled post caps, a key light with shadow, Sora moved clear of the wall. F40#9 5.32 -> 6.48 (3/3) with today's camera. Below 6: 10.",
     "11 Nov 11:15: morning list for LANE-MESHY (new art, below-6 rows): F41#8 Stormwood trio silhouettes, F40#3 Cloudreach landmark art, F40#1 a real landform at the Realm Gate Crag approach, F41#1 Stormheart crown and glowing core, F36#29 innkeeper body; plus the skyroad arch Fly check (32 F40#0 frames). Two owner decisions waiting: F40#9 post camera, F40#6 mount refuses a fatal drop.",
@@ -2077,8 +2078,8 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#30": {
-      "gpu": 5.38,
-      "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51)"
+      "gpu": 6.02,
+      "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905"
     },
     "F38#31": {
       "gpu": 7.2,
@@ -2405,8 +2406,8 @@
       "src": "GPU High 8-9 Nov (B)"
     },
     "F41#9": {
-      "gpu": 5.86,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 6.81,
+      "src": "G-floor2-harvest-presence-confirm (tb/item-scout-1108 df24a8ab4): harvest nodes larger with satellite clusters, row 5.81 -> 6.81 (3/3); landed #905"
     },
     "F41#24": {
       "gpu": 7.08,
