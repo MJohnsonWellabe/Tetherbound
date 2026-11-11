@@ -2941,7 +2941,9 @@
    "job": "phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --preset=High, subsets camp_tent, camp_bed, bonfire_fire; base and arm. PLUS one extra arm frame: bonfire_fire with the overlay but heading_overrides for it removed (planned stand), to show the fixed sign and gate from where the old camera stood.",
    "frames": "camp_tent, camp_bed, bonfire_fire (+ bonfire at planned stand, arm only, as a sign check)",
    "capture": "After newapproach-card-white. High. Pre-check: nothing red, the sign reads correctly from the planned stand, gate timber brown with grain. LANE-SCOUT: report tent+bed (game only) and bonfire separately.",
-   "note": "Camp attempt 2 (attempt 1 lost on the game-only frames)."
+   "note": "Camp attempt 2 (attempt 1 lost on the game-only frames).",
+   "done": true,
+   "frames_pushed": "G-floor2-camp-r2 4eb98c34c: no red on arm, gate brown, bonfire in view; old planned stand put the trainer on the gate (broken stand). Sign-front diagnostic follows. With LANE-SCOUT."
   },
   {
    "id": "rebaseline-creature-poses-stage",
