@@ -193,6 +193,7 @@ func _run() -> void:
 		"fixture": "Production scene, trainer and camera; direct visual pose fixture, not combat or traversal proof",
 		"live_transitions": _live_transitions,
 		"paired_transitions": _paired_transitions,
+		"creature_ruler_depth": bool(ruler_depth_config().get("enabled", false)),
 		"frames": _records, "failures": _failures, "complete": _failures.is_empty()}
 	if not _graphics_capture.is_empty():
 		manifest["graphics_capture"] = _graphics_capture
@@ -202,15 +203,45 @@ func _run() -> void:
 	quit(0 if _failures.is_empty() else 1)
 
 
+## Where the subject stands relative to the trainer: x is the side offset and
+## y the distance ahead along the camera axis, both in metres.
+##
+## The shipped stage puts the subject max(7, height * 1.8) m beyond the trainer.
+## The production camera sits about 5 m behind the trainer, so a 2.9 m hare
+## ends 12 m from the lens against a 1.80 m trainer at 5 m and draws at about
+## the trainer's height on screen: the "ruler" is at a different depth from the
+## thing it measures. With `creature_ruler_depth` on (capture_stands.json) the
+## subject stands beside the trainer on the trainer's own depth plane
+## (`_plane_spot`), so their on-screen heights compare as their real heights
+## do; `_fit_in_frame` then keeps it in frame and clear of the trainer.
+static func stage_offsets(height: float, cfg: Dictionary) -> Vector2:
+	if not bool(cfg.get("enabled", false)):
+		return Vector2(clampf(height * 0.7, 2.0, 5.0), maxf(7.0, height * 1.8))
+	var ahead := clampf(height * float(cfg.get("ahead_per_height", 1.1)) - float(cfg.get("ahead_less_m", 3.0)),
+		float(cfg.get("ahead_min_m", 0.0)), float(cfg.get("ahead_max_m", 12.0)))
+	var side := clampf(height * float(cfg.get("side_per_height", 0.7)),
+		float(cfg.get("side_min_m", 2.0)), float(cfg.get("side_max_m", 5.0)))
+	return Vector2(side, ahead)
+
+
+static func ruler_depth_config() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/capture_stands.json"))
+	if parsed is Dictionary and (parsed as Dictionary).get("creature_ruler_depth") is Dictionary:
+		return (parsed as Dictionary)["creature_ruler_depth"]
+	return {}
+
+
 func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: float) -> void:
 	var stage: Vector2 = STAGES[_biome]
 	var placeholder: Dictionary = SPECIES_DATA.placeholder(species)
 	var height := float(placeholder.get("height", 2.0)) * scale_factor
-	var distance := maxf(7.0, height * 1.8)
-	var side := clampf(height * 0.7, 2.0, 5.0)
+	var offsets := stage_offsets(height, ruler_depth_config())
+	var distance := offsets.y
+	var side := offsets.x
 	var subject_x := NAN
 	var subject_z := NAN
 	var ground := NAN
+	var on_plane := bool(ruler_depth_config().get("enabled", false))
 	# Cliff shelves and narrow bridges can leave the first forward point over a
 	# void. Search nearby walkable presentation ground before placing a body;
 	# a NaN transform produces a plausible-looking image with no creature.
@@ -218,6 +249,10 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		for candidate_side: float in [side, -side, 0.0, side + 3.0, -side - 3.0]:
 			var x := stage.x + candidate_side
 			var z := stage.y + candidate_distance
+			if on_plane:
+				var spot := _plane_spot(candidate_side, candidate_distance)
+				x = spot.x
+				z = spot.y
 			var y := float(_world.call("ground_height_at", x, z))
 			if is_finite(y):
 				subject_x = x
@@ -326,6 +361,13 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		var length := player.get_animation(player.current_animation).length
 		player.seek(length * (0.9 if pose == "fainted" else 0.45), true)
 		player.pause()
+	var fit := {}
+	if bool(ruler_depth_config().get("enabled", false)):
+		fit = await _fit_in_frame(body, Vector2(side, distance), pose)
+		side = float(fit.get("lateral_m", side))
+		distance = float(fit.get("behind_plane_m", distance))
+		subject_x = body.global_position.x
+		subject_z = body.global_position.z
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	var frame_id := "%s__%s__%s" % [_biome, species, pose]
@@ -343,11 +385,248 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 			"animation_player_present": player != null,
 			"trainer_to_subject_xz_m": sqrt(side * side + distance * distance),
 			"subject_stand_xz": [subject_x, subject_z],
+			"ruler_depth_fit": fit,
 			"animation": str(player.current_animation) if player != null else "",
 			"trainer_visible_intent": true, "camera": "production CameraRig/Camera3D"})
 		print("PHASE2 CREATURE %s -> %s" % [frame_id, path])
 	body.queue_free()
 	await process_frame
+
+
+## Where a subject stands on the trainer's depth plane: `lateral` metres to
+## the trainer's side along the camera's right axis (toward the side the old
+## stage used) and `behind` metres further from the camera along its view axis
+## (0 = exactly the trainer's depth; never negative, so never nearer the lens).
+func _plane_spot(lateral: float, behind: float) -> Vector2:
+	var basis := _camera.global_transform.basis
+	var right := Vector2(basis.x.x, basis.x.z).normalized()
+	var away := Vector2(-basis.z.x, -basis.z.z).normalized()
+	if right.x < 0.0:
+		right = -right
+	var at := Vector2(_player.global_position.x, _player.global_position.z)
+	return at + right * lateral + away * maxf(behind, 0.0)
+
+
+## Ruler-depth fit rule (coordinator, 11 Nov). The first GPU capture cut
+## Aquaryn's crest and tail and a fainted otter's hindquarters, let the alpha
+## Mosshell cover the trainer's legs, and its judges noted that subjects
+## standing nearer the lens than the trainer were flattered by perspective.
+## Round 2 put the body ORIGIN on the plane, which left a camera-facing
+## animal's front feet up to half its length nearer the lens, so round 3 puts
+## its nearest ground contact (posed mesh) at or behind the trainer's feet.
+## So the subject stands on the trainer's own depth plane and this only ever
+## moves it SIDEWAYS along that plane while it overlaps the trainer. A subject
+## too big for the frame at the trainer's depth (cut top or bottom, or cut at
+## the side once clear of the trainer) steps AWAY from the lens, which can only
+## understate it, and the manifest records how far (`behind_plane_m`). It never
+## moves toward the camera; camera and trainer never move.
+func _fit_in_frame(body: Node3D, offsets: Vector2, pose: String) -> Dictionary:
+	var cfg := ruler_depth_config()
+	var lateral := offsets.x
+	var behind := maxf(offsets.y, 0.0)
+	var steps := 0
+	var went_out := false
+	var max_steps := int(cfg.get("fit_max_steps", 16))
+	var step_side := float(cfg.get("fit_step_side_m", 0.4))
+	var step_behind := float(cfg.get("fit_step_behind_m", 1.0))
+	var margin := float(cfg.get("fit_margin", 0.03))
+	var view := Vector2(root.size)
+	var report := {}
+	while true:
+		for _settle in 2:
+			await process_frame
+		var points := _subject_corners(body)
+		var subject := _screen_rect(points)
+		var contact := _contact_depth(points, float(cfg.get("fit_contact_band_m", 0.25)))
+		# No part of the subject's ground contact may be nearer the lens than
+		# the trainer's feet (a body facing the camera has its front feet half
+		# its length ahead of its origin). Step back by exactly the shortfall.
+		var contact_short := -float(contact.get("nearest_m", 0.0))
+		var trainer := _screen_rect(_trainer_corners())
+		var cut_side := subject.size == Vector2.ZERO \
+			or subject.position.x < view.x * margin or subject.end.x > view.x * (1.0 - margin)
+		var cut_height := subject.size == Vector2.ZERO \
+			or subject.position.y < view.y * margin or subject.end.y > view.y * (1.0 - margin)
+		var overlaps := subject.grow(view.x * 0.005).intersects(trainer)
+		var ratio := subject.size.y / maxf(trainer.size.y, 1.0)
+		var away := Vector3(-_camera.global_transform.basis.z.x, 0.0, -_camera.global_transform.basis.z.z).normalized()
+		report = {"lateral_m": snappedf(lateral, 0.01), "behind_plane_m": snappedf(behind, 0.01),
+			"depth_vs_trainer_m": snappedf(away.dot(body.global_position - _player.global_position), 0.01),
+			"contact_depth_vs_trainer_feet_m": snappedf(float(contact.get("nearest_m", NAN)), 0.01),
+			"body_nearest_depth_vs_trainer_feet_m": snappedf(float(contact.get("body_nearest_m", NAN)), 0.01),
+			"lens_to_trainer_feet_m": snappedf(float(contact.get("lens_to_trainer_m", NAN)), 0.01),
+			"lens_to_contact_m": snappedf(float(contact.get("lens_to_contact_m", NAN)), 0.01),
+			"contact_ground_y": snappedf(float(contact.get("contact_ground_y", NAN)), 0.01),
+			"trainer_ground_y": snappedf(float(contact.get("trainer_ground_y", NAN)), 0.01),
+			"feet_screen_y": snappedf(subject.end.y / view.y, 0.001),
+			"trainer_feet_screen_y": snappedf(trainer.end.y / view.y, 0.001),
+			"steps": steps, "in_frame": not (cut_side or cut_height),
+			"overlaps_trainer": overlaps, "screen_height_vs_trainer": snappedf(ratio, 0.01)}
+		print("PHASE2 FIT %s step=%d subject=%s trainer=%s view=%s cut_side=%s cut_height=%s overlaps=%s contact=%s" % [
+			body.name, steps, str(subject), str(trainer), str(view), str(cut_side), str(cut_height), str(overlaps), str(contact)])
+		var contact_ok := contact_short <= 0.01
+		if (contact_ok and not (cut_side or cut_height or overlaps)) or steps >= max_steps:
+			break
+		var next_lateral := lateral
+		var next_behind := behind
+		if not contact_ok:
+			next_behind += contact_short + 0.02
+			var spot_back := _plane_spot(next_lateral, next_behind)
+			var ground_back := float(_world.call("ground_height_at", spot_back.x, spot_back.y))
+			if not is_finite(ground_back):
+				report["stopped"] = "no finite ground at the contact-rule spot"
+				break
+			behind = next_behind
+			steps += 1
+			body.global_position = Vector3(spot_back.x, ground_back, spot_back.y)
+			_seat(body, ground_back)
+			GRASS_FIELD.clearings_dirty = true
+			continue
+		var gap := trainer.position.x - subject.end.x
+		if overlaps and not cut_side:
+			next_lateral += step_side
+			went_out = true
+		elif cut_side and not cut_height and not overlaps and not went_out \
+				and gap > view.x * 0.06 and lateral - step_side >= 1.2:
+			# Cut at the outer edge with room beside the trainer: come inward.
+			next_lateral -= step_side
+		else:
+			next_behind += step_behind
+			# A body lying down is not a height read; only upright poses hold the ratio.
+			if pose not in ["fainted", "resting"] \
+					and ratio * (1.0 - step_behind / maxf(_camera.global_position.distance_to(body.global_position), 1.0)) \
+					< float(cfg.get("fit_min_ratio", 1.15)):
+				report["stopped"] = "would stop drawing taller than the trainer"
+				break
+		var spot := _plane_spot(next_lateral, next_behind)
+		var ground := float(_world.call("ground_height_at", spot.x, spot.y))
+		if not is_finite(ground):
+			report["stopped"] = "no finite ground at the next spot"
+			break
+		lateral = next_lateral
+		behind = next_behind
+		steps += 1
+		body.global_position = Vector3(spot.x, ground, spot.y)
+		_seat(body, ground)
+		GRASS_FIELD.clearings_dirty = true
+	return report
+
+
+## World-space sample of the subject's own mesh vertices AS POSED (every
+## `stride`th vertex, capped). A skinned mesh is run through its skeleton's
+## current bone poses, so a faint, rest or hit clip is measured where it is
+## drawn. The bounding box's corners are empty air: projected raw they report
+## cuts the animal does not have, and flattened they miss the perspective
+## growth of a head that points at the lens. The vertices are where it is.
+func _subject_corners(body: Node3D) -> PackedVector3Array:
+	var out := PackedVector3Array()
+	var pivot := body.get_node_or_null(^"Model") as Node3D
+	if pivot == null:
+		return out
+	for mesh: MeshInstance3D in RENDER_BOUNDS._mesh_instances(pivot):
+		var skeleton: Skeleton3D = RENDER_BOUNDS._skeleton_for(mesh)
+		var skinned := skeleton != null and mesh.skin != null
+		var bone_world: Array[Transform3D] = []
+		if skinned:
+			for bind in mesh.skin.get_bind_count():
+				var bone := mesh.skin.get_bind_bone(bind)
+				if bone < 0:
+					bone = skeleton.find_bone(mesh.skin.get_bind_name(bind))
+				bone_world.append(skeleton.global_transform * skeleton.get_bone_global_pose(bone) * mesh.skin.get_bind_pose(bind)
+					if bone >= 0 else Transform3D.IDENTITY)
+		var rest_world: Transform3D = pivot.global_transform * RENDER_BOUNDS._render_transform(mesh, pivot)
+		for surface in mesh.mesh.get_surface_count():
+			var arrays: Array = mesh.mesh.surface_get_arrays(surface)
+			if arrays.is_empty() or not arrays[Mesh.ARRAY_VERTEX] is PackedVector3Array:
+				continue
+			var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var bones: Variant = arrays[Mesh.ARRAY_BONES]
+			var weights: Variant = arrays[Mesh.ARRAY_WEIGHTS]
+			var per := 0
+			if skinned and bones is PackedInt32Array and weights is PackedFloat32Array and not vertices.is_empty():
+				per = (bones as PackedInt32Array).size() / vertices.size()
+			var stride := maxi(1, vertices.size() / 1500)
+			for index in range(0, vertices.size(), stride):
+				if per <= 0:
+					out.append(rest_world * vertices[index])
+					continue
+				var posed := Vector3.ZERO
+				var total := 0.0
+				for slot in per:
+					var weight: float = weights[index * per + slot]
+					var bind: int = bones[index * per + slot]
+					if weight <= 0.0 or bind >= bone_world.size():
+						continue
+					posed += (bone_world[bind] * vertices[index]) * weight
+					total += weight
+				out.append(posed / total if total > 0.0 else rest_world * vertices[index])
+	if out.is_empty():
+		var bounds: AABB = RENDER_BOUNDS.measure(pivot)
+		for index in 8:
+			out.append(pivot.global_transform * bounds.get_endpoint(index))
+	return out
+
+
+## Where the subject touches the ground, relative to the trainer's feet, along
+## the lens axis (horizontal). Ground contact = the sampled vertices within
+## `band` of the subject's lowest point. Negative `nearest_m` means part of its
+## ground contact is NEARER the lens than the trainer's feet.
+func _contact_depth(points: PackedVector3Array, band: float) -> Dictionary:
+	if points.is_empty():
+		return {}
+	var away := Vector3(-_camera.global_transform.basis.z.x, 0.0, -_camera.global_transform.basis.z.z).normalized()
+	var feet := _player.global_position
+	var lowest := INF
+	for point: Vector3 in points:
+		lowest = minf(lowest, point.y)
+	var nearest := INF
+	var nearest_at := Vector3.ZERO
+	var body_nearest := INF
+	for point: Vector3 in points:
+		var depth := away.dot(point - feet)
+		body_nearest = minf(body_nearest, depth)
+		if point.y <= lowest + band and depth < nearest:
+			nearest = depth
+			nearest_at = point
+	return {"nearest_m": nearest, "body_nearest_m": body_nearest, "lowest_y": lowest,
+		"contact_ground_y": float(_world.call("ground_height_at", nearest_at.x, nearest_at.z)),
+		"trainer_ground_y": float(_world.call("ground_height_at", feet.x, feet.z)),
+		"lens_to_trainer_m": away.dot(feet - _camera.global_position),
+		"lens_to_contact_m": away.dot(nearest_at - _camera.global_position)}
+
+
+func _trainer_corners() -> PackedVector3Array:
+	var out := PackedVector3Array()
+	var at := _player.global_position
+	# The trainer's feet are on the ground under them; the body's origin is not
+	# necessarily at its feet, so the silhouette is built up from the ground.
+	var ground := float(_world.call("ground_height_at", at.x, at.z))
+	if is_finite(ground):
+		at.y = ground
+	var right := _camera.global_transform.basis.x
+	right = Vector3(right.x, 0.0, right.z).normalized()
+	for side: float in [-0.45, 0.45]:
+		for dy: float in [0.0, 1.8]:
+			out.append(at + right * side + Vector3(0.0, dy, 0.0))
+	return out
+
+
+## Screen-space bounds of world points; zero-size when any point is behind the lens.
+func _screen_rect(points: PackedVector3Array) -> Rect2:
+	if points.is_empty():
+		return Rect2()
+	var rect := Rect2()
+	var started := false
+	for point: Vector3 in points:
+		if _camera.is_position_behind(point):
+			return Rect2()
+		var screen := _camera.unproject_position(point)
+		if started:
+			rect = rect.expand(screen)
+		else:
+			rect = Rect2(screen, Vector2.ZERO)
+			started = true
+	return rect
 
 
 ## F38#26 capture fix (7 Nov, NEAR6-MS ask): in play a creature that stands
