@@ -2378,7 +2378,9 @@
    "job": "res://tools/phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night --preset=High --output={OUT}; overlay off and on",
    "frames": "three_bells_bridge day and night close (2 per side)",
    "capture": "High, pre-check only, no judging: push both sides and say whether an objective beam is in the base frames at all and whether the overlay changes it.",
-   "note": "LANE-NEWAPPROACH sweep: the only unjudged off candidate that might move F40#8 (5.85)."
+   "note": "LANE-NEWAPPROACH sweep: the only unjudged off candidate that might move F40#8 (5.85).",
+   "done": true,
+   "result": "G-bridge-beacon ca6be3752 (tb/gpu-frames-1108): no objective beam in the base frames; overlay changes nothing visible. The cyan the judges name is not the objective beacon; candidate cannot help F40#8."
   },
   {
    "id": "recheck-f40-5-captain-fight",
