@@ -2475,8 +2475,8 @@
       "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Skyrill poses; 0.03 under the bar"
     },
     "F36#42": {
-      "gpu": 7.51,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Cragclaw 6.84 -> 7.51 (3/3); High bar met, Medium queued"
+      "gpu": 7.3,
+      "src": "G-things-faint arm High 7.51, Medium 7.30 (G-closeouts-solmane-cragclaw-wmm 4e4a4dbfd); not closed: face hidden under the shell; arm not yet landed"
     },
     "F36#49": {
       "gpu": 6.9,
@@ -2515,12 +2515,12 @@
       "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Tempestwing poses"
     },
     "F36#48": {
-      "gpu": 6.88,
-      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Galewisp poses; fly-grip carries nothing"
+      "gpu": 7.44,
+      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), capture-stage fix ships (not yet landed), GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers"
     },
     "F36#92": {
-      "gpu": 6.72,
-      "src": "G-water-gameclip-rescores (LANE-SCOUT, tb/item-scout-1108 bc028142f), one-sided on the game-resolved clip (stage fix lands with THINGS-FAINT), GPU High: Water Mangrove Monitor 6.26 -> 6.72; faint lies belly-up, forelimbs in the air"
+      "gpu": 6.6,
+      "src": "G-closeouts-solmane-cragclaw-wmm (4e4a4dbfd), all-roles game clip, High 6.60 (6.72 hit/faint only); faint lies belly-up, needs a faint fix"
     },
     "F36#50": {
       "gpu": 6.98,
@@ -2535,8 +2535,8 @@
       "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Water Mirejaw 6.37 (game clip) -> 7.39 (3/3)"
     },
     "F36#94": {
-      "gpu": 6.09,
-      "src": "G-water-gameclip-rescores (LANE-SCOUT, tb/item-scout-1108 bc028142f), one-sided on the game-resolved clip (stage fix lands with THINGS-FAINT), GPU High: Water Mosshell 5.81 -> 6.09; ride and swim unchanged (travel-pose arm judging)"
+      "gpu": 6.67,
+      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), capture-stage fix ships (not yet landed), GPU High: Water Mosshell 4.65 -> 6.67 (+2.02, 3/3); rider perched high on the dome"
     },
     "F36#30": {
       "gpu": 6.56,
@@ -2551,8 +2551,8 @@
       "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler)"
     },
     "F36#69": {
-      "gpu": 7.63,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Solmane; High bar met, Medium queued"
+      "gpu": 8.04,
+      "src": "CLOSED: High 7.63 (G-things-t4-rescore) and Medium 8.04 (G-closeouts-solmane-cragclaw-wmm, LANE-SCOUT 4e4a4dbfd)"
     },
     "F36#58": {
       "gpu": 7.47,
