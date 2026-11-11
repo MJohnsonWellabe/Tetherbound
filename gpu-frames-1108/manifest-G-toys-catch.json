@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "06-breakout.png",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-toys-catch/arm-High/06-breakout.png",
+  "sky_fraction": 0.093,
+  "lower_edges": 0.1504,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#13 frames 06-09."
+ },
+ {
+  "frame": "07-aiming-weakened.png",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-toys-catch/arm-High/07-aiming-weakened.png",
+  "sky_fraction": 0.112,
+  "lower_edges": 0.5832,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#13 frames 06-09."
+ },
+ {
+  "frame": "08-caught-verdict.png",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-toys-catch/arm-High/08-caught-verdict.png",
+  "sky_fraction": 0.171,
+  "lower_edges": 0.2503,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#13 frames 06-09."
+ },
+ {
+  "frame": "09-caught-banner.png",
+  "preset": "arm-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-toys-catch/arm-High/09-caught-banner.png",
+  "sky_fraction": 0.148,
+  "lower_edges": 0.2379,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#13 frames 06-09."
+ },
+ {
+  "frame": "06-breakout.png",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-toys-catch/base-High/06-breakout.png",
+  "sky_fraction": 0.094,
+  "lower_edges": 0.2184,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#13 frames 06-09."
+ },
+ {
+  "frame": "07-aiming-weakened.png",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-toys-catch/base-High/07-aiming-weakened.png",
+  "sky_fraction": 0.155,
+  "lower_edges": 0.5912,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#13 frames 06-09."
+ },
+ {
+  "frame": "08-caught-verdict.png",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-toys-catch/base-High/08-caught-verdict.png",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.2715,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#13 frames 06-09."
+ },
+ {
+  "frame": "09-caught-banner.png",
+  "preset": "base-High",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-toys-catch/base-High/09-caught-banner.png",
+  "sky_fraction": 0.148,
+  "lower_edges": 0.2407,
+  "script_errors": 0,
+  "note": "things-toys-ui, High, tb/things 22ff3cd1f; base = overlay off, arm = THINGS-TOYS-UI/overlay_toys_ui.json. F40#13 frames 06-09."
+ }
+]
