@@ -1,0 +1,11 @@
+Nn: none
+Dg: none
+Xl: "none"
+Uy: "none"
+Qg: "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+Nl: "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+Og: "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+Hp: "Distinct named Stormwood characters use identical dialogue lines"
+Xb: "none"
+Ug: "none"
+Yg: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

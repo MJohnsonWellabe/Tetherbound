@@ -19,3 +19,4 @@ Columns: file | rows | result.
 - G-below6-thundertunnel-heartwood.md | F36#80, F41#1 | ship (+1.41 → 6.04; +1.37 → 5.66, close-only 5.95)
 - G-dialogue-recapture-meadows.md | F38#16, F38#17, F38#36, F38#37 | new baseline: 6.25, 6.58, 7.11, 6.87; mean 6.60
 - G-dialogue-recapture-tidewake-cloudreach.md | F39#18, F39#26, F39#29, F40#10, F40#12 | new baseline: 7.12, 6.94, 7.03, 6.77, 7.25; Tidewake ≈6.64, Cloudreach ≈7.26
+- G-dialogue-recapture-stormwood.md | F41#7, F41#11, F41#15, F41#20 | new baseline: 6.24, 6.91, 4.49, 6.41; Stormwood ≈6.25. All fall: Marrow's head bloom, creature occlusion, reused models
