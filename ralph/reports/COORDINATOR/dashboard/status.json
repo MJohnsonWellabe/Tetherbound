@@ -833,7 +833,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "9:25 PM CT Sun 25 Oct 2026",
+  "last_lane_refresh": "20:30 UTC Wed 11 Nov 2026",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -902,38 +902,42 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Two lanes (owner 8 Nov): LANE-MESHY builds and judges one row at a time under the 8 Nov process; LANE-SCOUT refreshes the queue from today's frames so the build lane stops spending hours on rows that are already fine or already lost.",
+  "active_lanes_note": "Owner restructure (11 Nov 20:24 UTC): one Fable lane on every row below 6, two Fable lanes on the 6-7 band split by shared cause (THINGS: creatures, characters, poses, UI, dialogue; PLACES: world, terrain, light, weather), LANE-SCOUT judging and the GPU lane capturing. FLOOR2, NEWAPPROACH, REMAKES and MESHY archived after pushing handoffs; STORMWOOD archives when its last turn ends.",
   "active_lanes": [
     {
-      "lane": "LANE-MESHY · build arms (free Blender + CC0 pipeline)",
-      "doing": "Builds config, code and Blender-asset arms; new GPU arms held until its queue is down to two.",
-      "criteria": "F41#1, F41#2-#5, F41#10, F41#12, F41#17, F38#3, F38#23, F38#27, F40#19",
-      "now": "PAUSED overnight 11 Nov 03:35 (owner: consolidate lanes to save usage).",
-      "next": "On resume: skyroad arch (Fly reachability), F39#21 close-out (7.06), red-rule ride-alongs, new art (innkeeper body F36#29, Stormwood trio silhouettes F41#8, Cloudreach landmark art F40#3)."
+      "lane": "LANE-BELOW6 · Fable · tb/below6 (session_01GPgpLTfhRVzmhmswzRDvDP)",
+      "doing": "Every row below 6, with Meshy for new art.",
+      "criteria": "F36#86 Voltarach, F36#30 and F36#88 Abyssal Guardian, F36#61 Ribbonray, F36#93 Water Mirejaw, F36#94 Water Mosshell, F40#3, F41#1, F40#1, F36#29, F41#8, F39#8 (parked)",
+      "now": "Starting from the REMAKES, MESHY, NEWAPPROACH and FLOOR2 handoffs. REMAKES' Voltarach and Ribbonray arms are queued on the GPU.",
+      "next": "REMAKES-ABYSSAL arm; F40#3 landmark crowns (built flag-off, needs a CPU screen)."
     },
     {
-      "lane": "LANE-NEWAPPROACH · floor lane, Fable (fresh session session_01GPgpLRF3o7sPZWqT61aNNN from handoff, tb/newapproach)",
-      "now": "Sweep of built-but-unjudged candidate flags touching below-6 rows (cheapest win source tonight); F41#3 re-score queued on GPU.",
-      "next": "One or two arms from the sweep."
+      "lane": "LANE-THINGS · Fable · tb/things (session_01GPgpLVbagDjodbwdmxBeVz)",
+      "doing": "6-7 band, shared causes across creatures, characters, poses, UI and dialogue (CLUSTERS-6TO7 T1-T11).",
+      "criteria": "F36 (1) pose rows, F38-F41 (2) dialogue and character rows, UI rows",
+      "now": "T1 roster-wide faint grounding (includes the below-6 faints).",
+      "next": "T4 re-score of unrescored pose rows; T6 conversation shot plus T7 portraits on post-#910 frames."
+    },
+    {
+      "lane": "LANE-PLACES · Fable · tb/places (session_01GPgpLVN3awNzikwdX9LgpX)",
+      "doing": "6-7 band, shared causes across world, terrain, light and weather (CLUSTERS-6TO7 P1-P8).",
+      "criteria": "F41#2, #4, #5, #6, #12, #13, #19 (+F41#8 ride-along), F40#0, F39 dunes rows, Cloudreach plateaus, Meadows ground",
+      "now": "P1 Stormwood storm light, building on LANE-STORMWOOD's untested flag-off arm on tb/stormwood.",
+      "next": "P2 rain (F40#0)."
     },
     {
       "lane": "LANE-SCOUT · GPU judging",
-      "doing": "Judges each GPU section with three code-blind judges, anchors and calibration; pre-judge render check first.",
+      "doing": "Three code-blind judges, anchors and calibration on every GPU section.",
       "criteria": "every GPU arm",
-      "now": "Waiting on the next GPU sections (F38#3 confirm, Glass Sink ring).",
-      "next": "F38#3 confirm at High and Medium"
+      "now": "Re-scores and arm verdicts as the GPU lane pushes.",
+      "next": "REMAKES Voltarach and Ribbonray arms."
     },
     {
       "lane": "GPU lane · owner's PC",
-      "doing": "Captures live vs arm at High (Medium only for 7.5+), controller prompts locked on both sides.",
+      "doing": "Captures base vs arm at High (Medium only at 7.5+).",
       "criteria": "ralph/reports/COORDINATOR/gpu_queue.json",
-      "now": "F38#3 standoff close-out confirm (two runs per side).",
-      "next": "Glass Sink continuous ring (F41#10)"
-    },
-    {
-      "lane": "LANE-FLOOR2 · second floor lane (session_01GPgpLTA2EQ5pbbaeoU8Q2Y, tb/floor2)",
-      "now": "Started 11 Nov 01:39 by owner request: creature cluster F38#5, F38#26, F38#31, F39#8 as one shared-cause swing.",
-      "next": "Never-attempted below-6 rows: F39#31 Veilfall landmark, F39#30 Tidewake matrix, F41#9 harvest identity, F40#5 captain fight camera."
+      "now": "Queue at ccr 09e123913.",
+      "next": "remakes-voltarach-floor1, remakes-ribbonray-floor1"
     }
   ],
   "score_ledger": [
