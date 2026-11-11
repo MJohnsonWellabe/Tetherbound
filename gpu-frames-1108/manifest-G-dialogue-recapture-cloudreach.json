@@ -1,0 +1,123 @@
+[
+ {
+  "frame": "cloudreach__inventory__character__bridgekeeper_orrin__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__bridgekeeper_orrin__dialogue.jpg",
+  "sky_fraction": 0.207,
+  "lower_edges": 0.2605,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__captain_veyra__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__captain_veyra__dialogue.jpg",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.2485,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__courier_neri__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__courier_neri__dialogue.jpg",
+  "sky_fraction": 0.219,
+  "lower_edges": 0.2919,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__defector_rusk__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__defector_rusk__dialogue.jpg",
+  "sky_fraction": 0.155,
+  "lower_edges": 0.409,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__healer_iven__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__healer_iven__dialogue.jpg",
+  "sky_fraction": 0.104,
+  "lower_edges": 0.2384,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__keeper_maela__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__keeper_maela__dialogue.jpg",
+  "sky_fraction": 0.178,
+  "lower_edges": 0.2571,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__naturalist_sora__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__naturalist_sora__dialogue.jpg",
+  "sky_fraction": 0.271,
+  "lower_edges": 0.272,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__officer_voss__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__officer_voss__dialogue.jpg",
+  "sky_fraction": 0.551,
+  "lower_edges": 0.2115,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__trader_kelm__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__trader_kelm__dialogue.jpg",
+  "sky_fraction": 0.107,
+  "lower_edges": 0.2654,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__warden_aila__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__warden_aila__dialogue.jpg",
+  "sky_fraction": 0.118,
+  "lower_edges": 0.3592,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ },
+ {
+  "frame": "cloudreach__inventory__character__young_trainer_tavi__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "8df122a830e982315e71ab94241cd2c7559b046c",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=cloudreach --seed=2042 (every post)",
+  "path": "G-dialogue-recapture-cloudreach/main-High/cloudreach__inventory__character__young_trainer_tavi__dialogue.jpg",
+  "sky_fraction": 0.181,
+  "lower_edges": 0.3802,
+  "script_errors": 0,
+  "note": "Dialogue re-capture on the fixed tool (PR #910), main 8df122a83, High, one side. All 11 __dialogue frames blend 1.000, timed_out false; no stand failures."
+ }
+]
