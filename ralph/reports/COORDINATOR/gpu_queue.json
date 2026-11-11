@@ -2900,7 +2900,9 @@
    "job": "phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --preset=High, subsets camp_tent, camp_bed, bonfire_fire; base and arm",
    "frames": "camp_tent, camp_bed, bonfire_fire",
    "capture": "High. Pre-check: sign lettering reads correctly from either side, props not overlapping (tent vs bed), nothing red (camp props, owner red rule). The bonfire frame's stand moves (heading 90) so its gain is partly staging: LANE-SCOUT to report the bonfire frame separately. Then judge on F38#32's brief.",
-   "note": "6-to-7 tier (6.37)."
+   "note": "6-to-7 tier (6.37).",
+   "done": true,
+   "frames_pushed": "G-floor2-camp-hero 13a6d2ac4: pre-checks pass (no overlap, no red on arm, fire now in view). Base's sign beam is dark crimson (red-rule ride-along for LANE-MESHY's list). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
