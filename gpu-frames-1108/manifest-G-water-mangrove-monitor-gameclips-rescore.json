@@ -1,0 +1,167 @@
+[
+ {
+  "frame": "water_mangrove_monitor-faint-000.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-faint-000.jpg",
+  "sky_fraction": 0.952,
+  "lower_edges": 0.0709,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-faint-025.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-faint-025.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0743,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-faint-050.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-faint-050.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0717,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-faint-075.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-faint-075.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0711,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-faint-100.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-faint-100.jpg",
+  "sky_fraction": 0.953,
+  "lower_edges": 0.0727,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-000.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-hit-000.jpg",
+  "sky_fraction": 0.952,
+  "lower_edges": 0.0709,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-025.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-hit-025.jpg",
+  "sky_fraction": 0.948,
+  "lower_edges": 0.0671,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-050.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-hit-050.jpg",
+  "sky_fraction": 0.949,
+  "lower_edges": 0.069,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-075.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-hit-075.jpg",
+  "sky_fraction": 0.952,
+  "lower_edges": 0.0707,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-100.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-hit-100.jpg",
+  "sky_fraction": 0.952,
+  "lower_edges": 0.0709,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-000.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-swim-000.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0324,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-025.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-swim-025.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0343,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-050.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-swim-050.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.032,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-075.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-swim-075.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0333,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-100.png",
+  "preset": "main-High",
+  "tree": "5cb2084c334f30c7d57c8efdb93a2bb0c21b9106",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler",
+  "path": "G-water-mangrove-monitor-gameclips-rescore/main-High/water_mangrove_monitor-swim-100.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0325,
+  "script_errors": 0,
+  "note": "High, one side on tb/things 5cb2084c3 (flags off); hit, faint, swim. Neutral stage: sky heuristic bypassed after an eye check."
+ }
+]
