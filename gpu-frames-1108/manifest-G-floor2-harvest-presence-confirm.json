@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "stormwood__inventory__harvest__stormglass.jpg",
+  "preset": "arm-High",
+  "tree": "f79383083ce242b52cd677c8b2fa7bd6c4eda6c3",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence-confirm/arm-High/stormwood__inventory__harvest__stormglass.jpg",
+  "sky_fraction": 0.104,
+  "lower_edges": 0.2587,
+  "script_errors": 0,
+  "note": "F41#9 confirm (landing version). High, tb/floor2 f79383083 (satellites on the node's own footprint with a trainer keep-out; no ground lights), phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (floor2_presence on). Frames: stormglass, stormglass_crown, glowmoss. Pre-check: trainer whole and clear in all three (no copy at the feet or in front of the legs); no clipped-white glare on the crown (clipped px 991 arm vs 1060 base, the existing small highlights); violet holds (stormglass 0.44 -> 1.51%, crown 1.30 -> 2.94%); red <= 0.09%."
+ },
+ {
+  "frame": "stormwood__inventory__harvest__stormglass_crown.jpg",
+  "preset": "arm-High",
+  "tree": "f79383083ce242b52cd677c8b2fa7bd6c4eda6c3",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence-confirm/arm-High/stormwood__inventory__harvest__stormglass_crown.jpg",
+  "sky_fraction": 0.422,
+  "lower_edges": 0.2199,
+  "script_errors": 0,
+  "note": "F41#9 confirm (landing version). High, tb/floor2 f79383083 (satellites on the node's own footprint with a trainer keep-out; no ground lights), phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (floor2_presence on). Frames: stormglass, stormglass_crown, glowmoss. Pre-check: trainer whole and clear in all three (no copy at the feet or in front of the legs); no clipped-white glare on the crown (clipped px 991 arm vs 1060 base, the existing small highlights); violet holds (stormglass 0.44 -> 1.51%, crown 1.30 -> 2.94%); red <= 0.09%."
+ },
+ {
+  "frame": "stormwood__inventory__harvest__glowmoss.jpg",
+  "preset": "arm-High",
+  "tree": "f79383083ce242b52cd677c8b2fa7bd6c4eda6c3",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence-confirm/arm-High/stormwood__inventory__harvest__glowmoss.jpg",
+  "sky_fraction": 0.221,
+  "lower_edges": 0.2716,
+  "script_errors": 0,
+  "note": "F41#9 confirm (landing version). High, tb/floor2 f79383083 (satellites on the node's own footprint with a trainer keep-out; no ground lights), phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (floor2_presence on). Frames: stormglass, stormglass_crown, glowmoss. Pre-check: trainer whole and clear in all three (no copy at the feet or in front of the legs); no clipped-white glare on the crown (clipped px 991 arm vs 1060 base, the existing small highlights); violet holds (stormglass 0.44 -> 1.51%, crown 1.30 -> 2.94%); red <= 0.09%."
+ },
+ {
+  "frame": "stormwood__inventory__harvest__stormglass.jpg",
+  "preset": "base-High",
+  "tree": "f79383083ce242b52cd677c8b2fa7bd6c4eda6c3",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence-confirm/base-High/stormwood__inventory__harvest__stormglass.jpg",
+  "sky_fraction": 0.097,
+  "lower_edges": 0.2499,
+  "script_errors": 0,
+  "note": "F41#9 confirm (landing version). High, tb/floor2 f79383083 (satellites on the node's own footprint with a trainer keep-out; no ground lights), phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (floor2_presence on). Frames: stormglass, stormglass_crown, glowmoss. Pre-check: trainer whole and clear in all three (no copy at the feet or in front of the legs); no clipped-white glare on the crown (clipped px 991 arm vs 1060 base, the existing small highlights); violet holds (stormglass 0.44 -> 1.51%, crown 1.30 -> 2.94%); red <= 0.09%."
+ },
+ {
+  "frame": "stormwood__inventory__harvest__stormglass_crown.jpg",
+  "preset": "base-High",
+  "tree": "f79383083ce242b52cd677c8b2fa7bd6c4eda6c3",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence-confirm/base-High/stormwood__inventory__harvest__stormglass_crown.jpg",
+  "sky_fraction": 0.424,
+  "lower_edges": 0.2042,
+  "script_errors": 0,
+  "note": "F41#9 confirm (landing version). High, tb/floor2 f79383083 (satellites on the node's own footprint with a trainer keep-out; no ground lights), phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (floor2_presence on). Frames: stormglass, stormglass_crown, glowmoss. Pre-check: trainer whole and clear in all three (no copy at the feet or in front of the legs); no clipped-white glare on the crown (clipped px 991 arm vs 1060 base, the existing small highlights); violet holds (stormglass 0.44 -> 1.51%, crown 1.30 -> 2.94%); red <= 0.09%."
+ },
+ {
+  "frame": "stormwood__inventory__harvest__glowmoss.jpg",
+  "preset": "base-High",
+  "tree": "f79383083ce242b52cd677c8b2fa7bd6c4eda6c3",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-floor2-harvest-presence-confirm/base-High/stormwood__inventory__harvest__glowmoss.jpg",
+  "sky_fraction": 0.215,
+  "lower_edges": 0.2772,
+  "script_errors": 0,
+  "note": "F41#9 confirm (landing version). High, tb/floor2 f79383083 (satellites on the node's own footprint with a trainer keep-out; no ground lights), phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042. base = tree as is; arm = plus FLOOR2-HARVEST/overlay_presence.json (floor2_presence on). Frames: stormglass, stormglass_crown, glowmoss. Pre-check: trainer whole and clear in all three (no copy at the feet or in front of the legs); no clipped-white glare on the crown (clipped px 991 arm vs 1060 base, the existing small highlights); violet holds (stormglass 0.44 -> 1.51%, crown 1.30 -> 2.94%); red <= 0.09%."
+ }
+]
