@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 00:34 UTC",
+  "updated": "11 Nov 2026 00:40 UTC",
   "headline": [
+    "11 Nov 00:40: Warrens foundation landed (#894, with the cave-mouth keep-out). Batch 51 (#897, giant trees in the fight fade) and batch 52 (#898, walk_03 open-ground stand) in CI. Tonight on main so far: #894 Warrens foundation, #895 Stormwood bark, #896 Meadows ridge.",
     "11 Nov 00:20: giant trees in the fight fade win (Hollows +1.09, F41#3 to 5.89), batch 51 in CI, with the Hall timber red-rule fix. Landed tonight: Stormwood bark (#895), Meadows ridge (#896). Warrens foundation (#894) is on its last CI run; the walk_03 stand follows.",
     "10 Nov 23:30: Warrens walk_03 open-ground stand wins big (F38#24 +2.47, F38#30 +1.28, 3/3): the old stand was a random spot on the slope showing neither subject. Rows to 6.01 and 5.38 once it lands. The flank grass texture lost twice and is parked. The stronghold approach (the ridge) holds at 7.51. Warrens batch 48 re-running CI with the cave-mouth keep-out fix.",
     "10 Nov 22:55: floor lane's third win: the Meadows ridge (F38#24 stronghold +0.75 to 7.26), batch 50 in CI. Every visual row now has a score: 28 below 6, none unscored (down from 37). F38#24 rises from the lowest item (3.67) to 5.11.",
@@ -1881,6 +1882,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "batch 52 (#898, in CI)",
+      "what": "Burrow Warrens walk_03 gets a reviewed open-ground capture stand showing the hillside, road and ridge (F38#24 +2.47, F38#30 +1.28, 3/3; capture tooling only)",
+      "when": "11 Nov, in CI"
+    },
     {
       "pr": "batch 51 (#897, in CI)",
       "what": "Stormwood fights: the giant Deepwood trees dither out of the fight camera like every other tree (Hollows Alpha +1.09, 3/3; F41#3 5.29 -> 5.89); Hall nave post retinted out of the red family (arch_home +0.24, 3/3)",
