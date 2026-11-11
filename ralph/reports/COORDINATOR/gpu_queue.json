@@ -2205,7 +2205,8 @@
    "frames": "(1) keeper_maela perch and realm_gate_crag close with --cloudreach-cause-cloud_sea on both sides; (2) phase2 ride road_back_13.5s and road_back_15.0s",
    "capture": "High, overlay off vs on. After newapproach-cloudreach-cause-no-cloudsea. PRE-CHECK ONLY, no judging: are the hard horizontal top, the straight diagonal edges against the cliffs, the vertical edge at the pillar and the ribbon-like planes on the ride back softened or gone with the overlay on? Also report anything new: cloud missing under the rims, banding, or a shader error on Forward+.",
    "note": "Soft deck intersection (cloud_sea.soft_intersect_m): the deck alpha fades in front of solid ground, aimed at the hard slab edges the cause package showed and the ride-back slabs behind F40#6 (5.10) and F40#11 (5.50). PRE-CHECK only; push as a diagnostic section with the GPU lane's read.",
-   "done": false
+   "done": true,
+   "frames_pushed": "691b7f301 diagnostic: no effect on the slab top, edges or ride ribbons (deck edges over open air)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
