@@ -811,6 +811,7 @@
   ],
   "owner_needs": [
     "11 Nov: F40#9 post focus camera (LANE-NEWAPPROACH, flag-off): when the player stands still at a Cloudreach named post with its prompt up, the play camera eases in (5.2 m to 3.6 m) and slides toward the NPC; releases on any input, never in fights. GPU +0.71 (3/3), F40#9 5.02 -> 5.73. Land it? (changes how the camera behaves in play)",
+    "11 Nov: F40#6 refuse_drop (LANE-NEWAPPROACH, flag-off, gameplay): a mount refuses to ride off a drop with no floor within 100 m ('Your mount won't take that drop'); survivable ledges are ridden off as before. F40#6's judged frames are the 3 s after riding off the arrival terrace edge; every look arm left that defect PRESENT, judges ask for 'clamped pathing or an authored drop'. Today the game recovers the mount in about half a second with no loss. Turn it on?",
     "Nothing pending. Keep the PC on and awake overnight for the GPU run."
   ],
   "four_chapter_run": null,

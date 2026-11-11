@@ -2651,6 +2651,26 @@
    "done": true,
    "frames_pushed": "G-newapproach-post-focus f0bcfe69b: focus engaged (spring 3.60 arm vs 5.20 base on all three); NPC larger beside the trainer. With LANE-SCOUT.",
    "verdict": "G-newapproach-post-focus (tb/item-scout-1108 07d0145af): +0.71 (5.02->5.73, 3/3). HELD for owner decision (play-camera behaviour). Row still below 6; next arm: authored posts, Sora re-stage, post lighting on top of focus."
+  },
+  {
+   "id": "newapproach-post-setting",
+   "kind": "arm",
+   "rows": [
+    "F40#9"
+   ],
+   "branch": "tb/newapproach",
+   "head": "fb4ff2c0e",
+   "tree": "tb/newapproach fb4ff2c0e (camera_rig.gd, cloudreach_physical_runtime.gd, cloudreach_npc_posts.gd; installed assets only)",
+   "overlay_branch": "tb/newapproach",
+   "overlay_base": "ralph/reports/LANES/NEWAPPROACH-POSTFOCUS/overlay_post_focus.json (base: post focus on)",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-POSTSET/overlay_post_setting.json (arm: post focus on + setting)",
+   "extra_side": "ALSO capture the setting WITHOUT post focus (overlay_post_setting.json with camera.json post_focus.enabled forced false) and plain base (no overlay), so the setting can land alone if the owner declines the camera change",
+   "overlay_format": "deep merge (arrays replaced whole)",
+   "request": "ralph/reports/LANES/NEWAPPROACH-POSTSET/CAPTURE.json",
+   "job": "phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela --preset=High; four sides: plain base, focus-only, focus+setting, setting-only",
+   "frames": "tavi, sora, maela",
+   "capture": "High. Pre-check: spring length 3.6 with focus, 5.2 without; nothing red; key light not blowing out the NPCs. LANE-SCOUT judges focus+setting vs focus-only (the lane's pair) and setting-only vs plain base.",
+   "note": "Post focus itself is held for the owner."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
