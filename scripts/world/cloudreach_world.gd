@@ -881,6 +881,31 @@ func _build_materials() -> void:
 	var cloud_deck_far := cloud_deck.duplicate() as ShaderMaterial
 	cloud_deck_far.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("deck_colour", "#93aec4"))))
 	_materials["cloud_deck_far"] = cloud_deck_far
+	# F40#11 / F40#6 `cloud_sea.soft_sea` (judged ON, GPU High): both deck sheets
+	# take the soft lit cloud-sea material (integer-hash billows, white tops,
+	# blue shadows, pale cloud piled against rock) in place of the deck shader.
+	var soft_sea: Variant = cloud_cfg.get("soft_sea", {})
+	if soft_sea is Dictionary and (soft_sea as Dictionary).get("enabled") == true:
+		var sea_cfg := soft_sea as Dictionary
+		var sea := ShaderMaterial.new()
+		sea.shader = load("res://shaders/cloudreach_cloud_sea_soft.gdshader") as Shader
+		sea.set_shader_parameter("cloud_top", Color(str(sea_cfg.get("top_colour", "#e6edf5"))))
+		sea.set_shader_parameter("cloud_mid", Color(str(sea_cfg.get("mid_colour", "#b3c6dc"))))
+		sea.set_shader_parameter("cloud_shadow", Color(str(sea_cfg.get("shadow_colour", "#6b8cbd"))))
+		sea.set_shader_parameter("billow_m", float(sea_cfg.get("billow_m", 130.0)))
+		var sun_xz: Array = sea_cfg.get("sun_xz", [0.6, 0.8])
+		sea.set_shader_parameter("sun_xz", Vector2(float(sun_xz[0]), float(sun_xz[1])))
+		sea.set_shader_parameter("alpha_min", float(sea_cfg.get("alpha_min", 0.55)))
+		sea.set_shader_parameter("alpha_max", float(sea_cfg.get("alpha_max", 0.96)))
+		sea.set_shader_parameter("wrap_m", float(sea_cfg.get("wrap_m", 45.0)))
+		sea.set_shader_parameter("wrap_strength", float(sea_cfg.get("wrap_strength", 0.7)))
+		_materials["cloud_deck"] = sea
+		var sea_far := sea.duplicate() as ShaderMaterial
+		sea_far.set_shader_parameter("cloud_top", Color(str(sea_cfg.get("far_top_colour", "#c9d9e8"))))
+		sea_far.set_shader_parameter("cloud_mid", Color(str(sea_cfg.get("far_mid_colour", "#a9c0d8"))))
+		sea_far.set_shader_parameter("cloud_shadow", Color(str(sea_cfg.get("far_shadow_colour", "#7391b5"))))
+		sea_far.set_shader_parameter("wrap_strength", 0.0)
+		_materials["cloud_deck_far"] = sea_far
 	var cloud_bank := ShaderMaterial.new()
 	cloud_bank.shader = preload("res://shaders/cloudreach_cloud_volume.gdshader")
 	cloud_bank.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("billow_colour", "#e4edf2"))))
