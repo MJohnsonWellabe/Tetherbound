@@ -1,0 +1,101 @@
+[
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "armA-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/armA-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.199,
+  "lower_edges": 0.3662,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "preset": "armA-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/armA-High/cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.2646,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "preset": "armA-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/armA-High/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.361,
+  "lower_edges": 0.3132,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "armB-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/armB-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.199,
+  "lower_edges": 0.3615,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "preset": "armB-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/armB-High/cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.2639,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "preset": "armB-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/armB-High/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.35,
+  "lower_edges": 0.3084,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/base-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.138,
+  "lower_edges": 0.3233,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/base-High/cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.2395,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "preset": "base-High",
+  "tree": "e2138671a7bfce8507a1dda7afc8b50c7616084a",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-newapproach-bridge-view/base-High/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.268,
+  "lower_edges": 0.2991,
+  "script_errors": 0,
+  "note": "F40#8. High, main e2138671a (#900), phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night. base = main as is (landing_tree_clear names [LandingTree171]). armA = plus tb/newapproach e1f731f25 NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (names [LandingTree171, LandingTree926]). armB = overlay_bridge_view.json (same tree clear + world_payoffs.anchor_waymark on: stone #8c8676, cap #a8873f, 2.1 m). Judge A vs base and B vs base; ship the better side only. Pre-check: the trunk in front of the stand is gone on A and B. Night: A's revealed Storm Anchor cyan post peaks at luminance 250 (among the brightest things in frame); B's stone waymark peaks at 172, below the trainer (224 p95) and the moon (230), frame p99.5 189 - not the brightest thing."
+ }
+]
