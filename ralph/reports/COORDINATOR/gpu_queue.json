@@ -2797,7 +2797,9 @@
    "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High",
    "frames": "16,17,18 (F40#11); 17,18,27,28 (F40#6)",
    "capture": "High; pre-checks (1),(2),(4); then LANE-SCOUT.",
-   "note": "Measures the floor alone while card shading is fixed."
+   "note": "Measures the floor alone while card shading is fixed.",
+   "done": true,
+   "frames_pushed": "G-newapproach-cloud-sea-only fe749ec0a on main 63d6abd25: pre-checks pass (floor facets gone, billows, no clip, no cliff line). With LANE-SCOUT."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
