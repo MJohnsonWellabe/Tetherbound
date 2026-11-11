@@ -1,5 +1,5 @@
 {
-  "updated": "11 Nov 2026 01:40 UTC",
+  "updated": "11 Nov 2026 01:55 UTC",
   "headline": [
     "11 Nov 01:40: owner asked for a third build lane: LANE-FLOOR2 takes the creature cluster and the never-attempted below-6 rows; LANE-NEWAPPROACH keeps Cloudreach and the stuck rows; LANE-MESHY does F39#21 close-out, then new art (innkeeper body, named silhouettes). Every below-6 row now has an owner.",
     "11 Nov 01:31: all five floor-lane landings of the night are on main: #894 Warrens foundation (cave mouth kept clear), #895 Stormwood bark, #896 Meadows ridge, #897 giant trees in the fight fade plus Hall timber out of the red family, #898 Warrens walk_03 stand. Below-6 count 37 -> 27 with nothing unscored. Next on the GPU: the Cloudreach cause package for the five Cloudreach rows just under 6.",
@@ -2048,8 +2048,8 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#28": {
-      "gpu": 5.97,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 6.99,
+      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note)"
     },
     "F38#29": {
       "gpu": 6.05,
