@@ -1,4 +1,4 @@
-STATUS: prepared, third in line (two arms on the GPU at most: Voltarach and Ribbonray go first)
+STATUS: ready for GPU (High first); queued 11 Nov 21:10 UTC on the coordinator's go
 ROWS: F36#30 Abyssal Guardian poses (5.54), F36#88 Water Abyssal Guardian poses (5.85)
 BRANCH: tb/below6 (needs the branch: new texture, import once)
 OVERLAY: ralph/reports/LANES/BELOW6-ABYSSAL/overlay.json
