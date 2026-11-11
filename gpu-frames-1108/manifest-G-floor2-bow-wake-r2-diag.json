@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "mounted-swim-05-mounted.png",
+  "preset": "arm-High",
+  "tree": "0cbd114d7894f7055e73a8726f8c69aff4ebca45",
+  "tool": "res://tools/phase2_capture_tidewake_mounted_swim.gd",
+  "path": "G-floor2-bow-wake-r2-diag/arm-High/mounted-swim-05-mounted.png",
+  "sky_fraction": 0.589,
+  "lower_edges": 0.0399,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-bow-wake-r2, F39#8 attempt 2). High, tb/floor2 0cbd114d7 (sine-free hash + rotated gradient noise, depth_pull_m 0.1, skip_vertex_transform), phase2_capture_tidewake_mounted_swim.gd --seed=2042. base = tree as is; arm = plus FLOOR2-BOWWAKE/overlay_bow_wake.json. Frames 05-07. Read: the hard-edged cells are gone, but no V wake shows behind the moving mount in any of 03-10; frame 06 has the bow ring plus one faint short streak leaving it to the upper left; the stamped trail rings are gone."
+ },
+ {
+  "frame": "mounted-swim-06-mounted.png",
+  "preset": "arm-High",
+  "tree": "0cbd114d7894f7055e73a8726f8c69aff4ebca45",
+  "tool": "res://tools/phase2_capture_tidewake_mounted_swim.gd",
+  "path": "G-floor2-bow-wake-r2-diag/arm-High/mounted-swim-06-mounted.png",
+  "sky_fraction": 0.565,
+  "lower_edges": 0.0352,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-bow-wake-r2, F39#8 attempt 2). High, tb/floor2 0cbd114d7 (sine-free hash + rotated gradient noise, depth_pull_m 0.1, skip_vertex_transform), phase2_capture_tidewake_mounted_swim.gd --seed=2042. base = tree as is; arm = plus FLOOR2-BOWWAKE/overlay_bow_wake.json. Frames 05-07. Read: the hard-edged cells are gone, but no V wake shows behind the moving mount in any of 03-10; frame 06 has the bow ring plus one faint short streak leaving it to the upper left; the stamped trail rings are gone."
+ },
+ {
+  "frame": "mounted-swim-07-mounted.png",
+  "preset": "arm-High",
+  "tree": "0cbd114d7894f7055e73a8726f8c69aff4ebca45",
+  "tool": "res://tools/phase2_capture_tidewake_mounted_swim.gd",
+  "path": "G-floor2-bow-wake-r2-diag/arm-High/mounted-swim-07-mounted.png",
+  "sky_fraction": 0.281,
+  "lower_edges": 0.1234,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-bow-wake-r2, F39#8 attempt 2). High, tb/floor2 0cbd114d7 (sine-free hash + rotated gradient noise, depth_pull_m 0.1, skip_vertex_transform), phase2_capture_tidewake_mounted_swim.gd --seed=2042. base = tree as is; arm = plus FLOOR2-BOWWAKE/overlay_bow_wake.json. Frames 05-07. Read: the hard-edged cells are gone, but no V wake shows behind the moving mount in any of 03-10; frame 06 has the bow ring plus one faint short streak leaving it to the upper left; the stamped trail rings are gone."
+ },
+ {
+  "frame": "mounted-swim-05-mounted.png",
+  "preset": "base-High",
+  "tree": "0cbd114d7894f7055e73a8726f8c69aff4ebca45",
+  "tool": "res://tools/phase2_capture_tidewake_mounted_swim.gd",
+  "path": "G-floor2-bow-wake-r2-diag/base-High/mounted-swim-05-mounted.png",
+  "sky_fraction": 0.589,
+  "lower_edges": 0.0402,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-bow-wake-r2, F39#8 attempt 2). High, tb/floor2 0cbd114d7 (sine-free hash + rotated gradient noise, depth_pull_m 0.1, skip_vertex_transform), phase2_capture_tidewake_mounted_swim.gd --seed=2042. base = tree as is; arm = plus FLOOR2-BOWWAKE/overlay_bow_wake.json. Frames 05-07. Read: the hard-edged cells are gone, but no V wake shows behind the moving mount in any of 03-10; frame 06 has the bow ring plus one faint short streak leaving it to the upper left; the stamped trail rings are gone."
+ },
+ {
+  "frame": "mounted-swim-06-mounted.png",
+  "preset": "base-High",
+  "tree": "0cbd114d7894f7055e73a8726f8c69aff4ebca45",
+  "tool": "res://tools/phase2_capture_tidewake_mounted_swim.gd",
+  "path": "G-floor2-bow-wake-r2-diag/base-High/mounted-swim-06-mounted.png",
+  "sky_fraction": 0.559,
+  "lower_edges": 0.0391,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-bow-wake-r2, F39#8 attempt 2). High, tb/floor2 0cbd114d7 (sine-free hash + rotated gradient noise, depth_pull_m 0.1, skip_vertex_transform), phase2_capture_tidewake_mounted_swim.gd --seed=2042. base = tree as is; arm = plus FLOOR2-BOWWAKE/overlay_bow_wake.json. Frames 05-07. Read: the hard-edged cells are gone, but no V wake shows behind the moving mount in any of 03-10; frame 06 has the bow ring plus one faint short streak leaving it to the upper left; the stamped trail rings are gone."
+ },
+ {
+  "frame": "mounted-swim-07-mounted.png",
+  "preset": "base-High",
+  "tree": "0cbd114d7894f7055e73a8726f8c69aff4ebca45",
+  "tool": "res://tools/phase2_capture_tidewake_mounted_swim.gd",
+  "path": "G-floor2-bow-wake-r2-diag/base-High/mounted-swim-07-mounted.png",
+  "sky_fraction": 0.282,
+  "lower_edges": 0.1238,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC, not for judging (floor2-aquaryn-bow-wake-r2, F39#8 attempt 2). High, tb/floor2 0cbd114d7 (sine-free hash + rotated gradient noise, depth_pull_m 0.1, skip_vertex_transform), phase2_capture_tidewake_mounted_swim.gd --seed=2042. base = tree as is; arm = plus FLOOR2-BOWWAKE/overlay_bow_wake.json. Frames 05-07. Read: the hard-edged cells are gone, but no V wake shows behind the moving mount in any of 03-10; frame 06 has the bow ring plus one faint short streak leaving it to the upper left; the stamped trail rings are gone."
+ }
+]
