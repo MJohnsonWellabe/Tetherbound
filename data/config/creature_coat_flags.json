@@ -979,6 +979,43 @@
           "emission": "res://assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101_arc_emission_face.png"
         }
       }
+    },
+    "remakes_floor_voltarach": {
+      "_why": "LANE-REMAKES (11 Nov 2026), F36#86 Voltarach poses (GPU 8 Nov 5.11: 'chrome-gold statue', face lost, 3/3; the native eight-leg spider ships again since 9 Nov and carried the same defect on 24 Oct). Board: charcoal shell, thin gold lightning cracks, blue eyes. Wide gold fields and the gold halo go to dark bronze, only thin crack cores stay gold, the charcoal lifts a step, the roughness map is replaced by a matte shell value, and the storm trait is lit: blue eyes plus the thin cracks (emission map). Stronger than creatures_vis_coat_voltarach/creatures_vis_glow_voltarach, which it supersedes when on. Script tools/art_pipeline/grade_remakes_floor.py voltarach.",
+      "enabled": true,
+      "_why_on": "ON (GPU High G-remakes-floor1, 11 Nov 2026; ralph/reports/GPU-PASS/1108/G-remakes-floor1-ribbonray-voltarach.md on tb/item-scout-1108 e9012a32d): F36#86 Voltarach 5.15 -> 6.50 (+1.35), 3/3 prefer the arm, no loss, no red. Owner 4 Nov: a judged gain ships ON.",
+      "coats": {
+        "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_floor1.png",
+          "emission": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_floor1_glow.png", "emission_energy": 1.8,
+          "roughness": 0.82, "specular": 0.35
+        }
+      }
+    },
+    "remakes_floor_abyssal_guardian": {
+      "_why": "LANE-REMAKES (11 Nov 2026), F36#30 Abyssal Guardian poses 5.54 and F36#88 water form 5.85 (GPU 8 Nov: 'glossy vinyl, toy-like', 3/3). Probed: the remake's roughness map averages 0.52 over a flat saturated navy. The navy loses a third of its saturation toward slate sea-blue with fine value mottling from its own detail, the pure-white belly drops to grey-cream, and the roughness map is replaced by a matte wet-hide value with lower specular. Cyan markings and eyes keep their pixels. Script tools/art_pipeline/grade_remakes_floor.py abyssal_guardian. The water form (installed retex r6 model) takes the same matte values over its 1 Nov vis1 grade (cyan dots muted, self-lit emission x0.6). The 'spindly' build is mesh and is not addressed. OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_Image_0_floor1.png",
+          "roughness": 0.86, "specular": 0.3
+        },
+        "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6.png": {
+          "albedo": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6_vis1.png", "emission_scale": 0.6,
+          "roughness": 0.86, "specular": 0.3
+        }
+      }
+    },
+    "remakes_floor_ribbonray": {
+      "_why": "LANE-REMAKES (11 Nov 2026), F36#61 Ribbonray poses 5.68 (GPU 8 Nov: 'the whole body is saturated magenta and reads as an effect, not a believable animal', 3/3; two judges ask for a natural navy and cyan ray). Its reference board is a blue-headed ray with blue-violet wings. Magenta and mauve texels turn to deep ocean blue (dark scales navy, pale skin soft blue-lilac); the cyan eyes keep their pixels; matte hide. Script tools/art_pipeline/grade_remakes_floor.py ribbonray.",
+      "enabled": true,
+      "_why_on": "ON (GPU High G-remakes-floor1, 11 Nov 2026; ralph/reports/GPU-PASS/1108/G-remakes-floor1-ribbonray-voltarach.md on tb/item-scout-1108 e9012a32d): F36#61 Ribbonray 5.02 -> 6.90 (+1.88), 3/3 prefer the arm, no loss, no red. Owner 4 Nov: a judged gain ships ON.",
+      "coats": {
+        "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0_floor1.png",
+          "roughness": 0.85, "specular": 0.3
+        }
+      }
     }
   }
 }
