@@ -2674,6 +2674,24 @@
    "done": true,
    "frames_pushed": "G-newapproach-post-setting 04e5b4474: four sides; pre-checks pass (focus engages only with focus, no red, no blowout); warm hotspot on a trunk in focusset Maela. With LANE-SCOUT.",
    "verdict": "G-newapproach-post-setting (tb/item-scout-1108 22102b6be): setting +1.16 (3/3) both ways; setonly 6.48 clears 6 without the post camera. Post camera adds nothing measurable on top. Land setonly."
+  },
+  {
+   "id": "newapproach-edge-cards",
+   "kind": "arm",
+   "rows": [
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "73ab762e2",
+   "tree": "current main plus scripts/world/cloudreach_world.gd from tb/newapproach 422cf4dbd (two blocks reading island_roots.mist_style; installed texture only)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-EDGECARDS/overlay_edge_cards.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-EDGECARDS/CAPTURE.json",
+   "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
+   "frames": "phase2_16_terrace_mounted_at_edge, phase2_17_terrace_01.0s, phase2_18_terrace_02.0s",
+   "capture": "High. Pre-check: no straight quad edge or hard line against the cliff; no flat-sprite pop as the mount passes; not pasted-on at 1080p. Then LANE-SCOUT on F40#11's brief.",
+   "note": "New idea (island mist volume banks -> cumulus cards), not the parked deck-shader line."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
