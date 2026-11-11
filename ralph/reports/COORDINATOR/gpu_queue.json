@@ -2943,7 +2943,8 @@
    "capture": "After newapproach-card-white. High. Pre-check: nothing red, the sign reads correctly from the planned stand, gate timber brown with grain. LANE-SCOUT: report tent+bed (game only) and bonfire separately.",
    "note": "Camp attempt 2 (attempt 1 lost on the game-only frames).",
    "done": true,
-   "frames_pushed": "G-floor2-camp-r2 4eb98c34c: no red on arm, gate brown, bonfire in view; old planned stand put the trainer on the gate (broken stand). Sign-front diagnostic follows. With LANE-SCOUT."
+   "frames_pushed": "G-floor2-camp-r2 4eb98c34c: no red on arm, gate brown, bonfire in view; old planned stand put the trainer on the gate (broken stand). Sign-front diagnostic follows. With LANE-SCOUT.",
+   "verdict": "G-floor2-camp-r2 (tb/item-scout-1108 ebb0ebcc3): SHIP. F38#32 6.26->6.91; tent+bed +0.07 (2/3, no loss), bonfire +1.83 (3/3, stand fix). Landing after the sign-front check."
   },
   {
    "id": "rebaseline-creature-poses-stage",
