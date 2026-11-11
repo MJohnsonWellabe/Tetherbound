@@ -2488,7 +2488,9 @@
    "job": "phase2_capture_tidewake_mounted_swim.gd --seed=2042 High, output under res://ralph/reports/VISUAL/phase2/tidewake/; base and arm",
    "frames": "judge 06-08 (moving beat) paired base vs arm; 03-05 shown; 11-13 control",
    "capture": "High. Pre-check on a 3x crop inside the V of frame 06: no hard-edged cells; else report and do not judge. Attempt 2 on this approach (two fails parks it).",
-   "note": "Round 1 failed pre-check on world-grid tiles (likely sin-hash corner mismatch on NVIDIA)."
+   "note": "Round 1 failed pre-check on world-grid tiles (likely sin-hash corner mismatch on NVIDIA).",
+   "done": true,
+   "result": "Pre-check FAILED (attempt 2): tiles fixed but the V wake no longer draws (only the bow ring and one faint streak). Diagnostic G-floor2-bow-wake-r2-diag 69bc5cfe8. Approach PARKED after two fails."
   },
   {
    "id": "floor2-sand-ripple-relief",
