@@ -153,7 +153,13 @@
     "deck_colour": "#7793a8",
     "deck_far_colour": "#526b80",
     "billow_colour": "#9db3c1",
-    "billow_base_colour": "#51677c"
+    "billow_base_colour": "#51677c",
+    "soft_sea": {
+      "_scope": "world_presentation",
+      "_why": "F40#11 / F40#6: on the judging GPU the deck shader's fract(sin()) noise hash drew the cloud floor as flat rectangular patches (3/3 judges: the largest drag on F40#11). When on, both deck sheets take shaders/cloudreach_cloud_sea_soft.gdshader: billows from an integer lattice hash, white sunlit tops, blue shadowed creases, and pale cloud piled against rock. Sheet heights, the billow volumes and the CloudSea box are unchanged. Colours and scale are the shader and code defaults.",
+      "_why_on": "GPU High, G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88), 11 Nov 2026: F40#11 6.17 -> 6.97 mapped (+0.80, 3/3 prefer) and F40#6 5.61 -> 6.33 mapped (+0.72, 3/3 prefer).",
+      "enabled": true
+    }
   },
   "distant_relief": {
     "_comment": "CLOUDREACH-ATMOS-0906 (C4), read by cloudreach_world.gd::_build_distant_relief. horizon_ranges below already puts ten ranges on the skyline, but every one of them is a peak ABOVE the player -- which is why the judge read stand 08 as 'the world ends at a hard grey haze line behind the cottages, reading as a sea or a void' and stand 04 as 'a razor-straight terrain edge with sky under it, nothing beyond'. These are wide, low masses out past the realm footprint whose tops sit BELOW the local tier, so a stand on a rim looks down onto them, and the cloud sheet runs between, so they emerge through cloud the way the key art's far ridges do. haze_near/haze_far are the aerial-perspective tiers (judge defect 13, 'far cliffs are as saturated and contrasty as near ones'); range_material names which tier the existing horizon_ranges wear. Set enabled false to remove the lower relief and revert horizon_ranges to the near cliff shader.",
