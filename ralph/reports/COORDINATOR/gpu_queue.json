@@ -2467,6 +2467,27 @@
    "note": "Round 1 won (+1.4 to +1.8, 3/3) but was held for depth flattery; this is the depth-plane revision.",
    "done": true,
    "frames_pushed": "G-floor2-creature-ruler-depth-r2 751b0657d: 16 of 18 pairs; held by eye: aquaryn fainted (cut left edge), galewisp idle (claws 10% below boots). Meadows contacts 10-15% below trainer's feet (slope vs nearness unresolved); landing waits for a ground-contact depth readout from LANE-FLOOR2. Sparkit and stormraven read taller than the trainer."
+  },
+  {
+   "id": "floor2-aquaryn-bow-wake-r2",
+   "kind": "arm",
+   "rows": [
+    "F39#8"
+   ],
+   "no_loss_rows": [
+    "F39#22 (frames 11-13)"
+   ],
+   "branch": "tb/floor2",
+   "head": "0cbd114d7",
+   "tree": "tb/floor2 (water_mount_wake.gd, water_mount_bow_wake.gdshader with the sine-free gradient noise; no assets)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-BOWWAKE/overlay_bow_wake.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-BOWWAKE/CAPTURE.json (round 2)",
+   "job": "phase2_capture_tidewake_mounted_swim.gd --seed=2042 High, output under res://ralph/reports/VISUAL/phase2/tidewake/; base and arm",
+   "frames": "judge 06-08 (moving beat) paired base vs arm; 03-05 shown; 11-13 control",
+   "capture": "High. Pre-check on a 3x crop inside the V of frame 06: no hard-edged cells; else report and do not judge. Attempt 2 on this approach (two fails parks it).",
+   "note": "Round 1 failed pre-check on world-grid tiles (likely sin-hash corner mismatch on NVIDIA)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
