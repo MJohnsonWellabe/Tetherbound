@@ -228,6 +228,18 @@
           }
         }
       }
+    },
+    "below6_mirejaw_hit": {
+      "_why": "LANE-BELOW6 (11 Nov 2026), F36#52 Mirejaw (GPU G-things-t4-rescore 5.28: in the hit frame 'the head becomes a pale translucent jaw shape' and a grey smear sits by the trainer, 2-3/3). The GLB has one opaque material, so nothing is translucent: the hit clip pitches the body so far that the jaw gapes to its pale mouth lining and the paddle tail swings down through the stage floor, where its flat pale underside shows edge-on. The hit's rotation is scaled down so the jaw and tail stay in a readable flinch. Same hook as remakes_floor_ribbonray_hit (GPU: airborne hit PARTIAL -> FIXED 3/3). OFF until GPU-judged.",
+      "enabled": false,
+      "species": {
+        "mirejaw": {
+          "hit": {
+            "rotation": 0.45,
+            "position": 0.5
+          }
+        }
+      }
     }
   }
 }
