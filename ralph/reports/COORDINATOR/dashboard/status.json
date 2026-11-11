@@ -1,5 +1,5 @@
 {
-  "updated": "10 Nov 2026 23:31 UTC",
+  "updated": "11 Nov 2026 00:04 UTC",
   "headline": [
     "10 Nov 23:30: Warrens walk_03 open-ground stand wins big (F38#24 +2.47, F38#30 +1.28, 3/3): the old stand was a random spot on the slope showing neither subject. Rows to 6.01 and 5.38 once it lands. The flank grass texture lost twice and is parked. The stronghold approach (the ridge) holds at 7.51. Warrens batch 48 re-running CI with the cave-mouth keep-out fix.",
     "10 Nov 22:55: floor lane's third win: the Meadows ridge (F38#24 stronghold +0.75 to 7.26), batch 50 in CI. Every visual row now has a score: 28 below 6, none unscored (down from 37). F38#24 rises from the lowest item (3.67) to 5.11.",
@@ -1886,9 +1886,9 @@
       "when": "10 Nov 23:30"
     },
     {
-      "pr": "batch 49 (#895, in CI)",
+      "pr": "#895",
       "what": "Stormwood giant trunks get real matte bark instead of lilac plastic (F41#22 6.08 -> 6.96, F41#24 6.15 -> 7.08 on five stands, all 3/3; no judge reads it as red)",
-      "when": "10 Nov, in CI"
+      "when": "11 Nov 00:03"
     },
     {
       "pr": "batch 48 (#894, in CI)",
