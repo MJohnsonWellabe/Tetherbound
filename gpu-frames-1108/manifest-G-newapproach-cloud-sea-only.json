@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "phase2_16_terrace_mounted_at_edge.png",
+  "preset": "base-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/base-High/phase2_16_terrace_mounted_at_edge.png",
+  "sky_fraction": 0.056,
+  "lower_edges": 0.4254,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_17_terrace_01.0s.png",
+  "preset": "base-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/base-High/phase2_17_terrace_01.0s.png",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.0636,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_18_terrace_after.png",
+  "preset": "base-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/base-High/phase2_18_terrace_after.png",
+  "sky_fraction": 0.126,
+  "lower_edges": 0.3425,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_27_terrace_road_back_13.5s.png",
+  "preset": "base-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/base-High/phase2_27_terrace_road_back_13.5s.png",
+  "sky_fraction": 0.185,
+  "lower_edges": 0.0274,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_28_terrace_road_back_15.0s.png",
+  "preset": "base-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/base-High/phase2_28_terrace_road_back_15.0s.png",
+  "sky_fraction": 0.087,
+  "lower_edges": 0.0458,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_16_terrace_mounted_at_edge.png",
+  "preset": "softsea-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/softsea-High/phase2_16_terrace_mounted_at_edge.png",
+  "sky_fraction": 0.03,
+  "lower_edges": 0.4412,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_17_terrace_01.0s.png",
+  "preset": "softsea-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/softsea-High/phase2_17_terrace_01.0s.png",
+  "sky_fraction": 0.067,
+  "lower_edges": 0.0909,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_18_terrace_after.png",
+  "preset": "softsea-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/softsea-High/phase2_18_terrace_after.png",
+  "sky_fraction": 0.052,
+  "lower_edges": 0.3718,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_27_terrace_road_back_13.5s.png",
+  "preset": "softsea-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/softsea-High/phase2_27_terrace_road_back_13.5s.png",
+  "sky_fraction": 0.091,
+  "lower_edges": 0.0788,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ },
+ {
+  "frame": "phase2_28_terrace_road_back_15.0s.png",
+  "preset": "softsea-High",
+  "tree": "63d6abd25158defafbdfa0f46f71fb668d2b26cd",
+  "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+  "path": "G-newapproach-cloud-sea-only/softsea-High/phase2_28_terrace_road_back_15.0s.png",
+  "sky_fraction": 0.05,
+  "lower_edges": 0.0684,
+  "script_errors": 0,
+  "note": "F40#11 (frames 16, 17, 18) and F40#6 (17, 18, 27, 28). High, main 63d6abd25 (#904) + cloudreach_world.gd and the new cloudreach_cloud_sea_soft / cloudreach_cloud_card shaders from tb/newapproach 2078f6442 on both sides (main's cloudreach_cloud_deck.gdshader kept), phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, --fixed-fps 20. base = that tree. softsea = plus local overlay cloudreach_visual.json cloud_sea.soft_sea.enabled true only (no mist_card_shading: #904's cards keep their shading). Pre-check: (1) base floor faceted, softsea smooth; (2) billows with blue shadows, 0 clipped px; (4) no hard line at the cliff base. Note: frame 27 still shows the straight-edged ribbon sheets over the soft floor; cards unchanged from base (lilac)."
+ }
+]
