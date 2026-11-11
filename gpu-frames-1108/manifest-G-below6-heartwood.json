@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-heartwood/arm-High/stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+  "sky_fraction": 0.043,
+  "lower_edges": 0.4948,
+  "script_errors": 0,
+  "note": "F41#1, High. base = tb/below6 cbc867f80 (heartwood_1111 OFF); arm = + BELOW6-HEARTWOOD/overlay.json (heartwood_1111 on; reader stormheart_tree.gd)."
+ },
+ {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-heartwood/arm-High/stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+  "sky_fraction": 0.056,
+  "lower_edges": 0.2764,
+  "script_errors": 0,
+  "note": "F41#1, High. base = tb/below6 cbc867f80 (heartwood_1111 OFF); arm = + BELOW6-HEARTWOOD/overlay.json (heartwood_1111 on; reader stormheart_tree.gd)."
+ },
+ {
+  "frame": "stormwood__landmark__dynamo_core__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-heartwood/arm-High/stormwood__landmark__dynamo_core__day__approach.jpg",
+  "sky_fraction": 0.029,
+  "lower_edges": 0.435,
+  "script_errors": 0,
+  "note": "F41#1, High. base = tb/below6 cbc867f80 (heartwood_1111 OFF); arm = + BELOW6-HEARTWOOD/overlay.json (heartwood_1111 on; reader stormheart_tree.gd)."
+ },
+ {
+  "frame": "stormwood__landmark__dynamo_core__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-heartwood/arm-High/stormwood__landmark__dynamo_core__day__close.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.2617,
+  "script_errors": 0,
+  "note": "F41#1, High. base = tb/below6 cbc867f80 (heartwood_1111 OFF); arm = + BELOW6-HEARTWOOD/overlay.json (heartwood_1111 on; reader stormheart_tree.gd)."
+ },
+ {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-heartwood/base-High/stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+  "sky_fraction": 0.042,
+  "lower_edges": 0.4956,
+  "script_errors": 0,
+  "note": "F41#1, High. base = tb/below6 cbc867f80 (heartwood_1111 OFF); arm = + BELOW6-HEARTWOOD/overlay.json (heartwood_1111 on; reader stormheart_tree.gd)."
+ },
+ {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-heartwood/base-High/stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+  "sky_fraction": 0.04,
+  "lower_edges": 0.2739,
+  "script_errors": 0,
+  "note": "F41#1, High. base = tb/below6 cbc867f80 (heartwood_1111 OFF); arm = + BELOW6-HEARTWOOD/overlay.json (heartwood_1111 on; reader stormheart_tree.gd)."
+ },
+ {
+  "frame": "stormwood__landmark__dynamo_core__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-heartwood/base-High/stormwood__landmark__dynamo_core__day__approach.jpg",
+  "sky_fraction": 0.029,
+  "lower_edges": 0.4365,
+  "script_errors": 0,
+  "note": "F41#1, High. base = tb/below6 cbc867f80 (heartwood_1111 OFF); arm = + BELOW6-HEARTWOOD/overlay.json (heartwood_1111 on; reader stormheart_tree.gd)."
+ },
+ {
+  "frame": "stormwood__landmark__dynamo_core__day__close.jpg",
+  "preset": "base-High",
+  "tree": "cbc867f80267a836cf19ee70f41219f28ea4f394",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-heartwood/base-High/stormwood__landmark__dynamo_core__day__close.jpg",
+  "sky_fraction": 0.057,
+  "lower_edges": 0.2602,
+  "script_errors": 0,
+  "note": "F41#1, High. base = tb/below6 cbc867f80 (heartwood_1111 OFF); arm = + BELOW6-HEARTWOOD/overlay.json (heartwood_1111 on; reader stormheart_tree.gd)."
+ }
+]
