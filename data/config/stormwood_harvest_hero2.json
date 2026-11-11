@@ -23,7 +23,7 @@
       "clear_radius_m": 1.9,
       "models": [
         {"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "height_m": [2.0, 2.0], "sink_m": 0.08, "glow_colour": "#9fdcff", "glow_energy": 1.1},
-        {"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "count": 1, "ring_m": 1.25, "height_m": [0.7, 0.7], "sink_m": 0.04, "glow_colour": "#9fdcff", "glow_energy": 1.0}
+        {"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "count": 1, "ring_m": 1.25, "ring_of_main": 0.8, "height_m": [0.7, 0.7], "sink_m": 0.04, "glow_colour": "#9fdcff", "glow_energy": 1.0}
       ]
     },
     "stormglass_crown": {
@@ -32,7 +32,7 @@
       "clear_radius_m": 2.4,
       "models": [
         {"model": "res://assets/props/meshy-1031/glass_spikes/glass_spikes.glb", "height_m": [3.0, 3.0], "sink_m": 0.12, "glow_colour": "#b9e6ff", "glow_energy": 1.4},
-        {"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "count": 2, "ring_m": 1.7, "height_m": [0.9, 1.2], "sink_m": 0.05, "glow_colour": "#b9e6ff", "glow_energy": 1.2}
+        {"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "count": 2, "ring_m": 1.7, "ring_of_main": 0.8, "height_m": [0.9, 1.2], "sink_m": 0.05, "glow_colour": "#b9e6ff", "glow_energy": 1.2}
       ]
     },
     "glowmoss": {
@@ -42,8 +42,19 @@
       "_why_r3": "Batch-1 GPU (5.40 -> 5.34): the glowmoss node still read as a mushroom on a flat mint decal disc. replace_model drops the disc; a squat moss-tinted rock mound carries the fungi.",
       "models": [
         {"model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "height_m": [1.1, 1.1], "squash_y": 0.55, "sink_m": 0.25, "tint": "#3f6b47", "roughness": 0.95},
-        {"model": "res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb", "count": 4, "ring_m": 0.55, "height_m": [0.9, 1.5], "sink_m": 0.04, "glow_colour": "#5ad8a6", "glow_energy": 1.2, "shadow": false}
+        {"model": "res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb", "count": 4, "ring_m": 0.55, "ring_of_main": 0.8, "height_m": [0.9, 1.5], "sink_m": 0.04, "glow_colour": "#5ad8a6", "glow_energy": 1.2, "shadow": false}
       ]
+    }
+  },
+  "floor2_presence": {
+    "_candidate": "F41#9 P2-046 (LANE-FLOOR2, 11 Nov 2026, OFF until GPU-judged). GPU 1108 (5.86) frames: each named node fills a few percent of a frame that is mostly dark wet ground; storm-glass stands below the 1.80 m trainer and glowmoss at knee height. The WD2 judges' path to 7.5 was 'make the nodes bigger'. On: the shipped Blender nodes grow by height_scale (storm-glass 1.6 -> 2.7 m, crown 2.6 -> 3.4 m, glowmoss 1.0 -> 1.7 m, clearings with them) their already-emissive surfaces (glass prisms, fungus caps) glow a little stronger (emission_energy; kept low enough that the violet and teal hold instead of clipping to white), and five or six small copies of the node's own model stand half inside its base (ring_of_main: a fraction of the node's footprint radius, so none lands on ground a player stands on) so it reads as a deposit. The per-node ground lights were dropped after GPU capture G-floor2-harvest-presence: they did not show on the ground and were the performance risk. Visual only; no collider, stock, reward or placement change.",
+    "scope": "client_presentation",
+    "enabled": true,
+    "_why_on": "Ships ON (11 Nov 2026). GPU High, LANE-SCOUT G-floor2-harvest-presence-confirm (tb/item-scout-1108 df24a8ab4): F41#9 5.81 -> 6.81 over storm-glass, crown and glowmoss, +1.00, 3/3 judges, as judged at tb/floor2 f79383083 (no ground lights; copies ring 0.8 of the node's footprint). Follow-ups from that batch: contact shadow under the nodes, copper sheen, glowmoss reading as mushrooms.",
+    "items": {
+      "stormglass": {"height_scale": 1.7, "satellites": {"count": 5, "ring_m": 2.0, "ring_of_main": 0.8, "height_frac": [0.2, 0.38]}, "emission_energy": 0.8},
+      "stormglass_crown": {"height_scale": 1.3, "satellites": {"count": 6, "ring_m": 2.9, "ring_of_main": 0.8, "height_frac": [0.18, 0.34]}, "emission_energy": 0.9},
+      "glowmoss": {"height_scale": 1.7, "satellites": {"count": 5, "ring_m": 1.9, "ring_of_main": 0.8, "height_frac": [0.28, 0.48]}, "emission_energy": 1.4}
     }
   }
 }
