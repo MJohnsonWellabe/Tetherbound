@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 06:00 UTC",
+  "updated": "11 Nov 2026 07:52 UTC",
   "headline": [
+    "11 Nov 07:52: #900 landed the Tidewake sand ripple relief: the hard dark stripes across the beach at dawn and golden hour came from ripple shading at a low sun, not shadows. F39#30 5.85 -> 6.16 (3/3), F13#5 dawn/golden +0.34. Below 6: 17. Creature stage round 2 scored F38#5 8.00 / F38#31 7.17 / F38#26 6.39 (3/3) but is held until a ground-contact depth readout shows Meadows subjects are not nearer the lens. Aquaryn bow wake parked after two GPU pre-check fails.",
     "11 Nov 06:00: #899 landed the Fly grip pose (F38#8 6.26 -> 7.14, 3/3): the trainer now hangs from Galecrest's talons with bent elbows and trailing knees. Below 6: 18. Aquaryn bow wake (F39#8) failed its GPU pre-check (hard world-grid tiles inside the V); LANE-FLOOR2 is fixing the interior.",
     "11 Nov 05:10: F40#5 Cloudreach captain fight re-scored at 7.06 on main (was 5.94): the #882 dust retune cleared the exchange. Off the below-6 list and now a 7.5 close-out candidate (frame 1 framing). F40#8 bridge beacon style ruled out by a GPU pre-check (no objective beam in the frames). F38#8 Fly grip pose arm on the GPU now.",
     "11 Nov 04:22: F41#3 named wild fight re-scored at 6.23 on main (native Voltarach plus the giant-tree fight fade from #897): off the below-6 list. Spacing defect still present (Sparkit tucked among the forelegs). Below 6: 20.",
@@ -2435,6 +2436,10 @@
     "F40#19": {
       "gpu": 6.66,
       "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-f40-19-mist sky-only, landed #885"
+    },
+    "F39#30": {
+      "gpu": 6.16,
+      "src": "G-floor2-sand-ripple-relief (LANE-SCOUT, tb/item-scout-1108 48b7553fc): first GPU baseline 5.85; sand ripple relief 5.85 -> 6.16 (dawn/golden +0.54 3/3), landed #900. Next asks: dawn black horizon band, night value range, rain storm grade."
     }
   }
 }
