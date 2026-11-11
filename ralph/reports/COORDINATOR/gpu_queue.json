@@ -3157,7 +3157,23 @@
    "capture": "High, base and arm, same command and switches",
    "also": "if a slot allows, one extra base without --game-clips/--clear-ruler for water_mirejaw and water_abyssal_guardian (stage fix alone)",
    "priority": "three below-6 rows (F36#93 5.52, F36#88 5.85, F36#30 5.54) plus six 6-7 rows in one arm",
-   "note": "Shared faint-grounding fix (LANE-THINGS T1). Also exposes a stage fault: the pose stage played raw clips, not the game-resolved clip, so earlier water-form faint frames were of a faint no fight plays."
+   "note": "Shared faint-grounding fix (LANE-THINGS T1). Also exposes a stage fault: the pose stage played raw clips, not the game-resolved clip, so earlier water-form faint frames were of a faint no fight plays.",
+   "done": "G-things-faint c7479c87e (judging: LANE-SCOUT)"
+  },
+  {
+   "id": "water-mosshell-gameclips-rescore",
+   "kind": "baseline",
+   "rows": [
+    "F36#94"
+   ],
+   "branch": "tb/things",
+   "head": "5cb2084c3",
+   "overlay": null,
+   "tree": "tb/things 5cb2084c3 (script/config only; its capture_f36_poses.gd has --game-clips); all lane flags off, so it renders as main",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler --out={OUT}",
+   "frames": "hit and faint 000-100 (10 frames); crop 560,200 1000x640",
+   "capture": "High, one side",
+   "note": "The 5.81 was scored on the raw clip, not the game-resolved one (LANE-THINGS stage fault). Water rows F36#88, #91, #92 and #93 get their corrected re-score from the base side of G-things-faint; this covers the last water-form pose row."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
