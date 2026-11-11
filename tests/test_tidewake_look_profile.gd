@@ -233,3 +233,26 @@ func test_current_flow_visual_ships_with_its_score() -> void:
 	assert_false("current_flow_visual" in raw.sections_off, "the current_flow_visual section is in play")
 	assert_false(bool(raw.current_flow_visual.enabled), "in play it turns the grouped current foam off")
 	assert_true(str(raw.get("_why_current_flow_visual_on", "")).contains("6.75"))
+
+
+## LANE-FLOOR2 (11 Nov 2026), G-floor2-dawn-haze-storm-grade (GPU High): F39#30
+## 6.12 -> 6.70 (+0.58, 3/3 on every set), F39#31 Veilfall 5.56 -> 6.02.
+func test_dawn_haze_and_storm_grade_ship_with_their_score() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	for key: String in ["_why_dawn_fog_1111", "_why_storm_grade_1111", "_why_rain_streaks_1111"]:
+		assert_true(str(raw.get(key, "")).contains("G-floor2-dawn-haze-storm-grade"), "%s records its GPU round" % key)
+	assert_almost_eq(float(raw.lighting_candidate.times.dawn.environment.fog_density), 0.004, 0.00001, "dawn horizon haze")
+	var grade: Dictionary = raw.rain_grade_candidate
+	assert_almost_eq(float(grade.sun.energy_mult), 0.18, 0.0001, "storm sun")
+	assert_eq(str(grade.sky.cloud_lit), "#a2adb4")
+	assert_eq(str(grade.sky.cloud_shade), "#515d66")
+	assert_eq(str(grade.sky.cloud_base), "#3c4750")
+	assert_almost_eq(float(grade.sky.cloud_coverage), 0.88, 0.0001, "closed deck")
+	assert_almost_eq(float(grade.sky.cloud_sharpness), 0.5, 0.0001, "cloud structure kept")
+	assert_almost_eq(float(grade.environment.ambient_energy_mult), 0.62, 0.0001)
+	assert_almost_eq(float(grade.environment.adjustment_saturation_mult), 0.72, 0.0001)
+	var veil: Dictionary = raw.rain_veil_candidate
+	assert_almost_eq(float(veil.streak_size_m[0]), 0.07, 0.0001, "fine far streaks")
+	assert_eq(str(veil.colour), "#c3ced84d")
+	assert_true(not ("rain_grade_candidate" in raw.sections_off) and not ("rain_veil_candidate" in raw.sections_off), "rain grade and veil stay ON")
+

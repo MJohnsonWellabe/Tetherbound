@@ -1,0 +1,8 @@
+{"data/config/tidewake_look.json": {
+ "lighting_candidate": {"times": {"dawn": {"environment": {"fog_density": 0.004}}}},
+ "rain_grade_candidate": {
+  "sun": {"energy_mult": 0.18},
+  "sky": {"cloud_lit": "#a2adb4", "cloud_shade": "#515d66", "cloud_base": "#3c4750", "cloud_coverage": 0.88, "cloud_sharpness": 0.5},
+  "environment": {"ambient_energy_mult": 0.62, "ambient_colour": "#8494a0", "adjustment_saturation_mult": 0.72}},
+ "rain_veil_candidate": {"streak_size_m": [0.07, 5.0], "colour": "#c3ced84d"}
+}}

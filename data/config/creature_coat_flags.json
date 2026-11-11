@@ -734,11 +734,12 @@
     },
     "creatures_ralph_fulgocobra_goldvein": {
       "_why": "Visual lane (3 Nov 2026), board F41#13 Fulgocobra half (r25: lighting its glow map alone stayed flat, 5.83 -> 5.92; judges: 'needs real emissive veins along its gold bands'). Emission = its glow map plus the bright scale ridges inside its gold bands (hue 25-52 deg, pale electric gold), matte body. OFF until judged. ON (visual lane v1/b12, 3 Nov 2026): CPU 6.06 -> 6.52 mapped (three code-blind judges, linear slope 1.26, r 0.91, anchor RMSE 0.35, confirming batch; pale gold bands separate from the black hood, defect PARTIAL 3/3).",
+      "_why_emission_1111": "LANE-SCOUT G-floor2-storm-glow-lines (GPU High, tb/item-scout-1108 3ccb770d2, 11 Nov 2026): F41#13 +0.64 on idle and on hurt, three code-blind judges 3/3 each, sparkit control identical, row 6.66. Vein glow 2.0 -> 1.3 with the charged_1105 body wash removed, so the gold bands keep their scale pattern instead of blooming into amber blobs.",
       "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
           "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_goldvein.png",
-          "emission_energy": 2.0,
+          "emission_energy": 1.3,
           "roughness": 0.8,
           "specular": 0.25
         }
@@ -956,12 +957,13 @@
     "lanekit_face_read_fulgocobra": {
       "_why": "Fulgocobra / Mirejaw face read (LANE-KIT, 7 Nov 2026; F36 roster rows 5.78 / 5.84). Judges: near-black heads, the hood/head merges with the backdrop and the face is lost; a whole-body value lift was flat (b25). Face only: the head's triangles are rasterised into a UV mask (ralph/reports/LANES/ITEM-EYES/face_read.py); inside it the albedo gets a midtone gamma lift (0.45 since r2; 0.55 in r1, flat) and the live emission map (eyes, spots, hood lines, in the creature's element) x5 (x3 in r1); r2 adds a material rim light (0.6, tint 0.5) on the whole coat, the judges' named fix. Nothing outside the head changes; no new floating effect. OFF until judged.",
       "_why_on": "LANE-KIT 7 Nov 2026, qj EYES-939043818257-11072236 (neutral stage, whole-body camera, Fulgocobra and Mirejaw together): CPU mapped 6.09 -> 6.78 (+0.69; raw 5.3/5.6/5.5 -> 5.9/6.2/6.0, r 0.85); all three judges move the near-black-head defect PRESENT -> PARTIAL (Mirejaw face pale and readable, cobra hood separates with the rim). Round 1 (lift only, no rim) was flat. Judged gain ships ON (owner 7 Nov).",
+      "_why_emission_1111": "LANE-SCOUT G-floor2-storm-glow-lines (GPU High, tb/item-scout-1108 3ccb770d2, 11 Nov 2026): F41#13 +0.64 on idle and on hurt, three code-blind judges 3/3 each, sparkit control identical, row 6.66. Vein glow 2.0 -> 1.3 with the charged_1105 body wash removed, so the gold bands keep their scale pattern instead of blooming into amber blobs.",
       "enabled": true,
       "coats": {
         "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_face.png", "rim": 0.6, "rim_tint": 0.5,
           "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_goldvein_face.png",
-          "emission_energy": 2.0,
+          "emission_energy": 1.3,
           "roughness": 0.8,
           "specular": 0.25
         }

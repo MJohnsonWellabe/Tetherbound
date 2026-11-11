@@ -1,0 +1,20 @@
+{
+ "id": "floor2-storm-glow-lines",
+ "kind": "arm",
+ "branch": "tb/floor2",
+ "head": "see `git log -1 origin/tb/floor2`",
+ "tree": "main with PR #901 (the round 3 creature stage) is enough: the arm is a config overlay only",
+ "overlay": "ralph/reports/LANES/FLOOR2-STORMGLOW/overlay_lines_not_wash.json",
+ "overlay_format": "deep merge",
+ "job": [
+  {"tool": "res://tools/phase2_capture_creatures.gd",
+   "args": ["--biome=stormwood", "--only=stormraven,fulgocobra,sparkit", "--poses=idle,hurt", "--seed=2042", "--preset={PRESET}", "--output={OUT}"]}
+ ],
+ "rows": ["F41#13"],
+ "frames": ["stormwood__stormraven__idle", "stormwood__fulgocobra__idle", "stormwood__sparkit__idle (control: should not change)", "stormwood__stormraven__hurt, stormwood__fulgocobra__hurt (no-loss check)"],
+ "expected_frame_count": 6,
+ "capture_both": "base = main with the round 3 stage; arm = overlay on",
+ "preset": "High",
+ "note": "{OUT} must start with res://.artifacts/phase2/ or res://ralph/reports/VISUAL/phase2/.",
+ "want_to_see": "Arm: the stormraven is a blue-black raven with visible feather detail, glowing eyes and thin blue-lit lines, not a white silhouette; the fulgocobra's bands are gold with their scale pattern, glowing along veins and eyes, not white-hot blobs. Sparkit identical to base. Pre-check: if the arm raven is still mostly white or cyan, or goes so dark it is lost against the ground, report it and do not judge."
+}
