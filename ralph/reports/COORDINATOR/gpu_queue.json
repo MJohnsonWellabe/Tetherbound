@@ -4499,6 +4499,33 @@
    "priority": "near-floor F40#15 6.08; F40#8 bridge frames"
   },
   {
+   "id": "below6-stormraven-r2",
+   "kind": "arm (needs import)",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/below6",
+   "head": "49a4b3dc2",
+   "job": "BELOW6-STORMRAVEN/CAPTURE.json (stormraven + fulgocobra idle), base vs overlay",
+   "capture": "High; pre-check: dark pupil inside a blue iris, no white bloom",
+   "priority": "below-6 row",
+   "route": "LANE-SCOUT"
+  },
+  {
+   "id": "below6-masonry",
+   "kind": "arm",
+   "rows": [
+    "F40#15",
+    "F40#17"
+   ],
+   "branch": "tb/below6",
+   "head": "49a4b3dc2",
+   "job": "ralph/reports/LANES/BELOW6-MASONRY/CAPTURE.json (stormward overlook walk_03_day, flight aerie vista_dusk) plus a shared-material no-loss set (Sky Shrine, aviary)",
+   "capture": "High, base vs overlay",
+   "priority": "below-6 row",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-riftfrill-matte",
    "kind": "arm (near-bar)",
    "rows": [
