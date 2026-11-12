@@ -104,6 +104,12 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 **Flags:** clear moves: F41#15 4.49 → 6.87 (out of below-6; defect FIXED 3/3) and F41#14 6.35 → 7.59. Marginal 7.5-or-above (extrapolated, want a second panel before Medium): F41#1 7.62, F41#11 7.55, F41#14 7.59. None below 6. F41#12's thick-gold-stripe defect is FIXED 3/3 on main as it is.
 **Method note for the coordinator:** across today's five batches the same rows moved 0.6 to 0.9 between batches (anchor RMSE 0.39 to 0.70 with three pinned anchor pairs). Row changes smaller than that are not real. I am using five anchor pairs from the next batch; rows near 7.5 should close only on a pooled or two-sided confirming panel, as F39#4 and F39#24 did.
 
+**G-rescore-f40-0-sample** (`ralph/reports/GPU-PASS/1108/G-rescore-f40-0-sample.md`, frames @ 6b2bfe3ef; 192 frames, 24 sets, five anchor pairs; fit r 0.730, RMSE 0.66, so about ±0.6):
+- F40#0: 6.54 -> 5.98 (12 Nov, G-rescore-f40-0-sample; clear 6.29, rain 5.68; sample of day and night only)
+- F40#19: 6.66 -> 5.98 at High (same matrix mean; realm gate rain set 5.59)
+- F40#21: 6.68 -> 5.98 (matrix mean; its defect FIXED 3/3 at 4 of 12 stands, PARTIAL at 7)
+**Flags:** F40#0 reads about 6 (5.98, inside the batch's error of the below-6 line). **Rain is 0.6 below clear at every stand.** Lowest stands: stormward overlook, windscar flight aerie, broken skyroad arch, old wind observatory (thin landmarks, new art). Judges' next rain asks: brighter broken overcast in place of the striped grey sky, pale stone kept pale, wet sheen, fog layers; at night a moon key and warm lamp pools in place of the cobalt wash.
+
 ### Build work handed over
 | Item | State | Goes to |
 |---|---|---|

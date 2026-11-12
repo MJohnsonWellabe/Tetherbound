@@ -1,0 +1,171 @@
+{
+ "Gl": {
+  "anchor": true,
+  "A": "f36_0_npc:C2B",
+  "B": "f36_0_npc:C2A"
+ },
+ "Mq": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "El": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Nm": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "So": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Br": {
+  "anchor": false,
+  "label": "three_bells_bridge clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ta": {
+  "anchor": false,
+  "label": "three_bells_bridge rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Zj": {
+  "anchor": false,
+  "label": "broken_skyroad_arch clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Bc": {
+  "anchor": false,
+  "label": "broken_skyroad_arch rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Py": {
+  "anchor": false,
+  "label": "realm_gate_crag clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Lz": {
+  "anchor": false,
+  "label": "realm_gate_crag rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Bu": {
+  "anchor": false,
+  "label": "galefoot_waycamp clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ug": {
+  "anchor": false,
+  "label": "galefoot_waycamp rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Az": {
+  "anchor": false,
+  "label": "sky_shrine clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Jh": {
+  "anchor": false,
+  "label": "sky_shrine rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Xh": {
+  "anchor": false,
+  "label": "the_high_perches clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "the_high_perches rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Tj": {
+  "anchor": false,
+  "label": "summit_eyrie clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ak": {
+  "anchor": false,
+  "label": "summit_eyrie rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Gj": {
+  "anchor": false,
+  "label": "stormward_overlook clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Fd": {
+  "anchor": false,
+  "label": "stormward_overlook rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Qx": {
+  "anchor": false,
+  "label": "cliffhold clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "As": {
+  "anchor": false,
+  "label": "cliffhold rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Zi": {
+  "anchor": false,
+  "label": "old_wind_observatory clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Xg": {
+  "anchor": false,
+  "label": "old_wind_observatory rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ga": {
+  "anchor": false,
+  "label": "windscar_beacon clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "Sk": {
+  "anchor": false,
+  "label": "windscar_beacon rain",
+  "A": "main",
+  "one_sided": true
+ },
+ "Vg": {
+  "anchor": false,
+  "label": "windscar_flight_aerie clear",
+  "A": "main",
+  "one_sided": true
+ },
+ "My": {
+  "anchor": false,
+  "label": "windscar_flight_aerie rain",
+  "A": "main",
+  "one_sided": true
+ }
+}
