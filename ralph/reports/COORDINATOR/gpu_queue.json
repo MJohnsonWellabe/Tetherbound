@@ -4088,11 +4088,12 @@
     "F36#33",
     "F36#62",
     "F36#75",
-    "nightburrow"
+    "nightburrow",
+    "F36#36"
    ],
    "branch": "tb/things",
-   "head": "286411cd0",
-   "tree": "tb/things 286411cd0 both sides; pass --clear-ruler explicitly",
+   "head": "8e099fef8",
+   "tree": "tb/things 8e099fef8 both sides; IMPORT needed (two Brooktail derived textures); --clear-ruler is now the default on this tree",
    "overlay_branch": "tb/things",
    "overlay": "ralph/reports/LANES/THINGS-EMBERS/overlay_aspect_billboard.json + (ashtusk only) the THINGS-ASHTUSK hit-recoil overlay, deep-merged",
    "overlay_format": "deep merge",
@@ -4100,7 +4101,7 @@
    "capture": "High for all four; MEDIUM as well for ashtusk (close-out: High 8.03, Medium 7.28)",
    "pre_check": "no thin vertical line above the back; motes small and soft (owner: no big floating effects); embers not red",
    "priority": "right after glidebank: Ashtusk close-out candidate",
-   "note": "Combined Ashtusk close-out: mote billboard fix (thin line) + per-species hit recoil (tusks out of the floor)."
+   "note": "Combined Ashtusk close-out: mote billboard fix (thin line) + per-species hit recoil (tusks out of the floor). Plus Brooktail (separate arm, same session): THINGS-BROOKTAIL/overlay_brooktail_spots.json, High and Medium."
   },
   {
    "id": "places-wetpath-r2",
