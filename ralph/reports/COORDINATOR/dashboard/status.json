@@ -1,5 +1,5 @@
 {
-  "updated": "12 Nov 2026 09:05 UTC",
+  "updated": "12 Nov 2026 09:10 UTC",
   "headline": [
     "12 Nov 09:05: F41#15, the lowest row, jumps 5.13 -> 6.97 (+1.84, 3/3): wild creatures now keep 16 m clear of Stormwood's named conversation posts (Nysa was hidden behind two giant birds), with the warm deck dressing riding along; Sera and Tamsin's dialogue 5.79 -> 6.97. Landing as batch 77 with Hesk's portrait fix.",
     "12 Nov 07:50: #920 landed the Cloudreach gate paving (F40#0 gate +0.93 clear, +0.79 rain). GPU: Galewisp landing beside the trainer and taller (F36#48 7.44 close-out try). LANE-THINGS building the wild-creature keep-clear round Stormwood named posts (F41#15).",
@@ -2175,13 +2175,13 @@
       "item": "F41#15 Stormwood post clearance + deck dressing (Marrow, Nysa)",
       "before": 5.13,
       "after": 6.97,
-      "pr": "batch 77 (being cut: tb/coord-batch77-land)"
+      "pr": "#921 (in CI)"
     },
     {
       "item": "Stormwood dialogue ride-along (Sera, Tamsin)",
       "before": 5.79,
       "after": 6.97,
-      "pr": "batch 77"
+      "pr": "#921 (in CI)"
     }
   ],
   "landed_recent": [
