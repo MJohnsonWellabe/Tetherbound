@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 21:00 UTC",
+  "updated": "12 Nov 2026 21:05 UTC",
   "headline": [
+    "12 Nov 21:05: #934 is in full CI: the surface swim stroke (F39#5 5.98, F39#14 6.12) and the restored sea (F39#17 6.27). Auto-merge is off; I merge by hand once the engine jobs have run.",
     "12 Nov 21:00: two of the lowest rows ship. Swim r5: F39#5 5.45 to 5.98 and F39#14 5.74 to 6.12 (both 3/3); the swim now reads as swimming, with arms spread at the surface. Restored sea r5: F39#17 6.08 to 6.27 (2/3), sunset no longer black. Landing branch requested from LANE-BELOW6.",
     "12 Nov 20:45: #933 landed, full CI green. Main's long-running CI reds are fixed (two of them were real bugs: the rarity rim and the Water catalogue). The F38#20 stronghold stand and F38#3 opposing-trainer stand are on main; Medium close-out captures are queued. A full run on main has been dispatched to confirm.",
     "12 Nov 20:20: LANE-CIFIX root-caused main's full-CI reds. Two were real game bugs: a creature's rarity rim was frozen by the first body of its species, and the Water catalogue refused its own entries on a re-merge. The rest were tests and smokes left behind by the remakes and #878. They land as #933 together with batch 86 (stronghold stand F38#20, opposing trainer stand F38#3), one full CI run on current main.",
