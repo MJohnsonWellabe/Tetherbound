@@ -117,7 +117,10 @@ static func finish() -> Dictionary:
 # into grass colonies with true clearings that show the wet moss floor.
 # `wet_earth_1110` (LANE-MESHY, OFF until judged) rides last: it lifts the
 # near-black path and pools to banked wet earth.
-const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104", "path_loam_1104", "grass_patch_1104", "wet_earth_1110"]
+# `pool_damp_1112` (LANE-THINGS, OFF until judged) rides after it: the pools
+# stop being a mirror (they turned into a flat pale slab under the Break sky)
+# and read as damp matte earth.
+const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104", "path_loam_1104", "grass_patch_1104", "wet_earth_1110", "pool_damp_1112"]
 
 
 static func _merge_into(target: Dictionary, key: String, value: Variant) -> void:
