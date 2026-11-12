@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "01-launch.png",
+  "preset": "arm-Medium",
+  "tree": "b628efddf739e0746c3743dd69f59f9dcf0f685f",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-medium-f38-15-galeland/arm-Medium/01-launch.jpg",
+  "sky_fraction": 0.247,
+  "lower_edges": 0.0353,
+  "script_errors": 0,
+  "note": "medium-f38-15-galeland (CLOSE-OUT, F38#15 High 7.70 in G-f38-15-row): MEDIUM. tb/things b628efddf both sides, default carrier Galecrest, seed 2042. base = overlay off; arm = THINGS-GALELAND/overlay_galewisp_landing.json. Row frames: 02-glide (meadows__flying__glide), 03-landed (meadows__flying__landed); 01-launch rides along. Arm is a re-run: the first arm (1002 s build) came out warm late-day, kept aside, not packed."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "arm-Medium",
+  "tree": "b628efddf739e0746c3743dd69f59f9dcf0f685f",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-medium-f38-15-galeland/arm-Medium/02-glide.jpg",
+  "sky_fraction": 0.253,
+  "lower_edges": 0.0326,
+  "script_errors": 0,
+  "note": "medium-f38-15-galeland (CLOSE-OUT, F38#15 High 7.70 in G-f38-15-row): MEDIUM. tb/things b628efddf both sides, default carrier Galecrest, seed 2042. base = overlay off; arm = THINGS-GALELAND/overlay_galewisp_landing.json. Row frames: 02-glide (meadows__flying__glide), 03-landed (meadows__flying__landed); 01-launch rides along. Arm is a re-run: the first arm (1002 s build) came out warm late-day, kept aside, not packed."
+ },
+ {
+  "frame": "03-landed.png",
+  "preset": "arm-Medium",
+  "tree": "b628efddf739e0746c3743dd69f59f9dcf0f685f",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-medium-f38-15-galeland/arm-Medium/03-landed.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.4552,
+  "script_errors": 0,
+  "note": "medium-f38-15-galeland (CLOSE-OUT, F38#15 High 7.70 in G-f38-15-row): MEDIUM. tb/things b628efddf both sides, default carrier Galecrest, seed 2042. base = overlay off; arm = THINGS-GALELAND/overlay_galewisp_landing.json. Row frames: 02-glide (meadows__flying__glide), 03-landed (meadows__flying__landed); 01-launch rides along. Arm is a re-run: the first arm (1002 s build) came out warm late-day, kept aside, not packed."
+ },
+ {
+  "frame": "01-launch.png",
+  "preset": "base-Medium",
+  "tree": "b628efddf739e0746c3743dd69f59f9dcf0f685f",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-medium-f38-15-galeland/base-Medium/01-launch.jpg",
+  "sky_fraction": 0.13,
+  "lower_edges": 0.0349,
+  "script_errors": 0,
+  "note": "medium-f38-15-galeland (CLOSE-OUT, F38#15 High 7.70 in G-f38-15-row): MEDIUM. tb/things b628efddf both sides, default carrier Galecrest, seed 2042. base = overlay off; arm = THINGS-GALELAND/overlay_galewisp_landing.json. Row frames: 02-glide (meadows__flying__glide), 03-landed (meadows__flying__landed); 01-launch rides along. Arm is a re-run: the first arm (1002 s build) came out warm late-day, kept aside, not packed."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "base-Medium",
+  "tree": "b628efddf739e0746c3743dd69f59f9dcf0f685f",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-medium-f38-15-galeland/base-Medium/02-glide.jpg",
+  "sky_fraction": 0.127,
+  "lower_edges": 0.0324,
+  "script_errors": 0,
+  "note": "medium-f38-15-galeland (CLOSE-OUT, F38#15 High 7.70 in G-f38-15-row): MEDIUM. tb/things b628efddf both sides, default carrier Galecrest, seed 2042. base = overlay off; arm = THINGS-GALELAND/overlay_galewisp_landing.json. Row frames: 02-glide (meadows__flying__glide), 03-landed (meadows__flying__landed); 01-launch rides along. Arm is a re-run: the first arm (1002 s build) came out warm late-day, kept aside, not packed."
+ },
+ {
+  "frame": "03-landed.png",
+  "preset": "base-Medium",
+  "tree": "b628efddf739e0746c3743dd69f59f9dcf0f685f",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-medium-f38-15-galeland/base-Medium/03-landed.jpg",
+  "sky_fraction": 0.116,
+  "lower_edges": 0.4419,
+  "script_errors": 0,
+  "note": "medium-f38-15-galeland (CLOSE-OUT, F38#15 High 7.70 in G-f38-15-row): MEDIUM. tb/things b628efddf both sides, default carrier Galecrest, seed 2042. base = overlay off; arm = THINGS-GALELAND/overlay_galewisp_landing.json. Row frames: 02-glide (meadows__flying__glide), 03-landed (meadows__flying__landed); 01-launch rides along. Arm is a re-run: the first arm (1002 s build) came out warm late-day, kept aside, not packed."
+ }
+]
