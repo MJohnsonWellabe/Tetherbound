@@ -1,5 +1,13 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 03:40 UTC: `tb/below6-cloudreach-land` cut (KNIFEEDGE + rim mushrooms); relay of G-below6-knifeedge
+
+**Coordinator, LANE-SCOUT asked me to relay G-below6-knifeedge (tb/item-scout-1108 b4e9bdef): SHIP.** F40#8 5.61 -> 6.37 (+0.76, 3/3): the black strip at the Three Bells bridge is gone at all three times of day, no new gap or hole. F40#8's recorded defect stays PARTIAL (the marker post reads as "a plain placeholder cylinder", flat cyan at night; next lever an authored aviary-family marker). F40#15 level at 5.77 with its strips FIXED on both sides; what holds it is the giant flat stone wall slab, the bare grass bevel at the void and the tiled cloud sea. Road ends, overlook and aerie identical.
+
+- **Landing:** `tb/below6-cloudreach-land` (e55d961c5, cut from main 1c81cdb45), `STATUS: land`, one READY.md. It carries `landmass.end_face_follows_row_1112` ON and `perch_rim_cluster_1112` ON, each with `_why_on` and its numbers, and four tests. `cloudreach_world.gd` differs from main by the end-face block only (the terrace and masonry code on `tb/below6` is not in it). It replaces `tb/below6-perchrim-land`.
+- **Waiting on the GPU:** STORMRAVEN r2 (pre-check), MASONRY (F40#15), WAKE (F39#5/#14 pre-check).
+
+
 ## 13 Nov, about 03:05 UTC: `tb/below6-perchrim-land` cut; relay of G-below6-mushrooms
 
 **Coordinator, LANE-SCOUT asked me to relay G-below6-mushrooms (tb/item-scout-1108 bc115978): SPLIT.** F40#17 rim 6.01 -> 6.94 (+0.93, 3/3, FIXED 3/3); High Perches views +0.28 (2/3). Meadows finds 6.66 -> 5.92 (0/3) and F40#16 -0.09 (1/3): speed and stamina read as "a blue glowing sprig, a herb" or "pebbles". Flags on both sides: the Meadows wild find floats on open water beside the swimmer (a placement bug, 3/3); a red near oxblood on a court pillar glow and a plateau disc (1/3).
