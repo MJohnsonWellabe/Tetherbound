@@ -1,0 +1,16 @@
+{
+ "id": "places-wet-path-1112",
+ "branch": "tb/places",
+ "head": "(this commit)",
+ "base": "main",
+ "arm": "ralph/reports/LANES/PLACES-WETPATH/overlay.json",
+ "preset": "High first, then Medium if High reaches 7.5",
+ "tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache",
+ "rows": {
+  "F40#0": {"pieces": "3-4 (realm gate day clear and rain), plus the rain pieces of two more stands with trails, e.g. 84 and 88 (summit day and night rain), 92 (overlook day rain), with one clear piece each as a control"},
+  "F40#19": {"pieces": "4"},
+  "F40#1": {"tool": "the row's own frames from ralph/reports/VISUAL/item-scores/job.json"}
+ },
+ "want_to_see": "ground and trail that look wet in rain; a dull earth trail with a soft, frayed edge in clear weather",
+ "reject_if": "near-black mud, a blown sheen, or a trail that vanishes into the grass"
+}

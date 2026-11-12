@@ -1,6 +1,9 @@
 # LANE-PLACES NOTE (branch `tb/places`)
 
 ## RESTARTED (owner direction via coordinator, 12 Nov 2026)
+- **Gate paving (scoped) landed in #920**; main a4ad0486 is merged into `tb/places`.
+- **Sent to GPU (the only arm waiting): `PLACES-WETPATH/`** (`ground_wet_path_1112`): Cloudreach ground and trail darken with a sheen in rain; trail duller with a frayed, wider shoulder. Cause: rain wetness only ever reached the Meadows terrain material. Rows F40#0, F40#19, F40#1. CPU: clear and rain gate frames both show it.
+- **send_later:** not used; this session only acts on reminders the owner asks for. Coordinator: please nudge instead.
 - **Gate paving judged SPLIT; scoped landing cut.** `G-places-gatepaving` (555ebf04): F40#0 gate clear +0.93, rain +0.79 (3/3 each); F40#1 grass stands −0.61 (0/3, stones nearly invisible on grass). Landing `tb/places-gatepaving-land` (35ec8545), `PLACES-GATEPAVING/READY.md` STATUS: land: flag ON only at the dirt-road stands, grass stands as on main. The scoped form was checked on CPU, not re-judged on GPU.
 - **Sent to GPU (the only arm waiting): gate paving round 2, scoped** (`PLACES-GATEPAVING/` ARM Round 2, CAPTURE r2), same frames, for a re-judge. The landing branch above waits on it: land only if the gate gain holds and F40#1 does not lose.
 - Open at the gate (judges): orange path too saturated with unblended edges; rain has no wet darkening or sheen. F40#1 still needs real ledges.
