@@ -4526,6 +4526,19 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "things-reticle",
+   "kind": "arm (close-out candidate)",
+   "rows": [
+    "F38#7"
+   ],
+   "branch": "main + overlay",
+   "head": "main 1c81cdb45, overlay tb/things 07dd4a3a5 THINGS-RETICLE/overlay_reticle_ring.json",
+   "job": "phase2_capture_catch.gd --biome=meadows F38#7 job.json frames; Tidewake F39#23 catch_low/catch_high as no-loss",
+   "capture": "High AND Medium, base vs overlay",
+   "priority": "close-out candidate (7.49): with the #933 close-outs, ahead of the cloudrain re-run",
+   "route": "LANE-SCOUT (close call with control)"
+  },
+  {
    "id": "things-cloudnight",
    "kind": "arm",
    "rows": [
