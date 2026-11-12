@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "01-launch.png",
+  "preset": "arm-High",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/arm-High/01-launch.jpg",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.0313,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "arm-High",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/arm-High/02-glide.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.0389,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "03-landed.png",
+  "preset": "arm-High",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/arm-High/03-landed.jpg",
+  "sky_fraction": 0.126,
+  "lower_edges": 0.4196,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "01-launch.png",
+  "preset": "arm-Medium",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/arm-Medium/01-launch.jpg",
+  "sky_fraction": 0.237,
+  "lower_edges": 0.0348,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "arm-Medium",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/arm-Medium/02-glide.jpg",
+  "sky_fraction": 0.235,
+  "lower_edges": 0.0424,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "03-landed.png",
+  "preset": "arm-Medium",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/arm-Medium/03-landed.jpg",
+  "sky_fraction": 0.12,
+  "lower_edges": 0.4521,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "01-launch.png",
+  "preset": "base-High",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/base-High/01-launch.jpg",
+  "sky_fraction": 0.242,
+  "lower_edges": 0.0353,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "base-High",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/base-High/02-glide.jpg",
+  "sky_fraction": 0.244,
+  "lower_edges": 0.0381,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "03-landed.png",
+  "preset": "base-High",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/base-High/03-landed.jpg",
+  "sky_fraction": 0.156,
+  "lower_edges": 0.434,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "01-launch.png",
+  "preset": "base-Medium",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/base-Medium/01-launch.jpg",
+  "sky_fraction": 0.198,
+  "lower_edges": 0.0345,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "02-glide.png",
+  "preset": "base-Medium",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/base-Medium/02-glide.jpg",
+  "sky_fraction": 0.166,
+  "lower_edges": 0.0385,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ },
+ {
+  "frame": "03-landed.png",
+  "preset": "base-Medium",
+  "tree": "caf1939b042b08e4ec9f73826acfecef816ae3ea",
+  "tool": "tools/phase2_capture_realm_flight.gd",
+  "path": "G-f38-15-steer2/base-Medium/03-landed.jpg",
+  "sky_fraction": 0.12,
+  "lower_edges": 0.4482,
+  "script_errors": 0,
+  "note": "F38#15 last attempt (High 7.70 / Medium 7.37): tb/things caf1939b0 (fixed --glide-steer: returns to the start stand and heading before landing) both sides, default carrier Galecrest, seed 2042, --glide-steer, High + Medium. base = THINGS-GALELAND landing overlay; arm = landing + THINGS-GLIDEBANK/overlay_glide_bank.json (36 deg). Row frames: 02-glide (banked turn) and 03-landed (side-on). Every side FLIGHT failures=[]. Top-band sky maxdiff: Medium 1, High 5 (High sky varies about 5 run to run; one base-High re-shoot moved it from +5 warm to -5 cool)."
+ }
+]
