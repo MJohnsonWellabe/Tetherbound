@@ -751,6 +751,8 @@ func _begin_transition() -> void:
 		_from = _current(_last_base)
 		_to = target
 		_blend = 0.0
+	if not bool(target.get("flashes", false)):
+		_clear_decorative_lightning()
 	_reapply_left = 0.0
 	_dirty = true
 
@@ -761,7 +763,31 @@ func settle_presentation() -> void:
 	_blend = 1.0
 	_last_phase = presentation_key()
 	_last_night_scale = -1.0
+	if not bool(_to.get("flashes", false)):
+		_clear_decorative_lightning()
 	_apply_current(true)
+
+## Owner rule: lightning is Break's cue only. A decorative bolt, cloud flash or
+## sky flash still alive when the phase leaves Break goes out at once (a drop
+## in light, never a new onset) instead of decaying into Fading. GPU probe,
+## 12 Nov: a Fading still shot right after Break showed Break's last bolt.
+func _clear_decorative_lightning() -> void:
+	for index in _bolt_levels.size():
+		_bolt_levels[index] = 0.0
+	for bolt: MeshInstance3D in _bolts:
+		if is_instance_valid(bolt):
+			bolt.visible = false
+	_sky_pulses.clear()
+	_cloud_flash = 0.0
+	_flash = 0.0
+	_flash_echo = -1.0
+	if _bolt_light != null:
+		_bolt_light.visible = false
+	if _flash_light != null:
+		_flash_light.visible = false
+	if _ceiling_material != null:
+		_ceiling_material.set_shader_parameter("cloud_flash", 0.0)
+		_ceiling_material.set_shader_parameter("flash", 0.0)
 
 func _advance_presentation(delta: float) -> void:
 	if _to.is_empty():
