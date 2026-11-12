@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 23:00 UTC",
+  "updated": "12 Nov 2026 23:20 UTC",
   "headline": [
+    "12 Nov 23:20: #936 landed (Cloudreach wall stones, F40#15). Today's landings: #927, #928, #930, #933, #934, #935, #936; closes today: F41#11, F38#4, F38#20 (plus F38#9, F39#4, F39#24 earlier).",
     "12 Nov 23:00: F38#20 Team Tether stronghold CLOSES (7.50 High and Medium, control 0.3 strict). It was 5.72 this morning, below 6. F38#3 fight camera does not close (6.89 High / 7.03 Medium).",
     "12 Nov 22:50: #934 landed: the swimmer reads as swimming and restoring the currents visibly changes the sea. F39#14 and F39#17 are now above 6; F39#5 is at 5.98. #936 (wall stones) is updated onto the new main and re-running CI.",
     "12 Nov 22:40: Cloudreach wall stones at human scale ship (F40#15 5.17 to 5.54, 3/3; shrine and aviary unchanged), landing as #936. Stormraven's eye round 2 does not show at creature distance and is parked. New bug for LANE-BELOW6: a translucent amber pane covering half the overlook route frame (both sides, 3/3).",
@@ -2267,6 +2268,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#936",
+      "what": "Cloudreach wall stones at human scale (F40#15 5.17 to 5.54); full CI 23 jobs green",
+      "when": "12 Nov 23:18"
+    },
     {
       "pr": "GPU close",
       "what": "F38#20 Team Tether stronghold closed (7.50 High and Medium; 5.72 this morning)",
