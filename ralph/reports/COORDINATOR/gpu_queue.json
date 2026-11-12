@@ -4276,6 +4276,21 @@
    "priority": "after glidebank close-out: a split win (+0.6 on clear and gate rain) needing its two losing pieces fixed"
   },
   {
+   "id": "things-beam",
+   "kind": "arm (code, no overlay)",
+   "rows": [
+    "F38#7",
+    "F38#33",
+    "F38#14"
+   ],
+   "branch": "tb/things",
+   "head": "f582dbd7a",
+   "job": "ralph/reports/LANES/THINGS-BEAM/CAPTURE.json: phase2_capture_catch.gd --biome=meadows --seed=2042; F38#7 job.json frames plus F38#33 and F38#14 frames",
+   "capture": "High; base = main 506b40292, arm = tb/things f582dbd7a",
+   "priority": "after wetpath-r2 and rescore-stale-d; cheap catch capture, fixes a beacon beam standing through every catch frame",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-meadowground",
    "kind": "arm (shared cause, 6-7)",
    "rows": [
