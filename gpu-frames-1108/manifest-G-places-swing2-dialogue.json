@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "base-High",
+  "tree": "e83c4119b58d27f28c142f6a35933e8d0d00fb79",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-swing2-dialogue/base-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.3575,
+  "script_errors": 0,
+  "note": "places-stormwood-swing2, High, tb/places e83c4119b58d27f28c142f6a35933e8d0d00fb79 both sides (contains #914). base = overlay off; swing2 = PLACES-STORMWOOD2/overlay.json. The F41#2 storm-phase set is HELD (a bolt in Fading on every side). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "preset": "base-High",
+  "tree": "e83c4119b58d27f28c142f6a35933e8d0d00fb79",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-swing2-dialogue/base-High/stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.2964,
+  "script_errors": 0,
+  "note": "places-stormwood-swing2, High, tb/places e83c4119b58d27f28c142f6a35933e8d0d00fb79 both sides (contains #914). base = overlay off; swing2 = PLACES-STORMWOOD2/overlay.json. The F41#2 storm-phase set is HELD (a bolt in Fading on every side). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "base-High",
+  "tree": "e83c4119b58d27f28c142f6a35933e8d0d00fb79",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-swing2-dialogue/base-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.109,
+  "lower_edges": 0.1792,
+  "script_errors": 0,
+  "note": "places-stormwood-swing2, High, tb/places e83c4119b58d27f28c142f6a35933e8d0d00fb79 both sides (contains #914). base = overlay off; swing2 = PLACES-STORMWOOD2/overlay.json. The F41#2 storm-phase set is HELD (a bolt in Fading on every side). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "swing2-High",
+  "tree": "e83c4119b58d27f28c142f6a35933e8d0d00fb79",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-swing2-dialogue/swing2-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.077,
+  "lower_edges": 0.3792,
+  "script_errors": 0,
+  "note": "places-stormwood-swing2, High, tb/places e83c4119b58d27f28c142f6a35933e8d0d00fb79 both sides (contains #914). base = overlay off; swing2 = PLACES-STORMWOOD2/overlay.json. The F41#2 storm-phase set is HELD (a bolt in Fading on every side). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "preset": "swing2-High",
+  "tree": "e83c4119b58d27f28c142f6a35933e8d0d00fb79",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-swing2-dialogue/swing2-High/stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.2975,
+  "script_errors": 0,
+  "note": "places-stormwood-swing2, High, tb/places e83c4119b58d27f28c142f6a35933e8d0d00fb79 both sides (contains #914). base = overlay off; swing2 = PLACES-STORMWOOD2/overlay.json. The F41#2 storm-phase set is HELD (a bolt in Fading on every side). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "swing2-High",
+  "tree": "e83c4119b58d27f28c142f6a35933e8d0d00fb79",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-swing2-dialogue/swing2-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.102,
+  "lower_edges": 0.2314,
+  "script_errors": 0,
+  "note": "places-stormwood-swing2, High, tb/places e83c4119b58d27f28c142f6a35933e8d0d00fb79 both sides (contains #914). base = overlay off; swing2 = PLACES-STORMWOOD2/overlay.json. The F41#2 storm-phase set is HELD (a bolt in Fading on every side). F41#8 inventory frames."
+ }
+]
