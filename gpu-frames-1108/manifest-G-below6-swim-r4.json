@@ -1,0 +1,156 @@
+[
+ {
+  "frame": "east_dry_exit.png",
+  "preset": "arm-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/arm-High/east_dry_exit.jpg",
+  "sky_fraction": 0.058,
+  "lower_edges": 0.0333,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "entry.png",
+  "preset": "arm-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/arm-High/entry.jpg",
+  "sky_fraction": 0.489,
+  "lower_edges": 0.0951,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "surface_east.png",
+  "preset": "arm-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/arm-High/surface_east.jpg",
+  "sky_fraction": 0.503,
+  "lower_edges": 0.1126,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "surface_far.png",
+  "preset": "arm-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/arm-High/surface_far.jpg",
+  "sky_fraction": 0.452,
+  "lower_edges": 0.1011,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "surface_mid.png",
+  "preset": "arm-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/arm-High/surface_mid.jpg",
+  "sky_fraction": 0.49,
+  "lower_edges": 0.1065,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "surface_west.png",
+  "preset": "arm-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/arm-High/surface_west.jpg",
+  "sky_fraction": 0.505,
+  "lower_edges": 0.0513,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "west_dry_approach.png",
+  "preset": "arm-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/arm-High/west_dry_approach.jpg",
+  "sky_fraction": 0.107,
+  "lower_edges": 0.058,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "east_dry_exit.png",
+  "preset": "base-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/base-High/east_dry_exit.jpg",
+  "sky_fraction": 0.058,
+  "lower_edges": 0.0333,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "entry.png",
+  "preset": "base-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/base-High/entry.jpg",
+  "sky_fraction": 0.49,
+  "lower_edges": 0.0922,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "surface_east.png",
+  "preset": "base-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/base-High/surface_east.jpg",
+  "sky_fraction": 0.503,
+  "lower_edges": 0.1099,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "surface_far.png",
+  "preset": "base-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/base-High/surface_far.jpg",
+  "sky_fraction": 0.451,
+  "lower_edges": 0.0987,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "surface_mid.png",
+  "preset": "base-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/base-High/surface_mid.jpg",
+  "sky_fraction": 0.49,
+  "lower_edges": 0.1048,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "surface_west.png",
+  "preset": "base-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/base-High/surface_west.jpg",
+  "sky_fraction": 0.505,
+  "lower_edges": 0.049,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "west_dry_approach.png",
+  "preset": "base-High",
+  "tree": "d13bdd51d77a3e58c453d41b901bff9ef4bee959",
+  "tool": "res://tools/phase2_capture_swimming.gd",
+  "path": "G-below6-swim-r4/base-High/west_dry_approach.jpg",
+  "sky_fraction": 0.107,
+  "lower_edges": 0.058,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-swim-r4 (F39#5) pre-check failed: arm apex still above the head in entry and surface_mid. Pushed only so LANE-BELOW6 can see the GPU body pose (CPU water is opaque). tb/below6 d13bdd51d, base no overlay vs arm BELOW6-SWIM/overlay.json; --fixed-fps 20; High."
+ }
+]
