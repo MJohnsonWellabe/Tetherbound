@@ -1,0 +1,178 @@
+[
+ {
+  "frame": "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/arm-High/stormwood__glowmoss_hollows__03__the_lantern_pools__day__close.jpg",
+  "sky_fraction": 0.056,
+  "lower_edges": 0.2489,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__glowmoss_hollows__04__crown_overlook__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/arm-High/stormwood__glowmoss_hollows__04__crown_overlook__day__close.jpg",
+  "sky_fraction": 0.146,
+  "lower_edges": 0.2751,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/arm-High/stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "sky_fraction": 0.124,
+  "lower_edges": 0.2117,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/arm-High/stormwood__cinder_verge__01__the_struck_sentinel__day__approach.jpg",
+  "sky_fraction": 0.108,
+  "lower_edges": 0.2928,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__landmark__crown_heartstone__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/arm-High/stormwood__landmark__crown_heartstone__day__close.jpg",
+  "sky_fraction": 0.363,
+  "lower_edges": 0.2524,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__deepwood__09__lantern_hollow__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/arm-High/stormwood__deepwood__09__lantern_hollow__day__close.jpg",
+  "sky_fraction": 0.069,
+  "lower_edges": 0.3577,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__landmark__glass_field__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/arm-High/stormwood__landmark__glass_field__day__close.jpg",
+  "sky_fraction": 0.184,
+  "lower_edges": 0.1989,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__landmark__lantern_hollow__night__close.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/arm-High/stormwood__landmark__lantern_hollow__night__close.jpg",
+  "sky_fraction": 0.074,
+  "lower_edges": 0.2666,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/base-High/stormwood__glowmoss_hollows__03__the_lantern_pools__day__close.jpg",
+  "sky_fraction": 0.056,
+  "lower_edges": 0.247,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__glowmoss_hollows__04__crown_overlook__day__close.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/base-High/stormwood__glowmoss_hollows__04__crown_overlook__day__close.jpg",
+  "sky_fraction": 0.153,
+  "lower_edges": 0.2763,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/base-High/stormwood__deepwood__10__the_fallen_giant__day__close.jpg",
+  "sky_fraction": 0.126,
+  "lower_edges": 0.2124,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__approach.jpg",
+  "sky_fraction": 0.13,
+  "lower_edges": 0.2931,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__landmark__crown_heartstone__day__close.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/base-High/stormwood__landmark__crown_heartstone__day__close.jpg",
+  "sky_fraction": 0.42,
+  "lower_edges": 0.2507,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__deepwood__09__lantern_hollow__day__close.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/base-High/stormwood__deepwood__09__lantern_hollow__day__close.jpg",
+  "sky_fraction": 0.058,
+  "lower_edges": 0.3546,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__landmark__glass_field__day__close.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/base-High/stormwood__landmark__glass_field__day__close.jpg",
+  "sky_fraction": 0.189,
+  "lower_edges": 0.199,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ },
+ {
+  "frame": "stormwood__landmark__lantern_hollow__night__close.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_locations.gd --biome=stormwood (8 stands, --times=day,night --views=approach,close, one boot)",
+  "path": "G-places-stormlight-locations/base-High/stormwood__landmark__lantern_hollow__night__close.jpg",
+  "sky_fraction": 0.067,
+  "lower_edges": 0.2693,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#4, F41#5, F41#12 frames."
+ }
+]
