@@ -3473,7 +3473,8 @@
    "capture": "High. Base = tb/below6 with only heartwood_1111 ON (as main now ships) and the old stands; arm = the overlay",
    "want_to_see": "approach frames: the trunk and gate centre-frame at the end of the road (spot a); close frames unchanged; the split's exposed wood reads as aged heartwood, not an orange slab",
    "priority": "below 6 (F41#1)",
-   "note": "Stand move lands only with its game fix (the aged heartwood finish on the split trunk's exposed wood)."
+   "note": "Stand move lands only with its game fix (the aged heartwood finish on the split trunk's exposed wood).",
+   "done": "G-below6-stormheart-approach 4ec37efdb (judging; split not in frame)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
