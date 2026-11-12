@@ -1,0 +1,24 @@
+[
+ {
+  "frame": "stormwood__dynamo__11__the_glass_field__walk_03_day.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_routes.gd --biome=stormwood --subset=stormwood__dynamo__11__the_glass_field",
+  "path": "G-places-stormlight-routes/arm-High/stormwood__dynamo__11__the_glass_field__walk_03_day.jpg",
+  "sky_fraction": 0.098,
+  "lower_edges": 0.2524,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#19."
+ },
+ {
+  "frame": "stormwood__dynamo__11__the_glass_field__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_routes.gd --biome=stormwood --subset=stormwood__dynamo__11__the_glass_field",
+  "path": "G-places-stormlight-routes/base-High/stormwood__dynamo__11__the_glass_field__walk_03_day.jpg",
+  "sky_fraction": 0.097,
+  "lower_edges": 0.2517,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#19."
+ }
+]
