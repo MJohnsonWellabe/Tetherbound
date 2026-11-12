@@ -58,7 +58,8 @@ func test_enabled_scopes_union_their_species_and_master_or_none_change_nothing()
 	var live: Dictionary = SETTLE.scoped(shipped)
 	assert_eq(live.enabled, true)
 	# things_faint_scope ON (T1, G-things-faint.md, seven rows).
-	assert_eq(live.only_species, ["mosshell", "aquaryn", "mirejaw", "abyssal_guardian", "mangrove_monitor", "cragclaw", "cannonback"])
+	assert_eq(live.only_species, ["mosshell", "aquaryn", "mirejaw", "abyssal_guardian", "mangrove_monitor", "cragclaw", "cannonback",
+		"pebbik", "breezetail", "shadelet", "paddlenewt", "riftfrill", "mosshock", "stormraven"])
 	# The Aquaryn scope ships with settled_rest in rest_only mode: its own
 	# faint and hit clips stay, and only its rest is the baked lie-down.
 	var rest: Dictionary = (shipped as Dictionary).get("settled_rest", {})

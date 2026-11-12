@@ -549,7 +549,8 @@ static func face_camera(model: Node3D, player: AnimationPlayer, clip: String, ca
 static func crumples_species(rig: Rig, crumple: Dictionary) -> bool:
 	if _listed(crumple.get("keep_authored", []), rig.species_id):
 		return false
-	if _listed(crumple.get("species", []), rig.species_id):
+	if _listed(crumple.get("species", []), rig.species_id) or bool(crumple.get("force", false)):
+		# `force` comes from a `faint.per_species` row: that one species crumples.
 		return true
 	var winged := false
 	var limbed := false

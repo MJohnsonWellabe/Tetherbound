@@ -24,8 +24,9 @@ func test_storm_phase_ships_on_with_its_judged_gain() -> void:
 	var bodies: Dictionary = _json("res://data/config/stormwood_npcs.json").distinct_bodies_1111
 	assert_true(bool(bodies.enabled) and str(bodies.get("_why_on", "")).contains("G-places-stormlight"),
 		"distinct_bodies_1111 ships ON with its verdict (F41#8 +0.58)")
-	assert_false(bool(_json("res://data/config/cloudreach_visual.json").rain_time_grade.enabled),
-		"the Cloudreach rain time grade stays OFF until judged")
+	var rain: Dictionary = _json("res://data/config/cloudreach_visual.json").rain_time_grade
+	assert_true(bool(rain.enabled) and str(rain.get("_why_on", "")).contains("G-places-raintime"),
+		"the Cloudreach rain time grade ships ON with its verdict (+0.70 on rain sets)")
 
 
 func _surge_with(on: bool) -> Dictionary:
