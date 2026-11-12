@@ -1,0 +1,65 @@
+[
+ {
+  "label": "G F38#0 village_road+hall_front one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_village_road_hall_front.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_village_road_hall_front.png",
+  "brief": "Fixed captures from the game of the Meadows biome by day in clear weather: two places (top row and bottom row), each from an approach view, the gameplay camera and a reverse view (left to right). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#0 hall_nave+shrine_room one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_hall_nave_shrine_room.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_hall_nave_shrine_room.png",
+  "brief": "Fixed captures from the game of the Meadows biome by day in clear weather: two places (top row and bottom row), each from an approach view, the gameplay camera and a reverse view (left to right). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#0 farm_to_hall+band1_lower_meadows_1 one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_farm_to_hall_band1_lower_meadows_1.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_farm_to_hall_band1_lower_meadows_1.png",
+  "brief": "Fixed captures from the game of the Meadows biome by day in clear weather: two places (top row and bottom row), each from an approach view, the gameplay camera and a reverse view (left to right). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#0 band2_stone_and_root_0+band3_the_river_lock_0 one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_band2_stone_and_root_0_band3_the_river_lock_0.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_band2_stone_and_root_0_band3_the_river_lock_0.png",
+  "brief": "Fixed captures from the game of the Meadows biome by day in clear weather: two places (top row and bottom row), each from an approach view, the gameplay camera and a reverse view (left to right). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#0 band4_upper_meadows_ironwood_0+band5_stronghold_approach_0 one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_band4_upper_meadows_ironwood_0_band5_stronghold_approach_0.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_band4_upper_meadows_ironwood_0_band5_stronghold_approach_0.png",
+  "brief": "Fixed captures from the game of the Meadows biome by day in clear weather: two places (top row and bottom row), each from an approach view, the gameplay camera and a reverse view (left to right). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#0 rain gameplay one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_rain.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_rain.png",
+  "brief": "Fixed captures from the game of the Meadows biome by day in rain: six places from the gameplay camera. Judge whether these views read as the key art's world at a shipping game's finish - weather mood, palette, light, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#0 detail views one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_detail.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f38d_detail.png",
+  "brief": "Fixed captures from the game of the Meadows biome by day: six close detail views of places, props and materials. Judge whether the materials, props and set dressing read as the key art's world at a shipping game's finish, and anything that reads as a placeholder, artefact or defect.",
+  "defects": [
+   "none"
+  ]
+ }
+]

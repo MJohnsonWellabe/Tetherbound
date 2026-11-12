@@ -1,0 +1,74 @@
+[
+ {
+  "label": "G F41#7 dialogue recapture",
+  "a": "G-ds_F41-7.png",
+  "b": "G-ds_F41-7.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+  ]
+ },
+ {
+  "label": "G F41#11 dialogue recapture",
+  "a": "G-ds_F41-11.png",
+  "b": "G-ds_F41-11.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character portrait identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+  ]
+ },
+ {
+  "label": "G F41#15 dialogue recapture",
+  "a": "G-ds_F41-15.png",
+  "b": "G-ds_F41-15.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G F41#20 dialogue recapture",
+  "a": "G-ds_F41-20.png",
+  "b": "G-ds_F41-20.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character dialogue reuse. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Distinct named Stormwood characters use identical dialogue lines"
+  ]
+ },
+ {
+  "label": "G stormwood dialogue sample 1 recapture",
+  "a": "G-ds_s1.png",
+  "b": "G-ds_s1.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (9 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G stormwood dialogue sample 2 recapture",
+  "a": "G-ds_s2.png",
+  "b": "G-ds_s2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (9 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G stormwood dialogue sample 3 recapture",
+  "a": "G-ds_s3.png",
+  "b": "G-ds_s3.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (9 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G stormwood dialogue sample 4 recapture",
+  "a": "G-ds_s4.png",
+  "b": "G-ds_s4.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (6 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

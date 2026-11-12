@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F41#4 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-sw1_F41-4_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-sw1_F41-4_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named destination identities. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+  ]
+ },
+ {
+  "label": "G F41#5 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-sw1_F41-5_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-sw1_F41-5_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: forest ground and distance layers. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
+  ]
+ },
+ {
+  "label": "G F41#12 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-sw1_F41-12_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-sw1_F41-12_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: charged road surface. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern"
+  ]
+ },
+ {
+  "label": "G F41#17 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-sw1_F41-17_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-sw1_F41-17_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Crown Arch. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+  ]
+ }
+]

@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "f04_6_r22:r22": [
+   5.6,
+   6.3,
+   5.7
+  ],
+  "f04_6_r22:control": [
+   4.9,
+   5.6,
+   5.1
+  ],
+  "craft:before": [
+   5.3,
+   5.4,
+   5.3
+  ],
+  "craft:after": [
+   6.8,
+   6.9,
+   6.7
+  ],
+  "f36_0_npc:C1B": [
+   7.1,
+   7.2,
+   6.5
+  ],
+  "f36_0_npc:C1A": [
+   7.1,
+   7.2,
+   6.5
+  ]
+ },
+ "candidates": {
+  "G F39#26 rescore main [G-r2_F39-26.png]": [
+   6.2,
+   6.0,
+   6.0
+  ],
+  "G F36(1) glimmermoth rescore main [G-r2_glimmermoth.png]": [
+   6.7,
+   6.3,
+   6.2
+  ],
+  "G F39#27 rescore main [G-r2_F39-27.png]": [
+   5.8,
+   6.0,
+   5.6
+  ],
+  "G F39#18 rescore main [G-r2_F39-18.png]": [
+   6.6,
+   6.6,
+   6.4
+  ],
+  "G F39#29 rescore main [G-r2_F39-29.png]": [
+   6.0,
+   6.2,
+   5.8
+  ],
+  "G F36(1) skyrill rescore main [G-r2_skyrill.png]": [
+   7.0,
+   6.8,
+   6.8
+  ],
+  "G F36(1) cragclaw rescore main [G-r2_cragclaw.png]": [
+   6.5,
+   6.3,
+   6.5
+  ],
+  "G F36(1) fulgocobra rescore main [G-r2_fulgocobra.png]": [
+   6.4,
+   6.2,
+   6.3
+  ],
+  "G F36(1) veridian rescore main [G-r2_veridian.png]": [
+   6.0,
+   5.9,
+   5.9
+  ],
+  "G F36(1) ribbonray rescore main [G-r2_ribbonray.png]": [
+   5.3,
+   5.6,
+   5.3
+  ]
+ }
+}

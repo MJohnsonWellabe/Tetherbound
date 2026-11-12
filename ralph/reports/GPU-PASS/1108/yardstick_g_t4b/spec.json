@@ -1,0 +1,86 @@
+[
+ {
+  "label": "G F36(1) trailpup rescore main",
+  "a": "G-t4b_trailpup.png",
+  "b": "G-t4b_trailpup.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: trailpup - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "stock animal look with no rim light or type accent"
+  ]
+ },
+ {
+  "label": "G F36(1) solmane rescore main",
+  "a": "G-t4b_solmane.png",
+  "b": "G-t4b_solmane.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: solmane - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F36(1) cliffspike rescore main",
+  "a": "G-t4b_cliffspike.png",
+  "b": "G-t4b_cliffspike.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: cliffspike - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F36(1) voltwig rescore main",
+  "a": "G-t4b_voltwig.png",
+  "b": "G-t4b_voltwig.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: voltwig - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F36(1) stormtrail rescore main",
+  "a": "G-t4b_stormtrail.png",
+  "b": "G-t4b_stormtrail.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: stormtrail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "flat black placeholder look with emissive bands",
+   "faint flattens to a sheet"
+  ]
+ },
+ {
+  "label": "G F36(1) duskhush rescore main",
+  "a": "G-t4b_duskhush.png",
+  "b": "G-t4b_duskhush.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: duskhush - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black plumage hides the face",
+   "barely above the trainer"
+  ]
+ },
+ {
+  "label": "G F36(1) breezetail rescore main",
+  "a": "G-t4b_breezetail.png",
+  "b": "G-t4b_breezetail.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: breezetail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F36(1) stormraven rescore main",
+  "a": "G-t4b_stormraven.png",
+  "b": "G-t4b_stormraven.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: stormraven - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F36(1) ashtusk rescore main",
+  "a": "G-t4b_ashtusk.png",
+  "b": "G-t4b_ashtusk.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: ashtusk - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black plates merge with shadow",
+   "faint is an armoured ball"
+  ]
+ }
+]

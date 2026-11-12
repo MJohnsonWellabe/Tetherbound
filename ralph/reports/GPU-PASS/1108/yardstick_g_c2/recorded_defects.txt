@@ -1,0 +1,5 @@
+Uf: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Hc: "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+Po: "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+Kt: none
+Ot: none

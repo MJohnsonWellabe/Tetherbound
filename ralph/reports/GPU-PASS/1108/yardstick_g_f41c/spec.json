@@ -1,0 +1,56 @@
+[
+ {
+  "label": "G F41#24 cleanliness forest+forest_r one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_forest_forest_r.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_forest_forest_r.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (two camera stands, each in storm calm, storm break and the Long Storm aftermath). Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F41#24 cleanliness giant+giant_r one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_giant_giant_r.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_giant_giant_r.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (two camera stands, each in storm calm, storm break and the Long Storm aftermath). Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F41#24 cleanliness glass+rod_line one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_glass_rod_line.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_glass_rod_line.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (two camera stands, each in storm calm, storm break and the Long Storm aftermath). Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F41#24 cleanliness stormheart+heart_near one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_stormheart_heart_near.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_stormheart_heart_near.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (two camera stands, each in storm calm, storm break and the Long Storm aftermath). Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F41#24 cleanliness hollows+reverse one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_hollows_reverse.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_hollows_reverse.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (two camera stands, each in storm calm, storm break and the Long Storm aftermath). Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F41#24 cleanliness hollows fight one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_fight.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_fight.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (six moments of a real fight against a named wild creature). Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ }
+]

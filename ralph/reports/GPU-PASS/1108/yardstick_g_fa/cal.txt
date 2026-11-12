@@ -1,0 +1,212 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9742,
+  "least_squares_slope": 1.407,
+  "method": "linear",
+  "slope": 1.407,
+  "intercept": -1.9797,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.224,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.1,
+   "reference": 4.83,
+   "mapped": 5.196,
+   "residual": -0.366
+  },
+  "craft:after": {
+   "measured": 6.733,
+   "reference": 7.35,
+   "mapped": 7.494,
+   "residual": -0.144
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.1,
+   "reference": 6.75,
+   "mapped": 6.603,
+   "residual": 0.147
+  },
+  "f04_6_r22:control": {
+   "measured": 5.3,
+   "reference": 5.83,
+   "mapped": 5.478,
+   "residual": 0.352
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.733,
+   "reference": 7.47,
+   "mapped": 7.494,
+   "residual": -0.024
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.733,
+   "reference": 7.53,
+   "mapped": 7.494,
+   "residual": 0.036
+  }
+ },
+ "candidates": {
+  "G F36(1) abyssal_guardian faint base-vs-arm [G-faint_abyssal_guardian_arm.png]": {
+   "measured_mean": 6.067,
+   "mapped_mean": 6.56,
+   "mapped_judges": [
+    6.74,
+    6.46,
+    6.46
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) abyssal_guardian faint base-vs-arm [G-faint_abyssal_guardian_base.png]": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.62,
+   "mapped_judges": [
+    5.9,
+    5.62,
+    5.34
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) cannonback faint base-vs-arm [G-faint_cannonback_arm.png]": {
+   "measured_mean": 6.433,
+   "mapped_mean": 7.07,
+   "mapped_judges": [
+    7.31,
+    7.03,
+    6.88
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) cannonback faint base-vs-arm [G-faint_cannonback_base.png]": {
+   "measured_mean": 6.2,
+   "mapped_mean": 6.74,
+   "mapped_judges": [
+    6.88,
+    6.6,
+    6.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) mirejaw faint base-vs-arm [G-faint_mirejaw_arm.png]": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.98,
+   "mapped_judges": [
+    7.31,
+    6.88,
+    6.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) mirejaw faint base-vs-arm [G-faint_mirejaw_base.png]": {
+   "measured_mean": 6.167,
+   "mapped_mean": 6.7,
+   "mapped_judges": [
+    6.88,
+    6.88,
+    6.32
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) mangrove_monitor faint base-vs-arm [G-faint_mangrove_monitor_arm.png]": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.98,
+   "mapped_judges": [
+    7.03,
+    6.88,
+    7.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) mangrove_monitor faint base-vs-arm [G-faint_mangrove_monitor_base.png]": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.51,
+   "mapped_judges": [
+    6.46,
+    6.6,
+    6.46
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_cragclaw faint base-vs-arm [G-faint_water_cragclaw_arm.png]": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.51,
+   "mapped_judges": [
+    7.03,
+    6.32,
+    6.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_cragclaw faint base-vs-arm [G-faint_water_cragclaw_base.png]": {
+   "measured_mean": 5.267,
+   "mapped_mean": 5.43,
+   "mapped_judges": [
+    5.62,
+    5.62,
+    5.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_abyssal_guardian noswitch-vs-base [G-faint_water_abyssal_guardian_basenoswitch.png]": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.62,
+   "mapped_judges": [
+    5.62,
+    5.34,
+    5.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_abyssal_guardian noswitch-vs-base [G-faint_water_abyssal_guardian_base.png]": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.32,
+   "mapped_judges": [
+    6.32,
+    6.04,
+    6.6
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

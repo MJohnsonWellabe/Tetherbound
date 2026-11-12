@@ -1,0 +1,53 @@
+{
+ "Af": {
+  "anchor": false,
+  "label": "G warrens route_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_rd_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_rd_arm.png"
+ },
+ "Ei": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Kv": {
+  "anchor": false,
+  "label": "G F38#24 walk_03_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_walk_03_day_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_walk_03_day_base.png"
+ },
+ "Uk": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Dc": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Gb": {
+  "anchor": false,
+  "label": "G F38#24 walk_02_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_walk_02_day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_walk_02_day_arm.png"
+ },
+ "Wz": {
+  "anchor": false,
+  "label": "G F38#30 walk_03_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_walk_03_day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_walk_03_day_arm.png"
+ },
+ "No": {
+  "anchor": false,
+  "label": "G F38#30 walk_02_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_walk_02_day_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_walk_02_day_base.png"
+ },
+ "Cm": {
+  "anchor": false,
+  "label": "G F38#24 stronghold route_day control base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_sh_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-fs_sh_base.png"
+ }
+}

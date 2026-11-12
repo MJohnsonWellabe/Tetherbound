@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "craft:after": [
+   6.6,
+   6.7,
+   6.6
+  ],
+  "craft:before": [
+   4.6,
+   4.6,
+   4.6
+  ],
+  "f04_6_r22:r22": [
+   5.6,
+   5.6,
+   5.6
+  ],
+  "f04_6_r22:control": [
+   4.9,
+   4.6,
+   5.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.4,
+   4.2,
+   4.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.7,
+   3.5,
+   3.3
+  ]
+ },
+ "candidates": {
+  "G F38#24 stronghold route_day base-vs-arm [G-rs_sh_arm.png]": [
+   6.3,
+   6.4,
+   6.4
+  ],
+  "G F38#24 stronghold route_day base-vs-arm [G-rs_sh_base.png]": [
+   5.6,
+   5.5,
+   5.6
+  ],
+  "G F38#30 walk_02_day base-vs-arm [G-rs_walk_02_day_base.png]": [
+   4.2,
+   4.0,
+   3.7
+  ],
+  "G F38#30 walk_02_day base-vs-arm [G-rs_walk_02_day_arm.png]": [
+   4.2,
+   4.0,
+   3.8
+  ],
+  "G F38#30 walk_03_day base-vs-arm [G-rs_walk_03_day_arm.png]": [
+   3.0,
+   2.6,
+   2.8
+  ],
+  "G F38#30 walk_03_day base-vs-arm [G-rs_walk_03_day_base.png]": [
+   2.3,
+   2.3,
+   2.4
+  ],
+  "G F38#24 walk_02_day base-vs-arm [G-rs_walk_02_day_base.png]": [
+   3.0,
+   3.0,
+   3.0
+  ],
+  "G F38#24 walk_02_day base-vs-arm [G-rs_walk_02_day_arm.png]": [
+   3.0,
+   3.0,
+   3.0
+  ],
+  "G warrens route_day regress base-vs-arm [G-rs_rd_base.png]": [
+   5.7,
+   5.6,
+   5.4
+  ],
+  "G warrens route_day regress base-vs-arm [G-rs_rd_arm.png]": [
+   5.4,
+   5.4,
+   5.2
+  ],
+  "G F38#24 walk_03_day base-vs-arm [G-rs_walk_03_day_base.png]": [
+   2.5,
+   2.5,
+   2.5
+  ],
+  "G F38#24 walk_03_day base-vs-arm [G-rs_walk_03_day_arm.png]": [
+   2.8,
+   2.7,
+   3.0
+  ]
+ }
+}

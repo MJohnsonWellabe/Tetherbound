@@ -1,0 +1,101 @@
+[
+ {
+  "label": "GPU1108 F38#19 live one-sided",
+  "a": "<scratch>/sides/F38-19_live.png",
+  "b": "<scratch>/sides/F38-19_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: exploration HUD. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+  ]
+ },
+ {
+  "label": "GPU1108 F38#24 live one-sided",
+  "a": "<scratch>/sides/F38-24_live.png",
+  "b": "<scratch>/sides/F38-24_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: distant mountains. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "GPU1108 F38#30 live one-sided",
+  "a": "<scratch>/sides/F38-30_live.png",
+  "b": "<scratch>/sides/F38-30_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Burrow Warrens hillside. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "GPU1108 F39#7 live one-sided",
+  "a": "<scratch>/sides/F39-7_live.png",
+  "b": "<scratch>/sides/F39-7_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight actor composition. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases"
+  ]
+ },
+ {
+  "label": "GPU1108 F39#19 live one-sided",
+  "a": "<scratch>/sides/F39-19_live.png",
+  "b": "<scratch>/sides/F39-19_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight team roster contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The left team roster fades to pale low-contrast text against terrain during active combat"
+  ]
+ },
+ {
+  "label": "GPU1108 F39#20 live one-sided",
+  "a": "<scratch>/sides/F39-20_live.png",
+  "b": "<scratch>/sides/F39-20_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight background creature ground contact. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight"
+  ]
+ },
+ {
+  "label": "GPU1108 F39#23 live one-sided",
+  "a": "<scratch>/sides/F39-23_live.png",
+  "b": "<scratch>/sides/F39-23_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: catch chance HUD contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+  ]
+ },
+ {
+  "label": "GPU1108 F40#14 live one-sided",
+  "a": "<scratch>/sides/F40-14_live.png",
+  "b": "<scratch>/sides/F40-14_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: Cloudreach map region label. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis"
+  ]
+ },
+ {
+  "label": "GPU1108 F41#15 live one-sided",
+  "a": "<scratch>/sides/F41-15_live.png",
+  "b": "<scratch>/sides/F41-15_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "GPU1108 F41#16 live one-sided",
+  "a": "<scratch>/sides/F41-16_live.png",
+  "b": "<scratch>/sides/F41-16_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Hollows fight loss result clarity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown"
+  ]
+ },
+ {
+  "label": "GPU1108 F41#21 C live-vs-arm",
+  "a": "<scratch>/sides/F41-21_live.png",
+  "b": "<scratch>/sides/F41-21_victory_on.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Hollows victory reward tiles. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards"
+  ]
+ }
+]

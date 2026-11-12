@@ -1,0 +1,8 @@
+Gb: "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+Se: none
+Hu: "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+Yd: none
+Hb: "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+Xt: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ss: "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes"
+Dt: "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar"

@@ -1,0 +1,160 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8477,
+  "least_squares_slope": 1.3949,
+  "method": "linear",
+  "slope": 1.3949,
+  "intercept": -1.8368,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.612,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.733,
+   "reference": 7.35,
+   "mapped": 7.556,
+   "residual": -0.206
+  },
+  "craft:before": {
+   "measured": 5.267,
+   "reference": 4.83,
+   "mapped": 5.51,
+   "residual": -0.68
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.633,
+   "reference": 4.0,
+   "mapped": 4.626,
+   "residual": -0.626
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.233,
+   "reference": 6.53,
+   "mapped": 5.463,
+   "residual": 1.067
+  },
+  "f04_6_r22:control": {
+   "measured": 5.167,
+   "reference": 5.83,
+   "mapped": 5.37,
+   "residual": 0.46
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.167,
+   "reference": 6.75,
+   "mapped": 6.765,
+   "residual": -0.015
+  }
+ },
+ "candidates": {
+  "G F41#5 dither live-vs-arm [G-dith_F41-5_arm.png]": {
+   "measured_mean": 5.5,
+   "mapped_mean": 5.84,
+   "mapped_judges": [
+    5.97,
+    5.84,
+    5.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#5 dither live-vs-arm [G-dith_F41-5_live.png]": {
+   "measured_mean": 5.5,
+   "mapped_mean": 5.84,
+   "mapped_judges": [
+    5.97,
+    5.84,
+    5.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G grove giant_calm dither live-vs-arm [G-dith_gc_live.png]": {
+   "measured_mean": 4.9,
+   "mapped_mean": 5.0,
+   "mapped_judges": [
+    5.42,
+    5.0,
+    4.58
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G grove giant_calm dither live-vs-arm [G-dith_gc_arm.png]": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.3,
+   "mapped_judges": [
+    6.81,
+    6.11,
+    5.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 dither live-vs-arm [G-dith_F41-3_live.png]": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.39,
+   "mapped_judges": [
+    6.25,
+    6.67,
+    6.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 dither live-vs-arm [G-dith_F41-3_arm.png]": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.39,
+   "mapped_judges": [
+    6.25,
+    6.39,
+    6.53
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#4 dither live-vs-arm [G-dith_F41-4_live.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.11,
+   "mapped_judges": [
+    6.25,
+    6.11,
+    5.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#4 dither live-vs-arm [G-dith_F41-4_arm.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.11,
+   "mapped_judges": [
+    6.25,
+    6.11,
+    5.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

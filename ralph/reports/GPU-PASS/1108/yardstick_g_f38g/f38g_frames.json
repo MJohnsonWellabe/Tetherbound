@@ -1,0 +1,58 @@
+{
+ "village_road+hall_front": [
+  "village_road__golden__clear__approach.jpg",
+  "village_road__golden__clear__gameplay.jpg",
+  "village_road__golden__clear__reverse.jpg",
+  "hall_front__golden__clear__approach.jpg",
+  "hall_front__golden__clear__gameplay.jpg",
+  "hall_front__golden__clear__reverse.jpg"
+ ],
+ "hall_nave+shrine_room": [
+  "hall_nave__golden__clear__approach.jpg",
+  "hall_nave__golden__clear__gameplay.jpg",
+  "hall_nave__golden__clear__reverse.jpg",
+  "shrine_room__golden__clear__approach.jpg",
+  "shrine_room__golden__clear__gameplay.jpg",
+  "shrine_room__golden__clear__reverse.jpg"
+ ],
+ "farm_to_hall+band1_lower_meadows_1": [
+  "farm_to_hall__golden__clear__approach.jpg",
+  "farm_to_hall__golden__clear__gameplay.jpg",
+  "farm_to_hall__golden__clear__reverse.jpg",
+  "band1_lower_meadows_1__golden__clear__approach.jpg",
+  "band1_lower_meadows_1__golden__clear__gameplay.jpg",
+  "band1_lower_meadows_1__golden__clear__reverse.jpg"
+ ],
+ "band2_stone_and_root_0+band3_the_river_lock_0": [
+  "band2_stone_and_root_0__golden__clear__approach.jpg",
+  "band2_stone_and_root_0__golden__clear__gameplay.jpg",
+  "band2_stone_and_root_0__golden__clear__reverse.jpg",
+  "band3_the_river_lock_0__golden__clear__approach.jpg",
+  "band3_the_river_lock_0__golden__clear__gameplay.jpg",
+  "band3_the_river_lock_0__golden__clear__reverse.jpg"
+ ],
+ "band4_upper_meadows_ironwood_0+band5_stronghold_approach_0": [
+  "band4_upper_meadows_ironwood_0__golden__clear__approach.jpg",
+  "band4_upper_meadows_ironwood_0__golden__clear__gameplay.jpg",
+  "band4_upper_meadows_ironwood_0__golden__clear__reverse.jpg",
+  "band5_stronghold_approach_0__golden__clear__approach.jpg",
+  "band5_stronghold_approach_0__golden__clear__gameplay.jpg",
+  "band5_stronghold_approach_0__golden__clear__reverse.jpg"
+ ],
+ "rain gameplay": [
+  "village_road__golden__rain__gameplay.jpg",
+  "hall_front__golden__rain__gameplay.jpg",
+  "band1_lower_meadows_1__golden__rain__gameplay.jpg",
+  "band3_the_river_lock_0__golden__rain__gameplay.jpg",
+  "band4_upper_meadows_ironwood_0__golden__rain__gameplay.jpg",
+  "band5_stronghold_approach_0__golden__rain__gameplay.jpg"
+ ],
+ "detail": [
+  "village_road__golden__clear__detail.jpg",
+  "hall_front__golden__clear__detail.jpg",
+  "hall_nave__golden__clear__detail.jpg",
+  "band2_stone_and_root_0__golden__clear__detail.jpg",
+  "band4_upper_meadows_ironwood_0__golden__clear__detail.jpg",
+  "arch_home__golden__clear__detail.jpg"
+ ]
+}

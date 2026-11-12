@@ -1,0 +1,212 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9179,
+  "least_squares_slope": 1.3601,
+  "method": "linear",
+  "slope": 1.3601,
+  "intercept": -1.5157,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.458,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 4.7,
+   "reference": 4.83,
+   "mapped": 4.877,
+   "residual": -0.047
+  },
+  "craft:after": {
+   "measured": 6.733,
+   "reference": 7.35,
+   "mapped": 7.642,
+   "residual": -0.292
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.133,
+   "reference": 6.75,
+   "mapped": 6.826,
+   "residual": -0.076
+  },
+  "f04_6_r22:control": {
+   "measured": 5.3,
+   "reference": 5.83,
+   "mapped": 5.693,
+   "residual": 0.137
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.5,
+   "reference": 4.0,
+   "mapped": 4.605,
+   "residual": -0.605
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.267,
+   "reference": 6.53,
+   "mapped": 5.647,
+   "residual": 0.883
+  }
+ },
+ "candidates": {
+  "G F41#5 live-vs-a3 [G-a3lip_F41-5_live_for_a3.png]": {
+   "measured_mean": 5.267,
+   "mapped_mean": 5.65,
+   "mapped_judges": [
+    5.56,
+    5.69,
+    5.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#5 live-vs-a3 [G-a3lip_F41-5_a3.png]": {
+   "measured_mean": 5.267,
+   "mapped_mean": 5.65,
+   "mapped_judges": [
+    5.69,
+    5.56,
+    5.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#10 live-vs-lip [G-a3lip_F41-10_lip.png]": {
+   "measured_mean": 4.967,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    5.69,
+    4.74,
+    5.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#10 live-vs-lip [G-a3lip_F41-10_live_for_lip.png]": {
+   "measured_mean": 5.467,
+   "mapped_mean": 5.92,
+   "mapped_judges": [
+    6.37,
+    5.56,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#17 live-vs-a3 [G-a3lip_F41-17_a3.png]": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.64,
+   "mapped_judges": [
+    6.92,
+    6.64,
+    6.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#17 live-vs-a3 [G-a3lip_F41-17_live_for_a3.png]": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.55,
+   "mapped_judges": [
+    6.78,
+    6.51,
+    6.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#12 live-vs-a3 [G-a3lip_F41-12_a3.png]": {
+   "measured_mean": 5.467,
+   "mapped_mean": 5.92,
+   "mapped_judges": [
+    6.1,
+    5.83,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#12 live-vs-a3 [G-a3lip_F41-12_live_for_a3.png]": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.87,
+   "mapped_judges": [
+    6.1,
+    5.69,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#2 live-vs-a3 [G-a3lip_F41-2_live_for_a3.png]": {
+   "measured_mean": 5.1,
+   "mapped_mean": 5.42,
+   "mapped_judges": [
+    5.69,
+    5.28,
+    5.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#2 live-vs-a3 [G-a3lip_F41-2_a3.png]": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.37,
+    6.1,
+    5.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#4 live-vs-a3 [G-a3lip_F41-4_a3.png]": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.01,
+   "mapped_judges": [
+    6.1,
+    6.1,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#4 live-vs-a3 [G-a3lip_F41-4_live_for_a3.png]": {
+   "measured_mean": 5.5,
+   "mapped_mean": 5.96,
+   "mapped_judges": [
+    6.1,
+    5.96,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

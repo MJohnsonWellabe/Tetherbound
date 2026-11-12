@@ -20,6 +20,8 @@ func _load_plan() -> bool:
 			start = maxi(0, int(arg.trim_prefix("--start=")))
 		elif arg.begins_with("--count="):
 			count = maxi(1, int(arg.trim_prefix("--count=")))
+		elif arg == "--sight-stand":
+			_sight_stand = true
 	if start > 0 or count > 0:
 		_planned = _planned.slice(start, mini(_planned.size(), start + count) if count > 0 else _planned.size())
 	return not _planned.is_empty()
@@ -402,7 +404,10 @@ func _frame_speaker(row: Dictionary) -> String:
 	var note := "near"
 	var reach := SPEAKER_STAND_WITHIN_M
 	var d := body.global_position.distance_to(_player.global_position)
-	if d > reach:
+	# --sight-stand: a post within reach of the speaker but on the other side
+	# of a wall is not a place the player talks from either.
+	var blind := _sight_stand and d <= reach and not _stand_sees(body)
+	if d > reach or blind:
 		# The catalogue post is not where this body stands: talk to it where it
 		# is, from the side the player is coming from.
 		var away := Vector2(_player.global_position.x - body.global_position.x,
@@ -412,7 +417,17 @@ func _frame_speaker(row: Dictionary) -> String:
 		away = away.normalized()
 		var game := root.get_node_or_null(^"Game")
 		var placed := false
-		for gap: float in [2.6, 3.2, 2.0, 3.8, 4.4]:
+		# With --sight-stand the first pass only takes a stand with a clear
+		# line to the speaker; the second is the old search.
+		var stand_gaps: Array = []
+		if _sight_stand:
+			for sight_gap: float in [2.6, 3.2, 2.0, 3.8]:
+				stand_gaps.append([sight_gap, true])
+		for plain_gap: float in [2.6, 3.2, 2.0, 3.8, 4.4]:
+			stand_gaps.append([plain_gap, false])
+		for stand_gap: Array in stand_gaps:
+			var gap := float(stand_gap[0])
+			var need_sight := bool(stand_gap[1])
 			for turn: float in [0.0, 0.6, -0.6, 1.2, -1.2, 1.8, -1.8, 2.4, -2.4, PI]:
 				var dir := away.rotated(turn)
 				var at := Vector2(body.global_position.x, body.global_position.z) + dir * gap
@@ -443,6 +458,8 @@ func _frame_speaker(row: Dictionary) -> String:
 				_rig.reset_physics_interpolation()
 				for _frame in POPULATE_FRAMES:
 					await physics_frame
+				if need_sight and not _stand_sees(body):
+					continue
 				placed = true
 				break
 			if placed:
@@ -457,6 +474,39 @@ func _frame_speaker(row: Dictionary) -> String:
 		return "refused"
 	print("DLG_SPEAKER %s %s %s" % [str(row.frame_id), note, str(body.get_path())])
 	return note
+
+
+## --sight-stand (LANE-THINGS, 12 Nov; G-dialogue-recapture-meadows: Bram shot
+## through the inn wall, Mira through a window): true when nothing solid lies
+## between the player's chest and the speaker's. Their own colliders are left
+## out. In play a conversation is opened facing the speaker in the same room.
+var _sight_stand := false
+
+
+func _stand_sees(body: Node3D) -> bool:
+	var space := _player.get_world_3d().direct_space_state if _player != null else null
+	if space == null:
+		return true
+	var from := _player.global_position + Vector3.UP * 1.3
+	var to := body.global_position + Vector3.UP * 1.3
+	var exclude: Array[RID] = []
+	if _player is CollisionObject3D:
+		exclude.append((_player as CollisionObject3D).get_rid())
+	for node: Node in [body] + body.get_children():
+		if node is CollisionObject3D:
+			exclude.append((node as CollisionObject3D).get_rid())
+	var query := PhysicsRayQueryParameters3D.create(from, to, 0xFFFFFFFF, exclude)
+	if not space.intersect_ray(query).is_empty():
+		return false
+	# GPU lane, 12 Nov (tournament_quarter_mira): a clear physics line still
+	# stood the player behind a lattice door with no collider. The rig's own
+	# visible-mesh test covers that; the segment stops short of both bodies.
+	var span := to - from
+	if _rig != null and _rig.has_method("_speaker_hidden_by_meshes") and span.length() > 1.4:
+		var dir := span.normalized()
+		if bool(_rig.call("_speaker_hidden_by_meshes", from + dir * 0.6, to - dir * 0.6)):
+			return false
+	return true
 
 
 ## The top of whatever collider lies under `at` within 2.5 m of `near_y`, or

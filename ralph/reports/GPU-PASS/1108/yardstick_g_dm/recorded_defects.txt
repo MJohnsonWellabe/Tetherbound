@@ -1,0 +1,11 @@
+Gg: none
+Jq: "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+Yj: "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+Ib: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Iu: none
+Tz: "none"
+Qp: "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"
+Qg: "Large rock faces fill the camera and hide the named speaker during dialogue"
+Rp: "none"
+Jd: "none"
+Kk: "none"

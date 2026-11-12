@@ -1,0 +1,71 @@
+{
+ "Qq": {
+  "anchor": false,
+  "label": "G F36(1) brooktail rescore main",
+  "A": "G-t4a_brooktail.png",
+  "B": "G-t4a_brooktail.png"
+ },
+ "Dw": {
+  "anchor": false,
+  "label": "G F36(1) thundertunnel rescore main",
+  "A": "G-t4a_thundertunnel.png",
+  "B": "G-t4a_thundertunnel.png"
+ },
+ "Ib": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Fy": {
+  "anchor": false,
+  "label": "G F36(1) pebbik rescore main",
+  "A": "G-t4a_pebbik.png",
+  "B": "G-t4a_pebbik.png"
+ },
+ "Ae": {
+  "anchor": false,
+  "label": "G F36(1) mosshock rescore main",
+  "A": "G-t4a_mosshock.png",
+  "B": "G-t4a_mosshock.png"
+ },
+ "Nr": {
+  "anchor": false,
+  "label": "G F36(1) mirejaw rescore main",
+  "A": "G-t4a_mirejaw.png",
+  "B": "G-t4a_mirejaw.png"
+ },
+ "Ls": {
+  "anchor": false,
+  "label": "G F36(1) sparkit rescore main",
+  "A": "G-t4a_sparkit.png",
+  "B": "G-t4a_sparkit.png"
+ },
+ "Ar": {
+  "anchor": false,
+  "label": "G F36(1) shadelet rescore main",
+  "A": "G-t4a_shadelet.png",
+  "B": "G-t4a_shadelet.png"
+ },
+ "Na": {
+  "anchor": false,
+  "label": "G F36(1) riftfrill rescore main",
+  "A": "G-t4a_riftfrill.png",
+  "B": "G-t4a_riftfrill.png"
+ },
+ "Hk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Et": {
+  "anchor": false,
+  "label": "G F36(1) paddlenewt rescore main",
+  "A": "G-t4a_paddlenewt.png",
+  "B": "G-t4a_paddlenewt.png"
+ },
+ "Ex": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

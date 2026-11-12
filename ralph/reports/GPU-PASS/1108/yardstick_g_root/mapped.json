@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8057,
+  "least_squares_slope": 1.1685,
+  "method": "linear",
+  "slope": 1.1685,
+  "intercept": -0.3116,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.683,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:r22": {
+   "measured": 5.867,
+   "reference": 6.75,
+   "mapped": 6.544,
+   "residual": 0.206
+  },
+  "f04_6_r22:control": {
+   "measured": 5.167,
+   "reference": 5.83,
+   "mapped": 5.726,
+   "residual": 0.104
+  },
+  "craft:before": {
+   "measured": 5.167,
+   "reference": 4.83,
+   "mapped": 5.726,
+   "residual": -0.896
+  },
+  "craft:after": {
+   "measured": 6.667,
+   "reference": 7.35,
+   "mapped": 7.479,
+   "residual": -0.129
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.767,
+   "reference": 6.53,
+   "mapped": 5.258,
+   "residual": 1.272
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.167,
+   "reference": 4.0,
+   "mapped": 4.557,
+   "residual": -0.557
+  }
+ },
+ "candidates": {
+  "G F41#24 live-vs-arm [G-root_live.png]": {
+   "measured_mean": 4.6,
+   "mapped_mean": 5.06,
+   "mapped_judges": [
+    4.95,
+    5.18,
+    5.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#24 live-vs-arm [G-root_arm.png]": {
+   "measured_mean": 5.3,
+   "mapped_mean": 5.88,
+   "mapped_judges": [
+    5.88,
+    6.0,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

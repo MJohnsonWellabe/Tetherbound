@@ -1,0 +1,162 @@
+{
+ "key": {
+  "img_01": [
+   "base",
+   "swim-away-day"
+  ],
+  "img_02": [
+   "armA",
+   "swim-away-night"
+  ],
+  "img_03": [
+   "armA",
+   "swim-across-day"
+  ],
+  "img_04": [
+   "armB",
+   "swim-across-day"
+  ],
+  "img_05": [
+   "base",
+   "swim-across-day"
+  ],
+  "img_06": [
+   "armB",
+   "swim-away-day"
+  ],
+  "img_07": [
+   "base",
+   "swim-away-night"
+  ],
+  "img_08": [
+   "armA",
+   "swim-away-day"
+  ],
+  "img_09": [
+   "armB",
+   "swim-away-night"
+  ]
+ },
+ "truth": {
+  "swim-across-day": "RIGHT",
+  "swim-away-day": "TOWARD_CAMERA",
+  "swim-away-night": "TOWARD_CAMERA"
+ },
+ "judges": {
+  "d1": {
+   "img_01": [
+    "CANNOT_TELL",
+    3
+   ],
+   "img_02": [
+    "LEFT",
+    3
+   ],
+   "img_03": [
+    "RIGHT",
+    6
+   ],
+   "img_04": [
+    "RIGHT",
+    7
+   ],
+   "img_05": [
+    "RIGHT",
+    6
+   ],
+   "img_06": [
+    "TOWARD_CAMERA",
+    4
+   ],
+   "img_07": [
+    "TOWARD_CAMERA",
+    3
+   ],
+   "img_08": [
+    "TOWARD_CAMERA",
+    4
+   ],
+   "img_09": [
+    "TOWARD_CAMERA",
+    6
+   ]
+  },
+  "d2": {
+   "img_01": [
+    "CANNOT_TELL",
+    3
+   ],
+   "img_02": [
+    "LEFT",
+    5
+   ],
+   "img_03": [
+    "RIGHT",
+    7
+   ],
+   "img_04": [
+    "RIGHT",
+    8
+   ],
+   "img_05": [
+    "RIGHT",
+    6
+   ],
+   "img_06": [
+    "TOWARD_CAMERA",
+    4
+   ],
+   "img_07": [
+    "LEFT",
+    4
+   ],
+   "img_08": [
+    "TOWARD_CAMERA",
+    4
+   ],
+   "img_09": [
+    "LEFT",
+    6
+   ]
+  },
+  "d3": {
+   "img_01": [
+    "CANNOT_TELL",
+    3
+   ],
+   "img_02": [
+    "TOWARD_CAMERA",
+    4
+   ],
+   "img_03": [
+    "RIGHT",
+    8
+   ],
+   "img_04": [
+    "RIGHT",
+    8
+   ],
+   "img_05": [
+    "RIGHT",
+    6
+   ],
+   "img_06": [
+    "TOWARD_CAMERA",
+    5
+   ],
+   "img_07": [
+    "LEFT",
+    4
+   ],
+   "img_08": [
+    "TOWARD_CAMERA",
+    5
+   ],
+   "img_09": [
+    "TOWARD_CAMERA",
+    6
+   ]
+  }
+ },
+ "_fields": "[direction, confidence]"
+}

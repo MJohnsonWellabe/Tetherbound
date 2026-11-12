@@ -1,0 +1,23 @@
+{
+ "Xz": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Mg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Rl": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Yr": {
+  "anchor": false,
+  "label": "G F41#8 distinct-bodies base-vs-arm",
+  "A": "G-f418_arm.png",
+  "B": "G-f418_base.png"
+ }
+}

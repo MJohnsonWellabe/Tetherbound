@@ -1,0 +1,9 @@
+No: "glossy vinyl-blue skin, toy-like"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Je: "brass-gear machinery shell reads as kitbash"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Vp: "body passes through the trainer in faint end"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Kj: "low contrast against the stage"; "faint lies flat with the trainer inside the tail"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Vs: "faint poses the same as standing"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Sc: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Rq: none
+Ev: none
+Gv: "thin and spindly"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"

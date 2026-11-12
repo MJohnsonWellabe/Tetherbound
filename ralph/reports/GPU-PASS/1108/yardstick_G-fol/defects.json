@@ -1,0 +1,74 @@
+{
+ "G F41#3 live-vs-arm": {
+  "A": [
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PARTIAL"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PARTIAL"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   }
+  ]
+ },
+ "G F41#8 live-vs-arm": {
+  "A": [
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   }
+  ]
+ },
+ "G F41#5 live-vs-arm": {
+  "A": [
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   }
+  ]
+ }
+}

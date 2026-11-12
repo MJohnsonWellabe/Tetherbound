@@ -1,0 +1,186 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9113,
+  "least_squares_slope": 1.2224,
+  "method": "linear",
+  "slope": 1.2224,
+  "intercept": -0.925,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.409,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:r22": {
+   "measured": 5.867,
+   "reference": 6.75,
+   "mapped": 6.246,
+   "residual": 0.504
+  },
+  "f04_6_r22:control": {
+   "measured": 5.2,
+   "reference": 5.83,
+   "mapped": 5.431,
+   "residual": 0.399
+  },
+  "craft:before": {
+   "measured": 5.333,
+   "reference": 4.83,
+   "mapped": 5.594,
+   "residual": -0.764
+  },
+  "craft:after": {
+   "measured": 6.8,
+   "reference": 7.35,
+   "mapped": 7.387,
+   "residual": -0.037
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.933,
+   "reference": 7.47,
+   "mapped": 7.55,
+   "residual": -0.08
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.933,
+   "reference": 7.53,
+   "mapped": 7.55,
+   "residual": -0.02
+  }
+ },
+ "candidates": {
+  "G F39#26 rescore main [G-r2_F39-26.png]": {
+   "measured_mean": 6.067,
+   "mapped_mean": 6.49,
+   "mapped_judges": [
+    6.65,
+    6.41,
+    6.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) glimmermoth rescore main [G-r2_glimmermoth.png]": {
+   "measured_mean": 6.4,
+   "mapped_mean": 6.9,
+   "mapped_judges": [
+    7.27,
+    6.78,
+    6.65
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#27 rescore main [G-r2_F39-27.png]": {
+   "measured_mean": 5.8,
+   "mapped_mean": 6.16,
+   "mapped_judges": [
+    6.16,
+    6.41,
+    5.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#18 rescore main [G-r2_F39-18.png]": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    7.14,
+    7.14,
+    6.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#29 rescore main [G-r2_F39-29.png]": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.41,
+   "mapped_judges": [
+    6.41,
+    6.65,
+    6.16
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) skyrill rescore main [G-r2_skyrill.png]": {
+   "measured_mean": 6.867,
+   "mapped_mean": 7.47,
+   "mapped_judges": [
+    7.63,
+    7.39,
+    7.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) cragclaw rescore main [G-r2_cragclaw.png]": {
+   "measured_mean": 6.433,
+   "mapped_mean": 6.94,
+   "mapped_judges": [
+    7.02,
+    6.78,
+    7.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) fulgocobra rescore main [G-r2_fulgocobra.png]": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.78,
+   "mapped_judges": [
+    6.9,
+    6.65,
+    6.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) veridian rescore main [G-r2_veridian.png]": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.33,
+   "mapped_judges": [
+    6.41,
+    6.29,
+    6.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) ribbonray rescore main [G-r2_ribbonray.png]": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.68,
+   "mapped_judges": [
+    5.55,
+    5.92,
+    5.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

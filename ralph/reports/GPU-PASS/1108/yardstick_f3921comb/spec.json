@@ -1,0 +1,11 @@
+[
+ {
+  "label": "GPU1108F F39#21 live one-sided",
+  "a": "<scratch>/F39-21.png",
+  "b": "<scratch>/F39-21.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named fight victory hierarchy. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+  ]
+ }
+]

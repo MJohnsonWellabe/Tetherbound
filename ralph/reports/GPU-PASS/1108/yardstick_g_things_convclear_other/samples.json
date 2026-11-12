@@ -1,0 +1,30 @@
+{
+ "tidewake": [
+  "water__inventory__character__water_corin__dialogue.jpg",
+  "water__inventory__character__water_edda__dialogue.jpg",
+  "water__inventory__character__water_halen__dialogue.jpg",
+  "water__inventory__character__water_iona__dialogue.jpg",
+  "water__inventory__trainer__water_trainer_bex__dialogue.jpg",
+  "water__inventory__trainer__water_trainer_fen__dialogue.jpg",
+  "water__inventory__trainer__water_trainer_irva__dialogue.jpg",
+  "water__inventory__trainer__water_trainer_oswin__dialogue.jpg",
+  "water__inventory__trainer__water_trainer_solm__dialogue.jpg"
+ ],
+ "stormwood": [
+  "stormwood__inventory__character__defector_sable__dialogue.jpg",
+  "stormwood__inventory__character__stormreader_tamsin__dialogue.jpg",
+  "stormwood__inventory__character__trainer_ivo__dialogue.jpg",
+  "stormwood__inventory__trainer__circuit_tavi_rodline__dialogue.jpg",
+  "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "stormwood__inventory__trainer__outerworks_lieutenant_sera__dialogue.jpg",
+  "stormwood__inventory__trainer__tamsin_ash_ring__dialogue.jpg",
+  "stormwood__inventory__trainer__tamsin_surge_lesson__dialogue.jpg",
+  "stormwood__inventory__trainer__traveller_ivo_moss_detour__dialogue.jpg"
+ ],
+ "missing": [
+  [
+   "F40#12",
+   "cloudreach__inventory__character__captain_veyra__defeated__dialogue.jpg"
+  ]
+ ]
+}

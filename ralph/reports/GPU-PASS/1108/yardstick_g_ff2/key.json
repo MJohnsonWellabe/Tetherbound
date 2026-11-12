@@ -1,0 +1,35 @@
+{
+ "Gk": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Pr": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Zd": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "De": {
+  "anchor": false,
+  "label": "G ff2 swim-away-night base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ff2_swim-away-night_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ff2_swim-away-night_arm.png"
+ },
+ "Rw": {
+  "anchor": false,
+  "label": "G ff2 swim-away-day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ff2_swim-away-day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ff2_swim-away-day_arm.png"
+ },
+ "Ia": {
+  "anchor": false,
+  "label": "G ff2 swim-across-day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ff2_swim-across-day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ff2_swim-across-day_arm.png"
+ }
+}

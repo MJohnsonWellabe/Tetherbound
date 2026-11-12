@@ -1,0 +1,5 @@
+Wi: "the hit reaction smears the jaw or tail into a pale translucent shape"; "tail passes through the trainer"
+Zj: none
+Xw: none
+Sa: "hit reaction barely different from standing"; "glossy vinyl, toy-like"
+Ep: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

@@ -1,0 +1,146 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.3,
+   4.0,
+   5.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.8,
+   4.6,
+   5.6
+  ],
+  "f04_6_r22:r22": [
+   6.2,
+   5.6,
+   6.4
+  ],
+  "f04_6_r22:control": [
+   5.3,
+   4.8,
+   5.6
+  ],
+  "craft:before": [
+   5.0,
+   4.8,
+   5.4
+  ],
+  "craft:after": [
+   7.0,
+   6.6,
+   6.8
+  ]
+ },
+ "candidates": {
+  "G F39#18 live-vs-arm [G-npc_F39-18_arm.png]": [
+   5.0,
+   5.3,
+   5.3
+  ],
+  "G F39#18 live-vs-arm [G-npc_F39-18_live_for_arm.png]": [
+   5.0,
+   5.2,
+   5.3
+  ],
+  "G F39#26 live-vs-arm [G-npc_F39-26_live_for_arm.png]": [
+   5.1,
+   5.5,
+   5.5
+  ],
+  "G F39#26 live-vs-arm [G-npc_F39-26_arm.png]": [
+   5.1,
+   5.2,
+   5.4
+  ],
+  "G F39#29 live-vs-armEmis [G-npc_F39-29_live_for_armEmis.png]": [
+   4.6,
+   4.6,
+   5.3
+  ],
+  "G F39#29 live-vs-armEmis [G-npc_F39-29_armEmis.png]": [
+   4.6,
+   4.6,
+   5.3
+  ],
+  "G F41#7 live-vs-armEmis [G-npc_F41-7_live_for_armEmis.png]": [
+   6.0,
+   5.7,
+   5.7
+  ],
+  "G F41#7 live-vs-armEmis [G-npc_F41-7_armEmis.png]": [
+   5.9,
+   5.7,
+   5.7
+  ],
+  "G F41#11 live-vs-arm [G-npc_F41-11_arm.png]": [
+   6.4,
+   6.0,
+   6.2
+  ],
+  "G F41#11 live-vs-arm [G-npc_F41-11_live_for_arm.png]": [
+   6.4,
+   6.1,
+   6.2
+  ],
+  "G F41#15 live-vs-arm [G-npc_F41-15_arm.png]": [
+   5.7,
+   5.3,
+   5.7
+  ],
+  "G F41#15 live-vs-arm [G-npc_F41-15_live_for_arm.png]": [
+   5.6,
+   5.2,
+   5.5
+  ],
+  "G F41#15 live-vs-armEmis [G-npc_F41-15_live_for_armEmis.png]": [
+   5.6,
+   5.2,
+   5.5
+  ],
+  "G F41#15 live-vs-armEmis [G-npc_F41-15_armEmis.png]": [
+   5.6,
+   5.2,
+   5.5
+  ],
+  "G F39#29 live-vs-arm [G-npc_F39-29_live_for_arm.png]": [
+   4.6,
+   4.6,
+   5.3
+  ],
+  "G F39#29 live-vs-arm [G-npc_F39-29_arm.png]": [
+   4.6,
+   4.6,
+   5.3
+  ],
+  "G F39#13 live-vs-arm [G-npc_F39-13_arm.png]": [
+   5.2,
+   5.4,
+   5.4
+  ],
+  "G F39#13 live-vs-arm [G-npc_F39-13_live_for_arm.png]": [
+   5.2,
+   5.4,
+   5.4
+  ],
+  "G F41#20 live-vs-arm [G-npc_F41-20_arm.png]": [
+   5.8,
+   5.8,
+   5.8
+  ],
+  "G F41#20 live-vs-arm [G-npc_F41-20_live_for_arm.png]": [
+   5.8,
+   5.8,
+   5.8
+  ],
+  "G F41#7 live-vs-arm [G-npc_F41-7_arm.png]": [
+   6.0,
+   5.7,
+   5.7
+  ],
+  "G F41#7 live-vs-arm [G-npc_F41-7_live_for_arm.png]": [
+   6.0,
+   5.7,
+   5.7
+  ]
+ }
+}

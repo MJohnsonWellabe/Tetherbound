@@ -1,0 +1,22 @@
+[
+ {
+  "label": "G F36(1) ribbonray remakes-floor1 base-vs-arm",
+  "a": "G-rm_ribbonray_base.png",
+  "b": "G-rm_ribbonray_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: ribbonray - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "neon-magenta emissive ribbons read as an effect",
+   "hit reaction goes airborne"
+  ]
+ },
+ {
+  "label": "G F36(1) voltarach remakes-floor1 base-vs-arm",
+  "a": "G-rm_voltarach_base.png",
+  "b": "G-rm_voltarach_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: voltarach - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "chrome-gold statue shader",
+   "face lost"
+  ]
+ }
+]

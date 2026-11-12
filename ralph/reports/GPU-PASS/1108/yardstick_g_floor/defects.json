@@ -1,0 +1,194 @@
+{
+ "G F39#18 live-vs-armRanks": {
+  "A": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "speaker small and distant, panel detached": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "speaker small and distant, panel detached": "PARTIAL"
+   }
+  ]
+ },
+ "G F38#1 live-vs-recheck": {
+  "A": [
+   {
+    "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+   },
+   {
+    "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+   },
+   {
+    "fainted bodies upright/floating, rest poses not settled": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+   },
+   {
+    "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+   },
+   {
+    "fainted bodies upright/floating, rest poses not settled": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#7 live-vs-armCap": {
+  "A": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "same generic line, no portrait": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "same generic line, no portrait": "FIXED"
+   }
+  ]
+ },
+ "G F39#29 live-vs-armCap": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "no identifiable speaker near panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "no identifiable speaker near panel": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#7 live-vs-armRanks": {
+  "A": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "same generic line, no portrait": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "same generic line, no portrait": "FIXED"
+   }
+  ]
+ },
+ "G F41#15 live-vs-armCap": {
+  "A": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "foreground creatures/geometry hide speaker": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "foreground creatures/geometry hide speaker": "FIXED"
+   }
+  ]
+ },
+ "G F39#29 live-vs-armRanks": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "no identifiable speaker near panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "no identifiable speaker near panel": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#15 live-vs-armRanks": {
+  "A": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "foreground creatures/geometry hide speaker": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "foreground creatures/geometry hide speaker": "FIXED"
+   }
+  ]
+ }
+}

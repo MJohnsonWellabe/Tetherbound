@@ -1,0 +1,84 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.926,
+  "least_squares_slope": 1.713,
+  "method": "linear",
+  "slope": 1.713,
+  "intercept": -2.7879,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.435,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:r22": {
+   "measured": 5.6,
+   "reference": 6.75,
+   "mapped": 6.805,
+   "residual": -0.055
+  },
+  "f04_6_r22:control": {
+   "measured": 4.933,
+   "reference": 5.83,
+   "mapped": 5.663,
+   "residual": 0.167
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.233,
+   "reference": 4.0,
+   "mapped": 4.464,
+   "residual": -0.464
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.933,
+   "reference": 6.53,
+   "mapped": 5.663,
+   "residual": 0.867
+  },
+  "craft:after": {
+   "measured": 6.1,
+   "reference": 7.35,
+   "mapped": 7.661,
+   "residual": -0.311
+  },
+  "craft:before": {
+   "measured": 4.567,
+   "reference": 4.83,
+   "mapped": 5.035,
+   "residual": -0.205
+  }
+ },
+ "candidates": {
+  "G T2b High base-vs-arm [G-t2b_arm.png]": {
+   "measured_mean": 5.2,
+   "mapped_mean": 6.12,
+   "mapped_judges": [
+    6.63,
+    5.78,
+    5.95
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2b High base-vs-arm [G-t2b_base.png]": {
+   "measured_mean": 6.1,
+   "mapped_mean": 7.66,
+   "mapped_judges": [
+    8.18,
+    7.49,
+    7.32
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.35): G T2b High base-vs-arm [G-t2b_base.png]; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}

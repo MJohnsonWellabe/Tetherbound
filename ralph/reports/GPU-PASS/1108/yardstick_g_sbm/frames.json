@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "stormbrush-faint-000.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-faint-000.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0548,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-faint-025.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-faint-025.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0567,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-faint-050.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-faint-050.jpg",
+  "sky_fraction": 0.965,
+  "lower_edges": 0.0518,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-faint-075.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-faint-075.jpg",
+  "sky_fraction": 0.968,
+  "lower_edges": 0.0479,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-faint-100.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-faint-100.jpg",
+  "sky_fraction": 0.967,
+  "lower_edges": 0.0472,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-hit-000.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-hit-000.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0554,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-hit-025.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-hit-025.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0543,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-hit-050.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-hit-050.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0545,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-hit-075.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-hit-075.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0558,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ },
+ {
+  "frame": "stormbrush-hit-100.png",
+  "preset": "main-Medium",
+  "tree": "3a514ef5c97cedb677c530e4a0581128f861d30d",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd --species=stormbrush --whole-body --context",
+  "path": "G-f36-72-stormbrush-medium/main-Medium/stormbrush-hit-100.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0554,
+  "script_errors": 0,
+  "note": "F36 (1) stormbrush at MEDIUM, one side on main 3a514ef5c as it is (High mapped 7.68 in G-rescore-tier2-b2-a). Neutral stage: sky heuristic bypassed after an eye check of every frame."
+ }
+]

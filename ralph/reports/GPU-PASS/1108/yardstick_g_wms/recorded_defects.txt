@@ -1,0 +1,4 @@
+Vp: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Gr: none
+Fx: none
+Mu: "faint poses do not collapse"; "rider perched"

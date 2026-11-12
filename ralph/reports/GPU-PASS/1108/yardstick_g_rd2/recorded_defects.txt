@@ -1,0 +1,8 @@
+Xb: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Hj: none
+Bg: none
+Bb: "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+Ni: "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer"
+Ak: "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+Cm: "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+Dx: "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view"

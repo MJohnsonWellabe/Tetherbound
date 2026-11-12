@@ -1,0 +1,6 @@
+Su: "none"
+Fo: none
+Wy: "dark olive on grey"; "face lost in spines"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Vr: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Pp: "faint pose the same as standing"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Is: none

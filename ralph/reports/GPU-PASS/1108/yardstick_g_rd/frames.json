@@ -1,0 +1,26 @@
+{
+ "F38#5": [
+  "meadows__bramblebun__idle",
+  "meadows__brooktail__idle",
+  "meadows__pipwing__idle",
+  "meadows__trailpup__idle"
+ ],
+ "F38#26": [
+  "meadows__mosshell__idle",
+  "meadows__bramblebun__fainted",
+  "meadows__pipwing__fainted",
+  "meadows__trailpup__fainted"
+ ],
+ "F38#31": [
+  "meadows__brooktail__idle",
+  "meadows__brooktail__alpha_idle",
+  "meadows__trailpup__idle",
+  "meadows__trailpup__alpha_idle"
+ ],
+ "NOLOSS": [
+  "cloudreach__galewisp__idle",
+  "cloudreach__galewisp__hurt",
+  "stormwood__sparkit__idle",
+  "stormwood__sparkit__hurt"
+ ]
+}

@@ -1,0 +1,74 @@
+[
+ {
+  "label": "G F38#16 dialogue recapture",
+  "a": "G-dm_F38-16.png",
+  "b": "G-dm_F38-16.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: tournament dialogue subject identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"
+  ]
+ },
+ {
+  "label": "G F38#17 dialogue recapture",
+  "a": "G-dm_F38-17.png",
+  "b": "G-dm_F38-17.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named trainer dialogue subject visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+  ]
+ },
+ {
+  "label": "G F38#36 dialogue recapture",
+  "a": "G-dm_F38-36.png",
+  "b": "G-dm_F38-36.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: dialogue speaker occlusion. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+  ]
+ },
+ {
+  "label": "G F38#37 dialogue recapture",
+  "a": "G-dm_F38-37.png",
+  "b": "G-dm_F38-37.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Meadows dialogue rock obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large rock faces fill the camera and hide the named speaker during dialogue"
+  ]
+ },
+ {
+  "label": "G meadows dialogue sample 1 recapture",
+  "a": "G-dm_sample1.png",
+  "b": "G-dm_sample1.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G meadows dialogue sample 2 recapture",
+  "a": "G-dm_sample2.png",
+  "b": "G-dm_sample2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G meadows dialogue sample 3 recapture",
+  "a": "G-dm_sample3.png",
+  "b": "G-dm_sample3.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G meadows dialogue sample 4 recapture",
+  "a": "G-dm_sample4.png",
+  "b": "G-dm_sample4.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

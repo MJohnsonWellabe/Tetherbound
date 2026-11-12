@@ -1,0 +1,4 @@
+Qc: none
+Wg: none
+Hf: "Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated"
+Gf: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

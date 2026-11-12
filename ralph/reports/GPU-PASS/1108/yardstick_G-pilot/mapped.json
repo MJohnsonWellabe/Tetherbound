@@ -1,0 +1,110 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7427,
+  "least_squares_slope": 0.9234,
+  "method": "linear",
+  "slope": 0.9234,
+  "intercept": 1.2953,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.772,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 4.9,
+   "reference": 4.83,
+   "mapped": 5.82,
+   "residual": -0.99
+  },
+  "craft:after": {
+   "measured": 6.433,
+   "reference": 7.35,
+   "mapped": 7.236,
+   "residual": 0.114
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.133,
+   "reference": 6.53,
+   "mapped": 5.112,
+   "residual": 1.418
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.733,
+   "reference": 4.0,
+   "mapped": 4.743,
+   "residual": -0.743
+  },
+  "f04_6_r22:control": {
+   "measured": 4.767,
+   "reference": 5.83,
+   "mapped": 5.697,
+   "residual": 0.133
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.833,
+   "reference": 6.75,
+   "mapped": 6.682,
+   "residual": 0.068
+  }
+ },
+ "candidates": {
+  "G F41#3 r2 live-vs-arm [G-pilot_F41-3 r2_live_for_arm.png]": {
+   "measured_mean": 4.633,
+   "mapped_mean": 5.57,
+   "mapped_judges": [
+    5.82,
+    5.36,
+    5.54
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 r2 live-vs-arm [G-pilot_F41-3 r2_arm.png]": {
+   "measured_mean": 4.633,
+   "mapped_mean": 5.57,
+   "mapped_judges": [
+    5.82,
+    5.36,
+    5.54
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 r1 live-vs-arm [G-pilot_F41-3 r1_live_for_arm.png]": {
+   "measured_mean": 4.733,
+   "mapped_mean": 5.67,
+   "mapped_judges": [
+    5.73,
+    5.54,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 r1 live-vs-arm [G-pilot_F41-3 r1_arm.png]": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.4,
+   "mapped_judges": [
+    6.47,
+    6.28,
+    6.47
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "anchor residual RMSE 0.77 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}

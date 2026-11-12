@@ -1,0 +1,56 @@
+[
+ {
+  "label": "G F41#3 Hollows Alpha base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_h_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_h_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing (Hollows Alpha; nine moments of one fight). Judge how this subject looks in the game - whether the fighters, the ally and the trainer stay readable and well spaced, with nothing masking or intersecting them, and whether it reads as the key art's world.",
+  "defects": [
+   "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ]
+ },
+ {
+  "label": "G F41#22 fight Hollows Alpha base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_h_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_h_arm.png",
+  "brief": "Fixed captures from the game of a real fight in the Stormwood biome against a named wild creature (Hollows Alpha; nine moments: in fight, telegraph, strike, impact, later telegraphs, after the fight). Judge whether the fight reads on screen - both fighters, the telegraph and the impact clearly visible, nothing blocking the view - and whether it looks like an event that belongs to the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F41#3 Capacitor Alpha base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_c_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_c_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing (Capacitor Alpha; nine moments of one fight). Judge how this subject looks in the game - whether the fighters, the ally and the trainer stay readable and well spaced, with nothing masking or intersecting them, and whether it reads as the key art's world.",
+  "defects": [
+   "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ]
+ },
+ {
+  "label": "G F41#22 fight Capacitor Alpha base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_c_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_c_arm.png",
+  "brief": "Fixed captures from the game of a real fight in the Stormwood biome against a named wild creature (Capacitor Alpha; nine moments: in fight, telegraph, strike, impact, later telegraphs, after the fight). Judge whether the fight reads on screen - both fighters, the telegraph and the impact clearly visible, nothing blocking the view - and whether it looks like an event that belongs to the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F41#24 giant_calm base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_g_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_g_arm.png",
+  "brief": "Fixed capture from the game of the Stormwood biome (one camera stand by giant trees, storm calm). Judge the frame for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F38#0 arch_home base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_a_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-hg_a_arm.png",
+  "brief": "Fixed captures from the game of the Meadows biome at golden hour: a close detail view (left) and the gameplay camera (right) at one place by the home arch. Judge whether the materials, props and set dressing read as the key art's world at a shipping game's finish, anything that reads as a placeholder, artefact or defect, and whether any surface reads red, salmon or oxblood.",
+  "defects": [
+   "none"
+  ]
+ }
+]

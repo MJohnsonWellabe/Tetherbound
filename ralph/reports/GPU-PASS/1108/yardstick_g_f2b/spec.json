@@ -1,0 +1,66 @@
+[
+ {
+  "label": "G F36(1) shadelet faint2 base-vs-arm",
+  "a": "G-f2b_shadelet_base.png",
+  "b": "G-f2b_shadelet_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: shadelet - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black with no rim light",
+   "silhouette dissolves",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) trailpup faint2 base-vs-arm",
+  "a": "G-f2b_trailpup_base.png",
+  "b": "G-f2b_trailpup_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: trailpup - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "stock animal look with no rim light or type accent",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) water_mangrove_monitor faint2 base-vs-arm",
+  "a": "G-f2b_water_mangrove_monitor_base.png",
+  "b": "G-f2b_water_mangrove_monitor_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: water mangrove monitor - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "dark olive on grey",
+   "face lost in spines",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) stormtrail faint2 base-vs-arm",
+  "a": "G-f2b_stormtrail_base.png",
+  "b": "G-f2b_stormtrail_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: stormtrail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "flat black placeholder look with emissive bands",
+   "faint flattens to a sheet",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) voltwig faint2 base-vs-arm",
+  "a": "G-f2b_voltwig_base.png",
+  "b": "G-f2b_voltwig_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: voltwig - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) sparkit faint2 base-vs-arm",
+  "a": "G-f2b_sparkit_base.png",
+  "b": "G-f2b_sparkit_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: sparkit - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "below the trainer's height",
+   "flat mustard material",
+   "faint tail passes through the trainer",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ }
+]

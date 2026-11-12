@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "craft:before": [
+   4.8,
+   4.5,
+   4.8
+  ],
+  "craft:after": [
+   6.8,
+   6.6,
+   6.8
+  ],
+  "f04_6_r22:r22": [
+   6.5,
+   5.9,
+   6.0
+  ],
+  "f04_6_r22:control": [
+   5.6,
+   5.0,
+   5.3
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.6,
+   4.3,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.2,
+   5.2,
+   5.4
+  ]
+ },
+ "candidates": {
+  "G F41#5 live-vs-a3 [G-a3lip_F41-5_live_for_a3.png]": [
+   5.2,
+   5.3,
+   5.3
+  ],
+  "G F41#5 live-vs-a3 [G-a3lip_F41-5_a3.png]": [
+   5.3,
+   5.2,
+   5.3
+  ],
+  "G F41#10 live-vs-lip [G-a3lip_F41-10_lip.png]": [
+   5.3,
+   4.6,
+   5.0
+  ],
+  "G F41#10 live-vs-lip [G-a3lip_F41-10_live_for_lip.png]": [
+   5.8,
+   5.2,
+   5.4
+  ],
+  "G F41#17 live-vs-a3 [G-a3lip_F41-17_a3.png]": [
+   6.2,
+   6.0,
+   5.8
+  ],
+  "G F41#17 live-vs-a3 [G-a3lip_F41-17_live_for_a3.png]": [
+   6.1,
+   5.9,
+   5.8
+  ],
+  "G F41#12 live-vs-a3 [G-a3lip_F41-12_a3.png]": [
+   5.6,
+   5.4,
+   5.4
+  ],
+  "G F41#12 live-vs-a3 [G-a3lip_F41-12_live_for_a3.png]": [
+   5.6,
+   5.3,
+   5.4
+  ],
+  "G F41#2 live-vs-a3 [G-a3lip_F41-2_live_for_a3.png]": [
+   5.3,
+   5.0,
+   5.0
+  ],
+  "G F41#2 live-vs-a3 [G-a3lip_F41-2_a3.png]": [
+   5.8,
+   5.6,
+   5.5
+  ],
+  "G F41#4 live-vs-a3 [G-a3lip_F41-4_a3.png]": [
+   5.6,
+   5.6,
+   5.4
+  ],
+  "G F41#4 live-vs-a3 [G-a3lip_F41-4_live_for_a3.png]": [
+   5.6,
+   5.5,
+   5.4
+  ]
+ }
+}

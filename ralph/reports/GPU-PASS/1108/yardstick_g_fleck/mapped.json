@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8458,
+  "least_squares_slope": 1.1697,
+  "method": "linear",
+  "slope": 1.1697,
+  "intercept": -0.1099,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.615,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 4.867,
+   "reference": 4.83,
+   "mapped": 5.583,
+   "residual": -0.753
+  },
+  "craft:after": {
+   "measured": 6.533,
+   "reference": 7.35,
+   "mapped": 7.532,
+   "residual": -0.182
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.8,
+   "reference": 6.75,
+   "mapped": 6.674,
+   "residual": 0.076
+  },
+  "f04_6_r22:control": {
+   "measured": 4.933,
+   "reference": 5.83,
+   "mapped": 5.661,
+   "residual": 0.169
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.933,
+   "reference": 4.0,
+   "mapped": 4.491,
+   "residual": -0.491
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.667,
+   "reference": 6.53,
+   "mapped": 5.349,
+   "residual": 1.181
+  }
+ },
+ "candidates": {
+  "G F41#24 fleck live-vs-arm [G-fleck_arm.png]": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.82,
+   "mapped_judges": [
+    5.74,
+    5.97,
+    5.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#24 fleck live-vs-arm [G-fleck_live.png]": {
+   "measured_mean": 4.433,
+   "mapped_mean": 5.08,
+   "mapped_judges": [
+    5.15,
+    5.04,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

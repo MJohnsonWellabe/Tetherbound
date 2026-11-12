@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.5,
+   4.3,
+   4.2
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.3,
+   5.0,
+   4.8
+  ],
+  "craft:before": [
+   5.2,
+   5.0,
+   4.8
+  ],
+  "craft:after": [
+   7.0,
+   6.6,
+   6.7
+  ],
+  "f04_6_r22:r22": [
+   6.0,
+   5.6,
+   5.6
+  ],
+  "f04_6_r22:control": [
+   4.8,
+   4.7,
+   4.7
+  ]
+ },
+ "candidates": {
+  "G F39#26 live-vs-armGO [G-go_F39-26_armGO.png]": [
+   5.5,
+   4.8,
+   5.6
+  ],
+  "G F39#26 live-vs-armGO [G-go_F39-26_live_for_armGO.png]": [
+   5.8,
+   4.8,
+   5.8
+  ],
+  "G F39#18 live-vs-armGO [G-go_F39-18_armGO.png]": [
+   5.2,
+   4.7,
+   5.5
+  ],
+  "G F39#18 live-vs-armGO [G-go_F39-18_live_for_armGO.png]": [
+   5.5,
+   4.6,
+   5.4
+  ],
+  "G F41#8 live-vs-armGO [G-go_F41-8_armGO.png]": [
+   4.6,
+   4.3,
+   4.4
+  ],
+  "G F41#8 live-vs-armGO [G-go_F41-8_live_for_armGO.png]": [
+   4.5,
+   4.3,
+   4.4
+  ],
+  "G F39#29 live-vs-armGO [G-go_F39-29_live_for_armGO.png]": [
+   4.8,
+   4.0,
+   4.9
+  ],
+  "G F39#29 live-vs-armGO [G-go_F39-29_armGO.png]": [
+   5.0,
+   4.0,
+   5.0
+  ]
+ }
+}

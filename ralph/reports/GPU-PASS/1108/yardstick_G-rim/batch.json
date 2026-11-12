@@ -1,0 +1,126 @@
+{
+ "anchors": {
+  "f04_6_r22:r22": [
+   6.0,
+   5.6,
+   5.6
+  ],
+  "f04_6_r22:control": [
+   5.3,
+   4.9,
+   5.0
+  ],
+  "craft:before": [
+   4.8,
+   5.0,
+   5.6
+  ],
+  "craft:after": [
+   6.6,
+   6.7,
+   6.9
+  ],
+  "f10_2_r3_capacitor:control": [
+   5.0,
+   4.4,
+   4.8
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.6,
+   5.3,
+   5.6
+  ]
+ },
+ "candidates": {
+  "G F39#18 live-vs-rimOff [G-rim_F39-18_rimOff.png]": [
+   6.2,
+   6.4,
+   6.4
+  ],
+  "G F39#18 live-vs-rimOff [G-rim_F39-18_live_for_rimOff.png]": [
+   5.2,
+   5.6,
+   5.0
+  ],
+  "G F39#26 live-vs-rimOff [G-rim_F39-26_rimOff.png]": [
+   6.3,
+   6.6,
+   6.6
+  ],
+  "G F39#26 live-vs-rimOff [G-rim_F39-26_live_for_rimOff.png]": [
+   5.2,
+   5.2,
+   5.0
+  ],
+  "G F39#21 live-vs-arm [G-rim_F39-21_live_for_arm.png]": [
+   4.6,
+   4.3,
+   3.5
+  ],
+  "G F39#21 live-vs-arm [G-rim_F39-21_arm.png]": [
+   4.9,
+   4.0,
+   3.8
+  ],
+  "G F39#29 live-vs-rimOff [G-rim_F39-29_live_for_rimOff.png]": [
+   5.0,
+   4.9,
+   5.0
+  ],
+  "G F39#29 live-vs-rimOff [G-rim_F39-29_rimOff.png]": [
+   5.9,
+   5.6,
+   6.2
+  ],
+  "G F39#18 live-vs-rimSoft [G-rim_F39-18_rimSoft.png]": [
+   6.2,
+   6.5,
+   6.6
+  ],
+  "G F39#18 live-vs-rimSoft [G-rim_F39-18_live_for_rimSoft.png]": [
+   5.2,
+   5.5,
+   5.0
+  ],
+  "G F39#26 live-vs-rimSoft [G-rim_F39-26_rimSoft.png]": [
+   6.5,
+   6.6,
+   6.5
+  ],
+  "G F39#26 live-vs-rimSoft [G-rim_F39-26_live_for_rimSoft.png]": [
+   5.3,
+   5.2,
+   5.0
+  ],
+  "G F39#29 live-vs-rimSoft [G-rim_F39-29_rimSoft.png]": [
+   5.8,
+   5.6,
+   6.3
+  ],
+  "G F39#29 live-vs-rimSoft [G-rim_F39-29_live_for_rimSoft.png]": [
+   5.0,
+   4.8,
+   5.0
+  ],
+  "G F39#27 live-vs-rimSoft [G-rim_F39-27_live_for_rimSoft.png]": [
+   5.4,
+   5.0,
+   5.0
+  ],
+  "G F39#27 live-vs-rimSoft [G-rim_F39-27_rimSoft.png]": [
+   6.0,
+   5.7,
+   5.8
+  ],
+  "G F39#27 live-vs-rimOff [G-rim_F39-27_live_for_rimOff.png]": [
+   5.4,
+   5.0,
+   5.0
+  ],
+  "G F39#27 live-vs-rimOff [G-rim_F39-27_rimOff.png]": [
+   5.9,
+   5.7,
+   5.9
+  ]
+ }
+}

@@ -1,0 +1,137 @@
+[
+ {
+  "label": "GPU1108F F38#1 live one-sided",
+  "a": "<scratch>/sidesF/F38-1.png",
+  "b": "<scratch>/sidesF/F38-1.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: creature collapse and rest. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#3 live one-sided",
+  "a": "<scratch>/sidesF/F38-3.png",
+  "b": "<scratch>/sidesF/F38-3.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: fight camera and creature scale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#6 live one-sided",
+  "a": "<scratch>/sidesF/F38-6.png",
+  "b": "<scratch>/sidesF/F38-6.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: ground pickup identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#8 live one-sided",
+  "a": "<scratch>/sidesF/F38-8.png",
+  "b": "<scratch>/sidesF/F38-8.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Fly carrier grip pose. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#10 live one-sided",
+  "a": "<scratch>/sidesF/F38-10.png",
+  "b": "<scratch>/sidesF/F38-10.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: secondary menu panels. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#12 live one-sided",
+  "a": "<scratch>/sidesF/F38-12.png",
+  "b": "<scratch>/sidesF/F38-12.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: harvest reward identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#14 live one-sided",
+  "a": "<scratch>/sidesF/F38-14.png",
+  "b": "<scratch>/sidesF/F38-14.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: catch effect finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#16 live one-sided",
+  "a": "<scratch>/sidesF/F38-16.png",
+  "b": "<scratch>/sidesF/F38-16.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: tournament dialogue subject identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#20 live one-sided",
+  "a": "<scratch>/sidesF/F38-20.png",
+  "b": "<scratch>/sidesF/F38-20.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Team Tether stronghold. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#22 live one-sided",
+  "a": "<scratch>/sidesF/F38-22.png",
+  "b": "<scratch>/sidesF/F38-22.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: mill and settlements. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#25 live one-sided",
+  "a": "<scratch>/sidesF/F38-25.png",
+  "b": "<scratch>/sidesF/F38-25.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: shiny palette distinction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#28 live one-sided",
+  "a": "<scratch>/sidesF/F38-28.png",
+  "b": "<scratch>/sidesF/F38-28.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Warden arena boundary. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#31 live one-sided",
+  "a": "<scratch>/sidesF/F38-31.png",
+  "b": "<scratch>/sidesF/F38-31.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: alpha rarity read. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#34 live one-sided",
+  "a": "<scratch>/sidesF/F38-34.png",
+  "b": "<scratch>/sidesF/F38-34.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: placed wall visual. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+  ]
+ },
+ {
+  "label": "GPU1108F F38#37 live one-sided",
+  "a": "<scratch>/sidesF/F38-37.png",
+  "b": "<scratch>/sidesF/F38-37.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Meadows dialogue rock obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large rock faces fill the camera and hide the named speaker during dialogue"
+  ]
+ }
+]

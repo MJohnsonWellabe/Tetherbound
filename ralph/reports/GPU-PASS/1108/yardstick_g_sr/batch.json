@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   6.8,
+   6.8,
+   6.8
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.8,
+   6.8
+  ],
+  "craft:after": [
+   6.6,
+   6.6,
+   6.6
+  ],
+  "craft:before": [
+   5.0,
+   5.2,
+   4.9
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.8,
+   4.6,
+   4.5
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.6,
+   5.3,
+   5.1
+  ]
+ },
+ "candidates": {
+  "G F39-3 sand-ripple base-vs-arm [G-sr_F39-3_base.png]": [
+   5.5,
+   5.6,
+   5.9
+  ],
+  "G F39-3 sand-ripple base-vs-arm [G-sr_F39-3_arm.png]": [
+   5.5,
+   5.6,
+   5.9
+  ],
+  "G F13-5 sand-ripple base-vs-arm [G-sr_F13-5_arm.png]": [
+   5.8,
+   5.5,
+   5.8
+  ],
+  "G F13-5 sand-ripple base-vs-arm [G-sr_F13-5_base.png]": [
+   5.5,
+   5.3,
+   5.6
+  ],
+  "G F39-30-ctl sand-ripple base-vs-arm [G-sr_F39-30-ctl_arm.png]": [
+   5.7,
+   5.6,
+   5.9
+  ],
+  "G F39-30-ctl sand-ripple base-vs-arm [G-sr_F39-30-ctl_base.png]": [
+   5.5,
+   5.6,
+   5.7
+  ],
+  "G F39-30-arm sand-ripple base-vs-arm [G-sr_F39-30-arm_arm.png]": [
+   5.9,
+   5.7,
+   6.0
+  ],
+  "G F39-30-arm sand-ripple base-vs-arm [G-sr_F39-30-arm_base.png]": [
+   5.4,
+   5.4,
+   5.7
+  ]
+ }
+}
