@@ -4110,9 +4110,9 @@
     "F38#15"
    ],
    "branch": "tb/things",
-   "head": "300f5d4a4",
-   "tree": "tb/things 300f5d4a4 both sides (same as G-things-glidebank); base = THINGS-GALELAND landing overlay, arm = + THINGS-GLIDEBANK overlay",
-   "job": "Row = 02-glide from the --glide-steer run (banked turn) + 03-landed from the ORIGINAL run without --glide-steer (side-on landing). Re-use the already captured frames where the sky matches; re-capture any side whose sky differs from its pair by more than about 3 on the top band (arm Medium was 181 vs 173)",
+   "head": "caf1939b0",
+   "tree": "tb/things caf1939b0 both sides (its --glide-steer now returns to the starting stand and heading before landing); base = THINGS-GALELAND landing overlay, arm = + THINGS-GLIDEBANK overlay",
+   "job": "phase2_capture_realm_flight.gd --biome=meadows --seed=2042 --glide-steer, default carrier: 02-glide (banked turn) + 03-landed (side-on, starting heading) from ONE run per side; check each pair's top-band sky within about 3 and re-capture a side that drifts",
    "capture": "High and Medium; light matched per pair",
    "priority": "after the creature session: last F38#15 attempt (the bank won 3/3; the misses were capture framing and light)",
    "note": "If this does not close F38#15 at Medium, park the row until a new idea (two attempts)."
