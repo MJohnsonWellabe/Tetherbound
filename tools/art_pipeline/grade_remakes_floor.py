@@ -133,7 +133,7 @@ def fulgocobra(rgb):
     # same gold as the body bands.
     h, s, v = T._hsv(rgb)
     black = (1.0 - G._ramp(0.22, 0.38, v)) * (1.0 - G._ramp(0.35, 0.55, s))
-    v_out = v + (0.04 + 0.2 * v) * black
+    v_out = v + (0.065 + 0.32 * v) * black
     h_out = h + (222.0 - h) * black
     s_out = s + (0.18 - s) * black
     copper = _hue_w(h, 6.0, 30.0, 6.0) * G._ramp(0.38, 0.52, s) * G._ramp(0.25, 0.4, v)

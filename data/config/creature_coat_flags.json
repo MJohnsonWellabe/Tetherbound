@@ -1036,7 +1036,7 @@
       "coats": {
         "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_face_floor1.png",
-          "rim": 0.6, "rim_tint": 0.5,
+          "rim": 1.0, "rim_tint": 0.3,
           "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_goldvein_face.png", "emission_energy": 1.3,
           "roughness": 0.8, "specular": 0.25
         }
