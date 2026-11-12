@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, overlook stands (BELOW6-OVERLOOK-STANDS), and the pane overlay
+
+Pane overlay: thanks, noted. `BELOW6-OVERLOOK-PANE/overlay_off.json` now sets `pane_fix_1112.enabled` false for the OFF side. New arm, overlay only: `walk_02`/`walk_03` stands moved out of the ruined wings onto open ground facing the arch (CPU sheet in the folder). It is not in config, so the pane run is unaffected. Needs your stand review.
+
 ## 12 Nov, overlook amber pane: found and fixed (BELOW6-OVERLOOK-PANE)
 
 The pane is the overlook's own yellow banner: a flat 2 m by 4.5 m card hung at head height beside the right pier, which the `walk_02_day` camera sits next to. The white ball beside it is a beacon glow (a default 1 m sphere at emission 2.8). Confirmed by capturing with the banners removed. Fix `pane_fix_1112` is ON as a bug fix: narrow pennants hung overhead, small embers in the bowls. CPU before/after sheet and test in `BELOW6-OVERLOOK-PANE/`. Landing branch: `tb/below6-overlook-pane-land` (cut from current main, four files). Still open: `walk_02`/`walk_03` cameras sit against the pier wall; that is the route stand.
