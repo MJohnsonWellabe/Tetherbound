@@ -38,13 +38,13 @@ static func config() -> Dictionary:
 				"vein_wander", "pulse_spacing_m", "pulse_sharpness", "vein_glow", "web_energy"]:
 			if finish.has(key):
 				resolved[key] = finish[key]
-	# `contrast_1112` (LANE-PLACES, OFF until judged): the gold current keeps
-	# its contrast on the lighter umber road of road_value_1112.
-	var contrast: Dictionary = resolved.get("contrast_1112", {})
-	if bool(contrast.get("enabled", false)):
-		for key: String in ["core_energy", "edge_energy", "vein_glow", "web_energy"]:
-			if contrast.has(key):
-				resolved[key] = contrast[key]
+	# `thin_1112` (LANE-PLACES, OFF until judged): one thin sparse line on the
+	# umber road of road_value_1112, no web and almost no halo.
+	var thin: Dictionary = resolved.get("thin_1112", {})
+	if bool(thin.get("enabled", false)):
+		for key: String in ["core_energy", "edge_energy", "vein_width", "vein_breakup", "vein_glow", "web_energy"]:
+			if thin.has(key):
+				resolved[key] = thin[key]
 	return resolved
 
 
