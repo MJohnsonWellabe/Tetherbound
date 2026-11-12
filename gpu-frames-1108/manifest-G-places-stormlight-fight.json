@@ -1,0 +1,24 @@
+[
+ {
+  "frame": "capacitor_alpha-tell1-e-impact.png",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_stormwood_fights.gd --ids=capacitor_alpha --seconds=18 --interval=1.0 --seed=2042 (--fixed-fps 20)",
+  "path": "G-places-stormlight-fight/arm-High/capacitor_alpha-tell1-e-impact.png",
+  "sky_fraction": 0.2,
+  "lower_edges": 0.4802,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#6 rider."
+ },
+ {
+  "frame": "capacitor_alpha-tell1-e-impact.png",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_stormwood_fights.gd --ids=capacitor_alpha --seconds=18 --interval=1.0 --seed=2042 (--fixed-fps 20)",
+  "path": "G-places-stormlight-fight/base-High/capacitor_alpha-tell1-e-impact.png",
+  "sky_fraction": 0.195,
+  "lower_edges": 0.4799,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#6 rider."
+ }
+]
