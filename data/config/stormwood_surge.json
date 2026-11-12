@@ -131,6 +131,12 @@
         "aftermath": {"all": {"deck_dark": 0.0, "deck_shade_depth": 0.25, "deck_lit": 0.6, "horizon_glow": 0.8, "fog_layers": 0.5, "far_bolts": 0.0}}
       }
     },
+    "fading_clear_1112": {
+      "enabled": false,
+      "scope": "client_presentation",
+      "_why": "LANE-PLACES (12 Nov 2026). GPU G-places-stormlight, all three judges on F41#2: 'Fading still looks too close to Building'; the render check measured Fading as the darkest phase (mean brightness 83 -> 74 with storm_phase_1111). On, deep-merged after storm_phase_1111: Fading is the storm letting go: the key and fill come most of the way back (still under the aftermath and far above Break), the deck lifts and thins with lit tops and a bright band, the mist thins, and the shafts stay at full. No lightning (lightning is Break-only), no timing, strike or shelter change. OFF until judged.",
+      "overlay": {"phases": {"fading": {"sun_energy_mult": 0.68, "ambient_energy_mult": 0.92, "deck_dark": 0.0, "deck_shade_depth": 0.15, "deck_lit": 0.75, "horizon_glow": 0.95, "ceiling_thin_glow": 0.34, "fog_layers": 0.45, "fog_density_add": 0.0006, "shafts": 1.0}}}
+    },
     "fine_rain_1110": {
       "_why_on_1110": "GPU G-stormwood-groves (10 Nov, LANE-SCOUT 5455a13d1, three code-blind judges, confirming batch): wet earth + fine rain + horizon groves together: F41#17 +0.55 (to 7.23), F41#5 +0.50, F41#4 +0.27, all 3/3; no tree-wall read. The de-pinked wet earth alone was neutral (G-stormwood-swing-2-depink).",
       "enabled": true,

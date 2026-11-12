@@ -38,6 +38,13 @@ static func config() -> Dictionary:
 				"vein_wander", "pulse_spacing_m", "pulse_sharpness", "vein_glow", "web_energy"]:
 			if finish.has(key):
 				resolved[key] = finish[key]
+	# `contrast_1112` (LANE-PLACES, OFF until judged): the gold current keeps
+	# its contrast on the lighter umber road of road_value_1112.
+	var contrast: Dictionary = resolved.get("contrast_1112", {})
+	if bool(contrast.get("enabled", false)):
+		for key: String in ["core_energy", "edge_energy", "vein_glow", "web_energy"]:
+			if contrast.has(key):
+				resolved[key] = contrast[key]
 	return resolved
 
 

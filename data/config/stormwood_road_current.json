@@ -14,7 +14,7 @@
     "alpha": 0.88,
     "lift_m": 0.13
   },
-  "finish_candidate": {
+  "contrast_1112": {"enabled": false, "scope": "client_presentation", "_why": "LANE-PLACES (12 Nov 2026). GPU G-places-roadvalue: the umber road gained on four rows (3/3 each) but F41#4 lost twice because the gold path line lost contrast on the lighter road; judges also ask for more glow and branching on the road charge. On: a stronger core and edge, a wider soft halo and more of the hairline web. Owner yellow current, flow, reduced motion, phase intensity and warning dimming unchanged; yellow-gold only. OFF until judged; rides with stormwood_ground_finish.json road_value_1112.", "core_energy": 2.1, "edge_energy": 0.9, "vein_glow": 0.16, "web_energy": 0.22}, "finish_candidate": {
     "enabled": true,
     "scope": "client_presentation",
     "_comment": "F41/P2-040: finer irregular gold fissures, less continuous glowing road coverage. Restrained halo and hairline web preserve visible road dirt. Owner yellow current, flow direction, reduced motion, phase intensity and warning dimming remain unchanged. Acceptance pending; revert on visual failure.",
