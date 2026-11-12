@@ -15,5 +15,6 @@
   "forearm_minimum_reach": 0.15,
   "forearm_depth": -0.45,
   "kick_deg": 9.0,
-  "knee_deg": 14.0
+  "knee_deg": 14.0,
+ "surface_crawl_1112": {"enabled": false, "scope": "client_presentation", "_candidate": "LANE-BELOW6 (12 Nov 2026), F39#5 (GPU High 5.64, G-rescore-stale-tier2 3/3: 'the swimmer is a floating head with no stroke'). On main the stroke candidates put the chest 0.14 m under the surface with the arms reaching below the body, so only the hair and pack show. ON: the chest rides 0.16 m above the surface, the body is a little less flat, the arms sit wider, and the recovering arm arcs out of the water (new key arm_recover_lift). Pose keys only: capsule, camera, speed, stamina and the network packet are unchanged. OFF until judged.", "swim_pose": {"chest_above_surface_m": 0.16, "body_pitch_deg": 74.0, "head_lift_deg": -34.0, "arm_lateral": 0.6, "arm_depth": -0.1, "forearm_depth": -0.15, "arm_recover_lift": 1.0, "forearm_recover_scale": 0.9}}
 }

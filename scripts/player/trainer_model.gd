@@ -784,6 +784,12 @@ static func load_human_swim_visual() -> Dictionary:
 				var pose: Variant = ((tidewake as Dictionary).get(section, {}) as Dictionary).get("swim_pose", {})
 				if pose is Dictionary:
 					loaded.merge(pose as Dictionary, true)
+	# F39#5 `surface_crawl_1112` (OFF until judged): the last layer, so its
+	# pose keys win over the candidates above.
+	var crawl: Variant = loaded.get("surface_crawl_1112", {})
+	if crawl is Dictionary and bool((crawl as Dictionary).get("enabled", false)):
+		loaded = loaded.duplicate()
+		loaded.merge((crawl as Dictionary).get("swim_pose", {}), true)
 	return loaded
 
 
@@ -860,12 +866,17 @@ func _apply_human_swim_pose(rig: Skeleton3D, surface_y: float) -> void:
 		var lateral := float(_human_swim_visual.get("arm_lateral", 0.45))
 		# Aim in the installed skeleton's frame, preserving each bone's rest
 		# roll. Positive Y extends toward the head; negative Y draws past hips.
+		# F39#5 `arm_recover_lift` (0 keeps the old stroke): on the recovery half
+		# of the cycle the arm arcs up out of the water (the prone body's back
+		# is the skeleton's -Z), as a crawl stroke does,
+		# so the stroke shows above the surface instead of staying under it.
+		var lift := maxf(0.0, sin(stroke)) * float(_human_swim_visual.get("arm_recover_lift", 0.0))
 		_aim_hang_bone(rig, side + "Arm", side + "ForeArm",
-			Vector3(sign_side * lateral, reach, float(_human_swim_visual.get("arm_depth", -0.25))))
+			Vector3(sign_side * lateral, reach, float(_human_swim_visual.get("arm_depth", -0.25)) - lift))
 		_aim_hang_bone(rig, side + "ForeArm", side + "Hand",
 			Vector3(sign_side * lateral * float(_human_swim_visual.get("forearm_lateral_scale", 0.55)),
 			maxf(float(_human_swim_visual.get("forearm_minimum_reach", 0.15)), reach),
-			float(_human_swim_visual.get("forearm_depth", -0.45))))
+			float(_human_swim_visual.get("forearm_depth", -0.45)) - lift * float(_human_swim_visual.get("forearm_recover_scale", 0.8))))
 		_swim_flex(rig, side + "UpLeg", sin(stroke) * float(_human_swim_visual.get("kick_deg", 9.0)))
 		_swim_flex(rig, side + "Leg", float(_human_swim_visual.get("knee_deg", 14.0))
 			+ maxf(0.0, -sin(stroke)) * float(_human_swim_visual.get("kick_deg", 9.0)))
