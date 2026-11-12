@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "arm-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/arm-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.3625,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/arm-High/stormwood__inventory__character__elder_maud__dialogue.jpg",
+  "sky_fraction": 0.208,
+  "lower_edges": 0.375,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "preset": "arm-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/arm-High/stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.2997,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/arm-High/stormwood__inventory__character__rodkeeper_hesk__dialogue.jpg",
+  "sky_fraction": 0.287,
+  "lower_edges": 0.3436,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "arm-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/arm-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.108,
+  "lower_edges": 0.18,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/arm-High/stormwood__inventory__character__warden_elect_bryn__dialogue.jpg",
+  "sky_fraction": 0.209,
+  "lower_edges": 0.3005,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "base-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/base-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.3585,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/base-High/stormwood__inventory__character__elder_maud__dialogue.jpg",
+  "sky_fraction": 0.209,
+  "lower_edges": 0.374,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "preset": "base-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/base-High/stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.2981,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/base-High/stormwood__inventory__character__rodkeeper_hesk__dialogue.jpg",
+  "sky_fraction": 0.285,
+  "lower_edges": 0.3415,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "base-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/base-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.109,
+  "lower_edges": 0.1785,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "8a0f9c733323558bc0cdcb0924e583c294e0b542",
+  "tool": "tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-namedfaces/base-High/stormwood__inventory__character__warden_elect_bryn__dialogue.jpg",
+  "sky_fraction": 0.208,
+  "lower_edges": 0.3012,
+  "script_errors": 0,
+  "note": "below6-namedfaces F41#8: elder_maud, rodkeeper_hesk, warden_elect_bryn inventory frames (the row) + __dialogue frames (blend 1.0); same selector as G-below6-namedposts. base = tb/below6 8a0f9c733 (Hesk portrait fix on both sides), arm = + BELOW6-NAMEDFACES/overlay.json (named_tint_1112)."
+ }
+]
