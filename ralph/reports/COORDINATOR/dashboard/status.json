@@ -2026,7 +2026,7 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [
     {
-      "item": "F40#13 catch card clears on aim",
+      "item": "F40#13 catch card clears on aim (closes: Medium 7.76)",
       "before": 6.88,
       "after": 7.62,
       "pr": "#914"
@@ -2035,6 +2035,18 @@
       "item": "F36#52 Mirejaw grounded hit (main stage)",
       "before": 5.72,
       "after": 6.32,
+      "pr": "#914"
+    },
+    {
+      "item": "F41#2 Stormwood storm light",
+      "before": 5.17,
+      "after": 5.97,
+      "pr": "#914"
+    },
+    {
+      "item": "F41#8 distinct bodies with storm light",
+      "before": 5.22,
+      "after": 5.8,
       "pr": "#914"
     }
   ],
