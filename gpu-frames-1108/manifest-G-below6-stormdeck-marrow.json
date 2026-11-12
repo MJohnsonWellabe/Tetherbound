@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "b49b20b419ae98a0316d774821c439a5c2d0a60b",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-below6-stormdeck-marrow/arm-High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "sky_fraction": 0.271,
+  "lower_edges": 0.343,
+  "script_errors": 0,
+  "note": "below6-stormdeck, High, tb/below6 b49b20b41 both sides (Marrow fix shipped on the tree). arm = BELOW6-STORMDECK/overlay.json (deck_wood_warm_1112 + banner_cloth_1112 + aged_heartwood_1112 retuned). F41#15 three-frame row. Blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "b49b20b419ae98a0316d774821c439a5c2d0a60b",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-below6-stormdeck-marrow/arm-High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "sky_fraction": 0.278,
+  "lower_edges": 0.3318,
+  "script_errors": 0,
+  "note": "below6-stormdeck, High, tb/below6 b49b20b41 both sides (Marrow fix shipped on the tree). arm = BELOW6-STORMDECK/overlay.json (deck_wood_warm_1112 + banner_cloth_1112 + aged_heartwood_1112 retuned). F41#15 three-frame row. Blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "b49b20b419ae98a0316d774821c439a5c2d0a60b",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-below6-stormdeck-marrow/arm-High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "sky_fraction": 0.303,
+  "lower_edges": 0.3988,
+  "script_errors": 0,
+  "note": "below6-stormdeck, High, tb/below6 b49b20b41 both sides (Marrow fix shipped on the tree). arm = BELOW6-STORMDECK/overlay.json (deck_wood_warm_1112 + banner_cloth_1112 + aged_heartwood_1112 retuned). F41#15 three-frame row. Blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "b49b20b419ae98a0316d774821c439a5c2d0a60b",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-below6-stormdeck-marrow/base-High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "sky_fraction": 0.274,
+  "lower_edges": 0.344,
+  "script_errors": 0,
+  "note": "below6-stormdeck, High, tb/below6 b49b20b41 both sides (Marrow fix shipped on the tree). arm = BELOW6-STORMDECK/overlay.json (deck_wood_warm_1112 + banner_cloth_1112 + aged_heartwood_1112 retuned). F41#15 three-frame row. Blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "b49b20b419ae98a0316d774821c439a5c2d0a60b",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-below6-stormdeck-marrow/base-High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "sky_fraction": 0.282,
+  "lower_edges": 0.333,
+  "script_errors": 0,
+  "note": "below6-stormdeck, High, tb/below6 b49b20b41 both sides (Marrow fix shipped on the tree). arm = BELOW6-STORMDECK/overlay.json (deck_wood_warm_1112 + banner_cloth_1112 + aged_heartwood_1112 retuned). F41#15 three-frame row. Blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "b49b20b419ae98a0316d774821c439a5c2d0a60b",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-below6-stormdeck-marrow/base-High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "sky_fraction": 0.303,
+  "lower_edges": 0.3994,
+  "script_errors": 0,
+  "note": "below6-stormdeck, High, tb/below6 b49b20b41 both sides (Marrow fix shipped on the tree). arm = BELOW6-STORMDECK/overlay.json (deck_wood_warm_1112 + banner_cloth_1112 + aged_heartwood_1112 retuned). F41#15 three-frame row. Blend 1.000."
+ }
+]
