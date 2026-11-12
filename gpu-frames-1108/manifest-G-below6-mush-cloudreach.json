@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "cloudreach__inventory__pickup__speed_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-cloudreach/arm-High/cloudreach__inventory__pickup__speed_mushroom.jpg",
+  "sky_fraction": 0.005,
+  "lower_edges": 0.1454,
+  "script_errors": 0,
+  "note": "below6-mushrooms F40#16: Cloudreach speed + wild mushroom finds. tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__inventory__pickup__wild_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-cloudreach/arm-High/cloudreach__inventory__pickup__wild_mushroom.jpg",
+  "sky_fraction": 0.022,
+  "lower_edges": 0.1088,
+  "script_errors": 0,
+  "note": "below6-mushrooms F40#16: Cloudreach speed + wild mushroom finds. tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__inventory__pickup__speed_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-cloudreach/base-High/cloudreach__inventory__pickup__speed_mushroom.jpg",
+  "sky_fraction": 0.005,
+  "lower_edges": 0.1453,
+  "script_errors": 0,
+  "note": "below6-mushrooms F40#16: Cloudreach speed + wild mushroom finds. tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__inventory__pickup__wild_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-cloudreach/base-High/cloudreach__inventory__pickup__wild_mushroom.jpg",
+  "sky_fraction": 0.022,
+  "lower_edges": 0.1027,
+  "script_errors": 0,
+  "note": "below6-mushrooms F40#16: Cloudreach speed + wild mushroom finds. tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ }
+]
