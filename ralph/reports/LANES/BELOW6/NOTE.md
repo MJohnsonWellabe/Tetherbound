@@ -1,5 +1,13 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, 16:45 UTC: three arms being reworked; do not judge them until the next NOTE entry
+
+- **RESTORED-SEA (F39#17): SPLIT** (G-below6-restored-sea: S1/S2 row 6.21 -> 6.88, 3/3; S3/S4 6.61 -> 6.17, 0/3: the sunset foreground goes near-black and the day turquoise thins). Cause: I set an absolute depth falloff of 2.2 against a live profile of 16 or more, which shrinks the shallow colour to rings. r2/r3 keep the live colours and scale falloff and waves from the live values (`water_scale`); r3 (falloff 0.8 of live) is capturing on CPU now.
+- **SWIM (F39#5): held by the GPU pre-check** (the body floats on the GPU's transparent water and the raised arm reads as a wave). r3 is pushed: chest 0.07 m under the surface, flatter body, narrower arms, the recovering arm low. CPU recapture queued.
+- **STRONGHOLD-STAND (F38#20): held by the GPU pre-check** (the keep's top is cropped at z 7405). Screening z 7385, 7365 and (-18, 7350) on CPU now; I will move the block to the first one with sky above the battlements.
+- MUSHROOMS and KNIFEEDGE: still no verdict.
+
+
 ## 12 Nov, about 18:00 UTC: BELOW6-RESTORED-SEA ready (F39#17, my top row); queue order
 
 - **F39#17 current restoration (5.50): arm built and proven on CPU.** `ralph/reports/LANES/BELOW6-RESTORED-SEA/`. Flag `water_current_flow_visual.json restored_sea_1112` (OFF). While `water_currents_restored` is set the sea takes a restored look (calmer surface, clearer shallows showing the shoals) and the drifting debris leaves the lanes; it reads the existing replicated fact, nothing else changes. Live against restored at one camera: mean difference 2.4 -> 10.0 on CPU.
