@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 16:50 UTC",
+  "updated": "12 Nov 2026 17:00 UTC",
   "headline": [
+    "12 Nov 17:00: Stormwood storm-state matrix re-score: F41#22 and F41#24 read 6.46 (loose fit, +/-0.75). The lowest stand is giant (5.51): a flat grey slab at the trainer's feet in Break (also at forest), the trunk filling the frame, no sky.",
     "12 Nov 16:50: Cloudreach matrix re-score (192 frames on main): F40#0, #19 and #21 read 5.98, about 6. Rain is 0.6 below clear at every stand (5.68 vs 6.29): striped grey sky, no wet sheen, a flat blue night wash. The four lowest stands are the thin landmarks (stormward overlook, flight aerie, skyroad arch, observatory).",
     "12 Nov 16:30: F38#4 Meadows map parchment fog ships (7.36 to 7.81 at High, 3/3), landing as #927; Medium follows. F39#17 restored sea lifts its row 6.21 to 6.88 but darkens the waterfall and sunset stands, so LANE-BELOW6 is rescoping it.",
     "12 Nov 16:15: F41#11 Stormwood character portraits CLOSES (7.61 High and Medium, control on its closing score). The confirming panel read F41#14 candy tiers at 7.05 and F41#1 Stormheart at 6.54, so neither closes; the earlier re-score read those two high.",
@@ -2827,8 +2828,8 @@
       "src": "G-floor2-harvest-presence-confirm (tb/item-scout-1108 df24a8ab4): harvest nodes larger with satellite clusters, row 5.81 -> 6.81 (3/3); landed #905; RE-SCORE G-rescore-stale-ext-stormwood 7.17 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
     },
     "F41#24": {
-      "gpu": 7.08,
-      "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, cleanliness brief, 5 stands; batch 49 #895)"
+      "gpu": 6.46,
+      "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, cleanliness brief, 5 stands; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 7.08; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28"
     },
     "F13#5": {
       "gpu": 6.28,
@@ -2847,8 +2848,8 @@
       "src": "GPU High visual baseline, 8 Nov frames (G-baselines-unscored-rows; look only, criterion is C2/C3)"
     },
     "F41#22": {
-      "gpu": 6.96,
-      "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, 5 of 10 matrix stands; baseline 5.90 full row; batch 49 #895)"
+      "gpu": 6.46,
+      "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, 5 of 10 matrix stands; baseline 5.90 full row; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 6.96; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28"
     },
     "F38#0": {
       "gpu": 6.6,
