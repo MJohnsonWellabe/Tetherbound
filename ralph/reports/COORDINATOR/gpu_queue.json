@@ -4454,6 +4454,19 @@
    "priority": "near-floor rows F40#16 6.19, F40#17 6.08"
   },
   {
+   "id": "below6-restored-sea-r5",
+   "kind": "arm",
+   "rows": [
+    "F39#17"
+   ],
+   "branch": "tb/below6",
+   "head": "e4a71f5df",
+   "job": "BELOW6-RESTORED-SEA/CAPTURE.json, all four stands live and restored, base vs arm",
+   "capture": "High; pre-check S4 sunset restored black share vs base (hold if darker)",
+   "priority": "lowest row (5.50): r1 deep channel by day, r4 light water at low sun, stronger surf",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "below6-knifeedge",
    "kind": "arm",
    "rows": [
