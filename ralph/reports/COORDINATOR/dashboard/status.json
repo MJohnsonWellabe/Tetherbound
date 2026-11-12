@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 19:55 UTC",
+  "updated": "12 Nov 2026 20:20 UTC",
   "headline": [
+    "12 Nov 20:20: LANE-CIFIX root-caused main's full-CI reds. Two were real game bugs: a creature's rarity rim was frozen by the first body of its species, and the Water catalogue refused its own entries on a re-merge. The rest were tests and smokes left behind by the remakes and #878. They land as #933 together with batch 86 (stronghold stand F38#20, opposing trainer stand F38#3), one full CI run on current main.",
     "12 Nov 19:55: #929 (stronghold stand) and #931 (opposing trainer stand) fell behind main after #930, so both now land together as #932 on current main: one full CI run instead of two in a row.",
     "12 Nov 19:40: #930 landed (crimson ironwood fixed, full CI green). Below-7 rows grouped by shared cause: the largest unowned group is about 20 creature hurt, faint and swim pose rows (F36 and F38#1/#2), then about 8 dialogue-framing rows and about 8 terrain-edge rows.",
     "12 Nov 19:20: in full CI now: #929 stronghold stand (F38#20 6.40 to 7.57), #930 red-leaf hard-rule fix, #931 opposing trainer stands behind their creature (F38#3 7.48 to 7.61, Warden Aldis 6.80 to 7.18).",

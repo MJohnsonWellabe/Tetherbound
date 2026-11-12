@@ -4467,6 +4467,20 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "below6-swim-r5",
+   "kind": "arm",
+   "rows": [
+    "F39#5",
+    "F39#14"
+   ],
+   "branch": "tb/below6",
+   "head": "2d35377bc",
+   "job": "BELOW6-SWIM/CAPTURE.json (phase2_capture_swimming.gd), base vs arm",
+   "capture": "High; pre-check: no hand projected above the head at entry and surface_mid",
+   "priority": "below-6 row; r5 sweeps the arms sideways at the waterline (the forward reach was what projected up the screen)",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "below6-knifeedge",
    "kind": "arm",
    "rows": [
