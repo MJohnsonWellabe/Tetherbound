@@ -3570,6 +3570,26 @@
    "capture": "High, base plus two arms",
    "priority": "the judges' shared Stormwood ceiling (ground and road value)",
    "note": "Coordinator will say when #914 has landed."
+  },
+  {
+   "id": "things-galecarrier",
+   "kind": "arm",
+   "rows": [
+    "F36#48",
+    "Galewisp flight (F38#8/F38#15 with Galewisp carrying)"
+   ],
+   "branch": "tb/things",
+   "head": "a90645724",
+   "tree": "tb/things a90645724 for both sides (config only; its phase2_capture_realm_flight.gd adds --carrier)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-GALECARRIER/overlay_galewisp_carrier.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-GALECARRIER/CAPTURE.json",
+   "job": "phase2_capture_realm_flight.gd --biome=meadows --carrier=galewisp (frames 01-launch, 02-glide, 03-landed); capture_f36_poses.gd --species=galewisp --whole-body --context --roles=hit,faint,fly_grip",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "pre_check": "arm shows the 1 Nov remake (not the big-eyed fox-bird) in flight with the trainer hanging from its feet; watch for wing clipping in the procedural flap",
+   "priority": "owner-rule fix (1 Nov: all remakes ON, no mascot): the flight carrier still draws the pre-remake mesh; F36#48 is a near-bar close-out (7.44)",
+   "note": "After places-rain-time-grade."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
