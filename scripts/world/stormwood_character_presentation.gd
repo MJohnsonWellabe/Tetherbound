@@ -16,6 +16,14 @@ static func decorate(spec: Dictionary, identity_id: String, authored_rank: Strin
 	var uniform_rank := str(settings.get("rank_uniforms", {}).get(rank, ""))
 	var style: Dictionary = settings.get("uniform" if not uniform_rank.is_empty() else "civilian", {})
 	result["emission_floor"] = float(style.get("emission_floor", 0.0))
+	# F41#15 identity_floor_1112 (OFF until GPU-judged): the uniform floor exists
+	# for the near-black grunt-family bodies. A named identity whose own body is
+	# not dark (Captain Marrow: pale hair and skin) may state its own floor.
+	var identity_floor: Variant = settings.get("identity_floor_1112", {})
+	if identity_floor is Dictionary and bool((identity_floor as Dictionary).get("enabled", false)):
+		var floors: Dictionary = (identity_floor as Dictionary).get("floors", {})
+		if floors.has(canonical):
+			result["emission_floor"] = float(floors[canonical])
 	result["night_rim"] = (style.get("night_rim", {}) as Dictionary).duplicate(true)
 	if uniform_rank.is_empty():
 		return result
