@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-REDLEAF",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "QUEUED 12 Nov (hard-rule colour fix; coordinator asked for it ahead of the queue). Code change, no overlay.",
+ "tool": "tools/phase2_capture_routes.gd --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042",
+ "base": {"tree": "main", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": null},
+ "rows": {"F38#30": ["walk_02_day", "walk_03_day"], "F38#24": ["job.json frames"]}
+}
