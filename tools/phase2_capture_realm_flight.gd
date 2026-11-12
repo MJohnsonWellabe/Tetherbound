@@ -32,6 +32,10 @@ func _init() -> void:
 	_run.call_deferred()
 
 
+var _glide_steer := false
+var _glide_steer_frames := 14
+
+
 func _frames(count: int) -> void:
 	for i in count:
 		await physics_frame
@@ -60,6 +64,10 @@ func _run() -> void:
 			_output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg == "--glide-steer":
+			_glide_steer = true
+		elif arg.begins_with("--glide-steer-frames="):
+			_glide_steer_frames = int(arg.trim_prefix("--glide-steer-frames="))
 		elif arg.begins_with("--carrier="):
 			# LANE-THINGS, 12 Nov: every flight capture carried with Galecrest,
 			# so no frame ever showed the starter Galewisp's own carrier.
@@ -152,8 +160,19 @@ func _attempt(xz: Vector2) -> bool:
 		await _frames(24)
 	await _save("launch")
 	await _frames(80)
+	if _glide_steer and bool(_fly.call("is_flying")):
+		# --glide-steer: the default glide frame is a hover with no stick held.
+		# Fly forward, then start a turn, and take the frame mid-turn.
+		_action("move_forward", true)
+		await _frames(50)
+		_action("move_right", true)
+		await _frames(_glide_steer_frames)
 	if bool(_fly.call("is_flying")):
 		await _save("glide")
+	if _glide_steer:
+		_action("move_right", false)
+		_action("move_forward", false)
+		await _frames(30)
 	_action("fly_descend", true)
 	for i in 900:
 		if not bool(_fly.call("is_flying")):
