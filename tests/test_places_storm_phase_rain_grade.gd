@@ -81,6 +81,36 @@ func test_no_phase_fires_far_bolts() -> void:
 	surge.free()
 
 
+## Owner rule (12 Nov): lightning is Break-only. A bolt, cloud flash or sky
+## flash alive when the phase leaves Break is out at once, on a cross-fade and
+## on a settle (the GPU phase stills shot Fading right after Break).
+func test_leaving_break_puts_out_live_lightning_at_once() -> void:
+	for settle: bool in [true, false]:
+		var surge := SURGE.new()
+		surge.phase = "break"
+		surge.set("_to", surge._resolved(surge.presentation_for("break")))
+		surge.set("_blend", 1.0)
+		surge.set("_bolt_levels", [1.0, 0.6] as Array[float])
+		surge.set("_cloud_flash", 0.7)
+		surge.set("_flash", 0.3)
+		assert_true(surge.sky_lightning_visible(), "Break has live lightning")
+		surge.phase = "fading"
+		if settle:
+			surge.settle_presentation()
+		else:
+			surge.call("_begin_transition")
+		assert_false(surge.sky_lightning_visible(), "no lightning survives into Fading")
+		assert_almost_eq(surge.bolt_level(), 0.0, 0.0001)
+		assert_almost_eq(surge.flash_level(), 0.0, 0.0001)
+		surge.free()
+	var kept := SURGE.new()
+	kept.phase = "break"
+	kept.set("_bolt_levels", [1.0] as Array[float])
+	kept.call("_begin_transition")
+	assert_almost_eq(kept.bolt_level(), 1.0, 0.0001, "entering Break keeps its own bolts")
+	kept.free()
+
+
 func test_bolt_halo_adds_a_faint_wide_strip_only_when_asked() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7

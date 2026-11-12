@@ -57,6 +57,12 @@ func build(world: Node3D, masonry: Material, world_anchor: Vector3) -> void:
 	_add_route_banners(cfg, heading, right, site_offset, arch_scale, local_base_y)
 	_add_grounding_outcrops(world, masonry, heading, right, cfg)
 	_add_signal(signal_packed, site_offset, local_base_y + arch_scale.y * 3.0, cfg)
+	var crowns := preload("res://scripts/world/cloudreach_landmark_crowns.gd").config()
+	if crowns.has("beacon"):
+		var spec: Dictionary = crowns.beacon
+		preload("res://scripts/world/cloudreach_landmark_crowns.gd").dome(self, "BeaconCrown",
+			Vector3(site_offset.x, local_base_y + arch_scale.y * 3.0 + float(spec.get("lift_m", 0.2)), site_offset.y),
+			float(spec.get("radius_m", 4.6)), crowns)
 
 
 func frame_base_y() -> float:
