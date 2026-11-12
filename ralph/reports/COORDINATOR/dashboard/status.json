@@ -2024,7 +2024,20 @@
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [],
+  "score_ledger_pending": [
+    {
+      "item": "F40#13 catch card clears on aim",
+      "before": 6.88,
+      "after": 7.62,
+      "pr": "#914"
+    },
+    {
+      "item": "F36#52 Mirejaw grounded hit (main stage)",
+      "before": 5.72,
+      "after": 6.32,
+      "pr": "#914"
+    }
+  ],
   "landed_recent": [
     {
       "pr": "#912",

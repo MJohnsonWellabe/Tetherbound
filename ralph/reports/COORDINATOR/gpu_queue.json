@@ -3438,7 +3438,8 @@
    "job": "res://tools/_capture_character_cast.gd (no args; writes res://shots/characters/<slug>-front.png and -threequarter.png for the cast) at 1920x1080 forward_plus; keep innkeeper-front and innkeeper-threequarter only",
    "capture": "High, one side",
    "request": "ralph/reports/LANES/BELOW6-INNKEEPER-BASE/CAPTURE.json on tb/below6",
-   "note": "No GPU High score exists on the shipped innkeeper body (GPU Medium 5.90 on a matched camera, CPU 7.36 on this stand). Says whether F36#29 is below 6 at all. Cheap; fit between arms."
+   "note": "No GPU High score exists on the shipped innkeeper body (GPU Medium 5.90 on a matched camera, CPU 7.36 on this stand). Says whether F36#29 is below 6 at all. Cheap; fit between arms.",
+   "done": "G-innkeeper-baseline 39b7340bc (judging)"
   },
   {
    "id": "f40-13-catch-card-medium",
@@ -3452,7 +3453,8 @@
    "overlay": "ralph/reports/LANES/THINGS-TOYS-UI/overlay_toys_ui.json (arm side; only catch_card.clear_on_aim_1112 matters for this row)",
    "job": "tools/phase2_capture_catch.gd --biome=cloudreach (frames 06-breakout and 07-aiming-weakened), as in G-toys-catch",
    "capture": "MEDIUM, arm side only",
-   "note": "Close-out: High 7.62 (G-things-toys-ui.md, b4439ea2b). Closes at Medium 7.5+ once the flag lands."
+   "note": "Close-out: High 7.62 (G-things-toys-ui.md, b4439ea2b). Closes at Medium 7.5+ once the flag lands.",
+   "done": "G-f40-13-catch-card-medium 04d17515d (judging)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
