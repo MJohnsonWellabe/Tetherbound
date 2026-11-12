@@ -4421,6 +4421,19 @@
    "priority": "after wetpath-r2: F41#18 next lever named 3/3"
   },
   {
+   "id": "below6-stormraven",
+   "kind": "arm (needs import)",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/below6",
+   "head": "f0c0c9066",
+   "job": "ralph/reports/LANES/BELOW6-STORMRAVEN/CAPTURE.json: phase2_capture_creatures.gd --biome=stormwood --only=stormraven (plus fulgocobra idle for the row pair)",
+   "capture": "High, base vs overlay; one new texture import",
+   "priority": "below-6 row; after swim-r4",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "below6-mushrooms",
    "kind": "arm",
    "rows": [
