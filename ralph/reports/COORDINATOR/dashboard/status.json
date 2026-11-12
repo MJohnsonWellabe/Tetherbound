@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 04:30 UTC",
+  "updated": "12 Nov 2026 04:50 UTC",
   "headline": [
+    "12 Nov 04:50: #918 landed Captain Marrow's glow fix (F41#15 frames 4.55 -> 5.95; the Nysa frame still needs a capture for a full row score). F40#3 landmarks (6.33) landing being cut. Stormheart dressing passes but gains under 0.5: rides with the next Stormwood swing after the split wood is pulled off pink. Stormwood swing 2 on the GPU.",
     "12 Nov 04:30: F40#3 Cloudreach landmarks ship (crowns plus approach stands, 6.00 -> 6.33, 2/3): leaves the below-6 list once landed. Marrow landing #918 in CI. GPU: Stormheart dressing arm (banners plus aged split wood) for Marrow's frames and F41#1.",
     "12 Nov 03:50: Captain Marrow glow fix SHIPS (F41#15 Marrow frames 4.55 -> 5.95, +1.40, 3/3); landing being cut. Owner: lanes run all night; each lane schedules its own 30-minute check-in before going idle, and the coordinator checks every hour.",
     "12 Nov 03:45: wrap-up landed. #916 Stormheart approach stand and #917 conversation camera plus Galewisp carrier are on main, with every job green. All judged wins are now on main. The only open GPU item is Captain Marrow (F41#15 4.49): frames captured, LANE-SCOUT judging. Lanes restarted fresh from main (LANE-BELOW6, LANE-THINGS, LANE-PLACES); no new arms yet. Stormwood road value: 4 rows gain but F41#4 loses twice, held flag-off for a larger Stormwood swing.",
@@ -2120,16 +2121,16 @@
       "before": 6.17,
       "after": 6.83,
       "pr": "#917"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F41#15 Captain Marrow head glow (2 of 3 frames)",
       "before": 4.55,
       "after": 5.95,
-      "pr": "#918 (in CI)"
-    },
+      "pr": "#918"
+    }
+  ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [
     {
       "item": "F40#3 Cloudreach landmarks (crowns plus approach stands)",
       "before": 6.0,
@@ -2138,6 +2139,11 @@
     }
   ],
   "landed_recent": [
+    {
+      "pr": "#918",
+      "what": "Batch 74: Captain Marrow stops lighting himself (self-emission off, Stormwood floor 0, graded albedo): F41#15 Marrow frames 4.55 -> 5.95 (+1.40, 3/3)",
+      "when": "04:46 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#917",
       "what": "Batch 73 (wrap-up): conversation-shot clearance ON outside Stormwood (Meadows dialogue about 6.60 -> 6.99; F38#17 5.75 -> 6.97), Galewisp carrier is the 1 Nov remake (flight 6.17 -> 6.83), GPU-PASS 1108 verdicts and coordinator records on main, one-tap branch cleanup workflow",
@@ -2611,8 +2617,8 @@
       "src": "GPU High 8-9 Nov (B)"
     },
     "F41#15": {
-      "gpu": 4.49,
-      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: foreground obstruction: Officer Nysa hidden behind a creature (PRESENT 3/3); Marrow's head bloom; G-below6-marrow (LANE-SCOUT 168422e80): Marrow frames 4.55 -> 5.95 (+1.40, 3/3), SHIPS, landing being cut (Nysa frame not yet re-captured)"
+      "gpu": 5.95,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: foreground obstruction: Officer Nysa hidden behind a creature (PRESENT 3/3); Marrow's head bloom; G-below6-marrow (LANE-SCOUT 168422e80): Marrow frames 4.55 -> 5.95 (+1.40, 3/3), SHIPS, LANDED #918 (Nysa frame not yet re-captured)"
     },
     "F41#16": {
       "gpu": 6.28,
