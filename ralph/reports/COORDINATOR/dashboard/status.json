@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 11:25 UTC",
+  "updated": "12 Nov 2026 11:40 UTC",
   "headline": [
+    "12 Nov 11:40: #923 landed (Stormwood rim off, F41#18 6.22; ruler clear by default). Landed overnight: #918, #919, #920, #921, #922, #923. Below 6 now: F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90. GPU: F38#15 glide-bank close-out, then the Ashtusk ember fix (close-out), wet trail round 2, Stormwood uniforms.",
     "12 Nov 11:25: Ashtusk (High 8.03, Medium 7.28) and Brooktail (High 7.69, Medium 7.03) do not close: at Medium the ruler never overlapped, so the creatures themselves sit under 7.5. Close-out exception applies (both at 7.0 or above). #923 (Stormwood rim off, F41#18 6.22) in CI.",
     "12 Nov 11:05: pose-stage capture fix (--clear-ruler, no game change) lifts six creature rows: Ashtusk 8.03 and Brooktail 7.69 meet the bar at High (Medium running next), Mirejaw 7.26 (was 5.28), Riftfrill 7.31, Sparkit 7.26, Shadelet 7.07. Stormwood rim-off and wet trail round 2 in progress; F38#15 glide-bank close-out capturing.",
     "12 Nov 10:25: Stormwood rim-off ships: the white bloom on the player's head and pale officers came from the night character rim under storm light. F41#18 5.60 -> 6.22, Stormwood dialogue +0.41 to +0.45 (3/3 everywhere, nothing loses). Landing being cut.",
@@ -2197,24 +2198,28 @@
       "before": 7.08,
       "after": 7.7,
       "pr": "#922 (Medium 7.37)"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F41#18 Stormwood uniformed characters (character rim off in Stormwood)",
       "before": 5.6,
       "after": 6.22,
-      "pr": "#923 (in CI)"
+      "pr": "#923"
     },
     {
       "item": "F36#52 Mirejaw pose with the ruler clear (capture default)",
       "before": 6.07,
       "after": 7.26,
-      "pr": "#923 (in CI)"
+      "pr": "#923"
     }
   ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#923",
+      "what": "Batch 79: Stormwood character night rim off (white player head and pale officers gone: F41#18 5.60 -> 6.22, Stormwood dialogue +0.41 to +0.45, 3/3 everywhere) and the pose stage's trainer ruler clear of the creature by default (Ashtusk 8.03, Brooktail 7.69, Mirejaw 7.26 at High)",
+      "when": "11:36 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#922",
       "what": "Batch 78: carriers land beside the trainer and Galewisp stands taller (Galewisp landed 6.34 -> 8.11, flight 6.43 -> 7.29; F38#15 High 7.70, Medium 7.37)",
@@ -2727,7 +2732,7 @@
     },
     "F41#18": {
       "gpu": 6.22,
-      "src": "GPU High 8-9 Nov (F-stormwood); G-things-stormrim (b3b9fbd4d): rim off in Stormwood 5.60 -> 6.22 (3/3), landing being cut"
+      "src": "GPU High 8-9 Nov (F-stormwood); G-things-stormrim (b3b9fbd4d): rim off in Stormwood 5.60 -> 6.22 (3/3), LANDED #923"
     },
     "F41#19": {
       "gpu": 6.56,
