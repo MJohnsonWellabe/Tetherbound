@@ -20,7 +20,7 @@ func test_scope_ships_on_for_the_judged_species_without_fulgocobra() -> void:
 	var live: Dictionary = SETTLE.scoped(cfg)
 	for id: String in ["mirejaw", "water_mirejaw", "abyssal_guardian", "cragclaw", "water_cragclaw", "cannonback", "mangrove_monitor"]:
 		assert_false(SETTLE.excluded(live, id), "%s takes the settle" % id)
-	for id: String in ["fulgocobra", "water_abyssal_guardian", "water_mangrove_monitor", "glimmermoth", "terrapup"]:
+	for id: String in ["fulgocobra", "water_abyssal_guardian", "glimmermoth", "terrapup"]:
 		assert_true(SETTLE.excluded(live, id), "%s keeps its own faint" % id)
 
 
@@ -45,3 +45,22 @@ func test_base_id_row_reaches_the_water_form_and_exact_id_wins() -> void:
 	(cfg.faint.per_species as Dictionary).erase("water_cragclaw")
 	assert_eq(float(SETTLE._for_species(cfg, "water_cragclaw").faint.crumple.splay_deg), 10.0)
 	assert_eq(float(SETTLE._for_species(cfg, "terrapup").faint.crumple.splay_deg), 55.0)
+
+
+## Round 2 (G-things-faint2.md): the species the judges preferred take the
+## forced belly-down crumple; the four that lost keep their own faint.
+func test_round_two_scope_ships_the_winners_and_not_the_losers() -> void:
+	var cfg := _shipped()
+	var scope: Dictionary = cfg.get("things_faint2_scope", {})
+	assert_true(bool(scope.get("enabled", false)))
+	assert_eq(scope.get("species", []), ["pebbik", "breezetail", "shadelet", "paddlenewt", "riftfrill", "mosshock", "stormraven"])
+	var live: Dictionary = SETTLE.scoped(cfg)
+	for id: String in (scope.get("species", []) as Array) + ["water_mangrove_monitor"]:
+		assert_false(SETTLE.excluded(live, id), "%s takes the settle" % id)
+		var crumple: Dictionary = SETTLE._for_species(cfg, id).faint.crumple
+		assert_true(bool(crumple.get("force", false)), "%s crumples belly-down" % id)
+		assert_eq(float(crumple.get("tail_relax", 0.0)), 1.0)
+	for id: String in ["stormtrail", "trailpup", "voltwig", "sparkit"]:
+		assert_true(SETTLE.excluded(live, id), "%s lost on the GPU and keeps its side-lying faint" % id)
+	assert_false(bool(SETTLE._for_species(cfg, "cragclaw").faint.crumple.get("keep_head_up", false)), "cragclaw's head change was level and is not shipped")
+	assert_false(bool(SETTLE._for_species(cfg, "mangrove_monitor").faint.crumple.get("force", false)), "the land monitor keeps round 1's settle")
