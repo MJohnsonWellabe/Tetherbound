@@ -2090,7 +2090,14 @@
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [],
+  "score_ledger_pending": [
+    {
+      "item": "F41#1 Stormheart approach stand",
+      "before": 5.1,
+      "after": 6.81,
+      "pr": "#916"
+    }
+  ],
   "landed_recent": [
     {
       "pr": "#915",
@@ -2532,7 +2539,7 @@
     },
     "F41#1": {
       "gpu": 6.81,
-      "src": "G-below6-stormheart-approach (LANE-SCOUT d3f616f1c), GPU High: new approach stand (road, trunk and gate) with the landed heartwood, 5.10 -> 6.81 (+1.71, 3/3); approach-only 2.80 -> 6.42; stand not yet landed"
+      "src": "G-below6-stormheart-approach (LANE-SCOUT d3f616f1c), GPU High: new approach stand (road, trunk and gate) with the landed heartwood, 5.10 -> 6.81 (+1.71, 3/3); approach-only 2.80 -> 6.42; stand in PR #916"
     },
     "F41#10": {
       "gpu": 6.02,
