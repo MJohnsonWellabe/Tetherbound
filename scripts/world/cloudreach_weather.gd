@@ -58,6 +58,7 @@ func _apply_realm_weather() -> void:
 	if look != null and look.has_method("set_weather"):
 		var preset := realm_preset(weather(), _presets.get(weather(), {}), _scene_id())
 		look.call("set_weather", combined_delta(_realm_atmosphere_delta, _time_graded(preset, look)))
+	_apply_ground_wet_path()
 	# Seat the mist ceiling now too, not only from _process: a pinned capture
 	# freezes this node's processing (phase2_capture_locations.gd), and the
 	# GPU F40#19 frames then drew no mist at all (ceiling never left its
@@ -111,6 +112,86 @@ func _load_time_grade() -> void:
 	if arm is Dictionary and (arm as Dictionary).get("enabled") == true:
 		_time_grade = arm
 		_style_time_grade_streaks()
+
+
+## `ground_wet_path_1112` (cloudreach_visual.json, OFF until judged; GPU
+## judges at the realm gate: "rain has no wet darkening or sheen", "the orange
+## path is too saturated and its edges are not blended into the grass"). One
+## shader global (cloudreach_ground_1112) read by the Cloudreach turf, trail
+## and worn-ground shaders: rain wetness from the weather preset's
+## ground_wetness, and a duller, frayed, wider-feathered trail. Cloudreach
+## scene only; all zero when off.
+func _apply_ground_wet_path() -> void:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
+	var arm: Dictionary = (raw as Dictionary).get("ground_wet_path_1112", {}) if raw is Dictionary else {}
+	var value := Vector4.ZERO
+	if arm.get("enabled") == true and _scene_id() in (arm.get("scenes", ["cloudreach_cliffs"]) as Array):
+		value = ground_wet_path_value(arm, _presets.get(weather(), {}), realm_preset(weather(), _presets.get(weather(), {}), _scene_id()))
+		value.x *= _wet_day_scale(arm)
+		# Round 3: at night the whole arm stands down, trail tone and feather
+		# included, so night frames are main's (the no-loss side of the verdict).
+		var look_node: Node = get_node_or_null(look_path)
+		if look_node != null and look_node.has_method("hour"):
+			var clock := wet_hour_scale(float(look_node.call("hour")), arm.get("wet_hours", []))
+			value.y *= clock
+			value.z *= clock
+	RenderingServer.global_shader_parameter_set(&"cloudreach_ground_1112", value)
+
+
+## Round 2 (GPU G-places-wetpath: summit night rain -0.34, the wet trail read
+## as "a black, char-like smear"): the rain darkening fades out with the
+## clock's own sky value, so a night that is already dark takes none.
+func _wet_day_scale(arm: Dictionary) -> float:
+	var look: Node = get_node_or_null(look_path)
+	if look == null:
+		return 1.0
+	var config: Variant = look.get("_config")
+	var cycle: Variant = look.get("_cycle")
+	if not config is Dictionary or (config as Dictionary).is_empty() or cycle == null:
+		return 1.0
+	# Round 3 (GPU G-places-wetpath-r2: summit night rain -0.12, "a dark
+	# soot-like smear"; the sky-value fade still left part of the darkening at
+	# 23:00): the clock decides first. No wet darkening outside the arm's
+	# `wet_hours`, whatever the sky colour.
+	var by_clock := wet_hour_scale(float(look.call("hour")), arm.get("wet_hours", []))
+	if by_clock <= 0.0:
+		return 0.0
+	var now: Dictionary = TIME_GRADE_LOOK.blended_config_at(config, cycle, float(look.call("hour")))
+	var day_sky: Dictionary = TIME_GRADE_LOOK._merged_from(config, "sky", TIME_GRADE_LOOK._preset_over(config, "day"))
+	return minf(by_clock, wet_day_scale(_grade_colour((now.get("sky", {}) as Dictionary).get("top_colour"), "#3b6f93"),
+		_grade_colour(day_sky.get("top_colour"), "#3b6f93"), arm))
+
+
+## 0 at night, 1 by day (pure; tested): `hours` is [dawn start, dawn end, dusk
+## start, dusk end] on the 24 h clock, eased across dawn and dusk. An absent or
+## malformed list leaves the clock out of it (1).
+static func wet_hour_scale(hour: float, hours: Variant) -> float:
+	if not hours is Array or (hours as Array).size() != 4:
+		return 1.0
+	var h := fposmod(hour, 24.0)
+	var list: Array = hours
+	if h <= float(list[0]) or h >= float(list[3]):
+		return 0.0
+	if h < float(list[1]):
+		return smoothstep(float(list[0]), float(list[1]), h)
+	if h > float(list[2]):
+		return 1.0 - smoothstep(float(list[2]), float(list[3]), h)
+	return 1.0
+
+
+## 1 by day, 0 at night (pure; tested): the sky's value against day, eased
+## between the arm's `wet_night_band`.
+static func wet_day_scale(top_now: Color, top_day: Color, arm: Dictionary) -> float:
+	var band: Array = arm.get("wet_night_band", [0.2, 0.6])
+	var k := clampf(top_now.get_luminance() / maxf(0.001, top_day.get_luminance()), 0.0, 1.0)
+	return smoothstep(float(band[0]), float(band[1]), k)
+
+
+## The shader global for an enabled arm (pure; tested).
+static func ground_wet_path_value(arm: Dictionary, shared_preset: Dictionary, realm: Dictionary) -> Vector4:
+	var wetness := float(realm.get("ground_wetness", shared_preset.get("ground_wetness", 0.0)))
+	return Vector4(clampf(wetness, 0.0, 1.0) * float(arm.get("rain_wet", 1.0)),
+		clampf(float(arm.get("path_feather", 1.0)), 0.0, 1.0), clampf(float(arm.get("path_dull", 0.5)), 0.0, 1.0), 0.0)
 
 
 func _time_grade_applies() -> bool:
