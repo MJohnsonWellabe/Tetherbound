@@ -18,6 +18,9 @@ The old approach stand, reproduced as an ad-hoc spot so both sides see the split
 ## CPU check (`_sheet_cpu.jpg`: base left, arm right, that same stand)
 The slab goes from saturated orange to a muted grey-brown that sits with the lavender-grey bark. Nothing else in the frame changes.
 
+## Second set: Marrow's dialogue frames
+G-below6-marrow, all three judges on the arm side: "trunk colours: saturated orange on the left (one judge says it's near oxblood)". That trunk face is this same exposed wood, seen from the DynamoCore deck (`BELOW6-MARROW/_sheet_cpu_probes.jpg` shows it at the left of every probe). CAPTURE.json `second_capture` adds his two dialogue frames, base and arm. Not captured on CPU with this flag.
+
 ## Expected
 On this one frame, more than 0.5 (it was the named defect, 3/3). It earns nothing on the F41#1 row's fixed set, which does not show the split; it lands as a game fix if the judges prefer it.
 
