@@ -862,7 +862,11 @@ func _apply_human_swim_pose(rig: Skeleton3D, surface_y: float) -> void:
 	for side: String in ["Left", "Right"]:
 		var sign_side := 1.0 if side == "Left" else -1.0
 		var stroke := _human_swim_phase + (0.0 if side == "Left" else PI)
-		var reach := cos(stroke)
+		# F39#5 `arm_reach_scale` (1 keeps the old stroke): the swim camera sits
+		# behind and above, so an arm reaching far forward projects up past the
+		# head and reads as a wave. A smaller reach keeps the hands beside the
+		# shoulders, sweeping at the waterline.
+		var reach := cos(stroke) * float(_human_swim_visual.get("arm_reach_scale", 1.0))
 		var lateral := float(_human_swim_visual.get("arm_lateral", 0.45))
 		# Aim in the installed skeleton's frame, preserving each bone's rest
 		# roll. Positive Y extends toward the head; negative Y draws past hips.

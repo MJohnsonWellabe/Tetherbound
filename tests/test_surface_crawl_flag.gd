@@ -14,17 +14,18 @@ func test_flag_is_declared_with_pose_keys_only() -> void:
 	var pose: Dictionary = cfg.get("swim_pose", {})
 	for key: String in pose:
 		assert_true(key in ["chest_above_surface_m", "body_pitch_deg", "head_lift_deg", "neck_lift_deg", "arm_lateral",
-			"arm_depth", "forearm_depth", "arm_recover_lift", "forearm_recover_scale", "stroke_seconds", "kick_deg", "knee_deg"],
+			"arm_depth", "forearm_depth", "arm_recover_lift", "forearm_recover_scale", "stroke_seconds", "kick_deg", "knee_deg",
+			"arm_reach_scale", "forearm_minimum_reach", "forearm_lateral_scale"],
 			"%s is a pose key" % key)
-	assert_true(float(pose.get("arm_recover_lift", 0.0)) > 0.0, "the recovering arm leaves the water")
+	assert_true(float(pose.get("arm_reach_scale", 1.0)) < 1.0, "the arms sweep beside the shoulders instead of reaching past the head")
 
 
 func test_loaded_pose_follows_the_flag() -> void:
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
 	var loaded := TRAINER_MODEL.load_human_swim_visual()
 	var crawl: Dictionary = raw.get("surface_crawl_1112", {})
-	var wanted := float((crawl.get("swim_pose", {}) as Dictionary).get("arm_recover_lift", 0.0))
+	var wanted := float((crawl.get("swim_pose", {}) as Dictionary).get("arm_reach_scale", 1.0))
 	if bool(crawl.get("enabled", false)):
-		assert_eq(float(loaded.get("arm_recover_lift", 0.0)), wanted, "on: the crawl layer wins")
+		assert_eq(float(loaded.get("arm_reach_scale", 1.0)), wanted, "on: the crawl layer wins")
 	else:
-		assert_eq(float(loaded.get("arm_recover_lift", 0.0)), 0.0, "off: the stroke is the one that ships")
+		assert_eq(float(loaded.get("arm_reach_scale", 1.0)), 1.0, "off: the stroke is the one that ships")
