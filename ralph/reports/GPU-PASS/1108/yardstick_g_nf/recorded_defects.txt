@@ -1,0 +1,8 @@
+Av: "carrying frame carries nothing"
+Cj: "none"
+Fb: none
+Jv: none
+Jb: "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"
+Eh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vl: "none"
+Au: "the carrier creature is hidden behind the trainer and foliage at landing and looks barely taller than the trainer"
