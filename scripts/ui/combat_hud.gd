@@ -396,6 +396,8 @@ func _ready() -> void:
 		var throw_node: Variant = _manager.call("throw_aim") if _manager.has_method("throw_aim") else null
 		if throw_node is Object and (throw_node as Object).has_signal("orb_released"):
 			(throw_node as Object).connect("orb_released", _on_orb_released)
+		if throw_node is Object and (throw_node as Object).has_signal("aim_entered"):
+			(throw_node as Object).connect("aim_entered", _on_aim_entered)
 	_show_fight(false)
 
 
@@ -2022,11 +2024,40 @@ var _breakout_card_up := false
 func _on_orb_released() -> void:
 	if not _breakout_card_up:
 		return
+	_clear_breakout_card_now()
+	if not _breakout_card_up:
+		return
 	var cfg := _catch_card_config()
 	var row: Variant = cfg.get("clear_on_release_1107", {})
 	if row is Dictionary and bool((row as Dictionary).get("enabled", false)):
 		_outcome_left = 0.0
 		_catch_focus_left = 0.0
+
+
+## F40#13 (LANE-FLOOR2, hud.json `catch_card.clear_on_aim_1112`, OFF until
+## judged): the stale breakout card was still up when the player aimed the
+## next throw, over the catch-chance plate. When on, entering aim (and
+## releasing an orb) takes a breakout card down in the same frame instead of
+## waiting for the next outcome tick.
+func _on_aim_entered() -> void:
+	_clear_breakout_card_now()
+
+
+func _clear_breakout_card_now() -> void:
+	if not _breakout_card_up:
+		return
+	var row: Variant = _catch_card_config().get("clear_on_aim_1112", {})
+	if not (row is Dictionary and bool((row as Dictionary).get("enabled", false))):
+		return
+	_outcome_left = 0.0
+	_catch_focus_left = 0.0
+	_breakout_card_up = false
+	# The card can be cleared before the HUD builds its nodes (a bare instance in
+	# tests, or an aim before _ready); the timers above are what end it.
+	if _outcome != null:
+		_outcome.text = ""
+		_hide_catch_portrait()
+		_outcome.remove_theme_stylebox_override("normal")
 
 
 func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
