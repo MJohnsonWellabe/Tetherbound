@@ -2485,7 +2485,7 @@
     },
     "F41#13": {
       "gpu": 6.66,
-      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902"
+      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed)"
     },
     "F41#14": {
       "gpu": 6.35,
@@ -2512,8 +2512,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#2": {
-      "gpu": 6.1,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 5.97,
+      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 ships (not yet landed); this batch reads about 0.9 below the board: F41#2 5.17 -> 5.97 (+0.80, 3/3); board was 6.10 from another batch"
     },
     "F41#20": {
       "gpu": 6.41,
@@ -2544,8 +2544,8 @@
       "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: named trainer identity; Marrow's head blown white"
     },
     "F41#8": {
-      "gpu": 5.31,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 5.8,
+      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 ships (not yet landed); this batch reads about 0.9 below the board: F41#8 5.22 -> 5.80 (+0.58, 3/3) with distinct_bodies_1111"
     },
     "F41#9": {
       "gpu": 6.81,

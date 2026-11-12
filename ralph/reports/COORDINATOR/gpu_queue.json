@@ -3455,6 +3455,25 @@
    "capture": "MEDIUM, arm side only",
    "note": "Close-out: High 7.62 (G-things-toys-ui.md, b4439ea2b). Closes at Medium 7.5+ once the flag lands.",
    "done": "G-f40-13-catch-card-medium 04d17515d (judging)"
+  },
+  {
+   "id": "below6-stormheart-approach",
+   "kind": "arm",
+   "rows": [
+    "F41#1"
+   ],
+   "branch": "tb/below6",
+   "head": "61a8487d2",
+   "tree": "tb/below6 61a8487d2 for BOTH sides (its phase2_capture_locations.gd adds the approach_overrides hook; flags off renders as main with the old stands)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-RAMP/overlay_approach.json (heartwood on, split_bark_finish.aged_heartwood_1112 on, capture_stands approach_overrides on)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-RAMP/CAPTURE.json",
+   "job": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042 --output={OUT}",
+   "capture": "High. Base = tb/below6 with only heartwood_1111 ON (as main now ships) and the old stands; arm = the overlay",
+   "want_to_see": "approach frames: the trunk and gate centre-frame at the end of the road (spot a); close frames unchanged; the split's exposed wood reads as aged heartwood, not an orange slab",
+   "priority": "below 6 (F41#1)",
+   "note": "Stand move lands only with its game fix (the aged heartwood finish on the split trunk's exposed wood)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
