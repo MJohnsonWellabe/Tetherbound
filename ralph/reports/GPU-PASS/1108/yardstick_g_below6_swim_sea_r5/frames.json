@@ -1,0 +1,7 @@
+{"branch": "tb/gpu-frames-1108", "renderer": "High",
+ "sections": {"G-below6-swim-r5": "5f025653b (tb/below6 2d35377bc; arm BELOW6-SWIM/overlay.json)", "G-below6-restored-sea-r5": "15076fecf (tb/below6 e4a71f5df; arm BELOW6-RESTORED-SEA/overlay.json)"},
+ "sets": {"F39#5 row": ["entry", "surface_west", "surface_mid"], "F39#14 row": ["entry", "surface_west", "surface_mid"],
+  "F39#5 other frames": ["surface_east", "surface_far", "east_dry_exit"],
+  "F39#17 row (2x2)": ["S1_live_t0", "S1_restored_t0", "S2_live_t0", "S2_restored_t0"],
+  "F39#17 other stands (2x2)": ["S3_restored_t0", "S3_restored_t1", "S4_restored_t0", "S4_restored_t1"]},
+ "confound": "shore follower creature differs between runs in every swim frame (base blue turtle, arm green crocodilian)"}
