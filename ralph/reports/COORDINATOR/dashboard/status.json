@@ -2413,7 +2413,7 @@
     },
     "F40#13": {
       "gpu": 7.62,
-      "src": "G-things-toys-ui (LANE-SCOUT b4439ea2b), GPU High: catch card clears on aim 6.88 -> 7.62 (+0.74, 3/3); arm not yet landed; Medium queued"
+      "src": "G-things-toys-ui High 7.62 and G-f40-13-catch-card-medium (LANE-SCOUT 6dfe45f55) Medium 7.76: closes when PR #914 lands the catch_card arm"
     },
     "F40#14": {
       "gpu": 6.99,
@@ -2742,6 +2742,10 @@
     "F36#80": {
       "gpu": 6.04,
       "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, LANDED #912: Thundertunnel coat 4.63 -> 6.04 (+1.41, 3/3)"
+    },
+    "F36#29": {
+      "gpu": 7.03,
+      "src": "G-innkeeper-baseline (LANE-SCOUT 6dfe45f55), GPU High on main's shipped body: 7.03 (defect PARTIAL 2/3). The old 5.83 was an unshipped candidate. Near-bar: face texture, separated browns and a relaxed idle"
     }
   }
 }
