@@ -2,18 +2,38 @@
  "row": "F41#13 electric creature finish (5.97): Stormraven",
  "branch": "tb/below6",
  "tool": "res://tools/phase2_capture_creatures.gd",
- "args": ["--biome=stormwood", "--only=stormraven", "--seed=2042", "--output={OUT}"],
+ "args": [
+  "--biome=stormwood",
+  "--only=stormraven",
+  "--seed=2042",
+  "--output={OUT}"
+ ],
  "output_rule": "the tool writes under res://ralph/reports/VISUAL/phase2/stormwood/",
- "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
- "resolution": [1920, 1080],
- "presets": ["High"],
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080",
+  "--fixed-fps",
+  "20"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "presets": [
+  "High"
+ ],
  "preset": "High",
- "frames": ["stormwood__stormraven__idle"],
+ "frames": [
+  "stormwood__stormraven__idle"
+ ],
  "row_also_has": "stormwood__fulgocobra__idle (unchanged by this arm; judge the row as the pair, as G-rescore-stale-d did)",
- "overlay": "ralph/reports/LANES/BELOW6-STORMRAVEN/overlay.json",
+ "overlay": "ralph/reports/LANES/BELOW6-STORMRAVEN/overlay_night.json",
  "capture_both": "base (overlay off) and arm (overlay on), same command as G-rescore-stale-d used for F41#13",
- "needs_import": "yes: one new texture, creature_stormraven_owner1101_glow_read_r2.png (import sidecar committed, mode 2)",
- "_why": "G-rescore-stale-d: 'Stormraven is a flat cobalt shape with no visible face, eye or charge contrast'. Arm: the remake's own glow map redrawn stronger (filled lit eyes, wider lightning feather lines), lit at 3.4 with a cool rim.",
- "want_to_see": "a lit eye that reads at normal creature distance and feather lines that read as charge, with the head separating from the ground. Say if the eye blooms into a white blob or the body reads as speckled: emission energy and rim are config.",
- "note": "In my CPU frame the trainer stands on Rodkeeper Hesk's head beside the raven (both sides, not from this arm): the creature stand overlaps his post."
+ "needs_import": "yes: one new texture, creature_stormraven_owner1101_Image_0_night.png (sidecar committed, mode 2); glow_read_r2.png as before",
+ "_why": "G-below6-stormraven-masonry 3/3: 'flat, saturated royal-blue bird ... glossy plastic, no feather detail, no rim light, no electric trait' where the board shows a black raven with blue lightning. r3: a near-black feather base derived from the remake's own albedo, the widened lightning glow map with its pupilled eye at 2.4, a strong cool rim and a matte finish.",
+ "want_to_see": "a black raven whose lightning lines and eye carry the charge, with the head and body holding their silhouette against the ground through the rim. Say if the body is a featureless black hole (the albedo can lift), if the lines clip to white, or if the flecks read as speckle.",
+ "note": "CPU look was captured at emission 3.2, where the lines clip to white; the pushed value is 2.4 and was not re-captured. CPU shows no bloom and little of the rim.",
+ "round": "r3: near-black feather base (after G-below6-stormraven-masonry: r2 level)"
 }

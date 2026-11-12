@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 06:10 UTC: STORMRAVEN r3 ready (near-black raven)
+
+`ralph/reports/LANES/BELOW6-STORMRAVEN/` now carries r3 as its own flag, `creature_coat_flags.json below6_stormraven_night` (OFF), overlay `overlay_night.json`: a near-black feather base derived from the remake's albedo, the widened lightning lines and pupilled eye at 2.4, a strong cool rim, matte finish. One new derived texture (needs import; sidecar committed, policy check passes). On CPU it reads as a black raven with lightning flecks and a lit eye. CAPTURE.json is updated; please pre-check for a featureless black body or clipped white lines.
+
+Waiting on the GPU: WAKE (pre-check), STORMRAVEN r3 (pre-check). Waiting to land: `tb/below6-swimsea-land` (#934), `tb/below6-masonry-land`.
+
+
 ## 13 Nov, about 05:15 UTC: `tb/below6-masonry-land` cut; relay of G-below6-stormraven-masonry
 
 **Coordinator, LANE-SCOUT asked me to relay G-below6-stormraven-masonry (tb/item-scout-1108 832aaa06).**
