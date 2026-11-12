@@ -417,7 +417,25 @@ func _build_environment() -> void:
 	if not "--no-graphics-preset" in OS.get_cmdline_user_args():
 		var prefs := preload("res://scripts/ui/graphics_prefs.gd")
 		prefs.load_preferences()
+		# The stage's own backdrop and fill are the calibration (see above) and
+		# are not the preset's to change. On Forward+ the first version of this
+		# rendered the backdrop black on both presets (GPU lane, main 6906a2eb):
+		# the preset turns volumetric fog on, and with no sky a BG_COLOR backdrop
+		# takes the fog's black. The stage is a studio with no air: keep the
+		# preset's shading (glow, SSAO, SSIL, shadows, filtering) and drop fog.
+		var stage_background_mode := env.background_mode
+		var stage_background := env.background_color
+		var stage_ambient_source := env.ambient_light_source
+		var stage_ambient := env.ambient_light_color
+		var stage_ambient_energy := env.ambient_light_energy
 		prefs.apply_environment(env)
+		env.volumetric_fog_enabled = false
+		env.fog_enabled = false
+		env.background_mode = stage_background_mode
+		env.background_color = stage_background
+		env.ambient_light_source = stage_ambient_source
+		env.ambient_light_color = stage_ambient
+		env.ambient_light_energy = stage_ambient_energy
 		prefs.apply_sun(key)
 		prefs.apply_viewport(root)
 		prefs.apply_camera(_camera)
