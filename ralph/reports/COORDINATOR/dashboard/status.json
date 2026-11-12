@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 21:45 UTC",
+  "updated": "12 Nov 2026 21:55 UTC",
   "headline": [
+    "12 Nov 21:55: #935 in full CI: the Cloudreach bridge strip (F40#8 6.37) and the High Perches rim mushrooms (F40#17 6.94). #934 (swim and restored sea) had one Tidewake chain time out while loading; it will be re-run once when its run completes.",
     "12 Nov 21:45: knife-edge ships (F40#8 5.61 to 6.37, 3/3; the black rail strip across the grass at Three Bells is gone). Main's full run after #933 fixed smoke_art, the Tidewake relay and the Livewire net smoke; two reds remain (F18 earned loop: the player gets stuck in terrain on a walk; the shared boss net smoke, intermittent). LANE-CIFIX has both.",
     "12 Nov 21:20: mushrooms split. The High Perches rim dressing ships (F40#17 6.01 to 6.94, 3/3); the pickup restyle does not (the finds read as smudges and herbs, -0.74 in Meadows). LANE-BELOW6 cuts the rim part alone for landing. #934 (swim and restored sea) is waiting for a CI runner.",
     "12 Nov 21:05: #934 is in full CI: the surface swim stroke (F39#5 5.98, F39#14 6.12) and the restored sea (F39#17 6.27). Auto-merge is off; I merge by hand once the engine jobs have run.",
