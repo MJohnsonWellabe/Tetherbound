@@ -1029,6 +1029,15 @@
           "roughness": 0.88, "specular": 0.25
         }
       }
+    },
+    "things_brooktail_spots_1112": {
+      "_why": "LANE-THINGS (12 Nov 2026), F36#36 Brooktail close-out (G-medium-ashtusk-brooktail-ruler.md: High 7.69, Medium 7.03; 3/3 'the aqua spots are too many and too large, and read as a leopard pattern'). Owner pick: deep-river black otter with glowing aqua spots. The same lifted coat with the small spots removed and the large ones shrunk (spot area 2.5% -> 0.7% of the atlas), the removed texels filled with the otter's own dark coat. Comes after remake_owner1101_dark_lift so it wins. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101_Image_0_coat_lift_spots.jpg"
+        }
+      }
     }
   }
 }
