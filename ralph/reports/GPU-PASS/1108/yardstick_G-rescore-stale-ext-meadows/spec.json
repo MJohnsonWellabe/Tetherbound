@@ -1,0 +1,235 @@
+[
+ {
+  "label": "F38#3",
+  "frames": [
+   "meadows__fights__south_bridge_grunt-01.jpg",
+   "meadows__fights__south_bridge_grunt-02.jpg",
+   "meadows__fights__south_bridge_grunt-03.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: fight camera and creature scale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "F38#4",
+  "frames": [
+   "meadows__menu_map.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: map. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+  ]
+ },
+ {
+  "label": "F38#7",
+  "frames": [
+   "meadows__catching__01-aiming-full-health.jpg",
+   "meadows__catching__catch_high.jpg",
+   "meadows__catching__catch_low.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: catch aim readability. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+  ]
+ },
+ {
+  "label": "F38#8",
+  "frames": [
+   "meadows__flying__glide.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Fly carrier grip pose. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person"
+  ]
+ },
+ {
+  "label": "F38#9",
+  "frames": [
+   "meadows__menu_backpack.jpg",
+   "meadows__menu_build.jpg",
+   "meadows__menu_creatures.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: menu shell. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world"
+  ]
+ },
+ {
+  "label": "F38#10",
+  "frames": [
+   "meadows__menu_build.jpg",
+   "meadows__menu_players.jpg",
+   "meadows__menu_quest_log.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: secondary menu panels. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+  ]
+ },
+ {
+  "label": "F38#11",
+  "frames": [
+   "meadows__fights__south_bridge_grunt-02.jpg",
+   "meadows__fights__south_bridge_grunt-03.jpg",
+   "meadows__fights__south_bridge_grunt-05.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: shared fight tell and hit effects. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes"
+  ]
+ },
+ {
+  "label": "F38#13",
+  "frames": [
+   "meadows__catching__03-absorbing.jpg",
+   "meadows__catching__03-strike.jpg",
+   "meadows__catching__04-orb-resting.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: catch sequence camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+  ]
+ },
+ {
+  "label": "F38#14",
+  "frames": [
+   "meadows__catching__03-absorbing.jpg",
+   "meadows__catching__03-strike.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: catch effect finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames"
+  ]
+ },
+ {
+  "label": "F38#15",
+  "frames": [
+   "meadows__flying__glide.jpg",
+   "meadows__flying__landed.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: flight and landing pose read. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut"
+  ]
+ },
+ {
+  "label": "F38#18",
+  "frames": [
+   "meadows__system__crafting.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: craft recipe text. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Long recipe names and material preview lines are clipped in the crafting list"
+  ]
+ },
+ {
+  "label": "F38#19",
+  "frames": [
+   "meadows__exploration_hud.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: exploration HUD. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+  ]
+ },
+ {
+  "label": "F38#20",
+  "frames": [
+   "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Team Tether stronghold. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ },
+ {
+  "label": "F38#21",
+  "frames": [
+   "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach.jpg",
+   "meadows__band3_the_river_lock__06__old_mill_crossing__day__close.jpg",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: ground cover. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks"
+  ]
+ },
+ {
+  "label": "F38#22",
+  "frames": [
+   "meadows__band3_the_river_lock__06__old_mill_crossing__day__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: mill and settlements. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+  ]
+ },
+ {
+  "label": "F38#23",
+  "frames": [
+   "meadows__band3_the_river_lock__05__the_tether_relay__route_day.jpg",
+   "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Tether Relay yard. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp"
+  ]
+ },
+ {
+  "label": "F38#25",
+  "frames": [
+   "meadows__nightburrow__idle.jpg",
+   "meadows__nightburrow__shiny_idle.jpg",
+   "meadows__stormtrail__shiny_idle.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: shiny palette distinction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view"
+  ]
+ },
+ {
+  "label": "F38#33",
+  "frames": [
+   "meadows__catching__06-breakout.jpg",
+   "meadows__catching__08-caught-verdict.jpg",
+   "meadows__catching__09-caught-banner.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: catch result hierarchy. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish"
+  ]
+ },
+ {
+  "label": "F38#34",
+  "frames": [
+   "meadows__system__building.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: placed wall visual. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+  ]
+ },
+ {
+  "label": "F38#35",
+  "frames": [
+   "meadows__inventory__character__halda.jpg",
+   "meadows__inventory__character__lark.jpg",
+   "meadows__inventory__character__oskar.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: human post poses. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles"
+  ]
+ },
+ {
+  "label": "F38#38",
+  "frames": [
+   "meadows__system__crafting.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Craft and leave button hints are faint gray on the dark translucent craft panel"
+  ]
+ }
+]

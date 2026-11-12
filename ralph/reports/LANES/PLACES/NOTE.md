@@ -22,6 +22,26 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 - F41#18: 6.1 -> 5.93 (12 Nov, G-rescore-stale-tier2)
 **Flags:** none at 7.5 or above. Below 6 now: F38#12 5.89; F38#20 5.72; F39#5 5.64; F40#15 5.89; F41#18 5.93. F38#21 was judged on 2 of its job frames (it rode along); re-judge it in the Meadows batch.
 
+**G-rescore-stale-ext-meadows** (`ralph/reports/GPU-PASS/1108/G-rescore-stale-ext-meadows.md`; fit r 0.867, RMSE 0.58). **Caveat: this batch reads about 0.6 above tier2 on the five rows judged in both, and every score above 7.35 is extrapolated.**
+- F38#3: 6.49 -> 8.09 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#4: 7.21 -> 8.09 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#7: 7.26 -> 7.52 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#9: 7.32 -> 8.29 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#10: 6.58 -> 7.38 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#11: 6.89 -> 7.47 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#13: 7.16 -> 7.66 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#15: 6.84 -> 7.23 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#18: 7.95 -> 8.24 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#19: 6.89 -> 7.62 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#21: 7.0 -> 6.95 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#23: 7.58 -> 6.57 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#25: 6.23 -> 7.23 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#33: 7.32 -> 8.14 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#34: 6.75 -> 7.76 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#35: 6.31 -> 6.33 (12 Nov, G-rescore-stale-ext-meadows)
+- F38#38: 8.16 -> 8.52 (12 Nov, G-rescore-stale-ext-meadows)
+**Flags:** eleven rows map at 7.5 or above (F38#3, #4, #7, #9, #13, #14 partial, #18, #19, #33, #34, #38): candidates for a Medium capture plus a confirming two-sided judgement, not High passes yet. F38#23 dropped 7.58 → 6.57 (its defect is fixed; the yard is now an empty stretched-cobble plane). None below 6.
+
 ### Build work handed over
 | Item | State | Goes to |
 |---|---|---|
