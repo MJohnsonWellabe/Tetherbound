@@ -1,7 +1,7 @@
 {
   "updated": "11 Nov 2026 20:25 UTC",
   "headline": [
-    "12 Nov 00:11: landed #910, #911, #912 (Voltarach 6.50, Ribbonray 6.90, Trail Camp 6.91, Abyssal matte, Thundertunnel 6.04, Stormheart core, grounded faints for seven rows incl. Water Mirejaw 7.39 and Cragclaw 7.51, Water Mosshell 6.67, Galewisp 7.44, dialogue capture fixes, Windows download fix). Closed: F36#69 Solmane. Judged, landing next: F40#13 catch card 7.62 (Medium queued), F36#52 Mirejaw hit +0.60. Judging: Stormwood storm light.",
+    "12 Nov 02:20: wrap-up (owner) to get everything on main. Landed tonight: #910, #911, #912, #914, #915. Closed: F36#69 Solmane, F40#13 catch feedback. Still to land: Stormheart approach stand (F41#1 6.81) and the conversation camera (waits for Tidewake/Cloudreach/Stormwood checks); last GPU items: Pebbik/Breezetail Medium, Galewisp carrier, Stormwood road value.",
     "11 Nov 20:25: lane restructure (owner): LANE-BELOW6, LANE-THINGS, LANE-PLACES + GPU lane + LANE-SCOUT. Current build lanes are writing handoffs. PR #910 (dialogue capture blend fix + Trail Camp F38#32 6.91) in CI.",
     "11 Nov 20:16: lanes LANE-FLOOR2, LANE-NEWAPPROACH and LANE-REMAKES stopped at 19:35 on the weekly usage limit; owner reset it and all lanes are resumed. New LANE-STORMWOOD takes the Stormwood storm-light pass (8 F41 rows incl. F41#8). Lanes: FLOOR2 (camp landing, faint grounding, dust/pickups), NEWAPPROACH (dialogue blend fix, Water Mosshell ride, conversation shot, Cloudreach rain), REMAKES (Voltarach, Abyssal Guardian x2, Ribbonray materials), MESHY (new art below 6), STORMWOOD, SCOUT (judging), GPU lane.",
     "11 Nov 19:22: F36#72 Stormbrush poses CLOSES at 7.5 (High 7.68, Medium 7.75) on a plain re-score of the 1 Nov remake. New LANE-REMAKES takes the regressed remakes' materials (Voltarach, Abyssal Guardian x2, Ribbonray); LANE-FLOOR2 the shared faint grounding (Water Mirejaw, Water Abyssal Guardian); LANE-NEWAPPROACH the Water Mosshell ride.",
@@ -2045,10 +2045,7 @@
       "before": 5.22,
       "after": 5.8,
       "pr": "#914"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F36#58 Pebbik faint (Medium queued)",
       "before": 7.0,
@@ -2092,7 +2089,14 @@
       "pr": "#915"
     }
   ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#915",
+      "what": "Batches 70+71: faint round 2 (Pebbik 7.65, Breezetail 7.61, Water Mangrove Monitor 7.19, Paddlenewt, Riftfrill, Shadelet), Cloudreach rain grade (F40#0 rain sets +0.70), rolling download ships in parts under 2 GiB with JOIN.cmd",
+      "when": "02:20 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#914",
       "what": "Batches 68+69: catch card clears on aim (F40#13 CLOSED, Medium 7.76), Mirejaw grounded hit (F36#52 +0.60), Stormwood storm light and distinct villager bodies (F41#2 +0.80, F41#8 +0.58), Building far bolts off per owner",
@@ -2640,7 +2644,7 @@
     },
     "F40#0": {
       "gpu": 6.54,
-      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads.; G-places-raintime (LANE-SCOUT): rain half of the matrix 5.04 -> 5.74 (+0.70, 12/12 sets 3/3), rain grade in PR #915 (row not re-scored as a whole yet)"
+      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads.; G-places-raintime (LANE-SCOUT): rain half of the matrix 5.04 -> 5.74 (+0.70, 12/12 sets 3/3), rain grade LANDED #915 (row not re-scored as a whole yet)"
     },
     "F40#19": {
       "gpu": 6.66,
@@ -2704,7 +2708,7 @@
     },
     "F36#92": {
       "gpu": 7.19,
-      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (landing tb/things-faint2-land, not yet on main): water mangrove monitor 6.84 -> 7.19 (3/3)"
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: water mangrove monitor 6.84 -> 7.19 (3/3)"
     },
     "F36#50": {
       "gpu": 6.98,
@@ -2788,15 +2792,15 @@
     },
     "F36#57": {
       "gpu": 6.96,
-      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (landing tb/things-faint2-land, not yet on main): paddlenewt 6.47 -> 6.96 (3/3)"
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: paddlenewt 6.47 -> 6.96 (3/3)"
     },
     "F36#62": {
       "gpu": 6.85,
-      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (landing tb/things-faint2-land, not yet on main): riftfrill 6.43 -> 6.85 (3/3)"
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: riftfrill 6.43 -> 6.85 (3/3)"
     },
     "F36#66": {
       "gpu": 6.09,
-      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (landing tb/things-faint2-land, not yet on main): shadelet 5.43 -> 6.09 (3/3)"
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: shadelet 5.43 -> 6.09 (3/3)"
     },
     "F36#80": {
       "gpu": 6.04,
