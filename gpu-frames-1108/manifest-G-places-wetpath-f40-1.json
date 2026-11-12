@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/arm-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.186,
+  "lower_edges": 0.2668,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/arm-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.281,
+  "lower_edges": 0.2293,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/arm-High/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.144,
+  "lower_edges": 0.1622,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/arm-High/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.186,
+  "lower_edges": 0.2432,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/arm-High/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "sky_fraction": 0.11,
+  "lower_edges": 0.2224,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/arm-High/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "sky_fraction": 0.075,
+  "lower_edges": 0.3264,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.186,
+  "lower_edges": 0.2683,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.28,
+  "lower_edges": 0.2294,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/base-High/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.144,
+  "lower_edges": 0.1624,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/base-High/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.186,
+  "lower_edges": 0.246,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/base-High/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "sky_fraction": 0.111,
+  "lower_edges": 0.221,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-places-wetpath-f40-1/base-High/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "sky_fraction": 0.075,
+  "lower_edges": 0.3284,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#1 job.json frames + controls."
+ }
+]
