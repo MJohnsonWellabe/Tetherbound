@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "preset": "base-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-roadvalue-storm/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "sky_fraction": 0.116,
+  "lower_edges": 0.2808,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#2."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "preset": "base-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-roadvalue-storm/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "sky_fraction": 0.128,
+  "lower_edges": 0.2768,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#2."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "preset": "base-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-roadvalue-storm/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "sky_fraction": 0.121,
+  "lower_edges": 0.3078,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#2."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "preset": "base-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-roadvalue-storm/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "sky_fraction": 0.147,
+  "lower_edges": 0.301,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#2."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "preset": "roadnp-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-roadvalue-storm/roadnp-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "sky_fraction": 0.113,
+  "lower_edges": 0.274,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#2."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "preset": "roadnp-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-roadvalue-storm/roadnp-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "sky_fraction": 0.117,
+  "lower_edges": 0.2636,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#2."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "preset": "roadnp-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-roadvalue-storm/roadnp-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "sky_fraction": 0.122,
+  "lower_edges": 0.2937,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#2."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "preset": "roadnp-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-roadvalue-storm/roadnp-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "sky_fraction": 0.149,
+  "lower_edges": 0.2884,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#2."
+ }
+]
