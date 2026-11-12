@@ -1,6 +1,8 @@
 # THINGS-CONVCLEAR-LAND: the conversation shot keeps the player and the companion out of the speaker's third; ships ON
 
-STATUS: land
+STATUS: hold
+
+**Held by the coordinator (12 Nov):** the camera rule runs in every biome, so Tidewake, Cloudreach and Stormwood are being captured with it first to confirm no loss. Flip this to `STATUS: land` when those verdicts are in.
 
 - **Branch:** `tb/things-convclear-land`, cut from `origin/main` 4e35bfbd.
 - **Owner:** approved 11 Nov for conversation shots only, to ship if the GPU judges confirm it.
