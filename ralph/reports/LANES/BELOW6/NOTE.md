@@ -1,29 +1,27 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
-## State (11 Nov 2026, 23:10 UTC)
+## State (12 Nov 2026, about 03:30 UTC)
 | Row | Arm | Status |
 |---|---|---|
-| F41#1 Stormheart, F36#80 Thundertunnel | landing | **in PR #912** (coordinator; one older test, `test_dark_value_lift_flags.gd`, pinned the texture this replaces and was fixed there). Was `tb/below6-heartwood-thundertunnel-land` (1ac181b28, cut from origin/main 8df122a83). GPU High: Stormheart 4.29 -> 5.66 (close-only 5.95), Thundertunnel 4.63 -> 6.04, 3/3 each. Both flags ON with `_why_on`, two pinning test files, 55 tests / 7860 assertions pass. READY on that branch, STATUS: land. **Read its "One difference from the judged arm":** the heartwood's axis collider ships OFF because it broke the tree's pinned physics tests; players can walk into the root cage. |
-| F36#30 Abyssal Guardian matte hide | landing | PR #911 (5.22 -> 5.77). |
-| F36#52 Mirejaw, F36#30 Abyssal Guardian hit reactions | `BELOW6-HITS` (two clip flags, config only) | **ready for GPU**; one capture command, judge per species. |
-| F36#86 Voltarach, F36#61 Ribbonray | landed | PR #910 (6.50, 6.90). |
-| F36#94 Water Mosshell | won | 4.65 -> 6.67; LANE-THINGS lands it. |
-| F41#1 core follow-up | `BELOW6-COREV2` (`heartwood_1111.core_v2`, OFF) | **parked, not sent** after three CPU looks: facet contrast works, arc lines keep drawing a horizontal white line (`NOT-SENT.md`). |
-| F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | not sent: no visible change on CPU (`NOT-SENT.md`). |
-| F40#3 Cloudreach landmark read (5.65) | `BELOW6-CROWNS` | not sent (`NOT-SENT.md`). |
-| F36#88 Water Abyssal Guardian | none | material lever spent; a new mesh is the judges' ask: parked without Meshy. |
-| F40#1 Cloudreach open terrain (5.90) | none | looked at, nothing built: eight dressing candidates already failed; the untried lever is raising the island crown itself (`cloudreach_world.gd _mesa`), a multi-hour terrain change with route and collision risk. |
-| F36#29 innkeeper (Wilhelm) | `BELOW6-INNKEEPER-BASE/CAPTURE.json` (baseline, one side, main, High) | **baseline request pushed.** Correction to my earlier line: a GPU number does exist, 5.90 at Medium from the F36(0) NPC face round (`ITEM-F36-29/READY.md`); the 5.83 was a Meshy candidate (VIS-STORMWOOD READY). CPU on the shipped body: 7.36 (cast stand), 6.20 (dialogue). No GPU High score exists. Two grade arms are parked; the judges' ask is a face-texture refinement. |
+| F41#15 (4.49), F41#7 (6.24): Captain Marrow's white head | `BELOW6-MARROW` (two flags, one new texture) | **ready for GPU.** Cause found: he emits his own texture plus a 0.18 floor that comes from `stormwood_character_presentation.json`, which no earlier arm touched. Body fixed on CPU; the face only partly (scene light remains). See ARM.md. |
+| F41#1 Stormheart approach frames | `BELOW6-RAMP` (new approach stand from the GPU screen + aged heartwood) | **ready for GPU**, all four frames. Read ARM.md: my first diagnosis (the ramp) was wrong and is corrected there. |
+| F36#52 Mirejaw, F36#30 Abyssal Guardian hit reactions | `BELOW6-HITS` | ready for GPU (queued by the coordinator as BELOW6-MIREJAW earlier) |
+| F36#29 innkeeper | `BELOW6-INNKEEPER-BASE/CAPTURE.json` | baseline request pushed (one side, main, High) |
+| F41#1 heartwood, F36#80 Thundertunnel | landing | PR #912 |
+| F36#30 Abyssal matte hide | landing | PR #911 |
+| F41#1 core follow-up | `BELOW6-COREV2` | parked, not sent |
+| F36#46 Fulgocobra, F40#3 crowns | | not sent (NOT-SENT.md in each folder) |
+| F36#88 Water Abyssal Guardian | | material lever spent; needs a new mesh: parked |
+| F40#1 Cloudreach open terrain (5.90) | none | nothing built; the untried lever is raising the island crown itself |
 | F41#8 (5.31) | `tb/item-f41-8-bodies` | rides with LANE-PLACES' storm-light pass |
-| F39#8 (5.66) | none | parked (no new idea) |
+| F39#8 (5.66) | | parked |
 
-**Next on F41#1 (CORRECTED 12 Nov):** the orange slab in the approach frames is **not** the entrance ramp, as I first wrote; it is the south split's exposed inner wood. The fix is `split_bark_finish.aged_heartwood_1112` (flag-off, built, CPU-checked: `BELOW6-RAMP/ARM.md`). The ramp body the coordinator asked for is also built and tested flag-off (`ramp_body_1112`), but no judged frame shows the ramp. **Waiting for the GPU's stand-screening frames** to pick the new approach stand and send one arm. Core follow-up parked (`BELOW6-COREV2`). **Next on Thundertunnel:** the lines as glowing veins, a faint with the head out of the curl.
-
-**For LANE-THINGS:** Voltarach's hit is recipe-driven; a clip flag cannot reach it (captured, identical frames).
+**For LANE-PLACES (storm light):** after Marrow's own emission is off, the DynamoCore deck's scene light still clips a pale face on CPU. Captain_b (Nerissa) has the same missing `body_emission_enabled` in `art.json`.
+**For LANE-THINGS:** Voltarach's hit is recipe-driven; a clip flag cannot reach it.
+**Meshy:** no generations (owner, 11 Nov). Credits spent: 0.
 
 **Lane checkout:** `creature_coat_flags.json`, `creature_clip_flags.json` and `tests/test_remakes_floor_landed.gd` are synced to main 8df122a83 (the #910 flags ON) with this lane's OFF flags appended. The branch is not otherwise merged with main (shallow checkout).
 
-**Meshy:** owner, 11 Nov ("We don't have meshy credits"): no generations. None were made by this lane; credits spent: 0. New art here is Blender or installed families.
 
 **Left on the two landed rows (judges, arm side):** Voltarach's face is one blue eye spot with no head mass, its hit barely differs from standing, some gold sheen on leg tips. Ribbonray's upright two-legged anatomy is mesh: parked without Meshy unless a pose or rig idea turns up.
 
