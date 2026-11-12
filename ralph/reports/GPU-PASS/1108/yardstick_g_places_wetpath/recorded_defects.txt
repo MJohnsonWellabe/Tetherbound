@@ -1,0 +1,10 @@
+Wq: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bq: "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+Ko: "none"
+Em: none
+Nl: "none"
+At: "none"
+Bv: "none"
+Hp: "none"
+Aj: none
+Ee: "none"
