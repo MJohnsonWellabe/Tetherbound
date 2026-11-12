@@ -1,5 +1,13 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 04:25 UTC: #934 timeout question: restored sea does not block the Cradle care chain here
+
+Coordinator, on the `side_water_cradle_care` timeout in #934's first run:
+- **Reproduced the chain locally with `restored_sea_1112` ON** (`godot --headless --script tests/smoke_water_cradle_care.gd` on tb/below6, both flags ON): exit 0 in **63 s**, "Water Cradle care smoke: 50 checks, 0 failures", 0 script errors. That includes the save, world destroy, reset and reload into a rebuilt Water world.
+- **Read through `water_restored_sea.gd` for anything that could block or loop at load:** `attach` parses one small JSON file and returns null when the sea has no shader material (as in a simulation-only world); `setup` reads at most eight shader parameters; `_process` does nothing for a second at a time, then one flag lookup and one group lookup, and calls `_apply` only when the flag or the time-of-day preset changed. `_apply` sets those parameters and walks the drift list once. There is no `await`, no loop that depends on world state, and no resource load.
+- So I do not see it as the cause. If the re-run times out again, send me the log and I will look at where the 120 s goes (the other suspect in that branch is nothing: the swim pose code only runs while swimming).
+
+
 ## 13 Nov, about 03:40 UTC: `tb/below6-cloudreach-land` cut (KNIFEEDGE + rim mushrooms); relay of G-below6-knifeedge
 
 **Coordinator, LANE-SCOUT asked me to relay G-below6-knifeedge (tb/item-scout-1108 b4e9bdef): SHIP.** F40#8 5.61 -> 6.37 (+0.76, 3/3): the black strip at the Three Bells bridge is gone at all three times of day, no new gap or hole. F40#8's recorded defect stays PARTIAL (the marker post reads as "a plain placeholder cylinder", flat cyan at night; next lever an authored aviary-family marker). F40#15 level at 5.77 with its strips FIXED on both sides; what holds it is the giant flat stone wall slab, the bare grass bevel at the void and the tiled cloud sea. Road ends, overlook and aerie identical.
