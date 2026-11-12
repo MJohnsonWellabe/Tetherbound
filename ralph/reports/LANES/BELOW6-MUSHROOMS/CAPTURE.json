@@ -1,0 +1,22 @@
+{
+ "row": "Toy pickups: F40#16 mushroom pickup variants (6.19) and F40#17 High Perches rim mushroom (6.08)",
+ "branch": "tb/below6",
+ "captures": [
+  {"tool": "res://tools/phase2_capture_world_inventory.gd",
+   "args": ["--biome=cloudreach", "--subset=cloudreach__inventory__pickup__speed_mushroom", "--subset=cloudreach__inventory__pickup__wild_mushroom", "--seed=2042", "--output={OUT}"],
+   "frames": ["cloudreach__inventory__pickup__speed_mushroom", "cloudreach__inventory__pickup__wild_mushroom"]},
+  {"tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+   "args": ["--seed=2042", "--output={OUT}"],
+   "frames": ["cloudreach__flying__high-perches-crown-rim-out-day", "cloudreach__flying__high-perches-crown-rim-out-night"]}
+ ],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-MUSHROOMS/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same commands as the F-cloudreach pass used for F40#16 and F40#17",
+ "needs_import": "no: installed stylized_nature models only",
+ "_why": "F-cloudreach, 3/3 on F40#16 and F40#17: the caps are 'oversized and toy-saturated against the stylised-realism direction'. Arm: each mushroom find is a small patch of installed mushrooms (five for Speed and Stamina, three shelf fungi for Wild) in a muted cap colour, about 0.6x the old cap height.",
+ "want_to_see": "a patch that reads as grown there, Speed (slate blue) and Wild (rust-orange shelf fungus) clearly different in silhouette and colour, still findable at normal camera distance. Say if the Speed patch is now too small or too pale to find: height_scale and tint are config.",
+ "note": "The high-perch frames were not captured on CPU (only the two inventory frames were). The presentation is shared, so Meadows and Stormwood mushroom finds change too; their rows (F38#6, F41#14) can be added to the batch if cheap."
+}

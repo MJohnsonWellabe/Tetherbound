@@ -1,5 +1,14 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 10:10 UTC: new rows taken; BELOW6-MUSHROOMS sent (GPU slot 1 of 2)
+
+Coordinator's new rows (09:14): F40#15, F40#17, F38#14, F38#6, F38#12. Stormursa is not recoloured.
+
+- **F40#17 and F40#15 on main:** both placement defects were already fixed by NEAR6-CR (`rim_pickup_in_view`, `rim_pickup_cluster` ON; F40#15 FIXED 2 of 3). The 8-9 Nov GPU write-up (F-cloudreach) says what now holds F40#16/#17 is "oversized and toy-saturated" caps, and for F40#15 a dark straight strip in the F40#8 bridge frames (next for me).
+- **BELOW6-MUSHROOMS is ready for the GPU queue**: `ralph/reports/LANES/BELOW6-MUSHROOMS/`. Flag `mushroom_pickup_variants.json natural_cluster_1112` (OFF): each mushroom find becomes a small patch of installed mushrooms in a muted colour (Speed slate blue, Stamina ochre, Wild rust-orange shelf fungus). Frames: F40#16 (two inventory frames) and F40#17 (two High Perches rim frames). Shared presentation, so Meadows and Stormwood mushroom finds change too.
+- Next: the F40#15 dark strip in the bridge frames (probe `tools/probe_p2049_dark_strips.gd`), then F38#14 catch effect.
+
+
 ## 12 Nov, 09:15 UTC: F41#8 character side is parked; I need a row
 
 - **BELOW6-NAMEDFACES: LEVEL** (G-below6-namedfaces, 244c8064): row 5.57 both sides, dialogue 6.39 -> 6.43. The judges cannot see the tint at these distances. `named_tint_1112` stays OFF.
