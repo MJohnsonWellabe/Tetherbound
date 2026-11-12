@@ -2084,6 +2084,12 @@
       "before": 5.43,
       "after": 6.09,
       "pr": "#915"
+    },
+    {
+      "item": "F40#0 Cloudreach rain sets (rain half of the matrix)",
+      "before": 5.04,
+      "after": 5.74,
+      "pr": "#915"
     }
   ],
   "landed_recent": [
@@ -2634,7 +2640,7 @@
     },
     "F40#0": {
       "gpu": 6.54,
-      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads."
+      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads.; G-places-raintime (LANE-SCOUT): rain half of the matrix 5.04 -> 5.74 (+0.70, 12/12 sets 3/3), rain grade in PR #915 (row not re-scored as a whole yet)"
     },
     "F40#19": {
       "gpu": 6.66,
