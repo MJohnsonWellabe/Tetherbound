@@ -3875,6 +3875,62 @@
    "pre_check": "Galewisp head not cropped at launch; landed bird beside the trainer, whole",
    "priority": "Galewisp flight frames 6.83; F36#48 at 7.44 (near-bar)",
    "note": "Carrier lands beside the trainer (side 2.3 m, forward 1.2 m) and Galewisp presentation height 3.0 -> 3.4 (grow, never shrink)."
+  },
+  {
+   "id": "things-stormpost",
+   "kind": "arm",
+   "rows": [
+    "F41#15",
+    "F41#7",
+    "F41#11",
+    "F41#20"
+   ],
+   "branch": "tb/things",
+   "head": "b628efddf",
+   "order": 1,
+   "tree": "tb/things b628efddf both sides; IMPORT needed (merged dressing adds stormheart_heartwood_core.gdshader)",
+   "overlays": {
+    "base": "ralph/reports/LANES/THINGS-STORMPOST/overlay_base.json (dressing OFF; base = main)",
+    "arm": "ralph/reports/LANES/THINGS-STORMPOST/overlay_arm.json (wild_post_clearance_1112 ON, dressing ON)"
+   },
+   "request": "ralph/reports/LANES/THINGS-STORMPOST/CAPTURE.json (F41#15 three frames + Sera + Tamsin x2), phase2_capture_dialogue.gd --biome=stormwood --fixed-fps 20, same stand switches as G-rescore-f41-15-main",
+   "pre_check": "no wild creature within about 16 m of the speaker on the arm; clearance camera rule stays off in Stormwood on both sides",
+   "priority": "FIRST: lowest row on the board (F41#15 4.99)"
+  },
+  {
+   "id": "below6-namedfaces",
+   "kind": "arm",
+   "rows": [
+    "F41#8"
+   ],
+   "branch": "tb/below6",
+   "head": "8a0f9c733",
+   "order": 2,
+   "tree": "tb/below6 8a0f9c733 both sides (no import)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-NAMEDFACES/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-NAMEDFACES/CAPTURE.json (three row frames + three __dialogue frames, same selector as G-below6-namedposts)",
+   "pre_check": "faces show skin tone and features; bodies not muddy or too dark against the ground",
+   "priority": "below-6 row (F41#8 5.92 per G-below6-namedposts base)"
+  },
+  {
+   "id": "things-galeland-2",
+   "kind": "arm",
+   "rows": [
+    "F36#48",
+    "F38#15"
+   ],
+   "branch": "tb/things",
+   "head": "b628efddf",
+   "order": 3,
+   "tree": "tb/things b628efddf both sides (needs the same import as stormpost)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-GALELAND/overlay_galewisp_landing.json (attempt 2: side move only, height 3.4)",
+   "overlay_format": "deep merge",
+   "request": "landed frames only: phase2_capture_realm_flight.gd --biome=meadows --carrier=galewisp (03-landed) and Galecrest 03-landed",
+   "pre_check": "Galewisp ear tufts inside the frame; bird beside the trainer, whole",
+   "priority": "near-bar close-out (F36#48 7.44)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
