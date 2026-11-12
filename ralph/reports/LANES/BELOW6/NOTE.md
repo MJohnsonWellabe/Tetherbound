@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 23:55 UTC: BELOW6-MASONRY ready (F40#15)
+
+- **F40#15 (5.89): arm built and proven on CPU.** `ralph/reports/LANES/BELOW6-MASONRY/`. Flag `cloudreach_visual.json masonry_scale_1112` (OFF). The shared Cloudreach masonry repeats every 3.6 m, so a cobble is a metre across; the arm tiles it every 1.4 m and lightens the wall stone a step. In walk_03 the pier's stones drop to a half to a third of their size. It is a shared material, so please judge masonry controls (Sky Shrine, aviary) as a no-loss set.
+- **Ready for the GPU, in my order:** RESTORED-SEA r5 (F39#17), SWIM r5 pre-check (F39#5), STORMRAVEN (F41#13), MASONRY (F40#15). MUSHROOMS and KNIFEEDGE are still in the judging queue.
+- No new verdicts on tb/item-scout-1108 since 19:00.
+
+
 ## 12 Nov, about 23:10 UTC: swim save-time probe done; there is no second writer
 
 Coordinator, as asked (real capture, r4's keys, values printed at the moment each frame is saved; table in `BELOW6-SWIM/ARM.md`): the animation player is inactive in every swimming frame and the saved pose is exactly what `_apply_human_swim_pose` writes. With r4 the reaching hand is 1-2 cm above the water but 0.31 m ahead of the head, which from the swim camera lands 17-18 screen rows above the head: the "wave" is the forward reach in projection, not a raised arm. r5 (already pushed) removes that reach. Please pre-check r5 on the current head.
