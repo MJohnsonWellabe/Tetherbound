@@ -45,3 +45,21 @@ func test_enabled_override_applies_only_to_named_destinations() -> void:
 	assert_true(LOCATIONS.approach_override_for(path, "bad_position").is_empty(), "a malformed position is rejected")
 	assert_true(LOCATIONS.approach_override_for(path, "bad_heading").is_empty(), "a missing heading is rejected")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+func test_cloudreach_landmark_stands_ship_on_with_their_verdict() -> void:
+	var shipped: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
+	var candidates: Dictionary = ((shipped as Dictionary).get("approach_overrides", {}) as Dictionary).get("candidates_1112", {})
+	assert_true(bool(candidates.get("enabled", false)), "the F40#3 stands ship ON (judged)")
+	assert_true(str(candidates.get("_why_on", "")).contains("G-below6-f40-3-landmarks.md"), "they cite their GPU verdict")
+	var beacon: Dictionary = LOCATIONS.approach_override_for(CONFIG, "cloudreach__windscar_ravine__05__windscar_beacon")
+	assert_eq(beacon.get("position", []), [-240.0, 2698.0])
+	assert_eq(float(beacon.get("heading_deg", -1.0)), 47.0)
+	var observatory: Dictionary = LOCATIONS.approach_override_for(CONFIG, "cloudreach__upper_cloudreach__10__old_wind_observatory")
+	assert_eq(observatory.get("position", []), [430.0, 4500.0])
+	assert_eq(float(observatory.get("heading_deg", -1.0)), 180.0)
+	# the block is still its own switch: off, it moves nothing
+	var path := _write({"approach_overrides": {"enabled": true, "destinations": {},
+		"candidates_1112": {"enabled": false, "destinations": {"c": {"position": [1.0, 2.0], "heading_deg": 47.0}}}}})
+	assert_true(LOCATIONS.approach_override_for(path, "c").is_empty(), "an OFF candidate block moves nothing")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
