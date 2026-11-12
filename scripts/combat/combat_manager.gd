@@ -2411,6 +2411,15 @@ func _stand_the_opponent_trainer_behind(wild_spot: Vector3, ally_spot: Vector3, 
 		_staged_opponent_trainer = admission_trainer
 		_staged_opponent_home = admission_trainer.global_transform
 	var spot := opponent_trainer_stand_spot(cfg, wild_spot, forward)
+	# Of the two sides, the one nearer the lens: on the far side the creature
+	# hides its own trainer.
+	var lens := get_viewport().get_camera_3d() if is_inside_tree() else null
+	if lens != null:
+		var mirrored := cfg.duplicate()
+		mirrored["side_m"] = -float(cfg.get("side_m", 1.6))
+		var other := opponent_trainer_stand_spot(mirrored, wild_spot, forward)
+		if other.distance_squared_to(lens.global_position) < spot.distance_squared_to(lens.global_position):
+			spot = other
 	var centre: Vector3 = _arena.global_position
 	if Vector2(spot.x - centre.x, spot.z - centre.z).length() > float(_arena.get("radius")) + float(cfg.get("outside_m", 2.0)):
 		return
