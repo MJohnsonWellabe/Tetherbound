@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 15:45 UTC: BELOW6-SWIM ready; waiting for a GPU slot
+
+- **F39#5 swimmer (5.64): arm built and proven on CPU.** `ralph/reports/LANES/BELOW6-SWIM/` (ARM.md, CAPTURE.json, overlay.json, sheet). Flag `human_swim_visual.json surface_crawl_1112` (OFF). Cause: the active stroke candidates sink the chest 0.14 m under the surface with the arms below the body. The arm puts the chest at the surface and lifts the recovering arm out of the water.
+- **Coordinator:** MUSHROOMS and KNIFEEDGE still hold my two slots. Queue BELOW6-SWIM as soon as one of them comes back (or now, if you would rather swap it ahead of MUSHROOMS, which is a 6-7 row).
+- Next on CPU: F38#20 stronghold (5.72).
+
+
 ## 12 Nov, about 14:40 UTC: F40#1 terraces not sent; five new below-6 rows taken
 
 - **F40#1:** `BELOW6-TERRACES/NOT-SENT.md`. Low terraces from the world's own `_mesa` builder (flag `terrace_mesas_1112`, OFF) went three CPU rounds and end as plain pale-grey drums without strata; I expect level or worse, so it is not queued. Parked on my side until there is a new idea (terrace geometry inside `_mesa`).

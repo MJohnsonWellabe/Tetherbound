@@ -1,0 +1,18 @@
+{
+ "row": "F39#5 surface swimming trainer pose (5.64); F39#14 swimmer water contact (6.44) shares the frames",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_swimming.gd",
+ "args": ["--seed=2042", "--output={OUT}"],
+ "output_rule": "the tool only accepts an output under res://ralph/reports/VISUAL/phase2/tidewake/",
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "frames": ["tidewake__swimming__entry", "tidewake__swimming__surface_west", "tidewake__swimming__surface_mid"],
+ "overlay": "ralph/reports/LANES/BELOW6-SWIM/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same command as G-rescore-stale-tier2 used for F39#5",
+ "needs_import": "no",
+ "_why": "G-rescore-stale-tier2 3/3: 'the swimmer is a floating head with no stroke'. On main the active stroke candidates put the chest 0.14 m under the surface with the arms reaching below the body, so only hair and pack show. Arm: chest at the surface, body pitch 80, arms wider, and the recovering arm arcs out of the water.",
+ "want_to_see": "shoulders, back and one reaching arm above the water in each frame, reading as a crawl stroke. Say if the raised arm reads as a wave or a 'hands up' pose, or if the body now floats on top of the water: chest height and arm lift are config.",
+ "note": "The frames are stills at whatever stroke phase the capture lands on. Judge F39#14 on the same pair if cheap: the wake is unchanged."
+}
