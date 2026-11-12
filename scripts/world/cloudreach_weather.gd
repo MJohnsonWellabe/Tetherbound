@@ -58,6 +58,7 @@ func _apply_realm_weather() -> void:
 	if look != null and look.has_method("set_weather"):
 		var preset := realm_preset(weather(), _presets.get(weather(), {}), _scene_id())
 		look.call("set_weather", combined_delta(_realm_atmosphere_delta, _time_graded(preset, look)))
+	_apply_ground_wet_path()
 	# Seat the mist ceiling now too, not only from _process: a pinned capture
 	# freezes this node's processing (phase2_capture_locations.gd), and the
 	# GPU F40#19 frames then drew no mist at all (ceiling never left its
@@ -111,6 +112,29 @@ func _load_time_grade() -> void:
 	if arm is Dictionary and (arm as Dictionary).get("enabled") == true:
 		_time_grade = arm
 		_style_time_grade_streaks()
+
+
+## `ground_wet_path_1112` (cloudreach_visual.json, OFF until judged; GPU
+## judges at the realm gate: "rain has no wet darkening or sheen", "the orange
+## path is too saturated and its edges are not blended into the grass"). One
+## shader global (cloudreach_ground_1112) read by the Cloudreach turf, trail
+## and worn-ground shaders: rain wetness from the weather preset's
+## ground_wetness, and a duller, frayed, wider-feathered trail. Cloudreach
+## scene only; all zero when off.
+func _apply_ground_wet_path() -> void:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
+	var arm: Dictionary = (raw as Dictionary).get("ground_wet_path_1112", {}) if raw is Dictionary else {}
+	var value := Vector4.ZERO
+	if arm.get("enabled") == true and _scene_id() in (arm.get("scenes", ["cloudreach_cliffs"]) as Array):
+		value = ground_wet_path_value(arm, _presets.get(weather(), {}), realm_preset(weather(), _presets.get(weather(), {}), _scene_id()))
+	RenderingServer.global_shader_parameter_set(&"cloudreach_ground_1112", value)
+
+
+## The shader global for an enabled arm (pure; tested).
+static func ground_wet_path_value(arm: Dictionary, shared_preset: Dictionary, realm: Dictionary) -> Vector4:
+	var wetness := float(realm.get("ground_wetness", shared_preset.get("ground_wetness", 0.0)))
+	return Vector4(clampf(wetness, 0.0, 1.0) * float(arm.get("rain_wet", 1.0)),
+		clampf(float(arm.get("path_feather", 1.0)), 0.0, 1.0), clampf(float(arm.get("path_dull", 0.5)), 0.0, 1.0), 0.0)
 
 
 func _time_grade_applies() -> bool:

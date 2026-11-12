@@ -7,7 +7,10 @@ varying vec3 world_position;
 void vertex() { world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz; }
 void fragment() {
 	float edge_wander=sin(world_position.x*0.71+sin(world_position.z*0.39))*0.06;
-	float side_edge=smoothstep(0.035,0.31,min(UV.x,1.0-UV.x)+edge_wander);
+	float feather=cloudreach_ground_1112.y;
+	// Frayed, wider shoulder: a second, finer wander eats into the edge.
+	float fray=sin(world_position.x*2.9+sin(world_position.z*1.7)*1.3)*sin(world_position.z*2.3+world_position.x*0.6)*0.05*feather;
+	float side_edge=smoothstep(0.035,mix(0.31,0.47,feather),min(UV.x,1.0-UV.x)+edge_wander*(1.0+1.5*feather)+fray);
 	// A trail is wear in the turf, not an opaque strip laid over it. Fade both
 	// authored ends into the same world-space grass as the shoulder so route
 	// sections can meet landings without exposing a transverse rectangle.
@@ -26,6 +29,9 @@ void fragment() {
 	// At this cutoff the soil contributes at most 0.1 percent of the albedo.
 	if (edge <= 0.001) { discard; }
 	vec3 soil=texture(dirt_texture,world_position.xz*0.48).rgb*tint.rgb;
+	float dull=cloudreach_ground_1112.z;
+	soil=mix(soil,vec3(dot(soil,vec3(0.299,0.587,0.114)))*vec3(1.0,0.95,0.86),dull)*(1.0-0.1*dull);
+	soil*=mix(1.0,0.66,cloudreach_ground_1112.x);
 	// This is the same world-space function and wet/dry material parameters
 	// used by the crown, not a second grass approximation. In particular, keep
 	// its texture rotation, scale and broad variation aligned across the edge.
@@ -36,5 +42,5 @@ void fragment() {
 		NORMAL = normalize((VIEW_MATRIX * vec4(cloudreach_detail_normal(world_position, n,
 			dot(ALBEDO, vec3(0.333333))), 0.0)).xyz);
 	}
-	ROUGHNESS = 0.98;
+	ROUGHNESS = mix(0.98, mix(0.72, 0.4, edge), cloudreach_ground_1112.x);
 }
