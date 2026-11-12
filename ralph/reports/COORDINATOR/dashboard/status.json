@@ -2087,10 +2087,7 @@
       "before": 5.04,
       "after": 5.74,
       "pr": "#915"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F41#1 Stormheart approach stand",
       "before": 5.1,
@@ -2098,7 +2095,14 @@
       "pr": "#916"
     }
   ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#916",
+      "what": "Batch 72: Stormheart approach stand (F41#1 5.10 -> 6.81); gate B village-tool smoke flake confirmed again by one re-run",
+      "when": "03:10 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#915",
       "what": "Batches 70+71: faint round 2 (Pebbik 7.65, Breezetail 7.61, Water Mangrove Monitor 7.19, Paddlenewt, Riftfrill, Shadelet), Cloudreach rain grade (F40#0 rain sets +0.70), rolling download ships in parts under 2 GiB with JOIN.cmd",
@@ -2539,7 +2543,7 @@
     },
     "F41#1": {
       "gpu": 6.81,
-      "src": "G-below6-stormheart-approach (LANE-SCOUT d3f616f1c), GPU High: new approach stand (road, trunk and gate) with the landed heartwood, 5.10 -> 6.81 (+1.71, 3/3); approach-only 2.80 -> 6.42; stand in PR #916"
+      "src": "G-below6-stormheart-approach (LANE-SCOUT d3f616f1c), GPU High: new approach stand (road, trunk and gate) with the landed heartwood, 5.10 -> 6.81 (+1.71, 3/3); approach-only 2.80 -> 6.42; stand LANDED #916"
     },
     "F41#10": {
       "gpu": 6.02,
