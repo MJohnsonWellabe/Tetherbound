@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 07:25 UTC",
+  "updated": "12 Nov 2026 07:50 UTC",
   "headline": [
+    "12 Nov 07:50: #920 landed the Cloudreach gate paving (F40#0 gate +0.93 clear, +0.79 rain). GPU: Galewisp landing beside the trainer and taller (F36#48 7.44 close-out try). LANE-THINGS building the wild-creature keep-clear round Stormwood named posts (F41#15).",
     "12 Nov 07:25: F41#15 cause found (LANE-THINGS): Nysa's and Sera's frames are filled by wild creatures idling at their posts, not by a camera problem. Coordinator go-ahead for a flag-off keep-clear radius round named conversation posts (Stormwood first); it rides with the judged deck dressing. Owner casting item: Officer Nysa is played by the male officer A body (shared with Lieutenant Varga).",
     "12 Nov 07:20: PR #920 in CI: Cloudreach gate paving scoped to the gate road (F40#0 gate +0.93 clear, +0.79 rain) plus the storm-phase capture settle; merge held until the GPU confirms the scoped form matches the judged arm. Named-villager lantern posts did not ship (F41#8 -0.49: blown faces).",
     "12 Nov 07:00: Cloudreach gate paving splits: F40#0 realm gate +0.93 clear / +0.79 rain (3/3), but the F40#1 row loses -0.61 where there is no path (stones vanish). LANE-PLACES scoping it to path-borne stones for one more round; if F40#0 holds and F40#1 is level it ships alone. LANE-THINGS still capturing the Stormwood creature cone on CPU.",
@@ -2153,18 +2154,28 @@
       "before": 5.97,
       "after": 6.19,
       "pr": "#919"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F40#0 Cloudreach realm gate paving at trainer scale (clear / rain)",
       "before": 5.78,
       "after": 6.71,
-      "pr": "#920 (in CI; rain 5.60 -> 6.39; merge held for GPU confirm of the scoped form)"
+      "pr": "#920"
+    },
+    {
+      "item": "F40#0 Cloudreach realm gate paving (day rain)",
+      "before": 5.6,
+      "after": 6.39,
+      "pr": "#920"
     }
   ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#920",
+      "what": "Batch 76: Cloudreach gate paving at trainer scale, scoped to the gate road (F40#0 gate 5.78 -> 6.71 clear, 5.60 -> 6.39 rain, 3/3; scoped form GPU-confirmed against main) plus the storm-phase capture settle",
+      "when": "07:50 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#919",
       "what": "Batch 75: lightning goes out the moment Break ends (owner: Break-only; F41#2 re-scores 6.19, was 5.97) and F40#3 Cloudreach landmark crowns plus approach stands (6.00 -> 6.33); one Tidewake side-chain smoke timed out once and passed on re-run",
