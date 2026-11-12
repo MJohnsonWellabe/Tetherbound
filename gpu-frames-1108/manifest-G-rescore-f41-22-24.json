@@ -1,0 +1,167 @@
+[
+ {
+  "frame": "forest_aftermath_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/forest_aftermath_calm.jpg",
+  "sky_fraction": 0.116,
+  "lower_edges": 0.3684,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "forest_break.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/forest_break.jpg",
+  "sky_fraction": 0.171,
+  "lower_edges": 0.321,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "forest_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/forest_calm.jpg",
+  "sky_fraction": 0.112,
+  "lower_edges": 0.3643,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "giant_aftermath_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/giant_aftermath_calm.jpg",
+  "sky_fraction": 0.093,
+  "lower_edges": 0.399,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "giant_break.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/giant_break.jpg",
+  "sky_fraction": 0.099,
+  "lower_edges": 0.3886,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "giant_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/giant_calm.jpg",
+  "sky_fraction": 0.092,
+  "lower_edges": 0.3989,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "glass_aftermath_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/glass_aftermath_calm.jpg",
+  "sky_fraction": 0.108,
+  "lower_edges": 0.2876,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "glass_break.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/glass_break.jpg",
+  "sky_fraction": 0.115,
+  "lower_edges": 0.2851,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "glass_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/glass_calm.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.2834,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "rod_line_aftermath_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/rod_line_aftermath_calm.jpg",
+  "sky_fraction": 0.118,
+  "lower_edges": 0.2698,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "rod_line_break.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/rod_line_break.jpg",
+  "sky_fraction": 0.142,
+  "lower_edges": 0.2794,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "rod_line_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/rod_line_calm.jpg",
+  "sky_fraction": 0.117,
+  "lower_edges": 0.2704,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "stormheart_aftermath_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/stormheart_aftermath_calm.jpg",
+  "sky_fraction": 0.118,
+  "lower_edges": 0.5293,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "stormheart_break.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/stormheart_break.jpg",
+  "sky_fraction": 0.132,
+  "lower_edges": 0.5104,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ },
+ {
+  "frame": "stormheart_calm.jpg",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/capture_stormwood_f10_matrix.gd",
+  "path": "G-rescore-f41-22-24/main-High/stormheart_calm.jpg",
+  "sky_fraction": 0.119,
+  "lower_edges": 0.5656,
+  "script_errors": 0,
+  "note": "LANE-PLACES re-score F41#22 and F41#24: main 90ffeb663 as it is, High, one side. capture_stormwood_f10_matrix.gd --stands=forest,giant,glass,rod_line,stormheart --phases=calm,break (aftermath on, the tool default), as G-newapproach-stormwood-bark: 15 frames (calm, break, aftermath_calm per stand)."
+ }
+]
