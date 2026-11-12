@@ -1,0 +1,11 @@
+[
+ {
+  "label": "G F40#5 recheck main",
+  "a": "G-rf5.png",
+  "b": "G-rf5.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: captain fight camera orientation (three moments of one fight, left to right). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read"
+  ]
+ }
+]

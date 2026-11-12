@@ -1,0 +1,26 @@
+{
+ "G F39#21 live-vs-recheck": {
+  "A": [
+   {
+    "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus": "FIXED"
+   },
+   {
+    "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus": "PARTIAL"
+   },
+   {
+    "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus": "PRESENT"
+   },
+   {
+    "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus": "PRESENT"
+   },
+   {
+    "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus": "PRESENT"
+   }
+  ]
+ }
+}

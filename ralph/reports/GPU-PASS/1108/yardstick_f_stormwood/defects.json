@@ -1,0 +1,386 @@
+{
+ "GPU1108F F41#19 live one-sided": {
+  "A": [
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+   },
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "FIXED"
+   },
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+   },
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "FIXED"
+   },
+   {
+    "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F41#7 live one-sided": {
+  "A": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F41#2 live one-sided": {
+  "A": [
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   },
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   },
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   },
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   },
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F41#11 live one-sided": {
+  "A": [
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F41#4 live one-sided": {
+  "A": [
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   },
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   },
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   },
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   },
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F41#18 live one-sided": {
+  "A": [
+   {
+    "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"
+   },
+   {
+    "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"
+   },
+   {
+    "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"
+   },
+   {
+    "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"
+   },
+   {
+    "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F41#17 live one-sided": {
+  "A": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "FIXED"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "FIXED"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F41#6 live one-sided": {
+  "A": [
+   {
+    "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+   },
+   {
+    "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+   },
+   {
+    "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+   },
+   {
+    "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+   },
+   {
+    "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F41#12 live one-sided": {
+  "A": [
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F41#3 live one-sided": {
+  "A": [
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PARTIAL"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PARTIAL"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F41#10 live one-sided": {
+  "A": [
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   },
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   },
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   },
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   },
+   {
+    "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F41#1 live one-sided": {
+  "A": [
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PARTIAL"
+   },
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PARTIAL"
+   },
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PARTIAL"
+   },
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PARTIAL"
+   },
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F41#13 live one-sided": {
+  "A": [
+   {
+    "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+   },
+   {
+    "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+   },
+   {
+    "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+   },
+   {
+    "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+   },
+   {
+    "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F41#5 live one-sided": {
+  "A": [
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F41#20 live one-sided": {
+  "A": [
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F41#21 live one-sided": {
+  "A": [
+   {
+    "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+   },
+   {
+    "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+   },
+   {
+    "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+   },
+   {
+    "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+   },
+   {
+    "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+   }
+  ]
+ }
+}

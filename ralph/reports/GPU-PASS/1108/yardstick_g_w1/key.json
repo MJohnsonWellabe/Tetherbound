@@ -1,0 +1,35 @@
+{
+ "Cp": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Jx": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Vi": {
+  "anchor": false,
+  "label": "G F36(1) galewisp flight carrier base-vs-arm",
+  "A": "G-w1_gale_arm.png",
+  "B": "G-w1_gale_base.png"
+ },
+ "Jo": {
+  "anchor": false,
+  "label": "G F36(1) breezetail faint2 Medium arm",
+  "A": "G-w1_breezetail.png",
+  "B": "G-w1_breezetail.png"
+ },
+ "Jj": {
+  "anchor": false,
+  "label": "G F36(1) pebbik faint2 Medium arm",
+  "A": "G-w1_pebbik.png",
+  "B": "G-w1_pebbik.png"
+ },
+ "Kn": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

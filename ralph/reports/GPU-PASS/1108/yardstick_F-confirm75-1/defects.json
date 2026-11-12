@@ -1,0 +1,74 @@
+{
+ "GPU1108F F40#12 live one-sided": {
+  "A": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F38#28 live one-sided": {
+  "A": [
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "FIXED"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "FIXED"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "FIXED"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "FIXED"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F41#17 live one-sided": {
+  "A": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "FIXED"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "FIXED"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ]
+ }
+}

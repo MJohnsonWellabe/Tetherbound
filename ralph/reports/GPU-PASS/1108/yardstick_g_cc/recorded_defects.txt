@@ -1,0 +1,8 @@
+Zj: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vr: "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+Zi: "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role"
+Sc: none
+Da: "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail"
+Lr: none
+Sw: "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer"
+Li: "none"

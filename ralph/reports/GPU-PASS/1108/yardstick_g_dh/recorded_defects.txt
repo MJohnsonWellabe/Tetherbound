@@ -1,0 +1,7 @@
+Nj: none
+Fq: none
+Ui: none
+Ts: "A hard black band sits where the water meets the sand and horizon at dawn"; "Rain falls under a fully lit noon sky with white cumulus, with no storm grade or fog"
+Ru: "A hard black band sits where the water meets the sand and horizon at dawn"; "Rain falls under a fully lit noon sky with white cumulus, with no storm grade or fog"
+Fj: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+An: "A hard black band sits where the water meets the sand and horizon at dawn"; "Rain falls under a fully lit noon sky with white cumulus, with no storm grade or fog"

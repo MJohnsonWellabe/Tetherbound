@@ -1,0 +1,186 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   3.8,
+   3.7,
+   3.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   4.5,
+   4.2
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   7.1,
+   6.9
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   7.1,
+   6.9
+  ],
+  "craft:before": [
+   4.8,
+   4.8,
+   5.1
+  ],
+  "craft:after": [
+   6.6,
+   6.6,
+   6.8
+  ]
+ },
+ "candidates": {
+  "G stormwood dialogue changed-nine stand-vs-arm [G-cc3_stormwoodchg_stand.png]": [
+   5.0,
+   5.0,
+   5.3
+  ],
+  "G stormwood dialogue changed-nine stand-vs-arm [G-cc3_stormwoodchg_arm.png]": [
+   4.7,
+   4.9,
+   5.8
+  ],
+  "G F40#10 stand-vs-arm [G-cc3_F40-10_stand.png]": [
+   6.2,
+   6.1,
+   6.5
+  ],
+  "G F40#10 stand-vs-arm [G-cc3_F40-10_arm.png]": [
+   6.2,
+   6.1,
+   6.5
+  ],
+  "G F41#15 stand-vs-arm [G-cc3_F41-15_arm.png]": [
+   4.8,
+   4.8,
+   5.3
+  ],
+  "G F41#15 stand-vs-arm [G-cc3_F41-15_stand.png]": [
+   4.1,
+   4.3,
+   4.7
+  ],
+  "G F41#20 stand-vs-arm [G-cc3_F41-20_stand.png]": [
+   6.0,
+   6.2,
+   6.1
+  ],
+  "G F41#20 stand-vs-arm [G-cc3_F41-20_arm.png]": [
+   6.0,
+   6.2,
+   6.1
+  ],
+  "G F39#29 stand-vs-arm [G-cc3_F39-29_stand.png]": [
+   6.0,
+   6.0,
+   6.6
+  ],
+  "G F39#29 stand-vs-arm [G-cc3_F39-29_arm.png]": [
+   6.0,
+   6.0,
+   6.6
+  ],
+  "G F41#7 stand-vs-arm [G-cc3_F41-7_arm.png]": [
+   5.6,
+   5.6,
+   6.2
+  ],
+  "G F41#7 stand-vs-arm [G-cc3_F41-7_stand.png]": [
+   5.6,
+   5.6,
+   6.2
+  ],
+  "G F41#11 base-vs-arm [G-cc3_F41-11_arm.png]": [
+   6.0,
+   6.2,
+   6.4
+  ],
+  "G F41#11 base-vs-arm [G-cc3_F41-11_base.png]": [
+   6.0,
+   6.2,
+   6.4
+  ],
+  "G F39#26 stand-vs-arm [G-cc3_F39-26_stand.png]": [
+   6.4,
+   6.3,
+   6.5
+  ],
+  "G F39#26 stand-vs-arm [G-cc3_F39-26_arm.png]": [
+   6.5,
+   6.1,
+   6.7
+  ],
+  "G F40#12 stand-vs-arm [G-cc3_F40-12_arm.png]": [
+   6.2,
+   6.2,
+   6.4
+  ],
+  "G F40#12 stand-vs-arm [G-cc3_F40-12_stand.png]": [
+   6.2,
+   6.2,
+   6.4
+  ],
+  "G F41#20 base-vs-arm [G-cc3_F41-20_arm.png]": [
+   6.0,
+   6.2,
+   6.1
+  ],
+  "G F41#20 base-vs-arm [G-cc3_F41-20_base.png]": [
+   6.0,
+   6.2,
+   6.1
+  ],
+  "G F41#11 stand-vs-arm [G-cc3_F41-11_stand.png]": [
+   6.0,
+   6.2,
+   6.4
+  ],
+  "G F41#11 stand-vs-arm [G-cc3_F41-11_arm.png]": [
+   6.0,
+   6.2,
+   6.4
+  ],
+  "G F39#18 stand-vs-arm [G-cc3_F39-18_arm.png]": [
+   6.3,
+   6.6,
+   6.8
+  ],
+  "G F39#18 stand-vs-arm [G-cc3_F39-18_stand.png]": [
+   6.3,
+   6.6,
+   6.8
+  ],
+  "G tidewake dialogue changed-nine stand-vs-arm [G-cc3_tidewakechg_stand.png]": [
+   5.8,
+   6.4,
+   6.1
+  ],
+  "G tidewake dialogue changed-nine stand-vs-arm [G-cc3_tidewakechg_arm.png]": [
+   5.9,
+   6.3,
+   6.2
+  ],
+  "G F41#15 base-vs-arm [G-cc3_F41-15_base.png]": [
+   4.2,
+   4.2,
+   4.7
+  ],
+  "G F41#15 base-vs-arm [G-cc3_F41-15_arm.png]": [
+   5.0,
+   4.9,
+   5.4
+  ],
+  "G F41#7 base-vs-arm [G-cc3_F41-7_base.png]": [
+   5.6,
+   5.6,
+   6.2
+  ],
+  "G F41#7 base-vs-arm [G-cc3_F41-7_arm.png]": [
+   5.6,
+   5.6,
+   6.2
+  ]
+ }
+}

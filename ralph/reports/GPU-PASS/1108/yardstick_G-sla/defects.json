@@ -1,0 +1,170 @@
+{
+ "G F41#4 live-vs-arm": {
+  "A": [
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   },
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   },
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   },
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+   },
+   {
+    "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PRESENT"
+   }
+  ]
+ },
+ "G F41#3 live-vs-arm": {
+  "A": [
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PARTIAL"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PARTIAL"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   },
+   {
+    "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+   }
+  ]
+ },
+ "G F41#15 live-vs-arm": {
+  "A": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#5 live-vs-arm": {
+  "A": [
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+   },
+   {
+    "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+   }
+  ]
+ },
+ "G F41#17 live-vs-arm": {
+  "A": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#2 live-vs-arm": {
+  "A": [
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   },
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   },
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   },
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   },
+   {
+    "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PRESENT"
+   }
+  ]
+ },
+ "G F41#12 live-vs-arm": {
+  "A": [
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   }
+  ]
+ }
+}

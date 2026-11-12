@@ -1,0 +1,46 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.3,
+   4.0,
+   4.6
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.8,
+   3.6,
+   4.1
+  ],
+  "f04_6_r22:r22": [
+   5.6,
+   5.6,
+   5.6
+  ],
+  "f04_6_r22:control": [
+   4.9,
+   4.9,
+   4.9
+  ],
+  "craft:before": [
+   4.8,
+   5.0,
+   5.0
+  ],
+  "craft:after": [
+   6.6,
+   6.4,
+   6.6
+  ]
+ },
+ "candidates": {
+  "G F41#10 live-vs-arm [G-lip_F41-10_arm.png]": [
+   5.4,
+   5.2,
+   5.2
+  ],
+  "G F41#10 live-vs-arm [G-lip_F41-10_live_for_arm.png]": [
+   5.4,
+   5.2,
+   5.2
+  ]
+ }
+}

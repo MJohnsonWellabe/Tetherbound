@@ -1,0 +1,290 @@
+{
+ "GPU1108 F39#3 live one-sided": {
+  "A": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108 F39#8 live one-sided": {
+  "A": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108 F38#26 live one-sided": {
+  "A": [
+   {
+    "d": "PRESENT"
+   },
+   {
+    "d": "PRESENT"
+   },
+   {
+    "d": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "d": "PRESENT"
+   },
+   {
+    "d": "PRESENT"
+   },
+   {
+    "d": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108 F38#32 live one-sided": {
+  "A": [
+   {
+    "d": "PRESENT"
+   },
+   {
+    "d": "PRESENT"
+   },
+   {
+    "d": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "d": "PRESENT"
+   },
+   {
+    "d": "PRESENT"
+   },
+   {
+    "d": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108 F41#14 live one-sided": {
+  "A": [
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   }
+  ]
+ },
+ "GPU1108 F41#8 live one-sided": {
+  "A": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108 F38#36 live one-sided": {
+  "A": [
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   }
+  ]
+ },
+ "GPU1108 F39#10 live one-sided": {
+  "A": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108 F38#17 live one-sided": {
+  "A": [
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   },
+   {
+    "d": "FIXED"
+   }
+  ]
+ },
+ "GPU1108 F38#5 live one-sided": {
+  "A": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108 F41#9 live one-sided": {
+  "A": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108 F38#41 live one-sided": {
+  "A": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   },
+   {
+    "d": "PARTIAL"
+   }
+  ]
+ }
+}

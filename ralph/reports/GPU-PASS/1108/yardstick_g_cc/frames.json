@@ -1,0 +1,42 @@
+{
+ "f401": [
+  "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg"
+ ],
+ "f403": [
+  "cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "cloudreach__landmark__broken_skyroad_arch__day__close.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__day__close.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__day__close.jpg"
+ ],
+ "gaps": [
+  "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg"
+ ],
+ "dialogue": [
+  "cloudreach__inventory__character__keeper_maela.jpg",
+  "cloudreach__inventory__character__keeper_maela__dialogue.jpg",
+  "cloudreach__inventory__character__naturalist_sora.jpg",
+  "cloudreach__inventory__character__naturalist_sora__dialogue.jpg",
+  "cloudreach__inventory__character__young_trainer_tavi.jpg",
+  "cloudreach__inventory__character__young_trainer_tavi__dialogue.jpg"
+ ],
+ "f40": [
+  "cloudreach__broken_causeways__03__three_bells_bridge__approach__day__clear.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__clear.jpg",
+  "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+  "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg",
+  "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__day__clear.jpg",
+  "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__day__clear.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__golden__clear.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__night__clear.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__rain.jpg"
+ ]
+}

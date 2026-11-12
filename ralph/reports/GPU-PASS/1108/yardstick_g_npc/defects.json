@@ -1,0 +1,266 @@
+{
+ "G F39#18 live-vs-arm": {
+  "A": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+   }
+  ]
+ },
+ "G F39#26 live-vs-arm": {
+  "A": [
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#29 live-vs-armEmis": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#7 live-vs-armEmis": {
+  "A": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ]
+ },
+ "G F41#11 live-vs-arm": {
+  "A": [
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   }
+  ]
+ },
+ "G F41#15 live-vs-arm": {
+  "A": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#15 live-vs-armEmis": {
+  "A": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#29 live-vs-arm": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#13 live-vs-arm": {
+  "A": [
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+   }
+  ]
+ },
+ "G F41#20 live-vs-arm": {
+  "A": [
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   }
+  ]
+ },
+ "G F41#7 live-vs-arm": {
+  "A": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ]
+ }
+}

@@ -1,0 +1,464 @@
+{
+ "F39#23": {
+  "section": "A",
+  "mapped": 6.8,
+  "mapped_judges": [
+   6.51,
+   7.08,
+   6.8
+  ],
+  "raw": [
+   6.0,
+   6.4,
+   6.2
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "FIXED",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#24": {
+  "section": "A",
+  "mapped": 3.67,
+  "mapped_judges": [
+   4.09,
+   3.53,
+   3.38
+  ],
+  "raw": [
+   4.3,
+   3.9,
+   3.8
+  ],
+  "defect_calls": [
+   "PRESENT",
+   "PRESENT",
+   "PRESENT"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": true
+ },
+ "F41#16": {
+  "section": "A",
+  "mapped": 6.28,
+  "mapped_judges": [
+   6.37,
+   6.37,
+   6.09
+  ],
+  "raw": [
+   5.9,
+   5.9,
+   5.7
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#19": {
+  "section": "A",
+  "mapped": 6.89,
+  "mapped_judges": [
+   6.8,
+   6.8,
+   7.08
+  ],
+  "raw": [
+   6.2,
+   6.2,
+   6.4
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F39#7": {
+  "section": "A",
+  "mapped": 6.61,
+  "mapped_judges": [
+   6.66,
+   6.8,
+   6.37
+  ],
+  "raw": [
+   6.1,
+   6.2,
+   5.9
+  ],
+  "defect_calls": [
+   "FIXED",
+   "FIXED",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F40#14": {
+  "section": "A",
+  "mapped": 6.99,
+  "mapped_judges": [
+   7.08,
+   6.94,
+   6.94
+  ],
+  "raw": [
+   6.4,
+   6.3,
+   6.3
+  ],
+  "defect_calls": [
+   "FIXED",
+   "FIXED",
+   "FIXED"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F39#19": {
+  "section": "A",
+  "mapped": 6.85,
+  "mapped_judges": [
+   6.8,
+   6.94,
+   6.8
+  ],
+  "raw": [
+   6.2,
+   6.3,
+   6.2
+  ],
+  "defect_calls": [
+   "FIXED",
+   "FIXED",
+   "FIXED"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F39#20": {
+  "section": "A",
+  "mapped": 6.37,
+  "mapped_judges": [
+   6.09,
+   6.51,
+   6.51
+  ],
+  "raw": [
+   5.7,
+   6.0,
+   6.0
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "FIXED",
+   "FIXED"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F41#15": {
+  "section": "A",
+  "mapped": 5.71,
+  "mapped_judges": [
+   5.8,
+   5.66,
+   5.66
+  ],
+  "raw": [
+   5.5,
+   5.4,
+   5.4
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#30": {
+  "section": "A",
+  "mapped": 4.0,
+  "mapped_judges": [
+   4.24,
+   3.95,
+   3.81
+  ],
+  "raw": [
+   4.4,
+   4.2,
+   4.1
+  ],
+  "defect_calls": [
+   "PRESENT",
+   "PRESENT",
+   "PRESENT"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F39#3": {
+  "section": "B",
+  "mapped": 6.1,
+  "mapped_judges": [
+   6.55,
+   5.96,
+   5.81
+  ],
+  "raw": [
+   5.9,
+   5.5,
+   5.4
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PRESENT"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F39#8": {
+  "section": "B",
+  "mapped": 5.66,
+  "mapped_judges": [
+   5.66,
+   5.81,
+   5.51
+  ],
+  "raw": [
+   5.3,
+   5.4,
+   5.2
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#26": {
+  "section": "B",
+  "mapped": 5.91,
+  "mapped_judges": [
+   5.96,
+   6.1,
+   5.66
+  ],
+  "raw": [
+   5.5,
+   5.6,
+   5.3
+  ],
+  "defect_calls": [
+   "PRESENT",
+   "PRESENT",
+   "PRESENT"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#32": {
+  "section": "B",
+  "mapped": 5.66,
+  "mapped_judges": [
+   5.81,
+   5.66,
+   5.51
+  ],
+  "raw": [
+   5.4,
+   5.3,
+   5.2
+  ],
+  "defect_calls": [
+   "PRESENT",
+   "PRESENT",
+   "PRESENT"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F41#14": {
+  "section": "B",
+  "mapped": 6.35,
+  "mapped_judges": [
+   6.55,
+   6.4,
+   6.1
+  ],
+  "raw": [
+   5.9,
+   5.8,
+   5.6
+  ],
+  "defect_calls": [
+   "FIXED",
+   "FIXED",
+   "FIXED"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F41#8": {
+  "section": "B",
+  "mapped": 5.31,
+  "mapped_judges": [
+   5.66,
+   5.21,
+   5.07
+  ],
+  "raw": [
+   5.3,
+   5.0,
+   4.9
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PRESENT"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#36": {
+  "section": "B",
+  "mapped": 7.74,
+  "mapped_judges": [
+   7.88,
+   7.74,
+   7.59
+  ],
+  "raw": [
+   6.8,
+   6.7,
+   6.6
+  ],
+  "defect_calls": [
+   "FIXED",
+   "FIXED",
+   "FIXED"
+  ],
+  "above_top_anchor": true,
+  "outside_anchor_range": false
+ },
+ "F39#10": {
+  "section": "B",
+  "mapped": 6.3,
+  "mapped_judges": [
+   6.7,
+   6.25,
+   5.96
+  ],
+  "raw": [
+   6.0,
+   5.7,
+   5.5
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#17": {
+  "section": "B",
+  "mapped": 7.34,
+  "mapped_judges": [
+   7.44,
+   7.29,
+   7.29
+  ],
+  "raw": [
+   6.5,
+   6.4,
+   6.4
+  ],
+  "defect_calls": [
+   "FIXED",
+   "FIXED",
+   "FIXED"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#5": {
+  "section": "B",
+  "mapped": 5.86,
+  "mapped_judges": [
+   6.1,
+   5.96,
+   5.51
+  ],
+  "raw": [
+   5.6,
+   5.5,
+   5.2
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F41#9": {
+  "section": "B",
+  "mapped": 5.86,
+  "mapped_judges": [
+   5.96,
+   6.1,
+   5.51
+  ],
+  "raw": [
+   5.5,
+   5.6,
+   5.2
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ },
+ "F38#41": {
+  "section": "B",
+  "mapped": 6.65,
+  "mapped_judges": [
+   6.7,
+   6.7,
+   6.55
+  ],
+  "raw": [
+   6.0,
+   6.0,
+   5.9
+  ],
+  "defect_calls": [
+   "PARTIAL",
+   "PARTIAL",
+   "PARTIAL"
+  ],
+  "above_top_anchor": false,
+  "outside_anchor_range": false
+ }
+}

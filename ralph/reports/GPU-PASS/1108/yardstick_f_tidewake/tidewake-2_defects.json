@@ -1,0 +1,242 @@
+{
+ "GPU1108F F39#29 live one-sided": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "FIXED"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "FIXED"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F39#2 live one-sided": {
+  "A": [
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+   },
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PRESENT"
+   },
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+   },
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PRESENT"
+   },
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F39#5 live one-sided": {
+  "A": [
+   {
+    "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming": "PARTIAL"
+   },
+   {
+    "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming": "PARTIAL"
+   },
+   {
+    "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming": "PARTIAL"
+   },
+   {
+    "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming": "PARTIAL"
+   },
+   {
+    "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F39#15 live one-sided": {
+  "A": [
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PRESENT"
+   },
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PRESENT"
+   },
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PRESENT"
+   },
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PRESENT"
+   },
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F39#27 live one-sided": {
+  "A": [
+   {
+    "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views": "FIXED"
+   },
+   {
+    "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views": "FIXED"
+   },
+   {
+    "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views": "FIXED"
+   },
+   {
+    "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views": "FIXED"
+   },
+   {
+    "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F39#9 live one-sided": {
+  "A": [
+   {
+    "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path": "PARTIAL"
+   },
+   {
+    "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path": "PRESENT"
+   },
+   {
+    "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path": "PARTIAL"
+   },
+   {
+    "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path": "PRESENT"
+   },
+   {
+    "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F39#25 live one-sided": {
+  "A": [
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   },
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   },
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   },
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   },
+   {
+    "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F39#17 live one-sided": {
+  "A": [
+   {
+    "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged": "PRESENT"
+   },
+   {
+    "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged": "PRESENT"
+   },
+   {
+    "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged": "PRESENT"
+   },
+   {
+    "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged": "PRESENT"
+   },
+   {
+    "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F39#13 live one-sided": {
+  "A": [
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   },
+   {
+    "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F39#22 live one-sided": {
+  "A": [
+   {
+    "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+   },
+   {
+    "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+   },
+   {
+    "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+   },
+   {
+    "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+   },
+   {
+    "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+   }
+  ]
+ }
+}

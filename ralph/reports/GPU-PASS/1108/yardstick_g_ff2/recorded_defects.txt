@@ -1,0 +1,6 @@
+Gk: none
+Pr: none
+Zd: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+De: "The swimming current's direction cannot be read from the swimmer view at a glance on a 7-inch screen"
+Rw: "The swimming current's direction cannot be read from the swimmer view at a glance on a 7-inch screen"
+Ia: "The swimming current's direction cannot be read from the swimmer view at a glance on a 7-inch screen"

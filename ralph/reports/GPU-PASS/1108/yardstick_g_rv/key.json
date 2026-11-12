@@ -1,0 +1,47 @@
+{
+ "Yc": {
+  "anchor": false,
+  "label": "G F41#5 base-vs-arm",
+  "A": "G-rv_F41-5_base.png",
+  "B": "G-rv_F41-5_roadnp.png"
+ },
+ "Dt": {
+  "anchor": false,
+  "label": "G F41#8 base-vs-arm",
+  "A": "G-rv_F41-8_base.png",
+  "B": "G-rv_F41-8_roadnp.png"
+ },
+ "Ku": {
+  "anchor": false,
+  "label": "G F41#12 base-vs-arm",
+  "A": "G-rv_F41-12_base.png",
+  "B": "G-rv_F41-12_roadnp.png"
+ },
+ "Uw": {
+  "anchor": false,
+  "label": "G F41#4 base-vs-arm",
+  "A": "G-rv_F41-4_roadnp.png",
+  "B": "G-rv_F41-4_base.png"
+ },
+ "Bj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Gb": {
+  "anchor": false,
+  "label": "G F41#2 base-vs-arm",
+  "A": "G-rv_F41-2_base.png",
+  "B": "G-rv_F41-2_roadnp.png"
+ },
+ "Rt": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Jn": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

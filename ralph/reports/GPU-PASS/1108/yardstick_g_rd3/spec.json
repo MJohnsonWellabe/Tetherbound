@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F38#5 ruler-depth-r3 base-vs-arm",
+  "a": "G-rd3_F38-5_base.png",
+  "b": "G-rd3_F38-5_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: normal creature scale (4 creature views). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+  ]
+ },
+ {
+  "label": "G F38#26 ruler-depth-r3 base-vs-arm",
+  "a": "G-rd3_F38-26_base.png",
+  "b": "G-rd3_F38-26_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: creature ground contact (4 creature views). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view"
+  ]
+ },
+ {
+  "label": "G F38#31 ruler-depth-r3 base-vs-arm",
+  "a": "G-rd3_F38-31_base.png",
+  "b": "G-rd3_F38-31_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: alpha rarity read (two species; in each row the normal variant is on the left and its alpha variant on the right). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer"
+  ]
+ },
+ {
+  "label": "G NOLOSS-A ruler-depth-r3 base-vs-arm",
+  "a": "G-rd3_NOLOSS-A_base.png",
+  "b": "G-rd3_NOLOSS-A_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in several biomes: normal creature scale (6 creature views in other biomes). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+  ]
+ },
+ {
+  "label": "G NOLOSS-B ruler-depth-r3 base-vs-arm",
+  "a": "G-rd3_NOLOSS-B_base.png",
+  "b": "G-rd3_NOLOSS-B_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in several biomes: normal creature scale (3 creature views in other biomes). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+  ]
+ }
+]

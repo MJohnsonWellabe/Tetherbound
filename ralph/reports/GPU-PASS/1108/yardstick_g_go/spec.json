@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F39#18 live-vs-armGO",
+  "a": "<scratch>/G-go_F39-18_live_for_armGO.png",
+  "b": "<scratch>/G-go_F39-18_armGO.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+  ]
+ },
+ {
+  "label": "G F39#26 live-vs-armGO",
+  "a": "<scratch>/G-go_F39-26_live_for_armGO.png",
+  "b": "<scratch>/G-go_F39-26_armGO.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F39#29 live-vs-armGO",
+  "a": "<scratch>/G-go_F39-29_live_for_armGO.png",
+  "b": "<scratch>/G-go_F39-29_armGO.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named conversations show no identifiable speaker near the dialogue panel"
+  ]
+ },
+ {
+  "label": "G F41#8 live-vs-armGO",
+  "a": "<scratch>/G-go_F41-8_live_for_armGO.png",
+  "b": "<scratch>/G-go_F41-8_armGO.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character silhouettes. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"
+  ]
+ }
+]

@@ -1,0 +1,50 @@
+{
+ "G F38#32 live-vs-arm": {
+  "A": [
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+   },
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PARTIAL"
+   },
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PARTIAL"
+   },
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+   },
+   {
+    "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+   }
+  ]
+ },
+ "G F41#1 live-vs-arm": {
+  "A": [
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PARTIAL"
+   },
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PRESENT"
+   },
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PARTIAL"
+   },
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PRESENT"
+   },
+   {
+    "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PRESENT"
+   }
+  ]
+ }
+}

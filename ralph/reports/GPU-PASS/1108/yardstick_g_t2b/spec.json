@@ -1,0 +1,12 @@
+[
+ {
+  "label": "G T2b High base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2b_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2b_arm.png",
+  "brief": "Fixed captures from the game of the trainer swimming in a Tidewake sea current, seen from the normal third-person swimming camera (three views: day, day, night). Judge whether the current's direction and strength read at a glance on a 7-inch handheld screen while swimming, and whether the water reads as the key art's world.",
+  "defects": [
+   "The swimming current's direction cannot be read from the swimmer view at a glance on a 7-inch screen",
+   "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
+  ]
+ }
+]

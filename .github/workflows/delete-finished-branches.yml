@@ -1,0 +1,88 @@
+name: Delete finished branches
+
+# One tap from the Actions tab (owner, 12 Nov 2026: "tell me when I can delete
+# everything"). Deletes every branch except main and branches with an open PR.
+# A branch whose commits are all on main is deleted outright. A branch with
+# commits main does not have is first saved under refs/archive/<name> (a hidden
+# ref: ordinary clones do not download it, so main stays lean) and then deleted.
+# Raw GPU capture branches (tb/gpu-frames-*) are not archived: per-frame
+# captures never belong in the repo, and their verdicts are on main.
+# Restore an archived branch with:
+#   git fetch origin refs/archive/<name>:refs/heads/<name> && git push origin <name>
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "delete = archive where needed, then delete; list = only print what would happen"
+        type: choice
+        options: [delete, list]
+        default: delete
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: delete-finished-branches
+  cancel-in-progress: false
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      MODE: ${{ inputs.mode }}
+    steps:
+      - name: Archive where needed, then delete
+        run: |
+          set -euo pipefail
+          open_heads=$(gh api "repos/$REPO/pulls?state=open&per_page=100" --paginate -q '.[].head.ref')
+          deleted=0; archived=0; skipped=0
+          while IFS= read -r b; do
+            [ -z "$b" ] && continue
+            [ "$b" = "main" ] && continue
+            if printf '%s\n' "$open_heads" | grep -qxF -- "$b"; then
+              echo "SKIP     $b (open pull request)"; skipped=$((skipped+1)); continue
+            fi
+            enc=$(jq -rn --arg b "$b" '$b|@uri')
+            ahead=$(gh api "repos/$REPO/compare/main...$enc" -q .ahead_by 2>/dev/null || echo "?")
+            sha=$(gh api "repos/$REPO/git/ref/heads/$b" -q .object.sha)
+            if [ "$ahead" = "?" ]; then
+              echo "SKIP     $b (could not compare with main)"; skipped=$((skipped+1)); continue
+            fi
+            if [ "$ahead" != "0" ]; then
+              case "$b" in
+                tb/gpu-frames-*) note="raw GPU frames, not archived" ;;
+                *)
+                  note="archived as refs/archive/$b"
+                  if [ "$MODE" = "delete" ]; then
+                    if ! gh api -X POST "repos/$REPO/git/refs" -f ref="refs/archive/$b" -f sha="$sha" >/dev/null 2>&1; then
+                      existing=$(gh api "repos/$REPO/git/ref/archive/$b" -q .object.sha 2>/dev/null || true)
+                      if [ "$existing" != "$sha" ]; then
+                        echo "SKIP     $b (archive failed; branch kept)"; skipped=$((skipped+1)); continue
+                      fi
+                    fi
+                    archived=$((archived+1))
+                  fi ;;
+              esac
+            else
+              note="all commits on main"
+            fi
+            if [ "$MODE" = "delete" ]; then
+              if gh api -X DELETE "repos/$REPO/git/refs/heads/$b" >/dev/null 2>&1; then
+                echo "DELETED  $b ($ahead ahead; $note)"; deleted=$((deleted+1))
+              else
+                echo "SKIP     $b (delete refused; branch kept)"; skipped=$((skipped+1))
+              fi
+            else
+              echo "WOULD    $b ($ahead ahead; $note)"
+            fi
+          done < <(gh api "repos/$REPO/branches?per_page=100" --paginate -q '.[].name')
+          echo
+          echo "Deleted $deleted, archived $archived, kept $skipped (mode: $MODE)."
+          {
+            echo "### Delete finished branches ($MODE)"
+            echo "Deleted $deleted, archived $archived, kept $skipped."
+          } >> "$GITHUB_STEP_SUMMARY"

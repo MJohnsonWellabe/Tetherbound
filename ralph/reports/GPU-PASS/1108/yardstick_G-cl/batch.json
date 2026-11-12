@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "f04_6_r22:r22": [
+   6.3,
+   6.4,
+   6.3
+  ],
+  "f04_6_r22:control": [
+   5.6,
+   5.7,
+   5.6
+  ],
+  "craft:after": [
+   6.9,
+   6.8,
+   6.6
+  ],
+  "craft:before": [
+   5.2,
+   5.3,
+   5.2
+  ],
+  "f10_2_r3_capacitor:control": [
+   5.4,
+   5.0,
+   4.8
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   6.0,
+   5.6,
+   5.6
+  ]
+ },
+ "candidates": {
+  "G F38#3 High r1 live-vs-arm [G-cl_f3High_arm2.png]": [
+   6.4,
+   6.2,
+   6.6
+  ],
+  "G F38#3 High r1 live-vs-arm [G-cl_f3High_live.png]": [
+   6.1,
+   5.9,
+   6.3
+  ],
+  "G F38#3 Medium r2 live-vs-arm [G-cl_f3Medium_arm2.png]": [
+   6.7,
+   6.3,
+   6.9
+  ],
+  "G F38#3 Medium r2 live-vs-arm [G-cl_f3Medium_live2.png]": [
+   6.2,
+   5.8,
+   6.4
+  ],
+  "G F38#3 High r2 live-vs-arm [G-cl_f3High_arm2.png]": [
+   6.4,
+   6.2,
+   6.6
+  ],
+  "G F38#3 High r2 live-vs-arm [G-cl_f3High_live2.png]": [
+   6.3,
+   6.0,
+   6.5
+  ],
+  "G F38#3 Medium r1 live-vs-arm [G-cl_f3Medium_live.png]": [
+   6.6,
+   6.6,
+   6.9
+  ],
+  "G F38#3 Medium r1 live-vs-arm [G-cl_f3Medium_arm2.png]": [
+   6.5,
+   6.2,
+   6.6
+  ],
+  "G F38#27 Medium live-vs-arm [G-cl_f27m_live.png]": [
+   6.4,
+   6.5,
+   6.4
+  ],
+  "G F38#27 Medium live-vs-arm [G-cl_f27m_arm.png]": [
+   7.0,
+   7.2,
+   7.1
+  ]
+ }
+}

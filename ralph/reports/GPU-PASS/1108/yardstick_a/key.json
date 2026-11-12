@@ -1,0 +1,83 @@
+{
+ "Pp": {
+  "anchor": false,
+  "label": "GPU1108 F39#23 live one-sided",
+  "A": "<scratch>/sides/F39-23_live.png",
+  "B": "<scratch>/sides/F39-23_live.png"
+ },
+ "Wm": {
+  "anchor": false,
+  "label": "GPU1108 F41#21 C live-vs-arm",
+  "A": "<scratch>/sides/F41-21_live.png",
+  "B": "<scratch>/sides/F41-21_victory_on.png"
+ },
+ "Gc": {
+  "anchor": false,
+  "label": "GPU1108 F38#24 live one-sided",
+  "A": "<scratch>/sides/F38-24_live.png",
+  "B": "<scratch>/sides/F38-24_live.png"
+ },
+ "Ik": {
+  "anchor": false,
+  "label": "GPU1108 F41#16 live one-sided",
+  "A": "<scratch>/sides/F41-16_live.png",
+  "B": "<scratch>/sides/F41-16_live.png"
+ },
+ "Rs": {
+  "anchor": false,
+  "label": "GPU1108 F38#19 live one-sided",
+  "A": "<scratch>/sides/F38-19_live.png",
+  "B": "<scratch>/sides/F38-19_live.png"
+ },
+ "Jq": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Dc": {
+  "anchor": false,
+  "label": "GPU1108 F39#7 live one-sided",
+  "A": "<scratch>/sides/F39-7_live.png",
+  "B": "<scratch>/sides/F39-7_live.png"
+ },
+ "Qq": {
+  "anchor": false,
+  "label": "GPU1108 F40#14 live one-sided",
+  "A": "<scratch>/sides/F40-14_live.png",
+  "B": "<scratch>/sides/F40-14_live.png"
+ },
+ "Dz": {
+  "anchor": false,
+  "label": "GPU1108 F39#19 live one-sided",
+  "A": "<scratch>/sides/F39-19_live.png",
+  "B": "<scratch>/sides/F39-19_live.png"
+ },
+ "Oq": {
+  "anchor": false,
+  "label": "GPU1108 F39#20 live one-sided",
+  "A": "<scratch>/sides/F39-20_live.png",
+  "B": "<scratch>/sides/F39-20_live.png"
+ },
+ "Nk": {
+  "anchor": false,
+  "label": "GPU1108 F41#15 live one-sided",
+  "A": "<scratch>/sides/F41-15_live.png",
+  "B": "<scratch>/sides/F41-15_live.png"
+ },
+ "Dd": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Zs": {
+  "anchor": false,
+  "label": "GPU1108 F38#30 live one-sided",
+  "A": "<scratch>/sides/F38-30_live.png",
+  "B": "<scratch>/sides/F38-30_live.png"
+ },
+ "Zx": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

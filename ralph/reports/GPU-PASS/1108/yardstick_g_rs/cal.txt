@@ -1,0 +1,214 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8143,
+  "least_squares_slope": 0.936,
+  "method": "linear",
+  "slope": 0.936,
+  "intercept": 1.3003,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.669,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.633,
+   "reference": 7.35,
+   "mapped": 7.509,
+   "residual": -0.159
+  },
+  "craft:before": {
+   "measured": 4.6,
+   "reference": 4.83,
+   "mapped": 5.606,
+   "residual": -0.776
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.6,
+   "reference": 6.75,
+   "mapped": 6.542,
+   "residual": 0.208
+  },
+  "f04_6_r22:control": {
+   "measured": 4.833,
+   "reference": 5.83,
+   "mapped": 5.824,
+   "residual": 0.006
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.2,
+   "reference": 6.53,
+   "mapped": 5.232,
+   "residual": 1.298
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.5,
+   "reference": 4.0,
+   "mapped": 4.576,
+   "residual": -0.576
+  }
+ },
+ "candidates": {
+  "G F38#24 stronghold route_day base-vs-arm [G-rs_sh_arm.png]": {
+   "measured_mean": 6.367,
+   "mapped_mean": 7.26,
+   "mapped_judges": [
+    7.2,
+    7.29,
+    7.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 stronghold route_day base-vs-arm [G-rs_sh_base.png]": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.51,
+   "mapped_judges": [
+    6.54,
+    6.45,
+    6.54
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_02_day base-vs-arm [G-rs_walk_02_day_base.png]": {
+   "measured_mean": 3.967,
+   "mapped_mean": 5.01,
+   "mapped_judges": [
+    5.23,
+    5.04,
+    4.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_02_day base-vs-arm [G-rs_walk_02_day_arm.png]": {
+   "measured_mean": 4.0,
+   "mapped_mean": 5.04,
+   "mapped_judges": [
+    5.23,
+    5.04,
+    4.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_03_day base-vs-arm [G-rs_walk_03_day_arm.png]": {
+   "measured_mean": 2.8,
+   "mapped_mean": 3.92,
+   "mapped_judges": [
+    4.11,
+    3.73,
+    3.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_03_day base-vs-arm [G-rs_walk_03_day_base.png]": {
+   "measured_mean": 2.333,
+   "mapped_mean": 3.48,
+   "mapped_judges": [
+    3.45,
+    3.45,
+    3.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_02_day base-vs-arm [G-rs_walk_02_day_base.png]": {
+   "measured_mean": 3.0,
+   "mapped_mean": 4.11,
+   "mapped_judges": [
+    4.11,
+    4.11,
+    4.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_02_day base-vs-arm [G-rs_walk_02_day_arm.png]": {
+   "measured_mean": 3.0,
+   "mapped_mean": 4.11,
+   "mapped_judges": [
+    4.11,
+    4.11,
+    4.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G warrens route_day regress base-vs-arm [G-rs_rd_base.png]": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.51,
+   "mapped_judges": [
+    6.64,
+    6.54,
+    6.35
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G warrens route_day regress base-vs-arm [G-rs_rd_arm.png]": {
+   "measured_mean": 5.333,
+   "mapped_mean": 6.29,
+   "mapped_judges": [
+    6.35,
+    6.35,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_03_day base-vs-arm [G-rs_walk_03_day_base.png]": {
+   "measured_mean": 2.5,
+   "mapped_mean": 3.64,
+   "mapped_judges": [
+    3.64,
+    3.64,
+    3.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_03_day base-vs-arm [G-rs_walk_03_day_arm.png]": {
+   "measured_mean": 2.833,
+   "mapped_mean": 3.95,
+   "mapped_judges": [
+    3.92,
+    3.83,
+    4.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}

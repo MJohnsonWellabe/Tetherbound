@@ -1,0 +1,46 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.0,
+   4.6,
+   5.0
+  ],
+  "craft:after": [
+   6.8,
+   6.2,
+   6.6
+  ],
+  "f04_6_r22:r22": [
+   6.2,
+   5.6,
+   5.6
+  ],
+  "f04_6_r22:control": [
+   5.3,
+   4.7,
+   4.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.9,
+   3.7,
+   4.2
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.5,
+   4.6,
+   4.9
+  ]
+ },
+ "candidates": {
+  "G F41#24 fleck live-vs-arm [G-fleck_arm.png]": [
+   5.0,
+   5.2,
+   5.0
+  ],
+  "G F41#24 fleck live-vs-arm [G-fleck_live.png]": [
+   4.5,
+   4.4,
+   4.4
+  ]
+ }
+}

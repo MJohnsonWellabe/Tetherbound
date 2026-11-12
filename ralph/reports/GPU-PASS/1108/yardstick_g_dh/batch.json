@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.6,
+   4.6,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.3,
+   5.4,
+   5.3
+  ],
+  "f36_0_npc:C1B": [
+   6.4,
+   6.6,
+   6.6
+  ],
+  "f36_0_npc:C1A": [
+   6.4,
+   6.6,
+   6.6
+  ],
+  "craft:before": [
+   4.5,
+   5.0,
+   5.6
+  ],
+  "craft:after": [
+   6.6,
+   6.8,
+   7.0
+  ]
+ },
+ "candidates": {
+  "G F39-31 dawn-haze base-vs-arm [G-dh_F39-31_base.png]": [
+   5.6,
+   5.0,
+   5.4
+  ],
+  "G F39-31 dawn-haze base-vs-arm [G-dh_F39-31_arm.png]": [
+   6.0,
+   5.4,
+   5.5
+  ],
+  "G F39-30-veil dawn-haze base-vs-arm [G-dh_F39-30-veil_arm.png]": [
+   6.0,
+   5.4,
+   5.6
+  ],
+  "G F39-30-veil dawn-haze base-vs-arm [G-dh_F39-30-veil_base.png]": [
+   5.6,
+   5.0,
+   5.2
+  ],
+  "G F39-30-ctl dawn-haze base-vs-arm [G-dh_F39-30-ctl_arm.png]": [
+   6.5,
+   6.4,
+   6.8
+  ],
+  "G F39-30-ctl dawn-haze base-vs-arm [G-dh_F39-30-ctl_base.png]": [
+   6.4,
+   6.2,
+   6.7
+  ],
+  "G F39-30-arm dawn-haze base-vs-arm [G-dh_F39-30-arm_arm.png]": [
+   6.2,
+   5.9,
+   6.0
+  ],
+  "G F39-30-arm dawn-haze base-vs-arm [G-dh_F39-30-arm_base.png]": [
+   5.6,
+   5.4,
+   5.5
+  ]
+ }
+}

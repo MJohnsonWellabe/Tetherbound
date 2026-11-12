@@ -1,0 +1,155 @@
+[
+ {
+  "label": "GPU1108F F40#1 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: open terrain. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#2 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: summit aviary. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#3 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: architectural landmark read. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#4 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: exposed landform edges. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#5 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: captain fight camera orientation. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#6 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: mounted terrace edge and cloud crossing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#7 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: grass and stone finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#8 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: bright Cloudreach route markers. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#9 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: named NPC post readability. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#10 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue foreground composition. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#11 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: terrace edge clouds. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#12 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#13 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: catch chance feedback timing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#15 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: floating dark strips. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#16 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: mushroom pickup variants. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#17 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: High Perches rim mushroom. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+  ]
+ },
+ {
+  "label": "GPU1108F F40#18 live one-sided",
+  "a": "<scratch>",
+  "b": "<scratch>",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: full-party catch choice legibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom"
+  ]
+ }
+]

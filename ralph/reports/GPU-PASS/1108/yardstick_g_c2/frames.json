@@ -1,0 +1,79 @@
+[
+ {
+  "frame": "meadows__inventory__prop__bonfire_fire.jpg",
+  "preset": "arm-High",
+  "tree": "7ab45702119bb5a24e4465a951552706f55f18ab",
+  "tool": "res://tools/phase2_capture_world_inventory.gd --biome=meadows --seed=2042 (three subsets, one boot)",
+  "path": "G-floor2-camp-r2/arm-High/meadows__inventory__prop__bonfire_fire.jpg",
+  "sky_fraction": 0.125,
+  "lower_edges": 0.4365,
+  "script_errors": 0,
+  "note": "F38#32 attempt 2, High. base = tb/floor2 7ab457021 (trail_camp OFF); arm = + FLOOR2-CAMP/overlay_camp_hero.json (declutter, single-sided sign, plain wood gate, bonfire stand heading 90); armplanned = trail_camp on, no heading override (bonfire only; the old stand was rejected for a capsule overlap, so it moved 5 m east)."
+ },
+ {
+  "frame": "meadows__inventory__prop__camp_bed.jpg",
+  "preset": "arm-High",
+  "tree": "7ab45702119bb5a24e4465a951552706f55f18ab",
+  "tool": "res://tools/phase2_capture_world_inventory.gd --biome=meadows --seed=2042 (three subsets, one boot)",
+  "path": "G-floor2-camp-r2/arm-High/meadows__inventory__prop__camp_bed.jpg",
+  "sky_fraction": 0.137,
+  "lower_edges": 0.433,
+  "script_errors": 0,
+  "note": "F38#32 attempt 2, High. base = tb/floor2 7ab457021 (trail_camp OFF); arm = + FLOOR2-CAMP/overlay_camp_hero.json (declutter, single-sided sign, plain wood gate, bonfire stand heading 90); armplanned = trail_camp on, no heading override (bonfire only; the old stand was rejected for a capsule overlap, so it moved 5 m east)."
+ },
+ {
+  "frame": "meadows__inventory__prop__camp_tent.jpg",
+  "preset": "arm-High",
+  "tree": "7ab45702119bb5a24e4465a951552706f55f18ab",
+  "tool": "res://tools/phase2_capture_world_inventory.gd --biome=meadows --seed=2042 (three subsets, one boot)",
+  "path": "G-floor2-camp-r2/arm-High/meadows__inventory__prop__camp_tent.jpg",
+  "sky_fraction": 0.162,
+  "lower_edges": 0.3187,
+  "script_errors": 0,
+  "note": "F38#32 attempt 2, High. base = tb/floor2 7ab457021 (trail_camp OFF); arm = + FLOOR2-CAMP/overlay_camp_hero.json (declutter, single-sided sign, plain wood gate, bonfire stand heading 90); armplanned = trail_camp on, no heading override (bonfire only; the old stand was rejected for a capsule overlap, so it moved 5 m east)."
+ },
+ {
+  "frame": "meadows__inventory__prop__bonfire_fire.jpg",
+  "preset": "armplanned-High",
+  "tree": "7ab45702119bb5a24e4465a951552706f55f18ab",
+  "tool": "res://tools/phase2_capture_world_inventory.gd --biome=meadows --seed=2042 (three subsets, one boot)",
+  "path": "G-floor2-camp-r2/armplanned-High/meadows__inventory__prop__bonfire_fire.jpg",
+  "sky_fraction": 0.095,
+  "lower_edges": 0.3026,
+  "script_errors": 0,
+  "note": "F38#32 attempt 2, High. base = tb/floor2 7ab457021 (trail_camp OFF); arm = + FLOOR2-CAMP/overlay_camp_hero.json (declutter, single-sided sign, plain wood gate, bonfire stand heading 90); armplanned = trail_camp on, no heading override (bonfire only; the old stand was rejected for a capsule overlap, so it moved 5 m east)."
+ },
+ {
+  "frame": "meadows__inventory__prop__bonfire_fire.jpg",
+  "preset": "base-High",
+  "tree": "7ab45702119bb5a24e4465a951552706f55f18ab",
+  "tool": "res://tools/phase2_capture_world_inventory.gd --biome=meadows --seed=2042 (three subsets, one boot)",
+  "path": "G-floor2-camp-r2/base-High/meadows__inventory__prop__bonfire_fire.jpg",
+  "sky_fraction": 0.113,
+  "lower_edges": 0.3436,
+  "script_errors": 0,
+  "note": "F38#32 attempt 2, High. base = tb/floor2 7ab457021 (trail_camp OFF); arm = + FLOOR2-CAMP/overlay_camp_hero.json (declutter, single-sided sign, plain wood gate, bonfire stand heading 90); armplanned = trail_camp on, no heading override (bonfire only; the old stand was rejected for a capsule overlap, so it moved 5 m east)."
+ },
+ {
+  "frame": "meadows__inventory__prop__camp_bed.jpg",
+  "preset": "base-High",
+  "tree": "7ab45702119bb5a24e4465a951552706f55f18ab",
+  "tool": "res://tools/phase2_capture_world_inventory.gd --biome=meadows --seed=2042 (three subsets, one boot)",
+  "path": "G-floor2-camp-r2/base-High/meadows__inventory__prop__camp_bed.jpg",
+  "sky_fraction": 0.135,
+  "lower_edges": 0.4346,
+  "script_errors": 0,
+  "note": "F38#32 attempt 2, High. base = tb/floor2 7ab457021 (trail_camp OFF); arm = + FLOOR2-CAMP/overlay_camp_hero.json (declutter, single-sided sign, plain wood gate, bonfire stand heading 90); armplanned = trail_camp on, no heading override (bonfire only; the old stand was rejected for a capsule overlap, so it moved 5 m east)."
+ },
+ {
+  "frame": "meadows__inventory__prop__camp_tent.jpg",
+  "preset": "base-High",
+  "tree": "7ab45702119bb5a24e4465a951552706f55f18ab",
+  "tool": "res://tools/phase2_capture_world_inventory.gd --biome=meadows --seed=2042 (three subsets, one boot)",
+  "path": "G-floor2-camp-r2/base-High/meadows__inventory__prop__camp_tent.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3213,
+  "script_errors": 0,
+  "note": "F38#32 attempt 2, High. base = tb/floor2 7ab457021 (trail_camp OFF); arm = + FLOOR2-CAMP/overlay_camp_hero.json (declutter, single-sided sign, plain wood gate, bonfire stand heading 90); armplanned = trail_camp on, no heading override (bonfire only; the old stand was rejected for a capsule overlap, so it moved 5 m east)."
+ }
+]

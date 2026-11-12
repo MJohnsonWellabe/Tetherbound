@@ -1,0 +1,71 @@
+{
+ "Dw": {
+  "anchor": false,
+  "label": "G F36(1) stormtrail rescore main",
+  "A": "G-t4b_stormtrail.png",
+  "B": "G-t4b_stormtrail.png"
+ },
+ "At": {
+  "anchor": false,
+  "label": "G F36(1) duskhush rescore main",
+  "A": "G-t4b_duskhush.png",
+  "B": "G-t4b_duskhush.png"
+ },
+ "Rg": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Wi": {
+  "anchor": false,
+  "label": "G F36(1) stormraven rescore main",
+  "A": "G-t4b_stormraven.png",
+  "B": "G-t4b_stormraven.png"
+ },
+ "Ez": {
+  "anchor": false,
+  "label": "G F36(1) cliffspike rescore main",
+  "A": "G-t4b_cliffspike.png",
+  "B": "G-t4b_cliffspike.png"
+ },
+ "Sq": {
+  "anchor": false,
+  "label": "G F36(1) voltwig rescore main",
+  "A": "G-t4b_voltwig.png",
+  "B": "G-t4b_voltwig.png"
+ },
+ "Nf": {
+  "anchor": false,
+  "label": "G F36(1) solmane rescore main",
+  "A": "G-t4b_solmane.png",
+  "B": "G-t4b_solmane.png"
+ },
+ "Vd": {
+  "anchor": false,
+  "label": "G F36(1) trailpup rescore main",
+  "A": "G-t4b_trailpup.png",
+  "B": "G-t4b_trailpup.png"
+ },
+ "Pm": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Eh": {
+  "anchor": false,
+  "label": "G F36(1) ashtusk rescore main",
+  "A": "G-t4b_ashtusk.png",
+  "B": "G-t4b_ashtusk.png"
+ },
+ "Am": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ot": {
+  "anchor": false,
+  "label": "G F36(1) breezetail rescore main",
+  "A": "G-t4b_breezetail.png",
+  "B": "G-t4b_breezetail.png"
+ }
+}

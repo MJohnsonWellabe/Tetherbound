@@ -1,0 +1,46 @@
+{
+ "sample1": [
+  "meadows__inventory__character__ada__dialogue.jpg",
+  "meadows__inventory__character__bram__dialogue.jpg",
+  "meadows__inventory__character__halda__dialogue.jpg",
+  "meadows__inventory__character__lark__dialogue.jpg",
+  "meadows__inventory__character__maren__dialogue.jpg",
+  "meadows__inventory__character__mira__dialogue.jpg",
+  "meadows__inventory__character__nessa__dialogue.jpg",
+  "meadows__inventory__character__old_perrin__dialogue.jpg",
+  "meadows__inventory__character__oskar__dialogue.jpg"
+ ],
+ "sample2": [
+  "meadows__inventory__character__rae__dialogue.jpg",
+  "meadows__inventory__character__ren__dialogue.jpg",
+  "meadows__inventory__character__sela__dialogue.jpg",
+  "meadows__inventory__character__sorrel__dialogue.jpg",
+  "meadows__inventory__character__tam__dialogue.jpg",
+  "meadows__inventory__character__tobin__dialogue.jpg",
+  "meadows__inventory__character__wilhelm__dialogue.jpg",
+  "meadows__inventory__trainer__band2_outrider_kest__dialogue.jpg",
+  "meadows__inventory__trainer__captain_ridge__dialogue.jpg"
+ ],
+ "sample3": [
+  "meadows__inventory__trainer__captain_riverwatch__dialogue.jpg",
+  "meadows__inventory__trainer__lost_creature_rue__dialogue.jpg",
+  "meadows__inventory__trainer__night_watch_farro__dialogue.jpg",
+  "meadows__inventory__trainer__pasture_drover_juno__dialogue.jpg",
+  "meadows__inventory__trainer__patrol_ridgeline__dialogue.jpg",
+  "meadows__inventory__trainer__practice_trainer__dialogue.jpg",
+  "meadows__inventory__trainer__quarry_picket_dorn__dialogue.jpg",
+  "meadows__inventory__trainer__relay_captain__dialogue.jpg",
+  "meadows__inventory__trainer__relay_officer_dell__dialogue.jpg"
+ ],
+ "sample4": [
+  "meadows__inventory__trainer__relay_picket_hess__dialogue.jpg",
+  "meadows__inventory__trainer__relay_picket_orrin__dialogue.jpg",
+  "meadows__inventory__trainer__shepherd_the_rise__dialogue.jpg",
+  "meadows__inventory__trainer__south_bridge_grunt__dialogue.jpg",
+  "meadows__inventory__trainer__stronghold_checkpoint__dialogue.jpg",
+  "meadows__inventory__trainer__stronghold_outer_watch__dialogue.jpg",
+  "meadows__inventory__trainer__stronghold_patrol__dialogue.jpg",
+  "meadows__inventory__trainer__wanderer_trail_camp__dialogue.jpg",
+  "meadows__inventory__trainer__warden_aldis__dialogue.jpg"
+ ]
+}
