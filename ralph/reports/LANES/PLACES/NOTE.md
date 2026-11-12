@@ -65,6 +65,7 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 - F39#25: 7.28 -> 7.07 (12 Nov, G-rescore-stale-ext-tidewake)
 - F39#28: 7.33 -> 7.30 (12 Nov, G-rescore-stale-ext-tidewake)
 **Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.
+**F39#17 for a build lane (below 6 now):** the GPU lane checked the frames: live and restored differ by 0.58% of pixels at the same camera, so the row needs a game change (stronger live flow streaks, or a larger visible change on restoration), not a capture change. **Medium for F39#4 and F39#24 is queued** as G-closeout-tidewake-medium.
 **Medium for the Meadows candidates** is queued by the GPU lane as G-closeout-meadows-ui-medium (F38#3 #4 #7 #9 #19 #33 #34) and -medium-2 (F38#13 #18 #38); it goes to both this lane and LANE-SCOUT. **Coordinator: say which of us judges it**, so it is not done twice; I will take it as a two-sided High and Medium batch unless told otherwise.
 **Requests for the GPU lane (it reads this NOTE through you if my message does not arrive):** Medium for F39#4 and F39#24, same frames.
 

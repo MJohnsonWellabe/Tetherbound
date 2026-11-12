@@ -60,3 +60,6 @@ LANE-PLACES (re-scoring lane), 12 Nov 2026.
 - **Veilfall (F39#2):** still asks for a tiered, vegetated mountain with several falls and base mist (new art).
 - **Fight camera (F39#7, F39#19):** a dark void, a grey slab and a floating olive object enter the high fight camera's frame.
 - **Recorded defects now FIXED 3/3:** F39#4, #10, #16, #20, #22, #23, #24, #25, #28.
+
+## F39#17 follow-up (GPU lane eye check, 12 Nov)
+The capture is faithful; the game's restored state barely differs at this camera. `S1_live_t0` against `S1_restored_t0` (same camera): mean absolute difference 1.23, 0.58% of pixels differ by more than 20. Live shows small scattered white flow flecks on the near water; restored shows a couple of faint wake lines and slightly moved debris. Shoreline, sandbars and water colour are identical. `S2_live_t0` is a different stand. So this is a game fix for a build lane, not a capture fix: make the live current's flow streaks visibly stronger, or make restoration change more of the scene. Tool: `phase2_capture_current_states.gd --seed=2042`.
