@@ -3633,6 +3633,26 @@
    "job": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
    "capture": "MEDIUM, arm side only",
    "note": "Close-outs: High pebbik 7.65, breezetail 7.61 (G-things-faint2.md, 102221c2e). Close at Medium 7.5+ once the arm lands. Short; fit after things-convclear-other-biomes."
+  },
+  {
+   "id": "below6-marrow",
+   "kind": "arm",
+   "rows": [
+    "F41#15",
+    "F41#7"
+   ],
+   "branch": "tb/below6",
+   "head": "917e71d59",
+   "tree": "tb/below6 917e71d59 for both sides (one import: new captain_a floor1 texture)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-MARROW/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-MARROW/CAPTURE.json",
+   "job": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow at 1920x1080 forward_plus --fixed-fps 20",
+   "frames": "stormwood__inventory__character__captain_marrow__dialogue, stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "lowest row on the board (F41#15 4.49)",
+   "note": "Marrow's body emitted its own albedo plus a 0.18 Stormwood emission floor; arm turns both off for captain_a. Finishing in-progress work during wrap-up."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
