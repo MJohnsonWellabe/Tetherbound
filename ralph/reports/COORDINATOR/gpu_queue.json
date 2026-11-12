@@ -3990,6 +3990,30 @@
    "capture": "High, base and arm",
    "pre_check": "no creature head over a speaker on the arm",
    "priority": "low expectation (CPU level); cheap; runs after wetpath"
+  },
+  {
+   "id": "rescore-stale-tier2",
+   "kind": "re-score",
+   "rows": [
+    "F38#2",
+    "F38#20",
+    "F38#29",
+    "F38#12",
+    "F38#14",
+    "F38#22",
+    "F38#6",
+    "F41#10",
+    "F40#15",
+    "F40#17",
+    "F39#5",
+    "F41#18"
+   ],
+   "branch": "main",
+   "head": "latest main (after #921 if merged)",
+   "job": "each row's own job.json frames (ralph/reports/VISUAL/item-scores/job.json board_row), one side on main, High",
+   "capture": "High, main only (row scores)",
+   "priority": "after the queued arms; GPU filler. These rows were last scored 8-9 Nov, before about a dozen landings; current numbers re-order the next tier",
+   "note": "Report each row's mapped score to LANE-SCOUT; flag any row now at or above 7.0 (near-bar)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
