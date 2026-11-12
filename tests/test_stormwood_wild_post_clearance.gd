@@ -12,6 +12,8 @@ var _director: Node = null
 
 func before_each() -> void:
 	_director = DIRECTOR.new()
+	# Off the tree the realm lookup would ask for /root/Game; this is not Meadows.
+	_director._meadows_ground_cached = 0
 
 
 func after_each() -> void:
