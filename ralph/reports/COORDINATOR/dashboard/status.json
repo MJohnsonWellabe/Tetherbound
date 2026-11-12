@@ -1,7 +1,7 @@
 {
   "updated": "11 Nov 2026 20:25 UTC",
   "headline": [
-    "11 Nov 23:25: landed #910 (Voltarach 6.50, Ribbonray 6.90, Trail Camp 6.91, dialogue capture fix). In CI: #911 Abyssal matte; #912 Stormheart core, Thundertunnel 6.04 and the Windows download fix (the .pck had passed GitHub's 2 GiB asset limit, so latest had no zip); #912 also carries the grounded faints (was #913, merged in after #911 moved main) for 7 rows, Water Mosshell 6.67, Galewisp 7.44. Closed: F36#69 Solmane (Medium 8.04). Dialogue rows re-based on the fixed camera blend; F41#15 falls to 4.49. Judging next: toys and UI, Mirejaw and Abyssal hits, Stormwood storm light.",
+    "12 Nov 00:11: landed #910, #911, #912 (Voltarach 6.50, Ribbonray 6.90, Trail Camp 6.91, Abyssal matte, Thundertunnel 6.04, Stormheart core, grounded faints for seven rows incl. Water Mirejaw 7.39 and Cragclaw 7.51, Water Mosshell 6.67, Galewisp 7.44, dialogue capture fixes, Windows download fix). Closed: F36#69 Solmane. Judged, landing next: F40#13 catch card 7.62 (Medium queued), F36#52 Mirejaw hit +0.60. Judging: Stormwood storm light.",
     "11 Nov 20:25: lane restructure (owner): LANE-BELOW6, LANE-THINGS, LANE-PLACES + GPU lane + LANE-SCOUT. Current build lanes are writing handoffs. PR #910 (dialogue capture blend fix + Trail Camp F38#32 6.91) in CI.",
     "11 Nov 20:16: lanes LANE-FLOOR2, LANE-NEWAPPROACH and LANE-REMAKES stopped at 19:35 on the weekly usage limit; owner reset it and all lanes are resumed. New LANE-STORMWOOD takes the Stormwood storm-light pass (8 F41 rows incl. F41#8). Lanes: FLOOR2 (camp landing, faint grounding, dust/pickups), NEWAPPROACH (dialogue blend fix, Water Mosshell ride, conversation shot, Cloudreach rain), REMAKES (Voltarach, Abyssal Guardian x2, Ribbonray materials), MESHY (new art below 6), STORMWOOD, SCOUT (judging), GPU lane.",
     "11 Nov 19:22: F36#72 Stormbrush poses CLOSES at 7.5 (High 7.68, Medium 7.75) on a plain re-score of the 1 Nov remake. New LANE-REMAKES takes the regressed remakes' materials (Voltarach, Abyssal Guardian x2, Ribbonray); LANE-FLOOR2 the shared faint grounding (Water Mirejaw, Water Abyssal Guardian); LANE-NEWAPPROACH the Water Mosshell ride.",
@@ -1949,10 +1949,7 @@
       "before": 5.22,
       "after": 5.77,
       "pr": "#911"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F36#80 Thundertunnel coat",
       "before": 4.63,
@@ -2026,7 +2023,14 @@
       "pr": "#912"
     }
   ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#912",
+      "what": "Batches 66+67: Stormheart heartwood (F41#1 +1.37), Thundertunnel coat (F36#80 6.04), grounded faints for seven pose rows (Water Mirejaw 7.39, Cragclaw 7.51), travel poses (Water Mosshell 6.67, Galewisp 7.44), camera occlusion fix, dialogue identity fix; Windows export leaves out tests/ralph/archive so the download fits under 2 GiB",
+      "when": "00:11 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#911",
       "what": "Batch 65: Abyssal Guardian matte hide ON (F36#30 5.22 -> 5.77, 3/3); knife-swing smoke flake confirmed by one re-run",
@@ -2452,7 +2456,7 @@
     },
     "F41#1": {
       "gpu": 5.66,
-      "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, arm ships (not yet landed): Stormheart heartwood core 4.29 -> 5.66 (+1.37, 3/3; batch scale lower than the 5.78 board); close-only 5.95; approach stands face a bark wall"
+      "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, LANDED #912: Stormheart heartwood core 4.29 -> 5.66 (+1.37, 3/3; batch scale lower than the 5.78 board); close-only 5.95; approach stands face a bark wall"
     },
     "F41#10": {
       "gpu": 6.02,
@@ -2608,7 +2612,7 @@
     },
     "F36#91": {
       "gpu": 6.51,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Water Cragclaw 5.43 (game clip) -> 6.51 (3/3)"
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Water Cragclaw 5.43 (game clip) -> 6.51 (3/3)"
     },
     "F36#60": {
       "gpu": 7.26,
@@ -2616,7 +2620,7 @@
     },
     "F36#38": {
       "gpu": 7.07,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Cannonback 6.74 -> 7.07 (3/3)"
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Cannonback 6.74 -> 7.07 (3/3)"
     },
     "F36#78": {
       "gpu": 6.84,
@@ -2624,7 +2628,7 @@
     },
     "F36#48": {
       "gpu": 7.44,
-      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), capture-stage fix ships (not yet landed), GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers"
+      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers"
     },
     "F36#92": {
       "gpu": 6.6,
@@ -2632,7 +2636,7 @@
     },
     "F36#50": {
       "gpu": 6.98,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Mangrove Monitor 6.51 -> 6.98 (3/3)"
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mangrove Monitor 6.51 -> 6.98 (3/3)"
     },
     "F36#88": {
       "gpu": 6.32,
@@ -2640,15 +2644,15 @@
     },
     "F36#93": {
       "gpu": 7.39,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Water Mirejaw 6.37 (game clip) -> 7.39 (3/3)"
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Water Mirejaw 6.37 (game clip) -> 7.39 (3/3)"
     },
     "F36#94": {
       "gpu": 6.67,
-      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), capture-stage fix ships (not yet landed), GPU High: Water Mosshell 4.65 -> 6.67 (+2.02, 3/3); rider perched high on the dome"
+      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Water Mosshell 4.65 -> 6.67 (+2.02, 3/3); rider perched high on the dome"
     },
     "F36#30": {
       "gpu": 6.56,
-      "src": "G-things-faint arm 6.56 (faint grounding, fixed stage); plus G-below6-abyssal-matte (LANE-SCOUT 44f5b38be) matte hide on main's stage 5.22 -> 5.77 (+0.55, 3/3), expected to stack; matte LANDED #911; faint in #913"
+      "src": "G-things-faint arm 6.56 (faint grounding, fixed stage); plus G-below6-abyssal-matte (LANE-SCOUT 44f5b38be) matte hide on main's stage 5.22 -> 5.77 (+0.55, 3/3), expected to stack; matte LANDED #911; faint LANDED #912"
     },
     "F36#86": {
       "gpu": 6.5,
@@ -2656,7 +2660,7 @@
     },
     "F36#52": {
       "gpu": 6.98,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding arm ships (not yet landed): Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler); G-below6-hits (LANE-SCOUT 65306ecd0): grounded hit 5.72 -> 6.32 on main's stage (+0.60, 3/3), arm not yet landed"
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler); G-below6-hits (LANE-SCOUT 65306ecd0): grounded hit 5.72 -> 6.32 on main's stage (+0.60, 3/3), arm not yet landed"
     },
     "F36#69": {
       "gpu": 8.04,
@@ -2724,7 +2728,7 @@
     },
     "F36#80": {
       "gpu": 6.04,
-      "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, arm ships (not yet landed): Thundertunnel coat 4.63 -> 6.04 (+1.41, 3/3)"
+      "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, LANDED #912: Thundertunnel coat 4.63 -> 6.04 (+1.41, 3/3)"
     }
   }
 }
