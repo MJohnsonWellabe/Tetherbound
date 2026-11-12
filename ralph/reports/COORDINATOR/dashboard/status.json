@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 23:35 UTC",
+  "updated": "12 Nov 2026 23:55 UTC",
   "headline": [
+    "12 Nov 23:55: the catch ring ships and closes F38#7 once on main (7.40 to 7.76 on High and Medium, 3/3, neutral control); landing as #937. F39#23 Tidewake catch +0.61.",
     "12 Nov 23:35: Cloudreach brighter rain sky does not ship: three rain sets gain about +0.2 (3/3), but F40#19's sky reads washed out (-0.12). LANE-THINGS will keep the brighter ground and go back to the darker slate cloud deck that won for F40#19 earlier.",
     "12 Nov 23:20: #936 landed (Cloudreach wall stones, F40#15). Today's landings: #927, #928, #930, #933, #934, #935, #936; closes today: F41#11, F38#4, F38#20 (plus F38#9, F39#4, F39#24 earlier).",
     "12 Nov 23:00: F38#20 Team Tether stronghold CLOSES (7.50 High and Medium, control 0.3 strict). It was 5.72 this morning, below 6. F38#3 fight camera does not close (6.89 High / 7.03 Medium).",
@@ -2614,9 +2615,9 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.52 (was 6.10)"
     },
     "F38#7": {
-      "gpu": 7.49,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.52 (was 7.26) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 6.77, Medium 7.26, not closed | ARM THINGS-BEAM G-things-beam (d7a1d3b0a, 12 Nov) 6.92 -> 7.49 High (3/3); landing #928",
-      "medium": 7.26
+      "gpu": 7.76,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.52 (was 7.26) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 6.77, Medium 7.26, not closed | ARM THINGS-BEAM G-things-beam (d7a1d3b0a, 12 Nov) 6.92 -> 7.49 High (3/3); landing #928 | CLOSE CALL G-things-reticle (bb82ee421, 12 Nov): arm 7.76 High and Medium (3/3, neutral control); closes once #937 lands",
+      "medium": 7.76
     },
     "F38#8": {
       "gpu": 6.21,
