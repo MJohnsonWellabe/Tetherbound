@@ -1,0 +1,188 @@
+[
+ {
+  "label": "F41#1",
+  "frames": [
+   "stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+   "stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+   "stormwood__landmark__dynamo_core__day__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Stormheart finale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+  ]
+ },
+ {
+  "label": "F41#3",
+  "frames": [
+   "stormwood__fight__capacitor_alpha-i01.jpg",
+   "stormwood__fight__capacitor_alpha-tell1-a-start.jpg",
+   "stormwood__fight__capacitor_alpha-tell1-e-impact.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ]
+ },
+ {
+  "label": "F41#4",
+  "frames": [
+   "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close.jpg",
+   "stormwood__glowmoss_hollows__04__crown_overlook__day__close.jpg",
+   "stormwood__deepwood__10__the_fallen_giant__day__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named destination identities. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+  ]
+ },
+ {
+  "label": "F41#5",
+  "frames": [
+   "stormwood__cinder_verge__01__the_struck_sentinel__day__approach.jpg",
+   "stormwood__glowmoss_hollows__04__crown_overlook__day__close.jpg",
+   "stormwood__landmark__crown_heartstone__day__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: forest ground and distance layers. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
+  ]
+ },
+ {
+  "label": "F41#6",
+  "frames": [
+   "stormwood__fight__capacitor_alpha-tell1-d-strike.jpg",
+   "stormwood__fight__capacitor_alpha-tell1-e-impact.jpg",
+   "stormwood__fight__hollows_alpha-tell1-e-impact.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild danger and opening cues. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals"
+  ]
+ },
+ {
+  "label": "F41#7",
+  "frames": [
+   "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue.jpg",
+   "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue.jpg",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+  ]
+ },
+ {
+  "label": "F41#9",
+  "frames": [
+   "stormwood__inventory__harvest__stormglass.jpg",
+   "stormwood__inventory__harvest__stormglass_crown.jpg",
+   "stormwood__inventory__harvest__glowmoss.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: harvest resource identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+  ]
+ },
+ {
+  "label": "F41#11",
+  "frames": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue.jpg",
+   "stormwood__inventory__character__caretaker_lio__dialogue.jpg",
+   "stormwood__inventory__character__elder_maud__dialogue.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character portrait identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+  ]
+ },
+ {
+  "label": "F41#12",
+  "frames": [
+   "stormwood__deepwood__09__lantern_hollow__day__close.jpg",
+   "stormwood__landmark__glass_field__day__close.jpg",
+   "stormwood__landmark__lantern_hollow__night__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: charged road surface. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern"
+  ]
+ },
+ {
+  "label": "F41#14",
+  "frames": [
+   "stormwood__inventory__pickup__good_candy.jpg",
+   "stormwood__inventory__pickup__great_candy.jpg",
+   "stormwood__inventory__pickup__rare_candy.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: candy pickup tiers. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+  ]
+ },
+ {
+  "label": "F41#15",
+  "frames": [
+   "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "F41#16",
+  "frames": [
+   "stormwood__fight__hollows_long__hollows_alpha-i12.jpg",
+   "stormwood__fight__hollows_long__hollows_alpha-99-after.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Hollows fight loss result clarity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown"
+  ]
+ },
+ {
+  "label": "F41#17",
+  "frames": [
+   "stormwood__landmark__crown_arch__day__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Crown Arch. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+  ]
+ },
+ {
+  "label": "F41#19",
+  "frames": [
+   "stormwood__dynamo__11__the_glass_field__walk_03_day.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Glass Field spike bases. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+  ]
+ },
+ {
+  "label": "F41#20",
+  "frames": [
+   "stormwood__inventory__character__trader_fenn__dialogue.jpg",
+   "stormwood__inventory__character__trader_oswin__dialogue.jpg",
+   "stormwood__inventory__character__elder_maud__dialogue.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character dialogue reuse. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Distinct named Stormwood characters use identical dialogue lines"
+  ]
+ },
+ {
+  "label": "F41#21",
+  "frames": [
+   "stormwood__fight__hollows_win__hollows_alpha-99-after.jpg",
+   "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Hollows victory reward tiles. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards"
+  ]
+ }
+]

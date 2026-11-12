@@ -84,6 +84,26 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 - F39#24: High 7.99, Medium 7.99 (12 Nov); the one-sided panel had High 7.77. Defect FIXED 3/3.
 **CLOSE CANDIDATES for the coordinator: F39#4 and F39#24** meet 7.5 on both Medium and High across two panels. Scores are extrapolated above the top anchor (7.35), as every score in this range is.
 
+**G-rescore-stale-ext-stormwood** (`ralph/reports/GPU-PASS/1108/G-rescore-stale-ext-stormwood.md`, frames @ d41014666; **fit r 0.792, RMSE 0.70, the loosest batch: changes under about 0.7 are inside its error**; all 16 rows on full frame sets):
+- F41#1: 6.81 -> 7.62 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#3: 6.23 -> 7.06 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#4: 6.37 -> 7.02 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#5: 6.06 -> 6.53 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#6: 6.8 -> 6.83 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#7: 6.24 -> 7.02 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#9: 6.81 -> 7.17 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#11: 6.91 -> 7.55 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#12: 6.6 -> 6.90 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#14: 6.35 -> 7.59 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#15: 4.49 -> 6.87 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#16: 6.28 -> 6.37 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#17: 7.03 -> 7.40 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#19: 6.56 -> 7.25 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#20: 6.41 -> 6.68 (12 Nov, G-rescore-stale-ext-stormwood)
+- F41#21: 7.13 -> 7.25 (12 Nov, G-rescore-stale-ext-stormwood)
+**Flags:** clear moves: F41#15 4.49 → 6.87 (out of below-6; defect FIXED 3/3) and F41#14 6.35 → 7.59. Marginal 7.5-or-above (extrapolated, want a second panel before Medium): F41#1 7.62, F41#11 7.55, F41#14 7.59. None below 6. F41#12's thick-gold-stripe defect is FIXED 3/3 on main as it is.
+**Method note for the coordinator:** across today's five batches the same rows moved 0.6 to 0.9 between batches (anchor RMSE 0.39 to 0.70 with three pinned anchor pairs). Row changes smaller than that are not real. I am using five anchor pairs from the next batch; rows near 7.5 should close only on a pooled or two-sided confirming panel, as F39#4 and F39#24 did.
+
 ### Build work handed over
 | Item | State | Goes to |
 |---|---|---|
