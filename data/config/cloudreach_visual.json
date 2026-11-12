@@ -87,7 +87,8 @@
           "ground_wetness": 0.8
         }
       }
-    }
+    },
+    "rain_bright_overcast_1112": {"_scope": "device_local_presentation", "_why": "LANE-THINGS (12 Nov 2026), Cloudreach rain across the matrix (G-rescore-f40-0-sample: F40#0, F40#19, F40#21 at 5.98; rain 0.6 under clear at all 12 stands; 3/3: 'a tiled striped grey sky, pale stone washed flat grey, no fog depth layers'; ask: 'brighter broken overcast, pale stone kept pale'). Layered last over rain_storm and rain_storm_sky: the closed slate deck (coverage 0.86, sharpness 1.4) drew as even bands across the whole sky, so the deck opens a little (0.7) with soft edges (0.85) in a lighter, wider-range grey; the sky and fog lift a step and cool less; the diffuse sun and the ambient come up so pale limestone stays pale; fog thins slightly so far shelves separate. Wet ground is unchanged. Cloudreach rain only. OFF until judged.", "enabled": false, "scenes": ["cloudreach_cliffs"], "presets": {"rain": {"sun": {"energy_mult": 0.62, "shadow_opacity": 0.2}, "sky": {"top_colour": "#4d6074", "horizon_colour": "#9aa9b3", "ground_horizon_colour": "#9aa9b3", "cloud_coverage": 0.7, "cloud_sharpness": 0.85, "cloud_lit": "#cfd6dc", "cloud_shade": "#7f8b97", "cloud_base": "#66727f"}, "environment": {"ambient_colour": "#8a9cab", "ambient_energy_mult": 0.95, "fog_density_add": 0.0062, "fog_colour": "#8b9daa", "adjustment_saturation_mult": 0.95}}}}
   },
   "time_override_arms": {
     "night_foreground_fill": {
