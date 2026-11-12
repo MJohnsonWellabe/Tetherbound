@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 07:50 UTC",
+  "updated": "12 Nov 2026 09:05 UTC",
   "headline": [
+    "12 Nov 09:05: F41#15, the lowest row, jumps 5.13 -> 6.97 (+1.84, 3/3): wild creatures now keep 16 m clear of Stormwood's named conversation posts (Nysa was hidden behind two giant birds), with the warm deck dressing riding along; Sera and Tamsin's dialogue 5.79 -> 6.97. Landing as batch 77 with Hesk's portrait fix.",
     "12 Nov 07:50: #920 landed the Cloudreach gate paving (F40#0 gate +0.93 clear, +0.79 rain). GPU: Galewisp landing beside the trainer and taller (F36#48 7.44 close-out try). LANE-THINGS building the wild-creature keep-clear round Stormwood named posts (F41#15).",
     "12 Nov 07:25: F41#15 cause found (LANE-THINGS): Nysa's and Sera's frames are filled by wild creatures idling at their posts, not by a camera problem. Coordinator go-ahead for a flag-off keep-clear radius round named conversation posts (Stormwood first); it rides with the judged deck dressing. Owner casting item: Officer Nysa is played by the male officer A body (shared with Lieutenant Varga).",
     "12 Nov 07:20: PR #920 in CI: Cloudreach gate paving scoped to the gate road (F40#0 gate +0.93 clear, +0.79 rain) plus the storm-phase capture settle; merge held until the GPU confirms the scoped form matches the judged arm. Named-villager lantern posts did not ship (F41#8 -0.49: blown faces).",
@@ -2169,7 +2170,20 @@
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [],
+  "score_ledger_pending": [
+    {
+      "item": "F41#15 Stormwood post clearance + deck dressing (Marrow, Nysa)",
+      "before": 5.13,
+      "after": 6.97,
+      "pr": "batch 77 (being cut: tb/coord-batch77-land)"
+    },
+    {
+      "item": "Stormwood dialogue ride-along (Sera, Tamsin)",
+      "before": 5.79,
+      "after": 6.97,
+      "pr": "batch 77"
+    }
+  ],
   "landed_recent": [
     {
       "pr": "#920",
@@ -2659,8 +2673,8 @@
       "src": "GPU High 8-9 Nov (B)"
     },
     "F41#15": {
-      "gpu": 4.99,
-      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: foreground obstruction: Officer Nysa hidden behind a creature (PRESENT 3/3); Marrow's head bloom; G-below6-marrow (LANE-SCOUT 168422e80): Marrow frames 4.55 -> 5.95 (+1.40, 3/3), SHIPS, LANDED #918 (Nysa frame not yet re-captured); G-rescore-f41-15-main (LANE-SCOUT 059fad1ec): ROW SCORE on main after #918 = 4.99 (all three frames; Nysa hidden by two storm creatures, portrait/body mismatch)"
+      "gpu": 6.97,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: foreground obstruction: Officer Nysa hidden behind a creature (PRESENT 3/3); Marrow's head bloom; G-below6-marrow (LANE-SCOUT 168422e80): Marrow frames 4.55 -> 5.95 (+1.40, 3/3), SHIPS, LANDED #918 (Nysa frame not yet re-captured); G-rescore-f41-15-main (LANE-SCOUT 059fad1ec): ROW SCORE on main after #918 = 4.99 (all three frames; Nysa hidden by two storm creatures, portrait/body mismatch); G-things-stormpost (LANE-SCOUT b3ff7d0d7): wild post clearance + deck dressing 5.13 -> 6.97 (+1.84, 3/3), landing in batch 77"
     },
     "F41#16": {
       "gpu": 6.28,
