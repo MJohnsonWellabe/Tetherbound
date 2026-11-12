@@ -76,7 +76,14 @@ func test_f39_23_ring_style_ships_on() -> void:
 	assert_true(str(ring._why_on).contains("CPU 5.26 -> 5.62"), "records its score")
 	assert_eq(str(ring.scope), "client_presentation", "declares its scope")
 	assert_between(float(ring.alpha_scale), 0.2, 1.0, "the ring stays visible")
-	assert_between(float(ring.width_scale), 0.4, 1.0, "a thinner ring, never a bolder one (round 1 lost)")
+	# 12 Nov (G-things-reticle.md: F38#7 7.40 -> 7.76 on both presets): the 0.7
+	# hairline was "almost invisible". It is now 1.15 wide at full alpha with a
+	# 1.5 px halo. Round 1's loss was a heavy outline with arcs x1.35, so the
+	# ceiling stays well under that.
+	assert_between(float(ring.width_scale), 0.4, 1.25, "a readable ring, never round 1's heavy one (x1.35 lost)")
+	assert_between(float(ring.outline_px), 0.0, 2.0, "at most a thin halo")
+	assert_almost_eq(float(ring.alpha_scale), 1.0, 0.001, "the ring is drawn at full strength")
+	assert_true(str(ring._why_on_1112).contains("G-things-reticle"), "records its GPU verdict")
 	var reticle := FileAccess.get_file_as_string("res://scripts/ui/capture_reticle.gd")
 	assert_true(reticle.contains("_readout_visual.get(\"ring_style_1104\", {})"), "the reticle reads the flag")
 
