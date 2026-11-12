@@ -3,6 +3,21 @@
  "after": "section F (all four biomes) finishes",
  "entries": [
   {
+   "id": "closeout-stormwood-medium",
+   "kind": "close-out (Medium)",
+   "rows": [
+    "F41#1",
+    "F41#14",
+    "F41#11"
+   ],
+   "branch": "main",
+   "head": "latest main",
+   "job": "each row's own job.json frames on current main at MEDIUM, one side, same frames as G-rescore-stale-ext-stormwood",
+   "capture": "Medium, one side",
+   "priority": "next after the current batch: three rows flagged 7.5+ at High",
+   "route": "LANE-SCOUT (close decisions) and LANE-PLACES"
+  },
+  {
    "id": "closeout-stormtrail-high-stormbrush-medium",
    "kind": "close-out",
    "rows": [
