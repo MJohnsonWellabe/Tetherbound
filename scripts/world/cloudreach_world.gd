@@ -6586,20 +6586,6 @@ func _is_carved_bank(a: Vector3, b: Vector3, c: Vector3, touched: bool, bank_nor
 ## carved outer edge. The body sits under this mesh so ground-truth and the
 ## look pass read it as drawn turf, like every other crown's. Built from
 ## packed arrays rather than per-vertex SurfaceTool calls: ~20k triangles.
-var _carved_bank_uv := -1.0
-
-
-## 0 while `carved_bank_uv_1112` is off; else its UV scale (1 / metres per tile).
-func _carved_bank_uv_scale() -> float:
-	if _carved_bank_uv < 0.0:
-		_carved_bank_uv = 0.0
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
-		var cfg: Variant = (parsed as Dictionary).get("carved_bank_uv_1112", {}) if parsed is Dictionary else {}
-		if cfg is Dictionary and bool((cfg as Dictionary).get("enabled", false)):
-			_carved_bank_uv = maxf(0.001, float((cfg as Dictionary).get("uv_scale", 0.08)))
-	return _carved_bank_uv
-
-
 func _build_carved_crown(root: Node3D, carved: Dictionary, top_material: Material,
 		collision: bool) -> void:
 	var crown_mesh := ArrayMesh.new()
@@ -6619,14 +6605,6 @@ func _build_carved_crown(root: Node3D, carved: Dictionary, top_material: Materia
 			verts[index + 2] = triangles[index + 1]
 		for index in verts.size():
 			uvs[index] = Vector2(verts[index].x, verts[index].z) * 0.04
-		# F40#1 carved_bank_uv_1112 (LANE-BELOW6, OFF until GPU-judged): a bank
-		# is near-vertical, so the crown's top-down UVs stretch one texel row
-		# down its whole face ("a brown soil skirt", "a test tile"). Map it by
-		# run along the face and height instead.
-		if key == "bank" and _carved_bank_uv_scale() > 0.0:
-			var scale := _carved_bank_uv_scale()
-			for index in verts.size():
-				uvs[index] = Vector2((verts[index].x + verts[index].z) * 0.7071, verts[index].y) * scale
 		var arrays := []
 		arrays.resize(Mesh.ARRAY_MAX)
 		arrays[Mesh.ARRAY_VERTEX] = verts
