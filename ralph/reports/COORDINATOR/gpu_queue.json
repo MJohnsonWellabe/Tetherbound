@@ -3970,6 +3970,27 @@
    "priority": "Meadows dialogue rows F38#16 6.32, F38#17 6.97, F38#36 7.39 (near bar), F38#37 6.90"
   },
   {
+   "id": "things-stormrim",
+   "kind": "arm",
+   "rows": [
+    "F41#15",
+    "F41#7",
+    "F41#11",
+    "F41#20",
+    "F41#18"
+   ],
+   "branch": "tb/things",
+   "head": "f468ccbe3",
+   "tree": "tb/things f468ccbe3 both sides (import cached from stormpost if same)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-STORMRIM/overlay_player_rim_off.json",
+   "overlay_format": "deep merge",
+   "request": "phase2_capture_dialogue.gd --biome=stormwood --fixed-fps 20, whole Stormwood dialogue set as G-things-stormpost; coordinator adds F41#18 (uniformed character readability) job.json frames as a no-loss check (the rim carried rank separation)",
+   "capture": "High, base and arm",
+   "pre_check": "player's head and speakers' faces no longer clip white; officers still separate from the purple forest",
+   "priority": "right after the F38#15 Medium close-out: four Stormwood dialogue rows, named 3/3 on every frame"
+  },
+  {
    "id": "places-wetpath",
    "kind": "arm",
    "rows": [
