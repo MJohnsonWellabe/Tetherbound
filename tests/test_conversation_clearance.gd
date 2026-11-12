@@ -153,3 +153,30 @@ func test_rule_is_scoped_off_stormwood_and_on_elsewhere() -> void:
 	var off := block.duplicate(true)
 	off["enabled"] = false
 	assert_true(RIG.clearance_for_realm({"clearance_1112": off}, "meadows").is_empty())
+
+
+## `creature_cone` (OFF on main): the visible fraction of the speaker joins the
+## trainer score, so a creature over the speaker's body makes the shot not clear.
+func test_creature_cone_ships_off_and_is_inert() -> void:
+	var block := _shipped()
+	assert_false(bool((block.get("creature_cone", {}) as Dictionary).get("enabled", true)), "the creature cone is OFF until judged")
+	var speaker := Vector3(0.0, 1.4, -3.0)
+	var shot := _shot(Vector3(0.0, 1.6, 3.0), speaker)
+	var trainer := Vector3(-1.05, 1.45, 1.2)
+	_rig.set_cone_probe_for_tests(func(_from: Vector3, _to: Vector3) -> bool: return true)
+	assert_eq(_rig._clearance_total(shot, trainer, speaker, block), _rig._clearance_score(shot, trainer, speaker, block),
+		"with the cone off a fully hidden speaker does not change the score")
+
+
+func test_creature_cone_marks_a_covered_speaker_not_clear() -> void:
+	var block := _shipped().duplicate(true)
+	(block["creature_cone"] as Dictionary)["enabled"] = true
+	var speaker := Vector3(0.0, 1.4, -3.0)
+	var shot := _shot(Vector3(0.0, 1.6, 3.0), speaker)
+	var trainer := Vector3(-1.05, 1.45, 1.2)
+	_rig.set_cone_probe_for_tests(func(_from: Vector3, _to: Vector3) -> bool: return false)
+	assert_true(_rig._clearance_total(shot, trainer, speaker, block) >= 0.0, "nothing in the cone: clear")
+	# A creature below the speaker's head: only the head line is clear.
+	_rig.set_cone_probe_for_tests(func(_from: Vector3, to: Vector3) -> bool: return to.y < 1.55)
+	assert_eq(_rig._speaker_visible_fraction(shot, speaker, block["creature_cone"]), 0.2)
+	assert_true(_rig._clearance_total(shot, trainer, speaker, block) < 0.0, "a speaker covered up to the neck is not clear")

@@ -73,7 +73,9 @@
         "swing_deg": [10.0, 20.0, -44.0, 30.0, -54.0, 42.0, -66.0, 56.0],
         "elevation_add_deg": [0.0, 7.0],
         "min_gain": 0.08,
-        "companion": {"enabled": true, "behind_lens_m": 2.4, "margin_deg": 8.0}
+        "companion": {"enabled": true, "behind_lens_m": 2.4, "margin_deg": 8.0},
+        "creature_cone": {"_why": "Stormwood (LANE-THINGS, 12 Nov 2026, OFF until judged). G-things-convclear-other-biomes.md: on the swung shot a creature's head hides Lieutenant Sera and the storm bird hides Tamsin; Nysa is hidden by a creature on every side. The single sight line to the speaker's head passes when a creature covers the rest of them. When on, a shot also needs min_visible of five lines to the speaker (head, chest, hips, both shoulders) clear of colliders and visible meshes, or the swing search looks for an angle past the creature (camera_rig.gd _clearance_total). Judged together with taking stormwood off exclude_realms.", "scope": "client_presentation", "enabled": false, "min_visible": 0.8, "head_above_anchor_m": 0.22, "hips_below_anchor_m": 0.5, "shoulder_half_width_m": 0.28},
+        "search_cooldown_frames": 12
       },
       "speaker_frame_candidate_enabled": true
     },
