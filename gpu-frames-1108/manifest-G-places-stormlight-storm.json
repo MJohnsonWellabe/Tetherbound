@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-stormlight-storm/arm-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "sky_fraction": 0.113,
+  "lower_edges": 0.2895,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#2 calm/building/break (+ fading)."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-stormlight-storm/arm-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "sky_fraction": 0.128,
+  "lower_edges": 0.276,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#2 calm/building/break (+ fading)."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-stormlight-storm/arm-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "sky_fraction": 0.121,
+  "lower_edges": 0.3083,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#2 calm/building/break (+ fading)."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-stormlight-storm/arm-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "sky_fraction": 0.121,
+  "lower_edges": 0.2709,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#2 calm/building/break (+ fading)."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-stormlight-storm/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "sky_fraction": 0.155,
+  "lower_edges": 0.2771,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#2 calm/building/break (+ fading)."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-stormlight-storm/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "sky_fraction": 0.163,
+  "lower_edges": 0.2763,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#2 calm/building/break (+ fading)."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-stormlight-storm/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "sky_fraction": 0.162,
+  "lower_edges": 0.3074,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#2 calm/building/break (+ fading)."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_storm_phases.gd --biome=stormwood --subset=struck_sentinel --times=day --views=close",
+  "path": "G-places-stormlight-storm/base-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3032,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#2 calm/building/break (+ fading)."
+ }
+]
