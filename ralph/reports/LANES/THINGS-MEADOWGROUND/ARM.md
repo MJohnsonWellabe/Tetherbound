@@ -1,6 +1,6 @@
 # THINGS-MEADOWGROUND: the Meadows ground pass that was built on 1 Nov and never judged (P-GROUND)
 
-**Cause group.** `CLUSTERS-6TO7.md` rank 1, P-GROUND: "blurry, smeared ground", "uniform olive carpet", "grass reaches the waist around characters" (3/3 in four of tonight's batches). Meadows rows in the group: F38#20 6.02, F38#22 6.10, F38#30 6.02, F38#26 6.85.
+**Cause group.** `CLUSTERS-6TO7.md` rank 1, P-GROUND: "blurry, smeared ground", "uniform olive carpet", "grass reaches the waist around characters" (3/3 in four of tonight's batches). Meadows rows: F38#21 6.23 (re-scored 12 Nov, was 7.0: "uniform dark grass carpet with no rock or colour breaks"), F38#22 6.10, F38#30 6.02, F38#26 6.85. F38#20 re-scored below 6 and is LANE-BELOW6's row now; keep its frames as a no-loss check.
 
 **What it is.** `meadows_look.json cause_ground` (OFF on main since PR #792; built by the cause lane, `ralph/reports/LANES/CAUSE-MEADOWS/READY.md`). No verdict for it exists in GPU-PASS/1108. Nothing new is built here; this arm puts it in front of the judges.
 - Terrain: two-tone macro variation in place of the olive smear, sharper mip bias (0.86 -> 0.7), stronger near grain.
