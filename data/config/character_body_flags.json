@@ -584,6 +584,15 @@
      "body_albedo_override": "res://assets/characters/captain_a/captain_a_lod0_texture_0_floor1.png"
     }
    }
+  },
+  "things_self_lit_off_1112": {
+   "_why": "LANE-THINGS (12 Nov 2026), Meadows dialogue F38#17 (G-things-convclear-meadows.md, 3/3: 'Warder Solene's face is overexposed'). Same fault as below6_marrow_self_lit_off: the body's imported material emits its own albedo atlas at full strength. Solene and Keeper Hald wear the grunt profile with an officer_b copy as body_model_override (appearance variants lanekit_f38_17_*), so they miss officer_b's own opt-out in art.json; captain_b (Riverwatch captain, Captain Veyra, Captain Nerissa) never had one. The grunt mesh itself does not emit, so the grunt row only reaches the two variants. CPU probe: tools/_probe_things_emit.gd; the conversation key light changes nothing on Solene's face. OFF until judged.",
+   "scope": "client_presentation",
+   "enabled": false,
+   "characters": {
+    "grunt": {"body_emission_enabled": false},
+    "captain_b": {"body_emission_enabled": false}
+   }
   }
  }
 }
