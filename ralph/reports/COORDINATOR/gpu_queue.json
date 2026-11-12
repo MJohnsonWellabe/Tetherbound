@@ -3760,6 +3760,28 @@
    "capture": "High, one side (row score)",
    "priority": "F41#2 is at 5.97; earlier Fading stills carried Break's last bolt",
    "pre_check": "Fading must show no bolt; Break must still show lightning"
+  },
+  {
+   "id": "below6-stormdeck",
+   "kind": "arm",
+   "rows": [
+    "F41#15",
+    "F41#7",
+    "F41#11",
+    "F41#20",
+    "F41#1"
+   ],
+   "branch": "tb/below6",
+   "head": "b49b20b41",
+   "tree": "tb/below6 b49b20b41 for both sides (no import; main through #918 merged, so Marrow's glow fix is in both sides)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-STORMDECK/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-STORMDECK/CAPTURE.json (marrow_dialogue, split_facing); coordinator adds officer_nysa_deepwood_rod__dialogue to the Marrow set so F41#15 gets a three-frame row score",
+   "capture": "High, base and arm per set",
+   "pre_check": "read mean hue of the deck planks and the left trunk face in the arm frames: both should be 15-50 deg; if either is 300-350 (pink-magenta), do not judge, report the number to LANE-BELOW6",
+   "priority": "below-6 floor (F41#15 4.99); supersedes BELOW6-STORMDRESS (contains it)",
+   "note": "Warm oak deck tint (deck_wood_warm_1112) + cloth banners + aged split wood retuned to grey-brown."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
