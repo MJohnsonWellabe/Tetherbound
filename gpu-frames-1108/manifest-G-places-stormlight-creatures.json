@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_creatures.gd --biome=stormwood --only=fulgocobra,stormraven --poses=idle",
+  "path": "G-places-stormlight-creatures/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.3718,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#13 rider."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_creatures.gd --biome=stormwood --only=fulgocobra,stormraven --poses=idle",
+  "path": "G-places-stormlight-creatures/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.155,
+  "lower_edges": 0.3575,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#13 rider."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_creatures.gd --biome=stormwood --only=fulgocobra,stormraven --poses=idle",
+  "path": "G-places-stormlight-creatures/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.177,
+  "lower_edges": 0.3613,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#13 rider."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_creatures.gd --biome=stormwood --only=fulgocobra,stormraven --poses=idle",
+  "path": "G-places-stormlight-creatures/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.176,
+  "lower_edges": 0.3489,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#13 rider."
+ }
+]
