@@ -8,9 +8,14 @@ This file is the lane's channel to the coordinator.
 - **In CI, PR #917:** the conversation clearance rule (off in Stormwood) and the Galewisp remake carrier. I merge main again when it lands; the Stormwood creature-cone work and the Galewisp grip close-out both sit on top of it.
 - **Arms on the GPU:** none.
 
+## Work since the restart
+- **PARKED after two attempts: the belly-down collapse for stormtrail, trailpup, voltwig and sparkit.** Attempt 1 (FAINT2) lost 0/3 on the GPU ("cowering"). Attempt 2, CPU only, not sent: two flatter prone settings (torso right down, legs splayed 70 to 80 degrees). The bodies turn into shapeless mounds with no readable head, and Sparkit's foot separates from the leg. The side-lying faint on main is better than either. A third idea would have to be a different kind of change: an authored side-lie with the head turned to the camera and the legs slack (the Aquaryn `faint_fold` shape), not the crumple.
+- **Skyrill (7.47), looked at, nothing sent.** Its faint end is already flat on its side with the sail down. The judges' note is the sail standing up at faint mid (the 050 tile), before the roll finishes. The plain settle does not change that (captured earlier). The only lever I can see is rolling earlier in the clip so the sail goes down with the body; I have not built it, and I am not confident it is worth more than the 0.03 the row needs.
+- **Nothing is on the GPU from this lane.**
+
 ## Order
 1. Close-outs that do not need PR #917: F36#68 Skyrill 7.47 (sail at faint mid), F39#6 Aquaryn (Medium 7.46), F36#93 Water Mirejaw 7.39, F36#42 Cragclaw 7.30 (face under the shell), F36#60 Reedwing 7.26, F36#75 Stormtrail 7.22.
-2. The four dropped faints (stormtrail, trailpup, voltwig, sparkit): a flat side-lying collapse, not the crouch.
+2. (Parked, see above) the four dropped faints.
 3. After PR #917: creatures out of the speaker's cone so the clearance rule can run in Stormwood (Sera, Tamsin, Nysa); the Galewisp grip and landing frame (7.44).
 4. Mira's lattice stand; Solene's and Aldis's blown lamps.
 
