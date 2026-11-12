@@ -8,7 +8,7 @@
 
 **Change (round 3).** The clock gates the arm first: `wet_hours` [5, 7, 18, 20]. Outside those hours the wet darkening, the duller trail tone and the wider feather are all zero, so a night frame is main's; they ease in over dawn and out over dusk. Day behaviour is round 2's, unchanged. The PLACES code (weather script, four shaders, one shader global, config, test) is carried onto `tb/things` unchanged apart from the gate.
 
-**CPU.** Night rain at the realm gate (matrix piece 8), flag on against main, ground band of each of the four views: mean brightness identical (54.7, 64.0, 69.1, 78.1 on both sides), mean pixel difference 0.03 to 0.07 (rain streak noise). Day rain with the flag on: see the status line in NOTE (capture running when this was written).
+**CPU.** Night rain at the realm gate (matrix piece 8), flag on against main, ground band of each of the four views: mean brightness identical (54.7, 64.0, 69.1, 78.1 on both sides), mean pixel difference 0.03 to 0.07 (rain streak noise). Day rain at the same stand (piece 4; `_sheet_wet_day_off_vs_on_cpu.jpg`, left main, right arm): the ground darkens (ground band brightness 73 -> 53 and 80 -> 59) and the trail is a duller earth with a soft edge, as in round 2. No script or shader errors on either run.
 
 **Tests.** `tests/test_places_storm_phase_rain_grade.gd` (10, one new: the clock gate).
 
