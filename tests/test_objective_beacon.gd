@@ -249,3 +249,19 @@ func test_the_beam_hides_while_a_fight_is_live_and_returns_after() -> void:
 	assert_false(OBJECTIVE_BEACON.fight_holds_beam(null), "no combat manager never hides it")
 	beacon.free()
 	manager.free()
+
+
+## F38#7 (12 Nov): the world that owns the beacon is not always the tree's
+## current scene (a capture or harness adds it under the root). The beam must
+## still find that world's CombatManager and stand down while it fights.
+func test_the_beam_finds_the_fight_in_its_own_world() -> void:
+	var world := Node.new()
+	var manager := FightFixture.new()
+	manager.name = "CombatManager"
+	world.add_child(manager)
+	var beacon: Node3D = OBJECTIVE_BEACON.new()
+	world.add_child(beacon)
+	assert_false(beacon._fight_on_screen(), "no live fight keeps the beam")
+	manager.fighting = true
+	assert_true(beacon._fight_on_screen(), "a live fight in the beacon's own world holds the beam")
+	world.free()
