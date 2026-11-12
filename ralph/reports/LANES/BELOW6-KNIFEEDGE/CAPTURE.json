@@ -1,0 +1,22 @@
+{
+ "row": "F40#15 floating dark strips (6.08) and the F40#8 Three Bells bridge frames it shows in",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+ "args": ["--biome=cloudreach", "--subset=cloudreach__broken_causeways__03__three_bells_bridge", "--times=day,golden,night", "--views=close", "--seed=2042", "--output={OUT}"],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "frames": [
+  "cloudreach__broken_causeways__03__three_bells_bridge__day__close",
+  "cloudreach__broken_causeways__03__three_bells_bridge__golden__close",
+  "cloudreach__broken_causeways__03__three_bells_bridge__night__close"
+ ],
+ "also_if_cheap": "F40#15's own two frames (cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day via phase2_capture_routes.gd, cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk): the fix applies to every route shoulder's end face, so they may change too. I did not capture them on CPU.",
+ "overlay": "ralph/reports/LANES/BELOW6-KNIFEEDGE/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same command as F-cloudreach used for the F40#8 bridge frames",
+ "needs_import": "no",
+ "_why": "F-cloudreach 3/3: 'the dark straight strip still crossing the grass in the F40#8 bridge frames, lower left, in all three frames'. The strip is the end face of the route shoulder BrokenCausewayMainCliffShoulders/Ridge000 standing up to 0.8 m above the pad crown as a zero-thickness black wall. Arm: end faces follow their row.",
+ "want_to_see": "no black line across the grass in front of the bridge in any of the three frames. A small dark wedge may remain right at the bridge's left foot post; say if it reads as a defect.",
+ "note": "CPU captured the day frame only."
+}

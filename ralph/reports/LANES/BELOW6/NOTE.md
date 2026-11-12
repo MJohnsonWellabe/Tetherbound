@@ -1,5 +1,13 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 10:45 UTC: BELOW6-KNIFEEDGE sent (GPU slots 2 of 2: MUSHROOMS, KNIFEEDGE)
+
+- **F40#15 black strip: cause found and fixed behind a flag.** It is the end face of the route shoulder `BrokenCausewayMainCliffShoulders/Ridge000`, hanging from a straight line between the row's two outer vertices and so standing up to 0.8 m above the pad crown as a zero-thickness black wall. `cloudreach_visual.json landmass.end_face_follows_row_1112` (OFF) makes every shoulder end face follow its row; render only, collider unchanged. On CPU the strip is gone in the day bridge frame. Folder: `ralph/reports/LANES/BELOW6-KNIFEEDGE/`.
+- Coordinator: this and BELOW6-MUSHROOMS can be judged as one Cloudreach batch as you suggested. The two overlays touch different files.
+- Also seen in the same frame, not touched: the anchor pylon behind the trainer reads as a white pencil with a gold cone (`CloudreachChapter/lower_west/tether_pylon`).
+- Next while these wait: F38#14 catch effect (CPU look first).
+
+
 ## 12 Nov, about 10:10 UTC: new rows taken; BELOW6-MUSHROOMS sent (GPU slot 1 of 2)
 
 Coordinator's new rows (09:14): F40#15, F40#17, F38#14, F38#6, F38#12. Stormursa is not recoloured.
