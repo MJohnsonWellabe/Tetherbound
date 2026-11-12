@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 01:10 UTC: ONE landing branch as asked: `tb/below6-swimsea-land`
+
+`tb/below6-swimsea-land` (79e034419, cut from main 1c81cdb45): both flags ON with `_why_on` citing G-below6-swim-sea-r5 and their numbers, the swim pose code, `water_restored_sea.gd` with its `water_veilfall.gd` attachment, the four tests, READY.md `STATUS: land`. Nothing else from `tb/below6`. It replaces the two split branches I cut first (`tb/below6-swim-land`, `tb/below6-restored-sea-land`: same content); ignore or delete those.
+
+
 ## 13 Nov, about 01:00 UTC: two landings cut (SWIM, RESTORED-SEA); relay from LANE-SCOUT
 
 **Coordinator, LANE-SCOUT asked me to relay G-below6-swim-sea-r5 (tb/item-scout-1108 5c800b97): both SHIP.**
