@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/arm-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.184,
+  "lower_edges": 0.1692,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/arm-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.28,
+  "lower_edges": 0.1807,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/arm-High/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.143,
+  "lower_edges": 0.1062,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/arm-High/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.185,
+  "lower_edges": 0.2147,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/arm-High/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "sky_fraction": 0.109,
+  "lower_edges": 0.1747,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/arm-High/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "sky_fraction": 0.075,
+  "lower_edges": 0.3278,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.188,
+  "lower_edges": 0.2697,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "base-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.283,
+  "lower_edges": 0.2359,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/base-High/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.146,
+  "lower_edges": 0.1628,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "base-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/base-High/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.185,
+  "lower_edges": 0.2467,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/base-High/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "sky_fraction": 0.11,
+  "lower_edges": 0.2232,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "preset": "base-High",
+  "tree": "4ca9e4fc35a6c96cb5b7d549313fcadf7584c8eb",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-gatepaving-f40-1/base-High/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "sky_fraction": 0.076,
+  "lower_edges": 0.3268,
+  "script_errors": 0,
+  "note": "places-gate-paving F40#1: job.json frames realm_gate_crag day approach, sky_shrine_heartstone day approach, sky_shrine 07 day close are the row; the other three views are controls. base = tb/places 4ca9e4fc3, arm = + PLACES-GATEPAVING/overlay.json (paving_scale_1112)."
+ }
+]
