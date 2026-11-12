@@ -4031,6 +4031,26 @@
    "capture": "High, main only (row scores)",
    "priority": "after the queued arms; GPU filler. These rows were last scored 8-9 Nov, before about a dozen landings; current numbers re-order the next tier",
    "note": "Report each row's mapped score to LANE-SCOUT; flag any row now at or above 7.0 (near-bar)."
+  },
+  {
+   "id": "below6-mushrooms",
+   "kind": "arm",
+   "rows": [
+    "F40#16",
+    "F40#17",
+    "F38#6",
+    "F41#14"
+   ],
+   "branch": "tb/below6",
+   "head": "6eb2cfa71",
+   "tree": "tb/below6 6eb2cfa71 both sides (no import)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-MUSHROOMS/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-MUSHROOMS/CAPTURE.json (Cloudreach speed and wild mushroom inventory frames; High Perches crown rim day and night). Coordinator adds the no-loss check: the F38#6 (Meadows pickups) and F41#14 (Stormwood) job.json frames that show a mushroom find, since the presentation is shared",
+   "capture": "High, base and arm",
+   "pre_check": "patches read as grown there and are still findable at normal distance (say if the Speed patch is too small or pale); no red",
+   "priority": "near-floor rows F40#16 6.19, F40#17 6.08"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
