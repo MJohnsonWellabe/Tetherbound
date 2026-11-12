@@ -3496,7 +3496,8 @@
    "capture": "High, two new sides on tb/things: 'stand' = --sight-stand, no overlay (capture fix only); 'arm' = --sight-stand plus the overlay. Base = the existing G-dialogue-recapture-meadows frames (1c7b2f364, main 8df122a83).",
    "pre_check": "blend 1.0 on every frame; in the arm's trainer rows the companion is not in frame (it should stand behind the lens). If it still is, tell LANE-THINGS which rows before judging.",
    "priority": "6-7 band, one shared cause across every dialogue row (owner approved: ships if judged). Tidewake, Cloudreach and Stormwood follow if Meadows wins.",
-   "note": "Owner 11 Nov: conversation shots only; movement and fight cameras unchanged."
+   "note": "Owner 11 Nov: conversation shots only; movement and fight cameras unchanged.",
+   "done": "G-things-convclear-meadows fc6e1866e (judging; companion out of all 28 trainer rows)"
   },
   {
    "id": "things-faint2",
