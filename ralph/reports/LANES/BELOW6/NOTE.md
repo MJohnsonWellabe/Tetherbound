@@ -1,5 +1,13 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 14:40 UTC: F40#1 terraces not sent; five new below-6 rows taken
+
+- **F40#1:** `BELOW6-TERRACES/NOT-SENT.md`. Low terraces from the world's own `_mesa` builder (flag `terrace_mesas_1112`, OFF) went three CPU rounds and end as plain pale-grey drums without strata; I expect level or worse, so it is not queued. Parked on my side until there is a new idea (terrace geometry inside `_mesa`).
+- **New rows from G-rescore-stale-tier2 (coordinator, 13:21):** F39#5 swimmer pose (5.64), F38#20 stronghold (5.72), F38#12 harvest rewards (5.89), F40#15 (5.89; the strips are FIXED on its own frames, the rest is the cobble wall and lawn), F41#18 (left to LANE-THINGS' STORMUNIFORM). Next for me, worst-first: F39#5, then F38#20.
+- **In flight:** MUSHROOMS, KNIFEEDGE (2 of 2). No verdicts yet.
+- A capture of mine died after one frame at about 13:45 with no error in its log; the rerun completed. If the GPU machine or another lane saw a kill at that time, it was not a script error.
+
+
 ## 12 Nov, about 12:55 UTC: owner directions taken (below-6 only; no 0.5 threshold)
 
 - **My rows now:** F41#8 (5.80), F36#46 Fulgocobra (5.87), F40#1 (5.90, back from LANE-PLACES), F39#8 (parked). F38#6, #12 and #14 are LANE-THINGS'.
