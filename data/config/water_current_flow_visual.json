@@ -11,5 +11,4 @@
     "visual_ridge_spacing_m": 23.0,
     "visual_ridge_width_m": 4.5,
     "visual_ridge_gain": 0.7
-  }
-}
+  }, "restored_sea_1112": {"enabled": false, "scope": "client_presentation (reads the replicated world fact water_currents_restored)", "_candidate": "LANE-BELOW6 (12 Nov 2026), F39#17 current restoration environment (GPU High 5.50, G-rescore-stale-ext-tidewake PRESENT 3/3: 'the three frames are the same picture; restoration has no visible environmental effect'; live and restored differ by a mean of 1.23). WORLD 6.5: the currents return when the Guardian is freed. ON: while the fact is set the sea takes a restored look (clearer, brighter shallows that show the sandbars, a calmer surface) and the drifting logs and weed mats leave the lanes; buoys stay. Shader values on the existing sea material and visibility of existing floaters only: flow vectors, strengths, physics, routes, saves and authority are unchanged. OFF until judged.", "water": {"shallow_colour": "#9ee0cf", "deep_colour": "#1f7189", "alpha_shallow": 0.28, "depth_falloff": 2.2, "wave_strength": 0.13, "fresnel_strength": 0.48}, "clear_debris": true}}
