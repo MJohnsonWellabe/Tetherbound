@@ -2,7 +2,7 @@ STATUS: land
 
 # THINGS-FLIGHTTOOL landing (flight capture take-off race)
 
-Branch `tb/things-flighttool-land`, cut from main f421556c. Tooling only: `tools/phase2_capture_realm_flight.gd`.
+Branch `tb/things-flighttool-land`, cut from main f421556c, main b3dc2139 merged in. Tooling only: `tools/phase2_capture_realm_flight.gd`.
 
 **Blocker reproduced.** "double Jump denied" with an empty reason at the first stands, intermittently (GPU lane, both trees, about an hour of retries on the F38#15 close-out). On CPU here: five stands denied before one took off, so the row's frames came out as 03/04/05 from a later stand.
 
