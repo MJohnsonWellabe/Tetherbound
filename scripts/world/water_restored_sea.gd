@@ -20,6 +20,7 @@ var _markers: Node
 var _cfg: Dictionary = {}
 var _live: Dictionary = {}
 var _restored := false
+var _time := ""
 var _poll := 0.0
 
 
@@ -47,23 +48,44 @@ func setup(cfg: Dictionary, sea: ShaderMaterial, markers: Node, flags: RefCounte
 	_sea = sea
 	_markers = markers
 	_flags = flags
-	for key: String in (_cfg.get("water", {}) as Dictionary).keys() + (_cfg.get("water_scale", {}) as Dictionary).keys():
-		if not key.begins_with("_"):
-			_live[key] = _sea.get_shader_parameter(key)
+	var sections: Array = [_cfg]
+	sections.append_array((_cfg.get("by_time", {}) as Dictionary).values())
+	for section: Variant in sections:
+		if not section is Dictionary:
+			continue
+		for key: String in ((section as Dictionary).get("water", {}) as Dictionary).keys() \
+				+ ((section as Dictionary).get("water_scale", {}) as Dictionary).keys():
+			if not key.begins_with("_") and not _live.has(key):
+				_live[key] = _sea.get_shader_parameter(key)
 	_apply(_flags != null and bool(_flags.has(RESTORED_FLAG)))
 
 
+## The time-of-day preset the look follows ("day", "golden", ...), "" off-tree.
+func _time_of_day() -> String:
+	var cycle := get_tree().get_first_node_in_group("day_cycle") if is_inside_tree() else null
+	return str(cycle.call("time_of_day")) if cycle != null and cycle.has_method("time_of_day") else ""
+
+
+## `by_time.<preset>` replaces the top-level `water` / `water_scale` pair while
+## that preset is the time of day (G-below6-sea-r4: a deeper restored sea reads
+## at high sun and goes near black at sunset, so each gets its own values).
+func _section(time: String) -> Dictionary:
+	var by_time: Dictionary = _cfg.get("by_time", {})
+	return by_time[time] if by_time.has(time) and by_time[time] is Dictionary else _cfg
+
+
 ## The restored state's sea values (colours as Color).
-func sea_values() -> Dictionary:
+func sea_values(time: String = "") -> Dictionary:
 	var out := {}
-	var raw: Dictionary = _cfg.get("water", {})
+	var section := _section(time)
+	var raw: Dictionary = section.get("water", {})
 	for key: String in raw:
 		if not key.begins_with("_"):
 			out[key] = Color(str(raw[key])) if raw[key] is String else raw[key]
 	# `water_scale` multiplies the live value, so a restored look keeps its
 	# relation to whichever sea profile is active (G-below6-restored-sea: an
 	# absolute depth falloff turned the sunset foreground near-black).
-	var scale: Dictionary = _cfg.get("water_scale", {})
+	var scale: Dictionary = section.get("water_scale", {})
 	for key: String in scale:
 		var live: Variant = _live.get(key, _sea.get_shader_parameter(key) if _sea != null else null)
 		if not key.begins_with("_") and (live is float or live is int):
@@ -81,15 +103,21 @@ func _process(delta: float) -> void:
 		return
 	_poll = POLL_SECONDS
 	var restored: bool = _flags != null and bool(_flags.has(RESTORED_FLAG))
-	if restored != _restored:
+	if restored != _restored or (restored and _time_of_day() != _time):
 		_apply(restored)
 
 
 func _apply(restored: bool) -> void:
 	_restored = restored
-	var values := sea_values()
-	for key: String in values:
-		_sea.set_shader_parameter(key, values[key] if restored else _live[key])
+	_time = _time_of_day()
+	# Back to the live sea first, so a value only one time of day sets does
+	# not linger when the preset changes.
+	for key: String in _live:
+		_sea.set_shader_parameter(key, _live[key])
+	if restored:
+		var values := sea_values(_time)
+		for key: String in values:
+			_sea.set_shader_parameter(key, values[key])
 	if not bool(_cfg.get("clear_debris", true)) or not is_instance_valid(_markers):
 		return
 	# Drifting logs and weed mats are the debris of a choked channel; the
