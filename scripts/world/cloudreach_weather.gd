@@ -127,7 +127,33 @@ func _apply_ground_wet_path() -> void:
 	var value := Vector4.ZERO
 	if arm.get("enabled") == true and _scene_id() in (arm.get("scenes", ["cloudreach_cliffs"]) as Array):
 		value = ground_wet_path_value(arm, _presets.get(weather(), {}), realm_preset(weather(), _presets.get(weather(), {}), _scene_id()))
+		value.x *= _wet_day_scale(arm)
 	RenderingServer.global_shader_parameter_set(&"cloudreach_ground_1112", value)
+
+
+## Round 2 (GPU G-places-wetpath: summit night rain -0.34, the wet trail read
+## as "a black, char-like smear"): the rain darkening fades out with the
+## clock's own sky value, so a night that is already dark takes none.
+func _wet_day_scale(arm: Dictionary) -> float:
+	var look: Node = get_node_or_null(look_path)
+	if look == null:
+		return 1.0
+	var config: Variant = look.get("_config")
+	var cycle: Variant = look.get("_cycle")
+	if not config is Dictionary or (config as Dictionary).is_empty() or cycle == null:
+		return 1.0
+	var now: Dictionary = TIME_GRADE_LOOK.blended_config_at(config, cycle, float(look.call("hour")))
+	var day_sky: Dictionary = TIME_GRADE_LOOK._merged_from(config, "sky", TIME_GRADE_LOOK._preset_over(config, "day"))
+	return wet_day_scale(_grade_colour((now.get("sky", {}) as Dictionary).get("top_colour"), "#3b6f93"),
+		_grade_colour(day_sky.get("top_colour"), "#3b6f93"), arm)
+
+
+## 1 by day, 0 at night (pure; tested): the sky's value against day, eased
+## between the arm's `wet_night_band`.
+static func wet_day_scale(top_now: Color, top_day: Color, arm: Dictionary) -> float:
+	var band: Array = arm.get("wet_night_band", [0.2, 0.6])
+	var k := clampf(top_now.get_luminance() / maxf(0.001, top_day.get_luminance()), 0.0, 1.0)
+	return smoothstep(float(band[0]), float(band[1]), k)
 
 
 ## The shader global for an enabled arm (pure; tested).

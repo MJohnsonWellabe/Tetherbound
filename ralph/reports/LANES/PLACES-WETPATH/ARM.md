@@ -21,3 +21,12 @@ F40#1's own defect (lawn where ledges should be) needs terrain; ground colour va
 
 ## Reject if
 The wet ground reads as mud or near-black, the sheen blows out, or the trail disappears into the grass.
+
+## Round 2 (12 Nov): after the split verdict; please re-judge
+`G-places-wetpath` (49169c37): clear controls +0.60 and +0.57, gate rain +0.65 (3/3 each), summit day rain +0.08; **summit night rain −0.34** (wet trail "a black, char-like smear"), **overlook rain −0.09** (grey trail lost in wet grass); F40#1 level. Judges' target, 3/3: one mid-value, desaturated earth brown that holds by day, in rain and at night, with soft edges.
+Changes, same flag and overlay:
+- Wet soil darkens about half as far and keeps its warm hue (multiplied by 0.88, 0.82, 0.72 instead of a flat 0.66).
+- The rain darkening on turf and soil fades out as the clock's own sky darkens (`wet_night_band`), so night takes none.
+- The clear-weather trail tone and edge, which won, are unchanged.
+**Not re-captured on CPU.** The shader edit is two colour multiplies and the unit tests pass, but no frame of round 2 exists yet; treat the GPU pre-check as the first look.
+Frames: the four rain pieces (gate 4, summit 84 and 88, overlook 92) plus one clear control (3). Night (88) and overlook (92) are the no-loss checks. Judges also noted a violet blotch under the trainer on clear night (2/3); not addressed here.

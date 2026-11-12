@@ -31,7 +31,10 @@ void fragment() {
 	vec3 soil=texture(dirt_texture,world_position.xz*0.48).rgb*tint.rgb;
 	float dull=cloudreach_ground_1112.z;
 	soil=mix(soil,vec3(dot(soil,vec3(0.299,0.587,0.114)))*vec3(1.0,0.95,0.86),dull)*(1.0-0.1*dull);
-	soil*=mix(1.0,0.66,cloudreach_ground_1112.x);
+	// Round 2 (GPU G-places-wetpath): wet soil darkens half as far and keeps
+	// its warm hue, so the trail stays an earth brown in rain instead of a
+	// grey or charred strip.
+	soil*=mix(vec3(1.0),vec3(0.88,0.82,0.72),cloudreach_ground_1112.x);
 	// This is the same world-space function and wet/dry material parameters
 	// used by the crown, not a second grass approximation. In particular, keep
 	// its texture rotation, scale and broad variation aligned across the edge.

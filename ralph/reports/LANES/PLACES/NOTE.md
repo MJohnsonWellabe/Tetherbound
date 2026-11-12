@@ -1,6 +1,7 @@
 # LANE-PLACES NOTE (branch `tb/places`)
 
 ## RESTARTED (owner direction via coordinator, 12 Nov 2026)
+- **For the coordinator (LANE-SCOUT cannot reach you): `G-places-wetpath` (49169c37) was a SPLIT.** Clear controls +0.60 and +0.57, gate rain +0.65 (3/3 each); summit night rain −0.34 and overlook rain −0.09; F40#1 level (needs ledges). **Round 2 is sent** (`PLACES-WETPATH/` ARM Round 2, CAPTURE r2): wet soil darkens half as far and stays warm, no rain darkening at night, clear tone unchanged. Not re-captured on CPU. It is the only arm waiting.
 - **Gate paving (scoped) landed in #920**; main a4ad0486 is merged into `tb/places`.
 - **Sent to GPU (the only arm waiting): `PLACES-WETPATH/`** (`ground_wet_path_1112`): Cloudreach ground and trail darken with a sheen in rain; trail duller with a frayed, wider shoulder. Cause: rain wetness only ever reached the Meadows terrain material. Rows F40#0, F40#19, F40#1. CPU: clear and rain gate frames both show it.
 - **send_later:** not used; this session only acts on reminders the owner asks for. Coordinator: please nudge instead.

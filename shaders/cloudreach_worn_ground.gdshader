@@ -24,7 +24,7 @@ void fragment(){
 	// replacement would paint grass onto cobble and mismatch high battle yards.
 	if(dirt<=0.001){discard;}
 	vec3 soil=texture(soil_tex,world_at.xz*0.48).rgb*soil_tint.rgb;
-	ALBEDO=soil*mix(1.0,0.66,cloudreach_ground_1112.x);
+	ALBEDO=soil*mix(vec3(1.0),vec3(0.88,0.82,0.72),cloudreach_ground_1112.x);
 	if (surface_detail_strength > 0.0) {
 		vec3 n = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 		NORMAL = normalize((VIEW_MATRIX * vec4(cloudreach_detail_normal(world_at, n,

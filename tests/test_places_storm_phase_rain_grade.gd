@@ -181,3 +181,17 @@ func test_cloudreach_rain_stays_night_at_night_and_keeps_golden_light() -> void:
 			best_sun = float(golden.graded.sun.energy_mult)
 	assert_true(best > 0.03, "some golden or dawn hour keeps a warm horizon under the rain (r-b %.3f)" % best)
 	assert_true(best_sun > float(noon.base.sun.energy_mult), "and more of the low sun than day rain")
+
+
+## ground_wet_path_1112 round 2 (GPU G-places-wetpath): no rain darkening at
+## night; the full amount by day; no wetness in clear weather.
+func test_cloudreach_wet_ground_fades_out_at_night_and_needs_rain() -> void:
+	var arm: Dictionary = _json("res://data/config/cloudreach_visual.json").ground_wet_path_1112
+	var day := Color("#3b6f93")
+	assert_almost_eq(CR_WEATHER.wet_day_scale(day, day, arm), 1.0, 0.001, "full by day")
+	assert_almost_eq(CR_WEATHER.wet_day_scale(Color(day.r * 0.1, day.g * 0.1, day.b * 0.1), day, arm), 0.0, 0.001, "none at night")
+	var clear := CR_WEATHER.ground_wet_path_value(arm, {}, {})
+	assert_almost_eq(clear.x, 0.0, 0.001, "clear weather is dry")
+	assert_true(clear.y > 0.0 and clear.z > 0.0, "the trail keeps its duller, frayed edge in clear weather")
+	var rain := CR_WEATHER.ground_wet_path_value(arm, {"ground_wetness": 0.6}, {"ground_wetness": 1.0})
+	assert_almost_eq(rain.x, 1.0, 0.001, "rain wets the ground")
