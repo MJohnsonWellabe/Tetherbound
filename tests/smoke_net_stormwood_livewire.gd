@@ -14,7 +14,7 @@ const EARLY_TARGET_MS := 350
 const EARLY_MINIMUM_MS := 180
 ## How many fresh deadlines the released-baseline block may arm when a host
 ## stall jumps the window. Retries re-sample; they never widen the window.
-const RELEASE_WINDOW_ATTEMPTS := 3
+const RELEASE_WINDOW_ATTEMPTS := 6
 const ELAPSED_MARGIN_MS := 60
 const REJECTION_DELIVERY_MARGIN_MS := 250
 ## The charged move's authored cooldown, which the host adds to an accepted
@@ -202,6 +202,19 @@ func _run_livewire() -> void:
 	for attempt in RELEASE_WINDOW_ATTEMPTS:
 		before_inactive_deadline = await _await_before_host_deadline(
 			int(inactive_authority.get("deadline_ms", 0)))
+		if not _safe_early(before_inactive_deadline):
+			# A stall jumped the window: no early action is sent against a
+			# missed sample. Land a fresh baseline for a fresh deadline.
+			print("inactive baseline: a host stall jumped the window (attempt %d of %d); re-arming"
+				% [attempt + 1, RELEASE_WINDOW_ATTEMPTS])
+			after_first = await _fresh_baseline("inactive baseline", next_action, charged, after_first,
+				int(inactive_authority.get("deadline_ms", 0)))
+			if after_first.is_empty():
+				quit(await finish())
+				return
+			inactive_authority = _authority(after_first)
+			next_action += 1
+			continue
 		early = await _charged(next_action, charged, after_first, 8)
 		after_early = await _await_host_time(
 			int(inactive_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
@@ -331,6 +344,20 @@ func _run_livewire() -> void:
 	var after_release_early: Dictionary = {}
 	var release_conclusive := false
 	for attempt in RELEASE_WINDOW_ATTEMPTS:
+		if not _safe_early(before_release_deadline):
+			# A re-armed sample missed the window: never send against it.
+			print("released baseline: a host stall jumped the window (attempt %d of %d); re-arming"
+				% [attempt + 1, RELEASE_WINDOW_ATTEMPTS])
+			release_accepted += 1
+			after_release_first = await _fresh_baseline("released baseline", release_accepted, charged,
+				after_release_first, int(release_authority.get("deadline_ms", 0)))
+			if after_release_first.is_empty():
+				quit(await finish())
+				return
+			release_authority = _authority(after_release_first)
+			before_release_deadline = await _await_before_host_deadline(
+				int(release_authority.get("deadline_ms", 0)))
+			continue
 		release_early = await _charged(release_accepted + 1, charged, after_release_first, 8)
 		after_release_early = await _await_host_time(
 			int(release_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
@@ -359,6 +386,21 @@ func _run_livewire() -> void:
 		"the released early action did not advance host authority")
 
 	quit(await finish())
+
+
+## Waits out `deadline_ms`, restages and lands `action` as a fresh baseline
+## charge. Returns the host state once it is accepted ({} if staging failed).
+func _fresh_baseline(label: String, action: int, move_id: String, state: Dictionary,
+		deadline_ms: int) -> Dictionary:
+	await _await_after_host_deadline(deadline_ms)
+	if not await _restage_for_strike(label):
+		return {}
+	var sent := await _charged(action, move_id, state, 2)
+	check(str(sent.get("verdict", "")) == "PASS", "%s: sent a fresh baseline action" % label)
+	var accepted := await _await_host_action(action)
+	check(int(_authority(accepted).get("last_accepted_action", 0)) == action,
+		"%s: the fresh baseline action was accepted" % label)
+	return accepted
 
 
 func _restage_for_strike(label: String) -> bool:
