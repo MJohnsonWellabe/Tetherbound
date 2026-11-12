@@ -1,0 +1,1 @@
+{"tool":"tools/phase2_capture_routes.gd","args":"--biome=cloudreach --subset=cloudreach__windscar_ravine__06__windscar_flight_aerie --seed=2042","frames":["vista_dusk"],"also":"overlook route frames (same tool, subset cloudreach__summit_final_stronghold__12__stormward_overlook)"}

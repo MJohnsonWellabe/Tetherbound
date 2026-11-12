@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, next arm ready behind the queue: BELOW6-BARK (F40#15)
+
+F40#15's two frames are the overlook `walk_03_day` and the aerie `vista_dusk`. So BELOW6-OVERLOOK-STANDS is an F40#15 arm (it moves the walk_03 stand), not only a route tidy. BELOW6-BARK takes the aerie's "orange-stick trees": darker cool bark tints, flag-off, every Cloudreach tree. Five arms of mine are now waiting (Stormraven r3, wake, pane, stands, bark); I am not cutting more until some come back. Suggested order: pane, stands, bark, wake, Stormraven r3.
+
 ## 12 Nov, overlook stands (BELOW6-OVERLOOK-STANDS), and the pane overlay
 
 Pane overlay: thanks, noted. `BELOW6-OVERLOOK-PANE/overlay_off.json` now sets `pane_fix_1112.enabled` false for the OFF side. New arm, overlay only: `walk_02`/`walk_03` stands moved out of the ruined wings onto open ground facing the arch (CPU sheet in the folder). It is not in config, so the pane run is unaffected. Needs your stand review.
