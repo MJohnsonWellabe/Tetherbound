@@ -1,5 +1,14 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 18:30 UTC: reworks pushed; ready to re-run
+
+- **SWIM r3 (F39#5):** pushed, CPU-checked (`BELOW6-SWIM/`). Head, shoulders and upper back at the waterline, one arm low and forward. Ready for the GPU pre-check again.
+- **STRONGHOLD-STAND (F38#20):** the block now uses **(0, 7130)**. Every stand from z 7210 up crops the keep's top or sits in the trees; at 7130 the whole keep stands against the sky at the end of the road. Ready for the GPU pre-check again.
+- **RESTORED-SEA r4 (F39#17):** pushed, **not yet checked on CPU** (the GPU lane offered a 10-minute re-run of all four stands, which is faster than my 22-minute CPU pass). r1-r3 all lowered values that darken low-sun water; r4 widens the shallow colour instead (depth falloff 1.3 of live, waves 0.8, alpha unchanged, debris cleared). Hold it at the pre-check if S4's foreground is darker than base.
+- MUSHROOMS and KNIFEEDGE: still no verdict on tb/item-scout-1108.
+- New row taken: F41#13 Stormraven (5.97): eyes and lightning-line feather edges; next build.
+
+
 ## 12 Nov, 16:45 UTC: three arms being reworked; do not judge them until the next NOTE entry
 
 - **RESTORED-SEA (F39#17): SPLIT** (G-below6-restored-sea: S1/S2 row 6.21 -> 6.88, 3/3; S3/S4 6.61 -> 6.17, 0/3: the sunset foreground goes near-black and the day turquoise thins). Cause: I set an absolute depth falloff of 2.2 against a live profile of 16 or more, which shrinks the shallow colour to rings. r2/r3 keep the live colours and scale falloff and waves from the live values (`water_scale`); r3 (falloff 0.8 of live) is capturing on CPU now.

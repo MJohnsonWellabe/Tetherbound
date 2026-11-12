@@ -10,3 +10,7 @@
 **Not changed:** the game, and the row's third frame (`meadows__landmark__stronghold__day__approach`, the courtyard), where the judges' other complaint lives ("empty oversaturated stronghold interior").
 
 **Ask:** approve the stand move, then queue base (overlay off) against arm (overlay on) for the two Band 5 approach frames with `phase2_capture_locations.gd --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --times=day,night --views=approach --seed=2042`, High.
+
+## Stand moved to (0, 7130) after the GPU pre-check (12 Nov)
+
+The GPU lane held the first stand: at z 7405 the keep's top runs off the frame, day and night. Two more CPU screens (z 7385, 7365, (-18, 7350); then 7130, 7210, 7270) show why: the keep stands high on its hill and the production camera looks slightly down, so every stand from 7210 up crops the battlements or sits inside the tree line (one also had wild creatures filling the frame). At **(0, 7130)** the whole keep, its towers and banners stand against the sky at the end of the road, about a fifth of the frame tall (`_sheet_cpu_7130_7210_7270.jpg`, left). The block now uses (0, 7130), heading 0. The base stand at 6968 shows the keep at roughly half that size behind the first pylons.
