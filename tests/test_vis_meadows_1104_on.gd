@@ -217,7 +217,8 @@ func test_f38_20_bigger_keep_keeps_its_front_face_with_its_score() -> void:
 func test_f38_15_mount_grows_without_moving_collision_or_seat() -> void:
 	var fly := _load("res://data/config/fly_traversal.json")
 	assert_almost_eq(float(fly.get("collision_height_m", 0.0)), 4.5, 0.001, "flight collision height unchanged")
-	var expected := {"galecrest": [3.2, 2.45, ["foot_l", "foot_r"]], "galewisp": [3.0, 2.3, ["foot_l", "foot_r"]]}
+	var expected := {"galecrest": [3.2, 2.45, ["foot_l", "foot_r"]], "galewisp": [3.4, 2.3, ["foot_l", "foot_r"]]}
+	# Galewisp art height 3.0 -> 3.4 on 12 Nov with the landing side step (G-galeland2.md).
 	# Galewisp's grip moved to its feet on 12 Nov with the remake carrier
 	# (G-faint2-medium-galecarrier.md); height and seat are as F38#15 left them.
 	for id: String in expected:
