@@ -64,10 +64,15 @@ today.
 The button points at:
 
 ```
-https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip
+https://github.com/MJohnsonWellabe/Tetherbound/releases/tag/latest
 ```
 
-That URL is permanent and always resolves to the newest release asset, so
+Since 12 Nov 2026 the game data is over GitHub's 2 GiB asset limit, so the
+release carries `Tetherbound-windows.zip`, the `Tetherbound.pck.part` files and
+`Tetherbound-parts.txt`, and the button opens the release page that lists them.
+`JOIN.cmd` in the zip joins and verifies the parts.
+
+That URL is permanent and always resolves to the newest release, so
 shipping a new build is a push and nothing else. It also needs no login, which
 is the whole reason this exists — CI already uploaded a Windows build, but as a
 GitHub *artifact*, which expires after 14 days and requires signing in.
