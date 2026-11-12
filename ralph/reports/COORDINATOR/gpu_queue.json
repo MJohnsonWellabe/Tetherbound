@@ -4092,6 +4092,24 @@
    "capture": "High, base and arm",
    "pre_check": "patches read as grown there and are still findable at normal distance (say if the Speed patch is too small or pale); no red",
    "priority": "near-floor rows F40#16 6.19, F40#17 6.08"
+  },
+  {
+   "id": "below6-knifeedge",
+   "kind": "arm",
+   "rows": [
+    "F40#15",
+    "F40#8"
+   ],
+   "branch": "tb/below6",
+   "head": "e948b35aa",
+   "tree": "tb/below6 e948b35aa both sides (no import)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-KNIFEEDGE/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-KNIFEEDGE/CAPTURE.json (Three Bells bridge frames, F40#15 frames); coordinator adds a no-loss check of two other Cloudreach route-shoulder ends (e.g. F40#0 matrix pieces at the gate road and summit road) since the end-face change applies to every route shoulder",
+   "capture": "High, base and arm",
+   "pre_check": "the black strip from the bridge foot is gone; no new hole or gap where a shoulder ends",
+   "priority": "near-floor F40#15 6.08; F40#8 bridge frames"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
