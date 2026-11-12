@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-CLOUDNIGHT",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; queue after THINGS-WETPATH3 (one matrix session can serve CLOUDRAIN, WETPATH3 and this)",
+ "tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-CLOUDNIGHT/overlay_night_moonlit_cast.json"},
+ "rows": {"F40#0, F40#19, F40#21": {"pieces": "night clear d*8+7 and night rain d*8+8 at the G-rescore-f40-0-sample stands"}}
+}
