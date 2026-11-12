@@ -1,0 +1,17 @@
+{
+ "id": "places-road-value-1112",
+ "branch": "tb/places",
+ "head": "(this commit)",
+ "base": "main (with storm_phase_1111 landed, #914)",
+ "arms": {"road": "ralph/reports/LANES/PLACES-ROADVALUE/overlay.json", "road_no_puddles": "ralph/reports/LANES/PLACES-ROADVALUE/overlay_no_puddles.json"},
+ "preset": "High first, then Medium if High reaches 7.5",
+ "rows": {
+  "F41#12": {"tool": "tools/phase2_capture_locations.gd --biome=stormwood --views=close --seed=2042", "frames": ["stormwood__deepwood__09__lantern_hollow__day__close", "stormwood__landmark__glass_field__day__close", "stormwood__landmark__lantern_hollow__night__close"]},
+  "F41#4": {"tool": "tools/phase2_capture_locations.gd --biome=stormwood --times=day --views=close --seed=2042", "frames": ["stormwood__glowmoss_hollows__03__the_lantern_pools__day__close", "stormwood__glowmoss_hollows__04__crown_overlook__day__close", "stormwood__deepwood__10__the_fallen_giant__day__close"]},
+  "F41#5": {"tool": "tools/phase2_capture_locations.gd --biome=stormwood --times=day --seed=2042", "frames": ["stormwood__cinder_verge__01__the_struck_sentinel__day__approach", "stormwood__glowmoss_hollows__04__crown_overlook__day__close", "stormwood__landmark__crown_heartstone__day__close"]},
+  "F41#8": {"tool": "tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=<frame>", "frames": ["stormwood__inventory__character__elder_maud", "stormwood__inventory__character__rodkeeper_hesk", "stormwood__inventory__character__warden_elect_bryn"]},
+  "F41#2": {"tool": "tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel", "frames": ["...__close__calm", "...__close__building", "...__close__break"]}
+ },
+ "want_to_see": "a wet dark-umber road with value and soft edges into the moss; no black blotch decals; small dark wet patches, not mirrors",
+ "reject_if": "lilac or white puddle slabs, a salmon road, or a road that reads as dry sand"
+}

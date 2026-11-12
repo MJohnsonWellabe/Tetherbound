@@ -26,6 +26,13 @@ uniform vec2 sz_pool = vec2(0.0, 0.0);
 uniform vec4 sz_pool_colour : source_color = vec4(0.05, 0.06, 0.07, 1.0);
 uniform float sz_pool_roughness = 0.38;
 uniform float sz_pool_specular = 0.25;
+// road_value_1112: small wet puddles on bare earth and road (not on green
+// ground). sz_puddle is the noise band [full, none]; equal values = off.
+uniform vec2 sz_puddle = vec2(0.0, 0.0);
+uniform float sz_puddle_scale = 0.3;
+uniform float sz_puddle_roughness = 0.2;
+uniform float sz_puddle_specular = 0.5;
+uniform float sz_puddle_darken = 0.8;
 
 float sz_hash12(vec2 p) {
     vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -78,6 +85,18 @@ const TAIL := """
                 SPECULAR = mix(SPECULAR, sz_pool_specular, sz_pool_w);
             }
         }
+        // road_value_1112: puddle highlights on the wet road and bare earth,
+        // near the camera only, so the road has value instead of one flat tone.
+        if (sz_puddle.y > sz_puddle.x) {
+            float sz_earth = 1.0 - sz_green;
+            float sz_p = sz_noise(v_vertex.xz * sz_puddle_scale) * 0.65
+                + sz_noise(v_vertex.xz * sz_puddle_scale * 2.9 + vec2(9.1, 3.7)) * 0.35;
+            float sz_pw = (1.0 - smoothstep(sz_puddle.x, sz_puddle.y, sz_p)) * sz_earth * sz_strength
+                * (1.0 - smoothstep(70.0, 130.0, length(v_vertex.xz - _camera_pos.xz)));
+            ALBEDO *= mix(1.0, sz_puddle_darken, sz_pw);
+            ROUGHNESS = mix(ROUGHNESS, sz_puddle_roughness, sz_pw);
+            SPECULAR = mix(SPECULAR, sz_puddle_specular, sz_pw);
+        }
     }
 """
 
@@ -117,7 +136,8 @@ static func finish() -> Dictionary:
 # into grass colonies with true clearings that show the wet moss floor.
 # `wet_earth_1110` (LANE-MESHY, OFF until judged) rides last: it lifts the
 # near-black path and pools to banked wet earth.
-const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104", "path_loam_1104", "grass_patch_1104", "wet_earth_1110"]
+# `road_value_1112` (LANE-PLACES, OFF until judged) rides after wet_earth_1110.
+const FINISH_CANDIDATES := ["value_lift_candidate", "rock_value_1104", "path_loam_1104", "grass_patch_1104", "wet_earth_1110", "road_value_1112"]
 
 
 static func _merge_into(target: Dictionary, key: String, value: Variant) -> void:
@@ -194,9 +214,16 @@ static func install(terrain: Object) -> void:
 	for key: String in ["soil_colour", "moss_colour", "pool_colour"]:
 		if zones.has(key):
 			material.call("set_shader_param", "sz_" + key, Color(str(zones[key])))
-	for key: String in ["pool_roughness", "pool_specular"]:
+	for key: String in ["pool_roughness", "pool_specular", "puddle_scale", "puddle_roughness", "puddle_specular", "puddle_darken"]:
 		if zones.has(key):
 			material.call("set_shader_param", "sz_" + key, float(zones[key]))
+	var puddle: Array = zones.get("puddle", [])
+	if puddle.size() == 2:
+		material.call("set_shader_param", "sz_puddle", Vector2(float(puddle[0]), float(puddle[1])))
+	# road_value_1112: a softer texture blend, so the road no longer meets the
+	# moss with a hard cut-out edge (Terrain3D blend_sharpness, default 0.5).
+	if zones.has("blend_sharpness"):
+		material.call("set_shader_param", "blend_sharpness", float(zones["blend_sharpness"]))
 
 
 ## F41#5 `macro_1104` (stormwood_ground_finish.json, OFF until judged). Judges
