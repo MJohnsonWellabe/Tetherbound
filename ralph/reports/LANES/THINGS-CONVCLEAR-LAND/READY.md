@@ -1,10 +1,14 @@
 # THINGS-CONVCLEAR-LAND: the conversation shot keeps the player and the companion out of the speaker's third; ships ON
 
-STATUS: hold
+STATUS: land
 
-**Held by the coordinator (12 Nov):** the camera rule runs in every biome, so Tidewake, Cloudreach and Stormwood are being captured with it first to confirm no loss. Flip this to `STATUS: land` when those verdicts are in.
+**Hold lifted (12 Nov):** the other-biome verdict is in (`G-things-convclear-other-biomes.md`, `tb/item-scout-1108` 52ea1568) and the one biome that failed the no-loss rule is scoped out.
+- **Tidewake and Cloudreach:** level with the rule (every row within 0.04; nothing loses). The rule runs there.
+- **Stormwood: the rule is OFF** (`clearance_1112.exclude_realms: ["stormwood"]`). It was mixed: F41#15 gained (5.14 to 5.82, 3/3), but on the nine most-changed frames 2/3 judges preferred the unswung shot, because a creature head hides Lieutenant Sera and the storm bird hides Tamsin. With the realm excluded, Stormwood conversations are exactly as on main, so nothing there can lose. **This gives up the F41#15 gain** until the rule also keeps wild and party creatures out of the speaker's cone (the follow-up the judges ask for).
+- **Meadows:** the ship verdict stands.
+- The scope-out itself was not captured on the GPU: it is the same flag-off path as main, pinned by a unit test.
 
-- **Branch:** `tb/things-convclear-land`, cut from `origin/main` 4e35bfbd.
+- **Branch:** `tb/things-convclear-land`, cut from `origin/main` 4e35bfbd, with main 6eae7917 merged in.
 - **Owner:** approved 11 Nov for conversation shots only, to ship if the GPU judges confirm it.
 - **Verdict (LANE-SCOUT):** `G-things-convclear-meadows.md` (`tb/item-scout-1108` 3136cc76), GPU High.
   - Against the same-stand base the arm wins all 8 Meadows sets (+0.16 to +1.68; 3/3 on seven, 2/3 and a tie on F38#37). Nothing loses.
@@ -26,7 +30,7 @@ STATUS: hold
   - **LANE-SCOUT's question, answered:** `--sight-stand` is a capture choice only. The game does not place the player; the player walks up to the speaker. The switch makes the capture stand where a player would (same room, speaker in view). I recommend making it the fixed dialogue camera set once Mira's row is re-captured clean, and re-baselining the dialogue rows on it; until then it stays opt-in.
   - `docs/TECHNICAL.md` §8.1: one bullet.
 - **Test added:** `tests/test_conversation_clearance.gd` (5): the rule ships ON inside the villager shot and the aftermath profile does not inherit it; the screen-clearance score; a blocked shot swings clear and a clear shot is untouched; the follower steps behind the lens, another trainer's creature is never moved, and it follows again on exit; inert with the flag off.
-- **Tests run on this branch (per-file lines checked):** `conversation_clearance` 5, `conversation_camera` 32, `dialogue_capture_waits_for_blend` 3, `camfx_candidates` 11: 51 tests, 0 failed.
+- **Tests run on this branch after the scope-out and the merge (per-file lines checked):** `conversation_clearance` 6 (adds the Stormwood scope test), `conversation_camera` 32, `dialogue_capture_waits_for_blend` 3, `camfx_candidates` 11: 52 tests, 0 failed.
 - **Not included (round 2, unjudged, on `tb/things` 6d5b759d):** the companion re-checked every frame with a wider in-frame test, for the dog still at the edge on Rae and Old Perrin. It follows as its own small arm once those rows are re-captured.
 
 ## Follow-ups named by the judges

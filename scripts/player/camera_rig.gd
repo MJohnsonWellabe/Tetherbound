@@ -1248,8 +1248,8 @@ func _solve_conversation_shot() -> Dictionary:
 		shot = _open_view_shot(shot, used_cfg, used_room, trainer_anchor, speaker_anchor, forward, open_cfg)
 	# camera.json conversation.clearance_1112 (OFF = no block): the player's
 	# own head and back are kept out of the speaker's third.
-	var clear_cfg: Variant = _talk_cfg.get("clearance_1112", {})
-	if clear_cfg is Dictionary and bool((clear_cfg as Dictionary).get("enabled", false)):
+	var clear_cfg := _clearance_config()
+	if not clear_cfg.is_empty():
 		shot = _clearance_shot(shot, used_cfg, used_room, trainer_anchor, speaker_anchor, forward, clear_cfg)
 	_talk_used_fallback = bool(shot.get("fallback", false))
 	return shot
@@ -1291,6 +1291,28 @@ func _clearance_score(shot: Dictionary, trainer_anchor: Vector3, speaker_anchor:
 
 
 var _clear_last: Variant = null
+
+
+## The clearance block for the realm the player is in, or {} when the rule is
+## off or that realm is listed in `exclude_realms`. Stormwood is listed: there
+## the swung shot put wild and party creatures over the speaker (GPU, 2/3
+## prefer the unswung shot), which this rule does not handle.
+func _clearance_config() -> Dictionary:
+	var realm := ""
+	if is_inside_tree():
+		var game := get_node_or_null(^"/root/Game")
+		if game != null:
+			realm = str(game.get("current_realm"))
+	return clearance_for_realm(_talk_cfg, realm)
+
+
+static func clearance_for_realm(talk_cfg: Dictionary, realm: String) -> Dictionary:
+	var clear_cfg: Variant = talk_cfg.get("clearance_1112", {})
+	if not (clear_cfg is Dictionary and bool((clear_cfg as Dictionary).get("enabled", false))):
+		return {}
+	if realm != "" and realm in ((clear_cfg as Dictionary).get("exclude_realms", []) as Array):
+		return {}
+	return clear_cfg as Dictionary
 
 
 ## The nearest swing (and, after those, a higher lens) whose shot is reachable,
@@ -1363,10 +1385,10 @@ func _step_companions_clear() -> void:
 
 
 func _companion_clear_config() -> Dictionary:
-	var clear_cfg: Variant = _talk_cfg.get("clearance_1112", {})
-	if not (clear_cfg is Dictionary and bool((clear_cfg as Dictionary).get("enabled", false))):
+	var clear_cfg := _clearance_config()
+	if clear_cfg.is_empty():
 		return {}
-	var companion: Variant = (clear_cfg as Dictionary).get("companion", {})
+	var companion: Variant = clear_cfg.get("companion", {})
 	if not (companion is Dictionary and bool((companion as Dictionary).get("enabled", true))):
 		return {}
 	return companion as Dictionary

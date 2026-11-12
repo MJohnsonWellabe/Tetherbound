@@ -140,3 +140,16 @@ func test_companion_step_is_inert_with_the_flag_off() -> void:
 	assert_true(_rig._companion_clear_config().is_empty())
 	_rig._talk_cfg = {}
 	assert_true(_rig._companion_clear_config().is_empty())
+
+
+## G-things-convclear-other-biomes.md: the rule is off in Stormwood.
+func test_rule_is_scoped_off_stormwood_and_on_elsewhere() -> void:
+	var block := _shipped()
+	assert_eq(block.get("exclude_realms", []), ["stormwood"])
+	var talk := {"clearance_1112": block}
+	assert_true(RIG.clearance_for_realm(talk, "stormwood").is_empty(), "no clearance swing or companion step in Stormwood")
+	for realm: String in ["meadows", "water", "cloudreach", ""]:
+		assert_false(RIG.clearance_for_realm(talk, realm).is_empty(), "the rule runs in '%s'" % realm)
+	var off := block.duplicate(true)
+	off["enabled"] = false
+	assert_true(RIG.clearance_for_realm({"clearance_1112": off}, "meadows").is_empty())

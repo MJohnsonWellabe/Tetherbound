@@ -63,6 +63,8 @@
         "scope": "client_presentation",
         "enabled": true,
         "_why_on": "Ships ON (12 Nov 2026; owner approved 11 Nov for conversation shots only). LANE-SCOUT G-things-convclear-meadows.md (tb/item-scout-1108 3136cc76), GPU High: the arm wins all 8 Meadows sets against the same-stand base (+0.16 to +1.68; 3/3 on seven, 2/3 and a tie on F38#37) and all four board rows against main, 3/3 each: F38#17 5.75 -> 6.97, F38#16 5.83 -> 6.32, F38#36 7.12 -> 7.39, F38#37 6.70 -> 6.90. Nothing loses. The companion left about 15 frames; Rae and Old Perrin still show it at the frame edge (a follow-up).",
+        "exclude_realms": ["stormwood"],
+        "_why_exclude_realms": "LANE-SCOUT G-things-convclear-other-biomes.md (tb/item-scout-1108 52ea1568): Tidewake and Cloudreach are level with the rule (within 0.04, nothing loses). Stormwood is mixed: F41#15 gains (5.14 -> 5.82, 3/3) but on the nine most-changed frames 2/3 judges prefer the unswung shot, because a creature head hides Lieutenant Sera and the storm bird hides Tamsin. That fails the no-loss rule, so the rule is off in Stormwood until it also keeps wild and party creatures out of the speaker's cone.",
         "min_gap": 0.06,
         "min_edge": 0.3,
         "trainer_radius_m": 0.38,
