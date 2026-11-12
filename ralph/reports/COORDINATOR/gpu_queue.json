@@ -3569,7 +3569,8 @@
    "request": "ralph/reports/LANES/PLACES-ROADVALUE/CAPTURE.json (per-row tool and frames)",
    "capture": "High, base plus two arms",
    "priority": "the judges' shared Stormwood ceiling (ground and road value)",
-   "note": "Coordinator will say when #914 has landed."
+   "note": "Coordinator will say when #914 has landed.",
+   "done": "G-places-roadvalue-storm a6e992aa9, -locations f80209d9d, -dialogue bba97ce20 (no-puddles arm judging; puddle arm failed pre-check: lilac/white slabs)"
   },
   {
    "id": "things-convclear-other-biomes",
