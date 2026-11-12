@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1108",
+ "F38#20": {"High": "G-below6-stronghold-stand-r2/arm-High (tb/below6 d4801ed9a + BELOW6-STRONGHOLD-STAND overlay; stand (0, 7130))", "Medium": "G-closeout-f38-20-medium @ 0074a8b6d, main 1c81cdb45 (#933, stand ON)",
+   "frames": ["stronghold_approach__day__approach", "stronghold_approach__night__approach", "landmark__stronghold__day__approach"]},
+ "F38#3": {"High": "G-things-foestand-meadows/arm-High (tb/things 8cb498dba + overlay_opponent_stand.json)", "Medium": "G-closeout-f38-3-medium @ 660838f12, main 1c81cdb45",
+   "frames": ["south_bridge_grunt-01", "south_bridge_grunt-02", "south_bridge_grunt-03"]},
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg"}
