@@ -586,12 +586,11 @@
    }
   },
   "things_self_lit_off_1112": {
-   "_why": "LANE-THINGS (12 Nov 2026), Meadows dialogue F38#17 (G-things-convclear-meadows.md, 3/3: 'Warder Solene's face is overexposed'). Same fault as below6_marrow_self_lit_off: the body's imported material emits its own albedo atlas at full strength. Solene and Keeper Hald wear the grunt profile with an officer_b copy as body_model_override (appearance variants lanekit_f38_17_*), so they miss officer_b's own opt-out in art.json; captain_b (Riverwatch captain, Captain Veyra, Captain Nerissa) never had one. The grunt mesh itself does not emit, so the grunt row only reaches the two variants. CPU probe: tools/_probe_things_emit.gd; the conversation key light changes nothing on Solene's face. OFF until judged.",
+   "_why": "LANE-THINGS (12 Nov 2026), Meadows dialogue F38#17 (G-things-convclear-meadows.md, 3/3: 'Warder Solene's face is overexposed'). Same fault as below6_marrow_self_lit_off: the body's imported material emits its own albedo atlas at full strength. Solene and Keeper Hald wear the grunt profile with an officer_b copy as body_model_override (appearance variants lanekit_f38_17_*), so they miss officer_b's own opt-out in art.json; captain_b (Riverwatch captain, Captain Veyra, Captain Nerissa) never had one. The grunt mesh itself does not emit, so the grunt row only reaches the two variants. CPU probe: tools/_probe_things_emit.gd; the conversation key light changes nothing on Solene's face. CPU result: Solene's body mean 127 -> 122 and her face comes partly out of clip (still pale: the rest is the atlas under full sun, as with Marrow); Hald changes little. captain_b was tried and dropped: Captain Oreth's face goes dark orange (a loss), and no judge called him blown out. Ride-along only (under 0.5 on its own): capture it with the next Meadows dialogue arm. OFF until judged.",
    "scope": "client_presentation",
    "enabled": false,
    "characters": {
-    "grunt": {"body_emission_enabled": false},
-    "captain_b": {"body_emission_enabled": false}
+    "grunt": {"body_emission_enabled": false}
    }
   }
  }
