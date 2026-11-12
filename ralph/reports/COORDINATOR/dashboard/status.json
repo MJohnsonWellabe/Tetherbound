@@ -903,27 +903,27 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Owner restructure (11 Nov 20:24 UTC): one Fable lane on every row below 6, two Fable lanes on the 6-7 band split by shared cause (THINGS: creatures, characters, poses, UI, dialogue; PLACES: world, terrain, light, weather), LANE-SCOUT judging and the GPU lane capturing. FLOOR2, NEWAPPROACH, REMAKES and MESHY archived after pushing handoffs; STORMWOOD archives when its last turn ends.",
+  "active_lanes_note": "12 Nov 03:20 UTC: wrap-up done (all judged wins on main or in PR #917; the owner deleted the finished branches), lanes restarted on fresh branches from main: LANE-BELOW6 (tb/below6), LANE-THINGS (tb/things), LANE-PLACES (tb/places), with LANE-SCOUT judging and the GPU lane capturing.",
   "active_lanes": [
     {
       "lane": "LANE-BELOW6 · Fable · tb/below6 (session_01GPgpLTfhRVzmhmswzRDvDP)",
       "doing": "Every row below 6, with Meshy for new art.",
       "criteria": "F36#86 Voltarach, F36#30 and F36#88 Abyssal Guardian, F36#61 Ribbonray, F36#93 Water Mirejaw, F36#94 Water Mosshell, F40#3, F41#1, F40#1, F36#29, F41#8, F39#8 (parked)",
-      "now": "Starting from the REMAKES, MESHY, NEWAPPROACH and FLOOR2 handoffs. REMAKES' Voltarach and Ribbonray arms are queued on the GPU.",
+      "now": "Restarted. Marrow arm (F41#15) on the GPU; next F36#46 Fulgocobra, F40#3, F40#1.",
       "next": "REMAKES-ABYSSAL arm; F40#3 landmark crowns (built flag-off, needs a CPU screen)."
     },
     {
       "lane": "LANE-THINGS · Fable · tb/things (session_01GPgpLVbagDjodbwdmxBeVz)",
       "doing": "6-7 band, shared causes across creatures, characters, poses, UI and dialogue (CLUSTERS-6TO7 T1-T11).",
       "criteria": "F36 (1) pose rows, F38-F41 (2) dialogue and character rows, UI rows",
-      "now": "T1 roster-wide faint grounding (includes the below-6 faints).",
+      "now": "Restarted from main. Close-outs at 7.0-7.5 (Skyrill, Galewisp, Aquaryn, Water Mirejaw, Cragclaw) and the Stormwood clearance.",
       "next": "T4 re-score of unrescored pose rows; T6 conversation shot plus T7 portraits on post-#910 frames."
     },
     {
       "lane": "LANE-PLACES · Fable · tb/places (session_01GPgpLVN3awNzikwdX9LgpX)",
       "doing": "6-7 band, shared causes across world, terrain, light and weather (CLUSTERS-6TO7 P1-P8).",
       "criteria": "F41#2, #4, #5, #6, #12, #13, #19 (+F41#8 ride-along), F40#0, F39 dunes rows, Cloudreach plateaus, Meadows ground",
-      "now": "P1 Stormwood storm light, building on LANE-STORMWOOD's untested flag-off arm on tb/stormwood.",
+      "now": "Restarted from main. Stormwood road value done right inside a bigger Stormwood pass; Cloudreach F40#0 ground.",
       "next": "P2 rain (F40#0)."
     },
     {
