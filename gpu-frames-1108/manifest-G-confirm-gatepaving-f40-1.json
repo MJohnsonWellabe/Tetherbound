@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/arm-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.187,
+  "lower_edges": 0.2677,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/arm-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.281,
+  "lower_edges": 0.2322,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/arm-High/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.144,
+  "lower_edges": 0.1613,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/arm-High/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.185,
+  "lower_edges": 0.2441,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/arm-High/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "sky_fraction": 0.11,
+  "lower_edges": 0.2239,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/arm-High/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "sky_fraction": 0.075,
+  "lower_edges": 0.3269,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.187,
+  "lower_edges": 0.2686,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.281,
+  "lower_edges": 0.2325,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/base-High/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.144,
+  "lower_edges": 0.1622,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/base-High/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.185,
+  "lower_edges": 0.2454,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/base-High/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "sky_fraction": 0.11,
+  "lower_edges": 0.2223,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/phase2_capture_locations.gd",
+  "path": "G-confirm-gatepaving-f40-1/base-High/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "sky_fraction": 0.075,
+  "lower_edges": 0.326,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#1 job.json frames + controls."
+ }
+]
