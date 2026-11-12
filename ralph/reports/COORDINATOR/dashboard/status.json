@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 12:35 UTC",
+  "updated": "12 Nov 2026 12:45 UTC",
   "headline": [
+    "12 Nov 12:45: owner removed the 0.5 threshold (PR #924 landed): any judged gain lands on its own. Ashtusk embers + hit ships (+0.30); Brooktail spots no gain (parked); embers split by species (Stormtrail 7.49, Riftfrill and Nightburrow slightly down) so the landing scopes it to Ashtusk and Stormtrail. Finding: the creature pose stage renders High and Medium identically, so pose-row scores vary only by judge panel (about 0.7).",
     "12 Nov 12:35: OWNER DIRECTION, new lane roles: LANE-BELOW6 rows below 6 (F41#8, F36#46, F40#1, F39#8 parked); LANE-THINGS moves every 6-7 row over 7 (all categories, shared causes first; queued 7.5 close-outs finish, no new ones); LANE-PLACES re-scores every outdated row on current main (GPU captures, its own three-judge batches). GPU: re-scores first, then alternating with arms. 48 stale 6-7 rows capturing now.",
     "12 Nov 11:40: #923 landed (Stormwood rim off, F41#18 6.22; ruler clear by default). Landed overnight: #918, #919, #920, #921, #922, #923. Below 6 now: F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90. GPU: F38#15 glide-bank close-out, then the Ashtusk ember fix (close-out), wet trail round 2, Stormwood uniforms.",
     "12 Nov 11:25: Ashtusk (High 8.03, Medium 7.28) and Brooktail (High 7.69, Medium 7.03) do not close: at Medium the ruler never overlapped, so the creatures themselves sit under 7.5. Close-out exception applies (both at 7.0 or above). #923 (Stormwood rim off, F41#18 6.22) in CI.",
@@ -2930,7 +2931,7 @@
     },
     "F36#33": {
       "gpu": 8.03,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Ashtusk; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 8.03 at High; G-medium-ashtusk-brooktail-ruler (e44e6ee88): Medium 7.28, not closed",
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Ashtusk; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 8.03 at High; G-medium-ashtusk-brooktail-ruler (e44e6ee88): Medium 7.28, not closed; G-things-creature-closeout (adfe7e1bd): embers + hit 7.02 -> 7.32 (3/3) SHIPS; pose-stage High and Medium render identically (preset not applied), panels vary about 0.7",
       "medium": 7.28
     },
     "F36#87": {
