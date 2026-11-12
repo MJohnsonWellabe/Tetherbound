@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 18:50 UTC",
+  "updated": "12 Nov 2026 19:15 UTC",
   "headline": [
+    "12 Nov 19:15: the 'red crest' on the Burrow Warrens badgers was a crimson asset-pack leaf on an ironwood harvest tree. The hard-rule fix is landing as #930. Stormwood uniforms do not ship (F41#18 level; dark cloth sinks into the dark ground); the judges want lit dark cloth with a rim light and metal rank trim. The stronghold stand (#929) is in full CI.",
     "12 Nov 18:50: F38#20 stronghold stand ships (6.40 to 7.57, 3/3, defect FIXED); it was below 6 and is landing as #929 (auto-merge off until the engine jobs have run); Medium follows. F39#17 restored sea r4 fixes the sunset loss but the restoration no longer reads on its own row, so LANE-BELOW6 combines rounds 1 and 4.",
     "12 Nov 18:35: main's full CI has been red in every scheduled run since at least 11 Nov 16:18, and nobody owned it. Pre-existing failures: smoke_art (shiny and alpha creatures render the plain texture after the remakes went on; the common tier shows a rim), the Tidewake return-shortcut relay (Aquaryn fixture) and the Stormwood Livewire net smoke. New in one run: the shared-boss net smoke (failed jobs re-run once). None of these is in #928's beacon change. New lane LANE-CIFIX (session_01GPgpLUBEgVBDCvLstsLeqN, tb/cifix) reproduces and fixes them.",
     "12 Nov 18:30: LANE-BELOW6's three below-6 reworks keep failing the GPU pre-check: restored sea r3 (sunset foreground still near black) and swim r3 (arm raised like a wave). Both approaches are parked. Restored sea r4 widens the shallows instead of darkening, and the stronghold stand moves to (0, 7130); both are queued. Swim needs its pose keys verified first (water-hidden check).",
@@ -2805,8 +2806,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-ext-stormwood 7.40 (LANE-PLACES 444270729, main, GPU High, 12 Nov) EXTRAPOLATED: Medium + confirming batch"
     },
     "F41#18": {
-      "gpu": 5.93,
-      "src": "GPU High 8-9 Nov (F-stormwood); G-things-stormrim (b3b9fbd4d): rim off in Stormwood 5.60 -> 6.22 (3/3), LANDED #923; RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.93 (was 6.10)"
+      "gpu": 5.89,
+      "src": "GPU High 8-9 Nov (F-stormwood); G-things-stormrim (b3b9fbd4d): rim off in Stormwood 5.60 -> 6.22 (3/3), LANDED #923; RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.93 (was 6.10) | ARM THINGS-STORMUNIFORM G-things-stormuniform (25ed5dd72, 12 Nov): row 5.56 -> 5.60 (1/3), not shipped; wash gone but cloth sinks into ground; officer dialogue +0.27 (3/3). POOLED current-main 5.89 row (6.22, 5.56), 6.34 dialogue. Next: cool rim/key light, lifted albedo, copper/steel trim, legible rank"
     },
     "F41#19": {
       "gpu": 7.25,
