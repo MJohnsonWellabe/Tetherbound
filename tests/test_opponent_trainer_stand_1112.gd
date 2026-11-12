@@ -19,5 +19,7 @@ func test_spot_is_behind_and_to_one_side_of_the_opposing_creature() -> void:
 func test_flag_is_declared_with_its_scope() -> void:
 	var doc: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/combat.json"))
 	var block: Dictionary = (doc.get("arena", {}) as Dictionary).get("opponent_trainer_stand_1112", {})
-	assert_true(block.has("enabled"), "flag declared")
+	assert_true(bool(block.get("enabled", false)), "ships ON (G-things-foestand)")
+	assert_almost_eq(float(block.get("behind_m", 0.0)), 3.0, 0.001)
+	assert_almost_eq(float(block.get("side_m", 0.0)), 1.6, 0.001)
 	assert_eq(str(block.get("scope", "")), "client_presentation")

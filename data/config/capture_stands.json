@@ -57,6 +57,7 @@
         "cloudreach__upper_cloudreach__10__old_wind_observatory": {"position": [430.0, 4500.0], "heading_deg": 180.0},
         "cloudreach__windscar_ravine__05__windscar_beacon": {"position": [-240.0, 2698.0], "heading_deg": 47.0}
       }
-    }
+    },
+    "candidates_f38_20_1112": {"enabled": true, "_why_on": "12 Nov 2026 (coordinator landing): G-below6-sea-r4-stronghold.md (LANE-SCOUT, tb/item-scout-1108 012ab2548), GPU High, F38#20 6.40 -> 7.57 (+1.17, 3/3; recorded defect FIXED 3/3): the keep reads as a lit landmark at the end of the road. Capture stand only; the game is unchanged.", "_candidate": "LANE-BELOW6 (12 Nov 2026), F38#20 Team Tether stronghold (GPU High 5.72, G-rescore-stale-tier2: 'reads as a small dark ruin behind the pylons'). The Band 5 approach stand is the band's road entry at (0, 6968), about 590 m from the keep, so the row's two approach frames show its subject as a speck on the horizon. Candidate: the same road, about 430 m from the keep, looking north, where the whole keep with its towers and banners stands against the sky at the end of the road (screened on CPU with --spot from z 7130 to 7480: every stand from 7210 up crops the top of the keep, which stands high on its hill, or sits inside the tree line; the GPU pre-check rejected 7405 for that crop). Capture stand only; the game is unchanged. OFF until the coordinator's stand review and a GPU verdict.", "destinations": {"meadows__band5_stronghold_approach__09__stronghold_approach": {"position": [0.0, 7130.0], "heading_deg": 0.0}}}
   }
 }
