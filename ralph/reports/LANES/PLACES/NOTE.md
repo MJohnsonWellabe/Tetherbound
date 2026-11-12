@@ -6,6 +6,8 @@
 - **Sent to GPU (arm 1 of 2):** `PLACES-STORMWOOD2/` (two overlays): judged no-puddles road + gold line contrast + a clearer Fading. Rows F41#2, #4, #5, #12, #8. CPU: the gold line reads clearly on the umber road.
 - **Finding:** the CPU phase tool's Fading still repeats a Break frame (bolts, dark deck) on main and on every arm, so Fading cannot be checked on CPU. On GPU the judges did see Fading (steam), so this looks CPU-only; not chased further.
 - **Next:** Cloudreach F40#0 gate cobbles, ground and fog; then near-bar close-outs.
+- **Built, held (not sent): `paving_scale_1112`** (`cloudreach_f40_items.json`, `cloudreach_settlement_life.gd`; overlay and CPU sheet in `PLACES-GATEPAVING/`). Cause found: the gate's stone-trail pieces are sized by a 0.28 m height, which scales the model about 2.5x and stands its top a shin's height proud. On: 0.12 m pieces sunk 55%. CPU (gate approach, day clear): the torso-sized pad becomes a line of boot-sized stepping stones flush with the path. It touches the gate, gate-road and shrine stands only, so it is under 0.5 alone; it waits to ride with Cloudreach ground colour variation and layered fog (not built yet).
+- Main 2ac7ab84 (#917) is merged into `tb/places`.
 - Standing rules for this lane: lightning is Break-only (owner); puddles parked; check older test pins and `texture_import_policy.py` before a landing; no unrelated `.uid` files.
 
 ## WRAPPED (owner direction via coordinator, 12 Nov 2026). Handoff.
