@@ -3497,6 +3497,36 @@
    "pre_check": "blend 1.0 on every frame; in the arm's trainer rows the companion is not in frame (it should stand behind the lens). If it still is, tell LANE-THINGS which rows before judging.",
    "priority": "6-7 band, one shared cause across every dialogue row (owner approved: ships if judged). Tidewake, Cloudreach and Stormwood follow if Meadows wins.",
    "note": "Owner 11 Nov: conversation shots only; movement and fight cameras unchanged."
+  },
+  {
+   "id": "things-faint2",
+   "kind": "arm",
+   "rows": [
+    "F36#83 trailpup",
+    "F36#87 voltwig",
+    "F36#58 pebbik",
+    "F36#35 breezetail",
+    "F36#70 sparkit",
+    "F36#75 stormtrail",
+    "F36#54 mosshock",
+    "F36#66 shadelet",
+    "F36#57 paddlenewt",
+    "F36#62 riftfrill",
+    "F36#74 stormraven",
+    "F36#42 cragclaw (close-out)",
+    "F36#92 water mangrove monitor"
+   ],
+   "branch": "tb/things",
+   "head": "d2581fb0e",
+   "tree": "tb/things d2581fb0e for both sides (script/config only)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FAINT2/overlay_faint_round2.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-FAINT2/CAPTURE.json",
+   "job": "capture_f36_poses.gd --species=water_mangrove_monitor,trailpup,voltwig,pebbik,breezetail,sparkit,stormtrail,mosshock,shadelet,paddlenewt,riftfrill,stormraven,cragclaw --whole-body --context --clear-ruler --roles=hit,faint",
+   "capture": "High, base (overlay off) and arm (overlay on). Main's tool now plays the game-resolved clip by default (#912).",
+   "priority": "6-7 band, shared faint cause across 13 rows; Cragclaw is a near-bar close-out (Medium 7.30)",
+   "note": "After things-convclear-meadows."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
