@@ -965,6 +965,15 @@ func _build_materials() -> void:
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
 	for material_key: String in ["masonry", "masonry_trim"]:
 		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
+		# F40#15 `masonry_scale_1112` (ON: G-below6-stormraven-masonry): the shared brick tiles
+		# once every 3.6 m, so a single cobble is as large as the trainer's
+		# torso on every Cloudreach wall ("stretched giant cobbles", 3/3).
+		var masonry_scale: Variant = _visual_config.get("masonry_scale_1112", {})
+		if masonry_scale is Dictionary and bool((masonry_scale as Dictionary).get("enabled", false)):
+			masonry.set_shader_parameter("tile", float((masonry_scale as Dictionary).get("tile", 0.28)))
+			var tint_key := "trim_tint" if material_key == "masonry_trim" else "tint"
+			if (masonry_scale as Dictionary).has(tint_key):
+				masonry.set_shader_parameter("tint", Color(str((masonry_scale as Dictionary)[tint_key])))
 		_materials[material_key] = masonry
 	_materials["bronze"] = _material(Color("#81704b"), 0.72)
 	var timber:=ShaderMaterial.new()
