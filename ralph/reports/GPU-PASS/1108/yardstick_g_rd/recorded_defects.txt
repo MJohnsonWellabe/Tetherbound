@@ -1,0 +1,7 @@
+Sl: "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+Sa: "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view"
+Ep: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Yx: "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer"
+Zr: none
+Qa: none
+Fu: "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"

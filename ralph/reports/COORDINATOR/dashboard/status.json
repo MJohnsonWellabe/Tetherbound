@@ -1,6 +1,45 @@
 {
-  "updated": "10 Nov 2026 19:30 UTC",
+  "updated": "11 Nov 2026 20:25 UTC",
   "headline": [
+    "12 Nov 02:20: wrap-up (owner) to get everything on main. Landed tonight: #910, #911, #912, #914, #915. Closed: F36#69 Solmane, F40#13 catch feedback. Still to land: Stormheart approach stand (F41#1 6.81) and the conversation camera (waits for Tidewake/Cloudreach/Stormwood checks); last GPU items: Pebbik/Breezetail Medium, Galewisp carrier, Stormwood road value.",
+    "11 Nov 20:25: lane restructure (owner): LANE-BELOW6, LANE-THINGS, LANE-PLACES + GPU lane + LANE-SCOUT. Current build lanes are writing handoffs. PR #910 (dialogue capture blend fix + Trail Camp F38#32 6.91) in CI.",
+    "11 Nov 20:16: lanes LANE-FLOOR2, LANE-NEWAPPROACH and LANE-REMAKES stopped at 19:35 on the weekly usage limit; owner reset it and all lanes are resumed. New LANE-STORMWOOD takes the Stormwood storm-light pass (8 F41 rows incl. F41#8). Lanes: FLOOR2 (camp landing, faint grounding, dust/pickups), NEWAPPROACH (dialogue blend fix, Water Mosshell ride, conversation shot, Cloudreach rain), REMAKES (Voltarach, Abyssal Guardian x2, Ribbonray materials), MESHY (new art below 6), STORMWOOD, SCOUT (judging), GPU lane.",
+    "11 Nov 19:22: F36#72 Stormbrush poses CLOSES at 7.5 (High 7.68, Medium 7.75) on a plain re-score of the 1 Nov remake. New LANE-REMAKES takes the regressed remakes' materials (Voltarach, Abyssal Guardian x2, Ribbonray); LANE-FLOOR2 the shared faint grounding (Water Mirejaw, Water Abyssal Guardian); LANE-NEWAPPROACH the Water Mosshell ride.",
+    "11 Nov 19:25: capture fault found (LANE-NEWAPPROACH, confirmed by the GPU lane from manifests): phase2_capture_dialogue.gd shoots before the conversation camera finishes its 0.45 s blend at GPU frame rates. 9 of 11 Tidewake dialogue frames today were 0.56-0.93 blended, and the 9 Nov captures too; base and arm were often shot at different blend points. Tool fix in progress; every dialogue row gets a re-capture on it before any dialogue verdict counts.",
+    "11 Nov 19:12: tier-2 re-score batch 2 (13 pose rows on current main): Stormbrush 7.68 (meets the bar at High; Medium next), Reedwing 7.26, Cannonback 7.21, Water Cragclaw 6.92. Five remakes regressed below 6: Voltarach 5.11 (chrome statue), Abyssal Guardian 5.54, Water Mirejaw 5.52 (belly-up faint), Water Mosshell 5.81 (floating rider), Water Abyssal Guardian 5.85. Their old scores were for meshes that no longer ship. Floor rule: these go first (shared faint grounding fix, travel-pose fixes, remakes).",
+    "11 Nov 19:00: tier-2 re-score batch 1 (no code, current main): Skyrill 6.33 -> 7.47, Cragclaw 6.94, Glimmermoth 6.90, Fulgocobra 6.78, F39#18 dialogue 7.06, F39#26 6.49; fell: Ribbonray 5.68 (its remake reads as a magenta effect; now below 6), Veridian 6.33, F39#29 6.41, F39#27 6.16. Next: a shared faint fix folding wings, sails, hoods and antlers down with the body; re-score the other ~14 pose rows.",
+    "11 Nov 18:40: owner decision: mounts will not refuse fatal drops (F40#6 refuse_drop stays off).",
+    "11 Nov 18:35: owner: archive the two old LANE-NEWAPPROACH sessions (done), keep the rest going, start moving 6-7 rows up a tier with the low-hanging fruit first. LANE-MESHY resumed (skyroad arch stand, five below-6 new-art rows, Aquaryn faint pose, campfire). Tier-2 plan: re-capture every creature pose frame on the new stage (about 30 F36 pose rows were scored on the old stage), a shared dialogue-occluder fade for six dialogue rows (LANE-NEWAPPROACH), LANE-SCOUT ranking the 135 rows in 6-7 by gain per effort.",
+    "11 Nov 17:55: LANE-MESHY list when restarted (owner decision pending): F41#8 Stormwood trio silhouettes, F40#3 Cloudreach landmark art, F40#1 Realm Gate Crag landform, F41#1 Stormheart crown and core, F36#29 innkeeper body, skyroad arch Fly fix (32 F40#0 frames), Aquaryn faint pose authored for its rig (F39#6 Medium 7.46), Trail Camp campfire (F38#32), camp sign beam off oxblood.",
+    "11 Nov 17:23: #908 landed Aquaryn's folded-leg faint: F39#6 High 7.79, Medium 7.46 (0.04 short of closing). Below 6: 6, all new art except F39#8 (parked).",
+    "11 Nov 16:49: #907 landed Aquaryn's settled resting pose (it used to rest by rolling its standing pose onto its side): F39#6 6.75 -> 7.47 High. Its faint fold then judged High 7.79 / Medium 7.46, 0.04 short of closing; a forelimb fold is the close-out. Below 6: 6 (five new art, one parked).",
+    "11 Nov 15:56: #906 landed a soft lit cloud-sea material for Cloudreach: the faceted cloud floor (a sine-hash corner mismatch on the judging GPU) becomes rolling billows with blue creases. F40#11 6.97, F40#6 6.33 (was the lowest row). Below 6: 6, of which five need new art (F41#8, F40#3, F41#1, F40#1, F36#29) and one is parked (F39#8).",
+    "11 Nov 14:41: #905 landed the Stormwood harvest presence (F41#9 6.81: the storm-glass crown now 'the strongest single subject in the batch') and the Warrens mound meadow match (F38#30 6.02: the stretched mound shell takes the meadow's own grass). Below 6: 8.",
+    "11 Nov 13:31: #904 landed Cloudreach island mist as cumulus cloud cards: F40#11 5.26 -> 5.99 (3/3), just under 6. Next arm retints them to the cloud floor's white and replaces the faceted floor with a soft lit cloud-sea material. Below 6: 10.",
+    "11 Nov 12:40: #903 landed authored Cloudreach NPC posts: role structures (Tavi's training yard, Sora's study, Maela's cages), cobbled post caps, a key light with shadow, Sora moved clear of the wall. F40#9 5.32 -> 6.48 (3/3) with today's camera. Below 6: 10.",
+    "11 Nov 11:15: morning list for LANE-MESHY (new art, below-6 rows): F41#8 Stormwood trio silhouettes, F40#3 Cloudreach landmark art, F40#1 a real landform at the Realm Gate Crag approach, F41#1 Stormheart crown and glowing core, F36#29 innkeeper body; plus the skyroad arch Fly check (32 F40#0 frames). Two owner decisions waiting: F40#9 post camera, F40#6 mount refuses a fatal drop.",
+    "11 Nov 09:50: #902 landed the Stormwood creature glow on lines and eyes (F41#13 6.66; the stormraven is a blue-black raven again, not a white ghost) and the Tidewake dawn haze plus storm grade (F39#30 6.70, F39#31 Veilfall 6.02). Below 6: 11.",
+    "11 Nov 09:20: #901 landed two GPU wins in one CI run. The creature pose stage now stands each creature beside the trainer with its feet at the trainer's depth: F38#5 CLOSES at 7.5 (High 7.77, Medium 7.71), F38#31 7.20, F38#26 6.85, F41#13 6.46, F39#6 7.24. The Three Bells bridge view (landing tree cleared, cyan anchor column replaced by a stone waymark) takes F40#8 to 6.77. Below 6: 12.",
+    "11 Nov 07:52: #900 landed the Tidewake sand ripple relief: the hard dark stripes across the beach at dawn and golden hour came from ripple shading at a low sun, not shadows. F39#30 5.85 -> 6.16 (3/3), F13#5 dawn/golden +0.34. Below 6: 17. Creature stage round 2 scored F38#5 8.00 / F38#31 7.17 / F38#26 6.39 (3/3) but is held until a ground-contact depth readout shows Meadows subjects are not nearer the lens. Aquaryn bow wake parked after two GPU pre-check fails.",
+    "11 Nov 06:00: #899 landed the Fly grip pose (F38#8 6.26 -> 7.14, 3/3): the trainer now hangs from Galecrest's talons with bent elbows and trailing knees. Below 6: 18. Aquaryn bow wake (F39#8) failed its GPU pre-check (hard world-grid tiles inside the V); LANE-FLOOR2 is fixing the interior.",
+    "11 Nov 05:10: F40#5 Cloudreach captain fight re-scored at 7.06 on main (was 5.94): the #882 dust retune cleared the exchange. Off the below-6 list and now a 7.5 close-out candidate (frame 1 framing). F40#8 bridge beacon style ruled out by a GPU pre-check (no objective beam in the frames). F38#8 Fly grip pose arm on the GPU now.",
+    "11 Nov 04:22: F41#3 named wild fight re-scored at 6.23 on main (native Voltarach plus the giant-tree fight fade from #897): off the below-6 list. Spacing defect still present (Sparkit tucked among the forelegs). Below 6: 20.",
+    "11 Nov 04:08: F41#13 charge lines parked after two losses (-0.62, -0.49): line-only glow can't separate a dark body from dark Stormwood ground; judges point to a lighter, rim-lit body and the Stormwood creature-stand ground. LANE-FLOOR2 revising the creature stage to the trainer's depth plane (raven scale checked there too).",
+    "11 Nov 03:50: LANE-FLOOR2's creature stage wins big on GPU (F38#5 5.62 -> 7.45, F38#31 -> 7.28, F38#26 -> 6.80, all 3/3; controls gain) but larger subjects stood nearer the camera than the trainer, so perspective flattered scale. Held for one revision: subjects on the trainer's own depth plane, stepped sideways to fit. Re-capture next; lands if the gain holds.",
+    "11 Nov 03:35: overnight consolidation (owner): LANE-MESHY paused until morning; the two Fable lanes (LANE-NEWAPPROACH on F41#13, LANE-FLOOR2 on the creature stage then the Aquaryn wake) keep building; judging and the GPU run as arms arrive.",
+    "11 Nov 03:25: Cloudreach cloud deck parked for F40#6/F40#11 after the hidden-box arm lost (-0.36, -0.16): without the box the floor reads warm beige and loses depth. Judges point to the mount grounding and edge-puff cards instead. LANE-FLOOR2's creature stage (F38#5, #26, #31) is capturing.",
+    "11 Nov 02:40: Cloudreach cause package parked after two tries (full package failed the GPU pre-check on cloud_sea; without it, pale_strata's flat tan cut faces lost F40#1 -0.13 and F40#3 -0.16). Re-checks: F38#32 6.37 (above 6), F40#3 5.65, F41#13 5.14. Below 6: 21. Next: cloud-deck soft edges pre-check (F40#6/#11), F40#8 cyan beam and foreground trunk.",
+    "11 Nov 02:00: row audit (LANE-SCOUT ROW-AUDIT-1111) brings the board up to date: F41#21 7.13, F40#19 6.66, F38#1 6.58, F41#15 6.33 and F38#28 (7.54 High / 6.99 Medium) were already above 6 from earlier landed fixes; F41#13 drops to 5.00 (disputed). Below 6: 22. Three cheap re-captures queued (F40#3 new stand, F38#32 confirm, F41#13 confirm).",
+    "11 Nov 01:40: owner asked for a third build lane: LANE-FLOOR2 takes the creature cluster and the never-attempted below-6 rows; LANE-NEWAPPROACH keeps Cloudreach and the stuck rows; LANE-MESHY does F39#21 close-out, then new art (innkeeper body, named silhouettes). Every below-6 row now has an owner.",
+    "11 Nov 01:31: all five floor-lane landings of the night are on main: #894 Warrens foundation (cave mouth kept clear), #895 Stormwood bark, #896 Meadows ridge, #897 giant trees in the fight fade plus Hall timber out of the red family, #898 Warrens walk_03 stand. Below-6 count 37 -> 27 with nothing unscored. Next on the GPU: the Cloudreach cause package for the five Cloudreach rows just under 6.",
+    "11 Nov 00:40: Warrens foundation landed (#894, with the cave-mouth keep-out). Batch 51 (#897, giant trees in the fight fade) and batch 52 (#898, walk_03 open-ground stand) in CI. Tonight on main so far: #894 Warrens foundation, #895 Stormwood bark, #896 Meadows ridge.",
+    "11 Nov 00:20: giant trees in the fight fade win (Hollows +1.09, F41#3 to 5.89), batch 51 in CI, with the Hall timber red-rule fix. Landed tonight: Stormwood bark (#895), Meadows ridge (#896). Warrens foundation (#894) is on its last CI run; the walk_03 stand follows.",
+    "10 Nov 23:30: Warrens walk_03 open-ground stand wins big (F38#24 +2.47, F38#30 +1.28, 3/3): the old stand was a random spot on the slope showing neither subject. Rows to 6.01 and 5.38 once it lands. The flank grass texture lost twice and is parked. The stronghold approach (the ridge) holds at 7.51. Warrens batch 48 re-running CI with the cave-mouth keep-out fix.",
+    "10 Nov 22:55: floor lane's third win: the Meadows ridge (F38#24 stronghold +0.75 to 7.26), batch 50 in CI. Every visual row now has a score: 28 below 6, none unscored (down from 37). F38#24 rises from the lowest item (3.67) to 5.11.",
+    "10 Nov 22:40: floor lane's second win: Stormwood bark (F41#22 +0.88 to 6.96, F41#24 +0.93 to 7.08, all six sets 3/3), batch 49 in CI. Warrens foundation (batch 48) re-running CI after a test fix. F41#22 leaves the below-6 list.",
+    "10 Nov 22:05: floor lane's first win: Warrens foundation removes the floating drums (walk_03 +0.57 on both of the two lowest rows; route_day +0.46), batch 48 in CI. Rows still low (4.11, 3.69): the next lever is a stand that frames the hillside and mountains from open ground, plus a real mountain backdrop. Baselines today: F41#22 5.90, F38#0 6.60, F39#32 6.77, F40#21 7.03, F22#4 7.20; F40#0 capturing.",
+    "10 Nov 20:40: owner's wave-motion current cue, seven GPU rounds today across crests and swell lines. Crest-shape line and across-flow swell lines are both parked (two failures each). Only hard-edged crests at about 4x the log ever read toward-camera (3/3), and those looked like artefacts. One last new technique allowed: streaks along the flow with dashes sliding toward the camera. Arrow stays (off by default, Accessibility). Water cleanup (#892) and plinth stone (#893, in CI) are the day's T2/F39 gains.",
+    "10 Nov 20:00: Heart Chamber plinth stone wins on GPU (F39#21 win to 7.06, near the bar; F39#28 +0.74), batch 47 in CI. T2 water cleanup landed (#892) after one net smoke re-run (a Meadows reward read-back failed once and passed on re-run). Next on F39#21: crystal material, rim light on the creature, and pinning the end-of-fight camera before the Medium confirm.",
     "10 Nov 19:30: T2 water cleanup wins on GPU (swim-across 5.65 -> 6.50, +0.85, 3/3; away +0.32; night +0.18); its softer swimmer ring lost a shore check (-0.14) and is left out. Batch 46 in CI. Next T2 tries: the owner's wave cue as soft swell lines (fifth attempt, new technique), queued on the GPU.",
     "10 Nov 17:37: Nerissa victory camera fix wins on GPU (win 5.32 -> 6.63, aftermath 5.06 -> 6.22, both 3/3), landed (#891). F39#21 stays open at 6.63: judges name the crystal edge, off-family carved crates and an unlit blue statue next.",
     "10 Nov 16:22: wave cue v3 with the cut fixed did not ship: the softened crests drift diagonally, so swim-away direction fell back to 1/3, and they read as popping white ovals (-0.88); look still won across (+0.64) and at night (+0.58). Crest-shape line parked after four tries. Next: one T2 water cleanup swing (seam band, daylight-lit night, white foam disc), then a different wave technique (flow-mapped normals and soft scrolling foam that outrun the swimmer). Arrow stays (off by default).",
@@ -716,6 +755,8 @@
     }
   ],
   "decisions": [
+    "11 Nov 20:25, owner: consolidate build lanes to one Fable lane for every row below 6 (LANE-BELOW6, uses Meshy for new art) and two Fable lanes for the 6-7 band (LANE-THINGS: creatures, characters, poses, UI, dialogue; LANE-PLACES: world, terrain, light, weather), each attacking shared causes that lift several rows. GPU lane stays; LANE-SCOUT stays as judge. FLOOR2, NEWAPPROACH, REMAKES, STORMWOOD and MESHY write handoffs and are archived.",
+    "11 Nov 18:40, owner: NO to F40#6 refuse_drop (a mount refusing a fatal drop). The flag stays off and is not to be proposed again; F40#6 stays at 6.33 and moves by other means.",
     "7 Nov (owner): F38#5 approved: cluster 1914 may use a 4 m radius; test cap 4.0 for 1914 only, farthest member within 10 m of the road.",
     "8:30 PM CT Sun 25 Oct 2026 (coordinator): the Fallen Giant hero may be judged now but lands only after it gets a collider; players must not walk through a 45 m log.",
     "7:40 PM CT Sun 25 Oct 2026 (coordinator): Veilfall's judging camera is not reframed away from the faceted gully (players still see it). Cladding retried with raycast seating; terrain reshape allowed with a route walk check. Ashfoot camp safe-zone rule kept (WORLD §5.2).",
@@ -788,11 +829,12 @@
     "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
   ],
   "owner_needs": [
+    "11 Nov: F40#9 post focus camera (flag-off): no longer needed for the row. The post setting alone takes F40#9 to 6.48, and the camera adds nothing measurable on top of it (G-newapproach-post-setting). Coordinator recommends leaving it off; say if you want it anyway.",
     "Nothing pending. Keep the PC on and awake overnight for the GPU run."
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "9:25 PM CT Sun 25 Oct 2026",
+  "last_lane_refresh": "20:30 UTC Wed 11 Nov 2026",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -861,28 +903,42 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Two lanes (owner 8 Nov): LANE-MESHY builds and judges one row at a time under the 8 Nov process; LANE-SCOUT refreshes the queue from today's frames so the build lane stops spending hours on rows that are already fine or already lost.",
+  "active_lanes_note": "Owner restructure (11 Nov 20:24 UTC): one Fable lane on every row below 6, two Fable lanes on the 6-7 band split by shared cause (THINGS: creatures, characters, poses, UI, dialogue; PLACES: world, terrain, light, weather), LANE-SCOUT judging and the GPU lane capturing. FLOOR2, NEWAPPROACH, REMAKES and MESHY archived after pushing handoffs; STORMWOOD archives when its last turn ends.",
   "active_lanes": [
     {
-      "lane": "LANE-MESHY · build arms (free Blender + CC0 pipeline)",
-      "doing": "Builds config, code and Blender-asset arms; new GPU arms held until its queue is down to two.",
-      "criteria": "F41#1, F41#2-#5, F41#10, F41#12, F41#17, F38#3, F38#23, F38#27, F40#19",
-      "now": "Preparing the F38#3 ship (Meadows-only trainer standoff) and storm-light A3 (key light written into light_pass_1101, proven offline first).",
-      "next": "F38#27 duplicate-digit fix for a close-out confirm; held: F40#19 Cloudreach rain, boss-ally spacing, thin combat dust"
+      "lane": "LANE-BELOW6 · Fable · tb/below6 (session_01GPgpLTfhRVzmhmswzRDvDP)",
+      "doing": "Every row below 6, with Meshy for new art.",
+      "criteria": "F36#86 Voltarach, F36#30 and F36#88 Abyssal Guardian, F36#61 Ribbonray, F36#93 Water Mirejaw, F36#94 Water Mosshell, F40#3, F41#1, F40#1, F36#29, F41#8, F39#8 (parked)",
+      "now": "Starting from the REMAKES, MESHY, NEWAPPROACH and FLOOR2 handoffs. REMAKES' Voltarach and Ribbonray arms are queued on the GPU.",
+      "next": "REMAKES-ABYSSAL arm; F40#3 landmark crowns (built flag-off, needs a CPU screen)."
+    },
+    {
+      "lane": "LANE-THINGS · Fable · tb/things (session_01GPgpLVbagDjodbwdmxBeVz)",
+      "doing": "6-7 band, shared causes across creatures, characters, poses, UI and dialogue (CLUSTERS-6TO7 T1-T11).",
+      "criteria": "F36 (1) pose rows, F38-F41 (2) dialogue and character rows, UI rows",
+      "now": "T1 roster-wide faint grounding (includes the below-6 faints).",
+      "next": "T4 re-score of unrescored pose rows; T6 conversation shot plus T7 portraits on post-#910 frames."
+    },
+    {
+      "lane": "LANE-PLACES · Fable · tb/places (session_01GPgpLVN3awNzikwdX9LgpX)",
+      "doing": "6-7 band, shared causes across world, terrain, light and weather (CLUSTERS-6TO7 P1-P8).",
+      "criteria": "F41#2, #4, #5, #6, #12, #13, #19 (+F41#8 ride-along), F40#0, F39 dunes rows, Cloudreach plateaus, Meadows ground",
+      "now": "P1 Stormwood storm light, building on LANE-STORMWOOD's untested flag-off arm on tb/stormwood.",
+      "next": "P2 rain (F40#0)."
     },
     {
       "lane": "LANE-SCOUT · GPU judging",
-      "doing": "Judges each GPU section with three code-blind judges, anchors and calibration; pre-judge render check first.",
+      "doing": "Three code-blind judges, anchors and calibration on every GPU section.",
       "criteria": "every GPU arm",
-      "now": "Waiting on the next GPU sections (F38#3 confirm, Glass Sink ring).",
-      "next": "F38#3 confirm at High and Medium"
+      "now": "Re-scores and arm verdicts as the GPU lane pushes.",
+      "next": "REMAKES Voltarach and Ribbonray arms."
     },
     {
       "lane": "GPU lane · owner's PC",
-      "doing": "Captures live vs arm at High (Medium only for 7.5+), controller prompts locked on both sides.",
+      "doing": "Captures base vs arm at High (Medium only at 7.5+).",
       "criteria": "ralph/reports/COORDINATOR/gpu_queue.json",
-      "now": "F38#3 standoff close-out confirm (two runs per side).",
-      "next": "Glass Sink continuous ring (F41#10)"
+      "now": "Queue at ccr 09e123913.",
+      "next": "remakes-voltarach-floor1, remakes-ribbonray-floor1"
     }
   ],
   "score_ledger": [
@@ -1869,15 +1925,243 @@
       "before": 6.16,
       "after": 6.3,
       "pr": "#863 (merged 8 Nov)"
+    },
+    {
+      "item": "F38#32 Trail Camp",
+      "before": 6.26,
+      "after": 6.91,
+      "pr": "#910"
+    },
+    {
+      "item": "F36#86 Voltarach coat",
+      "before": 5.15,
+      "after": 6.5,
+      "pr": "#910"
+    },
+    {
+      "item": "F36#61 Ribbonray coat and hit",
+      "before": 5.02,
+      "after": 6.9,
+      "pr": "#910"
+    },
+    {
+      "item": "F36#30 Abyssal Guardian matte hide",
+      "before": 5.22,
+      "after": 5.77,
+      "pr": "#911"
+    },
+    {
+      "item": "F36#80 Thundertunnel coat",
+      "before": 4.63,
+      "after": 6.04,
+      "pr": "#912"
+    },
+    {
+      "item": "F41#1 Stormheart heartwood core",
+      "before": 4.29,
+      "after": 5.66,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#42 Cragclaw grounded faint",
+      "before": 6.84,
+      "after": 7.51,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#93 Water Mirejaw faint and game clip",
+      "before": 5.52,
+      "after": 7.39,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#91 Water Cragclaw grounded faint",
+      "before": 5.43,
+      "after": 6.51,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#30 Abyssal Guardian grounded faint",
+      "before": 5.62,
+      "after": 6.56,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#50 Mangrove Monitor grounded faint",
+      "before": 6.51,
+      "after": 6.98,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#38 Cannonback grounded faint",
+      "before": 6.74,
+      "after": 7.07,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#52 Mirejaw grounded faint (fixed stage)",
+      "before": 6.7,
+      "after": 6.98,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#94 Water Mosshell ride and swim",
+      "before": 4.65,
+      "after": 6.67,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#48 Galewisp fly grip",
+      "before": 6.35,
+      "after": 7.44,
+      "pr": "#912"
+    },
+    {
+      "item": "F36#88 Water Abyssal Guardian on the game clip",
+      "before": 5.85,
+      "after": 6.32,
+      "pr": "#912"
+    },
+    {
+      "item": "F40#13 catch card clears on aim (closes: Medium 7.76)",
+      "before": 6.88,
+      "after": 7.62,
+      "pr": "#914"
+    },
+    {
+      "item": "F36#52 Mirejaw grounded hit (main stage)",
+      "before": 5.72,
+      "after": 6.32,
+      "pr": "#914"
+    },
+    {
+      "item": "F41#2 Stormwood storm light",
+      "before": 5.17,
+      "after": 5.97,
+      "pr": "#914"
+    },
+    {
+      "item": "F41#8 distinct bodies with storm light",
+      "before": 5.22,
+      "after": 5.8,
+      "pr": "#914"
+    },
+    {
+      "item": "F36#58 Pebbik faint (Medium queued)",
+      "before": 7.0,
+      "after": 7.65,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#35 Breezetail faint (Medium queued)",
+      "before": 7.31,
+      "after": 7.61,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#92 Water Mangrove Monitor faint",
+      "before": 6.84,
+      "after": 7.19,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#57 Paddlenewt faint",
+      "before": 6.47,
+      "after": 6.96,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#62 Riftfrill faint",
+      "before": 6.43,
+      "after": 6.85,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#66 Shadelet faint",
+      "before": 5.43,
+      "after": 6.09,
+      "pr": "#915"
+    },
+    {
+      "item": "F40#0 Cloudreach rain sets (rain half of the matrix)",
+      "before": 5.04,
+      "after": 5.74,
+      "pr": "#915"
+    },
+    {
+      "item": "F41#1 Stormheart approach stand",
+      "before": 5.1,
+      "after": 6.81,
+      "pr": "#916"
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
     {
-      "pr": "batch 46 (in CI)",
+      "pr": "#916",
+      "what": "Batch 72: Stormheart approach stand (F41#1 5.10 -> 6.81); gate B village-tool smoke flake confirmed again by one re-run",
+      "when": "03:10 UTC Thu 12 Nov 2026"
+    },
+    {
+      "pr": "#915",
+      "what": "Batches 70+71: faint round 2 (Pebbik 7.65, Breezetail 7.61, Water Mangrove Monitor 7.19, Paddlenewt, Riftfrill, Shadelet), Cloudreach rain grade (F40#0 rain sets +0.70), rolling download ships in parts under 2 GiB with JOIN.cmd",
+      "when": "02:20 UTC Thu 12 Nov 2026"
+    },
+    {
+      "pr": "#914",
+      "what": "Batches 68+69: catch card clears on aim (F40#13 CLOSED, Medium 7.76), Mirejaw grounded hit (F36#52 +0.60), Stormwood storm light and distinct villager bodies (F41#2 +0.80, F41#8 +0.58), Building far bolts off per owner",
+      "when": "01:42 UTC Thu 12 Nov 2026"
+    },
+    {
+      "pr": "#912",
+      "what": "Batches 66+67: Stormheart heartwood (F41#1 +1.37), Thundertunnel coat (F36#80 6.04), grounded faints for seven pose rows (Water Mirejaw 7.39, Cragclaw 7.51), travel poses (Water Mosshell 6.67, Galewisp 7.44), camera occlusion fix, dialogue identity fix; Windows export leaves out tests/ralph/archive so the download fits under 2 GiB",
+      "when": "00:11 UTC Thu 12 Nov 2026"
+    },
+    {
+      "pr": "#911",
+      "what": "Batch 65: Abyssal Guardian matte hide ON (F36#30 5.22 -> 5.77, 3/3); knife-swing smoke flake confirmed by one re-run",
+      "when": "23:27 UTC Wed 11 Nov 2026"
+    },
+    {
+      "pr": "#910",
+      "what": "Batch 64: dialogue capture waits for the camera blend; Trail Camp (F38#32 6.91); Voltarach (F36#86 6.50) and Ribbonray (F36#61 6.90) coats",
+      "when": "22:10 UTC Wed 11 Nov 2026"
+    },
+    {
+      "pr": "#898",
+      "what": "Burrow Warrens walk_03 gets a reviewed open-ground capture stand showing the hillside, road and ridge (F38#24 +2.47, F38#30 +1.28, 3/3; capture tooling only)",
+      "when": "11 Nov 01:04"
+    },
+    {
+      "pr": "#897",
+      "what": "Stormwood fights: the giant Deepwood trees dither out of the fight camera like every other tree (Hollows Alpha +1.09, 3/3; F41#3 5.29 -> 5.89); Hall nave post retinted out of the red family (arch_home +0.24, 3/3)",
+      "when": "11 Nov 01:31"
+    },
+    {
+      "pr": "#896",
+      "what": "Meadows distant mountains: the Blender ridge ring replaces the faceted horizon (F38#24 stronghold approach 6.51 -> 7.26, 3/3; row 3.69 -> 5.11 with the Warrens foundation)",
+      "when": "10 Nov 23:30"
+    },
+    {
+      "pr": "#895",
+      "what": "Stormwood giant trunks get real matte bark instead of lilac plastic (F41#22 6.08 -> 6.96, F41#24 6.15 -> 7.08 on five stands, all 3/3; no judge reads it as red)",
+      "when": "11 Nov 00:03"
+    },
+    {
+      "pr": "#894",
+      "what": "Burrow Warrens: the floating black chamber drums are gone, closed under a grass foundation with collision (F38#30/F38#24 walk_03 +0.57, route_day +0.46, all 3/3)",
+      "when": "11 Nov 00:33"
+    },
+    {
+      "pr": "#893",
+      "what": "Heart Chamber plinths and tether box in chamber stone instead of the S-scroll railing sheet (F39#21 win 5.25 -> 7.06, +1.81; aftermath +1.47; F39#28 fight start +0.74; all 3/3)",
+      "when": "10 Nov 20:47"
+    },
+    {
+      "pr": "#892",
       "what": "Tidewake swim water: the pale straight-edged wedges (seabed regions seen through the sea) are gone because water is opaque past 1.5 m, and the water dims at night (T2 swim-across +0.85, swim-away +0.32, night +0.18; softer swimmer ring dropped after a shore regression)",
-      "when": "10 Nov, in CI"
+      "when": "10 Nov 20:07"
     },
     {
       "pr": "#891",
@@ -1918,8 +2202,8 @@
   "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
   "gpu_scores": {
     "F38#1": {
-      "gpu": 5.76,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 6.58,
+      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-npc-floor recheck, ghost-glow landed batch 27"
     },
     "F38#10": {
       "gpu": 6.58,
@@ -1946,12 +2230,12 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#16": {
-      "gpu": 6.75,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 6.32,
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#16 6.32"
     },
     "F38#17": {
-      "gpu": 7.34,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 6.97,
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#17 6.97"
     },
     "F38#18": {
       "gpu": 7.95,
@@ -1982,24 +2266,24 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#24": {
-      "gpu": 3.67,
-      "src": "GPU High 8-9 Nov (A)"
+      "gpu": 6.01,
+      "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51; stronghold 7.51)"
     },
     "F38#25": {
       "gpu": 6.23,
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#26": {
-      "gpu": 5.91,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 6.85,
+      "src": "G-floor2-creature-ruler-depth-r3: 5.44 -> 6.85 (3/3), landed #901"
     },
     "F38#27": {
-      "gpu": 5.89,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.84,
+      "src": "CLOSED 10 Nov: High 7.84, Medium 8.25 (G-f38-27-close, G-f38-27-close-medium on tb/item-scout-1108 038a46d59); the 5.89 entry was stale (spotted by LANE-FLOOR2)"
     },
     "F38#28": {
-      "gpu": 5.97,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 6.99,
+      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note)"
     },
     "F38#29": {
       "gpu": 6.05,
@@ -2010,16 +2294,16 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#30": {
-      "gpu": 4.0,
-      "src": "GPU High 8-9 Nov (A)"
+      "gpu": 6.02,
+      "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905"
     },
     "F38#31": {
-      "gpu": 5.85,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.2,
+      "src": "G-floor2-creature-ruler-depth-r3 (tb/item-scout-1108 3fe1c4396): 5.80 -> 7.20 (3/3), landed #901"
     },
     "F38#32": {
-      "gpu": 5.66,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 6.91,
+      "src": "G-floor2-camp-r2 (LANE-SCOUT ebb0ebcc3): Trail Camp declutter, one-faced sign, plain gate wood, bonfire stand fixed; 6.26 -> 6.91; LANDED on main 8df122a83 via #910"
     },
     "F38#33": {
       "gpu": 7.32,
@@ -2034,12 +2318,12 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#36": {
-      "gpu": 7.74,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 7.39,
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#36 7.39"
     },
     "F38#37": {
-      "gpu": 6.75,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 6.9,
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#37 6.9"
     },
     "F38#38": {
       "gpu": 8.16,
@@ -2054,8 +2338,8 @@
       "src": "GPU High 8-9 Nov (B)"
     },
     "F38#5": {
-      "gpu": 5.86,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 7.77,
+      "src": "CLOSED: High 7.77 (G-floor2-creature-ruler-depth-r3) + Medium 7.71 (G-floor2-creature-ruler-depth-r3-medium), landed #901"
     },
     "F38#6": {
       "gpu": 6.1,
@@ -2066,8 +2350,8 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#8": {
-      "gpu": 5.46,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.14,
+      "src": "G-newapproach-fly-grip (LANE-SCOUT, tb/item-scout-1108 88b1dc8ba): elbow bend plus trailing legs, base 6.26 -> 7.14 (+0.88, 3/3), landed #899. Close-out note: arms still straight up to the talons, no lean or swing."
     },
     "F38#9": {
       "gpu": 7.32,
@@ -2106,8 +2390,8 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#18": {
-      "gpu": 6.16,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.12,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
     },
     "F39#19": {
       "gpu": 6.85,
@@ -2122,8 +2406,8 @@
       "src": "GPU High 8-9 Nov (A)"
     },
     "F39#21": {
-      "gpu": 4.75,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.06,
+      "src": "GPU High 10 Nov (G-nerissa-plinth-stone win, landed #893)"
     },
     "F39#22": {
       "gpu": 6.19,
@@ -2142,20 +2426,20 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#26": {
-      "gpu": 6.01,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.94,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
     },
     "F39#27": {
-      "gpu": 6.57,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.16,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: grass defect FIXED; bare flat dunes now"
     },
     "F39#28": {
       "gpu": 7.33,
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#29": {
-      "gpu": 6.61,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.03,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
     },
     "F39#3": {
       "gpu": 6.1,
@@ -2170,8 +2454,8 @@
       "src": "GPU High 8-9 Nov (F-tidewake)"
     },
     "F39#6": {
-      "gpu": 7.18,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.46,
+      "src": "Faint fold landed #908: High 7.79 (G-floor2-aquaryn-faint-fold, 3/3, defect FIXED 3/3), Medium 7.46 (0.04 short). Forelimb flattening parked after two tries (needs an authored pose for the rig)."
     },
     "F39#7": {
       "gpu": 6.61,
@@ -2190,20 +2474,20 @@
       "src": "GPU High 8-9 Nov (F-cloudreach)"
     },
     "F40#10": {
-      "gpu": 6.74,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 6.77,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
     },
     "F40#11": {
-      "gpu": 5.5,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 6.97,
+      "src": "G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88): soft lit cloud sea, 6.17 -> 6.97 (3/3); landed #906 (with #904's cumulus cards). Near-bar: card colour fix next."
     },
     "F40#12": {
-      "gpu": 7.17,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 7.25,
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
     },
     "F40#13": {
-      "gpu": 6.19,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 7.62,
+      "src": "G-things-toys-ui High 7.62 and G-f40-13-catch-card-medium (LANE-SCOUT 6dfe45f55) Medium 7.76: CLOSED (landed #914)"
     },
     "F40#14": {
       "gpu": 6.99,
@@ -2230,60 +2514,60 @@
       "src": "GPU High 8-9 Nov (F-cloudreach)"
     },
     "F40#3": {
-      "gpu": 5.86,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 5.65,
+      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art"
     },
     "F40#4": {
       "gpu": 6.12,
       "src": "GPU High 8-9 Nov (F-cloudreach)"
     },
     "F40#5": {
-      "gpu": 5.94,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 7.06,
+      "src": "G-recheck-f40-5 (LANE-SCOUT, tb/item-scout-1108 d4e4bf712), one-sided on main e1c941cbd at High: fight dust no longer covers the exchange after #882; frame 1 still crops the boar and half-hides Sparkit behind the team HUD (2/3). Close-out candidate (25 Oct exception)."
     },
     "F40#6": {
-      "gpu": 5.1,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 6.33,
+      "src": "G-newapproach-cloud-sea-only: soft lit cloud sea, 5.61 -> 6.33 (3/3); landed #906. Remaining defect: mount upright over open cloud (refuse_drop, owner decision)."
     },
     "F40#7": {
       "gpu": 6.26,
       "src": "GPU High 8-9 Nov (F-cloudreach)"
     },
     "F40#8": {
-      "gpu": 5.85,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 6.77,
+      "src": "G-newapproach-bridge-view (tb/item-scout-1108 248db8b0a): 5.29 -> 6.77 (3/3), landed #901 (bridge landing tree cleared, stone waymark)"
     },
     "F40#9": {
-      "gpu": 5.72,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "gpu": 6.48,
+      "src": "G-newapproach-post-setting (tb/item-scout-1108 22102b6be): authored posts with today's camera, 5.32 -> 6.48 (3/3); landed #903"
     },
     "F41#1": {
-      "gpu": 5.78,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.81,
+      "src": "G-below6-stormheart-approach (LANE-SCOUT d3f616f1c), GPU High: new approach stand (road, trunk and gate) with the landed heartwood, 5.10 -> 6.81 (+1.71, 3/3); approach-only 2.80 -> 6.42; stand LANDED #916"
     },
     "F41#10": {
       "gpu": 6.02,
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#11": {
-      "gpu": 7.34,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.91,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: portrait identity"
     },
     "F41#12": {
       "gpu": 6.6,
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#13": {
-      "gpu": 5.59,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.66,
+      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed)"
     },
     "F41#14": {
       "gpu": 6.35,
       "src": "GPU High 8-9 Nov (B)"
     },
     "F41#15": {
-      "gpu": 5.71,
-      "src": "GPU High 8-9 Nov (A)"
+      "gpu": 4.49,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: foreground obstruction: Officer Nysa hidden behind a creature (PRESENT 3/3); Marrow's head bloom"
     },
     "F41#16": {
       "gpu": 6.28,
@@ -2302,20 +2586,20 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#2": {
-      "gpu": 6.1,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 5.97,
+      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#2 5.17 -> 5.97 (+0.80, 3/3); board was 6.10 from another batch"
     },
     "F41#20": {
-      "gpu": 6.99,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.41,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: dialogue reuse; Fenn and Oswin share one model"
     },
     "F41#21": {
-      "gpu": 5.78,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 7.13,
+      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): C.md victory_on, landed batch 25"
     },
     "F41#3": {
-      "gpu": 5.78,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.23,
+      "src": "G-recheck-f41-3 (LANE-SCOUT, tb/item-scout-1108 6422e1c4f), one-sided on main e1c941cbd: native Voltarach + giant-tree fade; spacing defect still PRESENT 3/3"
     },
     "F41#4": {
       "gpu": 6.37,
@@ -2330,16 +2614,212 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#7": {
-      "gpu": 7.23,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.24,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: named trainer identity; Marrow's head blown white"
     },
     "F41#8": {
-      "gpu": 5.31,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 5.8,
+      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#8 5.22 -> 5.80 (+0.58, 3/3) with distinct_bodies_1111"
     },
     "F41#9": {
-      "gpu": 5.86,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 6.81,
+      "src": "G-floor2-harvest-presence-confirm (tb/item-scout-1108 df24a8ab4): harvest nodes larger with satellite clusters, row 5.81 -> 6.81 (3/3); landed #905"
+    },
+    "F41#24": {
+      "gpu": 7.08,
+      "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, cleanliness brief, 5 stands; batch 49 #895)"
+    },
+    "F13#5": {
+      "gpu": 6.28,
+      "src": "GPU High 10 Nov (G-newapproach-t2-cleanup, mean of 3 swim views, landed #892)"
+    },
+    "F39#32": {
+      "gpu": 6.77,
+      "src": "GPU High baseline, 8 Nov frames (G-baselines-unscored-rows, provisional)"
+    },
+    "F40#21": {
+      "gpu": 6.68,
+      "src": "GPU High 10 Nov, matrix scope from the F40#0 capture (was 7.03 provisional on 8 Nov frames)"
+    },
+    "F22#4": {
+      "gpu": 7.2,
+      "src": "GPU High visual baseline, 8 Nov frames (G-baselines-unscored-rows; look only, criterion is C2/C3)"
+    },
+    "F41#22": {
+      "gpu": 6.96,
+      "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, 5 of 10 matrix stands; baseline 5.90 full row; batch 49 #895)"
+    },
+    "F38#0": {
+      "gpu": 6.6,
+      "src": "GPU High baseline 10 Nov, main 2ffc97db0, 268 frames day+golden (G-baseline F38#0 full row)"
+    },
+    "F40#0": {
+      "gpu": 6.54,
+      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads.; G-places-raintime (LANE-SCOUT): rain half of the matrix 5.04 -> 5.74 (+0.70, 12/12 sets 3/3), rain grade LANDED #915 (row not re-scored as a whole yet)"
+    },
+    "F40#19": {
+      "gpu": 6.66,
+      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-f40-19-mist sky-only, landed #885"
+    },
+    "F39#30": {
+      "gpu": 6.7,
+      "src": "G-floor2-dawn-haze-storm-grade (tb/item-scout-1108 5d0858f3b): row 6.12 -> 6.70 (3/3), rain FIXED; dawn band still present 2/3; landed #902"
+    },
+    "F39#31": {
+      "gpu": 6.02,
+      "src": "G-floor2-dawn-haze-storm-grade: Veilfall rain views 5.56 -> 6.02 (3/3); landed #902. Judges want new art (cliffs, mist at the fall, terraces)."
+    },
+    "F36#68": {
+      "gpu": 7.47,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Skyrill poses; 0.03 under the bar"
+    },
+    "F36#42": {
+      "gpu": 7.3,
+      "src": "G-things-faint arm High 7.51, Medium 7.30 (G-closeouts-solmane-cragclaw-wmm 4e4a4dbfd); not closed: face hidden under the shell; LANDED #914"
+    },
+    "F36#49": {
+      "gpu": 6.9,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Glimmermoth poses"
+    },
+    "F36#46": {
+      "gpu": 5.87,
+      "src": "G-things-faint base (fixed stage): Fulgocobra 5.87; faint arm level (-0.05); hood stays raised, near-black body sinks into stage"
+    },
+    "F36#85": {
+      "gpu": 6.33,
+      "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Veridian poses; contorted faint neck, tiny rider"
+    },
+    "F36#61": {
+      "gpu": 6.9,
+      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, LANDED on main 8df122a83 via #910: Ribbonray navy coat plus hit clip blend, 5.02 -> 6.90 (+1.88, 3/3)"
+    },
+    "F36#72": {
+      "gpu": 7.75,
+      "src": "CLOSED: High 7.68 + Medium 7.75 (G-f36-72-stormbrush-medium)"
+    },
+    "F36#91": {
+      "gpu": 6.51,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Water Cragclaw 5.43 (game clip) -> 6.51 (3/3)"
+    },
+    "F36#60": {
+      "gpu": 7.26,
+      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Reedwing poses"
+    },
+    "F36#38": {
+      "gpu": 7.07,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Cannonback 6.74 -> 7.07 (3/3)"
+    },
+    "F36#78": {
+      "gpu": 6.84,
+      "src": "G-rescore-tier2-batch-2 (LANE-SCOUT, tb/item-scout-1108 0756a82f3), one-sided on main 0058b0d6c at High: Tempestwing poses"
+    },
+    "F36#48": {
+      "gpu": 7.44,
+      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers; G-faint2-medium-galecarrier: Galewisp remake as flight carrier 6.17 -> 6.83 on the flight frames (+0.66, 3/3), landing in the final batch"
+    },
+    "F36#92": {
+      "gpu": 7.19,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: water mangrove monitor 6.84 -> 7.19 (3/3)"
+    },
+    "F36#50": {
+      "gpu": 6.98,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mangrove Monitor 6.51 -> 6.98 (3/3)"
+    },
+    "F36#88": {
+      "gpu": 6.32,
+      "src": "G-things-faint (2) game-clip base 6.32 (stage fix lands with THINGS-FAINT); matte arm level 0.00 (G-below6-abyssal-matte): material lever spent, remake needs Meshy"
+    },
+    "F36#93": {
+      "gpu": 7.39,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Water Mirejaw 6.37 (game clip) -> 7.39 (3/3)"
+    },
+    "F36#94": {
+      "gpu": 6.67,
+      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Water Mosshell 4.65 -> 6.67 (+2.02, 3/3); rider perched high on the dome"
+    },
+    "F36#30": {
+      "gpu": 6.56,
+      "src": "G-things-faint arm 6.56 (faint grounding, fixed stage); plus G-below6-abyssal-matte (LANE-SCOUT 44f5b38be) matte hide on main's stage 5.22 -> 5.77 (+0.55, 3/3), expected to stack; matte LANDED #911; faint LANDED #912"
+    },
+    "F36#86": {
+      "gpu": 6.5,
+      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, LANDED on main 8df122a83 via #910: Voltarach charcoal coat, 5.15 -> 6.50 (+1.35, 3/3); face still unreadable"
+    },
+    "F36#52": {
+      "gpu": 6.98,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler); G-below6-hits (LANE-SCOUT 65306ecd0): grounded hit 5.72 -> 6.32 on main's stage (+0.60, 3/3), LANDED #914"
+    },
+    "F36#69": {
+      "gpu": 8.04,
+      "src": "CLOSED: High 7.63 (G-things-t4-rescore) and Medium 8.04 (G-closeouts-solmane-cragclaw-wmm, LANE-SCOUT 4e4a4dbfd)"
+    },
+    "F36#58": {
+      "gpu": 7.65,
+      "src": "CLOSED: High 7.65 (G-things-faint2) and Medium 7.56 (G-faint2-medium-galecarrier, 5f1f5ee24); landed #915"
+    },
+    "F36#35": {
+      "gpu": 7.61,
+      "src": "CLOSED: High 7.61 (G-things-faint2) and Medium 7.56 (G-faint2-medium-galecarrier, 5f1f5ee24); landed #915"
+    },
+    "F36#75": {
+      "gpu": 7.22,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormtrail"
+    },
+    "F36#40": {
+      "gpu": 7.02,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Cliffspike"
+    },
+    "F36#36": {
+      "gpu": 6.9,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Brooktail"
+    },
+    "F36#33": {
+      "gpu": 6.9,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Ashtusk"
+    },
+    "F36#87": {
+      "gpu": 6.78,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Voltwig"
+    },
+    "F36#54": {
+      "gpu": 6.68,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Mosshock"
+    },
+    "F36#70": {
+      "gpu": 6.6,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Sparkit"
+    },
+    "F36#44": {
+      "gpu": 6.53,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Duskhush"
+    },
+    "F36#83": {
+      "gpu": 6.53,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Trailpup"
+    },
+    "F36#74": {
+      "gpu": 6.37,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormraven"
+    },
+    "F36#57": {
+      "gpu": 6.96,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: paddlenewt 6.47 -> 6.96 (3/3)"
+    },
+    "F36#62": {
+      "gpu": 6.85,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: riftfrill 6.43 -> 6.85 (3/3)"
+    },
+    "F36#66": {
+      "gpu": 6.09,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: shadelet 5.43 -> 6.09 (3/3)"
+    },
+    "F36#80": {
+      "gpu": 6.04,
+      "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, LANDED #912: Thundertunnel coat 4.63 -> 6.04 (+1.41, 3/3)"
+    },
+    "F36#29": {
+      "gpu": 7.03,
+      "src": "G-innkeeper-baseline (LANE-SCOUT 6dfe45f55), GPU High on main's shipped body: 7.03 (defect PARTIAL 2/3). The old 5.83 was an unshipped candidate. Near-bar: face texture, separated browns and a relaxed idle"
     }
   }
 }

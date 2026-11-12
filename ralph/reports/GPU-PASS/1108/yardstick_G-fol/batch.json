@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f04_6_r22:control": [
+   5.2,
+   5.0,
+   4.8
+  ],
+  "f04_6_r22:r22": [
+   6.0,
+   5.6,
+   5.7
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   4.6,
+   4.4
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.9,
+   3.9,
+   3.8
+  ],
+  "craft:after": [
+   6.0,
+   6.0,
+   6.2
+  ],
+  "craft:before": [
+   4.8,
+   4.6,
+   4.5
+  ]
+ },
+ "candidates": {
+  "G F41#3 live-vs-arm [G-fol_F41-3_arm.png]": [
+   5.4,
+   5.6,
+   5.9
+  ],
+  "G F41#3 live-vs-arm [G-fol_F41-3_live_for_arm.png]": [
+   5.3,
+   4.9,
+   4.9
+  ],
+  "G F41#8 live-vs-arm [G-fol_F41-8_arm.png]": [
+   5.3,
+   5.0,
+   5.0
+  ],
+  "G F41#8 live-vs-arm [G-fol_F41-8_live_for_arm.png]": [
+   5.3,
+   5.0,
+   5.0
+  ],
+  "G F41#5 live-vs-arm [G-fol_F41-5_live_for_arm.png]": [
+   5.4,
+   4.8,
+   5.2
+  ],
+  "G F41#5 live-vs-arm [G-fol_F41-5_arm.png]": [
+   5.4,
+   4.8,
+   5.2
+  ]
+ }
+}

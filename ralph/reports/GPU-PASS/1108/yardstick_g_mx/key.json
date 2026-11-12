@@ -1,0 +1,35 @@
+{
+ "Su": {
+  "anchor": false,
+  "label": "G F36(1) solmane Medium main",
+  "A": "G-mx_solmane.png",
+  "B": "G-mx_solmane.png"
+ },
+ "Fo": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Wy": {
+  "anchor": false,
+  "label": "G F36(1) water_mangrove_monitor allroles game-clip",
+  "A": "G-mx_wmm.png",
+  "B": "G-mx_wmm.png"
+ },
+ "Vr": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Pp": {
+  "anchor": false,
+  "label": "G F36(1) cragclaw Medium faint-arm",
+  "A": "G-mx_cragclaw.png",
+  "B": "G-mx_cragclaw.png"
+ },
+ "Is": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}

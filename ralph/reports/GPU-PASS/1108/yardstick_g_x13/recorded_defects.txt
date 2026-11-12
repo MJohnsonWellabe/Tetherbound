@@ -1,0 +1,5 @@
+Ku: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Yd: "Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated"
+La: none
+Ac: none
+Eg: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"

@@ -1,0 +1,92 @@
+[
+ {
+  "label": "G F39#18 dialogue recapture",
+  "a": "G-dt_F39-18.png",
+  "b": "G-dt_F39-18.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+  ]
+ },
+ {
+  "label": "G F39#26 dialogue recapture",
+  "a": "G-dt_F39-26.png",
+  "b": "G-dt_F39-26.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F39#29 dialogue recapture",
+  "a": "G-dt_F39-29.png",
+  "b": "G-dt_F39-29.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named conversations show no identifiable speaker near the dialogue panel"
+  ]
+ },
+ {
+  "label": "G tidewake dialogue sample 1 recapture",
+  "a": "G-dt_tidewake_s1.png",
+  "b": "G-dt_tidewake_s1.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named-character conversations (9 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G tidewake dialogue sample 2 recapture",
+  "a": "G-dt_tidewake_s2.png",
+  "b": "G-dt_tidewake_s2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named-character conversations (9 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G tidewake dialogue sample 3 recapture",
+  "a": "G-dt_tidewake_s3.png",
+  "b": "G-dt_tidewake_s3.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named-character conversations (9 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G tidewake dialogue sample 4 recapture",
+  "a": "G-dt_tidewake_s4.png",
+  "b": "G-dt_tidewake_s4.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named-character conversations (3 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#10 dialogue recapture",
+  "a": "G-dt_F40-10.png",
+  "b": "G-dt_F40-10.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue foreground composition. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F40#12 dialogue recapture",
+  "a": "G-dt_F40-12.png",
+  "b": "G-dt_F40-12.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+  ]
+ },
+ {
+  "label": "G cloudreach dialogue sample 1 recapture",
+  "a": "G-dt_cloudreach_s1.png",
+  "b": "G-dt_cloudreach_s1.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: named-character conversations (6 conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

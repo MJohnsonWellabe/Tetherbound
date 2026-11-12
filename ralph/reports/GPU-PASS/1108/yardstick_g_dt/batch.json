@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.6,
+   5.0,
+   5.2
+  ],
+  "craft:after": [
+   6.9,
+   6.9,
+   6.6
+  ],
+  "f36_0_npc:C1A": [
+   6.5,
+   7.0,
+   6.6
+  ],
+  "f36_0_npc:C1B": [
+   6.5,
+   7.0,
+   6.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.2,
+   5.1,
+   4.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.8,
+   4.5,
+   4.2
+  ]
+ },
+ "candidates": {
+  "G F39#18 dialogue recapture [G-dt_F39-18.png]": [
+   6.4,
+   6.6,
+   6.4
+  ],
+  "G F40#10 dialogue recapture [G-dt_F40-10.png]": [
+   6.2,
+   6.4,
+   6.0
+  ],
+  "G F39#26 dialogue recapture [G-dt_F39-26.png]": [
+   6.2,
+   6.4,
+   6.4
+  ],
+  "G tidewake dialogue sample 3 recapture [G-dt_tidewake_s3.png]": [
+   6.0,
+   6.2,
+   5.6
+  ],
+  "G tidewake dialogue sample 2 recapture [G-dt_tidewake_s2.png]": [
+   6.0,
+   6.3,
+   5.6
+  ],
+  "G tidewake dialogue sample 1 recapture [G-dt_tidewake_s1.png]": [
+   6.0,
+   6.2,
+   5.7
+  ],
+  "G F40#12 dialogue recapture [G-dt_F40-12.png]": [
+   6.5,
+   6.8,
+   6.4
+  ],
+  "G tidewake dialogue sample 4 recapture [G-dt_tidewake_s4.png]": [
+   6.1,
+   6.5,
+   5.9
+  ],
+  "G F39#29 dialogue recapture [G-dt_F39-29.png]": [
+   6.4,
+   6.6,
+   6.2
+  ],
+  "G cloudreach dialogue sample 1 recapture [G-dt_cloudreach_s1.png]": [
+   6.7,
+   6.9,
+   6.5
+  ]
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "F39-30-arm": [
+  "lesson-dawn",
+  "shore-rain",
+  "lesson-rain"
+ ],
+ "F39-30-veil": [
+  "veilfall-rain",
+  "veilfall-vista-rain"
+ ],
+ "F39-30-ctl": [
+  "shore-day",
+  "shore-golden"
+ ],
+ "F39-31": [
+  "veilfall-rain",
+  "veilfall-vista-rain"
+ ]
+}

@@ -1,0 +1,11 @@
+[
+ {
+  "label": "G F38#27 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f3827_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f3827_arm.png",
+  "brief": "Two interface screens from the game: the settings controls list (top) and the quick-item bindings list (bottom). Judge the interface: whether the control and binding text is easy to scan at a glance, the binding cells and key labels are easy to read, and it fits the game's UI direction.",
+  "defects": [
+   "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan"
+  ]
+ }
+]

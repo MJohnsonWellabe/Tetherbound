@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8655,
+  "least_squares_slope": 1.0967,
+  "method": "linear",
+  "slope": 1.0967,
+  "intercept": -0.0271,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.693,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.167,
+   "reference": 4.83,
+   "mapped": 5.639,
+   "residual": -0.809
+  },
+  "craft:after": {
+   "measured": 6.833,
+   "reference": 7.35,
+   "mapped": 7.467,
+   "residual": -0.117
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.8,
+   "reference": 7.53,
+   "mapped": 7.43,
+   "residual": 0.1
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.8,
+   "reference": 7.47,
+   "mapped": 7.43,
+   "residual": 0.04
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.733,
+   "reference": 6.53,
+   "mapped": 5.164,
+   "residual": 1.366
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.2,
+   "reference": 4.0,
+   "mapped": 4.579,
+   "residual": -0.579
+  }
+ },
+ "candidates": {
+  "G F38#32 camp-hero tb base-vs-arm [G-ch_tb_base.png]": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.59,
+   "mapped_judges": [
+    6.33,
+    6.88,
+    6.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#32 camp-hero tb base-vs-arm [G-ch_tb_arm.png]": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    5.68,
+    6.66,
+    6.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#32 camp-hero fire base-vs-arm [G-ch_fire_arm.png]": {
+   "measured_mean": 6.333,
+   "mapped_mean": 6.92,
+   "mapped_judges": [
+    6.77,
+    7.21,
+    6.77
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#32 camp-hero fire base-vs-arm [G-ch_fire_base.png]": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    4.91,
+    5.57,
+    5.24
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#32 camp-hero row base-vs-arm [G-ch_row_arm.png]": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.48,
+   "mapped_judges": [
+    6.22,
+    6.88,
+    6.33
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#32 camp-hero row base-vs-arm [G-ch_row_base.png]": {
+   "measured_mean": 5.467,
+   "mapped_mean": 5.97,
+   "mapped_judges": [
+    5.68,
+    6.22,
+    6.0
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

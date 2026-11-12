@@ -1,0 +1,146 @@
+{
+ "G F41#17 live one-sided": {
+  "A": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ]
+ },
+ "G F40#12 live one-sided": {
+  "A": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ]
+ },
+ "G F39#18 live-vs-arm": {
+  "A": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "FIXED"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "FIXED"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   }
+  ]
+ },
+ "G F38#28 live one-sided": {
+  "A": [
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#29 live-vs-arm": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#26 live-vs-arm": {
+  "A": [
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "FIXED"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "FIXED"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "FIXED"
+   }
+  ]
+ }
+}

@@ -1,0 +1,4 @@
+Sh: "oversaturated plastic-blue fur"; "bulk hides the trainer ruler"
+Mk: none
+Za: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Wv: none

@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "06-breakout.png",
+  "preset": "arm-Medium",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-f40-13-catch-card-medium/arm-Medium/06-breakout.png",
+  "sky_fraction": 0.093,
+  "lower_edges": 0.2142,
+  "script_errors": 0,
+  "note": "F40#13 close-out MEDIUM, arm only: tb/things 22ff3cd1f + THINGS-TOYS-UI/overlay_toys_ui.json (High 7.62)."
+ },
+ {
+  "frame": "07-aiming-weakened.png",
+  "preset": "arm-Medium",
+  "tree": "22ff3cd1f6330fe181b8c8ee6810ef465b4e32d5",
+  "tool": "phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+  "path": "G-f40-13-catch-card-medium/arm-Medium/07-aiming-weakened.png",
+  "sky_fraction": 0.119,
+  "lower_edges": 0.5717,
+  "script_errors": 0,
+  "note": "F40#13 close-out MEDIUM, arm only: tb/things 22ff3cd1f + THINGS-TOYS-UI/overlay_toys_ui.json (High 7.62)."
+ },
+ {
+  "frame": "14-innkeeper-front.png",
+  "preset": "main-High",
+  "tree": "4e35bfbd1b13a9d7ca9be48138e8bb6610bd0581",
+  "tool": "res://tools/_capture_character_cast.gd (no args)",
+  "path": "G-innkeeper-baseline/main-High/14-innkeeper-front.jpg",
+  "sky_fraction": 0.871,
+  "lower_edges": 0.0404,
+  "script_errors": 0,
+  "note": "F36#29 Innkeeper (Wilhelm) GPU High baseline, one side on main 4e35bfbd1 (#912), front + three-quarter on the cast stand. Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "14-innkeeper-threequarter.png",
+  "preset": "main-High",
+  "tree": "4e35bfbd1b13a9d7ca9be48138e8bb6610bd0581",
+  "tool": "res://tools/_capture_character_cast.gd (no args)",
+  "path": "G-innkeeper-baseline/main-High/14-innkeeper-threequarter.jpg",
+  "sky_fraction": 0.877,
+  "lower_edges": 0.0362,
+  "script_errors": 0,
+  "note": "F36#29 Innkeeper (Wilhelm) GPU High baseline, one side on main 4e35bfbd1 (#912), front + three-quarter on the cast stand. Neutral stage: sky heuristic bypassed after an eye check."
+ }
+]

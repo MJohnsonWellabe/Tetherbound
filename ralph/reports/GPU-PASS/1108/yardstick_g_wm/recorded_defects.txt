@@ -1,0 +1,5 @@
+Gu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Lj: none
+Qz: none
+Es: "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+Du: "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"

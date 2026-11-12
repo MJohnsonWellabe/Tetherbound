@@ -1,0 +1,69 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9272,
+  "least_squares_slope": 1.2888,
+  "method": "linear",
+  "slope": 1.2888,
+  "intercept": -1.2761,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.518,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.233,
+   "reference": 6.53,
+   "mapped": 5.469,
+   "residual": 1.061
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.467,
+   "reference": 4.0,
+   "mapped": 4.481,
+   "residual": -0.481
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.733,
+   "reference": 7.53,
+   "mapped": 7.402,
+   "residual": 0.128
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.8,
+   "reference": 7.47,
+   "mapped": 7.488,
+   "residual": -0.018
+  },
+  "craft:before": {
+   "measured": 5.0,
+   "reference": 4.83,
+   "mapped": 5.168,
+   "residual": -0.338
+  },
+  "craft:after": {
+   "measured": 6.967,
+   "reference": 7.35,
+   "mapped": 7.703,
+   "residual": -0.353
+  }
+ },
+ "candidates": {
+  "G F40#5 recheck main [G-rf5.png]": {
+   "measured_mean": 6.467,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    7.23,
+    6.97,
+    6.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

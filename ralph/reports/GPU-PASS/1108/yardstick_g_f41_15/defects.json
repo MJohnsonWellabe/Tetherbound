@@ -1,0 +1,146 @@
+{
+ "G F41#7 live-vs-armA": {
+  "A": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ]
+ },
+ "G F41#20 live-vs-armA": {
+  "A": [
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   }
+  ]
+ },
+ "G F41#15 live-vs-armB": {
+  "A": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   }
+  ]
+ },
+ "G F41#15 live-vs-armA": {
+  "A": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   }
+  ]
+ },
+ "G F39#29 live-vs-armA": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#7 live-vs-armB": {
+  "A": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ]
+ }
+}

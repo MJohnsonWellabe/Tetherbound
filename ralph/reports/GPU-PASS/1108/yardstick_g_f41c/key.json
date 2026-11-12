@@ -1,0 +1,53 @@
+{
+ "Xp": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ha": {
+  "anchor": false,
+  "label": "G F41#24 cleanliness stormheart+heart_near one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_stormheart_heart_near.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_stormheart_heart_near.png"
+ },
+ "Yt": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Oy": {
+  "anchor": false,
+  "label": "G F41#24 cleanliness giant+giant_r one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_giant_giant_r.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_giant_giant_r.png"
+ },
+ "Ab": {
+  "anchor": false,
+  "label": "G F41#24 cleanliness forest+forest_r one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_forest_forest_r.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_forest_forest_r.png"
+ },
+ "Va": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Pg": {
+  "anchor": false,
+  "label": "G F41#24 cleanliness glass+rod_line one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_glass_rod_line.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_glass_rod_line.png"
+ },
+ "Xr": {
+  "anchor": false,
+  "label": "G F41#24 cleanliness hollows+reverse one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_hollows_reverse.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_hollows_reverse.png"
+ },
+ "Zo": {
+  "anchor": false,
+  "label": "G F41#24 cleanliness hollows fight one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_fight.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f41m_fight.png"
+ }
+}

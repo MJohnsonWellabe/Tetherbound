@@ -1,0 +1,92 @@
+[
+ {
+  "label": "G F36(1) sparkit rescore main",
+  "a": "G-t4a_sparkit.png",
+  "b": "G-t4a_sparkit.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: sparkit - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "below the trainer's height",
+   "flat mustard material",
+   "faint tail passes through the trainer"
+  ]
+ },
+ {
+  "label": "G F36(1) riftfrill rescore main",
+  "a": "G-t4a_riftfrill.png",
+  "b": "G-t4a_riftfrill.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: riftfrill - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "glossy dark purple",
+   "back below the trainer's head"
+  ]
+ },
+ {
+  "label": "G F36(1) shadelet rescore main",
+  "a": "G-t4a_shadelet.png",
+  "b": "G-t4a_shadelet.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: shadelet - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black with no rim light",
+   "silhouette dissolves"
+  ]
+ },
+ {
+  "label": "G F36(1) pebbik rescore main",
+  "a": "G-t4a_pebbik.png",
+  "b": "G-t4a_pebbik.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: pebbik - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F36(1) mirejaw rescore main",
+  "a": "G-t4a_mirejaw.png",
+  "b": "G-t4a_mirejaw.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: mirejaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "low, at trainer height",
+   "body passes through the trainer in faint end",
+   "stretched dark bar on the tail"
+  ]
+ },
+ {
+  "label": "G F36(1) thundertunnel rescore main",
+  "a": "G-t4a_thundertunnel.png",
+  "b": "G-t4a_thundertunnel.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: thundertunnel - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F36(1) paddlenewt rescore main",
+  "a": "G-t4a_paddlenewt.png",
+  "b": "G-t4a_paddlenewt.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: paddlenewt - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "chest-high to the trainer",
+   "crest vanishes in faint",
+   "stray tail spike"
+  ]
+ },
+ {
+  "label": "G F36(1) mosshock rescore main",
+  "a": "G-t4a_mosshock.png",
+  "b": "G-t4a_mosshock.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: mosshock - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "neon-green camo pattern swallows face and form",
+   "about trainer height"
+  ]
+ },
+ {
+  "label": "G F36(1) brooktail rescore main",
+  "a": "G-t4a_brooktail.png",
+  "b": "G-t4a_brooktail.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: brooktail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "about trainer height"
+  ]
+ }
+]

@@ -1,0 +1,212 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.918,
+  "least_squares_slope": 1.4374,
+  "method": "linear",
+  "slope": 1.4374,
+  "intercept": -1.6568,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.457,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.4,
+   "reference": 7.35,
+   "mapped": 7.543,
+   "residual": -0.193
+  },
+  "craft:before": {
+   "measured": 4.767,
+   "reference": 4.83,
+   "mapped": 5.195,
+   "residual": -0.365
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.233,
+   "reference": 4.0,
+   "mapped": 4.428,
+   "residual": -0.428
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.1,
+   "reference": 6.53,
+   "mapped": 5.674,
+   "residual": 0.856
+  },
+  "f04_6_r22:control": {
+   "measured": 4.967,
+   "reference": 5.83,
+   "mapped": 5.482,
+   "residual": 0.348
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.0,
+   "reference": 6.75,
+   "mapped": 6.968,
+   "residual": -0.218
+  }
+ },
+ "candidates": {
+  "G F41#7 live-vs-armA [G-f41-15_F41-7_live_for_armA.png]": {
+   "measured_mean": 5.467,
+   "mapped_mean": 6.2,
+   "mapped_judges": [
+    6.25,
+    6.11,
+    6.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#7 live-vs-armA [G-f41-15_F41-7_armA.png]": {
+   "measured_mean": 5.4,
+   "mapped_mean": 6.11,
+   "mapped_judges": [
+    6.11,
+    5.96,
+    6.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#20 live-vs-armA [G-f41-15_F41-20_armA.png]": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.58,
+   "mapped_judges": [
+    6.39,
+    6.54,
+    6.82
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#20 live-vs-armA [G-f41-15_F41-20_live_for_armA.png]": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.63,
+   "mapped_judges": [
+    6.39,
+    6.54,
+    6.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#15 live-vs-armB [G-f41-15_F41-15_live_for_armB.png]": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.11,
+    6.11,
+    6.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#15 live-vs-armB [G-f41-15_F41-15_armB.png]": {
+   "measured_mean": 6.067,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    6.97,
+    6.97,
+    7.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#15 live-vs-armA [G-f41-15_F41-15_live_for_armA.png]": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.11,
+    6.11,
+    6.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#15 live-vs-armA [G-f41-15_F41-15_armA.png]": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.11,
+    6.11,
+    6.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#29 live-vs-armA [G-f41-15_F39-29_live_for_armA.png]": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.53,
+   "mapped_judges": [
+    5.24,
+    5.67,
+    5.67
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#29 live-vs-armA [G-f41-15_F39-29_armA.png]": {
+   "measured_mean": 5.2,
+   "mapped_mean": 5.82,
+   "mapped_judges": [
+    5.53,
+    5.82,
+    6.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#7 live-vs-armB [G-f41-15_F41-7_armB.png]": {
+   "measured_mean": 6.067,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    6.97,
+    6.97,
+    7.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#7 live-vs-armB [G-f41-15_F41-7_live_for_armB.png]": {
+   "measured_mean": 5.4,
+   "mapped_mean": 6.11,
+   "mapped_judges": [
+    6.11,
+    5.96,
+    6.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

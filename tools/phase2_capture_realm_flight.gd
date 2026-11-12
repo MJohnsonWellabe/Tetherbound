@@ -18,6 +18,7 @@ const STANDS := {
 var _biome := ""
 var _output := ""
 var _seed := 2042
+var _carrier := "galecrest"
 var _graphics_capture: Dictionary = {}
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
@@ -59,6 +60,10 @@ func _run() -> void:
 			_output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg.begins_with("--carrier="):
+			# LANE-THINGS, 12 Nov: every flight capture carried with Galecrest,
+			# so no frame ever showed the starter Galewisp's own carrier.
+			_carrier = arg.trim_prefix("--carrier=")
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/%s/" % _biome):
 		quit(1)
 		return
@@ -75,7 +80,7 @@ func _run() -> void:
 	game.progression.set_flag("fly_traversal_unlocked")
 	if _biome == "stormwood":
 		game.progression.set_flag("stormwood:canopy_flight_forbidden")
-	game.party.add(SPECIES.spawn("galecrest"))
+	game.party.add(SPECIES.spawn(_carrier))
 	_world = (load(SCENES[_biome]) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world

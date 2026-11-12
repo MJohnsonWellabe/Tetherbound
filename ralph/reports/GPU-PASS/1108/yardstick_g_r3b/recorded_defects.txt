@@ -1,0 +1,9 @@
+Wz: "thin and spindly"; "neck stays raised in the faint"
+Wq: "dark olive on grey"; "face lost in spines"; "wheel-shaped faint end"
+Hm: "faint poses do not collapse"; "rider perched"
+Qt: "chrome-gold statue shader"; "face lost"
+Gt: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Pz: none
+Ou: "faint poses the same as standing"
+Yv: "crimson gill frills near the reserved red"; "dark faint blob"
+Lh: none

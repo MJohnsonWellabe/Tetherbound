@@ -1,0 +1,368 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.911,
+  "least_squares_slope": 1.4035,
+  "method": "linear",
+  "slope": 1.4035,
+  "intercept": -1.7307,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.57,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.467,
+   "reference": 4.0,
+   "mapped": 4.538,
+   "residual": -0.538
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.067,
+   "reference": 6.53,
+   "mapped": 5.381,
+   "residual": 1.149
+  },
+  "craft:after": {
+   "measured": 6.3,
+   "reference": 7.35,
+   "mapped": 7.112,
+   "residual": 0.238
+  },
+  "craft:before": {
+   "measured": 5.0,
+   "reference": 4.83,
+   "mapped": 5.287,
+   "residual": -0.457
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.7,
+   "reference": 7.47,
+   "mapped": 7.673,
+   "residual": -0.203
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.733,
+   "reference": 7.53,
+   "mapped": 7.72,
+   "residual": -0.19
+  }
+ },
+ "candidates": {
+  "G F40#0 overlook night rain base-vs-arm [G-rt_overlook_night_base.png]": {
+   "measured_mean": 4.3,
+   "mapped_mean": 4.3,
+   "mapped_judges": [
+    4.3,
+    3.88,
+    4.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 overlook night rain base-vs-arm [G-rt_overlook_night_arm.png]": {
+   "measured_mean": 4.867,
+   "mapped_mean": 5.1,
+   "mapped_judges": [
+    5.01,
+    4.73,
+    5.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 overlook day rain base-vs-arm [G-rt_overlook_day_arm.png]": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.01,
+   "mapped_judges": [
+    4.73,
+    5.01,
+    5.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 overlook day rain base-vs-arm [G-rt_overlook_day_base.png]": {
+   "measured_mean": 4.7,
+   "mapped_mean": 4.87,
+   "mapped_judges": [
+    4.59,
+    4.87,
+    5.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit golden rain base-vs-arm [G-rt_summit_golden_arm.png]": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.22,
+   "mapped_judges": [
+    6.13,
+    6.13,
+    6.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit golden rain base-vs-arm [G-rt_summit_golden_base.png]": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.33,
+   "mapped_judges": [
+    5.29,
+    5.15,
+    5.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit day rain base-vs-arm [G-rt_summit_day_base.png]": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.85,
+   "mapped_judges": [
+    5.85,
+    5.71,
+    5.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit day rain base-vs-arm [G-rt_summit_day_arm.png]": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.04,
+   "mapped_judges": [
+    5.99,
+    5.99,
+    6.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate night rain base-vs-arm [G-rt_gate_night_base.png]": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.01,
+   "mapped_judges": [
+    5.29,
+    4.73,
+    5.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate night rain base-vs-arm [G-rt_gate_night_arm.png]": {
+   "measured_mean": 5.467,
+   "mapped_mean": 5.94,
+   "mapped_judges": [
+    6.13,
+    5.57,
+    6.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate dawn rain base-vs-arm [G-rt_gate_dawn_base.png]": {
+   "measured_mean": 4.9,
+   "mapped_mean": 5.15,
+   "mapped_judges": [
+    5.29,
+    4.87,
+    5.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate dawn rain base-vs-arm [G-rt_gate_dawn_arm.png]": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.9,
+   "mapped_judges": [
+    5.99,
+    5.71,
+    5.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 overlook dawn rain base-vs-arm [G-rt_overlook_dawn_base.png]": {
+   "measured_mean": 4.4,
+   "mapped_mean": 4.44,
+   "mapped_judges": [
+    4.44,
+    4.16,
+    4.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 overlook dawn rain base-vs-arm [G-rt_overlook_dawn_arm.png]": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.05,
+   "mapped_judges": [
+    5.01,
+    4.73,
+    5.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit night rain base-vs-arm [G-rt_summit_night_base.png]": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.05,
+   "mapped_judges": [
+    5.29,
+    4.73,
+    5.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit night rain base-vs-arm [G-rt_summit_night_arm.png]": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.55,
+   "mapped_judges": [
+    6.55,
+    6.41,
+    6.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate golden rain base-vs-arm [G-rt_gate_golden_arm.png]": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.04,
+   "mapped_judges": [
+    6.13,
+    5.85,
+    6.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate golden rain base-vs-arm [G-rt_gate_golden_base.png]": {
+   "measured_mean": 4.967,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    5.29,
+    5.01,
+    5.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 overlook golden rain base-vs-arm [G-rt_overlook_golden_base.png]": {
+   "measured_mean": 4.433,
+   "mapped_mean": 4.49,
+   "mapped_judges": [
+    4.44,
+    4.16,
+    4.87
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 overlook golden rain base-vs-arm [G-rt_overlook_golden_arm.png]": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.29,
+   "mapped_judges": [
+    5.15,
+    5.15,
+    5.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate day rain base-vs-arm [G-rt_gate_day_arm.png]": {
+   "measured_mean": 5.3,
+   "mapped_mean": 5.71,
+   "mapped_judges": [
+    5.85,
+    5.29,
+    5.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate day rain base-vs-arm [G-rt_gate_day_base.png]": {
+   "measured_mean": 5.1,
+   "mapped_mean": 5.43,
+   "mapped_judges": [
+    5.57,
+    5.01,
+    5.71
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit dawn rain base-vs-arm [G-rt_summit_dawn_arm.png]": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.04,
+   "mapped_judges": [
+    6.13,
+    5.85,
+    6.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit dawn rain base-vs-arm [G-rt_summit_dawn_base.png]": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.29,
+   "mapped_judges": [
+    5.29,
+    5.29,
+    5.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

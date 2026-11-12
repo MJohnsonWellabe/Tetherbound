@@ -1,0 +1,46 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.4,
+   4.4,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.1,
+   5.2,
+   5.5
+  ],
+  "f04_6_r22:r22": [
+   5.8,
+   5.6,
+   6.4
+  ],
+  "f04_6_r22:control": [
+   4.9,
+   4.8,
+   5.6
+  ],
+  "craft:after": [
+   6.6,
+   6.0,
+   6.9
+  ],
+  "craft:before": [
+   5.1,
+   4.6,
+   5.2
+  ]
+ },
+ "candidates": {
+  "G F39#21 live one-sided": [
+   4.3,
+   4.6,
+   4.3
+  ],
+  "G F41#13 live one-sided": [
+   4.95,
+   4.7,
+   4.8
+  ]
+ }
+}

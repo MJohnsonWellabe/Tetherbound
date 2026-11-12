@@ -1,0 +1,251 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8652,
+  "least_squares_slope": 1.292,
+  "method": "linear",
+  "slope": 1.292,
+  "intercept": -1.4756,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.578,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.267,
+   "reference": 4.83,
+   "mapped": 5.329,
+   "residual": -0.499
+  },
+  "craft:after": {
+   "measured": 6.867,
+   "reference": 7.35,
+   "mapped": 7.396,
+   "residual": -0.046
+  },
+  "f04_6_r22:control": {
+   "measured": 5.6,
+   "reference": 5.83,
+   "mapped": 5.76,
+   "residual": 0.07
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.533,
+   "reference": 6.75,
+   "mapped": 6.966,
+   "residual": -0.216
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.267,
+   "reference": 6.53,
+   "mapped": 5.329,
+   "residual": 1.201
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.633,
+   "reference": 4.0,
+   "mapped": 4.511,
+   "residual": -0.511
+  }
+ },
+ "candidates": {
+  "GPU1108F F38#1 live one-sided": {
+   "measured_mean": 5.6,
+   "mapped_mean": 5.76,
+   "mapped_judges": [
+    5.5,
+    5.76,
+    6.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#28 live one-sided": {
+   "measured_mean": 5.767,
+   "mapped_mean": 5.97,
+   "mapped_judges": [
+    6.02,
+    6.28,
+    5.63
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#3 live one-sided": {
+   "measured_mean": 6.167,
+   "mapped_mean": 6.49,
+   "mapped_judges": [
+    6.28,
+    6.53,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#22 live one-sided": {
+   "measured_mean": 5.867,
+   "mapped_mean": 6.1,
+   "mapped_judges": [
+    6.15,
+    6.02,
+    6.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#14 live one-sided": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.06,
+   "mapped_judges": [
+    5.76,
+    6.15,
+    6.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#10 live one-sided": {
+   "measured_mean": 6.233,
+   "mapped_mean": 6.58,
+   "mapped_judges": [
+    6.28,
+    6.66,
+    6.79
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#20 live one-sided": {
+   "measured_mean": 5.8,
+   "mapped_mean": 6.02,
+   "mapped_judges": [
+    5.76,
+    6.28,
+    6.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#8 live one-sided": {
+   "measured_mean": 5.367,
+   "mapped_mean": 5.46,
+   "mapped_judges": [
+    4.98,
+    5.63,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#6 live one-sided": {
+   "measured_mean": 5.867,
+   "mapped_mean": 6.1,
+   "mapped_judges": [
+    5.76,
+    6.28,
+    6.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#37 live one-sided": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.75,
+   "mapped_judges": [
+    6.79,
+    6.79,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#12 live one-sided": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.06,
+   "mapped_judges": [
+    6.02,
+    6.02,
+    6.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#34 live one-sided": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.75,
+   "mapped_judges": [
+    6.66,
+    6.79,
+    6.79
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#31 live one-sided": {
+   "measured_mean": 5.667,
+   "mapped_mean": 5.85,
+   "mapped_judges": [
+    5.63,
+    5.89,
+    6.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#25 live one-sided": {
+   "measured_mean": 5.967,
+   "mapped_mean": 6.23,
+   "mapped_judges": [
+    6.15,
+    6.28,
+    6.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "GPU1108F F38#16 live one-sided": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.75,
+   "mapped_judges": [
+    6.92,
+    6.66,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

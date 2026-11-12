@@ -1,0 +1,98 @@
+{
+ "G F41#11 live-vs-arm": {
+  "A": [
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   },
+   {
+    "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+   }
+  ]
+ },
+ "G F41#17 live-vs-arm": {
+  "A": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#8 live-vs-arm": {
+  "A": [
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PARTIAL"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PARTIAL"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PARTIAL"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PARTIAL"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#20 live-vs-arm": {
+  "A": [
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   },
+   {
+    "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+   }
+  ]
+ }
+}

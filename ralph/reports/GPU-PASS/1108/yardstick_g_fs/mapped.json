@@ -1,0 +1,215 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.856,
+  "least_squares_slope": 1.1967,
+  "method": "linear",
+  "slope": 1.1967,
+  "intercept": -0.4675,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.596,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.0,
+   "reference": 4.83,
+   "mapped": 5.516,
+   "residual": -0.686
+  },
+  "craft:after": {
+   "measured": 6.8,
+   "reference": 7.35,
+   "mapped": 7.67,
+   "residual": -0.32
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.933,
+   "reference": 6.53,
+   "mapped": 5.436,
+   "residual": 1.094
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.167,
+   "reference": 4.0,
+   "mapped": 4.519,
+   "residual": -0.519
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.833,
+   "reference": 6.75,
+   "mapped": 6.513,
+   "residual": 0.237
+  },
+  "f04_6_r22:control": {
+   "measured": 5.1,
+   "reference": 5.83,
+   "mapped": 5.636,
+   "residual": 0.194
+  }
+ },
+ "candidates": {
+  "G warrens route_day base-vs-arm [G-fs_rd_base.png]": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.23,
+   "mapped_judges": [
+    6.23,
+    6.23,
+    6.23
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G warrens route_day base-vs-arm [G-fs_rd_arm.png]": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.03,
+   "mapped_judges": [
+    6.11,
+    5.99,
+    5.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_03_day base-vs-arm [G-fs_walk_03_day_arm.png]": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.63,
+   "mapped_judges": [
+    6.47,
+    7.07,
+    6.35
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_03_day base-vs-arm [G-fs_walk_03_day_base.png]": {
+   "measured_mean": 3.867,
+   "mapped_mean": 4.16,
+   "mapped_judges": [
+    4.08,
+    4.8,
+    3.6
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_02_day base-vs-arm [G-fs_walk_02_day_base.png]": {
+   "measured_mean": 3.633,
+   "mapped_mean": 3.88,
+   "mapped_judges": [
+    3.72,
+    4.8,
+    3.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 walk_02_day base-vs-arm [G-fs_walk_02_day_arm.png]": {
+   "measured_mean": 3.633,
+   "mapped_mean": 3.88,
+   "mapped_judges": [
+    3.72,
+    4.8,
+    3.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_03_day base-vs-arm [G-fs_walk_03_day_base.png]": {
+   "measured_mean": 3.933,
+   "mapped_mean": 4.24,
+   "mapped_judges": [
+    4.32,
+    4.92,
+    3.48
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_03_day base-vs-arm [G-fs_walk_03_day_arm.png]": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.52,
+   "mapped_judges": [
+    5.76,
+    5.76,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_02_day base-vs-arm [G-fs_walk_02_day_arm.png]": {
+   "measured_mean": 4.767,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    5.04,
+    5.64,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#30 walk_02_day base-vs-arm [G-fs_walk_02_day_base.png]": {
+   "measured_mean": 4.767,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    5.04,
+    5.64,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#24 stronghold route_day control base-vs-arm [G-fs_sh_arm.png]": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.51,
+   "mapped_judges": [
+    7.43,
+    7.43,
+    7.67
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "G F38#24 stronghold route_day control base-vs-arm [G-fs_sh_base.png]": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.51,
+   "mapped_judges": [
+    7.43,
+    7.43,
+    7.67
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.35): G F38#24 stronghold route_day control base-vs-arm [G-fs_sh_arm.png], G F38#24 stronghold route_day control base-vs-arm [G-fs_sh_base.png]; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch",
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}

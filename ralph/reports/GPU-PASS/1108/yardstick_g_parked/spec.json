@@ -1,0 +1,101 @@
+[
+ {
+  "label": "G F39#16 live-vs-arm",
+  "a": "<scratch>/G-parked_F39-16_live_for_arm.png",
+  "b": "<scratch>/G-parked_F39-16_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: live current streaks. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
+  ]
+ },
+ {
+  "label": "G F39#17 live-vs-arm",
+  "a": "<scratch>/G-parked_F39-17_live_for_arm.png",
+  "b": "<scratch>/G-parked_F39-17_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: current restoration environment. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"
+  ]
+ },
+ {
+  "label": "G F40#2 live-vs-arm",
+  "a": "<scratch>/G-parked_F40-2_live_for_arm.png",
+  "b": "<scratch>/G-parked_F40-2_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: summit aviary. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark"
+  ]
+ },
+ {
+  "label": "G F41#10 live-vs-arm",
+  "a": "<scratch>/G-parked_F41-10_live_for_arm.png",
+  "b": "<scratch>/G-parked_F41-10_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Glass Sink landmark. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+  ]
+ },
+ {
+  "label": "G F41#13 live-vs-arm",
+  "a": "<scratch>/G-parked_F41-13_live_for_arm.png",
+  "b": "<scratch>/G-parked_F41-13_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: electric creature finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ },
+ {
+  "label": "G F41#13 live-vs-armGlow",
+  "a": "<scratch>/G-parked_F41-13_live_for_armGlow.png",
+  "b": "<scratch>/G-parked_F41-13_armGlow.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: electric creature finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ },
+ {
+  "label": "G F41#2 live-vs-arm",
+  "a": "<scratch>/G-parked_F41-2_live_for_arm.png",
+  "b": "<scratch>/G-parked_F41-2_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Surge phase presentation. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain"
+  ]
+ },
+ {
+  "label": "G F41#3 live-vs-arm",
+  "a": "<scratch>/G-parked_F41-3_live_for_arm.png",
+  "b": "<scratch>/G-parked_F41-3_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ]
+ },
+ {
+  "label": "G F41#3 live-vs-armTone",
+  "a": "<scratch>/G-parked_F41-3_live_for_armTone.png",
+  "b": "<scratch>/G-parked_F41-3_armTone.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ]
+ },
+ {
+  "label": "G F41#6 live-vs-arm",
+  "a": "<scratch>/G-parked_F41-6_live_for_arm.png",
+  "b": "<scratch>/G-parked_F41-6_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild danger and opening cues. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals"
+  ]
+ },
+ {
+  "label": "G F41#6 live-vs-armTone",
+  "a": "<scratch>/G-parked_F41-6_live_for_armTone.png",
+  "b": "<scratch>/G-parked_F41-6_armTone.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild danger and opening cues. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals"
+  ]
+ }
+]

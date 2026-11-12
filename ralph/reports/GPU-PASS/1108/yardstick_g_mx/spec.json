@@ -1,0 +1,32 @@
+[
+ {
+  "label": "G F36(1) solmane Medium main",
+  "a": "G-mx_solmane.png",
+  "b": "G-mx_solmane.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: solmane - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F36(1) cragclaw Medium faint-arm",
+  "a": "G-mx_cragclaw.png",
+  "b": "G-mx_cragclaw.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: cragclaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "faint pose the same as standing",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) water_mangrove_monitor allroles game-clip",
+  "a": "G-mx_wmm.png",
+  "b": "G-mx_wmm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, swim; faint mid, faint late, faint end). Catalogue subject: water mangrove monitor - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "dark olive on grey",
+   "face lost in spines",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ }
+]

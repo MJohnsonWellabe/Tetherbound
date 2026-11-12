@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F41#3 live-vs-arm",
+  "a": "<scratch>/G-rim2_F41-3_live_for_arm.png",
+  "b": "<scratch>/G-rim2_F41-3_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ]
+ },
+ {
+  "label": "G F41#3 live-vs-armTone",
+  "a": "<scratch>/G-rim2_F41-3_live_for_armTone.png",
+  "b": "<scratch>/G-rim2_F41-3_armTone.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ]
+ }
+]

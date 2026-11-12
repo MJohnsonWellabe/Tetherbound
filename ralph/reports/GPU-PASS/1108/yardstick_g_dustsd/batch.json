@@ -1,0 +1,136 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.2,
+   5.3,
+   5.6
+  ],
+  "craft:after": [
+   6.6,
+   7.0,
+   7.0
+  ],
+  "f04_6_r22:r22": [
+   6.0,
+   6.3,
+   6.4
+  ],
+  "f04_6_r22:control": [
+   5.3,
+   5.6,
+   5.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   5.4,
+   4.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.0,
+   4.6,
+   4.3
+  ]
+ },
+ "candidates": {
+  "G F38#3 dust r1 live-vs-arm [G-dustsd_F38-3 dust r1_arm.png]": [
+   6.5,
+   6.1,
+   6.2
+  ],
+  "G F38#3 dust r1 live-vs-arm [G-dustsd_F38-3 dust r1_live_for_arm.png]": [
+   6.0,
+   5.8,
+   5.8
+  ],
+  "G F41#3 dust r2 live-vs-arm [G-dustsd_F41-3 dust r2_arm.png]": [
+   5.6,
+   5.6,
+   5.6
+  ],
+  "G F41#3 dust r2 live-vs-arm [G-dustsd_F41-3 dust r2_live_for_arm.png]": [
+   5.5,
+   5.5,
+   5.3
+  ],
+  "G F38#3 dust r2 live-vs-arm [G-dustsd_F38-3 dust r2_arm.png]": [
+   6.4,
+   6.1,
+   6.2
+  ],
+  "G F38#3 dust r2 live-vs-arm [G-dustsd_F38-3 dust r2_live_for_arm.png]": [
+   6.2,
+   5.9,
+   5.8
+  ],
+  "G F38#3 sd r2 live-vs-arm [G-dustsd_F38-3 sd r2_arm.png]": [
+   5.7,
+   5.6,
+   5.4
+  ],
+  "G F38#3 sd r2 live-vs-arm [G-dustsd_F38-3 sd r2_live_for_arm.png]": [
+   6.2,
+   5.9,
+   5.9
+  ],
+  "G F38#11 sd r2 live-vs-arm [G-dustsd_F38-11 sd r2_arm.png]": [
+   5.9,
+   5.8,
+   5.6
+  ],
+  "G F38#11 sd r2 live-vs-arm [G-dustsd_F38-11 sd r2_live_for_arm.png]": [
+   6.3,
+   5.9,
+   6.0
+  ],
+  "G F38#11 dust r1 live-vs-arm [G-dustsd_F38-11 dust r1_live_for_arm.png]": [
+   6.0,
+   5.9,
+   5.8
+  ],
+  "G F38#11 dust r1 live-vs-arm [G-dustsd_F38-11 dust r1_arm.png]": [
+   6.4,
+   6.1,
+   6.0
+  ],
+  "G F38#11 dust r2 live-vs-arm [G-dustsd_F38-11 dust r2_arm.png]": [
+   6.2,
+   6.1,
+   6.0
+  ],
+  "G F38#11 dust r2 live-vs-arm [G-dustsd_F38-11 dust r2_live_for_arm.png]": [
+   6.3,
+   5.9,
+   6.0
+  ],
+  "G F38#11 sd r1 live-vs-arm [G-dustsd_F38-11 sd r1_arm.png]": [
+   5.0,
+   5.3,
+   4.8
+  ],
+  "G F38#11 sd r1 live-vs-arm [G-dustsd_F38-11 sd r1_live_for_arm.png]": [
+   5.9,
+   5.9,
+   5.9
+  ],
+  "G F41#3 dust r1 live-vs-arm [G-dustsd_F41-3 dust r1_live_for_arm.png]": [
+   5.6,
+   5.5,
+   5.4
+  ],
+  "G F41#3 dust r1 live-vs-arm [G-dustsd_F41-3 dust r1_arm.png]": [
+   5.5,
+   5.5,
+   5.4
+  ],
+  "G F38#3 sd r1 live-vs-arm [G-dustsd_F38-3 sd r1_arm.png]": [
+   5.0,
+   5.2,
+   4.8
+  ],
+  "G F38#3 sd r1 live-vs-arm [G-dustsd_F38-3 sd r1_live_for_arm.png]": [
+   6.1,
+   5.9,
+   5.9
+  ]
+ }
+}

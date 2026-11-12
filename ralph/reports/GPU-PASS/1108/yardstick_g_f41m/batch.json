@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.3,
+   4.5,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.9,
+   5.1,
+   5.2
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.6,
+   7.1
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   6.6,
+   7.1
+  ],
+  "craft:before": [
+   5.4,
+   5.0,
+   5.0
+  ],
+  "craft:after": [
+   6.7,
+   6.6,
+   6.7
+  ]
+ },
+ "candidates": {
+  "G F41#22 matrix stormheart+heart_near one-sided": [
+   6.2,
+   6.4,
+   6.3
+  ],
+  "G F41#22 matrix hollows+reverse one-sided": [
+   5.2,
+   5.2,
+   5.4
+  ],
+  "G F41#22 matrix forest+forest_r one-sided": [
+   5.4,
+   5.3,
+   5.3
+  ],
+  "G F41#22 matrix hollows fight one-sided": [
+   5.6,
+   5.4,
+   5.3
+  ],
+  "G F41#22 matrix giant+giant_r one-sided": [
+   4.7,
+   4.6,
+   4.8
+  ],
+  "G F41#22 matrix glass+rod_line one-sided": [
+   6.1,
+   6.2,
+   6.2
+  ]
+ }
+}

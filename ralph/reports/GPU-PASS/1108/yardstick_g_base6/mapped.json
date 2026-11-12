@@ -1,0 +1,121 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8839,
+  "least_squares_slope": 1.1831,
+  "method": "linear",
+  "slope": 1.1831,
+  "intercept": -0.6096,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.647,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.933,
+   "reference": 6.53,
+   "mapped": 5.227,
+   "residual": 1.303
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.367,
+   "reference": 4.0,
+   "mapped": 4.556,
+   "residual": -0.556
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.8,
+   "reference": 7.47,
+   "mapped": 7.435,
+   "residual": 0.035
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.8,
+   "reference": 7.53,
+   "mapped": 7.435,
+   "residual": 0.095
+  },
+  "craft:before": {
+   "measured": 5.167,
+   "reference": 4.83,
+   "mapped": 5.503,
+   "residual": -0.673
+  },
+  "craft:after": {
+   "measured": 6.9,
+   "reference": 7.35,
+   "mapped": 7.554,
+   "residual": -0.204
+  }
+ },
+ "candidates": {
+  "G F22#4 named fights one-sided": {
+   "measured_mean": 6.6,
+   "mapped_mean": 7.2,
+   "mapped_judges": [
+    6.96,
+    7.44,
+    7.2
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#32 tidewake sheet 2 one-sided": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.84,
+   "mapped_judges": [
+    6.73,
+    6.84,
+    6.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#21 cloudreach sheet 1 one-sided": {
+   "measured_mean": 6.433,
+   "mapped_mean": 7.0,
+   "mapped_judges": [
+    7.08,
+    7.2,
+    6.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#21 cloudreach sheet 2 one-sided": {
+   "measured_mean": 6.483,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    6.84,
+    7.14,
+    7.2
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#32 tidewake sheet 1 one-sided": {
+   "measured_mean": 6.167,
+   "mapped_mean": 6.69,
+   "mapped_judges": [
+    6.73,
+    6.84,
+    6.49
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

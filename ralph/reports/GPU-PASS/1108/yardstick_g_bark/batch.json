@@ -1,0 +1,116 @@
+{
+ "anchors": {
+  "craft:after": [
+   6.6,
+   6.2,
+   6.6
+  ],
+  "craft:before": [
+   5.2,
+   5.0,
+   5.2
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.8,
+   4.5,
+   5.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.2,
+   5.0,
+   5.7
+  ],
+  "f36_0_npc:C1B": [
+   6.9,
+   6.6,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.9,
+   6.6,
+   6.8
+  ]
+ },
+ "candidates": {
+  "G F41#4 High live-vs-arm [G-bark_High_F41-4_live.png]": [
+   5.6,
+   5.2,
+   5.4
+  ],
+  "G F41#4 High live-vs-arm [G-bark_High_F41-4_arm.png]": [
+   5.8,
+   5.6,
+   5.8
+  ],
+  "G F41#5 High live-vs-arm [G-bark_High_F41-5_live.png]": [
+   5.4,
+   5.0,
+   5.6
+  ],
+  "G F41#5 High live-vs-arm [G-bark_High_F41-5_arm.png]": [
+   5.7,
+   5.4,
+   5.9
+  ],
+  "G F41#4 Medium live-vs-arm [G-bark_Medium_F41-4_live.png]": [
+   5.6,
+   5.2,
+   5.4
+  ],
+  "G F41#4 Medium live-vs-arm [G-bark_Medium_F41-4_arm.png]": [
+   5.8,
+   5.6,
+   5.8
+  ],
+  "G F41#5 Medium live-vs-arm [G-bark_Medium_F41-5_live.png]": [
+   5.4,
+   5.0,
+   5.6
+  ],
+  "G F41#5 Medium live-vs-arm [G-bark_Medium_F41-5_arm.png]": [
+   5.7,
+   5.4,
+   5.9
+  ],
+  "G F41#12 High live-vs-arm [G-bark_High_F41-12_live.png]": [
+   5.8,
+   5.2,
+   5.6
+  ],
+  "G F41#12 High live-vs-arm [G-bark_High_F41-12_arm.png]": [
+   5.9,
+   5.5,
+   5.8
+  ],
+  "G F41#12 Medium live-vs-arm [G-bark_Medium_F41-12_arm.png]": [
+   5.9,
+   5.5,
+   5.8
+  ],
+  "G F41#12 Medium live-vs-arm [G-bark_Medium_F41-12_live.png]": [
+   5.8,
+   5.2,
+   5.6
+  ],
+  "G F41#17 Medium live-vs-arm [G-bark_Medium_F41-17_arm.png]": [
+   6.0,
+   5.8,
+   6.2
+  ],
+  "G F41#17 Medium live-vs-arm [G-bark_Medium_F41-17_live.png]": [
+   5.4,
+   4.9,
+   5.4
+  ],
+  "G F41#17 High live-vs-arm [G-bark_High_F41-17_live.png]": [
+   5.4,
+   4.9,
+   5.4
+  ],
+  "G F41#17 High live-vs-arm [G-bark_High_F41-17_arm.png]": [
+   6.0,
+   5.8,
+   6.2
+  ]
+ }
+}

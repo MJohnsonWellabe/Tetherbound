@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F40#13 catch_card Medium arm",
+  "a": "G-ikm_F40-13.png",
+  "b": "G-ikm_F40-13.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: catch chance feedback timing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar"
+  ]
+ },
+ {
+  "label": "G F36#29 innkeeper High main",
+  "a": "G-ikm_F36-29.png",
+  "b": "G-ikm_F36-29.png",
+  "brief": "One named villager on a neutral stand, front and three-quarter views; the character is 1.78 m, beside a 1.80 m trainer scale. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+  "defects": [
+   "Soft flat face with low-resolution eyes and mouth, blotchy chalky skin, muddy low-contrast materials and a stiff pose"
+  ]
+ }
+]

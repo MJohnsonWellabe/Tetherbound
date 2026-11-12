@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7978,
+  "least_squares_slope": 1.1558,
+  "method": "linear",
+  "slope": 1.1558,
+  "intercept": -0.4753,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.695,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.467,
+   "reference": 4.83,
+   "mapped": 5.843,
+   "residual": -1.013
+  },
+  "craft:after": {
+   "measured": 6.767,
+   "reference": 7.35,
+   "mapped": 7.346,
+   "residual": 0.004
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.967,
+   "reference": 6.53,
+   "mapped": 5.265,
+   "residual": 1.265
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.3,
+   "reference": 4.0,
+   "mapped": 4.495,
+   "residual": -0.495
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.167,
+   "reference": 6.75,
+   "mapped": 6.652,
+   "residual": 0.098
+  },
+  "f04_6_r22:control": {
+   "measured": 5.333,
+   "reference": 5.83,
+   "mapped": 5.689,
+   "residual": 0.141
+  }
+ },
+ "candidates": {
+  "G T2flecks High base-vs-arm [G-flk_base.png]": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.77,
+   "mapped_judges": [
+    6.69,
+    6.81,
+    6.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2flecks High base-vs-arm [G-flk_arm.png]": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.5,
+   "mapped_judges": [
+    6.34,
+    6.34,
+    6.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

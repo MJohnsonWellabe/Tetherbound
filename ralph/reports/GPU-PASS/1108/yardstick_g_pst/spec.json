@@ -1,0 +1,29 @@
+[
+ {
+  "label": "G F39#21 win base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-pst_win_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-pst_win_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the tidewake biome: named fight victory hierarchy. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+  ]
+ },
+ {
+  "label": "G F39#21 aftermath base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-pst_aftermath_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-pst_aftermath_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the tidewake biome: named fight victory hierarchy. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+  ]
+ },
+ {
+  "label": "G F39#28 t0 base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-pst_t0_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-pst_t0_arm.png",
+  "brief": "Fixed capture from the game of a named trainer fight in the tidewake biome at the opening of the fight. Judge how the fight reads on screen - both fighters, the arena and its set dressing - and whether it looks like an event that belongs to the key art's world, with believable form, material, light and staging.",
+  "defects": [
+   "The upper-center boss title card overlaps part of Cannonback's shell and head in the opening and tell views"
+  ]
+ }
+]

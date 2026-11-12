@@ -1,0 +1,11 @@
+[
+ {
+  "label": "G F38#8 fly-grip base-vs-armA",
+  "a": "G-fg_base.png",
+  "b": "G-fg_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Fly carrier grip pose (launch above, glide below). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person"
+  ]
+ }
+]

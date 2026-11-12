@@ -1,0 +1,5 @@
+Vn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vw: "glossy vinyl, toy-like"
+Jy: none
+Dw: none
+Jf: "glossy vinyl, toy-like"

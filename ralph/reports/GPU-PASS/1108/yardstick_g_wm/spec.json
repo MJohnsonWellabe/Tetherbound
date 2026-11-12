@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F38#30 meadow-match base-vs-arm",
+  "a": "G-wm_30_base.png",
+  "b": "G-wm_30_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Burrow Warrens hillside (three views of the route past the Burrow, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "G F38#24 walk_03 meadow-match base-vs-arm",
+  "a": "G-wm_24_base.png",
+  "b": "G-wm_24_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the meadows biome: distant mountains. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ }
+]

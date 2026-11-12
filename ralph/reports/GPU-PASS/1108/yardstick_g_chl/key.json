@@ -1,0 +1,29 @@
+{
+ "Xt": {
+  "anchor": false,
+  "label": "G CTRL charge-lines base-vs-arm",
+  "A": "G-chl_CTRL_arm.png",
+  "B": "G-chl_CTRL_base.png"
+ },
+ "Le": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Jp": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Xy": {
+  "anchor": false,
+  "label": "G F41#13 charge-lines base-vs-arm",
+  "A": "G-chl_F41-13_base.png",
+  "B": "G-chl_F41-13_arm.png"
+ },
+ "Zo": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

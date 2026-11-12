@@ -1,0 +1,29 @@
+{
+ "Gu": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Lj": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Qz": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Es": {
+  "anchor": false,
+  "label": "G F38#24 walk_03 meadow-match base-vs-arm",
+  "A": "G-wm_24_base.png",
+  "B": "G-wm_24_arm.png"
+ },
+ "Du": {
+  "anchor": false,
+  "label": "G F38#30 meadow-match base-vs-arm",
+  "A": "G-wm_30_base.png",
+  "B": "G-wm_30_arm.png"
+ }
+}

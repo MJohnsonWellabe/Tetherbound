@@ -1,0 +1,9 @@
+Qu: "none"
+Ie: none
+Fs: "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+Yg: "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+Sp: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Uk: "none"
+Ml: none
+Xr: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Tf: "none"

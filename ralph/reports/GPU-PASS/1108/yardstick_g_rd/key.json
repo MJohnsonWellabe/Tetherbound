@@ -1,0 +1,41 @@
+{
+ "Sl": {
+  "anchor": false,
+  "label": "G NOLOSS ruler-depth base-vs-arm",
+  "A": "G-rd_NOLOSS_arm.png",
+  "B": "G-rd_NOLOSS_base.png"
+ },
+ "Sa": {
+  "anchor": false,
+  "label": "G F38#26 ruler-depth base-vs-arm",
+  "A": "G-rd_F38-26_arm.png",
+  "B": "G-rd_F38-26_base.png"
+ },
+ "Ep": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Yx": {
+  "anchor": false,
+  "label": "G F38#31 ruler-depth base-vs-arm",
+  "A": "G-rd_F38-31_base.png",
+  "B": "G-rd_F38-31_arm.png"
+ },
+ "Zr": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Qa": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Fu": {
+  "anchor": false,
+  "label": "G F38#5 ruler-depth base-vs-arm",
+  "A": "G-rd_F38-5_base.png",
+  "B": "G-rd_F38-5_arm.png"
+ }
+}

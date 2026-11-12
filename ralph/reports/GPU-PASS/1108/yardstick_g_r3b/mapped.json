@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9158,
+  "least_squares_slope": 1.1084,
+  "method": "linear",
+  "slope": 1.1084,
+  "intercept": -0.0237,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.399,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.067,
+   "reference": 4.83,
+   "mapped": 5.592,
+   "residual": -0.762
+  },
+  "craft:after": {
+   "measured": 6.533,
+   "reference": 7.35,
+   "mapped": 7.218,
+   "residual": 0.132
+  },
+  "f04_6_r22:control": {
+   "measured": 4.833,
+   "reference": 5.83,
+   "mapped": 5.334,
+   "residual": 0.496
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.833,
+   "reference": 6.75,
+   "mapped": 6.442,
+   "residual": 0.308
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.867,
+   "reference": 7.47,
+   "mapped": 7.587,
+   "residual": -0.117
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.867,
+   "reference": 7.53,
+   "mapped": 7.587,
+   "residual": -0.057
+  }
+ },
+ "candidates": {
+  "G F36(1) water_abyssal_guardian rescore main [G-r3b_water_abyssal_guardian.png]": {
+   "measured_mean": 5.3,
+   "mapped_mean": 5.85,
+   "mapped_judges": [
+    6.18,
+    5.52,
+    5.85
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_mangrove_monitor rescore main [G-r3b_water_mangrove_monitor.png]": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.26,
+   "mapped_judges": [
+    6.4,
+    6.18,
+    6.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_mosshell rescore main [G-r3b_water_mosshell.png]": {
+   "measured_mean": 5.267,
+   "mapped_mean": 5.81,
+   "mapped_judges": [
+    5.74,
+    5.74,
+    5.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) voltarach rescore main [G-r3b_voltarach.png]": {
+   "measured_mean": 4.633,
+   "mapped_mean": 5.11,
+   "mapped_judges": [
+    4.96,
+    5.19,
+    5.19
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_cragclaw rescore main [G-r3b_water_cragclaw.png]": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.92,
+   "mapped_judges": [
+    7.07,
+    6.85,
+    6.85
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_mirejaw rescore main [G-r3b_water_mirejaw.png]": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.52,
+   "mapped_judges": [
+    5.07,
+    5.52,
+    5.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

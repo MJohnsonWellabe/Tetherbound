@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.0,
+   4.8,
+   5.2
+  ],
+  "craft:after": [
+   6.8,
+   6.6,
+   6.6
+  ],
+  "f04_6_r22:control": [
+   5.0,
+   4.8,
+   5.3
+  ],
+  "f04_6_r22:r22": [
+   6.0,
+   5.7,
+   6.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.5,
+   3.8,
+   4.5
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.3,
+   4.6,
+   5.1
+  ]
+ },
+ "candidates": {
+  "G ff3 swim-across-day base-vs-arm [G-ff3_swim-across-day_arm.png]": [
+   5.5,
+   5.0,
+   6.0
+  ],
+  "G ff3 swim-across-day base-vs-arm [G-ff3_swim-across-day_base.png]": [
+   6.0,
+   5.5,
+   5.6
+  ],
+  "G ff3 swim-away-day base-vs-arm [G-ff3_swim-away-day_arm.png]": [
+   5.3,
+   5.6,
+   6.1
+  ],
+  "G ff3 swim-away-day base-vs-arm [G-ff3_swim-away-day_base.png]": [
+   5.8,
+   5.3,
+   5.6
+  ],
+  "G ff3 swim-away-night base-vs-arm [G-ff3_swim-away-night_base.png]": [
+   5.4,
+   5.0,
+   5.2
+  ],
+  "G ff3 swim-away-night base-vs-arm [G-ff3_swim-away-night_arm.png]": [
+   5.3,
+   5.9,
+   5.9
+  ]
+ }
+}

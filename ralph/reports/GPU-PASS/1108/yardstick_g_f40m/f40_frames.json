@@ -1,0 +1,79 @@
+{
+ "day clear approach": [
+  "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+  "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__day__clear.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__approach__day__clear.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear.jpg",
+  "cloudreach__windscar_ravine__06__windscar_flight_aerie__approach__day__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__clear.jpg",
+  "cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__clear.jpg"
+ ],
+ "day clear gameplay": [
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__day__clear.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__clear.jpg",
+  "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__day__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__clear.jpg",
+  "cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__clear.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__clear.jpg",
+  "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__clear.jpg",
+  "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__clear.jpg"
+ ],
+ "day clear reverse+detail": [
+  "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg",
+  "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__reverse__day__clear.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__reverse__day__clear.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__clear.jpg",
+  "cloudreach__windscar_ravine__06__windscar_flight_aerie__reverse__day__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__clear.jpg",
+  "cloudreach__upper_cloudreach__09__cliffhold__detail__day__clear.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__clear.jpg"
+ ],
+ "dawn clear": [
+  "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__dawn__clear.jpg",
+  "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__dawn__clear.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__dawn__clear.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__dawn__clear.jpg",
+  "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__dawn__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__dawn__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__dawn__clear.jpg",
+  "cloudreach__upper_cloudreach__09__cliffhold__gameplay__dawn__clear.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__dawn__clear.jpg"
+ ],
+ "golden clear": [
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__golden__clear.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__golden__clear.jpg",
+  "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__golden__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__golden__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__golden__clear.jpg",
+  "cloudreach__upper_cloudreach__09__cliffhold__gameplay__golden__clear.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__golden__clear.jpg",
+  "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__golden__clear.jpg",
+  "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__golden__clear.jpg"
+ ],
+ "night clear": [
+  "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__clear.jpg",
+  "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__night__clear.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__night__clear.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__night__clear.jpg",
+  "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__night__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__clear.jpg",
+  "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg",
+  "cloudreach__upper_cloudreach__09__cliffhold__gameplay__night__clear.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg"
+ ],
+ "rain": [
+  "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__day__rain.jpg",
+  "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__dawn__rain.jpg",
+  "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__golden__rain.jpg",
+  "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__day__rain.jpg",
+  "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__rain.jpg",
+  "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__rain.jpg",
+  "cloudreach__upper_cloudreach__09__cliffhold__gameplay__golden__rain.jpg",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__dawn__rain.jpg",
+  "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__rain.jpg"
+ ]
+}

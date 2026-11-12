@@ -1,0 +1,98 @@
+{
+ "G F39#26 live-vs-armGO": {
+  "A": [
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#18 live-vs-armGO": {
+  "A": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#8 live-vs-armGO": {
+  "A": [
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PARTIAL"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PARTIAL"
+   },
+   {
+    "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+   }
+  ]
+ },
+ "G F39#29 live-vs-armGO": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ }
+}

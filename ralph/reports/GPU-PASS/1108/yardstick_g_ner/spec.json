@@ -1,0 +1,29 @@
+[
+ {
+  "label": "G F39#21 win live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_win_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_win_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the tidewake biome: named fight victory hierarchy. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+  ]
+ },
+ {
+  "label": "G F39#21 aftermath live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_aftermath_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_aftermath_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the tidewake biome: named fight victory hierarchy. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+  ]
+ },
+ {
+  "label": "G F39#21 midfight live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_midfight_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_midfight_arm.png",
+  "brief": "Fixed capture from the game of a named trainer fight in the tidewake biome, mid-fight. Judge how the fight reads on screen - both fighters and the action clearly visible, nothing blocking the view - and whether it looks like an event that belongs to the key art's world.",
+  "defects": [
+   "none"
+  ]
+ }
+]
