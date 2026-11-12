@@ -238,6 +238,10 @@ func _load_plan() -> bool:
 					if not close_xz.is_empty():
 						row_xz = close_xz
 						row_heading = spot.get("close_view_heading_deg", row_heading)
+					var approach_spec := approach_override_for(STAND_GUARD_CONFIG, identity) if view_name == "approach" else {}
+					if not approach_spec.is_empty():
+						row_xz = approach_spec.position
+						row_heading = approach_spec.heading_deg
 					_planned.append({
 					"close_position_authored": not close_xz.is_empty(),
 					"frame_id": frame_id,
@@ -285,12 +289,19 @@ func _load_plan() -> bool:
 					push_error("phase2 locations: duplicate frame id %s" % frame_id)
 					return false
 				frame_ids[frame_id] = true
+				var landmark_xz := [x, z]
+				var landmark_heading: Variant = null
+				var landmark_approach := approach_override_for(STAND_GUARD_CONFIG, identity) if view_name == "approach" else {}
+				if not landmark_approach.is_empty():
+					landmark_xz = landmark_approach.position
+					landmark_heading = landmark_approach.heading_deg
 				_planned.append({"frame_id": frame_id, "biome_id": _biome_id,
 					"biome_display_name": str(selected_biome.get("display_name", _biome_id)),
 					"band_id": str(landmark.get("region_id", landmark.get("island_id", ""))),
 					"band_display_name": "", "destination_index": destination_index,
 					"spot_index_in_band": 0, "destination_display_name": display_name,
-					"position_xz": [x, z], "view_heading_deg": null,
+					"position_xz": landmark_xz, "view_heading_deg": landmark_heading,
+					"approach_position_authored": not landmark_approach.is_empty(),
 					"time": time_name, "view": view_name, "identity": identity})
 	for spot: Dictionary in _extra_spots:
 		destination_index += 1
@@ -902,6 +913,35 @@ static func close_position_for(spot: Dictionary) -> Array:
 	if not is_finite(float(parts[0])) or not is_finite(float(parts[1])):
 		return []
 	return [float(parts[0]), float(parts[1])]
+
+
+## F41#1 (LANE-BELOW6, 12 Nov 2026): `approach_overrides` in capture_stands.json
+## (OFF by default). A destination whose approach stands cannot show their
+## subject (the Stormheart's two approach views seat beside the trunk and face
+## bark from 5 m) may author where its approach view looks from: the stand
+## search then runs from `position` along `heading_deg`, exactly as an ad-hoc
+## `--spot` does. Keyed by destination identity. Capture tooling only; a frame
+## taken from an overridden stand is re-baselined, never compared with the old
+## stand's score. Returns {} when off or not authored.
+static func approach_override_for(config_path: String, identity: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(config_path))
+	if not parsed is Dictionary:
+		return {}
+	var block: Variant = (parsed as Dictionary).get("approach_overrides", {})
+	if not block is Dictionary or not bool((block as Dictionary).get("enabled", false)):
+		return {}
+	var spec: Variant = ((block as Dictionary).get("destinations", {}) as Dictionary).get(identity, null)
+	if not spec is Dictionary:
+		return {}
+	var position: Variant = (spec as Dictionary).get("position", null)
+	var heading: Variant = (spec as Dictionary).get("heading_deg", null)
+	if not position is Array or (position as Array).size() != 2 or typeof(heading) not in [TYPE_INT, TYPE_FLOAT]:
+		return {}
+	var x := float((position as Array)[0])
+	var z := float((position as Array)[1])
+	if not is_finite(x) or not is_finite(z) or not is_finite(float(heading)):
+		return {}
+	return {"position": [x, z], "heading_deg": float(heading)}
 
 
 func _capture_forward(row: Dictionary) -> Vector2:
