@@ -3746,6 +3746,20 @@
    "job": "res://tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel --motion-seconds=8, base only",
    "priority": "settles capture timing vs game for the bolt in Fading (owner: lightning Break-only)",
    "note": "GPU lane: game reported phase fading at 30.3 s of 60 when shot; the tool shoots 3 physics + 5 render frames after jumping the clock straight from Break. Motion run shows whether the bolt clears with time."
+  },
+  {
+   "id": "rescore-f41-2-breakonly",
+   "kind": "re-score",
+   "rows": [
+    "F41#2"
+   ],
+   "branch": "tb/places-breakonly-land",
+   "head": "a2ce48f7b",
+   "tree": "a2ce48f7b = main 3b7d04b5e + the Break-only lightning fix (PR #919, in CI); fetch by SHA if the branch is gone after merge",
+   "job": "res://tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel (calm, building, break, fading close), 1920x1080 forward_plus",
+   "capture": "High, one side (row score)",
+   "priority": "F41#2 is at 5.97; earlier Fading stills carried Break's last bolt",
+   "pre_check": "Fading must show no bolt; Break must still show lightning"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

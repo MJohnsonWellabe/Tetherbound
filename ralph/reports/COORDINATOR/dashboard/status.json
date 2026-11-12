@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 05:15 UTC",
+  "updated": "12 Nov 2026 05:20 UTC",
   "headline": [
+    "12 Nov 05:20: PR #919 in CI: lightning goes out the moment Break ends (owner rule), so Fading stills no longer carry Break's last strike. F41#2 re-score queued on the fix.",
     "12 Nov 05:15: Fading bolt was capture timing, not the game: Fading is clean and brighter than Building over 16 steps (G-fading-bolt-motion-probe). Owner's Break-only lightning holds on main. LANE-PLACES fixing the storm-phase tool to settle before the shot; F41#2 (5.97) gets a fresh re-score after.",
     "12 Nov 05:10: F41#15 full row score on main after #918 is 4.99 (was 4.49): Marrow's frames are fixed; Officer Nysa's frame, captured for the first time, is hidden by two storm creatures and her portrait does not match her body. LANE-THINGS' Stormwood creature cone targets exactly that. GPU running a Fading-bolt motion probe (capture timing vs game).",
     "12 Nov 05:00: Stormwood swing 2 does not ship (bright branching gold current: F41#12 -0.71, 3/3 'thick gold stripes'); the umber road keeps winning, next try is a thin white-violet charge. GPU found a lightning bolt in the Fading frame on main too: LANE-PLACES is finding whether the capture tool or the game causes it (owner: lightning Break-only). Marrow landed (#918); F40#3 landing being cut.",
