@@ -1,0 +1,9 @@
+{
+ "data/config/combat.json": {
+  "arena": {
+   "wild_post_clearance_1112": {
+    "enabled": true
+   }
+  }
+ }
+}
