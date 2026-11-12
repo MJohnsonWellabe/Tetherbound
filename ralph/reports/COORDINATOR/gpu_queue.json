@@ -4324,6 +4324,20 @@
    "priority": "top shared cause in the 6-7 map (P-GROUND, four Meadows rows); ahead of single-row arms"
   },
   {
+   "id": "below6-swim-r3",
+   "kind": "arm",
+   "rows": [
+    "F39#5",
+    "F39#14"
+   ],
+   "branch": "tb/below6",
+   "head": "f0c61187e",
+   "job": "ralph/reports/LANES/BELOW6-SWIM/CAPTURE.json (phase2_capture_swimming.gd, base vs arm)",
+   "capture": "High; GPU pre-check: chest just under the surface, recovering arm low and forward (r2 was held: whole body on the water, arm raised)",
+   "priority": "after restored-sea-r3",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-foestand",
    "kind": "arm (6-7, shared cause)",
    "rows": [
