@@ -647,6 +647,17 @@ func _run() -> void:
 	# host-frozen wind-up does 9001's strike arrive (a strike before
 	# `strike_at_ms` is `stale_move_start`). The guest's forged zero cooldown
 	# and damage remain the claim.
+	# An enemy blow before the guest stepped clear starts a saved HP change;
+	# until the owner commits it the host answers every move `pending_vitals`
+	# (CI 43283130371 shard 14, a slow save round trip). Wait it out on the
+	# host so the refusal below can only be the deadline's.
+	var vitals_settled := false
+	for poll in REFUSAL_POLLS:
+		if (await _encounter(0)).get("actor_vitals_pending", true) == false:
+			vitals_settled = true
+			break
+		await step(0, "wait", {"frames": 1})
+	check(vitals_settled, "the host settled every saved HP change before the authority probe")
 	var authority_not_before_ms := int((await _host_authority(guest_peer_id)).get("host_now_ms", 0))
 	var refusals_before := ((await _encounter(1)).get("refusals", []) as Array).size()
 	var forged: Dictionary = await step(1, "strike", {

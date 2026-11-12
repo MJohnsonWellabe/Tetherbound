@@ -14,13 +14,18 @@ const EARLY_TARGET_MS := 350
 const EARLY_MINIMUM_MS := 180
 ## How many fresh deadlines the released-baseline block may arm when a host
 ## stall jumps the window. Retries re-sample; they never widen the window.
-const RELEASE_WINDOW_ATTEMPTS := 3
+const RELEASE_WINDOW_ATTEMPTS := 6
 const ELAPSED_MARGIN_MS := 60
 const REJECTION_DELIVERY_MARGIN_MS := 250
 ## The charged move's authored cooldown, which the host adds to an accepted
 ## action's arrival to set its deadline (stormwood_hosted_trainer.gd _strike;
 ## see the Arc Lash note below). Read back to 1ms, the host's ceil.
 const AUTHORED_CHARGED_COOLDOWN_MS := 1200
+## Physics frames between the move start and its strike: the charged wind-up
+## (0.45 s = 27 frames) plus ~180 ms for a host stall that delivers the start
+## late (the strike is refused as stale if it lands inside the wind-up). Never
+## the exhausted 0.9 s wind-up: Wind is refilled before every accepted charge.
+const START_SETTLE_FRAMES := 38
 
 
 func _initialize() -> void:
@@ -163,6 +168,7 @@ func _run_livewire() -> void:
 		"trainer": TRAINER, "hp": 100000.0, "stationary_target": true,
 	})
 	check(str(health.get("verdict", "")) == "PASS", "fixture kept one hosted round alive")
+	check(await _fill_energy(), "fixture filled the client's host-owned Energy for the first charge")
 	host_state = await _await_hosted(0, true)
 	var aimed := await _stage_client_for_current_opponent()
 	check(str(aimed.get("verdict", "")) == "PASS", "client and host agree on strike geometry")
@@ -188,7 +194,6 @@ func _run_livewire() -> void:
 	# the old deadline is an inconclusive sample, so it becomes the next
 	# baseline and the window is sampled again. An acceptance before the old
 	# deadline is still the failure this block exists to catch.
-	var accepted_action := 801
 	var next_action := 802
 	var before_inactive_deadline: Dictionary = {}
 	var early: Dictionary = {}
@@ -197,18 +202,33 @@ func _run_livewire() -> void:
 	for attempt in RELEASE_WINDOW_ATTEMPTS:
 		before_inactive_deadline = await _await_before_host_deadline(
 			int(inactive_authority.get("deadline_ms", 0)))
+		if not _safe_early(before_inactive_deadline):
+			# A stall jumped the window: no early action is sent against a
+			# missed sample. Land a fresh baseline for a fresh deadline.
+			print("inactive baseline: a host stall jumped the window (attempt %d of %d); re-arming"
+				% [attempt + 1, RELEASE_WINDOW_ATTEMPTS])
+			after_first = await _fresh_baseline("inactive baseline", next_action, charged, after_first,
+				int(inactive_authority.get("deadline_ms", 0)))
+			if after_first.is_empty():
+				quit(await finish())
+				return
+			inactive_authority = _authority(after_first)
+			next_action += 1
+			continue
 		early = await _charged(next_action, charged, after_first, 8)
 		after_early = await _await_host_time(
 			int(inactive_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
 		var late_authority := _authority(after_early)
 		var arrived_ms := int(late_authority.get("deadline_ms", 0)) - AUTHORED_CHARGED_COOLDOWN_MS
-		if int(late_authority.get("last_accepted_action", 0)) != next_action \
+		# Late means the host ADMITTED this start at or past the old deadline
+		# (its strike may still be refused); the start, not the strike, is
+		# what the deadline gates since move_start authority.
+		if _started(after_early) != next_action \
 				or arrived_ms + 1 < int(inactive_authority.get("deadline_ms", 0)):
 			conclusive = true
 			break
 		print("inactive baseline: the early action reached the host %dms after its deadline (attempt %d of %d); re-arming"
 			% [arrived_ms - int(inactive_authority.get("deadline_ms", 0)), attempt + 1, RELEASE_WINDOW_ATTEMPTS])
-		accepted_action = next_action
 		after_first = after_early
 		inactive_authority = late_authority
 		next_action += 1
@@ -217,9 +237,18 @@ func _run_livewire() -> void:
 	check(_safe_early(before_inactive_deadline),
 		"coordinator reached a safe pre-deadline window on the host clock")
 	check(str(early.get("verdict", "")) == "PASS", "sent a fresh pre-cooldown action")
-	check(_hp(after_early) == _hp(after_first) and _seq(after_early) == _seq(after_first),
-		"default host deadline refused the fresh early action")
-	check(int(_authority(after_early).get("last_accepted_action", 0)) == accepted_action,
+	# Baseline is the host sample taken just before the early send: a late,
+	# inconclusive action's hit lands one wind-up after its start, so the
+	# re-armed `after_first` snapshot can predate that hit.
+	# `seq` also ticks on host bookkeeping unrelated to this action (opponent
+	# state sync, crediting the previous hit), so the refusal witness is the
+	# host's own admitted move start: unchanged HP and no start admitted.
+	check(_hp(after_early) == _hp(before_inactive_deadline)
+		and _started(after_early) == _started(before_inactive_deadline),
+		"default host deadline refused the fresh early action (hp %.1f -> %.1f, started %d -> %d)" % [
+			_hp(before_inactive_deadline), _hp(after_early), _started(before_inactive_deadline), _started(after_early)])
+	check(int(_authority(after_early).get("last_accepted_action", 0))
+		== int(_authority(before_inactive_deadline).get("last_accepted_action", -1)),
 		"the refused early action did not advance host authority")
 	next_action += 1
 
@@ -315,12 +344,26 @@ func _run_livewire() -> void:
 	var after_release_early: Dictionary = {}
 	var release_conclusive := false
 	for attempt in RELEASE_WINDOW_ATTEMPTS:
+		if not _safe_early(before_release_deadline):
+			# A re-armed sample missed the window: never send against it.
+			print("released baseline: a host stall jumped the window (attempt %d of %d); re-arming"
+				% [attempt + 1, RELEASE_WINDOW_ATTEMPTS])
+			release_accepted += 1
+			after_release_first = await _fresh_baseline("released baseline", release_accepted, charged,
+				after_release_first, int(release_authority.get("deadline_ms", 0)))
+			if after_release_first.is_empty():
+				quit(await finish())
+				return
+			release_authority = _authority(after_release_first)
+			before_release_deadline = await _await_before_host_deadline(
+				int(release_authority.get("deadline_ms", 0)))
+			continue
 		release_early = await _charged(release_accepted + 1, charged, after_release_first, 8)
 		after_release_early = await _await_host_time(
 			int(release_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
 		var late_authority := _authority(after_release_early)
 		var arrived_ms := int(late_authority.get("deadline_ms", 0)) - AUTHORED_CHARGED_COOLDOWN_MS
-		if int(late_authority.get("last_accepted_action", 0)) != release_accepted + 1 \
+		if _started(after_release_early) != release_accepted + 1 \
 				or arrived_ms + 1 < int(release_authority.get("deadline_ms", 0)):
 			release_conclusive = true
 			break
@@ -334,13 +377,30 @@ func _run_livewire() -> void:
 	check(release_conclusive, "a released early action reached the host before its deadline within %d attempt(s)"
 		% RELEASE_WINDOW_ATTEMPTS)
 	check(str(release_early.get("verdict", "")) == "PASS", "sent a fresh action after release")
-	check(_hp(after_release_early) == _hp(after_release_first)
-		and _seq(after_release_early) == _seq(after_release_first),
-		"releasing Livewire restored the host's authored deadline refusal")
-	check(int(_authority(after_release_early).get("last_accepted_action", 0)) == release_accepted,
+	check(_hp(after_release_early) == _hp(before_release_deadline)
+		and _started(after_release_early) == _started(before_release_deadline),
+		"releasing Livewire restored the host's authored deadline refusal (hp %.1f -> %.1f, started %d -> %d)" % [
+			_hp(before_release_deadline), _hp(after_release_early), _started(before_release_deadline), _started(after_release_early)])
+	check(int(_authority(after_release_early).get("last_accepted_action", 0))
+		== int(_authority(before_release_deadline).get("last_accepted_action", -1)),
 		"the released early action did not advance host authority")
 
 	quit(await finish())
+
+
+## Waits out `deadline_ms`, restages and lands `action` as a fresh baseline
+## charge. Returns the host state once it is accepted ({} if staging failed).
+func _fresh_baseline(label: String, action: int, move_id: String, state: Dictionary,
+		deadline_ms: int) -> Dictionary:
+	await _await_after_host_deadline(deadline_ms)
+	if not await _restage_for_strike(label):
+		return {}
+	var sent := await _charged(action, move_id, state, 2)
+	check(str(sent.get("verdict", "")) == "PASS", "%s: sent a fresh baseline action" % label)
+	var accepted := await _await_host_action(action)
+	check(int(_authority(accepted).get("last_accepted_action", 0)) == action,
+		"%s: the fresh baseline action was accepted" % label)
+	return accepted
 
 
 func _restage_for_strike(label: String) -> bool:
@@ -348,6 +408,8 @@ func _restage_for_strike(label: String) -> bool:
 	# deadlines and relic replication.  Reconcile both real bodies immediately
 	# before an action expected to land so this timing proof cannot turn into an
 	# unrelated cone/position miss.
+	# Outside every timing window: refill Wind (and re-bank Energy).
+	await _fill_energy()
 	var aimed := await _stage_client_for_current_opponent()
 	check(str(aimed.get("verdict", "")) == "PASS",
 		"%s strike geometry is current on client and host" % label)
@@ -397,7 +459,25 @@ func _charged(action: int, move_id: String, state: Dictionary, settle: int) -> D
 		"encounter_id": str((state.get("record", {}) as Dictionary).get("id", "")),
 		"slot": "charged", "move_id": move_id, "action": action,
 		"realm": STORMWOOD, "damage": 999999.0, "settle": settle, "with_start": true,
+		# The host's deadline is anchored at the move start, so wait out only
+		# the charged wind-up (0.45 s) before the strike, not the default 1.1 s
+		# that would spend most of the 1.2 s cooldown before any sample.
+		"start_settle": START_SETTLE_FRAMES,
 	})
+
+
+## Charged moves cost a full Energy bar (#878). This witness compares cooldown
+## timing, not Energy, so the host banks enough Energy for every charge it
+## sends up front: a refill between charges would add a host round trip
+## inside the deadline windows this smoke samples.
+func _fill_energy() -> bool:
+	var filled := await step(0, "stormwood_hosted_fixture_energy", {
+		"trainer": TRAINER, "peer": _client_peer_id, "charges": 64,
+	})
+	if str(filled.get("verdict", "")) != "PASS":
+		check(false, "fixture filled the client's host-owned Energy: %s" % str(filled.get("detail", "")))
+		return false
+	return true
 
 
 func _await_host_action(action: int) -> Dictionary:
@@ -458,6 +538,10 @@ func _await_host_time(wanted_ms: int) -> Dictionary:
 
 static func _authority(state: Dictionary) -> Dictionary:
 	return state.get("host_authority", {}) as Dictionary
+
+
+static func _started(state: Dictionary) -> int:
+	return int(_authority(state).get("last_started_action", -1))
 
 
 static func _safe_early(state: Dictionary) -> bool:
