@@ -26,6 +26,7 @@ const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const CORE_COLUMN_SHADER := preload("res://scripts/world/stormheart_core_column.gdshader")
 const CORE_COLUMN_BODY_SHADER := preload("res://scripts/world/stormheart_core_column_core.gdshader")
+const HEARTWOOD_CORE_SHADER := preload("res://scripts/world/stormheart_heartwood_core.gdshader")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -47,6 +48,8 @@ var _column_cooled := 0.12
 var _core_arc_holder: Node3D
 var _heartwood_core: StandardMaterial3D
 var _heartwood_core_energy := 2.4
+var _heartwood_core_shader: ShaderMaterial
+var _heartwood_arc_energy := 3.0
 var _heartwood_cooled := 0.15
 var _heartwood_lights: Array[OmniLight3D] = []
 
@@ -241,13 +244,27 @@ func _heartwood(cfg: Dictionary) -> void:
 	_heartwood_core_energy = float(cfg.get("core_glow_energy", 2.4))
 	_heartwood_core.emission_energy_multiplier = _heartwood_core_energy
 	_heartwood_cooled = float(cfg.get("cooled_scale", 0.15))
+	# core_v2 (OFF until GPU-judged): per-facet value, a lifted silhouette edge
+	# and slow internal arcs instead of one flat gradient; stronger light on
+	# the roots. The body material above stays the fallback.
+	var v2: Dictionary = cfg.get("core_v2", {})
+	var core_material: Material = _heartwood_core
+	if bool(v2.get("enabled", false)):
+		_heartwood_core_shader = ShaderMaterial.new()
+		_heartwood_core_shader.shader = HEARTWOOD_CORE_SHADER
+		_heartwood_core_shader.set_shader_parameter("body_colour", Color(str(cfg.get("core_albedo", "#3566d6"))))
+		_heartwood_core_shader.set_shader_parameter("glow_colour", Color(str(cfg.get("core_glow", "#4f7dff"))))
+		_heartwood_core_shader.set_shader_parameter("energy", _heartwood_core_energy)
+		_heartwood_arc_energy = float(v2.get("arc_energy", 3.0))
+		_heartwood_core_shader.set_shader_parameter("arc_energy", _heartwood_arc_energy)
+		core_material = _heartwood_core_shader
 	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
 		for surface in visual.mesh.get_surface_count():
 			var source := visual.mesh.surface_get_material(surface)
 			var source_name := source.resource_name if source != null else ""
 			var pick: Material = bark
 			if source_name.contains("core"):
-				pick = _heartwood_core
+				pick = core_material
 				visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			elif source_name.contains("vein"):
 				pick = vein
@@ -259,7 +276,7 @@ func _heartwood(cfg: Dictionary) -> void:
 		light.name = "HeartwoodLight"
 		light.position = model.position + Vector3(0.0, float(y), 0.0)
 		light.light_color = Color(str(cfg.get("light_colour", "#a9c8ff")))
-		light.light_energy = float(cfg.get("light_energy", 2.0))
+		light.light_energy = float(v2.get("light_energy", 5.0)) if bool(v2.get("enabled", false)) else float(cfg.get("light_energy", 2.0))
 		light.omni_range = float(cfg.get("light_range_m", 26.0))
 		light.shadow_enabled = false
 		add_child(light)
@@ -310,6 +327,81 @@ func add_approach(start: Vector3) -> void:
 	# Meet the deck at its outer edge: ending farther inside leaves the
 	# rising ramp below the ring's vertical fascia at first contact.
 	_ramp("OuterWorksApproach",to_local(start),Vector3(0,6,-OUTER_WORKS_OUTER_RADIUS),10)
+	if not simulation_only and _presentation_enabled("ramp_body_1112"):
+		_ramp_body(to_local(start), Vector3(0,6,-OUTER_WORKS_OUTER_RADIUS), 10.0,
+			_presentation.get("ramp_body_1112", {}))
+
+
+## F41#1 (LANE-BELOW6, 12 Nov 2026, OFF until GPU-judged): the entrance ramp is
+## one paper-thin quad, so from beside or below it the stand sees its underside
+## as an orange sheet (3/3 judges: "an untextured placeholder slab"). This
+## gives it a body: plank skirts from each edge down into the ground, an edge
+## beam, and timber posts along both sides. Visual only: the ramp's own
+## collision quad is untouched and nothing here has a collider.
+func _ramp_body(start: Vector3, finish: Vector3, width: float, cfg: Dictionary) -> void:
+	var holder := Node3D.new()
+	holder.name = "RampBody1112"
+	add_child(holder)
+	var along := finish - start
+	var side := Vector3(along.z, 0, -along.x).normalized() * width * 0.5
+	var sink := float(cfg.get("sink_m", 2.0))
+	var material: Material = _cut_wood if _cut_wood != null else _wood
+	var timber := _wood.duplicate() as StandardMaterial3D
+	timber.albedo_color = Color(str(cfg.get("timber_colour", "#6f5238")))
+	timber.uv1_triplanar = true
+	timber.uv1_scale = Vector3.ONE * 0.5
+	var vertices := PackedVector3Array()
+	var uv := PackedVector2Array()
+	var steps := maxi(2, int(cfg.get("skirt_steps", 12)))
+	var floor_y := start.y - sink
+	for edge: float in [-1.0, 1.0]:
+		for i in steps:
+			var p := start.lerp(finish, float(i) / steps) + side * edge
+			var q := start.lerp(finish, float(i + 1) / steps) + side * edge
+			var pb := Vector3(p.x, floor_y, p.z)
+			var qb := Vector3(q.x, floor_y, q.z)
+			# face outward on both sides
+			var quad: Array[Vector3] = [p, q, qb, pb]
+			if edge > 0.0:
+				quad = [q, p, pb, qb]
+			var u0 := float(i) / steps * along.length() * 0.25
+			var u1 := float(i + 1) / steps * along.length() * 0.25
+			var corners_uv: Array[Vector2] = [Vector2(u0, 0), Vector2(u1, 0), Vector2(u1, (q.y - floor_y) * 0.25), Vector2(u0, (p.y - floor_y) * 0.25)]
+			if edge > 0.0:
+				corners_uv = [Vector2(u1, 0), Vector2(u0, 0), Vector2(u0, (p.y - floor_y) * 0.25), Vector2(u1, (q.y - floor_y) * 0.25)]
+			for index in [0, 1, 2, 0, 2, 3]:
+				vertices.append(quad[index])
+				uv.append(corners_uv[index])
+	var mesh := ArrayMesh.new()
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_TEX_UV] = uv
+	var normals := PackedVector3Array()
+	for i in range(0, vertices.size(), 3):
+		var n := (vertices[i + 2] - vertices[i]).cross(vertices[i + 1] - vertices[i]).normalized()
+		for unused in 3:
+			normals.append(n)
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var skirts := MeshInstance3D.new()
+	skirts.name = "Skirts"
+	skirts.mesh = mesh
+	skirts.material_override = material
+	holder.add_child(skirts)
+	var post_every := float(cfg.get("post_every_m", 9.5))
+	var post_size := float(cfg.get("post_width_m", 0.55))
+	var rail := float(cfg.get("post_above_m", 1.1))
+	var count := maxi(2, int(along.length() / post_every))
+	for edge: float in [-1.0, 1.0]:
+		for i in count + 1:
+			var p := start.lerp(finish, float(i) / count) + side * edge * (1.0 + post_size / width)
+			var height := p.y + rail - floor_y
+			_visual_box(holder, "Post%s%d" % ["West" if edge < 0.0 else "East", i], Vector3(p.x, floor_y + height * 0.5, p.z), Vector3(post_size, height, post_size), timber)
+		var a := start + side * edge
+		var b := finish + side * edge
+		var beam := _visual_box(holder, "EdgeBeam%s" % ("West" if edge < 0.0 else "East"), (a + b) * 0.5 + Vector3.UP * 0.05, Vector3(0.4, 0.4, a.distance_to(b)), timber)
+		beam.look_at_from_position(beam.position, b + Vector3.UP * 0.05, Vector3.UP)
 
 func ascent_point(fraction: float) -> Vector3:
 	var t := clampf(fraction,0,1)
@@ -955,6 +1047,12 @@ func _built_detail() -> void:
 	wood.shader = CUT_WOOD_SHADER
 	wood.set_shader_parameter("wood_atlas",load("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"))
 	wood.set_shader_parameter("wood_tint",Color(str(settings.get("wood_tint","#c4aa87"))))
+	# deck_wood_warm_1112 (LANE-BELOW6, OFF until GPU-judged): under Stormwood's
+	# violet light the pale weathered planks render pink-lilac (hue 330). A tint
+	# that leans against that light brings them back to a warm oak.
+	var warm: Dictionary = settings.get("deck_wood_warm_1112", {})
+	if bool(warm.get("enabled", false)):
+		wood.set_shader_parameter("wood_tint",Color(str(warm.get("tint","#bdbd87"))))
 	wood.set_shader_parameter("weathering",clampf(float(settings.get("wood_weathering",0.0)),0.0,1.0))
 	_cut_wood = wood
 	for visual: MeshInstance3D in find_children("*","MeshInstance3D",true,false):
@@ -1047,18 +1145,40 @@ func _hanging_banner(parent: Node3D,at: Vector3,cloth: Material,trim: Material,i
 	holder.position = at
 	holder.rotation.y = atan2(at.x,at.z)
 	parent.add_child(holder)
+	# banner_cloth_1112 (LANE-BELOW6, OFF until GPU-judged; judges 3/3: "flat
+	# blue decal squares", "a blue placeholder slab"): hanging folds with their
+	# own shading, a darker storm navy, a darker hem and a finer bolt, so the
+	# banner reads as cloth. Same rod, bracket, size and position.
+	var cloth_cfg: Dictionary = (_presentation.get("built_detail", {}) as Dictionary).get("banner_cloth_1112", {})
+	var cloth_on := bool(cloth_cfg.get("enabled", false))
+	var folds := float(cloth_cfg.get("folds", 4.5))
+	var fold_depth := float(cloth_cfg.get("fold_depth_m", 0.11))
+	var columns := 24 if cloth_on else 8
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for row in 16:
-		for column in 8:
+		for column in columns:
 			for corner: Vector2i in [Vector2i(0,0),Vector2i(1,0),Vector2i(1,1),Vector2i(0,0),Vector2i(1,1),Vector2i(0,1)]:
-				var uv := Vector2(float(column+corner.x)/8.0,float(row+corner.y)/16.0)
+				var uv := Vector2(float(column+corner.x)/float(columns),float(row+corner.y)/16.0)
 				surface.set_uv(uv)
-				surface.add_vertex(_banner_point(uv.x,uv.y))
+				var point := _banner_point(uv.x,uv.y)
+				if cloth_on:
+					var wave := sin(uv.x * PI * 2.0 * folds + float(index) * 1.7)
+					point.z += wave * fold_depth * (0.25 + 0.75 * uv.y)
+					var shade := 0.74 + 0.26 * wave
+					shade *= 1.0 - 0.35 * smoothstep(0.86, 1.0, uv.y)
+					shade *= 1.0 - 0.18 * smoothstep(0.0, 0.06, 0.06 - uv.y)
+					surface.set_color(Color(shade, shade, shade))
+				surface.add_vertex(point)
 	surface.generate_normals()
 	var visual := MeshInstance3D.new()
 	visual.name = "ShapedCloth"
 	visual.mesh = surface.commit()
+	if cloth_on and cloth is StandardMaterial3D:
+		var folded := cloth.duplicate() as StandardMaterial3D
+		folded.vertex_color_use_as_albedo = true
+		folded.albedo_color = Color(str(cloth_cfg.get("colour", "#1b3350")))
+		cloth = folded
 	visual.material_override = cloth
 	holder.add_child(visual)
 	_visual_box(holder,"ClothRod",Vector3(0,0.12,0),Vector3(3.65,0.16,0.16),_metal)
@@ -1076,7 +1196,9 @@ func _hanging_banner(parent: Node3D,at: Vector3,cloth: Material,trim: Material,i
 			var a := lightning[segment]
 			var b := lightning[segment+1]
 			trim_poses.append(_beam_pose(_banner_point(a.x,a.y)+Vector3.FORWARD*0.055*side,
-				_banner_point(b.x,b.y)+Vector3.FORWARD*0.055*side,0.14,0.14))
+				_banner_point(b.x,b.y)+Vector3.FORWARD*(0.055 + (fold_depth if cloth_on else 0.0))*side,
+				float(cloth_cfg.get("bolt_width_m", 0.07)) if cloth_on else 0.14,
+				float(cloth_cfg.get("bolt_width_m", 0.07)) if cloth_on else 0.14))
 	_instances(holder,trim_poses,trim)
 
 
@@ -1630,6 +1752,10 @@ func _lip_banners(root: Node3D, cfg: Dictionary) -> void:
 		holder.position = at
 		holder.rotation.y = atan2(-at.x, -at.z)
 		holder.scale = Vector3(1.0, float(cfg.get("drop_scale", 0.5)), 1.0)
+		var lip_cloth: Dictionary = settings.get("banner_cloth_1112", {})
+		if bool(lip_cloth.get("enabled", false)) and index % 2 == 1:
+			# two sizes round the lip instead of eight identical squares
+			holder.scale *= float(lip_cloth.get("alternate_scale", 0.72))
 		root.add_child(holder)
 		_hanging_banner(holder, Vector3.ZERO, cloth, trim, index)
 
@@ -2049,6 +2175,9 @@ func set_core_released(released: bool) -> void:
 		_core_arc_holder.visible = not released
 	if _heartwood_core != null:
 		_heartwood_core.emission_energy_multiplier = _heartwood_core_energy * (_heartwood_cooled if released else 1.0)
+		if _heartwood_core_shader != null:
+			_heartwood_core_shader.set_shader_parameter("energy", _heartwood_core_energy * (_heartwood_cooled if released else 1.0))
+			_heartwood_core_shader.set_shader_parameter("arc_energy", 0.0 if released else _heartwood_arc_energy)
 		for light: OmniLight3D in _heartwood_lights:
 			light.visible = not released
 	if _core_material == null:
