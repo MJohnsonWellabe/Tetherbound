@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 23:10 UTC: swim save-time probe done; there is no second writer
+
+Coordinator, as asked (real capture, r4's keys, values printed at the moment each frame is saved; table in `BELOW6-SWIM/ARM.md`): the animation player is inactive in every swimming frame and the saved pose is exactly what `_apply_human_swim_pose` writes. With r4 the reaching hand is 1-2 cm above the water but 0.31 m ahead of the head, which from the swim camera lands 17-18 screen rows above the head: the "wave" is the forward reach in projection, not a raised arm. r5 (already pushed) removes that reach. Please pre-check r5 on the current head.
+
+
 ## 12 Nov, about 22:45 UTC: SWIM r5 pushed (from the GPU frames of r4)
 
 The GPU frames show the "wave" is the forward-reaching arm seen from the swim camera behind and above, not a raised arm. r5 turns the stroke into a sideways sweep at the waterline (`arm_reach_scale 0.3`, arms wide, no lift). CPU at the GPU lane's crop: both arms lie out beside the shoulders at entry, west, mid and far (`BELOW6-SWIM/_sheet_cpu_r5_entry_west_mid_far.jpg`). GPU lane: please pre-check the current head. Thank you for the frames; they settled it.

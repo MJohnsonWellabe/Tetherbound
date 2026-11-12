@@ -50,3 +50,18 @@ The GPU lane held r4 and sent its frames (tb/gpu-frames-1108 `G-below6-swim-r4/`
 r5 makes that the whole stroke: `arm_reach_scale 0.3` (new key, 1 keeps the old stroke) so the hands sweep a third as far forward and back, `arm_lateral 0.85`, no lift, forearms in line with the upper arms. Chest stays 0.10 m under the surface.
 
 CPU (`_sheet_cpu_r5_entry_west_mid_far.jpg`, the GPU lane's crop at entry, surface west, mid and far): both arms lie out at the waterline beside the shoulders in all four stands; no hand is above the head in any of them. 0 script errors. The risk now is the opposite one: a judge may read it as a float with spread arms, not a stroke.
+
+## Save-time probe (12 Nov, coordinator's request): no second writer; it is projection
+
+The real `phase2_capture_swimming.gd` run (`--fixed-fps 20`, CPU) with **r4's pose keys**, printing at the moment each frame is saved: the stroke phase, whether the animation player is active, each bone's height above the water plane, how far it is ahead of the head along the camera's ground direction, and its screen row (smaller is higher on screen).
+
+| Frame | Phase | Animation player | Reaching hand: height | ahead of head | screen row (head row) |
+|---|---|---|---|---|---|
+| surface_west | 2.68 | inactive | +0.01 m | +0.31 m | 641 (658) |
+| entry | 3.37 | inactive | +0.02 m | +0.31 m | 646 (664) |
+| surface_mid | 0.76 | inactive | -0.00 m | -0.24 m | 667 (657) |
+| surface_far | 4.95 | inactive | +0.10 m | -0.16 m | 650 (657) |
+
+The animation player is off in every frame and the saved pose is the one `_apply_human_swim_pose` writes: the reaching hand is 1-2 cm above the water, the chest 0.10 m under it. No clip, IK or settle layer raises the arm. What puts the hand above the head on screen is the reach: 0.31 m ahead of the head, seen from the swim camera behind and above, is 17-18 rows higher than the head. That is the "wave" in the GPU frames (the stroke phase differs between the CPU and GPU runs, which is why different stands show it).
+
+r5 removes that reach (`arm_reach_scale 0.3`), so the hands stay beside the shoulders in screen space as well as in the world.
