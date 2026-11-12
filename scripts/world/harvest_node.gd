@@ -661,7 +661,38 @@ func _material_fixups_for_model(model_path: String) -> Dictionary:
 		for material_name: String in per_model.keys():
 			retint[material_name] = per_model[material_name]
 		return {"retint": retint, "retexture": layer.get("retexture", {})}
+	return sibling_fixups(layers, model_path)
+
+
+## A harvest node built from a model no scatter layer lists got no fixup at
+## all, so an ironwood made from TwistedTree_1 or _3 kept the pack's crimson
+## autumn leaves: red outside Team Tether (GATE-D4b flagged it; GPU judges
+## 12 Nov, 3/3, "a bright red bush" by the Burrow Warrens). Such a model takes
+## the layer of a listed sibling of the same family (same path, another
+## number): that layer's own retint and retexture, without a per-model variant.
+static func sibling_fixups(layers: Dictionary, model_path: String) -> Dictionary:
+	var family := model_family(model_path)
+	if family.is_empty():
+		return {}
+	for layer_name: String in layers.keys():
+		if layer_name.begins_with("_") or not layers[layer_name] is Dictionary:
+			continue
+		var layer: Dictionary = layers[layer_name]
+		for other: Variant in layer.get("models", []):
+			if str(other) != model_path and model_family(str(other)) == family:
+				return {"retint": (layer.get("retint", {}) as Dictionary).duplicate(),
+					"retexture": layer.get("retexture", {})}
 	return {}
+
+
+## "res://.../TwistedTree_3.gltf" -> "res://.../TwistedTree_"; "" when the file
+## name does not end in _<number>.
+static func model_family(model_path: String) -> String:
+	var stem := model_path.get_basename()
+	var cut := stem.rfind("_")
+	if cut < 0 or not stem.substr(cut + 1).is_valid_int():
+		return ""
+	return stem.substr(0, cut + 1)
 
 
 ## Mirrors `vegetation.gd::_tint_for`'s textured branch (same pack, same
