@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven-r2/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.159,
+  "lower_edges": 0.3585,
+  "script_errors": 0,
+  "note": "below6-stormraven r2 (F41#13): tb/below6 49a4b3dc2 both sides (glow_read_r2 re-imported), base vs arm BELOW6-STORMRAVEN/overlay.json (eye keeps a dark pupil, emission 2.9); stormraven idle + fulgocobra idle (pair); --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven-r2/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.3707,
+  "script_errors": 0,
+  "note": "below6-stormraven r2 (F41#13): tb/below6 49a4b3dc2 both sides (glow_read_r2 re-imported), base vs arm BELOW6-STORMRAVEN/overlay.json (eye keeps a dark pupil, emission 2.9); stormraven idle + fulgocobra idle (pair); --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven-r2/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.159,
+  "lower_edges": 0.3554,
+  "script_errors": 0,
+  "note": "below6-stormraven r2 (F41#13): tb/below6 49a4b3dc2 both sides (glow_read_r2 re-imported), base vs arm BELOW6-STORMRAVEN/overlay.json (eye keeps a dark pupil, emission 2.9); stormraven idle + fulgocobra idle (pair); --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven-r2/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.371,
+  "script_errors": 0,
+  "note": "below6-stormraven r2 (F41#13): tb/below6 49a4b3dc2 both sides (glow_read_r2 re-imported), base vs arm BELOW6-STORMRAVEN/overlay.json (eye keeps a dark pupil, emission 2.9); stormraven idle + fulgocobra idle (pair); --fixed-fps 20; High."
+ }
+]
