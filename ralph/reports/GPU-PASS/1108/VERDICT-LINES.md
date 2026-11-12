@@ -22,3 +22,4 @@ Columns: file | rows | result.
 - G-dialogue-recapture-stormwood.md | F41#7, F41#11, F41#15, F41#20 | new baseline: 6.24, 6.91, 4.49, 6.41; Stormwood ≈6.25. All fall: Marrow's head bloom, creature occlusion, reused models
 - G-things-toys-ui.md | F40#13, F38#6, F40#16, F38#3, F38#11, F41#3 | SPLIT: catch_card ships F40#13 6.88 → 7.62 (3/3, capture Medium); meshy pickup tone_down LOSES F38#6 −0.84 (0/3), drop it; mushroom and dust level
 - G-below6-hits.md | F36#52, F36#30 | SPLIT: Mirejaw hit ships 5.72 → 6.32 (3/3); Abyssal flinch −0.25 (1/3), adds a white foot-block artefact, do not ship
+- G-places-stormlight.md | F41#2, F41#8, F41#13, F41#4, F41#5, F41#6, F41#12, F41#19 | SHIP: F41#2 5.17 → 5.97 (3/3), F41#8 5.22 → 5.80 (3/3), F41#13 +0.23 rides; the rest level. Batch reads ~0.9 below the board; Stormwood ground and road value is the shared ceiling
