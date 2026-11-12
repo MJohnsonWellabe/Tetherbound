@@ -1,0 +1,266 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9005,
+  "least_squares_slope": 1.3382,
+  "method": "linear",
+  "slope": 1.3382,
+  "intercept": -1.3947,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.602,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.867,
+   "reference": 7.47,
+   "mapped": 7.794,
+   "residual": -0.324
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.867,
+   "reference": 7.53,
+   "mapped": 7.794,
+   "residual": -0.264
+  },
+  "craft:before": {
+   "measured": 4.867,
+   "reference": 4.83,
+   "mapped": 5.118,
+   "residual": -0.288
+  },
+  "craft:after": {
+   "measured": 6.133,
+   "reference": 7.35,
+   "mapped": 6.813,
+   "residual": 0.537
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.133,
+   "reference": 6.53,
+   "mapped": 5.475,
+   "residual": 1.055
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.567,
+   "reference": 4.0,
+   "mapped": 4.716,
+   "residual": -0.716
+  }
+ },
+ "candidates": {
+  "G F38#34 High-vs-Medium [G-mu_F38-34_medium.png]": {
+   "measured_mean": 6.333,
+   "mapped_mean": 7.08,
+   "mapped_judges": [
+    7.44,
+    6.37,
+    7.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#34 High-vs-Medium [G-mu_F38-34_high.png]": {
+   "measured_mean": 6.333,
+   "mapped_mean": 7.08,
+   "mapped_judges": [
+    7.44,
+    6.37,
+    7.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#7 High-vs-Medium [G-mu_F38-7_medium.png]": {
+   "measured_mean": 6.467,
+   "mapped_mean": 7.26,
+   "mapped_judges": [
+    7.44,
+    6.9,
+    7.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#7 High-vs-Medium [G-mu_F38-7_high.png]": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.77,
+   "mapped_judges": [
+    7.04,
+    6.37,
+    6.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#38 High-vs-Medium [G-mu_F38-38_medium.png]": {
+   "measured_mean": 6.8,
+   "mapped_mean": 7.7,
+   "mapped_judges": [
+    7.97,
+    7.17,
+    7.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "G F38#38 High-vs-Medium [G-mu_F38-38_high.png]": {
+   "measured_mean": 6.8,
+   "mapped_mean": 7.7,
+   "mapped_judges": [
+    7.97,
+    7.17,
+    7.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "G F38#9 High-vs-Medium [G-mu_F38-9_high.png]": {
+   "measured_mean": 6.8,
+   "mapped_mean": 7.7,
+   "mapped_judges": [
+    7.84,
+    7.44,
+    7.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "G F38#9 High-vs-Medium [G-mu_F38-9_medium.png]": {
+   "measured_mean": 6.8,
+   "mapped_mean": 7.7,
+   "mapped_judges": [
+    7.84,
+    7.44,
+    7.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "G F38#3 High-vs-Medium [G-mu_F38-3_medium.png]": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.35,
+   "mapped_judges": [
+    7.3,
+    7.17,
+    7.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#3 High-vs-Medium [G-mu_F38-3_high.png]": {
+   "measured_mean": 6.4,
+   "mapped_mean": 7.17,
+   "mapped_judges": [
+    7.04,
+    7.04,
+    7.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#4 High-vs-Medium [G-mu_F38-4_medium.png]": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.99,
+   "mapped_judges": [
+    7.17,
+    6.63,
+    7.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#4 High-vs-Medium [G-mu_F38-4_high.png]": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.99,
+   "mapped_judges": [
+    7.17,
+    6.63,
+    7.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#19 High-vs-Medium [G-mu_F38-19_medium.png]": {
+   "measured_mean": 6.4,
+   "mapped_mean": 7.17,
+   "mapped_judges": [
+    7.04,
+    7.17,
+    7.3
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#19 High-vs-Medium [G-mu_F38-19_high.png]": {
+   "measured_mean": 6.4,
+   "mapped_mean": 7.17,
+   "mapped_judges": [
+    7.04,
+    7.17,
+    7.3
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#33 High-vs-Medium [G-mu_F38-33_high.png]": {
+   "measured_mean": 6.5,
+   "mapped_mean": 7.3,
+   "mapped_judges": [
+    7.17,
+    6.9,
+    7.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F38#33 High-vs-Medium [G-mu_F38-33_medium.png]": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.35,
+   "mapped_judges": [
+    7.44,
+    7.17,
+    7.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.53): G F38#38 High-vs-Medium [G-mu_F38-38_high.png], G F38#38 High-vs-Medium [G-mu_F38-38_medium.png], G F38#9 High-vs-Medium [G-mu_F38-9_high.png], G F38#9 High-vs-Medium [G-mu_F38-9_medium.png]; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}
