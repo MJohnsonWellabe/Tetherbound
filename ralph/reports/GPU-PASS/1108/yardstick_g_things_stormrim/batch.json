@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "craft:after": [
+   6.6,
+   6.4,
+   6.6
+  ],
+  "craft:before": [
+   5.0,
+   5.1,
+   5.0
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   7.0,
+   6.9
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   7.0,
+   6.9
+  ],
+  "f04_6_r22:r22": [
+   6.4,
+   5.9,
+   6.0
+  ],
+  "f04_6_r22:control": [
+   5.4,
+   5.0,
+   5.2
+  ]
+ },
+ "candidates": {
+  "G F41#18 row base-vs-arm [G-srim_F41-18_row_base.png]": [
+   5.0,
+   5.3,
+   5.6
+  ],
+  "G F41#18 row base-vs-arm [G-srim_F41-18_row_arm.png]": [
+   5.5,
+   5.8,
+   6.1
+  ],
+  "G F41#18 dialogue base-vs-arm [G-srim_F41-18_dialogue_base.png]": [
+   5.6,
+   5.8,
+   5.9
+  ],
+  "G F41#18 dialogue base-vs-arm [G-srim_F41-18_dialogue_arm.png]": [
+   6.0,
+   6.2,
+   6.2
+  ],
+  "G F41#15 row base-vs-arm [G-srim_F41-15_row_base.png]": [
+   5.6,
+   5.8,
+   5.9
+  ],
+  "G F41#15 row base-vs-arm [G-srim_F41-15_row_arm.png]": [
+   6.0,
+   6.1,
+   6.2
+  ],
+  "G Stormwood dialogue ride-along base-vs-arm [G-srim_Stormwood_dialogue_ride-along_base.png]": [
+   5.8,
+   6.0,
+   6.1
+  ],
+  "G Stormwood dialogue ride-along base-vs-arm [G-srim_Stormwood_dialogue_ride-along_arm.png]": [
+   6.3,
+   6.4,
+   6.3
+  ]
+ }
+}
