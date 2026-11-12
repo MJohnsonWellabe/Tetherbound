@@ -2021,10 +2021,7 @@
       "before": 5.85,
       "after": 6.32,
       "pr": "#912"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F40#13 catch card clears on aim (closes: Medium 7.76)",
       "before": 6.88,
@@ -2050,7 +2047,14 @@
       "pr": "#914"
     }
   ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#914",
+      "what": "Batches 68+69: catch card clears on aim (F40#13 CLOSED, Medium 7.76), Mirejaw grounded hit (F36#52 +0.60), Stormwood storm light and distinct villager bodies (F41#2 +0.80, F41#8 +0.58), Building far bolts off per owner",
+      "when": "01:42 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#912",
       "what": "Batches 66+67: Stormheart heartwood (F41#1 +1.37), Thundertunnel coat (F36#80 6.04), grounded faints for seven pose rows (Water Mirejaw 7.39, Cragclaw 7.51), travel poses (Water Mosshell 6.67, Galewisp 7.44), camera occlusion fix, dialogue identity fix; Windows export leaves out tests/ralph/archive so the download fits under 2 GiB",
@@ -2425,7 +2429,7 @@
     },
     "F40#13": {
       "gpu": 7.62,
-      "src": "G-things-toys-ui High 7.62 and G-f40-13-catch-card-medium (LANE-SCOUT 6dfe45f55) Medium 7.76: closes when PR #914 lands the catch_card arm"
+      "src": "G-things-toys-ui High 7.62 and G-f40-13-catch-card-medium (LANE-SCOUT 6dfe45f55) Medium 7.76: CLOSED (landed #914)"
     },
     "F40#14": {
       "gpu": 6.99,
@@ -2525,7 +2529,7 @@
     },
     "F41#2": {
       "gpu": 5.97,
-      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 ships (not yet landed); this batch reads about 0.9 below the board: F41#2 5.17 -> 5.97 (+0.80, 3/3); board was 6.10 from another batch"
+      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#2 5.17 -> 5.97 (+0.80, 3/3); board was 6.10 from another batch"
     },
     "F41#20": {
       "gpu": 6.41,
@@ -2557,7 +2561,7 @@
     },
     "F41#8": {
       "gpu": 5.8,
-      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 ships (not yet landed); this batch reads about 0.9 below the board: F41#8 5.22 -> 5.80 (+0.58, 3/3) with distinct_bodies_1111"
+      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#8 5.22 -> 5.80 (+0.58, 3/3) with distinct_bodies_1111"
     },
     "F41#9": {
       "gpu": 6.81,
@@ -2613,7 +2617,7 @@
     },
     "F36#42": {
       "gpu": 7.3,
-      "src": "G-things-faint arm High 7.51, Medium 7.30 (G-closeouts-solmane-cragclaw-wmm 4e4a4dbfd); not closed: face hidden under the shell; arm not yet landed"
+      "src": "G-things-faint arm High 7.51, Medium 7.30 (G-closeouts-solmane-cragclaw-wmm 4e4a4dbfd); not closed: face hidden under the shell; LANDED #914"
     },
     "F36#49": {
       "gpu": 6.9,
@@ -2685,7 +2689,7 @@
     },
     "F36#52": {
       "gpu": 6.98,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler); G-below6-hits (LANE-SCOUT 65306ecd0): grounded hit 5.72 -> 6.32 on main's stage (+0.60, 3/3), arm not yet landed"
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler); G-below6-hits (LANE-SCOUT 65306ecd0): grounded hit 5.72 -> 6.32 on main's stage (+0.60, 3/3), LANDED #914"
     },
     "F36#69": {
       "gpu": 8.04,
