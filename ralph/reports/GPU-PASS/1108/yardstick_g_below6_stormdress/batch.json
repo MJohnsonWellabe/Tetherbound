@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.6,
+   4.7,
+   4.9
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.4,
+   5.4,
+   5.5
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.6,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   6.6,
+   6.8
+  ],
+  "craft:before": [
+   5.0,
+   5.0,
+   5.0
+  ],
+  "craft:after": [
+   6.5,
+   6.4,
+   6.6
+  ]
+ },
+ "candidates": {
+  "G F41#15 stormdress marrow base-vs-arm [G-sd_marrow_arm.png]": [
+   5.3,
+   5.5,
+   5.5
+  ],
+  "G F41#15 stormdress marrow base-vs-arm [G-sd_marrow_base.png]": [
+   5.0,
+   5.2,
+   5.2
+  ],
+  "G F41#1 stormdress split base-vs-arm [G-sd_split_base.png]": [
+   4.3,
+   4.5,
+   4.3
+  ],
+  "G F41#1 stormdress split base-vs-arm [G-sd_split_arm.png]": [
+   4.5,
+   4.8,
+   4.7
+  ],
+  "G F41#1 stormdress f411 base-vs-arm [G-sd_f411_base.png]": [
+   6.0,
+   5.9,
+   6.2
+  ],
+  "G F41#1 stormdress f411 base-vs-arm [G-sd_f411_arm.png]": [
+   6.1,
+   6.0,
+   6.2
+  ]
+ }
+}

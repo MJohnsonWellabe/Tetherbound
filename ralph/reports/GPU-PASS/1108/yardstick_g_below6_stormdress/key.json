@@ -1,0 +1,35 @@
+{
+ "Xo": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "An": {
+  "anchor": false,
+  "label": "G F41#15 stormdress marrow base-vs-arm",
+  "A": "G-sd_marrow_arm.png",
+  "B": "G-sd_marrow_base.png"
+ },
+ "Sc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Mw": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Hm": {
+  "anchor": false,
+  "label": "G F41#1 stormdress split base-vs-arm",
+  "A": "G-sd_split_base.png",
+  "B": "G-sd_split_arm.png"
+ },
+ "Xm": {
+  "anchor": false,
+  "label": "G F41#1 stormdress f411 base-vs-arm",
+  "A": "G-sd_f411_base.png",
+  "B": "G-sd_f411_arm.png"
+ }
+}
