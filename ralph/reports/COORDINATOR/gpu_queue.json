@@ -16,6 +16,25 @@
    "priority": "FIRST: Stormtrail closes if High reaches 7.5 (Medium 7.72 already); Stormbrush margin check (Medium 7.55 on the black stage)"
   },
   {
+   "id": "closeout-meadows-ui-medium",
+   "kind": "close-out (Medium)",
+   "rows": [
+    "F38#3",
+    "F38#4",
+    "F38#7",
+    "F38#9",
+    "F38#19",
+    "F38#33",
+    "F38#34"
+   ],
+   "branch": "main",
+   "head": "90ffeb663",
+   "job": "each row's own job.json frames on main 90ffeb663 at MEDIUM (one side), the same frames as G-rescore-stale-ext-meadows",
+   "capture": "Medium, one side",
+   "priority": "right after the Stormtrail/Stormbrush close-out: seven rows flagged 7.5+ at High in the Meadows re-score (extrapolated)",
+   "route": "send to LANE-SCOUT (close decisions), not only LANE-PLACES"
+  },
+  {
    "id": "reverify-f36-medium-after-posepreset-fix",
    "kind": "re-verify (Medium)",
    "rows": [
