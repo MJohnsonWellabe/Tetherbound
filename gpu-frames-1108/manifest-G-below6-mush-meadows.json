@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "meadows__inventory__pickup__good_candy.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/arm-High/meadows__inventory__pickup__good_candy.jpg",
+  "sky_fraction": 0.037,
+  "lower_edges": 0.4265,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__potion_small.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/arm-High/meadows__inventory__pickup__potion_small.jpg",
+  "sky_fraction": 0.06,
+  "lower_edges": 0.4253,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__rare_candy.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/arm-High/meadows__inventory__pickup__rare_candy.jpg",
+  "sky_fraction": 0.011,
+  "lower_edges": 0.2028,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__speed_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/arm-High/meadows__inventory__pickup__speed_mushroom.jpg",
+  "sky_fraction": 0.118,
+  "lower_edges": 0.407,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__stamina_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/arm-High/meadows__inventory__pickup__stamina_mushroom.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.3691,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__wild_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/arm-High/meadows__inventory__pickup__wild_mushroom.jpg",
+  "sky_fraction": 0.004,
+  "lower_edges": 0.047,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__good_candy.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/base-High/meadows__inventory__pickup__good_candy.jpg",
+  "sky_fraction": 0.037,
+  "lower_edges": 0.425,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__potion_small.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/base-High/meadows__inventory__pickup__potion_small.jpg",
+  "sky_fraction": 0.06,
+  "lower_edges": 0.4251,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__rare_candy.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/base-High/meadows__inventory__pickup__rare_candy.jpg",
+  "sky_fraction": 0.011,
+  "lower_edges": 0.202,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__speed_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/base-High/meadows__inventory__pickup__speed_mushroom.jpg",
+  "sky_fraction": 0.118,
+  "lower_edges": 0.4057,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__stamina_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/base-High/meadows__inventory__pickup__stamina_mushroom.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.3688,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "meadows__inventory__pickup__wild_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-meadows/base-High/meadows__inventory__pickup__wild_mushroom.jpg",
+  "sky_fraction": 0.004,
+  "lower_edges": 0.0461,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Meadows mushroom finds + F38#6 job frames (candy/potion). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ }
+]
