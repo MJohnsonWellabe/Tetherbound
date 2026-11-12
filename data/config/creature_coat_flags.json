@@ -1040,6 +1040,15 @@
           "emission_energy": 1.6
         }
       }
+    },
+    "things_riftfrill_matte_1112": {
+      "_why": "LANE-THINGS (12 Nov 2026), F36#62 Riftfrill close-out (G-things-ruler-rescore.md: High 7.31; judges: 'glossy plastic purple'). The Paddlenewt remake's amphibian gloss turns the purple aspect coat into moulded plastic under the stage key. A matte finish on the Riftfrill coat only (roughness value replaces the map, lower specular); Paddlenewt keeps its wet skin. OFF until judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101_Image_0_riftfrill.png": {
+          "metallic": 0.0, "roughness": 0.88, "specular": 0.22
+        }
+      }
     }
   }
 }
