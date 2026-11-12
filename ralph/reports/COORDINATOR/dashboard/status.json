@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 15:45 UTC",
+  "updated": "12 Nov 2026 16:15 UTC",
   "headline": [
+    "12 Nov 16:15: F41#11 Stormwood character portraits CLOSES (7.61 High and Medium, control on its closing score). The confirming panel read F41#14 candy tiers at 7.05 and F41#1 Stormheart at 6.54, so neither closes; the earlier re-score read those two high.",
     "12 Nov 15:45: Stormwood re-score (16 rows on main): broad gains from tonight's landings: F41#15 6.87 (was 4.49), F41#3 7.06, F41#4 7.02, F41#7 7.02, F41#19 7.25, F41#17 7.40; flagged for close-out (Medium + confirming batch): F41#1 Stormheart 7.62, F41#14 candy pickups 7.59, F41#11 portraits 7.55.",
     "12 Nov 15:00: two more closes: F39#4 shiny creature finish (High 7.77, Medium 7.77) and F39#24 creature rest poses (High 7.65, Medium 7.61), confirmed by two independent panels with a closed-row control. Three criteria closed today: F38#9, F39#4, F39#24.",
     "12 Nov 14:55: F38#9 menu shell CLOSES (High 7.70, Medium 7.70; strict panel with a closed-row control). Six other Meadows rows the re-score flagged read 6.99-7.35 on this panel: the two re-score panels bracket them. Nearest: F38#3 fight camera and F38#33 catch result.",
@@ -2239,6 +2240,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "GPU close",
+      "what": "F41#11 Stormwood character portraits closed (7.61 High and Medium); already on main",
+      "when": "12 Nov 16:15"
+    },
+    {
       "pr": "#925",
       "what": "Batch 80: the creature pose stage applies the graphics preset (pose 'Medium' had been a High copy), the flight capture take-off race fix, and Ashtusk and Stormtrail embers facing the lens with Ashtusk's hit recoil (Ashtusk 7.02 -> 7.32, Stormtrail 7.40 -> 7.49)",
       "when": "13:17 UTC Thu 12 Nov 2026"
@@ -2732,16 +2738,18 @@
       "src": "G-newapproach-post-setting (tb/item-scout-1108 22102b6be): authored posts with today's camera, 5.32 -> 6.48 (3/3); landed #903"
     },
     "F41#1": {
-      "gpu": 7.62,
-      "src": "G-below6-stormheart-approach (LANE-SCOUT d3f616f1c), GPU High: new approach stand (road, trunk and gate) with the landed heartwood, 5.10 -> 6.81 (+1.71, 3/3); approach-only 2.80 -> 6.42; stand LANDED #916; RE-SCORE G-rescore-stale-ext-stormwood 7.62 (LANE-PLACES 444270729, main, GPU High, 12 Nov) EXTRAPOLATED: Medium + confirming batch"
+      "gpu": 6.54,
+      "src": "G-below6-stormheart-approach (LANE-SCOUT d3f616f1c), GPU High: new approach stand (road, trunk and gate) with the landed heartwood, 5.10 -> 6.81 (+1.71, 3/3); approach-only 2.80 -> 6.42; stand LANDED #916; RE-SCORE G-rescore-stale-ext-stormwood 7.62 (LANE-PLACES 444270729, main, GPU High, 12 Nov) | CLOSE CALL G-closeout-stormwood (b17cc0d05, 12 Nov) High 6.54 Medium 6.54; crown cropped, flat core, black path",
+      "medium": 6.54
     },
     "F41#10": {
       "gpu": 6.01,
       "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.01 (was 6.02)"
     },
     "F41#11": {
-      "gpu": 7.55,
-      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: portrait identity; RE-SCORE G-rescore-stale-ext-stormwood 7.55 (LANE-PLACES 444270729, main, GPU High, 12 Nov) EXTRAPOLATED: Medium + confirming batch"
+      "gpu": 7.61,
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: portrait identity; RE-SCORE G-rescore-stale-ext-stormwood 7.55 (LANE-PLACES 444270729, main, GPU High, 12 Nov) | CLOSE CALL G-closeout-stormwood (b17cc0d05, 12 Nov) High 7.61 Medium 7.61 CLOSED",
+      "medium": 7.61
     },
     "F41#12": {
       "gpu": 6.9,
@@ -2752,8 +2760,9 @@
       "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed)"
     },
     "F41#14": {
-      "gpu": 7.59,
-      "src": "GPU High 8-9 Nov (B); RE-SCORE G-rescore-stale-ext-stormwood 7.59 (LANE-PLACES 444270729, main, GPU High, 12 Nov) EXTRAPOLATED: Medium + confirming batch"
+      "gpu": 7.05,
+      "src": "GPU High 8-9 Nov (B); RE-SCORE G-rescore-stale-ext-stormwood 7.59 (LANE-PLACES 444270729, main, GPU High, 12 Nov) | CLOSE CALL G-closeout-stormwood (b17cc0d05, 12 Nov) High 7.05 Medium 7.05; Good and Great still one form (B-PICKUPS, THINGS)",
+      "medium": 7.05
     },
     "F41#15": {
       "gpu": 6.92,
