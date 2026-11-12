@@ -1,0 +1,56 @@
+{
+ "anchors": {
+  "craft:after": [
+   6.6,
+   6.6,
+   6.6
+  ],
+  "craft:before": [
+   5.4,
+   5.4,
+   5.2
+  ],
+  "f04_6_r22:control": [
+   5.6,
+   5.8,
+   5.6
+  ],
+  "f04_6_r22:r22": [
+   6.4,
+   6.6,
+   6.4
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   7.0,
+   7.0
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   7.0,
+   7.0
+  ]
+ },
+ "candidates": {
+  "G F38#15 steer2 Medium base-vs-arm [G-st2_Medium_arm.png]": [
+   6.6,
+   7.1,
+   6.7
+  ],
+  "G F38#15 steer2 Medium base-vs-arm [G-st2_Medium_base.png]": [
+   6.5,
+   7.0,
+   6.6
+  ],
+  "G F38#15 steer2 High base-vs-arm [G-st2_High_base.png]": [
+   6.4,
+   6.8,
+   6.4
+  ],
+  "G F38#15 steer2 High base-vs-arm [G-st2_High_arm.png]": [
+   6.4,
+   6.9,
+   6.4
+  ]
+ }
+}
