@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 05:45 UTC",
+  "updated": "12 Nov 2026 06:15 UTC",
   "headline": [
+    "12 Nov 06:15: #919 landed: F41#2 (6.19) and F40#3 (6.33) leave the below-6 list. Below 6 now: F41#15 4.99 (Nysa's frame; combined creature-cone + deck dressing arm coming from LANE-THINGS), F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90. GPU: Stormwood swing 3 (umber road + one thin gold line).",
     "12 Nov 05:45: Stormwood deck dressing (warm oak planks, cloth banners, grey-brown split wood) passes but rides along: F41#15 full row 4.62 -> 5.10 (+0.48, 3/3), split frame +0.40; pink gone. Only Nysa's creature clearance can lift F41#15 past 6: LANE-THINGS sends one combined arm (creature cone + this dressing + Stormwood speaker-light scale).",
     "12 Nov 05:35: F41#2 re-scores 6.19 with lightning confined to Break (was 5.97 on the board): leaves the below-6 list when #919 lands. #919 also carries F40#3 (6.33). Below 6 after #919: F41#15 4.99, F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90.",
     "12 Nov 05:25: PR #919 now carries both the Break-only lightning fix and the F40#3 Cloudreach landmark crowns and stands (6.00 -> 6.33), one CI run. Owner question pending: Stormwood road charge colour (yellow-gold by owner direction vs judges' white-violet); lane keeps gold until the owner answers.",
@@ -2134,24 +2135,28 @@
       "before": 4.55,
       "after": 5.95,
       "pr": "#918"
-    }
-  ],
-  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [
+    },
     {
       "item": "F40#3 Cloudreach landmarks (crowns plus approach stands)",
       "before": 6.0,
       "after": 6.33,
-      "pr": "#919 (in CI, with the Break-only lightning fix)"
+      "pr": "#919"
     },
     {
       "item": "F41#2 Stormwood Surge phases (lightning confined to Break; re-score)",
       "before": 5.97,
       "after": 6.19,
-      "pr": "#919 (in CI)"
+      "pr": "#919"
     }
   ],
+  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
+  "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#919",
+      "what": "Batch 75: lightning goes out the moment Break ends (owner: Break-only; F41#2 re-scores 6.19, was 5.97) and F40#3 Cloudreach landmark crowns plus approach stands (6.00 -> 6.33); one Tidewake side-chain smoke timed out once and passed on re-run",
+      "when": "06:11 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#918",
       "what": "Batch 74: Captain Marrow stops lighting himself (self-emission off, Stormwood floor 0, graded albedo): F41#15 Marrow frames 4.55 -> 5.95 (+1.40, 3/3)",
@@ -2578,8 +2583,8 @@
       "src": "GPU High 8-9 Nov (F-cloudreach)"
     },
     "F40#3": {
-      "gpu": 5.65,
-      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art; G-below6-f40-3-landmarks (LANE-SCOUT cb3ff531d): re-baselined on new stands 6.00 -> 6.33 (2/3), ships; landing being cut"
+      "gpu": 6.33,
+      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art; G-below6-f40-3-landmarks (LANE-SCOUT cb3ff531d): re-baselined on new stands 6.00 -> 6.33 (2/3), ships; LANDED #919; LANDED #919"
     },
     "F40#4": {
       "gpu": 6.12,
@@ -2650,8 +2655,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#2": {
-      "gpu": 5.97,
-      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#2 5.17 -> 5.97 (+0.80, 3/3); board was 6.10 from another batch; G-rescore-f41-2-breakonly (LANE-SCOUT f146e7ddd): row score 6.19 on main + #919 (Fading sky L 129, no bolt)"
+      "gpu": 6.19,
+      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#2 5.17 -> 5.97 (+0.80, 3/3); board was 6.10 from another batch; G-rescore-f41-2-breakonly (LANE-SCOUT f146e7ddd): row score 6.19 on main + #919 (Fading sky L 129, no bolt); LANDED #919"
     },
     "F41#20": {
       "gpu": 6.41,
