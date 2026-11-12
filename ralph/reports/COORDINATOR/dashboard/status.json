@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 05:25 UTC",
+  "updated": "12 Nov 2026 05:35 UTC",
   "headline": [
+    "12 Nov 05:35: F41#2 re-scores 6.19 with lightning confined to Break (was 5.97 on the board): leaves the below-6 list when #919 lands. #919 also carries F40#3 (6.33). Below 6 after #919: F41#15 4.99, F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90.",
     "12 Nov 05:25: PR #919 now carries both the Break-only lightning fix and the F40#3 Cloudreach landmark crowns and stands (6.00 -> 6.33), one CI run. Owner question pending: Stormwood road charge colour (yellow-gold by owner direction vs judges' white-violet); lane keeps gold until the owner answers.",
     "12 Nov 05:20: PR #919 in CI: lightning goes out the moment Break ends (owner rule), so Fading stills no longer carry Break's last strike. F41#2 re-score queued on the fix.",
     "12 Nov 05:15: Fading bolt was capture timing, not the game: Fading is clean and brighter than Building over 16 steps (G-fading-bolt-motion-probe). Owner's Break-only lightning holds on main. LANE-PLACES fixing the storm-phase tool to settle before the shot; F41#2 (5.97) gets a fresh re-score after.",
@@ -2141,6 +2142,12 @@
       "before": 6.0,
       "after": 6.33,
       "pr": "#919 (in CI, with the Break-only lightning fix)"
+    },
+    {
+      "item": "F41#2 Stormwood Surge phases (lightning confined to Break; re-score)",
+      "before": 5.97,
+      "after": 6.19,
+      "pr": "#919 (in CI)"
     }
   ],
   "landed_recent": [
@@ -2643,7 +2650,7 @@
     },
     "F41#2": {
       "gpu": 5.97,
-      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#2 5.17 -> 5.97 (+0.80, 3/3); board was 6.10 from another batch"
+      "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#2 5.17 -> 5.97 (+0.80, 3/3); board was 6.10 from another batch; G-rescore-f41-2-breakonly (LANE-SCOUT f146e7ddd): row score 6.19 on main + #919 (Fading sky L 129, no bolt)"
     },
     "F41#20": {
       "gpu": 6.41,
