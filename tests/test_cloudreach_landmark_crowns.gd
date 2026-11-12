@@ -31,3 +31,11 @@ func test_dome_is_a_collisionless_gold_ribbed_crown() -> void:
 	var gold := Color(str(raw.gold))
 	assert_true(gold.r > gold.b and gold.h * 360.0 > 30.0 and gold.h * 360.0 < 55.0, "gold, not red")
 	parent.free()
+
+
+func test_judged_crowns_ship_on_with_their_verdict() -> void:
+	var raw := _raw()
+	assert_true(bool(raw.enabled), "F40#3 crowns ship ON (G-below6-f40-3-landmarks, 6.00 -> 6.33)")
+	assert_true(str(raw.get("_why_on", "")).contains("G-below6-f40-3-landmarks"), "ON cites its verdict")
+	var cfg := CROWNS.config()
+	assert_true(cfg.has("observatory") and cfg.has("beacon"), "ON returns both crowns")

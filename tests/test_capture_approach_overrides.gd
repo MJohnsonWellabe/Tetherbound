@@ -47,12 +47,18 @@ func test_enabled_override_applies_only_to_named_destinations() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 
-func test_candidate_stands_are_read_only_when_their_block_is_on() -> void:
+func test_candidate_stands_ship_on_and_are_read_only_when_their_block_is_on() -> void:
 	var shipped: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
 	var candidates: Dictionary = ((shipped as Dictionary).get("approach_overrides", {}) as Dictionary).get("candidates_1112", {})
-	assert_false(bool(candidates.get("enabled", true)), "candidate stands ship OFF until judged")
-	assert_true(LOCATIONS.approach_override_for(CONFIG, "cloudreach__windscar_ravine__05__windscar_beacon").is_empty(),
-		"an OFF candidate block moves nothing")
+	# F40#3 judged (G-below6-f40-3-landmarks, 6.00 -> 6.33): the two Cloudreach stands ship ON.
+	assert_true(bool(candidates.get("enabled", false)), "the judged F40#3 candidate stands ship ON")
+	assert_true(str(candidates.get("_why_on", "")).contains("G-below6-f40-3-landmarks"), "ON cites its verdict")
+	assert_eq(LOCATIONS.approach_override_for(CONFIG, "cloudreach__windscar_ravine__05__windscar_beacon").get("position", []),
+		[-240.0, 2698.0], "the beacon stand moves to the judged spot")
+	var off := _write({"approach_overrides": {"enabled": true, "destinations": {},
+		"candidates_1112": {"enabled": false, "destinations": {"c": {"position": [1.0, 2.0], "heading_deg": 47.0}}}}})
+	assert_true(LOCATIONS.approach_override_for(off, "c").is_empty(), "an OFF candidate block moves nothing")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(off))
 	var path := _write({"approach_overrides": {"enabled": true, "destinations": {},
 		"candidates_1112": {"enabled": true, "destinations": {"c": {"position": [1.0, 2.0], "heading_deg": 47.0}}}}})
 	assert_eq(LOCATIONS.approach_override_for(path, "c").get("position", []), [1.0, 2.0])

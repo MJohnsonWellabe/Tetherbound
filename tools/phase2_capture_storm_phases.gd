@@ -106,6 +106,27 @@ func _pin_time(time_name: String) -> Dictionary:
 	surge.call("settle_presentation")
 	for _frame in 5:
 		await process_frame
+	# GPU lane, 12 Nov: stills shot a few frames after the clock jump caught
+	# the previous phase's look and lightning (Building like Calm, Break with
+	# no bolt, a bolt in Fading). Let two seconds of game time run, settle
+	# again, then time Break on a decorative bolt and require every other
+	# phase to show no lightning at the shot.
+	await create_timer(2.0).timeout
+	surge.call("settle_presentation")
+	for _frame in 3:
+		await process_frame
+	var waited := 0
+	if _requested_phase == "break":
+		while waited < 240 and float(surge.call("bolt_level")) < 0.3:
+			await process_frame
+			waited += 1
+	elif bool(surge.call("sky_lightning_visible")):
+		_failures.append("Lightning is visible in %s at the shot" % _requested_phase)
+		return {}
+	clock["stormwood_lightning_at_shot"] = {"bolt_level": float(surge.call("bolt_level")),
+		"visible": bool(surge.call("sky_lightning_visible")), "break_wait_frames": waited}
+	print("STORM PHASE SHOT %s bolt_level=%.2f lightning_visible=%s waited=%d" % [_requested_phase,
+		float(surge.call("bolt_level")), str(bool(surge.call("sky_lightning_visible"))), waited])
 	clock["stormwood_phase"] = str(surge.get("phase"))
 	clock["stormwood_phase_info"] = surge.call("phase_info_at", _player.global_position)
 	if str(clock.stormwood_phase) != _requested_phase:
