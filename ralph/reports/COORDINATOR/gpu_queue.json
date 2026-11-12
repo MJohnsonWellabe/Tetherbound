@@ -4100,6 +4100,28 @@
    "priority": "after glidebank close-out: a split win (+0.6 on clear and gate rain) needing its two losing pieces fixed"
   },
   {
+   "id": "things-stormuniform",
+   "kind": "arm",
+   "rows": [
+    "F41#18",
+    "F41#15",
+    "F41#7",
+    "F41#8"
+   ],
+   "branch": "tb/things",
+   "head": "50b041a7b",
+   "tree": "tb/things 50b041a7b both sides",
+   "overlays": {
+    "base": "ralph/reports/LANES/THINGS-STORMRIM/overlay_player_rim_off.json (= main once #923 lands)",
+    "arm": "base + ralph/reports/LANES/THINGS-STORMUNIFORM/overlay_uniform_floor_off.json (uniform and civilian emission_floor 0.0)"
+   },
+   "overlay_format": "deep merge",
+   "request": "F41#18 row frames (Dace, Varga, Sable, inventory camera) + phase2_capture_dialogue.gd --biome=stormwood dialogue set as G-things-stormrim; coordinator adds the F41#8 named-villager frames (Maud, Hesk, Bryn) as a no-loss check, because the civilian floor also goes to 0",
+   "capture": "High, base and arm",
+   "pre_check": "officers' coats near-black with the chevron readable and still separate from the dark forest; villagers not sunk into the road",
+   "priority": "after wetpath-r2: F41#18 next lever named 3/3"
+  },
+  {
    "id": "rescore-stale-tier2",
    "kind": "re-score",
    "rows": [
