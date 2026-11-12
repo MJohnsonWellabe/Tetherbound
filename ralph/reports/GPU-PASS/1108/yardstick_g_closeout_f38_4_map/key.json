@@ -1,0 +1,29 @@
+{
+ "Ci": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Tp": {
+  "anchor": false,
+  "label": "G F38#38 High-vs-Medium",
+  "A": "G-mpm_F38-38_medium.png",
+  "B": "G-mpm_F38-38_high.png"
+ },
+ "Si": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Wd": {
+  "anchor": false,
+  "label": "G F38#4 High-vs-Medium",
+  "A": "G-mpm_F38-4_high.png",
+  "B": "G-mpm_F38-4_medium.png"
+ },
+ "Vy": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}
