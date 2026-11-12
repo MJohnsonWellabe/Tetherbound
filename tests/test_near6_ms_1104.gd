@@ -87,7 +87,9 @@ func test_f38_4_meadows_parchment_fog_ships_on() -> void:
 	var cloud: Dictionary = _json("res://data/config/map.json").fog_veil.cloud_fog
 	assert_true(bool(cloud.enabled), "cloud fog stays on")
 	assert_true(str(cloud._why_meadows_parchment_1104).contains("CPU 6.15 -> 7.18"), "records its score")
-	assert_eq(cloud.tones.meadows, ["#8c8266", "#cfc3a0"], "Meadows fog is parchment, not slate")
+	# Warmer and lower in contrast since 12 Nov (G-restoredsea-mapfog.md: F38#4 7.36 -> 7.81).
+	assert_eq(cloud.tones.meadows, ["#bda77a", "#dccfa8"], "Meadows fog is warm parchment, not slate or grey smudge")
+	assert_eq(cloud.tones.water, ["#8c8266", "#cfc3a0"], "Tidewake keeps its own parchment")
 	for tone: String in cloud.tones.meadows:
 		var c := Color(tone)
 		assert_true(c.r >= c.b, "a warm tone, never a cold storm grey (%s)" % tone)
