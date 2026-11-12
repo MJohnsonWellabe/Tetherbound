@@ -182,13 +182,21 @@ func _ready() -> void:
 static var _billboard_local: Variant = null
 
 
-## vfx.json `aspect_billboard_local_1112.enabled` (OFF until judged).
-static func billboard_local_enabled() -> bool:
+## vfx.json `aspect_billboard_local_1112`: on for the listed aspect variants
+## (an absent or empty `species` list means every variant).
+static func billboard_local_enabled(variant_id: String = "") -> bool:
 	if _billboard_local == null:
 		var doc: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/vfx.json"))
 		var block: Variant = (doc as Dictionary).get("aspect_billboard_local_1112", {}) if doc is Dictionary else {}
-		_billboard_local = block is Dictionary and bool((block as Dictionary).get("enabled", false))
-	return bool(_billboard_local)
+		_billboard_local = block if block is Dictionary else {}
+	return billboard_local_for(_billboard_local as Dictionary, variant_id)
+
+
+static func billboard_local_for(block: Dictionary, variant_id: String) -> bool:
+	if not bool(block.get("enabled", false)):
+		return false
+	var species: Variant = block.get("species", [])
+	return not species is Array or (species as Array).is_empty() or variant_id in (species as Array)
 
 
 func _material(no_depth_test: bool) -> StandardMaterial3D:
@@ -231,7 +239,7 @@ func _physics_process(delta: float) -> void:
 	var basis := camera.global_transform.basis
 	var right: Vector3 = basis.x
 	var up: Vector3 = basis.y
-	if billboard_local_enabled():
+	if billboard_local_enabled(str(name).trim_prefix("AspectVfx_")):
 		# The discs are built in this node's own space. With the camera's world
 		# axes used as-is, a creature standing side-on to the lens drew every
 		# mote edge-on (F36#33, 3/3: "a thin vertical line floats above the back").

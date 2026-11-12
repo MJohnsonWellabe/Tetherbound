@@ -31,5 +31,12 @@ func test_ashtusk_faint_stays_the_games_clip() -> void:
 
 func test_scope_is_declared_for_ashtusk() -> void:
 	var scope: Dictionary = _shipped().get("things_hit_scope", {})
-	assert_true(scope.has("enabled"), "flag declared")
+	assert_true(bool(scope.get("enabled", false)), "ships ON (G-things-creature-closeout)")
 	assert_eq(scope.get("species", []), ["ashtusk"])
+
+
+func test_settle_now_reaches_ashtusk_and_no_new_species() -> void:
+	var live: Dictionary = SETTLE.scoped(_shipped())
+	assert_false(SETTLE.excluded(live, "ashtusk"), "Ashtusk takes the hit settle")
+	for id: String in ["tuskroot", "stormtrail", "terrapup"]:
+		assert_true(SETTLE.excluded(live, id), "%s is untouched" % id)
