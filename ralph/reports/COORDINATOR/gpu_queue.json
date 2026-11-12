@@ -3856,6 +3856,25 @@
    "pre_check": "post must not crowd the subject crop; villager not over-lit (Hesk's pale coat is the risk)",
    "priority": "below-6 row (F41#8 5.80)",
    "note": "One installed storm-lantern post 1.9 m beside each named villager with a warm light, so feet and legs separate from the black road."
+  },
+  {
+   "id": "things-galeland",
+   "kind": "arm",
+   "rows": [
+    "F36#48",
+    "F38#15"
+   ],
+   "branch": "tb/things",
+   "head": "fbedb3fff",
+   "tree": "tb/things fbedb3fff for both sides (no import)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-GALELAND/overlay_galewisp_landing.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-GALELAND/CAPTURE.json (phase2_capture_realm_flight.gd --biome=meadows --carrier=galewisp: launch, glide, landed; plus Galecrest landed as a no-loss check since the landing offsets are shared)",
+   "capture": "High, base and arm",
+   "pre_check": "Galewisp head not cropped at launch; landed bird beside the trainer, whole",
+   "priority": "Galewisp flight frames 6.83; F36#48 at 7.44 (near-bar)",
+   "note": "Carrier lands beside the trainer (side 2.3 m, forward 1.2 m) and Galewisp presentation height 3.0 -> 3.4 (grow, never shrink)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
