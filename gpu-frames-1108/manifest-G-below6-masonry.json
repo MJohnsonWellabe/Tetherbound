@@ -1,0 +1,156 @@
+[
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.218,
+  "lower_edges": 0.0665,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.005,
+  "lower_edges": 0.0479,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.327,
+  "lower_edges": 0.2461,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.296,
+  "lower_edges": 0.0586,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.363,
+  "lower_edges": 0.1464,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/arm-High/cloudreach__windscar_ravine__06__windscar_flight_aerie__route_day.jpg",
+  "sky_fraction": 0.174,
+  "lower_edges": 0.0306,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/arm-High/cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0292,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.218,
+  "lower_edges": 0.0663,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.005,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.327,
+  "lower_edges": 0.2482,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.297,
+  "lower_edges": 0.0587,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.363,
+  "lower_edges": 0.1317,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__route_day.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/base-High/cloudreach__windscar_ravine__06__windscar_flight_aerie__route_day.jpg",
+  "sky_fraction": 0.174,
+  "lower_edges": 0.0307,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-masonry/base-High/cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0284,
+  "script_errors": 0,
+  "note": "below6-masonry (F40#15, F40#17): job frames stormward_overlook walk_03_day and flight_aerie vista_dusk + the boot's other route frames; tb/below6 49a4b3dc2, base vs arm BELOW6-MASONRY/overlay.json (masonry_scale_1112); --fixed-fps 20; High."
+ }
+]
