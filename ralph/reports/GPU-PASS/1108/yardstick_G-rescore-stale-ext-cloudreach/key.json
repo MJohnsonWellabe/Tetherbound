@@ -1,0 +1,59 @@
+{
+ "Wu": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Mx": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Xv": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Zs": {
+  "anchor": false,
+  "label": "F40#2",
+  "A": "main",
+  "one_sided": true
+ },
+ "Nj": {
+  "anchor": false,
+  "label": "F40#4",
+  "A": "main",
+  "one_sided": true
+ },
+ "Wq": {
+  "anchor": false,
+  "label": "F40#7",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ad": {
+  "anchor": false,
+  "label": "F40#11",
+  "A": "main",
+  "one_sided": true
+ },
+ "Er": {
+  "anchor": false,
+  "label": "F40#14",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ee": {
+  "anchor": false,
+  "label": "F40#16",
+  "A": "main",
+  "one_sided": true
+ },
+ "Et": {
+  "anchor": false,
+  "label": "F40#18",
+  "A": "main",
+  "one_sided": true
+ }
+}

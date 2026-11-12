@@ -69,6 +69,16 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 **Meadows Medium (G-closeout-meadows-ui-medium @ e92acfdc9: F38#3 #4 #7 #9 #19 #33 #34) is left to LANE-SCOUT for the close decisions**, so the same frames are not judged twice. I am not judging it unless the coordinator asks for a second panel. The -medium-2 section was dropped by the coordinator (F38#18 and #38 closed on 9 Nov; F38#13 pools to about 7.3).
 **Requests for the GPU lane (it reads this NOTE through you if my message does not arrive):** Medium for F39#4 and F39#24, same frames.
 
+**G-rescore-stale-ext-cloudreach** (`ralph/reports/GPU-PASS/1108/G-rescore-stale-ext-cloudreach.md`, frames @ d5a3a57b2; fit r 0.859, RMSE 0.59):
+- F40#2: 6.15 -> 6.93 (12 Nov, G-rescore-stale-ext-cloudreach)
+- F40#4: 6.12 -> 6.47 (12 Nov, G-rescore-stale-ext-cloudreach)
+- F40#7: 6.26 -> 6.80 (12 Nov, G-rescore-stale-ext-cloudreach)
+- F40#11: 6.97 -> 6.52 (12 Nov, G-rescore-stale-ext-cloudreach)
+- F40#14: 6.99 -> 7.21 (12 Nov, G-rescore-stale-ext-cloudreach)
+- F40#16: 6.19 -> 6.93 (12 Nov, G-rescore-stale-ext-cloudreach)
+- F40#18: 7.1 -> 7.49 (12 Nov, G-rescore-stale-ext-cloudreach)
+**Flags:** none at 7.5 or above, none below 6. **F40#18 7.49** is a close-out candidate (defect FIXED / FIXED / PARTIAL). **F40#11 is on 2 of 3 frames**: its job.json lists a ride still (`phase2_18_terrace_02.0s`) that the tool no longer produces; whoever owns job.json should point it at `phase2_18_terrace_after`. All four world rows share one cause 3/3: flat single-tone lawn, faceted brown cliffs and extruded disc shelves with knife-straight edges.
+
 ### Build work handed over
 | Item | State | Goes to |
 |---|---|---|
