@@ -3,6 +3,21 @@
  "after": "section F (all four biomes) finishes",
  "entries": [
   {
+   "id": "confirm-gatepaving-scoped",
+   "kind": "confirm",
+   "rows": [
+    "F40#0",
+    "F40#1"
+   ],
+   "branch": "tb/coord-batch76-land",
+   "head": "2c87dbf79",
+   "tree": "base: main 74f0c9e17; arm: 2c87dbf79 (batch 76 landing: paving_scale_1112 ON scoped to the gate road dressing sites)",
+   "job": "capture_cloudreach_f40_matrix.gd --piece=3-4 --ground-cover-cache (realm gate, clear and rain) + the F40#1 row's three job.json frames, same commands as G-places-gatepaving",
+   "capture": "High, base (main) and arm (landing)",
+   "priority": "FIRST: confirms the scoped landing before auto-merge (PR in CI now)",
+   "want_to_see": "gate frames as the judged winner (small flush stones on the road); F40#1 row frames pixel-identical or near to main"
+  },
+  {
    "id": "check-venn-plane",
    "kind": "check",
    "priority": "FIRST (a build is waiting on it)",
