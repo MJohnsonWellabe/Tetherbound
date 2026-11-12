@@ -1,0 +1,156 @@
+[
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.218,
+  "lower_edges": 0.0662,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.005,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.327,
+  "lower_edges": 0.25,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.297,
+  "lower_edges": 0.0596,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/arm-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.363,
+  "lower_edges": 0.1319,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/arm-High/cloudreach__windscar_ravine__06__windscar_flight_aerie__route_day.jpg",
+  "sky_fraction": 0.175,
+  "lower_edges": 0.0307,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/arm-High/cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0286,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.218,
+  "lower_edges": 0.0663,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.005,
+  "lower_edges": 0.0473,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.327,
+  "lower_edges": 0.2453,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.297,
+  "lower_edges": 0.0596,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.363,
+  "lower_edges": 0.1303,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__route_day.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/base-High/cloudreach__windscar_ravine__06__windscar_flight_aerie__route_day.jpg",
+  "sky_fraction": 0.174,
+  "lower_edges": 0.0303,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-knife-f40-15/base-High/cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.029,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#15 job frames (stormward_overlook walk_03_day, flight_aerie vista_dusk) + the boot's other route frames; aerie walk_01-03 have no production stand on either side (tool survey 7/10, exit 1). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ }
+]
