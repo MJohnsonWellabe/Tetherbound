@@ -79,6 +79,11 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 - F40#18: 7.1 -> 7.49 (12 Nov, G-rescore-stale-ext-cloudreach)
 **Flags:** none at 7.5 or above, none below 6. **F40#18 7.49** is a close-out candidate (defect FIXED / FIXED / PARTIAL). **F40#11 is on 2 of 3 frames**: its job.json lists a ride still (`phase2_18_terrace_02.0s`) that the tool no longer produces; whoever owns job.json should point it at `phase2_18_terrace_after`. All four world rows share one cause 3/3: flat single-tone lawn, faceted brown cliffs and extruded disc shelves with knife-straight edges.
 
+**G-closeout-tidewake-medium** (`ralph/reports/GPU-PASS/1108/G-closeout-tidewake-medium.md`; two-sided High against Medium, fit r 0.843, RMSE 0.62, confirming batch):
+- F39#4: High 8.03, Medium 8.03 (12 Nov); the one-sided panel had High 7.81. Defect FIXED 3/3.
+- F39#24: High 7.99, Medium 7.99 (12 Nov); the one-sided panel had High 7.77. Defect FIXED 3/3.
+**CLOSE CANDIDATES for the coordinator: F39#4 and F39#24** meet 7.5 on both Medium and High across two panels. Scores are extrapolated above the top anchor (7.35), as every score in this range is.
+
 ### Build work handed over
 | Item | State | Goes to |
 |---|---|---|

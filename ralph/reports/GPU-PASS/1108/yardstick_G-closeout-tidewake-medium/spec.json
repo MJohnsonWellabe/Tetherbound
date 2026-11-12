@@ -1,0 +1,20 @@
+[
+ {
+  "label": "F39#4",
+  "a": "F39-4_high.png",
+  "b": "F39-4_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: shiny creature finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity"
+  ]
+ },
+ {
+  "label": "F39#24",
+  "a": "F39-24_high.png",
+  "b": "F39-24_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: creature rest poses. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled"
+  ]
+ }
+]
