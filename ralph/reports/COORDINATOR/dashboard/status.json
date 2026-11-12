@@ -1,5 +1,5 @@
 {
-  "updated": "12 Nov 2026 11:05 UTC",
+  "updated": "12 Nov 2026 11:10 UTC",
   "headline": [
     "12 Nov 11:05: pose-stage capture fix (--clear-ruler, no game change) lifts six creature rows: Ashtusk 8.03 and Brooktail 7.69 meet the bar at High (Medium running next), Mirejaw 7.26 (was 5.28), Riftfrill 7.31, Sparkit 7.26, Shadelet 7.07. Stormwood rim-off and wet trail round 2 in progress; F38#15 glide-bank close-out capturing.",
     "12 Nov 10:25: Stormwood rim-off ships: the white bloom on the player's head and pale officers came from the night character rim under storm light. F41#18 5.60 -> 6.22, Stormwood dialogue +0.41 to +0.45 (3/3 everywhere, nothing loses). Landing being cut.",
@@ -2204,7 +2204,13 @@
       "item": "F41#18 Stormwood uniformed characters (character rim off in Stormwood)",
       "before": 5.6,
       "after": 6.22,
-      "pr": "landing being cut (tb/things-stormrim-land)"
+      "pr": "#923 (in CI)"
+    },
+    {
+      "item": "F36#52 Mirejaw pose with the ruler clear (capture default)",
+      "before": 6.07,
+      "after": 7.26,
+      "pr": "#923 (in CI)"
     }
   ],
   "landed_recent": [
