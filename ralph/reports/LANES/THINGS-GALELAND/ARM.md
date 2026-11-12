@@ -23,3 +23,8 @@ LANE-THINGS, 12 Nov 2026. Branch `tb/things`. Config only. CPU proof: `_sheet_ga
 
 ## Landing note
 `tests/test_vis_meadows_1104_on.gd` pins Galewisp's presentation height at 3.0; a landing must update that pin.
+
+## Attempt 2 (12 Nov, after the GPU pre-check failed attempt 1)
+- **GPU pre-check, attempt 1:** launch and glide passed and Galecrest's landing passed, but Galewisp's landed frame cut the ear tufts off at the top edge. Cause, per the GPU lane: `forward_m` 2.4 to 1.2 brought the bird nearer the camera on top of the height change. My CPU frame did not show the crop.
+- **Change:** `forward_m` is left at main's 2.4. The overlay now only moves the carrier sideways (`side_m` 1.2 to 2.3) and keeps Galewisp at 3.4 m. The side move alone puts it beside the trainer.
+- **Not re-captured on CPU:** the CPU landed frame did not reproduce the crop, so it cannot confirm the fix. The GPU pre-check on the landed frame is the test. If the tufts still crop, drop the height to 3.2 before parking; that would be the second failed attempt.
