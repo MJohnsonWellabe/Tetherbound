@@ -3529,6 +3529,13 @@ func _apply_tree_palette(root_node: Node, seed_value: int) -> void:
 					elif key_name.contains("bark"):
 						material.albedo_color = [Color("#adb5ad"), Color("#929e96"),
 							Color("#a6ac96")][variant]
+						# F40#15 (flag-off): the pale grey tint leaves the bark
+						# texture's own orange at full strength ("orange-stick
+						# trees"). A darker cool tint pulls it to weathered brown.
+						var bark_tone: Dictionary = _visual_config.get("tree_bark_tone_1112", {})
+						var tones: Array = bark_tone.get("colours", [])
+						if bool(bark_tone.get("enabled", false)) and tones.size() == 3:
+							material.albedo_color = Color(str(tones[variant]))
 					material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 					IMPORTED_MATERIALS.apply_thin_foliage_backlight(source.resource_name, material)
 					_tree_palette_materials[cache_key] = material
