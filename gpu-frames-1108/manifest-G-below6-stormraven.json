@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "f0c0c90664cafcb24e136184451619aea2e1deae",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.3598,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-stormraven (F41#13) pre-check failed: the arm eye blooms into a filled white blob with a cyan halo (no pupil). Pushed only so LANE-BELOW6 can see the GPU bloom. tb/below6 f0c0c9066, base vs arm BELOW6-STORMRAVEN/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "f0c0c90664cafcb24e136184451619aea2e1deae",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.371,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-stormraven (F41#13) pre-check failed: the arm eye blooms into a filled white blob with a cyan halo (no pupil). Pushed only so LANE-BELOW6 can see the GPU bloom. tb/below6 f0c0c9066, base vs arm BELOW6-STORMRAVEN/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "f0c0c90664cafcb24e136184451619aea2e1deae",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.159,
+  "lower_edges": 0.3554,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-stormraven (F41#13) pre-check failed: the arm eye blooms into a filled white blob with a cyan halo (no pupil). Pushed only so LANE-BELOW6 can see the GPU bloom. tb/below6 f0c0c9066, base vs arm BELOW6-STORMRAVEN/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "f0c0c90664cafcb24e136184451619aea2e1deae",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.371,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-stormraven (F41#13) pre-check failed: the arm eye blooms into a filled white blob with a cyan halo (no pupil). Pushed only so LANE-BELOW6 can see the GPU bloom. tb/below6 f0c0c9066, base vs arm BELOW6-STORMRAVEN/overlay.json; --fixed-fps 20; High."
+ }
+]
