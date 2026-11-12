@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "d4801ed9a1b57e72dcd65de41128ca16692b4819",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-stronghold-stand-r2/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg",
+  "sky_fraction": 0.115,
+  "lower_edges": 0.4437,
+  "script_errors": 0,
+  "note": "below6-stronghold-stand r2 (F38#20): stand (0, 7130); tb/below6 d4801ed9a (game-identical to d13bdd51d for this tool), base no overlay vs arm BELOW6-STRONGHOLD-STAND/overlay.json; High"
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach.jpg",
+  "preset": "arm-High",
+  "tree": "d4801ed9a1b57e72dcd65de41128ca16692b4819",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-stronghold-stand-r2/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__night__approach.jpg",
+  "sky_fraction": 0.281,
+  "lower_edges": 0.2985,
+  "script_errors": 0,
+  "note": "below6-stronghold-stand r2 (F38#20): stand (0, 7130); tb/below6 d4801ed9a (game-identical to d13bdd51d for this tool), base no overlay vs arm BELOW6-STRONGHOLD-STAND/overlay.json; High"
+ },
+ {
+  "frame": "meadows__landmark__stronghold__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "d4801ed9a1b57e72dcd65de41128ca16692b4819",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-stronghold-stand-r2/arm-High/meadows__landmark__stronghold__day__approach.jpg",
+  "sky_fraction": 0.005,
+  "lower_edges": 0.3407,
+  "script_errors": 0,
+  "note": "below6-stronghold-stand r2 (F38#20): stand (0, 7130); tb/below6 d4801ed9a (game-identical to d13bdd51d for this tool), base no overlay vs arm BELOW6-STRONGHOLD-STAND/overlay.json; High"
+ },
+ {
+  "frame": "meadows__landmark__stronghold__night__approach.jpg",
+  "preset": "arm-High",
+  "tree": "d4801ed9a1b57e72dcd65de41128ca16692b4819",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-stronghold-stand-r2/arm-High/meadows__landmark__stronghold__night__approach.jpg",
+  "sky_fraction": 0.017,
+  "lower_edges": 0.3009,
+  "script_errors": 0,
+  "note": "below6-stronghold-stand r2 (F38#20): stand (0, 7130); tb/below6 d4801ed9a (game-identical to d13bdd51d for this tool), base no overlay vs arm BELOW6-STRONGHOLD-STAND/overlay.json; High"
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "d4801ed9a1b57e72dcd65de41128ca16692b4819",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-stronghold-stand-r2/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg",
+  "sky_fraction": 0.198,
+  "lower_edges": 0.2469,
+  "script_errors": 0,
+  "note": "below6-stronghold-stand r2 (F38#20): stand (0, 7130); tb/below6 d4801ed9a (game-identical to d13bdd51d for this tool), base no overlay vs arm BELOW6-STRONGHOLD-STAND/overlay.json; High"
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach.jpg",
+  "preset": "base-High",
+  "tree": "d4801ed9a1b57e72dcd65de41128ca16692b4819",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-stronghold-stand-r2/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__night__approach.jpg",
+  "sky_fraction": 0.406,
+  "lower_edges": 0.1309,
+  "script_errors": 0,
+  "note": "below6-stronghold-stand r2 (F38#20): stand (0, 7130); tb/below6 d4801ed9a (game-identical to d13bdd51d for this tool), base no overlay vs arm BELOW6-STRONGHOLD-STAND/overlay.json; High"
+ },
+ {
+  "frame": "meadows__landmark__stronghold__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "d4801ed9a1b57e72dcd65de41128ca16692b4819",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-stronghold-stand-r2/base-High/meadows__landmark__stronghold__day__approach.jpg",
+  "sky_fraction": 0.006,
+  "lower_edges": 0.3401,
+  "script_errors": 0,
+  "note": "below6-stronghold-stand r2 (F38#20): stand (0, 7130); tb/below6 d4801ed9a (game-identical to d13bdd51d for this tool), base no overlay vs arm BELOW6-STRONGHOLD-STAND/overlay.json; High"
+ },
+ {
+  "frame": "meadows__landmark__stronghold__night__approach.jpg",
+  "preset": "base-High",
+  "tree": "d4801ed9a1b57e72dcd65de41128ca16692b4819",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-stronghold-stand-r2/base-High/meadows__landmark__stronghold__night__approach.jpg",
+  "sky_fraction": 0.039,
+  "lower_edges": 0.2499,
+  "script_errors": 0,
+  "note": "below6-stronghold-stand r2 (F38#20): stand (0, 7130); tb/below6 d4801ed9a (game-identical to d13bdd51d for this tool), base no overlay vs arm BELOW6-STRONGHOLD-STAND/overlay.json; High"
+ }
+]
