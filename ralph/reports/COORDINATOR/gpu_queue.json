@@ -3,6 +3,23 @@
  "after": "section F (all four biomes) finishes",
  "entries": [
   {
+   "id": "medium-f38-15-galeland",
+   "kind": "close-out medium",
+   "rows": [
+    "F38#15"
+   ],
+   "branch": "tb/things",
+   "head": "b628efddf",
+   "tree": "tb/things b628efddf both sides (same tree as G-galeland2-galecrest)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-GALELAND/overlay_galewisp_landing.json",
+   "overlay_format": "deep merge",
+   "job": "tools/phase2_capture_realm_flight.gd --biome=meadows --seed=2042 (default carrier Galecrest): frames 02-glide and 03-landed = F38#15 job.json meadows__flying__glide and __landed",
+   "capture": "MEDIUM preset, base and arm",
+   "priority": "FIRST (owner: candidates that would close a criterion go first): F38#15 High 7.70 with this arm (G-f38-15-row, LANE-SCOUT ce551ce9e)",
+   "note": "Closes at mapped 7.5 or above on both High and Medium."
+  },
+  {
    "id": "confirm-gatepaving-scoped",
    "kind": "confirm",
    "rows": [
