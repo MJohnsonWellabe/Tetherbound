@@ -121,6 +121,15 @@ func _process(delta: float) -> void:
 	if cell == _cell:
 		return
 	_cell = cell
+	# storm_phase_1111 (`follow_camera`): the node's custom AABB is centred on
+	# the node, which sat at the world origin, so away from the origin (all of
+	# Stormwood's route) the whole MultiMesh was culled and no shaft ever drew
+	# (GPU judges after storm_sky_1101 shipped: "no shafts"). On: the node sits
+	# on the camera's cell and the shafts are placed relative to it.
+	var anchor := Vector3.ZERO
+	if bool(cfg.get("follow_camera", false)):
+		anchor = Vector3((float(cell.x) + 0.5) * size, at.y, (float(cell.y) + 0.5) * size)
+		global_position = anchor
 	var placed := placements(cell, cfg)
 	for i in placed.size():
 		var p: Dictionary = placed[i]
@@ -128,7 +137,7 @@ func _process(delta: float) -> void:
 		var basis := Basis.from_scale(Vector3(float(p.width), h, 1.0))
 		# Foot buried below the camera's ground so terrain hides the base.
 		var origin := Vector3(float(p.x), at.y - float(cfg.get("foot_below_camera_m", 24.0)) + h * 0.5, float(p.z))
-		multimesh.set_instance_transform(i, Transform3D(basis, origin))
+		multimesh.set_instance_transform(i, Transform3D(basis, origin - anchor))
 		multimesh.set_instance_custom_data(i, Color(float(p.seed), float(p.alpha), 0.0, 0.0))
 
 

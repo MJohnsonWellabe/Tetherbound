@@ -1,0 +1,18 @@
+{
+ "id": "places-rain-time-grade",
+ "branch": "tb/places",
+ "head": "(this commit)",
+ "base": "main",
+ "arm": "tb/places + ralph/reports/LANES/PLACES-RAINTIME/overlay.json",
+ "overlay": "ralph/reports/LANES/PLACES-RAINTIME/overlay.json",
+ "preset": "High first, then Medium if High reaches 7.5",
+ "tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache",
+ "rows": {
+  "F40#0": {"pieces": "rain pieces of at least three stands: N = stand*8 + {2 dawn, 4 day, 6 golden, 8 night}; e.g. 2,4,6,8 (gate), 82,84,86,88 (summit), 90,92,94,96 (overlook); add one clear piece per stand as a control",
+   "frames": ["cloudreach__gate_lower_cliffs__01__realm_gate_crag__{approach,gameplay,reverse,detail}__{dawn,day,golden,night}__rain"]},
+  "F40#19": {"pieces": "4 (realm gate day rain, the row's own piece) plus 8 (night rain)"}
+ },
+ "capture_both": "base (main) and arm (overlay), same pieces",
+ "want_to_see": "night rain that is night; golden-hour rain with warm low light; thin translucent streaks that are never the brightest thing in frame",
+ "reject_if": "golden rain reads as a flat tan wash, or the night trainer sinks into the ground"
+}

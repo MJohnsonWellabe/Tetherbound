@@ -1,0 +1,30 @@
+{
+ "id": "places-stormlight-phase-1111",
+ "branch": "tb/places",
+ "head": "(this commit)",
+ "base": "main",
+ "arm": "tb/places + ralph/reports/LANES/PLACES-STORMLIGHT/overlay.json",
+ "overlay": "ralph/reports/LANES/PLACES-STORMLIGHT/overlay.json",
+ "preset": "High first, then Medium if High reaches 7.5",
+ "capture_both": "base (main) and arm (overlay), same seed 2042",
+ "rows": {
+  "F41#2": {"tool": "tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel",
+   "frames": ["stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm", "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building", "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break"]},
+  "F41#4": {"tool": "tools/phase2_capture_locations.gd --biome=stormwood --times=day --views=close --seed=2042 --subset=<frame stand>",
+   "frames": ["stormwood__glowmoss_hollows__03__the_lantern_pools__day__close", "stormwood__glowmoss_hollows__04__crown_overlook__day__close", "stormwood__deepwood__10__the_fallen_giant__day__close"]},
+  "F41#5": {"tool": "tools/phase2_capture_locations.gd --biome=stormwood --times=day --seed=2042 (approach for the struck sentinel, close for the others)",
+   "frames": ["stormwood__cinder_verge__01__the_struck_sentinel__day__approach", "stormwood__glowmoss_hollows__04__crown_overlook__day__close", "stormwood__landmark__crown_heartstone__day__close"]},
+  "F41#12": {"tool": "tools/phase2_capture_locations.gd --biome=stormwood --views=close --seed=2042 (day, and night for landmark lantern_hollow)",
+   "frames": ["stormwood__deepwood__09__lantern_hollow__day__close", "stormwood__landmark__glass_field__day__close", "stormwood__landmark__lantern_hollow__night__close"]},
+  "F41#19": {"tool": "tools/phase2_capture_routes.gd --biome=stormwood --seed=2042 --subset=stormwood__dynamo__11__the_glass_field",
+   "frames": ["stormwood__dynamo__11__the_glass_field__walk_03_day"]},
+  "F41#8": {"tool": "tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=<frame>",
+   "frames": ["stormwood__inventory__character__elder_maud", "stormwood__inventory__character__rodkeeper_hesk", "stormwood__inventory__character__warden_elect_bryn"]},
+  "F41#6": {"tool": "tools/phase2_capture_stormwood_fights.gd --ids=capacitor_alpha --seconds=18 --interval=1.0 --seed=2042", "rider": true,
+   "frames": ["stormwood__fight__capacitor_alpha-tell1-e-impact"]},
+  "F41#13": {"tool": "tools/phase2_capture_creatures.gd --biome=stormwood --seed=2042 --only=fulgocobra,stormraven --poses=idle", "rider": true,
+   "frames": ["stormwood__fulgocobra__idle", "stormwood__stormraven__idle"]}
+ },
+ "want_to_see": "a layered storm sky that darkens Calm < Building < Break; white-violet bolts with trunks and wet ground lit by them in Break; light shafts in Calm; pale mist banks between tree ranks with no glare at the Glass Field; three distinct villagers in F41#8",
+ "reject_if": "white fog glare at the Glass Field, a blown specular blot on wet ground, or near ground hidden by mist"
+}
