@@ -4567,6 +4567,20 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "below6-overlook-pane",
+   "kind": "fix (judge before landing)",
+   "rows": [
+    "F40#15",
+    "overlook routes"
+   ],
+   "branch": "tb/below6",
+   "head": "4e03b0b23",
+   "job": "phase2_capture_routes.gd --biome=cloudreach --subset=cloudreach__summit_final_stronghold__12__stormward_overlook --seed=2042; frames route_day, vista_dusk, walk_01_day, walk_02_day, walk_03_day; base = pane_fix_1112 OFF, arm = ON (default)",
+   "capture": "High",
+   "priority": "cheap; the amber pane was 'the worst artefact in the batch' (3/3)",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-riftfrill-matte",
    "kind": "arm (near-bar)",
    "rows": [
