@@ -3734,6 +3734,18 @@
    "capture": "High, main only (row score, no arm)",
    "priority": "GPU otherwise idle; gives F41#15 a full row score (Nysa never captured)",
    "note": "Judge as a row score with anchors; report the Nysa frame's occluder if any."
+  },
+  {
+   "id": "fading-bolt-motion-probe",
+   "kind": "probe",
+   "rows": [
+    "F41#2"
+   ],
+   "branch": "tb/places",
+   "head": "e83c4119b",
+   "job": "res://tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel --motion-seconds=8, base only",
+   "priority": "settles capture timing vs game for the bolt in Fading (owner: lightning Break-only)",
+   "note": "GPU lane: game reported phase fading at 30.3 s of 60 when shot; the tool shoots 3 physics + 5 render frames after jumping the clock straight from Break. Motion run shows whether the bolt clears with time."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
