@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-stormlight-dialogue/arm-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.3612,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-stormlight-dialogue/arm-High/stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.2987,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "arm-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-stormlight-dialogue/arm-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.108,
+  "lower_edges": 0.1811,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-stormlight-dialogue/base-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.072,
+  "lower_edges": 0.3621,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-stormlight-dialogue/base-High/stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "sky_fraction": 0.167,
+  "lower_edges": 0.2976,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "base-High",
+  "tree": "038f0fdebcae8a271052e46082d34ed56ba7b693",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-stormlight-dialogue/base-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.1806,
+  "script_errors": 0,
+  "note": "places-stormlight, High, seed 2042, tb/places 038f0fdeb both sides; base = overlay off, arm = PLACES-STORMLIGHT/overlay.json (storm_phase_1111 + distinct_bodies_1111). F41#8 inventory frames."
+ }
+]
