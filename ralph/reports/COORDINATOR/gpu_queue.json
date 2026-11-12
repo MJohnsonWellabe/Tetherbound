@@ -21,6 +21,20 @@
    "note": "Art-only bank (up to 24 deg roll into turns, 8 deg nose dip); movement, collision, rider and grip unchanged. Remote carriers are not banked yet (local presentation only)."
   },
   {
+   "id": "medium-ashtusk-brooktail-ruler",
+   "kind": "close-out medium",
+   "rows": [
+    "F36#33",
+    "F36#36"
+   ],
+   "branch": "main",
+   "head": "f421556ca",
+   "tree": "main f421556ca, no overlay (same as G-things-ruler-rescore)",
+   "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --clear-ruler --roles=hit,faint for ashtusk and brooktail (the row frames judged in G-things-ruler-rescore); base without --clear-ruler for the paired check",
+   "capture": "MEDIUM preset, base and arm",
+   "priority": "close-outs: Ashtusk High 8.03, Brooktail High 7.69 (G-things-ruler-rescore, 86e6ee44e)"
+  },
+  {
    "id": "medium-f38-15-galeland",
    "kind": "close-out medium",
    "rows": [

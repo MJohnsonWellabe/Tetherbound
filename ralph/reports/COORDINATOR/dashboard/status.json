@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 10:35 UTC",
+  "updated": "12 Nov 2026 11:05 UTC",
   "headline": [
+    "12 Nov 11:05: pose-stage capture fix (--clear-ruler, no game change) lifts six creature rows: Ashtusk 8.03 and Brooktail 7.69 meet the bar at High (Medium running next), Mirejaw 7.26 (was 5.28), Riftfrill 7.31, Sparkit 7.26, Shadelet 7.07. Stormwood rim-off and wet trail round 2 in progress; F38#15 glide-bank close-out capturing.",
     "12 Nov 10:25: Stormwood rim-off ships: the white bloom on the player's head and pale officers came from the night character rim under storm light. F41#18 5.60 -> 6.22, Stormwood dialogue +0.41 to +0.45 (3/3 everywhere, nothing loses). Landing being cut.",
     "12 Nov 10:10: F38#15 Galecrest flight: High 7.70, Medium 7.37 with the landing staging (#922, re-running CI after a base update): 0.13 short of closing; LANE-THINGS building a glide or landing pose variation as the close-out. GPU: Stormwood rim-off (white player head) capturing.",
     "12 Nov 09:25: #921 landed: F41#15, the lowest row all week, is 6.97. Below 6 now: F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90. F38#15 Galecrest flight reaches 7.70 at High with the landing staging: Medium capture running first; landing as batch 78.",
@@ -2886,8 +2887,8 @@
       "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, LANDED on main 8df122a83 via #910: Voltarach charcoal coat, 5.15 -> 6.50 (+1.35, 3/3); face still unreadable"
     },
     "F36#52": {
-      "gpu": 6.98,
-      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler); G-below6-hits (LANE-SCOUT 65306ecd0): grounded hit 5.72 -> 6.32 on main's stage (+0.60, 3/3), LANDED #914"
+      "gpu": 7.26,
+      "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mirejaw 6.70 (fixed stage) -> 6.98 (2/3); on main's old stage 5.28 in G-things-t4-rescore (tail through the ruler); G-below6-hits (LANE-SCOUT 65306ecd0): grounded hit 5.72 -> 6.32 on main's stage (+0.60, 3/3), LANDED #914; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 7.26 at High"
     },
     "F36#69": {
       "gpu": 8.04,
@@ -2910,12 +2911,12 @@
       "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Cliffspike"
     },
     "F36#36": {
-      "gpu": 6.9,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Brooktail"
+      "gpu": 7.69,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Brooktail; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 7.69 at High"
     },
     "F36#33": {
-      "gpu": 6.9,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Ashtusk"
+      "gpu": 8.03,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Ashtusk; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 8.03 at High"
     },
     "F36#87": {
       "gpu": 6.78,
@@ -2926,8 +2927,8 @@
       "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Mosshock"
     },
     "F36#70": {
-      "gpu": 6.6,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Sparkit"
+      "gpu": 7.26,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Sparkit; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 7.26 at High"
     },
     "F36#44": {
       "gpu": 6.53,
@@ -2946,12 +2947,12 @@
       "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: paddlenewt 6.47 -> 6.96 (3/3)"
     },
     "F36#62": {
-      "gpu": 6.85,
-      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: riftfrill 6.43 -> 6.85 (3/3)"
+      "gpu": 7.31,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: riftfrill 6.43 -> 6.85 (3/3); G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 7.31 at High"
     },
     "F36#66": {
-      "gpu": 6.09,
-      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: shadelet 5.43 -> 6.09 (3/3)"
+      "gpu": 7.07,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: shadelet 5.43 -> 6.09 (3/3); G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 7.07 at High"
     },
     "F36#80": {
       "gpu": 6.04,
