@@ -1,14 +1,20 @@
 {
- "id": "places-gate-paving-1112",
+ "id": "places-gate-paving-1112-r2-scoped",
  "branch": "tb/places",
  "head": "(this commit)",
  "base": "main",
  "arm": "ralph/reports/LANES/PLACES-GATEPAVING/overlay.json",
  "preset": "High first, then Medium if High reaches 7.5",
  "rows": {
-  "F40#1": {"tool": "the row's own frames from ralph/reports/VISUAL/item-scores/job.json (Realm Gate Crag approach, Heartstone approach, Sky Shrine close)"},
-  "F40#0": {"tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=3 --ground-cover-cache (realm gate, day clear, four views); add --piece=4 (day rain) if cheap"}
+  "F40#1": {
+   "tool": "the row's own frames from ralph/reports/VISUAL/item-scores/job.json (Realm Gate Crag approach, Heartstone approach, Sky Shrine close)"
+  },
+  "F40#0": {
+   "tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=3 --ground-cover-cache (realm gate, day clear, four views); add --piece=4 (day rain) if cheap"
+  }
  },
  "want_to_see": "a stone trail at the trainer's scale, flush with the path, in place of the torso-sized cobble pad",
- "reject_if": "the trail reads as scattered litter, or the path looks bare"
+ "reject_if": "the trail reads as scattered litter, or the path looks bare",
+ "round": 2,
+ "note": "Scoped to the dirt-road stands (see ARM.md Round 2). Same frames as round 1: F40#0 pieces 3-4, the F40#1 row and controls. Ships alone if F40#0 holds about +0.8 and F40#1 does not lose."
 }
