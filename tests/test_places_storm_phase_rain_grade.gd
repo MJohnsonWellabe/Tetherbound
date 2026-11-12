@@ -51,7 +51,10 @@ func test_storm_phase_on_orders_the_phases_and_never_lights_calm() -> void:
 	assert_true(float(rows.calm.deck_dark) < float(rows.building.deck_dark)
 		and float(rows.building.deck_dark) < float(rows["break"].deck_dark), "the deck darkens Calm < Building < Break")
 	assert_eq(float(rows.calm.far_bolts), 0.0, "Calm has no lightning")
-	assert_true(float(rows.building.far_bolts) > 0.0, "Building shows far-horizon bolts")
+	# Owner, 12 Nov 2026: sky lightning stays the Break-only danger cue (F10), so
+	# no phase carries far-horizon bolts; the judged arm had faint ones in Building.
+	for phase: String in RULES.PHASES:
+		assert_eq(float(rows[phase].far_bolts), 0.0, "%s carries no far bolts (owner: lightning is Break's cue)" % phase)
 	assert_false(bool(rows.building.flashes), "Building takes no whole-sky flashes")
 	for phase: String in RULES.PHASES:
 		assert_true(float(rows[phase].horizon_glow) >= 0.5, "%s keeps a pale band under the deck (lift, don't darken)" % phase)
@@ -63,29 +66,17 @@ func test_storm_phase_on_orders_the_phases_and_never_lights_calm() -> void:
 		"far bolts are fainter and farther than Break's")
 
 
-func test_far_bolts_fire_only_in_a_far_bolt_phase_and_respect_the_hold() -> void:
+func test_no_phase_fires_far_bolts() -> void:
+	# Owner, 12 Nov 2026: lightning stays Break's alone; Building fires nothing.
 	var surge := SURGE.new()
 	surge.rules = RULES.new(_surge_with(true))
-	surge.set("_to", surge._resolved(surge.presentation_for("building")))
-	surge.set("_blend", 1.0)
-	var cfg: Dictionary = surge.rules.config.presentation.sky_lightning
-	for step in 200:
-		surge.call("_advance_sky_lightning", 0.1)
-	var kinds := {}
-	for entry: Array in surge.sky_log:
-		kinds[str(entry[1])] = true
-	assert_true(kinds.has("far_bolt"), "Building fires far bolts")
-	assert_eq(kinds.size(), 1, "and nothing else (no Break events): %s" % str(kinds.keys()))
-	surge.sky_log.clear()
-	surge.hold_sky_bolts(100.0)
-	for step in 200:
-		surge.call("_advance_far_bolts", 0.1, cfg)
-	assert_eq(surge.sky_log.size(), 0, "no far bolt while a ground warning holds decorative bolts")
-	surge.set("_to", surge._resolved(surge.presentation_for("calm")))
-	surge.set("_bolt_hold", 0.0)
-	for step in 200:
-		surge.call("_advance_sky_lightning", 0.1)
-	assert_eq(surge.sky_log.size(), 0, "Calm fires nothing")
+	for phase: String in ["calm", "building", "fading"]:
+		surge.sky_log.clear()
+		surge.set("_to", surge._resolved(surge.presentation_for(phase)))
+		surge.set("_blend", 1.0)
+		for step in 200:
+			surge.call("_advance_sky_lightning", 0.1)
+		assert_eq(surge.sky_log.size(), 0, "%s fires no sky lightning" % phase)
 	surge.free()
 
 
