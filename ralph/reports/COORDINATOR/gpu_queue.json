@@ -4250,6 +4250,26 @@
    "priority": "top shared cause in the 6-7 map (P-GROUND, four Meadows rows); ahead of single-row arms"
   },
   {
+   "id": "things-foestand",
+   "kind": "arm (6-7, shared cause)",
+   "rows": [
+    "F38#3",
+    "F39#7",
+    "F39#19",
+    "F41#3"
+   ],
+   "branch": "tb/things",
+   "head": "40fb0d9e3",
+   "tree": "tb/things 40fb0d9e3 (or later) both sides",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FOESTAND/overlay_opponent_stand.json (combat.json arena.opponent_trainer_stand_1112)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-FOESTAND/CAPTURE.json: F38#3 job.json frames + one Tidewake (F39#7 or F39#19) and one Stormwood (F41#3) trainer fight as no-loss",
+   "capture": "High, base and arm",
+   "pre_check": "opposing trainer visible behind their own creature, grounded, not on a ledge; player's trainer unchanged",
+   "priority": "after meadowground: F38#3 close candidate (High 7.17, Medium 7.35) + the T-FIGHTSTAGE cause group"
+  },
+  {
    "id": "things-stormuniform",
    "kind": "arm",
    "rows": [
