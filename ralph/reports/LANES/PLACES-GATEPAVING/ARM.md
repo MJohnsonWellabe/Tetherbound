@@ -16,8 +16,3 @@ Small. It removes one named defect at the gate, gate-road and shrine stands; it 
 
 ## Reject if
 The trail reads as scattered litter or the path looks bare.
-
-## Round 2 (12 Nov): scoped to the dirt-road stands; please re-judge on the same frames
-`G-places-gatepaving` was a split: F40#0 gate clear +0.93 and rain +0.79 (3/3 each), F40#1 row −0.61 (0/3; on grass the stones read as a faint grey smear). The flag now carries `stands` (gate_road_approach, gate_road_close, f40_gate_road): only pieces on the dirt road take the smaller, sunk size; every other stand keeps the shipped pieces.
-CPU check with the overlay on: the realm gate approach (matrix piece 3) shows the small flush stones; the F40#1 Realm Gate Crag landmark approach differs from main by about 2% of pixels (I took that as grass motion; not inspected further). The shrine-side F40#1 frames were not captured on CPU.
-Same overlay (`overlay.json`), same frames: F40#0 pieces 3–4, the F40#1 row and controls. A landing branch is already cut for the scoped form (`tb/places-gatepaving-land`, READY.md); it should land only if this re-judge holds the gate gain with no F40#1 loss.

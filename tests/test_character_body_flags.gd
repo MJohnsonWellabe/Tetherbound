@@ -12,7 +12,7 @@ const FLAGS_PATH := "res://data/config/character_body_flags.json"
 const JUDGED_ON := ["npc_vis_look_grunt", "npc_vis_look_farmer", "npc_vis_look_local_historian",
 	"npc_vis_look_lost_traveler", "npc_vis_look_field_researcher", "npc_vis_look_warden",
 	"npc_vis_look_grunt_a", "npc_vis_look_grunt_c", "npc_vis_look_officer_b", "npc_vis_look_officer_a",
-	"npc_vis_look_inn_helper", "npc_vis_look_creature_caretaker"]
+	"npc_vis_look_inn_helper", "npc_vis_look_creature_caretaker", "below6_marrow_self_lit_off"]
 
 
 func test_shipped_flags_resolve_and_only_judged_looks_ship_on() -> void:
@@ -25,7 +25,10 @@ func test_shipped_flags_resolve_and_only_judged_looks_ship_on() -> void:
 		var judged_on := flag in JUDGED_ON
 		if judged_on:
 			assert_true(bool(entry.get("enabled", false)), "%s ships ON (judged gain)" % flag)
-			assert_true(str(entry.get("_why", "")).contains("GPU batch 7"), "%s records its judged score" % flag)
+			# Batch-7 looks name the batch in `_why`; a later landing names its
+			# GPU verdict file in `_why_on`.
+			assert_true(str(entry.get("_why", "")).contains("GPU batch 7")
+				or str(entry.get("_why_on", "")).contains("GPU-PASS/"), "%s records its judged score" % flag)
 		else:
 			assert_false(bool(entry.get("enabled", true)), "%s ships OFF" % flag)
 		var characters: Dictionary = entry.get("characters", {})

@@ -20,7 +20,7 @@ func _init(authored: Dictionary = {}) -> void:
 # `building_glow_1104` (VIS-STORMWOOD, OFF until judged): Building shows
 # in-cloud sheet lightning (presentation only; `flashes` stays Break-only).
 ## `fine_rain_1110` (LANE-MESHY, OFF until judged) rides after soft_rain_1101.
-const PRESENTATION_CANDIDATES := ["storm_sky_1101", "soft_rain_1101", "phase_grade_1104", "building_glow_1104", "fine_rain_1110", "storm_phase_1111", "fading_clear_1112"]
+const PRESENTATION_CANDIDATES := ["storm_sky_1101", "soft_rain_1101", "phase_grade_1104", "building_glow_1104", "fine_rain_1110", "storm_phase_1111"]
 
 
 static func with_presentation_candidates(source: Dictionary) -> Dictionary:

@@ -931,6 +931,10 @@ static func approach_override_for(config_path: String, identity: String) -> Dict
 	if not block is Dictionary or not bool((block as Dictionary).get("enabled", false)):
 		return {}
 	var spec: Variant = ((block as Dictionary).get("destinations", {}) as Dictionary).get(identity, null)
+	# Unjudged stands live in their own switched-off block until an arm wins.
+	var candidates: Variant = (block as Dictionary).get("candidates_1112", {})
+	if not spec is Dictionary and candidates is Dictionary and bool((candidates as Dictionary).get("enabled", false)):
+		spec = ((candidates as Dictionary).get("destinations", {}) as Dictionary).get(identity, null)
 	if not spec is Dictionary:
 		return {}
 	var position: Variant = (spec as Dictionary).get("position", null)
