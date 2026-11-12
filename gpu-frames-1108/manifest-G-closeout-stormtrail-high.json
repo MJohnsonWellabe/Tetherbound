@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "stormtrail-faint-000.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-faint-000.jpg",
+  "sky_fraction": 0.965,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-faint-025.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-faint-025.jpg",
+  "sky_fraction": 0.965,
+  "lower_edges": 0.0489,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-faint-050.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-faint-050.jpg",
+  "sky_fraction": 0.968,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-faint-075.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-faint-075.jpg",
+  "sky_fraction": 0.97,
+  "lower_edges": 0.0439,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-faint-100.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-faint-100.jpg",
+  "sky_fraction": 0.97,
+  "lower_edges": 0.0437,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-hit-000.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-hit-000.jpg",
+  "sky_fraction": 0.964,
+  "lower_edges": 0.0493,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-hit-025.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-hit-025.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.051,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-hit-050.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-hit-050.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0516,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-hit-075.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-hit-075.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0493,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ },
+ {
+  "frame": "stormtrail-hit-100.png",
+  "preset": "main-High",
+  "tree": "90ffeb663cec077af7b837424e6b5be84db36f4c",
+  "tool": "tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-stormtrail-high/main-High/stormtrail-hit-100.jpg",
+  "sky_fraction": 0.964,
+  "lower_edges": 0.0494,
+  "script_errors": 0,
+  "note": "CLOSE-OUT Stormtrail at HIGH (Medium 7.72, High 7.49 before). Log: STAGE graphics preset applied: High. main 90ffeb663 (#925 preset + #926 slate backdrop), one side, capture_f36_poses.gd --whole-body --context --roles=hit,faint. Neutral stage frames (PACK_STAGE_FRAMES=1 after an eye check of every frame)."
+ }
+]
