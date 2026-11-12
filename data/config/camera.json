@@ -40,6 +40,7 @@
     "max_speaker_distance": 9.0,
     "min_distance": 1.2,
     "speaker_light_candidate": {
+      "realm_energy_1112": {"_why": "Stormwood dialogue (LANE-THINGS, 12 Nov 2026, OFF until judged). G-things-convclear-other-biomes.md and G-rescore-f41-15-main, 3/3: Captain Marrow's head is blown out white in every frame, Officer Nysa reads as a pale ghost, and the player's head blooms white at the left edge. The key and rim were tuned on brighter realms; the rim stands behind the speaker and so faces the player. When on, both lights are scaled per realm (conversation_camera.gd speaker_light_scale).", "scope": "client_presentation", "enabled": false, "scale": {"stormwood": 0.4}},
       "enabled": true,
       "_why": "GPU DLG-2 (1 Nov): P2-074 'add key, rim and fog depth to the dim chamber' (Nerissa); P2-087/P2-083 speakers read dark-on-dark against walls and under decks. When enabled, conversation_camera.gd places a soft warm-neutral key from the lens side and a cool rim from behind the speaker while the push-in is up (offset = [toward lens, right, up] m from the speaker's chest), freed on close. No shadows; client presentation only. CPU r1: with the key 1.7 m toward the lens it sat on the trainer in close conversations and blew their face out white; it now stands camera-right (the trainer is camera-left) with a short steep falloff. TUNABLE.",
       "key": {"offset": [1.0, 1.4, 0.9], "colour": "#fff2e2", "energy": 0.9, "range": 3.0, "attenuation": 2.0},

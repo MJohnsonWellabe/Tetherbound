@@ -180,3 +180,15 @@ func test_creature_cone_marks_a_covered_speaker_not_clear() -> void:
 	_rig.set_cone_probe_for_tests(func(_from: Vector3, to: Vector3) -> bool: return to.y < 1.55)
 	assert_eq(_rig._speaker_visible_fraction(shot, speaker, block["creature_cone"]), 0.2)
 	assert_true(_rig._clearance_total(shot, trainer, speaker, block) < 0.0, "a speaker covered up to the neck is not clear")
+
+
+## `speaker_light_candidate.realm_energy_1112` (OFF on main).
+func test_realm_light_scale_ships_off_and_scales_only_listed_realms_when_on() -> void:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/camera.json"))
+	var light: Dictionary = (parsed.get("conversation", {}) as Dictionary).get("speaker_light_candidate", {})
+	assert_false(bool((light.get("realm_energy_1112", {}) as Dictionary).get("enabled", true)))
+	assert_eq(CONVERSATION.speaker_light_scale(light, "stormwood"), 1.0, "off: no change")
+	var on := light.duplicate(true)
+	(on["realm_energy_1112"] as Dictionary)["enabled"] = true
+	assert_eq(CONVERSATION.speaker_light_scale(on, "stormwood"), 0.4)
+	assert_eq(CONVERSATION.speaker_light_scale(on, "meadows"), 1.0)
