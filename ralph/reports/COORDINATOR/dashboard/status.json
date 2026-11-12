@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 23:20 UTC",
+  "updated": "12 Nov 2026 23:35 UTC",
   "headline": [
+    "12 Nov 23:35: Cloudreach brighter rain sky does not ship: three rain sets gain about +0.2 (3/3), but F40#19's sky reads washed out (-0.12). LANE-THINGS will keep the brighter ground and go back to the darker slate cloud deck that won for F40#19 earlier.",
     "12 Nov 23:20: #936 landed (Cloudreach wall stones, F40#15). Today's landings: #927, #928, #930, #933, #934, #935, #936; closes today: F41#11, F38#4, F38#20 (plus F38#9, F39#4, F39#24 earlier).",
     "12 Nov 23:00: F38#20 Team Tether stronghold CLOSES (7.50 High and Medium, control 0.3 strict). It was 5.72 this morning, below 6. F38#3 fight camera does not close (6.89 High / 7.03 Medium).",
     "12 Nov 22:50: #934 landed: the swimmer reads as swimming and restoring the currents visibly changes the sea. F39#14 and F39#17 are now above 6; F39#5 is at 5.98. #936 (wall stones) is updated onto the new main and re-running CI.",
@@ -2913,7 +2914,7 @@
     },
     "F40#21": {
       "gpu": 5.98,
-      "src": "GPU High 10 Nov, matrix scope from the F40#0 capture (was 7.03 provisional on 8 Nov frames) | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.68; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled)"
+      "src": "GPU High 10 Nov, matrix scope from the F40#0 capture (was 7.03 provisional on 8 Nov frames) | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.68; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled) | ARM THINGS-CLOUDRAIN (14e9b2c81, 12 Nov): F40#0 day +0.21 / night +0.24 (3/3), F40#21 +0.20 (3/3), F40#19 -0.12 (2/3 prefer base: paler sky washed out); not shipped. Next: brighter ground with the slate deck from G-f40-19-mist"
     },
     "F22#4": {
       "gpu": 7.2,
@@ -2929,11 +2930,11 @@
     },
     "F40#0": {
       "gpu": 5.98,
-      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads.; G-places-raintime (LANE-SCOUT): rain half of the matrix 5.04 -> 5.74 (+0.70, 12/12 sets 3/3), rain grade LANDED #915 (row not re-scored as a whole yet) | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.54; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled)"
+      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads.; G-places-raintime (LANE-SCOUT): rain half of the matrix 5.04 -> 5.74 (+0.70, 12/12 sets 3/3), rain grade LANDED #915 (row not re-scored as a whole yet) | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.54; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled) | ARM THINGS-CLOUDRAIN (14e9b2c81, 12 Nov): F40#0 day +0.21 / night +0.24 (3/3), F40#21 +0.20 (3/3), F40#19 -0.12 (2/3 prefer base: paler sky washed out); not shipped. Next: brighter ground with the slate deck from G-f40-19-mist"
     },
     "F40#19": {
       "gpu": 5.98,
-      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-f40-19-mist sky-only, landed #885 | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.66; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled)"
+      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-f40-19-mist sky-only, landed #885 | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.66; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled) | ARM THINGS-CLOUDRAIN (14e9b2c81, 12 Nov): F40#0 day +0.21 / night +0.24 (3/3), F40#21 +0.20 (3/3), F40#19 -0.12 (2/3 prefer base: paler sky washed out); not shipped. Next: brighter ground with the slate deck from G-f40-19-mist"
     },
     "F39#30": {
       "gpu": 6.7,
