@@ -4091,15 +4091,16 @@
     "nightburrow"
    ],
    "branch": "tb/things",
-   "head": "4ab726f65",
-   "tree": "tb/things 4ab726f65 both sides (pose stage defaults to the clear ruler only after #923; pass --clear-ruler explicitly on both sides)",
+   "head": "286411cd0",
+   "tree": "tb/things 286411cd0 both sides; pass --clear-ruler explicitly",
    "overlay_branch": "tb/things",
-   "overlay": "ralph/reports/LANES/THINGS-EMBERS/overlay_aspect_billboard.json",
+   "overlay": "ralph/reports/LANES/THINGS-EMBERS/overlay_aspect_billboard.json + (ashtusk only) the THINGS-ASHTUSK hit-recoil overlay, deep-merged",
    "overlay_format": "deep merge",
    "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --clear-ruler --roles=hit,faint for ashtusk, riftfrill, stormtrail, nightburrow",
    "capture": "High for all four; MEDIUM as well for ashtusk (close-out: High 8.03, Medium 7.28)",
    "pre_check": "no thin vertical line above the back; motes small and soft (owner: no big floating effects); embers not red",
-   "priority": "right after glidebank: Ashtusk close-out candidate"
+   "priority": "right after glidebank: Ashtusk close-out candidate",
+   "note": "Combined Ashtusk close-out: mote billboard fix (thin line) + per-species hit recoil (tusks out of the floor)."
   },
   {
    "id": "places-wetpath-r2",
