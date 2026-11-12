@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 14:05 UTC",
+  "updated": "12 Nov 2026 14:10 UTC",
   "headline": [
+    "12 Nov 14:10: Meadows re-score (17 rows): this panel reads about 0.6 above the first batch on the same rows, and every score above 7.35 is extrapolated past the top anchor. Ten rows flagged at 7.5+ (F38#3, #4, #7, #9, #13, #14, #18, #19, #33, #34, #38) get Medium captures and a confirming batch before any close. Drops: F38#23 6.57 (was 7.58), F38#8 6.23 (was 7.14). Overlapping rows are pooled on the board.",
     "12 Nov 14:05: real Medium re-verification: all four closed creature rows HOLD (Stormbrush 7.55, Solmane 7.72, Pebbik 7.63, Breezetail 7.59). Stormtrail Medium 7.72, High 7.49: a High re-run on the corrected stage (#926 landed: slate backdrop restored) could close it. Ashtusk Medium 7.42, open.",
     "12 Nov 13:25: first re-score batch (15 stale rows on current main): F38#14 catch effect 6.94 (was 6.06), F38#6 pickups 6.52, F38#2 6.35, F38#29 6.35; down: F38#21 6.23 (was 7.0), and five rows now below 6 (F38#12 5.89, F38#20 5.72, F39#5 5.64, F40#15 5.89, F41#18 5.93). Panel spread about 0.3. Below-6 rows go to LANE-BELOW6.",
     "12 Nov 13:20: #925 landed (pose-stage graphics preset fix; flight take-off fix; Ashtusk 7.32, Stormtrail 7.49). Next on the GPU: real Medium re-verification of F36#72, #69, #58, #35 (closed on a High copy) plus Ashtusk and Stormtrail; then the stale 6-7 re-scores and the 6-7 arms (Meadows ground shared cause).",
@@ -2381,28 +2382,28 @@
       "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-npc-floor recheck, ghost-glow landed batch 27"
     },
     "F38#10": {
-      "gpu": 6.58,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.38,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.38 (was 6.58) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#11": {
-      "gpu": 6.89,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.47,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.47 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#12": {
       "gpu": 5.89,
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.06)"
     },
     "F38#13": {
-      "gpu": 6.94,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.94 (was 7.16)"
+      "gpu": 7.3,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.94 (was 7.16); RE-SCORE pooled 7.30 (tier2 6.94, ext-meadows 7.66; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#14": {
-      "gpu": 6.94,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.94 (was 6.06)"
+      "gpu": 7.23,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.94 (was 6.06); RE-SCORE pooled 7.23 (tier2 6.94, ext-meadows 7.52; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#15": {
-      "gpu": 7.7,
-      "src": "GPU High 8-9 Nov (F-meadows); G-f38-15-row High 7.70 and G-medium-f38-15-galeland Medium 7.37 with the landing staging (#922 in CI): 0.13 short at Medium; glide/landing pose variation is the close-out lever",
+      "gpu": 7.23,
+      "src": "GPU High 8-9 Nov (F-meadows); G-f38-15-row High 7.70 and G-medium-f38-15-galeland Medium 7.37 with the landing staging (#922 in CI): 0.13 short at Medium; glide/landing pose variation is the close-out lever; RE-SCORE G-rescore-stale-ext-meadows 7.23 (was 6.84) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)",
       "medium": 7.37
     },
     "F38#16": {
@@ -2414,40 +2415,40 @@
       "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#17 6.97"
     },
     "F38#18": {
-      "gpu": 7.95,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 8.24,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.24 (was 7.95) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#19": {
-      "gpu": 6.89,
-      "src": "GPU High 8-9 Nov (A)"
+      "gpu": 7.62,
+      "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-meadows 7.62 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#2": {
       "gpu": 6.35,
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.35 (was 6.00)"
     },
     "F38#20": {
-      "gpu": 5.72,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.72 (was 6.02)"
+      "gpu": 5.9,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.72 (was 6.02); RE-SCORE pooled 5.90 (tier2 5.72, ext-meadows 6.09; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#21": {
-      "gpu": 6.23,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.23 (was 7.00)"
+      "gpu": 6.59,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.23 (was 7.00); RE-SCORE pooled 6.59 (tier2 6.23, ext-meadows 6.95; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#22": {
-      "gpu": 6.06,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.06 (was 6.10)"
+      "gpu": 6.43,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.06 (was 6.10); RE-SCORE pooled 6.43 (tier2 6.06, ext-meadows 6.80; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#23": {
-      "gpu": 7.58,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 6.57,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 6.57 (was 7.58) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#24": {
       "gpu": 6.01,
       "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51; stronghold 7.51)"
     },
     "F38#25": {
-      "gpu": 6.23,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.23,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.23 (was 6.23) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#26": {
       "gpu": 6.85,
@@ -2466,8 +2467,8 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.35 (was 6.05)"
     },
     "F38#3": {
-      "gpu": 6.49,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 8.09,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#30": {
       "gpu": 6.02,
@@ -2482,16 +2483,16 @@
       "src": "G-floor2-camp-r2 (LANE-SCOUT ebb0ebcc3): Trail Camp declutter, one-faced sign, plain gate wood, bonfire stand fixed; 6.26 -> 6.91; LANDED on main 8df122a83 via #910"
     },
     "F38#33": {
-      "gpu": 7.32,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 8.14,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.14 (was 7.32) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#34": {
-      "gpu": 6.75,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.76,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.76 (was 6.75) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#35": {
-      "gpu": 6.31,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 6.33,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 6.33 (was 6.31) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#36": {
       "gpu": 7.39,
@@ -2502,12 +2503,12 @@
       "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#37 6.9"
     },
     "F38#38": {
-      "gpu": 8.16,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 8.52,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.52 (was 8.16) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#4": {
-      "gpu": 7.21,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 8.09,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 7.21) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#41": {
       "gpu": 6.65,
@@ -2522,16 +2523,16 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.52 (was 6.10)"
     },
     "F38#7": {
-      "gpu": 7.26,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 7.52,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.52 (was 7.26) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#8": {
-      "gpu": 7.14,
-      "src": "G-newapproach-fly-grip (LANE-SCOUT, tb/item-scout-1108 88b1dc8ba): elbow bend plus trailing legs, base 6.26 -> 7.14 (+0.88, 3/3), landed #899. Close-out note: arms still straight up to the talons, no lean or swing."
+      "gpu": 6.23,
+      "src": "G-newapproach-fly-grip (LANE-SCOUT, tb/item-scout-1108 88b1dc8ba): elbow bend plus trailing legs, base 6.26 -> 7.14 (+0.88, 3/3), landed #899. Close-out note: arms still straight up to the talons, no lean or swing.; RE-SCORE G-rescore-stale-ext-meadows 6.23 (was 7.14) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#9": {
-      "gpu": 7.32,
-      "src": "GPU High 8-9 Nov (F-meadows)"
+      "gpu": 8.29,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.29 (was 7.32) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F39#1": {
       "gpu": 6.42,
