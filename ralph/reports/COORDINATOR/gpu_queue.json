@@ -3657,6 +3657,25 @@
    "capture": "High, base (overlay off) and arm (overlay on)",
    "priority": "lowest row on the board (F41#15 4.49)",
    "note": "Marrow's body emitted its own albedo plus a 0.18 Stormwood emission floor; arm turns both off for captain_a. Finishing in-progress work during wrap-up."
+  },
+  {
+   "id": "below6-f40-3-landmarks",
+   "kind": "arm",
+   "rows": [
+    "F40#3"
+   ],
+   "branch": "tb/below6",
+   "head": "0623dcbfe",
+   "tree": "tb/below6 0623dcbfe for both sides (no import; the arm needs this branch's phase2_capture_locations.gd)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-F40-3/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-F40-3/CAPTURE.json",
+   "job": "res://tools/phase2_capture_locations.gd --biome=cloudreach (three approach subsets, day, seed 2042) at 1920x1080 forward_plus",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "below-6 row, worst-first (F40#3 5.65)",
+   "stand_ruling": "Coordinator: both stand moves allowed (old observatory stand frames a rim wall; old beacon stand shows the gate at about a twentieth of the frame, so neither shows its subject; same rule as the landed Stormheart stand). Re-baseline, not like-for-like.",
+   "note": "Two new approach stands plus the aviary-family dome crowns (landmark_crowns_1111). Skyroad arch frame unchanged (control)."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
