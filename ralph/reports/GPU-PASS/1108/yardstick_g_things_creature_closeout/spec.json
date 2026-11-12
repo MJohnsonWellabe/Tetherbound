@@ -1,0 +1,72 @@
+[
+ {
+  "label": "G F36(1) ashtusk High closeout base-vs-arm",
+  "a": "G-cc_ashtusk_High_base.png",
+  "b": "G-cc_ashtusk_High_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: ashtusk - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black plates merge with shadow",
+   "a thin line floats above the back",
+   "tusks clip into the floor in the hit reaction"
+  ]
+ },
+ {
+  "label": "G F36(1) ashtusk Medium closeout base-vs-arm",
+  "a": "G-cc_ashtusk_Medium_base.png",
+  "b": "G-cc_ashtusk_Medium_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: ashtusk - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black plates merge with shadow",
+   "a thin line floats above the back",
+   "tusks clip into the floor in the hit reaction"
+  ]
+ },
+ {
+  "label": "G F36(1) brooktail High closeout base-vs-arm",
+  "a": "G-cc_brooktail_High_base.png",
+  "b": "G-cc_brooktail_High_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: brooktail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "oversized glowing spots read as a decal pattern",
+   "dark head with unreadable eyes"
+  ]
+ },
+ {
+  "label": "G F36(1) brooktail Medium closeout base-vs-arm",
+  "a": "G-cc_brooktail_Medium_base.png",
+  "b": "G-cc_brooktail_Medium_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: brooktail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "oversized glowing spots read as a decal pattern",
+   "dark head with unreadable eyes"
+  ]
+ },
+ {
+  "label": "G F36(1) riftfrill High closeout base-vs-arm",
+  "a": "G-cc_riftfrill_High_base.png",
+  "b": "G-cc_riftfrill_High_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: riftfrill - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "glossy dark purple"
+  ]
+ },
+ {
+  "label": "G F36(1) stormtrail High closeout base-vs-arm",
+  "a": "G-cc_stormtrail_High_base.png",
+  "b": "G-cc_stormtrail_High_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: stormtrail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "flat black placeholder look with emissive bands",
+   "faint flattens to a sheet"
+  ]
+ },
+ {
+  "label": "G F36(1) nightburrow High closeout base-vs-arm",
+  "a": "G-cc_nightburrow_High_base.png",
+  "b": "G-cc_nightburrow_High_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: nightburrow - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ }
+]
