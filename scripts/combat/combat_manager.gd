@@ -2168,6 +2168,7 @@ func _place_fighters() -> void:
 	_trainer_stand_anchor = ally_spot if beside_ally else Vector3.INF
 	_stand_the_trainer_aside(forward)
 	_trainer_stand_anchor = Vector3.INF
+	_stand_the_opponent_trainer_behind(wild_spot, ally_spot, forward)
 
 
 ## Cards M2 (BRIDGE_GUARDIAN_REGRESSION): the lateral seat is F04#2's answer
@@ -2387,6 +2388,63 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 		to.y = 0.0
 		if to.length() > 0.01:
 			model.rotation.y = atan2(to.x, to.z)
+
+
+## opponent_trainer_stand_1112 (LANE-THINGS, 12 Nov 2026; F38#3 judges 3/3:
+## "the Tether grunt is half hidden behind Terrapup's legs"). A trainer the
+## player challenged stays at the post they were spoken to at, which the
+## formation then puts beside or under the player's own creature. When on, the
+## opposing trainer stands behind their own creature for the fight and goes
+## back to the post when it ends. Client presentation only: the NPC node's
+## position is not saved or replicated, and its post, dialogue and rewards are
+## untouched.
+var _staged_opponent_trainer: Node3D = null
+var _staged_opponent_home := Transform3D.IDENTITY
+
+
+func _stand_the_opponent_trainer_behind(wild_spot: Vector3, ally_spot: Vector3, forward: Vector3) -> void:
+	var cfg: Dictionary = (MATH.config().get("arena", {}) as Dictionary).get("opponent_trainer_stand_1112", {})
+	if not bool(cfg.get("enabled", false)) or not is_instance_valid(admission_trainer) or _arena == null:
+		return
+	if _staged_opponent_trainer != admission_trainer:
+		_restore_the_opponent_trainer()
+		_staged_opponent_trainer = admission_trainer
+		_staged_opponent_home = admission_trainer.global_transform
+	var spot := opponent_trainer_stand_spot(cfg, wild_spot, forward)
+	# Of the two sides, the one nearer the lens: on the far side the creature
+	# hides its own trainer.
+	var lens := get_viewport().get_camera_3d() if is_inside_tree() else null
+	if lens != null:
+		var mirrored := cfg.duplicate()
+		mirrored["side_m"] = -float(cfg.get("side_m", 1.6))
+		var other := opponent_trainer_stand_spot(mirrored, wild_spot, forward)
+		if other.distance_squared_to(lens.global_position) < spot.distance_squared_to(lens.global_position):
+			spot = other
+	var centre: Vector3 = _arena.global_position
+	if Vector2(spot.x - centre.x, spot.z - centre.z).length() > float(_arena.get("radius")) + float(cfg.get("outside_m", 2.0)):
+		return
+	var height := _ground_height(spot.x, spot.z)
+	if is_nan(height) or absf(height - wild_spot.y) > float(cfg.get("max_step_m", 1.5)):
+		return
+	spot.y = height
+	admission_trainer.global_position = spot
+	var to := ally_spot - spot
+	to.y = 0.0
+	if to.length() > 0.01:
+		admission_trainer.rotation.y = atan2(to.x, to.z)
+
+
+## Behind the opposing creature along the fight's heading, a little to one side
+## so the creature does not hide its trainer from the lens.
+static func opponent_trainer_stand_spot(cfg: Dictionary, wild_spot: Vector3, forward: Vector3) -> Vector3:
+	var side := forward.cross(Vector3.UP).normalized()
+	return wild_spot + forward * float(cfg.get("behind_m", 3.0)) + side * float(cfg.get("side_m", 1.6))
+
+
+func _restore_the_opponent_trainer() -> void:
+	if is_instance_valid(_staged_opponent_trainer):
+		_staged_opponent_trainer.global_transform = _staged_opponent_home
+	_staged_opponent_trainer = null
 
 
 func _trainer_swimming() -> bool:
@@ -6794,6 +6852,7 @@ func _finish() -> void:
 	if is_inside_tree(): PROJECTILE.cancel_encounter(get_tree(), _encounter_id)
 	_end_hitstop()
 	state = State.INACTIVE
+	_restore_the_opponent_trainer()
 	_disconnect_opponent_callbacks(_wild)
 
 	# §9. Leaving is `disengage`: the fight survives if anybody else is still in

@@ -80,3 +80,15 @@ func test_any_candidates_block_is_read_only_while_enabled() -> void:
 	assert_true(LOCATIONS.approach_override_for(on, "a").is_empty(), "a disabled block moves nothing")
 	assert_eq(LOCATIONS.approach_override_for(on, "b").get("position", []), [3.0, 4.0], "an enabled block moves its stand")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(on))
+
+
+## F38#20 (12 Nov 2026): the stronghold approach stand ships ON at (0, 7130)
+## on its GPU verdict (G-below6-sea-r4-stronghold, 6.40 -> 7.57).
+func test_stronghold_approach_stand_ships_on_with_its_verdict() -> void:
+	var shipped: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
+	var block: Dictionary = ((shipped as Dictionary).get("approach_overrides", {}) as Dictionary).get("candidates_f38_20_1112", {})
+	assert_true(bool(block.get("enabled", false)), "the judged F38#20 stand ships ON")
+	assert_true(str(block.get("_why_on", "")).contains("G-below6-sea-r4-stronghold"), "ON cites its verdict")
+	var spec: Dictionary = LOCATIONS.approach_override_for(CONFIG, "meadows__band5_stronghold_approach__09__stronghold_approach")
+	assert_eq(spec.get("position", []), [0.0, 7130.0], "the stronghold stand moves to the judged spot")
+	assert_eq(float(spec.get("heading_deg", -1.0)), 0.0)

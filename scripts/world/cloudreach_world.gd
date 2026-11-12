@@ -3058,7 +3058,7 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var first_row: Array[Vector3] = rows[0]
 	var last_row: Array[Vector3] = rows[rows.size() - 1]
 	var last := station_count - 1
-	# F40#15 P2-049 `end_face_follows_row_1112` (OFF until judged): the end face
+	# F40#15 P2-049 `end_face_follows_row_1112` (ON: G-below6-knifeedge): the end face
 	# used to hang from a straight line between the row's two outer vertices.
 	# Where the row is clamped flat onto a pad crown but one outer vertex rides
 	# up a bridge deck, that line stood up to 0.8 m above the crown as a black
