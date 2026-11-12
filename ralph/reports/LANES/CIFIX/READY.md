@@ -9,6 +9,7 @@ repros were run locally on the pinned engine (Godot 4.7.stable, `tools/cloud_set
 | 2 | verify-regions-relay (tidewake) / return shortcuts | Fixed: game-side catalogue idempotence | game |
 | 3 | verify-multiplayer-shard (9), `smoke_net_stormwood_livewire.gd` | Root cause fixed. The timing window is still marginal on a loaded runner (see below) | harness |
 | 4 | verify-multiplayer-shard (12), `smoke_net_shared_boss.gd` | Not chased: it passed on the coordinator's re-run (job 131401459559, attempt 2) | none |
+| 5 | verify-multiplayer-shard (14), `smoke_net_shared_wild_fight.gd` (PR #929, job 131410891120) | Fixed: a harness precondition | harness |
 
 ## 1. smoke_art: shiny, alpha and rarity checks
 
@@ -60,8 +61,17 @@ Before: 4 `art FAIL` lines, exit 1. After: exit 0, with these lines:
 
 I tried a client-scheduled early send, then reverted it. The host processed the early start 500–700 ms after the client spacing implied, so it did not help. That suggests a host-side delay right after a landed charged hit, worth a look if this stays red. Neither option needs an owner decision unless the window semantics change.
 
+## 5. shared_wild_fight: rapid-intent refusal coded `pending_vitals`
+
+- **Cause.** In CI the rapid move_starts (9001 and 9002) and the strike were all refused as `pending_vitals`. An enemy blow on the guest's creature, landed before the smoke stepped it clear, had started a saved HP change. Until the owner commits that change, the host refuses every move: `encounter_director.ordinary_actor_vitals_pending`, "The original health change is still being saved." That is the designed rule. On a slow CI host the save round trip outlasted the smoke's staging, so the authority probe ran into it. The other assertions in that run then cascaded from the same refusal. The "peer exited" line in that job is `smoke_net_peer_death`'s negative control, which is meant to kill a peer.
+- **Fix.** The encounter probe now reports the host's `actor_vitals_pending`. The smoke waits until it is false before the authority probe, and that wait is a check of its own.
+- **Evidence.** It did not reproduce locally: 2 of 2 runs passed before the fix. After the fix, 2 of 2 runs pass, including the new precondition.
+
+**Shared cause?** Not one game bug. My Livewire runs never saw a `pending_vitals` refusal; theirs were `insufficient_energy` before the fix, then `stale_move_start` and `cooldown`. What these failures have in common is that a slow CI host exposes timing assumptions each smoke made, all made more fragile by #878's move_start authority: Energy cost, start-anchored deadlines, and pending-vitals gating on move_start.
+
 ## Checks run
 - `tests/smoke_art.gd`: exit 0, plus the negative control above.
 - `tests/smoke_water_loops_shortcuts.gd` with the CI step's three cases: exit 0.
 - `run_tests.gd --only=test_water_species_catalog,test_meadows_cause_flags,test_creature_coat_flags`: 20 tests, 0 failed.
 - `tools/net/run_net_smoke.sh stormwood_livewire`: see §3.
+- `tools/net/run_net_smoke.sh shared_wild_fight`: 2 of 2 pass after the fix.

@@ -7504,6 +7504,11 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					if not receipt.is_empty():
 						receipt_rows.append(receipt)
 			out["host_now_ms"] = Time.get_ticks_msec()
+			# While a creature's saved HP change is in flight the host refuses
+			# every move as `pending_vitals` (encounter_director
+			# ordinary_actor_vitals_pending); a timing probe must wait it out.
+			out["actor_vitals_pending"] = edirector.call("ordinary_actor_vitals_pending",
+				str(rec.get("encounter_id", ""))) == true
 			out["strike_authority"] = authority_rows
 			out["host_strike_receipts"] = receipt_rows
 			out["host_strike_transaction"] = (_strike_transaction.get("receipt") as Dictionary).duplicate(true) \
