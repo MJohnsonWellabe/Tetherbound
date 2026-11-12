@@ -192,3 +192,19 @@ func test_realm_light_scale_ships_off_and_scales_only_listed_realms_when_on() ->
 	(on["realm_energy_1112"] as Dictionary)["enabled"] = true
 	assert_eq(CONVERSATION.speaker_light_scale(on, "stormwood"), 0.4)
 	assert_eq(CONVERSATION.speaker_light_scale(on, "meadows"), 1.0)
+
+
+## `speaker_centre` (OFF on main).
+func test_speaker_centre_ships_off_and_marks_an_edge_speaker_not_clear_when_on() -> void:
+	var block := _shipped()
+	assert_false(bool((block.get("speaker_centre", {}) as Dictionary).get("enabled", true)))
+	var lens := Vector3(0.0, 1.6, 3.0)
+	var aim := Vector3(0.0, 1.4, -3.0)
+	# The trainer is behind the lens; the speaker stands far to the left of the aim.
+	var trainer := Vector3(0.0, 1.45, 5.0)
+	var edge_speaker := Vector3(-2.9, 1.4, -3.0)
+	assert_eq(_rig._clearance_score(_shot(lens, aim), trainer, edge_speaker, block), 1.0, "off: an edge speaker is still clear")
+	var on := block.duplicate(true)
+	(on["speaker_centre"] as Dictionary)["enabled"] = true
+	assert_true(_rig._clearance_score(_shot(lens, aim), trainer, edge_speaker, on) < 0.0, "on: a speaker at the frame edge is not clear")
+	assert_true(_rig._clearance_score(_shot(lens, aim), trainer, aim, on) >= 0.0, "on: a centred speaker is clear")

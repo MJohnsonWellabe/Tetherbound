@@ -1277,17 +1277,32 @@ func _clearance_score(shot: Dictionary, trainer_anchor: Vector3, speaker_anchor:
 	var head := trainer_anchor + Vector3.UP * float(cfg.get("trainer_head_above_anchor_m", 0.2))
 	var trainer_depth := (head - lens).dot(look)
 	var speaker_depth := (speaker_anchor - lens).dot(look)
-	if trainer_depth <= 0.05 or speaker_depth <= 0.05:
+	if speaker_depth <= 0.05:
 		return 1.0
+	var xs := (speaker_anchor - lens).dot(right) / speaker_depth / half_width
+	if trainer_depth <= 0.05:
+		return minf(1.0, _speaker_centre_term(xs, cfg))
 	var xt := (head - lens).dot(right) / trainer_depth / half_width
 	var rt := float(cfg.get("trainer_radius_m", 0.38)) / trainer_depth / half_width
 	if absf(xt) - rt >= 1.0:
-		return 1.0
-	var xs := (speaker_anchor - lens).dot(right) / speaker_depth / half_width
+		return minf(1.0, _speaker_centre_term(xs, cfg))
 	var rs := float(cfg.get("speaker_radius_m", 0.32)) / speaker_depth / half_width
 	var gap := absf(xs - xt) - rt - rs - float(cfg.get("min_gap", 0.06))
 	var edge := absf(xt) - rt - float(cfg.get("min_edge", 0.3))
-	return minf(gap, edge)
+	return minf(minf(gap, edge), _speaker_centre_term(xs, cfg))
+
+
+## `clearance_1112.speaker_centre` (OFF by default; LANE-THINGS, 12 Nov; GPU
+## Meadows dialogue: Hess stands cut off at the left edge of his own shot
+## with a banner mid-frame). With the trainer out of frame the shot counted
+## as clear wherever the speaker stood. When on, a speaker further than
+## `max_offset` half-frames from the centre makes the shot not clear, so the
+## search looks for an angle that puts them nearer the middle. 1.0 when off.
+static func _speaker_centre_term(xs: float, cfg: Dictionary) -> float:
+	var centre: Variant = cfg.get("speaker_centre", {})
+	if not (centre is Dictionary and bool((centre as Dictionary).get("enabled", false))):
+		return 1.0
+	return float((centre as Dictionary).get("max_offset", 0.5)) - absf(xs)
 
 
 var _clear_last: Variant = null
