@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 06:15 UTC",
+  "updated": "12 Nov 2026 06:20 UTC",
   "headline": [
+    "12 Nov 06:20: Stormwood swing 3 failed the GPU pre-check (more road yellow, line not thinner): the gold road charge is parked after three tries pending the owner's colour decision (yellow-gold per WO-F09-04 vs judges' white-violet). LANE-PLACES fixes the storm-phase capture settle, then Cloudreach F40#0 or near-bar close-outs.",
     "12 Nov 06:15: #919 landed: F41#2 (6.19) and F40#3 (6.33) leave the below-6 list. Below 6 now: F41#15 4.99 (Nysa's frame; combined creature-cone + deck dressing arm coming from LANE-THINGS), F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90. GPU: Stormwood swing 3 (umber road + one thin gold line).",
     "12 Nov 05:45: Stormwood deck dressing (warm oak planks, cloth banners, grey-brown split wood) passes but rides along: F41#15 full row 4.62 -> 5.10 (+0.48, 3/3), split frame +0.40; pink gone. Only Nysa's creature clearance can lift F41#15 past 6: LANE-THINGS sends one combined arm (creature cone + this dressing + Stormwood speaker-light scale).",
     "12 Nov 05:35: F41#2 re-scores 6.19 with lightning confined to Break (was 5.97 on the board): leaves the below-6 list when #919 lands. #919 also carries F40#3 (6.33). Below 6 after #919: F41#15 4.99, F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90.",
@@ -841,6 +842,7 @@
     "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
   ],
   "owner_needs": [
+    "Stormwood road charge colour: keep yellow-gold (owner WO-F09-04) or allow a white-violet trial (judges 3/3, matches the board's lightning)? Gold tuning is parked after three tries.",
     "11 Nov: F40#9 post focus camera (flag-off): no longer needed for the row. The post setting alone takes F40#9 to 6.48, and the camera adds nothing measurable on top of it (G-newapproach-post-setting). Coordinator recommends leaving it off; say if you want it anyway.",
     "Nothing pending. Keep the PC on and awake overnight for the GPU run."
   ],
