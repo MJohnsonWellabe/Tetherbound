@@ -1,5 +1,5 @@
 {
-  "updated": "12 Nov 2026 10:25 UTC",
+  "updated": "12 Nov 2026 10:35 UTC",
   "headline": [
     "12 Nov 10:25: Stormwood rim-off ships: the white bloom on the player's head and pale officers came from the night character rim under storm light. F41#18 5.60 -> 6.22, Stormwood dialogue +0.41 to +0.45 (3/3 everywhere, nothing loses). Landing being cut.",
     "12 Nov 10:10: F38#15 Galecrest flight: High 7.70, Medium 7.37 with the landing staging (#922, re-running CI after a base update): 0.13 short of closing; LANE-THINGS building a glide or landing pose variation as the close-out. GPU: Stormwood rim-off (white player head) capturing.",
@@ -2183,6 +2183,18 @@
       "before": 5.79,
       "after": 6.97,
       "pr": "#921"
+    },
+    {
+      "item": "Galewisp landed frame (F36#48 flight)",
+      "before": 6.34,
+      "after": 8.11,
+      "pr": "#922"
+    },
+    {
+      "item": "F38#15 Galecrest flight and landing (High)",
+      "before": 7.08,
+      "after": 7.7,
+      "pr": "#922 (Medium 7.37)"
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
@@ -2195,6 +2207,11 @@
     }
   ],
   "landed_recent": [
+    {
+      "pr": "#922",
+      "what": "Batch 78: carriers land beside the trainer and Galewisp stands taller (Galewisp landed 6.34 -> 8.11, flight 6.43 -> 7.29; F38#15 High 7.70, Medium 7.37)",
+      "when": "10:34 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#921",
       "what": "Batch 77: wild creatures keep 16 m clear of Stormwood's named conversation posts, with the warm deck dressing and Hesk's portrait: F41#15 5.13 -> 6.97 (+1.84, 3/3), Sera and Tamsin 5.79 -> 6.97",
