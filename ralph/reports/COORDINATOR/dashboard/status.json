@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 22:50 UTC",
+  "updated": "12 Nov 2026 23:00 UTC",
   "headline": [
+    "12 Nov 23:00: F38#20 Team Tether stronghold CLOSES (7.50 High and Medium, control 0.3 strict). It was 5.72 this morning, below 6. F38#3 fight camera does not close (6.89 High / 7.03 Medium).",
     "12 Nov 22:50: #934 landed: the swimmer reads as swimming and restoring the currents visibly changes the sea. F39#14 and F39#17 are now above 6; F39#5 is at 5.98. #936 (wall stones) is updated onto the new main and re-running CI.",
     "12 Nov 22:40: Cloudreach wall stones at human scale ship (F40#15 5.17 to 5.54, 3/3; shrine and aviary unchanged), landing as #936. Stormraven's eye round 2 does not show at creature distance and is parked. New bug for LANE-BELOW6: a translucent amber pane covering half the overlook route frame (both sides, 3/3).",
     "12 Nov 22:20: #935 landed (F40#8 6.37, F40#17 6.94). #934 (swim and restored sea) is updated onto the new main and re-running full CI; its earlier run had one Tidewake chain time out while loading.",
@@ -2267,6 +2268,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "GPU close",
+      "what": "F38#20 Team Tether stronghold closed (7.50 High and Medium; 5.72 this morning)",
+      "when": "12 Nov 23:00"
+    },
+    {
       "pr": "#934",
       "what": "Surface swim stroke (F39#5 5.45 to 5.98, F39#14 5.74 to 6.12) and restored sea (F39#17 6.08 to 6.27); full CI 23 jobs green (the earlier Tidewake load timeout did not recur)",
       "when": "12 Nov 22:46"
@@ -2500,8 +2506,9 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.35 (was 6.00)"
     },
     "F38#20": {
-      "gpu": 5.9,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.72 (was 6.02); RE-SCORE pooled 5.90 (tier2 5.72, ext-meadows 6.09; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | ARM BELOW6-STRONGHOLD-STAND r2 G-below6-sea-r4-stronghold (012ab2548, 12 Nov): stand at (0, 7130) 6.40 -> 7.57 High (+1.17, 3/3, FIXED 3/3; above top anchor), landing #929; needs Medium. Pooled current-main before the stand: about 6.1"
+      "gpu": 7.54,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.72 (was 6.02); RE-SCORE pooled 5.90 (tier2 5.72, ext-meadows 6.09; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | ARM BELOW6-STRONGHOLD-STAND r2 G-below6-sea-r4-stronghold (012ab2548, 12 Nov): stand at (0, 7130) 6.40 -> 7.57 High (+1.17, 3/3, FIXED 3/3; above top anchor), landing #929; needs Medium. Pooled current-main before the stand: about 6.1 | CLOSED G-closeout-f38-20-f38-3 (bebe5fa91): High 7.50 / Medium 7.50, pooled High 7.54",
+      "medium": 7.5
     },
     "F38#21": {
       "gpu": 6.59,
@@ -2540,9 +2547,9 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.35 (was 6.05)"
     },
     "F38#3": {
-      "gpu": 7.17,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium",
-      "medium": 7.35
+      "gpu": 7.25,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close",
+      "medium": 7.03
     },
     "F38#30": {
       "gpu": 6.02,

@@ -3708,11 +3708,11 @@
       "title": "Meadows and village: visual catalog burn-down to the full bar",
       "chapter": "Wave 2 · Creature power, homestead and visuals",
       "lane": "tb/visual-meadows",
-      "pct": 19,
+      "pct": 21,
       "counts": {
-        "in_progress": 13,
+        "in_progress": 12,
         "blocked": 1,
-        "met": 8,
+        "met": 9,
         "not_started": 20
       },
       "criteria": [
@@ -4217,9 +4217,9 @@
         },
         {
           "text": "F38 (2) impact>12 item P2-003 Team Tether stronghold: The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close — fixed on main with a GPU before/after pass at the bar.",
-          "status": "in_progress",
-          "evidence": "Cloud yardstick 1 Nov batch-1: p2_003_candidate 6.29 vs main 5.79 (+0.50, not above the gain bar), back to lane. GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PRESENT at band5_stronghold_approach_0 (base a dark speck behind the pylons); PARTIAL at band5_1 (near-black, giant flat banners). Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 40, lane tb/x04-meadows. The generic capture stands are not verified route approaches; reshoot the authored approach before work is assigned.",
-          "gap": "Pylon dominance, keep presence, banded moon halo, close-up room.",
+          "status": "met",
+          "evidence": "GPU closed 12 Nov: stronghold approach stand at (0, 7130) landed in #933; G-closeout-f38-20-f38-3 (LANE-SCOUT, tb/item-scout-1108 bebe5fa91): High 7.50 / Medium 7.50 this batch (pooled High 7.54), confirming batch, fit r 0.987, control F38#38 7.92 (about 0.3 strict). Thin margin; next lever is the interior prop family.",
+          "gap": "",
           "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
           "parent": "F38#2",
           "subject": "P2-003",
