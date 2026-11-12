@@ -4526,6 +4526,21 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "things-cloudnight",
+   "kind": "arm",
+   "rows": [
+    "F40#0",
+    "F40#19",
+    "F40#21"
+   ],
+   "branch": "tb/things",
+   "head": "3c242a6a6",
+   "job": "ralph/reports/LANES/THINGS-CLOUDNIGHT/CAPTURE.json: capture_cloudreach_f40_matrix.gd night clear d*8+7 and night rain d*8+8 at the G-rescore-f40-0-sample stands",
+   "capture": "High, base vs overlay",
+   "priority": "three rows at 5.98; right after the cloudrain arm re-run",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-riftfrill-matte",
    "kind": "arm (near-bar)",
    "rows": [
