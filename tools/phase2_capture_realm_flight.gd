@@ -118,7 +118,11 @@ func _run() -> void:
 	_finish()
 
 
+var _attempt_index := -1
+
+
 func _attempt(xz: Vector2) -> bool:
+	_attempt_index += 1
 	var start_count := _records.size()
 	var ground := float(_world.call("ground_height_at", xz.x, xz.y))
 	if not is_finite(ground):
@@ -143,14 +147,36 @@ func _attempt(xz: Vector2) -> bool:
 	if not blockers.is_empty():
 		_failures.append("At %s: %s" % [str(xz), blockers])
 		return false
-	if not elevated:
+	# Take-off race (GPU lane, 12 Nov: "double Jump denied" with an empty
+	# reason at the first stands, intermittently by preset): the second press
+	# was sent on a fixed frame count, sometimes before the trainer had left
+	# the floor or after they had landed again. Wait for the trainer to be
+	# airborne, then press; if Fly did not deploy, jump again and retry.
+	for take_off in 4:
+		if not elevated:
+			if _player.is_on_floor():
+				_action("jump", true)
+				await _frames(3)
+				_action("jump", false)
+			for _wait in 30:
+				if not _player.is_on_floor():
+					break
+				await physics_frame
+			await _frames(2)
 		_action("jump", true)
 		await _frames(3)
 		_action("jump", false)
-		await _frames(6)
-	_action("jump", true)
-	await _frames(3)
-	_action("jump", false)
+		await _frames(2)
+		if bool(_fly.call("is_flying")):
+			if take_off > 0:
+				print("FLIGHT TAKE-OFF at %s on attempt %d" % [str(xz), take_off + 1])
+			break
+		if not str(_fly.get("last_denial")).is_empty():
+			break
+		for _settle in 40:
+			if elevated or _player.is_on_floor():
+				break
+			await physics_frame
 	if not bool(_fly.call("is_flying")):
 		_failures.append("At %s: double Jump denied: %s" % [str(xz), str(_fly.get("last_denial"))])
 		return false
@@ -158,6 +184,7 @@ func _attempt(xz: Vector2) -> bool:
 		# Let the normal follow camera catch up with the fixture ledge before
 		# naming this a launch frame; the immediate image contains only scenery.
 		await _frames(24)
+	print("FLIGHT STAND index=%d at %s" % [_attempt_index, str(xz)])
 	await _save("launch")
 	await _frames(80)
 	if _glide_steer and bool(_fly.call("is_flying")):
