@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.4,
+   4.6,
+   4.4
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.3,
+   5.1,
+   5.1
+  ],
+  "craft:after": [
+   6.3,
+   6.6,
+   6.3
+  ],
+  "craft:before": [
+   4.6,
+   5.3,
+   5.0
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   6.8,
+   6.7
+  ],
+  "f36_0_npc:C1A": [
+   7.1,
+   6.9,
+   6.7
+  ]
+ },
+ "candidates": {
+  "G F39#17 other stands base-vs-arm [G-rsm_F39-17_other_stands_arm.png]": [
+   5.2,
+   6.3,
+   5.6
+  ],
+  "G F39#17 other stands base-vs-arm [G-rsm_F39-17_other_stands_base.png]": [
+   5.6,
+   6.6,
+   5.9
+  ],
+  "G F39#17 row base-vs-arm [G-rsm_F39-17_row_arm.png]": [
+   5.9,
+   6.5,
+   6.3
+  ],
+  "G F39#17 row base-vs-arm [G-rsm_F39-17_row_base.png]": [
+   5.2,
+   6.2,
+   5.8
+  ],
+  "G F38#4 row base-vs-arm [G-rsm_F38-4_base.png]": [
+   6.5,
+   6.8,
+   6.5
+  ],
+  "G F38#4 row base-vs-arm [G-rsm_F38-4_arm.png]": [
+   6.9,
+   7.1,
+   6.8
+  ]
+ }
+}
