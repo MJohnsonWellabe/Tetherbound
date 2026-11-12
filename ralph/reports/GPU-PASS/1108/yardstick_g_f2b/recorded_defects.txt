@@ -1,0 +1,9 @@
+Lf: "flat black placeholder look with emissive bands"; "faint flattens to a sheet"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Kg: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vm: "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Pd: none
+Ck: none
+Np: "below the trainer's height"; "flat mustard material"; "faint tail passes through the trainer"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Vj: "near-black with no rim light"; "silhouette dissolves"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Kj: "stock animal look with no rim light or type accent"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Do: "dark olive on grey"; "face lost in spines"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
