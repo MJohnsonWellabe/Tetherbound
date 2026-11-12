@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, overlook amber pane: found and fixed (BELOW6-OVERLOOK-PANE)
+
+The pane is the overlook's own yellow banner: a flat 2 m by 4.5 m card hung at head height beside the right pier, which the `walk_02_day` camera sits next to. The white ball beside it is a beacon glow (a default 1 m sphere at emission 2.8). Confirmed by capturing with the banners removed. Fix `pane_fix_1112` is ON as a bug fix: narrow pennants hung overhead, small embers in the bowls. CPU before/after sheet and test in `BELOW6-OVERLOOK-PANE/`. Landing branch: `tb/below6-overlook-pane-land` (cut from current main, four files). Still open: `walk_02`/`walk_03` cameras sit against the pier wall; that is the route stand.
+
 ## 13 Nov, about 06:10 UTC: STORMRAVEN r3 ready (near-black raven)
 
 `ralph/reports/LANES/BELOW6-STORMRAVEN/` now carries r3 as its own flag, `creature_coat_flags.json below6_stormraven_night` (OFF), overlay `overlay_night.json`: a near-black feather base derived from the remake's albedo, the widened lightning lines and pupilled eye at 2.4, a strong cool rim, matte finish. One new derived texture (needs import; sidecar committed, policy check passes). On CPU it reads as a black raven with lightning flecks and a lit eye. CAPTURE.json is updated; please pre-check for a featureless black body or clipped white lines.
