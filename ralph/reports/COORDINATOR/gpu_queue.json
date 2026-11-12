@@ -4364,6 +4364,21 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "things-cloudrain",
+   "kind": "arm",
+   "rows": [
+    "F40#0",
+    "F40#19",
+    "F40#21"
+   ],
+   "branch": "tb/things",
+   "head": "22d3005fa",
+   "job": "ralph/reports/LANES/THINGS-CLOUDRAIN/CAPTURE.json: capture_cloudreach_f40_matrix.gd day rain d*8+4 and night rain d*8+8 at the G-rescore-f40-0-sample stands; d*8+3 and d*8+7 at one stand as no-loss",
+   "capture": "High, base vs overlay",
+   "priority": "three rows at 5.98 share this cause; after the BELOW6 trio",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-foestand",
    "kind": "arm (6-7, shared cause)",
    "rows": [
