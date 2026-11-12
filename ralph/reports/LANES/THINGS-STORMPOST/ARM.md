@@ -19,7 +19,7 @@ LANE-THINGS, 12 Nov 2026. Branch `tb/things` (main a4ad0486 and `tb/below6-storm
 | Officer Nysa | two giant birds fill the frame either side of her | she stands clear at centre; two bears and a raven at mid-distance behind |
 | Lieutenant Sera | a Stormursa fills the right half, a metre away | she stands clear; one small creature far behind |
 
-Captain Marrow's and Tamsin's posts were not captured on CPU (each Stormwood run is 9 minutes a post); they are in the frame list.
+Tamsin's ash-ring post, captured on the arm side afterwards: she stands alone, no creature in the frame, no script errors. Captain Marrow's two posts were not captured on CPU; they are in the frame list.
 
 ## Not addressed
 - The washed-out speakers and the player's head blooming white (3/3): not the conversation lights (tested, no change). Stormwood NPC presentation; parked arms cover it.
