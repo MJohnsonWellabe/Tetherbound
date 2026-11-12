@@ -3,6 +3,25 @@
 ## NOW THE RE-SCORING LANE (owner direction via coordinator, 12 Nov about 12:30)
 Job: an up-to-date GPU High score on current main for every visual row; judged here with `tools/visual_judge` (standard prompt, at least 3 anchor pairs, three code-blind judges, `calibrate.py`); write-ups as `ralph/reports/GPU-PASS/1108/G-rescore-<batch>.md` on `tb/places`.
 
+### Re-score results (one line per row: row, old board score, new mapped score, date and batch)
+**G-rescore-stale-tier2** (`ralph/reports/GPU-PASS/1108/G-rescore-stale-tier2.md`; fit r 0.893, RMSE in the report):
+- F38#2: 6.0 -> 6.35 (12 Nov, G-rescore-stale-tier2)
+- F38#6: 6.1 -> 6.52 (12 Nov, G-rescore-stale-tier2)
+- F38#12: 6.06 -> 5.89 (12 Nov, G-rescore-stale-tier2)
+- F38#13: 7.16 -> 6.94 (12 Nov, G-rescore-stale-tier2)
+- F38#14: 6.06 -> 6.94 (12 Nov, G-rescore-stale-tier2)
+- F38#20: 6.02 -> 5.72 (12 Nov, G-rescore-stale-tier2)
+- F38#21: 7.0 -> 6.23 (12 Nov, G-rescore-stale-tier2)
+- F38#22: 6.1 -> 6.06 (12 Nov, G-rescore-stale-tier2)
+- F38#29: 6.05 -> 6.35 (12 Nov, G-rescore-stale-tier2)
+- F39#5: 6.06 -> 5.64 (12 Nov, G-rescore-stale-tier2)
+- F39#14: 6.37 -> 6.44 (12 Nov, G-rescore-stale-tier2)
+- F40#15: 6.08 -> 5.89 (12 Nov, G-rescore-stale-tier2)
+- F40#17: 6.08 -> 6.18 (12 Nov, G-rescore-stale-tier2)
+- F41#10: 6.02 -> 6.01 (12 Nov, G-rescore-stale-tier2)
+- F41#18: 6.1 -> 5.93 (12 Nov, G-rescore-stale-tier2)
+**Flags:** none at 7.5 or above. Below 6 now: F38#12 5.89; F38#20 5.72; F39#5 5.64; F40#15 5.89; F41#18 5.93. F38#21 was judged on 2 of its job frames (it rode along); re-judge it in the Meadows batch.
+
 ### Build work handed over
 | Item | State | Goes to |
 |---|---|---|
