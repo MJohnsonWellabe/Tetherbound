@@ -248,6 +248,12 @@ func _fight_on_screen() -> bool:
 	var manager := combat_manager
 	if manager == null and is_inside_tree() and get_tree().current_scene != null:
 		manager = get_tree().current_scene.get_node_or_null(^"CombatManager")
+	# The world that owns this beacon is not always the tree's current scene
+	# (a capture or a harness adds the world under the root), and then the
+	# lookup above found nothing and the beam stood through every fight and
+	# catch (F38#7, 3/3: "a tall cyan sky beam cuts through the target").
+	if manager == null and get_parent() != null:
+		manager = get_parent().get_node_or_null(^"CombatManager")
 	return fight_holds_beam(manager)
 
 
