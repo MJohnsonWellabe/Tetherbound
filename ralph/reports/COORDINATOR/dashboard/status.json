@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 03:45 UTC",
+  "updated": "12 Nov 2026 03:50 UTC",
   "headline": [
+    "12 Nov 03:50: Captain Marrow glow fix SHIPS (F41#15 Marrow frames 4.55 -> 5.95, +1.40, 3/3); landing being cut. Owner: lanes run all night; each lane schedules its own 30-minute check-in before going idle, and the coordinator checks every hour.",
     "12 Nov 03:45: wrap-up landed. #916 Stormheart approach stand and #917 conversation camera plus Galewisp carrier are on main, with every job green. All judged wins are now on main. The only open GPU item is Captain Marrow (F41#15 4.49): frames captured, LANE-SCOUT judging. Lanes restarted fresh from main (LANE-BELOW6, LANE-THINGS, LANE-PLACES); no new arms yet. Stormwood road value: 4 rows gain but F41#4 loses twice, held flag-off for a larger Stormwood swing.",
     "12 Nov 02:20: wrap-up (owner) to get everything on main. Landed tonight: #910, #911, #912, #914, #915. Closed: F36#69 Solmane, F40#13 catch feedback. Still to land: Stormheart approach stand (F41#1 6.81) and the conversation camera (waits for Tidewake/Cloudreach/Stormwood checks); last GPU items: Pebbik/Breezetail Medium, Galewisp carrier, Stormwood road value.",
     "11 Nov 20:25: lane restructure (owner): LANE-BELOW6, LANE-THINGS, LANE-PLACES + GPU lane + LANE-SCOUT. Current build lanes are writing handoffs. PR #910 (dialogue capture blend fix + Trail Camp F38#32 6.91) in CI.",
@@ -2121,7 +2122,14 @@
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [],
+  "score_ledger_pending": [
+    {
+      "item": "F41#15 Captain Marrow head glow (2 of 3 frames)",
+      "before": 4.55,
+      "after": 5.95,
+      "pr": "landing being cut (tb/below6-marrow-land)"
+    }
+  ],
   "landed_recent": [
     {
       "pr": "#917",
@@ -2597,7 +2605,7 @@
     },
     "F41#15": {
       "gpu": 4.49,
-      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: foreground obstruction: Officer Nysa hidden behind a creature (PRESENT 3/3); Marrow's head bloom"
+      "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: foreground obstruction: Officer Nysa hidden behind a creature (PRESENT 3/3); Marrow's head bloom; G-below6-marrow (LANE-SCOUT 168422e80): Marrow frames 4.55 -> 5.95 (+1.40, 3/3), SHIPS, landing being cut (Nysa frame not yet re-captured)"
     },
     "F41#16": {
       "gpu": 6.28,
