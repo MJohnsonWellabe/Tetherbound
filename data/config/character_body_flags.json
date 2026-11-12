@@ -573,6 +573,16 @@
      }
     }
    }
+  },
+  "below6_marrow_self_lit_off": {
+   "_why": "LANE-BELOW6 (12 Nov 2026), F41#15 (GPU High 4.49) and F41#7: Captain Marrow's head is a blown-out white glow (3/3). captain_a is the one cast body in art.json without `body_emission_enabled: false`, so its imported material still emits its own albedo texture at full strength (emission ON, the texture as emission texture; with the Stormwood uniform floor the operator is ADD). CPU probes (same dialogue frame): body mean 168 -> 119 and the face starts to come out of clip with the emission texture and the floor off; the dialogue speaker light, character rim, crown light and deck lanterns each change nothing on the face. The face still clips under the scene light alone, so the pale texels (hair, skin, collar: 11% of the atlas above 0.38) are also compressed by half in a graded albedo (identity, palette and dark cloth unchanged). Pair with stormwood_character_presentation.json identity_floor_1112. OFF until GPU-judged.",
+   "enabled": false,
+   "characters": {
+    "captain_a": {
+     "body_emission_enabled": false,
+     "body_albedo_override": "res://assets/characters/captain_a/captain_a_lod0_texture_0_floor1.png"
+    }
+   }
   }
  }
 }
