@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 17:00 UTC",
+  "updated": "12 Nov 2026 17:05 UTC",
   "headline": [
+    "12 Nov 17:05: F38#15 flight does not close (7.02 High / 7.39 Medium with the glide bank); the bank is parked after two small rounds. Judges ask for a descent pose (glide, flare, folded perch) and a later landed frame.",
     "12 Nov 17:00: Stormwood storm-state matrix re-score: F41#22 and F41#24 read 6.46 (loose fit, +/-0.75). The lowest stand is giant (5.51): a flat grey slab at the trainer's feet in Break (also at forest), the trunk filling the frame, no sky.",
     "12 Nov 16:50: Cloudreach matrix re-score (192 frames on main): F40#0, #19 and #21 read 5.98, about 6. Rain is 0.6 below clear at every stand (5.68 vs 6.29): striped grey sky, no wet sheen, a flat blue night wash. The four lowest stands are the thin landmarks (stormward overlook, flight aerie, skyroad arch, observatory).",
     "12 Nov 16:30: F38#4 Meadows map parchment fog ships (7.36 to 7.81 at High, 3/3), landing as #927; Medium follows. F39#17 restored sea lifts its row 6.21 to 6.88 but darkens the waterfall and sunset stands, so LANE-BELOW6 is rescoping it.",
@@ -2416,7 +2417,7 @@
     },
     "F38#15": {
       "gpu": 7.23,
-      "src": "GPU High 8-9 Nov (F-meadows); G-f38-15-row High 7.70 and G-medium-f38-15-galeland Medium 7.37 with the landing staging (#922 in CI): 0.13 short at Medium; glide/landing pose variation is the close-out lever; RE-SCORE G-rescore-stale-ext-meadows 7.23 (was 6.84) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)",
+      "src": "GPU High 8-9 Nov (F-meadows); G-f38-15-row High 7.70 and G-medium-f38-15-galeland Medium 7.37 with the landing staging (#922 in CI): 0.13 short at Medium; glide/landing pose variation is the close-out lever; RE-SCORE G-rescore-stale-ext-meadows 7.23 (was 6.84) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-f38-15-steer2 (LANE-SCOUT 4d035d461, 12 Nov): glide-bank arm 7.02 High (+0.06, 1/3) / 7.39 Medium (+0.16, 3/3); not closed; glide bank PARKED (second round under 0.5). Next: glide-flare-perch descent pose; later landed frame (High caught wings mid-settle)",
       "medium": 7.37
     },
     "F38#16": {
