@@ -2244,6 +2244,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#927",
+      "what": "F38#4 Meadows map warm parchment fog (7.36 to 7.81 High, 3/3); Medium close capture follows",
+      "when": "12 Nov 17:05"
+    },
+    {
       "pr": "GPU close",
       "what": "F41#11 Stormwood character portraits closed (7.61 High and Medium); already on main",
       "when": "12 Nov 16:15"
@@ -2525,8 +2530,8 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.52 (was 8.16) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#4": {
-      "gpu": 6.99,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 7.21) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 6.99, Medium 6.99, not closed | ARM THINGS-MAPFOG G-restoredsea-mapfog (be513ad94, 12 Nov) base 7.36 -> arm 7.81 High (3/3; EXTRAPOLATED, above top anchor), landing #927; needs Medium, pooled with the stricter 6.99 panel",
+      "gpu": 7.81,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 7.21) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 6.99, Medium 6.99, not closed | ARM THINGS-MAPFOG G-restoredsea-mapfog (be513ad94, 12 Nov) base 7.36 -> arm 7.81 High (3/3; EXTRAPOLATED, above top anchor), landing #927; needs Medium, pooled with the stricter 6.99 panel | LANDED #927 (main 506b40292)",
       "medium": 6.99
     },
     "F38#41": {
