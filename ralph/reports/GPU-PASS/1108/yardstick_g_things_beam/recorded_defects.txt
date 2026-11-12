@@ -1,0 +1,6 @@
+He: none
+Ff: "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames"
+Tk: "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish"
+Jn: none
+Zu: "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+Sa: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
