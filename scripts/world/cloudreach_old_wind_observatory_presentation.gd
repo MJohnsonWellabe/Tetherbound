@@ -61,6 +61,11 @@ func build(materials: Dictionary, simulation_only: bool = false,
 	var glow := _glow_material(Color(str(cfg.wind_glow)))
 	_build_dial_court(cfg, stone, trim, bronze, blue)
 	_build_tower_ribs(cfg, trim, bronze)
+	var crowns := preload("res://scripts/world/cloudreach_landmark_crowns.gd").config()
+	if crowns.has("observatory"):
+		var spec: Dictionary = crowns.observatory
+		preload("res://scripts/world/cloudreach_landmark_crowns.gd").dome(self, "ObservatoryCrown",
+			Vector3.UP * float(spec.get("base_y_m", 16.2)), float(spec.get("radius_m", 6.4)), crowns)
 	_build_armillary(cfg, bronze, glow)
 	_build_tower_face()
 	_build_wind_standards(cfg, timber, blue, gold)
