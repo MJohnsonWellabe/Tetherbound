@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "breezetail-faint-000.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-faint-000.jpg",
+  "sky_fraction": 0.964,
+  "lower_edges": 0.0541,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-faint-025.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-faint-025.jpg",
+  "sky_fraction": 0.965,
+  "lower_edges": 0.0533,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-faint-050.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-faint-050.jpg",
+  "sky_fraction": 0.965,
+  "lower_edges": 0.0551,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-faint-075.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-faint-075.jpg",
+  "sky_fraction": 0.964,
+  "lower_edges": 0.0589,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-faint-100.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-faint-100.jpg",
+  "sky_fraction": 0.969,
+  "lower_edges": 0.0519,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-hit-000.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-hit-000.jpg",
+  "sky_fraction": 0.964,
+  "lower_edges": 0.0552,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-hit-025.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-hit-025.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0592,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-hit-050.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-hit-050.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0591,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-hit-075.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-hit-075.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.056,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "breezetail-hit-100.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/breezetail-hit-100.jpg",
+  "sky_fraction": 0.964,
+  "lower_edges": 0.055,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-faint-000.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-faint-000.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0575,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-faint-025.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-faint-025.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0556,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-faint-050.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-faint-050.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0572,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-faint-075.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-faint-075.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0561,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-faint-100.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-faint-100.jpg",
+  "sky_fraction": 0.97,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-hit-000.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-hit-000.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.058,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-hit-025.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-hit-025.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0626,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-hit-050.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-hit-050.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0626,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-hit-075.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-hit-075.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0595,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ },
+ {
+  "frame": "pebbik-hit-100.png",
+  "preset": "arm-Medium",
+  "tree": "a90645724f8d4249fc193464e9f1e46236e2ef32",
+  "tool": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+  "path": "G-faint2-pebbik-breezetail-medium/arm-Medium/pebbik-hit-100.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0579,
+  "script_errors": 0,
+  "note": "Close-out MEDIUM, arm only: tb/things a90645724 + THINGS-FAINT2 overlay (High 7.65 / 7.61). Neutral stage: sky heuristic bypassed after an eye check."
+ }
+]
