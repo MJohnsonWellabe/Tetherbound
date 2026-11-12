@@ -1,0 +1,108 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9154,
+  "least_squares_slope": 1.1961,
+  "method": "linear",
+  "slope": 1.1961,
+  "intercept": -0.4065,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.557,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.767,
+   "reference": 7.47,
+   "mapped": 7.687,
+   "residual": -0.217
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.8,
+   "reference": 7.53,
+   "mapped": 7.727,
+   "residual": -0.197
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.867,
+   "reference": 6.53,
+   "mapped": 5.415,
+   "residual": 1.115
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.1,
+   "reference": 4.0,
+   "mapped": 4.498,
+   "residual": -0.498
+  },
+  "craft:after": {
+   "measured": 6.267,
+   "reference": 7.35,
+   "mapped": 7.089,
+   "residual": 0.261
+  },
+  "craft:before": {
+   "measured": 4.767,
+   "reference": 4.83,
+   "mapped": 5.295,
+   "residual": -0.465
+  }
+ },
+ "candidates": {
+  "G F41#1 stormdeck split base-vs-arm [G-sk_split_base.png]": {
+   "measured_mean": 4.1,
+   "mapped_mean": 4.5,
+   "mapped_judges": [
+    4.14,
+    4.26,
+    5.1
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#1 stormdeck split base-vs-arm [G-sk_split_arm.png]": {
+   "measured_mean": 4.433,
+   "mapped_mean": 4.9,
+   "mapped_judges": [
+    4.5,
+    4.62,
+    5.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#15 stormdeck marrow base-vs-arm [G-sk_marrow_base.png]": {
+   "measured_mean": 4.2,
+   "mapped_mean": 4.62,
+   "mapped_judges": [
+    4.26,
+    4.86,
+    4.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#15 stormdeck marrow base-vs-arm [G-sk_marrow_arm.png]": {
+   "measured_mean": 4.6,
+   "mapped_mean": 5.1,
+   "mapped_judges": [
+    4.62,
+    5.45,
+    5.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
