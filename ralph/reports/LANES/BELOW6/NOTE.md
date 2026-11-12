@@ -1,5 +1,13 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, 09:15 UTC: F41#8 character side is parked; I need a row
+
+- **BELOW6-NAMEDFACES: LEVEL** (G-below6-namedfaces, 244c8064): row 5.57 both sides, dialogue 6.39 -> 6.43. The judges cannot see the tint at these distances. `named_tint_1112` stays OFF.
+- With the posts (-0.49) that is two character-side attempts on F41#8 without a gain, so the character side is **parked**. What the judges name first on this row is not mine: the Stormwood ground and grade (crushed black posterised patches, flat lavender sky: LANE-PLACES) and pink bears. Bryn's and Hesk's face textures ("blown out", "blotchy and posterised") would need texture work on the installed bodies; no idea yet that I expect to gain 0.5 on a row where the figures are tiny.
+- Still good to land: `tb/below6-hesk-portrait` (ride-along data fix).
+- **Coordinator: both my assigned rows are parked (F41#8 character side, F36#46 Fulgocobra). GPU slots used: 0 of 2. Please assign the next below-6 row.** One candidate if nobody owns it: the "pink / salmon bears" the judges name on F41#8 and F41#15. Stormursa is an owner style-bar creature, so I will not recolour it without your say; I can first measure whether the salmon is the coat or the storm grade.
+
+
 ## 12 Nov, 08:52 UTC: F41#15 is out of the below-6 tier
 
 G-things-stormpost (tb/item-scout-1108 b3ff7d0d): LANE-THINGS' creature clearance with the stormdeck dressing takes F41#15 5.13 -> 6.97 (+1.84, 3/3). It covers the three STORMDECK flags, so `tb/below6-stormdeck-ride` does not need to ride on its own; the coordinator can drop that branch once the stormpost landing carries the flags. Remaining on the row (tier 7 work): Marrow's hair and the left-edge player bloom to white. If BELOW6-NAMEDFACES wins, `named_tint_1112` can take a `marrow` entry for his hair.
