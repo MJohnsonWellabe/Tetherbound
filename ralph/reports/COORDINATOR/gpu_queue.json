@@ -3989,6 +3989,25 @@
    "priority": "Cloudreach rain ground and trail (judges b and c on the gate verdict)"
   },
   {
+   "id": "things-ruler-rescore",
+   "kind": "re-score (capture fix)",
+   "rows": [
+    "F36#52",
+    "F36 brooktail",
+    "F36#66",
+    "F36#62",
+    "F36 sparkit",
+    "F36 ashtusk"
+   ],
+   "branch": "main",
+   "head": "279c7ae9d",
+   "tree": "main 279c7ae9d, no overlay",
+   "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --roles=hit,faint for mirejaw, brooktail, shadelet, riftfrill, sparkit, ashtusk; base without --clear-ruler, arm with --clear-ruler",
+   "capture": "High, base and arm (same tree; only the capture switch differs)",
+   "priority": "six pose rows marked down 3/3 for the ruler through the tail (G-things-t4-rescore); no game change",
+   "note": "If it holds, --clear-ruler becomes the fixed setting for every F36 (1) pose row."
+  },
+  {
    "id": "things-stormrule",
    "kind": "arm",
    "rows": [
@@ -4006,7 +4025,8 @@
    "request": "phase2_capture_dialogue.gd --biome=stormwood --fixed-fps 20, the whole Stormwood dialogue set (as G-things-convclear-other-biomes)",
    "capture": "High, base and arm",
    "pre_check": "no creature head over a speaker on the arm",
-   "priority": "low expectation (CPU level); cheap; runs after wetpath"
+   "priority": "low expectation (CPU level); cheap; runs after wetpath",
+   "status": "held by LANE-THINGS (after RULER)"
   },
   {
    "id": "rescore-stale-tier2",
