@@ -1,0 +1,35 @@
+[
+ {
+  "frame": "stormwood__spot__a__day__approach.jpg",
+  "preset": "main-High",
+  "tree": "c16b3501d8c80bbee330a24da0a9e282f160e4eb",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=zz_no_match --spot=a@-100,5300@0 --spot=b@-100,5200@0 --spot=c@-100,5100@0 --views=approach --times=day --seed=2042",
+  "path": "G-stormheart-stand-screen/main-High/stormwood__spot__a__day__approach.jpg",
+  "sky_fraction": 0.231,
+  "lower_edges": 0.2573,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC (not judged) for LANE-BELOW6: stand screen on tb/coord-batch66-land c16b3501d (heartwood on), High, one side."
+ },
+ {
+  "frame": "stormwood__spot__b__day__approach.jpg",
+  "preset": "main-High",
+  "tree": "c16b3501d8c80bbee330a24da0a9e282f160e4eb",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=zz_no_match --spot=a@-100,5300@0 --spot=b@-100,5200@0 --spot=c@-100,5100@0 --views=approach --times=day --seed=2042",
+  "path": "G-stormheart-stand-screen/main-High/stormwood__spot__b__day__approach.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.3724,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC (not judged) for LANE-BELOW6: stand screen on tb/coord-batch66-land c16b3501d (heartwood on), High, one side."
+ },
+ {
+  "frame": "stormwood__spot__c__day__approach.jpg",
+  "preset": "main-High",
+  "tree": "c16b3501d8c80bbee330a24da0a9e282f160e4eb",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=zz_no_match --spot=a@-100,5300@0 --spot=b@-100,5200@0 --spot=c@-100,5100@0 --views=approach --times=day --seed=2042",
+  "path": "G-stormheart-stand-screen/main-High/stormwood__spot__c__day__approach.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.2743,
+  "script_errors": 0,
+  "note": "DIAGNOSTIC (not judged) for LANE-BELOW6: stand screen on tb/coord-batch66-land c16b3501d (heartwood on), High, one side."
+ }
+]
