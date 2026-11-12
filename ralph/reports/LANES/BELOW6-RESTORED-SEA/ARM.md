@@ -21,4 +21,12 @@ G-below6-restored-sea: the row's own frames gained (S1/S2 6.21 -> 6.88, 3/3) but
 
 r3 keeps the live colours and takes its two changes as a fraction of whatever profile is live (`water_scale`: depth falloff 0.8, wave strength 0.65), plus `alpha_shallow 0.3` and the cleared debris. r2 (falloff 0.5) still darkened the sunset on CPU and was not sent.
 
-CPU (`_sheet_cpu_r3_restored_S1-S4_base_top_arm_bottom.jpg`, restored frames at all four stands, base above, r3 below): S3 is unchanged in value, S4 keeps its teal ripples with a slightly darker near foreground (mean luminance 22 -> 17; r1 was near black), and S1/S2 still differ from live by about 8 (base about 2). The change at S1/S2 is smaller than r1's, so the row's gain may be smaller too.
+CPU (the r3 sheet (replaced by the r4 sheet), restored frames at all four stands, base above, r3 below): S3 is unchanged in value, S4 keeps its teal ripples with a slightly darker near foreground (mean luminance 22 -> 17; r1 was near black), and S1/S2 still differ from live by about 8 (base about 2). The change at S1/S2 is smaller than r1's, so the row's gain may be smaller too.
+
+## r4 (12 Nov, after the r3 pre-check hold)
+
+The GPU lane held r3 before judging: S4's restored foreground was still darker than base (mean luminance 25 -> 20, near-black share 70 -> 80 percent). Everything r1-r3 changed lowers light on low-sun water: a narrower shallow band, calmer waves, clearer shallows.
+
+r4 goes the other way. While the fact is set, the shallow colour reaches 1.3 times further than the live profile (`water_scale.depth_falloff 1.3`: restored shallows), the waves ease to 0.8 of live, and the debris is cleared. Colours and alpha are untouched.
+
+CPU (`_sheet_cpu_r4_restored_S1-S4_base_top_arm_bottom.jpg`; restored frames at S1-S4, base above, r4 below): the turquoise shallows spread well out from the islands at S1 and S2, S3 is unchanged in value, and the S4 sunset foreground is lighter and more teal than base, not darker. Foreground mean luminance, base -> arm: S1 62 -> 88, S2 79 -> 110, S3 35 -> 36, S4 22 -> 35. Live against restored: S1 15.2, S2 16.3 (base about 2). Live frames are untouched.

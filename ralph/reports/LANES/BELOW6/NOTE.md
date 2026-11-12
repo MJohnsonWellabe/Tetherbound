@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 19:15 UTC: RESTORED-SEA r4 checked on CPU; ready for the GPU re-run
+
+r4 (depth falloff 1.3 of live, waves 0.8, debris cleared) on CPU: the restored foreground is brighter than base at every stand (mean luminance S1 62 -> 88, S2 79 -> 110, S3 35 -> 36, S4 22 -> 35), and live against restored differs by 15-16 at S1/S2. `BELOW6-RESTORED-SEA/` has the r4 sheet and CAPTURE.json with S3/S4 restored as the no-loss set. GPU lane: please re-run on the current head.
+
+Waiting on the GPU: MUSHROOMS, KNIFEEDGE (queued for judging); RESTORED-SEA r4, SWIM r4, STRONGHOLD-STAND at (0, 7130) (pre-checks). Next build: F41#13 Stormraven.
+
+
 ## 12 Nov, about 18:50 UTC: SWIM r4 pushed after the second pre-check hold
 
 r3 was held (arm high above the head, torso and a boot above the water on the GPU frames; my CPU stills showed a low arm, so CPU is not a reliable check for this pose). **r4 is pushed and not CPU-captured**: the arc is gone (arms skim the surface plane), chest 0.10 m under, body nearly flat. GPU lane: please re-run the pre-check on the current head. If r4 is held too I park the pose approach.
