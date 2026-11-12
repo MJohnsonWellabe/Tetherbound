@@ -2048,7 +2048,44 @@
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [],
+  "score_ledger_pending": [
+    {
+      "item": "F36#58 Pebbik faint (Medium queued)",
+      "before": 7.0,
+      "after": 7.65,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#35 Breezetail faint (Medium queued)",
+      "before": 7.31,
+      "after": 7.61,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#92 Water Mangrove Monitor faint",
+      "before": 6.84,
+      "after": 7.19,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#57 Paddlenewt faint",
+      "before": 6.47,
+      "after": 6.96,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#62 Riftfrill faint",
+      "before": 6.43,
+      "after": 6.85,
+      "pr": "#915"
+    },
+    {
+      "item": "F36#66 Shadelet faint",
+      "before": 5.43,
+      "after": 6.09,
+      "pr": "#915"
+    }
+  ],
   "landed_recent": [
     {
       "pr": "#914",
