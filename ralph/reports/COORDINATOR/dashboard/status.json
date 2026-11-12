@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 19:20 UTC",
+  "updated": "12 Nov 2026 19:40 UTC",
   "headline": [
+    "12 Nov 19:40: #930 landed (crimson ironwood fixed, full CI green). Below-7 rows grouped by shared cause: the largest unowned group is about 20 creature hurt, faint and swim pose rows (F36 and F38#1/#2), then about 8 dialogue-framing rows and about 8 terrain-edge rows.",
     "12 Nov 19:20: in full CI now: #929 stronghold stand (F38#20 6.40 to 7.57), #930 red-leaf hard-rule fix, #931 opposing trainer stands behind their creature (F38#3 7.48 to 7.61, Warden Aldis 6.80 to 7.18).",
     "12 Nov 19:15: the 'red crest' on the Burrow Warrens badgers was a crimson asset-pack leaf on an ironwood harvest tree. The hard-rule fix is landing as #930. Stormwood uniforms do not ship (F41#18 level; dark cloth sinks into the dark ground); the judges want lit dark cloth with a rim light and metal rank trim. The stronghold stand (#929) is in full CI.",
     "12 Nov 18:50: F38#20 stronghold stand ships (6.40 to 7.57, 3/3, defect FIXED); it was below 6 and is landing as #929 (auto-merge off until the engine jobs have run); Medium follows. F39#17 restored sea r4 fixes the sunset loss but the restoration no longer reads on its own row, so LANE-BELOW6 combines rounds 1 and 4.",
@@ -2254,6 +2255,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#930",
+      "what": "Hard-rule fix: no crimson ironwood leaves at the Burrow Warrens (harvest trees take a listed sibling's leaf swap); full CI green, all 23 jobs",
+      "when": "12 Nov 19:39"
+    },
     {
       "pr": "#928",
       "what": "Quest beacon stands down in catch views (F38#7 7.49, F38#33 7.49, F38#14 7.40). Merged on a fast-tier gate (the full-ci run was cancelled by a concurrent run); full CI dispatched on main f5263ebc7 to verify",
