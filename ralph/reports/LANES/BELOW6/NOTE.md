@@ -7,7 +7,8 @@
 | F41#15 / F41#7 Marrow's head | landed | PR #918 (4.55 -> 5.95 on his two frames). |
 | F40#3 Cloudreach landmark read | landing | **READY TO LAND: `tb/below6-f40-3-land`** (ca60c3d10, cut from origin/main 3b7d04b5). Crowns and the two approach stands ON with `_why_on` (coordinator ship call and stand ruling); re-baselined at 6.33. 41 tests / 614 assertions pass. `ralph/reports/LANES/BELOW6-F40-3-LAND/READY.md`, STATUS: land. Skyroad Arch: no stand fix exists (screened); needs art. |
 | Stormheart banners and split wood | `BELOW6-STORMDRESS` | **judged RIDE-ALONG** (Marrow frames +0.48, split frame +0.47, F41#1 row +0.10; all under 0.5, nothing loses). The aged wood rendered rose-mauve on GPU (hue 332); **retuned and measured** (CPU slab hue 35, saturation 0.39; details at the end of its ARM.md). Check the GPU pixel hue before it rides with the next Stormwood landing. |
-| Stormwood top-deck dialogue look, what is left: one flat lavender grade, tiled pink-lilac planks, the dialogue box over Marrow's lower half | none | not started (scene light and grade overlap LANE-PLACES' storm-light rows) |
+| Stormwood top-deck dialogue frames (F41#7, #11, #15, #20): pink-lilac planks, plus the STORMDRESS banners and retuned split wood | `BELOW6-STORMDECK` (three flags) | **ready for GPU.** Queue this, not STORMDRESS again. It asks the GPU lane for a pixel-hue check before judging. CPU: planks hue 330 -> 24-29. |
+| What is left on those frames after it: the flat lavender grade and sky, the dialogue box over Marrow's lower half | none | not started (the grade overlaps LANE-PLACES' storm-light rows) |
 | F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | parked, not sent (`NOT-SENT.md`, with a correction) |
 | F40#1 Cloudreach open terrain (5.90) | none | not started |
 | F39#8 (5.66) | none | parked |
