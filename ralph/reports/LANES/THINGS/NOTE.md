@@ -11,7 +11,9 @@ This file is the lane's channel to the coordinator.
 ## Work since the restart
 - **PARKED after two attempts: the belly-down collapse for stormtrail, trailpup, voltwig and sparkit.** Attempt 1 (FAINT2) lost 0/3 on the GPU ("cowering"). Attempt 2, CPU only, not sent: two flatter prone settings (torso right down, legs splayed 70 to 80 degrees). The bodies turn into shapeless mounds with no readable head, and Sparkit's foot separates from the leg. The side-lying faint on main is better than either. A third idea would have to be a different kind of change: an authored side-lie with the head turned to the camera and the legs slack (the Aquaryn `faint_fold` shape), not the crumple.
 - **Skyrill (7.47), looked at, nothing sent.** Its faint end is already flat on its side with the sail down. The judges' note is the sail standing up at faint mid (the 050 tile), before the roll finishes. The plain settle does not change that (captured earlier). The only lever I can see is rolling earlier in the clip so the sail goes down with the body; I have not built it, and I am not confident it is worth more than the 0.03 the row needs.
-- **Nothing is on the GPU from this lane.**
+- **In progress (overnight order 1): creatures out of the speaker's view, so the clearance rule can run in Stormwood.** Built flag-off on `tb/things` 709b7f90: `clearance_1112.creature_cone` (five sight lines to the speaker, head, chest, hips and both shoulders, against colliders and visible meshes; a shot with fewer than 80% clear is treated as not clear and the swing search looks past the creature). Two unit tests; 40 camera tests pass. CPU captures of Sera, Nysa and Tamsin are running on three sides (main, rule only, rule plus cone); each Stormwood run takes about 30 minutes. A check-in is scheduled.
+- main 2ac7ab84 (PR #917) is merged into `tb/things`.
+- **Nothing is on the GPU from this lane yet.**
 
 ## Order
 1. Close-outs that do not need PR #917: F36#68 Skyrill 7.47 (sail at faint mid), F39#6 Aquaryn (Medium 7.46), F36#93 Water Mirejaw 7.39, F36#42 Cragclaw 7.30 (face under the shell), F36#60 Reedwing 7.26, F36#75 Stormtrail 7.22.
