@@ -1,0 +1,178 @@
+[
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+  "sky_fraction": 0.081,
+  "lower_edges": 0.1508,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.jpg",
+  "sky_fraction": 0.145,
+  "lower_edges": 0.0904,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.jpg",
+  "sky_fraction": 0.05,
+  "lower_edges": 0.1455,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.png",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.jpg",
+  "sky_fraction": 0.132,
+  "lower_edges": 0.1301,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg",
+  "sky_fraction": 0.055,
+  "lower_edges": 0.1599,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.png",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.jpg",
+  "sky_fraction": 0.138,
+  "lower_edges": 0.1357,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg",
+  "sky_fraction": 0.259,
+  "lower_edges": 0.1727,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.png",
+  "preset": "arm-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.jpg",
+  "sky_fraction": 0.278,
+  "lower_edges": 0.1294,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+  "sky_fraction": 0.082,
+  "lower_edges": 0.1547,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.jpg",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.1024,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.jpg",
+  "sky_fraction": 0.05,
+  "lower_edges": 0.1462,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.png",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.jpg",
+  "sky_fraction": 0.125,
+  "lower_edges": 0.1232,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg",
+  "sky_fraction": 0.055,
+  "lower_edges": 0.1615,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.png",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.jpg",
+  "sky_fraction": 0.134,
+  "lower_edges": 0.1227,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg",
+  "sky_fraction": 0.258,
+  "lower_edges": 0.1755,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.png",
+  "preset": "base-High",
+  "tree": "4eba46f9f664f18670f91e82458c2fb2f87866f8",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.jpg",
+  "sky_fraction": 0.273,
+  "lower_edges": 0.1302,
+  "script_errors": 0,
+  "note": "places-wetpath: base = tb/places 4eba46f9f, arm = + PLACES-WETPATH/overlay.json (cloudreach_visual.json ground_wet_path_1112). No import (shader sources only). F40#0 matrix --ground-cover-cache, gate pair (rain piece + clear control)."
+ }
+]
