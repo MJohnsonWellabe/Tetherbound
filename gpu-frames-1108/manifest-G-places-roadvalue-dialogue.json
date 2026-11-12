@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "base-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-roadvalue-dialogue/base-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.3606,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "preset": "base-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-roadvalue-dialogue/base-High/stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.298,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "base-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-roadvalue-dialogue/base-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.108,
+  "lower_edges": 0.1788,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "roadnp-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-roadvalue-dialogue/roadnp-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.076,
+  "lower_edges": 0.3462,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "preset": "roadnp-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-roadvalue-dialogue/roadnp-High/stormwood__inventory__character__rodkeeper_hesk.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.2818,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#8 inventory frames."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "roadnp-High",
+  "tree": "66b68b8c8f78d8d17815e9d99ddb1842879a6cc6",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood (3 subsets)",
+  "path": "G-places-roadvalue-dialogue/roadnp-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.103,
+  "lower_edges": 0.1813,
+  "script_errors": 0,
+  "note": "places-road-value, High. base = main 328c598ae (#914); roadnp = tb/places 66b68b8c8 + local match-main (storm_phase_1111 on, building far_bolts 0.0, distinct_bodies_1111 on) + PLACES-ROADVALUE/overlay_no_puddles.json. The 'road' arm (overlay.json, with puddles) is HELD: lilac/white puddle slabs on the road (reject rule). Stale Bryn import: main's VRAM-compressed Bryn albedo is rendered from the older cached import on all sides. F41#8 inventory frames."
+ }
+]
