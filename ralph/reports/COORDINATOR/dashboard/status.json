@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 22:40 UTC",
+  "updated": "12 Nov 2026 22:50 UTC",
   "headline": [
+    "12 Nov 22:50: #934 landed: the swimmer reads as swimming and restoring the currents visibly changes the sea. F39#14 and F39#17 are now above 6; F39#5 is at 5.98. #936 (wall stones) is updated onto the new main and re-running CI.",
     "12 Nov 22:40: Cloudreach wall stones at human scale ship (F40#15 5.17 to 5.54, 3/3; shrine and aviary unchanged), landing as #936. Stormraven's eye round 2 does not show at creature distance and is parked. New bug for LANE-BELOW6: a translucent amber pane covering half the overlook route frame (both sides, 3/3).",
     "12 Nov 22:20: #935 landed (F40#8 6.37, F40#17 6.94). #934 (swim and restored sea) is updated onto the new main and re-running full CI; its earlier run had one Tidewake chain time out while loading.",
     "12 Nov 21:55: #935 in full CI: the Cloudreach bridge strip (F40#8 6.37) and the High Perches rim mushrooms (F40#17 6.94). #934 (swim and restored sea) had one Tidewake chain time out while loading; it will be re-run once when its run completes.",
@@ -2265,6 +2266,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#934",
+      "what": "Surface swim stroke (F39#5 5.45 to 5.98, F39#14 5.74 to 6.12) and restored sea (F39#17 6.08 to 6.27); full CI 23 jobs green (the earlier Tidewake load timeout did not recur)",
+      "when": "12 Nov 22:46"
+    },
     {
       "pr": "#935",
       "what": "Cloudreach: the black strip at the Three Bells bridge is gone (F40#8 5.61 to 6.37) and natural mushroom patches at the High Perches rim (F40#17 6.01 to 6.94); full CI 23 jobs green",
