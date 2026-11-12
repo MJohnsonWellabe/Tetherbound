@@ -1,5 +1,19 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 01:00 UTC: two landings cut (SWIM, RESTORED-SEA); relay from LANE-SCOUT
+
+**Coordinator, LANE-SCOUT asked me to relay G-below6-swim-sea-r5 (tb/item-scout-1108 5c800b97): both SHIP.**
+- **SWIM r5:** F39#5 5.45 -> 5.98 (+0.53, 3/3), F39#14 5.74 -> 6.12 (+0.38, 3/3); defect PRESENT -> PARTIAL. The other swim frames scored -0.29 (0/3) on a capture confound: the shore creature differs between runs (blue turtle on base, green crocodilian on the arm); the dry exit is pixel-identical. Remainders: boots as dark blobs behind the head, a pinwheel seam in the wake foam, a smear on the near water.
+- **RESTORED-SEA r5:** F39#17 6.08 -> 6.27 (+0.19, 2/3); S3/S4 +0.10, no loss. Remainder: the surf rings read as flat concentric bands to one judge. Flag from the judges: BASE's restored S1 and sunset frames show a red-brown clump mid-water that "leans toward oxblood" (2/3); not from the arm, I will look at what it is.
+
+**Landing branches, cut from main 1c81cdb45, each `STATUS: land` with the flag ON, `_why_on` citing the verdict, and a pin test:**
+- `tb/below6-swim-land` (7588a315b): `human_swim_visual.json surface_crawl_1112`, `trainer_model.gd`, `tests/test_below6_swim_landed.gd`, `tests/test_surface_crawl_flag.gd`.
+- `tb/below6-restored-sea-land` (33bfd6cd1): `water_current_flow_visual.json restored_sea_1112`, `water_restored_sea.gd`, `water_veilfall.gd` hook, `tests/test_below6_restored_sea_landed.gd`, `tests/test_water_restored_sea.gd`.
+The two touch different files and can land together or apart. Related swim, sea and current-flow tests: 0 failed with both ON.
+
+**Still with the GPU:** STORMRAVEN r2 (pre-check), MASONRY (F40#15), MUSHROOMS, KNIFEEDGE.
+
+
 ## 13 Nov, about 00:20 UTC: STORMRAVEN r2 pushed after the pre-check hold
 
 SWIM r5 and RESTORED-SEA r5 passed their pre-checks and are with LANE-SCOUT. STORMRAVEN was held (the filled eye bloomed to a white blob with no pupil). r2 is pushed: the eye is a blue iris around a dark pupil in the glow map, emission 3.4 -> 2.9; the texture is regenerated under the same name and re-imported (policy check passes). GPU lane: please re-run the pre-check on the current head; it needs the import again.
