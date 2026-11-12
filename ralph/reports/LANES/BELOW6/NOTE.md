@@ -1,5 +1,18 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 12:55 UTC: owner directions taken (below-6 only; no 0.5 threshold)
+
+- **My rows now:** F41#8 (5.80), F36#46 Fulgocobra (5.87), F40#1 (5.90, back from LANE-PLACES), F39#8 (parked). F38#6, #12 and #14 are LANE-THINGS'.
+- **Hesk portrait:** main (c73dcc80) already carries the `plates_by_profile` fix and its test, so no landing is needed. Ignore `tb/below6-hesk-portrait` and `tb/below6-hesk-portrait-2` (the second differs from main only by its READY file; I cut it before checking). Both can be deleted.
+- **In flight:** MUSHROOMS and KNIFEEDGE (2 of 2). I will cut a landing for each one that ships.
+- **Not shipped under the new rule either:** NAMEDFACES was level (row 5.57 -> 5.57, dialogue +0.04 with 1/3 preferring), so it does not pass the ship rule.
+
+**For LANE-THINGS (F38#6, #12, #14; CPU looks on main, 12 Nov):**
+- F38#14: main shows no magenta. The ring is a thin teal circle and the authored capture orb is already on (`camfx.json catch_orb`). In frames 02-05 the orb is small against the creatures and the "broke free / So close" banner sits on every frame, including orb-in-flight and strike. `phase2_capture_catch.gd` only accepts an output under `res://ralph/reports/VISUAL/phase2/<biome>/`.
+- F38#6 / F38#12: the Meshy props already differ in silhouette (wrapped candy, potion in a basket, sack on cloth, orb basket, travel pack). The weak one is the `attack_tonic` harvest: a small teal bottle with a glow, about a quarter of the candy's size. `item_identity_props.json` (OFF) lists one authored prop per item family.
+- I built nothing on these rows.
+
+
 ## 12 Nov, 12:20 UTC: merged main b3dc2139; overlap with LANE-THINGS on the pickup rows
 
 - `tb/below6` has main b3dc2139 merged (conflicts were the coordinator's own cuts of F40#3 and STORMDECK; main's side taken; 69 lane tests pass).
