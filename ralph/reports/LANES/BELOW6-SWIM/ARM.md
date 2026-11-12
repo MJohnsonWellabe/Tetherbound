@@ -42,3 +42,11 @@ Probe: the swim capture, overlay on, at `surface_mid`; the pose was stepped thro
 So in r4 the chest and hips stay under the plane for the whole cycle and the hand's apex is 0.13 m above it, about 0.16 m above the shoulder, never near head height. `_sheet_cpu_r4_water_hidden_two_phases.jpg` shows the two apex phases with the sea mesh hidden: the body lies flat and prone with the arms close to the head, one reaching slightly forward, and no raised arm.
 
 For comparison r3's keys were `arm_recover_lift 0.42` with `arm_depth 0.12` and chest -0.07; I did not probe r3, so I cannot say from numbers why its GPU frames showed the arm above the head.
+
+## r5 (12 Nov, from the GPU frames of r4)
+
+The GPU lane held r4 and sent its frames (tb/gpu-frames-1108 `G-below6-swim-r4/`). They show what the numbers could not: the "raised arm" in r2-r4 is not a vertical arm. It is the arm that reaches forward in the crawl. The swim camera sits behind and above, so an arm stretched ahead of the head projects up the screen past the head with an open glove, and that silhouette reads as a wave. The one r4 frame the GPU lane called right (surface_west) is the phase where both arms lie out at the sides.
+
+r5 makes that the whole stroke: `arm_reach_scale 0.3` (new key, 1 keeps the old stroke) so the hands sweep a third as far forward and back, `arm_lateral 0.85`, no lift, forearms in line with the upper arms. Chest stays 0.10 m under the surface.
+
+CPU (`_sheet_cpu_r5_entry_west_mid_far.jpg`, the GPU lane's crop at entry, surface west, mid and far): both arms lie out at the waterline beside the shoulders in all four stands; no hand is above the head in any of them. 0 script errors. The risk now is the opposite one: a judge may read it as a float with spread arms, not a stroke.

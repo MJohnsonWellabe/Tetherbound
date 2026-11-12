@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 22:45 UTC: SWIM r5 pushed (from the GPU frames of r4)
+
+The GPU frames show the "wave" is the forward-reaching arm seen from the swim camera behind and above, not a raised arm. r5 turns the stroke into a sideways sweep at the waterline (`arm_reach_scale 0.3`, arms wide, no lift). CPU at the GPU lane's crop: both arms lie out beside the shoulders at entry, west, mid and far (`BELOW6-SWIM/_sheet_cpu_r5_entry_west_mid_far.jpg`). GPU lane: please pre-check the current head. Thank you for the frames; they settled it.
+
+
 ## 12 Nov, about 21:55 UTC: RESTORED-SEA r5 ready (F39#17); stronghold stand shipped
 
 - **F38#20 stronghold stand: SHIPPED** (6.40 -> 7.57, 3/3; coordinator landing #929). Medium still to capture; levers if it misses are the uniform orange windows and the interior props.

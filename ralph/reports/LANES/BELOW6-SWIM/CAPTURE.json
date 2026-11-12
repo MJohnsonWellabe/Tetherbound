@@ -31,8 +31,8 @@
  "overlay": "ralph/reports/LANES/BELOW6-SWIM/overlay.json",
  "capture_both": "base (overlay off) and arm (overlay on), same command as G-rescore-stale-tier2 used for F39#5",
  "needs_import": "no",
- "_why": "G-rescore-stale-tier2 3/3: 'the swimmer is a floating head with no stroke'. On main the active stroke candidates put the chest 0.14 m under the surface with the arms reaching below the body. r3: chest 0.07 m under the surface, body pitch 83, arms narrower, and the recovering arm low and forward just above the water.",
- "want_to_see": "head, shoulders and upper back at the waterline and one arm reaching low and forward: a crawl, not a wave. The GPU pre-check rejected r2 because the body floated on the transparent water with an arm raised high; say if r3 still shows the torso and legs on top, or if it has gone back to a floating head.",
+ "_why": "G-rescore-stale-tier2 3/3: 'the swimmer is a floating head with no stroke'. r5: chest 0.10 m under the surface, body nearly flat, and the stroke is a sideways sweep at the waterline: arms out wide, reaching only a third as far forward and back, no lift.",
+ "want_to_see": "in every stand both arms lying out at the waterline beside the shoulders, as in r4's surface_west frame; no hand above the head. Say if it now reads as a T-pose float instead of a stroke.",
  "note": "The frames are stills at whatever stroke phase the capture lands on. Judge F39#14 on the same pair if cheap: the wake is unchanged.",
- "round": "r3 (after the GPU pre-check hold)"
+ "round": "r5 (after the r4 pre-check hold and its GPU frames)"
 }
