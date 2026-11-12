@@ -185,13 +185,44 @@ jobs:
         # The kickoff pair ships in the same zip (D73): the owner downloads the
         # game from the website, unzips, and double-clicks KICKOFF.cmd to run
         # the whole evidence pass -- archive/docs/acceptance/KICKOFF_RUN.md.
+        #
+        # GitHub refuses a release asset of 2 GiB or more, and the game data
+        # alone (Tetherbound.pck) is larger than that (4.3 GB on 12 Nov 2026).
+        # So the .pck ships beside the zip in parts under 2 GiB, and the zip
+        # carries JOIN.cmd, which stitches them back with copy /b and checks
+        # the SHA-256 (owner, 12 Nov 2026: split plus a join script, no extra
+        # software). Tetherbound-parts.txt lists the parts and the hash for
+        # KICKOFF's export check.
         run: |
           set -euo pipefail
           cp tools/owner/KICKOFF.cmd tools/owner/kickoff.ps1 build/windows/
+          mkdir -p dist
+          split -b 1900m -d -a 1 build/windows/Tetherbound.pck dist/Tetherbound.pck.part
+          PCK_SHA=$(sha256sum build/windows/Tetherbound.pck | cut -d' ' -f1)
+          PARTS=$(cd dist && ls Tetherbound.pck.part* | sort)
+          { printf '%s\n' $PARTS; echo "sha256 $PCK_SHA"; } > dist/Tetherbound-parts.txt
+          JOINED=$(printf '%s+' $PARTS); JOINED=${JOINED%+}
+          rm build/windows/Tetherbound.pck
+          {
+            printf '@echo off\r\n'
+            printf 'rem Joins the Tetherbound.pck parts downloaded beside this file.\r\n'
+            printf 'cd /d "%%~dp0"\r\n'
+            printf 'if exist Tetherbound.pck goto check\r\n'
+            printf 'copy /b %s Tetherbound.pck >nul\r\n' "$JOINED"
+            printf 'if errorlevel 1 (echo A part is missing. Download every Tetherbound.pck.part file from the release into this folder, then run JOIN.cmd again. & del Tetherbound.pck 2^>nul & pause & exit /b 1)\r\n'
+            printf ':check\r\n'
+            printf 'certutil -hashfile Tetherbound.pck SHA256 | findstr /i /c:"%s" >nul\r\n' "$PCK_SHA"
+            printf 'if errorlevel 1 (echo The joined file does not match the release. Delete Tetherbound.pck, re-download the parts and run JOIN.cmd again. & pause & exit /b 1)\r\n'
+            printf 'echo Joined and verified. Start Tetherbound.exe.\r\n'
+            printf 'pause\r\n'
+          } > build/windows/JOIN.cmd
           cd build/windows
-          zip -r ../../Tetherbound-windows.zip .
+          zip -r ../../dist/Tetherbound-windows.zip .
           cd ../..
-          unzip -l Tetherbound-windows.zip
+          unzip -l dist/Tetherbound-windows.zip
+          ls -l dist
+          cat dist/Tetherbound-parts.txt
+          for f in dist/*; do test "$(stat -c%s "$f")" -lt 2147483648; done
 
       - name: Keep an obsolete CI completion from replacing the download
         id: publish-head
@@ -222,9 +253,12 @@ jobs:
           body: |
             Automatic build of passing `main`, commit ${{ env.RELEASE_SHA }}.
 
-            **Windows / ROG Ally.** Unzip and run `Tetherbound.exe` — keep the
-            `.pck` and every `.dll` (including `steam_api64.dll` when present)
-            next to it.
+            **Windows / ROG Ally.** The game data is larger than GitHub's 2 GB
+            file limit, so it comes in parts. Download `Tetherbound-windows.zip`
+            and every `Tetherbound.pck.part` file. Unzip the zip, move the part
+            files into the unzipped folder, double-click `JOIN.cmd` (it joins
+            and verifies them), then run `Tetherbound.exe`. Keep the `.pck` and
+            every `.dll` (including `steam_api64.dll` when present) next to it.
 
             **Evidence run.** Double-click `KICKOFF.cmd` from the same folder
             and walk away; it fetches the repo, plays the chapter with video,
@@ -235,7 +269,10 @@ jobs:
             Every creature, the trainer, Grandpa, the Warden and the Veridian
             Stag are produced from the project's own concept art. No stand-ins
             remain in the roster.
-          files: Tetherbound-windows.zip
+          files: |
+            dist/Tetherbound-windows.zip
+            dist/Tetherbound.pck.part*
+            dist/Tetherbound-parts.txt
           # Truthfully a prerelease: this is a slice, not a game. Keeping the
           # flag honest is why the download link is addressed by tag — see the
           # note at the top of this file.

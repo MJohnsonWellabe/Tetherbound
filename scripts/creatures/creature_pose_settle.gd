@@ -314,8 +314,34 @@ static func _times(animation: Animation, rig: Rig, count: int) -> PackedFloat64A
 	return times
 
 
+## `faint.per_species` (LANE-THINGS, 12 Nov; empty on main): a species row is
+## deep-merged over the `faint` block for that species' bake only, so one rig
+## can take a larger head drop or keep its torso height without changing any
+## other body. An exact id (`water_mirejaw`) wins over the base id.
+static func _for_species(cfg: Dictionary, species_id: String) -> Dictionary:
+	var faint: Variant = cfg.get("faint", {})
+	var rows: Variant = (faint as Dictionary).get("per_species", {}) if faint is Dictionary else {}
+	if not rows is Dictionary or (rows as Dictionary).is_empty():
+		return cfg
+	var row: Variant = (rows as Dictionary).get(species_id, (rows as Dictionary).get(species_id.trim_prefix("water_"), null))
+	if not row is Dictionary:
+		return cfg
+	var out := cfg.duplicate(true)
+	_merge(out["faint"], row as Dictionary)
+	return out
+
+
+static func _merge(into: Dictionary, patch: Dictionary) -> void:
+	for key: Variant in patch:
+		if patch[key] is Dictionary and into.get(key) is Dictionary:
+			_merge(into[key], patch[key])
+		else:
+			into[key] = patch[key]
+
+
 ## Faint: optional side-lie, optional head lift, then grounded dense pivot keys.
-static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animation:
+static func settle_faint(rig: Rig, source: Animation, raw_cfg: Dictionary) -> Animation:
+	var cfg := _for_species(raw_cfg, rig.species_id)
 	var grounded := _section(cfg, "faint", "grounded")
 	var side := _section(cfg, "faint", "side_lie")
 	var lift := _section(cfg, "faint", "head_lift")
@@ -389,6 +415,11 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 		# not as the collapsed faint.
 		if not bool(crumple.get("keep_head_up", false)):
 			_drop_head(rig, animation, end, rotations[-1], positions[-1], crumple, limbed)
+		# `tail_relax` (per species, 0 by default): a recipe faint curls the
+		# tail for a side-lying body; once the crumple rights the body that
+		# curl stands the tail straight up. The tail eases back to its rest.
+		if float(crumple.get("tail_relax", 0.0)) > 0.0:
+			rig.relax_tail(animation, crumple)
 	else:
 		if not lift.is_empty() and limbed:
 			# The face stays visible on a side-lying body.
@@ -518,7 +549,8 @@ static func face_camera(model: Node3D, player: AnimationPlayer, clip: String, ca
 static func crumples_species(rig: Rig, crumple: Dictionary) -> bool:
 	if _listed(crumple.get("keep_authored", []), rig.species_id):
 		return false
-	if _listed(crumple.get("species", []), rig.species_id):
+	if _listed(crumple.get("species", []), rig.species_id) or bool(crumple.get("force", false)):
+		# `force` comes from a `faint.per_species` row: that one species crumples.
 		return true
 	var winged := false
 	var limbed := false
@@ -540,7 +572,7 @@ static func _drop_head(rig: Rig, animation: Animation, end: float, rotation: Qua
 		return
 	var chain: Array[int] = []
 	var bone := rig.skeleton.get_bone_parent(head)
-	for n in (2 if limbed else 3):
+	for n in int(cfg.get("head_joints", 2 if limbed else 3)):
 		if bone < 0:
 			break
 		chain.push_front(bone)
@@ -946,6 +978,31 @@ class Rig:
 					continue
 				var value: Quaternion = animation.track_get_key_value(track, key)
 				animation.track_set_key_value(track, key, (Quaternion.IDENTITY.slerp(local_swing, r) * value).normalized())
+		bone_tracks.erase(animation.get_instance_id())
+
+	## `crumple.tail_relax`: every `tail_*` bone's rotation eases toward its
+	## rest over the clip's end (1.0 = fully at rest on the last key).
+	func relax_tail(animation: Animation, cfg: Dictionary) -> void:
+		var amount := clampf(float(cfg.get("tail_relax", 0.0)), 0.0, 1.0)
+		var start := float(cfg.get("ramp_start", 0.3))
+		var tracks := _bone_tracks(animation)
+		for bone in skeleton.get_bone_count():
+			if not str(skeleton.get_bone_name(bone)).to_lower().begins_with("tail"):
+				continue
+			var track: int = (tracks.get(bone, {}) as Dictionary).get(Animation.TYPE_ROTATION_3D, -1)
+			if track < 0 or animation.track_get_key_count(track) == 0:
+				continue
+			var rest := skeleton.get_bone_rest(bone).basis.get_rotation_quaternion()
+			for phase: float in [start, (start + 1.0) * 0.5, 1.0]:
+				var t := phase * animation.length
+				if animation.track_find_key(track, t, Animation.FIND_MODE_APPROX) < 0:
+					animation.rotation_track_insert_key(track, t, animation.rotation_track_interpolate(track, t))
+			for key in animation.track_get_key_count(track):
+				var r := _smooth((animation.track_get_key_time(track, key) / animation.length - start) / maxf(1.0 - start, 0.05))
+				if r <= 0.0:
+					continue
+				var value: Quaternion = animation.track_get_key_value(track, key)
+				animation.track_set_key_value(track, key, value.slerp(rest, r * amount).normalized())
 		bone_tracks.erase(animation.get_instance_id())
 
 	## `faint_fold`: slack limbs. Each upper limb bone swings toward the trunk

@@ -268,7 +268,8 @@
     "timber_colour": "#6f5238"
   },
   "heartwood_1111": {
-    "enabled": false,
+    "enabled": true,
+    "_why_on": "ON (GPU High G-below6, 11 Nov 2026; ralph/reports/GPU-PASS/1108/G-below6-thundertunnel-heartwood.md on tb/item-scout-1108 4515bd926): F41#1 Stormheart 4.29 -> 5.66 (+1.37) on the row, 4.39 -> 5.95 (+1.56) on the two close frames, 3/3 prefer the arm on both sets, flat white strokes PRESENT -> FIXED 2/3, no loss. Owner 4 Nov: a judged gain ships ON.",
     "scope": "client_presentation",
     "_candidate": "LANE-BELOW6 (11 Nov 2026), F41#1 P2-037 (GPU High 5.78): judges 3/3 every round ask for a visible core and a branching crown; the ground stands look across the hollow's empty axis, where only flat white arc strokes stood. Earlier cores sat in the wall cleft at r 45 m and beyond (heart_cleft crystal, heart_cradle_1107, heart_core_1109) or were a bare light tube (core_column). A Blender heartwood (assets/props/blender-1111/stormheart_heartwood, script ralph/reports/LANES/BELOW6-HEARTWOOD/build_heartwood.py) stands on the axis: a faceted lightning core to 96 m (natural glow, cools on release) in an open cage of six braided roots that flare 10-13 m over the floor, with five counter-wound ties, opening from 30 m into an inner crown of limbs inside the 18 m deck opening (max r 14.8 m, clear of the ascent ramp at r 22-30 m). The core arcs are hidden while it is on. No collider, floor or route change: an optional 4.6 m axis body (body_enabled) stays OFF because the tree's physical shapes are pinned byte-identical with and without presentation, so a player can walk into the cage for now. OFF until GPU-judged.",
     "model": "res://assets/props/blender-1111/stormheart_heartwood/stormheart_heartwood.glb",

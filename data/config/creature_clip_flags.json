@@ -231,25 +231,14 @@
       }
     },
     "below6_mirejaw_hit": {
-      "_why": "LANE-BELOW6 (11 Nov 2026), F36#52 Mirejaw (GPU G-things-t4-rescore 5.28: in the hit frame 'the head becomes a pale translucent jaw shape' and a grey smear sits by the trainer, 2-3/3). The GLB has one opaque material, so nothing is translucent: the hit clip pitches the body so far that the jaw gapes to its pale mouth lining and the paddle tail swings down through the stage floor, where its flat pale underside shows edge-on. The hit's rotation is scaled down so the jaw and tail stay in a readable flinch. Same hook as remakes_floor_ribbonray_hit (GPU: airborne hit PARTIAL -> FIXED 3/3). OFF until GPU-judged.",
-      "enabled": false,
+      "_why": "LANE-BELOW6 (11 Nov 2026), F36#52 Mirejaw (GPU G-things-t4-rescore 5.28: in the hit frame 'the head becomes a pale translucent jaw shape' and a grey smear sits by the trainer, 2-3/3). The GLB has one opaque material, so nothing is translucent: the hit clip pitches the body so far that the jaw gapes to its pale mouth lining and the paddle tail swings down through the stage floor, where its flat pale underside shows edge-on. The hit's rotation is scaled down so the jaw and tail stay in a readable flinch. Same hook as remakes_floor_ribbonray_hit.",
+      "enabled": true,
+      "_why_on": "ON (GPU High G-below6-hits, 12 Nov 2026; ralph/reports/GPU-PASS/1108/G-below6-hits.md on tb/item-scout-1108 65306ecd0): F36#52 Mirejaw 5.72 -> 6.32 (+0.60), 3/3 prefer the arm, no loss. The Abyssal flinch judged with it lost and is not part of this flag. Owner 4 Nov: a judged gain ships ON.",
       "species": {
         "mirejaw": {
           "hit": {
             "rotation": 0.45,
             "position": 0.5
-          }
-        }
-      }
-    },
-    "below6_flinch_abyssal": {
-      "_why": "LANE-BELOW6 (11 Nov 2026). GPU 11 Nov, 3/3 on the arm side: F36#30 Abyssal Guardian (5.77) 'the hit is almost identical to standing'. The recoil is exaggerated (rotation x1.9) with the feet kept near the ground (position x0.6), the hook that landed for cindercub and trailpup (CO16 +0.28 to +0.32). OFF until GPU-judged.",
-      "enabled": false,
-      "species": {
-        "abyssal_guardian": {
-          "hit": {
-            "rotation": 1.9,
-            "position": 0.6
           }
         }
       }

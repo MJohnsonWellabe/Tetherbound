@@ -27,6 +27,11 @@ func _load_plan() -> bool:
 ## Beyond this the post is not at the speaker; the dialogue frame stands the
 ## player beside the body instead (a normal talking distance is 2-4 m).
 const SPEAKER_STAND_WITHIN_M := 4.5
+## Longest wait for the conversation camera to finish easing in: 3 s of
+## physics ticks at the project's 60 Hz.
+const BLEND_WAIT_MAX_TICKS := 180
+var _blend_wait_ticks := 0
+var _blend_timed_out := false
 
 func _begin_manifest() -> void:
 	super._begin_manifest()
@@ -195,6 +200,15 @@ func _capture_row_with_dialogue(row: Dictionary) -> void:
 	# (trainer_npc.gd with_variant_portrait), so an enabled appearance variant's
 	# plate is captured as play shows it. Empty for every other post.
 	var identity := TRAINER_NPC.with_variant_portrait({}, _trainer_spec(row))
+	# LANE-THINGS, 12 Nov (F39#26, 3/3 "Adair's portrait shows Iona"): a
+	# Tidewake character's conversation is opened in play by
+	# water_scene_npcs.gd start_conversation, which hands the panel that
+	# speaker's own name and plate (an enabled appearance variant's paired
+	# portrait). Opened here without it, the panel fell back to the line's
+	# base-body plate, so Adair wore the field researcher's face. Hand over
+	# the same identity play does.
+	if identity.is_empty():
+		identity = _scene_npc_identity(row)
 	if not bool(panel.call("start", conversation, identity)):
 		_failures.append("%s: panel refused %s" % [str(row.frame_id), conversation])
 		panel.visible = false
@@ -228,6 +242,8 @@ func _capture_row_with_dialogue(row: Dictionary) -> void:
 		record["camera_fov_degrees"] = _camera.fov
 		record["conversation_camera_active"] = bool(_rig.call("is_in_conversation"))
 		record["conversation_camera_blend"] = float(_rig.call("conversation_blend"))
+		record["conversation_camera_blend_wait_ticks"] = _blend_wait_ticks
+		record["conversation_camera_blend_timed_out"] = _blend_timed_out
 		var shot: Dictionary = _rig.call("conversation_shot")
 		for key: String in shot:
 			if shot[key] is Vector3:
@@ -262,11 +278,50 @@ func _capture_row_with_dialogue(row: Dictionary) -> void:
 func _settle_dialogue_capture() -> bool:
 	for frame in 7:
 		await process_frame
+	# The conversation camera eases in over `camera.json conversation.blend_time`
+	# (0.45 s), one step per physics tick. Seven drawn frames are seconds on a
+	# software renderer and a fraction of that on a GPU or at --fixed-fps, so a
+	# fast capture took its frame part-way through the move (GPU, 9-11 Nov:
+	# blend 0.41 to 0.74 on 9 of 11 Tidewake frames; the speaker read small with
+	# the player in front). Wait for the shot to arrive, bounded.
+	_blend_wait_ticks = 0
+	_blend_timed_out = false
+	if _rig != null and _rig.has_method("conversation_blend") and bool(_rig.call("is_in_conversation")):
+		while float(_rig.call("conversation_blend")) < 1.0 and _blend_wait_ticks < BLEND_WAIT_MAX_TICKS:
+			await physics_frame
+			_blend_wait_ticks += 1
+		_blend_timed_out = float(_rig.call("conversation_blend")) < 1.0
+		if _blend_timed_out:
+			push_warning("phase2 dialogue: conversation camera blend %.3f after %d physics ticks; frame taken mid-blend"
+				% [float(_rig.call("conversation_blend")), _blend_wait_ticks])
+		# Let the arrived transform reach a drawn frame.
+		for frame in 2:
+			await process_frame
 	return true
 
 
 ## The placed trainer spec for a trainer post (encounter directors'
 ## `trainer_specs`, matched by authored id), or {} for any other post.
+## The identity water_scene_npcs.gd start_conversation passes for this post's
+## speaker, read from that node's own resolved specs. Empty elsewhere.
+func _scene_npc_identity(row: Dictionary) -> Dictionary:
+	var id := str(row.get("authored_id", ""))
+	if id.is_empty():
+		return {}
+	for node: Node in root.find_children("*", "Node", true, false):
+		var specs: Variant = node.get("_specs") if "_specs" in node else null
+		if not (specs is Dictionary and (specs as Dictionary).get(id) is Dictionary):
+			continue
+		var spec: Dictionary = (specs as Dictionary)[id]
+		if not spec.has("display_name") or str(spec.get("portrait", "")).is_empty():
+			continue
+		var identity := {"speaker": spec.display_name, "portrait": spec.portrait}
+		if spec.has("portrait_region"):
+			identity["portrait_region"] = spec["portrait_region"]
+		return identity
+	return {}
+
+
 func _trainer_spec(row: Dictionary) -> Dictionary:
 	var id := str(row.get("authored_id", ""))
 	if id.is_empty():

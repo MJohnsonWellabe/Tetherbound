@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
 ## F41#1 (LANE-BELOW6, 11 Nov 2026): the Blender heartwood on the hollow's axis
-## is declared OFF until GPU-judged, its model carries named bark, vein and core
+## ships ON (GPU High 4.29 -> 5.66, 3/3), its model carries named bark, vein and core
 ## surfaces, and above the floor flare it stays inside the 18 m deck opening
 ## (clear of the ascent ramp at r 22-30 m). The optional axis body (body_enabled) is OFF,
 ## so the tree's physical shapes do not change.
@@ -16,10 +16,13 @@ func _cfg() -> Dictionary:
 	return (parsed as Dictionary).get("heartwood_1111", {}) if parsed is Dictionary else {}
 
 
-func test_heartwood_declared_off_until_judged() -> void:
+func test_heartwood_ships_on_with_its_verdict() -> void:
 	var cfg := _cfg()
 	assert_false(cfg.is_empty(), "heartwood_1111 must be declared")
-	assert_false(bool(cfg.get("enabled", true)), "heartwood_1111 ships OFF until GPU-judged")
+	assert_true(bool(cfg.get("enabled", false)), "heartwood_1111 ships ON (judged gain)")
+	var why := str(cfg.get("_why_on", ""))
+	assert_true(why.contains("G-below6-thundertunnel-heartwood.md"), "it cites its GPU verdict")
+	assert_true(why.contains("4.29 -> 5.66"), "and its judged score")
 	assert_eq(str(cfg.get("scope", "")), "client_presentation")
 	assert_false(bool(cfg.get("body_enabled", true)), "the optional axis body stays OFF: the tree's physics are pinned")
 

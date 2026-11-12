@@ -439,6 +439,30 @@ function Phase-Export {
   $lastMod = ""
   try { $lastMod = "$($resp.Headers['Last-Modified'])" } catch {}
   Expand-Archive -Path $zip -DestinationPath $dir -Force
+  # The game data ships beside the zip in parts under GitHub's 2 GiB asset
+  # limit (owner, 12 Nov 2026); join them next to the executable and check
+  # the SHA-256 that Tetherbound-parts.txt records.
+  $partsList = Join-Path $dir "Tetherbound-parts.txt"
+  Download "$RepoUrl/releases/download/latest/Tetherbound-parts.txt" $partsList | Out-Null
+  $lines = Get-Content $partsList
+  $parts = @($lines | Where-Object { $_ -match '^Tetherbound\.pck\.part\d+$' })
+  $want = (($lines | Where-Object { $_ -match '^sha256 ' }) -replace '^sha256 ', '').Trim()
+  if ($parts.Count -eq 0 -or -not $want) { throw "Tetherbound-parts.txt lists no parts or no hash" }
+  $anyExe = Get-ChildItem $dir -Recurse -Filter "Tetherbound.exe" | Select-Object -First 1
+  if (-not $anyExe) { throw "no Tetherbound.exe in the release zip" }
+  $pck = Join-Path $anyExe.DirectoryName "Tetherbound.pck"
+  $out = [System.IO.File]::Create($pck)
+  try {
+    foreach ($p in $parts) {
+      $f = Join-Path $dir $p
+      Download "$RepoUrl/releases/download/latest/$p" $f | Out-Null
+      $in = [System.IO.File]::OpenRead($f)
+      try { $in.CopyTo($out) } finally { $in.Close() }
+      Remove-Item $f
+    }
+  } finally { $out.Close() }
+  $got = (Get-FileHash -Algorithm SHA256 $pck).Hash.ToLower()
+  if ($got -ne $want.ToLower()) { throw "joined Tetherbound.pck does not match the release (sha256 $got, expected $want)" }
   $exe = Get-ChildItem $dir -Recurse -Filter "Tetherbound.console.exe" | Select-Object -First 1
   $console = $true
   if (-not $exe) { $exe = Get-ChildItem $dir -Recurse -Filter "Tetherbound.exe" | Select-Object -First 1; $console = $false }

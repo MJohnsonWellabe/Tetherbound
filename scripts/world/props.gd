@@ -72,9 +72,22 @@ func build() -> void:
 		var floor_flag: Variant = (cluster as Dictionary).get("camp_floor", {})
 		if floor_flag is Dictionary and bool((floor_flag as Dictionary).get("enabled", false)):
 			floor_overrides = (floor_flag as Dictionary).get("prop_scale", {}) as Dictionary
+		# F38#32 `hero_candidate` (OFF until judged): fewer, larger props. Its
+		# `prop_scale` replaces the scale of listed models and `drop_models`
+		# leaves the small loose items out, so the site reads from the stand
+		# distance as a tent, a fire and a bed instead of a dozen brown shapes.
+		var hero_drop: Array = []
+		var hero_flag: Variant = (parsed.get("hero_candidates", {}) as Dictionary).get(cluster_name, {}) \
+			if parsed.get("hero_candidates", {}) is Dictionary else {}
+		if hero_flag is Dictionary and bool((hero_flag as Dictionary).get("enabled", false)):
+			floor_overrides = floor_overrides.duplicate()
+			floor_overrides.merge((hero_flag as Dictionary).get("prop_scale", {}) as Dictionary, true)
+			hero_drop = (hero_flag as Dictionary).get("drop_models", [])
 		for entry: Variant in cluster_props:
 			if entry is Dictionary:
 				var prop_spec := entry as Dictionary
+				if hero_drop.has(str(prop_spec.get("model", ""))):
+					continue
 				if floor_overrides.has(str(prop_spec.get("model", ""))):
 					prop_spec = prop_spec.duplicate(true)
 					prop_spec["scale"] = float(floor_overrides[str(prop_spec.get("model", ""))])
@@ -124,6 +137,13 @@ func build() -> void:
 				if not is_nan(ground):
 					var gateway := TRAIL_CAMP_ROADSIDE_THRESHOLD.new()
 					gateway.name = "TrailCampRoadsideThreshold"
+					# F38#32 (OFF until judged): the board's two labels each
+					# show one face, so neither reads mirrored from behind.
+					gateway.set("single_sided_labels", hero_flag is Dictionary \
+						and bool((hero_flag as Dictionary).get("enabled", false)) \
+						and bool((hero_flag as Dictionary).get("single_sided_sign", false)))
+					if hero_flag is Dictionary and bool((hero_flag as Dictionary).get("enabled", false)):
+						gateway.set("wood_tint", str((hero_flag as Dictionary).get("sign_wood_tint", "")))
 					group.add_child(gateway)
 					gateway.call("build", Vector3(x, ground, z),
 						float(threshold_cfg.get("yaw_deg", 0.0)))
