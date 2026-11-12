@@ -4068,6 +4068,24 @@
    "status": "held by LANE-THINGS (after RULER)"
   },
   {
+   "id": "places-wetpath-r2",
+   "kind": "arm (round 2)",
+   "rows": [
+    "F40#0",
+    "F40#19"
+   ],
+   "branch": "tb/places",
+   "head": "5c372b751",
+   "tree": "tb/places 5c372b751 both sides (shader edit; import if needed)",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-WETPATH/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-WETPATH/CAPTURE.json: capture_cloudreach_f40_matrix.gd --ground-cover-cache pieces 3, 4, 84, 88, 92 (88 night rain and 92 overlook rain are the no-loss checks)",
+   "capture": "High, base and arm",
+   "pre_check": "night rain trail still a readable warm brown path (no black smear); overlook rain trail visible against wet grass",
+   "priority": "after glidebank close-out: a split win (+0.6 on clear and gate rain) needing its two losing pieces fixed"
+  },
+  {
    "id": "rescore-stale-tier2",
    "kind": "re-score",
    "rows": [
