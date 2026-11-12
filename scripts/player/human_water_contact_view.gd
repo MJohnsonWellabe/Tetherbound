@@ -184,6 +184,9 @@ func _set_ring(ring: MeshInstance3D, phase: float, opacity: float) -> void:
 	var material := ring.material_override as ShaderMaterial
 	material.set_shader_parameter("phase", phase)
 	material.set_shader_parameter("opacity", opacity * clampf(float(settings.get("opacity", 0.26)), 0.0, 0.5))
+	var soft: Variant = settings.get("soft_churn_1112", {})
+	material.set_shader_parameter("soft_churn", clampf(float((soft as Dictionary).get("amount", 1.0)), 0.0, 1.0)
+		if soft is Dictionary and bool((soft as Dictionary).get("enabled", false)) else 0.0)
 
 
 func _clear_trail() -> void:
