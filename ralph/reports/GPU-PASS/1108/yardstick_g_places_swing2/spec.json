@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F41#4 base-vs-arm",
+  "a": "G-s2_F41-4_base.png",
+  "b": "G-s2_F41-4_swing2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named destination identities. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+  ]
+ },
+ {
+  "label": "G F41#5 base-vs-arm",
+  "a": "G-s2_F41-5_base.png",
+  "b": "G-s2_F41-5_swing2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: forest ground and distance layers. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
+  ]
+ },
+ {
+  "label": "G F41#12 base-vs-arm",
+  "a": "G-s2_F41-12_base.png",
+  "b": "G-s2_F41-12_swing2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: charged road surface. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern"
+  ]
+ },
+ {
+  "label": "G F41#8 base-vs-arm",
+  "a": "G-s2_F41-8_base.png",
+  "b": "G-s2_F41-8_swing2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character silhouettes. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"
+  ]
+ }
+]
