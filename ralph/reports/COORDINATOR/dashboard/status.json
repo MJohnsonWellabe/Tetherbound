@@ -1,6 +1,7 @@
 {
   "updated": "12 Nov 2026 17:15 UTC",
   "headline": [
+    "12 Nov 17:15: F38#4 Meadows map CLOSES (Medium 7.53, High pooled 7.67, control on scale) after #927's parchment fog. Margin is thin; the next lever is faint terrain and landmark silhouettes across the whole canvas.",
     "12 Nov 17:15: Cloudreach wet trail round 2 is closer but still split: every day set gains +0.56 to +0.65 (3/3), night rain still loses -0.12 (2/3 prefer base) because the soil darkening is not actually gated off at night. LANE-PLACES has the verdict.",
     "12 Nov 17:05: F38#15 flight does not close (7.02 High / 7.39 Medium with the glide bank); the bank is parked after two small rounds. Judges ask for a descent pose (glide, flare, folded perch) and a later landed frame.",
     "12 Nov 17:00: Stormwood storm-state matrix re-score: F41#22 and F41#24 read 6.46 (loose fit, +/-0.75). The lowest stand is giant (5.51): a flat grey slab at the trainer's feet in Break (also at forest), the trunk filling the frame, no sky.",
@@ -2245,6 +2246,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "GPU close",
+      "what": "F38#4 Meadows map closed (Medium 7.53, High 7.67)",
+      "when": "12 Nov 17:15"
+    },
+    {
       "pr": "#927",
       "what": "F38#4 Meadows map warm parchment fog (7.36 to 7.81 High, 3/3); Medium close capture follows",
       "when": "12 Nov 17:05"
@@ -2531,9 +2537,9 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.52 (was 8.16) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#4": {
-      "gpu": 7.81,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 7.21) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 6.99, Medium 6.99, not closed | ARM THINGS-MAPFOG G-restoredsea-mapfog (be513ad94, 12 Nov) base 7.36 -> arm 7.81 High (3/3; EXTRAPOLATED, above top anchor), landing #927; needs Medium, pooled with the stricter 6.99 panel | LANDED #927 (main 506b40292)",
-      "medium": 6.99
+      "gpu": 7.67,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 7.21) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 6.99, Medium 6.99, not closed | ARM THINGS-MAPFOG G-restoredsea-mapfog (be513ad94, 12 Nov) base 7.36 -> arm 7.81 High (3/3; EXTRAPOLATED, above top anchor), landing #927; needs Medium, pooled with the stricter 6.99 panel | LANDED #927 (main 506b40292) | CLOSED G-closeout-f38-4-map (0dc0cdcd3): Medium 7.53, High pooled 7.67",
+      "medium": 7.53
     },
     "F38#41": {
       "gpu": 6.65,

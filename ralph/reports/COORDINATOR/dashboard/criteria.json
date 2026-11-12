@@ -3708,12 +3708,12 @@
       "title": "Meadows and village: visual catalog burn-down to the full bar",
       "chapter": "Wave 2 · Creature power, homestead and visuals",
       "lane": "tb/visual-meadows",
-      "pct": 16.7,
+      "pct": 19,
       "counts": {
         "in_progress": 13,
         "blocked": 1,
-        "met": 7,
-        "not_started": 21
+        "met": 8,
+        "not_started": 20
       },
       "criteria": [
         {
@@ -3800,9 +3800,9 @@
         },
         {
           "text": "F38 (1) top-20 item P2-002 map: The map canvas shows headings and markers without visible terrain or road context for the displayed destinations — fixed on main with a GPU before/after pass at the bar.",
-          "status": "not_started",
-          "evidence": "GPU High 1 Nov main frames, cloud yardstick (3 judges, 3 anchor pairs, calibrated; ralph/reports/CLOUD-JUDGE/MEADOWS-MAIN-1101/): 5.95. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. First Shore is marked discovered but the Day 1 state may hide survey detail; both biome maps lack terrain/route context at this state.",
-          "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+          "status": "met",
+          "evidence": "GPU closed 12 Nov: #927 (warm parchment fog) landed; G-closeout-f38-4-map (LANE-SCOUT, tb/item-scout-1108 0dc0cdcd3): Medium 7.53, High pooled 7.67 (7.81 arm panel, 7.53 this batch), confirming batch, fit r 0.979, control F38#38 8.00 (about 0.2 strict). Defect PARTIAL 3/3: most of the canvas is blank grid outside the surveyed circle.",
+          "gap": "",
           "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
           "parent": "F38#1",
           "subject": "P2-002",
