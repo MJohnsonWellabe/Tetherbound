@@ -18,6 +18,19 @@
    "route": "LANE-SCOUT (close decisions) and LANE-PLACES"
   },
   {
+   "id": "below6-restored-sea",
+   "kind": "arm",
+   "rows": [
+    "F39#17"
+   ],
+   "branch": "tb/below6",
+   "head": "f29722b0d",
+   "job": "ralph/reports/LANES/BELOW6-RESTORED-SEA/CAPTURE.json (phase2_capture_current_states.gd, base and arm, include S2_restored)",
+   "capture": "High",
+   "priority": "lowest row on the board (5.50): first arm after the close-out Mediums",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "closeout-stormtrail-high-stormbrush-medium",
    "kind": "close-out",
    "rows": [
@@ -4377,6 +4390,19 @@
    "request": "ralph/reports/LANES/THINGS-RIFTFRILL/CAPTURE.json",
    "capture": "High (Medium if High reaches 7.5)",
    "priority": "back of the queue: LANE-THINGS is over its two-arms-waiting limit; Riftfrill 7.31"
+  },
+  {
+   "id": "things-mapfog",
+   "kind": "arm",
+   "rows": [
+    "F38#4"
+   ],
+   "branch": "tb/things",
+   "head": "31b5e5879",
+   "job": "ralph/reports/LANES/THINGS-MAPFOG/CAPTURE.json (phase2_capture_ui.gd --biome=meadows map tab, base vs overlay)",
+   "capture": "High",
+   "priority": "cheap UI capture; ride any Meadows UI session",
+   "route": "LANE-SCOUT"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
