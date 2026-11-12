@@ -13,3 +13,13 @@
 **Not in this arm.** Night (the cobalt wash and the self-lit trainer): separate change, next. Wet sheen: PLACES-WETPATH.
 
 **Ask.** Matrix pieces d*8+4 (day rain) for the sample stands, plus d*8+3 (day clear) and d*8+7 (night clear) as no-loss (the flag cannot touch them; one stand is enough), and d*8+8 (night rain) to see the deck at night. High.
+
+## Round 2 (12 Nov, after G-things-cloudrain, 14e9b2c8)
+
+Round 1 was a split: F40#0 day rain +0.21, night rain +0.24, F40#21 +0.20 (3/3 each, partly confounded by a High Perches tile that differed between sides), but **F40#19 -0.12** (2/3 prefer base): the paler sky read as washed out, and the slate deck had earlier won +0.44 for that row.
+
+Change: the flag no longer sets any sky key. The slate cloud deck from `rain_storm_sky` stands as on main; the arm keeps only the light on the ground (diffuse sun 0.45 -> 0.62, ambient 0.8 -> 0.95 in a lighter grey, slightly thinner and lighter fog). Same flag name, same overlay.
+
+Not re-captured on CPU: round 2 is a strict subset of round 1's keys. Please capture High Perches from one boot on both sides.
+
+Not in this arm: the layered sky with sun breaks, height mist and light shafts the judges ask for. The weather sky only exposes coverage, sharpness and three colours, so that is a sky shader change, not a config one.

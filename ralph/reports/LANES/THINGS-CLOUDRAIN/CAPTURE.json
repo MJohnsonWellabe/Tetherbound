@@ -3,9 +3,19 @@
  "lane": "LANE-THINGS",
  "branch": "tb/things",
  "preset": "High",
- "status": "QUEUED 12 Nov (coordinator's shared-cause ask; arms out: STORMUNIFORM, RIFTFRILL, FOESTAND waiting)",
+ "status": "ROUND 2 QUEUED 12 Nov: same overlay, the flag no longer sets sky keys (slate deck kept). Capture High Perches from one boot on both sides.",
  "tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache",
- "base": {"tree": "tb/things", "overlay": null},
- "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-CLOUDRAIN/overlay_rain_bright_overcast.json"},
- "rows": {"F40#0, F40#19, F40#21": {"pieces": "day rain d*8+4 and night rain d*8+8 at the G-rescore-f40-0-sample stands; d*8+3 and d*8+7 at one stand as no-loss"}}
+ "base": {
+  "tree": "tb/things",
+  "overlay": null
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-CLOUDRAIN/overlay_rain_bright_overcast.json"
+ },
+ "rows": {
+  "F40#0, F40#19, F40#21": {
+   "pieces": "day rain d*8+4 and night rain d*8+8 at the G-rescore-f40-0-sample stands; d*8+3 and d*8+7 at one stand as no-loss"
+  }
+ }
 }
