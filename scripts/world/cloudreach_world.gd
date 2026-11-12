@@ -3008,9 +3008,20 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var first_row: Array[Vector3] = rows[0]
 	var last_row: Array[Vector3] = rows[rows.size() - 1]
 	var last := station_count - 1
-	_add_surface_triangle(deep_tool, first_row[0], first_row[6], left_bottom[0])
+	# F40#15 P2-049 `end_face_follows_row_1112` (ON: G-below6-knifeedge): the end face
+	# used to hang from a straight line between the row's two outer vertices.
+	# Where the row is clamped flat onto a pad crown but one outer vertex rides
+	# up a bridge deck, that line stood up to 0.8 m above the crown as a black
+	# knife-edge across the grass (Three Bells bridge foot). ON: the face's top
+	# edge follows every vertex of the row, so it can never stand above the top.
+	if bool(config.get("end_face_follows_row_1112", {}).get("enabled", false)):
+		for column in first_row.size() - 1:
+			_add_surface_triangle(deep_tool, first_row[column], first_row[column + 1], left_bottom[0])
+			_add_surface_triangle(deep_tool, last_row[column], left_bottom[last], last_row[column + 1])
+	else:
+		_add_surface_triangle(deep_tool, first_row[0], first_row[6], left_bottom[0])
+		_add_surface_triangle(deep_tool, last_row[0], left_bottom[last], last_row[6])
 	_add_surface_triangle(deep_tool, left_bottom[0], first_row[6], right_bottom[0])
-	_add_surface_triangle(deep_tool, last_row[0], left_bottom[last], last_row[6])
 	_add_surface_triangle(deep_tool, left_bottom[last], right_bottom[last], last_row[6])
 	deep_tool.generate_normals()
 	deep_tool.commit(mesh)
