@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "stormwood__inventory__pickup__good_candy.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/arm-High/stormwood__inventory__pickup__good_candy.jpg",
+  "sky_fraction": 0.227,
+  "lower_edges": 0.3088,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__great_candy.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/arm-High/stormwood__inventory__pickup__great_candy.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.2077,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__rare_candy.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/arm-High/stormwood__inventory__pickup__rare_candy.jpg",
+  "sky_fraction": 0.209,
+  "lower_edges": 0.2348,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__speed_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/arm-High/stormwood__inventory__pickup__speed_mushroom.jpg",
+  "sky_fraction": 0.312,
+  "lower_edges": 0.259,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__stamina_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/arm-High/stormwood__inventory__pickup__stamina_mushroom.jpg",
+  "sky_fraction": 0.237,
+  "lower_edges": 0.2609,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__wild_mushroom.jpg",
+  "preset": "arm-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/arm-High/stormwood__inventory__pickup__wild_mushroom.jpg",
+  "sky_fraction": 0.112,
+  "lower_edges": 0.3199,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__good_candy.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/base-High/stormwood__inventory__pickup__good_candy.jpg",
+  "sky_fraction": 0.227,
+  "lower_edges": 0.3088,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__great_candy.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/base-High/stormwood__inventory__pickup__great_candy.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.2077,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__rare_candy.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/base-High/stormwood__inventory__pickup__rare_candy.jpg",
+  "sky_fraction": 0.209,
+  "lower_edges": 0.2348,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__speed_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/base-High/stormwood__inventory__pickup__speed_mushroom.jpg",
+  "sky_fraction": 0.312,
+  "lower_edges": 0.259,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__stamina_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/base-High/stormwood__inventory__pickup__stamina_mushroom.jpg",
+  "sky_fraction": 0.237,
+  "lower_edges": 0.2609,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__inventory__pickup__wild_mushroom.jpg",
+  "preset": "base-High",
+  "tree": "6eb2cfa717ee5afe7a05d3438f3c4d56d4a81d63",
+  "tool": "res://tools/phase2_capture_world_inventory.gd",
+  "path": "G-below6-mush-stormwood/base-High/stormwood__inventory__pickup__wild_mushroom.jpg",
+  "sky_fraction": 0.112,
+  "lower_edges": 0.3199,
+  "script_errors": 0,
+  "note": "below6-mushrooms no-loss: Stormwood mushroom finds + F41#14 job frames (candy tiers); identical base vs arm (diff 0.00). tb/below6 6eb2cfa71 both sides, base no overlay vs arm BELOW6-MUSHROOMS/overlay.json; --fixed-fps 20; High."
+ }
+]
