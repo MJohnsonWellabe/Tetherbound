@@ -2468,8 +2468,8 @@
       "src": "G-newapproach-post-setting (tb/item-scout-1108 22102b6be): authored posts with today's camera, 5.32 -> 6.48 (3/3); landed #903"
     },
     "F41#1": {
-      "gpu": 5.66,
-      "src": "G-below6-thundertunnel-heartwood (LANE-SCOUT, tb/item-scout-1108 4515bd926), GPU High, LANDED #912: Stormheart heartwood core 4.29 -> 5.66 (+1.37, 3/3; batch scale lower than the 5.78 board); close-only 5.95; approach stands face a bark wall"
+      "gpu": 6.81,
+      "src": "G-below6-stormheart-approach (LANE-SCOUT d3f616f1c), GPU High: new approach stand (road, trunk and gate) with the landed heartwood, 5.10 -> 6.81 (+1.71, 3/3); approach-only 2.80 -> 6.42; stand not yet landed"
     },
     "F41#10": {
       "gpu": 6.02,
