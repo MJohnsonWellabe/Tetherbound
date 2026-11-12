@@ -1139,18 +1139,40 @@ func _hanging_banner(parent: Node3D,at: Vector3,cloth: Material,trim: Material,i
 	holder.position = at
 	holder.rotation.y = atan2(at.x,at.z)
 	parent.add_child(holder)
+	# banner_cloth_1112 (LANE-BELOW6, OFF until GPU-judged; judges 3/3: "flat
+	# blue decal squares", "a blue placeholder slab"): hanging folds with their
+	# own shading, a darker storm navy, a darker hem and a finer bolt, so the
+	# banner reads as cloth. Same rod, bracket, size and position.
+	var cloth_cfg: Dictionary = (_presentation.get("built_detail", {}) as Dictionary).get("banner_cloth_1112", {})
+	var cloth_on := bool(cloth_cfg.get("enabled", false))
+	var folds := float(cloth_cfg.get("folds", 4.5))
+	var fold_depth := float(cloth_cfg.get("fold_depth_m", 0.11))
+	var columns := 24 if cloth_on else 8
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for row in 16:
-		for column in 8:
+		for column in columns:
 			for corner: Vector2i in [Vector2i(0,0),Vector2i(1,0),Vector2i(1,1),Vector2i(0,0),Vector2i(1,1),Vector2i(0,1)]:
-				var uv := Vector2(float(column+corner.x)/8.0,float(row+corner.y)/16.0)
+				var uv := Vector2(float(column+corner.x)/float(columns),float(row+corner.y)/16.0)
 				surface.set_uv(uv)
-				surface.add_vertex(_banner_point(uv.x,uv.y))
+				var point := _banner_point(uv.x,uv.y)
+				if cloth_on:
+					var wave := sin(uv.x * PI * 2.0 * folds + float(index) * 1.7)
+					point.z += wave * fold_depth * (0.25 + 0.75 * uv.y)
+					var shade := 0.74 + 0.26 * wave
+					shade *= 1.0 - 0.35 * smoothstep(0.86, 1.0, uv.y)
+					shade *= 1.0 - 0.18 * smoothstep(0.0, 0.06, 0.06 - uv.y)
+					surface.set_color(Color(shade, shade, shade))
+				surface.add_vertex(point)
 	surface.generate_normals()
 	var visual := MeshInstance3D.new()
 	visual.name = "ShapedCloth"
 	visual.mesh = surface.commit()
+	if cloth_on and cloth is StandardMaterial3D:
+		var folded := cloth.duplicate() as StandardMaterial3D
+		folded.vertex_color_use_as_albedo = true
+		folded.albedo_color = Color(str(cloth_cfg.get("colour", "#1b3350")))
+		cloth = folded
 	visual.material_override = cloth
 	holder.add_child(visual)
 	_visual_box(holder,"ClothRod",Vector3(0,0.12,0),Vector3(3.65,0.16,0.16),_metal)
@@ -1168,7 +1190,9 @@ func _hanging_banner(parent: Node3D,at: Vector3,cloth: Material,trim: Material,i
 			var a := lightning[segment]
 			var b := lightning[segment+1]
 			trim_poses.append(_beam_pose(_banner_point(a.x,a.y)+Vector3.FORWARD*0.055*side,
-				_banner_point(b.x,b.y)+Vector3.FORWARD*0.055*side,0.14,0.14))
+				_banner_point(b.x,b.y)+Vector3.FORWARD*(0.055 + (fold_depth if cloth_on else 0.0))*side,
+				float(cloth_cfg.get("bolt_width_m", 0.07)) if cloth_on else 0.14,
+				float(cloth_cfg.get("bolt_width_m", 0.07)) if cloth_on else 0.14))
 	_instances(holder,trim_poses,trim)
 
 
@@ -1722,6 +1746,10 @@ func _lip_banners(root: Node3D, cfg: Dictionary) -> void:
 		holder.position = at
 		holder.rotation.y = atan2(-at.x, -at.z)
 		holder.scale = Vector3(1.0, float(cfg.get("drop_scale", 0.5)), 1.0)
+		var lip_cloth: Dictionary = settings.get("banner_cloth_1112", {})
+		if bool(lip_cloth.get("enabled", false)) and index % 2 == 1:
+			# two sizes round the lip instead of eight identical squares
+			holder.scale *= float(lip_cloth.get("alternate_scale", 0.72))
 		root.add_child(holder)
 		_hanging_banner(holder, Vector3.ZERO, cloth, trim, index)
 
