@@ -331,6 +331,22 @@ static func _for_species(cfg: Dictionary, species_id: String) -> Dictionary:
 	return out
 
 
+## The same for `hit.per_species` (LANE-THINGS, 12 Nov; Ashtusk's tusks dug
+## through the floor in its own hit clip): a species row is deep-merged over
+## the hit block for that species' bake only.
+static func _hit_for_species(cfg: Dictionary, species_id: String) -> Dictionary:
+	var hit: Variant = cfg.get("hit", {})
+	var rows: Variant = (hit as Dictionary).get("per_species", {}) if hit is Dictionary else {}
+	if not rows is Dictionary or (rows as Dictionary).is_empty():
+		return cfg
+	var row: Variant = (rows as Dictionary).get(species_id, (rows as Dictionary).get(species_id.trim_prefix("water_"), null))
+	if not row is Dictionary:
+		return cfg
+	var out := cfg.duplicate(true)
+	_merge(out["hit"], row as Dictionary)
+	return out
+
+
 static func _merge(into: Dictionary, patch: Dictionary) -> void:
 	for key: Variant in patch:
 		if patch[key] is Dictionary and into.get(key) is Dictionary:
@@ -587,7 +603,8 @@ static func _drop_head(rig: Rig, animation: Animation, end: float, rotation: Qua
 
 
 ## Hit: a recoil when the authored hit barely moves, then planted samples.
-static func settle_hit(rig: Rig, source: Animation, cfg: Dictionary) -> Animation:
+static func settle_hit(rig: Rig, source: Animation, raw_cfg: Dictionary) -> Animation:
+	var cfg := _hit_for_species(raw_cfg, rig.species_id)
 	var recoil := _section(cfg, "hit", "recoil")
 	var grounded := _section(cfg, "hit", "grounded")
 	if recoil.is_empty() and grounded.is_empty():
@@ -604,7 +621,8 @@ static func settle_hit(rig: Rig, source: Animation, cfg: Dictionary) -> Animatio
 		var motion := 0.0
 		for i in times.size():
 			motion = maxf(motion, Rig.mean_shift(first, rig.posed(animation, times[i], rotations[i], positions[i])))
-		if motion / rig.standing_height < float(recoil.get("min_motion_frac", 0.04)):
+		# `force` (a per-species row) adds the recoil to a clip that already moves.
+		if bool(recoil.get("force", false)) or motion / rig.standing_height < float(recoil.get("min_motion_frac", 0.04)):
 			var pitch := deg_to_rad(float(recoil.get("pitch_deg", 7.0)))
 			var lean := deg_to_rad(float(recoil.get("lean_deg", 6.0)))
 			var shove := rig.standing_height * float(recoil.get("shove_frac", 0.08))
