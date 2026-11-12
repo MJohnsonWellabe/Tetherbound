@@ -19,7 +19,8 @@ This file is the lane's channel to the coordinator.
 - **Officer Nysa's portrait: not a mapping fault.** Her row uses the installed officer A body and its plate (`stormwood_raw_officer_a.png`); body and portrait are the same dark-haired man. She reads as pale because the Stormwood NPC presentation washes her out. **Owner casting item, like Captain Nerissa:** "Officer Nysa" is played by a male body; Lieutenant Varga shares it.
 - **The light dimmer (`realm_energy_1112`) does nothing on CPU: not sent.** Nysa is as washed out with both conversation lights at 0.4 as on main, so the blow-out is not those lights. It belongs with the parked NPC emission and floor arms.
 - **Harness:** do not use `--sight-stand` for Stormwood on CPU (over 50 minutes on Sera's post; 9 minutes without). The container also restarts whenever my turn ends, which kills background captures: captures have to run inside a turn.
-- **Next:** the Galewisp grip and landing frame (7.44), then the authored side-lie for the four parked faints.
+- **Arm sent: `THINGS-GALELAND`** (`ralph/reports/LANES/THINGS-GALELAND/ARM.md`, `CAPTURE.json`, CPU sheet). Config only: the carrier lands beside the trainer instead of behind them, and Galewisp's presentation height goes 3.0 to 3.4 so it reads clearly taller. The landing offsets are shared with Galecrest, so its landed frame is in the capture as a no-loss check. The grip itself is not changed (no toe bones; it needs a pose). **One arm on the GPU.**
+- **Next:** the authored side-lie for the four parked faints.
 - main 2ac7ab84 (PR #917) is merged into `tb/things`.
 - **Nothing is on the GPU from this lane yet.**
 
