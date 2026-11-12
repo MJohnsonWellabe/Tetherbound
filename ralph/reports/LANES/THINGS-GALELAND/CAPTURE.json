@@ -1,0 +1,30 @@
+{
+ "id": "THINGS-GALELAND",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "base": {
+  "tree": "tb/things",
+  "overlay": null
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-GALELAND/overlay_galewisp_landing.json"
+ },
+ "rows": {
+  "Galewisp in flight (6.83 in G-faint2-medium-galecarrier)": {
+   "tool": "phase2_capture_realm_flight.gd --biome=meadows --carrier=galewisp",
+   "frames": [
+    "01-launch",
+    "02-glide",
+    "03-landed"
+   ]
+  },
+  "No-loss check, Galecrest landing (F38#15; the landing offsets are shared)": {
+   "tool": "phase2_capture_realm_flight.gd --biome=meadows",
+   "frames": [
+    "03-landed"
+   ]
+  }
+ }
+}
