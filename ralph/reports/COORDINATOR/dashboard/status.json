@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 16:15 UTC",
+  "updated": "12 Nov 2026 16:30 UTC",
   "headline": [
+    "12 Nov 16:30: F38#4 Meadows map parchment fog ships (7.36 to 7.81 at High, 3/3), landing as #927; Medium follows. F39#17 restored sea lifts its row 6.21 to 6.88 but darkens the waterfall and sunset stands, so LANE-BELOW6 is rescoping it.",
     "12 Nov 16:15: F41#11 Stormwood character portraits CLOSES (7.61 High and Medium, control on its closing score). The confirming panel read F41#14 candy tiers at 7.05 and F41#1 Stormheart at 6.54, so neither closes; the earlier re-score read those two high.",
     "12 Nov 15:45: Stormwood re-score (16 rows on main): broad gains from tonight's landings: F41#15 6.87 (was 4.49), F41#3 7.06, F41#4 7.02, F41#7 7.02, F41#19 7.25, F41#17 7.40; flagged for close-out (Medium + confirming batch): F41#1 Stormheart 7.62, F41#14 candy pickups 7.59, F41#11 portraits 7.55.",
     "12 Nov 15:00: two more closes: F39#4 shiny creature finish (High 7.77, Medium 7.77) and F39#24 creature rest poses (High 7.65, Medium 7.61), confirmed by two independent panels with a closed-row control. Three criteria closed today: F38#9, F39#4, F39#24.",
@@ -2522,7 +2523,7 @@
     },
     "F38#4": {
       "gpu": 6.99,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 7.21) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 6.99, Medium 6.99, not closed",
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 7.21) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 6.99, Medium 6.99, not closed | ARM THINGS-MAPFOG G-restoredsea-mapfog (be513ad94, 12 Nov) base 7.36 -> arm 7.81 High (3/3; EXTRAPOLATED, above top anchor), landing #927; needs Medium, pooled with the stricter 6.99 panel",
       "medium": 6.99
     },
     "F38#41": {
@@ -2581,7 +2582,7 @@
     },
     "F39#17": {
       "gpu": 5.5,
-      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov); capture faithful (GPU lane eye check): the game restored state barely differs from live (mean diff 1.23); needs a game change (LANE-BELOW6)"
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov); capture faithful (GPU lane eye check): the game restored state barely differs from live (mean diff 1.23); needs a game change (LANE-BELOW6) | ARM BELOW6-RESTORED-SEA G-restoredsea-mapfog (be513ad94, 12 Nov): row 6.21 -> 6.88 (3/3) but S3/S4 lose -0.44 (0/3, sunset water near black); not shipped, BELOW6 rescoping"
     },
     "F39#18": {
       "gpu": 7.12,
