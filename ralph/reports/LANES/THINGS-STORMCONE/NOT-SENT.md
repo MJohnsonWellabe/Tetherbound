@@ -18,5 +18,7 @@ Keep wild creatures away from named conversation posts in Stormwood: a keep-clea
 ## Harness finding
 `--sight-stand` on CPU in Stormwood can take over 50 minutes on one post (Sera): when the post is within reach but blocked, the search tries up to 90 stands and each costs seconds of CPU frames. Without the switch the same post takes 9 minutes. On the GPU this is fast. Do not use `--sight-stand` for Stormwood on CPU.
 
-## Light scale
-Both speakers are washed pale on CPU as well, so the light scale may be checkable there. Not captured yet.
+## Light scale: no effect on CPU, not sent
+Nysa captured with `realm_energy_1112` on (both conversation lights at 0.4 in Stormwood): the frame is the same as main. She is still washed pale and the player's face is still white. So the blow-out does not come from the conversation key and rim. It is the same family as the parked NPC emission and floor arms for Marrow (`G-npc-emission-off.md`, `G-npc-floor.md`): the Stormwood NPC presentation itself. My guess about the rim light facing the player was wrong.
+
+Both flags stay off on `tb/things` and are not proposed for landing.
