@@ -4674,14 +4674,11 @@
    "title": "Tidewake: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-tidewake",
-   "pct": 3,
+   "pct": 9.1,
    "counts": {
-    "met": 1,
-    "partial": 0,
-    "in_progress": 17,
+    "in_progress": 15,
     "not_started": 15,
-    "blocked": 0,
-    "failing": 0
+    "met": 3
    },
    "criteria": [
     {
@@ -4782,9 +4779,9 @@
     },
     {
      "text": "F39 (1) top-20 item P2-030 shiny creature finish: Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 80, lane tb/x04-tidewake. Variants are easy to identify; Ripplet and Mosshell retain more form detail. Phase 2c: thirteen source-preserving regional shiny repaints staged at21a8e11de behind phase2_shiny_finish_enabled=false; s",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "met",
+     "evidence": "CLOSED 12 Nov 2026: GPU High 7.77 and Medium 7.77 on main 90ffeb663 (LANE-SCOUT G-closeout-tidewake.md, tb/item-scout-1108 bf8e1cee6; three code-blind judges, confirming anchors, closed-row control F38#38, fit r 0.98); independent panel LANE-PLACES G-closeout-tidewake-medium (tb/places dd33e2047) 8.03 / 8.03. Recorded defect FIXED 3/3.",
+     "gap": "",
      "note": "Counted once (owner 24 Oct board math): touches tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-030",
@@ -5315,9 +5312,9 @@
     },
     {
      "text": "F39 (2) impact>12 item P2-029 creature rest poses: Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "CPU 3 Nov (landed #803, CREATURES-RALPH r23/r24): Riptusk 5.72->6.07 kept; Torrentoad 5.81->5.84 (tie) holds the item; item at 5.84. Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 27, lane tb/x04-tidewake. Grass obscures contact edges; no floating conclusion from these frames. Reviewed authored-endpoint reuse candidate off; scoped hurt-to-camp pivot release; focused tests44/709 pass. See tidewake/fixes/",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+     "status": "met",
+     "evidence": "CLOSED 12 Nov 2026: GPU High 7.65 and Medium 7.61 on main 90ffeb663 (LANE-SCOUT G-closeout-tidewake.md, tb/item-scout-1108 bf8e1cee6; three code-blind judges, confirming anchors, closed-row control F38#38); independent panel LANE-PLACES G-closeout-tidewake-medium (tb/places dd33e2047) 7.99 / 7.99. Recorded defect FIXED 3/3.",
+     "gap": "",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-029",
