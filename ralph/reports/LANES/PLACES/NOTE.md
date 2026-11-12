@@ -3,6 +3,9 @@
 ## RESTARTED (owner direction via coordinator, 12 Nov 2026)
 - `tb/places` was deleted on the remote; recovered from the lane container and re-cut from main d777b905 with `road_value_1112` (flag-off, puddles parked) and this NOTE.
 - **Working on:** Stormwood swing 2 = road value done right (gold path line contrast restored on the umber road) riding inside a bigger pass: a Fading phase that differs from Building, layered treeline and depth steps. Then Cloudreach F40#0 gate cobbles, ground and fog. Then near-bar close-outs (F41#17, #24, #21, F40#18, F39#24, #25, #4).
+- **Sent to GPU (arm 1 of 2):** `PLACES-STORMWOOD2/` (two overlays): judged no-puddles road + gold line contrast + a clearer Fading. Rows F41#2, #4, #5, #12, #8. CPU: the gold line reads clearly on the umber road.
+- **Finding:** the CPU phase tool's Fading still repeats a Break frame (bolts, dark deck) on main and on every arm, so Fading cannot be checked on CPU. On GPU the judges did see Fading (steam), so this looks CPU-only; not chased further.
+- **Next:** Cloudreach F40#0 gate cobbles, ground and fog; then near-bar close-outs.
 - Standing rules for this lane: lightning is Break-only (owner); puddles parked; check older test pins and `texture_import_policy.py` before a landing; no unrelated `.uid` files.
 
 ## WRAPPED (owner direction via coordinator, 12 Nov 2026). Handoff.
