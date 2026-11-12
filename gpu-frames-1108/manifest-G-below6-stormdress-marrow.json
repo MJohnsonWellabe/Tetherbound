@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "61caaf5a93345c8ec7ec794ac2979192998f101c",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow (--fixed-fps 20)",
+  "path": "G-below6-stormdress-marrow/arm-High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "sky_fraction": 0.274,
+  "lower_edges": 0.3439,
+  "script_errors": 0,
+  "note": "below6-stormdress, High, tb/below6 61caaf5a93345c8ec7ec794ac2979192998f101c both sides; arm = BELOW6-STORMDRESS/overlay.json (banner_cloth_1112 + aged_heartwood_1112). BELOW6-MARROW/overlay.json on BOTH sides (#918 in CI). Dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "61caaf5a93345c8ec7ec794ac2979192998f101c",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow (--fixed-fps 20)",
+  "path": "G-below6-stormdress-marrow/arm-High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "sky_fraction": 0.281,
+  "lower_edges": 0.3332,
+  "script_errors": 0,
+  "note": "below6-stormdress, High, tb/below6 61caaf5a93345c8ec7ec794ac2979192998f101c both sides; arm = BELOW6-STORMDRESS/overlay.json (banner_cloth_1112 + aged_heartwood_1112). BELOW6-MARROW/overlay.json on BOTH sides (#918 in CI). Dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "61caaf5a93345c8ec7ec794ac2979192998f101c",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow (--fixed-fps 20)",
+  "path": "G-below6-stormdress-marrow/base-High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "sky_fraction": 0.274,
+  "lower_edges": 0.344,
+  "script_errors": 0,
+  "note": "below6-stormdress, High, tb/below6 61caaf5a93345c8ec7ec794ac2979192998f101c both sides; arm = BELOW6-STORMDRESS/overlay.json (banner_cloth_1112 + aged_heartwood_1112). BELOW6-MARROW/overlay.json on BOTH sides (#918 in CI). Dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "61caaf5a93345c8ec7ec794ac2979192998f101c",
+  "tool": "phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow (--fixed-fps 20)",
+  "path": "G-below6-stormdress-marrow/base-High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "sky_fraction": 0.281,
+  "lower_edges": 0.333,
+  "script_errors": 0,
+  "note": "below6-stormdress, High, tb/below6 61caaf5a93345c8ec7ec794ac2979192998f101c both sides; arm = BELOW6-STORMDRESS/overlay.json (banner_cloth_1112 + aged_heartwood_1112). BELOW6-MARROW/overlay.json on BOTH sides (#918 in CI). Dialogue frames blend 1.000."
+ }
+]
