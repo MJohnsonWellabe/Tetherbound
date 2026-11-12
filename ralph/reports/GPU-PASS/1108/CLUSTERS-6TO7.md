@@ -1,68 +1,71 @@
-# CLUSTERS-6TO7: the 6.0–6.99 band split into THINGS and PLACES, grouped by shared named cause
+# CLUSTERS-6TO7: the 6.0–6.99 band grouped by shared named cause
 
-LANE-SCOUT, 11 Nov 2026, for LANE-THINGS and LANE-PLACES. Read-only. This updates `LOW-HANGING-6TO7.md` (10 Nov board) with today's GPU High re-scores:
-- `G-rescore-tier2-batch-1.md` and `-batch-2.md`: dialogue rows plus 19 pose rows;
-- `G-f40-0-skyroad-arch-recapture.md`;
-- `G-floor2-camp-r2.md`;
-- `G-meshy-f41-8-distinct-bodies.md`;
-- `STORMWOOD-LIGHT-ASKS.md`.
+LANE-SCOUT, 12 Nov 2026. Read-only. This replaces the 11 Nov version.
+- **Sources:**
+  - the board: main b3dc2139, 104 rows in 6.0–6.99;
+  - each row's job.json defect;
+  - the causes judges named in tonight's GPU batches: stormrim, ruler re-score, speakercentre, wetpath, glidebank, Medium ashtusk/brooktail and toys-ui.
+- **Re-score list for the GPU lane:** `RESCORE-6TO7.md`.
 
-"Shares" counts the rows in the group. Gains are estimates from comparable judged arms.
+## How to read it
+- **Rank** = rows touched × expected gain per row. The gain is estimated from comparable judged arms.
+- **The pattern to copy.** Tonight's wins each came from one cause touching several rows:
+  - Stormwood player rim off: 4 sets gained, F41#18 cleared 6.
+  - Pose-stage ruler: 6 rows gained, 2 met the bar at High.
+  - Wild-post clearance: F41#15 plus 3 dialogue sets.
+  Single-row tweaks mostly came back level.
+- **Lanes:**
+  - **THINGS:** creatures, characters, dialogue, UI.
+  - **PLACES:** world, light, weather.
+  - **BELOW6:** pickups, catch, Cloudreach props.
 
-## What moved today
-- **Closed:** F36#72 Stormbrush (High 7.68, Medium 7.75).
-- **Out of the band, upward:** reedwing 7.26, cannonback 7.21, F39#18 7.06, skyrill 7.47 (close-out exception).
-- **Out of the band, now below 6 (hand to LANE-BELOW6):**
-  - voltarach 5.11;
-  - water mirejaw 5.52;
-  - abyssal guardian 5.54;
-  - ribbonray 5.68;
-  - water mosshell 5.81;
-  - water abyssal guardian 5.85.
-  All are remakes that regressed.
-- **Still in the band, re-scored:** cragclaw 6.94, water cragclaw 6.92, glimmermoth 6.90, galewisp 6.88, tempestwing 6.84, fulgocobra 6.78, veridian 6.33, water mangrove monitor 6.26, mangrove monitor 6.25. F38#32 camp is 6.91 with r2 landed.
-- **F40#0 over all 384 frames: 6.54** (was 6.58 from 352). The 10 Nov sample under-weights rain: half the matrix is rain, but the sample had 1 rain sheet in 7.
-- **Dialogue rows on main:**
-  - F39#18 7.06, F39#26 6.49, F39#29 6.41, F39#27 6.16;
-  - the speaker look is fixed by the soft rim;
-  - the coordinator reports a dialogue blend fault, so a full dialogue re-capture is due once that fix lands.
+## Ranked groups
 
-## THINGS (creatures, characters, poses, UI, dialogue)
+| Rank | Group | Lane | Rows (board, or tonight's score) | Fix kind | Gain/row | Rows × gain |
+|---|---|---|---|---|---|---|
+| 1 | **P-GROUND: smeared ground material, flat grass carpet, even scatter.** Judges' words: "blurry, smeared ground", "uniform olive carpet", "grass reaches the waist around characters". Named 3/3 in wetpath, toys-ui (aftermath), glidebank and stormrim. | PLACES | F38#20 6.02, F38#22 6.10, F38#30 6.02, F38#26 6.85, F40#7 6.26, F40#21 6.68, F41#5 6.06, F41#4 6.37, F39#3 6.10, F39#27 6.16 | material resolution and filtering, grass clumping and clearings (scene) | +0.3 | **3.0** |
+| 2 | **P-STORMSKY: flat lavender sky card, flat ground grade, no storm light in Stormwood.** Named 3/3 in stormrim and in the G-wp Stormwood fight sheet. | PLACES | F41#4 6.37, F41#5 6.06, F41#6 6.80, F41#12 6.60, F41#13 6.66, F41#19 6.56, F41#1 6.81, F41#22 6.96; dialogue rows F41#7, #11, #18 and #20 ride along | layered storm sky, depth fog, rim on characters (scene, `light_pass_1101`) | +0.35 | **2.8** |
+| 3 | **T-DARKRIM: dark-bodied creatures with no rim light; glossy or near-black materials.** Named 3/3 in ruler-rescore and Medium ashtusk/brooktail. Five of these are already ≥7.0 at High, so this is the fastest closer. | THINGS | Ashtusk 7.28 Medium, Brooktail 7.03 Medium, Riftfrill 7.31, Mirejaw 7.26, Shadelet 7.07, Sparkit 7.26, F41#13 6.66 (fulgocobra, stormraven), Stormraven 6.37, Duskhush 6.53 | cool rim or back light plus a slight albedo lift on the pose stage and in the world (scene) | +0.3 | **2.7**, and could close 4–5 rows under the close-out exception |
+| 4 | **T-CONVCONE: companion, trainer or props inside the line to the speaker.** speakercentre: Hess +1.16, Rae −1.60 when the companion filled the frame. | THINGS | F38#16 6.32, F38#17 6.97, F38#37 6.90, F39#26 6.94, F40#9 6.48, F40#10 6.77 | keep the companion and trainer out of the cone to the speaker (config), then speaker_centre per post | +0.4 | **2.4** |
+| 5 | **T-UI: small text, low contrast, clipped labels.** | THINGS | F38#10 6.58, F38#19 6.89, F39#19 6.85, F39#23 6.80, F40#14 6.99 (label clipped), F41#16 6.28 (CPU arm 7.44) | code/UI; F40#14 is a wrap fix | +0.4 | **2.4**, with F40#14 likely closing |
+| 6 | **P-WATER: Tidewake water depth, streaks and foam.** | PLACES | F39#10 6.30 (6.99 seen), F39#14 6.37, F39#16 6.88, F39#17 6.27, F39#15 6.27, F13#5 6.28 | water shader and foam (scene); re-score first, since G-exposure lifted F39#1, #2 and #10 to about 7 | +0.3 | **1.8** |
+| 7 | **B-PICKUPS: pickups that read as toys or as one shape.** Parked: saturation tone_down (F38#6 −0.84, 0/3). | BELOW6 | F38#6 6.10, F40#16 6.19, F41#14 6.35, F38#12 6.06, F41#9 6.81 | distinct silhouette per item or tier (new_art or scale), not colour | +0.35 | **1.75** |
+| 8 | **T-FIGHTSTAGE: actors overlap; ally fills the view.** | THINGS | F38#3 6.49 (7.11 seen), F39#7 6.61, F41#3 6.23, F39#22 6.19, F39#20 6.37 | fight camera spacing (config) | +0.3 | **1.5** |
+| 9 | **T-IDENTITY: portrait, line or subject mismatch.** | THINGS | F38#16, F41#7 6.24, F41#11 6.91, F41#20 6.41, F41#18 rank trim | data | +0.3 | **1.5**, riding with T-CONVCONE |
+| 10 | **B-CLOUDPROPS: floating and unfinished Cloudreach props.** | BELOW6 | F40#15 6.08, F40#17 6.08, F40#4 6.12, F40#11 6.97, F40#8 6.77 | ground the props, finish the undersides (scene or new_art) | +0.3 | **1.5** |
+| 11 | **T-HUMANPOSE: same neutral stance; defeated NPCs stay upright.** | THINGS | F38#29 6.05, F38#35 6.31, F39#5 6.06, F40#6 6.33, F38#2 6.00, F38#1 6.58 | new animation (new_art); low gain per scene change | +0.25 | **1.5** |
+| 12 | **B-CATCH: magenta ring, flat orb, catch camera and HUD.** ghost-glow arm reached 7.11 / 7.26 on two of three frames. | BELOW6 | F38#14 6.06, F39#9 6.65, F39#23 6.80 | VFX and camera config | +0.4 | **1.2** |
+| 13 | **T-TELEGRAPH: flat magenta danger rings and slabs.** Named 3/3 in the G-wp Stormwood fight sheet. | THINGS | F38#11 6.89, F41#6 6.80 | physical effects (dust, stone, lightning) in place of flat rings (VFX) | +0.4 | **0.8** |
+| 14 | **P-RAINTRAIL: wetpath follow-up.** The clear-weather tone wins (+0.6); the rain darkening overshoots at night. | PLACES | F40#0 6.54, F40#19 6.66 | trail tone with a rain floor (config) | +0.3 | **0.6** |
 
-| # | Shared cause (judges' words) | Rows (latest) | Fix type | Est. gain |
-|---|---|---|---|---|
-| T1 | **The faint does not ground.** Neck, hood, sail, wings or antlers stay up, or the body sits up "like a frog". | glimmermoth 6.90, fulgocobra 6.78, veridian 6.33, water mangrove monitor 6.26, cragclaw 6.94, water cragclaw 6.92, tempestwing 6.84 (stiff wing fan); plus skyrill 7.47 and cannonback 7.21 (rigid roll) near the bar; plus 4 below-6 rows | pose data / faint clip (one pass) | +0.3–0.6 each; would likely close skyrill |
-| T2 | **Tail around the trainer on the pose stage.** "Trainer inside the tail coil." | mangrove monitor 6.25 (3/3 every frame), water mangrove monitor 6.26, stormbrush (closed, PARTIAL) | capture-stand spacing or tail pose | +0.4 |
-| T3 | **Travel poses broken.** "Carry carries nothing"; rider "doll-sized". | galewisp 6.88 (fly-grip 3/3), veridian 6.33 (tiny rider 3/3); water mosshell's ride (below 6) is with NEWAPPROACH | pose data / attach | +0.3–0.5 |
-| T4 | **Not yet re-scored since the 1 Nov remakes.** Old meshes. | sparkit 6.03 (CPU), riftfrill 6.04, shadelet 6.06, pebbik 6.07 (CPU), mirejaw 6.23, thundertunnel 6.47, paddlenewt 6.49, mosshock 6.55 (CPU), brooktail 6.63, trailpup 6.64, solmane 6.68, cliffspike 6.72, voltwig 6.79, stormtrail 6.82, duskhush 6.85, breezetail 6.89, stormraven 6.94 (CPU), ashtusk 6.96 | re-score only (two batches) | ±0.8 per row; mean −0.15 so far |
-| T5 | **F36 (0) model rows.** | Mirejaw 6.13, Galewisp 6.33, Riverdrake 6.60, Veridian 6.63, Terrapup 6.69, Abyssal Guardian 6.73, Cannonback 6.73, Fulgocobra 6.77, grunt family 6.84, Voltarach 6.97 | re-score first; abyssal and voltarach remakes regressed (new_art) | unknown |
-| T6 | **Conversation shot.** Player shoulder fills the left; speaker small or behind the panel. | F39#26 6.49, F39#29 6.41, F38#36 6.26, F38#16 6.75, F40#10 6.74, F40#12 6.95 (and F39#18 7.06) | config (`camera.json` conversation camera), with NEWAPPROACH | +0.3–0.5 |
-| T7 | **Portrait and speaker mismatches.** | F39#26 (Adair shows Iona), F39#18 (Bex and Irva share one), F39#29 (Nerissa reads as a bearded man, 1/3) | data | +0.2 each; ride along |
-| T8 | **Flat white fight dust and smoke** bury the fighters. | F38#3 6.49, F38#11 6.89, F41#3 6.23 | config / VFX | +0.3–0.5 |
-| T9 | **Toy pickups**: oversized, saturated caps, candy and potions. | F38#6 6.10, F40#16 6.19, F40#17 6.08, F41#14 6.35 | config (scale and saturation) | +0.3–0.5 |
-| T10 | **Small UI bugs.** | F40#13 6.19 (stale "broke free"), F38#22 6.10 (broken "TRAIL CAMP" glyph), F38#10 6.58 and F38#38 6.49 (panel rows) | code / UI | +0.3–0.8 |
-| T11 | **NPC presentation.** Speakers unlit, near-white, "glow against the scene"; idles and defeated slump. | F41#8 (5.72 arm, below 6), F38#35 6.31, F38#29 6.05, F41#18 6.10, F41#20 6.99 (Fenn's face blooms) | rim light / grade (scene); idles are new_art | +0.3 |
+**Not a shared cause (one asset each, new art):**
+- F39#2 Veilfall, F40#2 aviary, F41#10 Glass Sink, F41#1 Stormheart, F38#20 stronghold, F38#24 mountains, F39#15 shallows discs, F38#34 placed wall, F39#12 bed, F39#13 workbench, F38#32 camp props.
+- Score each with its row; do not batch them as one arm.
 
-## PLACES (world, terrain, light, weather)
+## Top 3 per lane
+- **THINGS:**
+  1. T-DARKRIM: rim light and albedo lift, one arm across the pose stage and the world. It can close Ashtusk, Brooktail, Riftfrill, Mirejaw and Sparkit.
+  2. T-CONVCONE: clear the cone, with T-IDENTITY data riding along.
+  3. T-UI: F40#14 wrap first.
+- **PLACES:**
+  1. P-GROUND: ground material and grass clumping across Meadows, Cloudreach and Stormwood.
+  2. P-STORMSKY: sky and fog for Stormwood. Stormrim already removed the character glare.
+  3. P-WATER: re-score after G-exposure, then the water shader.
+- **BELOW6:**
+  1. B-PICKUPS: silhouettes, not saturation.
+  2. B-CLOUDPROPS.
+  3. B-CATCH: build on ghost-glow.
 
-| # | Shared cause | Rows (latest) | Fix type | Est. gain |
-|---|---|---|---|---|
-| P1 | **Stormwood storm light** (see `STORMWOOD-LIGHT-ASKS.md`): per-phase key light with white-violet bolts, a layered storm sky in place of the "flat lilac card", layered fog in place of the single purple fog wall, black pools lifted to dark pools with value. Lift, don't darken. Write to `light_pass_1101`. | F41#2 6.15, F41#4 6.50, F41#5 6.28, F41#12 6.41, F41#19 6.56, F41#6 6.80, F41#13 6.66; F41#8 rides along | shared scene / config | +0.3–0.6 each |
-| P2 | **Rain rendered as thick white overlay streaks**; night rain reads as day; golden-hour rain loses the golden light. | F40#0 6.54 (half the matrix is rain), F41#12, F41#13, F39 rain frames | shared weather config | +0.4 on rain frames; F40#0 most |
-| P3 | **Empty plateaus without biome identity**: "generator test pad", no cloud sea or sky islands; lawn discs with extruded rims. | F40#0 6.54, F40#4 6.12, F40#7 6.26, F40#6 6.33, F40#11 6.97 (cloud sea), F40#2 aviary 6.15 | scene, with new_art for the landmarks | +0.3–0.5 |
-| P4 | **Dark foregrounds at dawn and night.** The trainer sinks in; the ground crushes. | F40#0 (dawn and night sheets), F39#30 6.70 | grade (scene) | +0.3 |
-| P5 | **Bare Tidewake dunes near characters.** Evenly scattered tufts, flat-lit sand, no clumps. | F39#27 6.16, F39#26, F39#29, F39#17 6.27, F39#14 6.37, F39#15 6.27 | scene dressing | +0.3–0.4 |
-| P6 | **Smeared Meadows ground and wall textures.** | F38#20 6.02, F38#22 6.10, F04#6 6.50 (aftermath sites), F38#30 6.02 | material resolution (scene) | +0.3 |
-| P7 | **Camp props.** Flat flame card, grass swallowing prop bases, floating planks. | F38#32 6.91 (r2), F39#13 6.23 (black square sprites), F39#12 6.80 | new_art fire, plus a grass-clear radius | +0.3–0.5 |
-| P8 | **Landmarks needing new art** (to BELOW6/MESHY if they stay low). | F39#2 Veilfall 6.48, F39#3 6.10, F41#10 Glass Sink 6.02, F40#2 6.15, F38#20 6.02 | new_art | +0.5–1.0 |
-
-## Suggested starts
-1. **THINGS:** T1 faint grounding (FLOOR2, already queued) and T4 re-score (no code). Then T6 conversation shot with T7 portraits riding along.
-2. **PLACES:** P1 storm light, with P2 rain inside the same arm where Stormwood rain is in frame. Then P2 for F40#0 on its own.
-3. **Parked; do not repeat:**
-   - in-cloud sheet lightning;
-   - line-only charge accents on F41#13;
-   - fight-distance rim light;
-   - the Glass Sink lip;
-   - NPC emission-off and floor arms for Marrow;
-   - the card-white edge cards on F40#11.
+## Parked; do not repeat
+- **Pickups:** saturation tone_down.
+- **Stormwood:**
+  - in-cloud sheet lightning;
+  - line-only charge accents (F41#13);
+  - fight-distance rim light;
+  - trunk dither and occlusion fade (level).
+- **Landmarks:** Glass Sink lip.
+- **NPCs:**
+  - NPC emission-off and floor arms (Marrow);
+  - named-post lanterns (F41#8).
+- **Cloudreach:** card-white edge cards (F40#11).
+- **Conversations:** speaker_centre as one global arm. Ship it per post instead.
