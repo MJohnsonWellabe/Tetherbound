@@ -47,8 +47,9 @@ func setup(cfg: Dictionary, sea: ShaderMaterial, markers: Node, flags: RefCounte
 	_sea = sea
 	_markers = markers
 	_flags = flags
-	for key: String in sea_values():
-		_live[key] = _sea.get_shader_parameter(key)
+	for key: String in (_cfg.get("water", {}) as Dictionary).keys() + (_cfg.get("water_scale", {}) as Dictionary).keys():
+		if not key.begins_with("_"):
+			_live[key] = _sea.get_shader_parameter(key)
 	_apply(_flags != null and bool(_flags.has(RESTORED_FLAG)))
 
 
@@ -59,6 +60,14 @@ func sea_values() -> Dictionary:
 	for key: String in raw:
 		if not key.begins_with("_"):
 			out[key] = Color(str(raw[key])) if raw[key] is String else raw[key]
+	# `water_scale` multiplies the live value, so a restored look keeps its
+	# relation to whichever sea profile is active (G-below6-restored-sea: an
+	# absolute depth falloff turned the sunset foreground near-black).
+	var scale: Dictionary = _cfg.get("water_scale", {})
+	for key: String in scale:
+		var live: Variant = _live.get(key, _sea.get_shader_parameter(key) if _sea != null else null)
+		if not key.begins_with("_") and (live is float or live is int):
+			out[key] = float(live) * float(scale[key])
 	return out
 
 
