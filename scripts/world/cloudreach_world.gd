@@ -2312,9 +2312,17 @@ func _build_terrace_mesas(root: Node3D) -> void:
 		var foot := _vec3(spec.get("at", [0, 0, 0]))
 		var size := _vec3(spec.get("size", [14, 14, 12]))
 		var rise := float(spec.get("rise_m", 2.4))
-		_mesa(root, "TerraceMesa%02d" % index, Vector3(foot.x, foot.y + rise - size.y * 0.5, foot.z), size,
+		var mesa := _mesa(root, "TerraceMesa%02d" % index, Vector3(foot.x, foot.y + rise - size.y * 0.5, foot.z), size,
 			side, _materials["upland"], true, int(spec.get("seed", 7 + index * 13)),
-			bool(spec.get("rugged", true)))
+			bool(spec.get("rugged", false)))
+		# `_mesa` draws every wall band in the shared brown cliff material
+		# whatever side material it is given; the walls take the pale one here.
+		if side_tint != "":
+			for raw_mesh: Node in mesa.find_children("*", "MeshInstance3D", true, false):
+				var visual := raw_mesh as MeshInstance3D
+				for surface in visual.mesh.get_surface_count() if visual.mesh != null else 0:
+					if visual.mesh.surface_get_material(surface) != _materials["upland"]:
+						visual.set_surface_override_material(surface, side)
 		index += 1
 
 
