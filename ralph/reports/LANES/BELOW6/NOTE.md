@@ -1,5 +1,14 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 03:05 UTC: `tb/below6-perchrim-land` cut; relay of G-below6-mushrooms
+
+**Coordinator, LANE-SCOUT asked me to relay G-below6-mushrooms (tb/item-scout-1108 bc115978): SPLIT.** F40#17 rim 6.01 -> 6.94 (+0.93, 3/3, FIXED 3/3); High Perches views +0.28 (2/3). Meadows finds 6.66 -> 5.92 (0/3) and F40#16 -0.09 (1/3): speed and stamina read as "a blue glowing sprig, a herb" or "pebbles". Flags on both sides: the Meadows wild find floats on open water beside the swimmer (a placement bug, 3/3); a red near oxblood on a court pillar glow and a plateau disc (1/3).
+
+- **Landing:** `tb/below6-perchrim-land` (aad1e7272, cut from main 1c81cdb45), `STATUS: land`. New flag `mushroom_pickup_variants.json perch_rim_cluster_1112` ON with `_why_on`: the natural patches apply only at the three High Perches rim placements; `natural_cluster_1112` (the unscoped restyle) stays OFF. Pin test `tests/test_below6_perch_rim_landed.gd`; 108 mushroom, NEAR6-CR and pickup tests pass. Checked on CPU in the real High Perches capture: the three rim finds show the patches, nothing else changes.
+- **KNIFEEDGE** passed its pre-check and is with LANE-SCOUT. The GPU lane notes F40#15's own frames barely change with it (their cobbles are the MASONRY arm's).
+- **Pickup restyle, next round (not built yet):** keep the natural forms but give Speed and Stamina a clear cap-and-stem silhouette at normal distance, larger, with value contrast against the grass and one hue each; base's yellow cap "reads instantly". That is a 6-7 row now (F40#16 6.43 on base), so it is LANE-THINGS' unless you want me to finish it.
+
+
 ## 13 Nov, about 02:10 UTC: BELOW6-WAKE ready; mushroom answer
 
 - **BELOW6-WAKE (F39#5 5.98, F39#14 6.12):** `ralph/reports/LANES/BELOW6-WAKE/`. Flag `human_water_contact_visual.json soft_churn_1112` (OFF): the wake foam's churn breaks up in patches and fades toward the centre instead of in spokes that meet there (the judges' pinwheel seam). CPU cannot show the foam against its pale water, so the GPU pre-check is the first look; base is tb/below6 with the shipped swim pose.
