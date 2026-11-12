@@ -339,6 +339,16 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 				var vary := float(posmod(str(stand.get("id", "")).hash() + int(item.along_m * 7.0), 1000)) / 999.0
 				var size := float(item.height) * lerpf(float(item.get("scale_min", 1.0)), float(item.get("scale_max", 1.0)), vary)
 				var rise := float(item.get("void_top_m", -1.5)) - size if hung else float(item.get("rise_m", 0.0))
+				# `paving_scale_1112` (LANE-PLACES, OFF until judged; GPU judges on the
+				# F40#0 gate stands: "cobble stones as large as the trainer's torso
+				# that bury the trainer to the shins"). The stone-trail pieces were
+				# sized by height alone (0.28 m), which scaled the model about 2.5x
+				# and stood its top a shin's height proud. On: near the model's own
+				# size (stones about a boot long) and sunk so only the tops show.
+				var paving_fix: Dictionary = items_config().get("paving_scale_1112", {})
+				if item.asset == "paving" and not hung and bool(paving_fix.get("enabled", false)):
+					size = float(paving_fix.get("height_m", 0.12)) * lerpf(float(item.get("scale_min", 1.0)), float(item.get("scale_max", 1.0)), vary)
+					rise = -size * clampf(float(paving_fix.get("sink_fraction", 0.55)), 0.0, 0.9)
 				var model := _scene(holder, load(str(PROPS[item.asset])) as PackedScene,
 					at + Vector3.UP * rise, size, face)
 				if str(item.asset).contains("bush"):
