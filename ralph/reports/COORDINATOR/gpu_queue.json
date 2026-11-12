@@ -4198,6 +4198,24 @@
    "priority": "FIRST among arms after the queued re-scores (lowest active row, F39#5 5.64)"
   },
   {
+   "id": "below6-stronghold-stand",
+   "kind": "stand re-baseline (below 6)",
+   "rows": [
+    "F38#20"
+   ],
+   "branch": "tb/below6",
+   "head": "b8e67a027",
+   "tree": "tb/below6 b8e67a027 both sides (no import)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-STRONGHOLD-STAND/overlay.json (capture_stands approach_overrides.candidates_f38_20_1112)",
+   "overlay_format": "deep merge",
+   "job": "phase2_capture_locations.gd --biome=meadows --subset=meadows__band5_stronghold_approach__09__stronghold_approach --times=day,night --views=approach --seed=2042, High; plus the row's third frame meadows__landmark__stronghold__day__approach unchanged on both sides",
+   "capture": "High, base and arm",
+   "pre_check": "keep, towers, gate ramp and pylons fill the frame; keep top not cropped at (0, 7405)",
+   "stand_ruling": "Coordinator approved 12 Nov: the old Band 5 stand shows the keep as a speck at about 590 m (black cut-out at night), so it does not show its subject; same rule as the Stormheart and F40#3 stands. Re-baseline, not a like-for-like gain.",
+   "priority": "after below6-swim: below-6 row F38#20"
+  },
+  {
    "id": "f38-15-composite-recapture",
    "kind": "close-out recapture (High + Medium)",
    "rows": [
