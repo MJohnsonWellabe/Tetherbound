@@ -200,6 +200,15 @@ func _capture_row_with_dialogue(row: Dictionary) -> void:
 	# (trainer_npc.gd with_variant_portrait), so an enabled appearance variant's
 	# plate is captured as play shows it. Empty for every other post.
 	var identity := TRAINER_NPC.with_variant_portrait({}, _trainer_spec(row))
+	# LANE-THINGS, 12 Nov (F39#26, 3/3 "Adair's portrait shows Iona"): a
+	# Tidewake character's conversation is opened in play by
+	# water_scene_npcs.gd start_conversation, which hands the panel that
+	# speaker's own name and plate (an enabled appearance variant's paired
+	# portrait). Opened here without it, the panel fell back to the line's
+	# base-body plate, so Adair wore the field researcher's face. Hand over
+	# the same identity play does.
+	if identity.is_empty():
+		identity = _scene_npc_identity(row)
 	if not bool(panel.call("start", conversation, identity)):
 		_failures.append("%s: panel refused %s" % [str(row.frame_id), conversation])
 		panel.visible = false
@@ -293,6 +302,26 @@ func _settle_dialogue_capture() -> bool:
 
 ## The placed trainer spec for a trainer post (encounter directors'
 ## `trainer_specs`, matched by authored id), or {} for any other post.
+## The identity water_scene_npcs.gd start_conversation passes for this post's
+## speaker, read from that node's own resolved specs. Empty elsewhere.
+func _scene_npc_identity(row: Dictionary) -> Dictionary:
+	var id := str(row.get("authored_id", ""))
+	if id.is_empty():
+		return {}
+	for node: Node in root.find_children("*", "Node", true, false):
+		var specs: Variant = node.get("_specs") if "_specs" in node else null
+		if not (specs is Dictionary and (specs as Dictionary).get(id) is Dictionary):
+			continue
+		var spec: Dictionary = (specs as Dictionary)[id]
+		if not spec.has("display_name") or str(spec.get("portrait", "")).is_empty():
+			continue
+		var identity := {"speaker": spec.display_name, "portrait": spec.portrait}
+		if spec.has("portrait_region"):
+			identity["portrait_region"] = spec["portrait_region"]
+		return identity
+	return {}
+
+
 func _trainer_spec(row: Dictionary) -> Dictionary:
 	var id := str(row.get("authored_id", ""))
 	if id.is_empty():

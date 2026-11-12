@@ -21,12 +21,35 @@ var _water: MeshInstance3D = null
 const TRAINER_MODEL := preload("res://scripts/player/trainer_model.gd")
 var _rider: Node3D = null
 const FLY_VIEW_TURN_DEG := 35.0
+const FLY := preload("res://scripts/player/fly_controller.gd")
+## The stage floor under the carried row, and how far the hanging trainer's
+## feet stay above it.
+var _fly_floor_y := 0.0
+const FLY_FEET_CLEAR_M := 1.2
 ## Close-1020 batch 4: the stage camera looks almost level (~1.6 deg), so a
 ## creature downed on its side reads as belly-up; fights are watched from
 ## combat.json's starting pitch. Opt-in so earlier rounds stay reproducible.
 var _combat_pitch := false
 ## --roles=a,b overrides ROLES (e.g. hit,faint,rest for the rest-pose items).
 var _roles: Array = []
+## Game clips (LANE-THINGS, 12 Nov; the default since the THINGS-FAINT
+## landing): each row plays the clip the game's own animator resolved for that
+## role, not the species' raw clip of that name. Recipe species (every water
+## form on an installed mesh) play `f36_candidate/<role>` in a fight, and
+## creature_pose_settle.gd re-keys the resolved clip, so the raw clip showed a
+## faint no fight plays (water mirejaw belly-up and floating, water abyssal
+## guardian sitting up) and no settle change could reach it. `--raw-clips`
+## restores the old rows for reproducing earlier rounds; `--game-clips` is
+## still accepted.
+var _game_clips := true
+## --clear-ruler (LANE-THINGS, 12 Nov; T2 "trainer inside the tail coil",
+## mangrove monitor 3/3 every frame): the ruler was placed from the body's
+## rest-mesh bounds, which a posed tail, neck or collapsed body leaves. With
+## this the ruler stands clear of the skinned mesh as posed across the row's
+## own phases (creature_pose_settle.gd Rig samples), never nearer than before.
+var _clear_ruler := false
+const POSE_RIG := preload("res://scripts/creatures/creature_pose_settle.gd")
+const RULER_GAP_M := 0.9
 
 
 func _run() -> void:
@@ -50,6 +73,12 @@ func _run() -> void:
 			_context = true
 		elif arg == "--combat-pitch":
 			_combat_pitch = true
+		elif arg == "--game-clips":
+			_game_clips = true
+		elif arg == "--raw-clips":
+			_game_clips = false
+		elif arg == "--clear-ruler":
+			_clear_ruler = true
 		elif arg == "--all":
 			all_roster = true
 		elif arg.begins_with("--roles="):
@@ -170,11 +199,26 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			receipt.append({"role": role, "status": "not_a_carrier"})
 			continue
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
+		if _game_clips and not candidate and player != null:
+			var animator: Variant = body.get("_animator")
+			var resolved: Variant = animator.get("_clips") if animator is Object else null
+			var game_clip := str((resolved as Dictionary).get(role, "")) if resolved is Dictionary else ""
+			if not game_clip.is_empty() and player.has_animation(game_clip):
+				clip = game_clip
 		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)):
 			receipt.append({"role": role, "status": "missing_baseline_clip"})
 			_pose_failures.append("%s: missing %s clip" % [id, role])
 			continue
+		# GPU re-score, 11 Nov (water mosshell, 3/3): after the faint row the
+		# ride and swim rows showed the turtle belly-up. Recipe clips move the
+		# model pivot and leave unkeyed bones; the game leaves them through
+		# creature_animator.gd (revive stops the player and restores the
+		# pivot). This stage plays clips directly, so it does the same here.
+		_reset_between_roles(body, player)
 		var staged := _stage_role(role, body, measured_height, resting_bounds) if _context else {}
+		var ruler_home := _trainer.global_position
+		if _clear_ruler and _context and _trainer.visible and player != null:
+			_stand_ruler_clear(body, player, clip, phases)
 		# The game puts a fainted creature's aspect flame out (creature_body.gd
 		# play_faint); this row plays the clip directly, so do the same here.
 		body.call("set_aspect_vfx_suspended", role == "faint")
@@ -187,11 +231,17 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 				player.pause()
 			for frame in 3:
 				await process_frame
+			if _context and role == "fly_grip":
+				# The talons move with the clip, so the hang is re-seated per phase.
+				_hang_rider_from_grip(body)
+				await process_frame
 			var path := "%s/%s-%s-%03d.png" % [out, id, role, int(phase * 100)]
 			var captured := await _capture(path)
 			receipt.append({"role": role, "phase": phase, "path": path, "captured": captured})
 			if not captured:
 				_pose_failures.append("%s: PNG capture failed" % path)
+		if _clear_ruler and _context:
+			_trainer.global_position = ruler_home
 		if _context:
 			_unstage_role(staged, body)
 	var file := FileAccess.open("%s/%s-receipt.json" % [out, id], FileAccess.WRITE)
@@ -226,6 +276,18 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 			# the side-on stage camera and read as folded (r4 judges); the
 			# flight row is shot with the body turned to a three-quarter view.
 			body.rotation.y += deg_to_rad(FLY_VIEW_TURN_DEG)
+			# GPU re-score, 11 Nov (galewisp, 3/3): "carries nothing, the trainer
+			# stands apart". In play the trainer hangs from the carrier's grip
+			# bones in fly_traversal.json's hang pose (fly_controller.gd). The
+			# row is staged the same way: the production trainer model in that
+			# pose, its hands on the stage body's grip bones.
+			_fly_floor_y = float((staged.body_position as Vector3).y)
+			_rider = Node3D.new()
+			_rider.set_script(TRAINER_MODEL)
+			_world.add_child(_rider)
+			_rider.global_transform = Transform3D(body.global_basis.orthonormalized(), body.global_position)
+			_rider.call("set_fly_hang", true, FLY.hang_pose())
+			_trainer.visible = false
 		"swim":
 			# GPU A+C (24 Oct): the glossy slab ended in a blown white specular edge
 			# and stood the ruler in the water. A rough, nearly specular-free
@@ -247,6 +309,19 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 			var waterline := body.global_position.y + height * 0.38
 			_water.global_position = Vector3(body.global_position.x, waterline, body.global_position.z)
 			_trainer.global_position = Vector3(_trainer.global_position.x, waterline, _trainer.global_position.z)
+			# GPU re-score, 11 Nov (water mosshell, 2/3): the ruler read as a
+			# trainer standing on the water. A swimmer that can be ridden carries
+			# its rider when it swims in play, so that row seats the rider on
+			# its back, as the ride row does, in place of the standing ruler.
+			var seat: Variant = _mount_offset(str(body.get("species_id")))
+			if seat != null:
+				_rider = Node3D.new()
+				_rider.set_script(TRAINER_MODEL)
+				_world.add_child(_rider)
+				_rider.call("set_riding", true)
+				_rider.global_transform = Transform3D(body.global_basis.orthonormalized(),
+					body.global_transform * (seat as Vector3))
+				_trainer.visible = false
 		"ride":
 			var offset: Variant = _mount_offset(str(body.get("species_id")))
 			# A fresh rider per species: a rider reused after set_riding(false)
@@ -259,6 +334,69 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 				body.global_transform * (offset as Vector3))
 			_trainer.visible = false
 	return staged
+
+
+## Lowest world x of the skinned mesh over the row's phases; the ruler steps
+## left until it is RULER_GAP_M clear of it.
+func _stand_ruler_clear(body: Node3D, player: AnimationPlayer, clip: String, phases: Array) -> void:
+	var model := body.get_node_or_null(^"Model") as Node3D
+	var skeletons := model.find_children("*", "Skeleton3D", true, false) if model != null else []
+	var animation_root := player.get_node_or_null(player.root_node)
+	if skeletons.size() != 1 or animation_root == null or not player.has_animation(clip):
+		return
+	var rig = POSE_RIG.Rig.new(model, skeletons[0] as Skeleton3D, animation_root, 1500)
+	if rig.empty():
+		return
+	var animation := player.get_animation(clip)
+	var low := INF
+	for phase: float in phases:
+		var t := animation.length * phase
+		for point: Vector3 in rig.posed(animation, t, rig.pivot_rotation(animation, t), rig.pivot_position(animation, t)):
+			low = minf(low, (body.global_transform * point).x)
+	if is_finite(low):
+		_trainer.global_position.x = minf(_trainer.global_position.x, low - RULER_GAP_M)
+
+
+## What creature_animator.gd does when the game leaves a terminal or recipe
+## clip: stop the player, put the bones back on their rest and restore the
+## model pivot the clip moved.
+func _reset_between_roles(body: Node3D, player: AnimationPlayer) -> void:
+	if player == null:
+		return
+	player.stop()
+	for skeleton: Node in body.find_children("*", "Skeleton3D", true, false):
+		(skeleton as Skeleton3D).reset_bone_poses()
+	var animator: Variant = body.get("_animator")
+	if animator is Object and (animator as Object).has_method("_restore_candidate_pivot"):
+		(animator as Object).call("_restore_candidate_pivot")
+
+
+## Move the hanging rider so the midpoint of its hands is on the midpoint of
+## the stage body's grip bones (fly_controller.gd align_carrier_grip, with the
+## trainer moved instead of the carrier), then lift both clear of the floor.
+func _hang_rider_from_grip(body: Node3D) -> void:
+	if _rider == null or not _rider.has_method("skeleton"):
+		return
+	var grip: Array = SPECIES.fly_capability(str(body.get("species_id"))).get("grip_bones", [])
+	var rigs := body.find_children("*", "Skeleton3D", true, false)
+	var trainer: Skeleton3D = _rider.call("skeleton")
+	if grip.size() != 2 or rigs.is_empty() or trainer == null:
+		return
+	var rig := rigs[0] as Skeleton3D
+	var hands := Vector3.ZERO
+	var feet := Vector3.ZERO
+	for i in 2:
+		var hand := trainer.find_bone("LeftHand" if i == 0 else "RightHand")
+		var foot := rig.find_bone(str(grip[i]))
+		if hand < 0 or foot < 0:
+			return
+		hands += trainer.to_global(trainer.get_bone_global_pose(hand).origin) * 0.5
+		feet += rig.to_global(rig.get_bone_global_pose(foot).origin) * 0.5
+	_rider.global_position += feet - hands
+	var short := _fly_floor_y + FLY_FEET_CLEAR_M - _rider.global_position.y
+	if short > 0.0:
+		body.global_position += Vector3.UP * short
+		_rider.global_position += Vector3.UP * short
 
 
 func _swims(id: String) -> bool:

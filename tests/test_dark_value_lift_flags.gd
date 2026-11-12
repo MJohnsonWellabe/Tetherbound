@@ -19,6 +19,22 @@ func _parsed() -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
+## The value-lift layer on its own. Later coats graded from a lift (Thundertunnel's
+## below6_floor_thundertunnel, F36#80, 11 Nov) win over it when ON; their own
+## tests pin that (tests/test_below6_thundertunnel_landed.gd), so they are
+## switched off here.
+const LATER_COATS := ["below6_floor_thundertunnel"]
+
+
+func _lift_layer_only() -> Dictionary:
+	var parsed := _parsed()
+	var flags: Dictionary = parsed.get("flags", {})
+	for later: String in LATER_COATS:
+		if flags.get(later) is Dictionary:
+			(flags[later] as Dictionary)["enabled"] = false
+	return parsed
+
+
 func _paths(species: String) -> Array:
 	var tag := "r10" if species in R10 else "owner1101"
 	var dir := ROOT + "%s/candidate_%s/models/creature_%s_%s_" % [species, tag, species, tag]
@@ -35,11 +51,11 @@ func test_each_lift_ships_on_with_its_score() -> void:
 
 
 func test_on_resolves_the_lift_and_off_does_not() -> void:
-	var on := BODY.parse_coat_flags(_parsed())
+	var on := BODY.parse_coat_flags(_lift_layer_only())
 	for species: String in SCORES:
 		var paths := _paths(species)
 		assert_eq(str((on.get(paths[0], {}) as Dictionary).get("albedo", "")), paths[1], "ON: %s wears its lift" % species)
-		var parsed := _parsed()
+		var parsed := _lift_layer_only()
 		(parsed.flags["creatures_ralph_%s_value_lift" % species] as Dictionary)["enabled"] = false
 		var off := BODY.parse_coat_flags(parsed)
 		assert_true(str((off.get(paths[0], {}) as Dictionary).get("albedo", "")) != paths[1], "OFF: %s keeps its earlier albedo" % species)

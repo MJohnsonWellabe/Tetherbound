@@ -27,6 +27,9 @@ SOURCES = {
     "voltarach": C + "voltarach/candidate/models/creature_voltarach_native_Image_0.jpg",
     "abyssal_guardian": C + "abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101_Image_0.jpg",
     "ribbonray": C + "ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101_Image_0.jpg",
+    # LANE-BELOW6 (11 Nov): graded from the coats that ship, not the raw remake.
+    "thundertunnel": C + "thundertunnel/candidate_owner1101/models/creature_thundertunnel_owner1101_Image_0_value_lift.png",
+    "fulgocobra": C + "fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_face.png",
 }
 
 
@@ -97,6 +100,46 @@ def ribbonray(rgb):
     h_out = h + (h_t - h) * mag
     s_out = s + ((0.26 + 0.36 * dark) * np.clip(s / 0.30, 0.7, 1.2) - s) * mag
     v_out = v * (1.0 - (0.12 + 0.30 * dark) * mag)
+    return T._rgb(np.mod(h_out, 360.0), np.clip(s_out, 0, 1), np.clip(v_out, 0, 1)), None
+
+
+def thundertunnel(rgb):
+    # GPU 11 Nov (5.92): "flat pinkish-tan flesh material; white cracks read as
+    # mud fissures". A mole's velvet is cool brown-grey, not skin: the warm tan
+    # loses most of its saturation and a third of its value, keeping its own
+    # fur-stroke detail (boosted a little so it does not go flat). The thin
+    # pale cracks become blue-white storm lines and get an emission map, so
+    # they read as the one elemental trait instead of dried mud.
+    h, s, v = T._hsv(rgb)
+    tan = _hue_w(h, 8.0, 42.0) * G._ramp(0.14, 0.26, s)
+    pale = (1.0 - G._ramp(0.16, 0.30, s)) * G._ramp(0.62, 0.78, v)
+    thin = np.clip(pale - _f(_f(pale, "min", 5), "max", 9), 0.0, 1.0)
+    crack = G._ramp(0.35, 0.7, _f(thin, "blur", 1))
+    detail = v - _f(v, "blur", 5)
+    v_out = v * (1.0 - 0.34 * tan) + 0.9 * detail * tan
+    s_out = s * (1.0 - 0.52 * tan)
+    h_out = h + (30.0 - h) * 0.5 * tan
+    out = T._rgb(np.mod(h_out, 360.0), np.clip(s_out, 0, 1), np.clip(v_out, 0, 1))
+    # blend the storm blue in RGB: a hue lerp from tan to blue passes through green
+    line = np.array([0.62, 0.80, 1.0]) * (0.55 + 0.45 * v)[..., None]
+    out = out * (1.0 - crack[..., None]) + line * crack[..., None]
+    return out, line * crack[..., None]
+
+
+def fulgocobra(rgb):
+    # GPU 11 Nov (5.87): "the near-black body sinks into the stage; the
+    # copper-brown neck plates sit near the reserved red". Blacks lift to a
+    # blue-charcoal with their scale detail, and the copper plates move to the
+    # same gold as the body bands.
+    h, s, v = T._hsv(rgb)
+    black = (1.0 - G._ramp(0.22, 0.38, v)) * (1.0 - G._ramp(0.35, 0.55, s))
+    v_out = v + (0.04 + 0.2 * v) * black
+    h_out = h + (222.0 - h) * black
+    s_out = s + (0.18 - s) * black
+    copper = _hue_w(h, 6.0, 30.0, 6.0) * G._ramp(0.38, 0.52, s) * G._ramp(0.25, 0.4, v)
+    h_out = h_out + (43.0 - h_out) * copper
+    s_out = s_out * (1.0 - 0.10 * copper)
+    v_out = v_out * (1.0 + 0.08 * copper)
     return T._rgb(np.mod(h_out, 360.0), np.clip(s_out, 0, 1), np.clip(v_out, 0, 1)), None
 
 

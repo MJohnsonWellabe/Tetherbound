@@ -250,6 +250,36 @@
   },
   "root_vault_1107": {"enabled": true, "_why_on": "CPU 4.75 -> 5.24 mapped (LANE-SW r1, 7 Nov 2026: F41#1 P2-037 Stormheart finale, three code-blind judges 3/3 higher, defect PRESENT -> PARTIAL 3/3; ralph/reports/LANES/LANE-SW/qj/F41-1-5fc02ca2f939-11072048/VERDICT.md). Owner 4 Nov: a judged gain ships ON.", "scope": "client_presentation", "_candidate": "LANE-SW (7 Nov 2026), F41#1 P2-037: the approach frame stands under the OuterWorks deck (a 6 m annular slab, r 18-44 m), whose underside is the Bark_TwistedTree texture laid one tile per radial quad, so a third of the frame is a 'radial plank ceiling'. A Blender-built living-root vault (assets/props/blender-1107/stormheart_root_vault, script and provenance in ralph/reports/LANES/ITEM-F41-1/) sits just under that slab: a bark web whose grain runs along 56 primary and 56 secondary gnarled roots, flaring down into buttress roots at the outer wall (none in the two entrance splits), and thin blue-white veins on 14 roots (the trunk's own lightning, natural glow). Nothing hangs below 4.7 m inside r 44 m; the lip within r 20.2 m stays flat for the lantern clusters. No collider, floor, route or deck change. OFF until judged.", "model": "res://assets/props/blender-1107/stormheart_root_vault/stormheart_root_vault.glb", "bark_tint": "#9b7a5a", "bark_uv_scale": 1.0, "vein_colour": "#9fd0ff", "vein_energy": 1.3},
   "heart_cradle_1107": {"enabled": false, "scope": "client_presentation", "_candidate": "LANE-SW (7 Nov 2026), F41#1 P2-037 round 2: every root-vault judge still asks for 'an exposed glowing core'. The core was a 15 m Meshy crystal cluster at the foot of the heart cleft (heart_cleft, angle 90 deg, r 51 m), small and boxed behind the deck slab. A Blender heart cradle (assets/props/blender-1107/stormheart_heart_cradle, script in ralph/reports/LANES/ITEM-F41-1/build_heart_cradle.py) replaces it there: a 16 m faceted crystal core with ten smaller prisms (natural lightning glow), lodged at 17-31 m in a sling of five crossing roots and held open toward the hollow by nine braided heartwood roots that rise from the floor and climb the cleft to 46 m, three with vein lines. The core sits above the 6-16 m band the deck slab hides from the hollow stands (first capture, unjudged: at 1-16 m only its glow showed under the slab, as a flat white blob). Everything stays at r >= 45.6 m, outside the 44 m hollow floor. The Meshy CrystalHeart is hidden while this is on. No collider, floor or route change. OFF until judged.", "model": "res://assets/props/blender-1107/stormheart_heart_cradle/stormheart_heart_cradle.glb", "hide_meshy_crystal": true, "bark_tint": "#9b7a5a", "vein_colour": "#9fd0ff", "vein_energy": 1.3, "crystal_albedo": "#7f9cff", "crystal_glow": "#a8b9ff", "crystal_glow_energy": 1.0},
+  "heartwood_1111": {
+    "enabled": true,
+    "_why_on": "ON (GPU High G-below6, 11 Nov 2026; ralph/reports/GPU-PASS/1108/G-below6-thundertunnel-heartwood.md on tb/item-scout-1108 4515bd926): F41#1 Stormheart 4.29 -> 5.66 (+1.37) on the row, 4.39 -> 5.95 (+1.56) on the two close frames, 3/3 prefer the arm on both sets, flat white strokes PRESENT -> FIXED 2/3, no loss. Owner 4 Nov: a judged gain ships ON.",
+    "scope": "client_presentation",
+    "_candidate": "LANE-BELOW6 (11 Nov 2026), F41#1 P2-037 (GPU High 5.78): judges 3/3 every round ask for a visible core and a branching crown; the ground stands look across the hollow's empty axis, where only flat white arc strokes stood. Earlier cores sat in the wall cleft at r 45 m and beyond (heart_cleft crystal, heart_cradle_1107, heart_core_1109) or were a bare light tube (core_column). A Blender heartwood (assets/props/blender-1111/stormheart_heartwood, script ralph/reports/LANES/BELOW6-HEARTWOOD/build_heartwood.py) stands on the axis: a faceted lightning core to 96 m (natural glow, cools on release) in an open cage of six braided roots that flare 10-13 m over the floor, with five counter-wound ties, opening from 30 m into an inner crown of limbs inside the 18 m deck opening (max r 14.8 m, clear of the ascent ramp at r 22-30 m). The core arcs are hidden while it is on. No collider, floor or route change: an optional 4.6 m axis body (body_enabled) stays OFF because the tree's physical shapes are pinned byte-identical with and without presentation, so a player can walk into the cage for now.",
+    "model": "res://assets/props/blender-1111/stormheart_heartwood/stormheart_heartwood.glb",
+    "centre": [
+      0.0,
+      5.0
+    ],
+    "bark_tint": "#9b7a5a",
+    "vein_colour": "#9fd0ff",
+    "vein_energy": 2.6,
+    "core_albedo": "#3566d6",
+    "core_glow": "#4f7dff",
+    "core_glow_energy": 0.7,
+    "cooled_scale": 0.15,
+    "light_heights_m": [
+      3.0,
+      14.0,
+      34.0
+    ],
+    "light_colour": "#a9c8ff",
+    "light_energy": 2.0,
+    "light_range_m": 26.0,
+    "hide_core_arcs": true,
+    "body_enabled": false,
+    "body_radius_m": 4.6,
+    "body_height_m": 14.0
+  },
   "hollow_floor": {
     "enabled": true, "_why_on": "ON (VIS-STORMWOOD j1, 4 Nov 2026): CPU three-judge A/B (s1_base vs s1_cand, same run, calibrated slope 1.95, r 0.90, anchor RMSE 0.55): F41#1 Stormheart 3.22 -> 3.94 mapped with deck_light_1101 + hollow_floor + hero_interior.round2.",
     "_why_off": "r17 code-blind CPU round (25 Oct): clearing the hollow's ground cover mapped 5.24 -> 4.75 against r16. OFF.",

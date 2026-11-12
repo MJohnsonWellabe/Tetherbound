@@ -188,7 +188,9 @@ static func show_instance(node: MultiMeshInstance3D, index: int) -> void:
 
 static func _ignored(node: Node, ignore: Array) -> bool:
 	for owner_node: Variant in ignore:
-		if owner_node is Node and is_instance_valid(owner_node) \
+		# Validity first: `is` on a freed instance is itself an error (dialogue
+		# re-capture, 11 Nov: a post fixture freed a node this list still held).
+		if is_instance_valid(owner_node) and owner_node is Node \
 				and (node == owner_node or (owner_node as Node).is_ancestor_of(node)):
 			return true
 	return false

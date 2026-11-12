@@ -57,7 +57,8 @@ func test_enabled_scopes_union_their_species_and_master_or_none_change_nothing()
 	# 6.75 -> 7.47, 3/3); tidewake_scope OFF.
 	var live: Dictionary = SETTLE.scoped(shipped)
 	assert_eq(live.enabled, true)
-	assert_eq(live.only_species, ["mosshell", "aquaryn"])
+	# things_faint_scope ON (T1, G-things-faint.md, seven rows).
+	assert_eq(live.only_species, ["mosshell", "aquaryn", "mirejaw", "abyssal_guardian", "mangrove_monitor", "cragclaw", "cannonback"])
 	# The Aquaryn scope ships with settled_rest in rest_only mode: its own
 	# faint and hit clips stay, and only its rest is the baked lie-down.
 	var rest: Dictionary = (shipped as Dictionary).get("settled_rest", {})
