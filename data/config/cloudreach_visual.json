@@ -332,6 +332,7 @@
     "max_steps": 26
   },
   "landmass": {
+    "end_face_follows_row_1112": {"enabled": false, "scope": "client_presentation", "_candidate": "LANE-BELOW6 (12 Nov 2026), F40#15 P2-049 (GPU High 6.08; F-cloudreach 3/3: 'the dark straight strip still crossing the grass in the F40#8 bridge frames'). Probe: the strip is the end face of BrokenCausewayMainCliffShoulders/Ridge000. Its top edge was a straight line between the last row's two outer vertices (330.01 and 330.83), while the row between them is clamped flat at 330.01 under the pad crown (330.03), so the face stood up to 0.8 m above the grass as a zero-thickness black wall. ON: the end faces of every route shoulder follow all seven row vertices. Render only: the collider is built from the top rows and does not change. OFF until judged."},
     "sky_pillar_collider_radius_m": 1.1,
     "_sky_pillar_collider_note": "Shrine-dais corner trap (#340): the two 2.2 m SkyPillars collide as this inscribed cylinder instead of a box, so a trainer on the dais cannot be pinned against a box corner and the Fly launch at the shrine landing has room.",
     "route_shelf_headroom_m": 3.2,
