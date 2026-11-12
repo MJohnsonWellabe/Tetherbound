@@ -1,0 +1,331 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9402,
+  "least_squares_slope": 1.3905,
+  "method": "linear",
+  "slope": 1.3905,
+  "intercept": -2.0599,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.393,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 7.0,
+   "reference": 7.35,
+   "mapped": 7.674,
+   "residual": -0.324
+  },
+  "craft:before": {
+   "measured": 5.167,
+   "reference": 4.83,
+   "mapped": 5.125,
+   "residual": -0.295
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.667,
+   "reference": 4.0,
+   "mapped": 4.429,
+   "residual": -0.429
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.833,
+   "reference": 6.53,
+   "mapped": 6.052,
+   "residual": 0.478
+  },
+  "f04_6_r22:control": {
+   "measured": 5.267,
+   "reference": 5.83,
+   "mapped": 5.264,
+   "residual": 0.566
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.333,
+   "reference": 6.75,
+   "mapped": 6.747,
+   "residual": 0.003
+  }
+ },
+ "candidates": {
+  "F39#1": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.14,
+   "mapped_judges": [
+    6.01,
+    6.56,
+    5.87
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#2": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.79,
+   "mapped_judges": [
+    6.56,
+    7.12,
+    6.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#3": {
+   "measured_mean": 6.7,
+   "mapped_mean": 7.26,
+   "mapped_judges": [
+    7.12,
+    7.53,
+    7.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#4": {
+   "measured_mean": 7.1,
+   "mapped_mean": 7.81,
+   "mapped_judges": [
+    7.67,
+    8.09,
+    7.67
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F39#7": {
+   "measured_mean": 6.567,
+   "mapped_mean": 7.07,
+   "mapped_judges": [
+    7.26,
+    7.12,
+    6.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#8": {
+   "measured_mean": 5.667,
+   "mapped_mean": 5.82,
+   "mapped_judges": [
+    5.59,
+    6.42,
+    5.45
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#9": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.42,
+   "mapped_judges": [
+    6.42,
+    6.56,
+    6.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#10": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.02,
+   "mapped_judges": [
+    7.12,
+    7.4,
+    6.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#12": {
+   "measured_mean": 6.5,
+   "mapped_mean": 6.98,
+   "mapped_judges": [
+    6.7,
+    7.12,
+    7.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#13": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.14,
+   "mapped_judges": [
+    5.73,
+    6.56,
+    6.14
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#14": {
+   "measured_mean": 6.333,
+   "mapped_mean": 6.75,
+   "mapped_judges": [
+    6.7,
+    7.26,
+    6.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#15": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.14,
+   "mapped_judges": [
+    6.01,
+    6.56,
+    5.87
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#16": {
+   "measured_mean": 6.2,
+   "mapped_mean": 6.56,
+   "mapped_judges": [
+    6.56,
+    6.98,
+    6.14
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#17": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.5,
+   "mapped_judges": [
+    5.31,
+    6.01,
+    5.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#19": {
+   "measured_mean": 6.2,
+   "mapped_mean": 6.56,
+   "mapped_judges": [
+    6.28,
+    6.7,
+    6.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#20": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.42,
+   "mapped_judges": [
+    6.01,
+    6.7,
+    6.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#22": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.7,
+   "mapped_judges": [
+    6.84,
+    6.98,
+    6.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#23": {
+   "measured_mean": 6.767,
+   "mapped_mean": 7.35,
+   "mapped_judges": [
+    7.4,
+    7.4,
+    7.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#24": {
+   "measured_mean": 7.067,
+   "mapped_mean": 7.77,
+   "mapped_judges": [
+    7.67,
+    8.09,
+    7.53
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F39#25": {
+   "measured_mean": 6.567,
+   "mapped_mean": 7.07,
+   "mapped_judges": [
+    7.26,
+    7.4,
+    6.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39#28": {
+   "measured_mean": 6.733,
+   "mapped_mean": 7.3,
+   "mapped_judges": [
+    7.4,
+    7.4,
+    7.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.35): F39#24, F39#4; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}

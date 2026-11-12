@@ -42,6 +42,32 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 - F38#38: 8.16 -> 8.52 (12 Nov, G-rescore-stale-ext-meadows)
 **Flags:** eleven rows map at 7.5 or above (F38#3, #4, #7, #9, #13, #14 partial, #18, #19, #33, #34, #38): candidates for a Medium capture plus a confirming two-sided judgement, not High passes yet. F38#23 dropped 7.58 → 6.57 (its defect is fixed; the yard is now an empty stretched-cobble plane). None below 6.
 
+**G-rescore-stale-ext-tidewake** (`ralph/reports/GPU-PASS/1108/G-rescore-stale-ext-tidewake.md`; fit r 0.940, RMSE 0.39, the tightest so far; all 21 rows on full frame sets):
+- F39#1: 6.42 -> 6.14 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#2: 6.48 -> 6.79 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#3: 6.1 -> 7.26 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#4: 7.28 -> 7.81 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#7: 6.61 -> 7.07 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#8: 5.66 -> 5.82 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#9: 6.65 -> 6.42 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#10: 6.3 -> 7.02 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#12: 6.8 -> 6.98 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#13: 6.23 -> 6.14 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#14: 6.37 -> 6.75 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#15: 6.27 -> 6.14 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#16: 6.88 -> 6.56 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#17: 6.27 -> 5.50 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#19: 6.85 -> 6.56 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#20: 6.37 -> 6.42 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#22: 6.19 -> 6.70 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#23: 6.8 -> 7.35 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#24: 7.18 -> 7.77 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#25: 7.28 -> 7.07 (12 Nov, G-rescore-stale-ext-tidewake)
+- F39#28: 7.33 -> 7.30 (12 Nov, G-rescore-stale-ext-tidewake)
+**Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.
+**Medium for the Meadows candidates** is queued by the GPU lane as G-closeout-meadows-ui-medium (F38#3 #4 #7 #9 #19 #33 #34) and -medium-2 (F38#13 #18 #38); it goes to both this lane and LANE-SCOUT. **Coordinator: say which of us judges it**, so it is not done twice; I will take it as a two-sided High and Medium batch unless told otherwise.
+**Requests for the GPU lane (it reads this NOTE through you if my message does not arrive):** Medium for F39#4 and F39#24, same frames.
+
 ### Build work handed over
 | Item | State | Goes to |
 |---|---|---|
