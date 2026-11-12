@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 13:25 UTC",
+  "updated": "12 Nov 2026 14:05 UTC",
   "headline": [
+    "12 Nov 14:05: real Medium re-verification: all four closed creature rows HOLD (Stormbrush 7.55, Solmane 7.72, Pebbik 7.63, Breezetail 7.59). Stormtrail Medium 7.72, High 7.49: a High re-run on the corrected stage (#926 landed: slate backdrop restored) could close it. Ashtusk Medium 7.42, open.",
     "12 Nov 13:25: first re-score batch (15 stale rows on current main): F38#14 catch effect 6.94 (was 6.06), F38#6 pickups 6.52, F38#2 6.35, F38#29 6.35; down: F38#21 6.23 (was 7.0), and five rows now below 6 (F38#12 5.89, F38#20 5.72, F39#5 5.64, F40#15 5.89, F41#18 5.93). Panel spread about 0.3. Below-6 rows go to LANE-BELOW6.",
     "12 Nov 13:20: #925 landed (pose-stage graphics preset fix; flight take-off fix; Ashtusk 7.32, Stormtrail 7.49). Next on the GPU: real Medium re-verification of F36#72, #69, #58, #35 (closed on a High copy) plus Ashtusk and Stormtrail; then the stale 6-7 re-scores and the 6-7 arms (Meadows ground shared cause).",
     "12 Nov 12:55: measurement fault found: the creature pose capture tool never applied the graphics preset, so every F36 pose-stage 'Medium' was a copy of High. Four rows closed earlier on that evidence (F36#72 Stormbrush, F36#69 Solmane, F36#58 Pebbik, F36#35 Breezetail) are flagged for Medium re-verification once LANE-THINGS lands the tool fix (top priority). Their High scores stand.",
@@ -858,7 +859,6 @@
     "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
   ],
   "owner_needs": [
-    "FYI: F36#72, F36#69, F36#58 and F36#35 were marked closed on a Medium capture that turned out to be a High copy (pose tool did not apply the preset). Being re-verified at a real Medium after the tool fix; any that miss will reopen.",
     "Stormwood road charge colour: keep yellow-gold (owner WO-F09-04) or allow a white-violet trial (judges 3/3, matches the board's lightning)? Gold tuning is parked after three tries.",
     "Casting: 'Officer Nysa' (Stormwood) is played by the installed male officer A body and plate, shared with Lieutenant Varga, like Captain Nerissa's bearded body. Keep, recast to another installed body, or rename?",
     "11 Nov: F40#9 post focus camera (flag-off): no longer needed for the row. The post setting alone takes F40#9 to 6.48, and the camera adds nothing measurable on top of it (G-newapproach-post-setting). Coordinator recommends leaving it off; say if you want it anyway.",
@@ -2871,7 +2871,8 @@
     },
     "F36#72": {
       "gpu": 7.75,
-      "src": "CLOSED: High 7.68 + Medium 7.75 (G-f36-72-stormbrush-medium) | RE-VERIFY (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix."
+      "src": "CLOSED: High 7.68 + Medium 7.75 (G-f36-72-stormbrush-medium) | re-verify (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix. | HOLDS: real Medium 7.55 (G-reverify-f36-medium, LANE-SCOUT 350092ebd, main 6906a2ebf)",
+      "medium": 7.55
     },
     "F36#91": {
       "gpu": 6.51,
@@ -2927,19 +2928,23 @@
     },
     "F36#69": {
       "gpu": 8.04,
-      "src": "CLOSED: High 7.63 (G-things-t4-rescore) and Medium 8.04 (G-closeouts-solmane-cragclaw-wmm, LANE-SCOUT 4e4a4dbfd) | RE-VERIFY (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix."
+      "src": "CLOSED: High 7.63 (G-things-t4-rescore) and Medium 8.04 (G-closeouts-solmane-cragclaw-wmm, LANE-SCOUT 4e4a4dbfd) | re-verify (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix. | HOLDS: real Medium 7.72 (G-reverify-f36-medium, LANE-SCOUT 350092ebd, main 6906a2ebf)",
+      "medium": 7.72
     },
     "F36#58": {
       "gpu": 7.65,
-      "src": "CLOSED: High 7.65 (G-things-faint2) and Medium 7.56 (G-faint2-medium-galecarrier, 5f1f5ee24); landed #915 | RE-VERIFY (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix."
+      "src": "CLOSED: High 7.65 (G-things-faint2) and Medium 7.56 (G-faint2-medium-galecarrier, 5f1f5ee24); landed #915 | re-verify (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix. | HOLDS: real Medium 7.63 (G-reverify-f36-medium, LANE-SCOUT 350092ebd, main 6906a2ebf)",
+      "medium": 7.63
     },
     "F36#35": {
       "gpu": 7.61,
-      "src": "CLOSED: High 7.61 (G-things-faint2) and Medium 7.56 (G-faint2-medium-galecarrier, 5f1f5ee24); landed #915 | RE-VERIFY (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix."
+      "src": "CLOSED: High 7.61 (G-things-faint2) and Medium 7.56 (G-faint2-medium-galecarrier, 5f1f5ee24); landed #915 | re-verify (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix. | HOLDS: real Medium 7.59 (G-reverify-f36-medium, LANE-SCOUT 350092ebd, main 6906a2ebf)",
+      "medium": 7.59
     },
     "F36#75": {
-      "gpu": 7.22,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormtrail"
+      "gpu": 7.49,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormtrail; Medium 7.72 (G-reverify-f36-medium); High 7.49 (G-cc): 0.01 short, High re-run on the corrected stage queued",
+      "medium": 7.72
     },
     "F36#40": {
       "gpu": 7.02,

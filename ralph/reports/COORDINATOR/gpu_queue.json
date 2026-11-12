@@ -3,6 +3,19 @@
  "after": "section F (all four biomes) finishes",
  "entries": [
   {
+   "id": "closeout-stormtrail-high-stormbrush-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#75",
+    "F36#72"
+   ],
+   "branch": "main",
+   "head": "90ffeb663",
+   "job": "capture_f36_poses.gd --whole-body --context --roles=hit,faint on main 90ffeb663 (stage backdrop fixed, #926): stormtrail at HIGH; stormbrush at MEDIUM; check the log shows the preset and the backdrop is slate",
+   "capture": "one side",
+   "priority": "FIRST: Stormtrail closes if High reaches 7.5 (Medium 7.72 already); Stormbrush margin check (Medium 7.55 on the black stage)"
+  },
+  {
    "id": "reverify-f36-medium-after-posepreset-fix",
    "kind": "re-verify (Medium)",
    "rows": [
