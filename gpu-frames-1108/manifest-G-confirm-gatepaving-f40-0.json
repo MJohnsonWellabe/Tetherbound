@@ -1,0 +1,178 @@
+[
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+  "sky_fraction": 0.082,
+  "lower_edges": 0.1538,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.jpg",
+  "sky_fraction": 0.145,
+  "lower_edges": 0.1024,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.jpg",
+  "sky_fraction": 0.05,
+  "lower_edges": 0.1461,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.png",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.jpg",
+  "sky_fraction": 0.128,
+  "lower_edges": 0.1202,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg",
+  "sky_fraction": 0.055,
+  "lower_edges": 0.1615,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.png",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.jpg",
+  "sky_fraction": 0.134,
+  "lower_edges": 0.1231,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg",
+  "sky_fraction": 0.259,
+  "lower_edges": 0.1751,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.png",
+  "preset": "arm-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.jpg",
+  "sky_fraction": 0.275,
+  "lower_edges": 0.1325,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+  "sky_fraction": 0.082,
+  "lower_edges": 0.154,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.jpg",
+  "sky_fraction": 0.142,
+  "lower_edges": 0.1019,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.jpg",
+  "sky_fraction": 0.051,
+  "lower_edges": 0.3717,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.png",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain.jpg",
+  "sky_fraction": 0.127,
+  "lower_edges": 0.2925,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg",
+  "sky_fraction": 0.055,
+  "lower_edges": 0.3938,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.png",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain.jpg",
+  "sky_fraction": 0.135,
+  "lower_edges": 0.3124,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg",
+  "sky_fraction": 0.26,
+  "lower_edges": 0.4283,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.png",
+  "preset": "base-High",
+  "tree": "2c87dbf7995228b910c28445b6f26ab407c7826b",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-confirm-gatepaving-f40-0/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain.jpg",
+  "sky_fraction": 0.276,
+  "lower_edges": 0.3307,
+  "script_errors": 0,
+  "note": "confirm-gatepaving-scoped: base = main 74f0c9e17, arm = tb/coord-batch76-land 2c87dbf79 (paving_scale_1112 ON scoped to gate_road_approach/gate_road_close/f40_gate_road), no overlay; manifest sha = arm. F40#0 pieces 3-4 (realm gate clear+rain)."
+ }
+]
