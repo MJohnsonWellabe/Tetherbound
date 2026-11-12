@@ -2127,7 +2127,7 @@
       "item": "F41#15 Captain Marrow head glow (2 of 3 frames)",
       "before": 4.55,
       "after": 5.95,
-      "pr": "landing being cut (tb/below6-marrow-land)"
+      "pr": "#918 (in CI)"
     }
   ],
   "landed_recent": [
