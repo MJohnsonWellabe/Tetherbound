@@ -3676,6 +3676,25 @@
    "priority": "below-6 row, worst-first (F40#3 5.65)",
    "stand_ruling": "Coordinator: both stand moves allowed (old observatory stand frames a rim wall; old beacon stand shows the gate at about a twentieth of the frame, so neither shows its subject; same rule as the landed Stormheart stand). Re-baseline, not like-for-like.",
    "note": "Two new approach stands plus the aviary-family dome crowns (landmark_crowns_1111). Skyroad arch frame unchanged (control)."
+  },
+  {
+   "id": "below6-stormdress",
+   "kind": "arm",
+   "rows": [
+    "F41#15",
+    "F41#7",
+    "F41#1"
+   ],
+   "branch": "tb/below6",
+   "head": "61caaf5a9",
+   "tree": "tb/below6 61caaf5a9 for both sides (no import)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-STORMDRESS/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-STORMDRESS/CAPTURE.json (three sets: marrow_dialogue, f41_1_row, split_facing)",
+   "capture": "High, base and arm per set. Marrow set: add BELOW6-MARROW/overlay.json to BOTH sides (its landing #918 is still in CI).",
+   "priority": "below-6 floor work: Marrow frames 5.95 and F41#1 6.81; supersedes BELOW6-SPLITWOOD",
+   "note": "Stormheart cloth banners (banner_cloth_1112) plus aged split heartwood (aged_heartwood_1112): the 'blue slab' and 'orange trunk' all three judges named on Marrow's frames and F41#1."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
