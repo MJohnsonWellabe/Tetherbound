@@ -16,8 +16,10 @@
 - **F38#21 loses.** Base's frame 2 has "a cluster of yellow flowers" that breaks the lilac repetition. The arm "leans back to lilac only".
   - Recorded defect: PARTIAL on base, PRESENT on the arm (2/3).
   - The cause arm thins the colour variety the row asks for.
-- **F38#30's +0.24 is not the ground.** The hillside defect is PRESENT on both sides (3/3): "a broad, smeared ... terrain face with straight edges and a dark seam". The arm's gain comes from frame 2's badgers being caught in side profile, which is "more naturalistic", where base's face the camera "with a mascot-like face". That is creature pose timing.
+- **F38#30's +0.24 is not the ground.** The hillside defect is PRESENT on both sides (3/3): "a broad, smeared ... terrain face with straight edges and a dark seam". The arm's gain comes from frame 2's badgers being caught in side profile, which is "more naturalistic", where base's face the camera "with a mascot-like face". The GPU lane confirms it: a different wild creature spawned on each side in walk_03 (badgers on base, an armoured creature on the arm). Spawn difference, not ground.
 - **F38#26:** level. Mosshell's front sinks into grass on both sides.
+
+- **The old-mill approach frame** (base camera against a trunk, GPU lane note) is not in these sets. F38#22 uses the old-mill close, village close and trail-camp close frames.
 
 ## Flag: red on a non-Tether creature (3/3, both sides)
 - The badger-type creatures at the Burrow Warrens (F38#30 frames) carry "a bright red bush or crest on the back".
