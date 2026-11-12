@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 12:55 UTC",
+  "updated": "12 Nov 2026 13:20 UTC",
   "headline": [
+    "12 Nov 13:20: #925 landed (pose-stage graphics preset fix; flight take-off fix; Ashtusk 7.32, Stormtrail 7.49). Next on the GPU: real Medium re-verification of F36#72, #69, #58, #35 (closed on a High copy) plus Ashtusk and Stormtrail; then the stale 6-7 re-scores and the 6-7 arms (Meadows ground shared cause).",
     "12 Nov 12:55: measurement fault found: the creature pose capture tool never applied the graphics preset, so every F36 pose-stage 'Medium' was a copy of High. Four rows closed earlier on that evidence (F36#72 Stormbrush, F36#69 Solmane, F36#58 Pebbik, F36#35 Breezetail) are flagged for Medium re-verification once LANE-THINGS lands the tool fix (top priority). Their High scores stand.",
     "12 Nov 12:45: owner removed the 0.5 threshold (PR #924 landed): any judged gain lands on its own. Ashtusk embers + hit ships (+0.30); Brooktail spots no gain (parked); embers split by species (Stormtrail 7.49, Riftfrill and Nightburrow slightly down) so the landing scopes it to Ashtusk and Stormtrail. Finding: the creature pose stage renders High and Medium identically, so pose-row scores vary only by judge panel (about 0.7).",
     "12 Nov 12:35: OWNER DIRECTION, new lane roles: LANE-BELOW6 rows below 6 (F41#8, F36#46, F40#1, F39#8 parked); LANE-THINGS moves every 6-7 row over 7 (all categories, shared causes first; queued 7.5 close-outs finish, no new ones); LANE-PLACES re-scores every outdated row on current main (GPU captures, its own three-judge batches). GPU: re-scores first, then alternating with arms. 48 stale 6-7 rows capturing now.",
@@ -2214,11 +2215,28 @@
       "before": 6.07,
       "after": 7.26,
       "pr": "#923"
+    },
+    {
+      "item": "F36#33 Ashtusk (embers face the lens, hit recoil)",
+      "before": 7.02,
+      "after": 7.32,
+      "pr": "#925"
+    },
+    {
+      "item": "F36#75 Stormtrail (embers face the lens)",
+      "before": 7.4,
+      "after": 7.49,
+      "pr": "#925"
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#925",
+      "what": "Batch 80: the creature pose stage applies the graphics preset (pose 'Medium' had been a High copy), the flight capture take-off race fix, and Ashtusk and Stormtrail embers facing the lens with Ashtusk's hit recoil (Ashtusk 7.02 -> 7.32, Stormtrail 7.40 -> 7.49)",
+      "when": "13:17 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#923",
       "what": "Batch 79: Stormwood character night rim off (white player head and pale officers gone: F41#18 5.60 -> 6.22, Stormwood dialogue +0.41 to +0.45, 3/3 everywhere) and the pose stage's trainer ruler clear of the creature by default (Ashtusk 8.03, Brooktail 7.69, Mirejaw 7.26 at High)",
