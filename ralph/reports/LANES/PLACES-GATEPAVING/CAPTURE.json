@@ -1,0 +1,14 @@
+{
+ "id": "places-gate-paving-1112",
+ "branch": "tb/places",
+ "head": "(this commit)",
+ "base": "main",
+ "arm": "ralph/reports/LANES/PLACES-GATEPAVING/overlay.json",
+ "preset": "High first, then Medium if High reaches 7.5",
+ "rows": {
+  "F40#1": {"tool": "the row's own frames from ralph/reports/VISUAL/item-scores/job.json (Realm Gate Crag approach, Heartstone approach, Sky Shrine close)"},
+  "F40#0": {"tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=3 --ground-cover-cache (realm gate, day clear, four views); add --piece=4 (day rain) if cheap"}
+ },
+ "want_to_see": "a stone trail at the trainer's scale, flush with the path, in place of the torso-sized cobble pad",
+ "reject_if": "the trail reads as scattered litter, or the path looks bare"
+}
