@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 14:10 UTC",
+  "updated": "12 Nov 2026 14:40 UTC",
   "headline": [
+    "12 Nov 14:40: Stormtrail High 7.36 (not closed; faint flattens, loose orbs); Stormbrush holds again at Medium 7.56 on the corrected stage. Tidewake re-score (21 rows): up F39#3 7.26, F39#10 7.02, F39#4 7.81 and F39#24 7.77 (both flagged for Medium); new below 6: F39#17 current restoration 5.50 (judges: no visible environmental effect). F39#8 5.82 stays below 6.",
     "12 Nov 14:10: Meadows re-score (17 rows): this panel reads about 0.6 above the first batch on the same rows, and every score above 7.35 is extrapolated past the top anchor. Ten rows flagged at 7.5+ (F38#3, #4, #7, #9, #13, #14, #18, #19, #33, #34, #38) get Medium captures and a confirming batch before any close. Drops: F38#23 6.57 (was 7.58), F38#8 6.23 (was 7.14). Overlapping rows are pooled on the board.",
     "12 Nov 14:05: real Medium re-verification: all four closed creature rows HOLD (Stormbrush 7.55, Solmane 7.72, Pebbik 7.63, Breezetail 7.59). Stormtrail Medium 7.72, High 7.49: a High re-run on the corrected stage (#926 landed: slate backdrop restored) could close it. Ashtusk Medium 7.42, open.",
     "12 Nov 13:25: first re-score batch (15 stale rows on current main): F38#14 catch effect 6.94 (was 6.06), F38#6 pickups 6.52, F38#2 6.35, F38#29 6.35; down: F38#21 6.23 (was 7.0), and five rows now below 6 (F38#12 5.89, F38#20 5.72, F39#5 5.64, F40#15 5.89, F41#18 5.93). Panel spread about 0.3. Below-6 rows go to LANE-BELOW6.",
@@ -2535,72 +2536,72 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.29 (was 7.32) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F39#1": {
-      "gpu": 6.42,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.14,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.14 (was 6.42; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#10": {
-      "gpu": 6.3,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 7.02,
+      "src": "GPU High 8-9 Nov (B); RE-SCORE G-rescore-stale-ext-tidewake 7.02 (was 6.30; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#12": {
-      "gpu": 6.8,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.98,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.98 (was 6.80; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#13": {
-      "gpu": 6.23,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.14,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.14 (was 6.23; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#14": {
-      "gpu": 6.44,
-      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.44 (was 6.37)"
+      "gpu": 6.6,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.44 (was 6.37); RE-SCORE G-rescore-stale-ext-tidewake 6.60 (was 6.37; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#15": {
-      "gpu": 6.27,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.14,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.14 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#16": {
-      "gpu": 6.88,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.56,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.88; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#17": {
-      "gpu": 6.27,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 5.5,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#18": {
       "gpu": 7.12,
       "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
     },
     "F39#19": {
-      "gpu": 6.85,
-      "src": "GPU High 8-9 Nov (A)"
+      "gpu": 6.56,
+      "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.85; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#2": {
-      "gpu": 6.48,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.79,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.79 (was 6.48; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#20": {
-      "gpu": 6.37,
-      "src": "GPU High 8-9 Nov (A)"
+      "gpu": 6.42,
+      "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.42 (was 6.37; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#21": {
       "gpu": 7.06,
       "src": "GPU High 10 Nov (G-nerissa-plinth-stone win, landed #893)"
     },
     "F39#22": {
-      "gpu": 6.19,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.7,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.70 (was 6.19; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#23": {
-      "gpu": 6.8,
-      "src": "GPU High 8-9 Nov (A)"
+      "gpu": 7.35,
+      "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 7.35 (was 6.80; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#24": {
-      "gpu": 7.18,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.77,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 7.77 (was 7.18; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) EXTRAPOLATED: Medium + confirming batch"
     },
     "F39#25": {
-      "gpu": 7.28,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.07,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 7.07 (was 7.28; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#26": {
       "gpu": 6.94,
@@ -2611,20 +2612,20 @@
       "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: grass defect FIXED; bare flat dunes now"
     },
     "F39#28": {
-      "gpu": 7.33,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.3,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 7.30 (was 7.33; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#29": {
       "gpu": 7.03,
       "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
     },
     "F39#3": {
-      "gpu": 6.1,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 7.26,
+      "src": "GPU High 8-9 Nov (B); RE-SCORE G-rescore-stale-ext-tidewake 7.26 (was 6.10; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#4": {
-      "gpu": 7.28,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 7.81,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 7.81 (was 7.28; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) EXTRAPOLATED: Medium + confirming batch"
     },
     "F39#5": {
       "gpu": 5.64,
@@ -2635,16 +2636,16 @@
       "src": "Faint fold landed #908: High 7.79 (G-floor2-aquaryn-faint-fold, 3/3, defect FIXED 3/3), Medium 7.46 (0.04 short). Forelimb flattening parked after two tries (needs an authored pose for the rig)."
     },
     "F39#7": {
-      "gpu": 6.61,
-      "src": "GPU High 8-9 Nov (A)"
+      "gpu": 7.07,
+      "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 7.07 (was 6.61; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#8": {
-      "gpu": 5.66,
-      "src": "GPU High 8-9 Nov (B)"
+      "gpu": 5.82,
+      "src": "GPU High 8-9 Nov (B); RE-SCORE G-rescore-stale-ext-tidewake 5.82 (was 5.66; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F39#9": {
-      "gpu": 6.65,
-      "src": "GPU High 8-9 Nov (F-tidewake)"
+      "gpu": 6.42,
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.42 (was 6.65; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
     },
     "F40#1": {
       "gpu": 5.9,
@@ -2872,7 +2873,7 @@
     },
     "F36#72": {
       "gpu": 7.75,
-      "src": "CLOSED: High 7.68 + Medium 7.75 (G-f36-72-stormbrush-medium) | re-verify (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix. | HOLDS: real Medium 7.55 (G-reverify-f36-medium, LANE-SCOUT 350092ebd, main 6906a2ebf)",
+      "src": "CLOSED: High 7.68 + Medium 7.75 (G-f36-72-stormbrush-medium) | re-verify (12 Nov 12:55): the Medium for this row came from capture_f36_poses.gd, which did not apply the graphics preset (High and Medium render identically; GPU lane trace). High evidence stands; a real Medium capture follows the tool fix. | HOLDS: real Medium 7.55 (G-reverify-f36-medium, LANE-SCOUT 350092ebd, main 6906a2ebf); Medium 7.56 on the corrected slate stage: holds",
       "medium": 7.55
     },
     "F36#91": {
@@ -2943,8 +2944,8 @@
       "medium": 7.59
     },
     "F36#75": {
-      "gpu": 7.49,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormtrail; Medium 7.72 (G-reverify-f36-medium); High 7.49 (G-cc): 0.01 short, High re-run on the corrected stage queued",
+      "gpu": 7.36,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormtrail; Medium 7.72 (G-reverify-f36-medium); High 7.49 (G-cc): 0.01 short, High re-run on the corrected stage queued; G-closeout-stormtrail-stormbrush (888dffb78): High 7.36 on the slate stage, not closed",
       "medium": 7.72
     },
     "F36#40": {

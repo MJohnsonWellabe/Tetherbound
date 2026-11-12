@@ -25,11 +25,13 @@
     "F38#9",
     "F38#19",
     "F38#33",
-    "F38#34"
+    "F38#34",
+    "F39#4",
+    "F39#24"
    ],
    "branch": "main",
    "head": "90ffeb663",
-   "job": "each row's own job.json frames on main 90ffeb663 at MEDIUM (one side), the same frames as G-rescore-stale-ext-meadows",
+   "job": "each row's own job.json frames on main 90ffeb663 at MEDIUM (one side), the same frames as G-rescore-stale-ext-meadows; ALSO Tidewake F39#4 and F39#24 job.json frames at Medium (flagged 7.5+ in G-rescore-stale-ext-tidewake)",
    "capture": "Medium, one side",
    "priority": "right after the Stormtrail/Stormbrush close-out: seven rows flagged 7.5+ at High in the Meadows re-score (extrapolated)",
    "route": "send to LANE-SCOUT (close decisions), not only LANE-PLACES"
