@@ -3720,6 +3720,20 @@
    "priority": "bigger Stormwood swing across five rows incl. two below 6 (F41#2 5.97, F41#8 5.80)",
    "pre_check": "reject if the gold line blooms into a wide yellow band, the road reads dry sand or salmon, or Fading shows any bolt; check Fading is brighter than Building",
    "note": "Judged no-puddle road value plus restored gold-line contrast (fixes the F41#4 loss) plus Fading clear."
+  },
+  {
+   "id": "rescore-f41-15-main",
+   "kind": "re-score",
+   "rows": [
+    "F41#15"
+   ],
+   "branch": "main",
+   "head": "3b7d04b5e",
+   "tree": "main 3b7d04b5e (Marrow glow fix #918 landed)",
+   "job": "res://tools/phase2_capture_dialogue.gd --biome=stormwood, frames from F41#15's job.json: captain_marrow, captain_marrow_dynamo_core, officer_nysa_deepwood_rod (all three __dialogue), 1920x1080 forward_plus --fixed-fps 20",
+   "capture": "High, main only (row score, no arm)",
+   "priority": "GPU otherwise idle; gives F41#15 a full row score (Nysa never captured)",
+   "note": "Judge as a row score with anchors; report the Nysa frame's occluder if any."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
