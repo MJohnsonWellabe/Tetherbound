@@ -1,0 +1,4 @@
+Ur: none
+Tk: "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail"
+Uj: none
+Zo: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
