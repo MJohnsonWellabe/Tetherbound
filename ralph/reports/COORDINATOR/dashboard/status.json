@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 11:10 UTC",
+  "updated": "12 Nov 2026 11:25 UTC",
   "headline": [
+    "12 Nov 11:25: Ashtusk (High 8.03, Medium 7.28) and Brooktail (High 7.69, Medium 7.03) do not close: at Medium the ruler never overlapped, so the creatures themselves sit under 7.5. Close-out exception applies (both at 7.0 or above). #923 (Stormwood rim off, F41#18 6.22) in CI.",
     "12 Nov 11:05: pose-stage capture fix (--clear-ruler, no game change) lifts six creature rows: Ashtusk 8.03 and Brooktail 7.69 meet the bar at High (Medium running next), Mirejaw 7.26 (was 5.28), Riftfrill 7.31, Sparkit 7.26, Shadelet 7.07. Stormwood rim-off and wet trail round 2 in progress; F38#15 glide-bank close-out capturing.",
     "12 Nov 10:25: Stormwood rim-off ships: the white bloom on the player's head and pale officers came from the night character rim under storm light. F41#18 5.60 -> 6.22, Stormwood dialogue +0.41 to +0.45 (3/3 everywhere, nothing loses). Landing being cut.",
     "12 Nov 10:10: F38#15 Galecrest flight: High 7.70, Medium 7.37 with the landing staging (#922, re-running CI after a base update): 0.13 short of closing; LANE-THINGS building a glide or landing pose variation as the close-out. GPU: Stormwood rim-off (white player head) capturing.",
@@ -2918,11 +2919,13 @@
     },
     "F36#36": {
       "gpu": 7.69,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Brooktail; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 7.69 at High"
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Brooktail; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 7.69 at High; G-medium-ashtusk-brooktail-ruler (e44e6ee88): Medium 7.03, not closed",
+      "medium": 7.03
     },
     "F36#33": {
       "gpu": 8.03,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Ashtusk; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 8.03 at High"
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Ashtusk; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 8.03 at High; G-medium-ashtusk-brooktail-ruler (e44e6ee88): Medium 7.28, not closed",
+      "medium": 7.28
     },
     "F36#87": {
       "gpu": 6.78,
