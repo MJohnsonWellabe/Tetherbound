@@ -26,3 +26,4 @@ Columns: file | rows | result.
 - G-f40-13-catch-card-medium.md | F40#13 | CLOSES: Medium 7.76 (raw 7.0, 6.7, 7.3; confirming batch) with High 7.62; land the catch_card arm
 - G-innkeeper-baseline.md | F36#29 | GPU High baseline 7.03 (defect PARTIAL 2/3); close-out exception applies; face texture, separated browns and a relaxed idle would take it past 7.5
 - G-below6-stormheart-approach.md | F41#1 | SHIP: 5.10 → 6.81 (+1.71, 3/3; approach-only 2.80 → 6.42), from the new approach stand, not new art; confirm it as F41#1's fixed camera set. aged_heartwood_1112 not visible, so not judged. Crown out of frame; decal banners
+- G-things-convclear-meadows.md | F38#16, F38#17, F38#36, F38#37 + 36 Meadows conversations | SHIP: arm beats the stand on 8/8 sets (+0.16 to +1.68; 3/3 on 7) and main on 4/4 rows (F38#17 5.75 → 6.97, #16 → 6.32, #36 → 7.39, #37 → 6.90); Meadows dialogue ≈6.60 → ≈6.99. Mira lattice (sight-stand), Solene/Aldis blown lights and the Rae dog remain
