@@ -1,0 +1,35 @@
+{
+ "Va": {
+  "anchor": false,
+  "label": "G F39#21 win live-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_win_live.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_win_arm.png"
+ },
+ "Gp": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Vw": {
+  "anchor": false,
+  "label": "G F39#21 aftermath live-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_aftermath_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_aftermath_live.png"
+ },
+ "Ll": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Tm": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Gy": {
+  "anchor": false,
+  "label": "G F39#21 midfight live-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_midfight_live.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-ner_midfight_arm.png"
+ }
+}

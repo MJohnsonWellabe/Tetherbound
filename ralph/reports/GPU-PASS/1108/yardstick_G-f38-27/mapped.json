@@ -1,0 +1,84 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8729,
+  "least_squares_slope": 1.3172,
+  "method": "linear",
+  "slope": 1.3172,
+  "intercept": -1.0555,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.563,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.467,
+   "reference": 7.35,
+   "mapped": 7.462,
+   "residual": -0.112
+  },
+  "craft:before": {
+   "measured": 4.967,
+   "reference": 4.83,
+   "mapped": 5.487,
+   "residual": -0.657
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.9,
+   "reference": 6.53,
+   "mapped": 5.399,
+   "residual": 1.131
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.133,
+   "reference": 4.0,
+   "mapped": 4.389,
+   "residual": -0.389
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.0,
+   "reference": 6.75,
+   "mapped": 6.848,
+   "residual": -0.098
+  },
+  "f04_6_r22:control": {
+   "measured": 5.133,
+   "reference": 5.83,
+   "mapped": 5.706,
+   "residual": 0.124
+  }
+ },
+ "candidates": {
+  "G F38#27 live-vs-arm [G-f3827_arm.png]": {
+   "measured_mean": 6.633,
+   "mapped_mean": 7.68,
+   "mapped_judges": [
+    7.9,
+    7.51,
+    7.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "G F38#27 live-vs-arm [G-f3827_live.png]": {
+   "measured_mean": 6.733,
+   "mapped_mean": 7.81,
+   "mapped_judges": [
+    7.51,
+    8.03,
+    7.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.35): G F38#27 live-vs-arm [G-f3827_arm.png], G F38#27 live-vs-arm [G-f3827_live.png]; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}

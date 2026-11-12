@@ -1,0 +1,35 @@
+{
+ "He": {
+  "anchor": false,
+  "label": "G F40#3 recheck one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rc_F40-3.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rc_F40-3.png"
+ },
+ "Hv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Xx": {
+  "anchor": false,
+  "label": "G F41#13 recheck one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rc_F41-13.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rc_F41-13.png"
+ },
+ "Al": {
+  "anchor": false,
+  "label": "G F38#32 recheck one-sided",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rc_F38-32.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-rc_F38-32.png"
+ },
+ "En": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ny": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

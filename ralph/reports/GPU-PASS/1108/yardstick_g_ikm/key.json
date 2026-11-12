@@ -1,0 +1,29 @@
+{
+ "Ag": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Sw": {
+  "anchor": false,
+  "label": "G F36#29 innkeeper High main",
+  "A": "G-ikm_F36-29.png",
+  "B": "G-ikm_F36-29.png"
+ },
+ "Un": {
+  "anchor": false,
+  "label": "G F40#13 catch_card Medium arm",
+  "A": "G-ikm_F40-13.png",
+  "B": "G-ikm_F40-13.png"
+ },
+ "Rs": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ov": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

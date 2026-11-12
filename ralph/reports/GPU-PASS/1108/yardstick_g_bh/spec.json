@@ -1,0 +1,22 @@
+[
+ {
+  "label": "G F36(1) mirejaw hit base-vs-arm",
+  "a": "G-bh_mirejaw_base.png",
+  "b": "G-bh_mirejaw_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, then the hit reaction at three moments). Catalogue subject: mirejaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "the hit reaction smears the jaw or tail into a pale translucent shape",
+   "tail passes through the trainer"
+  ]
+ },
+ {
+  "label": "G F36(1) abyssal_guardian hit base-vs-arm",
+  "a": "G-bh_abyssal_guardian_base.png",
+  "b": "G-bh_abyssal_guardian_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, then the hit reaction at three moments). Catalogue subject: abyssal guardian - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "hit reaction barely different from standing",
+   "glossy vinyl, toy-like"
+  ]
+ }
+]

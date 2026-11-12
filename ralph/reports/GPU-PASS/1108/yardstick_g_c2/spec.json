@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F38#32 camp-r2 tb base-vs-arm",
+  "a": "G-c2_tb_base.png",
+  "b": "G-c2_tb_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: meadows camp and workshop prop legibility (two views of the trail camp, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+  ]
+ },
+ {
+  "label": "G F38#32 camp-r2 fire base-vs-arm",
+  "a": "G-c2_fire_base.png",
+  "b": "G-c2_fire_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: meadows camp and workshop prop legibility (one view of the trail camp). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+  ]
+ }
+]

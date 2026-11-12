@@ -1,0 +1,41 @@
+{
+ "Ht": {
+  "anchor": false,
+  "label": "G T2cleanup F39 shore regress base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2cl_regress_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2cl_regress_base.png"
+ },
+ "Wj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Gk": {
+  "anchor": false,
+  "label": "G T2cleanup swim-away-day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2cl_swim-away-day_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2cl_swim-away-day_base.png"
+ },
+ "Kp": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Bd": {
+  "anchor": false,
+  "label": "G T2cleanup swim-across-day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2cl_swim-across-day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2cl_swim-across-day_arm.png"
+ },
+ "Un": {
+  "anchor": false,
+  "label": "G T2cleanup swim-away-night base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2cl_swim-away-night_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-t2cl_swim-away-night_arm.png"
+ },
+ "Yw": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}

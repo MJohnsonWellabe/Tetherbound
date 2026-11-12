@@ -1,0 +1,29 @@
+[
+ {
+  "label": "G F36(1) pebbik faint2 Medium arm",
+  "a": "G-w1_pebbik.png",
+  "b": "G-w1_pebbik.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: pebbik - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) breezetail faint2 Medium arm",
+  "a": "G-w1_breezetail.png",
+  "b": "G-w1_breezetail.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: breezetail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) galewisp flight carrier base-vs-arm",
+  "a": "G-w1_gale_base.png",
+  "b": "G-w1_gale_arm.png",
+  "brief": "Fixed captures from the game of the trainer's flight in the meadows biome: launch, glide and landing (left to right, top to bottom). Catalogue subject: galewisp - the creature carrying the 1.80 m trainer in flight (fly-grip), with every applicable fly-grip pose reading correctly. Judge the creature and the carry as the game's real look: pose, grip, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "carrying frame carries nothing"
+  ]
+ }
+]

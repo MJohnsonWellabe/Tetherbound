@@ -1,0 +1,71 @@
+{
+ "anchors": {
+  "craft:after": [
+   6.5,
+   6.4,
+   6.6
+  ],
+  "craft:before": [
+   5.2,
+   5.2,
+   5.0
+  ],
+  "f04_6_r22:control": [
+   5.0,
+   5.3,
+   5.0
+  ],
+  "f04_6_r22:r22": [
+   6.0,
+   6.2,
+   5.6
+  ],
+  "f36_0_npc:C1B": [
+   6.6,
+   6.8,
+   7.2
+  ],
+  "f36_0_npc:C1A": [
+   6.6,
+   6.8,
+   7.2
+  ]
+ },
+ "candidates": {
+  "G F36(1) cannonback rescore main [G-r3a_cannonback.png]": [
+   6.2,
+   6.6,
+   6.8
+  ],
+  "G F36(1) galewisp rescore main [G-r3a_galewisp.png]": [
+   6.0,
+   6.4,
+   6.4
+  ],
+  "G F36(1) mangrove_monitor rescore main [G-r3a_mangrove_monitor.png]": [
+   5.5,
+   5.8,
+   6.0
+  ],
+  "G F36(1) tempestwing rescore main [G-r3a_tempestwing.png]": [
+   6.0,
+   6.5,
+   6.2
+  ],
+  "G F36(1) abyssal_guardian rescore main [G-r3a_abyssal_guardian.png]": [
+   5.0,
+   5.0,
+   5.6
+  ],
+  "G F36(1) reedwing rescore main [G-r3a_reedwing.png]": [
+   6.4,
+   6.7,
+   6.6
+  ],
+  "G F36(1) stormbrush rescore main [G-r3a_stormbrush.png]": [
+   6.5,
+   7.2,
+   7.0
+  ]
+ }
+}

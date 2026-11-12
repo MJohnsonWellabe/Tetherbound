@@ -1,0 +1,5 @@
+Oi: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ld: none
+Me: none
+Ae: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Cp: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"

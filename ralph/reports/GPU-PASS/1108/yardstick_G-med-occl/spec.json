@@ -1,0 +1,56 @@
+[
+ {
+  "label": "G F38#28 live one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F38-28_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F38-28_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Warden arena boundary. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+  ]
+ },
+ {
+  "label": "G F40#12 live one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F40-12_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F40-12_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+  ]
+ },
+ {
+  "label": "G F41#17 live one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F41-17_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F41-17_live.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Crown Arch. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+  ]
+ },
+ {
+  "label": "G F39#18 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F39-18_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F39-18_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+  ]
+ },
+ {
+  "label": "G F39#26 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F39-26_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F39-26_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F39#29 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F39-29_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-med-occl_F39-29_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named conversations show no identifiable speaker near the dialogue panel"
+  ]
+ }
+]

@@ -1,0 +1,5 @@
+Ch: "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor"
+Jg: none
+Ki: "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor"
+Hp: none
+Ze: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

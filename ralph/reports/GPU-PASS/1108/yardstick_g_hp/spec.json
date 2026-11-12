@@ -1,0 +1,11 @@
+[
+ {
+  "label": "G F41#9 harvest-presence base-vs-arm",
+  "a": "G-hp_base.png",
+  "b": "G-hp_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: harvest resource identity (two harvest nodes: stormglass above, glowmoss below). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+  ]
+ }
+]

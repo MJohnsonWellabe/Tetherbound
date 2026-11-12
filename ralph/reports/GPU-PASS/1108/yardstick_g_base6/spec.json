@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F39#32 tidewake sheet 1 one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F39-32_tidewake_sheet_1.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F39-32_tidewake_sheet_1.png",
+  "brief": "Fixed captures from the game of the tidewake biome (four views). Judge the scenes for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, or a rendering bug rather than an authored choice, and whether they read as the key art's world.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F39#32 tidewake sheet 2 one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F39-32_tidewake_sheet_2.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F39-32_tidewake_sheet_2.png",
+  "brief": "Fixed captures from the game of the tidewake biome (four views). Judge the scenes for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, or a rendering bug rather than an authored choice, and whether they read as the key art's world.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#21 cloudreach sheet 1 one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F40-21_cloudreach_sheet_1.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F40-21_cloudreach_sheet_1.png",
+  "brief": "Fixed captures from the game of the cloudreach biome (four views). Judge the scenes for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, or a rendering bug rather than an authored choice, and whether they read as the key art's world.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#21 cloudreach sheet 2 one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F40-21_cloudreach_sheet_2.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F40-21_cloudreach_sheet_2.png",
+  "brief": "Fixed captures from the game of the cloudreach biome (four views). Judge the scenes for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, or a rendering bug rather than an authored choice, and whether they read as the key art's world.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F22#4 named fights one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F22-4_named.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-base6_F22-4_named.png",
+  "brief": "Fixed captures from the game of four named fights against story bosses and captains in different biomes (four views). Judge how each fight reads on screen - both fighters, the boss's identity and its attack clearly visible, nothing blocking the view - and whether each looks like a distinct event that belongs to the key art's world.",
+  "defects": [
+   "none"
+  ]
+ }
+]

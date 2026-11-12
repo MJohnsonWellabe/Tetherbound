@@ -1,0 +1,53 @@
+{
+ "Wz": {
+  "anchor": false,
+  "label": "G F36(1) water_abyssal_guardian rescore main",
+  "A": "G-r3b_water_abyssal_guardian.png",
+  "B": "G-r3b_water_abyssal_guardian.png"
+ },
+ "Wq": {
+  "anchor": false,
+  "label": "G F36(1) water_mangrove_monitor rescore main",
+  "A": "G-r3b_water_mangrove_monitor.png",
+  "B": "G-r3b_water_mangrove_monitor.png"
+ },
+ "Hm": {
+  "anchor": false,
+  "label": "G F36(1) water_mosshell rescore main",
+  "A": "G-r3b_water_mosshell.png",
+  "B": "G-r3b_water_mosshell.png"
+ },
+ "Qt": {
+  "anchor": false,
+  "label": "G F36(1) voltarach rescore main",
+  "A": "G-r3b_voltarach.png",
+  "B": "G-r3b_voltarach.png"
+ },
+ "Gt": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Pz": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ou": {
+  "anchor": false,
+  "label": "G F36(1) water_cragclaw rescore main",
+  "A": "G-r3b_water_cragclaw.png",
+  "B": "G-r3b_water_cragclaw.png"
+ },
+ "Yv": {
+  "anchor": false,
+  "label": "G F36(1) water_mirejaw rescore main",
+  "A": "G-r3b_water_mirejaw.png",
+  "B": "G-r3b_water_mirejaw.png"
+ },
+ "Lh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}

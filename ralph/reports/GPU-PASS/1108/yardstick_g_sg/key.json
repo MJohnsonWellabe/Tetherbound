@@ -1,0 +1,35 @@
+{
+ "Ft": {
+  "anchor": false,
+  "label": "G F41#13 storm-glow hurt base-vs-arm",
+  "A": "G-sg_hurt_base.png",
+  "B": "G-sg_hurt_arm.png"
+ },
+ "Qs": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Hg": {
+  "anchor": false,
+  "label": "G F41#13 storm-glow ctl base-vs-arm",
+  "A": "G-sg_ctl_base.png",
+  "B": "G-sg_ctl_arm.png"
+ },
+ "Zi": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Dp": {
+  "anchor": false,
+  "label": "G F41#13 storm-glow arm base-vs-arm",
+  "A": "G-sg_arm_arm.png",
+  "B": "G-sg_arm_base.png"
+ },
+ "Gg": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}

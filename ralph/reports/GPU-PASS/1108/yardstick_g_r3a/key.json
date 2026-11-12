@@ -1,0 +1,59 @@
+{
+ "Dw": {
+  "anchor": false,
+  "label": "G F36(1) cannonback rescore main",
+  "A": "G-r3a_cannonback.png",
+  "B": "G-r3a_cannonback.png"
+ },
+ "Si": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Bf": {
+  "anchor": false,
+  "label": "G F36(1) galewisp rescore main",
+  "A": "G-r3a_galewisp.png",
+  "B": "G-r3a_galewisp.png"
+ },
+ "Px": {
+  "anchor": false,
+  "label": "G F36(1) mangrove_monitor rescore main",
+  "A": "G-r3a_mangrove_monitor.png",
+  "B": "G-r3a_mangrove_monitor.png"
+ },
+ "Eo": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ch": {
+  "anchor": false,
+  "label": "G F36(1) tempestwing rescore main",
+  "A": "G-r3a_tempestwing.png",
+  "B": "G-r3a_tempestwing.png"
+ },
+ "Iv": {
+  "anchor": false,
+  "label": "G F36(1) abyssal_guardian rescore main",
+  "A": "G-r3a_abyssal_guardian.png",
+  "B": "G-r3a_abyssal_guardian.png"
+ },
+ "Pa": {
+  "anchor": false,
+  "label": "G F36(1) reedwing rescore main",
+  "A": "G-r3a_reedwing.png",
+  "B": "G-r3a_reedwing.png"
+ },
+ "Js": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Aa": {
+  "anchor": false,
+  "label": "G F36(1) stormbrush rescore main",
+  "A": "G-r3a_stormbrush.png",
+  "B": "G-r3a_stormbrush.png"
+ }
+}

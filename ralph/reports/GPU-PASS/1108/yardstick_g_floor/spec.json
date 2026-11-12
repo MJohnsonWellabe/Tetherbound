@@ -1,0 +1,74 @@
+[
+ {
+  "label": "G F39#29 live-vs-armCap",
+  "a": "<scratch>/G-floor_F39-29_live_for_armCap.png",
+  "b": "<scratch>/G-floor_F39-29_armCap.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named conversations show no identifiable speaker near the dialogue panel"
+  ]
+ },
+ {
+  "label": "G F39#29 live-vs-armRanks",
+  "a": "<scratch>/G-floor_F39-29_live_for_armRanks.png",
+  "b": "<scratch>/G-floor_F39-29_armRanks.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named conversations show no identifiable speaker near the dialogue panel"
+  ]
+ },
+ {
+  "label": "G F41#7 live-vs-armCap",
+  "a": "<scratch>/G-floor_F41-7_live_for_armCap.png",
+  "b": "<scratch>/G-floor_F41-7_armCap.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+  ]
+ },
+ {
+  "label": "G F41#7 live-vs-armRanks",
+  "a": "<scratch>/G-floor_F41-7_live_for_armRanks.png",
+  "b": "<scratch>/G-floor_F41-7_armRanks.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+  ]
+ },
+ {
+  "label": "G F41#15 live-vs-armCap",
+  "a": "<scratch>/G-floor_F41-15_live_for_armCap.png",
+  "b": "<scratch>/G-floor_F41-15_armCap.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G F41#15 live-vs-armRanks",
+  "a": "<scratch>/G-floor_F41-15_live_for_armRanks.png",
+  "b": "<scratch>/G-floor_F41-15_armRanks.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G F39#18 live-vs-armRanks",
+  "a": "<scratch>/G-floor_F39-18_live_for_armRanks.png",
+  "b": "<scratch>/G-floor_F39-18_armRanks.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+  ]
+ },
+ {
+  "label": "G F38#1 live-vs-recheck",
+  "a": "<scratch>/G-floor_F38-1_live_for_recheck.png",
+  "b": "<scratch>/G-floor_F38-1_recheck.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: creature collapse and rest. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground"
+  ]
+ }
+]

@@ -1,0 +1,137 @@
+[
+ {
+  "label": "G F39#18 stand-vs-arm",
+  "a": "G-cc3_F39-18_stand.png",
+  "b": "G-cc3_F39-18_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+  ]
+ },
+ {
+  "label": "G F39#26 stand-vs-arm",
+  "a": "G-cc3_F39-26_stand.png",
+  "b": "G-cc3_F39-26_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F39#29 stand-vs-arm",
+  "a": "G-cc3_F39-29_stand.png",
+  "b": "G-cc3_F39-29_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named conversations show no identifiable speaker near the dialogue panel"
+  ]
+ },
+ {
+  "label": "G tidewake dialogue changed-nine stand-vs-arm",
+  "a": "G-cc3_tidewakechg_stand.png",
+  "b": "G-cc3_tidewakechg_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#10 stand-vs-arm",
+  "a": "G-cc3_F40-10_stand.png",
+  "b": "G-cc3_F40-10_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue foreground composition. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F40#12 stand-vs-arm",
+  "a": "G-cc3_F40-12_stand.png",
+  "b": "G-cc3_F40-12_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+  ]
+ },
+ {
+  "label": "G F41#7 stand-vs-arm",
+  "a": "G-cc3_F41-7_stand.png",
+  "b": "G-cc3_F41-7_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+  ]
+ },
+ {
+  "label": "G F41#7 base-vs-arm",
+  "a": "G-cc3_F41-7_base.png",
+  "b": "G-cc3_F41-7_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+  ]
+ },
+ {
+  "label": "G F41#11 stand-vs-arm",
+  "a": "G-cc3_F41-11_stand.png",
+  "b": "G-cc3_F41-11_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character portrait identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+  ]
+ },
+ {
+  "label": "G F41#11 base-vs-arm",
+  "a": "G-cc3_F41-11_base.png",
+  "b": "G-cc3_F41-11_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character portrait identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+  ]
+ },
+ {
+  "label": "G F41#15 stand-vs-arm",
+  "a": "G-cc3_F41-15_stand.png",
+  "b": "G-cc3_F41-15_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G F41#15 base-vs-arm",
+  "a": "G-cc3_F41-15_base.png",
+  "b": "G-cc3_F41-15_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G F41#20 stand-vs-arm",
+  "a": "G-cc3_F41-20_stand.png",
+  "b": "G-cc3_F41-20_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character dialogue reuse. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Distinct named Stormwood characters use identical dialogue lines"
+  ]
+ },
+ {
+  "label": "G F41#20 base-vs-arm",
+  "a": "G-cc3_F41-20_base.png",
+  "b": "G-cc3_F41-20_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character dialogue reuse. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Distinct named Stormwood characters use identical dialogue lines"
+  ]
+ },
+ {
+  "label": "G stormwood dialogue changed-nine stand-vs-arm",
+  "a": "G-cc3_stormwoodchg_stand.png",
+  "b": "G-cc3_stormwoodchg_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

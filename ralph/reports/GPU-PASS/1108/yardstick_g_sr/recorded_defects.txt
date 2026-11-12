@@ -1,0 +1,7 @@
+Ti: none
+Xw: "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces"
+Hn: none
+Hs: "Hard, regularly spaced dark diagonal stripes cross the sand at golden hour and dawn"
+Up: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Zs: "Hard, regularly spaced dark diagonal stripes cross the sand at golden hour and dawn"
+Cz: none

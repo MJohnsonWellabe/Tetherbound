@@ -1,0 +1,41 @@
+{
+ "anchors": {
+  "f04_6_r22:control": [
+   4.9,
+   4.9,
+   5.4
+  ],
+  "f04_6_r22:r22": [
+   5.8,
+   6.0,
+   6.4
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.6,
+   4.3,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.3,
+   4.9,
+   5.3
+  ],
+  "craft:before": [
+   5.0,
+   5.4,
+   5.2
+  ],
+  "craft:after": [
+   7.0,
+   6.8,
+   7.1
+  ]
+ },
+ "candidates": {
+  "GPU1108F F39#21 live one-sided": [
+   5.4,
+   5.0,
+   5.6
+  ]
+ }
+}

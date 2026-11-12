@@ -1,0 +1,41 @@
+[
+ {
+  "label": "G F36(1) water_mosshell travel-pose row base-vs-arm",
+  "a": "G-tp_water_mosshell_row_base.png",
+  "b": "G-tp_water_mosshell_row_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, ride; faint mid, faint end, swim). Catalogue subject: water mosshell - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "faint poses do not collapse",
+   "rider perched"
+  ]
+ },
+ {
+  "label": "G F36(1) galewisp travel-pose row base-vs-arm",
+  "a": "G-tp_galewisp_row_base.png",
+  "b": "G-tp_galewisp_row_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, fly-grip carry; faint mid, faint end, fly-grip carry). Catalogue subject: galewisp - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "carrying frame carries nothing",
+   "faint wing passes over the trainer"
+  ]
+ },
+ {
+  "label": "G F36(1) water_mosshell travel-only base-vs-arm",
+  "a": "G-tp_water_mosshell_trav_base.png",
+  "b": "G-tp_water_mosshell_trav_arm.png",
+  "brief": "One creature on the game's pose stage with the 1.80 m trainer, travel poses only (left to right, top to bottom: ride, ride; swim, swim). Catalogue subject: water mosshell - every applicable swim, fly-grip and ride pose reads correctly. Judge the creature and trainer as the game's real look: contact, pose, scale and fit with the key art's world.",
+  "defects": [
+   "rider perched",
+   "trainer stands on the water in swim"
+  ]
+ },
+ {
+  "label": "G F36(1) galewisp travel-only base-vs-arm",
+  "a": "G-tp_galewisp_trav_base.png",
+  "b": "G-tp_galewisp_trav_arm.png",
+  "brief": "One creature on the game's pose stage with the 1.80 m trainer, travel poses only (left to right, top to bottom: fly-grip carry at four moments). Catalogue subject: galewisp - every applicable swim, fly-grip and ride pose reads correctly. Judge the creature and trainer as the game's real look: contact, pose, scale and fit with the key art's world.",
+  "defects": [
+   "carrying frame carries nothing"
+  ]
+ }
+]

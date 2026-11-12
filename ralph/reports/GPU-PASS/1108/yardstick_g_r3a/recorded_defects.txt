@@ -1,0 +1,10 @@
+Dw: "brass-gear machinery shell reads as kitbash"
+Si: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bf: "carrying frame carries nothing"; "faint wing passes over the trainer"
+Px: "low contrast against the stage"; "faint lies flat with the trainer inside the tail"
+Eo: none
+Ch: "thin and low-contrast"; "faint stays perched"
+Iv: "glossy vinyl-blue skin with regular dots"; "toy-like look"
+Pa: "flat decal-like blue and yellow blotch pattern"; "faint deflates"
+Js: none
+Aa: "oversaturated plastic-blue fur"; "bulk hides the trainer ruler"

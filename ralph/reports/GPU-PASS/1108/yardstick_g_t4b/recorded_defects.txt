@@ -1,0 +1,12 @@
+Dw: "flat black placeholder look with emissive bands"; "faint flattens to a sheet"
+At: "near-black plumage hides the face"; "barely above the trainer"
+Rg: none
+Wi: "none"
+Ez: "none"
+Sq: "none"
+Nf: "none"
+Vd: "stock animal look with no rim light or type accent"
+Pm: none
+Eh: "near-black plates merge with shadow"; "faint is an armoured ball"
+Am: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ot: "none"

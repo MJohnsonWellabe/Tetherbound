@@ -1,0 +1,12 @@
+[
+ {
+  "label": "G F36(1) water_mosshell game-clip one-sided",
+  "a": "G-wms_water_mosshell.png",
+  "b": "G-wms_water_mosshell.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, ride; faint mid, faint end, swim). Catalogue subject: water mosshell - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "faint poses do not collapse",
+   "rider perched"
+  ]
+ }
+]

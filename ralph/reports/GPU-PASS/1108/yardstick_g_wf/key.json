@@ -1,0 +1,47 @@
+{
+ "Ae": {
+  "anchor": false,
+  "label": "G F38#24 walk_02_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_02_day_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_02_day_base.png"
+ },
+ "Qu": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Np": {
+  "anchor": false,
+  "label": "G F38#30 walk_02_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_02_day_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_02_day_base.png"
+ },
+ "Ye": {
+  "anchor": false,
+  "label": "G F38#24 walk_03_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_03_day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_03_day_arm.png"
+ },
+ "Gt": {
+  "anchor": false,
+  "label": "G route_day regress base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_route_day_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_route_day_base.png"
+ },
+ "Cp": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Qx": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Af": {
+  "anchor": false,
+  "label": "G F38#30 walk_03_day base-vs-arm",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_03_day_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_03_day_arm.png"
+ }
+}

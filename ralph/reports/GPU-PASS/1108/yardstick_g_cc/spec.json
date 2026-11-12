@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F40#1 cause base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_401_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_401_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: open terrain (six destination approach views). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+  ]
+ },
+ {
+  "label": "G F40#3 cause base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_403_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_403_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: architectural landmark read (three destinations, approach and close). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail"
+  ]
+ },
+ {
+  "label": "G F40#8 cause base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_408_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_408_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: bright Cloudreach route markers (one bridge at day, golden hour and night). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer"
+  ]
+ },
+ {
+  "label": "G F40#9 cause base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_409_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_409_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: named NPC post readability (three NPCs, portrait and dialogue). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role"
+  ]
+ },
+ {
+  "label": "G F40#0 cause base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_400_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cc_400_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind): three places from approach and gameplay views by day, plus golden hour, night and rain. Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ }
+]

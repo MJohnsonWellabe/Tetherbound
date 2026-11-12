@@ -1,0 +1,162 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9592,
+  "least_squares_slope": 1.2122,
+  "method": "linear",
+  "slope": 1.2122,
+  "intercept": -0.5592,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.281,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 5.033,
+   "reference": 5.83,
+   "mapped": 5.542,
+   "residual": 0.288
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.867,
+   "reference": 6.75,
+   "mapped": 6.553,
+   "residual": 0.197
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.8,
+   "reference": 7.47,
+   "mapped": 7.684,
+   "residual": -0.214
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.8,
+   "reference": 7.53,
+   "mapped": 7.684,
+   "residual": -0.154
+  },
+  "craft:after": {
+   "measured": 6.267,
+   "reference": 7.35,
+   "mapped": 7.037,
+   "residual": 0.313
+  },
+  "craft:before": {
+   "measured": 4.8,
+   "reference": 4.83,
+   "mapped": 5.26,
+   "residual": -0.43
+  }
+ },
+ "candidates": {
+  "G F36(1) water_mosshell travel-pose row base-vs-arm [G-tp_water_mosshell_row_arm.png]": {
+   "measured_mean": 5.967,
+   "mapped_mean": 6.67,
+   "mapped_judges": [
+    6.23,
+    6.71,
+    7.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_mosshell travel-pose row base-vs-arm [G-tp_water_mosshell_row_base.png]": {
+   "measured_mean": 4.3,
+   "mapped_mean": 4.65,
+   "mapped_judges": [
+    4.29,
+    4.65,
+    5.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) galewisp travel-pose row base-vs-arm [G-tp_galewisp_row_arm.png]": {
+   "measured_mean": 6.6,
+   "mapped_mean": 7.44,
+   "mapped_judges": [
+    6.96,
+    7.93,
+    7.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) galewisp travel-pose row base-vs-arm [G-tp_galewisp_row_base.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.35,
+   "mapped_judges": [
+    5.62,
+    6.96,
+    6.47
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_mosshell travel-only base-vs-arm [G-tp_water_mosshell_trav_base.png]": {
+   "measured_mean": 3.567,
+   "mapped_mean": 3.76,
+   "mapped_judges": [
+    3.56,
+    3.68,
+    4.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) water_mosshell travel-only base-vs-arm [G-tp_water_mosshell_trav_arm.png]": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.75,
+   "mapped_judges": [
+    6.11,
+    6.96,
+    7.2
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) galewisp travel-only base-vs-arm [G-tp_galewisp_trav_arm.png]": {
+   "measured_mean": 6.167,
+   "mapped_mean": 6.92,
+   "mapped_judges": [
+    6.47,
+    7.32,
+    6.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36(1) galewisp travel-only base-vs-arm [G-tp_galewisp_trav_base.png]": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.1,
+   "mapped_judges": [
+    4.53,
+    5.5,
+    5.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}

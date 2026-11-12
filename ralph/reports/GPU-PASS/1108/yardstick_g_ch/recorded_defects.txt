@@ -1,0 +1,6 @@
+Kg: "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+Se: "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+Hv: "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+Ad: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Oe: none
+Iy: none

@@ -1,0 +1,29 @@
+{
+ "Ch": {
+  "anchor": false,
+  "label": "G F40#6 cloud-plane base-vs-arm",
+  "A": "G-cp_6_arm.png",
+  "B": "G-cp_6_base.png"
+ },
+ "Jg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ki": {
+  "anchor": false,
+  "label": "G F40#11 cloud-plane base-vs-arm",
+  "A": "G-cp_11_base.png",
+  "B": "G-cp_11_arm.png"
+ },
+ "Hp": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Ze": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

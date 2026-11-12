@@ -1,0 +1,8 @@
+Wk: none
+Ql: "none"
+Ws: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Mz: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Si: none
+Wu: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Kc: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Gm: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

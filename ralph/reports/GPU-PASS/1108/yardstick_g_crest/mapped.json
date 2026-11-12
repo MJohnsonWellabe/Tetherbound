@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8995,
+  "least_squares_slope": 1.7212,
+  "method": "linear",
+  "slope": 1.7212,
+  "intercept": -3.9002,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.504,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.733,
+   "reference": 7.35,
+   "mapped": 7.689,
+   "residual": -0.339
+  },
+  "craft:before": {
+   "measured": 5.233,
+   "reference": 4.83,
+   "mapped": 5.107,
+   "residual": -0.277
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.967,
+   "reference": 4.0,
+   "mapped": 4.648,
+   "residual": -0.648
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.567,
+   "reference": 6.53,
+   "mapped": 5.681,
+   "residual": 0.849
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.2,
+   "reference": 6.75,
+   "mapped": 6.771,
+   "residual": -0.021
+  },
+  "f04_6_r22:control": {
+   "measured": 5.4,
+   "reference": 5.83,
+   "mapped": 5.394,
+   "residual": 0.436
+  }
+ },
+ "candidates": {
+  "G T2crest swim-across-day base-vs-arm [G-crest_swim-across-day_arm.png]": {
+   "measured_mean": 5.5,
+   "mapped_mean": 5.57,
+   "mapped_judges": [
+    5.39,
+    5.74,
+    5.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2crest swim-across-day base-vs-arm [G-crest_swim-across-day_base.png]": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.25,
+   "mapped_judges": [
+    5.91,
+    6.77,
+    6.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2crest swim-away-day base-vs-arm [G-crest_swim-away-day_arm.png]": {
+   "measured_mean": 5.167,
+   "mapped_mean": 4.99,
+   "mapped_judges": [
+    4.88,
+    5.22,
+    4.88
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2crest swim-away-day base-vs-arm [G-crest_swim-away-day_base.png]": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.14,
+   "mapped_judges": [
+    5.91,
+    6.43,
+    6.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2crest swim-away-night base-vs-arm [G-crest_swim-away-night_base.png]": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.48,
+   "mapped_judges": [
+    6.25,
+    6.94,
+    6.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G T2crest swim-away-night base-vs-arm [G-crest_swim-away-night_arm.png]": {
+   "measured_mean": 5.6,
+   "mapped_mean": 5.74,
+   "mapped_judges": [
+    5.39,
+    6.08,
+    5.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

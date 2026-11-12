@@ -1,0 +1,39 @@
+[
+ {
+  "label": "G F39-30-arm dawn-haze base-vs-arm",
+  "a": "G-dh_F39-30-arm_base.png",
+  "b": "G-dh_F39-30-arm_arm.png",
+  "brief": "Fixed captures from the game of the Tidewake biome frame matrix: a dawn lesson view, the shore in rain and a lesson view in rain, top to bottom. Judge how this biome looks in the game - whether it reads as the key art's world, with believable form, material, light and staging, and passes as a finished game's view.",
+  "defects": [
+   "A hard black band sits where the water meets the sand and horizon at dawn",
+   "Rain falls under a fully lit noon sky with white cumulus, with no storm grade or fog"
+  ]
+ },
+ {
+  "label": "G F39-30-veil dawn-haze base-vs-arm",
+  "a": "G-dh_F39-30-veil_base.png",
+  "b": "G-dh_F39-30-veil_arm.png",
+  "brief": "Fixed captures from the game of the Tidewake biome frame matrix: the Veilfall approach in rain and the Veilfall vista in rain, top to bottom. Judge how this biome looks in the game - whether it reads as the key art's world, with believable form, material, light and staging, and passes as a finished game's view.",
+  "defects": [
+   "A hard black band sits where the water meets the sand and horizon at dawn",
+   "Rain falls under a fully lit noon sky with white cumulus, with no storm grade or fog"
+  ]
+ },
+ {
+  "label": "G F39-30-ctl dawn-haze base-vs-arm",
+  "a": "G-dh_F39-30-ctl_base.png",
+  "b": "G-dh_F39-30-ctl_arm.png",
+  "brief": "Fixed captures from the game of the Tidewake biome frame matrix: the shore by day and at golden hour, top to bottom. Judge how this biome looks in the game - whether it reads as the key art's world, with believable form, material, light and staging, and passes as a finished game's view.",
+  "defects": [
+   "A hard black band sits where the water meets the sand and horizon at dawn",
+   "Rain falls under a fully lit noon sky with white cumulus, with no storm grade or fog"
+  ]
+ },
+ {
+  "label": "G F39-31 dawn-haze base-vs-arm",
+  "a": "G-dh_F39-31_base.png",
+  "b": "G-dh_F39-31_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: the hero landmark Veilfall, reading at distance and up close (approach in rain above, vista in rain below). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ }
+]

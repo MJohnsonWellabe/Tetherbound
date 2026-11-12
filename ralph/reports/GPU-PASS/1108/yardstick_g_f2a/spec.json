@@ -1,0 +1,73 @@
+[
+ {
+  "label": "G F36(1) pebbik faint2 base-vs-arm",
+  "a": "G-f2a_pebbik_base.png",
+  "b": "G-f2a_pebbik_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: pebbik - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) riftfrill faint2 base-vs-arm",
+  "a": "G-f2a_riftfrill_base.png",
+  "b": "G-f2a_riftfrill_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: riftfrill - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "glossy dark purple",
+   "back below the trainer's head",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) cragclaw faint2 base-vs-arm",
+  "a": "G-f2a_cragclaw_base.png",
+  "b": "G-f2a_cragclaw_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: cragclaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "faint pose the same as standing",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) mosshock faint2 base-vs-arm",
+  "a": "G-f2a_mosshock_base.png",
+  "b": "G-f2a_mosshock_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: mosshock - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "neon-green camo pattern swallows face and form",
+   "about trainer height",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) paddlenewt faint2 base-vs-arm",
+  "a": "G-f2a_paddlenewt_base.png",
+  "b": "G-f2a_paddlenewt_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: paddlenewt - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "chest-high to the trainer",
+   "crest vanishes in faint",
+   "stray tail spike",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) breezetail faint2 base-vs-arm",
+  "a": "G-f2a_breezetail_base.png",
+  "b": "G-f2a_breezetail_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: breezetail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G F36(1) stormraven faint2 base-vs-arm",
+  "a": "G-f2a_stormraven_base.png",
+  "b": "G-f2a_stormraven_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: stormraven - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ }
+]

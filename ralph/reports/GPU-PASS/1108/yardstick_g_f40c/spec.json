@@ -1,0 +1,65 @@
+[
+ {
+  "label": "G F40#21 day clear approach one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_day_clear_approach.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_day_clear_approach.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome by day in clear weather, nine places from an approach view. Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#21 day clear gameplay one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_day_clear_gameplay.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_day_clear_gameplay.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome by day in clear weather, nine places from the gameplay camera. Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#21 day clear reverse+detail one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_day_clear_reverse_detail.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_day_clear_reverse_detail.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome by day in clear weather, nine places from reverse and close detail views. Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#21 dawn clear one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_dawn_clear.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_dawn_clear.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome at dawn in clear weather, nine places from the gameplay camera. Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#21 golden clear one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_golden_clear.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_golden_clear.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome at golden hour in clear weather, nine places from the gameplay camera. Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#21 night clear one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_night_clear.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_night_clear.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome at night in clear weather, nine places from the gameplay camera. Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#21 rain one-sided",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_rain.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-f40_rain.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome in rain at different times of day, nine places from the gameplay camera. Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ }
+]

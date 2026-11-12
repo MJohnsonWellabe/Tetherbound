@@ -1,0 +1,11 @@
+Yu: "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain"
+Pk: none
+Ua: "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals"
+Rd: "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"
+Mz: none
+Mt: "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+Pw: "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern"
+Ga: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bo: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Pe: "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+Az: "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
