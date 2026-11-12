@@ -3527,7 +3527,49 @@
    "job": "capture_f36_poses.gd --species=water_mangrove_monitor,trailpup,voltwig,pebbik,breezetail,sparkit,stormtrail,mosshock,shadelet,paddlenewt,riftfrill,stormraven,cragclaw --whole-body --context --clear-ruler --roles=hit,faint",
    "capture": "High, base (overlay off) and arm (overlay on). Main's tool now plays the game-resolved clip by default (#912).",
    "priority": "6-7 band, shared faint cause across 13 rows; Cragclaw is a near-bar close-out (Medium 7.30)",
-   "note": "After things-convclear-meadows."
+   "note": "After things-convclear-meadows.",
+   "done": "G-things-faint2 e6dadc433 (judging)"
+  },
+  {
+   "id": "places-rain-time-grade",
+   "kind": "arm",
+   "rows": [
+    "F40#0",
+    "F40#19"
+   ],
+   "branch": "tb/places",
+   "head": "e556a60f1",
+   "tree": "tb/places e556a60f1 for both sides (rain_time_grade code is flag-off there; base = overlay off)",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-RAINTIME/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-RAINTIME/CAPTURE.json",
+   "job": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache for pieces 2,4,6,8 (gate), 82,84,86,88 (summit), 90,92,94,96 (overlook), plus one clear piece per stand as a control",
+   "capture": "High, base (overlay off) and arm (overlay on), same pieces",
+   "pre_check": "reject if golden rain reads as a flat tan wash, or the night trainer sinks into the ground",
+   "priority": "F40#0 (6.54 over 384 frames, half rain) and F40#19",
+   "note": "LANE-PLACES P2. Run now."
+  },
+  {
+   "id": "places-road-value",
+   "kind": "arm",
+   "rows": [
+    "F41#12",
+    "F41#4",
+    "F41#5",
+    "F41#8",
+    "F41#2"
+   ],
+   "branch": "tb/places",
+   "head": "e556a60f1",
+   "tree": "HOLD until PR #914 merges (needs storm_phase_1111 on main as the base). Then: base = main, arms on tb/places with the two overlays",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-ROADVALUE/overlay.json and overlay_no_puddles.json (two arm sides)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-ROADVALUE/CAPTURE.json (per-row tool and frames)",
+   "capture": "High, base plus two arms",
+   "priority": "the judges' shared Stormwood ceiling (ground and road value)",
+   "note": "Coordinator will say when #914 has landed."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
