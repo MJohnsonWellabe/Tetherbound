@@ -1,0 +1,19 @@
+{
+ "row": "F39#17 current restoration environment (5.50)",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_current_states.gd",
+ "args": ["--seed=2042", "--out={OUT}"],
+ "output_rule": "the tool only accepts --out under res://ralph/reports/VISUAL/phase2/tidewake/",
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "frames": ["tidewake__current_states__S1_live_t0", "tidewake__current_states__S1_restored_t0", "tidewake__current_states__S2_live_t0"],
+ "also_judge": "S2_restored_t0 beside S2_live_t0: the row's defect is about the difference between the two states, and the job's third frame is a second live view.",
+ "overlay": "ralph/reports/LANES/BELOW6-RESTORED-SEA/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same command as G-rescore-stale-ext-tidewake used for F39#17",
+ "needs_import": "no",
+ "_why": "PRESENT 3/3: 'the three frames are the same picture; restoration has no visible environmental effect'. Arm: while water_currents_restored is set, the sea takes a restored look (calmer surface, clearer shallows showing the shoals) and the drifting logs and weed mats leave the lanes.",
+ "want_to_see": "the restored frame reading as a changed place beside the live one: smooth calm water, pale shoals around the islands, no debris; the live frames unchanged from base. Say if the restored sea reads as flatter or duller than live: the six sea values are config.",
+ "note": "CPU: live-versus-restored mean difference at the same camera is 2.4 (S1) and 2.0 (S2) on base, 10.0 and 11.6 with the arm."
+}

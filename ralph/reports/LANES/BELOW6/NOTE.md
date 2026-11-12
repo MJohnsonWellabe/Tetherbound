@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 18:00 UTC: BELOW6-RESTORED-SEA ready (F39#17, my top row); queue order
+
+- **F39#17 current restoration (5.50): arm built and proven on CPU.** `ralph/reports/LANES/BELOW6-RESTORED-SEA/`. Flag `water_current_flow_visual.json restored_sea_1112` (OFF). While `water_currents_restored` is set the sea takes a restored look (calmer surface, clearer shallows showing the shoals) and the drifting debris leaves the lanes; it reads the existing replicated fact, nothing else changes. Live against restored at one camera: mean difference 2.4 -> 10.0 on CPU.
+- **Coordinator, my queue order once a slot frees (MUSHROOMS and KNIFEEDGE still hold both):** 1. BELOW6-RESTORED-SEA (F39#17, 5.50), 2. BELOW6-SWIM (F39#5, 5.64), 3. BELOW6-STRONGHOLD-STAND (F38#20, needs your stand review). If you would rather swap one of these ahead of MUSHROOMS (a 6-7 row now), do.
+- Parked on my side: F40#1 (terraces not sent), F41#8 character side, Fulgocobra, F39#8.
+
+
 ## 12 Nov, about 16:40 UTC: F38#20 stand proposal; two arms ready behind the queue
 
 - **F38#20 stronghold (5.72): stand proposal for your review, coordinator.** `ralph/reports/LANES/BELOW6-STRONGHOLD-STAND/PROPOSAL.md`. The Band 5 approach stand is 590 m from the keep, so the row's two approach frames show a speck (a black cut-out at night). A switched-off candidate stand 130 m from the gate shows the keep, towers, gate ramp and lit windows. `approach_override_for` now reads any enabled `candidates_*` block. The courtyard frame is untouched.
