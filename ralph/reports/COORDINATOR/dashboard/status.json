@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 10:10 UTC",
+  "updated": "12 Nov 2026 10:25 UTC",
   "headline": [
+    "12 Nov 10:25: Stormwood rim-off ships: the white bloom on the player's head and pale officers came from the night character rim under storm light. F41#18 5.60 -> 6.22, Stormwood dialogue +0.41 to +0.45 (3/3 everywhere, nothing loses). Landing being cut.",
     "12 Nov 10:10: F38#15 Galecrest flight: High 7.70, Medium 7.37 with the landing staging (#922, re-running CI after a base update): 0.13 short of closing; LANE-THINGS building a glide or landing pose variation as the close-out. GPU: Stormwood rim-off (white player head) capturing.",
     "12 Nov 09:25: #921 landed: F41#15, the lowest row all week, is 6.97. Below 6 now: F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90. F38#15 Galecrest flight reaches 7.70 at High with the landing staging: Medium capture running first; landing as batch 78.",
     "12 Nov 09:05: F41#15, the lowest row, jumps 5.13 -> 6.97 (+1.84, 3/3): wild creatures now keep 16 m clear of Stormwood's named conversation posts (Nysa was hidden behind two giant birds), with the warm deck dressing riding along; Sera and Tamsin's dialogue 5.79 -> 6.97. Landing as batch 77 with Hesk's portrait fix.",
@@ -2185,7 +2186,14 @@
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
-  "score_ledger_pending": [],
+  "score_ledger_pending": [
+    {
+      "item": "F41#18 Stormwood uniformed characters (character rim off in Stormwood)",
+      "before": 5.6,
+      "after": 6.22,
+      "pr": "landing being cut (tb/things-stormrim-land)"
+    }
+  ],
   "landed_recent": [
     {
       "pr": "#921",
@@ -2693,8 +2701,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood)"
     },
     "F41#18": {
-      "gpu": 6.1,
-      "src": "GPU High 8-9 Nov (F-stormwood)"
+      "gpu": 6.22,
+      "src": "GPU High 8-9 Nov (F-stormwood); G-things-stormrim (b3b9fbd4d): rim off in Stormwood 5.60 -> 6.22 (3/3), landing being cut"
     },
     "F41#19": {
       "gpu": 6.56,
