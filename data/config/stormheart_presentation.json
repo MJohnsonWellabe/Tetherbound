@@ -43,7 +43,7 @@
       "enabled": false,
       "_candidate": "LANE-BELOW6 (12 Nov 2026), F41#1: both approach frames stand beside the south split and the split's exposed wood fills their left edge as 'an orange wood-grain slab that reads as an untextured placeholder' (3/3, about 0.3 on the row). The exposed-wood shader multiplies an orange trim atlas, so a tint alone cannot take it off orange. ON greys the grain (weathering 0.75) under a pale heartwood tint, so the fracture reads as aged split timber beside the lavender-grey bark. Shader parameter only. OFF until GPU-judged.",
       "weathering": 1.0,
-      "tint": "#b0a25f",
+      "tint": "#ada273",
       "_why_tint": "GPU (12 Nov): at weathering 0.75 with tint #b3a892 the wood rendered rose-mauve (hue about 332; CPU measured 348, saturation 0.25): a quarter of the orange atlas under Stormwood's violet light. Fully grey grain under a khaki tint that leans against that light lands the rendered hue in the warm grey-brown range. Read the pixel hue, not the look."
     }
   },
