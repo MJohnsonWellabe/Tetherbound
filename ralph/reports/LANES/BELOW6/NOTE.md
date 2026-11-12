@@ -1,5 +1,13 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, 12:20 UTC: merged main b3dc2139; overlap with LANE-THINGS on the pickup rows
+
+- `tb/below6` has main b3dc2139 merged (conflicts were the coordinator's own cuts of F40#3 and STORMDECK; main's side taken; 69 lane tests pass).
+- MUSHROOMS and KNIFEEDGE: no verdict yet.
+- **Overlap, coordinator please decide:** G-things-toys-ui shows LANE-THINGS already working F38#6 (Meadows pickups, tone-down lost -0.84: "small blobs that are hard to identify"), F40#16 (mushroom tone-down level at 5.76) and the catch card (F40#13 shipped). So F38#6, F38#12 and F38#14 look like LANE-THINGS' ground; I will not build on them unless you say so. My MUSHROOMS arm is a different idea from their tone-down (new silhouettes per type, not a smaller cap), but their result is a warning for it: if the judges call the Speed patch too small, the next step is a larger patch (`height_scale` up), not parking.
+- With both GPU slots in use and those rows in question, I have nothing else assigned that I can build without duplicating another lane.
+
+
 ## 12 Nov, about 11:10 UTC: F38#14 catch effect, CPU look on main
 
 The recorded defect ("dominant saturated magenta ground ring and flat bright orb") is not what main shows now. In the five catch frames (02 orb in flight to 05 orb shakes) the ring is a thin teal circle and there is no magenta anywhere. What I see instead: the orb is a small grey puff that is hard to find against the creatures, and the "Bramblebun broke free / So close" banner sits at the top of every frame, including the orb-in-flight and strike frames it does not belong to (the F40#13 stale-message item, or the capture's staging). I am waiting for the coordinator's GPU re-score text before building anything here: without the judges' current words a change would be a guess.
