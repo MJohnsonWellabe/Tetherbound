@@ -1,0 +1,11 @@
+{
+ "id": "G-rescore-after-landings",
+ "kind": "one-sided re-score",
+ "base": "main (current), High, each row's own job.json frames",
+ "why": "scores dated 10-11 Nov that predate landings in their frames: Stormwood storm light and distinct bodies (#914), Break-only lightning (#919), Cloudreach rain time grade (#915) and gate paving (#920)",
+ "rows_by_biome": {
+  "stormwood": ["F41#1", "F41#3", "F41#7", "F41#9", "F41#11", "F41#15", "F41#20", "F41#21", "F41#22", "F41#24"],
+  "cloudreach": ["F40#19", "F40#21", "F40#11", "F40#0"]
+ },
+ "notes": {"F40#0": "384 frames; a sample is enough for a re-score: every stand, rain and clear, day and night (96 frames), or defer to the next full matrix", "F41#2": "needs the storm phase tool fix (tb/places-phasetool-land) before its base is re-captured"}
+}

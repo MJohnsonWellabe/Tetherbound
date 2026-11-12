@@ -1,5 +1,24 @@
 # LANE-PLACES NOTE (branch `tb/places`)
 
+## NOW THE RE-SCORING LANE (owner direction via coordinator, 12 Nov about 12:30)
+Job: an up-to-date GPU High score on current main for every visual row; judged here with `tools/visual_judge` (standard prompt, at least 3 anchor pairs, three code-blind judges, `calibrate.py`); write-ups as `ralph/reports/GPU-PASS/1108/G-rescore-<batch>.md` on `tb/places`.
+
+### Build work handed over
+| Item | State | Goes to |
+|---|---|---|
+| `ground_wet_path_1112` round 2 (Cloudreach wet ground, duller frayed trail) | On the GPU queue (`PLACES-WETPATH/`, ARM Round 2). Round 1 was a split: clear +0.60/+0.57, gate rain +0.65; summit night rain −0.34, overlook rain −0.09. Round 2 halves the soil darkening, keeps it warm, none at night. Never captured. Flag-off code is on `tb/places` (four Cloudreach shaders, `cloudreach_weather.gd`, `project.godot` global, `cloudreach_visual.json`, a test). | LANE-THINGS (owns 6–7); cut the landing from current main if it ships |
+| `road_value_1112` umber road (Stormwood) | Won twice against the black road (3/3); held because every gold-line variant on it lost or failed pre-check. Flag-off on `tb/places` (`stormwood_ground_zones.gd`, `stormwood_ground_finish.json`, `stormwood_road_current.gd/.json` with `thin_1112`). | Parked pending the owner's charge-colour answer (white-violet or gold) |
+| F40#1 open terrain | No arm expected to gain 0.5 without real ledges (terrain with collision). | LANE-BELOW6 |
+| `fading_clear_1112` | Not needed (Fading is fine on GPU once #919 landed); removed from `tb/places`. | dropped |
+Landed from this lane: storm light + distinct bodies (#914), rain time grade (#915), Break-only lightning (#919), gate paving scoped (#920), storm phase tool settle.
+Flags for whoever takes Stormwood next: lightning is Break-only (owner); puddles parked; F41#2 judges want a strike on the tree in Break, clearer Calm, colder Building, softer Fading mist.
+
+### Re-score list (from `status.json gpu_scores` on main b3dc2139)
+- **Tier 1, running on the GPU lane (47 rows, 6–7 band, scores dated 8–9 Nov):** G-rescore-stale-tier2, -ext-meadows, -ext-tidewake, -ext-cloudreach, -ext-stormwood. I judge each as it lands.
+- **Tier 1b, requested (`PLACES-RESCORE/CAPTURE-B-stale-rest.json`, 17 rows):** the other 8–9 Nov rows: F38#4, #7, #9, #13, #15, #18, #21, #23, #33, #38; F39#4, #8, #24, #25, #28; F40#18; F41#17. F38#41 has no job.json entry. Likely Medium candidates: F38#18, #23, #38.
+- **Tier 2, requested (`PLACES-RESCORE/CAPTURE-C-after-landings.json`, 14 rows):** scores from 10–11 Nov that predate landings in their frames: F41#1, #3, #7, #9, #11, #15, #20, #21, #22, #24; F40#19, #21, #11, #0 (a sample).
+- F41#2 waits for the storm phase tool fix to be on main.
+
 ## RESTARTED (owner direction via coordinator, 12 Nov 2026)
 - **For the coordinator (LANE-SCOUT cannot reach you): `G-places-wetpath` (49169c37) was a SPLIT.** Clear controls +0.60 and +0.57, gate rain +0.65 (3/3 each); summit night rain −0.34 and overlook rain −0.09; F40#1 level (needs ledges). **Round 2 is sent** (`PLACES-WETPATH/` ARM Round 2, CAPTURE r2): wet soil darkens half as far and stays warm, no rain darkening at night, clear tone unchanged. Not re-captured on CPU. It is the only arm waiting.
 - **Gate paving (scoped) landed in #920**; main a4ad0486 is merged into `tb/places`.

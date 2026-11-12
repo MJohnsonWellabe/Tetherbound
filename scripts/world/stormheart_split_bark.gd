@@ -15,6 +15,12 @@ static func exposed_material(settings: Dictionary) -> ShaderMaterial:
 	material.shader = EXPOSED_SHADER
 	material.set_shader_parameter("wood_atlas", load(WOOD_ATLAS))
 	material.set_shader_parameter("wood_tint", Color(str(settings.get("exposed_wood_tint", "#a8997b"))))
+	# F41#1 aged_heartwood_1112 (OFF until GPU-judged): the split's exposed
+	# wood read as "an orange untextured placeholder slab" beside the entrance.
+	var aged: Dictionary = settings.get("aged_heartwood_1112", {})
+	if bool(aged.get("enabled", false)):
+		material.set_shader_parameter("wood_tint", Color(str(aged.get("tint", "#b3a892"))))
+		material.set_shader_parameter("weathering", clampf(float(aged.get("weathering", 0.75)), 0.0, 1.0))
 	return material
 
 
