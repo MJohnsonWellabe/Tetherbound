@@ -3407,7 +3407,8 @@
    "capture": "High, base (overlay off) and arm (overlay on), seed 2042",
    "pre_check": "reject if white fog glare at the Glass Field, a blown specular blot on wet ground, or near ground hidden by mist",
    "priority": "P1 shared cause for seven Stormwood rows plus F41#8 (below 6, 5.31) riding along",
-   "note": "LANE-PLACES first arm: storm_phase_1111 (layered sky darkening per phase, bolts with a key light, a shaft-culling bug fix, mist banks) plus distinct_bodies_1111. After below6-hits."
+   "note": "LANE-PLACES first arm: storm_phase_1111 (layered sky darkening per phase, bolts with a key light, a shaft-culling bug fix, mist banks) plus distinct_bodies_1111. After below6-hits.",
+   "done": "G-places-stormlight-* (6 sections; judging)"
   },
   {
    "id": "stormheart-stand-screen",
@@ -3422,7 +3423,8 @@
    "capture": "High, one side, three frames; diagnostic only (not judged)",
    "request": "ralph/reports/LANES/BELOW6-STORMHEART-STAND/PROPOSAL.md on tb/below6",
    "want_to_see": "which spot shows the trunk base, the gate and as much crown as possible against the storm sky; note any wild creature blocking the view",
-   "note": "Screen for a new F41#1 approach stand; the current stand faces a bark wall from 5 m. Lands only with the ramp-body game fix LANE-BELOW6 is building. Cheap; run when the GPU is otherwise between arms."
+   "note": "Screen for a new F41#1 approach stand; the current stand faces a bark wall from 5 m. Lands only with the ramp-body game fix LANE-BELOW6 is building. Cheap; run when the GPU is otherwise between arms.",
+   "done": "275840782 (spot a best; sent to LANE-BELOW6)"
   },
   {
    "id": "innkeeper-baseline",
