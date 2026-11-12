@@ -3,6 +3,24 @@
  "after": "section F (all four biomes) finishes",
  "entries": [
   {
+   "id": "things-glidebank-closeout",
+   "kind": "close-out (High + Medium)",
+   "rows": [
+    "F38#15"
+   ],
+   "branch": "tb/things",
+   "head": "e44a4973a",
+   "tree": "tb/things e44a4973a both sides; if the tree lacks #922 (f421556ca), deep-merge THINGS-GALELAND/overlay_galewisp_landing.json on BOTH sides so base = main's landing",
+   "overlays": {
+    "base": "(landing overlay only, if needed)",
+    "arm": "+ ralph/reports/LANES/THINGS-GLIDEBANK/overlay_glide_bank.json (fly_traversal.json glide_bank_1112)"
+   },
+   "job": "phase2_capture_realm_flight.gd --biome=meadows --seed=2042 default carrier (Galecrest) with --glide-steer on BOTH sides (glide frame mid right turn) + 03-landed; ALSO the original hover 02-glide without --glide-steer on both sides as a no-loss check",
+   "capture": "High AND Medium, base and arm; pin time of day and weather identical on both sides",
+   "priority": "FIRST: F38#15 close-out (High 7.70, Medium 7.37; needs +0.13 at Medium)",
+   "note": "Art-only bank (up to 24 deg roll into turns, 8 deg nose dip); movement, collision, rider and grip unchanged. Remote carriers are not banked yet (local presentation only)."
+  },
+  {
    "id": "medium-f38-15-galeland",
    "kind": "close-out medium",
    "rows": [
