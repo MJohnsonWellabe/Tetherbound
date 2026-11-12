@@ -20,7 +20,11 @@ This file is the lane's channel to the coordinator.
 - **The light dimmer (`realm_energy_1112`) does nothing on CPU: not sent.** Nysa is as washed out with both conversation lights at 0.4 as on main, so the blow-out is not those lights. It belongs with the parked NPC emission and floor arms.
 - **Harness:** do not use `--sight-stand` for Stormwood on CPU (over 50 minutes on Sera's post; 9 minutes without). The container also restarts whenever my turn ends, which kills background captures: captures have to run inside a turn.
 - **Arm sent: `THINGS-GALELAND`** (`ralph/reports/LANES/THINGS-GALELAND/ARM.md`, `CAPTURE.json`, CPU sheet). Config only: the carrier lands beside the trainer instead of behind them, and Galewisp's presentation height goes 3.0 to 3.4 so it reads clearly taller. The landing offsets are shared with Galecrest, so its landed frame is in the capture as a no-loss check. The grip itself is not changed (no toe bones; it needs a pose). **One arm on the GPU.**
-- **Next:** the authored side-lie for the four parked faints.
+- **The slack-legged side-lie (`faint_fold`) for stormtrail, trailpup, voltwig and sparkit: tried on CPU, NOT SENT.** With the Aquaryn fold applied the faint end is almost the same picture as main: the body sits a little lower and the legs tuck, but from the stage camera the animal is still a log seen side-on with its belly or back to the lens and no readable head. I cannot claim +0.5 for it. What these four need is a faint clip authored per animal (head turned to the camera, forelegs forward on the floor), which is animation work in Blender, not a settle parameter. That is three shapes tried on these rows (crumple, flat prone, fold); the settle is exhausted for them.
+- **Asks for the GPU lane, no code:**
+  1. Re-capture `tournament_quarter_mira` with `--sight-stand` on current main (the lattice-door fix is on main, unjudged). If she is in view, `--sight-stand` can be confirmed as the fixed dialogue set for Meadows, Tidewake and Cloudreach and those rows re-baselined on it.
+  2. Do **not** make `--sight-stand` the fixed set for Stormwood until someone checks its capture time there; on CPU one blocked post took over 50 minutes.
+- **Next:** read the GALELAND verdict when it comes; Hess cut off at the left edge (dialogue framing); the Halder banner faction check for F38#36.
 - main 2ac7ab84 (PR #917) is merged into `tb/things`.
 - **Nothing is on the GPU from this lane yet.**
 
