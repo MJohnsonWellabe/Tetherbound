@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-MEADOWGROUND",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; not queued (three arms still waiting). Queue when a slot frees.",
+ "tool": "job.json repro commands for the listed rows (phase2_capture_locations.gd, phase2_capture_routes.gd, phase2_capture_creatures.gd)",
+ "base": {"tree": "main", "overlay": null},
+ "arm": {"tree": "main", "overlay": "ralph/reports/LANES/THINGS-MEADOWGROUND/overlay_cause_ground.json (on tb/things)"},
+ "rows": {"F38#20": ["job.json frames"], "F38#22": ["job.json frames"], "F38#30": ["job.json frames"], "F38#26": ["job.json frames"]}
+}
