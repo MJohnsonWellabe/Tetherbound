@@ -1,6 +1,7 @@
 {
-  "updated": "11 Nov 2026 20:25 UTC",
+  "updated": "12 Nov 2026 03:45 UTC",
   "headline": [
+    "12 Nov 03:45: wrap-up landed. #916 Stormheart approach stand and #917 conversation camera plus Galewisp carrier are on main, with every job green. All judged wins are now on main. The only open GPU item is Captain Marrow (F41#15 4.49): frames captured, LANE-SCOUT judging. Lanes restarted fresh from main (LANE-BELOW6, LANE-THINGS, LANE-PLACES); no new arms yet. Stormwood road value: 4 rows gain but F41#4 loses twice, held flag-off for a larger Stormwood swing.",
     "12 Nov 02:20: wrap-up (owner) to get everything on main. Landed tonight: #910, #911, #912, #914, #915. Closed: F36#69 Solmane, F40#13 catch feedback. Still to land: Stormheart approach stand (F41#1 6.81) and the conversation camera (waits for Tidewake/Cloudreach/Stormwood checks); last GPU items: Pebbik/Breezetail Medium, Galewisp carrier, Stormwood road value.",
     "11 Nov 20:25: lane restructure (owner): LANE-BELOW6, LANE-THINGS, LANE-PLACES + GPU lane + LANE-SCOUT. Current build lanes are writing handoffs. PR #910 (dialogue capture blend fix + Trail Camp F38#32 6.91) in CI.",
     "11 Nov 20:16: lanes LANE-FLOOR2, LANE-NEWAPPROACH and LANE-REMAKES stopped at 19:35 on the weekly usage limit; owner reset it and all lanes are resumed. New LANE-STORMWOOD takes the Stormwood storm-light pass (8 F41 rows incl. F41#8). Lanes: FLOOR2 (camp landing, faint grounding, dust/pickups), NEWAPPROACH (dialogue blend fix, Water Mosshell ride, conversation shot, Cloudreach rain), REMAKES (Voltarach, Abyssal Guardian x2, Ribbonray materials), MESHY (new art below 6), STORMWOOD, SCOUT (judging), GPU lane.",
@@ -2093,11 +2094,40 @@
       "before": 5.1,
       "after": 6.81,
       "pr": "#916"
+    },
+    {
+      "item": "F38#17 conversation shot (Meadows)",
+      "before": 5.75,
+      "after": 6.97,
+      "pr": "#917"
+    },
+    {
+      "item": "F38#16 conversation shot (Meadows)",
+      "before": 5.83,
+      "after": 6.32,
+      "pr": "#917"
+    },
+    {
+      "item": "F38#37 conversation shot (Meadows)",
+      "before": 6.7,
+      "after": 6.9,
+      "pr": "#917"
+    },
+    {
+      "item": "F36#48 Galewisp flies as its remake (flight frame)",
+      "before": 6.17,
+      "after": 6.83,
+      "pr": "#917"
     }
   ],
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#917",
+      "what": "Batch 73 (wrap-up): conversation-shot clearance ON outside Stormwood (Meadows dialogue about 6.60 -> 6.99; F38#17 5.75 -> 6.97), Galewisp carrier is the 1 Nov remake (flight 6.17 -> 6.83), GPU-PASS 1108 verdicts and coordinator records on main, one-tap branch cleanup workflow",
+      "when": "03:41 UTC Thu 12 Nov 2026"
+    },
     {
       "pr": "#916",
       "what": "Batch 72: Stormheart approach stand (F41#1 5.10 -> 6.81); gate B village-tool smoke flake confirmed again by one re-run",
@@ -2231,11 +2261,11 @@
     },
     "F38#16": {
       "gpu": 6.32,
-      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#16 6.32"
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#16 6.32"
     },
     "F38#17": {
       "gpu": 6.97,
-      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#17 6.97"
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#17 6.97"
     },
     "F38#18": {
       "gpu": 7.95,
@@ -2319,11 +2349,11 @@
     },
     "F38#36": {
       "gpu": 7.39,
-      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#36 7.39"
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#36 7.39"
     },
     "F38#37": {
       "gpu": 6.9,
-      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#37 6.9"
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#37 6.9"
     },
     "F38#38": {
       "gpu": 8.16,
@@ -2715,7 +2745,7 @@
     },
     "F36#48": {
       "gpu": 7.44,
-      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers; G-faint2-medium-galecarrier: Galewisp remake as flight carrier 6.17 -> 6.83 on the flight frames (+0.66, 3/3), landing in the final batch"
+      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers; G-faint2-medium-galecarrier: Galewisp remake as flight carrier 6.17 -> 6.83 on the flight frames (+0.66, 3/3), landing in the final batch; carrier LANDED #917"
     },
     "F36#92": {
       "gpu": 7.19,
