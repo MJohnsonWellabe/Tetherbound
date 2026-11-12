@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, 08:45 UTC: landing branch for the Hesk portrait fix
+
+`tb/below6-hesk-portrait` (d7ad322b7, cut from main a4ad0486): the `plates_by_profile` data fix and its test only, READY `STATUS: ride-along`. Batch it with any Stormwood landing. BELOW6-NAMEDFACES is still waiting for its verdict.
+
+
 ## 12 Nov, about 08:30 UTC: named posts dropped; BELOW6-NAMEDFACES sent (GPU slot 1 of 2)
 
 - **Named posts: DO NOT SHIP** (G-below6-namedposts: F41#8 row 5.92 -> 5.43, dialogue 6.38 -> 5.65, 0/3). `named_posts_1112` stays OFF; parked.
