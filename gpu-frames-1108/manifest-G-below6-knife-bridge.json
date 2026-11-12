@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+  "path": "G-below6-knife-bridge/arm-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.176,
+  "lower_edges": 0.1882,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#8: Three Bells bridge close day/golden/night. tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+  "path": "G-below6-knife-bridge/arm-High/cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.0775,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#8: Three Bells bridge close day/golden/night. tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+  "path": "G-below6-knife-bridge/arm-High/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.355,
+  "lower_edges": 0.15,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#8: Three Bells bridge close day/golden/night. tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+  "path": "G-below6-knife-bridge/base-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.175,
+  "lower_edges": 0.2012,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#8: Three Bells bridge close day/golden/night. tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+  "path": "G-below6-knife-bridge/base-High/cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.0779,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#8: Three Bells bridge close day/golden/night. tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+  "path": "G-below6-knife-bridge/base-High/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+  "sky_fraction": 0.358,
+  "lower_edges": 0.1642,
+  "script_errors": 0,
+  "note": "below6-knifeedge F40#8: Three Bells bridge close day/golden/night. tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ }
+]
