@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 18:35 UTC",
+  "updated": "12 Nov 2026 18:50 UTC",
   "headline": [
+    "12 Nov 18:50: F38#20 stronghold stand ships (6.40 to 7.57, 3/3, defect FIXED); it was below 6 and is landing as #929 (auto-merge off until the engine jobs have run); Medium follows. F39#17 restored sea r4 fixes the sunset loss but the restoration no longer reads on its own row, so LANE-BELOW6 combines rounds 1 and 4.",
     "12 Nov 18:35: main's full CI has been red in every scheduled run since at least 11 Nov 16:18, and nobody owned it. Pre-existing failures: smoke_art (shiny and alpha creatures render the plain texture after the remakes went on; the common tier shows a rim), the Tidewake return-shortcut relay (Aquaryn fixture) and the Stormwood Livewire net smoke. New in one run: the shared-boss net smoke (failed jobs re-run once). None of these is in #928's beacon change. New lane LANE-CIFIX (session_01GPgpLUBEgVBDCvLstsLeqN, tb/cifix) reproduces and fixes them.",
     "12 Nov 18:30: LANE-BELOW6's three below-6 reworks keep failing the GPU pre-check: restored sea r3 (sunset foreground still near black) and swim r3 (arm raised like a wave). Both approaches are parked. Restored sea r4 widens the shallows instead of darkening, and the stronghold stand moves to (0, 7130); both are queued. Swim needs its pose keys verified first (water-hidden check).",
     "12 Nov 18:20, scoring policy (coordinator): a row's board score is now the mean of the panels that scored it on current main. The newest panel no longer overwrites it, and the score from the batch where a fix won counts as evidence of the gain, not as the row's score. Today's swings (32 rows up, 27 down) were panel-to-panel spread of about 0.6 to 0.9 plus winning-batch scores reading high; no landed change has been shown to lower a row.",
@@ -2466,7 +2467,7 @@
     },
     "F38#20": {
       "gpu": 5.9,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.72 (was 6.02); RE-SCORE pooled 5.90 (tier2 5.72, ext-meadows 6.09; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.72 (was 6.02); RE-SCORE pooled 5.90 (tier2 5.72, ext-meadows 6.09; batches differ about 0.6) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | ARM BELOW6-STRONGHOLD-STAND r2 G-below6-sea-r4-stronghold (012ab2548, 12 Nov): stand at (0, 7130) 6.40 -> 7.57 High (+1.17, 3/3, FIXED 3/3; above top anchor), landing #929; needs Medium. Pooled current-main before the stand: about 6.1"
     },
     "F38#21": {
       "gpu": 6.59,
@@ -2608,7 +2609,7 @@
     },
     "F39#17": {
       "gpu": 5.5,
-      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov); capture faithful (GPU lane eye check): the game restored state barely differs from live (mean diff 1.23); needs a game change (LANE-BELOW6) | ARM BELOW6-RESTORED-SEA G-restoredsea-mapfog (be513ad94, 12 Nov): row 6.21 -> 6.88 (3/3) but S3/S4 lose -0.44 (0/3, sunset water near black); not shipped, BELOW6 rescoping"
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov); capture faithful (GPU lane eye check): the game restored state barely differs from live (mean diff 1.23); needs a game change (LANE-BELOW6) | ARM BELOW6-RESTORED-SEA G-restoredsea-mapfog (be513ad94, 12 Nov): row 6.21 -> 6.88 (3/3) but S3/S4 lose -0.44 (0/3, sunset water near black); not shipped, BELOW6 rescoping | ARM restored sea r4 (012ab2548): row 6.26 -> 6.23 (level, 1/3); S3/S4 +0.53 (3/3); not shipped. Next: combine r1 current read on S1/S2 with r4 sunset water, plus shoreline foam"
     },
     "F39#18": {
       "gpu": 7.12,
