@@ -1,0 +1,9 @@
+{"branch": "tb/gpu-frames-1108", "renderer": "High",
+ "sections": {"G-things-foestand-meadows": "720743ae5", "G-things-foestand-tidewake": "4f832bdce", "G-things-foestand-stormwood": "839299d82"},
+ "tree": "tb/things 8cb498dba (both sides)", "base": "no overlay", "arm": "THINGS-FOESTAND/overlay_opponent_stand.json",
+ "sets": {"F38#3": ["south_bridge_grunt-01", "south_bridge_grunt-02", "south_bridge_grunt-03"],
+  "Aldis": ["warden_aldis-02", "warden_aldis-04", "warden_aldis-06"],
+  "F39#7": ["venn t-023.02", "t-024.02", "t-025.02"],
+  "F39#19": ["venn t-000.00", "tell-start-000.57", "t-003.02"],
+  "F41#3": ["capacitor_alpha-i01", "tell1-a-start", "tell1-e-impact"]},
+ "render_diff_mean": {"F38#3": 19.1, "Aldis": 23.7, "F39#7": 21.3, "F39#19": 0.3, "F41#3": 24.5}}
