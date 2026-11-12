@@ -1,0 +1,24 @@
+[
+ {
+  "frame": "stormwood__spot__split__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "61caaf5a93345c8ec7ec794ac2979192998f101c",
+  "tool": "phase2_capture_locations.gd --biome=stormwood --spot=split@-101.56,5466.87@26.6 --views=approach --times=day",
+  "path": "G-below6-stormdress-split/arm-High/stormwood__spot__split__day__approach.jpg",
+  "sky_fraction": 0.044,
+  "lower_edges": 0.4952,
+  "script_errors": 0,
+  "note": "below6-stormdress, High, tb/below6 61caaf5a93345c8ec7ec794ac2979192998f101c both sides; arm = BELOW6-STORMDRESS/overlay.json (banner_cloth_1112 + aged_heartwood_1112). Split-facing frame (old approach stand)."
+ },
+ {
+  "frame": "stormwood__spot__split__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "61caaf5a93345c8ec7ec794ac2979192998f101c",
+  "tool": "phase2_capture_locations.gd --biome=stormwood --spot=split@-101.56,5466.87@26.6 --views=approach --times=day",
+  "path": "G-below6-stormdress-split/base-High/stormwood__spot__split__day__approach.jpg",
+  "sky_fraction": 0.043,
+  "lower_edges": 0.4943,
+  "script_errors": 0,
+  "note": "below6-stormdress, High, tb/below6 61caaf5a93345c8ec7ec794ac2979192998f101c both sides; arm = BELOW6-STORMDRESS/overlay.json (banner_cloth_1112 + aged_heartwood_1112). Split-facing frame (old approach stand)."
+ }
+]
