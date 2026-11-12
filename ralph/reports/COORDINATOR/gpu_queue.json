@@ -3951,6 +3951,45 @@
    "capture": "High, base and arm",
    "pre_check": "Hess near centre with face readable; no other speaker cropped or newly occluded",
    "priority": "Meadows dialogue rows F38#16 6.32, F38#17 6.97, F38#36 7.39 (near bar), F38#37 6.90"
+  },
+  {
+   "id": "places-wetpath",
+   "kind": "arm",
+   "rows": [
+    "F40#0",
+    "F40#19",
+    "F40#1"
+   ],
+   "branch": "tb/places",
+   "head": "4eba46f9f",
+   "tree": "tb/places 4eba46f9f both sides (shader change; import if needed)",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-WETPATH/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-WETPATH/CAPTURE.json: capture_cloudreach_f40_matrix.gd --ground-cover-cache pieces 3-4 (realm gate clear and rain) plus rain pieces 84, 88, 92 with one clear control each; F40#19 piece 4; F40#1 row job.json frames",
+   "capture": "High, base and arm",
+   "pre_check": "reject near-black mud, blown sheen, or a trail that vanishes into the grass",
+   "priority": "Cloudreach rain ground and trail (judges b and c on the gate verdict)"
+  },
+  {
+   "id": "things-stormrule",
+   "kind": "arm",
+   "rows": [
+    "F41#7",
+    "F41#11",
+    "F41#15",
+    "F41#20"
+   ],
+   "branch": "tb/things",
+   "head": "f23c7fa70",
+   "tree": "tb/things f23c7fa70 both sides (keep-clear ON as in #921)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-STORMRULE/overlay_rule_in_stormwood.json",
+   "overlay_format": "deep merge",
+   "request": "phase2_capture_dialogue.gd --biome=stormwood --fixed-fps 20, the whole Stormwood dialogue set (as G-things-convclear-other-biomes)",
+   "capture": "High, base and arm",
+   "pre_check": "no creature head over a speaker on the arm",
+   "priority": "low expectation (CPU level); cheap; runs after wetpath"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
