@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, 08:52 UTC: F41#15 is out of the below-6 tier
+
+G-things-stormpost (tb/item-scout-1108 b3ff7d0d): LANE-THINGS' creature clearance with the stormdeck dressing takes F41#15 5.13 -> 6.97 (+1.84, 3/3). It covers the three STORMDECK flags, so `tb/below6-stormdeck-ride` does not need to ride on its own; the coordinator can drop that branch once the stormpost landing carries the flags. Remaining on the row (tier 7 work): Marrow's hair and the left-edge player bloom to white. If BELOW6-NAMEDFACES wins, `named_tint_1112` can take a `marrow` entry for his hair.
+
+
 ## 12 Nov, 08:45 UTC: landing branch for the Hesk portrait fix
 
 `tb/below6-hesk-portrait` (d7ad322b7, cut from main a4ad0486): the `plates_by_profile` data fix and its test only, READY `STATUS: ride-along`. Batch it with any Stormwood landing. BELOW6-NAMEDFACES is still waiting for its verdict.
