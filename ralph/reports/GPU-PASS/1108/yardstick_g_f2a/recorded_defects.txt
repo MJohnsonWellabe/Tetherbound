@@ -1,0 +1,10 @@
+Xw: "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Tp: "faint pose the same as standing"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Jt: "glossy dark purple"; "back below the trainer's head"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Yg: "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Wz: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Zz: "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Eb: "neon-green camo pattern swallows face and form"; "about trainer height"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Fw: "chest-high to the trainer"; "crest vanishes in faint"; "stray tail spike"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Pl: none
+Lu: none

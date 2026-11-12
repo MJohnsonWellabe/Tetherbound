@@ -1,0 +1,410 @@
+{
+ "G F38#2 live-vs-armExp": {
+  "A": [
+   {
+    "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PARTIAL"
+   },
+   {
+    "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PARTIAL"
+   },
+   {
+    "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PARTIAL"
+   },
+   {
+    "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PARTIAL"
+   },
+   {
+    "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#10 live-vs-armExp": {
+  "A": [
+   {
+    "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "PARTIAL"
+   },
+   {
+    "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "PARTIAL"
+   },
+   {
+    "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "PARTIAL"
+   },
+   {
+    "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "PARTIAL"
+   },
+   {
+    "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#29 live-vs-armExp": {
+  "A": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ },
+ "G F40#2 live-vs-armExp": {
+  "A": [
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   },
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   },
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   },
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   },
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#2 live-vs-armExp": {
+  "A": [
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "FIXED"
+   },
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+   },
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "FIXED"
+   },
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+   },
+   {
+    "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#7 live-vs-armExp": {
+  "A": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ]
+ },
+ "G F39#15 live-vs-armExp": {
+  "A": [
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PARTIAL"
+   },
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PARTIAL"
+   },
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PARTIAL"
+   },
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PARTIAL"
+   },
+   {
+    "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PARTIAL"
+   }
+  ]
+ },
+ "G F41#15 live-vs-armExp": {
+  "A": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "FIXED"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#26 live-vs-armExp": {
+  "A": [
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#3 live-vs-armExp": {
+  "A": [
+   {
+    "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces": "PARTIAL"
+   },
+   {
+    "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces": "PARTIAL"
+   },
+   {
+    "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces": "PARTIAL"
+   },
+   {
+    "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces": "PARTIAL"
+   },
+   {
+    "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#18 live-vs-armExp": {
+  "A": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   }
+  ]
+ },
+ "G F40#12 live-vs-armExp": {
+  "A": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ]
+ },
+ "G F41#12 live-vs-armExp": {
+  "A": [
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   },
+   {
+    "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "PARTIAL"
+   }
+  ]
+ },
+ "G F38#28 live-vs-armExp": {
+  "A": [
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   },
+   {
+    "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PARTIAL"
+   }
+  ]
+ },
+ "G F38#23 live-vs-armExp": {
+  "A": [
+   {
+    "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+   },
+   {
+    "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+   },
+   {
+    "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+   },
+   {
+    "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+   },
+   {
+    "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+   }
+  ]
+ },
+ "G F41#17 live-vs-armExp": {
+  "A": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "FIXED"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "FIXED"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   },
+   {
+    "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+   }
+  ]
+ },
+ "G F39#1 live-vs-armExp": {
+  "A": [
+   {
+    "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL"
+   },
+   {
+    "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL"
+   },
+   {
+    "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL"
+   },
+   {
+    "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL"
+   },
+   {
+    "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL"
+   }
+  ]
+ }
+}

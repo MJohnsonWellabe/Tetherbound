@@ -1,0 +1,56 @@
+{
+ "anchors": {
+  "craft:before": [
+   4.8,
+   4.9,
+   5.0
+  ],
+  "craft:after": [
+   6.6,
+   6.3,
+   6.4
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.0,
+   4.2,
+   4.2
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.7,
+   3.9,
+   3.6
+  ],
+  "f04_6_r22:control": [
+   5.0,
+   4.7,
+   4.6
+  ],
+  "f04_6_r22:r22": [
+   6.3,
+   5.6,
+   5.6
+  ]
+ },
+ "candidates": {
+  "G F41#3 r2 live-vs-arm [G-pilot_F41-3 r2_live_for_arm.png]": [
+   4.9,
+   4.4,
+   4.6
+  ],
+  "G F41#3 r2 live-vs-arm [G-pilot_F41-3 r2_arm.png]": [
+   4.9,
+   4.4,
+   4.6
+  ],
+  "G F41#3 r1 live-vs-arm [G-pilot_F41-3 r1_live_for_arm.png]": [
+   4.8,
+   4.6,
+   4.8
+  ],
+  "G F41#3 r1 live-vs-arm [G-pilot_F41-3 r1_arm.png]": [
+   5.6,
+   5.4,
+   5.6
+  ]
+ }
+}

@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8296,
+  "least_squares_slope": 1.2783,
+  "method": "linear",
+  "slope": 1.2783,
+  "intercept": -0.8438,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.644,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.2,
+   "reference": 4.0,
+   "mapped": 4.525,
+   "residual": -0.525
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.867,
+   "reference": 6.53,
+   "mapped": 5.377,
+   "residual": 1.153
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.733,
+   "reference": 6.75,
+   "mapped": 6.485,
+   "residual": 0.265
+  },
+  "f04_6_r22:control": {
+   "measured": 5.067,
+   "reference": 5.83,
+   "mapped": 5.633,
+   "residual": 0.197
+  },
+  "craft:before": {
+   "measured": 5.1,
+   "reference": 4.83,
+   "mapped": 5.676,
+   "residual": -0.846
+  },
+  "craft:after": {
+   "measured": 6.6,
+   "reference": 7.35,
+   "mapped": 7.593,
+   "residual": -0.243
+  }
+ },
+ "candidates": {
+  "G F41#24 moss live-vs-arm [G-moss_live.png]": {
+   "measured_mean": 4.7,
+   "mapped_mean": 5.16,
+   "mapped_judges": [
+    5.55,
+    4.91,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#24 moss live-vs-arm [G-moss_arm.png]": {
+   "measured_mean": 4.633,
+   "mapped_mean": 5.08,
+   "mapped_judges": [
+    5.42,
+    4.78,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

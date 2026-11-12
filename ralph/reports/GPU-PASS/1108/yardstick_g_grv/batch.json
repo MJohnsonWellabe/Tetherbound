@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f04_6_r22:control": [
+   4.9,
+   5.1,
+   4.9
+  ],
+  "f04_6_r22:r22": [
+   5.7,
+   5.9,
+   5.8
+  ],
+  "craft:after": [
+   6.6,
+   6.6,
+   6.3
+  ],
+  "craft:before": [
+   5.0,
+   4.9,
+   4.7
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.2,
+   4.4,
+   5.1
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.4,
+   3.8,
+   4.5
+  ]
+ },
+ "candidates": {
+  "G F41#4 live-vs-arm [G-grv_F41-4_arm.png]": [
+   5.6,
+   5.8,
+   5.6
+  ],
+  "G F41#4 live-vs-arm [G-grv_F41-4_live_for_arm.png]": [
+   5.4,
+   5.6,
+   5.4
+  ],
+  "G F41#17 live-vs-arm [G-grv_F41-17_arm.png]": [
+   6.3,
+   6.3,
+   6.0
+  ],
+  "G F41#17 live-vs-arm [G-grv_F41-17_live_for_arm.png]": [
+   5.9,
+   5.9,
+   5.6
+  ],
+  "G F41#5 live-vs-arm [G-grv_F41-5_arm.png]": [
+   5.6,
+   5.5,
+   5.4
+  ],
+  "G F41#5 live-vs-arm [G-grv_F41-5_live_for_arm.png]": [
+   5.1,
+   5.2,
+   5.1
+  ],
+  "G F41#12 live-vs-arm [G-grv_F41-12_arm.png]": [
+   5.6,
+   5.6,
+   5.6
+  ],
+  "G F41#12 live-vs-arm [G-grv_F41-12_live_for_arm.png]": [
+   5.7,
+   5.6,
+   5.7
+  ]
+ }
+}

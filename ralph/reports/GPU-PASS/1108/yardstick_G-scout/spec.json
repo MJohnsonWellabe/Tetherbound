@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F41#1 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-scout_F41-1_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-scout_F41-1_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Stormheart finale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+  ]
+ },
+ {
+  "label": "G F38#32 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-scout_F38-32_live_for_arm.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-scout_F38-32_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: camp and workshop prop legibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+  ]
+ }
+]

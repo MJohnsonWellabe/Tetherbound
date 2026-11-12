@@ -1,0 +1,33 @@
+[
+ {
+  "label": "G F36(1) thundertunnel coat base-vs-arm",
+  "a": "G-hw_tt_base.png",
+  "b": "G-hw_tt_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: thundertunnel - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "flat pinkish-tan flesh material",
+   "cracks read as mud fissures or decals",
+   "faceless ball faint"
+  ]
+ },
+ {
+  "label": "G F41#1 heartwood row base-vs-arm",
+  "a": "G-hw_row_base.png",
+  "b": "G-hw_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: the Stormheart finale landmark (four views: the Stormheart tree and the dynamo core, approach top row, close bottom row). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "no core or crown in view",
+   "flat white lightning strokes"
+  ]
+ },
+ {
+  "label": "G F41#1 heartwood close base-vs-arm",
+  "a": "G-hw_close_base.png",
+  "b": "G-hw_close_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: the Stormheart finale landmark (two close views, top to bottom: the Stormheart tree and the dynamo core). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "no core or crown in view",
+   "flat white lightning strokes"
+  ]
+ }
+]

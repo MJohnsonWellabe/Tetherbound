@@ -1,0 +1,29 @@
+[
+ {
+  "label": "G v3f swim-away-day base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-v3f_swim-away-day_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-v3f_swim-away-day_arm.png",
+  "brief": "Four moments 0.3 s apart (left to right, top to bottom) from one fixed swimming camera in a Tidewake sea current, the trainer swimming. Judge how the water surface looks - whether the wave crests read as natural moving water in the key art's world (not artefacts, flicker or hard-edged shapes) - and whether the current's direction reads from the water on a 7-inch handheld screen.",
+  "defects": [
+   "The swimming current's direction cannot be read from the swimmer view at a glance on a 7-inch screen"
+  ]
+ },
+ {
+  "label": "G v3f swim-across-day base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-v3f_swim-across-day_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-v3f_swim-across-day_arm.png",
+  "brief": "Four moments 0.3 s apart (left to right, top to bottom) from one fixed swimming camera in a Tidewake sea current, the trainer swimming. Judge how the water surface looks - whether the wave crests read as natural moving water in the key art's world (not artefacts, flicker or hard-edged shapes) - and whether the current's direction reads from the water on a 7-inch handheld screen.",
+  "defects": [
+   "The swimming current's direction cannot be read from the swimmer view at a glance on a 7-inch screen"
+  ]
+ },
+ {
+  "label": "G v3f swim-away-night base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-v3f_swim-away-night_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-v3f_swim-away-night_arm.png",
+  "brief": "Four moments 0.3 s apart (left to right, top to bottom) from one fixed swimming camera in a Tidewake sea current, the trainer swimming. Judge how the water surface looks - whether the wave crests read as natural moving water in the key art's world (not artefacts, flicker or hard-edged shapes) - and whether the current's direction reads from the water on a 7-inch handheld screen.",
+  "defects": [
+   "The swimming current's direction cannot be read from the swimmer view at a glance on a 7-inch screen"
+  ]
+ }
+]

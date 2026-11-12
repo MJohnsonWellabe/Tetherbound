@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F40#19 live-vs-mist",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-mist_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-mist_mist.png",
+  "brief": "Fixed captures from the game of one place in the Cloudreach biome (high sky islands): the Realm Gate Crag in daytime rain, four views. Judge how the rain weather looks here - whether the sky, light, atmosphere and ground read as the key art's world in a believable rain storm. Score the scene, not the HUD.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#19 live-vs-skyonly",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-mist_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-mist_skyonly.png",
+  "brief": "Fixed captures from the game of one place in the Cloudreach biome (high sky islands): the Realm Gate Crag in daytime rain, four views. Judge how the rain weather looks here - whether the sky, light, atmosphere and ground read as the key art's world in a believable rain storm. Score the scene, not the HUD.",
+  "defects": [
+   "none"
+  ]
+ }
+]

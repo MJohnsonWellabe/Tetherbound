@@ -1,0 +1,122 @@
+{
+ "G F38#3 High r1 live-vs-arm": {
+  "A": [
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PRESENT"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   }
+  ]
+ },
+ "G F38#3 Medium r2 live-vs-arm": {
+  "A": [
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PRESENT"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PRESENT"
+   }
+  ]
+ },
+ "G F38#3 High r2 live-vs-arm": {
+  "A": [
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PRESENT"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   }
+  ]
+ },
+ "G F38#3 Medium r1 live-vs-arm": {
+  "A": [
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   },
+   {
+    "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+   }
+  ]
+ },
+ "G F38#27 Medium live-vs-arm": {
+  "A": [
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+   },
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+   },
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+   },
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+   },
+   {
+    "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+   }
+  ]
+ }
+}

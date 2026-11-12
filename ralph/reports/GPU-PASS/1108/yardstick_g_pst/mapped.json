@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9557,
+  "least_squares_slope": 1.4711,
+  "method": "linear",
+  "slope": 1.4711,
+  "intercept": -2.2554,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.408,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1A": {
+   "measured": 6.733,
+   "reference": 7.53,
+   "mapped": 7.65,
+   "residual": -0.12
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.767,
+   "reference": 7.47,
+   "mapped": 7.699,
+   "residual": -0.229
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.567,
+   "reference": 4.0,
+   "mapped": 4.463,
+   "residual": -0.463
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.4,
+   "reference": 6.53,
+   "mapped": 5.688,
+   "residual": 0.842
+  },
+  "craft:before": {
+   "measured": 4.867,
+   "reference": 4.83,
+   "mapped": 4.904,
+   "residual": -0.074
+  },
+  "craft:after": {
+   "measured": 6.5,
+   "reference": 7.35,
+   "mapped": 7.307,
+   "residual": 0.043
+  }
+ },
+ "candidates": {
+  "G F39#28 t0 base-vs-arm [G-pst_t0_arm.png]": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.23,
+   "mapped_judges": [
+    5.98,
+    5.98,
+    6.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#28 t0 base-vs-arm [G-pst_t0_base.png]": {
+   "measured_mean": 5.267,
+   "mapped_mean": 5.49,
+   "mapped_judges": [
+    5.1,
+    5.25,
+    6.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#21 aftermath base-vs-arm [G-pst_aftermath_base.png]": {
+   "measured_mean": 4.9,
+   "mapped_mean": 4.95,
+   "mapped_judges": [
+    4.81,
+    5.1,
+    4.95
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#21 aftermath base-vs-arm [G-pst_aftermath_arm.png]": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.42,
+   "mapped_judges": [
+    6.28,
+    6.28,
+    6.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#21 win base-vs-arm [G-pst_win_base.png]": {
+   "measured_mean": 5.1,
+   "mapped_mean": 5.25,
+   "mapped_judges": [
+    5.1,
+    5.39,
+    5.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F39#21 win base-vs-arm [G-pst_win_arm.png]": {
+   "measured_mean": 6.333,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    6.87,
+    6.87,
+    7.45
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

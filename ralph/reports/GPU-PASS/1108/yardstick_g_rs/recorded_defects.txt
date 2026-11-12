@@ -1,0 +1,9 @@
+Ya: "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+Mv: "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+Zh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bv: "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+Db: "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+Xe: "none"
+Ia: none
+Bu: "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+Vo: none

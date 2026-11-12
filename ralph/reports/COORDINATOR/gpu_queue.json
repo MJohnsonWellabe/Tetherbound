@@ -1751,7 +1751,8 @@
    "frames": "tidewake__fight__nerissa__win, __aftermath (F39#21), __t-000_00 (F39#28)",
    "capture": "High first, Medium only if High maps 7.5+. Base = main (snap ON). Pre-push: on the arm the S-scroll collage blocks at and beside the crystal read as chamber stone; nothing else changes.",
    "note": "Heart Chamber metal-coloured boxes (two crystal plinths, tether box) wore the T_MetalOrnaments railing sheet, which judges named 3/3 as an off-family collage; arm re-skins them in the chamber's rock-trim stone. Breadth swing across F39#21 and F39#28.",
-   "done": false
+   "done": true,
+   "frames_pushed": "321bfa17c (--fixed-fps 20); shipped as batch 47"
   },
   {
    "id": "newapproach-flowfoam-fronts",
@@ -1788,7 +1789,1874 @@
    "frames": "swim-away-day, swim-across-day, swim-away-night with 10-frame strips; base (overlay off) vs arm; arrow at shipped default (off). GIFs for all six.",
    "capture": "High only. Pre-push: no line looks ruled, cut or blocky (report before pushing if any); in swim-away-day estimate line speed down-screen vs a log in px per strip frame.",
    "note": "Owner's wave cue, fifth in-water attempt, new technique (no discrete shapes): a train of thin soft swell lines across the lane, scrolling downstream at current speed plus a 2.0 m/s margin; crescent caps off. Offline screen motion: down-screen in both away views, rightward in across. Pass bar for direction: at least 2/3 judges toward-camera at confidence 6+ on swim-away-day.",
-   "done": false
+   "done": true,
+   "frames_pushed": "diagnostic only, a5a302f7f (pre-check failed)"
+  },
+  {
+   "id": "newapproach-flowfoam-fronts-v2",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "4b3cfa57aa9f1548a36deb632b980f5aedcc63b1",
+   "tree": "tb/newapproach, main e3afe9a4d merged in (shaders/water_current_flow.gdshader; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-FLOWFOAM/overlay_fronts.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night 10-frame strips; base (overlay off) vs arm; arrow off; GIFs for all six",
+   "capture": "High only. Pre-check first: no straight moving edge in the x 500-720 column of swim-away-day, no ladder of thin lines near the posts, no rectangular patch in swim-across-day. The fronts now use no lattice noise; if a straight moving edge is still there, the noise theory in ARM.md is wrong, so report it. Then the blind direction read on the swim-away-day strip (pass at 2 of 3 toward-camera, confidence 6 or more) and the look judgment.",
+   "note": "Owner's wave cue, fifth attempt v2: swell lines with no lattice noise (sums of sines), fwidth fade against the far-field ladder, softer lane-edge fade; on main with the seam fix. Tests the theory that GPU-unstable hash noise caused the moving straight edges (and the earlier crest cut).",
+   "done": true,
+   "frames_pushed": "491b5e04a; judged no ship (look +0.26..+0.52 3/3; away direction 0/3)"
+  },
+  {
+   "id": "newapproach-flowfoam-fronts-v3",
+   "kind": "arm",
+   "rows": [
+    "CARD:T2",
+    "F13#5"
+   ],
+   "branch": "tb/newapproach",
+   "head": "a947d825bc19b85ea3942488e9f012e059dc570f",
+   "tree": "tb/newapproach, main e3afe9a4d merged in (shaders/water_current_flow.gdshader; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-FLOWFOAM/overlay_fronts.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_tidewake_f13_5.gd",
+     "godot_args": [
+      "--fixed-fps",
+      "20"
+     ],
+     "args": [
+      "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+      "--views=swim-away-day,swim-across-day,swim-away-night",
+      "--preset={PRESET}",
+      "--capture-size=1920x1080",
+      "--strip-frames=10",
+      "--strip-gap-frames=2",
+      "--source-sha={SHA}",
+      "--out={OUT}"
+     ]
+    }
+   ],
+   "frames": "swim-away-day, swim-across-day, swim-away-night 10-frame strips; base vs arm; arrow off; GIFs for all six",
+   "capture": "High only. Pre-check: still no straight moving edge, ladder or rectangle. Then measure line speed against the log in swim-away-day in the middle water (rows 400-640 at 1080p), not the far field: CPU showed about 2x the log at a lower margin. Blind direction read on the swim-away-day and swim-away-night strips (pass at 2 of 3 toward-camera, confidence 6 or more). Night: lines should no longer read as an even ruled comb.",
+   "note": "Wave lines v3: closer, thinner lines visible in near and middle water (front_length 3.2, sharpness 9, gap floor 0.45), uneven spacing, margin 3.2. CPU: middle-water lines about 2x the log at margin 2.4; far lines still slower.",
+   "done": true,
+   "frames_pushed": "88ac9afeb (for judging; far comb known); diagnostic copy b0e43ba4d"
+  },
+  {
+   "kind": "baseline",
+   "branch": "main",
+   "head": "2ffc97db0 (main after #893)",
+   "overlay": null,
+   "done": true,
+   "id": "baseline-f41-22-stormwood-matrix",
+   "rows": [
+    "F41#22",
+    "F41#24"
+   ],
+   "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+   "args": "F41-look set: stands forest, giant, glass, rod_line, stormheart, the three --custom stands and forest_r, giant_r; phases calm,break plus the Long Storm aftermath (no --no-aftermath); plus capture_named_fights_f10_6.gd --fixed-fps 20 (Hollows Alpha) for the fight row. Grep logs for 'stale'.",
+   "frames": "the full F41 matrix",
+   "capture": "High first (Medium only if any frame maps 7.5+). No arm; one side only. Lowest priority: run only when no arm is waiting.",
+   "note": "Owner floor rule: unscored rows get a GPU baseline first. F41#22 has no score of its own; LANE-SCOUT G-baselines-unscored-rows gives the tool list.",
+   "frames_pushed": "75cae1eb3 (matrix) and 60fda2d4b (Hollows Alpha fight)"
+  },
+  {
+   "kind": "baseline",
+   "branch": "main",
+   "head": "2ffc97db0 (main after #893)",
+   "overlay": null,
+   "done": true,
+   "id": "baseline-f38-0-meadows-recapture",
+   "rows": [
+    "F38#0"
+   ],
+   "tool": "res://tools/capture_f38_matrix.gd",
+   "args": "-- --seed=2042 --f38-preset=High --f38-baseline --output=res://<fresh dir>; plan ralph/reports/R2-F38/capture-definition.json; day and dusk, clear first (about 264 frames clears the 200 floor)",
+   "frames": "22 sites x 4 views x day,dusk x clear",
+   "capture": "High. No arm. Lowest priority, after the F41 matrix; may run overnight in pieces.",
+   "note": "Owner floor rule: F38#0 unscored (needs the 200-frame Meadows re-capture).",
+   "frames_pushed": "a1dd4a893 day + 96bae1525 golden (268); scored 6.60"
+  },
+  {
+   "kind": "baseline",
+   "branch": "main",
+   "head": "2ffc97db0 (main after #893)",
+   "overlay": null,
+   "done": true,
+   "id": "baseline-f40-0-cloudreach-recapture",
+   "rows": [
+    "F40#0"
+   ],
+   "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+   "args": "--piece=1..96 with --ground-cover-cache; complete union per the tool header",
+   "frames": "12 stands x 4 views x 4 times x 2 weather (384)",
+   "capture": "High first. No arm. Lowest priority, after the Meadows re-capture; overnight in pieces.",
+   "note": "Owner floor rule: F40#0 unscored (needs the Cloudreach re-capture).",
+   "frames_pushed": "352/384 in 8 sections bf80caeb8..d42d0b457; broken_skyroad_arch stand fails in the tool (LANE-MESHY)"
+  },
+  {
+   "id": "check-890-trunk-in-fight",
+   "kind": "regression-check",
+   "rows": [
+    "F41#3",
+    "F41#22"
+   ],
+   "branch": "main",
+   "head": "2ffc97db0",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/narrow_band_off.json",
+   "overlay_format": "deep merge",
+   "tool": "res://tools/capture_named_fights_f10_6.gd",
+   "args": "hollows_alpha, north view, fixture seed 1042206, --fixed-fps 20, 14 s at 2 s (the same run as G-baseline-f41-22-hollows-fight)",
+   "frames": "the same 7 frames, main (narrow band ON, already captured 60fda2d4b) vs main + narrow_band_off overlay",
+   "capture": "High. FIRST in line (before the Meadows re-capture). Question: in tell3-b-mid and tell4-a-start, does the Deepwood trunk that nearly fills the frame dither away with the old 3-7 m band? If yes, #890 regressed fight framing.",
+   "note": "#890 narrowed the near-lens trunk fade from 3-7 m to 3-4 m; its regression check covered only the capacitor_alpha fight frame. The Hollows Alpha baseline shows a trunk nearly filling two fight frames.",
+   "done": true,
+   "frames_pushed": "1520cfede: yes, #890 blocks 2 fight frames (old band 1); fix = wider fade while a fight camera is active (LANE-MESHY)"
+  },
+  {
+   "id": "newapproach-warrens-foundation",
+   "kind": "arm",
+   "rows": [
+    "F38#30",
+    "F38#24"
+   ],
+   "branch": "tb/newapproach",
+   "head": "b2522d3a07afaf398b9f9b2fbd450eb8926e4e7b",
+   "tree": "tb/newapproach, main e3afe9a4d merged in (scripts/world/burrow_warrens.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WARRENS2/overlay_foundation.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_routes.gd",
+     "args": [
+      "--biome=meadows",
+      "--seed=2042",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+      "--preset={PRESET}",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day, meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day, meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+   "capture": "High. FIRST in line, ahead of the remaining baseline pieces (pause Meadows golden or Cloudreach between pieces). walk_03: no floating black chamber drums; the trainer on or beside a closed grassy hillside. Pre-check: if the walk_03 arm frame is blank or the camera is inside geometry, report the manifest's player and camera positions and do not judge. route_day and walk_02 should look as on base apart from a green flank at the right of the mound in route_day. Note the pale patches on the slope in walk_03 (see ARM.md).",
+   "note": "Floor lane: the Warrens chamber shells hang in open air where the meadow falls below the cave floor (floating black drums in walk_03). The arm builds a grassy foundation with collision under them. Rows F38#30 (4.00) and F38#24 (3.67), the two lowest items.",
+   "done": true,
+   "frames_pushed": "e954ee827; shipped as batch 48"
+  },
+  {
+   "id": "newapproach-stormwood-bark",
+   "kind": "arm",
+   "rows": [
+    "F41#22",
+    "F41#24",
+    "F41#4",
+    "F41#5",
+    "F41#17"
+   ],
+   "branch": "tb/newapproach",
+   "head": "34bed949fe9d48aef9064246774bda04a022508b",
+   "tree": "tb/newapproach, main e3afe9a4d merged in (scripts/world/vegetation.gd, scripts/world/stormwood_look.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-BARK/overlay_bark.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/capture_stormwood_f10_matrix.gd",
+     "args": [
+      "--out={OUT}",
+      "--label=bark",
+      "--stands=forest,giant,glass,rod_line,stormheart",
+      "--phases=calm,break"
+     ]
+    }
+   ],
+   "frames": "the F41#22 matrix frames as in G-baseline-f41-22-stormwood-matrix (stands forest, giant, glass, rod_line, stormheart; calm and break), base vs arm",
+   "capture": "High. FIRST (pause the Cloudreach chain between spans). Giant and forest stands: trunks read as matte, furrowed bark, not smooth lilac plastic. Pre-check: report the trunk colour in the arm (it was dark grey-brown on CPU, red slightly above green); if it reads red or salmon on GPU, do not judge and tell me. Check no tree or log has turned white or black.",
+   "note": "Floor lane: the giant trunks are storm_canopy's Bark_TwistedTree with its texture mapped once over a huge trunk, and light_pass_1101 forces roughness 0.4 / specular 0.42 on every solid material, giving lilac plastic. Arm: world-space tiling bark detail plus matte through the light pass. Also fixes Image.adjust_bsc -> adjust_bcs (an engine-name bug on main).",
+   "done": true,
+   "frames_pushed": "05637ec3f (umber, not red)"
+  },
+  {
+   "id": "newapproach-warrens-ridge-stand",
+   "kind": "arm",
+   "rows": [
+    "F38#24",
+    "F38#30"
+   ],
+   "branch": "tb/newapproach",
+   "head": "e43aaa7d3e03213c4f96edd8a61a8f66c55e5a8e",
+   "tree": "tb/newapproach (tools/phase2_capture_routes.gd; assets already imported on main: assets/props/vl-1103/meadows_ridge)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WARRENS3/overlay_ridge_and_stand.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_routes.gd",
+     "args": [
+      "--biome=meadows",
+      "--seed=2042",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+      "--frame=meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+      "--preset={PRESET}",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day, meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day, meadows__band2_stone_and_root__04__the_burrow_warrens__route_day, meadows__band5_stronghold_approach__09__stronghold_approach__route_day; PLUS the F38#24 catalogue job frames from the 8 Nov re-score (every Meadows frame scored for F38#24 that shows the horizon), base vs arm, so the ridge is judged where it acts",
+   "capture": "High. Next arm in line. walk_03: slope on the left, open meadow and a continuous layered mountain ridge on the right. Any frame with a horizon: smooth continuous ranges instead of faceted shards. Pre-check: if walk_03's stand lands under the mound's dark overhang (as it did at other headings on CPU), report the manifest positions and do not judge that frame. The stronghold approach route frame is included because it is in the F38#24 set and shows the horizon.",
+   "note": "Floor lane: turns on the visual lane's Blender-built continuous Meadows ridge (meadows_ridge_vl, never judged) in place of the faceted procedural horizon rings, and turns walk_03 to heading 215 so the ridge is in view. Red trees by the Burrow entrance stay red: the owner's recorded call ('I actually really like the red trees').",
+   "done": true,
+   "frames_pushed": "fdb473cae"
+  },
+  {
+   "id": "newapproach-cloud-hash",
+   "kind": "arm",
+   "rows": [
+    "F40#6",
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "1617141219596e51d1421e4f9df062f49a1e88dd",
+   "tree": "tb/newapproach (shaders/cloudreach_cloud_deck.gdshader, scripts/world/cloudreach_world.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDHASH/overlay_cloud_hash.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+     "args": [
+      "--tag=phase2",
+      "--seed=2042",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "cloudreach__riding__phase2_16_terrace_mounted_at_edge, cloudreach__riding__phase2_17_terrace_01.0s, cloudreach__riding__phase2_18_terrace_after",
+   "capture": "High. Next in line. Pre-check before judging: the large hard-edged slabs in the cloud sea under the terrace on base; gone in the arm. If the slabs are still there with the arm on, report that and do not judge: the hash is then not the cause on the deck.",
+   "note": "Floor lane: the Cloudreach cloud deck uses the same sin-based lattice hash that caused GPU-only straight cuts in the wave lines; its cells (190, 92, 44 m) are slab-sized. The arm swaps in a stable hash behind cloud_sea.stable_hash. CPU cannot show the defect, so the GPU pre-check decides.",
+   "done": true,
+   "frames_pushed": "not judged: slabs survive with stable_hash (not the cause); they appear on the ride back as flat hard-edged sheets under the rider; diagnostic G-newapproach-cloud-hash-diag"
+  },
+  {
+   "id": "newapproach-warrens-flank-stand",
+   "kind": "arm",
+   "rows": [
+    "F38#30",
+    "F38#24"
+   ],
+   "branch": "tb/newapproach",
+   "head": "3f2fffb6104f427d27485250b074dde30477359e",
+   "tree": "tb/newapproach (scripts/world/burrow_warrens.gd, tools/phase2_capture_routes.gd; no assets, no import pass); the mouth keep-out fix is in this tree's burrow_warrens.gd",
+   "base_overlay_branch": "ccr-99b76ce0-imf8zn",
+   "base_overlay": "ralph/reports/COORDINATOR/overlays/warrens4_base.json",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-WARRENS4/overlay_flank_and_stand.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_routes.gd",
+     "args": [
+      "--biome=meadows",
+      "--seed=2042",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+      "--frame=meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+      "--frame=meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+      "--preset={PRESET}",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day, meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day, meadows__band2_stone_and_root__04__the_burrow_warrens__route_day, meadows__band5_stronghold_approach__09__stronghold_approach__route_day (control, should not change)",
+   "capture": "High. Next in line. BASE = tree + warrens4_base.json (the shipping state of batches 48 and 50: foundation on with its original tint, stand guard on, ridge on; the keep-out is in the code). ARM = tree + overlay_flank_and_stand.json. route_day: the flank right of the mound reads as grassy ground with grain and some cover, not a smooth slab, and the way into the cave is clear. walk_03: trainer on open ground with the hillside, the road and the mountain ridge in view. Stronghold approach: unchanged from base (control). Pre-check: if walk_03's manifest player position is not within 3 m of (-318, 2642), report it and do not judge that frame.",
+   "note": "Floor lane: grass grain and ground cover on the Warrens foundation flank (the route_day loss in the ridge batch was a 'smooth low-res grass slab'), plus an explicit open-ground stand for walk_03 at (-318, 2642) heading 231. Also checks that the mouth keep-out (fix for blocked cave ingress, ported into batch 48) does not lose against the judged foundation.",
+   "done": true,
+   "frames_pushed": "6e47b5a2f (four frames; walk_03 arm 5.0 m from target, intended view)"
+  },
+  {
+   "id": "hollows-giant-trees",
+   "kind": "arm",
+   "rows": [
+    "F41#3",
+    "F41#22"
+   ],
+   "ride_along_rows": [
+    "F38#0 arch_home golden detail (red rule)"
+   ],
+   "branch": "tb/item-hollows-trunk",
+   "head": "1c45229d939c19a3b950da17d7f97e0da3976577",
+   "overlay_branch": "tb/item-hollows-trunk",
+   "overlay": "ralph/reports/LANES/ITEM-HOLLOWS-TRUNK/overlay.json",
+   "overlay_format": "deep merge",
+   "frames": "(1) hollows_alpha full set: capture_named_fights_f10_6.gd --ids=hollows_alpha --camera-view=north --fixture-seed=1042206 --seconds=14 --interval=2 --fixed-fps 20 (as G-check-890); (2) capacitor_alpha, same tool and flags; (3) giant_calm: capture_stormwood_f10_matrix.gd --stands=giant --phases=calm --no-aftermath (exploration must be unchanged); (4) arch_home__golden__clear__detail and __gameplay: capture_f38_matrix.gd --seed=2042 --times=golden",
+   "capture": "High, base vs arm, --fixed-fps 20 for the fights. Next in line. Pre-check: no fight frame filled by teal giant-tree bark or roots; giant_calm identical; the Hall nave post reads brown/ochre, not red.",
+   "note": "The teal mass filling Hollows fight frames is the Meshy giant tree (giant_canopy giant_tree_a/b_v1, scarred_trunk), which is on neither near_lens_fade nor line_of_sight_fade. The arm adds them to the fight-only sight fade (exploration unchanged). Ride-along: timber_1110 retints the Hall nave post out of the red family (the arch_home 'red curtain').",
+   "done": true,
+   "frames_pushed": "ffe0f840f (63/side; no teal-filled fight frame on the arm; giant_calm unchanged; post hue 26)"
+  },
+  {
+   "id": "newapproach-cloudreach-cause",
+   "kind": "arm",
+   "rows": [
+    "F40#1",
+    "F40#3",
+    "F40#8",
+    "F40#9",
+    "F40#0"
+   ],
+   "branch": "tb/newapproach",
+   "head": "186b3e534db0690343d3ee7a6b35accddcec1500",
+   "tree": "tb/newapproach (scripts/world/cloudreach_world.gd; the cause package code and config are already on main, off)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDCAUSE/overlay_cause.json",
+   "overlay_format": "deep merge",
+   "job": "(1) the 8 Nov F-cloudreach re-score job frames for F40#1, F40#3, F40#8 and F40#9 (same tools and seeds; ralph/reports/LANES/CAUSE-CLOUDREACH/MANIFEST.json lists them); (2) a SAMPLE of the F40#0 matrix: capture_cloudreach_f40_matrix.gd pieces 1-24 with --ground-cover-cache (about 96 frames), not the full 384",
+   "frames": "base vs arm on both jobs",
+   "capture": "High. Next in line. Pre-check before judging, because this package has never been seen on GPU: no black or missing geometry; cliffs pale but not white or icy; no shimmer on the cliff courses at distance; cloud below the rims reads as cloud, not fog; no grove tree standing inside a landmark composition. If any of those fails, name the part (pale_strata, cloud_sea, light_grade, meadow_groves) so it can be dropped with its own flag and the rest re-sent.",
+   "note": "Floor lane: turns on the never-rendered Cloudreach cause package (cloudreach_cause.json: pale_strata, cloud_sea, light_grade, meadow_groves; route_boulders false), which answers the three batch-wide causes the F-cloudreach judges named. Targets the five Cloudreach rows just under 6 (F40#1 5.90, F40#3 5.86, F40#8 5.85, F40#9 5.72) and the F40#0 matrix (6.58).",
+   "done": true,
+   "frames_pushed": "not pushed: pre-check failed on cloud_sea (flat translucent slab with hard edges at keeper_maela; straight edge at realm_gate_crag); other three parts passed"
+  },
+  {
+   "id": "recheck-f40-3-f38-32-f41-13",
+   "kind": "baseline",
+   "rows": [
+    "F40#3",
+    "F38#32",
+    "F41#13"
+   ],
+   "branch": "main",
+   "head": "e1c941cbd (main after #897)",
+   "overlay": null,
+   "frames": "One-sided re-score captures on main, no arm: (1) F40#3 architectural landmark frames from the F-cloudreach re-score (the closer capture stands landed in batch 25 / #871 and were never re-judged); (2) F38#32 camp spacing frames from the B section; (3) F41#13 fulgocobra and stormraven idle frames as in G-rescore-f39-21-f41-13",
+   "capture": "High. After the Cloudreach cause arm and before any further baseline pieces.",
+   "note": "ROW-AUDIT-1111 cheapest re-captures: F40#3's new stand was never re-judged; F38#32 re-measured 6.24 live with no change (scale scatter); F41#13 has landed verdicts at 6.14 and 5.00 that disagree.",
+   "done": true,
+   "frames_pushed": "9ce07c9bb (G-recheck-1111, 9 frames)"
+  },
+  {
+   "id": "newapproach-cloudreach-cause-no-cloudsea",
+   "kind": "arm",
+   "rows": [
+    "F40#1",
+    "F40#3",
+    "F40#8",
+    "F40#9",
+    "F40#0"
+   ],
+   "branch": "tb/newapproach",
+   "head": "186b3e534",
+   "tree": "tb/newapproach 186b3e534 (as the full-package capture)",
+   "overlay_branch": "ccr-99b76ce0-imf8zn",
+   "overlay": "ralph/reports/COORDINATOR/overlays/cloudreach_cause_no_cloudsea.json",
+   "overlay_format": "deep merge",
+   "job": "Same two jobs as newapproach-cloudreach-cause: (1) the F-cloudreach job frames for F40#1, #3, #8, #9 (21 per side); (2) the F40#0 matrix pieces 1-24 (96 per side). BASE: reuse the base frames you already captured for newapproach-cloudreach-cause if the tree is identical; ARM: new capture with this overlay.",
+   "capture": "High. After recheck-f40-3-f38-32-f41-13. Pre-check: no hard-edged slab or straight cloud edge anywhere (cloud_sea is off, so the deck should be as base); the pale tan soil rims noted last time are expected (pale_strata), call them out for the judges.",
+   "note": "The full cause package failed the GPU pre-check on cloud_sea only (a flat translucent slab with hard edges at keeper_maela). This drops cloud_sea and keeps pale_strata (route_boulders off), light_grade and meadow_groves, all of which passed.",
+   "done": true,
+   "frames_pushed": "8bb3ffbfd (117/side, pre-check passed, no hard-edged cloud)"
+  },
+  {
+   "id": "newapproach-cloud-soft-precheck",
+   "kind": "precheck",
+   "rows": [
+    "F40#6",
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "758437f9918c8a7b4d4ea1ae098aca9d6d459437",
+   "tree": "tb/newapproach (shaders/cloudreach_cloud_deck.gdshader, scripts/world/cloudreach_world.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDSOFT/overlay_cloud_soft.json",
+   "overlay_format": "deep merge",
+   "job": "Two small sets, each with the overlay off and on. (1) The cause-package pre-check frames that showed the slab: keeper_maela perch and realm_gate_crag close, with the raised deck (add the user arg --cloudreach-cause-cloud_sea on both sides). (2) tools/phase2_capture_cloudreach_ride.gd --tag=phase2 --seed=2042, frames road_back_13.5s and road_back_15.0s, no raised deck.",
+   "frames": "(1) keeper_maela perch and realm_gate_crag close with --cloudreach-cause-cloud_sea on both sides; (2) phase2 ride road_back_13.5s and road_back_15.0s",
+   "capture": "High, overlay off vs on. After newapproach-cloudreach-cause-no-cloudsea. PRE-CHECK ONLY, no judging: are the hard horizontal top, the straight diagonal edges against the cliffs, the vertical edge at the pillar and the ribbon-like planes on the ride back softened or gone with the overlay on? Also report anything new: cloud missing under the rims, banding, or a shader error on Forward+.",
+   "note": "Soft deck intersection (cloud_sea.soft_intersect_m): the deck alpha fades in front of solid ground, aimed at the hard slab edges the cause package showed and the ride-back slabs behind F40#6 (5.10) and F40#11 (5.50). PRE-CHECK only; push as a diagnostic section with the GPU lane's read.",
+   "done": true,
+   "frames_pushed": "691b7f301 diagnostic: no effect on the slab top, edges or ride ribbons (deck edges over open air)"
+  },
+  {
+   "id": "newapproach-cloud-plane",
+   "kind": "arm",
+   "rows": [
+    "F40#6",
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "241780e7fdfd739727ee2783a5c7d5d3e590f99e",
+   "tree": "tb/newapproach (scripts/world/cloudreach_world.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDPLANE/overlay_hide_plane.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_cloudreach_ride.gd",
+     "args": [
+      "--tag=phase2",
+      "--seed=2042",
+      "--output={OUT}"
+     ]
+    }
+   ],
+   "frames": "phase2_16_terrace_mounted_at_edge, phase2_17_terrace_01.0s, phase2_18_terrace_after, phase2_27_terrace_road_back_13.5s, phase2_28_terrace_road_back_15.0s",
+   "capture": "High, --fixed-fps 20 on both sides so the ride frames line up. Next in line. Pre-check on the two road_back frames first: on base, the flat slab with a straight horizontal top behind the cloud; in the arm it should be gone. Report what slab or ribbon edges remain in the arm, if any, and anything new showing below the cloud where the box was. If the slabs are gone or clearly reduced, judge F40#6 and F40#11.",
+   "note": "Cloud deck cause found on CPU: cloudreach_world.gd _build_cloud_sea() builds an opaque, flat, unshaded realm-wide box (CloudSea) at the lowest height, kept for the kill plane; from a rim it reads as a flat slab with a ruler-straight top. The arm stops drawing its mesh (node and kill plane unchanged).",
+   "done": true,
+   "frames_pushed": "3f00e867c (slab gone; sheet ribbons remain)"
+  },
+  {
+   "id": "floor2-creature-ruler-depth",
+   "kind": "arm",
+   "rows": [
+    "F38#5",
+    "F38#26",
+    "F38#31"
+   ],
+   "no_loss_rows": [
+    "F39#6",
+    "F39#24"
+   ],
+   "branch": "tb/floor2",
+   "head": "06ddb072a1ef17f7e59bf6b793d497d238985482",
+   "tree": "tb/floor2 (tools/phase2_capture_creatures.gd, data/config/capture_stands.json, shaders/water_mount_bow_wake.gdshader and scripts/world/water_mount_wake.gd for the other arm; no assets, no import pass beyond one new shader)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STAGE/overlay_ruler_depth.json",
+   "overlay_format": "deep merge",
+   "job": [
+    {
+     "tool": "res://tools/phase2_capture_creatures.gd",
+     "args": [
+      "--biome=meadows",
+      "--only=bramblebun,pipwing,brooktail,trailpup,mosshell",
+      "--poses=idle,alpha_idle,fainted",
+      "--seed=2042",
+      "--preset={PRESET}",
+      "--output={OUT}/meadows"
+     ]
+    },
+    {
+     "tool": "res://tools/phase2_capture_creatures.gd",
+     "args": [
+      "--biome=water",
+      "--only=aquaryn",
+      "--poses=idle,fainted,resting",
+      "--seed=2042",
+      "--preset={PRESET}",
+      "--output={OUT}/water"
+     ]
+    },
+    {
+     "tool": "res://tools/phase2_capture_creatures.gd",
+     "args": [
+      "--biome=cloudreach",
+      "--only=galewisp",
+      "--poses=idle,hurt",
+      "--seed=2042",
+      "--preset={PRESET}",
+      "--output={OUT}/cloudreach"
+     ]
+    },
+    {
+     "tool": "res://tools/phase2_capture_creatures.gd",
+     "args": [
+      "--biome=stormwood",
+      "--only=sparkit",
+      "--poses=idle,hurt",
+      "--seed=2042",
+      "--preset={PRESET}",
+      "--output={OUT}/stormwood"
+     ]
+    }
+   ],
+   "frames": "meadows__brooktail__idle; meadows__pipwing__idle; meadows__bramblebun__idle; meadows__mosshell__fainted; meadows__trailpup__alpha_idle; meadows__trailpup__idle; meadows__brooktail__alpha_idle; water__aquaryn__idle, water__aquaryn__fainted, water__aquaryn__resting (no-loss check: F39#6, F39#24); cloudreach__galewisp__idle, cloudreach__galewisp__hurt (no-loss check); stormwood__sparkit__idle, stormwood__sparkit__hurt (no-loss check)",
+   "capture": "High. After newapproach-cloud-plane. The tool only writes under res://.artifacts/phase2/ or res://ralph/reports/VISUAL/phase2/, so {OUT} must start with one of those. Arm: each creature stands beside the trainer and draws clearly taller than the trainer; feet and contact shadow readable; alpha coyote and alpha otter a visible size step above their normal frames; subject and trainer both fully in frame. Pre-check: each arm manifest has creature_ruler_depth true and trainer_to_subject_xz_m under 5 for every frame; each base manifest has it false and 7 or more. If any arm subject is cut by a frame edge or hides the trainer, report it and do not judge that frame.",
+   "note": "LANE-FLOOR2: the creature pose stage stood every subject 7-12 m beyond the trainer, so perspective drew a 2.9 m creature at 0.68x the 1.80 m trainer. The flag (capture tooling only) stands the subject beside the trainer so true scale reads. Coordinator-approved as a capture-stand fix. Rows F38#5 (5.86), F38#26 (5.91), F38#31 (5.85); cross-biome no-loss frames.",
+   "done": true,
+   "frames_pushed": "f7ad234a1 (15 pairs; 5 arm frames held for edge cuts)"
+  },
+  {
+   "id": "newapproach-charge-lines",
+   "kind": "arm",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/newapproach",
+   "head": "7d54c3874a379083df3505ee3b0fe25cb3a390f1",
+   "tree": "tb/newapproach (shaders/creature_surface_finish.gdshader, scripts/creatures/creature_surface_finish.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CHARGELINES/overlay_charge_lines.json",
+   "overlay_format": "deep merge",
+   "job": "The same job and frames as G-recheck-1111 for F41#13 (fulgocobra and stormraven idle frames), plus one other storm creature frame from that set as a no-loss control.",
+   "frames": "G-recheck-1111's F41#13 frames (fulgocobra idle, stormraven idle) plus one other storm creature as a control; base vs arm",
+   "capture": "High. After floor2-creature-ruler-depth. Stormraven: a dark bird with glowing cyan feather edges, feathers readable, not a pale-blue blob. Fulgocobra: gold bands with visible scale borders and hood plates. Pre-check: if either creature blooms to white or the lines sparkle or crawl in motion, report it before judging. The control creature must look the same on both sides. No red.",
+   "note": "F41#13: the charged accent painted almost the whole stormraven body (charged_1105 widened the hue range), so it read as a pale-blue blob. The arm keeps the accent only on the texture's own scale and feather edges (accent_line) and lowers the glow, matching the judges' ask and the owner's 1 Nov creature rule.",
+   "done": true,
+   "frames_pushed": "395ccec66 (pre-check passed; raven marks speckled, motion untested)"
+  },
+  {
+   "id": "newapproach-charge-lines-r2",
+   "kind": "arm",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/newapproach",
+   "head": "this commit (branch head)",
+   "tree": "tb/newapproach (shaders/creature_surface_finish.gdshader, scripts/creatures/creature_surface_finish.gd; no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CHARGELINES/overlay_charge_lines_r2.json",
+   "overlay_format": "deep merge",
+   "job": "The same job and frames as G-recheck-1111 for F41#13 (fulgocobra and stormraven idle frames), plus one other storm creature frame from that set as a no-loss control.",
+   "frames": "fulgocobra idle, stormraven idle, sparkit idle (control); base vs arm (same command as G-newapproach-charge-lines)",
+   "capture": "High. Next in line. Round 2 (attempt 2 of 2; a loss parks F41#13). Stormraven: a dark bird that separates from the Stormwood ground, with bright saturated cyan feather-edge lines and lit cyan eyes, a soft white-violet rim, no whole-body white aura. Fulgocobra: gold bands at about base brightness with scale borders visible, its blue arc lines and eyes brighter, a soft rim. Pre-check before judging: if the raven is still too dark to read against the grass, or blooms to white, report which. The control creature must look the same on both sides. No red.",
+   "note": "F41#13 round 2 (last try before parking): same line mask, brighter saturated cyan lines, eye emission via glow-map boost, white-violet rim; cobra glow back near base.",
+   "done": true,
+   "frames_pushed": "b494466c3 (r2 pre-check passed)"
+  },
+  {
+   "id": "recheck-f41-3-native-voltarach",
+   "kind": "baseline",
+   "rows": [
+    "F41#3"
+   ],
+   "branch": "main",
+   "head": "e1c941cbd",
+   "overlay": null,
+   "tool": "res://tools/capture_named_fights_f10_6.gd",
+   "args": "--ids=capacitor_alpha --camera-view=north --fixture-seed=1042206 --seconds=14 --interval=2, --fixed-fps 20; and the same with --ids=hollows_alpha",
+   "frames": "F41#3's catalogue fight frames (capacitor_alpha i01, tell1 start/strike/impact; hollows as in G-hollows-giant-trees), one-sided on current main (native eight-leg Voltarach, giant-tree fight fade landed in #897)",
+   "capture": "High, one side, no arm. Next in line.",
+   "note": "LANE-NEWAPPROACH: the judged F41#3 defect (Sparkit jammed into Voltarach's forelegs) was scored on the old remake model; on current main a CPU run shows Sparkit 9.4 m clear to the side. The row may be stale; re-score before any new arm.",
+   "done": true,
+   "frames_pushed": "30df95d22 (G-recheck-f41-3)"
+  },
+  {
+   "id": "newapproach-bridge-beacon-precheck",
+   "kind": "precheck",
+   "rows": [
+    "F40#8"
+   ],
+   "branch": "tb/newapproach",
+   "head": "8abf81def4ead214d3d3018cdca5f062981ac431",
+   "tree": "main (config only; no code, no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-BRIDGEBEAM/overlay_beacon_style_only.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-BRIDGEBEAM/CAPTURE.json (at 0621699e0)",
+   "job": "res://tools/phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,night --preset=High --output={OUT}; overlay off and on",
+   "frames": "three_bells_bridge day and night close (2 per side)",
+   "capture": "High, pre-check only, no judging: push both sides and say whether an objective beam is in the base frames at all and whether the overlay changes it.",
+   "note": "LANE-NEWAPPROACH sweep: the only unjudged off candidate that might move F40#8 (5.85).",
+   "done": true,
+   "result": "G-bridge-beacon ca6be3752 (tb/gpu-frames-1108): no objective beam in the base frames; overlay changes nothing visible. The cyan the judges name is not the objective beacon; candidate cannot help F40#8."
+  },
+  {
+   "id": "recheck-f40-5-captain-fight",
+   "kind": "baseline",
+   "rows": [
+    "F40#5"
+   ],
+   "branch": "main",
+   "head": "main (after #898)",
+   "overlay": null,
+   "frames": "F40#5 captain fight frames as in the 8 Nov judging, one side on current main. The fight dust was retuned in #882 on 10 Nov, after that score (judges' main complaint: dust covering the exchange in frames 1 and 3). Use a seed on which the fight is won; if the fixture loses, try one other seed and say which.",
+   "capture": "High, one side, no arm. After the bridge pre-check.",
+   "note": "LANE-NEWAPPROACH sweep: F40#5 (5.94) needs a re-capture, not an arm.",
+   "done": true,
+   "frames_pushed": "G-recheck-f40-5 38970534b (tb/gpu-frames-1108), seed 2042, 38 frames; judged frames map to live-2491/3571/3931 (rounds 1-2, won). Fixture loses round 3 vs galecrest on seeds 2042 and 2043."
+  },
+  {
+   "id": "newapproach-fly-grip",
+   "kind": "arm",
+   "rows": [
+    "F38#8"
+   ],
+   "branch": "tb/newapproach",
+   "head": "6ee6f3b0c (request; tree = main, config only)",
+   "tree": "main (config only; no code, no assets, no import pass)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-FLYGRIP2/overlay_elbow_bend.json",
+   "overlay_b": "ralph/reports/LANES/NEWAPPROACH-FLYGRIP2/overlay_shoulder_grip.json (second arm side, same job)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-FLYGRIP2/CAPTURE.json and ARM.md",
+   "job": "res://tools/phase2_capture_realm_flight.gd --biome=meadows --seed=2042 --preset=High --output={OUT}; base, overlay A, overlay B",
+   "frames": "meadows__flying__launch, meadows__flying__glide (2 per side)",
+   "capture": "High first. Pre-check: the bird's feet still meet the hands in both frames, and with B the talons don't cut into the shoulders or hair. Then to LANE-SCOUT for judging on F38#8's brief (A vs base, B vs base); ship whichever wins more, not both.",
+   "note": "Coordinator read the CPU sheet: A turns the rigid upright V into bent elbows and tucked knees; B can read as hands behind the head.",
+   "done": true,
+   "frames_pushed": "A for judging: G-newapproach-fly-grip f98199652 (tb/gpu-frames-1108). B failed the pre-check (hands behind the head, gap to the feet): diagnostic only, 268dc208d. Both overlay runs log 'double Jump denied' at (-25,1300) after the judged frames; lane to explain before landing."
+  },
+  {
+   "id": "floor2-aquaryn-bow-wake",
+   "kind": "arm",
+   "rows": [
+    "F39#8"
+   ],
+   "no_loss_rows": [
+    "F39#22 (frames 11-13, dismount control)"
+   ],
+   "branch": "tb/floor2",
+   "head": "3cf3a24d5",
+   "tree": "tb/floor2 (scripts/world/water_mount_wake.gd, shaders/water_mount_bow_wake.gdshader, data/config/water_mount_presentation.json; one new shader, no assets, no import pass beyond the shader)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-BOWWAKE/overlay_bow_wake.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-BOWWAKE/CAPTURE.json and ARM.md",
+   "job": "res://tools/phase2_capture_tidewake_mounted_swim.gd --seed=2042 --preset=High --output=res://ralph/reports/VISUAL/phase2/tidewake/<fresh dir> (the tool only writes under that folder); base and overlay on, same tree",
+   "frames": "mounted-swim 03, 04, 05 (arm) plus 11, 12, 13 (control, F39#22)",
+   "capture": "High. Pre-check: a V wake must show in the moving frames (if 03-05 are near-still, use 06-08 and say which); if it draws as hard straight lines or a solid white wedge, report rather than send for judging. Coordinator note from the CPU sheet: the wild creature on the shore differed between base and arm on CPU (spawn difference), so say if the control frames differ for that reason.",
+   "note": "LANE-FLOOR2: the flat white foam disc under Aquaryn is the named defect 3/3; expected +0.5 to +0.8.",
+   "done": true,
+   "result": "Pre-check FAILED (not judged): V shape right in frame 06, but axis-aligned hard-edged white tiles inside the V (interior noise). 03-05 near-still. Diagnostic G-floor2-bow-wake-diag. Attempt 1."
+  },
+  {
+   "id": "floor2-creature-ruler-depth-r2",
+   "kind": "arm",
+   "rows": [
+    "F38#5",
+    "F38#26",
+    "F38#31"
+   ],
+   "no_loss_rows": [
+    "F39#6",
+    "F39#24",
+    "galewisp and sparkit frames"
+   ],
+   "branch": "tb/floor2",
+   "head": "c46704750",
+   "tree": "tb/floor2 (tools/phase2_capture_creatures.gd, data/config/capture_stands.json; capture tooling only, plus the bow-wake shader which stays off)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STAGE/overlay_ruler_depth.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-STAGE/CAPTURE.json and ARM.md (round 2)",
+   "job": "phase2_capture_creatures.gd four runs (meadows 5 species idle,alpha_idle,fainted; water aquaryn idle,fainted,resting; cloudreach galewisp idle,hurt; stormwood sparkit,stormraven,fulgocobra idle,hurt), seed 2042, High, output under res://ralph/reports/VISUAL/phase2/ or res://.artifacts/phase2/",
+   "frames": "the 24 listed in CAPTURE.json",
+   "capture": "High, base and arm. Pre-check from the manifest ruler_depth_fit (in_frame true, overlaps_trainer false, depth_vs_trainer_m >= 0) AND by eye: coordinator saw on the CPU sheet that Meadows subjects' feet sit well below the trainer's feet in frame (hare, alpha coyote, turtle). If on the GPU frames a subject's ground contact is clearly nearer the lens than the trainer's on flat ground, report it rather than judge, even if the manifest says 0 m. Say whether stormraven and sparkit read taller than the trainer.",
+   "note": "Round 1 won (+1.4 to +1.8, 3/3) but was held for depth flattery; this is the depth-plane revision.",
+   "done": true,
+   "frames_pushed": "G-floor2-creature-ruler-depth-r2 751b0657d: 16 of 18 pairs; held by eye: aquaryn fainted (cut left edge), galewisp idle (claws 10% below boots). Meadows contacts 10-15% below trainer's feet (slope vs nearness unresolved); landing waits for a ground-contact depth readout from LANE-FLOOR2. Sparkit and stormraven read taller than the trainer.",
+   "verdict": "G-floor2-creature-ruler-depth-r2 (tb/item-scout-1108 0636c1ae1): SHIP on scores, F38#5 5.14->8.00, F38#31 5.04->7.17, F38#26 4.88->6.39, no-loss sets gain, 3/3 everywhere. HELD by coordinator: Meadows subjects still read nearer the lens (scout's own read; judges a/b on F38#31). Landing waits on the ground-contact depth rule (d99b594a3) re-capture. Readout (FLOOR2-STAGE/ARM.md at aac9c84a3): every Meadows contact was 1.0-3.9 m nearer the lens than the trainer's feet; round 2 will NOT land."
+  },
+  {
+   "id": "floor2-aquaryn-bow-wake-r2",
+   "kind": "arm",
+   "rows": [
+    "F39#8"
+   ],
+   "no_loss_rows": [
+    "F39#22 (frames 11-13)"
+   ],
+   "branch": "tb/floor2",
+   "head": "0cbd114d7",
+   "tree": "tb/floor2 (water_mount_wake.gd, water_mount_bow_wake.gdshader with the sine-free gradient noise; no assets)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-BOWWAKE/overlay_bow_wake.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-BOWWAKE/CAPTURE.json (round 2)",
+   "job": "phase2_capture_tidewake_mounted_swim.gd --seed=2042 High, output under res://ralph/reports/VISUAL/phase2/tidewake/; base and arm",
+   "frames": "judge 06-08 (moving beat) paired base vs arm; 03-05 shown; 11-13 control",
+   "capture": "High. Pre-check on a 3x crop inside the V of frame 06: no hard-edged cells; else report and do not judge. Attempt 2 on this approach (two fails parks it).",
+   "note": "Round 1 failed pre-check on world-grid tiles (likely sin-hash corner mismatch on NVIDIA).",
+   "done": true,
+   "result": "Pre-check FAILED (attempt 2): tiles fixed but the V wake no longer draws (only the bow ring and one faint streak). Diagnostic G-floor2-bow-wake-r2-diag 69bc5cfe8. Approach PARKED after two fails."
+  },
+  {
+   "id": "floor2-sand-ripple-relief",
+   "kind": "arm",
+   "rows": [
+    "F39#30"
+   ],
+   "also_rows": [
+    "F13#5",
+    "F39#3 (golden/dawn frames)"
+   ],
+   "branch": "tb/floor2",
+   "head": "c092a2309",
+   "tree": "main (config overlay only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-SANDSTRIPES/overlay_ripple_relief.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-SANDSTRIPES/CAPTURE.json",
+   "job": "capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --capture-size=1920x1080 --preset=High --views=shore-day,shore-golden,shore-night,lesson-dune,lesson-dawn,shore-rain; base and arm",
+   "frames": "shore-golden, lesson-dawn (arm); shore-day, lesson-dune, shore-night, shore-rain (controls)",
+   "capture": "High, after the bow wake r2. Pre-check on BASE first: do golden and dawn show regular dark bands about a metre apart on the sand? If not, stop and report (nothing to fix). The base frames also serve as a GPU baseline for F39#30, which has only a CPU score.",
+   "note": "Cause found on CPU: ripple normal relief at low sun (not cast shadow).",
+   "done": true,
+   "frames_pushed": "G-floor2-sand-ripple-relief 3fcb19b91 on main 9ee887352: base shows the bands (strong at dawn, fainter at golden); arm removes them at dawn, much fainter at golden; controls unchanged. With LANE-SCOUT."
+  },
+  {
+   "id": "floor2-creature-ruler-depth-r3",
+   "kind": "arm",
+   "rows": [
+    "F38#5",
+    "F38#26",
+    "F38#31"
+   ],
+   "no_loss_rows": [
+    "F39#6",
+    "F39#24",
+    "galewisp",
+    "Stormwood sparkit/stormraven/fulgocobra"
+   ],
+   "branch": "tb/floor2",
+   "head": "aac9c84a3",
+   "tree": "tb/floor2 (tools/phase2_capture_creatures.gd, data/config/capture_stands.json; capture tooling only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STAGE/overlay_ruler_depth.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-STAGE/CAPTURE.json (round 3)",
+   "job": "same four phase2_capture_creatures.gd runs as round 2 (meadows, water, cloudreach, stormwood), seed 2042, High, base and arm",
+   "frames": "as CAPTURE.json; include aquaryn fainted and galewisp idle this time if they pass",
+   "capture": "High. Pre-check per arm frame from the manifest: in_frame true, overlaps_trainer false, contact_depth_vs_trainer_feet_m >= 0; and by eye, feet on the trainer's ground line. Report the readout columns per judged frame. Then LANE-SCOUT on the same briefs.",
+   "note": "Round 3 = ground-contact rule (no contact nearer the lens than the trainer's feet). Expected gains lower than round 2 but over +0.5 per row.",
+   "done": true,
+   "frames_pushed": "G-floor2-creature-ruler-depth-r3 34865ea78: all 18 pairs, pre-checks pass (contact >= 0 everywhere, whole, clear of trainer); Meadows feet lower in frame from the slope. Stormraven 1.97x, sparkit 1.74x the trainer. With LANE-SCOUT.",
+   "verdict": "G-floor2-creature-ruler-depth-r3 (tb/item-scout-1108 3fe1c4396): SHIP. F38#5 5.80->7.77 (FIXED 3/3), F38#31 5.80->7.20, F38#26 5.44->6.85, no-loss A +1.80, B +1.58, 3/3 everywhere; no judge reads nearness. F38#5 needs Medium. Extra (G-stage-r3-f41-13-f39-6, 9d64ad5cf): F41#13 5.64->6.46 (3/3), F39#6 6.03->7.24 (3/3) from the stage alone."
+  },
+  {
+   "id": "newapproach-bridge-view",
+   "kind": "arm",
+   "rows": [
+    "F40#8"
+   ],
+   "branch": "tb/newapproach",
+   "head": "e1f731f25",
+   "tree": "main (config only)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-BRIDGETREE/overlay_bridge_view.json (B: landing tree not placed + stone waymark)",
+   "overlay_a": "ralph/reports/LANES/NEWAPPROACH-BRIDGETREE/overlay_bridge_landing_tree.json (A: tree only)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-BRIDGETREE/CAPTURE.json",
+   "job": "phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=three_bells_bridge --views=close --times=day,golden,night --preset=High; base, A, B",
+   "frames": "three_bells_bridge close day, golden, night (3 per side)",
+   "capture": "High, after floor2-creature-ruler-depth-r3. Pre-check: at night, is B's stone marker the brightest thing in frame? Then LANE-SCOUT judges A vs base and B vs base on F40#8's brief; ship the better side only.",
+   "note": "Coordinator read the CPU sheet: removing LandingTree926 opens the bridge, bells and cliff; A exposes the cyan Storm Anchor column (the 8 Nov defect), B replaces it with a pale stone obelisk.",
+   "done": true,
+   "frames_pushed": "G-newapproach-bridge-view 4b5648a93 on main e2138671a: base, A, B; trunk gone on A and B; A reveals the saturated cyan post (peak 250); B's waymark not the brightest at night (mean 86, max 172). With LANE-SCOUT.",
+   "verdict": "G-newapproach-bridge-view (tb/item-scout-1108 248db8b0a): SHIP B. F40#8 5.29->6.77 (+1.48, 3/3); A alone +0.44 (reveals cyan post)."
+  },
+  {
+   "id": "floor2-creature-ruler-depth-r3-medium",
+   "kind": "close-out",
+   "rows": [
+    "F38#5"
+   ],
+   "branch": "tb/floor2",
+   "head": "aac9c84a3",
+   "tree": "tb/floor2 (same tree as r3)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STAGE/overlay_ruler_depth.json",
+   "overlay_format": "deep merge",
+   "job": "phase2_capture_creatures.gd --biome=meadows --only=bramblebun,pipwing,brooktail,trailpup --poses=idle --seed=2042 --preset=Medium, base and arm",
+   "frames": "F38#5 set: bramblebun, brooktail, pipwing, trailpup idle",
+   "capture": "Medium (F38#5 mapped 7.77 at High). Same pre-check (contact >= 0). Then LANE-SCOUT on the F38#5 brief; closes at 7.5+ mapped on Medium.",
+   "note": "Runs right after the bridge view, before the dawn/rain arm.",
+   "done": true,
+   "verdict": "G-floor2-creature-ruler-depth-r3-medium (tb/item-scout-1108 9ffa5de74): F38#5 Medium 7.71 (High 7.77) -> CLOSES once #901 lands."
+  },
+  {
+   "id": "floor2-dawn-haze-storm-grade",
+   "kind": "arm",
+   "rows": [
+    "F39#30"
+   ],
+   "no_loss_rows": [
+    "F39#31 (veilfall rain views)",
+    "F13#5"
+   ],
+   "branch": "tb/floor2",
+   "head": "5589958a6",
+   "tree": "main (config overlay only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-DAWNRAIN/overlay_dawn_haze_storm.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-DAWNRAIN/CAPTURE.json",
+   "job": "capture_tidewake_f13_5.gd F39-look camera set 1920x1080 High, views lesson-dawn, shore-rain, lesson-rain, veilfall-rain, veilfall-vista-rain, shore-day, shore-golden; base and arm",
+   "frames": "7 per side",
+   "capture": "High, after newapproach-bridge-view (lower priority: F39#30 is already above 6, below-6 arms go first). Pre-check: rain not near-black, dawn not a flat orange wash with no far dune.",
+   "note": "Dawn black horizon band (unhazed deep sea) and rain storm grade (cloud deck colours).",
+   "done": true,
+   "frames_pushed": "G-floor2-dawn-haze-storm-grade 90d3b0348: pre-checks pass (rain grey storm deck not near-black; dawn haze replaces the black strip, far dune reads; controls unchanged). With LANE-SCOUT.",
+   "verdict": "G-floor2-dawn-haze-storm-grade (5d0858f3b): SHIP. F39#30 row 6.12->6.70 (3/3 all sets), rain FIXED 3/3, dawn band still PRESENT 2/3; F39#31 5.56->6.02 (3/3)."
+  },
+  {
+   "id": "floor2-storm-glow-lines",
+   "kind": "arm",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/floor2",
+   "head": "8c831ccd4",
+   "tree": "tb/floor2 8c831ccd4 (has the round 3 stage ON, same as #901; other floor2 work is flag-off). Use it until #901 lands; after that main is enough.",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-STORMGLOW/overlay_lines_not_wash.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-STORMGLOW/CAPTURE.json",
+   "job": "phase2_capture_creatures.gd --biome=stormwood --only=stormraven,fulgocobra,sparkit --poses=idle,hurt --seed=2042 --preset=High, output under res://.artifacts/phase2/; base and arm",
+   "frames": "stormraven idle, fulgocobra idle (arm); sparkit idle (control); stormraven hurt, fulgocobra hurt (no-loss)",
+   "capture": "High. Pre-check: arm raven not mostly white or cyan, and not lost dark against the ground; else report. Check that the stage log shows creature_ruler_depth enabled on BOTH sides. Then LANE-SCOUT on F41#13's brief.",
+   "note": "Removes the charged_1105 whole-body wash (94% of the raven's texture emitting) in favour of the species' own line/eye masks, per the owner's 1 Nov one-trait rule.",
+   "done": true,
+   "verdict": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): SHIP. F41#13 +0.64 idle and hurt (3/3), control identical; row 6.66."
+  },
+  {
+   "id": "newapproach-post-focus",
+   "kind": "arm",
+   "rows": [
+    "F40#9"
+   ],
+   "branch": "tb/newapproach",
+   "head": "09fc4e0ba",
+   "tree": "tb/newapproach 09fc4e0ba (camera_rig.gd, cloudreach_physical_runtime.gd, camera.json post_focus; no assets)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-POSTFOCUS/overlay_post_focus.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-POSTFOCUS/CAPTURE.json",
+   "job": "phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela --preset=High; base and arm",
+   "frames": "tavi, sora, maela inventory character frames",
+   "capture": "High. Pre-check: manifest camera_rig_spring_length about 3.6 on the arm (5.2 on base); if 5.2 on both, the focus did not engage, do not judge. Then LANE-SCOUT on F40#9's brief.",
+   "note": "Gameplay camera change (flag-off); coordinator tells the owner before it lands.",
+   "done": true,
+   "frames_pushed": "G-newapproach-post-focus f0bcfe69b: focus engaged (spring 3.60 arm vs 5.20 base on all three); NPC larger beside the trainer. With LANE-SCOUT.",
+   "verdict": "G-newapproach-post-focus (tb/item-scout-1108 07d0145af): +0.71 (5.02->5.73, 3/3). HELD for owner decision (play-camera behaviour). Row still below 6; next arm: authored posts, Sora re-stage, post lighting on top of focus."
+  },
+  {
+   "id": "newapproach-post-setting",
+   "kind": "arm",
+   "rows": [
+    "F40#9"
+   ],
+   "branch": "tb/newapproach",
+   "head": "fb4ff2c0e",
+   "tree": "tb/newapproach fb4ff2c0e (camera_rig.gd, cloudreach_physical_runtime.gd, cloudreach_npc_posts.gd; installed assets only)",
+   "overlay_branch": "tb/newapproach",
+   "overlay_base": "ralph/reports/LANES/NEWAPPROACH-POSTFOCUS/overlay_post_focus.json (base: post focus on)",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-POSTSET/overlay_post_setting.json (arm: post focus on + setting)",
+   "extra_side": "ALSO capture the setting WITHOUT post focus (overlay_post_setting.json with camera.json post_focus.enabled forced false) and plain base (no overlay), so the setting can land alone if the owner declines the camera change",
+   "overlay_format": "deep merge (arrays replaced whole)",
+   "request": "ralph/reports/LANES/NEWAPPROACH-POSTSET/CAPTURE.json",
+   "job": "phase2_capture_characters.gd --biome=cloudreach --seed=2042 --subset=young_trainer_tavi --subset=naturalist_sora --subset=keeper_maela --preset=High; four sides: plain base, focus-only, focus+setting, setting-only",
+   "frames": "tavi, sora, maela",
+   "capture": "High. Pre-check: spring length 3.6 with focus, 5.2 without; nothing red; key light not blowing out the NPCs. LANE-SCOUT judges focus+setting vs focus-only (the lane's pair) and setting-only vs plain base.",
+   "note": "Post focus itself is held for the owner.",
+   "done": true,
+   "frames_pushed": "G-newapproach-post-setting 04e5b4474: four sides; pre-checks pass (focus engages only with focus, no red, no blowout); warm hotspot on a trunk in focusset Maela. With LANE-SCOUT.",
+   "verdict": "G-newapproach-post-setting (tb/item-scout-1108 22102b6be): setting +1.16 (3/3) both ways; setonly 6.48 clears 6 without the post camera. Post camera adds nothing measurable on top. Land setonly."
+  },
+  {
+   "id": "newapproach-edge-cards",
+   "kind": "arm",
+   "rows": [
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "73ab762e2",
+   "tree": "current main plus scripts/world/cloudreach_world.gd from tb/newapproach 422cf4dbd (two blocks reading island_roots.mist_style; installed texture only)",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-EDGECARDS/overlay_edge_cards.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-EDGECARDS/CAPTURE.json",
+   "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
+   "frames": "phase2_16_terrace_mounted_at_edge, phase2_17_terrace_01.0s, phase2_18_terrace_02.0s",
+   "capture": "High. Pre-check: no straight quad edge or hard line against the cliff; no flat-sprite pop as the mount passes; not pasted-on at 1080p. Then LANE-SCOUT on F40#11's brief.",
+   "note": "New idea (island mist volume banks -> cumulus cards), not the parked deck-shader line.",
+   "done": true,
+   "frames_pushed": "G-newapproach-edge-cards b013a69c9 on main 5b0f2c924: no quad edges or pop; cards crisper than the surrounding sea (possible pasted-on read). With LANE-SCOUT.",
+   "verdict": "G-newapproach-edge-cards (tb/item-scout-1108 0a154f5d7): SHIP +0.73 (3/3), F40#11 5.26->5.99. Cards read lavender-grey/pasted (3/3); next: retint to floor white + soft lit cloud-sea material."
+  },
+  {
+   "id": "floor2-harvest-presence",
+   "kind": "arm",
+   "rows": [
+    "F41#9"
+   ],
+   "branch": "tb/floor2",
+   "head": "c7612681b",
+   "tree": "tb/floor2 c7612681b (stormwood_harvest_runtime.gd, stormwood_harvest_hero2.json; no assets)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-HARVEST/overlay_presence.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-HARVEST/CAPTURE.json",
+   "job": "phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042 --preset=High; base and arm",
+   "frames": "harvest stormglass, stormglass_crown, glowmoss",
+   "capture": "High. Pre-check: trainer whole and not inside any node or satellite; say whether a coloured ground pool shows; if the storm-glass prisms clip to white, report and do not judge; nothing red. Then LANE-SCOUT on F41#9's brief.",
+   "note": "Bolder version (satellite ring) per the over-0.5 rule; ~130 shadowless lights realm-wide, Ally cost unmeasured (check before landing).",
+   "done": true,
+   "frames_pushed": "G-floor2-harvest-presence 8333275fc: stormglass and glowmoss pass; crown HELD (satellite in front of trainer's leg, glare). No visible ground pool. With LANE-SCOUT; lane adds satellite keep-out and drops the lights.",
+   "verdict": "G-floor2-harvest-presence (tb/item-scout-1108 3165aa268): SHIP +1.62 (3/3), F41#9 5.56->7.18 on 2 of 3 frames. Landing version (keep-out, no lights) needs a confirming 3-frame capture."
+  },
+  {
+   "id": "floor2-harvest-presence-confirm",
+   "kind": "confirm",
+   "rows": [
+    "F41#9"
+   ],
+   "branch": "tb/floor2",
+   "head": "f79383083",
+   "tree": "tb/floor2 f79383083 (landing version: satellites on the node's own footprint with keep-out, ground lights dropped)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-HARVEST/overlay_presence.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-HARVEST/CAPTURE.json (confirm)",
+   "job": "phase2_capture_world_inventory.gd --biome=stormwood --subset=stormwood__inventory__harvest__ --seed=2042 --preset=High; base and arm",
+   "frames": "stormglass, stormglass_crown, glowmoss",
+   "capture": "High. Pre-check: trainer whole in all three, no copy at the feet or in front of the legs, no clipped-white glare on the crown. Then LANE-SCOUT: row figure over all three frames vs base, and whether stormglass/glowmoss hold against G-floor2-harvest-presence.",
+   "note": "Confirms the landing version before the F41#9 landing.",
+   "done": true,
+   "frames_pushed": "G-floor2-harvest-presence-confirm 8e1ff92e1: all three frames pass (trainer clear, no crown glare, violet holds). With LANE-SCOUT.",
+   "verdict": "G-floor2-harvest-presence-confirm (tb/item-scout-1108 df24a8ab4): SHIP. F41#9 row 5.81->6.81 (+1.00, 3/3) over all three frames. Landing branch requested."
+  },
+  {
+   "id": "floor2-warrens-meadow-match",
+   "kind": "arm",
+   "rows": [
+    "F38#30"
+   ],
+   "also_rows": [
+    "F38#24 (walk_03 also frames the distant mountains)"
+   ],
+   "branch": "tb/floor2",
+   "head": "b8e9112a6",
+   "tree": "tb/floor2 b8e9112a6 (burrow_warrens.gd, burrow_warrens.json; installed textures and nature pack only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-WARRENS/overlay_meadow_match.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-WARRENS/CAPTURE.json",
+   "job": "phase2_capture_routes.gd --biome=meadows --seed=2042 --frame=...walk_02_day --frame=...walk_03_day --frame=...route_day --preset=High (use the row's usual route capture args if they differ); base and arm",
+   "frames": "burrow_warrens walk_02_day, walk_03_day, route_day",
+   "capture": "High. Pre-check: cave mouth and earth surround unchanged; no tuft floating or in the mouth; hillside visibly different from base (else report). The red trees at the entrance stay red (owner note). Then LANE-SCOUT on F38#30's brief.",
+   "note": "Third idea on F38#30: the mound shell takes the meadow's grass sheet on up-facing faces (cause shown by false-colour capture).",
+   "done": true,
+   "frames_pushed": "G-floor2-warrens-meadow-match aba474097: pre-checks pass (hillside grass, mouth unchanged, red trees kept). With LANE-SCOUT.",
+   "verdict": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): SHIP. F38#30 5.23->6.02 (+0.79, 3/3); F38#24 no loss. Red entrance bushes flagged by judges: owner keeps them red."
+  },
+  {
+   "id": "newapproach-cloud-sea",
+   "kind": "arm",
+   "rows": [
+    "F40#11",
+    "F40#6"
+   ],
+   "branch": "tb/newapproach",
+   "head": "3c9e04cf9 (request); code at 2078f6442",
+   "tree": "current main (with #904) plus from tb/newapproach 2078f6442: scripts/world/cloudreach_world.gd, shaders/cloudreach_cloud_sea_soft.gdshader and shaders/cloudreach_cloud_card.gdshader with .uid files. KEEP MAIN's cloudreach_cloud_deck.gdshader on both sides.",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CLOUDSEA/overlay_cloud_sea.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-CLOUDSEA/CAPTURE.json",
+   "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
+   "frames": "16, 17, 18 (F40#11); 17, 18, 27, 28 (F40#6)",
+   "capture": "High. Pre-check: base floor shows the faceted patches and the arm does not (if base is already smooth, the tree is wrong); arm keeps billows with blue shadows, not clipped white; cards floor-white with form; no hard line at the cliff base. Then LANE-SCOUT on F40#11 and F40#6 briefs.",
+   "note": "New idea: soft cloud-sea material with an integer hash (the faceting looks like the sin-hash corner mismatch on the judging GPU) plus floor-lit cards.",
+   "done": true,
+   "result": "Pre-check: floor facets GONE (base faceted, arm smooth, billows hold, no clip); cards FAIL (blue, 5x floor saturation). Diag G-newapproach-cloud-sea-diag. Re-run soft_sea only (no mist_card_shading) for judging."
+  },
+  {
+   "id": "newapproach-cloud-sea-only",
+   "kind": "arm",
+   "rows": [
+    "F40#11",
+    "F40#6"
+   ],
+   "branch": "tb/newapproach",
+   "head": "2078f6442",
+   "tree": "same as newapproach-cloud-sea (main + 3 lane files, MAIN's deck shader)",
+   "overlay": "overlay_cloud_sea.json WITHOUT island_roots.mist_card_shading (soft_sea only)",
+   "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High",
+   "frames": "16,17,18 (F40#11); 17,18,27,28 (F40#6)",
+   "capture": "High; pre-checks (1),(2),(4); then LANE-SCOUT.",
+   "note": "Measures the floor alone while card shading is fixed.",
+   "done": true,
+   "frames_pushed": "G-newapproach-cloud-sea-only fe749ec0a on main 63d6abd25: pre-checks pass (floor facets gone, billows, no clip, no cliff line). With LANE-SCOUT.",
+   "verdict": "G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88): SHIP. F40#11 6.17->6.97 (+0.80, 3/3); F40#6 5.61->6.33 (+0.72, 3/3)."
+  },
+  {
+   "id": "floor2-aquaryn-settled-rest",
+   "kind": "close-out",
+   "rows": [
+    "F39#6"
+   ],
+   "branch": "tb/floor2",
+   "head": "b8ab0b384",
+   "tree": "tb/floor2 b8ab0b384 (creature_pose_settle.gd, creature_body.gd, creature_pose_settle.json; creature stage ON as on main)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-AQUAPOSE/CAPTURE.json",
+   "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 --preset=High; base and arm",
+   "frames": "aquaryn idle, resting, fainted",
+   "capture": "High. Pre-check: resting body on its shadow, whole in frame, visibly different from base; idle and fainted match base. Then LANE-SCOUT on F39#6's brief as in G-stage-r3-f41-13-f39-6. If High maps 7.5+, queue Medium.",
+   "note": "Near-bar close-out (7.24 -> needs +0.26), allowed under the 25 Oct exception.",
+   "done": true,
+   "frames_pushed": "G-floor2-aquaryn-settled-rest d6d0f5a1b: pre-checks pass (settled rest on its shadow; idle and fainted unchanged). With LANE-SCOUT.",
+   "verdict": "G-floor2-aquaryn-settled-rest (tb/item-scout-1108 ee82bdaee): SHIP +0.72 (3/3), F39#6 6.75->7.47 at High (0.03 under). Next: grounded faint."
+  },
+  {
+   "id": "floor2-aquaryn-faint-fold",
+   "kind": "close-out",
+   "rows": [
+    "F39#6"
+   ],
+   "branch": "tb/floor2",
+   "head": "7a2899f56 (request at 54298c95e)",
+   "tree": "tb/floor2 7a2899f56 (creature_pose_settle.gd, creature_body.gd, creature_pose_settle.json; stage ON)",
+   "overlay_branch": "tb/floor2",
+   "overlay_base": "ralph/reports/LANES/FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json (base = the settled rest landing in #907)",
+   "overlay": "ralph/reports/LANES/FLOOR2-AQUAFAINT/overlay_faint_fold.json (arm = rest + faint fold)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-AQUAFAINT/CAPTURE.json",
+   "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 --preset=High; base and arm",
+   "frames": "aquaryn idle, resting, fainted",
+   "capture": "High. Pre-check: fainted head not buried, body not half-sunk, no limb twisted or through the body, differs from base; idle and resting match base. Then LANE-SCOUT on F39#6; if 7.5+ at High, queue Medium.",
+   "note": "Near-bar close-out (7.47, needs +0.03).",
+   "done": true,
+   "frames_pushed": "G-floor2-aquaryn-faint-fold cc9c26af1: pre-checks pass (faint grounded, limbs folded, head on sand). With LANE-SCOUT.",
+   "verdict": "G-floor2-aquaryn-faint-fold (tb/item-scout-1108 9caedcf89): SHIP +0.73 (3/3), F39#6 High 7.79, defect FIXED 3/3. Needs Medium."
+  },
+  {
+   "id": "floor2-aquaryn-faint-fold-medium",
+   "kind": "close-out",
+   "rows": [
+    "F39#6"
+   ],
+   "branch": "tb/floor2",
+   "head": "7a2899f56",
+   "tree": "same as floor2-aquaryn-faint-fold",
+   "overlay_base": "ralph/reports/LANES/FLOOR2-AQUAPOSE/overlay_aquaryn_rest.json",
+   "overlay": "ralph/reports/LANES/FLOOR2-AQUAFAINT/overlay_faint_fold.json",
+   "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 --preset=Medium; base and arm",
+   "frames": "aquaryn idle, resting, fainted",
+   "capture": "Medium (High mapped 7.79). Same pre-check. LANE-SCOUT on F39#6's brief; closes at 7.5+ on Medium.",
+   "done": true,
+   "frames_pushed": "G-floor2-aquaryn-faint-fold-medium 086dbe911: pre-checks pass. With LANE-SCOUT.",
+   "verdict": "G-floor2-aquaryn-faint-fold-medium (tb/item-scout-1108 9a3c1101f): Medium 7.46 (+0.44, 3/3), 0.04 short; does not close. Next: forelimbs and claws folded flat."
+  },
+  {
+   "id": "floor2-aquaryn-faint-flat",
+   "kind": "close-out",
+   "rows": [
+    "F39#6"
+   ],
+   "branch": "tb/floor2",
+   "head": "bc0c29f0d",
+   "tree": "tb/floor2 bc0c29f0d (main with #907 merged; creature_pose_settle.gd/json)",
+   "overlay_branch": "tb/floor2",
+   "overlay_base": "ralph/reports/LANES/FLOOR2-AQUAFAINT/overlay_faint_fold.json (base = judged faint fold)",
+   "overlay": "ralph/reports/LANES/FLOOR2-AQUAFLAT/overlay_faint_flat.json (arm = faint fold + drop_deg 40)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-AQUAFLAT/CAPTURE.json",
+   "job": "phase2_capture_creatures.gd --biome=water --only=aquaryn --poses=idle,resting,fainted --seed=2042 at High AND Medium; base and arm",
+   "frames": "aquaryn idle, resting, fainted",
+   "capture": "High and Medium. Pre-check: no limb or claw above the torso; no limb visibly through the body (report claw tips at the flank); head not buried; idle and resting match base. Then LANE-SCOUT on F39#6 at both presets; closes at 7.5+ on both.",
+   "note": "Near-bar close-out (Medium 7.46). The faint-fold landing waits to batch with this.",
+   "done": true,
+   "result": "Pre-check FAILED (attempt 1): drop_deg 40 drives the forefeet through the torso (claw tips out of the flank). Diag G-floor2-aquaryn-faint-flat-diag 874cda1c8. Faint fold landed alone as #908."
+  },
+  {
+   "id": "floor2-camp-hero",
+   "kind": "arm",
+   "rows": [
+    "F38#32"
+   ],
+   "branch": "tb/floor2",
+   "head": "1078a130a",
+   "tree": "tb/floor2 1078a130a (props.gd, trail_camp_roadside_threshold.gd, props.json, capture_stands.json; installed assets only)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-CAMP/overlay_camp_hero.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-CAMP/CAPTURE.json",
+   "job": "phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --preset=High, subsets camp_tent, camp_bed, bonfire_fire; base and arm",
+   "frames": "camp_tent, camp_bed, bonfire_fire",
+   "capture": "High. Pre-check: sign lettering reads correctly from either side, props not overlapping (tent vs bed), nothing red (camp props, owner red rule). The bonfire frame's stand moves (heading 90) so its gain is partly staging: LANE-SCOUT to report the bonfire frame separately. Then judge on F38#32's brief.",
+   "note": "6-to-7 tier (6.37).",
+   "done": true,
+   "frames_pushed": "G-floor2-camp-hero 13a6d2ac4: pre-checks pass (no overlap, no red on arm, fire now in view). Base's sign beam is dark crimson (red-rule ride-along for LANE-MESHY's list). With LANE-SCOUT.",
+   "verdict": "G-floor2-camp-hero (tb/item-scout-1108 57a0c813b): DO NOT SHIP. Tent+bed -0.44 (0/3, scaled flame card); bonfire stand +1.68. Next: declutter + single-sided sign + beam off oxblood + stand, no scale-up. Fire = new art."
+  },
+  {
+   "id": "newapproach-card-white",
+   "kind": "close-out",
+   "rows": [
+    "F40#11"
+   ],
+   "branch": "tb/newapproach",
+   "head": "6b835a144",
+   "tree": "current main (soft_sea and cumulus_cards ON after #906) plus from tb/newapproach 6b835a144: shaders/cloudreach_cloud_card.gdshader with .uid, and cloudreach_world.gd's mist_card_shading block",
+   "overlay_branch": "tb/newapproach",
+   "overlay": "ralph/reports/LANES/NEWAPPROACH-CARDWHITE/overlay_card_white.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/NEWAPPROACH-CARDWHITE/CAPTURE.json",
+   "job": "phase2_capture_cloudreach_ride.gd --seed=2042 --preset=High; base and arm",
+   "frames": "16, 17, 18",
+   "capture": "High. Pre-check frame 17: card saturation under 0.10 (floor ~0.05), value at or above the floor's, cards keep form (not see-through ghosts), cool tint on undersides only. Then LANE-SCOUT on F40#11.",
+   "note": "Near-bar close-out (F40#11 6.97); card shading attempt 2. Request sent 15:24, missed by the coordinator until 18:15.",
+   "done": true,
+   "result": "Pre-check FAILED (attempt 2): cards flat lavender cut-outs, value below floor, no form, tint over whole card. Card shading PARKED after two fails. Not pushed."
+  },
+  {
+   "id": "floor2-camp-r2",
+   "kind": "arm",
+   "rows": [
+    "F38#32"
+   ],
+   "branch": "tb/floor2",
+   "head": "7ab457021",
+   "tree": "tb/floor2 7ab457021 (props.gd, trail_camp_roadside_threshold.gd, props.json, capture_stands.json)",
+   "overlay_branch": "tb/floor2",
+   "overlay": "ralph/reports/LANES/FLOOR2-CAMP/overlay_camp_hero.json (attempt 2: declutter, single-sided sign, plain wood gate, bonfire stand 90)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/FLOOR2-CAMP/CAPTURE.json",
+   "job": "phase2_capture_world_inventory.gd --biome=meadows --seed=2042 --preset=High, subsets camp_tent, camp_bed, bonfire_fire; base and arm. PLUS one extra arm frame: bonfire_fire with the overlay but heading_overrides for it removed (planned stand), to show the fixed sign and gate from where the old camera stood.",
+   "frames": "camp_tent, camp_bed, bonfire_fire (+ bonfire at planned stand, arm only, as a sign check)",
+   "capture": "After newapproach-card-white. High. Pre-check: nothing red, the sign reads correctly from the planned stand, gate timber brown with grain. LANE-SCOUT: report tent+bed (game only) and bonfire separately.",
+   "note": "Camp attempt 2 (attempt 1 lost on the game-only frames).",
+   "done": true,
+   "frames_pushed": "G-floor2-camp-r2 4eb98c34c: no red on arm, gate brown, bonfire in view; old planned stand put the trainer on the gate (broken stand). Sign-front diagnostic follows. With LANE-SCOUT.",
+   "verdict": "G-floor2-camp-r2 (tb/item-scout-1108 ebb0ebcc3): SHIP. F38#32 6.26->6.91; tent+bed +0.07 (2/3, no loss), bonfire +1.83 (3/3, stand fix). Landing after the sign-front check. Sign-front diag (071f2dcc1): front reads TRAIL CAMP correctly. Follow-ups: tint misses the board frame; crimson clump by the chest (pre-existing red)."
+  },
+  {
+   "id": "rebaseline-creature-poses-stage",
+   "kind": "baseline",
+   "rows": [
+    "F36 (1) creature pose rows in 6-7 (about 30)",
+    "F38#1",
+    "F38#2",
+    "F38#15"
+   ],
+   "branch": "main",
+   "head": "0058b0d6c (current main, creature_ruler_depth ON since #901)",
+   "overlay": null,
+   "job": "phase2_capture_creatures.gd --seed=2042 --preset=High, one run per biome: --biome=meadows, --biome=water, --biome=cloudreach, --biome=stormwood (full roster, all poses); output under res://.artifacts/phase2/",
+   "frames": "every creature pose frame the tool writes, per biome",
+   "capture": "High, one side (no arm). After floor2-camp-r2. Pre-check: manifests show creature_ruler_depth ON and contact >= 0. Push per biome as it completes for LANE-SCOUT to re-score the F36 (1) pose rows.",
+   "note": "Pose rows were scored on the old stage (creatures drew ~0.7x their height). TECHNICAL 8.1 says re-baseline them. Tier-2 low-hanging fruit: possible gains with no code.",
+   "done": true,
+   "result": "CANCELLED by coordinator: wrong tool. F36 (1) pose rows use tools/art_pipeline/capture_f36_poses.gd, not phase2_capture_creatures.gd (LANE-SCOUT LOW-HANGING-6TO7). Replaced by rescore-tier2-batch-1."
+  },
+  {
+   "id": "rescore-tier2-batch-1",
+   "kind": "baseline",
+   "rows": [
+    "F39#18",
+    "F39#26",
+    "F39#27",
+    "F39#29",
+    "F36 (1) sample: Skyrill, Fulgocobra, Cragclaw, Glimmermoth, Ribbonray, Veridian poses"
+   ],
+   "branch": "main",
+   "head": "current main (fetch)",
+   "overlay": null,
+   "job": "(a) the Tidewake dialogue frames for F39#18, F39#26, F39#27 and F39#29 as in G-confirm-f39-26 (one-sided, main has the soft rim); (b) tools/art_pipeline/capture_f36_poses.gd --whole-body --context for the six sample species (skyrill, fulgocobra, cragclaw, glimmermoth, ribbonray, veridian), as the 24 Oct roster capture did",
+   "frames": "as the rows' last judged frame sets",
+   "capture": "High, one side, no arm. After floor2-camp-r2. Then LANE-SCOUT re-scores: the dialogue rows on their briefs, and the six pose rows to decide whether to re-score all ~20 pre-1-Nov pose rows.",
+   "note": "LANE-SCOUT LOW-HANGING-6TO7 items #1 and #2 (re-score only, no code).",
+   "done": true,
+   "frames_pushed": "G-rescore-tier2-dialogue 0bed8ee41 (12 frames); G-rescore-tier2-f36 8442aba2a (65 frames). With LANE-SCOUT."
+  },
+  {
+   "id": "meshy-f41-8-distinct-bodies",
+   "kind": "arm",
+   "rows": [
+    "F41#8"
+   ],
+   "branch": "tb/item-f41-8-bodies",
+   "head": "c1733ce49",
+   "tree": "tb/item-f41-8-bodies c1733ce49 (stormwood_chapter.gd distinct_bodies; installed cast bodies only)",
+   "overlay_branch": "tb/item-f41-8-bodies",
+   "overlay": "ralph/reports/LANES/MESHY-F41-8-BODIES/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/MESHY-F41-8-BODIES/CAPTURE.json",
+   "job": "tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset for elder_maud, rodkeeper_hesk, warden_elect_bryn inventory character frames; base and arm",
+   "frames": "stormwood inventory character: elder_maud, rodkeeper_hesk, warden_elect_bryn",
+   "capture": "High (Medium only if High reaches 7.5). BEFORE rescore-tier2-batch-2 (below-6 row first). Pre-check: three visibly different bodies; nothing red. Then LANE-SCOUT on F41#8's brief.",
+   "note": "Below-6 row. Hesk -> alpha_tracker body, Bryn -> lost_traveler body; Maud unchanged.",
+   "done": true,
+   "frames_pushed": "G-meshy-f41-8-distinct-bodies 9faf56418: three distinct bodies, nothing red. With LANE-SCOUT.",
+   "verdict": "G-meshy-f41-8-distinct-bodies (tb/item-scout-1108 ace829dd4): +0.29 (2/3, no loss), 5.43 -> 5.72. Under 0.5: rides with the Stormwood storm-light pass plus an outfit-colour contrast."
+  },
+  {
+   "id": "rescore-tier2-batch-2",
+   "kind": "baseline",
+   "rows": [
+    "remaining pre-1-Nov F36 (1) pose rows (~14): abyssal guardian, cannonback, galewisp, mangrove monitor, reedwing, stormbrush, tempestwing, voltarach and the water_* variants (water abyssal guardian, cragclaw, mangrove monitor, mirejaw, mosshell)"
+   ],
+   "branch": "main",
+   "head": "current main (fetch)",
+   "overlay": null,
+   "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context per species, as in G-rescore-tier2-f36 (hit and faint 000-100; ride where the species has it)",
+   "frames": "as G-rescore-tier2-f36; LANE-SCOUT crops 560,200 1000x640 at 1080p",
+   "capture": "High, one side, no arm; push 7 species per section so LANE-SCOUT can judge 7 per batch.",
+   "note": "LANE-SCOUT recommends re-scoring all: sample moved 4/6 up (+0.40 to +1.14) and found 2 regressed remakes.",
+   "done": true,
+   "frames_pushed": "G-rescore-tier2-b2-a 3e31d870e (7 species, 75 frames); G-rescore-tier2-b2-b 1c2bfd173 (6 species, 70 frames; 4 water variants lack swim clips). With LANE-SCOUT.",
+   "verdict": "G-rescore-tier2-batch-2 (tb/item-scout-1108 0756a82f3): 4 up (Stormbrush 7.68), 3 level, 6 down (5 below 6)."
+  },
+  {
+   "id": "f40-0-skyroad-arch-recapture",
+   "kind": "baseline",
+   "rows": [
+    "F40#0"
+   ],
+   "branch": "main",
+   "head": "3a514ef5c (after #909)",
+   "overlay": null,
+   "job": "res://tools/capture_cloudreach_f40_matrix.gd --piece=29..36 with --ground-cover-cache, as the 10 Nov F40#0 baseline (pieces 29-36 are the 32 broken_skyroad_arch frames)",
+   "frames": "broken_causeways__04__broken_skyroad_arch: 4 views x 4 times x 2 weather",
+   "capture": "High, one side. Completes the F40#0 matrix (352 -> 384 frames). Then LANE-SCOUT folds them into the F40#0 row figure.",
+   "note": "Unblocked by #909 (stand on the arch crown).",
+   "done": true,
+   "frames_pushed": "G-f40-0-skyroad-arch-recapture cd874ab2c: 32 arch frames (pieces 25-32), 0 failures; F40#0 matrix now 384. With LANE-SCOUT.",
+   "verdict": "G-f40-0-skyroad-arch-recapture: arch 6.05; F40#0 row 6.54 over 384 (unchanged in effect). Rain grade would lift half the matrix."
+  },
+  {
+   "id": "f36-72-stormbrush-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#72"
+   ],
+   "branch": "main",
+   "head": "current main",
+   "overlay": null,
+   "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context stormbrush at MEDIUM, as in G-rescore-tier2-b2-a",
+   "frames": "stormbrush hit and faint 000-100",
+   "capture": "Medium, one side. LANE-SCOUT: closes at 7.5+ mapped (High 7.68).",
+   "note": "Close-out.",
+   "done": "G-f36-72-stormbrush-medium f835c10d5 (F36#72 closed, High 7.68 / Medium 7.75)",
+   "frames_pushed": "G-f36-72-stormbrush-medium f835c10d5. With LANE-SCOUT."
+  },
+  {
+   "id": "remakes-voltarach-floor1",
+   "kind": "arm",
+   "rows": [
+    "F36#86"
+   ],
+   "branch": "tb/remakes",
+   "head": "ac738b144",
+   "tree": "tb/remakes ac738b144 (needs one import: new *_floor1*.png textures; one imported tree serves the Voltarach, Ribbonray and Abyssal arms)",
+   "overlay_branch": "tb/remakes",
+   "overlay": "ralph/reports/LANES/REMAKES-VOLTARACH/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/REMAKES-VOLTARACH/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=voltarach --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "standing (hit 000), hit 050, faint 050, faint 100; crop 560,200 1000x640",
+   "capture": "High, base (main, overlay off) and arm (overlay on), same command",
+   "priority": "below-6 floor row; owned now by LANE-BELOW6 (REMAKES handed off)",
+   "note": "Voltarach 5.11 (chrome-gold statue, face lost). Base re-baselines the native eight-leg spider main ships since 9 Nov.",
+   "done": "G-remakes-voltarach-floor1 2a9b685ad (judging: LANE-SCOUT)"
+  },
+  {
+   "id": "remakes-ribbonray-floor1",
+   "kind": "arm",
+   "rows": [
+    "F36#61"
+   ],
+   "branch": "tb/remakes",
+   "head": "ac738b144",
+   "tree": "tb/remakes ac738b144 (needs one import: new *_floor1*.png textures; one imported tree serves the Voltarach, Ribbonray and Abyssal arms)",
+   "overlay_branch": "tb/remakes",
+   "overlay": "ralph/reports/LANES/REMAKES-RIBBONRAY/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/REMAKES-RIBBONRAY/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=ribbonray --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "standing (hit 000), hit 050, faint 050, faint 100; crop 560,200 1000x640",
+   "capture": "High, base (main, overlay off) and arm (overlay on), same command",
+   "priority": "below-6 floor row; owned now by LANE-BELOW6 (REMAKES handed off)",
+   "note": "Ribbonray 5.68 (all-magenta; tail tip detached under the floor in hit frames).",
+   "done": "G-remakes-ribbonray-floor1 9c6d71c8e (judging: LANE-SCOUT)"
+  },
+  {
+   "id": "things-t4-rescore-a",
+   "kind": "baseline",
+   "rows": [
+    "F36 (1) pose rows: sparkit, riftfrill, shadelet, pebbik, mirejaw, thundertunnel, paddlenewt, mosshock, brooktail"
+   ],
+   "branch": "main",
+   "head": "current main (fetch)",
+   "overlay": null,
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=sparkit,riftfrill,shadelet,pebbik,mirejaw,thundertunnel,paddlenewt,mosshock,brooktail --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "standing (hit 000), hit 050, faint 050, faint 100 per species; crop 560,200 1000x640 (as G-rescore-tier2-f36)",
+   "capture": "High, one side (re-score, no arm)",
+   "request": "ralph/reports/LANES/THINGS/NOTE.md on tb/things (T4)",
+   "priority": "6-7 band; no code. Rows not scored since the 1 Nov remakes went ON. Results below 6 go to LANE-BELOW6; judges naming an ungrounded faint feed LANE-THINGS T1.",
+   "note": "lowest first: sparkit 6.03 (CPU), riftfrill 6.04, shadelet 6.06, pebbik 6.07 (CPU), mirejaw 6.23, thundertunnel 6.47, paddlenewt 6.49, mosshock 6.55 (CPU), brooktail 6.63",
+   "done": "G-things-t4-rescore-a 32de092b2 (judging: LANE-SCOUT)"
+  },
+  {
+   "id": "things-t4-rescore-b",
+   "kind": "baseline",
+   "rows": [
+    "F36 (1) pose rows: trailpup, solmane, cliffspike, voltwig, stormtrail, duskhush, breezetail, stormraven, ashtusk"
+   ],
+   "branch": "main",
+   "head": "current main (fetch)",
+   "overlay": null,
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=trailpup,solmane,cliffspike,voltwig,stormtrail,duskhush,breezetail,stormraven,ashtusk --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "standing (hit 000), hit 050, faint 050, faint 100 per species; crop 560,200 1000x640 (as G-rescore-tier2-f36)",
+   "capture": "High, one side (re-score, no arm)",
+   "request": "ralph/reports/LANES/THINGS/NOTE.md on tb/things (T4)",
+   "priority": "6-7 band; no code. Rows not scored since the 1 Nov remakes went ON. Results below 6 go to LANE-BELOW6; judges naming an ungrounded faint feed LANE-THINGS T1.",
+   "note": "trailpup 6.64, solmane 6.68, cliffspike 6.72, voltwig 6.79, stormtrail 6.82, duskhush 6.85, breezetail 6.89, stormraven 6.94 (CPU), ashtusk 6.96",
+   "done": "G-things-t4-rescore-b 35bd6ae29 (judging: LANE-SCOUT)"
+  },
+  {
+   "id": "things-faint",
+   "kind": "arm",
+   "rows": [
+    "F36#93",
+    "F36#88",
+    "F36#30",
+    "F36#42",
+    "F36#91",
+    "F36#38",
+    "F36#46",
+    "F36#50",
+    "F36#92",
+    "mirejaw"
+   ],
+   "branch": "tb/things",
+   "head": "5cb2084c3",
+   "tree": "tb/things 5cb2084c3 for BOTH sides (its capture_f36_poses.gd adds --game-clips and --clear-ruler; main's tool lacks them). Base = overlay off (all lane flags off, so game behaviour equals main); arm = overlay on.",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FAINT/overlay_faint_ground.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-FAINT/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mirejaw,water_abyssal_guardian,abyssal_guardian,mirejaw,cragclaw,water_cragclaw,cannonback,fulgocobra,mangrove_monitor,water_mangrove_monitor --whole-body --context --game-clips --clear-ruler --roles=hit,faint --out={OUT}",
+   "frames": "per species: hit 000, hit 050, faint 050, faint 100; crop 560,200 1000x640",
+   "capture": "High, base and arm, same command and switches",
+   "also": "if a slot allows, one extra base without --game-clips/--clear-ruler for water_mirejaw and water_abyssal_guardian (stage fix alone)",
+   "priority": "three below-6 rows (F36#93 5.52, F36#88 5.85, F36#30 5.54) plus six 6-7 rows in one arm",
+   "note": "Shared faint-grounding fix (LANE-THINGS T1). Also exposes a stage fault: the pose stage played raw clips, not the game-resolved clip, so earlier water-form faint frames were of a faint no fight plays.",
+   "done": "G-things-faint c7479c87e (judging: LANE-SCOUT)"
+  },
+  {
+   "id": "water-mosshell-gameclips-rescore",
+   "kind": "baseline",
+   "rows": [
+    "F36#94"
+   ],
+   "branch": "tb/things",
+   "head": "5cb2084c3",
+   "overlay": null,
+   "tree": "tb/things 5cb2084c3 (script/config only; its capture_f36_poses.gd has --game-clips); all lane flags off, so it renders as main",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell --whole-body --context --game-clips --clear-ruler --out={OUT}",
+   "frames": "hit and faint 000-100 (10 frames); crop 560,200 1000x640",
+   "capture": "High, one side",
+   "note": "The 5.81 was scored on the raw clip, not the game-resolved one (LANE-THINGS stage fault). Water rows F36#88, #91, #92 and #93 get their corrected re-score from the base side of G-things-faint; this covers the last water-form pose row.",
+   "done": "G-water-mosshell-gameclips-rescore 187ca7863 (judging: LANE-SCOUT)"
+  },
+  {
+   "id": "newapproach-travel-pose",
+   "kind": "arm",
+   "rows": [
+    "F36#94",
+    "F36#48"
+   ],
+   "branch": "tb/newapproach",
+   "head": "1833b8a9c",
+   "tree": "main 3a514ef5c plus tools/art_pipeline/capture_f36_poses.gd from tb/newapproach 1833b8a9c (capture stage only; no game file, config or import)",
+   "overlay": null,
+   "request": "ralph/reports/LANES/NEWAPPROACH-TRAVELPOSE/CAPTURE.json on tb/newapproach",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mosshell,galewisp --whole-body --context --out={OUT}",
+   "frames": "hit, faint, ride, swim (water_mosshell) and fly_grip (galewisp) 000-100; crop 560,200 1000x640",
+   "capture": "High. Base = main's tool, captured fresh in the same session (not the batch-2 frames); arm = the same command with the 1833b8a9c tool file swapped in.",
+   "want_to_see": "water mosshell upright in ride and swim with the rider seated on its back; galewisp fly_grip with the trainer hanging from its legs clear of the floor, nothing cut off",
+   "priority": "F36#94 is below 6 (5.81); the ride frames are its named defect (rider hovering 1 m over a belly-side shell, confirmed again in G-water-mosshell-gameclips-rescore)",
+   "note": "Sent by LANE-NEWAPPROACH before archiving but missed by the watcher; queued 11 Nov 21:15. The fault is in the pose stage (a faint recipe clip pivot leaked into ride and swim), not the game.",
+   "done": "G-newapproach-travel-pose eccd101c5 (judging: LANE-SCOUT)"
+  },
+  {
+   "id": "cragclaw-faint-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#42"
+   ],
+   "branch": "tb/things",
+   "head": "5cb2084c3",
+   "tree": "tb/things 5cb2084c3 (script/config only)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FAINT/overlay_faint_ground.json",
+   "overlay_format": "deep merge",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=cragclaw --whole-body --context --game-clips --clear-ruler --roles=hit,faint --out={OUT}",
+   "capture": "MEDIUM, arm side only (overlay on)",
+   "note": "Close-out: G-things-faint arm High 7.51 (LANE-SCOUT 58bf5187a). Closes at Medium 7.5+.",
+   "done": "G-cragclaw-faint-medium 2ec3fc87c (judging)"
+  },
+  {
+   "id": "solmane-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#69"
+   ],
+   "branch": "main",
+   "head": "3a514ef5c",
+   "overlay": null,
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=solmane --whole-body --context --out={OUT}",
+   "capture": "MEDIUM, one side, main as in G-things-t4-rescore-b",
+   "note": "Close-out: High 7.63 (G-things-t4-rescore, LANE-SCOUT f4ffb5e64). Closes at Medium 7.5+.",
+   "done": "G-solmane-medium 347eec615 (judging)"
+  },
+  {
+   "id": "water-mangrove-monitor-gameclips-rescore",
+   "kind": "baseline",
+   "rows": [
+    "F36#92"
+   ],
+   "branch": "tb/things",
+   "head": "5cb2084c3",
+   "overlay": null,
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context --game-clips --clear-ruler --out={OUT}",
+   "capture": "High, one side (flags off)",
+   "note": "Corrected re-score on the game-resolved clip; excluded from the THINGS-FAINT overlay so G-things-faint did not judge it. The GPU lane saw its faint 100 lying on its back, legs up.",
+   "done": "G-water-mangrove-monitor-gameclips-rescore b7a256c4c (captured before the skip; judging: all-roles faint lies belly down)"
+  },
+  {
+   "id": "below6-abyssal-matte",
+   "kind": "arm",
+   "rows": [
+    "F36#30",
+    "F36#88"
+   ],
+   "branch": "tb/below6",
+   "head": "bc8623efc",
+   "tree": "tb/below6 bc8623efc (needs one import: new *_floor1*.png texture)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-ABYSSAL/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-ABYSSAL/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=abyssal_guardian,water_abyssal_guardian --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "hit and faint 000-100; crop 560,200 1000x640",
+   "capture": "High, base (overlay off) and arm (overlay on), same command",
+   "priority": "below-6 material swing (glossy vinyl-blue, toy-like PRESENT 3/3 on the faint arm too); gloss only shows on GPU",
+   "note": "LANE-BELOW6 (carried from REMAKES). Material only; the faint fix is a separate landing (THINGS-FAINT).",
+   "done": "G-below6-abyssal-matte 420ed4abc (judging)"
+  },
+  {
+   "id": "below6-thundertunnel-coat",
+   "kind": "arm",
+   "rows": [
+    "F36#80"
+   ],
+   "branch": "tb/below6",
+   "head": "cbc867f80",
+   "tree": "tb/below6 cbc867f80 (one import covers this and below6-heartwood: new *_value_lift_floor1*.png textures and stormheart_heartwood.glb)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-THUNDERTUNNEL/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-THUNDERTUNNEL/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=thundertunnel --whole-body --context --out={OUT} at 1920x1080 forward_plus",
+   "frames": "hit and faint 000-100; crop 560,200 1000x640",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "below 6 (5.92)",
+   "note": "Flat pinkish-tan flesh, white mud-fissure cracks (3/3). Arm: cool brown-grey velvet with thin lit blue-white storm lines.",
+   "done": "G-below6-thundertunnel-coat 050a6fbab (judging)"
+  },
+  {
+   "id": "below6-heartwood",
+   "kind": "arm",
+   "rows": [
+    "F41#1"
+   ],
+   "branch": "tb/below6",
+   "head": "cbc867f80",
+   "tree": "tb/below6 cbc867f80 (same import as below6-thundertunnel-coat)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-HEARTWOOD/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-HEARTWOOD/CAPTURE.json",
+   "job": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042 --output={OUT}",
+   "frames": "the_stormheart_tree day approach and close; dynamo_core day close",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "below 6 (5.78)",
+   "note": "No core or crown in view, flat white lightning strokes (3/3 every round). Arm: a Blender heartwood (crystal core in braided bark roots) on the hollow axis. Pre-check: core blooms without washing out the roots; no white zig-zag strokes.",
+   "done": "G-below6-heartwood b1b75f1af (judging)"
+  },
+  {
+   "id": "dialogue-recapture-all-biomes",
+   "kind": "baseline",
+   "rows": [
+    "every F38-F41 (2) dialogue and character row, e.g. F39#18, F39#26, F39#27, F39#29, F38#16, F38#36, F40#10, F40#12, F41 dialogue rows"
+   ],
+   "branch": "main",
+   "head": "8df122a83 (PR #910 merged: dialogue capture waits for the conversation camera blend)",
+   "overlay": null,
+   "job": "res://tools/phase2_capture_dialogue.gd --seed=2042, one run per biome: --biome=meadows, --biome=tidewake (water), --biome=cloudreach, --biome=stormwood; every post",
+   "capture": "High, one side. Check manifest.json: conversation_camera_blend 1.0 and conversation_camera_blend_timed_out false on every frame; report any timeout.",
+   "priority": "high: re-bases every dialogue row; LANE-THINGS' T6 conversation-shot arm waits on these frames",
+   "note": "Earlier dialogue frames were shot mid camera blend (0.41-0.93) and are not comparable. Push as G-dialogue-recapture-<biome>.",
+   "done": "G-dialogue-recapture-meadows 1c7b2f364, -tidewake b54c9c6c5, -cloudreach 21dbbc238, -stormwood 750106556 (all blend 1.0)"
+  },
+  {
+   "id": "things-toys-ui",
+   "kind": "arm",
+   "rows": [
+    "F38#6",
+    "F40#16",
+    "F40#17",
+    "F40#13",
+    "F38#3",
+    "F38#11",
+    "F41#3"
+   ],
+   "branch": "tb/things",
+   "head": "22ff3cd1f",
+   "tree": "tb/things 22ff3cd1f (script/config only; flags off renders as main)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-TOYS-UI/overlay_toys_ui.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-TOYS-UI/CAPTURE.json (per-row tool and frames)",
+   "job": "per row, as CAPTURE.json lists: phase2_capture_world_inventory.gd --biome=meadows and --biome=cloudreach (pickups); phase2_capture_catch.gd --biome=cloudreach (catch frames 06-09); capture_f38_fight.gd --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames; the G-recheck-f41-3 capture",
+   "capture": "High, base (overlay off) and arm (overlay on), both on tb/things",
+   "priority": "6-7 band, one config tree across seven rows (T8 dust, T9 toy pickups, T10 stale catch card)",
+   "note": "LANE-THINGS arm 2. After dialogue-recapture-all-biomes.",
+   "done": "G-toys-* (verdict G-things-toys-ui.md, LANE-SCOUT b4439ea2b): catch card ships F40#13 7.62; pickup tone_down loses; rest level"
+  },
+  {
+   "id": "below6-mirejaw-hit",
+   "kind": "arm",
+   "rows": [
+    "F36#52"
+   ],
+   "branch": "tb/below6",
+   "head": "795cd62b6",
+   "tree": "tb/below6 795cd62b6 (config only; the tb/below6 import from cbc867f80 already covers it)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-MIREJAW/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-MIREJAW/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=mirejaw --whole-body --context --out={OUT}",
+   "frames": "hit and faint 000-100; crop 560,200 1000x640",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "F36#52 was 5.28 on main's stage (6.70 on the fixed stage)",
+   "note": "below6_mirejaw_hit: hit rotation x0.45, position x0.5 (Ribbonray's grounded-hit hook). The 'pale translucent jaw' and grey tail smear are the hit clip pitching the head to the floor and swinging the tail through the stage.",
+   "done": "superseded by below6-hits (same Mirejaw overlay plus the Abyssal flinch)"
+  },
+  {
+   "id": "below6-hits",
+   "kind": "arm",
+   "rows": [
+    "F36#52",
+    "F36#30"
+   ],
+   "branch": "tb/below6",
+   "head": "8e1931604",
+   "tree": "tb/below6 8e1931604 (config only; no import needed)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-HITS/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-HITS/CAPTURE.json",
+   "job": "res://tools/art_pipeline/capture_f36_poses.gd --species=mirejaw,abyssal_guardian --whole-body --context --out={OUT}",
+   "frames": "hit and faint 000-100 per species; crop 560,200 1000x640; judge each species as its own set",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "below 6: Mirejaw 5.28 (main stage), Abyssal 5.77",
+   "note": "Mirejaw grounded hit (rotation x0.45) plus Abyssal bowed flinch. Pre-check: Mirejaw hit 050 head up, no pale gaping jaw, no grey blade; Abyssal hit 050 a crouched flinch clearly unlike standing.",
+   "done": "G-below6-hits b4afac81a (judging)"
+  },
+  {
+   "id": "places-stormlight",
+   "kind": "arm",
+   "rows": [
+    "F41#2",
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#19",
+    "F41#8",
+    "F41#6",
+    "F41#13"
+   ],
+   "branch": "tb/places",
+   "head": "038f0fdeb",
+   "tree": "tb/places 038f0fdeb (both sides on this tree; flags off renders as main; may need one import for new scripts and shaders)",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-STORMLIGHT/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-STORMLIGHT/CAPTURE.json (per-row tool and frames)",
+   "job": "per CAPTURE.json rows: tools/phase2_capture_storm_phases.gd for F41#2 (calm, building, break), tools/phase2_capture_locations.gd --biome=stormwood --seed=2042 for the stands, and the F41#8 dialogue or inventory frames listed there",
+   "capture": "High, base (overlay off) and arm (overlay on), seed 2042",
+   "pre_check": "reject if white fog glare at the Glass Field, a blown specular blot on wet ground, or near ground hidden by mist",
+   "priority": "P1 shared cause for seven Stormwood rows plus F41#8 (below 6, 5.31) riding along",
+   "note": "LANE-PLACES first arm: storm_phase_1111 (layered sky darkening per phase, bolts with a key light, a shaft-culling bug fix, mist banks) plus distinct_bodies_1111. After below6-hits.",
+   "done": "G-places-stormlight-* (6 sections; judging)"
+  },
+  {
+   "id": "stormheart-stand-screen",
+   "kind": "diagnostic",
+   "rows": [
+    "F41#1"
+   ],
+   "branch": "tb/coord-batch66-land",
+   "head": "c16b3501d (heartwood_1111 ON)",
+   "overlay": null,
+   "job": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=zz_no_match --spot=a@-100,5300@0 --spot=b@-100,5200@0 --spot=c@-100,5100@0 --views=approach --times=day --seed=2042",
+   "capture": "High, one side, three frames; diagnostic only (not judged)",
+   "request": "ralph/reports/LANES/BELOW6-STORMHEART-STAND/PROPOSAL.md on tb/below6",
+   "want_to_see": "which spot shows the trunk base, the gate and as much crown as possible against the storm sky; note any wild creature blocking the view",
+   "note": "Screen for a new F41#1 approach stand; the current stand faces a bark wall from 5 m. Lands only with the ramp-body game fix LANE-BELOW6 is building. Cheap; run when the GPU is otherwise between arms.",
+   "done": "275840782 (spot a best; sent to LANE-BELOW6)"
+  },
+  {
+   "id": "innkeeper-baseline",
+   "kind": "baseline",
+   "rows": [
+    "F36#29"
+   ],
+   "branch": "main",
+   "head": "current main",
+   "overlay": null,
+   "job": "res://tools/_capture_character_cast.gd (no args; writes res://shots/characters/<slug>-front.png and -threequarter.png for the cast) at 1920x1080 forward_plus; keep innkeeper-front and innkeeper-threequarter only",
+   "capture": "High, one side",
+   "request": "ralph/reports/LANES/BELOW6-INNKEEPER-BASE/CAPTURE.json on tb/below6",
+   "note": "No GPU High score exists on the shipped innkeeper body (GPU Medium 5.90 on a matched camera, CPU 7.36 on this stand). Says whether F36#29 is below 6 at all. Cheap; fit between arms.",
+   "done": "G-innkeeper-baseline 39b7340bc (judging)"
+  },
+  {
+   "id": "f40-13-catch-card-medium",
+   "kind": "close-out",
+   "rows": [
+    "F40#13"
+   ],
+   "branch": "tb/things",
+   "head": "22ff3cd1f or later",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-TOYS-UI/overlay_toys_ui.json (arm side; only catch_card.clear_on_aim_1112 matters for this row)",
+   "job": "tools/phase2_capture_catch.gd --biome=cloudreach (frames 06-breakout and 07-aiming-weakened), as in G-toys-catch",
+   "capture": "MEDIUM, arm side only",
+   "note": "Close-out: High 7.62 (G-things-toys-ui.md, b4439ea2b). Closes at Medium 7.5+ once the flag lands.",
+   "done": "G-f40-13-catch-card-medium 04d17515d (judging)"
+  },
+  {
+   "id": "below6-stormheart-approach",
+   "kind": "arm",
+   "rows": [
+    "F41#1"
+   ],
+   "branch": "tb/below6",
+   "head": "61a8487d2",
+   "tree": "tb/below6 61a8487d2 for BOTH sides (its phase2_capture_locations.gd adds the approach_overrides hook; flags off renders as main with the old stands)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-RAMP/overlay_approach.json (heartwood on, split_bark_finish.aged_heartwood_1112 on, capture_stands approach_overrides on)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-RAMP/CAPTURE.json",
+   "job": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042 --output={OUT}",
+   "capture": "High. Base = tb/below6 with only heartwood_1111 ON (as main now ships) and the old stands; arm = the overlay",
+   "want_to_see": "approach frames: the trunk and gate centre-frame at the end of the road (spot a); close frames unchanged; the split's exposed wood reads as aged heartwood, not an orange slab",
+   "priority": "below 6 (F41#1)",
+   "note": "Stand move lands only with its game fix (the aged heartwood finish on the split trunk's exposed wood).",
+   "done": "G-below6-stormheart-approach 4ec37efdb (judging; split not in frame)"
+  },
+  {
+   "id": "things-convclear-meadows",
+   "kind": "arm",
+   "rows": [
+    "F38#36",
+    "F38#37",
+    "F38#17",
+    "F38#16"
+   ],
+   "branch": "tb/things",
+   "head": "eb250d657",
+   "tree": "tb/things eb250d657 (script/config only)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-CONVCLEAR/overlay_clearance.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-CONVCLEAR/CAPTURE.json",
+   "job": "tools/phase2_capture_dialogue.gd --biome=meadows --seed=2042, every post",
+   "capture": "High, two new sides on tb/things: 'stand' = --sight-stand, no overlay (capture fix only); 'arm' = --sight-stand plus the overlay. Base = the existing G-dialogue-recapture-meadows frames (1c7b2f364, main 8df122a83).",
+   "pre_check": "blend 1.0 on every frame; in the arm's trainer rows the companion is not in frame (it should stand behind the lens). If it still is, tell LANE-THINGS which rows before judging.",
+   "priority": "6-7 band, one shared cause across every dialogue row (owner approved: ships if judged). Tidewake, Cloudreach and Stormwood follow if Meadows wins.",
+   "note": "Owner 11 Nov: conversation shots only; movement and fight cameras unchanged.",
+   "done": "G-things-convclear-meadows fc6e1866e (judging; companion out of all 28 trainer rows)"
+  },
+  {
+   "id": "things-faint2",
+   "kind": "arm",
+   "rows": [
+    "F36#83 trailpup",
+    "F36#87 voltwig",
+    "F36#58 pebbik",
+    "F36#35 breezetail",
+    "F36#70 sparkit",
+    "F36#75 stormtrail",
+    "F36#54 mosshock",
+    "F36#66 shadelet",
+    "F36#57 paddlenewt",
+    "F36#62 riftfrill",
+    "F36#74 stormraven",
+    "F36#42 cragclaw (close-out)",
+    "F36#92 water mangrove monitor"
+   ],
+   "branch": "tb/things",
+   "head": "d2581fb0e",
+   "tree": "tb/things d2581fb0e for both sides (script/config only)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FAINT2/overlay_faint_round2.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-FAINT2/CAPTURE.json",
+   "job": "capture_f36_poses.gd --species=water_mangrove_monitor,trailpup,voltwig,pebbik,breezetail,sparkit,stormtrail,mosshock,shadelet,paddlenewt,riftfrill,stormraven,cragclaw --whole-body --context --clear-ruler --roles=hit,faint",
+   "capture": "High, base (overlay off) and arm (overlay on). Main's tool now plays the game-resolved clip by default (#912).",
+   "priority": "6-7 band, shared faint cause across 13 rows; Cragclaw is a near-bar close-out (Medium 7.30)",
+   "note": "After things-convclear-meadows.",
+   "done": "G-things-faint2 e6dadc433 (judging)"
+  },
+  {
+   "id": "places-rain-time-grade",
+   "kind": "arm",
+   "rows": [
+    "F40#0",
+    "F40#19"
+   ],
+   "branch": "tb/places",
+   "head": "e556a60f1",
+   "tree": "tb/places e556a60f1 for both sides (rain_time_grade code is flag-off there; base = overlay off)",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-RAINTIME/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-RAINTIME/CAPTURE.json",
+   "job": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache for pieces 2,4,6,8 (gate), 82,84,86,88 (summit), 90,92,94,96 (overlook), plus one clear piece per stand as a control",
+   "capture": "High, base (overlay off) and arm (overlay on), same pieces",
+   "pre_check": "reject if golden rain reads as a flat tan wash, or the night trainer sinks into the ground",
+   "priority": "F40#0 (6.54 over 384 frames, half rain) and F40#19",
+   "note": "LANE-PLACES P2. Run now."
+  },
+  {
+   "id": "places-road-value",
+   "kind": "arm",
+   "rows": [
+    "F41#12",
+    "F41#4",
+    "F41#5",
+    "F41#8",
+    "F41#2"
+   ],
+   "branch": "tb/places",
+   "head": "e556a60f1",
+   "tree": "HOLD until PR #914 merges (needs storm_phase_1111 on main as the base). Then: base = main, arms on tb/places with the two overlays",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-ROADVALUE/overlay.json and overlay_no_puddles.json (two arm sides)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-ROADVALUE/CAPTURE.json (per-row tool and frames)",
+   "capture": "High, base plus two arms",
+   "priority": "the judges' shared Stormwood ceiling (ground and road value)",
+   "note": "Coordinator will say when #914 has landed.",
+   "done": "G-places-roadvalue-storm a6e992aa9, -locations f80209d9d, -dialogue bba97ce20 (no-puddles arm judging; puddle arm failed pre-check: lilac/white slabs)"
+  },
+  {
+   "id": "things-convclear-other-biomes",
+   "kind": "arm",
+   "rows": [
+    "F39#18",
+    "F39#26",
+    "F39#29",
+    "F40#10",
+    "F40#12",
+    "F41#7",
+    "F41#11",
+    "F41#15",
+    "F41#20"
+   ],
+   "branch": "tb/things",
+   "head": "a90645724",
+   "tree": "tb/things a90645724 (script/config only)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-CONVCLEAR/overlay_clearance.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-CONVCLEAR/CAPTURE.json",
+   "job": "tools/phase2_capture_dialogue.gd --seed=2042 every post, --biome=water (Tidewake), --biome=cloudreach, --biome=stormwood",
+   "capture": "High, two sides per biome on tb/things: 'stand' = --sight-stand, 'arm' = --sight-stand plus the overlay; base = the existing G-dialogue-recapture-* frames for that biome",
+   "pre_check": "blend 1.0 everywhere; companion out of the arm's trainer rows",
+   "priority": "HIGH: the Meadows arm shipped (G-things-convclear-meadows, 3136cc76f) but the camera change applies in every biome, so these confirm no loss before landing. Stormwood holds F41#15 (4.49, a speaker hidden behind a creature).",
+   "note": "Run right after places-rain-time-grade, before things-galecarrier.",
+   "done": "G-things-convclear-tidewake 5b45b864a, -cloudreach a8d50f20a, -stormwood e15fcad3e (judging; GPU lane: one Stormwood regression, outerworks_lieutenant)"
+  },
+  {
+   "id": "things-galecarrier",
+   "kind": "arm",
+   "rows": [
+    "F36#48",
+    "Galewisp flight (F38#8/F38#15 with Galewisp carrying)"
+   ],
+   "branch": "tb/things",
+   "head": "a90645724",
+   "tree": "tb/things a90645724 for both sides (config only; its phase2_capture_realm_flight.gd adds --carrier)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-GALECARRIER/overlay_galewisp_carrier.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-GALECARRIER/CAPTURE.json",
+   "job": "phase2_capture_realm_flight.gd --biome=meadows --carrier=galewisp (frames 01-launch, 02-glide, 03-landed); capture_f36_poses.gd --species=galewisp --whole-body --context --roles=hit,faint,fly_grip",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "pre_check": "arm shows the 1 Nov remake (not the big-eyed fox-bird) in flight with the trainer hanging from its feet; watch for wing clipping in the procedural flap",
+   "priority": "owner-rule fix (1 Nov: all remakes ON, no mascot): the flight carrier still draws the pre-remake mesh; F36#48 is a near-bar close-out (7.44)",
+   "note": "After places-rain-time-grade.",
+   "done": "G-galecarrier-flight 138592fa3, G-galecarrier-poses 51fbc23df (judging)"
+  },
+  {
+   "id": "faint2-pebbik-breezetail-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#58 pebbik",
+    "F36#35 breezetail"
+   ],
+   "branch": "tb/things",
+   "head": "e1c71d6f1",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FAINT2/overlay_faint_round2.json",
+   "overlay_format": "deep merge",
+   "job": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+   "capture": "MEDIUM, arm side only",
+   "note": "Close-outs: High pebbik 7.65, breezetail 7.61 (G-things-faint2.md, 102221c2e). Close at Medium 7.5+ once the arm lands. Short; fit after things-convclear-other-biomes.",
+   "done": "G-faint2-pebbik-breezetail-medium 6cf29c52b (judging)"
+  },
+  {
+   "id": "below6-marrow",
+   "kind": "arm",
+   "rows": [
+    "F41#15",
+    "F41#7"
+   ],
+   "branch": "tb/below6",
+   "head": "917e71d59",
+   "tree": "tb/below6 917e71d59 for both sides (one import: new captain_a floor1 texture)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-MARROW/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-MARROW/CAPTURE.json",
+   "job": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --subset=captain_marrow at 1920x1080 forward_plus --fixed-fps 20",
+   "frames": "stormwood__inventory__character__captain_marrow__dialogue, stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "capture": "High, base (overlay off) and arm (overlay on)",
+   "priority": "lowest row on the board (F41#15 4.49)",
+   "note": "Marrow's body emitted its own albedo plus a 0.18 Stormwood emission floor; arm turns both off for captain_a. Finishing in-progress work during wrap-up."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

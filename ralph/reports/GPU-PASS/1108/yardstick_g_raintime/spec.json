@@ -1,0 +1,110 @@
+[
+ {
+  "label": "G F40#0 gate dawn rain base-vs-arm",
+  "a": "G-rt_gate_dawn_base.png",
+  "b": "G-rt_gate_dawn_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at dawn in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 gate day rain base-vs-arm",
+  "a": "G-rt_gate_day_base.png",
+  "b": "G-rt_gate_day_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) by day in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 gate golden rain base-vs-arm",
+  "a": "G-rt_gate_golden_base.png",
+  "b": "G-rt_gate_golden_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at golden hour in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 gate night rain base-vs-arm",
+  "a": "G-rt_gate_night_base.png",
+  "b": "G-rt_gate_night_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at night in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 summit dawn rain base-vs-arm",
+  "a": "G-rt_summit_dawn_base.png",
+  "b": "G-rt_summit_dawn_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at dawn in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 summit day rain base-vs-arm",
+  "a": "G-rt_summit_day_base.png",
+  "b": "G-rt_summit_day_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) by day in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 summit golden rain base-vs-arm",
+  "a": "G-rt_summit_golden_base.png",
+  "b": "G-rt_summit_golden_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at golden hour in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 summit night rain base-vs-arm",
+  "a": "G-rt_summit_night_base.png",
+  "b": "G-rt_summit_night_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at night in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 overlook dawn rain base-vs-arm",
+  "a": "G-rt_overlook_dawn_base.png",
+  "b": "G-rt_overlook_dawn_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at dawn in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 overlook day rain base-vs-arm",
+  "a": "G-rt_overlook_day_base.png",
+  "b": "G-rt_overlook_day_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) by day in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 overlook golden rain base-vs-arm",
+  "a": "G-rt_overlook_golden_base.png",
+  "b": "G-rt_overlook_golden_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at golden hour in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 overlook night rain base-vs-arm",
+  "a": "G-rt_overlook_night_base.png",
+  "b": "G-rt_overlook_night_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at night in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ }
+]

@@ -1,0 +1,15 @@
+Cs: none
+Ff: "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+Px: "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"
+Ct: none
+Fm: "none"
+Qx: "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+Mx: "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+Ja: "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+Vq: "none"
+Lr: "none"
+Fi: "Large rock faces fill the camera and hide the named speaker during dialogue"
+Bv: "none"
+Xa: "Large rock faces fill the camera and hide the named speaker during dialogue"
+Yy: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ss: "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"

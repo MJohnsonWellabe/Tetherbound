@@ -1,0 +1,46 @@
+{
+ "anchors": {
+  "f36_0_npc:C1B": [
+   6.8,
+   7.0,
+   6.4
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   7.0,
+   6.4
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.4,
+   5.5,
+   4.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.6,
+   4.7,
+   4.1
+  ],
+  "craft:after": [
+   6.7,
+   7.2,
+   6.3
+  ],
+  "craft:before": [
+   5.1,
+   5.5,
+   4.9
+  ]
+ },
+ "candidates": {
+  "G F38#5 ruler-depth-r3 Medium base-vs-arm [G-rd3m_arm.png]": [
+   6.7,
+   7.1,
+   6.8
+  ],
+  "G F38#5 ruler-depth-r3 Medium base-vs-arm [G-rd3m_base.png]": [
+   5.8,
+   6.0,
+   5.7
+  ]
+ }
+}

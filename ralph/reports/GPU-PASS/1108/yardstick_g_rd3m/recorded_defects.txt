@@ -1,0 +1,4 @@
+Sv: none
+Pk: "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+Dq: none
+Lh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

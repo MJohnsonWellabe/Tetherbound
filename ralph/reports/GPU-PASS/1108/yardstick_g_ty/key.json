@@ -1,0 +1,47 @@
+{
+ "Gb": {
+  "anchor": false,
+  "label": "G F40#16 toys-ui base-vs-arm",
+  "A": "G-ty_F40-16_arm.png",
+  "B": "G-ty_F40-16_base.png"
+ },
+ "Se": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Hu": {
+  "anchor": false,
+  "label": "G F38#6 toys-ui base-vs-arm",
+  "A": "G-ty_F38-6_base.png",
+  "B": "G-ty_F38-6_arm.png"
+ },
+ "Yd": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Hb": {
+  "anchor": false,
+  "label": "G F38#3 toys-ui base-vs-arm",
+  "A": "G-ty_F38-3_base.png",
+  "B": "G-ty_F38-3_arm.png"
+ },
+ "Xt": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ss": {
+  "anchor": false,
+  "label": "G F38#11 toys-ui base-vs-arm",
+  "A": "G-ty_F38-11_arm.png",
+  "B": "G-ty_F38-11_base.png"
+ },
+ "Dt": {
+  "anchor": false,
+  "label": "G F40#13 toys-ui base-vs-arm",
+  "A": "G-ty_F40-13_arm.png",
+  "B": "G-ty_F40-13_base.png"
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "Tj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ol": {
+  "anchor": false,
+  "label": "G F41#1 approach2 base-vs-arm",
+  "A": "G-sha_approach2_arm-High.png",
+  "B": "G-sha_approach2_base-High.png"
+ },
+ "Tw": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Jz": {
+  "anchor": false,
+  "label": "G F41#1 row4 base-vs-arm",
+  "A": "G-sha_row4_arm-High.png",
+  "B": "G-sha_row4_base-High.png"
+ },
+ "Pk": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

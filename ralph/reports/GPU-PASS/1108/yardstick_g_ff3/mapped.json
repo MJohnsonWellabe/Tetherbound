@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8661,
+  "least_squares_slope": 1.2992,
+  "method": "linear",
+  "slope": 1.2992,
+  "intercept": -1.0186,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.577,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.0,
+   "reference": 4.83,
+   "mapped": 5.477,
+   "residual": -0.647
+  },
+  "craft:after": {
+   "measured": 6.667,
+   "reference": 7.35,
+   "mapped": 7.643,
+   "residual": -0.293
+  },
+  "f04_6_r22:control": {
+   "measured": 5.033,
+   "reference": 5.83,
+   "mapped": 5.521,
+   "residual": 0.309
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.9,
+   "reference": 6.75,
+   "mapped": 6.647,
+   "residual": 0.103
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.267,
+   "reference": 4.0,
+   "mapped": 4.525,
+   "residual": -0.525
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.0,
+   "reference": 6.53,
+   "mapped": 5.477,
+   "residual": 1.053
+  }
+ },
+ "candidates": {
+  "G ff3 swim-across-day base-vs-arm [G-ff3_swim-across-day_arm.png]": {
+   "measured_mean": 5.5,
+   "mapped_mean": 6.13,
+   "mapped_judges": [
+    6.13,
+    5.48,
+    6.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff3 swim-across-day base-vs-arm [G-ff3_swim-across-day_base.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.39,
+   "mapped_judges": [
+    6.78,
+    6.13,
+    6.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff3 swim-away-day base-vs-arm [G-ff3_swim-away-day_arm.png]": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.34,
+   "mapped_judges": [
+    5.87,
+    6.26,
+    6.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff3 swim-away-day base-vs-arm [G-ff3_swim-away-day_base.png]": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.21,
+   "mapped_judges": [
+    6.52,
+    5.87,
+    6.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff3 swim-away-night base-vs-arm [G-ff3_swim-away-night_base.png]": {
+   "measured_mean": 5.2,
+   "mapped_mean": 5.74,
+   "mapped_judges": [
+    6.0,
+    5.48,
+    5.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G ff3 swim-away-night base-vs-arm [G-ff3_swim-away-night_arm.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.39,
+   "mapped_judges": [
+    5.87,
+    6.65,
+    6.65
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

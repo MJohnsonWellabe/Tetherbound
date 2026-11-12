@@ -1,0 +1,6 @@
+Cp: none
+Jx: none
+Vi: "carrying frame carries nothing"
+Jo: "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Jj: "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Kn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

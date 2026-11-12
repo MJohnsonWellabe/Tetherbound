@@ -1,0 +1,71 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9817,
+  "least_squares_slope": 1.4557,
+  "method": "linear",
+  "slope": 1.4557,
+  "intercept": -2.3905,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.189,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.8,
+   "reference": 7.47,
+   "mapped": 7.508,
+   "residual": -0.038
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.8,
+   "reference": 7.53,
+   "mapped": 7.508,
+   "residual": 0.022
+  },
+  "craft:before": {
+   "measured": 5.167,
+   "reference": 4.83,
+   "mapped": 5.131,
+   "residual": -0.301
+  },
+  "craft:after": {
+   "measured": 6.767,
+   "reference": 7.35,
+   "mapped": 7.46,
+   "residual": -0.11
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.2,
+   "reference": 6.75,
+   "mapped": 6.635,
+   "residual": 0.115
+  },
+  "f04_6_r22:control": {
+   "measured": 5.433,
+   "reference": 5.83,
+   "mapped": 5.519,
+   "residual": 0.311
+  }
+ },
+ "candidates": {
+  "G F36(1) stormbrush Medium main [G-sbm_stormbrush.png]": {
+   "measured_mean": 6.967,
+   "mapped_mean": 7.75,
+   "mapped_judges": [
+    7.94,
+    7.8,
+    7.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.53): G F36(1) stormbrush Medium main [G-sbm_stormbrush.png]; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}

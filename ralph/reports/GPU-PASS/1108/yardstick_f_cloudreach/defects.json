@@ -1,0 +1,410 @@
+{
+ "GPU1108F F40#2 live one-sided": {
+  "A": [
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   },
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   },
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   },
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   },
+   {
+    "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F40#18 live one-sided": {
+  "A": [
+   {
+    "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "FIXED"
+   },
+   {
+    "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "FIXED"
+   },
+   {
+    "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "FIXED"
+   },
+   {
+    "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "FIXED"
+   },
+   {
+    "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F40#9 live one-sided": {
+  "A": [
+   {
+    "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+   },
+   {
+    "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+   },
+   {
+    "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+   },
+   {
+    "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+   },
+   {
+    "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F40#11 live one-sided": {
+  "A": [
+   {
+    "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+   },
+   {
+    "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+   },
+   {
+    "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+   },
+   {
+    "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+   },
+   {
+    "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F40#3 live one-sided": {
+  "A": [
+   {
+    "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   },
+   {
+    "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   },
+   {
+    "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F40#12 live one-sided": {
+  "A": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F40#5 live one-sided": {
+  "A": [
+   {
+    "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+   },
+   {
+    "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+   },
+   {
+    "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+   },
+   {
+    "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+   },
+   {
+    "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F40#7 live one-sided": {
+  "A": [
+   {
+    "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PARTIAL"
+   },
+   {
+    "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PARTIAL"
+   },
+   {
+    "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PARTIAL"
+   },
+   {
+    "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PARTIAL"
+   },
+   {
+    "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F40#15 live one-sided": {
+  "A": [
+   {
+    "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+   },
+   {
+    "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "PARTIAL"
+   },
+   {
+    "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+   },
+   {
+    "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "PARTIAL"
+   },
+   {
+    "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F40#8 live one-sided": {
+  "A": [
+   {
+    "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+   },
+   {
+    "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+   },
+   {
+    "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+   },
+   {
+    "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+   },
+   {
+    "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F40#1 live one-sided": {
+  "A": [
+   {
+    "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PARTIAL"
+   },
+   {
+    "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PARTIAL"
+   },
+   {
+    "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PARTIAL"
+   },
+   {
+    "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PARTIAL"
+   },
+   {
+    "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F40#13 live one-sided": {
+  "A": [
+   {
+    "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "PARTIAL"
+   },
+   {
+    "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "PARTIAL"
+   },
+   {
+    "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "PARTIAL"
+   },
+   {
+    "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "PARTIAL"
+   },
+   {
+    "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F40#17 live one-sided": {
+  "A": [
+   {
+    "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "PARTIAL"
+   },
+   {
+    "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "FIXED"
+   },
+   {
+    "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "PARTIAL"
+   },
+   {
+    "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "FIXED"
+   },
+   {
+    "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F40#4 live one-sided": {
+  "A": [
+   {
+    "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   }
+  ]
+ },
+ "GPU1108F F40#16 live one-sided": {
+  "A": [
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   },
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   },
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   }
+  ],
+  "B": [
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   },
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   },
+   {
+    "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+   }
+  ]
+ },
+ "GPU1108F F40#6 live one-sided": {
+  "A": [
+   {
+    "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+   },
+   {
+    "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+   },
+   {
+    "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+   }
+  ],
+  "B": [
+   {
+    "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+   },
+   {
+    "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+   },
+   {
+    "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+   }
+  ]
+ },
+ "GPU1108F F40#10 live one-sided": {
+  "A": [
+   {
+    "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PARTIAL"
+   }
+  ],
+  "B": [
+   {
+    "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PARTIAL"
+   },
+   {
+    "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PARTIAL"
+   }
+  ]
+ }
+}

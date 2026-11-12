@@ -1,0 +1,7 @@
+Zc: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Oj: none
+Xx: "faint pose the same as standing"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Dc: "crimson gill frills near the reserved red"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Nz: "crimson gill frills near the reserved red"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Zu: "dark body on the stage"; "hood stays up in the faint"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Kc: none

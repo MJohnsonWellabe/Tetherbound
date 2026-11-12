@@ -1,0 +1,62 @@
+[
+ {
+  "label": "G F36(1) voltarach rescore main",
+  "a": "G-r3b_voltarach.png",
+  "b": "G-r3b_voltarach.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: voltarach - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "chrome-gold statue shader",
+   "face lost"
+  ]
+ },
+ {
+  "label": "G F36(1) water_abyssal_guardian rescore main",
+  "a": "G-r3b_water_abyssal_guardian.png",
+  "b": "G-r3b_water_abyssal_guardian.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: water abyssal guardian - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "thin and spindly",
+   "neck stays raised in the faint"
+  ]
+ },
+ {
+  "label": "G F36(1) water_cragclaw rescore main",
+  "a": "G-r3b_water_cragclaw.png",
+  "b": "G-r3b_water_cragclaw.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: water cragclaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "faint poses the same as standing"
+  ]
+ },
+ {
+  "label": "G F36(1) water_mangrove_monitor rescore main",
+  "a": "G-r3b_water_mangrove_monitor.png",
+  "b": "G-r3b_water_mangrove_monitor.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: water mangrove monitor - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "dark olive on grey",
+   "face lost in spines",
+   "wheel-shaped faint end"
+  ]
+ },
+ {
+  "label": "G F36(1) water_mirejaw rescore main",
+  "a": "G-r3b_water_mirejaw.png",
+  "b": "G-r3b_water_mirejaw.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: water mirejaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "crimson gill frills near the reserved red",
+   "dark faint blob"
+  ]
+ },
+ {
+  "label": "G F36(1) water_mosshell rescore main",
+  "a": "G-r3b_water_mosshell.png",
+  "b": "G-r3b_water_mosshell.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, ride; faint mid, faint end, swim). Catalogue subject: water mosshell - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "faint poses do not collapse",
+   "rider perched"
+  ]
+ }
+]

@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.859,
+  "least_squares_slope": 1.324,
+  "method": "linear",
+  "slope": 1.324,
+  "intercept": -0.7088,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.591,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 5.0,
+   "reference": 5.83,
+   "mapped": 5.911,
+   "residual": -0.081
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.767,
+   "reference": 6.75,
+   "mapped": 6.926,
+   "residual": -0.176
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.533,
+   "reference": 6.53,
+   "mapped": 5.293,
+   "residual": 1.237
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.867,
+   "reference": 4.0,
+   "mapped": 4.411,
+   "residual": -0.411
+  },
+  "craft:after": {
+   "measured": 6.067,
+   "reference": 7.35,
+   "mapped": 7.323,
+   "residual": 0.027
+  },
+  "craft:before": {
+   "measured": 4.633,
+   "reference": 4.83,
+   "mapped": 5.426,
+   "residual": -0.596
+  }
+ },
+ "candidates": {
+  "G F41#3 live-vs-arm [G-fol_F41-3_arm.png]": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.75,
+   "mapped_judges": [
+    6.44,
+    6.71,
+    7.1
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#3 live-vs-arm [G-fol_F41-3_live_for_arm.png]": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.96,
+   "mapped_judges": [
+    6.31,
+    5.78,
+    5.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#8 live-vs-arm [G-fol_F41-8_arm.png]": {
+   "measured_mean": 5.1,
+   "mapped_mean": 6.04,
+   "mapped_judges": [
+    6.31,
+    5.91,
+    5.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#8 live-vs-arm [G-fol_F41-8_live_for_arm.png]": {
+   "measured_mean": 5.1,
+   "mapped_mean": 6.04,
+   "mapped_judges": [
+    6.31,
+    5.91,
+    5.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#5 live-vs-arm [G-fol_F41-5_live_for_arm.png]": {
+   "measured_mean": 5.133,
+   "mapped_mean": 6.09,
+   "mapped_judges": [
+    6.44,
+    5.65,
+    6.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#5 live-vs-arm [G-fol_F41-5_arm.png]": {
+   "measured_mean": 5.133,
+   "mapped_mean": 6.09,
+   "mapped_judges": [
+    6.44,
+    5.65,
+    6.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

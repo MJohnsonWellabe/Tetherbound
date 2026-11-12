@@ -1,0 +1,4 @@
+Ma: "Several named destinations read as similar grass and trees without a distinct subject in the captured close views"
+Uo: none
+Bq: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Kj: none

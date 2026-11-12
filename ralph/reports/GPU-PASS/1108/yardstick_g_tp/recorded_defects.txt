@@ -1,0 +1,7 @@
+Ut: none
+Jk: "faint poses do not collapse"; "rider perched"
+Zk: none
+Ft: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ue: "carrying frame carries nothing"; "faint wing passes over the trainer"
+Uo: "rider perched"; "trainer stands on the water in swim"
+Rc: "carrying frame carries nothing"

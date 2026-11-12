@@ -1,0 +1,116 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.5,
+   4.9,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.3,
+   5.6,
+   5.4
+  ],
+  "f04_6_r22:control": [
+   5.2,
+   5.4,
+   5.4
+  ],
+  "f04_6_r22:r22": [
+   6.4,
+   6.4,
+   6.3
+  ],
+  "craft:before": [
+   5.0,
+   5.2,
+   5.2
+  ],
+  "craft:after": [
+   7.1,
+   6.6,
+   6.9
+  ]
+ },
+ "candidates": {
+  "G F39#18 live-vs-armRanks [G-floor_F39-18_armRanks.png]": [
+   6.4,
+   6.4,
+   6.6
+  ],
+  "G F39#18 live-vs-armRanks [G-floor_F39-18_live_for_armRanks.png]": [
+   6.1,
+   6.3,
+   6.4
+  ],
+  "G F38#1 live-vs-recheck [G-floor_F38-1_live_for_recheck.png]": [
+   5.9,
+   5.9,
+   5.6
+  ],
+  "G F38#1 live-vs-recheck [G-floor_F38-1_recheck.png]": [
+   6.3,
+   6.2,
+   5.9
+  ],
+  "G F41#7 live-vs-armCap [G-floor_F41-7_live_for_armCap.png]": [
+   6.7,
+   5.8,
+   6.3
+  ],
+  "G F41#7 live-vs-armCap [G-floor_F41-7_armCap.png]": [
+   6.5,
+   5.8,
+   6.5
+  ],
+  "G F39#29 live-vs-armCap [G-floor_F39-29_live_for_armCap.png]": [
+   5.6,
+   5.4,
+   5.6
+  ],
+  "G F39#29 live-vs-armCap [G-floor_F39-29_armCap.png]": [
+   5.4,
+   5.6,
+   5.4
+  ],
+  "G F41#7 live-vs-armRanks [G-floor_F41-7_armRanks.png]": [
+   6.4,
+   5.7,
+   6.5
+  ],
+  "G F41#7 live-vs-armRanks [G-floor_F41-7_live_for_armRanks.png]": [
+   6.7,
+   5.8,
+   6.3
+  ],
+  "G F41#15 live-vs-armCap [G-floor_F41-15_live_for_armCap.png]": [
+   6.4,
+   5.7,
+   6.5
+  ],
+  "G F41#15 live-vs-armCap [G-floor_F41-15_armCap.png]": [
+   6.3,
+   5.6,
+   6.4
+  ],
+  "G F39#29 live-vs-armRanks [G-floor_F39-29_live_for_armRanks.png]": [
+   5.6,
+   5.4,
+   5.5
+  ],
+  "G F39#29 live-vs-armRanks [G-floor_F39-29_armRanks.png]": [
+   5.6,
+   5.6,
+   5.6
+  ],
+  "G F41#15 live-vs-armRanks [G-floor_F41-15_live_for_armRanks.png]": [
+   6.4,
+   5.7,
+   6.4
+  ],
+  "G F41#15 live-vs-armRanks [G-floor_F41-15_armRanks.png]": [
+   6.2,
+   5.6,
+   6.4
+  ]
+ }
+}

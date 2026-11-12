@@ -1,0 +1,56 @@
+{
+ "anchors": {
+  "f04_6_r22:control": [
+   5.2,
+   5.0,
+   5.0
+  ],
+  "f04_6_r22:r22": [
+   6.4,
+   5.9,
+   6.2
+  ],
+  "craft:after": [
+   6.6,
+   6.6,
+   6.5
+  ],
+  "craft:before": [
+   5.2,
+   5.2,
+   5.3
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.3,
+   5.3,
+   4.3
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.6,
+   4.8,
+   3.9
+  ]
+ },
+ "candidates": {
+  "G T2 Medium base-vs-arm [G-t2_Medium_base.png]": [
+   5.6,
+   5.6,
+   5.4
+  ],
+  "G T2 Medium base-vs-arm [G-t2_Medium_arm.png]": [
+   6.2,
+   6.3,
+   6.0
+  ],
+  "G T2 High base-vs-arm [G-t2_High_arm.png]": [
+   6.2,
+   6.3,
+   6.0
+  ],
+  "G T2 High base-vs-arm [G-t2_High_base.png]": [
+   5.8,
+   5.8,
+   5.5
+  ]
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "Xw": {
+  "anchor": false,
+  "label": "G F36(1) stormraven faint2 base-vs-arm",
+  "A": "G-f2a_stormraven_arm.png",
+  "B": "G-f2a_stormraven_base.png"
+ },
+ "Tp": {
+  "anchor": false,
+  "label": "G F36(1) cragclaw faint2 base-vs-arm",
+  "A": "G-f2a_cragclaw_base.png",
+  "B": "G-f2a_cragclaw_arm.png"
+ },
+ "Jt": {
+  "anchor": false,
+  "label": "G F36(1) riftfrill faint2 base-vs-arm",
+  "A": "G-f2a_riftfrill_arm.png",
+  "B": "G-f2a_riftfrill_base.png"
+ },
+ "Yg": {
+  "anchor": false,
+  "label": "G F36(1) breezetail faint2 base-vs-arm",
+  "A": "G-f2a_breezetail_base.png",
+  "B": "G-f2a_breezetail_arm.png"
+ },
+ "Wz": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Zz": {
+  "anchor": false,
+  "label": "G F36(1) pebbik faint2 base-vs-arm",
+  "A": "G-f2a_pebbik_arm.png",
+  "B": "G-f2a_pebbik_base.png"
+ },
+ "Eb": {
+  "anchor": false,
+  "label": "G F36(1) mosshock faint2 base-vs-arm",
+  "A": "G-f2a_mosshock_base.png",
+  "B": "G-f2a_mosshock_arm.png"
+ },
+ "Fw": {
+  "anchor": false,
+  "label": "G F36(1) paddlenewt faint2 base-vs-arm",
+  "A": "G-f2a_paddlenewt_arm.png",
+  "B": "G-f2a_paddlenewt_base.png"
+ },
+ "Pl": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Lu": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

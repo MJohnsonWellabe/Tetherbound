@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   6.6,
+   6.6,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   6.6,
+   6.7,
+   7.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.6,
+   4.3,
+   4.8
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.4,
+   5.1,
+   5.7
+  ],
+  "craft:before": [
+   5.0,
+   4.9,
+   4.7
+  ],
+  "craft:after": [
+   6.6,
+   6.4,
+   6.5
+  ]
+ },
+ "candidates": {
+  "G F39#28 t0 base-vs-arm [G-pst_t0_arm.png]": [
+   5.6,
+   5.6,
+   6.1
+  ],
+  "G F39#28 t0 base-vs-arm [G-pst_t0_base.png]": [
+   5.0,
+   5.1,
+   5.7
+  ],
+  "G F39#21 aftermath base-vs-arm [G-pst_aftermath_base.png]": [
+   4.8,
+   5.0,
+   4.9
+  ],
+  "G F39#21 aftermath base-vs-arm [G-pst_aftermath_arm.png]": [
+   5.8,
+   5.8,
+   6.1
+  ],
+  "G F39#21 win base-vs-arm [G-pst_win_base.png]": [
+   5.0,
+   5.2,
+   5.1
+  ],
+  "G F39#21 win base-vs-arm [G-pst_win_arm.png]": [
+   6.2,
+   6.2,
+   6.6
+  ]
+ }
+}

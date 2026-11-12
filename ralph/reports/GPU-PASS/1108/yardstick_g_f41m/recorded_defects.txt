@@ -1,0 +1,9 @@
+Ox: none
+Sm: none
+Qz: "none"
+Lb: "none"
+Kr: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Qt: "none"
+Bm: "none"
+Sb: "none"
+Ek: "none"

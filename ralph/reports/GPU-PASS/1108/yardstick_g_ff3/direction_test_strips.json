@@ -1,0 +1,150 @@
+{
+ "key": {
+  "img_01": [
+   "base",
+   "swim-away-day"
+  ],
+  "img_02": [
+   "base",
+   "swim-away-night"
+  ],
+  "img_03": [
+   "arm",
+   "swim-away-day"
+  ],
+  "img_04": [
+   "base",
+   "swim-across-day"
+  ],
+  "img_05": [
+   "arm",
+   "swim-away-night"
+  ],
+  "img_06": [
+   "arm",
+   "swim-across-day"
+  ]
+ },
+ "truth": {
+  "swim-across-day": "RIGHT",
+  "swim-away-day": "TOWARD_CAMERA",
+  "swim-away-night": "TOWARD_CAMERA"
+ },
+ "judges": {
+  "d1": {
+   "img_01": [
+    "LEFT",
+    5,
+    "yes",
+    3
+   ],
+   "img_02": [
+    "LEFT",
+    5,
+    "yes",
+    3
+   ],
+   "img_03": [
+    "LEFT",
+    4,
+    "no",
+    4
+   ],
+   "img_04": [
+    "RIGHT",
+    5,
+    "yes",
+    3
+   ],
+   "img_05": [
+    "LEFT",
+    4,
+    "no",
+    4
+   ],
+   "img_06": [
+    "RIGHT",
+    3,
+    "no",
+    4
+   ]
+  },
+  "d2": {
+   "img_01": [
+    "CANNOT_TELL",
+    2,
+    "no",
+    2
+   ],
+   "img_02": [
+    "CANNOT_TELL",
+    2,
+    "no",
+    2
+   ],
+   "img_03": [
+    "LEFT",
+    3,
+    "no",
+    3
+   ],
+   "img_04": [
+    "RIGHT",
+    5,
+    "yes",
+    4
+   ],
+   "img_05": [
+    "CANNOT_TELL",
+    3,
+    "no",
+    3
+   ],
+   "img_06": [
+    "CANNOT_TELL",
+    3,
+    "no",
+    4
+   ]
+  },
+  "d3": {
+   "img_01": [
+    "RIGHT",
+    3,
+    "no",
+    2
+   ],
+   "img_02": [
+    "RIGHT",
+    3,
+    "no",
+    2
+   ],
+   "img_03": [
+    "RIGHT",
+    4,
+    "no",
+    5
+   ],
+   "img_04": [
+    "RIGHT",
+    6,
+    "yes",
+    4
+   ],
+   "img_05": [
+    "RIGHT",
+    3,
+    "no",
+    5
+   ],
+   "img_06": [
+    "RIGHT",
+    4,
+    "yes",
+    4
+   ]
+  }
+ },
+ "_fields": "[direction, confidence, consistent, readability]"
+}

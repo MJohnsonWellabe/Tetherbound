@@ -1,0 +1,19 @@
+{
+ "cap": [
+  "i01",
+  "tell1-a-start",
+  "tell1-d-strike",
+  "tell1-e-impact"
+ ],
+ "hol": [
+  "i00",
+  "i02",
+  "i04",
+  "tell1-a-start",
+  "tell1-d-strike",
+  "tell1-e-impact",
+  "tell3-b-mid",
+  "tell4-a-start",
+  "99-after"
+ ]
+}

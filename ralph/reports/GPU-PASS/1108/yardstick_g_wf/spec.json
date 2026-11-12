@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F38#30 walk_02_day base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_02_day_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_02_day_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the meadows biome: Burrow Warrens hillside. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "G F38#24 walk_02_day base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_02_day_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_02_day_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the meadows biome: distant mountains. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "G F38#30 walk_03_day base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_03_day_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_03_day_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the meadows biome: Burrow Warrens hillside. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "G F38#24 walk_03_day base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_03_day_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_walk_03_day_arm.png",
+  "brief": "Fixed capture from the game of one catalogue subject in the meadows biome: distant mountains. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "G route_day regress base-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_route_day_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-wf_route_day_arm.png",
+  "brief": "Fixed capture from the game of the Burrow Warrens in the meadows biome by day, seen from the route. Judge how the place looks - whether it reads as the key art's world, with believable form, material, light and staging.",
+  "defects": [
+   "none"
+  ]
+ }
+]

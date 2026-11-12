@@ -1,0 +1,13 @@
+Bd: "The player head and back overlap the named speaker in several conversation frames"
+Eo: "stays upright through the faint"; "pale body merges with the background"; "barely trainer height"
+Zy: "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views"
+Qn: "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+Zh: none
+Lu: "Several named conversations show no identifiable speaker near the dialogue panel"
+Jx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Br: none
+Gv: "chrome-mirror skin"; "faint keeps head and sail up"
+Nj: "plasticky salmon skin"; "faint pose the same as standing"
+Ab: "dark brown body on the stage"; "hood stays up in the faint"
+Fs: "contorted neck in the faint mid pose"; "noisy moss texture"; "rider looks tiny"
+Sg: "neon-magenta emissive ribbons read as an effect"; "hit reaction goes airborne"

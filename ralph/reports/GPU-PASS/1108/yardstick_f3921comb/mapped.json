@@ -1,0 +1,69 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8376,
+  "least_squares_slope": 1.2041,
+  "method": "linear",
+  "slope": 1.2041,
+  "intercept": -0.7344,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.63,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 5.067,
+   "reference": 5.83,
+   "mapped": 5.367,
+   "residual": 0.463
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.067,
+   "reference": 6.75,
+   "mapped": 6.571,
+   "residual": 0.179
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.5,
+   "reference": 4.0,
+   "mapped": 4.684,
+   "residual": -0.684
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.167,
+   "reference": 6.53,
+   "mapped": 5.487,
+   "residual": 1.043
+  },
+  "craft:before": {
+   "measured": 5.2,
+   "reference": 4.83,
+   "mapped": 5.527,
+   "residual": -0.697
+  },
+  "craft:after": {
+   "measured": 6.967,
+   "reference": 7.35,
+   "mapped": 7.654,
+   "residual": -0.304
+  }
+ },
+ "candidates": {
+  "GPU1108F F39#21 live one-sided": {
+   "measured_mean": 5.333,
+   "mapped_mean": 5.69,
+   "mapped_judges": [
+    5.77,
+    5.29,
+    6.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

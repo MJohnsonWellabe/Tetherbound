@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F38#27 Medium live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f27m_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f27m_arm.png",
+  "brief": "Two interface screens from the game: the settings controls list (top) and the quick-item bindings list (bottom). Judge the interface: whether the control and binding text is easy to scan at a glance, the binding cells and key labels are easy to read, and it fits the game's UI direction.",
+  "defects": [
+   "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan"
+  ]
+ },
+ {
+  "label": "G F38#3 High r1 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f3High_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f3High_arm2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: fight camera and creature scale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "G F38#3 High r2 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f3High_live2.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f3High_arm2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: fight camera and creature scale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "G F38#3 Medium r1 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f3Medium_live.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f3Medium_arm2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: fight camera and creature scale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "G F38#3 Medium r2 live-vs-arm",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f3Medium_live2.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/a563c070-1eb3-5127-891f-7214170e2b7f/scratchpad/gpu/sidesG/G-cl_f3Medium_arm2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: fight camera and creature scale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ }
+]
