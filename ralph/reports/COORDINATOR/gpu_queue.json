@@ -3,6 +3,24 @@
  "after": "section F (all four biomes) finishes",
  "entries": [
   {
+   "id": "reverify-f36-medium-after-posepreset-fix",
+   "kind": "re-verify (Medium)",
+   "rows": [
+    "F36#72",
+    "F36#69",
+    "F36#58",
+    "F36#35",
+    "F36#33",
+    "F36#75"
+   ],
+   "branch": "main",
+   "head": "after tb/things-posepreset-land lands",
+   "job": "capture_f36_poses.gd --whole-body --context --roles=hit,faint for stormbrush, solmane, pebbik, breezetail, ashtusk, stormtrail at MEDIUM on main with the preset fix (log must show the Medium preset)",
+   "capture": "Medium, one side (main)",
+   "priority": "FIRST once the pose preset fix is on main: four closed rows rest on an invalid Medium",
+   "status": "waiting for the tool fix"
+  },
+  {
    "id": "things-glidebank-closeout",
    "kind": "close-out (High + Medium)",
    "rows": [
