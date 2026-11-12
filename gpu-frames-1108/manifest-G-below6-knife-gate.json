@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-below6-knife-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+  "sky_fraction": 0.082,
+  "lower_edges": 0.1538,
+  "script_errors": 0,
+  "note": "below6-knifeedge no-loss: F40#0 gate road realm gate crag, day clear (piece 3). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-below6-knife-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.jpg",
+  "sky_fraction": 0.051,
+  "lower_edges": 0.3722,
+  "script_errors": 0,
+  "note": "below6-knifeedge no-loss: F40#0 gate road realm gate crag, day clear (piece 3). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-below6-knife-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg",
+  "sky_fraction": 0.055,
+  "lower_edges": 0.3934,
+  "script_errors": 0,
+  "note": "below6-knifeedge no-loss: F40#0 gate road realm gate crag, day clear (piece 3). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+  "preset": "arm-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-below6-knife-gate/arm-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg",
+  "sky_fraction": 0.26,
+  "lower_edges": 0.4272,
+  "script_errors": 0,
+  "note": "below6-knifeedge no-loss: F40#0 gate road realm gate crag, day clear (piece 3). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-below6-knife-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+  "sky_fraction": 0.081,
+  "lower_edges": 0.154,
+  "script_errors": 0,
+  "note": "below6-knifeedge no-loss: F40#0 gate road realm gate crag, day clear (piece 3). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-below6-knife-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.jpg",
+  "sky_fraction": 0.051,
+  "lower_edges": 0.3717,
+  "script_errors": 0,
+  "note": "below6-knifeedge no-loss: F40#0 gate road realm gate crag, day clear (piece 3). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-below6-knife-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg",
+  "sky_fraction": 0.055,
+  "lower_edges": 0.3933,
+  "script_errors": 0,
+  "note": "below6-knifeedge no-loss: F40#0 gate road realm gate crag, day clear (piece 3). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+  "preset": "base-High",
+  "tree": "e948b35aadf7880659e84502e2b517480dd5df27",
+  "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-below6-knife-gate/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg",
+  "sky_fraction": 0.26,
+  "lower_edges": 0.428,
+  "script_errors": 0,
+  "note": "below6-knifeedge no-loss: F40#0 gate road realm gate crag, day clear (piece 3). tb/below6 e948b35aa both sides, base no overlay vs arm BELOW6-KNIFEEDGE/overlay.json; High."
+ }
+]
