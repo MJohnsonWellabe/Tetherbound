@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 11:40 UTC",
+  "updated": "12 Nov 2026 12:35 UTC",
   "headline": [
+    "12 Nov 12:35: OWNER DIRECTION, new lane roles: LANE-BELOW6 rows below 6 (F41#8, F36#46, F40#1, F39#8 parked); LANE-THINGS moves every 6-7 row over 7 (all categories, shared causes first; queued 7.5 close-outs finish, no new ones); LANE-PLACES re-scores every outdated row on current main (GPU captures, its own three-judge batches). GPU: re-scores first, then alternating with arms. 48 stale 6-7 rows capturing now.",
     "12 Nov 11:40: #923 landed (Stormwood rim off, F41#18 6.22; ruler clear by default). Landed overnight: #918, #919, #920, #921, #922, #923. Below 6 now: F39#8 5.66 (parked), F41#8 5.80, F36#46 5.87, F40#1 5.90. GPU: F38#15 glide-bank close-out, then the Ashtusk ember fix (close-out), wet trail round 2, Stormwood uniforms.",
     "12 Nov 11:25: Ashtusk (High 8.03, Medium 7.28) and Brooktail (High 7.69, Medium 7.03) do not close: at Medium the ruler never overlapped, so the creatures themselves sit under 7.5. Close-out exception applies (both at 7.0 or above). #923 (Stormwood rim off, F41#18 6.22) in CI.",
     "12 Nov 11:05: pose-stage capture fix (--clear-ruler, no game change) lifts six creature rows: Ashtusk 8.03 and Brooktail 7.69 meet the bar at High (Medium running next), Mirejaw 7.26 (was 5.28), Riftfrill 7.31, Sparkit 7.26, Shadelet 7.07. Stormwood rim-off and wet trail round 2 in progress; F38#15 glide-bank close-out capturing.",
@@ -930,7 +931,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "12 Nov 03:20 UTC: wrap-up done (all judged wins on main or in PR #917; the owner deleted the finished branches), lanes restarted on fresh branches from main: LANE-BELOW6 (tb/below6), LANE-THINGS (tb/things), LANE-PLACES (tb/places), with LANE-SCOUT judging and the GPU lane capturing.",
+  "active_lanes_note": "12 Nov 12:35 (owner): LANE-BELOW6 = below 6; LANE-THINGS = 6-7 to over 7; LANE-PLACES = re-score outdated rows; LANE-SCOUT = arm verdicts; GPU lane = captures (re-scores first).",
   "active_lanes": [
     {
       "lane": "LANE-BELOW6 · Fable · tb/below6 (session_01GPgpLTfhRVzmhmswzRDvDP)",
