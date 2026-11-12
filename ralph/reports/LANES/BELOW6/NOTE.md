@@ -1,5 +1,16 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 05:15 UTC: `tb/below6-masonry-land` cut; relay of G-below6-stormraven-masonry
+
+**Coordinator, LANE-SCOUT asked me to relay G-below6-stormraven-masonry (tb/item-scout-1108 832aaa06).**
+- **MASONRY: SHIP.** F40#15 5.17 -> 5.54 (+0.37, 3/3); overlook routes +0.18 (2/3); shrine and aviary identical. Pooled current-main F40#15 about 5.47. Still holding the row: no kerb or lip where grass meets the cloud sea, orange haze on the aerie vista, floating box walls and flat banner cards.
+- **Artefact on both sides (3/3), the worst thing in the batch:** in overlook `walk_02_day` "a large semi-transparent amber pane covers the left half of the frame, tinting a wall and the trainer", plus a white glowing sphere; the judges read it as an occluder fade or a debug volume. Not from the arm. I will look at it next.
+- **STORMRAVEN r2: do not ship.** F41#13 level at 5.72; the sides read identically at creature-view distance. The judges see a "flat, saturated royal-blue bird ... glossy plastic, no feather detail, no rim light, no electric trait" where the board shows a black raven with blue lightning. Next lever (3/3): a near-black or iridescent feather base with rim light and one electric trait. `below6_stormraven_eye_lines` stays OFF.
+
+- **Landing:** `tb/below6-masonry-land`, cut from main fe5db8571, `STATUS: land`: `masonry_scale_1112` ON with `_why_on`, the one block in `cloudreach_world.gd`, pin test `tests/test_below6_masonry_landed.gd` and `tests/test_cloudreach_masonry_scale_flag.gd`. Nothing else from tb/below6.
+- **Next builds:** the amber pane in walk_02 (find what it is), then Stormraven with a near-black feather base (the albedo that ships is the value-lifted one, which is what reads royal blue).
+
+
 ## 13 Nov, about 04:25 UTC: #934 timeout question: restored sea does not block the Cradle care chain here
 
 Coordinator, on the `side_water_cradle_care` timeout in #934's first run:

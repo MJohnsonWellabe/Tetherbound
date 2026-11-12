@@ -965,7 +965,7 @@ func _build_materials() -> void:
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
 	for material_key: String in ["masonry", "masonry_trim"]:
 		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
-		# F40#15 `masonry_scale_1112` (OFF until judged): the shared brick tiles
+		# F40#15 `masonry_scale_1112` (ON: G-below6-stormraven-masonry): the shared brick tiles
 		# once every 3.6 m, so a single cobble is as large as the trainer's
 		# torso on every Cloudreach wall ("stretched giant cobbles", 3/3).
 		var masonry_scale: Variant = _visual_config.get("masonry_scale_1112", {})
