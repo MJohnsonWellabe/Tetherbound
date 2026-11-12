@@ -11,3 +11,13 @@
 **Tests.** `tests/test_glide_bank_1112.gd` (4).
 
 **Not done.** No rim light on the carrier (the judges' second suggestion): that is light, LANE-PLACES. The wings still cannot sweep (no wing bones).
+
+## Attempt 2 (12 Nov, after G-things-glidebank, 1764c5a8)
+
+Verdict on attempt 1: the bank is preferred 3/3 on the steer frames (High +0.31, Medium +0.26), but the steer path landed the bird facing away from the lens on both sides, which capped the row near 6.2, and the hover no-loss check was confounded by a browner sky on the arm.
+
+Change (capture tool only; the flag and its values are unchanged): `--glide-steer` now returns the trainer to the stand and heading the flight started on before the descent, so `03-landed` is the row's own side-on standing bird. The take-off race fix is also in this tool, so the first stand is used (`FLIGHT STAND index=0`).
+
+CPU (`_sheet_attempt2_landed_and_glide_cpu.jpg`; left: landed with no steer, middle: landed with steer and bank, right: the banked glide): the landed frame matches the original; the glide is banked.
+
+Ask: base and arm with `--glide-steer --glide-steer-frames=20`, the #922 landing (now on main), the same time of day and weather on both sides (the last batch differed in sky), High then Medium; judge `02-glide` and `03-landed`.
