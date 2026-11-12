@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "61a8487d29778e04de8d5bdc407e9c80975caea3",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-stormheart-approach/arm-High/stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+  "sky_fraction": 0.232,
+  "lower_edges": 0.2571,
+  "script_errors": 0,
+  "note": "F41#1, High, tb/below6 61a8487d2 both sides. base = heartwood_1111 on only (local overlay, as main ships), old stands; arm = BELOW6-RAMP/overlay_approach.json (heartwood, aged_heartwood_1112, approach_overrides -> (-100,5300) heading 0)."
+ },
+ {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "61a8487d29778e04de8d5bdc407e9c80975caea3",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-stormheart-approach/arm-High/stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+  "sky_fraction": 0.056,
+  "lower_edges": 0.2779,
+  "script_errors": 0,
+  "note": "F41#1, High, tb/below6 61a8487d2 both sides. base = heartwood_1111 on only (local overlay, as main ships), old stands; arm = BELOW6-RAMP/overlay_approach.json (heartwood, aged_heartwood_1112, approach_overrides -> (-100,5300) heading 0)."
+ },
+ {
+  "frame": "stormwood__landmark__dynamo_core__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "61a8487d29778e04de8d5bdc407e9c80975caea3",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-stormheart-approach/arm-High/stormwood__landmark__dynamo_core__day__approach.jpg",
+  "sky_fraction": 0.232,
+  "lower_edges": 0.2568,
+  "script_errors": 0,
+  "note": "F41#1, High, tb/below6 61a8487d2 both sides. base = heartwood_1111 on only (local overlay, as main ships), old stands; arm = BELOW6-RAMP/overlay_approach.json (heartwood, aged_heartwood_1112, approach_overrides -> (-100,5300) heading 0)."
+ },
+ {
+  "frame": "stormwood__landmark__dynamo_core__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "61a8487d29778e04de8d5bdc407e9c80975caea3",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-stormheart-approach/arm-High/stormwood__landmark__dynamo_core__day__close.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.2609,
+  "script_errors": 0,
+  "note": "F41#1, High, tb/below6 61a8487d2 both sides. base = heartwood_1111 on only (local overlay, as main ships), old stands; arm = BELOW6-RAMP/overlay_approach.json (heartwood, aged_heartwood_1112, approach_overrides -> (-100,5300) heading 0)."
+ },
+ {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "61a8487d29778e04de8d5bdc407e9c80975caea3",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-stormheart-approach/base-High/stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+  "sky_fraction": 0.043,
+  "lower_edges": 0.4948,
+  "script_errors": 0,
+  "note": "F41#1, High, tb/below6 61a8487d2 both sides. base = heartwood_1111 on only (local overlay, as main ships), old stands; arm = BELOW6-RAMP/overlay_approach.json (heartwood, aged_heartwood_1112, approach_overrides -> (-100,5300) heading 0)."
+ },
+ {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+  "preset": "base-High",
+  "tree": "61a8487d29778e04de8d5bdc407e9c80975caea3",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-stormheart-approach/base-High/stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+  "sky_fraction": 0.056,
+  "lower_edges": 0.2791,
+  "script_errors": 0,
+  "note": "F41#1, High, tb/below6 61a8487d2 both sides. base = heartwood_1111 on only (local overlay, as main ships), old stands; arm = BELOW6-RAMP/overlay_approach.json (heartwood, aged_heartwood_1112, approach_overrides -> (-100,5300) heading 0)."
+ },
+ {
+  "frame": "stormwood__landmark__dynamo_core__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "61a8487d29778e04de8d5bdc407e9c80975caea3",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-stormheart-approach/base-High/stormwood__landmark__dynamo_core__day__approach.jpg",
+  "sky_fraction": 0.029,
+  "lower_edges": 0.4357,
+  "script_errors": 0,
+  "note": "F41#1, High, tb/below6 61a8487d2 both sides. base = heartwood_1111 on only (local overlay, as main ships), old stands; arm = BELOW6-RAMP/overlay_approach.json (heartwood, aged_heartwood_1112, approach_overrides -> (-100,5300) heading 0)."
+ },
+ {
+  "frame": "stormwood__landmark__dynamo_core__day__close.jpg",
+  "preset": "base-High",
+  "tree": "61a8487d29778e04de8d5bdc407e9c80975caea3",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=stormwood --subset=stormwood__dynamo__12__the_stormheart_tree --subset=stormwood__landmark__dynamo_core --times=day --views=approach,close --seed=2042",
+  "path": "G-below6-stormheart-approach/base-High/stormwood__landmark__dynamo_core__day__close.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.2617,
+  "script_errors": 0,
+  "note": "F41#1, High, tb/below6 61a8487d2 both sides. base = heartwood_1111 on only (local overlay, as main ships), old stands; arm = BELOW6-RAMP/overlay_approach.json (heartwood, aged_heartwood_1112, approach_overrides -> (-100,5300) heading 0)."
+ }
+]

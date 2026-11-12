@@ -25,3 +25,4 @@ Columns: file | rows | result.
 - G-places-stormlight.md | F41#2, F41#8, F41#13, F41#4, F41#5, F41#6, F41#12, F41#19 | SHIP: F41#2 5.17 → 5.97 (3/3), F41#8 5.22 → 5.80 (3/3), F41#13 +0.23 rides; the rest level. Batch reads ~0.9 below the board; Stormwood ground and road value is the shared ceiling
 - G-f40-13-catch-card-medium.md | F40#13 | CLOSES: Medium 7.76 (raw 7.0, 6.7, 7.3; confirming batch) with High 7.62; land the catch_card arm
 - G-innkeeper-baseline.md | F36#29 | GPU High baseline 7.03 (defect PARTIAL 2/3); close-out exception applies; face texture, separated browns and a relaxed idle would take it past 7.5
+- G-below6-stormheart-approach.md | F41#1 | SHIP: 5.10 → 6.81 (+1.71, 3/3; approach-only 2.80 → 6.42), from the new approach stand, not new art; confirm it as F41#1's fixed camera set. aged_heartwood_1112 not visible, so not judged. Crown out of frame; decal banners
