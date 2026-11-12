@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__night__rain.png",
+  "preset": "arm-High",
+  "tree": "5c372b751b7629244d42669663e5c851186f70e6",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-r2-p88/arm-High/cloudreach__summit_final_stronghold__11__summit_eyrie__approach__night__rain.jpg",
+  "sky_fraction": 0.175,
+  "lower_edges": 0.1902,
+  "script_errors": 0,
+  "note": "places-wetpath-r2 (round 2: half soil darkening, warm hue kept, none at night): tb/places 5c372b751 both sides, base no overlay, arm PLACES-WETPATH/overlay.json, capture_cloudreach_f40_matrix.gd --ground-cover-cache, High. Section p88."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__night__rain.png",
+  "preset": "arm-High",
+  "tree": "5c372b751b7629244d42669663e5c851186f70e6",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-r2-p88/arm-High/cloudreach__summit_final_stronghold__11__summit_eyrie__detail__night__rain.jpg",
+  "sky_fraction": 0.175,
+  "lower_edges": 0.1705,
+  "script_errors": 0,
+  "note": "places-wetpath-r2 (round 2: half soil darkening, warm hue kept, none at night): tb/places 5c372b751 both sides, base no overlay, arm PLACES-WETPATH/overlay.json, capture_cloudreach_f40_matrix.gd --ground-cover-cache, High. Section p88."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__rain.png",
+  "preset": "arm-High",
+  "tree": "5c372b751b7629244d42669663e5c851186f70e6",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-r2-p88/arm-High/cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__rain.jpg",
+  "sky_fraction": 0.178,
+  "lower_edges": 0.1678,
+  "script_errors": 0,
+  "note": "places-wetpath-r2 (round 2: half soil darkening, warm hue kept, none at night): tb/places 5c372b751 both sides, base no overlay, arm PLACES-WETPATH/overlay.json, capture_cloudreach_f40_matrix.gd --ground-cover-cache, High. Section p88."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__night__rain.png",
+  "preset": "arm-High",
+  "tree": "5c372b751b7629244d42669663e5c851186f70e6",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-r2-p88/arm-High/cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__night__rain.jpg",
+  "sky_fraction": 0.124,
+  "lower_edges": 0.1384,
+  "script_errors": 0,
+  "note": "places-wetpath-r2 (round 2: half soil darkening, warm hue kept, none at night): tb/places 5c372b751 both sides, base no overlay, arm PLACES-WETPATH/overlay.json, capture_cloudreach_f40_matrix.gd --ground-cover-cache, High. Section p88."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__night__rain.png",
+  "preset": "base-High",
+  "tree": "5c372b751b7629244d42669663e5c851186f70e6",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-r2-p88/base-High/cloudreach__summit_final_stronghold__11__summit_eyrie__approach__night__rain.jpg",
+  "sky_fraction": 0.173,
+  "lower_edges": 0.2176,
+  "script_errors": 0,
+  "note": "places-wetpath-r2 (round 2: half soil darkening, warm hue kept, none at night): tb/places 5c372b751 both sides, base no overlay, arm PLACES-WETPATH/overlay.json, capture_cloudreach_f40_matrix.gd --ground-cover-cache, High. Section p88."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__night__rain.png",
+  "preset": "base-High",
+  "tree": "5c372b751b7629244d42669663e5c851186f70e6",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-r2-p88/base-High/cloudreach__summit_final_stronghold__11__summit_eyrie__detail__night__rain.jpg",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.1895,
+  "script_errors": 0,
+  "note": "places-wetpath-r2 (round 2: half soil darkening, warm hue kept, none at night): tb/places 5c372b751 both sides, base no overlay, arm PLACES-WETPATH/overlay.json, capture_cloudreach_f40_matrix.gd --ground-cover-cache, High. Section p88."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__rain.png",
+  "preset": "base-High",
+  "tree": "5c372b751b7629244d42669663e5c851186f70e6",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-r2-p88/base-High/cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__rain.jpg",
+  "sky_fraction": 0.175,
+  "lower_edges": 0.182,
+  "script_errors": 0,
+  "note": "places-wetpath-r2 (round 2: half soil darkening, warm hue kept, none at night): tb/places 5c372b751 both sides, base no overlay, arm PLACES-WETPATH/overlay.json, capture_cloudreach_f40_matrix.gd --ground-cover-cache, High. Section p88."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__night__rain.png",
+  "preset": "base-High",
+  "tree": "5c372b751b7629244d42669663e5c851186f70e6",
+  "tool": "tools/capture_cloudreach_f40_matrix.gd",
+  "path": "G-places-wetpath-r2-p88/base-High/cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__night__rain.jpg",
+  "sky_fraction": 0.122,
+  "lower_edges": 0.156,
+  "script_errors": 0,
+  "note": "places-wetpath-r2 (round 2: half soil darkening, warm hue kept, none at night): tb/places 5c372b751 both sides, base no overlay, arm PLACES-WETPATH/overlay.json, capture_cloudreach_f40_matrix.gd --ground-cover-cache, High. Section p88."
+ }
+]
