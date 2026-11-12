@@ -2168,12 +2168,12 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#16": {
-      "gpu": 6.25,
-      "src": "G-dialogue-recapture-meadows (LANE-SCOUT, tb/item-scout-1108 4db5c55a6), main 8df122a83 with the #910 blend fix (blend 1.000), GPU High, one-sided: tournament subject identity (was 6.75; player's head in Oskar's and Mira's shots)"
+      "gpu": 6.32,
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#16 6.32"
     },
     "F38#17": {
-      "gpu": 6.58,
-      "src": "G-dialogue-recapture-meadows (LANE-SCOUT, tb/item-scout-1108 4db5c55a6), main 8df122a83 with the #910 blend fix (blend 1.000), GPU High, one-sided: named trainer subject visibility (was 7.34; companion flank fills half of Keeper Hald's shot)"
+      "gpu": 6.97,
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#17 6.97"
     },
     "F38#18": {
       "gpu": 7.95,
@@ -2256,12 +2256,12 @@
       "src": "GPU High 8-9 Nov (F-meadows)"
     },
     "F38#36": {
-      "gpu": 7.11,
-      "src": "G-dialogue-recapture-meadows (LANE-SCOUT, tb/item-scout-1108 4db5c55a6), main 8df122a83 with the #910 blend fix (blend 1.000), GPU High, one-sided: dialogue speaker occlusion (was 6.26 on part-blended frames)"
+      "gpu": 7.39,
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#36 7.39"
     },
     "F38#37": {
-      "gpu": 6.87,
-      "src": "G-dialogue-recapture-meadows (LANE-SCOUT, tb/item-scout-1108 4db5c55a6), main 8df122a83 with the #910 blend fix (blend 1.000), GPU High, one-sided: dialogue rock obstruction (was 6.75)"
+      "gpu": 6.9,
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (other biomes being confirmed; not landed): F38#37 6.9"
     },
     "F38#38": {
       "gpu": 8.16,
