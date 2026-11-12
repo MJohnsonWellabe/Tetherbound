@@ -3596,7 +3596,8 @@
    "capture": "High, two sides per biome on tb/things: 'stand' = --sight-stand, 'arm' = --sight-stand plus the overlay; base = the existing G-dialogue-recapture-* frames for that biome",
    "pre_check": "blend 1.0 everywhere; companion out of the arm's trainer rows",
    "priority": "HIGH: the Meadows arm shipped (G-things-convclear-meadows, 3136cc76f) but the camera change applies in every biome, so these confirm no loss before landing. Stormwood holds F41#15 (4.49, a speaker hidden behind a creature).",
-   "note": "Run right after places-rain-time-grade, before things-galecarrier."
+   "note": "Run right after places-rain-time-grade, before things-galecarrier.",
+   "done": "G-things-convclear-tidewake 5b45b864a, -cloudreach a8d50f20a, -stormwood e15fcad3e (judging; GPU lane: one Stormwood regression, outerworks_lieutenant)"
   },
   {
    "id": "things-galecarrier",
@@ -3616,7 +3617,8 @@
    "capture": "High, base (overlay off) and arm (overlay on)",
    "pre_check": "arm shows the 1 Nov remake (not the big-eyed fox-bird) in flight with the trainer hanging from its feet; watch for wing clipping in the procedural flap",
    "priority": "owner-rule fix (1 Nov: all remakes ON, no mascot): the flight carrier still draws the pre-remake mesh; F36#48 is a near-bar close-out (7.44)",
-   "note": "After places-rain-time-grade."
+   "note": "After places-rain-time-grade.",
+   "done": "G-galecarrier-flight 138592fa3, G-galecarrier-poses 51fbc23df (judging)"
   },
   {
    "id": "faint2-pebbik-breezetail-medium",
@@ -3632,7 +3634,8 @@
    "overlay_format": "deep merge",
    "job": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
    "capture": "MEDIUM, arm side only",
-   "note": "Close-outs: High pebbik 7.65, breezetail 7.61 (G-things-faint2.md, 102221c2e). Close at Medium 7.5+ once the arm lands. Short; fit after things-convclear-other-biomes."
+   "note": "Close-outs: High pebbik 7.65, breezetail 7.61 (G-things-faint2.md, 102221c2e). Close at Medium 7.5+ once the arm lands. Short; fit after things-convclear-other-biomes.",
+   "done": "G-faint2-pebbik-breezetail-medium 6cf29c52b (judging)"
   },
   {
    "id": "below6-marrow",
