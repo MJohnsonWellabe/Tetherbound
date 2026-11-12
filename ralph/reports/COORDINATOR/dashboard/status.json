@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 21:55 UTC",
+  "updated": "12 Nov 2026 22:20 UTC",
   "headline": [
+    "12 Nov 22:20: #935 landed (F40#8 6.37, F40#17 6.94). #934 (swim and restored sea) is updated onto the new main and re-running full CI; its earlier run had one Tidewake chain time out while loading.",
     "12 Nov 21:55: #935 in full CI: the Cloudreach bridge strip (F40#8 6.37) and the High Perches rim mushrooms (F40#17 6.94). #934 (swim and restored sea) had one Tidewake chain time out while loading; it will be re-run once when its run completes.",
     "12 Nov 21:45: knife-edge ships (F40#8 5.61 to 6.37, 3/3; the black rail strip across the grass at Three Bells is gone). Main's full run after #933 fixed smoke_art, the Tidewake relay and the Livewire net smoke; two reds remain (F18 earned loop: the player gets stuck in terrain on a walk; the shared boss net smoke, intermittent). LANE-CIFIX has both.",
     "12 Nov 21:20: mushrooms split. The High Perches rim dressing ships (F40#17 6.01 to 6.94, 3/3); the pickup restyle does not (the finds read as smudges and herbs, -0.74 in Meadows). LANE-BELOW6 cuts the rim part alone for landing. #934 (swim and restored sea) is waiting for a CI runner.",
@@ -2263,6 +2264,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#935",
+      "what": "Cloudreach: the black strip at the Three Bells bridge is gone (F40#8 5.61 to 6.37) and natural mushroom patches at the High Perches rim (F40#17 6.01 to 6.94); full CI 23 jobs green",
+      "when": "12 Nov 22:15"
+    },
     {
       "pr": "#933",
       "what": "Main's full-CI reds fixed (tier rim cache bug, Water catalogue re-merge, art smoke follows the remakes, Livewire and shared wild fight net smokes), plus F38#20 stronghold stand (6.40 to 7.57) and F38#3 opposing trainer stand (7.48 to 7.61; Warden Aldis 6.80 to 7.18). Full CI all 23 jobs green",
