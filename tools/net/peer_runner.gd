@@ -2583,6 +2583,39 @@ func _nearest_live_wild_excluding(director: Node, excluded: int) -> Node3D:
 ## The teleport is the same one `tests/smoke_combat_camera.gd` uses to stand a
 ## trainer beside a creature; the ENGAGE itself is the production press, so a
 ## fight that would not start for a player does not start here either.
+## True once a downward ray finds collision under every point (each within
+## 30 m below a probe 6 m above it), polling for up to `frames` physics frames.
+func _await_ground_collision(points: Array, frames: int) -> bool:
+	var world: World3D = current_scene.get_viewport().world_3d if current_scene != null else null
+	if world == null:
+		return false
+	for i in maxi(1, frames):
+		var all_hit := true
+		for raw: Variant in points:
+			var at: Vector3 = raw
+			var ray := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 6.0, at + Vector3.DOWN * 30.0)
+			var exclude: Array[RID] = []
+			var ground := false
+			# Skip bodies (the player, creatures): only static ground counts.
+			for attempt in 6:
+				ray.exclude = exclude
+				var hit := world.direct_space_state.intersect_ray(ray)
+				if hit.is_empty():
+					break
+				if hit.collider is CharacterBody3D or hit.collider is RigidBody3D:
+					exclude.append(hit.rid)
+					continue
+				ground = true
+				break
+			if not ground:
+				all_hit = false
+				break
+		if all_hit:
+			return true
+		await physics_frame
+	return false
+
+
 func _step_engage_wild(args: Dictionary) -> Dictionary:
 	var director := _encounter_director()
 	if director == null:
@@ -2696,6 +2729,15 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	if args.has("f48_shipping_capture_binding") and (not shipping_source.live(self, director, shipping_binding) \
 			or shipping_source.selected_body(shipping_binding) != body):
 		return {"verdict": "FAIL", "detail": "Original shipping capture body changed before the real engage press"}
+	# The placement above teleports; a player walks. Streamed terrain
+	# (Terrain3D dynamic collision, built around the camera) can lag a long
+	# jump on a loaded host, and combat admission then finds no ground to seat
+	# the fighters ("support_missing"/"ground_height": CI 43302878714 shard 12,
+	# an 830 m jump in Cloudreach). Wait for collision under both bodies first.
+	var grounded := await _await_ground_collision([player.global_position, body.global_position],
+		int(args.get("ground_wait_frames", 240)))
+	if not grounded:
+		print("[engage_wild] no ground collision under the player/wild after the wait; pressing anyway")
 	director.call("interaction_activate")
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
