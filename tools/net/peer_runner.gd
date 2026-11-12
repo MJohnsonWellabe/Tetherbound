@@ -947,6 +947,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_stormwood_hosted_start(args)
 		"stormwood_hosted_fixture_health":
 			out = _step_stormwood_hosted_fixture_health(args)
+		"stormwood_hosted_fixture_energy":
+			out = _step_stormwood_hosted_fixture_energy(args)
 		"stormwood_hosted_raw_strike":
 			out = await _step_stormwood_hosted_raw_strike(args)
 		"stormwood_hosted_quick":
@@ -3444,6 +3446,44 @@ func _step_stormwood_hosted_fixture_health(args: Dictionary) -> Dictionary:
 	fight.call("_snapshot")
 	return {"verdict": "PASS", "detail": "TEST FIXTURE staged host-owned '%s' round %d to %.1f hp; stationary_target=%s"
 		% [trainer_id, int(fight.get("round_index")), hp, bool(args.get("stationary_target", false))]}
+
+
+## TEST FIXTURE ONLY. Host-only. Fills (or, with `charges`, banks past the cap)
+## one participant's host-owned Energy pools (and refills Wind) so a timing witness can fire charged moves without first landing quick
+## hits (charged moves cost Energy since #878). Cost, cooldown, deadline and the
+## hit itself are still decided by production host authority.
+func _step_stormwood_hosted_fixture_energy(args: Dictionary) -> Dictionary:
+	var session: Node = root.get_node_or_null(^"Game/Session")
+	var trainer_id := str(args.get("trainer", "tamsin_surge_lesson"))
+	if session == null or not bool(session.call("is_host")):
+		return {"verdict": "ERROR", "detail": "fixture energy is host-only"}
+	var fight := _stormwood_hosted_fight(trainer_id)
+	if fight == null or bool(fight.get("finished")):
+		return {"verdict": "FAIL", "detail": "no live hosted fight for '%s'" % trainer_id}
+	var authority: RefCounted = fight.get("authority")
+	var record: Dictionary = fight.get("record") as Dictionary
+	var rec: Dictionary = (authority.get("encounters") as Dictionary).get(str(record.get("encounter_id", "")), {})
+	var participant: Dictionary = (rec.get("participants", {}) as Dictionary).get(int(args.get("peer", 0)), {})
+	if participant.is_empty():
+		return {"verdict": "FAIL", "detail": "peer %d is not in the hosted encounter" % int(args.get("peer", 0))}
+	var uids: Array = (participant.get("actor_vitals", {}) as Dictionary).keys()
+	for uid: Variant in (participant.get("move_resources", {}) as Dictionary).keys():
+		if not uids.has(uid): uids.append(uid)
+	if uids.is_empty():
+		return {"verdict": "FAIL", "detail": "peer has no bound creature to fill"}
+	# `charges` banks that many full bars at once (above the in-game cap) so a
+	# timing witness never needs a refill round trip between its charges.
+	var energy := float(NET_COMBAT_MATH.config().get("energy", {}).get("max", 100.0)) \
+		* maxf(1.0, float(args.get("charges", 1)))
+	# Wind is capped by the host on every read, so it is refilled, not banked:
+	# an exhausted charge doubles its wind-up and moves the strike time.
+	var wind := float(NET_COMBAT_MATH.config().get("wind", {}).get("max", 100.0))
+	for uid: Variant in uids:
+		var row: Dictionary = authority.call("_participant_wind_row", participant, str(uid), true)
+		row["energy"] = energy
+		if row.has("wind"):
+			row["wind"] = maxf(float(row.get("wind", 0.0)), wind)
+	return {"verdict": "PASS", "detail": "TEST FIXTURE filled %s Energy to %.0f" % [str(uids), energy]}
 
 
 ## Sends intentionally untrusted fields down the same Session RPC as a client.
@@ -7675,6 +7715,21 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var cooldowns: Dictionary = fight.get("_cooldowns") as Dictionary
 				var resolved_multiplier := float(hub.get("director").call(
 					"host_card_cooldown_multiplier", peer_card))
+				# Since move_start authority, the hosted lock (`_cooldowns`) is
+				# wind-up + recovery from the start, and the move's own cooldown
+				# (the one Livewire scales) is the host's per-slot cooldown. The
+				# next same-slot action is admitted only after both.
+				var host_deadline := int(cooldowns.get(peer, 0))
+				# The newest action the host ADMITTED a start for (a start can
+				# be accepted while its strike is later refused).
+				var started_action := int(((fight.get("authority") as RefCounted).call("strike_authority_state",
+					str(record.get("encounter_id", "")), peer) as Dictionary).get("last_action", 0))
+				var host_rec: Dictionary = ((fight.get("authority") as RefCounted).get("encounters") as Dictionary).get(
+					str(record.get("encounter_id", "")), {})
+				var host_row: Dictionary = (host_rec.get("participants", {}) as Dictionary).get(peer, {})
+				for pool: Variant in (host_row.get("move_resources", {}) as Dictionary).values():
+					for slot_deadline: Variant in ((pool as Dictionary).get("cooldowns", {}) as Dictionary).values():
+						host_deadline = maxi(host_deadline, int(slot_deadline))
 				result.merge({
 					"participants": (fight.get("participants") as Array).duplicate(),
 					"last_strike": fight.get("last_strike"),
@@ -7699,7 +7754,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"host_authority": {
 						"host_now_ms": Time.get_ticks_msec(),
 						"last_accepted_action": int(actions.get(peer, 0)),
-						"deadline_ms": int(cooldowns.get(peer, 0)),
+						"deadline_ms": host_deadline,
+						"last_started_action": started_action,
 						"active_relic_id": str(peer_card.get("active_relic_id", "")),
 						"cooldown_multiplier": resolved_multiplier,
 					},
