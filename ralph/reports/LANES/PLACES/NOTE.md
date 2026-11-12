@@ -110,6 +110,11 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 - F40#21: 6.68 -> 5.98 (matrix mean; its defect FIXED 3/3 at 4 of 12 stands, PARTIAL at 7)
 **Flags:** F40#0 reads about 6 (5.98, inside the batch's error of the below-6 line). **Rain is 0.6 below clear at every stand.** Lowest stands: stormward overlook, windscar flight aerie, broken skyroad arch, old wind observatory (thin landmarks, new art). Judges' next rain asks: brighter broken overcast in place of the striped grey sky, pale stone kept pale, wet sheen, fog layers; at night a moon key and warm lamp pools in place of the cobalt wash.
 
+- F41#22: 6.96 -> 6.46 (12 Nov, G-rescore-f41-22-24; five stands x three storm states; anchor RMSE 0.75, read as +/-0.75; giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28)
+- F41#24: 7.08 -> 6.46 (same mean; its defect FIXED 3/3 at glass and stormheart, PARTIAL 3/3 at giant and forest: grey slab at the trainer's feet in Break)
+- Not scoreable: F38#41, F39#32, F22#4 have no job.json capture entry, so there are no frames to request.
+- Still to come: G-rescore-stale-d (F38#8 full set, F41#13). After it the re-score queue is empty.
+
 ### Build work handed over
 | Item | State | Goes to |
 |---|---|---|

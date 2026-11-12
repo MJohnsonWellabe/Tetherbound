@@ -1,0 +1,57 @@
+{
+ "Az": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Jh": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Xh": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Qn": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Tj": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Tw": {
+  "anchor": false,
+  "label": "forest",
+  "A": "main",
+  "one_sided": true
+ },
+ "Do": {
+  "anchor": false,
+  "label": "giant",
+  "A": "main",
+  "one_sided": true
+ },
+ "Aa": {
+  "anchor": false,
+  "label": "glass",
+  "A": "main",
+  "one_sided": true
+ },
+ "Fs": {
+  "anchor": false,
+  "label": "rod_line",
+  "A": "main",
+  "one_sided": true
+ },
+ "Jy": {
+  "anchor": false,
+  "label": "stormheart",
+  "A": "main",
+  "one_sided": true
+ }
+}
