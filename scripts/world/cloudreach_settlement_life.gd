@@ -346,7 +346,10 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 				# and stood its top a shin's height proud. On: near the model's own
 				# size (stones about a boot long) and sunk so only the tops show.
 				var paving_fix: Dictionary = items_config().get("paving_scale_1112", {})
-				if item.asset == "paving" and not hung and bool(paving_fix.get("enabled", false)):
+				# Only at the stands it lists (stands on a dirt path): on grass the
+				# small sunk stones all but vanish (GPU G-places-gatepaving, F40#1 -0.61).
+				if item.asset == "paving" and not hung and bool(paving_fix.get("enabled", false)) \
+						and str(stand.get("id", "")) in (paving_fix.get("stands", []) as Array):
 					size = float(paving_fix.get("height_m", 0.12)) * lerpf(float(item.get("scale_min", 1.0)), float(item.get("scale_max", 1.0)), vary)
 					rise = -size * clampf(float(paving_fix.get("sink_fraction", 0.55)), 0.0, 0.9)
 				var model := _scene(holder, load(str(PROPS[item.asset])) as PackedScene,
