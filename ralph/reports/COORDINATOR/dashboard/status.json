@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 03:50 UTC",
+  "updated": "12 Nov 2026 04:30 UTC",
   "headline": [
+    "12 Nov 04:30: F40#3 Cloudreach landmarks ship (crowns plus approach stands, 6.00 -> 6.33, 2/3): leaves the below-6 list once landed. Marrow landing #918 in CI. GPU: Stormheart dressing arm (banners plus aged split wood) for Marrow's frames and F41#1.",
     "12 Nov 03:50: Captain Marrow glow fix SHIPS (F41#15 Marrow frames 4.55 -> 5.95, +1.40, 3/3); landing being cut. Owner: lanes run all night; each lane schedules its own 30-minute check-in before going idle, and the coordinator checks every hour.",
     "12 Nov 03:45: wrap-up landed. #916 Stormheart approach stand and #917 conversation camera plus Galewisp carrier are on main, with every job green. All judged wins are now on main. The only open GPU item is Captain Marrow (F41#15 4.49): frames captured, LANE-SCOUT judging. Lanes restarted fresh from main (LANE-BELOW6, LANE-THINGS, LANE-PLACES); no new arms yet. Stormwood road value: 4 rows gain but F41#4 loses twice, held flag-off for a larger Stormwood swing.",
     "12 Nov 02:20: wrap-up (owner) to get everything on main. Landed tonight: #910, #911, #912, #914, #915. Closed: F36#69 Solmane, F40#13 catch feedback. Still to land: Stormheart approach stand (F41#1 6.81) and the conversation camera (waits for Tidewake/Cloudreach/Stormwood checks); last GPU items: Pebbik/Breezetail Medium, Galewisp carrier, Stormwood road value.",
@@ -2128,6 +2129,12 @@
       "before": 4.55,
       "after": 5.95,
       "pr": "#918 (in CI)"
+    },
+    {
+      "item": "F40#3 Cloudreach landmarks (crowns plus approach stands)",
+      "before": 6.0,
+      "after": 6.33,
+      "pr": "landing being cut (tb/below6-f40-3-land)"
     }
   ],
   "landed_recent": [
@@ -2553,7 +2560,7 @@
     },
     "F40#3": {
       "gpu": 5.65,
-      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art"
+      "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art; G-below6-f40-3-landmarks (LANE-SCOUT cb3ff531d): re-baselined on new stands 6.00 -> 6.33 (2/3), ships; landing being cut"
     },
     "F40#4": {
       "gpu": 6.12,
