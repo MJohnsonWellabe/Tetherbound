@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 20:45 UTC",
+  "updated": "12 Nov 2026 21:00 UTC",
   "headline": [
+    "12 Nov 21:00: two of the lowest rows ship. Swim r5: F39#5 5.45 to 5.98 and F39#14 5.74 to 6.12 (both 3/3); the swim now reads as swimming, with arms spread at the surface. Restored sea r5: F39#17 6.08 to 6.27 (2/3), sunset no longer black. Landing branch requested from LANE-BELOW6.",
     "12 Nov 20:45: #933 landed, full CI green. Main's long-running CI reds are fixed (two of them were real bugs: the rarity rim and the Water catalogue). The F38#20 stronghold stand and F38#3 opposing-trainer stand are on main; Medium close-out captures are queued. A full run on main has been dispatched to confirm.",
     "12 Nov 20:20: LANE-CIFIX root-caused main's full-CI reds. Two were real game bugs: a creature's rarity rim was frozen by the first body of its species, and the Water catalogue refused its own entries on a re-merge. The rest were tests and smokes left behind by the remakes and #878. They land as #933 together with batch 86 (stronghold stand F38#20, opposing trainer stand F38#3), one full CI run on current main.",
     "12 Nov 19:55: #929 (stronghold stand) and #931 (opposing trainer stand) fell behind main after #930, so both now land together as #932 on current main: one full CI run instead of two in a row.",
@@ -2613,7 +2614,7 @@
     },
     "F39#14": {
       "gpu": 6.6,
-      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.44 (was 6.37); RE-SCORE G-rescore-stale-ext-tidewake 6.60 (was 6.37; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.44 (was 6.37); RE-SCORE G-rescore-stale-ext-tidewake 6.60 (was 6.37; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | ARM swim r5 (5c800b975): 5.74 -> 6.12 (3/3), SHIP"
     },
     "F39#15": {
       "gpu": 6.14,
@@ -2625,7 +2626,7 @@
     },
     "F39#17": {
       "gpu": 5.5,
-      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov); capture faithful (GPU lane eye check): the game restored state barely differs from live (mean diff 1.23); needs a game change (LANE-BELOW6) | ARM BELOW6-RESTORED-SEA G-restoredsea-mapfog (be513ad94, 12 Nov): row 6.21 -> 6.88 (3/3) but S3/S4 lose -0.44 (0/3, sunset water near black); not shipped, BELOW6 rescoping | ARM restored sea r4 (012ab2548): row 6.26 -> 6.23 (level, 1/3); S3/S4 +0.53 (3/3); not shipped. Next: combine r1 current read on S1/S2 with r4 sunset water, plus shoreline foam"
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov); capture faithful (GPU lane eye check): the game restored state barely differs from live (mean diff 1.23); needs a game change (LANE-BELOW6) | ARM BELOW6-RESTORED-SEA G-restoredsea-mapfog (be513ad94, 12 Nov): row 6.21 -> 6.88 (3/3) but S3/S4 lose -0.44 (0/3, sunset water near black); not shipped, BELOW6 rescoping | ARM restored sea r4 (012ab2548): row 6.26 -> 6.23 (level, 1/3); S3/S4 +0.53 (3/3); not shipped. Next: combine r1 current read on S1/S2 with r4 sunset water, plus shoreline foam | ARM restored sea r5 (5c800b975): 6.08 -> 6.27 (2/3), S3/S4 +0.10, SHIP; landing to come"
     },
     "F39#18": {
       "gpu": 7.12,
@@ -2691,7 +2692,7 @@
     },
     "F39#5": {
       "gpu": 5.64,
-      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.64 (was 6.06)"
+      "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.64 (was 6.06) | ARM swim r5 G-below6-swim-sea-r5 (5c800b975, 12 Nov): 5.45 -> 5.98 (3/3; shore-creature confound against the arm), SHIP; landing to come"
     },
     "F39#6": {
       "gpu": 7.46,
