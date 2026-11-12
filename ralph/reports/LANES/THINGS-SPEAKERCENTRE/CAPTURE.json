@@ -3,7 +3,7 @@
  "lane": "LANE-THINGS",
  "branch": "tb/things",
  "preset": "High",
- "status": "READY, not queued: two arms are already on the GPU",
+ "status": "QUEUED 12 Nov after THINGS-STORMPOST shipped (one other arm out: THINGS-GALELAND attempt 2)",
  "tool": "phase2_capture_dialogue.gd --biome=meadows (same stand switches both sides)",
  "base": {
   "tree": "tb/things",

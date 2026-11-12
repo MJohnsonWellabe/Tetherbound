@@ -1,4 +1,4 @@
-# THINGS-SPEAKERCENTRE: the conversation shot keeps the speaker near the middle (Hess). READY, not queued.
+# THINGS-SPEAKERCENTRE: the conversation shot keeps the speaker near the middle (Hess). QUEUED.
 
 LANE-THINGS, 12 Nov 2026. Branch `tb/things`. CPU proof: `_sheet_hess_main_vs_arm_cpu.jpg` (main left, arm right).
 
@@ -11,8 +11,8 @@ Flag `camera.json conversation.twoshot_v2.clearance_1112.speaker_centre` (OFF; o
 ## CPU result
 Hess stands left of centre in three-quarter view, face readable, whole upper body in frame; the banner is out of the picture; crates and trees behind.
 
-## Why it is not queued
-Two arms are on the GPU. Also, this term can move any conversation shot whose speaker stands off-centre, in every realm where the rule runs (not Stormwood), so it needs the whole Meadows dialogue set as its no-loss check, not one frame. I captured only Hess on CPU.
+## What to capture
+Queued on 12 Nov when THINGS-STORMPOST shipped and a slot freed. This term can move any conversation shot whose speaker stands off-centre, in every realm where the rule runs (not Stormwood), so it needs the whole Meadows dialogue set as its no-loss check, not one frame. I captured only Hess on CPU.
 
 ## Estimate
 +0.3 to +0.5 on F38#37 or whichever row holds Hess's frame; unknown on the rest. Queue it when a slot frees.
