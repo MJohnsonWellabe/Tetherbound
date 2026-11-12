@@ -1,0 +1,90 @@
+{
+ "row": "Stormheart dressing: F41#15 / F41#7 Marrow dialogue frames (5.95), F41#1 (6.81), and one split-facing frame",
+ "branch": "tb/below6",
+ "overlay": "ralph/reports/LANES/BELOW6-STORMDRESS/overlay.json",
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "resolution": [
+  1920,
+  1080
+ ],
+ "needs_import": "no",
+ "capture_both": "base and arm for each set, same commands",
+ "sets": [
+  {
+   "name": "marrow_dialogue",
+   "tool": "res://tools/phase2_capture_dialogue.gd",
+   "args": [
+    "--biome=stormwood",
+    "--subset=captain_marrow",
+    "--output={OUT}"
+   ],
+   "godot_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--fixed-fps",
+    "20"
+   ],
+   "frames": [
+    "stormwood__inventory__character__captain_marrow__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+   ],
+   "note": "as G-below6-marrow. Until tb/below6-marrow-land is on main, add BELOW6-MARROW/overlay.json to BOTH sides so Marrow is the same on each."
+  },
+  {
+   "name": "f41_1_row",
+   "tool": "res://tools/phase2_capture_locations.gd",
+   "args": [
+    "--biome=stormwood",
+    "--subset=stormwood__dynamo__12__the_stormheart_tree",
+    "--subset=stormwood__landmark__dynamo_core",
+    "--times=day",
+    "--views=approach,close",
+    "--seed=2042",
+    "--output={OUT}"
+   ],
+   "godot_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080"
+   ],
+   "frames": [
+    "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+    "stormwood__dynamo__12__the_stormheart_tree__day__close",
+    "stormwood__landmark__dynamo_core__day__approach",
+    "stormwood__landmark__dynamo_core__day__close"
+   ],
+   "note": "the fixed F41#1 set (new approach stand, on main)"
+  },
+  {
+   "name": "split_facing",
+   "tool": "res://tools/phase2_capture_locations.gd",
+   "args": [
+    "--biome=stormwood",
+    "--subset=zz_no_match",
+    "--spot=split@-101.56,5466.87@26.6",
+    "--times=day",
+    "--views=approach",
+    "--seed=2042",
+    "--output={OUT}"
+   ],
+   "godot_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080"
+   ],
+   "frames": [
+    "stormwood__spot__split__day__approach"
+   ],
+   "note": "the old approach stand, beside the south split. If the orange slab is absent on base, do not judge this set."
+  }
+ ],
+ "_why": "Judges 3/3: banners read as flat blue UI decals / a blue placeholder slab; the split's exposed wood reads as a saturated orange placeholder (one judge: near oxblood). Arm: folded navy cloth banners and aged grey-brown heartwood.",
+ "want_to_see": "banners as hanging cloth with folds, darker and less like a flat sign; the orange trunk face muted to grey-brown. Judge each set on its own."
+}

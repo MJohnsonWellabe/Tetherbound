@@ -6,8 +6,8 @@
 |---|---|---|
 | F41#15 / F41#7 Marrow's head | landing | **READY TO LAND: `tb/below6-marrow-land`** (213cd9ff4, cut from origin/main 2ac7ab843). GPU High: his two dialogue frames 4.55 -> 5.95 (+1.40, 3/3). Both flags ON with `_why_on`, new pin test, `test_character_body_flags` updated, 22 tests / 2192 assertions pass, texture policy PASS. `ralph/reports/LANES/BELOW6-MARROW-LAND/READY.md`, STATUS: land. Coverage gap: the Nysa frame was not judged (2 of the row's 3 frames). |
 | F40#3 Cloudreach landmark read (5.65) | `BELOW6-F40-3` (two candidate approach stands + the dome crowns) | **ready for GPU** |
-| F41#1 split's exposed wood; also the "saturated orange trunk at the left" in Marrow's dialogue frames (same surface) | `BELOW6-SPLITWOOD` (`aged_heartwood_1112`) | **ready for GPU**; being widened to include the Marrow dialogue frames, where the judges named it (3/3, one "near oxblood") |
-| Stormwood top-deck dialogue look (F41#7, #11, #15, #20): lavender grade, pink-lilac planks, blue slab at the left edge | none yet | **in progress**: finding what the blue slab is |
+| F41#15 / F41#7 Marrow frames (5.95) and F41#1 (6.81): banners and the orange split wood | `BELOW6-STORMDRESS` (`banner_cloth_1112` + `aged_heartwood_1112`; three frame sets) | **ready for GPU.** Supersedes `BELOW6-SPLITWOOD` (do not queue both). The "blue slab at the left edge" in Marrow's frames is an ascent banner; the "orange trunk" is the split's exposed wood. |
+| Stormwood top-deck dialogue look, what is left: one flat lavender grade, tiled pink-lilac planks, the dialogue box over Marrow's lower half | none | not started (scene light and grade overlap LANE-PLACES' storm-light rows) |
 | F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | parked, not sent (`NOT-SENT.md`, with a correction) |
 | F40#1 Cloudreach open terrain (5.90) | none | not started |
 | F39#8 (5.66) | none | parked |

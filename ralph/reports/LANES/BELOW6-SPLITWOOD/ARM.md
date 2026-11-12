@@ -1,4 +1,4 @@
-STATUS: ready for GPU (High first); small arm
+STATUS: superseded by BELOW6-STORMDRESS (same flag, sent with the banners as one arm)
 ROW: F41#1 Stormheart (6.81 on the new approach stand). A game defect beside the entrance, not in the row's fixed camera set.
 BRANCH: tb/below6 (code and config only, no import)
 OVERLAY: ralph/reports/LANES/BELOW6-SPLITWOOD/overlay.json (`stormheart_presentation.json split_bark_finish.aged_heartwood_1112`)
