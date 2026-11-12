@@ -35,7 +35,7 @@ func test_ships_off_with_its_scope_declared() -> void:
 	var block: Dictionary = (raw.get("arena", {}) as Dictionary).get("wild_post_clearance_1112", {})
 	assert_false(bool(block.get("enabled", true)), "OFF until judged")
 	assert_true(str(block.get("scope", "")).contains("host-authoritative"), "spawn placement is declared host-authoritative")
-	assert_eq(float((block.get("radius_m", {}) as Dictionary).get("stormwood", 0.0)), 8.0)
+	assert_eq(float((block.get("radius_m", {}) as Dictionary).get("stormwood", 0.0)), 16.0)
 
 
 func test_posts_cover_every_trainer_and_character() -> void:
@@ -60,8 +60,8 @@ func test_on_pushes_a_spot_beside_a_post_out_to_the_radius_and_leaves_far_spots(
 	var beside := Vector3(-888.0, 52.0, 4483.0)
 	assert_false(_director._clear_of_named_trainer_grounds(beside), "ON: a wander target beside Nysa is refused")
 	var moved: Vector3 = _director._out_of_named_trainer_grounds(beside)
-	assert_true(Vector2(moved.x, moved.z).distance_to(post) >= 8.0, "ON: a spawn beside Nysa is pushed out to the radius")
+	assert_true(Vector2(moved.x, moved.z).distance_to(post) >= 16.0, "ON: a spawn beside Nysa is pushed out to the radius")
 	assert_eq(moved.y, beside.y, "height is left to the ground snap")
-	var far := Vector3(-860.0, 52.0, 4482.0)
-	assert_true(_director._clear_of_named_trainer_grounds(far), "30 m away is untouched")
+	var far := Vector3(-850.0, 52.0, 4460.0)
+	assert_true(_director._clear_of_named_trainer_grounds(far), "well outside the radius of every post is untouched")
 	assert_eq(_director._out_of_named_trainer_grounds(far), far)
