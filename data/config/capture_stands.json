@@ -40,5 +40,14 @@
     "fit_margin": 0.03,
     "fit_min_ratio": 1.15,
     "fit_contact_band_m": 0.25
+  },
+  "approach_overrides": {
+    "_why": "F41#1 (LANE-BELOW6, 12 Nov 2026). The Stormheart's two approach views seat at tree-local (-23, -46), beside the trunk, and face a bark wall from 5 m, so neither shows the tree (GPU G-below6: about 0.3 on the row). GPU screen G-stormheart-stand-screen (tb/gpu-frames-1108 275840782): from the road at (-100, 5300) looking north the trunk and its arched gate sit centre-frame between the root buttresses; (-100, 5200) and (-100, 5100) show only forest. Capture tooling only: earns no score credit by itself and is re-baselined.",
+    "enabled": true,
+    "_why_on": "ON (GPU High G-below6-stormheart-approach, 12 Nov 2026; ralph/reports/GPU-PASS/1108/G-below6-stormheart-approach.md on tb/item-scout-1108 d3f616f1c): F41#1 row 5.10 -> 6.81 (+1.71, 3/3); approach frames alone 2.80 -> 6.42. The old stand did not show its subject (a bark wall from 5 m). This is F41#1's fixed approach camera set from now on: both sides of every later comparison use it.",
+    "destinations": {
+      "stormwood__dynamo__12__the_stormheart_tree": {"position": [-100.0, 5300.0], "heading_deg": 0.0},
+      "stormwood__landmark__dynamo_core": {"position": [-100.0, 5300.0], "heading_deg": 0.0}
+    }
   }
 }
