@@ -407,6 +407,21 @@ func _build_environment() -> void:
 	_camera.global_position = CAM_POS
 	_camera.look_at(CAM_LOOK, Vector3.UP)
 	_camera.make_current()
+	# Graphics preset on the stage (GPU lane, 12 Nov): this stage built its own
+	# environment and lights and never asked graphics_prefs.gd, so High and
+	# Medium rendered identically and every "Medium" pose capture was a second
+	# High render. The selected preset now reaches the stage the way it reaches
+	# the game (world_look.gd): environment, sun, viewport, camera, in that
+	# order. `--no-graphics-preset` restores the old stage for reproducing
+	# earlier rounds.
+	if not "--no-graphics-preset" in OS.get_cmdline_user_args():
+		var prefs := preload("res://scripts/ui/graphics_prefs.gd")
+		prefs.load_preferences()
+		prefs.apply_environment(env)
+		prefs.apply_sun(key)
+		prefs.apply_viewport(root)
+		prefs.apply_camera(_camera)
+		print("STAGE graphics preset applied: %s" % prefs.selected())
 
 
 ## The 17 x 2 pass: every species, ordinary then shiny, trainer and camera
