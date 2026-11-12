@@ -13,3 +13,9 @@
 **CPU look** (`_sheet_cpu_idle_base_left_arm_right.jpg`, the row's idle frame, zoomed): the eye is a clear pale-blue disc instead of a small pale spot, and the chest and wing flecks are bolder. The body is still deep blue. CPU has no bloom, so how the eye glows on the GPU is unverified. No CPU judge batch.
 
 **Seen in the frame, not from this arm:** the trainer stands on Rodkeeper Hesk's head next to the raven on both sides; the creature capture stand overlaps Hesk's post.
+
+## r2 (12 Nov, after the GPU pre-check hold)
+
+Held before judging: on the GPU the filled eye disc bloomed into a white oval with no pupil (saturated pixels in a 120 x 80 box round the eye 108 -> 373), fine at full-frame distance but a white blob up close; the chest and wing flecks read a little more speckled.
+
+r2: `make_glow_r2.py` now draws the eye as a blue iris around a dark pupil (the map is cleared to black inside the pupil, the iris stays below white), and the coat's emission energy drops 3.4 -> 2.9. The widened feather lines are unchanged. The texture is regenerated and re-imported under the same name. Not re-captured on CPU: CPU has no bloom, so the GPU pre-check is the test.

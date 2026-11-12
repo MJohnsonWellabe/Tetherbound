@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 00:20 UTC: STORMRAVEN r2 pushed after the pre-check hold
+
+SWIM r5 and RESTORED-SEA r5 passed their pre-checks and are with LANE-SCOUT. STORMRAVEN was held (the filled eye bloomed to a white blob with no pupil). r2 is pushed: the eye is a blue iris around a dark pupil in the glow map, emission 3.4 -> 2.9; the texture is regenerated under the same name and re-imported (policy check passes). GPU lane: please re-run the pre-check on the current head; it needs the import again.
+
+
 ## 12 Nov, about 23:55 UTC: BELOW6-MASONRY ready (F40#15)
 
 - **F40#15 (5.89): arm built and proven on CPU.** `ralph/reports/LANES/BELOW6-MASONRY/`. Flag `cloudreach_visual.json masonry_scale_1112` (OFF). The shared Cloudreach masonry repeats every 3.6 m, so a cobble is a metre across; the arm tiles it every 1.4 m and lightens the wall stone a step. In walk_03 the pier's stones drop to a half to a third of their size. It is a shared material, so please judge masonry controls (Sky Shrine, aviary) as a no-loss set.

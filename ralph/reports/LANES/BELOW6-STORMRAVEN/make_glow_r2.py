@@ -5,7 +5,8 @@ Output: creature_stormraven_owner1101_glow_read_r2.png
   - the feather lines are widened (3 px dilation at the map's resolution, then a 1 px blur) so they
     survive at normal creature distance;
   - the two eye patches (the pale cyan eye patches in the albedo) get a
-    soft filled disc 1.7x their size with a white-hot core, so the eye reads as a lit electric eye.
+    soft blue iris 1.7x their size around a dark pupil, so the eye reads as a lit eye without
+    blooming to white.
 No hue change: the map stays the remake's blue-white. No new geometry, no generation.
 """
 import hashlib, sys
@@ -43,10 +44,14 @@ for fx, fy in EYES:
     ex, ey = x0 + xs.mean(), y0 + ys.mean()
     radius = max(0.006 * w, 1.7 * np.sqrt(len(xs) / np.pi))
     d = np.sqrt((xx - ex) ** 2 + (yy - ey) ** 2) / radius
-    disc = np.clip(1.0 - d, 0.0, 1.0) ** 1.4
-    colour = np.array([150.0, 215.0, 255.0])
-    core = np.clip(1.0 - d * 2.2, 0.0, 1.0)
-    eye = disc[..., None] * colour + core[..., None] * np.array([105.0, 40.0, 0.0])
+    # A lit iris with a dark pupil kept in its centre (GPU pre-check, 12 Nov: a
+    # filled disc with a white core bloomed into a blob with no pupil). The iris
+    # stays the map's own blue and below white so it glows without clipping.
+    disc = np.clip(1.0 - d, 0.0, 1.0) ** 1.2
+    colour = np.array([70.0, 150.0, 215.0])
+    pupil = np.clip((d - 0.22) / 0.14, 0.0, 1.0)
+    eye = (disc * pupil)[..., None] * colour
+    out = out * np.clip((d - 0.18) / 0.12, 0.0, 1.0)[..., None]
     out = np.maximum(out, eye)
     found.append((round(float(ex)), round(float(ey)), round(float(radius), 1)))
 Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).save(DST)

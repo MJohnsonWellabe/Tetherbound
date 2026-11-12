@@ -1031,12 +1031,12 @@
       }
     },
     "below6_stormraven_eye_lines": {
-      "_why": "LANE-BELOW6 (12 Nov 2026), F41#13 electric creature finish (GPU High 5.97, G-rescore-stale-d: Fulgocobra reads well; 'Stormraven is a flat cobalt shape with no visible face, eye or charge contrast'). Owner rule: one elemental trait, glowing eyes plus glowing lines in its element. The remake's own glow map is redrawn stronger (ralph/reports/LANES/BELOW6-STORMRAVEN/make_glow_r2.py): the two eyes become filled lit discs and the lightning feather lines are widened so they hold at normal creature distance, lit at 3.4 with a cool rim so the head separates from the ground. Same albedo, species, silhouette and colours; no red. OFF until GPU-judged.",
+      "_why": "LANE-BELOW6 (12 Nov 2026), F41#13 electric creature finish (GPU High 5.97, G-rescore-stale-d: Fulgocobra reads well; 'Stormraven is a flat cobalt shape with no visible face, eye or charge contrast'). Owner rule: one elemental trait, glowing eyes plus glowing lines in its element. The remake's own glow map is redrawn stronger (ralph/reports/LANES/BELOW6-STORMRAVEN/make_glow_r2.py): the two eyes become filled lit discs and the lightning feather lines are widened so they hold at normal creature distance, lit at 2.9 with a cool rim (r2 after the GPU pre-check: the eye keeps a dark pupil inside a blue iris instead of a filled white disc) so the head separates from the ground. Same albedo, species, silhouette and colours; no red. OFF until GPU-judged.",
       "enabled": false,
       "coats": {
         "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0_value_lift.png",
-          "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read_r2.png", "emission_energy": 3.4,
+          "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read_r2.png", "emission_energy": 2.9,
           "rim": 0.9, "rim_tint": 0.35,
           "roughness": 0.8, "specular": 0.25
         }
