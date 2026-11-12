@@ -4082,6 +4082,26 @@
    "status": "held by LANE-THINGS (after RULER)"
   },
   {
+   "id": "things-embers",
+   "kind": "arm + close-out",
+   "rows": [
+    "F36#33",
+    "F36#62",
+    "F36#75",
+    "nightburrow"
+   ],
+   "branch": "tb/things",
+   "head": "4ab726f65",
+   "tree": "tb/things 4ab726f65 both sides (pose stage defaults to the clear ruler only after #923; pass --clear-ruler explicitly on both sides)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-EMBERS/overlay_aspect_billboard.json",
+   "overlay_format": "deep merge",
+   "job": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --clear-ruler --roles=hit,faint for ashtusk, riftfrill, stormtrail, nightburrow",
+   "capture": "High for all four; MEDIUM as well for ashtusk (close-out: High 8.03, Medium 7.28)",
+   "pre_check": "no thin vertical line above the back; motes small and soft (owner: no big floating effects); embers not red",
+   "priority": "right after glidebank: Ashtusk close-out candidate"
+  },
+  {
    "id": "places-wetpath-r2",
    "kind": "arm (round 2)",
    "rows": [
