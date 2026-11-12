@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 18:20 UTC",
+  "updated": "12 Nov 2026 18:30 UTC",
   "headline": [
+    "12 Nov 18:30: LANE-BELOW6's three below-6 reworks keep failing the GPU pre-check: restored sea r3 (sunset foreground still near black) and swim r3 (arm raised like a wave). Both approaches are parked. Restored sea r4 widens the shallows instead of darkening, and the stronghold stand moves to (0, 7130); both are queued. Swim needs its pose keys verified first (water-hidden check).",
     "12 Nov 18:20, scoring policy (coordinator): a row's board score is now the mean of the panels that scored it on current main. The newest panel no longer overwrites it, and the score from the batch where a fix won counts as evidence of the gain, not as the row's score. Today's swings (32 rows up, 27 down) were panel-to-panel spread of about 0.6 to 0.9 plus winning-batch scores reading high; no landed change has been shown to lower a row.",
     "12 Nov 18:10: Meadows ground arm does not ship (F38#21 -0.20, 0/3; too subtle) and is parked; the judges want clusters, outcrops and blended dressing. Flag (3/3): Burrow Warrens badger creatures show a red crest; red is Team Tether only, so LANE-THINGS takes it first.",
     "12 Nov 17:35: Quest beacon beam removed from catch views ships (F38#7 6.92 to 7.49, F38#33 7.35 to 7.49, F38#14 7.01 to 7.40; nothing loses), landing as #928. F38#7 and F38#33 sit at 7.49, one step from closing.",
