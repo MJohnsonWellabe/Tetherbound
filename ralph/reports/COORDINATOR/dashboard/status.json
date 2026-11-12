@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 05:20 UTC",
+  "updated": "12 Nov 2026 05:25 UTC",
   "headline": [
+    "12 Nov 05:25: PR #919 now carries both the Break-only lightning fix and the F40#3 Cloudreach landmark crowns and stands (6.00 -> 6.33), one CI run. Owner question pending: Stormwood road charge colour (yellow-gold by owner direction vs judges' white-violet); lane keeps gold until the owner answers.",
     "12 Nov 05:20: PR #919 in CI: lightning goes out the moment Break ends (owner rule), so Fading stills no longer carry Break's last strike. F41#2 re-score queued on the fix.",
     "12 Nov 05:15: Fading bolt was capture timing, not the game: Fading is clean and brighter than Building over 16 steps (G-fading-bolt-motion-probe). Owner's Break-only lightning holds on main. LANE-PLACES fixing the storm-phase tool to settle before the shot; F41#2 (5.97) gets a fresh re-score after.",
     "12 Nov 05:10: F41#15 full row score on main after #918 is 4.99 (was 4.49): Marrow's frames are fixed; Officer Nysa's frame, captured for the first time, is hidden by two storm creatures and her portrait does not match her body. LANE-THINGS' Stormwood creature cone targets exactly that. GPU running a Fading-bolt motion probe (capture timing vs game).",
@@ -2139,7 +2140,7 @@
       "item": "F40#3 Cloudreach landmarks (crowns plus approach stands)",
       "before": 6.0,
       "after": 6.33,
-      "pr": "landing being cut (tb/below6-f40-3-land)"
+      "pr": "#919 (in CI, with the Break-only lightning fix)"
     }
   ],
   "landed_recent": [
