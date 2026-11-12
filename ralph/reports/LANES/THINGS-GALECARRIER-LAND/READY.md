@@ -8,7 +8,8 @@ STATUS: land
 - **What ships (game, config only):** `data/config/fly_traversal.json capabilities.galewisp`: `model` to the remake GLB and `grip_bones` to `["foot_l", "foot_r"]`, each with a `_why`. Height, feet offset, wing flap, collision and stamina are unchanged. Galecrest is not touched.
 - **What ships (capture tooling):** `tools/phase2_capture_realm_flight.gd --carrier=<species>` (default galecrest, so existing rows are unchanged).
 - **Test added:** `tests/test_galewisp_carrier_is_the_remake.gd` (2): every carrier flies as the model its species ships; Galewisp's grip bones exist on that rig.
-- **Tests run on this branch (per-file lines checked):** `galewisp_carrier_is_the_remake` 2, `fly_traversal` 16, `uiposes_fly_hang_body` 4: 22 tests, 0 failed.
+- **Existing test updated:** `tests/test_vis_meadows_1104_on.gd` pinned Galewisp's grip bones as `leg_lower_l/r`; the pin now reads `foot_l/r` (height and seat pins unchanged).
+- **Tests run on this branch (per-file lines checked):** `galewisp_carrier_is_the_remake` 2, `fly_traversal` 16, `uiposes_fly_hang_body` 4, `vis_meadows_1104_on` 20: 42 tests, 0 failed.
 - No texture is touched. No `.uid` files are included.
 
 ## Follow-ups named by the judges (not this landing)
