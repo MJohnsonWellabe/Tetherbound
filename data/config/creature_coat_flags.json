@@ -1030,6 +1030,18 @@
         }
       }
     },
+    "below6_stormraven_eye_lines": {
+      "_why": "LANE-BELOW6 (12 Nov 2026), F41#13 electric creature finish (GPU High 5.97, G-rescore-stale-d: Fulgocobra reads well; 'Stormraven is a flat cobalt shape with no visible face, eye or charge contrast'). Owner rule: one elemental trait, glowing eyes plus glowing lines in its element. The remake's own glow map is redrawn stronger (ralph/reports/LANES/BELOW6-STORMRAVEN/make_glow_r2.py): the two eyes become filled lit discs and the lightning feather lines are widened so they hold at normal creature distance, lit at 3.4 with a cool rim so the head separates from the ground. Same albedo, species, silhouette and colours; no red. OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0_value_lift.png",
+          "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read_r2.png", "emission_energy": 3.4,
+          "rim": 0.9, "rim_tint": 0.35,
+          "roughness": 0.8, "specular": 0.25
+        }
+      }
+    },
     "below6_floor_fulgocobra": {
       "_why": "LANE-BELOW6 (11 Nov 2026), F36#46 Fulgocobra 5.87 (GPU G-things-faint base: the near-black body sinks into the stage; the copper-brown neck plates sit near the reserved red). Graded from the face coat that ships: blacks lift to blue-charcoal with their scale detail and the copper plates move to the gold of the body bands. Keeps lanekit_face_read_fulgocobra's rim, gold-vein glow and matte values, and supersedes it when on. Script tools/art_pipeline/grade_remakes_floor.py fulgocobra. The raised hood in the faint is LANE-THINGS'. OFF until GPU-judged.",
       "enabled": false,
