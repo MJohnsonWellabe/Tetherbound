@@ -29,4 +29,15 @@ The GPU lane held r3 before judging: S4's restored foreground was still darker t
 
 r4 goes the other way. While the fact is set, the shallow colour reaches 1.3 times further than the live profile (`water_scale.depth_falloff 1.3`: restored shallows), the waves ease to 0.8 of live, and the debris is cleared. Colours and alpha are untouched.
 
-CPU (`_sheet_cpu_r4_restored_S1-S4_base_top_arm_bottom.jpg`; restored frames at S1-S4, base above, r4 below): the turquoise shallows spread well out from the islands at S1 and S2, S3 is unchanged in value, and the S4 sunset foreground is lighter and more teal than base, not darker. Foreground mean luminance, base -> arm: S1 62 -> 88, S2 79 -> 110, S3 35 -> 36, S4 22 -> 35. Live against restored: S1 15.2, S2 16.3 (base about 2). Live frames are untouched.
+CPU (the r4 sheet (replaced by the r5 sheet); restored frames at S1-S4, base above, r4 below): the turquoise shallows spread well out from the islands at S1 and S2, S3 is unchanged in value, and the S4 sunset foreground is lighter and more teal than base, not darker. Foreground mean luminance, base -> arm: S1 62 -> 88, S2 79 -> 110, S3 35 -> 36, S4 22 -> 35. Live against restored: S1 15.2, S2 16.3 (base about 2). Live frames are untouched.
+
+## r5 (12 Nov, after G-below6-sea-r4-stronghold)
+
+r4 fixed the sunset (S3/S4 5.84 -> 6.37, 3/3) but the row went level (6.26 -> 6.23): with lighter shallows "the restoration event does not read on either side" at S1/S2. r1 had read there (+0.67) with deeper water, and failed only at low sun.
+
+r5 gives each time of day its own values (`by_time`, keyed by the world look's time-of-day preset; code in `water_restored_sea.gd`):
+- **day:** the shallow colour draws in to a quarter of the live reach (`depth_falloff 0.25` of live), waves 0.55 of live, `alpha_shallow 0.28`: r1's deeper, calmer restored channel, with the live colours kept.
+- **every other preset** (golden, dusk, night): r4's values (falloff 1.3 of live, waves 0.8).
+- **both:** stronger surf on the sandbars (`surf_strength 1.0`, surf reach 1.8 and foam depth 1.5 of live), the shoreline foam the judges asked for; debris cleared.
+
+CPU (`_sheet_cpu_r5_restored_S1-S4_base_top_arm_bottom.jpg`; restored frames at S1-S4, base above, r5 below): S1 and S2 show deep calm channels with pale rings around each island; S3 (day, the waterfall view) keeps base's value; the S4 sunset keeps its teal and is lighter than base. Foreground mean luminance, base -> arm: S1 62 -> 46, S2 79 -> 55, S3 35 -> 35, S4 22 -> 35. Live against restored: S1 14.3, S2 16.8. 0 script errors. The preset is read once a second, so the look follows the clock in play.

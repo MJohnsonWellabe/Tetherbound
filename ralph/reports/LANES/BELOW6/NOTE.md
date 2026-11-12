@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 21:55 UTC: RESTORED-SEA r5 ready (F39#17); stronghold stand shipped
+
+- **F38#20 stronghold stand: SHIPPED** (6.40 -> 7.57, 3/3; coordinator landing #929). Medium still to capture; levers if it misses are the uniform orange windows and the interior props.
+- **RESTORED-SEA r5 pushed, CPU-checked.** r4 fixed the sunset but left the row level. r5 keys the values to the time-of-day preset: at day, r1's deeper, calmer channel (live colours kept); at other presets, r4's values; in both, stronger surf on the sandbars and no debris. CPU foreground luminance base -> arm: S1 62 -> 46, S2 79 -> 55, S3 35 -> 35, S4 22 -> 35. Ready for the pre-check and judging, S3/S4 restored as the no-loss set.
+- **Also ready:** BELOW6-STORMRAVEN (F41#13). **Waiting:** SWIM r4 pre-check, MUSHROOMS, KNIFEEDGE.
+
+
 ## 12 Nov, about 20:45 UTC: BELOW6-STORMRAVEN ready (F41#13)
 
 - **F41#13 Stormraven (5.97): arm built and proven on CPU.** `ralph/reports/LANES/BELOW6-STORMRAVEN/`. Flag `creature_coat_flags.json below6_stormraven_eye_lines` (OFF). The remake's own glow map redrawn stronger (filled lit eyes, wider lightning lines), energy 3.4, cool rim. One new derived texture (needs import; sidecar committed, policy check passes). 0 Meshy credits.
