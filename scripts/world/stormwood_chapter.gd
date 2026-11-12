@@ -59,7 +59,8 @@ func mount(owner_world: Node3D) -> void:
 	# chapter's ids or introducing a separate dialogue implementation.
 	var conversations: Dictionary = _read("res://data/dialogue/stormwood.json").get("conversations", {})
 	conversations[WEN_REFUSAL_CONVERSATION] = wen_refusal_conversation()
-	var actors: Array = _read("res://data/config/stormwood_npcs.json").get("characters", [])
+	var registry := _read("res://data/config/stormwood_npcs.json")
+	var actors: Array = distinct_bodies(registry.get("characters", []), registry.get("distinct_bodies_1111", {}))
 	var presentation := _read("res://data/config/stormwood_dialogue_presentation.json")
 	apply_npc_portraits(conversations, actors, presentation.get("npc_portraits", {}))
 	var openings: Dictionary = presentation.get("npc_openings", {})
@@ -207,6 +208,31 @@ static func circuit_win_events(trainers: Dictionary, progression: RefCounted) ->
 
 ## Pure so the unit suite can prove Wen's pre-guardian refusal with the same
 ## branch shape the production NPC placer evaluates.
+## F41#8 (LANE-MESHY, 11 Nov; `distinct_bodies_1111` in stormwood_npcs.json, OFF until
+## judged): Elder Maud, Rodkeeper Hesk and Warden-elect Bryn all stood on the one
+## local_historian body. ON gives each listed actor its own installed cast body. Its
+## appearance variant is dropped, because that variant was painted for local_historian;
+## the role accessories are bone-attached and carry over. Presentation only.
+static func distinct_bodies(actors: Array, cfg: Dictionary) -> Array:
+	if not bool(cfg.get("enabled", false)):
+		return actors
+	var bodies: Dictionary = cfg.get("bodies", {})
+	var variants: Dictionary = cfg.get("variants", {})
+	var out: Array = []
+	for actor: Dictionary in actors:
+		var id := str(actor.get("id", ""))
+		if bodies.has(id):
+			var changed := actor.duplicate(true)
+			changed["body_profile"] = str(bodies[id])
+			changed.erase("appearance_variant_id")
+			if variants.has(id):
+				changed["appearance_variant_id"] = str(variants[id])
+			out.append(changed)
+		else:
+			out.append(actor)
+	return out
+
+
 static func npc_spec(actor: Dictionary) -> Dictionary:
 	var actor_id := str(actor.get("id", ""))
 	var prefix := "stormwood_%s_" % actor_id

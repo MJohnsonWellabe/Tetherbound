@@ -1355,6 +1355,17 @@ func test_only_break_shows_sky_lightning() -> void:
 	for target: Array in [["calm", false], ["building", false], ["fading", false], ["break", true], ["calm", true]]:
 		var run := _run_sky(surge, str(target[0]), bool(target[1]), 60.0)
 		var decorative := (run.onsets as Array).filter(func(o: Array) -> bool: return str(o[1]) != "scene")
+		# storm_phase_1111 (GPU judged, G-places-stormlight, F41#2 +0.80): a row
+		# with `far_bolts` (Building) shows faint far-horizon bolts and nothing
+		# else: no Break event, no whole-sky flash, never at Break's full level.
+		var far_bolts := float(surge._resolved(surge.presentation_for(str(target[0]), bool(target[1]))).get("far_bolts", 0.0))
+		if far_bolts > 0.0:
+			assert_eq(str(target[0]), "building", "only Building carries far bolts")
+			assert_false(bool(target[1]), "never in the aftermath")
+			var other := decorative.filter(func(o: Array) -> bool: return str(o[1]) != "far_bolt")
+			assert_eq(other.size(), 0, "building shows far bolts only, no Break sky events")
+			assert_true(float(run.bolt_peak) < 1.0, "a far bolt never reaches Break's full bolt level (%.2f)" % float(run.bolt_peak))
+			continue
 		assert_eq(decorative.size(), 0, "%s%s has no sky lightning" % ["aftermath " if bool(target[1]) else "", str(target[0])])
 		assert_almost_eq(float(run.bolt_peak), 0.0, 0.0001)
 	surge.free()

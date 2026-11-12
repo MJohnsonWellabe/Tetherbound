@@ -1,0 +1,16 @@
+{
+ "id": "f41-8-distinct-bodies",
+ "branch": "tb/item-f41-8-bodies",
+ "head": "(this commit)",
+ "overlay": "ralph/reports/LANES/MESHY-F41-8-BODIES/overlay.json",
+ "rows": ["F41#8"],
+ "frames": [
+  "stormwood__inventory__character__elder_maud",
+  "stormwood__inventory__character__rodkeeper_hesk",
+  "stormwood__inventory__character__warden_elect_bryn"
+ ],
+ "tool": "tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=<frame>",
+ "capture_both": "base (live) and candidate (overlay), same seed",
+ "preset": "High first, then Medium if High reaches 7.5",
+ "want_to_see": "three distinct people: an elder with a cane (Maud), a hatted rod keeper in field gear (Hesk), a younger warden-elect (Bryn); no two share a body"
+}

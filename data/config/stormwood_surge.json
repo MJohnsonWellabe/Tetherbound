@@ -111,6 +111,26 @@
         "phase_readability_candidate": {"phases": {"building": {"fog_density_add": 0.0055, "rain_amount": 0.9, "sun_energy_mult": 0.34}}}
       }
     },
+    "storm_phase_1111": {
+      "enabled": true,
+      "_why_on": "ON (GPU High, LANE-SCOUT G-places-stormlight, tb/item-scout-1108 6ece0b6f, 12 Nov 2026; three code-blind judges, confirming batch): F41#2 Surge phases 5.17 -> 5.97 (+0.80, 3/3: Break shows lightning forks and the sky changes between phases); F41#13 +0.23 (3/3) riding; F41#6, #12, #19 identical, F41#4 and #5 within 0.05. No Glass Field glare. The batch reads about 0.9 below board values; gains are within-batch.",
+      "scope": "client_presentation",
+      "_why": "LANE-PLACES P1 (11 Nov 2026; GPU High judges on seven F41 rows, STORMWOOD-LIGHT-ASKS): 'Calm, Building and Break differ only in rain density', 'flat lavender sky card ... blocky, faceted polygons with streak artefacts', 'no fog layering between near and far', 'no lightning and no shafts, the sky never darkens at break'. One switch, deep-merged last (stormwood_surge_rules.gd PRESENTATION_CANDIDATES). (1) Layered storm sky: the ceiling dome normalises its view direction per pixel and doubles its tessellation (the faceting), and draws a billowed high deck with dark undersides and key-lit tops, a faster dark scud shelf and a paler band with hanging rain veils above the treeline; each phase darkens the deck only (deck_dark Calm 0 < Building < Break), never the band or the ground. (2) White-violet bolts: Break's decorative bolts are wider with a soft halo, held about 0.9 s, mostly inside the view, and lift the frame exposure while lit (ground and trunks flash with them); Building gains slow faint far-horizon bolts (`far_bolts`), Calm none. (3) Mist layers (stormwood_fog_layers.gd): low banks in the horizon colour between tree ranks from 30 m out, alpha-blended so they cannot glare. Strike, telegraph, phase timing, shelter and saves are untouched; decorative bolts stay held during a ground warning and inside the flash budget. OFF until GPU judged.",
+      "overlay": {
+        "ceiling": {"layered": {"enabled": true, "strength": 1.0, "shade_colour": "#2f2c4e", "lit_colour": "#d6d0f2", "band_colour": "#a8a4d0", "key_yaw_deg": 140.0}},
+        "shafts": {"follow_camera": true, "intensity": 0.3},
+        "fog_layers": {"enabled": true, "cell_m": 46.0, "ring": 5, "chance": 0.6, "width_m": [60.0, 110.0], "height_m": [7.0, 15.0], "near_fade_m": [30.0, 70.0], "far_fade_m": [240.0, 380.0], "max_alpha": 0.6, "lift": 0.12, "max_luminance": 0.62, "foot_sink_m": 1.5},
+        "sky_lightning": {"ground_light_exposure": 0.22, "bolt_chance": 0.8, "bolt_seconds": 0.9, "bolt_pool": 4, "bolt_azimuth_deg": 34.0, "bolt_width_m": 2.6, "bolt_halo_width_mul": 5.0, "bolt_halo_alpha": 0.16, "bolt_light_energy": 1.8, "bolt_light_floor": 0.4, "bolt_light_colour": "#e6dcff", "bolt_light_specular": 0.3, "bolt_light_elevation_deg": 22.0,
+          "far": {"interval_min": 3.0, "interval_max": 6.0, "bolt_distance_min_m": 700.0, "bolt_distance_max_m": 1100.0, "elevation_min_deg": 7.0, "elevation_max_deg": 14.0, "bolt_width_m": 3.4, "bolt_seconds": 1.1, "level": 0.6, "cloud_strength": 0.25, "light_scale": 0.2}},
+        "phases": {
+          "calm": {"deck_dark": 0.0, "deck_shade_depth": 0.3, "deck_lit": 0.55, "horizon_glow": 0.75, "fog_layers": 0.6, "far_bolts": 0.0},
+          "building": {"deck_dark": 0.22, "deck_shade_depth": 0.75, "deck_lit": 0.3, "horizon_glow": 0.6, "fog_layers": 0.85, "far_bolts": 1.0},
+          "break": {"deck_dark": 0.4, "deck_shade_depth": 1.0, "deck_lit": 0.15, "horizon_glow": 0.5, "fog_layers": 1.0, "far_bolts": 0.0},
+          "fading": {"deck_dark": 0.12, "deck_shade_depth": 0.5, "deck_lit": 0.45, "horizon_glow": 0.8, "fog_layers": 1.0, "far_bolts": 0.0}
+        },
+        "aftermath": {"all": {"deck_dark": 0.0, "deck_shade_depth": 0.25, "deck_lit": 0.6, "horizon_glow": 0.8, "fog_layers": 0.5, "far_bolts": 0.0}}
+      }
+    },
     "fine_rain_1110": {
       "_why_on_1110": "GPU G-stormwood-groves (10 Nov, LANE-SCOUT 5455a13d1, three code-blind judges, confirming batch): wet earth + fine rain + horizon groves together: F41#17 +0.55 (to 7.23), F41#5 +0.50, F41#4 +0.27, all 3/3; no tree-wall read. The de-pinked wet earth alone was neutral (G-stormwood-swing-2-depink).",
       "enabled": true,
