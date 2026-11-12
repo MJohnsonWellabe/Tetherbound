@@ -24,7 +24,8 @@ This file is the lane's channel to the coordinator.
 - **Asks for the GPU lane, no code:**
   1. Re-capture `tournament_quarter_mira` with `--sight-stand` on current main (the lattice-door fix is on main, unjudged). If she is in view, `--sight-stand` can be confirmed as the fixed dialogue set for Meadows, Tidewake and Cloudreach and those rows re-baselined on it.
   2. Do **not** make `--sight-stand` the fixed set for Stormwood until someone checks its capture time there; on CPU one blocked post took over 50 minutes.
-- **Next:** read the GALELAND verdict when it comes; Hess cut off at the left edge (dialogue framing); the Halder banner faction check for F38#36.
+- **Faction check for the crimson banners (F38#36 and LANE-SCOUT's note): not a red leak.** Captain Halder (`captain_field`, rank captain), Hess (`relay_picket_hess`, rank grunt) and Patrolman Verrick (`stronghold_patrol`, rank grunt) all carry a Team Tether rank in their band trainer files. Red behind them is Team Tether's own colour and within the owner's rule. Bex and Irva (Tidewake, rank grunt) are the same case. If the judges still mark the Halder banner down, it is for glare or composition, not the colour rule; tell the judges so.
+- **Next:** read the GALELAND verdict when it comes; Hess cut off at the left edge (dialogue framing).
 - main 2ac7ab84 (PR #917) is merged into `tb/things`.
 - **Nothing is on the GPU from this lane yet.**
 
