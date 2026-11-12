@@ -1046,7 +1046,9 @@ func enter_conversation(speaker: Node3D, cfg: Dictionary) -> bool:
 	_talk_active = true
 	_talk_leaving = false
 	_exclude_conversation_bodies()
+	_clear_last = null
 	_talk_shot = _solve_conversation_shot()
+	_step_companions_clear()
 	return true
 
 
@@ -1057,6 +1059,7 @@ func exit_conversation() -> void:
 		return
 	_talk_active = false
 	_talk_leaving = true
+	_release_companions()
 
 
 func is_in_conversation() -> bool:
@@ -1101,6 +1104,7 @@ func set_mesh_sight_probe_for_tests(probe: Callable) -> void:
 ## changed. Used when something with a better claim takes the camera.
 func _abandon_conversation() -> void:
 	_talk_active = false
+	_release_companions()
 	_talk_leaving = false
 	_talk_blend = 0.0
 	_talk_speaker = null
@@ -1242,8 +1246,198 @@ func _solve_conversation_shot() -> Dictionary:
 	var open_cfg := CAMFX.block("dialogue_open")
 	if not open_cfg.is_empty():
 		shot = _open_view_shot(shot, used_cfg, used_room, trainer_anchor, speaker_anchor, forward, open_cfg)
+	# camera.json conversation.clearance_1112 (OFF = no block): the player's
+	# own head and back are kept out of the speaker's third.
+	var clear_cfg := _clearance_config()
+	if not clear_cfg.is_empty():
+		shot = _clearance_shot(shot, used_cfg, used_room, trainer_anchor, speaker_anchor, forward, clear_cfg)
 	_talk_used_fallback = bool(shot.get("fallback", false))
 	return shot
+
+
+## camera.json conversation.clearance_1112 (LANE-THINGS, 12 Nov 2026; GPU
+## dialogue re-capture, 3/3 across every region: "the conversation camera does
+## not keep the player's head, back or backpack, or the companion, out of the
+## speaker's third"). Conversation shots only; flag-off.
+##
+## How clear the trainer is of the speaker in `shot`, in half-frame widths
+## (0 or more is clear). The trainer's head and the speaker's shoulders are
+## taken as discs on screen: the gap between them must be `min_gap`, and the
+## trainer's inner edge must sit at least `min_edge` from the frame's centre.
+## A trainer behind the lens or wholly outside the frame is clear.
+func _clearance_score(shot: Dictionary, trainer_anchor: Vector3, speaker_anchor: Vector3, cfg: Dictionary) -> float:
+	var dir := Vector3(shot["dir"]).normalized()
+	var lens: Vector3 = shot["pivot"] + dir * float(shot["distance"])
+	var look := -dir
+	var right := look.cross(Vector3.UP)
+	if right.length_squared() < 0.0001:
+		return 1.0
+	right = right.normalized()
+	var half_width := tan(deg_to_rad(float(shot.get("fov", _base_fov))) * 0.5) * 16.0 / 9.0
+	var head := trainer_anchor + Vector3.UP * float(cfg.get("trainer_head_above_anchor_m", 0.2))
+	var trainer_depth := (head - lens).dot(look)
+	var speaker_depth := (speaker_anchor - lens).dot(look)
+	if trainer_depth <= 0.05 or speaker_depth <= 0.05:
+		return 1.0
+	var xt := (head - lens).dot(right) / trainer_depth / half_width
+	var rt := float(cfg.get("trainer_radius_m", 0.38)) / trainer_depth / half_width
+	if absf(xt) - rt >= 1.0:
+		return 1.0
+	var xs := (speaker_anchor - lens).dot(right) / speaker_depth / half_width
+	var rs := float(cfg.get("speaker_radius_m", 0.32)) / speaker_depth / half_width
+	var gap := absf(xs - xt) - rt - rs - float(cfg.get("min_gap", 0.06))
+	var edge := absf(xt) - rt - float(cfg.get("min_edge", 0.3))
+	return minf(gap, edge)
+
+
+var _clear_last: Variant = null
+
+
+## The clearance block for the realm the player is in, or {} when the rule is
+## off or that realm is listed in `exclude_realms`. Stormwood is listed: there
+## the swung shot put wild and party creatures over the speaker (GPU, 2/3
+## prefer the unswung shot), which this rule does not handle.
+func _clearance_config() -> Dictionary:
+	var realm := ""
+	if is_inside_tree():
+		var game := get_node_or_null(^"/root/Game")
+		if game != null:
+			realm = str(game.get("current_realm"))
+	return clearance_for_realm(_talk_cfg, realm)
+
+
+static func clearance_for_realm(talk_cfg: Dictionary, realm: String) -> Dictionary:
+	var clear_cfg: Variant = talk_cfg.get("clearance_1112", {})
+	if not (clear_cfg is Dictionary and bool((clear_cfg as Dictionary).get("enabled", false))):
+		return {}
+	if realm != "" and realm in ((clear_cfg as Dictionary).get("exclude_realms", []) as Array):
+		return {}
+	return clear_cfg as Dictionary
+
+
+## The nearest swing (and, after those, a higher lens) whose shot is reachable,
+## sees and frames the speaker and keeps the trainer clear. A shot that is
+## already clear is returned untouched; when nothing is fully clear the best
+## candidate wins only if it beats the current shot by `min_gain`.
+func _clearance_shot(shot: Dictionary, cfg: Dictionary, room: float, trainer_anchor: Vector3,
+		speaker_anchor: Vector3, forward: Vector3, clear_cfg: Dictionary) -> Dictionary:
+	var current := _clearance_score(shot, trainer_anchor, speaker_anchor, clear_cfg)
+	if current >= 0.0:
+		_clear_last = null
+		return shot
+	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
+	var base_elevation := float(cfg.get("elevation_deg", 6.0))
+	var options: Array = []
+	# Last frame's choice first, so the shot does not flick between two
+	# near-equal answers while the speaker turns to face the player.
+	if _clear_last is Array:
+		options.append(_clear_last)
+	for lift: float in clear_cfg.get("elevation_add_deg", [0.0, 7.0]):
+		for extra: float in clear_cfg.get("swing_deg", [10.0, 20.0, -44.0, 30.0, -54.0, 42.0, -66.0, 56.0]):
+			if not options.has([extra, lift]):
+				options.append([extra, lift])
+	var best := shot
+	var best_score := current
+	var best_option: Variant = null
+	var gain := float(clear_cfg.get("min_gain", 0.08))
+	for option: Array in options:
+		var candidate := cfg.duplicate()
+		candidate["shoulder_yaw_deg"] = base_swing + float(option[0])
+		candidate["elevation_deg"] = base_elevation + float(option[1])
+		# The close-pair extra swing is already in `cfg`'s solve; a candidate
+		# states its own swing outright.
+		candidate["close_shoulder_extra_deg"] = 0.0
+		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
+		if _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"])) \
+				< float(probe["distance"]) - 0.01:
+			continue
+		if not _camera_is_reachable(trainer_anchor, probe) or not _speaker_in_sight(probe, speaker_anchor) \
+				or not _speaker_in_frame(probe, speaker_anchor):
+			continue
+		var score := _clearance_score(probe, trainer_anchor, speaker_anchor, clear_cfg)
+		var needed := 0.0 if (_clear_last is Array and option == _clear_last) else gain
+		if score > best_score + needed:
+			probe["fallback"] = bool(shot.get("fallback", false))
+			best = probe
+			best_score = score
+			best_option = option
+			if score >= 0.0:
+				break
+	_clear_last = best_option
+	return best
+
+
+## clearance_1112 `companion`: while a conversation shot is up, this trainer's
+## own following creature stands behind the lens when it would otherwise be
+## in the frame (Terrapup's flank filled half of Keeper Hald's shot), and
+## follows again when the conversation ends. The aftermath shot already does
+## this for the fight's ally (encounter_director.gd). Local presentation.
+var _clear_held: Array = []
+
+
+func _step_companions_clear() -> void:
+	var companion := _companion_clear_config()
+	if companion.is_empty() or not is_inside_tree():
+		return
+	for node: Node in get_tree().get_nodes_in_group(&"deployed_creature"):
+		if node is Node3D:
+			_step_companion_clear(node as Node3D, companion)
+
+
+func _companion_clear_config() -> Dictionary:
+	var clear_cfg := _clearance_config()
+	if clear_cfg.is_empty():
+		return {}
+	var companion: Variant = clear_cfg.get("companion", {})
+	if not (companion is Dictionary and bool((companion as Dictionary).get("enabled", true))):
+		return {}
+	return companion as Dictionary
+
+
+## One creature: true when it was stepped behind the lens and is now held.
+## Only this trainer's own following creature is ever moved; a creature
+## behind the lens or outside the view (widened by its own size) is left.
+func _step_companion_clear(body: Node3D, companion: Dictionary) -> bool:
+	if not _talk_shot.has("pivot") or not _talk_shot.has("dir"):
+		return false
+	if body == _talk_speaker or body == _target or _clear_held.has(body):
+		return false
+	if not body.has_method("set_following") or not body.has_method("is_following") \
+			or not body.has_method("place_on_ground") \
+			or not bool(body.call("is_following")) or body.get("leader") != _target:
+		return false
+	var dir := Vector3(_talk_shot["dir"]).normalized()
+	var lens: Vector3 = _talk_shot["pivot"] + dir * float(_talk_shot.get("distance", 0.0))
+	var look := -dir
+	var flat := Vector3(dir.x, 0.0, dir.z)
+	if flat.length_squared() < 0.0001:
+		return false
+	flat = flat.normalized()
+	var half := atan(tan(deg_to_rad(float(_talk_shot.get("fov", _base_fov)) * 0.5)) * 16.0 / 9.0) \
+		+ deg_to_rad(float(companion.get("margin_deg", 8.0)))
+	var height := float(body.call("height")) if body.has_method("height") else 2.0
+	var centre := CONVERSATION.world_position(body) + Vector3.UP * height * 0.5
+	var to_body := centre - lens
+	var depth := to_body.dot(look)
+	if depth <= 0.0:
+		return false
+	if to_body.normalized().angle_to(look) - atan2(height * 0.6, maxf(depth, 0.1)) > half:
+		return false
+	var spot := lens + flat * (float(companion.get("behind_lens_m", 2.4)) + height * 0.5)
+	if not bool(body.call("place_on_ground", spot)):
+		return false
+	if body.has_method("face_towards") and _talk_speaker != null and is_instance_valid(_talk_speaker):
+		body.call("face_towards", CONVERSATION.world_position(_talk_speaker))
+	body.call("set_following", false)
+	_clear_held.append(body)
+	return true
+
+
+func _release_companions() -> void:
+	for body: Variant in _clear_held:
+		if is_instance_valid(body) and (body as Node).has_method("set_following"):
+			(body as Node).call("set_following", true)
+	_clear_held.clear()
 
 
 ## camfx.json `dialogue_open` (judges 1 Nov: "rock faces fill 70% of the
