@@ -3931,6 +3931,26 @@
    "request": "landed frames only: phase2_capture_realm_flight.gd --biome=meadows --carrier=galewisp (03-landed) and Galecrest 03-landed",
    "pre_check": "Galewisp ear tufts inside the frame; bird beside the trainer, whole",
    "priority": "near-bar close-out (F36#48 7.44)"
+  },
+  {
+   "id": "things-speakercentre",
+   "kind": "arm",
+   "rows": [
+    "F38#16",
+    "F38#17",
+    "F38#36",
+    "F38#37"
+   ],
+   "branch": "tb/things",
+   "head": "4c824ef9a",
+   "tree": "tb/things 4c824ef9a for both sides (import as for stormpost if not cached)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-SPEAKERCENTRE/overlay_speaker_centre.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-SPEAKERCENTRE/CAPTURE.json: phase2_capture_dialogue.gd --biome=meadows, ALL Meadows dialogue frames as G-things-convclear-meadows (the term can move any off-centre speaker, so the whole set is the no-loss check)",
+   "capture": "High, base and arm",
+   "pre_check": "Hess near centre with face readable; no other speaker cropped or newly occluded",
+   "priority": "Meadows dialogue rows F38#16 6.32, F38#17 6.97, F38#36 7.39 (near bar), F38#37 6.90"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
