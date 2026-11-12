@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-GLIDEBANK",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; queue when STORMRIM or RULER returns (F38#15 close-out: High then Medium)",
+ "tool": "phase2_capture_realm_flight.gd --biome=meadows --seed=2042 --glide-steer --glide-steer-frames=20 (default carrier; pin time of day and weather on both sides)",
+ "base": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-GALELAND/overlay_galewisp_landing.json"},
+ "arm": {"tree": "tb/things", "overlay": ["ralph/reports/LANES/THINGS-GALELAND/overlay_galewisp_landing.json", "ralph/reports/LANES/THINGS-GLIDEBANK/overlay_glide_bank.json"]},
+ "rows": {"F38#15": ["glide", "landed"]}
+}
