@@ -4180,6 +4180,24 @@
    "note": "Report each row's mapped score to LANE-SCOUT; flag any row now at or above 7.0 (near-bar)."
   },
   {
+   "id": "below6-swim",
+   "kind": "arm (below 6)",
+   "rows": [
+    "F39#5",
+    "F39#14"
+   ],
+   "branch": "tb/below6",
+   "head": "1df322a2f",
+   "tree": "tb/below6 1df322a2f both sides (no import)",
+   "overlay_branch": "tb/below6",
+   "overlay": "ralph/reports/LANES/BELOW6-SWIM/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/BELOW6-SWIM/CAPTURE.json (phase2_capture_swimming.gd: entry, surface_west, surface_mid; F39#14 judged on the same pair)",
+   "capture": "High, base and arm",
+   "pre_check": "shoulders, back and a reaching arm above water; not a wave or hands-up; body not floating on top",
+   "priority": "FIRST among arms after the queued re-scores (lowest active row, F39#5 5.64)"
+  },
+  {
    "id": "f38-15-composite-recapture",
    "kind": "close-out recapture (High + Medium)",
    "rows": [
