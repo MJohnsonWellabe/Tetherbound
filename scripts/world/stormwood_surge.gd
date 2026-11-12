@@ -12,6 +12,7 @@ extends "res://scripts/world/world_weather.gd"
 const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const SHAFTS := preload("res://scripts/world/stormwood_storm_shafts.gd")
+const FOG_LAYERS := preload("res://scripts/world/stormwood_fog_layers.gd")
 const LONG_STORM_ENDED := "stormwood:long_storm_ended"
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 
@@ -73,7 +74,26 @@ uniform vec3 skyline_far_colour : source_color = vec3(0.36, 0.34, 0.47);
 uniform vec3 skyline_near_colour : source_color = vec3(0.22, 0.22, 0.31);
 uniform vec2 skyline_far_height = vec2(0.035, 0.03);
 uniform vec2 skyline_near_height = vec2(0.02, 0.045);
-varying vec3 dir;
+// storm_phase_1111 layered storm sky (GPU judges on six F41 rows: "flat
+// lilac sky card", "blocky, faceted polygons with streak artefacts").
+// layered 0 keeps every pixel as before. On: the view direction is
+// normalised per pixel (the interpolated one faceted the dome), the deck
+// becomes two layers (a billowed high deck with dark undersides and tops lit
+// from the key side, and a faster dark scud shelf under it) and a paler band
+// with hanging rain veils sits under the shelf above the treeline.
+// deck_dark is the phase's darkening of the deck (Break darkest); the band
+// keeps its value, so the ground and treeline never sink with the sky.
+uniform float layered = 0.0;
+uniform vec3 deck_shade : source_color = vec3(0.2, 0.19, 0.32);
+uniform vec3 deck_lit : source_color = vec3(0.82, 0.8, 0.95);
+uniform vec3 band_colour : source_color = vec3(0.62, 0.6, 0.8);
+uniform float deck_dark = 0.0;
+// How deep the undersides go toward deck_shade (Calm shallow, Break full).
+uniform float shade_depth = 1.0;
+uniform float deck_lit_amount = 0.0;
+uniform float horizon_glow = 0.0;
+uniform vec2 key_dir = vec2(0.64, -0.77);
+varying vec3 vdir;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
 	vec2 i = floor(p);
@@ -97,8 +117,9 @@ float treeline(vec2 ring, vec2 h, float seed, float crowns) {
 	float fine = noise(ring * crowns * 2.7 + vec2(1.3, seed));
 	return h.x + h.y * roll + 0.012 * tips + 0.004 * fine;
 }
-void vertex() { dir = normalize(VERTEX); }
+void vertex() { vdir = normalize(VERTEX); }
 void fragment() {
+	vec3 dir = layered > 0.0 ? normalize(vdir) : vdir;
 	float up = clamp(dir.y, 0.0, 1.0);
 	vec2 uv = dir.xz / (up + 0.18) * 1.4;
 	// cloud_time is accumulated by the script (speed x delta), so speed
@@ -109,6 +130,24 @@ void fragment() {
 	float raw_body = clamp(n * 0.75 + m * 0.35, 0.0, 1.0);
 	float body = mix(raw_body, smoothstep(0.38, 0.62, raw_body), definition);
 	vec3 colour = ceiling_colour * mix(1.0 - contrast, 1.0 + contrast * 0.6, body);
+	float shelf = 0.0;
+	if (layered > 0.0) {
+		vec2 warp = vec2(noise(uv * 0.9 + vec2(t * 0.6, 3.7)), noise(uv * 0.9 + vec2(8.3, -t * 0.4)));
+		vec2 hp = uv * 0.8 + warp * 0.7 + vec2(t, t * 0.35);
+		float high = fbm(hp);
+		float toward = fbm(hp + key_dir * 0.16);
+		float mass = smoothstep(0.34, 0.66, high);
+		float lit = smoothstep(0.5, 0.85, clamp((high - toward) * 5.0 + 0.5, 0.0, 1.0));
+		vec3 under_colour = mix(ceiling_colour * 0.82, deck_shade, shade_depth);
+		vec3 deck = mix(under_colour, ceiling_colour * (1.0 + contrast * 0.6), mass);
+		deck = mix(deck, deck_lit, deck_lit_amount * lit * (0.35 + 0.65 * mass));
+		vec2 suv = dir.xz / (up + 0.45) * 0.9;
+		float scud = fbm(suv * 1.6 + warp * 0.5 + vec2(t * 2.6 + 7.3, t * 1.1));
+		shelf = smoothstep(0.46, 0.7, scud) * smoothstep(0.03, 0.2, dir.y);
+		deck = mix(deck, under_colour * 0.78, shelf * 0.8);
+		deck *= 1.0 - deck_dark * smoothstep(0.06, 0.4, dir.y);
+		colour = mix(colour, deck, layered);
+	}
 	// Nothing lights the band just above the horizon: a bright sliver there
 	// read as a low sun breaking through (blind judge 8).
 	float aloft = smoothstep(0.14, 0.3, dir.y);
@@ -158,7 +197,19 @@ void fragment() {
 	// the storm horizon/fog colour: a translucent bottom band let art.json's
 	// own horizon haze and sun/moon glow show through as a pale "shelf" and
 	// a ghost disc (round-2 judge (e)).
-	colour = mix(horizon_colour, colour, smoothstep(0.0, 0.12, dir.y));
+	if (layered > 0.0) {
+		// A paler band under the shelf, with darker hanging rain veils by
+		// azimuth (sampled on the azimuth circle, so no seam).
+		vec2 around = normalize(dir.xz + vec2(0.00001));
+		float band = smoothstep(0.012, 0.07, dir.y) * (1.0 - smoothstep(0.1, 0.34, dir.y));
+		float veil = smoothstep(0.42, 0.72, fbm(around * 3.1 + vec2(4.4, t * 0.6)));
+		float strands = 0.75 + 0.25 * noise(vec2(dot(around, vec2(37.0, 53.0)), dir.y * 9.0 - t * 3.0));
+		vec3 under = mix(band_colour, mix(ceiling_colour, deck_shade * 1.15, shade_depth), veil * 0.7 * strands);
+		colour = mix(colour, under, band * horizon_glow * layered * (1.0 - 0.5 * shelf) * (1.0 - skyline));
+		colour = mix(horizon_colour, colour, max(smoothstep(0.0, mix(0.12, 0.035, layered), dir.y), skyline));
+	} else {
+		colour = mix(horizon_colour, colour, smoothstep(0.0, 0.12, dir.y));
+	}
 	ALPHA = max(opacity * gaps, skyline);
 }
 """
@@ -232,6 +283,12 @@ var _ceiling: MeshInstance3D
 var _ceiling_material: ShaderMaterial
 var _shafts: SHAFTS
 var _skyline_on := false
+var _layered_sky := false
+var _fog_layers: FOG_LAYERS
+var _far_next := 0.0
+var _bolt_light: DirectionalLight3D
+var _bolt_light_scale := 1.0
+var _bolt_light_aimed := false
 var _flash_light: DirectionalLight3D
 ## Cross-fade between presentations. `_to` is the target row as authored
 ## (daylight colours); `_from` is the FINAL on-screen values (already night
@@ -307,6 +364,7 @@ func _ready() -> void:
 		_rain.emitting = true
 		_build_ceiling()
 		_build_shafts()
+		_build_fog_layers()
 		_build_flash_light()
 		_build_steam()
 		_flash_rng.randomize()
@@ -444,7 +502,8 @@ const _COLOUR_KEYS := ["ambient_colour", "sky_top", "sky_horizon", "sky_ground_h
 const _NUMBER_KEYS := ["sun_energy_mult", "shadow_opacity", "ambient_energy_mult", "fog_density_add",
 	"ceiling_opacity", "ceiling_speed", "ceiling_contrast", "ceiling_breakup", "rain_amount",
 	"wind", "sheet_glow", "sheet_glow_rate", "intensity", "steam", "afterglow",
-	"ceiling_definition", "ceiling_rim", "ceiling_thin_glow", "crawlers", "shafts", "glow_low"]
+	"ceiling_definition", "ceiling_rim", "ceiling_thin_glow", "crawlers", "shafts", "glow_low",
+	"deck_dark", "deck_lit", "deck_shade_depth", "horizon_glow", "fog_layers", "far_bolts"]
 
 ## Authored row → typed values, still in authored (daylight) colours.
 func _resolved(row: Dictionary) -> Dictionary:
@@ -1106,12 +1165,34 @@ func _update_ceiling(p: Dictionary) -> void:
 	_ceiling_material.set_shader_parameter("rim", float(p.get("ceiling_rim", 0.0)))
 	_ceiling_material.set_shader_parameter("thin_glow", float(p.get("ceiling_thin_glow", 0.0)))
 	_ceiling_material.set_shader_parameter("crawlers", float(p.get("crawlers", 0.0)) * _crawler_gate)
+	if _layered_sky:
+		var k := clampf(float(p.get("night_scale", 1.0)), 0.0, 1.0)
+		var layered: Dictionary = _pres_cfg().get("ceiling", {}).get("layered", {})
+		for pair: Array in [["deck_shade", "shade_colour", "#2f2c4e"], ["deck_lit", "lit_colour", "#d6d0f2"], ["band_colour", "band_colour", "#a09ccc"]]:
+			var c := Color(str(layered.get(pair[1], pair[2])))
+			_ceiling_material.set_shader_parameter(pair[0], Color(c.r * k, c.g * k, c.b * k))
+		_ceiling_material.set_shader_parameter("deck_dark", float(p.get("deck_dark", 0.0)))
+		_ceiling_material.set_shader_parameter("shade_depth", float(p.get("deck_shade_depth", 1.0)))
+		_ceiling_material.set_shader_parameter("deck_lit_amount", float(p.get("deck_lit", 0.0)))
+		_ceiling_material.set_shader_parameter("horizon_glow", float(p.get("horizon_glow", 0.0)))
 	_ceiling.visible = float(p.get("ceiling_opacity", 0.0)) > 0.001 or _skyline_on
+	if _fog_layers != null:
+		_fog_layers.set_look(float(p.get("fog_layers", 0.0)), p.get("sky_horizon", _last_base.get("sky_horizon", colour)))
 	if _shafts != null:
 		_shafts.set_strength(float(p.get("shafts", 0.0)) * clampf(float(p.get("night_scale", 1.0)), 0.0, 1.0))
 
 ## storm_sky_1101 light shafts (presentation.shafts, OFF unless a candidate
 ## overlay enables it). Strength per phase row `shafts`.
+## storm_phase_1111 mist layers (presentation.fog_layers, OFF unless the
+## candidate overlay enables it). Strength per phase row `fog_layers`.
+func _build_fog_layers() -> void:
+	var cfg: Dictionary = _pres_cfg().get("fog_layers", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	_fog_layers = FOG_LAYERS.new()
+	_fog_layers.setup(cfg, world)
+	add_child(_fog_layers)
+
 func _build_shafts() -> void:
 	var cfg: Dictionary = _pres_cfg().get("shafts", {})
 	if not bool(cfg.get("enabled", false)):
@@ -1149,13 +1230,19 @@ func _build_ceiling() -> void:
 				_ceiling_material.set_shader_parameter("skyline_" + key, Vector2(float(pair[0]), float(pair[1])))
 	var sky: Dictionary = _pres_cfg().get("sky_lightning", {})
 	_ceiling_material.set_shader_parameter("cloud_flash_size", float(sky.get("cloud_flash_size", 0.06)))
+	var layered: Dictionary = cfg.get("layered", {})
+	_layered_sky = bool(layered.get("enabled", false))
+	if _layered_sky:
+		_ceiling_material.set_shader_parameter("layered", float(layered.get("strength", 1.0)))
+		var key_yaw := deg_to_rad(float(layered.get("key_yaw_deg", 140.0)))
+		_ceiling_material.set_shader_parameter("key_dir", Vector2(sin(key_yaw), cos(key_yaw)))
 	var radius := float(cfg.get("radius_m", 2400.0))
 	var dome := SphereMesh.new()
 	dome.radius = radius
 	dome.height = radius
 	dome.is_hemisphere = true
-	dome.radial_segments = 32
-	dome.rings = 12
+	dome.radial_segments = 64 if _layered_sky else 32
+	dome.rings = 24 if _layered_sky else 12
 	_ceiling = MeshInstance3D.new()
 	_ceiling.name = "StormCeiling"
 	_ceiling.mesh = dome
@@ -1267,6 +1354,7 @@ func _advance_flash(delta: float) -> void:
 		_flash_light.visible = _flash > 0.0
 		_flash_light.light_energy = _flash * float(cfg.get("light_energy", 2.2))
 	_advance_bolt_exposure(cfg)
+	_advance_bolt_light()
 	_advance_height_fog()
 	_advance_depth_fog()
 	if _ceiling_material != null:
@@ -1560,6 +1648,53 @@ func _advance_bolt_exposure(flash_cfg: Dictionary) -> void:
 		env.tonemap_exposure = target
 	_bolt_exposure_written = target
 
+## storm_phase_1111 bolt key light (sky_lightning.bolt_light_energy, 0 = off;
+## GPU judges: "phase key light with white-violet bolts", "the sky never
+## darkens at break" with nothing lit by the lightning). While a decorative
+## sky bolt is on screen, one shadowless white-violet directional light shines
+## from the bolt toward the camera at a low angle, so trunks, wet ground and
+## creatures take a lit edge from the lightning itself and Break reads as lit
+## by its bolts instead of merely dimmer than Calm. Its energy is the bolt's
+## own level (it decays with the bolt; no added onset; reduced motion scales
+## it like every flash). Client presentation only.
+func _advance_bolt_light() -> void:
+	var sky := _sky_cfg()
+	var energy := float(sky.get("bolt_light_energy", 0.0))
+	if energy <= 0.0:
+		return
+	if _bolt_light == null:
+		_bolt_light = DirectionalLight3D.new()
+		_bolt_light.name = "SkyBoltLight"
+		_bolt_light.shadow_enabled = false
+		_bolt_light.light_color = Color(str(sky.get("bolt_light_colour", "#e6dcff")))
+		_bolt_light.light_specular = float(sky.get("bolt_light_specular", 1.0))
+		_bolt_light.visible = false
+		add_child(_bolt_light)
+	var level := bolt_level() * flash_motion_scale() * _bolt_light_scale
+	# Break's steady crawler veins (a held glow, not a flash) keep a low floor
+	# of the same light, so Break is never just a dimmer Calm between bolts.
+	var shown := _current(_last_base) if not _to.is_empty() else {}
+	var held := float(shown.get("crawlers", 0.0)) * _crawler_gate * float(sky.get("bolt_light_floor", 0.0))
+	if held > level:
+		level = held
+		if not _bolt_light_aimed:
+			var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+			if camera != null:
+				var ahead := -camera.global_transform.basis.z
+				ahead.y = 0.0
+				if ahead.length() > 0.01:
+					_bolt_light.global_transform = Transform3D(Basis.looking_at(
+						bolt_light_direction(ahead, float(sky.get("bolt_light_elevation_deg", 22.0))), Vector3.UP), Vector3.ZERO)
+					_bolt_light_aimed = true
+	_bolt_light.visible = level > 0.01
+	_bolt_light.light_energy = level * energy
+
+## The bolt light's travel direction for a bolt seen toward `flat` (unit,
+## horizontal): from the bolt back toward the viewer, `elevation_deg` down.
+static func bolt_light_direction(flat: Vector3, elevation_deg: float) -> Vector3:
+	var down := deg_to_rad(clampf(elevation_deg, 5.0, 85.0))
+	return (-flat.normalized() * cos(down) + Vector3.DOWN * sin(down)).normalized()
+
 ## GPU SW8 path item 2 ("layered height fog instead of camera-height puffs and
 ## white-outs"): ground-hugging height fog that follows the local ground
 ## (presentation.height_fog, OFF until judged). The fog band starts
@@ -1652,6 +1787,7 @@ func _advance_sky_lightning(delta: float) -> void:
 	else:
 		_sky_next = minf(_sky_next, 0.5)
 		_sky_pulses.clear()
+		_advance_far_bolts(delta, cfg)
 	var due: Array = []
 	for pulse: Dictionary in _sky_pulses:
 		if float(pulse.at) <= _sky_clock:
@@ -1670,6 +1806,35 @@ func _advance_sky_lightning(delta: float) -> void:
 		var material := bolt.material_override as StandardMaterial3D
 		if material != null:
 			material.albedo_color.a = clampf(_bolt_levels[index], 0.0, 1.0)
+
+## storm_phase_1111 (GPU judges, F41#2: "Calm, Building and Break differ only
+## in rain density"; "no lightning ... the sky never darkens at break"): a
+## phase row with `far_bolts` > 0 (Building) shows slow, faint forked bolts
+## low on the far horizon, the storm walking in. No whole-sky flash, no
+## ground light and no telegraph: decoration only, held like Break's bolts
+## while a ground warning is drawn and counted in the same flash budget.
+## `far_bolts` scales the cadence; presentation.sky_lightning.far holds the
+## distance, size and level.
+func _advance_far_bolts(delta: float, cfg: Dictionary) -> void:
+	var amount := float(_to.get("far_bolts", 0.0)) if not _to.is_empty() and _blend >= 1.0 else 0.0
+	var far: Variant = cfg.get("far", {})
+	if amount <= 0.0 or not far is Dictionary or (far as Dictionary).is_empty():
+		_far_next = minf(_far_next, 1.0)
+		return
+	_far_next -= delta
+	if _far_next > 0.0:
+		return
+	if not decorative_onset_allowed() or sky_bolts_held():
+		_far_next = 0.25
+		return
+	_far_next = _sky_rng.randf_range(float(far.get("interval_min", 3.0)), float(far.get("interval_max", 6.0))) / amount
+	var merged := cfg.duplicate()
+	merged.merge(far as Dictionary, true)
+	_note_onset("far_bolt")
+	var dir := _sky_direction(merged, "bolt")
+	_cloud_flash_dir = dir
+	_cloud_flash = maxf(_cloud_flash, float(far.get("cloud_strength", 0.25)) * flash_motion_scale())
+	_show_bolt(dir, _sky_rng.randi(), merged, true)
 
 ## One event: an in-cloud flash (with a chance of one flicker) or a distant
 ## bolt (lighting the cloud above it, with a chance of one restrike).
@@ -1726,7 +1891,7 @@ func _show_bolt(dir: Vector3, seed: int, cfg: Dictionary, first: bool) -> void:
 		_bolt_levels.append(0.0)
 	if first:
 		_bolt_cursor = (_bolt_cursor + 1) % pool
-	_bolt_levels[_bolt_cursor] = 1.0
+	_bolt_levels[_bolt_cursor] = float(cfg.get("level", 1.0))
 	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
 	if camera == null or not first:
 		return
@@ -1750,6 +1915,11 @@ func _show_bolt(dir: Vector3, seed: int, cfg: Dictionary, first: bool) -> void:
 	rng.seed = seed
 	var distance := rng.randf_range(float(cfg.get("bolt_distance_min_m", 260.0)), float(cfg.get("bolt_distance_max_m", 520.0)))
 	var flat := Vector3(dir.x, 0.0, dir.z).normalized()
+	_bolt_light_scale = float(cfg.get("light_scale", 1.0))
+	if _bolt_light != null:
+		var travel := bolt_light_direction(flat, float(cfg.get("bolt_light_elevation_deg", 22.0)))
+		_bolt_light.global_transform = Transform3D(Basis.looking_at(travel, Vector3.UP), Vector3.ZERO)
+		_bolt_light_aimed = true
 	var origin := camera.global_position
 	var base := origin + flat * distance
 	var ground := origin.y - 2.0
@@ -1787,6 +1957,16 @@ static func bolt_mesh(top: Vector3, bottom: Vector3, side: Vector3, rng: RandomN
 			vertices.append_array(PackedVector3Array([a - side * wa * 0.5, a + side * wa * 0.5, b + side * wb * 0.5,
 				a - side * wa * 0.5, b + side * wb * 0.5, b - side * wb * 0.5]))
 			colours.append_array(PackedColorArray([ca, ca, cb, ca, cb, cb]))
+	# storm_phase_1111: a wide faint strip behind the core (bolt_halo_width_mul
+	# 0 = none) so a bolt reads as white-violet light, not a thin line.
+	var halo := float(cfg.get("bolt_halo_width_mul", 0.0))
+	if halo > 0.0:
+		var faint := float(cfg.get("bolt_halo_alpha", 0.18))
+		for ring: Array in [[halo, faint * 0.5], [halo * 0.45, faint]]:
+			var before := colours.size()
+			add_strip.call(points, width * float(ring[0]), 0.0)
+			for index in range(before, colours.size()):
+				colours[index].a *= float(ring[1])
 	add_strip.call(points, width, 0.0)
 	var from := rng.randi_range(2, maxi(2, segments / 2))
 	var branch: Array[Vector3] = [points[from]]
