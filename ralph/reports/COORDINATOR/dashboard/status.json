@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 21:20 UTC",
+  "updated": "12 Nov 2026 21:45 UTC",
   "headline": [
+    "12 Nov 21:45: knife-edge ships (F40#8 5.61 to 6.37, 3/3; the black rail strip across the grass at Three Bells is gone). Main's full run after #933 fixed smoke_art, the Tidewake relay and the Livewire net smoke; two reds remain (F18 earned loop: the player gets stuck in terrain on a walk; the shared boss net smoke, intermittent). LANE-CIFIX has both.",
     "12 Nov 21:20: mushrooms split. The High Perches rim dressing ships (F40#17 6.01 to 6.94, 3/3); the pickup restyle does not (the finds read as smudges and herbs, -0.74 in Meadows). LANE-BELOW6 cuts the rim part alone for landing. #934 (swim and restored sea) is waiting for a CI runner.",
     "12 Nov 21:05: #934 is in full CI: the surface swim stroke (F39#5 5.98, F39#14 6.12) and the restored sea (F39#17 6.27). Auto-merge is off; I merge by hand once the engine jobs have run.",
     "12 Nov 21:00: two of the lowest rows ship. Swim r5: F39#5 5.45 to 5.98 and F39#14 5.74 to 6.12 (both 3/3); the swim now reads as swimming, with arms spread at the surface. Restored sea r5: F39#17 6.08 to 6.27 (2/3), sunset no longer black. Landing branch requested from LANE-BELOW6.",
@@ -2737,8 +2738,8 @@
       "src": "GPU High 8-9 Nov (A)"
     },
     "F40#15": {
-      "gpu": 5.89,
-      "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08)"
+      "gpu": 5.77,
+      "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08) | G-below6-knifeedge base (current main): 5.77; strips FIXED 3/3 on main already; now held by the flat wall slab (masonry arm queued)"
     },
     "F40#16": {
       "gpu": 6.19,
@@ -2778,7 +2779,7 @@
     },
     "F40#8": {
       "gpu": 6.77,
-      "src": "G-newapproach-bridge-view (tb/item-scout-1108 248db8b0a): 5.29 -> 6.77 (3/3), landed #901 (bridge landing tree cleared, stone waymark)"
+      "src": "G-newapproach-bridge-view (tb/item-scout-1108 248db8b0a): 5.29 -> 6.77 (3/3), landed #901 (bridge landing tree cleared, stone waymark) | ARM BELOW6-KNIFEEDGE G-below6-knifeedge (b4e9bdef8, 12 Nov): 5.61 -> 6.37 (3/3), black rail strip at Three Bells gone; ships, landing to come"
     },
     "F40#9": {
       "gpu": 6.48,
