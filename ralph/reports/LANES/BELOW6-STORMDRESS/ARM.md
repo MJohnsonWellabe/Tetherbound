@@ -26,3 +26,8 @@ More than 0.5 on Marrow's two frames (two of the five things all three judges li
 
 ## Checks
 `--only=stormheart`: 37 tests, 5082 assertions, 0 failed (banner code in, flags off).
+
+## After the verdict (12 Nov): RIDE-ALONG, and the wood retuned
+G-below6-stormdress (tb/item-scout-1108 4702206a): Marrow frames 5.14 -> 5.62 (+0.48, 3/3); split-facing frame 3.93 -> 4.40 (+0.47, 3/3); F41#1 row 6.57 -> 6.67 (+0.10, 2/3). Nothing loses; every gain is under 0.5, so it rides with the next Stormwood landing.
+The judges and the GPU lane both caught the aged wood rendering **rose-mauve (hue about 332)**, not grey-brown. My "muted grey-brown" on CPU was an eyeball call; the CPU pixel hue was 348.
+Retune (`aged_heartwood_1112`): weathering 1.0 (no orange atlas left) under a khaki tint #b0a25f that leans against Stormwood's violet light. Measured on the split-facing CPU frame (`_sheet_cpu_split_wood_retuned.jpg`): slab mean hue 35, saturation 0.39, value 0.42: a warm olive-brown. A less saturated tint (#ada273) measured hue 15 and was dropped. The GPU read about 16 degrees lower than CPU on the first setting, so the GPU hue should land near 20-35; **read the pixel hue on the GPU frame before it rides.** The banners are unchanged.
