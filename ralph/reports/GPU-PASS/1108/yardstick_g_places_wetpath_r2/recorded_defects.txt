@@ -1,0 +1,8 @@
+Ec: "none"
+Lz: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Xw: none
+Nn: "none"
+Sx: none
+Ts: "none"
+Io: "none"
+Fr: "none"

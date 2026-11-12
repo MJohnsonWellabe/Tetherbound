@@ -1,0 +1,186 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8913,
+  "least_squares_slope": 1.2114,
+  "method": "linear",
+  "slope": 1.2114,
+  "intercept": -0.492,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.627,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.433,
+   "reference": 7.35,
+   "mapped": 7.301,
+   "residual": 0.049
+  },
+  "craft:before": {
+   "measured": 4.867,
+   "reference": 4.83,
+   "mapped": 5.403,
+   "residual": -0.573
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.733,
+   "reference": 6.53,
+   "mapped": 5.242,
+   "residual": 1.288
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.2,
+   "reference": 4.0,
+   "mapped": 4.596,
+   "residual": -0.596
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.667,
+   "reference": 7.47,
+   "mapped": 7.584,
+   "residual": -0.114
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.667,
+   "reference": 7.53,
+   "mapped": 7.584,
+   "residual": -0.054
+  }
+ },
+ "candidates": {
+  "G F40#0 overlook rain base-vs-arm [G-wp2_overlook_rain_base.png]": {
+   "measured_mean": 4.767,
+   "mapped_mean": 5.28,
+   "mapped_judges": [
+    5.81,
+    4.96,
+    5.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 overlook rain base-vs-arm [G-wp2_overlook_rain_arm.png]": {
+   "measured_mean": 4.733,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    5.44,
+    5.08,
+    5.2
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit-day rain base-vs-arm [G-wp2_summit-day_rain_arm.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.41,
+   "mapped_judges": [
+    6.78,
+    6.41,
+    6.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit-day rain base-vs-arm [G-wp2_summit-day_rain_base.png]": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.85,
+   "mapped_judges": [
+    6.17,
+    5.81,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate clear base-vs-arm [G-wp2_gate_clear_arm.png]": {
+   "measured_mean": 6.233,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    7.26,
+    7.14,
+    6.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate clear base-vs-arm [G-wp2_gate_clear_base.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.41,
+   "mapped_judges": [
+    6.53,
+    6.53,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate rain base-vs-arm [G-wp2_gate_rain_arm.png]": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.41,
+   "mapped_judges": [
+    6.66,
+    6.53,
+    6.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 gate rain base-vs-arm [G-wp2_gate_rain_base.png]": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.85,
+   "mapped_judges": [
+    6.05,
+    5.93,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit-night rain base-vs-arm [G-wp2_summit-night_rain_base.png]": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.49,
+   "mapped_judges": [
+    7.02,
+    6.53,
+    5.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F40#0 summit-night rain base-vs-arm [G-wp2_summit-night_rain_arm.png]": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.37,
+   "mapped_judges": [
+    6.66,
+    6.29,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
