@@ -4178,6 +4178,26 @@
    "priority": "after glidebank close-out: a split win (+0.6 on clear and gate rain) needing its two losing pieces fixed"
   },
   {
+   "id": "things-meadowground",
+   "kind": "arm (shared cause, 6-7)",
+   "rows": [
+    "F38#20",
+    "F38#22",
+    "F38#30",
+    "F38#26"
+   ],
+   "branch": "tb/things",
+   "head": "2636e0efc",
+   "tree": "tb/things 2636e0efc both sides",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-MEADOWGROUND/overlay_cause_ground.json (meadows_look.json cause_ground)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-MEADOWGROUND/CAPTURE.json: the four rows' job.json frames + two Meadows no-loss frames (a fight, a creature idle); pin time of day and weather on both sides; record Medium frame time (anisotropic cost)",
+   "capture": "High, base and arm",
+   "pre_check": "ground reads as clearings, lawn and tall grass, not bare; characters' feet visible",
+   "priority": "top shared cause in the 6-7 map (P-GROUND, four Meadows rows); ahead of single-row arms"
+  },
+  {
    "id": "things-stormuniform",
    "kind": "arm",
    "rows": [
