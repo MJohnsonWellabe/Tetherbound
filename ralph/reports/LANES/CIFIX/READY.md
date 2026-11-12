@@ -69,9 +69,42 @@ I tried a client-scheduled early send, then reverted it. The host processed the 
 
 **Shared cause?** Not one game bug. My Livewire runs never saw a `pending_vitals` refusal; theirs were `insufficient_energy` before the fix, then `stale_move_start` and `cooldown`. What these failures have in common is that a slow CI host exposes timing assumptions each smoke made, all made more fragile by #878's move_start authority: Energy cost, start-anchored deadlines, and pending-vitals gating on move_start.
 
+## Round 2 (main 1c81cdb45, full run 43302878714)
+
+My round-1 fixes held on main: suite 2, the Tidewake relay and shard 9 were all green. Two reds remained.
+
+### 6. verify-f18-earned-loop: "controller could not reach authored wood at (16.0, -28.0) (stopped 12.9m short)"
+- **Cause.**
+  - The material route walks a straight stick line from the gate end of The Rise (37, -18.7) to its first wood stop (16, -28).
+  - That line runs through the Meadows **trainer camp** (`bands/band1_lower_meadows/props.json` cluster `trainer_camp`): a bag, crate and barrel around x≈31, the 1.5× fire ring at (26.8, -26.6), a tent and a bed.
+  - In CI the walk wedged into the bag and crate ("[player] entombed at 30.50, -0.37, -26.68"), was recovered, then pinned on the fire ring until its budget ran out.
+  - Locally the same walk from nearly the same start (37.17 vs 37.09) slid past the camp and arrived in 469 frames. That is why the job was intermittent: red on 90ffeb663 and 1c81cdb45, green on f5263ebc7. No recent landing moved the camp.
+- **Fix (the route, `tests/helpers/gate_a_material_route.gd`).**
+  - When the straight line to an authored stop crosses an authored camp's footprint (props clusters named `*camp`, with the prop spread plus 2.5 m), the walk follows the shortest path along the authored roads in `terrain_playground.json`, as a player would. Here that is The Rise to (20, -18), then Practice Meadow to (20, -26).
+  - The extra distance is added to the walk's budget at the same 60 frames per metre.
+  - Legs that don't cross a camp are unchanged, and no check was changed.
+- **Evidence.**
+  - Detour unit probe: the camp leg gives [(28,-18), (20,-18), (20,-26)]; the (31.3,-14.4)→(38.7,-19.85) and (16,-28)→(26,-44) legs give [].
+  - The full smoke passes: exit 0, `failures: []`, the wood walk arrived in 347 frames.
+  - The local "before" run also passed, because the failure is intermittent, so the CI log is the before evidence.
+
+### 7. verify-multiplayer-shard (12): it was `smoke_net_cloudreach_riding`, not `shared_boss`
+- In run 43302878714, `smoke_net_shared_boss.gd` exited 0 (job log, lane 1, 139 s).
+- The red smoke in that shard was `smoke_net_cloudreach_riding.gd`: "forced leg NOT COVERED: the host could not start a Cloudreach wild fight (the engage press did not start a fight)".
+- **Cause, from the CI artifact `net-smoke-runs-12`, host peer-0.log.**
+  - The host logged: `Combat admission refused: stage support_missing, clear_seat_search_exhausted, clear_seat_attempts 395, last_candidate_failure ground_height`.
+  - This was right after the harness step `engage_wild` teleported the host's player about 830 m, from the Cloudreach arrival to a skyrill at (-260, 545), and pressed after only 20 physics frames.
+  - Cloudreach terrain uses Terrain3D dynamic collision, built in a radius around the camera, and it had not caught up on the loaded runner. Admission correctly refused because there was no ground to seat the fighters on.
+  - A walking player never outruns that collision, so this isn't a game bug. Locally (2 of 2 runs) the same wild admitted fine.
+- **Fix (harness, `tools/net/peer_runner.gd`).** `engage_wild` now waits, up to 240 frames, for static ground collision under the player and the wild before the real press. Character and rigid bodies are skipped when probing.
+- **Evidence.** It did not reproduce locally. After the fix it passes 1 of 1, with no "no ground collision" fallback and no script errors.
+- The same wait also protects every other smoke that uses `engage_wild` after a long teleport.
+
 ## Checks run
 - `tests/smoke_art.gd`: exit 0, plus the negative control above.
 - `tests/smoke_water_loops_shortcuts.gd` with the CI step's three cases: exit 0.
 - `run_tests.gd --only=test_water_species_catalog,test_meadows_cause_flags,test_creature_coat_flags`: 20 tests, 0 failed.
 - `tools/net/run_net_smoke.sh stormwood_livewire`: see §3.
 - `tools/net/run_net_smoke.sh shared_wild_fight`: 2 of 2 pass after the fix.
+- `tests/smoke_f18_earned_loop.gd`: exit 0 after the fix.
+- `tools/net/run_net_smoke.sh cloudreach_riding`: passes after the fix.
