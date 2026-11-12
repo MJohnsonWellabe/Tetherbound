@@ -2711,7 +2711,7 @@
     },
     "F36#48": {
       "gpu": 7.44,
-      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers"
+      "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers; G-faint2-medium-galecarrier: Galewisp remake as flight carrier 6.17 -> 6.83 on the flight frames (+0.66, 3/3), landing in the final batch"
     },
     "F36#92": {
       "gpu": 7.19,
@@ -2751,11 +2751,11 @@
     },
     "F36#58": {
       "gpu": 7.65,
-      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (not landed): pebbik 7.00 -> 7.65 (3/3); Medium queued"
+      "src": "CLOSED: High 7.65 (G-things-faint2) and Medium 7.56 (G-faint2-medium-galecarrier, 5f1f5ee24); landed #915"
     },
     "F36#35": {
       "gpu": 7.61,
-      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (not landed): breezetail 7.31 -> 7.61 (3/3); Medium queued"
+      "src": "CLOSED: High 7.61 (G-things-faint2) and Medium 7.56 (G-faint2-medium-galecarrier, 5f1f5ee24); landed #915"
     },
     "F36#75": {
       "gpu": 7.22,
