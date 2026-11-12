@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-masonry-noloss/arm-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.185,
+  "lower_edges": 0.269,
+  "script_errors": 0,
+  "note": "below6-masonry no-loss (shared Cloudreach masonry): Sky Shrine and Summit Eyrie (aviary) day approach + close; same tree and overlay; High."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-masonry-noloss/arm-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.278,
+  "lower_edges": 0.2312,
+  "script_errors": 0,
+  "note": "below6-masonry no-loss (shared Cloudreach masonry): Sky Shrine and Summit Eyrie (aviary) day approach + close; same tree and overlay; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-masonry-noloss/arm-High/cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach.jpg",
+  "sky_fraction": 0.27,
+  "lower_edges": 0.1817,
+  "script_errors": 0,
+  "note": "below6-masonry no-loss (shared Cloudreach masonry): Sky Shrine and Summit Eyrie (aviary) day approach + close; same tree and overlay; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close.jpg",
+  "preset": "arm-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-masonry-noloss/arm-High/cloudreach__summit_final_stronghold__11__summit_eyrie__day__close.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.1627,
+  "script_errors": 0,
+  "note": "below6-masonry no-loss (shared Cloudreach masonry): Sky Shrine and Summit Eyrie (aviary) day approach + close; same tree and overlay; High."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-masonry-noloss/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.187,
+  "lower_edges": 0.2691,
+  "script_errors": 0,
+  "note": "below6-masonry no-loss (shared Cloudreach masonry): Sky Shrine and Summit Eyrie (aviary) day approach + close; same tree and overlay; High."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-masonry-noloss/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.278,
+  "lower_edges": 0.2301,
+  "script_errors": 0,
+  "note": "below6-masonry no-loss (shared Cloudreach masonry): Sky Shrine and Summit Eyrie (aviary) day approach + close; same tree and overlay; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-masonry-noloss/base-High/cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach.jpg",
+  "sky_fraction": 0.27,
+  "lower_edges": 0.184,
+  "script_errors": 0,
+  "note": "below6-masonry no-loss (shared Cloudreach masonry): Sky Shrine and Summit Eyrie (aviary) day approach + close; same tree and overlay; High."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close.jpg",
+  "preset": "base-High",
+  "tree": "49a4b3dc2cf8225adda12fd503dac8b5c09348d9",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-masonry-noloss/base-High/cloudreach__summit_final_stronghold__11__summit_eyrie__day__close.jpg",
+  "sky_fraction": 0.114,
+  "lower_edges": 0.167,
+  "script_errors": 0,
+  "note": "below6-masonry no-loss (shared Cloudreach masonry): Sky Shrine and Summit Eyrie (aviary) day approach + close; same tree and overlay; High."
+ }
+]
