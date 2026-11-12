@@ -4581,6 +4581,35 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "things-stormpool",
+   "kind": "arm",
+   "rows": [
+    "F41#22",
+    "F41#24"
+   ],
+   "branch": "tb/things",
+   "head": "ad723a6a1",
+   "job": "ralph/reports/LANES/THINGS-STORMPOOL/CAPTURE.json: the G-rescore-f41-22-24 stands (giant, forest, rod_line; Calm, Break, aftermath), glass and stormheart no-loss",
+   "capture": "High, base vs overlay_pool_damp.json",
+   "priority": "shared cause for two 6.46 rows",
+   "route": "LANE-SCOUT"
+  },
+  {
+   "id": "things-cloudrain-r2",
+   "kind": "arm",
+   "rows": [
+    "F40#0",
+    "F40#19",
+    "F40#21"
+   ],
+   "branch": "tb/things",
+   "head": "ad723a6a1",
+   "job": "THINGS-CLOUDRAIN/CAPTURE.json round 2 (slate deck kept, ground light only); High Perches from one boot on both sides",
+   "capture": "High, base vs overlay",
+   "priority": "three rows at 5.98; after cloudnight",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-riftfrill-matte",
    "kind": "arm (near-bar)",
    "rows": [
