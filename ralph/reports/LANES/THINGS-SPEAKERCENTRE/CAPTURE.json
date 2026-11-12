@@ -1,0 +1,22 @@
+{
+ "id": "THINGS-SPEAKERCENTRE",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY, not queued: two arms are already on the GPU",
+ "tool": "phase2_capture_dialogue.gd --biome=meadows (same stand switches both sides)",
+ "base": {
+  "tree": "tb/things",
+  "overlay": null
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-SPEAKERCENTRE/overlay_speaker_centre.json"
+ },
+ "rows": {
+  "F38#16, F38#17, F38#36, F38#37 (all 48 Meadows dialogue frames: the term can move any shot whose speaker stands off-centre, so the whole set is the no-loss check)": [
+   "meadows__inventory__trainer__relay_picket_hess__dialogue",
+   "\u2026all Meadows dialogue frames as G-things-convclear-meadows"
+  ]
+ }
+}
