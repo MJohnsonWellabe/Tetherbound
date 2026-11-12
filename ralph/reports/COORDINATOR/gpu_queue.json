@@ -3695,6 +3695,31 @@
    "capture": "High, base and arm per set. Marrow set: add BELOW6-MARROW/overlay.json to BOTH sides (its landing #918 is still in CI).",
    "priority": "below-6 floor work: Marrow frames 5.95 and F41#1 6.81; supersedes BELOW6-SPLITWOOD",
    "note": "Stormheart cloth banners (banner_cloth_1112) plus aged split heartwood (aged_heartwood_1112): the 'blue slab' and 'orange trunk' all three judges named on Marrow's frames and F41#1."
+  },
+  {
+   "id": "places-stormwood-swing2",
+   "kind": "arm",
+   "rows": [
+    "F41#2",
+    "F41#4",
+    "F41#5",
+    "F41#12",
+    "F41#8"
+   ],
+   "branch": "tb/places",
+   "head": "e83c4119b",
+   "tree": "tb/places e83c4119b for both sides (no import)",
+   "overlay_branch": "tb/places",
+   "overlays": {
+    "swing2": "ralph/reports/LANES/PLACES-STORMWOOD2/overlay.json",
+    "swing2_keep_gaps": "ralph/reports/LANES/PLACES-STORMWOOD2/overlay_keep_gaps.json"
+   },
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-STORMWOOD2/CAPTURE.json (five rows; the two overlays differ only in F41#2's Fading frame, so capture other frames once)",
+   "capture": "High, base plus swing2 (plus swing2_keep_gaps for the F41#2 Fading frame)",
+   "priority": "bigger Stormwood swing across five rows incl. two below 6 (F41#2 5.97, F41#8 5.80)",
+   "pre_check": "reject if the gold line blooms into a wide yellow band, the road reads dry sand or salmon, or Fading shows any bolt; check Fading is brighter than Building",
+   "note": "Judged no-puddle road value plus restored gold-line contrast (fixes the F41#4 loss) plus Fading clear."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
