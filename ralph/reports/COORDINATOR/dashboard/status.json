@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 22:20 UTC",
+  "updated": "12 Nov 2026 22:40 UTC",
   "headline": [
+    "12 Nov 22:40: Cloudreach wall stones at human scale ship (F40#15 5.17 to 5.54, 3/3; shrine and aviary unchanged), landing as #936. Stormraven's eye round 2 does not show at creature distance and is parked. New bug for LANE-BELOW6: a translucent amber pane covering half the overlook route frame (both sides, 3/3).",
     "12 Nov 22:20: #935 landed (F40#8 6.37, F40#17 6.94). #934 (swim and restored sea) is updated onto the new main and re-running full CI; its earlier run had one Tidewake chain time out while loading.",
     "12 Nov 21:55: #935 in full CI: the Cloudreach bridge strip (F40#8 6.37) and the High Perches rim mushrooms (F40#17 6.94). #934 (swim and restored sea) had one Tidewake chain time out while loading; it will be re-run once when its run completes.",
     "12 Nov 21:45: knife-edge ships (F40#8 5.61 to 6.37, 3/3; the black rail strip across the grass at Three Bells is gone). Main's full run after #933 fixed smoke_art, the Tidewake relay and the Livewire net smoke; two reds remain (F18 earned loop: the player gets stuck in terrain on a walk; the shared boss net smoke, intermittent). LANE-CIFIX has both.",
@@ -2746,7 +2747,7 @@
     },
     "F40#15": {
       "gpu": 5.77,
-      "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08) | G-below6-knifeedge base (current main): 5.77; strips FIXED 3/3 on main already; now held by the flat wall slab (masonry arm queued)"
+      "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08) | G-below6-knifeedge base (current main): 5.77; strips FIXED 3/3 on main already; now held by the flat wall slab (masonry arm queued) | ARM masonry G-below6-stormraven-masonry (832aaa06a): 5.17 -> 5.54 (3/3), landing #936; pooled current-main about 5.47"
     },
     "F40#16": {
       "gpu": 6.19,
@@ -2812,7 +2813,7 @@
     },
     "F41#13": {
       "gpu": 5.97,
-      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads"
+      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries"
     },
     "F41#14": {
       "gpu": 7.05,
