@@ -4,12 +4,15 @@
 
 | Row | Arm | Status |
 |---|---|---|
-| F41#15 Marrow's head (4.49) | `BELOW6-MARROW` | **on the GPU** (queued by the coordinator) |
-| F41#1 split's exposed wood (game defect beside the entrance) | `BELOW6-SPLITWOOD` (`aged_heartwood_1112`, one split-facing ad-hoc stand) | **ready for GPU**, small arm |
-| F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | **parked, not sent.** My first "no change" was a broken flag path, now fixed; two real CPU looks since are still well under +0.5 (`NOT-SENT.md`). |
-| F40#3 Cloudreach landmark read (5.65) | `BELOW6-F40-3` (two new approach stands + the dome crowns) | **ready for GPU.** With `BELOW6-MARROW` on the GPU and `BELOW6-SPLITWOOD` waiting, queue this ahead of SPLITWOOD: it is a below-6 row, SPLITWOOD is not. |
+| F41#15 / F41#7 Marrow's head | landing | **READY TO LAND: `tb/below6-marrow-land`** (213cd9ff4, cut from origin/main 2ac7ab843). GPU High: his two dialogue frames 4.55 -> 5.95 (+1.40, 3/3). Both flags ON with `_why_on`, new pin test, `test_character_body_flags` updated, 22 tests / 2192 assertions pass, texture policy PASS. `ralph/reports/LANES/BELOW6-MARROW-LAND/READY.md`, STATUS: land. Coverage gap: the Nysa frame was not judged (2 of the row's 3 frames). |
+| F40#3 Cloudreach landmark read (5.65) | `BELOW6-F40-3` (two candidate approach stands + the dome crowns) | **ready for GPU** |
+| F41#1 split's exposed wood; also the "saturated orange trunk at the left" in Marrow's dialogue frames (same surface) | `BELOW6-SPLITWOOD` (`aged_heartwood_1112`) | **ready for GPU**; being widened to include the Marrow dialogue frames, where the judges named it (3/3, one "near oxblood") |
+| Stormwood top-deck dialogue look (F41#7, #11, #15, #20): lavender grade, pink-lilac planks, blue slab at the left edge | none yet | **in progress**: finding what the blue slab is |
+| F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | parked, not sent (`NOT-SENT.md`, with a correction) |
 | F40#1 Cloudreach open terrain (5.90) | none | not started |
-| F39#8 (5.66) | none | parked, no new idea |
+| F39#8 (5.66) | none | parked |
+
+`origin/main` 2ac7ab843 is merged into `tb/below6` (264f2e6a).
 
 Merge notes: main's landed versions won every conflict. Kept on top, flag-off: `ramp_body_1112`, `aged_heartwood_1112`, `heartwood_1111.core_v2`, `below6_floor_fulgocobra`, `below6_marrow_self_lit_off`, `identity_floor_1112`, `landmark_crowns_1111`. Dropped: `below6_flinch_abyssal` (lost on GPU). After the merge, `--only=stormheart,creature_coat_flags,creature_clip,character_body_flags,capture_approach_overrides,remakes_floor_landed,below6,texture_import_policy,dark_value_lift`: 20 test files, 60 tests, 1 failed (the broken Fulgocobra path, fixed; `creature_coat_flags` re-run: 6 tests, 0 failed).
 
