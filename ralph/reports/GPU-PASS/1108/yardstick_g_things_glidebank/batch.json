@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   7.0,
+   7.0,
+   6.8
+  ],
+  "f36_0_npc:C1B": [
+   6.9,
+   6.9,
+   6.8
+  ],
+  "craft:before": [
+   5.6,
+   5.5,
+   5.5
+  ],
+  "craft:after": [
+   6.9,
+   7.0,
+   7.0
+  ],
+  "f04_6_r22:control": [
+   5.7,
+   5.6,
+   5.6
+  ],
+  "f04_6_r22:r22": [
+   6.6,
+   6.4,
+   6.8
+  ]
+ },
+ "candidates": {
+  "G F38#15 hover High base-vs-arm [G-gb_hover_High_arm.png]": [
+   6.8,
+   6.8,
+   6.6
+  ],
+  "G F38#15 hover High base-vs-arm [G-gb_hover_High_base.png]": [
+   6.6,
+   6.6,
+   6.6
+  ],
+  "G F38#15 steer High base-vs-arm [G-gb_steer_High_base.png]": [
+   6.1,
+   6.0,
+   5.8
+  ],
+  "G F38#15 steer High base-vs-arm [G-gb_steer_High_arm.png]": [
+   6.3,
+   6.2,
+   6.0
+  ],
+  "G F38#15 hover Medium base-vs-arm [G-gb_hover_Medium_base.png]": [
+   6.8,
+   6.8,
+   6.6
+  ],
+  "G F38#15 hover Medium base-vs-arm [G-gb_hover_Medium_arm.png]": [
+   6.5,
+   6.4,
+   6.4
+  ],
+  "G F38#15 steer Medium base-vs-arm [G-gb_steer_Medium_arm.png]": [
+   6.3,
+   6.2,
+   6.0
+  ],
+  "G F38#15 steer Medium base-vs-arm [G-gb_steer_Medium_base.png]": [
+   6.2,
+   6.0,
+   5.8
+  ]
+ }
+}
