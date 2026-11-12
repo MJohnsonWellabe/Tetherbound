@@ -2299,6 +2299,12 @@ func _build_terrace_mesas(root: Node3D) -> void:
 	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
 		return
 	var index := 0
+	# The stands' own cliffs are the pale installed shelf modules, so the walls
+	# take a pale tint of the shared cliff surface instead of the brown default.
+	var side: Material = _materials["cliff"]
+	var side_tint := str((cfg as Dictionary).get("side_tint", ""))
+	if side_tint != "":
+		side = _textured_material(_surface_tint(_visual_config.get("surface", {}).get("cliff", {}), side_tint), Color(side_tint))
 	for raw: Variant in (cfg as Dictionary).get("mesas", []):
 		if not raw is Dictionary:
 			continue
@@ -2307,7 +2313,7 @@ func _build_terrace_mesas(root: Node3D) -> void:
 		var size := _vec3(spec.get("size", [14, 14, 12]))
 		var rise := float(spec.get("rise_m", 2.4))
 		_mesa(root, "TerraceMesa%02d" % index, Vector3(foot.x, foot.y + rise - size.y * 0.5, foot.z), size,
-			_materials["cliff"], _materials["upland"], true, int(spec.get("seed", 7 + index * 13)),
+			side, _materials["upland"], true, int(spec.get("seed", 7 + index * 13)),
 			bool(spec.get("rugged", true)))
 		index += 1
 
