@@ -3617,6 +3617,22 @@
    "pre_check": "arm shows the 1 Nov remake (not the big-eyed fox-bird) in flight with the trainer hanging from its feet; watch for wing clipping in the procedural flap",
    "priority": "owner-rule fix (1 Nov: all remakes ON, no mascot): the flight carrier still draws the pre-remake mesh; F36#48 is a near-bar close-out (7.44)",
    "note": "After places-rain-time-grade."
+  },
+  {
+   "id": "faint2-pebbik-breezetail-medium",
+   "kind": "close-out",
+   "rows": [
+    "F36#58 pebbik",
+    "F36#35 breezetail"
+   ],
+   "branch": "tb/things",
+   "head": "e1c71d6f1",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-FAINT2/overlay_faint_round2.json",
+   "overlay_format": "deep merge",
+   "job": "capture_f36_poses.gd --species=pebbik,breezetail --whole-body --context --clear-ruler --roles=hit,faint",
+   "capture": "MEDIUM, arm side only",
+   "note": "Close-outs: High pebbik 7.65, breezetail 7.61 (G-things-faint2.md, 102221c2e). Close at Medium 7.5+ once the arm lands. Short; fit after things-convclear-other-biomes."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

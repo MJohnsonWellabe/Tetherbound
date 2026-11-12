@@ -2656,8 +2656,8 @@
       "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers"
     },
     "F36#92": {
-      "gpu": 6.6,
-      "src": "G-closeouts-solmane-cragclaw-wmm (4e4a4dbfd), all-roles game clip, High 6.60 (6.72 hit/faint only); faint lies belly-up, needs a faint fix"
+      "gpu": 7.19,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (not landed): water mangrove monitor -> 7.19 (3/3)"
     },
     "F36#50": {
       "gpu": 6.98,
@@ -2692,12 +2692,12 @@
       "src": "CLOSED: High 7.63 (G-things-t4-rescore) and Medium 8.04 (G-closeouts-solmane-cragclaw-wmm, LANE-SCOUT 4e4a4dbfd)"
     },
     "F36#58": {
-      "gpu": 7.47,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Pebbik"
+      "gpu": 7.65,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (not landed): pebbik 7.00 -> 7.65 (3/3); Medium queued"
     },
     "F36#35": {
-      "gpu": 7.31,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Breezetail"
+      "gpu": 7.61,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (not landed): breezetail 7.31 -> 7.61 (3/3); Medium queued"
     },
     "F36#75": {
       "gpu": 7.22,
@@ -2740,16 +2740,16 @@
       "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Stormraven"
     },
     "F36#57": {
-      "gpu": 6.34,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Paddlenewt"
+      "gpu": 6.83,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (not landed): paddlenewt +0.49 over its T4 score 6.34"
     },
     "F36#62": {
-      "gpu": 6.3,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Riftfrill"
+      "gpu": 6.72,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (not landed): riftfrill +0.42 over its T4 score 6.3"
     },
     "F36#66": {
-      "gpu": 6.15,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Shadelet"
+      "gpu": 6.81,
+      "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships (not landed): shadelet +0.66 over its T4 score 6.15"
     },
     "F36#80": {
       "gpu": 6.04,
