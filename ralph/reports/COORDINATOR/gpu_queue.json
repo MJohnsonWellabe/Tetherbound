@@ -4291,6 +4291,19 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "below6-restored-sea-r3",
+   "kind": "arm",
+   "rows": [
+    "F39#17"
+   ],
+   "branch": "tb/below6",
+   "head": "6eeb87522",
+   "job": "ralph/reports/LANES/BELOW6-RESTORED-SEA/CAPTURE.json (phase2_capture_current_states.gd, base vs arm, all four stands live and restored; S3/S4 restored are the no-loss set)",
+   "capture": "High",
+   "priority": "lowest row (5.50): next arm",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-meadowground",
    "kind": "arm (shared cause, 6-7)",
    "rows": [
