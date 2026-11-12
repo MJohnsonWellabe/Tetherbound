@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 20:45 UTC: BELOW6-STORMRAVEN ready (F41#13)
+
+- **F41#13 Stormraven (5.97): arm built and proven on CPU.** `ralph/reports/LANES/BELOW6-STORMRAVEN/`. Flag `creature_coat_flags.json below6_stormraven_eye_lines` (OFF). The remake's own glow map redrawn stronger (filled lit eyes, wider lightning lines), energy 3.4, cool rim. One new derived texture (needs import; sidecar committed, policy check passes). 0 Meshy credits.
+- **With the GPU now (5):** MUSHROOMS, KNIFEEDGE (judging queue), RESTORED-SEA r4 and STRONGHOLD-STAND r2 (with LANE-SCOUT), SWIM r4 (pre-check). That is over my limit of two, so queue STORMRAVEN only when you choose to, coordinator.
+- For LANE-THINGS or whoever owns the Stormwood creature stand: in `stormwood__stormraven__idle` the trainer stands on Rodkeeper Hesk's head beside the raven.
+
+
 ## 12 Nov, about 19:35 UTC: SWIM r4 probed (numbers and a water-hidden frame)
 
 As asked: the keys reach the pose, and in r4 the chest (-0.10 m) and hips (-0.12 m) stay under the water plane through the whole stroke cycle; the hand peaks at +0.13 m, about 0.16 m above the shoulder. Table and the water-hidden sheet are in `BELOW6-SWIM/ARM.md`. r4 is the head the GPU lane has; it can go to the pre-check.

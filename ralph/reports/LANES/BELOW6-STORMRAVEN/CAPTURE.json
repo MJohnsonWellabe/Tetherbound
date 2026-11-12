@@ -1,0 +1,19 @@
+{
+ "row": "F41#13 electric creature finish (5.97): Stormraven",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_creatures.gd",
+ "args": ["--biome=stormwood", "--only=stormraven", "--seed=2042", "--output={OUT}"],
+ "output_rule": "the tool writes under res://ralph/reports/VISUAL/phase2/stormwood/",
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "frames": ["stormwood__stormraven__idle"],
+ "row_also_has": "stormwood__fulgocobra__idle (unchanged by this arm; judge the row as the pair, as G-rescore-stale-d did)",
+ "overlay": "ralph/reports/LANES/BELOW6-STORMRAVEN/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same command as G-rescore-stale-d used for F41#13",
+ "needs_import": "yes: one new texture, creature_stormraven_owner1101_glow_read_r2.png (import sidecar committed, mode 2)",
+ "_why": "G-rescore-stale-d: 'Stormraven is a flat cobalt shape with no visible face, eye or charge contrast'. Arm: the remake's own glow map redrawn stronger (filled lit eyes, wider lightning feather lines), lit at 3.4 with a cool rim.",
+ "want_to_see": "a lit eye that reads at normal creature distance and feather lines that read as charge, with the head separating from the ground. Say if the eye blooms into a white blob or the body reads as speckled: emission energy and rim are config.",
+ "note": "In my CPU frame the trainer stands on Rodkeeper Hesk's head beside the raven (both sides, not from this arm): the creature stand overlaps his post."
+}
