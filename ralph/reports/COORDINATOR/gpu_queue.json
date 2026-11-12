@@ -4218,6 +4218,22 @@
    "capture": "High, base and arm",
    "pre_check": "the black strip from the bridge foot is gone; no new hole or gap where a shoulder ends",
    "priority": "near-floor F40#15 6.08; F40#8 bridge frames"
+  },
+  {
+   "id": "things-riftfrill-matte",
+   "kind": "arm (near-bar)",
+   "rows": [
+    "F36#62"
+   ],
+   "branch": "tb/things",
+   "head": "7949eba7c",
+   "tree": "tb/things 7949eba7c both sides",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-RIFTFRILL/ (its overlay; see CAPTURE.json)",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-RIFTFRILL/CAPTURE.json",
+   "capture": "High (Medium if High reaches 7.5)",
+   "priority": "back of the queue: LANE-THINGS is over its two-arms-waiting limit; Riftfrill 7.31"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
