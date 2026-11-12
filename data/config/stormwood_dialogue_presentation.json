@@ -5,7 +5,7 @@
     "enabled": true,
     "_comment": "P2-082: installed plates match all eleven unchanged world speaker profiles, including side conversations and generated Wen/Bryn panels. Native paired identity review passed; see fixes/P2-082/people-blind-verdict.md.",
     "plates_by_profile": {
-      "local_historian": "res://assets/ui/portraits/old_perrin.png",
+      "local_historian": "res://assets/ui/portraits/old_perrin.png", "alpha_tracker": "res://assets/ui/portraits/sorrel.png", "lost_traveler": "res://assets/ui/portraits/tobin.png",
       "young_trainer": "res://assets/ui/portraits/bryn.png",
       "trader": "res://assets/ui/portraits/corin.png",
       "craftsperson": "res://assets/ui/portraits/ada.png",

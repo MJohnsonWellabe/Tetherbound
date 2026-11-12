@@ -5,12 +5,15 @@ render_mode cull_disabled, diffuse_burley, specular_schlick_ggx;
 // measure the cap's real thickness/height, so its radial width never collapses.
 uniform sampler2D wood_atlas : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform vec4 wood_tint : source_color = vec4(0.659, 0.6, 0.482, 1.0);
+// 0 keeps the atlas's own orange grain; 1 is fully grey (aged heartwood).
+uniform float weathering : hint_range(0.0, 1.0) = 0.0;
 
 void fragment() {
 	vec2 grain = UV;
 	grain.x += sin(UV.y * 2.1 + sin(UV.y * 0.61)) * 0.035;
 	vec2 atlas_uv = vec2(fract(grain.y), 0.025 + fract(grain.x) * 0.24);
 	vec3 wood = texture(wood_atlas, atlas_uv).rgb;
+	wood = mix(wood, vec3(dot(wood, vec3(0.299, 0.587, 0.114))), weathering);
 	float split = sin(grain.x * 63.0 + sin(grain.y * 4.7) * 0.8);
 	float broken = smoothstep(0.7, 0.95, split) * smoothstep(-0.15, 0.7, sin(grain.y * 3.1 + grain.x * 7.3));
 	float weather = 0.9 + 0.1 * sin(UV.y * 0.73 + UV.x * 1.7);

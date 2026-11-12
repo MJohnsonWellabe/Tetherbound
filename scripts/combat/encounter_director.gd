@@ -5668,6 +5668,13 @@ var _named_trainer_stands: Array[Vector2] = []
 var _named_trainer_stands_read := false
 
 
+## How far wild bodies keep from the stands `_named_trainer_grounds()` lists.
+## A realm director may answer for its own posts (Stormwood,
+## combat.json `arena.wild_post_clearance_1112`).
+func _named_trainer_wild_clear_m() -> float:
+	return float((MATH.config().get("arena", {}) as Dictionary).get("named_trainer_wild_clear_m", 0.0))
+
+
 func _named_trainer_grounds() -> Array[Vector2]:
 	if _named_trainer_stands_read:
 		return _named_trainer_stands
@@ -5695,8 +5702,7 @@ func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
 				return false
 		if not _clear_of_village_fence(here):
 			return false
-	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
-		"named_trainer_wild_clear_m", 0.0))
+	var clear := _named_trainer_wild_clear_m()
 	if clear <= 0.0:
 		return true
 	for stand: Vector2 in _named_trainer_grounds():
@@ -5795,8 +5801,7 @@ func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
 				away = (segment[1] - segment[0]).orthogonal()
 			var moved := nearest + away.normalized() * (fence_clear + 0.5)
 			out = Vector3(moved.x, out.y, moved.y)
-	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
-		"named_trainer_wild_clear_m", 0.0))
+	var clear := _named_trainer_wild_clear_m()
 	if clear <= 0.0:
 		return out
 	for stand: Vector2 in _named_trainer_grounds():
