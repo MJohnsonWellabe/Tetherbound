@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 21:05 UTC",
+  "updated": "12 Nov 2026 21:20 UTC",
   "headline": [
+    "12 Nov 21:20: mushrooms split. The High Perches rim dressing ships (F40#17 6.01 to 6.94, 3/3); the pickup restyle does not (the finds read as smudges and herbs, -0.74 in Meadows). LANE-BELOW6 cuts the rim part alone for landing. #934 (swim and restored sea) is waiting for a CI runner.",
     "12 Nov 21:05: #934 is in full CI: the surface swim stroke (F39#5 5.98, F39#14 6.12) and the restored sea (F39#17 6.27). Auto-merge is off; I merge by hand once the engine jobs have run.",
     "12 Nov 21:00: two of the lowest rows ship. Swim r5: F39#5 5.45 to 5.98 and F39#14 5.74 to 6.12 (both 3/3); the swim now reads as swimming, with arms spread at the surface. Restored sea r5: F39#17 6.08 to 6.27 (2/3), sunset no longer black. Landing branch requested from LANE-BELOW6.",
     "12 Nov 20:45: #933 landed, full CI green. Main's long-running CI reds are fixed (two of them were real bugs: the rarity rim and the Water catalogue). The F38#20 stronghold stand and F38#3 opposing-trainer stand are on main; Medium close-out captures are queued. A full run on main has been dispatched to confirm.",
@@ -2741,11 +2742,11 @@
     },
     "F40#16": {
       "gpu": 6.19,
-      "src": "GPU High 8-9 Nov (F-cloudreach)"
+      "src": "GPU High 8-9 Nov (F-cloudreach) | ARM BELOW6-MUSHROOMS pickups (bc115978b): 6.43 -> 6.34 (1/3), Meadows finds -0.74 (0/3); not shipped (finds read as smudges or herbs)"
     },
     "F40#17": {
       "gpu": 6.18,
-      "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08)"
+      "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08) | ARM BELOW6-MUSHROOMS rim part G-below6-mushrooms (bc115978b, 12 Nov): 6.01 -> 6.94 (3/3, FIXED 3/3), ships as its own part; landing to come"
     },
     "F40#18": {
       "gpu": 7.1,
