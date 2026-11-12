@@ -45,3 +45,15 @@ func test_enabled_override_applies_only_to_named_destinations() -> void:
 	assert_true(LOCATIONS.approach_override_for(path, "bad_position").is_empty(), "a malformed position is rejected")
 	assert_true(LOCATIONS.approach_override_for(path, "bad_heading").is_empty(), "a missing heading is rejected")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+func test_candidate_stands_are_read_only_when_their_block_is_on() -> void:
+	var shipped: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
+	var candidates: Dictionary = ((shipped as Dictionary).get("approach_overrides", {}) as Dictionary).get("candidates_1112", {})
+	assert_false(bool(candidates.get("enabled", true)), "candidate stands ship OFF until judged")
+	assert_true(LOCATIONS.approach_override_for(CONFIG, "cloudreach__windscar_ravine__05__windscar_beacon").is_empty(),
+		"an OFF candidate block moves nothing")
+	var path := _write({"approach_overrides": {"enabled": true, "destinations": {},
+		"candidates_1112": {"enabled": true, "destinations": {"c": {"position": [1.0, 2.0], "heading_deg": 47.0}}}}})
+	assert_eq(LOCATIONS.approach_override_for(path, "c").get("position", []), [1.0, 2.0])
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))

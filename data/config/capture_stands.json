@@ -48,6 +48,14 @@
     "destinations": {
       "stormwood__dynamo__12__the_stormheart_tree": {"position": [-100.0, 5300.0], "heading_deg": 0.0},
       "stormwood__landmark__dynamo_core": {"position": [-100.0, 5300.0], "heading_deg": 0.0}
+    },
+    "candidates_1112": {
+      "_why": "F40#3 Cloudreach landmark read (LANE-BELOW6, 12 Nov 2026; GPU High 5.65). OFF until judged: when `enabled`, these destinations are read as well as `destinations`. The Old Wind Observatory approach stand sits 8 m from the tower on the island rim and frames a bare rim wall with the tower cut off at the knees; the Windscar Beacon approach stand is 16 m behind the landmark position with the gate about 60 m further on, a twentieth of the frame. CPU screen (BELOW6-F40-3/_sheet_cpu_screen.jpg): from the south the observatory stands at the end of its path with the armillary ring (the tower top is cut in every candidate); from 32 m the beacon gate fills the centre of the frame. Capture tooling only; re-baselined, never compared with the old stand's score.",
+      "enabled": false,
+      "destinations": {
+        "cloudreach__upper_cloudreach__10__old_wind_observatory": {"position": [430.0, 4500.0], "heading_deg": 180.0},
+        "cloudreach__windscar_ravine__05__windscar_beacon": {"position": [-240.0, 2698.0], "heading_deg": 47.0}
+      }
     }
   }
 }
