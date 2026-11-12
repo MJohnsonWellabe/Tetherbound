@@ -4554,6 +4554,19 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "below6-stormraven-r3",
+   "kind": "arm (needs import)",
+   "rows": [
+    "F41#13"
+   ],
+   "branch": "tb/below6",
+   "head": "e150f1cad",
+   "job": "BELOW6-STORMRAVEN/CAPTURE.json with overlay_night.json (stormraven + fulgocobra idle)",
+   "capture": "High, base vs overlay; pre-check: the near-black body holds its form (feather detail, rim)",
+   "priority": "below-6 row; new approach (near-black raven base, not the eye)",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-riftfrill-matte",
    "kind": "arm (near-bar)",
    "rows": [
