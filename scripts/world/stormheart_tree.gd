@@ -1047,6 +1047,12 @@ func _built_detail() -> void:
 	wood.shader = CUT_WOOD_SHADER
 	wood.set_shader_parameter("wood_atlas",load("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"))
 	wood.set_shader_parameter("wood_tint",Color(str(settings.get("wood_tint","#c4aa87"))))
+	# deck_wood_warm_1112 (LANE-BELOW6, OFF until GPU-judged): under Stormwood's
+	# violet light the pale weathered planks render pink-lilac (hue 330). A tint
+	# that leans against that light brings them back to a warm oak.
+	var warm: Dictionary = settings.get("deck_wood_warm_1112", {})
+	if bool(warm.get("enabled", false)):
+		wood.set_shader_parameter("wood_tint",Color(str(warm.get("tint","#bdbd87"))))
 	wood.set_shader_parameter("weathering",clampf(float(settings.get("wood_weathering",0.0)),0.0,1.0))
 	_cut_wood = wood
 	for visual: MeshInstance3D in find_children("*","MeshInstance3D",true,false):
