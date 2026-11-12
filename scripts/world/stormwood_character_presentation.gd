@@ -25,6 +25,14 @@ static func decorate(spec: Dictionary, identity_id: String, authored_rank: Strin
 		if floors.has(canonical):
 			result["emission_floor"] = float(floors[canonical])
 	result["night_rim"] = (style.get("night_rim", {}) as Dictionary).duplicate(true)
+	# F41#8 named_tint_1112 (OFF until GPU-judged): the named villagers' pale skin
+	# and hair clip to white under the storm light ("faces burn orange-white", 3/3).
+	# A listed identity's body albedo is multiplied by its own grey; nothing emits.
+	var named_tint: Variant = settings.get("named_tint_1112", {})
+	if named_tint is Dictionary and bool((named_tint as Dictionary).get("enabled", false)):
+		var tints: Dictionary = (named_tint as Dictionary).get("tints", {})
+		if tints.has(canonical):
+			result["tint"] = str(tints[canonical])
 	if uniform_rank.is_empty():
 		return result
 	result["presentation_rank"] = uniform_rank

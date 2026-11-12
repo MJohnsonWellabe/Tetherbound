@@ -1,5 +1,13 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 08:30 UTC: named posts dropped; BELOW6-NAMEDFACES sent (GPU slot 1 of 2)
+
+- **Named posts: DO NOT SHIP** (G-below6-namedposts: F41#8 row 5.92 -> 5.43, dialogue 6.38 -> 5.65, 0/3). `named_posts_1112` stays OFF; parked.
+- **BELOW6-NAMEDFACES is ready for the GPU queue**: `ralph/reports/LANES/BELOW6-NAMEDFACES/` (ARM.md, CAPTURE.json, overlay.json, CPU sheet). Flag `stormwood_character_presentation.json named_tint_1112` (OFF): Maud, Hesk and Bryn's body albedo is multiplied by a neutral grey so their faces stop clipping to white. On CPU the emission floor and the rim were both ruled out first (no change); with the tint, near-white pixels in the dialogue crops fall by a third to a half and features read.
+- **Direct data fix riding along (both sides):** Hesk's dialogue portrait was the dark-haired boy (`villager_male`) because his new alpha_tracker body had no plate. `plates_by_profile` now maps alpha_tracker to the installed `sorrel.png` and lost_traveler to `tobin.png`. Bryn's lines already resolved to his own plate. Coordinator: this fix can land with anything; tests `test_stormwood_distinct_body_portraits.gd`.
+- Not mine, named by the judges on F41#8: repeated background sentinels and tan-vest figures (new art), salmon bears and cobalt wolves, hard black path patches, the player's own bloom.
+
+
 ## 12 Nov, about 07:10 UTC: F41#8 arm sent (GPU slot 1 of 2)
 
 **BELOW6-NAMEDPOSTS** is ready for the GPU queue: `ralph/reports/LANES/BELOW6-NAMEDPOSTS/` (ARM.md, CAPTURE.json, overlay.json, CPU sheet). Flag `stormwood_character_presentation.json named_posts_1112` (OFF). One installed storm-lantern post beside Elder Maud, Rodkeeper Hesk and Warden-elect Bryn; on CPU the black road around them becomes a warm pool and their legs separate from the ground. Character side only; the road is untouched. No new assets, 0 Meshy credits.
