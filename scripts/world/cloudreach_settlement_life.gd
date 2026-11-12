@@ -82,7 +82,13 @@ static func items_config() -> Dictionary:
 			or OS.get_cmdline_user_args().has(str(raw.get("preview_arg", "--none")))):
 		_items = raw
 		# Judged-next rounds, each OFF unless enabled or passed its preview arg.
+		# `candidates_off` (a dictionary, so an arm's overlay can reach it; a list
+		# entry cannot be deep-merged): a candidate named here by its preview_arg
+		# is skipped even when enabled, for an A/B of something that ships ON.
+		var off: Dictionary = raw.get("candidates_off", {})
 		for next: Variant in raw.get("candidates", []):
+			if next is Dictionary and bool(off.get(str(next.get("preview_arg", "")), false)):
+				continue
 			if next is Dictionary and (bool(next.get("enabled", false))
 					or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
 				_items = merge(_items, next.get("overlay", {}))
