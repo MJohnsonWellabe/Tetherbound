@@ -2,7 +2,7 @@ extends "res://tests/test_case.gd"
 
 ## combat.json `arena.wild_post_clearance_1112` (LANE-THINGS, 12 Nov 2026):
 ## in Stormwood, wild spawns and wander targets keep clear of named
-## conversation posts. Ships OFF until judged; OFF changes nothing.
+## conversation posts. Ships ON (G-things-stormpost.md); OFF changes nothing.
 
 const DIRECTOR := preload("res://scripts/combat/stormwood_encounter_director.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
@@ -30,10 +30,10 @@ func _set_flag(on: bool) -> void:
 	_block()["enabled"] = on
 
 
-func test_ships_off_with_its_scope_declared() -> void:
+func test_ships_on_with_its_scope_declared() -> void:
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/combat.json"))
 	var block: Dictionary = (raw.get("arena", {}) as Dictionary).get("wild_post_clearance_1112", {})
-	assert_false(bool(block.get("enabled", true)), "OFF until judged")
+	assert_true(bool(block.get("enabled", false)), "the judged keep-clear ships ON (G-things-stormpost.md)")
 	assert_true(str(block.get("scope", "")).contains("host-authoritative"), "spawn placement is declared host-authoritative")
 	assert_eq(float((block.get("radius_m", {}) as Dictionary).get("stormwood", 0.0)), 16.0)
 
