@@ -3475,6 +3475,28 @@
    "priority": "below 6 (F41#1)",
    "note": "Stand move lands only with its game fix (the aged heartwood finish on the split trunk's exposed wood).",
    "done": "G-below6-stormheart-approach 4ec37efdb (judging; split not in frame)"
+  },
+  {
+   "id": "things-convclear-meadows",
+   "kind": "arm",
+   "rows": [
+    "F38#36",
+    "F38#37",
+    "F38#17",
+    "F38#16"
+   ],
+   "branch": "tb/things",
+   "head": "eb250d657",
+   "tree": "tb/things eb250d657 (script/config only)",
+   "overlay_branch": "tb/things",
+   "overlay": "ralph/reports/LANES/THINGS-CONVCLEAR/overlay_clearance.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/THINGS-CONVCLEAR/CAPTURE.json",
+   "job": "tools/phase2_capture_dialogue.gd --biome=meadows --seed=2042, every post",
+   "capture": "High, two new sides on tb/things: 'stand' = --sight-stand, no overlay (capture fix only); 'arm' = --sight-stand plus the overlay. Base = the existing G-dialogue-recapture-meadows frames (1c7b2f364, main 8df122a83).",
+   "pre_check": "blend 1.0 on every frame; in the arm's trainer rows the companion is not in frame (it should stand behind the lens). If it still is, tell LANE-THINGS which rows before judging.",
+   "priority": "6-7 band, one shared cause across every dialogue row (owner approved: ships if judged). Tidewake, Cloudreach and Stormwood follow if Meadows wins.",
+   "note": "Owner 11 Nov: conversation shots only; movement and fight cameras unchanged."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
