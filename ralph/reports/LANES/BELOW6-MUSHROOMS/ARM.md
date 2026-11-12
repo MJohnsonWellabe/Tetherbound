@@ -15,6 +15,6 @@ The existing contact shadow, pebbles and clover stay. No new assets, no Meshy.
 
 **Risks:** the Speed patch is small and pale; earlier GPU passes called finds "pinhead-sized" before the size step. If the judges cannot find it, raise `height_scale`.
 
-**Scope:** the presentation is shared by Meadows, Cloudreach and Stormwood mushroom finds.
+**Scope:** the presentation dresses the Meadows and Cloudreach mushroom finds. Stormwood pickups are built by `stormwood_pickup_runtime.gd` with their own models and do not change (confirmed byte-identical on the GPU, 13 Nov).
 
 **Expected gain:** over 0.5 on F40#16 (silhouette defect plus the toy read); about 0.5 on F40#17.

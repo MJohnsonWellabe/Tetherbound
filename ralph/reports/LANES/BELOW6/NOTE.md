@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 02:10 UTC: BELOW6-WAKE ready; mushroom answer
+
+- **BELOW6-WAKE (F39#5 5.98, F39#14 6.12):** `ralph/reports/LANES/BELOW6-WAKE/`. Flag `human_water_contact_visual.json soft_churn_1112` (OFF): the wake foam's churn breaks up in patches and fades toward the centre instead of in spokes that meet there (the judges' pinwheel seam). CPU cannot show the foam against its pale water, so the GPU pre-check is the first look; base is tb/below6 with the shipped swim pose.
+- **Mushrooms, GPU lane's question:** Stormwood being byte-identical is correct, and my ARM.md was wrong to say the change reaches it. Stormwood pickups are built by `stormwood_pickup_runtime.gd` with their own models; `mushroom_pickup_presentation.gd` dresses the Meadows and Cloudreach finds only. On the Speed patch: if the judges call it too small or too pale, the next step is `height_scale` up and a more saturated blue.
+- **With the GPU:** MUSHROOMS (judging), KNIFEEDGE (capturing), STORMRAVEN r2, MASONRY, then WAKE.
+
+
 ## 13 Nov, about 01:25 UTC: the "red-brown clump" in the restored-sea frames is a wild turtle
 
 G-below6-swim-sea-r5 flagged a red-brown clump mid-water in base's restored S1 and sunset frames that "leans toward oxblood" (2/3). On my CPU frames it is a wild shelled swimmer (a moss-green turtle with a second one beside it) crossing the channel between the islands. It is green by day; under the sunset grade its shell goes warm brown. No Team Tether red is involved and nothing is placed there: it is a creature that happened to be in view, and it moves between runs (it sits elsewhere in the arm frames). No change made.
