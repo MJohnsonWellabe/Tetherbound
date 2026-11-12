@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 16:30 UTC",
+  "updated": "12 Nov 2026 16:50 UTC",
   "headline": [
+    "12 Nov 16:50: Cloudreach matrix re-score (192 frames on main): F40#0, #19 and #21 read 5.98, about 6. Rain is 0.6 below clear at every stand (5.68 vs 6.29): striped grey sky, no wet sheen, a flat blue night wash. The four lowest stands are the thin landmarks (stormward overlook, flight aerie, skyroad arch, observatory).",
     "12 Nov 16:30: F38#4 Meadows map parchment fog ships (7.36 to 7.81 at High, 3/3), landing as #927; Medium follows. F39#17 restored sea lifts its row 6.21 to 6.88 but darkens the waterfall and sunset stands, so LANE-BELOW6 is rescoping it.",
     "12 Nov 16:15: F41#11 Stormwood character portraits CLOSES (7.61 High and Medium, control on its closing score). The confirming panel read F41#14 candy tiers at 7.05 and F41#1 Stormheart at 6.54, so neither closes; the earlier re-score read those two high.",
     "12 Nov 15:45: Stormwood re-score (16 rows on main): broad gains from tonight's landings: F41#15 6.87 (was 4.49), F41#3 7.06, F41#4 7.02, F41#7 7.02, F41#19 7.25, F41#17 7.40; flagged for close-out (Medium + confirming batch): F41#1 Stormheart 7.62, F41#14 candy pickups 7.59, F41#11 portraits 7.55.",
@@ -2838,8 +2839,8 @@
       "src": "GPU High baseline, 8 Nov frames (G-baselines-unscored-rows, provisional)"
     },
     "F40#21": {
-      "gpu": 6.68,
-      "src": "GPU High 10 Nov, matrix scope from the F40#0 capture (was 7.03 provisional on 8 Nov frames)"
+      "gpu": 5.98,
+      "src": "GPU High 10 Nov, matrix scope from the F40#0 capture (was 7.03 provisional on 8 Nov frames) | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.68; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled)"
     },
     "F22#4": {
       "gpu": 7.2,
@@ -2854,12 +2855,12 @@
       "src": "GPU High baseline 10 Nov, main 2ffc97db0, 268 frames day+golden (G-baseline F38#0 full row)"
     },
     "F40#0": {
-      "gpu": 6.54,
-      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads.; G-places-raintime (LANE-SCOUT): rain half of the matrix 5.04 -> 5.74 (+0.70, 12/12 sets 3/3), rain grade LANDED #915 (row not re-scored as a whole yet)"
+      "gpu": 5.98,
+      "src": "F40#0 matrix complete at 384 frames (G-f40-0-skyroad-arch-recapture, tb/item-scout-1108 70a62022c): 352-frame baseline 6.58 blended with the 32 arch frames 6.05. Biggest drags: rain sheets (half the matrix), empty stand pads.; G-places-raintime (LANE-SCOUT): rain half of the matrix 5.04 -> 5.74 (+0.70, 12/12 sets 3/3), rain grade LANDED #915 (row not re-scored as a whole yet) | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.54; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled)"
     },
     "F40#19": {
-      "gpu": 6.66,
-      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-f40-19-mist sky-only, landed #885"
+      "gpu": 5.98,
+      "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-f40-19-mist sky-only, landed #885 | RE-SCORE G-rescore-f40-0-sample (LANE-PLACES d37c0b4cf, main 90ffeb663, 192 frames day/night x clear/rain, 12 Nov) 5.98 (was 6.66; clear 6.29, rain 5.68; fit +/-0.6, dawn/golden not sampled)"
     },
     "F39#30": {
       "gpu": 6.7,
