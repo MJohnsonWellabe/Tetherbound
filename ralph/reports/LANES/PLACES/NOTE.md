@@ -113,7 +113,9 @@ Job: an up-to-date GPU High score on current main for every visual row; judged h
 - F41#22: 6.96 -> 6.46 (12 Nov, G-rescore-f41-22-24; five stands x three storm states; anchor RMSE 0.75, read as +/-0.75; giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28)
 - F41#24: 7.08 -> 6.46 (same mean; its defect FIXED 3/3 at glass and stormheart, PARTIAL 3/3 at giant and forest: grey slab at the trainer's feet in Break)
 - Not scoreable: F38#41, F39#32, F22#4 have no job.json capture entry, so there are no frames to request.
-- Still to come: G-rescore-stale-d (F38#8 full set, F41#13). After it the re-score queue is empty.
+- F38#8: 7.14 -> 6.18 (12 Nov, G-rescore-stale-d, full set; defect PRESENT 3/3: trainer hangs rigidly under Galecrest; batch reads +/-0.7)
+- F41#13: 6.66 -> 5.97 (same batch; BELOW 6; Fulgocobra reads, Stormraven is a flat cobalt shape with no face or charge contrast)
+- Re-score queue is empty as of G-rescore-stale-d. Rows below 6 on current main at High: F38#12 5.89, F38#20 5.72, F39#5 5.64, F39#8 5.82, F39#17 5.50, F40#15 5.89, F41#18 5.93, F41#13 5.97, F40#0/#19/#21 5.98.
 
 ### Build work handed over
 | Item | State | Goes to |
