@@ -2286,11 +2286,38 @@ func _near_walkable_feature(world_point: Vector3, lines: Array[Dictionary],
 	return false
 
 
+## F40#1 P2-021 `landmass.terrace_mesas_1112` (OFF until judged): the gate and
+## shrine stands read as "broad level grass fields ... where layered elevated
+## land and ledge detail should lead" (PRESENT 3/3 through eight prop arms,
+## each read as pasted on the grass). These are not props: each entry is a low
+## mesa from the same builder, strata and turf as the cliffs behind the stands,
+## with its own collider, placed beside the approach so the ground steps up
+## from lawn to low terrace to cliff. World geometry from shared config, the
+## same on every peer; no save state. `at` is the turf height at the foot.
+func _build_terrace_mesas(root: Node3D) -> void:
+	var cfg: Variant = _visual_config.get("landmass", {}).get("terrace_mesas_1112", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return
+	var index := 0
+	for raw: Variant in (cfg as Dictionary).get("mesas", []):
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		var foot := _vec3(spec.get("at", [0, 0, 0]))
+		var size := _vec3(spec.get("size", [14, 14, 12]))
+		var rise := float(spec.get("rise_m", 2.4))
+		_mesa(root, "TerraceMesa%02d" % index, Vector3(foot.x, foot.y + rise - size.y * 0.5, foot.z), size,
+			_materials["cliff"], _materials["upland"], true, int(spec.get("seed", 7 + index * 13)),
+			bool(spec.get("rugged", true)))
+		index += 1
+
+
 func _build_routes() -> void:
 	var root := Node3D.new()
 	root.name = "AuthoredRoutes"
 	add_child(root)
 	_collect_all_route_lines()
+	_build_terrace_mesas(root)
 	for raw: Variant in _config.get("routes", []):
 		await _build_breathe()
 		if not raw is Dictionary:
