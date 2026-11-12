@@ -47,7 +47,11 @@ var _game_clips := true
 ## rest-mesh bounds, which a posed tail, neck or collapsed body leaves. With
 ## this the ruler stands clear of the skinned mesh as posed across the row's
 ## own phases (creature_pose_settle.gd Rig samples), never nearer than before.
-var _clear_ruler := false
+## Default since G-things-ruler-rescore.md (tb/item-scout-1108 86e6ee44): six
+## rows gained, none lost (Ashtusk 7.22 -> 8.03, Brooktail 6.93 -> 7.69,
+## Mirejaw 6.07 -> 7.26). `--rest-ruler` restores the old placement for
+## reproducing earlier rounds; `--clear-ruler` is still accepted.
+var _clear_ruler := true
 const POSE_RIG := preload("res://scripts/creatures/creature_pose_settle.gd")
 const RULER_GAP_M := 0.9
 
@@ -79,6 +83,8 @@ func _run() -> void:
 			_game_clips = false
 		elif arg == "--clear-ruler":
 			_clear_ruler = true
+		elif arg == "--rest-ruler":
+			_clear_ruler = false
 		elif arg == "--all":
 			all_roster = true
 		elif arg.begins_with("--roles="):
