@@ -3804,6 +3804,25 @@
    "pre_check": "yellow-pixel share on the road no higher than base; no web or stripe pattern; line visible; road not dry-sand or salmon",
    "priority": "Stormwood road across five rows incl. F41#8 (5.80, below 6)",
    "note": "Judged umber road (won twice) + one thin gold line (thin_1112); colour stays yellow-gold pending owner answer."
+  },
+  {
+   "id": "places-gate-paving",
+   "kind": "arm",
+   "rows": [
+    "F40#1",
+    "F40#0"
+   ],
+   "branch": "tb/places",
+   "head": "4ca9e4fc3",
+   "tree": "tb/places 4ca9e4fc3 for both sides (no import)",
+   "overlay_branch": "tb/places",
+   "overlay": "ralph/reports/LANES/PLACES-GATEPAVING/overlay.json",
+   "overlay_format": "deep merge",
+   "request": "ralph/reports/LANES/PLACES-GATEPAVING/CAPTURE.json (F40#1 job.json frames; F40#0 matrix piece 3 realm gate day clear, piece 4 day rain if cheap)",
+   "capture": "High, base and arm",
+   "pre_check": "reject if the trail reads as scattered litter or the path looks bare",
+   "priority": "F40#1 is below 6 (5.90); lane expects a small gain (likely a ride-along for the Cloudreach ground swing)",
+   "note": "Gate stone trail at trainer scale (0.12 m pieces sunk 55%) in place of the torso-sized cobble pad."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
