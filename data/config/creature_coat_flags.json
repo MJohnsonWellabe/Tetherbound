@@ -1042,6 +1042,18 @@
         }
       }
     },
+    "below6_stormraven_night": {
+      "_why": "LANE-BELOW6 (13 Nov 2026), F41#13 (GPU High 5.72 level, G-below6-stormraven-masonry 3/3: 'flat, saturated royal-blue bird ... glossy plastic, no feather detail, no rim light, no electric trait' where the board shows a black raven with blue lightning; the eye alone cannot carry it). r3: a near-black feather base from the remake's own albedo (ralph/reports/LANES/BELOW6-STORMRAVEN/make_night_albedo.py: saturation 0.42, value down, feather detail kept; beak, feet and eye keep their colour), the widened lightning glow map with its pupilled eye at 3.2, a strong cool rim so the dark body holds its silhouette, and a matte finish. Same species, silhouette and markings; no red. OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0_night.png",
+          "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read_r2.png", "emission_energy": 3.2,
+          "rim": 1.0, "rim_tint": 0.55,
+          "roughness": 0.92, "specular": 0.12
+        }
+      }
+    },
     "below6_floor_fulgocobra": {
       "_why": "LANE-BELOW6 (11 Nov 2026), F36#46 Fulgocobra 5.87 (GPU G-things-faint base: the near-black body sinks into the stage; the copper-brown neck plates sit near the reserved red). Graded from the face coat that ships: blacks lift to blue-charcoal with their scale detail and the copper plates move to the gold of the body bands. Keeps lanekit_face_read_fulgocobra's rim, gold-vein glow and matte values, and supersedes it when on. Script tools/art_pipeline/grade_remakes_floor.py fulgocobra. The raised hood in the faint is LANE-THINGS'. OFF until GPU-judged.",
       "enabled": false,
