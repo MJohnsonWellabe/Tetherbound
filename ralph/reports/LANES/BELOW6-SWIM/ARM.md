@@ -24,3 +24,21 @@ CPU (`_sheet_cpu_base_top_arm_bottom.jpg`, r3 below base): head, shoulders and t
 The GPU lane held r3 as well: on its frames the recovering arm stands high above the head with an open hand, and the torso, pack and a boot clear the water. My CPU frames of r3 showed a low arm; the stills land on a different stroke phase there and the opaque CPU water hides the body, so CPU is not a reliable check for this arm.
 
 r4 drops the arc instead of tuning it: `arm_recover_lift` 0.1 (the arms skim the surface plane), `arm_depth` 0.0, `arm_lateral` 0.34, chest 0.10 m under the surface, pitch 86. The stroke should show as arms reaching forward at the waterline, with the body under it. I have not captured r4 on CPU; the GPU pre-check (about 3 minutes) is the test. If r4 is held too, I park the pose approach: the next step would be a pinned stroke phase in the capture or an authored swim clip.
+
+## r4 checked numerically and with the water hidden (12 Nov, coordinator's request)
+
+Probe: the swim capture, overlay on, at `surface_mid`; the pose was stepped through twelve phases of one stroke cycle with `_apply_human_swim_pose`, and each bone's height above the water plane printed (metres; the loaded pose dictionary was printed too, so the keys do reach the pose).
+
+| Bone | Whole cycle |
+|---|---|
+| Spine02 (chest) | -0.10 at every phase |
+| Hips | -0.12 at every phase |
+| Head (bone at the skull base) | -0.02 at every phase |
+| Upper arm (shoulder end) | -0.03 at every phase |
+| Forearm (elbow end) | -0.05 to +0.04 |
+| Hand | -0.00 to +0.13 (the peak is one phase per side) |
+| Foot | -0.10 to +0.06 |
+
+So in r4 the chest and hips stay under the plane for the whole cycle and the hand's apex is 0.13 m above it, about 0.16 m above the shoulder, never near head height. `_sheet_cpu_r4_water_hidden_two_phases.jpg` shows the two apex phases with the sea mesh hidden: the body lies flat and prone with the arms close to the head, one reaching slightly forward, and no raised arm.
+
+For comparison r3's keys were `arm_recover_lift 0.42` with `arm_depth 0.12` and chest -0.07; I did not probe r3, so I cannot say from numbers why its GPU frames showed the arm above the head.

@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 19:35 UTC: SWIM r4 probed (numbers and a water-hidden frame)
+
+As asked: the keys reach the pose, and in r4 the chest (-0.10 m) and hips (-0.12 m) stay under the water plane through the whole stroke cycle; the hand peaks at +0.13 m, about 0.16 m above the shoulder. Table and the water-hidden sheet are in `BELOW6-SWIM/ARM.md`. r4 is the head the GPU lane has; it can go to the pre-check.
+
+RESTORED-SEA r4 and the stronghold stand at (0, 7130) passed their pre-checks and are with LANE-SCOUT. The GPU lane saw a faint translucent crenellation copy behind the keep at the new stand (day and night); I will look at it after Stormraven.
+
+
 ## 12 Nov, about 19:15 UTC: RESTORED-SEA r4 checked on CPU; ready for the GPU re-run
 
 r4 (depth falloff 1.3 of live, waves 0.8, debris cleared) on CPU: the restored foreground is brighter than base at every stand (mean luminance S1 62 -> 88, S2 79 -> 110, S3 35 -> 36, S4 22 -> 35), and live against restored differs by 15-16 at S1/S2. `BELOW6-RESTORED-SEA/` has the r4 sheet and CAPTURE.json with S3/S4 restored as the no-loss set. GPU lane: please re-run on the current head.
