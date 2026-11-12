@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, about 01:25 UTC: the "red-brown clump" in the restored-sea frames is a wild turtle
+
+G-below6-swim-sea-r5 flagged a red-brown clump mid-water in base's restored S1 and sunset frames that "leans toward oxblood" (2/3). On my CPU frames it is a wild shelled swimmer (a moss-green turtle with a second one beside it) crossing the channel between the islands. It is green by day; under the sunset grade its shell goes warm brown. No Team Tether red is involved and nothing is placed there: it is a creature that happened to be in view, and it moves between runs (it sits elsewhere in the arm frames). No change made.
+
+
 ## 13 Nov, about 01:10 UTC: ONE landing branch as asked: `tb/below6-swimsea-land`
 
 `tb/below6-swimsea-land` (79e034419, cut from main 1c81cdb45): both flags ON with `_why_on` citing G-below6-swim-sea-r5 and their numbers, the swim pose code, `water_restored_sea.gd` with its `water_veilfall.gd` attachment, the four tests, READY.md `STATUS: land`. Nothing else from `tb/below6`. It replaces the two split branches I cut first (`tb/below6-swim-land`, `tb/below6-restored-sea-land`: same content); ignore or delete those.
