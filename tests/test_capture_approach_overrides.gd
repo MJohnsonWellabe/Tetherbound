@@ -63,3 +63,20 @@ func test_candidate_stands_ship_on_and_are_read_only_when_their_block_is_on() ->
 		"candidates_1112": {"enabled": true, "destinations": {"c": {"position": [1.0, 2.0], "heading_deg": 47.0}}}}})
 	assert_eq(LOCATIONS.approach_override_for(path, "c").get("position", []), [1.0, 2.0])
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+func test_any_candidates_block_is_read_only_while_enabled() -> void:
+	# F38#20 (LANE-BELOW6, 12 Nov 2026): further unjudged stands sit in their own
+	# `candidates_*` block; the shipped stronghold candidate stays OFF until judged.
+	var shipped: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
+	var block: Dictionary = (shipped.get("approach_overrides", {}) as Dictionary).get("candidates_f38_20_1112", {})
+	assert_false(block.is_empty(), "the stronghold candidate block is declared")
+	if not bool(block.get("enabled", false)):
+		assert_true(LOCATIONS.approach_override_for(CONFIG, "meadows__band5_stronghold_approach__09__stronghold_approach").is_empty(),
+			"an OFF candidate block leaves the Band 5 stand where it is")
+	var on := _write({"approach_overrides": {"enabled": true, "destinations": {},
+		"candidates_one": {"enabled": false, "destinations": {"a": {"position": [1.0, 2.0], "heading_deg": 0.0}}},
+		"candidates_two": {"enabled": true, "destinations": {"b": {"position": [3.0, 4.0], "heading_deg": 90.0}}}}})
+	assert_true(LOCATIONS.approach_override_for(on, "a").is_empty(), "a disabled block moves nothing")
+	assert_eq(LOCATIONS.approach_override_for(on, "b").get("position", []), [3.0, 4.0], "an enabled block moves its stand")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(on))

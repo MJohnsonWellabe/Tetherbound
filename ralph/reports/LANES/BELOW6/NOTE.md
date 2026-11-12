@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 16:40 UTC: F38#20 stand proposal; two arms ready behind the queue
+
+- **F38#20 stronghold (5.72): stand proposal for your review, coordinator.** `ralph/reports/LANES/BELOW6-STRONGHOLD-STAND/PROPOSAL.md`. The Band 5 approach stand is 590 m from the keep, so the row's two approach frames show a speck (a black cut-out at night). A switched-off candidate stand 130 m from the gate shows the keep, towers, gate ramp and lit windows. `approach_override_for` now reads any enabled `candidates_*` block. The courtyard frame is untouched.
+- **Ready and waiting for a slot, in this order:** BELOW6-SWIM (F39#5), then the stronghold stand if you approve it.
+- **In flight:** MUSHROOMS, KNIFEEDGE. No verdicts yet.
+
+
 ## 12 Nov, about 15:45 UTC: BELOW6-SWIM ready; waiting for a GPU slot
 
 - **F39#5 swimmer (5.64): arm built and proven on CPU.** `ralph/reports/LANES/BELOW6-SWIM/` (ARM.md, CAPTURE.json, overlay.json, sheet). Flag `human_swim_visual.json surface_crawl_1112` (OFF). Cause: the active stroke candidates sink the chest 0.14 m under the surface with the arms below the body. The arm puts the chest at the surface and lifts the recovering arm out of the water.

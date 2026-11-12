@@ -57,6 +57,7 @@
         "cloudreach__upper_cloudreach__10__old_wind_observatory": {"position": [430.0, 4500.0], "heading_deg": 180.0},
         "cloudreach__windscar_ravine__05__windscar_beacon": {"position": [-240.0, 2698.0], "heading_deg": 47.0}
       }
-    }
+    },
+    "candidates_f38_20_1112": {"enabled": false, "_candidate": "LANE-BELOW6 (12 Nov 2026), F38#20 Team Tether stronghold (GPU High 5.72, G-rescore-stale-tier2: 'reads as a small dark ruin behind the pylons'). The Band 5 approach stand is the band's road entry at (0, 6968), about 590 m from the keep, so the row's two approach frames show its subject as a speck on the horizon. Candidate: the same road, 130 m from the gate, looking north, where the keep, both flank towers, the gate ramp and the lit windows fill the frame (screened on CPU with --spot at z 7330, 7430 and 7480; 7430 cropped the top, so 7405). Capture stand only; the game is unchanged. OFF until the coordinator's stand review and a GPU verdict.", "destinations": {"meadows__band5_stronghold_approach__09__stronghold_approach": {"position": [0.0, 7405.0], "heading_deg": 0.0}}}
   }
 }
