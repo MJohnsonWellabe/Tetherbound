@@ -18,3 +18,9 @@ The GPU lane held r2 before judging: on the GPU's transparent water the whole tr
 r3 (same flag, pose keys only): chest 0.07 m under the surface (main is -0.14, r2 was +0.03), pitch 83, `arm_lateral` 0.42, `arm_recover_lift` 0.42 and `forearm_recover_scale` 0.6, so the recovering arm stays low and forward.
 
 CPU (`_sheet_cpu_base_top_arm_bottom.jpg`, r3 below base): head, shoulders and the top of the pack sit at the waterline; one forearm and hand reach forward just above the water and the other arm lies at the surface. The CPU water is opaque, so how much of the body shows through on the GPU is still unverified.
+
+## r4 (12 Nov, after the second GPU pre-check hold): not CPU-captured
+
+The GPU lane held r3 as well: on its frames the recovering arm stands high above the head with an open hand, and the torso, pack and a boot clear the water. My CPU frames of r3 showed a low arm; the stills land on a different stroke phase there and the opaque CPU water hides the body, so CPU is not a reliable check for this arm.
+
+r4 drops the arc instead of tuning it: `arm_recover_lift` 0.1 (the arms skim the surface plane), `arm_depth` 0.0, `arm_lateral` 0.34, chest 0.10 m under the surface, pitch 86. The stroke should show as arms reaching forward at the waterline, with the body under it. I have not captured r4 on CPU; the GPU pre-check (about 3 minutes) is the test. If r4 is held too, I park the pose approach: the next step would be a pinned stroke phase in the capture or an authored swim clip.

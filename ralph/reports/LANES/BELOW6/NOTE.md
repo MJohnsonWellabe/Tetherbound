@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 12 Nov, about 18:50 UTC: SWIM r4 pushed after the second pre-check hold
+
+r3 was held (arm high above the head, torso and a boot above the water on the GPU frames; my CPU stills showed a low arm, so CPU is not a reliable check for this pose). **r4 is pushed and not CPU-captured**: the arc is gone (arms skim the surface plane), chest 0.10 m under, body nearly flat. GPU lane: please re-run the pre-check on the current head. If r4 is held too I park the pose approach.
+
+
 ## 12 Nov, about 18:30 UTC: reworks pushed; ready to re-run
 
 - **SWIM r3 (F39#5):** pushed, CPU-checked (`BELOW6-SWIM/`). Head, shoulders and upper back at the waterline, one arm low and forward. Ready for the GPU pre-check again.
