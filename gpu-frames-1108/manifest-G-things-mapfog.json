@@ -1,0 +1,54 @@
+[
+ {
+  "row": "F38#4",
+  "item": "P2-002",
+  "frame": "meadows__menu_map",
+  "arm": "base",
+  "tree": "31b5e5879b144d4002390bd8e74299c46e60723b",
+  "preset": "High",
+  "tool": "tools/phase2_capture_ui.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_ui.gd",
+   "--",
+   "--biome=meadows",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "things-mapfog (F38#4 6.99): tb/things 31b5e5879 both sides, base no overlay, arm THINGS-MAPFOG/overlay_map_parchment.json (warm parchment fog for the unsurveyed Meadows map). Job frame meadows__menu_map, High.",
+  "match": "exact",
+  "path": "G-things-mapfog/F38-4/base/High/meadows__menu_map.jpg",
+  "sky_fraction": 0.259,
+  "lower_edges": 0.2069
+ },
+ {
+  "row": "F38#4",
+  "item": "P2-002",
+  "frame": "meadows__menu_map",
+  "arm": "arm",
+  "tree": "31b5e5879b144d4002390bd8e74299c46e60723b",
+  "preset": "High",
+  "tool": "tools/phase2_capture_ui.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_ui.gd",
+   "--",
+   "--biome=meadows",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "things-mapfog (F38#4 6.99): tb/things 31b5e5879 both sides, base no overlay, arm THINGS-MAPFOG/overlay_map_parchment.json (warm parchment fog for the unsurveyed Meadows map). Job frame meadows__menu_map, High.",
+  "match": "exact",
+  "path": "G-things-mapfog/F38-4/arm/High/meadows__menu_map.jpg",
+  "sky_fraction": 0.264,
+  "lower_edges": 0.2112
+ }
+]
