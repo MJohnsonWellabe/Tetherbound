@@ -1,5 +1,21 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## RESTARTED (12 Nov 2026, about 04:30 UTC, on the coordinator's relay of the owner's direction). `origin/main` d777b905 is merged into `tb/below6`.
+
+| Row | Arm | Status |
+|---|---|---|
+| F41#15 Marrow's head (4.49) | `BELOW6-MARROW` | **on the GPU** (queued by the coordinator) |
+| F41#1 split's exposed wood (game defect beside the entrance) | `BELOW6-SPLITWOOD` (`aged_heartwood_1112`, one split-facing ad-hoc stand) | **ready for GPU**, small arm |
+| F36#46 Fulgocobra (5.87) | `BELOW6-FULGOCOBRA` | **parked, not sent.** My first "no change" was a broken flag path, now fixed; two real CPU looks since are still well under +0.5 (`NOT-SENT.md`). |
+| F40#3 (5.65), F40#1 (5.90) | none | next: the two Cloudreach rows. Nothing built yet this session. |
+| F39#8 (5.66) | none | parked, no new idea |
+
+Merge notes: main's landed versions won every conflict. Kept on top, flag-off: `ramp_body_1112`, `aged_heartwood_1112`, `heartwood_1111.core_v2`, `below6_floor_fulgocobra`, `below6_marrow_self_lit_off`, `identity_floor_1112`, `landmark_crowns_1111`. Dropped: `below6_flinch_abyssal` (lost on GPU). After the merge, `--only=stormheart,creature_coat_flags,creature_clip,character_body_flags,capture_approach_overrides,remakes_floor_landed,below6,texture_import_policy,dark_value_lift`: 20 test files, 60 tests, 1 failed (the broken Fulgocobra path, fixed; `creature_coat_flags` re-run: 6 tests, 0 failed).
+
+---
+
+# Wrap-up of 12 Nov 02:45 UTC (kept for its tables and runbook; superseded by the restart above)
+
 ## WRAPPED (12 Nov 2026, about 02:45 UTC, on the owner's wrap-up direction). No new arms. Everything is pushed.
 
 ### 1. Ready to land now
