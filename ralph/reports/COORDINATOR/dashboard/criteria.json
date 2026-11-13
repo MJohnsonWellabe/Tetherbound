@@ -2897,7 +2897,7 @@
         {
           "text": "F36 (1) breezetail: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
           "status": "met",
-          "evidence": "CLOSED 12 Nov 2026: GPU High 7.61 (G-things-faint2.md, tb/item-scout-1108 102221c2e) and Medium 7.56 (G-faint2-medium-galecarrier.md, 5f1f5ee24), confirming batches; faint round 2 (things_faint2_scope) landed ON in PR #915 (main).",
+          "evidence": "CLOSED 12 Nov 2026: GPU High 7.61 (G-things-faint2.md, tb/item-scout-1108 102221c2e) and Medium 7.56 (G-faint2-medium-galecarrier.md, 5f1f5ee24), confirming batches; faint round 2 (things_faint2_scope) landed ON in PR #915 (main). | 13 Nov: MEDIUM UNVERIFIED: the GPU lane found pose-stage Medium captures before d4960ba66 did not apply graphics_prefs (a second High render); real-Medium confirming read queued (reverify-f36-real-medium-main). Reopens if real Medium < 7.5.",
           "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
           "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
           "parent": "F36#1",
@@ -3158,7 +3158,7 @@
         {
           "text": "F36 (1) pebbik: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
           "status": "met",
-          "evidence": "CLOSED 12 Nov 2026: GPU High 7.65 (G-things-faint2.md, tb/item-scout-1108 102221c2e) and Medium 7.56 (G-faint2-medium-galecarrier.md, 5f1f5ee24), confirming batches; faint round 2 (things_faint2_scope) landed ON in PR #915 (main).",
+          "evidence": "CLOSED 12 Nov 2026: GPU High 7.65 (G-things-faint2.md, tb/item-scout-1108 102221c2e) and Medium 7.56 (G-faint2-medium-galecarrier.md, 5f1f5ee24), confirming batches; faint round 2 (things_faint2_scope) landed ON in PR #915 (main). | 13 Nov: MEDIUM UNVERIFIED: the GPU lane found pose-stage Medium captures before d4960ba66 did not apply graphics_prefs (a second High render); real-Medium confirming read queued (reverify-f36-real-medium-main). Reopens if real Medium < 7.5.",
           "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
           "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
           "parent": "F36#1",
@@ -3283,7 +3283,7 @@
         {
           "text": "F36 (1) solmane: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
           "status": "met",
-          "evidence": "CLOSED 11 Nov 2026: GPU High 7.63 (G-things-t4-rescore, tb/item-scout-1108 f4ffb5e64) and Medium 8.04 (G-closeouts-solmane-cragclaw-wmm, tb/item-scout-1108 4e4a4dbfd; frames G-solmane-medium 347eec615), both confirming batches, on main 3a514ef5c (capture_f36_poses.gd --whole-body --context). Remaining note, not blocking: the faint wings bury the body (3/3).",
+          "evidence": "CLOSED 11 Nov 2026: GPU High 7.63 (G-things-t4-rescore, tb/item-scout-1108 f4ffb5e64) and Medium 8.04 (G-closeouts-solmane-cragclaw-wmm, tb/item-scout-1108 4e4a4dbfd; frames G-solmane-medium 347eec615), both confirming batches, on main 3a514ef5c (capture_f36_poses.gd --whole-body --context). Remaining note, not blocking: the faint wings bury the body (3/3). | 13 Nov: MEDIUM UNVERIFIED: the GPU lane found pose-stage Medium captures before d4960ba66 did not apply graphics_prefs (a second High render); real-Medium confirming read queued (reverify-f36-real-medium-main). Reopens if real Medium < 7.5.",
           "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
           "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
           "parent": "F36#1",
@@ -3316,7 +3316,7 @@
         {
           "text": "F36 (1) stormbrush: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
           "status": "met",
-          "evidence": "CLOSED 11 Nov 2026: GPU High 7.68 (G-rescore-tier2-batch-2, tb/item-scout-1108 0756a82f3) and Medium 7.75 (G-f36-72-stormbrush-medium, f36c8acdc), both confirming batches, on main with the 1 Nov remake (capture_f36_poses.gd --whole-body --context).",
+          "evidence": "CLOSED 11 Nov 2026: GPU High 7.68 (G-rescore-tier2-batch-2, tb/item-scout-1108 0756a82f3) and Medium 7.75 (G-f36-72-stormbrush-medium, f36c8acdc), both confirming batches, on main with the 1 Nov remake (capture_f36_poses.gd --whole-body --context). | 13 Nov: MEDIUM UNVERIFIED: the GPU lane found pose-stage Medium captures before d4960ba66 did not apply graphics_prefs (a second High render); real-Medium confirming read queued (reverify-f36-real-medium-main). Reopens if real Medium < 7.5.",
           "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
           "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
           "parent": "F36#1",
