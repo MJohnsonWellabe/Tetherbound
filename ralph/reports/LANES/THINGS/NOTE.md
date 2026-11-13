@@ -9,6 +9,7 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **RUNE LANDING FIXED: `tb/things-rune-land` 27136b41** (after #942's CI failure). Rune now stands at Gull Rest offset (3, 0, 3): flat (ground within 4 m is within 1 m of his height), 17.7 m from `water_gull_rest_wild_001` (the test needs 15.5 m); no wild site moved. The capture logs `near` and frames him. Run locally: every `test_water*` and `test_tidewake*` file including `test_water_trainer_ring_clearance`, plus spawns and trainers data: 621 tests, 0 failed. My miss: I had only grepped the tests for his name.
 - **Ready: `THINGS-WARDENRING`** (`ralph/reports/LANES/THINGS-WARDENRING/`), F38#28 Medium close-out (High 7.54, Medium 6.99; 3/3 at Medium: the thin cyan floor arc reads as a guide line). A flag flip of the existing, never-judged `boundary_per_trainer_candidate`: a fainter, lower ring in the Warden's fight only. **Not visible on CPU on either side**; needs the GPU at Medium.
 - **F39#12 camp creature bed (6.80 to 6.98): not started.** The board lists it as one asset needing new art; I have no Meshy credits, so I will only look for a scene-level fix.
 - **LANDING READY: `tb/things-convtight-land`** (from main 317b3372, `THINGS-CONVTIGHT-LAND/READY.md`, STATUS: land). `G-things-convtight.md` (b4ff847a): 10 of 11 sets win, none lose; F39#26 to 7.04 and F40#12 to 7.12.
