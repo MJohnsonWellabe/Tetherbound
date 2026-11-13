@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, F39#8 Aquaryn ride: a decision for you before I build (BELOW6-AQUARYN-RIDE/QUESTION.md)
+
+The 3/3 defect is "the mount still stands on top of the surface". The sink is capped at 1.0 m by LANE-TW's pin that the rider's art origin stays above sea level (0.105 m of clearance left). CPU look at sink 1.7: the mount's belly and legs go under and it reads as swimming, with the rider in the water to about the waist (sheet in the folder; not frame-matched). LANE-TW's r1 at 1.4 scored +1.34 on CPU and was withheld only for that pin. Option A: allow the rider's legs in the water (one config value, pin rewritten to head and chest above the sea). Option B: keep the rider dry by raising the seat while swimming (riding controller and networked seat; larger). I recommend A but will not rewrite another lane's rule without your word. Going to F38#12 meanwhile.
+
 ## 13 Nov, BELOW6-OVERLOOK-SOLID ready (F40#15): solid ruins plus the two stands, one arm
 
 As you asked. Flag-off `ruin_collision_1113` (world_geometry): one solid box per pier and ruined wing at 90 percent of the visible stone, ordinary world layer, arch opening and route ribbon clear. The same overlay carries the two capture stand rows for walk_02 and walk_03. CPU, all five frames: route_day, vista_dusk and walk_01 unchanged; walk_02 and walk_03 now show the arch with the trainer on grass. Walk check with the overlay on: `smoke_cloudreach_waterward_overlook_join.gd` passes (386.5 m to the crown). It supersedes BELOW6-OVERLOOK-STANDS; please drop that one from the queue. One thing to know: the right wing stands on the east loop edge's 26 m crown strip, so a walker there goes round it; no smoke walks that edge. Waiting with you: uniforms, overlook join, overlook solid, Fulgocobra faint, bark, wake.
