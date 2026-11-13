@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "veilfall-near.jpg",
+  "preset": "base-High",
+  "tree": "13a7ab153a96936c92bf70f7a5482658a272b62f",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-f39-31-post958-tiera/base-High/veilfall-near.jpg",
+  "sky_fraction": 0.087,
+  "lower_edges": 0.2795,
+  "script_errors": 0,
+  "note": "Two uses. (1) F39#31 POST-#958 clear-day baseline = the BASE side: main 13a7ab153 content for these two views (tb/land-mt 5ef7e327e + main's seven non-imported files that draw here: water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader (#958 mist), coastal_rock_material.gd, human_water_contact_view.gd/.gdshader/_visual.json; tidewake_look.json already identical). (2) LAND-MT-TIERA = the TIERA side: + LAND-MT-TIERA/overlay.json from tb/land-mt ed91e8e13 (veilfall_cascade_a tier removed from veilfall_hero_candidate). veilfall-vista + veilfall-near, High. By eye: veilfall-near the large pale rock cluster on the right of the fall sheet is gone (a smaller rock with a sapling higher up remains, as the lane's ARM.md says); veilfall-vista unchanged (no-loss)."
+ },
+ {
+  "frame": "veilfall-vista.jpg",
+  "preset": "base-High",
+  "tree": "13a7ab153a96936c92bf70f7a5482658a272b62f",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-f39-31-post958-tiera/base-High/veilfall-vista.jpg",
+  "sky_fraction": 0.408,
+  "lower_edges": 0.2649,
+  "script_errors": 0,
+  "note": "Two uses. (1) F39#31 POST-#958 clear-day baseline = the BASE side: main 13a7ab153 content for these two views (tb/land-mt 5ef7e327e + main's seven non-imported files that draw here: water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader (#958 mist), coastal_rock_material.gd, human_water_contact_view.gd/.gdshader/_visual.json; tidewake_look.json already identical). (2) LAND-MT-TIERA = the TIERA side: + LAND-MT-TIERA/overlay.json from tb/land-mt ed91e8e13 (veilfall_cascade_a tier removed from veilfall_hero_candidate). veilfall-vista + veilfall-near, High. By eye: veilfall-near the large pale rock cluster on the right of the fall sheet is gone (a smaller rock with a sapling higher up remains, as the lane's ARM.md says); veilfall-vista unchanged (no-loss)."
+ },
+ {
+  "frame": "veilfall-near.jpg",
+  "preset": "tiera-High",
+  "tree": "13a7ab153a96936c92bf70f7a5482658a272b62f",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-f39-31-post958-tiera/tiera-High/veilfall-near.jpg",
+  "sky_fraction": 0.087,
+  "lower_edges": 0.2693,
+  "script_errors": 0,
+  "note": "Two uses. (1) F39#31 POST-#958 clear-day baseline = the BASE side: main 13a7ab153 content for these two views (tb/land-mt 5ef7e327e + main's seven non-imported files that draw here: water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader (#958 mist), coastal_rock_material.gd, human_water_contact_view.gd/.gdshader/_visual.json; tidewake_look.json already identical). (2) LAND-MT-TIERA = the TIERA side: + LAND-MT-TIERA/overlay.json from tb/land-mt ed91e8e13 (veilfall_cascade_a tier removed from veilfall_hero_candidate). veilfall-vista + veilfall-near, High. By eye: veilfall-near the large pale rock cluster on the right of the fall sheet is gone (a smaller rock with a sapling higher up remains, as the lane's ARM.md says); veilfall-vista unchanged (no-loss)."
+ },
+ {
+  "frame": "veilfall-vista.jpg",
+  "preset": "tiera-High",
+  "tree": "13a7ab153a96936c92bf70f7a5482658a272b62f",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-f39-31-post958-tiera/tiera-High/veilfall-vista.jpg",
+  "sky_fraction": 0.408,
+  "lower_edges": 0.2641,
+  "script_errors": 0,
+  "note": "Two uses. (1) F39#31 POST-#958 clear-day baseline = the BASE side: main 13a7ab153 content for these two views (tb/land-mt 5ef7e327e + main's seven non-imported files that draw here: water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader (#958 mist), coastal_rock_material.gd, human_water_contact_view.gd/.gdshader/_visual.json; tidewake_look.json already identical). (2) LAND-MT-TIERA = the TIERA side: + LAND-MT-TIERA/overlay.json from tb/land-mt ed91e8e13 (veilfall_cascade_a tier removed from veilfall_hero_candidate). veilfall-vista + veilfall-near, High. By eye: veilfall-near the large pale rock cluster on the right of the fall sheet is gone (a smaller rock with a sapling higher up remains, as the lane's ARM.md says); veilfall-vista unchanged (no-loss)."
+ }
+]
