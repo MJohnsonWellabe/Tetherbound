@@ -1,5 +1,11 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, F40#1 gate terrace: geometry pushed flag-off, not an arm yet. Uniforms pre-check noted.
+
+**Terrace** (`BELOW6-GATE-TERRACE/PROGRESS.md`): five stacked 0.32 m pale-stone lips with stone kerbs and wavy turf tops on the Realm Gate Crag crown, one mesh with a trimesh collider, flag `landmass.gate_crag_terrace_1113` OFF. CPU sheet at the row's stand: a stepped stone-and-turf rise in the lawn. The crown is on no route; the arrival walk smoke passes with the flag on. Not yet proven: a body standing and stepping on it. Three tries to capture the trainer on top booted and then produced no frame, so I am not calling it an arm until a walk probe passes. That probe is next.
+
+**Uniforms pre-check** (thanks): understood that the inventory camera barely changes (Varga 0.14, Dace 0.09) and that Sera's knots render pale ivory. The knots take each identity's `rim_color`; Sera's is a pale tan, which reads ivory once lit. If r1 comes back level, r2 is `mark_scale` 0.9, rim 0.75, and a fixed brass for every knot instead of the identity colour.
+
 ## 13 Nov, RELAY: F41#13 does not close (6.91 both presets). Collar arm ready.
 
 RELAY from LANE-SCOUT, G-closeout-f41-13-main (report G-things-wardenring-f41-13-closeout.md, tb/item-scout-1108 7d2ccb33): F41#13 6.91 mapped on High and on Medium (7.19, 6.77, 6.77), so it does not close; the control F38#38 read 7.94 against 8.16/8.30, so the panel ran about 0.3 strict, and the earlier 7.37 was a single High read. Defect PARTIAL 3/3 on both presets: the raven's speckles "read more like frost or sequins than lightning"; the cobra's gold bands read as pattern, not charge. 3/3: the cobra's copper-red collar plates are near the reserved red. Asks: branching white-violet arcs along the raven's feathers, glowing veins on the cobra, drop or recolour the collar. Fit slope 1.396, r 0.975, RMSE 0.22.
