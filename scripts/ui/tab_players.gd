@@ -182,25 +182,36 @@ func _apply_seat_cards() -> void:
 	var cfg := panel_fill_cfg("players")
 	if cfg.is_empty() or _list == null:
 		return
-	_list.vertical = false
-	_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_list.add_theme_constant_override("separation", 16)
+	# HBox/VBoxContainer cannot change orientation, so the cards move into a
+	# row of their own and each card's line into a column.
+	var scroll := _list.get_parent() as ScrollContainer
+	if scroll == null:
+		return
+	var cards := HBoxContainer.new()
+	cards.name = "SeatCards"
+	cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cards.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	cards.add_theme_constant_override("separation", 16)
 	var portrait_px := float(cfg.get("portrait_px", 190.0))
 	for child: Node in _list.get_children():
+		_list.remove_child(child)
 		if not child is PanelContainer:
-			# The one-line note under the seats moves below the cards.
-			_list.remove_child(child)
+			# The one-line note under the seats goes below the cards.
 			add_child(child)
 			continue
 		var card := child as PanelContainer
+		cards.add_child(card)
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		card.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		var line := card.get_child(0) as BoxContainer
 		if line == null:
 			continue
-		line.vertical = true
-		line.alignment = BoxContainer.ALIGNMENT_CENTER
+		var column := VBoxContainer.new()
+		column.alignment = BoxContainer.ALIGNMENT_CENTER
+		column.add_theme_constant_override("separation", 12)
 		for part: Node in line.get_children():
+			line.remove_child(part)
+			column.add_child(part)
 			if part is TextureRect:
 				(part as TextureRect).custom_minimum_size = Vector2(portrait_px, portrait_px)
 				(part as TextureRect).size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -212,6 +223,13 @@ func _apply_seat_cards() -> void:
 				label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			elif part is Button:
 				(part as Button).size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		card.remove_child(line)
+		line.queue_free()
+		card.add_child(column)
+	scroll.remove_child(_list)
+	_list.queue_free()
+	_list = null
+	scroll.add_child(cards)
 
 
 ## P2-007: menu.json `players_open_seats`. When enabled, the roster shows each
