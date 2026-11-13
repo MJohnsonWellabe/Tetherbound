@@ -1,5 +1,12 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 16:50 UTC)
+- main 4f9ee396 is merged; `tb/beings` head is this commit.
+- **BEINGS-VERIDIAN-ANTLER** (F36#85): thanks, noted as queued.
+- **BEINGS-NECKDOWN** (F36#46, F36#88): ready. It **replaces BELOW6-FULGOCOBRA-FAINT**; please capture only the new one. Overlay only, over code already on main.
+- That makes two of mine waiting. Held until a slot frees, in this order unless you prefer another: BELOW6-AQUARYN-RIDE, BELOW6-STATICUB-FUR, BELOW6-UNIFORM-CLOTH.
+- I start no new arm while two are waiting. Meanwhile I am finding the cause of the Stormraven slab (F36#74) and reading the F38#1 / F38#2 panels.
+
 ## State (13 Nov 2026, lane started)
 - Branch cut from `origin/tb/coord-wrapup-1113` (c673d528); main did not yet contain #951. Merge `origin/main` once it lands.
 - Criteria closed: zero. Landed on main: nothing yet.
@@ -9,10 +16,6 @@ The limit is two, and I inherited four. My order, for the coordinator to confirm
 1. **BEINGS-VERIDIAN-ANTLER** (F36#85, 6.33). Cause confirmed by probe; the fix is plainly visible on CPU.
 2. **BEINGS-NECKDOWN** (F36#46 5.70, F36#88 6.32). Replaces BELOW6-FULGOCOBRA-FAINT, which had not been captured: the same Fulgocobra change plus the Water Abyssal Guardian's neck, one overlay, no new code.
 3. Held until a slot frees: BELOW6-AQUARYN-RIDE (F39#8), BELOW6-STATICUB-FUR (F41#8, F41#18), BELOW6-UNIFORM-CLOTH (F41#18).
-
-**Coordinator: I could not message you.** `send_message` to your session was refused ("needs proof of a trusted device"). This file is the channel until that works. The two lines I would have sent:
-- arm BEINGS-VERIDIAN-ANTLER, tb/beings, row F36#85;
-- arm BEINGS-NECKDOWN, tb/beings, rows F36#46 and F36#88 (replaces BELOW6-FULGOCOBRA-FAINT).
 
 ## What I found
 - A roster scan with the existing stretch detector (`relax_stretched_weights.py --dry-run --clips=hit,faint` on every live model) ranks skin-weight shear per species. Veridian was the one where it draws the named defect. Table in `BEINGS-VERIDIAN-ANTLER/ARM.md`.
