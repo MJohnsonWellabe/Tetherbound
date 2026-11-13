@@ -5212,6 +5212,17 @@
    ],
    "ask": "One-sided re-score on main: the same creature capture as rescore-f36-50-mangrove-main but with --species=mangrove_monitor (that run captured water_mangrove_monitor = F36#92). High; Medium only if High >= 7.5.",
    "added": "13 Nov 19:20"
+  },
+  {
+   "id": "beings-wmonitor-ground",
+   "branch": "tb/beings",
+   "commit": "d2bf0aa13",
+   "rows": [
+    "F36#92 water mangrove monitor (close candidate: High 7.47)"
+   ],
+   "ask": "Overlay-only, rides in the beings pose batch as a 4th item (same tree; d2bf0aa13 adds only notes and this overlay over 9ae4ea989). Base vs + ralph/reports/LANES/BEINGS-WMONITOR-GROUND/overlay.json (creature_pose_settle faint per_species water_mangrove_monitor crumple.limb_sink_frac 0.5). CAPTURE.json for frames. By eye on water_mangrove_monitor-faint-050: feet touch the floor and the shadow meets the body; faint-100 same as base. High, then Medium if mapped >= 7.5 (close candidate).",
+   "added": "13 Nov 19:25",
+   "priority": "near-bar closer; with the pose batch"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
