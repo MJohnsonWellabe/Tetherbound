@@ -238,7 +238,7 @@
     },
     {
       "order": 1002,
-      "id": "tournament_semi_tam",
+      "id": "tournament_semi_tam", "appearance_variant_id": "beings_meadows_tam_coat",
       "gate_fight": true,
       "name": "Tam",
       "_comment": "TOURNAMENT-1, round 2 of 3. The near half's other quarter-final (Tam vs Fen) is simulated on the board and Tam wins it, so the semi-final is the player against Tam. Same two-types-in-one-team lesson his village battle teaches, levelled for the bracket.",

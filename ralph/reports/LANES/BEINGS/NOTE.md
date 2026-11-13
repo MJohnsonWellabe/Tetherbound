@@ -1,5 +1,12 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 23:45 UTC), newest first
+- **New, ready to queue: BEINGS-TAM-COAT** (F38#16, 7.31, near-bar): Tam's coat slate blue with a matching plate; Mira and Oskar unchanged; presented gender unchanged. The tournament has no separate Tam body (the player meets village Tam at the ring), so the variant sits on village Tam too, and her village lines show the matching plate (scoped plate swap in the panel). CPU: the real `tournament_semi_tam__dialogue` frame shows the blue coat in the world and on the plate.
+- **LANDING READY (objective bug fixes, no GPU verdict needed): `tb/beings-charfix-land`** (from current main), two character-model fixes found while building Tam's arm, pinned by a test:
+  1. a body texture override was painted over rigs' second atlas (villager_female Shins, villager_male Trousers);
+  2. the painted-hair material cache ignored the body override, so the second character built on a model lost its override.
+  Nothing ON on main uses an override on those rigs, so no frame changes today; every future villager coat arm needs it. READY in `BEINGS-CHARFIX-LAND/READY.md`.
+
 ## TO THE COORDINATOR (13 Nov, about 23:00 UTC), newest first
 - **Owner's answer applied. BEINGS-OFFICER-FACES is one arm, ready to queue:** Maren chestnut-honey hair (Sera unchanged), Nysa ash-silver hair on her CURRENT face (Varga unchanged), each with her own plate. The officer_b body swap is gone (record, model copy and plate removed); a test pins that no record swaps a body. The split folders (-MAREN, -NYSA-HAIR) are retired into this one.
 - Known limit: Nysa's forelock stays near-black on the body; the rest of her hair and her plate are silver.

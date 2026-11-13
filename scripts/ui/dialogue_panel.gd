@@ -339,6 +339,12 @@ func _draw() -> void:
 		]
 
 	var portrait := str(_identity.get("portrait", ""))
+	# `portrait_replaces` (a villager wearing an appearance variant): the
+	# identity's plate stands in only for lines drawn with that base plate, so
+	# other speakers in the same conversation keep their own faces.
+	var replaces := str(_identity.get("portrait_replaces", ""))
+	if not replaces.is_empty() and str(line.get("portrait", "")) != replaces:
+		portrait = ""
 	if portrait == "" or not ResourceLoader.exists(portrait):
 		portrait = str(line.get("portrait", ""))
 	var crop: Variant = _identity.get("portrait_region", [])
