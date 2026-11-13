@@ -5055,7 +5055,7 @@
   {
    "id": "land-cs-soiloff",
    "branch": "tb/land-cs",
-   "commit": "f54650bb6",
+   "commit": "91ac0d6a1",
    "rows": [
     "F41#22",
     "F41#24 (6.46)",
@@ -5063,7 +5063,7 @@
    ],
    "ask": "Takes THINGS-STORMPOOL r2's slot. Base vs ralph/reports/LANES/LAND-CS-SOILOFF/overlay.json (stormwood_ground_finish forest_layers_1113: wet_soil layer off, the 1,400 near-black glossy discs), High, capture_stormwood_f10_matrix.gd --stands=forest,giant,rod_line,glass,stormheart --phases=calm,break (+aftermath Calm). By-eye: forest_calm/giant_calm black jagged patches gone; forest_break/giant_break no pale slab by the trainer. Else hold.",
    "added": "13 Nov 16:50",
-   "note_tree": "May run from tb/land-cs 6d67a9a9d (adds only TURFGRAIN files + a flag-off shader/test) to share one import with land-cs-turfgrain."
+   "note_tree": "tb/land-cs 91ac0d6a1 contains main b8622117c (#954): base frames are main content."
   },
   {
    "id": "beings-neckdown",
@@ -5142,7 +5142,7 @@
   {
    "id": "land-cs-turfgrain",
    "branch": "tb/land-cs",
-   "commit": "6d67a9a9d",
+   "commit": "91ac0d6a1",
    "rows": [
     "F40#1 (5.90)",
     "F40#7 (6.26)",
@@ -5152,7 +5152,8 @@
    ],
    "ask": "Base no overlay vs ralph/reports/LANES/LAND-CS-TURFGRAIN/overlay.json (cloudreach_visual.json surface.turf_detail_1113 on: restores the grass texture's fine detail that cloudreach_turf.gdshaderinc cuts to 0.52 contrast). High; CAPTURE.json lists phase2_capture_locations day approach/close frames plus the F40 matrix sample. By eye: Realm Gate and Sky Shrine approach show fine grass grain up to the camera; hold if unchanged or if mid-distance lawn sparkles. Same tree as land-cs-soiloff: one import, one base capture per tool.",
    "added": "13 Nov 17:55",
-   "priority": "ahead of below6-wall-band and below6-gate-terrace (same F40#1 row; turfgrain addresses the judged cause)"
+   "priority": "ahead of below6-wall-band and below6-gate-terrace (same F40#1 row; turfgrain addresses the judged cause)",
+   "note_tree": "tb/land-cs 91ac0d6a1 contains main b8622117c (#954): base frames are main content."
   },
   {
    "id": "scene-hallwalls",
@@ -5302,6 +5303,17 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/BEINGS-MONITOR-VALUE/overlay.json (one coat flag lifts the body value of both monitor forms; hue and pattern kept). Per its CAPTURE.json; High, then Medium if F36#92 maps >= 7.5 (close candidate). One import with the rest of tb/beings (pose batch tree + flag-off code). Base for F36#92 must include main's limb_sink 0.5 once #956 lands.",
    "added": "13 Nov 20:20",
    "priority": "after the beings pose batch; ahead of trailpup-amber"
+  },
+  {
+   "id": "land-cs-overlook-seams",
+   "branch": "tb/land-cs",
+   "commit": "91ac0d6a1",
+   "rows": [
+    "F40#15 (5.60, worst world row)"
+   ],
+   "ask": "Base no overlay vs + ralph/reports/LANES/LAND-CS-OVERLOOK-SEAMS/overlay.json (stops building the four buried approach_pavers whose sunken strips read as dark slab/plank strips at route_day, vista_dusk, walk_02, walk_03). Per its CAPTURE.json, High. Same tb/land-cs import as TURFGRAIN and SOILOFF.",
+   "added": "13 Nov 20:30",
+   "priority": "worst row: run in the tb/land-cs boot with TURFGRAIN and SOILOFF"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
