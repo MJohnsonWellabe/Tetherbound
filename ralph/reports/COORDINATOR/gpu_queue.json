@@ -4775,6 +4775,17 @@
       "added": "13 Nov 07:09"
     },
     {
+      "id": "below6-uniform-cloth",
+      "branch": "tb/below6",
+      "commit": "ce6bfa693",
+      "rows": [
+        "F41#18 (5.89)",
+        "no-loss: the same three rigs outside Stormwood"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-UNIFORM-CLOTH/overlay.json (below6_uniform_cloth + uniform_cloth_floor_1113: mid-value slate cloth and a brass shoulder band on a mesh-built garment mask for grunt_c, officer_a and former_tether_member), High, phase2_capture_dialogue.gd --biome=stormwood --seed=2042 (Varga, Dace, Sable inventory + dialogue; officers and civilians as no-loss). These rigs are shared across biomes, so add a no-loss set outside Stormwood: the Meadows dialogue rows and fight frames that use those bodies (e.g. south_bridge_grunt) and a Tidewake or Cloudreach officer frame. By-eye: uniform separates from the mud at the inventory camera, brass shoulders read, hair and skin unchanged; no red.",
+      "added": "13 Nov 07:57"
+    },
+    {
       "id": "things-stormpool-r2",
       "branch": "tb/things",
       "commit": "a6a79ca70",
