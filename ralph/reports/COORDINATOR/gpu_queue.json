@@ -4977,6 +4977,17 @@
       ],
       "ask": "No arm: after #947 the fight HUD no longer shows a harvest verb ('Gather Reef Stone') in Tidewake fights. Re-capture the Tidewake fight rows' own job frames (the G-things-foestand-tidewake Venn set) at High on main 0e5d8c048 for row scores; check by eye that no world verb is on the fight HUD. Send to LANE-SCOUT.",
       "added": "13 Nov 08:55"
+    },
+    {
+      "id": "rescore-f41-6-f39-23-main",
+      "branch": "main",
+      "commit": "0a57e6d75",
+      "rows": [
+        "F41#6 (6.80/6.46)",
+        "F39#23"
+      ],
+      "ask": "No arm: row scores on current main from each row's own job.json frames, High. F41#6's recorded defect ('bright magenta danger slab through impact') no longer appears since the attack outlines went off (owner 24 Oct); F39#23 is also flagged by LANE-THINGS as a stale score. Send to LANE-SCOUT.",
+      "added": "13 Nov 10:43"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
