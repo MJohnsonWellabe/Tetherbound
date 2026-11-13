@@ -4656,6 +4656,17 @@
       "added": "13 Nov 03:37"
     },
     {
+      "id": "below6-fulgocobra-faint",
+      "branch": "tb/below6",
+      "commit": "6cc4dad05",
+      "rows": [
+        "F36#46 (5.87)",
+        "Fulgocobra hit no-loss"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-FULGOCOBRA-FAINT/overlay.json (below6_fulgocobra_scope ON: faint end pose lays neck and hood down), High, capture_f36_poses.gd --species=fulgocobra --game-clips --clear-ruler --roles=hit,faint --whole-body --context. Score the faint; judge the hit as no-loss (the scope also brings the settle's hit pass).",
+      "added": "13 Nov 04:10"
+    },
+    {
       "id": "things-stormpool-r2",
       "branch": "tb/things",
       "commit": "a6a79ca70",
