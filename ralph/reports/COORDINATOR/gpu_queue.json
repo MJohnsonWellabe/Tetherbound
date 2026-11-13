@@ -4731,6 +4731,16 @@
       "added": "13 Nov 06:24"
     },
     {
+      "id": "below6-gate-terrace",
+      "branch": "tb/below6",
+      "commit": "29b783c0e",
+      "rows": [
+        "F40#1 (5.90)"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-GATE-TERRACE/overlay.json (landmass.gate_crag_terrace_1113 ON: five stacked pale-stone terrace lips with turf tops and collision on the Realm Gate Crag crown), High, the same F40#1 row frames as wall-band (phase2_capture_locations.gd --biome=cloudreach --times=day --views=approach,close --seed=2042). Can share wall-band's base if the trees match outside flags. Only the realm_gate_crag approach frame should change.",
+      "added": "13 Nov 07:32"
+    },
+    {
       "id": "things-cloudnight-r2",
       "branch": "tb/things",
       "commit": "28b4dc4ca",
