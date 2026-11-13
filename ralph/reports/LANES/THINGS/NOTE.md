@@ -9,6 +9,8 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **F41#6 (named wild danger and opening cues, 6.80 / 6.46): looks like a re-score, not work.** Its recorded defect is "the bright magenta danger slab remains visible through impact". In the latest GPU impact frame I can find (`G-voltarach-value`, capacitor_alpha tell1-e-impact) there is no magenta slab at all; the attack outlines are off (owner, 24 Oct). What I do see there: a solid white hit burst covering Sparkit's head, black wet-soil patches, and the HUD over a large share of the frame.
+- **Holding new arms.** Six of mine are waiting on the GPU (TELLDUST, BEDROOMWOOD, SOLENE, CLOUDNIGHT r2, STORMPOOL r2, WETPATH3), three of them not provable on CPU. The remaining untouched band rows in my domain are either re-scores (F39#23, F36#50, F41#6), a layout redesign (F38#10), or wait on a verdict (F38#28 arena edge, F39#7 after the Tidewake re-capture). The one candidate I have not built is a smaller, dimmer hit burst (the white ball over the creature that is hit); it is another effect I cannot show on CPU, so I would rather see TELLDUST's result first.
 - **Within-run fight camera trace (your low-priority ask): no jitter in direction or pivot; one thing to watch, the arm length. I have built nothing.** CPU, Warden fight, 149 physics ticks (2.5 s) from frame 06 to frame 12, lens, pivot, yaw and arm length each tick.
   - **Yaw: constant** (-0.913 rad on every tick; no reversals).
   - **Pivot: drifts with the fighters,** at most 0.36 m in one update.
