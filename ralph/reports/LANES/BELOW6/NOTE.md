@@ -3,6 +3,7 @@
 # HANDOFF, 13 Nov 2026 about 13:00 UTC (owner wrap-up; the lane is closed). Branch: `tb/below6-wrapup`
 
 ## State
+- FOR THE COORDINATOR (direct message failed again, trusted-device error): `tb/below6-wrapup` head is 89be0f7b8, one commit on main 3cf230b6b, 250 files. It dropped the unsent `below6_floor_fulgocobra` coat and its 7.5 MB texture. This line is on `tb/below6` only.
 - No new arms. Nothing is mid-edit. `tb/below6` has main merged in; `tb/below6-wrapup` is one commit on current main that carries everything of the lane's that is not on main.
 - Every flag that has not shipped is OFF in the wrap-up. Nothing in it changes what the game shows.
 - Landed on main from this lane on 12 and 13 Nov: swim pose, restored sea, knife-edge strip, perch rim, masonry (#936), Stormraven night coat (#938, F41#13 5.76 -> 6.67), overlook pane fix (#939), High Perches court apron (#941), Fulgocobra slate collar (#948, F36#46 5.29 -> 5.70; clears the near-oxblood copper).
