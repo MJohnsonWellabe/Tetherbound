@@ -105,6 +105,11 @@ uniform float lane_glint = 0.0;
 uniform vec4 lane_glint_colour : source_color = vec4(0.62, 0.77, 0.88, 1.0);
 // b6: the lane tint fades over a wandering soft edge instead of the ribbon rim.
 uniform bool soft_channel_tint = false;
+// F13#5 `lesson_cue` (LANE-LAND-MT, 13 Nov; 1 keeps every lane as shipped).
+// COLOR.a is 0 on the swim-lesson lanes and 1 elsewhere, so the lesson's
+// crescent chop caps (judged "decals or a debug overlay", 3/3) can go without
+// changing the open-sea current look (F39#16 / F39#17).
+uniform float lesson_chop_scale = 1.0;
 varying vec3 v_world;
 varying float v_distance;
 
@@ -291,7 +296,7 @@ void fragment() {
 		float crescent = 1.0 - smoothstep(0.04, 0.12, abs(cap_local.y + cap_local.x * cap_local.x * 1.2 - 0.05));
 		crescent *= 1.0 - smoothstep(0.25, 0.42, abs(cap_local.x));
 		crescent *= mix(0.35, 1.0, lace) * mix(0.4, 1.0, hash(cap_cell + vec2(2.2, 7.7)));
-		float cap = cap_on * crescent * chop_cap_opacity;
+		float cap = cap_on * crescent * chop_cap_opacity * mix(1.0, lesson_chop_scale, 1.0 - COLOR.a);
 		foam = clamp(max(foam, cap), 0.0, 1.0);
 		seam_a = clamp(seam * seam_opacity, 0.0, 1.0) * ends * fade;
 	}

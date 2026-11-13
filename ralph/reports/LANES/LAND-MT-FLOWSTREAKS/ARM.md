@@ -1,3 +1,26 @@
+# LAND-MT-FLOWSTREAKS round 2 (lesson-gated): drop the crescents on the swim-lesson lanes only
+
+**Round 1 (G-land-mt-flowstreaks): DO NOT SHIP.** F13#5 +0.52 (3/3), but F39#16 / F39#17 current states -0.42 (0/3), because the re-enabled streaks drew guide lanes everywhere.
+
+**Round 2 change (coordinator / LANE-JUDGE ask: gate it to the lesson).**
+- New flag-off `current_flow.lesson_cue` in `water_veilfall.json`.
+- The flow ribbon's vertex alpha is 0 on four lesson lanes, the ones the T2 views look across: First Shore to Reedhaven and Reedhaven to Brine Steps, sheltered and direct.
+- The shader scales only those lanes' chop caps by `lesson_chop_scale` (0 when ON).
+- Streaks stay at their shipped 0 everywhere.
+- The current-state stands S1 and S2 use other lanes (`tidal_cradle_to_salt_crown`, `salt_crown_to_sluice_isle`), so their frames cannot change.
+
+**Overlay.** `{"water_veilfall.json": {"current_flow": {"lesson_cue": {"enabled": true}}}}`
+
+**CPU.** `_sheet_flowstreaks_off_vs_on_cpu.jpg` (left base, right chop caps off): the T2 crescents are gone. This sheet is the global chop-off probe; on the T2 views it is the same picture as the gated version, because all four views look across lesson lanes. Pin test `tests/test_current_lesson_cue.gd`: 1 test, 10 assertions, 0 failed (OFF marks no lane; ON marks the lesson lanes only and sets the scale to 0).
+
+**By-eye.** T2 views: no crescents. Current-state S1 / S2: identical to base.
+
+**Not in this arm.** A wake anchored to the swimmer (3/3 ask), and the wide bright band in swim-brine-day.
+
+---
+
+Earlier notes follow.
+
 # LAND-MT-FLOWSTREAKS round 2: chop caps off only
 
 **Round 1 verdict (G-land-mt-flowstreaks, LANE-JUDGE): DO NOT SHIP.**
