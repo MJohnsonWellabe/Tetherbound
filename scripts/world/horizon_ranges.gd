@@ -116,12 +116,13 @@ func _process(_delta: float) -> void:
 func sync_ridge_fog(environment: Environment) -> void:
 	if _ridge == null or environment == null:
 		return
+	var base_y := global_position.y if is_inside_tree() else position.y
 	var state: Array = [environment.fog_light_color, environment.fog_density,
-		environment.fog_enabled, global_position.y]
+		environment.fog_enabled, base_y]
 	if state == _ridge_fog_state:
 		return
 	_ridge_fog_state = state
-	RIDGE_VL.sync_fog(_ridge, environment, global_position.y)
+	RIDGE_VL.sync_fog(_ridge, environment, base_y)
 
 
 func _material() -> StandardMaterial3D:

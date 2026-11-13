@@ -91,7 +91,7 @@ func test_ridge_fog_follows_the_environment_without_delay() -> void:
 	var day: Vector3 = far.get_shader_parameter("fog_colour")
 	assert_true(dusk.x > dusk.z, "the dusk haze reached the ridge")
 	assert_true(day.z > day.x, "the day haze replaces it at once, not on a later poll")
-	assert_eq(float(far.get_shader_parameter("fog_density")), 0.0005, "density follows too")
+	assert_true(absf(float(far.get_shader_parameter("fog_density")) - 0.0005) < 1e-6, "density follows too")
 	env.fog_enabled = false
 	horizon.call("sync_ridge_fog", env)
 	assert_false(bool(far.get_shader_parameter("fog_enabled")), "fog off follows too")
