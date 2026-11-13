@@ -1,0 +1,8 @@
+Om: "none"
+Wt: none
+Do: none
+Rf: "none"
+Pc: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Tt: "none"
+Hs: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+Si: "none"

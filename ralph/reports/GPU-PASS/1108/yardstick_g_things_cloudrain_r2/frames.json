@@ -1,0 +1,3 @@
+{"branch": "tb/gpu-frames-1108", "section": "G-things-cloudrain-r2", "commit": "d18132857", "renderer": "High", "tree": "tb/things ad723a6a1 both sides", "base": "no overlay", "arm": "overlay_rain_bright_overcast.json r2 (no sky block, ground light only)",
+ "sets": "as yardstick_g_things_cloudrain (same 9 stands, F40#19 gate crag 4 views, Three Bells clear no-loss)",
+ "confound": "the_high_perches crown-court floor: cobbled on base, flat line-ring on arm in night gameplay and day approach; creature spawn differs"}
