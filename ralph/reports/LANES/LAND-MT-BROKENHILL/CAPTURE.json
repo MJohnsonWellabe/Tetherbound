@@ -1,0 +1,11 @@
+{
+ "id": "LAND-MT-BROKENHILL",
+ "lane": "LANE-LAND-MT",
+ "branch": "tb/land-mt",
+ "preset": "High",
+ "tool": "tools/phase2_capture_routes.gd --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042",
+ "base": {"tree": "tb/land-mt", "overlay": null},
+ "arm": {"tree": "tb/land-mt", "overlay": "ralph/reports/LANES/LAND-MT-BROKENHILL/overlay.json"},
+ "rows": {"F38#30": ["walk_02_day", "walk_03_day"], "F38#24 (no-loss)": ["walk_02_day", "walk_03_day"], "no-loss": ["route_day", "walk_01_day", "vista_dusk"]},
+ "by_eye": "route_day: grey rock outcrops between grass, brown slabs gone. walk_03: hill base no longer one straight diagonal, ferns and a bush on it."
+}
