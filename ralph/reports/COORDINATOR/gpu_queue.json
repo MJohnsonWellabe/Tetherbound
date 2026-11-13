@@ -4713,7 +4713,8 @@
         "no-loss: F38#17 Solene courtyard, F38#20 stronghold interior frames"
       ],
       "ask": "BOTH sides carry overlay_tell_dust.json (what #949 lands). Base = telldust only; arm = telldust + overlay_hall_moss.json (stronghold.json site.weathering.moss_amount 0.46->0.22, interior stone only). Warden fight F38#28 frames 03/05 (+ no-loss r16/a03) at High AND Medium, camera-paired, F38#38 control (confirming batch). No-loss: Solene's courtyard conversation and the F38#20 stronghold interior frames. By eye first on Warden 03: the green rectangles on the wall behind the dog should be gone or faint; if unchanged, hold.",
-      "added": "13 Nov 12:03"
+      "added": "13 Nov 12:03",
+      "status": "HELD 13 Nov by GPU by-eye: green wall rectangles unchanged (moss only on pilasters); cause is elsewhere; parked, LANE-SCENE probing"
     },
     {
       "id": "things-telldust2",
