@@ -253,6 +253,9 @@
     "VeilfallFarSilhouette"
   ],
   "crag_shader": {
+    "back_face_lit": 0.0,
+    "back_face_cut_m": 150.0,
+    "_why_back_face_cut_m": "ON (GPU judged, LANE-JUDGE G-land-mt-cragcut on tb/judge, 13 Nov 2026): the Venn fight's black overhead wedge is the inner side of these crag shells (CPU probe: back faces painted magenta filled the wedge on a fixed rebuild of the judged t-000 camera). Discarding back faces within 150 m shows the real Veilfall terrain behind. F39#19 High and Medium 6.85 -> 6.92 (+0.07, 2/3 prefer, 1 tie), no set loses; control F38#38 8.08. Shader value only; scope client_presentation.",
     "body_colour": "#2f3335",
     "wet_colour": "#13171a",
     "crown_colour": "#6a6962",
