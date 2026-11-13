@@ -3657,6 +3657,7 @@ func _build_hill_shell() -> void:
 	# `meadow_match` (F38#30, OFF until judged): see the shader and
 	# `_build_hill_shell_cover`.
 	var meadow: Dictionary = cfg.get("meadow_match", {})
+	var broken: Dictionary = {}
 	if not clip.is_empty():
 		var shader := Shader.new()
 		shader.code = """shader_type spatial;
@@ -3791,7 +3792,7 @@ void fragment() {
 	ROUGHNESS = 0.95;
 }
 """
-		var broken := _hill_broken_setup(cfg, clip)
+		broken = _hill_broken_setup(cfg, clip)
 		for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
 			var mesh := raw as MeshInstance3D
 			var to_mesh := Transform3D()
