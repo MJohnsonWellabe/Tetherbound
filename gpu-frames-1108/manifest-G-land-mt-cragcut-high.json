@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "t-000.00.png",
+  "preset": "arm-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/arm-High/t-000.00.png",
+  "sky_fraction": 0.054,
+  "lower_edges": 0.2036,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "arm-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/arm-High/t-003.02.png",
+  "sky_fraction": 0.047,
+  "lower_edges": 0.2261,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-023.02.png",
+  "preset": "arm-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/arm-High/t-023.02.png",
+  "sky_fraction": 0.274,
+  "lower_edges": 0.2067,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-024.02.png",
+  "preset": "arm-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/arm-High/t-024.02.png",
+  "sky_fraction": 0.26,
+  "lower_edges": 0.2014,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-025.02.png",
+  "preset": "arm-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/arm-High/t-025.02.png",
+  "sky_fraction": 0.251,
+  "lower_edges": 0.2006,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-000.00.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/base-High/t-000.00.png",
+  "sky_fraction": 0.06,
+  "lower_edges": 0.2036,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/base-High/t-003.02.png",
+  "sky_fraction": 0.048,
+  "lower_edges": 0.2163,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-023.02.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/base-High/t-023.02.png",
+  "sky_fraction": 0.118,
+  "lower_edges": 0.224,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-024.02.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/base-High/t-024.02.png",
+  "sky_fraction": 0.071,
+  "lower_edges": 0.1931,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-025.02.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-high/base-High/t-025.02.png",
+  "sky_fraction": 0.068,
+  "lower_edges": 0.1869,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), HIGH: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m (base = the warm-up run, same composition); t-003 3.9 m and t-023-025 22-29 m off (late fight frames diverge run to run). By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ }
+]
