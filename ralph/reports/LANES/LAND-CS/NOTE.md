@@ -1,5 +1,9 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## New arm, held: LAND-CS-ARCHSTAND (F40#3, 13 Nov 23:30 UTC)
+- The skyroad arch frame "shows no landmark" because the stand is 8 m from the arch, between its legs: the "two blocky cliff faces" are the legs. The arch's island is about 15 m across, so the tool cannot back off. A stand override from the arch centre toward the south rim frames the whole arch; the band frame broken_causeways 04, which had no stand at all, now captures too. Capture tooling only. CPU-ready and held for the queue.
+- F40#6: the remaining defect (the mount upright over open cloud) is recorded as an owner decision; not touched.
+
 ## Cloudreach "faceted brown cliff" (F40#2, #4, #7, #11 in G-rescore-stale-ext-cloudreach): finding, no arm (13 Nov 22:45 UTC)
 - The rock banks render warm tan (route_day bank RGB 167/146/103), not the owner's 6 Sep option-A grey-green granite (`geology.stone_light` #8a8f82). Cause: `cloudreach_rock.gdshaderinc` multiplies the granite palette by the rock scree texture (`albedo = stone * mix(0.82, tex * 1.28, 0.52)`), whose brown cast sets the hue.
 - The fix path already exists: the F26 course surface (`cloudreach_rock_courses`, art.json `cloudreach_rock_surface`, OFF) strips the texture hue and paints the palette with metre-scale beds.
@@ -45,6 +49,7 @@ On `tb/land-cs` with main 874835ea (#951 and #952) merged, flag on, Compatibilit
 | Arm | Rows | Status |
 |---|---|---|
 | LAND-CS-SOILOFF | F41#22, F41#24 (6.46); riders F41#5, F41#12, F41#2 | New. Cause confirmed by switch-off on CPU. Asks to take THINGS-STORMPOOL round 2's place. |
+| LAND-CS-ARCHSTAND | F40#3 (6.33) | New, CPU-ready, held. |
 | LAND-CS-OVERLOOK-SEAMS | F40#15 (5.60) | New, CPU-ready, held until a slot frees. |
 | LAND-CS-TURFGRAIN | F40#1, F40#7, F40#0/#19/#21, F40#4 | New, CPU-ready, held until a slot frees. |
 | BELOW6-OVERLOOK-JOIN, BELOW6-OVERLOOK-SOLID | F40#15 | SHIP verdicts; one landing branch pushed (see top). |
