@@ -13,8 +13,17 @@ Recorded defect (G-below6-stormraven-r3, 3/3): the board shows olive-black scale
 
 One element colour, same mesh, silhouette and scale pattern, no red.
 
+## Round 2 (after the GPU pre-check hold on r1)
+
+The pre-check held r1: vein cores rendered near pure white (RGB about 251,251,231), the head went pale grey, and the eye glow was lost. Changes, same flag and file names (textures regenerated in place):
+
+- Glow map: deeper amber (hue 40, saturation 0.95) at 72 percent value; emission energy 1.5 to 1.0.
+- Vein albedo: a mid gold (value capped at 0.5) so rim plus emission does not push it to white.
+- Head and hood plates: olive (saturation 0.30, value 0.66) instead of near-grey.
+- Eye and arc cracks: gold at their full original glow strength, so the eye reads lit.
+
 ## CPU
 
-`_sheet_cpu_idle_base_left_arm_right.jpg`, `stormwood__fulgocobra__idle`, seed 2042. The body reads olive-black with thin bright lines across the coils and hood, and the throat plates sit in the body. The sheet was captured at emission 2.2, where the lines clip to near-white on CPU; the flag now ships 1.5. If the GPU pre-check still shows white lines, lower the energy; if they are too faint, raise it toward 2.0.
+`_sheet_cpu_idle_base_left_arm_right.jpg` (r2 crop of `stormwood__fulgocobra__idle`, seed 2042). Veins read yellow-gold on the coils and hood edge, the head is olive with a gold eye ring, and the throat plates are dark bronze. Pixels at L 230 or above in the crop: base 20789, arm 5901. CPU has no bloom, so the GPU pre-check is still the real test of the vein cores; the next lever is energy (try 0.8).
 
-Not from this arm: the trainer stands on an NPC's head in this stand (creature stand overlaps a post), in base and arm alike.
+Not from this arm: the trainer stands on an NPC's head in this stand, in base and arm alike.

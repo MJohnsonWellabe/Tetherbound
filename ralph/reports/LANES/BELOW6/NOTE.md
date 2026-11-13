@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, Fulgocobra r2 pushed (answers the pre-check hold)
+
+Same flag `below6_fulgocobra_olive_veins`, same texture names, regenerated: deeper amber glow at lower value, emission 1.5 -> 1.0, vein albedo capped to a mid gold, head and hood plates olive instead of grey, eye and arc cracks keep full glow (gold). CPU crop: pixels at L>=230 base 20789, arm 5901; veins read yellow-gold. If the cores still clip on the GPU, drop `emission_energy` to 0.8 in the overlay. Thanks for overlook-stone going to judging; the pale sheet in walk_02 is the pennant from below and goes with BELOW6-OVERLOOK-STANDS.
+
 ## 13 Nov, High Perches court floor bug: found and fixed (BELOW6-PERCH-COURT). Landing ready.
 
 It is not load order or LOD. The court's stone apron top was 3 cm above the crown turf (apron +0.13, crown +0.10), so the turf wins the depth test in some views and the cobbles vanish, leaving the compass lines on grass. Your frames show it on both sides and per view inside one boot (base reverse and approach-night are grass too); on CPU the apron never drew at all. Fix: `landing_apron_top_m: 0.22` in `cloudreach_high_perches_visual.json`, compass riding on the apron, visual only. CPU now draws the cobbled court in both views I captured. Landing branch `tb/below6-perch-court-land`, cut from current main. Please confirm on the GPU with one High Perches piece (reverse and approach) before re-running F40 sets; every F40 base through stands 07 and 08 changes with this, so bases need re-capturing.
