@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "riftfrill-faint-000.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-faint-000.jpg",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0518,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-025.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-faint-025.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0502,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-050.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-faint-050.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0511,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-075.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-faint-075.jpg",
+  "sky_fraction": 0.967,
+  "lower_edges": 0.0497,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-100.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-faint-100.jpg",
+  "sky_fraction": 0.972,
+  "lower_edges": 0.0438,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-000.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-hit-000.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0511,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-025.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-hit-025.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0555,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-050.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-hit-050.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0551,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-075.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-hit-075.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0555,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-100.png",
+  "preset": "arm-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/arm-High/riftfrill-hit-100.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.051,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-000.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-faint-000.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0543,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-025.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-faint-025.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0527,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-050.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-faint-050.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0542,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-075.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-faint-075.jpg",
+  "sky_fraction": 0.965,
+  "lower_edges": 0.054,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-faint-100.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-faint-100.jpg",
+  "sky_fraction": 0.971,
+  "lower_edges": 0.0466,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-000.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-hit-000.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0531,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-025.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-hit-025.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0562,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-050.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-hit-050.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0562,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-075.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-hit-075.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0561,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ },
+ {
+  "frame": "riftfrill-hit-100.png",
+  "preset": "base-High",
+  "tree": "7949eba7c17421ce50a3b97b84e91351897961ee",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-things-riftfrill-matte/base-High/riftfrill-hit-100.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.053,
+  "script_errors": 0,
+  "note": "things-riftfrill-matte (F36#62, 7.31 near-bar): tb/things 7949eba7c both sides, base no overlay vs arm overlay_riftfrill_matte.json (creature_coat_flags things_riftfrill_matte_1112: metallic 0, roughness 0.88, specular 0.22; the only riftfrill flag); hit + faint whole-body with context; High. Pose-stage frames: sky flag bypassed after an eye check. Change is small (diff ~0.2)."
+ }
+]
