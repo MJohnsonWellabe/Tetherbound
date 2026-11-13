@@ -1,0 +1,41 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.0,
+   4.2,
+   4.3
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.8,
+   5.0,
+   5.3
+  ],
+  "craft:before": [
+   5.2,
+   5.1,
+   5.2
+  ],
+  "craft:after": [
+   6.6,
+   6.7,
+   6.8
+  ],
+  "f36_0_npc:C1B": [
+   6.6,
+   6.5,
+   7.0
+  ],
+  "f36_0_npc:C1A": [
+   6.6,
+   6.6,
+   7.0
+  ]
+ },
+ "candidates": {
+  "F39#31 High clear-day": [
+   4.8,
+   5.55,
+   6.05
+  ]
+ }
+}
