@@ -3600,6 +3600,14 @@ func _build_hill_shell() -> void:
 	add_child(holder)
 	var model := packed.instantiate() as Node3D
 	holder.add_child(model)
+	# `island_strip` (F38#30): the Meshy mound carries ~276 detached 2-4 m
+	# triangle islands floating just off its surface (the "crest shards").
+	var strip: Dictionary = cfg.get("island_strip", {})
+	if bool(strip.get("enabled", false)):
+		for raw_strip: Node in model.find_children("*", "MeshInstance3D", true, false):
+			var strip_mesh := raw_strip as MeshInstance3D
+			if strip_mesh.mesh != null:
+				strip_mesh.mesh = strip_mesh_islands(strip_mesh.mesh, int(strip.get("min_tris", 1000)))
 	var scale_raw: Array = cfg.get("scale_xyz", [1, 1, 1])
 	model.scale = Vector3(float(scale_raw[0]), float(scale_raw[1]), float(scale_raw[2]))
 	# fit_to: the shell's scale and footprint come from these nodes' combined
@@ -4273,6 +4281,69 @@ func _build_hill_foundation() -> void:
 		shape.shape = trimesh
 		body.add_child(shape)
 		foundation.add_child(body)
+
+
+## Returns a copy of `mesh` keeping only triangles whose connected piece
+## (vertices welded by position, so UV seams do not split a piece) has at least
+## `min_tris` triangles. Surface materials are kept; LODs are not rebuilt.
+static func strip_mesh_islands(mesh: Mesh, min_tris: int) -> ArrayMesh:
+	var out := ArrayMesh.new()
+	for s: int in mesh.get_surface_count():
+		var arrays := mesh.surface_get_arrays(s)
+		var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var idx: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+		if idx.is_empty():
+			idx.resize(verts.size())
+			for i: int in verts.size():
+				idx[i] = i
+		var weld := {}
+		var vid := PackedInt32Array()
+		vid.resize(verts.size())
+		for i: int in verts.size():
+			var v := verts[i]
+			var key := Vector3i(roundi(v.x * 100000.0), roundi(v.y * 100000.0), roundi(v.z * 100000.0))
+			if not weld.has(key):
+				weld[key] = weld.size()
+			vid[i] = int(weld[key])
+		var parent: Array[int] = []
+		parent.resize(weld.size())
+		for i: int in parent.size():
+			parent[i] = i
+		var tri_count := idx.size() / 3
+		for t: int in tri_count:
+			var a := _uf_find(parent, vid[idx[t * 3]])
+			var b := _uf_find(parent, vid[idx[t * 3 + 1]])
+			var c := _uf_find(parent, vid[idx[t * 3 + 2]])
+			parent[b] = a
+			parent[_uf_find(parent, c)] = a
+		var counts := {}
+		var tri_root := PackedInt32Array()
+		tri_root.resize(tri_count)
+		for t: int in tri_count:
+			var r := _uf_find(parent, vid[idx[t * 3]])
+			tri_root[t] = r
+			counts[r] = int(counts.get(r, 0)) + 1
+		var kept := PackedInt32Array()
+		for t: int in tri_count:
+			if int(counts[tri_root[t]]) >= min_tris:
+				kept.append(idx[t * 3])
+				kept.append(idx[t * 3 + 1])
+				kept.append(idx[t * 3 + 2])
+		arrays[Mesh.ARRAY_INDEX] = kept
+		out.add_surface_from_arrays(mesh.surface_get_primitive_type(s), arrays)
+		out.surface_set_material(s, mesh.surface_get_material(s))
+	return out
+
+
+static func _uf_find(parent: Array[int], x: int) -> int:
+	var r := x
+	while parent[r] != r:
+		r = parent[r]
+	while parent[x] != r:
+		var nxt := parent[x]
+		parent[x] = r
+		x = nxt
+	return r
 
 
 static func hill_shell_config(config: Dictionary) -> Dictionary:
