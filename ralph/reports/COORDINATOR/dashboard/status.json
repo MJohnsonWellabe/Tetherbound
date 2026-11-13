@@ -1,6 +1,6 @@
 {
- "updated": "13 Nov 2026 18:50 UTC",
- "headline": "13 Nov 18:50: GPU frames flowing again. The owner approved tb/gpu-frames-1113; 10 sections (7 row re-scores incl. F38#24 after #952, overlook join/solid) are with LANE-JUDGE. #953 workbench landed. Held at by-eye: telldust2 (beads), hallwalls (hard-edged green plane remains). Running: telldust3.",
+ "updated": "13 Nov 2026 19:10 UTC",
+ "headline": "13 Nov 19:10: first verdicts of the new round. SHIP: TELLDUST3 (F38#11 Medium +0.51), OVERLOOK-SOLID (F40#15 +1.37), OVERLOOK-JOIN (+0.42). Re-scores lifted F39#17 (+1.05), F38#16 (+0.99), F39#19 (+0.91, now 7.47), F39#5, F38#24 above 6. Near-bar 7.47: F39#19, F36#92.",
  "batches": [
   {
    "name": "Stormheart interior and Crown heartstone (PR #756)",
@@ -2139,7 +2139,7 @@
  "score_ledger_pending": [],
  "landed_recent": [
   {
-   "pr": 953,
+   "pr": "#953",
    "what": "Tidewake camp workbench r2b: hung tools, rope, vise and lantern back on the bench (were thrown up to 1.6 m off by the build script); bounds test added. LANE-SCENE.",
    "when": "13 Nov 18:18"
   },
@@ -2416,12 +2416,12 @@
    "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-npc-floor recheck, ghost-glow landed batch 27"
   },
   "F38#10": {
-   "gpu": 7.38,
-   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.38 (was 6.58) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
+   "gpu": 7.75,
+   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.38 (was 6.58) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-rescore-f38-19-c673: 7.75 High above top anchor (Build panel only); needs Players + Quest Log + Medium to close (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F38#11": {
    "gpu": 6.95,
-   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.47 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-things-telldust (13 Nov): tells 6.56->6.95 (3/3) | LANDED #949 (13 Nov): tells 6.95"
+   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.47 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-things-telldust (13 Nov): tells 6.56->6.95 (3/3) | LANDED #949 (13 Nov): tells 6.95 | G-things-telldust3: Medium 6.55 -> 7.06 (+0.51, 3/3) SHIP (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F38#12": {
    "gpu": 5.89,
@@ -2441,8 +2441,8 @@
    "medium": 7.37
   },
   "F38#16": {
-   "gpu": 6.32,
-   "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#16 6.32 | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 5.57->5.57; landing via tb/things-convtight-land | #944 (13 Nov): capture fix for the tournament frames landed; row re-capture queued"
+   "gpu": 7.31,
+   "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#16 6.32 | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 5.57->5.57; landing via tb/things-convtight-land | #944 (13 Nov): capture fix for the tournament frames landed; row re-capture queued | G-rescore-f38-16-c673: 7.31 (+0.99); same-character FIXED 3/3; asks: Mira and Tam share one body, pink glowing bush (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F38#17": {
    "gpu": 6.97,
@@ -2453,8 +2453,8 @@
    "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.24 (was 7.95) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
   },
   "F38#19": {
-   "gpu": 7.15,
-   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-meadows 7.62 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.17, not closed | G-things-bedroomwood (13 Nov): SHIPS High 6.64->7.15 (+0.51, 3/3; panel ~0.5 strict, control 7.67); landing via LANE-THINGS; next: right-hand HUD cluster and empty quick slots | LANDED #950 (13 Nov)",
+   "gpu": 7.27,
+   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-meadows 7.62 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.17, not closed | G-things-bedroomwood (13 Nov): SHIPS High 6.64->7.15 (+0.51, 3/3; panel ~0.5 strict, control 7.67); landing via LANE-THINGS; next: right-hand HUD cluster and empty quick slots | LANDED #950 (13 Nov) | G-rescore-f38-19-c673: 7.27 (+0.10) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)",
    "medium": 7.17
   },
   "F38#2": {
@@ -2479,8 +2479,8 @@
    "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 6.57 (was 7.58) (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
   },
   "F38#24": {
-   "gpu": 6.01,
-   "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51; stronghold 7.51) | G-things-redleaf (13 Nov): walk frames 5.87 level; stronghold route_day 7.73 on base; current main ~6.49; arm route_day tan-backdrop confound, re-shoot"
+   "gpu": 6.59,
+   "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51; stronghold 7.51) | G-things-redleaf (13 Nov): walk frames 5.87 level; stronghold route_day 7.73 on base; current main ~6.49; arm route_day tan-backdrop confound, re-shoot | G-rescore-f38-24-after-952: 6.59 High (+0.58), faceted mountains FIXED 2/3; walk_02/03 framing on a smeared near hill (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F38#25": {
    "gpu": 7.23,
@@ -2505,7 +2505,7 @@
   },
   "F38#3": {
    "gpu": 7.51,
-   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close | 13 Nov: DUSTTRAIL held (beads unchanged); the bead strings are the wind-up telegraph dust: THINGS-TELLDUST capturing | G-things-telldust (13 Nov): SHIPS, High 7.08->7.51, Medium 7.08->7.47 (3/3); Medium 0.03 short of close | LANDED #949 (13 Nov): 7.51 High / 7.47 Medium on main",
+   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close | 13 Nov: DUSTTRAIL held (beads unchanged); the bead strings are the wind-up telegraph dust: THINGS-TELLDUST capturing | G-things-telldust (13 Nov): SHIPS, High 7.08->7.51, Medium 7.08->7.47 (3/3); Medium 0.03 short of close | LANDED #949 (13 Nov): 7.51 High / 7.47 Medium on main | G-things-telldust3-grunt-medium: Medium 7.24 -> 7.28 (+0.04, 1/3), 0.22 short at Medium (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)",
    "medium": 7.47
   },
   "F38#30": {
@@ -2526,8 +2526,8 @@
    "medium": 7.35
   },
   "F38#34": {
-   "gpu": 7.08,
-   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.76 (was 6.75) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.08, Medium 7.08, not closed",
+   "gpu": 6.99,
+   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.76 (was 6.75) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.08, Medium 7.08, not closed | G-rescore-f38-19-c673: 6.99 level (wall FIXED 3/3, plain and new) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)",
    "medium": 7.08
   },
   "F38#35": {
@@ -2594,28 +2594,28 @@
    "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.14 (was 6.23; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
   },
   "F39#14": {
-   "gpu": 6.6,
-   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.44 (was 6.37); RE-SCORE G-rescore-stale-ext-tidewake 6.60 (was 6.37; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | ARM swim r5 (5c800b975): 5.74 -> 6.12 (3/3), SHIP"
+   "gpu": 6.35,
+   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.44 (was 6.37); RE-SCORE G-rescore-stale-ext-tidewake 6.60 (was 6.37; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | ARM swim r5 (5c800b975): 5.74 -> 6.12 (3/3), SHIP | G-rescore-f39-17-f39-5-c673: 6.35 (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F39#15": {
    "gpu": 6.14,
    "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.14 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
   },
   "F39#16": {
-   "gpu": 6.56,
-   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.88; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
+   "gpu": 6.55,
+   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.88; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-f39-17-f39-5-c673: 6.55 level (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F39#17": {
-   "gpu": 5.5,
-   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov); capture faithful (GPU lane eye check): the game restored state barely differs from live (mean diff 1.23); needs a game change (LANE-BELOW6) | ARM BELOW6-RESTORED-SEA G-restoredsea-mapfog (be513ad94, 12 Nov): row 6.21 -> 6.88 (3/3) but S3/S4 lose -0.44 (0/3, sunset water near black); not shipped, BELOW6 rescoping | ARM restored sea r4 (012ab2548): row 6.26 -> 6.23 (level, 1/3); S3/S4 +0.53 (3/3); not shipped. Next: combine r1 current read on S1/S2 with r4 sunset water, plus shoreline foam | ARM restored sea r5 (5c800b975): 6.08 -> 6.27 (2/3), S3/S4 +0.10, SHIP; landing to come"
+   "gpu": 6.55,
+   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 5.50 (was 6.27; LANE-PLACES 0a289b570, main, GPU High, 12 Nov); capture faithful (GPU lane eye check): the game restored state barely differs from live (mean diff 1.23); needs a game change (LANE-BELOW6) | ARM BELOW6-RESTORED-SEA G-restoredsea-mapfog (be513ad94, 12 Nov): row 6.21 -> 6.88 (3/3) but S3/S4 lose -0.44 (0/3, sunset water near black); not shipped, BELOW6 rescoping | ARM restored sea r4 (012ab2548): row 6.26 -> 6.23 (level, 1/3); S3/S4 +0.53 (3/3); not shipped. Next: combine r1 current read on S1/S2 with r4 sunset water, plus shoreline foam | ARM restored sea r5 (5c800b975): 6.08 -> 6.27 (2/3), S3/S4 +0.10, SHIP; landing to come | G-rescore-f39-17-f39-5-c673: 6.55 (+1.05) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F39#18": {
    "gpu": 7.12,
    "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
   },
   "F39#19": {
-   "gpu": 6.56,
-   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.85; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
+   "gpu": 7.47,
+   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.85; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-tidewake-fights-c673: 7.47 (+0.91; roster FIXED 3/3), 0.03 short (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F39#2": {
    "gpu": 6.79,
@@ -2635,7 +2635,7 @@
   },
   "F39#23": {
    "gpu": 7.35,
-   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 7.35 (was 6.80; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
+   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 7.35 (was 6.80; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-f41-6-f39-23-c673: 7.35 level (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F39#24": {
    "gpu": 7.65,
@@ -2672,16 +2672,16 @@
    "medium": 7.77
   },
   "F39#5": {
-   "gpu": 5.64,
-   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.64 (was 6.06) | ARM swim r5 G-below6-swim-sea-r5 (5c800b975, 12 Nov): 5.45 -> 5.98 (3/3; shore-creature confound against the arm), SHIP; landing to come"
+   "gpu": 6.35,
+   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.64 (was 6.06) | ARM swim r5 G-below6-swim-sea-r5 (5c800b975, 12 Nov): 5.45 -> 5.98 (3/3; shore-creature confound against the arm), SHIP; landing to come | G-rescore-f39-17-f39-5-c673: 6.35 (+0.71) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F39#6": {
    "gpu": 7.46,
    "src": "Faint fold landed #908: High 7.79 (G-floor2-aquaryn-faint-fold, 3/3, defect FIXED 3/3), Medium 7.46 (0.04 short). Forelimb flattening parked after two tries (needs an authored pose for the rig)."
   },
   "F39#7": {
-   "gpu": 7.07,
-   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 7.07 (was 6.61; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
+   "gpu": 7.11,
+   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 7.07 (was 6.61; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-tidewake-fights-c673: 7.11 level (Venn behind Cannonback shell) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F39#8": {
    "gpu": 5.82,
@@ -2716,8 +2716,8 @@
    "src": "GPU High 8-9 Nov (A)"
   },
   "F40#15": {
-   "gpu": 5.77,
-   "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08) | G-below6-knifeedge base (current main): 5.77; strips FIXED 3/3 on main already; now held by the flat wall slab (masonry arm queued) | ARM masonry G-below6-stormraven-masonry (832aaa06a): 5.17 -> 5.54 (3/3), landing #936; pooled current-main about 5.47 | FIX overlook pane G-below6-overlook-pane (66760567b, 13 Nov): overlook routes 4.92 -> 5.87 (3/3), edge and vista +0.38 (3/3); landing #939 after #938 | ARM overlook stone (575ffd7f6, 13 Nov): -0.58 (0/3), not shipped; strip defect PRESENT at the overlook vista (3/3), ghost planes in walk_02 (3/3): bugs to LANE-BELOW6"
+   "gpu": 5.6,
+   "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08) | G-below6-knifeedge base (current main): 5.77; strips FIXED 3/3 on main already; now held by the flat wall slab (masonry arm queued) | ARM masonry G-below6-stormraven-masonry (832aaa06a): 5.17 -> 5.54 (3/3), landing #936; pooled current-main about 5.47 | FIX overlook pane G-below6-overlook-pane (66760567b, 13 Nov): overlook routes 4.92 -> 5.87 (3/3), edge and vista +0.38 (3/3); landing #939 after #938 | ARM overlook stone (575ffd7f6, 13 Nov): -0.58 (0/3), not shipped; strip defect PRESENT at the overlook vista (3/3), ghost planes in walk_02 (3/3): bugs to LANE-BELOW6 | G-below6-overlook-solid SHIP 5.60 (+1.37 on walk_02/03, ghost glass gone; dark slab strips PARTIAL); overlook-join SHIP +0.42 (seam gone) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F40#16": {
    "gpu": 6.19,
@@ -2823,8 +2823,8 @@
    "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): C.md victory_on, landed batch 25; RE-SCORE G-rescore-stale-ext-stormwood 7.25 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
   },
   "F41#3": {
-   "gpu": 7.06,
-   "src": "G-recheck-f41-3 (LANE-SCOUT, tb/item-scout-1108 6422e1c4f), one-sided on main e1c941cbd: native Voltarach + giant-tree fade; spacing defect still PRESENT 3/3; RE-SCORE G-rescore-stale-ext-stormwood 7.06 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
+   "gpu": 6.99,
+   "src": "G-recheck-f41-3 (LANE-SCOUT, tb/item-scout-1108 6422e1c4f), one-sided on main e1c941cbd: native Voltarach + giant-tree fade; spacing defect still PRESENT 3/3; RE-SCORE G-rescore-stale-ext-stormwood 7.06 (LANE-PLACES 444270729, main, GPU High, 12 Nov) | G-rescore-f41-6-f39-23-c673: 6.99 from 1 of 3 job frames (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F41#4": {
    "gpu": 7.02,
@@ -2835,8 +2835,8 @@
    "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-ext-stormwood 6.53 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
   },
   "F41#6": {
-   "gpu": 6.83,
-   "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-ext-stormwood 6.83 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
+   "gpu": 6.79,
+   "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-ext-stormwood 6.83 (LANE-PLACES 444270729, main, GPU High, 12 Nov) | G-rescore-f41-6-f39-23-c673: 6.79 (magenta slab FIXED 3/3; hollows impact trunk, chrome-bloom boss) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F41#7": {
    "gpu": 7.02,
@@ -2944,8 +2944,8 @@
    "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers; G-faint2-medium-galecarrier: Galewisp remake as flight carrier 6.17 -> 6.83 on the flight frames (+0.66, 3/3), landing in the final batch; carrier LANDED #917"
   },
   "F36#92": {
-   "gpu": 7.19,
-   "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: water mangrove monitor 6.84 -> 7.19 (3/3)"
+   "gpu": 7.47,
+   "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: water mangrove monitor 6.84 -> 7.19 (3/3) | G-rescore-f36-50-c673 (water_mangrove_monitor): 7.47 High, 0.03 short; faint-mid hanging foreleg (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F36#50": {
    "gpu": 6.98,

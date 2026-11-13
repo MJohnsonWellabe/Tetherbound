@@ -4739,7 +4739,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113 ON), High, phase2_capture_routes.gd --biome=cloudreach --subset=cloudreach__summit_final_stronghold__12__stormward_overlook --seed=2042 (vista_dusk, route_day, walk_01-03); add the High Perches stands (07, 08) as no-loss. By-eye first: the straight dark seam at the trainer's feet in vista_dusk should be gone and the path intact.",
    "added": "13 Nov 03:37",
-   "status": "CAPTURED 13 Nov: frames on tb/gpu-frames-1113 (c34f3cb1e); with LANE-JUDGE."
+   "status": "SHIP 13 Nov (LANE-JUDGE). LANE-LAND-CS to land both."
   },
   {
    "id": "below6-overlook-solid",
@@ -4751,7 +4751,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 ON + two capture_stands rows for walk_02/03), High, same routes subset as overlook-join (vista_dusk, route_day, walk_01-03). Can share overlook-join's base capture (same branch lineage, flags off). By-eye: walk_02/03 show the arch, compass and pennants with the trainer on grass; no see-through walls.",
    "added": "13 Nov 04:25",
-   "status": "CAPTURED 13 Nov: frames on tb/gpu-frames-1113 (c34f3cb1e); with LANE-JUDGE."
+   "status": "SHIP 13 Nov (LANE-JUDGE). LANE-LAND-CS to land both."
   },
   {
    "id": "below6-fulgocobra-faint",
@@ -4875,7 +4875,7 @@
    ],
    "ask": "No arm: row score on current main of F39#17 (restored sea) and F39#5 (swim) after their arms landed (r5 ships). Their own job.json frame sets, High. Board still shows the pre-landing 5.5 and 5.64.",
    "added": "13 Nov 04:38",
-   "status": "CAPTURED 13 Nov: frames on tb/gpu-frames-1113 (c34f3cb1e); with LANE-JUDGE."
+   "status": "JUDGED 13 Nov (LANE-JUDGE ae67d0a5e); board updated."
   },
   {
    "id": "below6-stormraven-r3",
@@ -4987,7 +4987,7 @@
    ],
    "ask": "No arm: after #944 the dialogue capture stages tournament conversations where the game does. Re-capture the Meadows dialogue set's three tournament rows (Mira, Tam, Oskar) at High on main fe19404d4 for an F38#16 row score; send to LANE-SCOUT.",
    "added": "13 Nov 05:42",
-   "status": "CAPTURED 13 Nov: frames on tb/gpu-frames-1113 (c34f3cb1e); with LANE-JUDGE."
+   "status": "JUDGED 13 Nov (LANE-JUDGE ae67d0a5e); board updated."
   },
   {
    "id": "rescore-f36-50-mangrove-main",
@@ -4998,7 +4998,7 @@
    ],
    "ask": "No arm: pose-stage re-score on current main (clear ruler is the default since #923). Its 6.25 ('trainer inside the tail', 3/3) predates the clear ruler. capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context at High; send to LANE-SCOUT.",
    "added": "13 Nov 08:27",
-   "status": "CAPTURED 13 Nov: frames on tb/gpu-frames-1113 (c34f3cb1e); with LANE-JUDGE."
+   "status": "JUDGED 13 Nov (LANE-JUDGE ae67d0a5e); board updated."
   },
   {
    "id": "rescore-tidewake-fights-main",
@@ -5012,7 +5012,7 @@
    ],
    "ask": "No arm: after #947 the fight HUD no longer shows a harvest verb ('Gather Reef Stone') in Tidewake fights. Re-capture the Tidewake fight rows' own job frames (the G-things-foestand-tidewake Venn set) at High on main 0e5d8c048 for row scores; check by eye that no world verb is on the fight HUD. Send to LANE-SCOUT.",
    "added": "13 Nov 08:55",
-   "status": "CAPTURED 13 Nov: frames on tb/gpu-frames-1113 (c34f3cb1e); with LANE-JUDGE."
+   "status": "JUDGED 13 Nov (LANE-JUDGE ae67d0a5e); board updated."
   },
   {
    "id": "rescore-f41-6-f39-23-main",
@@ -5024,7 +5024,7 @@
    ],
    "ask": "No arm: row scores on current main from each row's own job.json frames, High. F41#6's recorded defect ('bright magenta danger slab through impact') no longer appears since the attack outlines went off (owner 24 Oct); F39#23 is also flagged by LANE-THINGS as a stale score. Send to LANE-SCOUT.",
    "added": "13 Nov 10:43",
-   "status": "CAPTURED 13 Nov: frames on tb/gpu-frames-1113 (c34f3cb1e); with LANE-JUDGE."
+   "status": "JUDGED 13 Nov (LANE-JUDGE ae67d0a5e); board updated."
   },
   {
    "id": "beings-veridian-antler",
@@ -5134,7 +5134,7 @@
    ],
    "ask": "No arm: after #952 (ridge fog follows the environment each frame), re-score F38#24 on main: the redleaf frame set (warrens walk_02/03 and stronghold route_day), with stronghold route_day captured straight after a golden-hour frame to confirm the tan sheet is gone. High.",
    "added": "13 Nov 17:34",
-   "status": "CAPTURED 13 Nov: frames on tb/gpu-frames-1113 (c34f3cb1e); with LANE-JUDGE."
+   "status": "JUDGED 13 Nov (LANE-JUDGE ae67d0a5e); board updated."
   },
   {
    "id": "land-cs-turfgrain",
@@ -5177,7 +5177,7 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1: neighbouring puffs share one slow wave so they never fade out independently; size 0.5, spacing 0.2, rise 0.04). capture_f38_fight.gd south_bridge_grunt + warden_aldis, --attack --dodge --tell-frames, High then Medium, camera-matched, F38#38 control. By eye on grunt 03: one continuous low band at the feet, no beads. The warden base capture is shared with scene-hallwalls (same tree, same base).",
    "added": "13 Nov 18:40",
    "priority": "near-bar closer, with scene-hallwalls before scene-cache",
-   "status": "BY-EYE PASS 13 Nov 19:00 (one thin continuous band, no beads). Grunt Medium paired 0.00 m -> G-things-telldust3-grunt-medium @e363003f8 with LANE-JUDGE (F38#3 Medium closer). Grunt High (~1 m off) and Warden (both) on their one retry."
+   "status": "SHIP 13 Nov (F38#11 Medium +0.51 3/3; F38#3 Medium +0.04, 0.22 short). LANE-SCENE to land. Retries of grunt High / Warden still useful as no-loss."
   },
   {
    "id": "land-mt-shorezones",
