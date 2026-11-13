@@ -1,3 +1,7 @@
+# PARKED (13 Nov): G-below6-uniforms DO NOT SHIP
+
+F41#18 row 6.05 -> 5.59 (-0.46, 0/3): without the emission floor the coats "blend into the dark mud and purple mist", and the 0.6 rim and shoulder knots do not show at the normal camera. Dialogue gained (+0.41, 3/3) but the row loss blocks it. Second round under the stop rule (G-things-stormuniform +0.04), so lighting-only arms on F41#18 are parked. The flag, its code and its test are removed from tb/below6. Next lever per the judges: the cloth albedo itself (mid-value, with a strong cool rim) and one bright copper or steel rank accent sized for the normal camera.
+
 # BELOW6-UNIFORMS: Stormwood uniform separation (F41#18)
 
 Row: F41#18 (pooled GPU High 5.89). G-things-stormuniform (3/3): the emission floor at 0 removes the "chalky ghost wash", but the cloth then "sinks into the dark green and black ground" and no rank markers read at the inventory distance. The judges asked for the floor kept at 0, a cool pale rim, and a shoulder, collar or rank trim in copper or steel.

@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, RELAY: uniforms do NOT ship; lighting-only arms on F41#18 parked and removed
+
+RELAY from LANE-SCOUT, G-below6-uniforms (tb/item-scout-1108 ca7cb834; slope 1.374, r 0.936, RMSE 0.49): F41#18 row 6.05 -> 5.59 (-0.46, 0/3). Without the floor the coats "blend into the dark mud and purple mist" (PRESENT 3/3 on the arm; base PARTIAL); the rim and knots do not show at that distance. Dialogue: row 6.14 -> 6.55 (+0.41, 3/3), officers 6.41 -> 6.55 (2/3), civilians 7.06 -> 7.19. Two rounds under the stop rule, so parked. I removed `uniform_separation_1113`, its code and its test from tb/below6. Row asks (3/3): lit mid-value cloth with a cool rim that reads at the normal camera; one bright copper, glass or steel rank accent per uniform sized for distance; new faces for Varga, Nysa and Sable (new art); and the salmon bears behind Nysa and Wen, which BELOW6-STATICUB-FUR answers. Carrying on with the terrace walk probe; the uniform cloth albedo is after that.
+
 ## 13 Nov, F40#1 gate terrace: geometry pushed flag-off, not an arm yet. Uniforms pre-check noted.
 
 **Terrace** (`BELOW6-GATE-TERRACE/PROGRESS.md`): five stacked 0.32 m pale-stone lips with stone kerbs and wavy turf tops on the Realm Gate Crag crown, one mesh with a trimesh collider, flag `landmass.gate_crag_terrace_1113` OFF. CPU sheet at the row's stand: a stepped stone-and-turf rise in the lawn. The crown is on no route; the arrival walk smoke passes with the flag on. Not yet proven: a body standing and stepping on it. Three tries to capture the trainer on top booted and then produced no frame, so I am not calling it an arm until a walk probe passes. That probe is next.
