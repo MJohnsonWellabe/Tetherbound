@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 09:24 UTC",
+  "updated": "13 Nov 2026 09:52 UTC",
   "headline": [
+    "13 Nov 09:52: The fight 'bead strings' (F38#3, F38#28) turn out to be the attack wind-up dust, not the stone trail; the trail arm is parked unjudged and the wind-up dust arm (telldust) is capturing.",
     "13 Nov 09:24: #948 landed (Fulgocobra slate collar: no red outside Team Tether). Overnight: #937-#939, #941-#948 (11 PRs).",
     "13 Nov 08:55: #947 landed (no harvest prompt across Tidewake/Cloudreach/Stormwood fights; Tidewake fight re-capture queued). Overnight: #937-#939, #941-#947 (10 PRs).",
     "13 Nov 08:53: Fulgocobra slate collar ships (+0.41 pose, +0.42 world, no red left on the cobra: hard-rule item cleared). Warden ring round 2 level at High: that approach parked; the dust-trail arm is capturing for the same row.",
@@ -2636,7 +2637,7 @@
     },
     "F38#3": {
       "gpu": 7.25,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close",
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close | 13 Nov: DUSTTRAIL held (beads unchanged); the bead strings are the wind-up telegraph dust: THINGS-TELLDUST capturing",
       "medium": 7.03
     },
     "F38#30": {

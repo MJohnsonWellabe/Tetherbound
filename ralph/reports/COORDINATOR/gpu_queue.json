@@ -4663,7 +4663,8 @@
         "F38#28 (close candidate: Medium 7.52, High 7.05)"
       ],
       "ask": "Base = round 1 (overlay_warden_ring.json, what lands in #945) vs arm overlay_warden_ring_r2.json (Warden ring 0.05 alpha / 0.3 m), High AND Medium side by side, the F38#28 job frames via the same phase2_capture_fights.gd repro as round 1 (warden_aldis-03/05/08); no-loss r04/r16/a03. Closes only at a mapped 7.5 on both presets in a confirming batch with the F38#38 control. Closer, so ahead of the floor arms.",
-      "added": "13 Nov 06:58"
+      "added": "13 Nov 06:58",
+      "status": "High judged level (6.91->6.87, 0/3); approach parked; Medium pass dropped"
     },
     {
       "id": "things-dusttrail",
@@ -4676,7 +4677,8 @@
         "F41#3 no-loss"
       ],
       "ask": "Base vs overlay_dust_trail.json, High, the G-things-foestand-meadows fight set (capture_f38_fight.gd south_bridge_grunt --attack --dodge --tell-frames). By-eye first: frame 02's pale bead loops during Pebble Toss should be short puffs; if the strings are still there, hold and tell LANE-THINGS. Near-bar item (High 6.89, Medium 7.03). UPDATED 13 Nov 08:17: run on tb/things a6c24558a (contains main d4960ba66 with Warden ring r1); add the Warden set at Medium AND High for F38#28 (the 'white puff ring' is this same trail). Moved up behind wardenring-r2: both rows are close candidates.",
-      "added": "13 Nov 02:58"
+      "added": "13 Nov 02:58",
+      "status": "HELD unjudged 13 Nov: beads unchanged on base vs arm (diff 0.2-0.8); the beads are the wind-up dust (THINGS-TELLDUST). Parked."
     },
     {
       "id": "things-bedroomwood",
