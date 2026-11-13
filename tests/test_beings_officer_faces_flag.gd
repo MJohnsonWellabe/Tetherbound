@@ -2,16 +2,13 @@ extends "res://tests/test_case.gd"
 
 ## BEINGS-OFFICER-FACES (F41#8, F41#18): appearance-variant records, OFF until
 ## GPU-judged. Maren keeps officer_b with her own hair and plate; Nysa keeps her
-## officer_a face with her own hair and plate (gender-neutral). The record that
-## would move Nysa to a woman's face is held for the owner and never attached.
-## Sera and Varga never change.
+## officer_a face with her own hair and plate (owner, 13 Nov: Nysa keeps her
+## current face and her gender stays unstated). Sera and Varga never change.
 
 const VAR := preload("res://scripts/characters/appearance_variants.gd")
 const MODEL := preload("res://scripts/characters/character_model.gd")
 const TRAINERS := "res://data/config/stormwood_trainers.json"
 const IDS := {"officer_maren_verge_rod": "beings_stormwood_maren", "officer_nysa_deepwood_rod": "beings_stormwood_nysa_hair"}
-## Held for the owner: gives Nysa a woman's face; never attached to a trainer.
-const HELD := "beings_stormwood_nysa"
 
 
 func _trainers() -> Dictionary:
@@ -68,10 +65,10 @@ func test_on_maren_and_nysa_get_their_own_body_and_plate() -> void:
 	assert_eq(str(varga.get("appearance_variant_id", "")), "", "Varga is unchanged")
 
 
-func test_the_face_swap_record_is_held_and_unattached() -> void:
+
+func test_no_record_changes_a_presented_face() -> void:
+	# Owner, 13 Nov 2026: these officers are told apart by hair colour and
+	# plate only, never by a body or face swap.
 	var records: Dictionary = VAR.load_config().get("variants", {})
-	var held: Dictionary = records.get(HELD, {})
-	assert_false(bool(held.get("enabled", true)), "the face-swap record is OFF")
-	assert_true(str(held.get("_why", "")).contains("HELD for the owner"), "it says why it is held")
-	for tr: Dictionary in _trainers().values():
-		assert_true(str(tr.get("appearance_variant_id", "")) != HELD, "%s does not use the held record" % tr.id)
+	for id: String in IDS.values():
+		assert_false((records.get(id, {}) as Dictionary).has("body_model_override"), "%s does not swap the body" % id)

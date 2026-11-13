@@ -8,8 +8,8 @@ wear officer_a). Ask: separate them by face, or hair and coat colour.
 
 Installed cast only, identity-preserving texture variants (no new mesh, no Meshy):
 - Maren keeps officer_b; her hair goes chestnut-honey.
-- Nysa moves to a copy of officer_b (a female face, so she no longer wears
-  Varga's face) with ash-silver hair, so she is not a second Sera either.
+- Nysa keeps her officer_a face (owner, 13 Nov: her gender stays unstated) and
+  the judged uniform cloth; her hair goes ash-silver.
 Hair is chosen by position on the model (top 16% of its height, from the
 model's own UVs, tools/creature_anatomy_maps.py) and the plum hair hue; face
 skin, coat, collar and eyes keep their pixels. Shading is kept: each texel's
@@ -18,19 +18,15 @@ the game shows for officer_b today (hair = plum hue in the top 62% of the plate)
 
 Writes:
   assets/characters/officer_b/officer_b_lod0_texture_0_vis1_maren.png
-  assets/characters/npc_identity/stormwood_nysa/nysa_lod0.glb  (officer_b copy, embedded atlas recoloured)
+  assets/characters/officer_a/officer_a_lod0_texture_0_vis1_cloth2_nysa.png
   assets/ui/portraits/npc_identity_stormwood_maren.png
-  assets/ui/portraits/npc_identity_stormwood_nysa.png
+  assets/ui/portraits/npc_identity_stormwood_nysa_hair.png
 
     python3 ralph/reports/LANES/BEINGS-OFFICER-FACES/derive_officer_hair.py
     python3 ralph/reports/LANES/BEINGS-OFFICER-FACES/derive_officer_hair.py --nysa-neutral
       (Nysa keeps her officer_a face; hair and plate only)
 """
-import io
-import json
 import os
-import shutil
-import struct
 import sys
 
 import numpy as np
@@ -47,7 +43,6 @@ PLATE = "assets/ui/portraits/officer_b.png"
 LOOKS = {
     # name: (target hue deg, target saturation, value scale)
     "maren": (38.0, 0.52, 2.0),
-    "nysa": (215.0, 0.07, 2.05),
 }
 HAIR_TOP = 0.84
 FACE_CENTRE = (0.42, 0.41)
@@ -94,37 +89,6 @@ def plate_mask(plate):
     return plum(h, s, v) & (rows < 0.62) & ~face
 
 
-def replace_embedded_png(src, dst, png_bytes):
-    data = open(src, "rb").read()
-    json_len = struct.unpack("<I", data[12:16])[0]
-    gltf = json.loads(data[20:20 + json_len])
-    off = 20 + json_len
-    bin_len = struct.unpack("<I", data[off:off + 4])[0]
-    binary = data[off + 8:off + 8 + bin_len]
-    images = gltf.get("images", [])
-    if len(images) != 1 or "bufferView" not in images[0]:
-        raise SystemExit("expected one embedded image in %s" % src)
-    target = images[0]["bufferView"]
-    out = bytearray()
-    for index, view in enumerate(gltf["bufferViews"]):
-        chunk = png_bytes if index == target else binary[view.get("byteOffset", 0):view.get("byteOffset", 0) + view["byteLength"]]
-        while len(out) % 4:
-            out.append(0)
-        view["byteOffset"] = len(out)
-        view["byteLength"] = len(chunk)
-        out += chunk
-    while len(out) % 4:
-        out.append(0)
-    gltf["buffers"][0]["byteLength"] = len(out)
-    js = json.dumps(gltf, separators=(",", ":")).encode()
-    js += b" " * ((4 - len(js) % 4) % 4)
-    total = 12 + 8 + len(js) + 8 + len(out)
-    with open(dst, "wb") as f:
-        f.write(struct.pack("<III", 0x46546C67, 2, total))
-        f.write(struct.pack("<II", len(js), 0x4E4F534A) + js)
-        f.write(struct.pack("<II", len(out), 0x004E4942) + bytes(out))
-
-
 def main():
     vis1 = Image.open(os.path.join(ROOT, VIS1)).convert("RGB")
     h, s, v = hsv_arrays(vis1)
@@ -136,17 +100,12 @@ def main():
     maren = recolour(vis1, mask, LOOKS["maren"])
     maren.save(os.path.join(ROOT, OB + "officer_b_lod0_texture_0_vis1_maren.png"))
     recolour(plate, pmask, LOOKS["maren"]).save(os.path.join(ROOT, "assets/ui/portraits/npc_identity_stormwood_maren.png"))
-    nysa = recolour(vis1, mask, LOOKS["nysa"])
-    folder = os.path.join(ROOT, "assets/characters/npc_identity/stormwood_nysa")
-    os.makedirs(folder, exist_ok=True)
-    buffer = io.BytesIO()
-    nysa.save(buffer, format="PNG", optimize=True)
-    replace_embedded_png(os.path.join(ROOT, GLB), os.path.join(folder, "nysa_lod0.glb"), buffer.getvalue())
-    recolour(plate, pmask, LOOKS["nysa"]).save(os.path.join(ROOT, "assets/ui/portraits/npc_identity_stormwood_nysa.png"))
+    # Owner, 13 Nov 2026: Nysa keeps her current face and her gender stays
+    # unstated, so the officer_b copy for Nysa was dropped; she gets
+    # nysa_neutral() below (her officer_a face, ash-silver hair, own plate).
+    nysa_neutral()
 
 
-if __name__ == "__main__" and "--nysa-neutral" not in sys.argv:
-    main()
 
 
 # --- Gender-neutral Nysa option (coordinator, 13 Nov 2026) -----------------
@@ -202,5 +161,8 @@ def nysa_neutral():
     recolour(plate, pmask, NYSA_NEUTRAL).save(os.path.join(ROOT, "assets/ui/portraits/npc_identity_stormwood_nysa_hair.png"))
 
 
-if __name__ == "__main__" and "--nysa-neutral" in sys.argv:
-    nysa_neutral()
+if __name__ == "__main__":
+    if "--nysa-neutral" in sys.argv:
+        nysa_neutral()
+    else:
+        main()

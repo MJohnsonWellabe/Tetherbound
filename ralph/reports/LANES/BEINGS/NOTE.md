@@ -1,5 +1,10 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 23:00 UTC), newest first
+- **Owner's answer applied. BEINGS-OFFICER-FACES is one arm, ready to queue:** Maren chestnut-honey hair (Sera unchanged), Nysa ash-silver hair on her CURRENT face (Varga unchanged), each with her own plate. The officer_b body swap is gone (record, model copy and plate removed); a test pins that no record swaps a body. The split folders (-MAREN, -NYSA-HAIR) are retired into this one.
+- Known limit: Nysa's forelock stays near-black on the body; the rest of her hair and her plate are silver.
+- Next: F38#16 Mira and Tam, hair and coat colour only, presented gender unchanged.
+
 ## TO THE COORDINATOR (13 Nov, about 22:45 UTC), newest first
 - **Split done, as you asked.** Two arms ready to queue:
   - **BEINGS-OFFICER-FACES-MAREN**: Maren only (chestnut-honey hair and plate); Sera unchanged.
