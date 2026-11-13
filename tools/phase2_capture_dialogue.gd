@@ -165,7 +165,7 @@ func _capture_row_with_dialogue(row: Dictionary) -> void:
 	# `_frame_speaker` already does for the dialogue view. The game's own
 	# placement is untouched; the manifest records the re-seat.
 	var post_body := _speaker_body(row)
-	if post_body != null:
+	if post_body != null and not _staged_at_post(row):
 		var post_xz: Array = row.get("position_xz", [])
 		if post_xz.size() == 2:
 			var post := Vector2(float(post_xz[0]), float(post_xz[1]))
@@ -390,9 +390,35 @@ func _speaker_body(row: Dictionary) -> Node3D:
 	return best
 
 
-## Returns what was done, for the manifest: "near", "moved:<m>", "absent" or
-## "refused".
+## LANE-THINGS, 13 Nov (F38#16, 3/3: "Mira's camera sits inside a timber and
+## lattice wall, no speaker shows"). A tournament round's lines are not spoken
+## at the opponent's home: tournament_dialogue_presentation.gd hides the home
+## body's art, stands a copy of them at the round's own spot and points the
+## conversation camera at that copy. This capture walked the player into
+## Mira's shop instead, so the copy appeared 3.5 m away through her lattice
+## door and the camera followed it. For those conversations the player stays
+## at the catalogue post, where the game stages the speaker.
+const TOURNAMENT_STAGING := preload("res://scripts/world/tournament_dialogue_presentation.gd")
+
+
+func _staged_at_post(row: Dictionary) -> bool:
+	var conversation := _dialogue_for(row)
+	if conversation.is_empty() or _world == null:
+		return false
+	for node: Node in _world.find_children("*", "Node", true, false):
+		if node.get_script() == TOURNAMENT_STAGING:
+			return (node.get("_conversations") as Dictionary).has(conversation)
+	return false
+
+
+## Returns what was done, for the manifest: "near", "moved:<m>", "staged",
+## "absent" or "refused".
 func _frame_speaker(row: Dictionary) -> String:
+	if _staged_at_post(row):
+		# The game stages this speaker at the post itself and frames them
+		# there (see `_staged_at_post`); nothing to walk to.
+		print("DLG_SPEAKER %s staged at the post by the tournament" % str(row.frame_id))
+		return "staged"
 	var body := _speaker_body(row)
 	if body == null:
 		var seen: Array[String] = []
