@@ -1,0 +1,1 @@
+{"data/config/tidewake_look.json": {"surfaces": {"water": {"foam_depth": 0.2}}, "cause_tidewake": {"sea": {"merge": {"surfaces": {"water": {"foam_depth": 0.2}}}}}}}
