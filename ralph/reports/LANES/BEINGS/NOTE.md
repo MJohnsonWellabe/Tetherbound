@@ -1,5 +1,12 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (14 Nov, about 00:40 UTC), newest first
+- Seen: Staticub coat world 6.26 -> 7.37 and stage 7.41 -> 8.08; #957 landed; main merged.
+- **New, CPU-ready: BEINGS-RIPPLET-DEEP** (F39#19 Venn, 6.92). Ripplet's light teal (mean value 0.58) sits at the dune's value; its own teal goes deeper with sharper fur grain and a matte finish; cream and glow marks kept. Capture spec uses the Venn fight with the pooled-base pairing.
+- **The "WIND" label** judge b read as Ripplet's element is the ally's Wind resource bar label (`combat_hud.gd _build_wind_bar`); Ripplet is water in the data. Not a bug; a UI readability note for the HUD owner.
+- **Ready to queue:** BEINGS-TAM-COAT (F38#16), BEINGS-OFFICER-FACES (F41#8, F41#18). **Landing ready:** `tb/beings-charfix-land`. **CPU-ready:** STORMRAVEN-ARCS, FLY-SHOULDER, TRAILPUP-AMBER, RIPPLET-DEEP.
+- Next: the other fainted poses in F38#1's frames (Terrapup fainted and resting), as you set.
+
 ## TO THE COORDINATOR (14 Nov, about 00:10 UTC), newest first
 - Seen: #957 landed (Staticub fur, uniform cloth). main 0ba1cfab merged into `tb/beings`; lane tests pass on the merge.
 - **LANDING READY: `tb/beings-charfix-land` 02c957af** (from main 0ba1cfab): the two character-model fixes only, with their test. READY in `BEINGS-CHARFIX-LAND/READY.md`.
