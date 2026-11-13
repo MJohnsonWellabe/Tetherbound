@@ -44,9 +44,10 @@ static func install(body: Node3D, cfg: Dictionary, idle: String) -> String:
 	var posed := source.duplicate(true) as Animation
 	posed.resource_name = "%s_%s" % [LIBRARY, role]
 	posed.loop_mode = Animation.LOOP_LINEAR
+	var gain := posture_gain(data)
 	for bone: String in rotations:
 		var degrees: Array = rotations[bone]
-		var radians := Vector3(deg_to_rad(float(degrees[0])), deg_to_rad(float(degrees[1])), deg_to_rad(float(degrees[2])))
+		var radians := Vector3(deg_to_rad(float(degrees[0]) * gain), deg_to_rad(float(degrees[1]) * gain), deg_to_rad(float(degrees[2]) * gain))
 		var offset := Basis.from_euler(radians, EULER_ORDER_XYZ).get_rotation_quaternion()
 		var track: int = tracks[bone]
 		for key: int in range(posed.track_get_key_count(track)):
@@ -60,6 +61,26 @@ static func install(body: Node3D, cfg: Dictionary, idle: String) -> String:
 		player.remove_animation_library(LIBRARY)
 	player.add_animation_library(LIBRARY, library)
 	return LIBRARY + "/idle"
+
+
+## F38#35 `posture_gain_1113` (npc_postures.json, OFF until judged). The role
+## postures apply (no mismatch warning on Halda, Lark or Oskar) but are 4-38
+## degree offsets, too small to read on a 40 px villager (G-rescore-stale-
+## tier2: "named villagers and trainers hold the same straight neutral stance").
+## When enabled every profile angle is scaled by `gain`, capped so no single
+## offset exceeds `max_deg`.
+static func posture_gain(data: Dictionary) -> float:
+	var block: Variant = data.get("posture_gain_1113", {})
+	if not block is Dictionary or not bool((block as Dictionary).get("enabled", false)):
+		return 1.0
+	var gain := clampf(float((block as Dictionary).get("gain", 1.0)), 0.0, 3.0)
+	var cap := float((block as Dictionary).get("max_deg", 80.0))
+	var largest := 0.0
+	for profile: Variant in (data.get("profiles", {}) as Dictionary).values():
+		for degrees: Variant in (profile as Dictionary).values():
+			for value: Variant in (degrees as Array):
+				largest = maxf(largest, absf(float(value)))
+	return minf(gain, cap / largest) if largest > 0.0 else gain
 
 
 static func config() -> Dictionary:
