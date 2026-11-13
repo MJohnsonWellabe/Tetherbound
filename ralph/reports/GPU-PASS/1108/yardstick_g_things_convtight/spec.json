@@ -1,0 +1,101 @@
+[
+ {
+  "label": "G F38#16",
+  "a": "G-ct_F38-16_base.png",
+  "b": "G-ct_F38-16_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: tournament dialogue subject identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"
+  ]
+ },
+ {
+  "label": "G F38#17",
+  "a": "G-ct_F38-17_base.png",
+  "b": "G-ct_F38-17_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named trainer dialogue subject visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+  ]
+ },
+ {
+  "label": "G F38#37",
+  "a": "G-ct_F38-37_base.png",
+  "b": "G-ct_F38-37_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Meadows dialogue rock obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large rock faces fill the camera and hide the named speaker during dialogue"
+  ]
+ },
+ {
+  "label": "G F39#26",
+  "a": "G-ct_F39-26_base.png",
+  "b": "G-ct_F39-26_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The player head and back overlap the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F40#10",
+  "a": "G-ct_F40-10_base.png",
+  "b": "G-ct_F40-10_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue foreground composition. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+  ]
+ },
+ {
+  "label": "G F40#12",
+  "a": "G-ct_F40-12_base.png",
+  "b": "G-ct_F40-12_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+  ]
+ },
+ {
+  "label": "G meadows sample1",
+  "a": "G-ct_meadows1_base.png",
+  "b": "G-ct_meadows1_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G meadows sample2",
+  "a": "G-ct_meadows2_base.png",
+  "b": "G-ct_meadows2_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G tidewake sample1",
+  "a": "G-ct_tidewake1_base.png",
+  "b": "G-ct_tidewake1_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G stormwood sample1",
+  "a": "G-ct_stormwood1_base.png",
+  "b": "G-ct_stormwood1_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G stormwood sample2",
+  "a": "G-ct_stormwood2_base.png",
+  "b": "G-ct_stormwood2_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (nine conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

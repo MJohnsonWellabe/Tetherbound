@@ -1,0 +1,83 @@
+{
+ "Vy": {
+  "anchor": false,
+  "label": "G F38#16",
+  "A": "G-ct_F38-16_base.png",
+  "B": "G-ct_F38-16_arm.png"
+ },
+ "Lp": {
+  "anchor": false,
+  "label": "G F38#17",
+  "A": "G-ct_F38-17_arm.png",
+  "B": "G-ct_F38-17_base.png"
+ },
+ "Nm": {
+  "anchor": false,
+  "label": "G stormwood sample2",
+  "A": "G-ct_stormwood2_arm.png",
+  "B": "G-ct_stormwood2_base.png"
+ },
+ "Qv": {
+  "anchor": false,
+  "label": "G F40#12",
+  "A": "G-ct_F40-12_arm.png",
+  "B": "G-ct_F40-12_base.png"
+ },
+ "Ma": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Vj": {
+  "anchor": false,
+  "label": "G F40#10",
+  "A": "G-ct_F40-10_arm.png",
+  "B": "G-ct_F40-10_base.png"
+ },
+ "Bb": {
+  "anchor": false,
+  "label": "G meadows sample2",
+  "A": "G-ct_meadows2_arm.png",
+  "B": "G-ct_meadows2_base.png"
+ },
+ "Xg": {
+  "anchor": false,
+  "label": "G meadows sample1",
+  "A": "G-ct_meadows1_base.png",
+  "B": "G-ct_meadows1_arm.png"
+ },
+ "Pl": {
+  "anchor": false,
+  "label": "G stormwood sample1",
+  "A": "G-ct_stormwood1_arm.png",
+  "B": "G-ct_stormwood1_base.png"
+ },
+ "Iy": {
+  "anchor": false,
+  "label": "G tidewake sample1",
+  "A": "G-ct_tidewake1_arm.png",
+  "B": "G-ct_tidewake1_base.png"
+ },
+ "Lk": {
+  "anchor": false,
+  "label": "G F38#37",
+  "A": "G-ct_F38-37_arm.png",
+  "B": "G-ct_F38-37_base.png"
+ },
+ "Xn": {
+  "anchor": false,
+  "label": "G F39#26",
+  "A": "G-ct_F39-26_arm.png",
+  "B": "G-ct_F39-26_base.png"
+ },
+ "Xd": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Uy": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}
