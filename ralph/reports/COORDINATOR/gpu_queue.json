@@ -5050,7 +5050,8 @@
    ],
    "ask": "Base vs ralph/reports/LANES/LAND-MT-BROKENHILL/overlay.json (bank.hill_shell.broken: noise relief, bedded Rock030 on steep faces, base-line foliage), High, phase2_capture_routes.gd --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042 (walk_02/03 scored; route_day, walk_01, vista_dusk no-loss). By-eye: route_day shows grey rock outcrops and the brown slabs are gone; walk_03 hill base no longer one straight diagonal. Else hold.",
    "added": "13 Nov 16:43",
-   "note_tree": "May run from tb/land-mt 21e74e3f0 to share one import with land-mt-shorezones."
+   "note_tree": "May run from tb/land-mt 21e74e3f0 to share one import with land-mt-shorezones.",
+   "status": "SHIP 13 Nov: F38#30 5.06 -> 6.48 (+1.42, 3/3). LANE-LAND-MT to land."
   },
   {
    "id": "land-cs-soiloff",
@@ -5243,7 +5244,8 @@
    ],
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl.json shader warm_haze_mix 0.85, warm_keep_scale 0.6: warm golden-hour fog on the far ridge moves to a cool dusk blue). phase2_capture_routes.gd --biome=meadows --subset=stronghold_approach (+ burrow_warrens to share BROKENHILL's boot) --seed=2042, High. By eye: stronghold vista_dusk mountains blue-grey with snow caps, not a flat tan sheet; day frames identical to base.",
    "added": "13 Nov 19:40",
-   "priority": "share the Meadows boot with land-mt-brokenhill; ahead of land-mt-shorezones (lane rates it clearer)"
+   "priority": "share the Meadows boot with land-mt-brokenhill; ahead of land-mt-shorezones (lane rates it clearer)",
+   "status": "SHIP 13 Nov: dusk vistas 6.41 -> 7.10 (3/3). LANE-LAND-MT to land."
   },
   {
    "id": "land-mt-seadepth",

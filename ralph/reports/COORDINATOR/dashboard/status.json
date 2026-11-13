@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 22:50 UTC",
+ "updated": "13 Nov 2026 22:55 UTC",
  "headline": "13 Nov 22:50: FIRST CLOSE of the round - Staticub roster row (F36 (0) #19) at 7.99 High and Medium on the pose stage. Five PRs landed this evening (#954, #956, #957, #958; #959 drift floaters in CI). World Staticub frames 6.53 stay as a follow-up.",
  "batches": [
   {
@@ -2500,7 +2500,7 @@
   },
   "F38#24": {
    "gpu": 6.59,
-   "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51; stronghold 7.51) | G-things-redleaf (13 Nov): walk frames 5.87 level; stronghold route_day 7.73 on base; current main ~6.49; arm route_day tan-backdrop confound, re-shoot | G-rescore-f38-24-after-952: 6.59 High (+0.58), faceted mountains FIXED 2/3; walk_02/03 framing on a smeared near hill (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
+   "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51; stronghold 7.51) | G-things-redleaf (13 Nov): walk frames 5.87 level; stronghold route_day 7.73 on base; current main ~6.49; arm route_day tan-backdrop confound, re-shoot | G-rescore-f38-24-after-952: 6.59 High (+0.58), faceted mountains FIXED 2/3; walk_02/03 framing on a smeared near hill (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov) | G-land-mt-duskridge: day frames level 6.56 (LANE-JUDGE tb/judge 292317634, 13 Nov)"
   },
   "F38#25": {
    "gpu": 7.23,
@@ -2529,8 +2529,8 @@
    "medium": 7.47
   },
   "F38#30": {
-   "gpu": 6.02,
-   "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905 | G-things-redleaf (13 Nov): main after #930 4.99 (hillside slab PRESENT 3/3, new art)"
+   "gpu": 6.48,
+   "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905 | G-things-redleaf (13 Nov): main after #930 4.99 (hillside slab PRESENT 3/3, new art) | G-land-mt-brokenhill SHIP 5.06 -> 6.48 (+1.42, 3/3): slab wall to rock outcrops (LANE-JUDGE tb/judge 292317634, 13 Nov)"
   },
   "F38#31": {
    "gpu": 7.2,
@@ -2896,7 +2896,7 @@
   },
   "F38#0": {
    "gpu": 6.6,
-   "src": "GPU High baseline 10 Nov, main 2ffc97db0, 268 frames day+golden (G-baseline F38#0 full row)"
+   "src": "GPU High baseline 10 Nov, main 2ffc97db0, 268 frames day+golden (G-baseline F38#0 full row) | G-land-mt-duskridge SHIP: dusk vistas 6.41 -> 7.10 (+0.69, 3/3) (LANE-JUDGE tb/judge 292317634, 13 Nov)"
   },
   "F40#0": {
    "gpu": 5.98,
