@@ -1,5 +1,10 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## Cloudreach "faceted brown cliff" (F40#2, #4, #7, #11 in G-rescore-stale-ext-cloudreach): finding, no arm (13 Nov 22:45 UTC)
+- The rock banks render warm tan (route_day bank RGB 167/146/103), not the owner's 6 Sep option-A grey-green granite (`geology.stone_light` #8a8f82). Cause: `cloudreach_rock.gdshaderinc` multiplies the granite palette by the rock scree texture (`albedo = stone * mix(0.82, tex * 1.28, 0.52)`), whose brown cast sets the hue.
+- The fix path already exists: the F26 course surface (`cloudreach_rock_courses`, art.json `cloudreach_rock_surface`, OFF) strips the texture hue and paints the palette with metre-scale beds.
+- **Not built:** it was GPU-judged inside the cause lane's `pale_strata` (G-newapproach-cloudreach-cause-no-cloudsea): F40#1 and F40#3 lost 0/3, the lips read "smooth, untextured clay-like", and judges preferred base's "textured earth". The untried variant (courses on the owner's granite, no pale retint) removes the same texture hue the judges preferred, so I am not spending a GPU slot on it without a new reason.
+
 ## F40#17 is stale on the board (13 Nov 21:50 UTC)
 The High Perches rim dressing shipped at 6.01 -> 6.94 (3/3; G-below6-mushrooms) and is on main (`tests/test_below6_perch_rim_landed.gd`, #949). Two judges gave 7.04 and 7.17. It needs a re-score on main (High, then Medium if High is 7.5 or above), not a new arm.
 
