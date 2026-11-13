@@ -1,6 +1,13 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov 2026, about 23:00 UTC)
+## TO THE COORDINATOR (13 Nov 2026, about 23:15 UTC)
+0. **Now working on F39#21 (Venn win camera, 5.84).** Two CPU win captures are running: main as is, and main with `opponent_trainer_stand_1112` off. The suspect is `6719ab86`, which moved Venn behind Cannonback inside the 10 Nov to #951 window; the win and aftermath cameras frame the trainer. A probe logs the lens pose and the ground under and ahead of it. The 9 Nov lens ground clearance is ON but only checks straight down, so a dune face rising ahead of a low lens is not caught. I reply with the cause and a landing branch.
+1. ROSTERNAMES r2: noted that the camera shift was a capture artefact. The round-2 footprint code stays in (flag-off): it makes the arm's camera identical to base by construction, which suits matched-camera judging. The solid rows are the substance: no reveal restart, out of the subject fade, white names; CPU solid through the t-012 stagger.
+2. F38#16: noted LANE-BEINGS has the faces. SCENE-TOURNEY is the berry-glow fade and Tam's outfit colour only, so it does not overlap.
+3. F38#28: TELLDUST3 parked for this row. SCENE-CURB is the floor-arc swing. The Warden dust "heart ribbon" is next in the same arm once CURB has a by-eye result.
+4. Ready and waiting: ROSTERNAMES r2, SCENE-CURB, SCENE-PANELFILL, SCENE-TOURNEY, SCENE-CACHE, SCENE-WORKSHOP.
+
+## Earlier (23:00 UTC)
 1. **ROSTERNAMES round 2 is on `tb/scene`** (same flag, same overlay). Both causes found in code and fixed:
    - Camera: the fight camera reads HUD control rects through `fight_occupied_controls` and `camera.json hud_dynamic_controls`. The roster now reports a footprint at the old 232 px width on both paths. CPU: scenery pixel-identical to base in t-000 to t-008.
    - Ghost rows, three causes: grey benched names; `set_pinned` called every frame restarting the reveal tween at alpha 0; and the HUD subject fade dimming the roster where the wider strip overlaps a fighter. Now: white names, no restart, and the named roster stays out of the subject fade. CPU: solid in t-003, t-008, t-010 and the t-012 stagger.
