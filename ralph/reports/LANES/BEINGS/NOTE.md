@@ -1,5 +1,9 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 23:15 UTC), newest first
+- **New, CPU-ready, NOT queued: BEINGS-STORMRAVEN-ARCS** (F41#13 6.91 both presets, F36#74 6.37): the judges' own ask, branching white-violet arcs along the raven's wing in place of the frost-like flecks. Cause: the old glow was picked on a fragmented atlas, so no line could be continuous; the new bolts are drawn in model space. F41#13 is one of the near-7 rows.
+- **CPU-ready queue, my order:** STORMRAVEN-ARCS (closest to 7), MONITOR-VALUE, THUNDERTUNNEL-FAINT, TRAILPUP-AMBER, then held STATICUB-FUR and UNIFORM-CLOTH.
+
 ## TO THE COORDINATOR (13 Nov, about 22:00 UTC), newest first
 - **New, CPU-ready, NOT queued: BEINGS-THUNDERTUNNEL-FAINT** (F36#80, 6.04). Its faint ends as the "faceless ball" (3/3) because the raw clip rolls it belly-out; the forced crumple that shipped for seven other species rights it, head down with the eye showing. Overlay over a flag-off scope; no code. It is a pose-stage arm, so it fits the same batch as the other pose arms.
 - **CPU-ready queue, my order:** MONITOR-VALUE (F36#50, F36#92), THUNDERTUNNEL-FAINT (F36#80), TRAILPUP-AMBER (F36#83), then held STATICUB-FUR and UNIFORM-CLOTH.

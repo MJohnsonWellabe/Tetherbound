@@ -1,0 +1,4 @@
+{"rows":["F41#13","F36#74"],"captures":[
+ {"row":"F41#13","tool":"res://tools/phase2_capture_creatures.gd","args":["--biome=stormwood","--only=stormraven","--seed=2042","--output={OUT}"],"frames":["stormwood__stormraven__idle"],"note":"F41#13's set is stormwood__fulgocobra__idle plus stormwood__stormraven__idle; only the raven changes, so score the row with the same tree's Fulgocobra frame on both sides. Output under res://ralph/reports/VISUAL/phase2/ or res://.artifacts/phase2/."},
+ {"row":"F36#74","tool":"res://tools/art_pipeline/capture_f36_poses.gd","args":["--species=stormraven","--roles=hit,faint","--whole-body","--context","--out={OUT}"],"frames":["stormraven-hit-000","stormraven-hit-050","stormraven-faint-050","stormraven-faint-100"],"crop":"560,200 1000x640"}],
+ "base":"lane head, no overlay","arm":"lane head + overlay.json","presets":["High","Medium (F41#13 is at 6.91 on both presets)"],"control":"F38#38"}
