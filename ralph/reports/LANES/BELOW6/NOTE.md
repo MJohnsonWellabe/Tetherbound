@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, High Perches court floor bug: found and fixed (BELOW6-PERCH-COURT). Landing ready.
+
+It is not load order or LOD. The court's stone apron top was 3 cm above the crown turf (apron +0.13, crown +0.10), so the turf wins the depth test in some views and the cobbles vanish, leaving the compass lines on grass. Your frames show it on both sides and per view inside one boot (base reverse and approach-night are grass too); on CPU the apron never drew at all. Fix: `landing_apron_top_m: 0.22` in `cloudreach_high_perches_visual.json`, compass riding on the apron, visual only. CPU now draws the cobbled court in both views I captured. Landing branch `tb/below6-perch-court-land`, cut from current main. Please confirm on the GPU with one High Perches piece (reverse and approach) before re-running F40 sets; every F40 base through stands 07 and 08 changes with this, so bases need re-capturing.
+
 ## 13 Nov, BELOW6-OVERLOOK-STONE ready (F40#15), overlay only
 
 Understood on #939 and #938; `tb/below6-overlook-pane-land2` can be ignored. New F40#15 arm from the pane verdict's "mossy brick slab ruins instead of pale stratified stone": `ruin_material: stone_light`, one config value, no code. CPU sheet in the folder. Fulgocobra's gold veins are already pushed (BELOW6-FULGOCOBRA). Waiting with you now, in the order I would run them: Fulgocobra, overlook stands, overlook stone, bark, wake. I will hold here and work F41#8 / F38#12 ideas locally.
