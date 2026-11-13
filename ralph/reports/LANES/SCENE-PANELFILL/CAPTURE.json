@@ -1,0 +1,1 @@
+{"row":"F38#10","tool":"res://tools/phase2_capture_ui.gd","args":["--biome=meadows","--tabs=players,quest_log,build","--gamepad","--seed=2042","--output={OUT}"],"presets":["High","Medium"],"frames":["menu_players","menu_quest_log","menu_build"],"control":"F38#38","base":"tb/scene head, no overlay","arm":"tb/scene head + ralph/reports/LANES/SCENE-PANELFILL/overlay.json"}
