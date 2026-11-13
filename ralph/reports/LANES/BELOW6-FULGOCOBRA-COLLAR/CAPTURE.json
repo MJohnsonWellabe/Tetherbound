@@ -1,0 +1,1 @@
+{"rows":["F41#13","F36#46"],"tool":"res://tools/art_pipeline/capture_f36_poses.gd","args":["--species=fulgocobra","--game-clips","--clear-ruler","--roles=hit,faint","--whole-body","--context","--out={OUT}"],"also":"res://tools/phase2_capture_creatures.gd --biome=stormwood --only=fulgocobra","frames":["fulgocobra-hit-000","stormwood__fulgocobra__idle"]}
