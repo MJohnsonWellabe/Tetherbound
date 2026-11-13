@@ -1,6 +1,6 @@
 {
- "updated": "13 Nov 2026 22:42 UTC",
- "headline": "13 Nov 21:48: four landings this evening (#954 overlook + dust, #956 monitor + Aquaryn, #957 Staticub fur + uniform cloth). Staticub stage 8.08 High: close batch queued. New regressions found by re-scores: F39#21 Venn win camera (5.84, LANE-SCENE), F13#5 swim cue (5.38, LANE-LAND-MT).",
+ "updated": "13 Nov 2026 22:50 UTC",
+ "headline": "13 Nov 22:50: FIRST CLOSE of the round - Staticub roster row (F36 (0) #19) at 7.99 High and Medium on the pose stage. Five PRs landed this evening (#954, #956, #957, #958; #959 drift floaters in CI). World Staticub frames 6.53 stay as a follow-up.",
  "batches": [
   {
    "name": "Stormheart interior and Crown heartstone (PR #756)",
@@ -3073,6 +3073,11 @@
   "F36#29": {
    "gpu": 7.03,
    "src": "G-innkeeper-baseline (LANE-SCOUT 6dfe45f55), GPU High on main's shipped body: 7.03 (defect PARTIAL 2/3). The old 5.83 was an unshipped candidate. Near-bar: face texture, separated browns and a relaxed idle"
+  },
+  "F36 (0) #19 Staticub": {
+   "gpu": 7.99,
+   "closed": true,
+   "src": "CLOSED 13 Nov 22:39 on the pose stage: G-closeout-staticub (LANE-JUDGE tb/judge 7a6b22afb), confirming batch with F38#38 control 8.35: 7.99 High / 7.99 Medium (judges 8.14, 7.69, 8.14); landed #957. World frames read 6.53 (orange-reading coat under storm light, faint veins) - follow-up, not part of the stage row."
   }
  }
 }
