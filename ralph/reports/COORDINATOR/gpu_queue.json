@@ -5327,6 +5327,17 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-CRAGBACK/overlay.json (Veilfall crag shader lights its back faces as rock facing the viewer; the Venn-fight black wedge is the inner side of the cull_disabled crag shells). Venn fight frames per its CAPTURE.json, High AND Medium with F38#38 control (confirming, so F39#19 can close). By eye: the dark mass behind the arena becomes grey rock.",
    "added": "13 Nov 20:35",
    "priority": "near-bar closer; can share the Venn fight boot with SCENE-ROSTERNAMES r2 if both are ready"
+  },
+  {
+   "id": "rescore-f39-31-clear-day",
+   "branch": "tb/land-mt",
+   "commit": "336b5cb64",
+   "rows": [
+    "F39#31 Veilfall at distance and up close (6.02, scored only as a rain no-loss rider)"
+   ],
+   "ask": "One-sided baseline in the tb/land-mt boot (no overlay = main content plus flag-off code): capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near, High. New F39#31 job.json item on tb/land-mt 336b5cb64. LANE-JUDGE scores it as a re-score.",
+   "added": "13 Nov 20:40",
+   "priority": "cheap; ride the tb/land-mt boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
