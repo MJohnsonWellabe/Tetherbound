@@ -1,0 +1,167 @@
+[
+ {
+  "frame": "water_mangrove_monitor-faint-000.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-faint-000.jpg",
+  "sky_fraction": 0.952,
+  "lower_edges": 0.071,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-faint-025.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-faint-025.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0746,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-faint-050.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-faint-050.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.074,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-faint-075.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-faint-075.jpg",
+  "sky_fraction": 0.953,
+  "lower_edges": 0.0733,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-faint-100.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-faint-100.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0716,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-000.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-hit-000.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.072,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-025.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-hit-025.jpg",
+  "sky_fraction": 0.949,
+  "lower_edges": 0.0667,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-050.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-hit-050.jpg",
+  "sky_fraction": 0.949,
+  "lower_edges": 0.0677,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-075.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-hit-075.jpg",
+  "sky_fraction": 0.952,
+  "lower_edges": 0.0716,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-hit-100.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-hit-100.jpg",
+  "sky_fraction": 0.952,
+  "lower_edges": 0.0719,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-000.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-swim-000.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.032,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-025.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-swim-025.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0342,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-050.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-swim-050.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0316,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-075.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-swim-075.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0329,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ },
+ {
+  "frame": "water_mangrove_monitor-swim-100.png",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-c673/main-High/water_mangrove_monitor-swim-100.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.0319,
+  "script_errors": 0,
+  "note": "F36#50 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; water_mangrove_monitor --whole-body --context (clear ruler, preset applied). Neutral stage frames, eye-checked."
+ }
+]
