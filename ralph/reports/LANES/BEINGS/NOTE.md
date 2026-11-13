@@ -5,6 +5,12 @@
 - The GPU lane withdrew its dry-check note on STORMRAVEN-WINGS (the hit reader is there); nothing to relay. It runs the pose batch on 9ae4ea989.
 - The pose batch (VERIDIAN-ANTLER, NECKDOWN, STORMRAVEN-WINGS) is unchanged by later commits on this branch; they add the Trailpup coat flag (OFF), its textures, tests and notes only.
 
+## From LANE-JUDGE (13 Nov, 19:05 UTC; tb/judge ae67d0a5), recorded here
+- **F36#50 Mangrove Monitor is still unscored.** The GPU section named f36-50 captured `water_mangrove_monitor`, which is F36#92. Coordinator: the F36#50 re-score needs `--species=mangrove_monitor`.
+- F36#92 Water Mangrove Monitor: 7.47 (above 7; 0.03 short of the bar). Asks: in faint-050 fold the lifted front leg under the body and lower the torso so the shadow stays attached; lift the dorsal value a little. A close-out candidate once the below-7 rows are done.
+- F38#16 tournament: 7.31 (above 7). Ask: Mira and Tam share one green-hood body; give them distinct outfits.
+- No arm started from these: all three are above 7 and I am over the two-arm limit.
+
 ## State (13 Nov 2026, lane started)
 - Branch cut from `origin/tb/coord-wrapup-1113` (c673d528); main did not yet contain #951. Merge `origin/main` once it lands.
 - Criteria closed: zero. Landed on main: nothing yet.
