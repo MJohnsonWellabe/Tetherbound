@@ -1,0 +1,4 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-mt-flowstreaks-t2 @ a9c833597, G-land-mt-flowstreaks-states @ 5dcb7002a", "content": "c212a3549 (main-era land-mt + #958 spray shader)", "preset": "High",
+ "F13#5": ["swim-away-day", "swim-across-day", "swim-away-night", "swim-brine-day (2x2); brief and recorded defect taken from LANE-PLACES' G-rescore-1113-f13-5 spec"],
+ "F39#17-16 (no-loss)": ["current_states S1_live_t0", "S1_restored_t0", "S2_live_t0"],
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}
