@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 01:25 UTC",
+  "updated": "13 Nov 2026 02:00 UTC",
   "headline": [
+    "13 Nov 02:00: #941 in full CI: the High Perches plaza no longer draws as placeholder grass (bug fix), and grounded faints for Duskhush (F36#44) and Ribbonray (F36#61), which take both over 7. New on the GPU queue: LANE-THINGS' tighter conversation camera, one change for six dialogue rows in the 6.5-7.0 band.",
     "13 Nov 01:25: #939 landed (overlook pane fixed). Voltwig does not close (7.27 on both presets). Riftfrill matte and Cloudreach rain round 2 do not register; the rain arm is parked, but it exposed a bug: the High Perches plaza sometimes renders as a placeholder line ring instead of cobbles. LANE-BELOW6 has it.",
     "13 Nov 00:57: #938 landed (Stormraven, F41#13 above 6). #939 (overlook pane fix) is updated onto the new main and in full CI.",
     "13 Nov 00:45: faint poses ship for Duskhush (F36#44 6.59 to 7.09) and Ribbonray (F36#61 6.55 to 7.09), both now over 7; Trailpup and Voltwig dropped from that change. Voltwig on main read 7.51 at High, so its Medium is queued as a close-out.",
