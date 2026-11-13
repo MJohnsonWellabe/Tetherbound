@@ -1,6 +1,7 @@
 {
-  "updated": "12 Nov 2026 23:55 UTC",
+  "updated": "13 Nov 2026 00:05 UTC",
   "headline": [
+    "13 Nov 00:05, owner direction: LANE-THINGS now works only on the 43 rows at 6.5 to 7.0, cheapest first (nine rows sit at 6.9 or above and need about +0.1), then shared causes (13 creature-pose rows, dialogue framing). LANE-BELOW6 owns all 13 rows below 6, including Cloudreach rain and night and the Stormwood uniforms. Bands now: 43 at 6.5-7.0, 33 at 6.0-6.5, 13 below 6.",
     "12 Nov 23:55: the catch ring ships and closes F38#7 once on main (7.40 to 7.76 on High and Medium, 3/3, neutral control); landing as #937. F39#23 Tidewake catch +0.61.",
     "12 Nov 23:35: Cloudreach brighter rain sky does not ship: three rain sets gain about +0.2 (3/3), but F40#19's sky reads washed out (-0.12). LANE-THINGS will keep the brighter ground and go back to the darker slate cloud deck that won for F40#19 earlier.",
     "12 Nov 23:20: #936 landed (Cloudreach wall stones, F40#15). Today's landings: #927, #928, #930, #933, #934, #935, #936; closes today: F41#11, F38#4, F38#20 (plus F38#9, F39#4, F39#24 earlier).",
