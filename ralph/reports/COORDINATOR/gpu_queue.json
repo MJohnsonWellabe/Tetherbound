@@ -5022,6 +5022,17 @@
       ],
       "ask": "Base vs ralph/reports/LANES/BEINGS-VERIDIAN-ANTLER/overlay.json (creature_model_flags beings_veridian_rigid_antlers ON: re-skinned copy of the live model, antlers bound to the head), High, capture_f36_poses.gd --species=veridian --roles=hit,faint --whole-body --context; frames hit-000/050, faint-050/100. By-eye on faint-050/100: the pale-and-green blade rising from the head is gone and a branched antler sits on the head; hit-000 identical. Needs one import of tb/beings (new GLB).",
       "added": "13 Nov 16:32"
+    },
+    {
+      "id": "land-mt-brokenhill",
+      "branch": "tb/land-mt",
+      "commit": "4e385d5b9",
+      "rows": [
+        "F38#30 Burrow Warrens hillside (4.99 on main)",
+        "F38#24 no-loss"
+      ],
+      "ask": "Base vs ralph/reports/LANES/LAND-MT-BROKENHILL/overlay.json (bank.hill_shell.broken: noise relief, bedded Rock030 on steep faces, base-line foliage), High, phase2_capture_routes.gd --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042 (walk_02/03 scored; route_day, walk_01, vista_dusk no-loss). By-eye: route_day shows grey rock outcrops and the brown slabs are gone; walk_03 hill base no longer one straight diagonal. Else hold.",
+      "added": "13 Nov 16:43"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
