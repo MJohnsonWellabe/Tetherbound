@@ -883,9 +883,9 @@
       "npc_entity_id": "water_trainer_rune",
       "island_id": "gull_rest",
       "island_local_offset": [
-        -2.0,
+        3.0,
         0.0,
-        -12.0
+        3.0
       ],
       "critical": false,
       "ace_level": 25,
