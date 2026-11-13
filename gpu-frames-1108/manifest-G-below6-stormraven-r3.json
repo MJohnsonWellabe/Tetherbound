@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "e150f1cad37436136cd25124fe028dcde04f1ca5",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven-r3/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3547,
+  "script_errors": 0,
+  "note": "below6-stormraven r3 (F41#13): tb/below6 e150f1cad both sides (_Image_0_night.png imported), base vs arm BELOW6-STORMRAVEN/overlay_night.json (below6_stormraven_night: near-black feather albedo, lightning glow 2.4, rim 1.0); stormraven idle + fulgocobra idle (pair); --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "e150f1cad37436136cd25124fe028dcde04f1ca5",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven-r3/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.371,
+  "script_errors": 0,
+  "note": "below6-stormraven r3 (F41#13): tb/below6 e150f1cad both sides (_Image_0_night.png imported), base vs arm BELOW6-STORMRAVEN/overlay_night.json (below6_stormraven_night: near-black feather albedo, lightning glow 2.4, rim 1.0); stormraven idle + fulgocobra idle (pair); --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "e150f1cad37436136cd25124fe028dcde04f1ca5",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven-r3/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.159,
+  "lower_edges": 0.3553,
+  "script_errors": 0,
+  "note": "below6-stormraven r3 (F41#13): tb/below6 e150f1cad both sides (_Image_0_night.png imported), base vs arm BELOW6-STORMRAVEN/overlay_night.json (below6_stormraven_night: near-black feather albedo, lightning glow 2.4, rim 1.0); stormraven idle + fulgocobra idle (pair); --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "e150f1cad37436136cd25124fe028dcde04f1ca5",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-stormraven-r3/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.3712,
+  "script_errors": 0,
+  "note": "below6-stormraven r3 (F41#13): tb/below6 e150f1cad both sides (_Image_0_night.png imported), base vs arm BELOW6-STORMRAVEN/overlay_night.json (below6_stormraven_night: near-black feather albedo, lightning glow 2.4, rim 1.0); stormraven idle + fulgocobra idle (pair); --fixed-fps 20; High."
+ }
+]
