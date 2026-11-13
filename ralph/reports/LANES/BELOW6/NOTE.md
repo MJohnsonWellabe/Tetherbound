@@ -1,5 +1,11 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, RELAY from LANE-SCOUT: Stormraven r3 SHIPS (F41#13 clears 6). Landing ready.
+
+G-below6-stormraven-r3 (tb/item-scout-1108 23aba198): F41#13 5.76 -> 6.67 (+0.91, 3/3; per judge 6.56, 6.89, 6.56; fit r 0.969, RMSE 0.25). Defect PRESENT -> PARTIAL 3/3. No judge marked the flecks down for brightness; the note is pattern ("speckle, not forked arcs"). Pooled current-main F41#13 is about 5.74 (the board has 5.97). Landing branch: `tb/below6-stormraven-night-land` (cut from current main; flag ON with `_why_on`, pin test, one older pin updated, READY). Scout's next for the row: forked arc veins and a stronger rim on the raven; Fulgocobra is now the bigger gap (navy with painted gold bands where the board shows olive-black scales with glowing veins; bolted-on copper throat plates); staging (posterised ground, no storm light).
+
+Overlook pane leftover (your pre-check): the faint pale rectangle top-left in `walk_02_day` is the right pier's pennant seen from directly below at about 2 m. BELOW6-OVERLOOK-STANDS moves that stand out of the wing, which removes it.
+
 ## 12 Nov, next arm ready behind the queue: BELOW6-BARK (F40#15)
 
 F40#15's two frames are the overlook `walk_03_day` and the aerie `vista_dusk`. So BELOW6-OVERLOOK-STANDS is an F40#15 arm (it moves the walk_03 stand), not only a route tidy. BELOW6-BARK takes the aerie's "orange-stick trees": darker cool bark tints, flag-off, every Cloudreach tree. Five arms of mine are now waiting (Stormraven r3, wake, pane, stands, bark); I am not cutting more until some come back. Suggested order: pane, stands, bark, wake, Stormraven r3.
