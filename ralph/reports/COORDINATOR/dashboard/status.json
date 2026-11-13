@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 03:20 UTC",
+  "updated": "13 Nov 2026 03:55 UTC",
   "headline": [
+    "13 Nov 03:55: Fulgocobra recolour parked after 2 rounds (olive body lost 0/3). F41#13 now reads 7.37 on the current tree: a close-out candidate. Convtight PR #942 in CI; Rune pulled from it after a real ring-clearance failure, being re-placed.",
     "13 Nov 03:20: Conversation camera (convtight) SHIPS: 10 of 11 sets gain, none lose (F39#26 to 7.04, F40#12 to 7.12, F38#17, F38#37, F40#10 up). Landing branch being cut by LANE-THINGS. Red-leaf fix #930 confirmed on GPU: no red outside Team Tether.",
     "13 Nov 02:25: #941 landed: Duskhush and Ribbonray over 7, and the High Perches plaza bug fixed. Overnight landings so far: #937 (catch ring, F38#7 closed), #938 (Stormraven over 6), #939 (overlook pane), #941.",
     "13 Nov 02:10: overlook pale stone loses (-0.58, the stone smears to 'clay'); Fulgocobra's gold veins render near-white and were held. LANE-BELOW6 now chases two overlook bugs the judges found (a dark strip at the trainer's feet, ghost planes in the sky). #941 in full CI; the conversation camera is capturing.",
@@ -2866,7 +2867,7 @@
     },
     "F41#13": {
       "gpu": 6.67,
-      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries | ARM stormraven r3 G-below6-stormraven-r3 (23aba198d, 13 Nov): 5.76 -> 6.67 (3/3), near-black raven with lightning flecks; SHIP, landing to come. Pooled current-main 5.74. Next: Fulgocobra olive body with gold veins | LANDED #938: arm 6.67 now on main"
+      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries | ARM stormraven r3 G-below6-stormraven-r3 (23aba198d, 13 Nov): 5.76 -> 6.67 (3/3), near-black raven with lightning flecks; SHIP, landing to come. Pooled current-main 5.74. Next: Fulgocobra olive body with gold veins | LANDED #938: arm 6.67 now on main | G-below6-fulgocobra-r2 (13 Nov): base on tb/below6 (main + Stormraven night coat #938) 7.37 High: close-out candidate"
     },
     "F41#14": {
       "gpu": 7.05,
@@ -2991,7 +2992,7 @@
     },
     "F36#46": {
       "gpu": 5.87,
-      "src": "G-things-faint base (fixed stage): Fulgocobra 5.87; faint arm level (-0.05); hood stays raised, near-black body sinks into stage | ARM fulgocobra olive veins: held at GPU pre-check (vein cores render near-white); round 2 with deeper gold"
+      "src": "G-things-faint base (fixed stage): Fulgocobra 5.87; faint arm level (-0.05); hood stays raised, near-black body sinks into stage | ARM fulgocobra olive veins: held at GPU pre-check (vein cores render near-white); round 2 with deeper gold | G-below6-fulgocobra-r2 (13 Nov): olive recolour DOES NOT SHIP (5.94->5.64); recolour PARKED after 2 rounds; faint still neck-up hood-flared 3/3"
     },
     "F36#85": {
       "gpu": 6.33,
