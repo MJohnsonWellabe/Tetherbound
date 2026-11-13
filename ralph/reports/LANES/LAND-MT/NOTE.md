@@ -2,7 +2,7 @@
 
 ## TO THE COORDINATOR
 - **Re-shoot ask (no arm):** stronghold `route_day` from `tb/land-mt` at High, in a boot that also shoots a golden-hour frame before it (for example the Warrens and stronghold subsets together). It carries the tan-mountain fix, so F38#24's third job frame should read like base's 7.73 frame every boot.
-- **Correctness fix ready to land whenever convenient:** the ridge fog sync (`scripts/world/horizon_ranges.gd`, test in `tests/test_meadows_ridge_vl.gd`, 4 tests, 0 failed). Say the word and I cut `tb/land-mt-ridgefog-land` from main.
+- **LANDING READY: `tb/land-mt-ridgefog-land` f1f04706** (from main 4f9ee396; `ralph/reports/LANES/LAND-MT-RIDGEFOG-LAND/READY.md`). The ridge fog sync correctness fix with its pin test; 4 tests, 0 failed. No flag.
 - `LAND-MT-BROKENHILL` is queued (thanks).
 
 Branch `tb/land-mt` (from `tb/coord-wrapup-1113` c673d528). Goal: every row above 7 on GPU High.
