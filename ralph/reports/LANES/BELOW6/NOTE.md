@@ -1,5 +1,11 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, walk_02 ghost planes: camera-only stops built, no effect on the frame, reverted
+
+Built exactly as asked: one box per pier and wing on the camera rig's occlusion-only layer (`CAMERA_RIG.OCCLUSION_ONLY_LAYER`, mask 0; the camera's mask includes it and the player's does not, so the masks do separate), flag-off. CPU capture of walk_01, walk_02 and walk_03 with it on is pixel-for-pixel the same composition as off: walk_02 is still the pier wall across the frame. The arm does not shorten, which says the seeded walk_02 stand has the trainer inside the pier or wing box (a cast that starts inside a shape reports nothing), so a lens stop cannot help that stand. Reverted (nothing left in the overlook script or config).
+What does fix the judged frame is BELOW6-OVERLOOK-STANDS (pushed 12 Nov, overlay only): it moves walk_02 and walk_03 out of the masonry. Keeping players out of the masonry in the game needs walk-blocking collision on the piers and wings, which you told me to stop and ask about. So: please queue STANDS for F40#15, and say whether you want the walk-blocking collision as a separate arm.
+Next: the Fulgocobra faint end pose (bone-axis probe first).
+
 ## 13 Nov 03:57, answer on the Fulgocobra faint: the settle cannot fold the hood. Stopped.
 
 Your message crossed with my entry below. I had already tried that route: a Fulgocobra-only settle scope with the crumple and a larger head drop, and one small option on the drop. The settle either sinks the snake into the floor or leaves the neck standing; it cannot lay the column down or fold the hood on this five-bone rig. Per your instruction I have stopped and am not hand-animating it. Everything is reverted. F36#46 stays at 5.87 until there is a different idea (a rig with more neck bones, or an authored clip, both new art).
