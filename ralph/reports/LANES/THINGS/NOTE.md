@@ -9,6 +9,9 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- main 3cf230b6 (telldust round 1, #949) is merged into `tb/things`.
+- **LANDING READY: `tb/things-bedroomwood-land` eaaf3947** (from main 3cf230b6, `THINGS-BEDROOMWOOD-LAND/READY.md`, STATUS: land). **Relay from LANE-SCOUT, `G-things-bedroomwood.md` (a32b6659): SHIP.** F38#19 High 6.64 to 7.15 (+0.51, 3/3); the three menu rows identical per judge (no loss). Not closed (7.15; the panel ran about 0.5 strict). Config only, one tint; 308 building tests, 0 failed.
+  - Still holding F38#19 (3/3): the quest card, minimap and hint row cluster on the right, and the empty "+" quick slots. One judge: a smeared ceiling wood texture.
 - **Your two closing-push items are both ready as separate overlay arms:**
   - **(a) `THINGS-HALLMOSS`** (entry below): the "green translucent plane" is not a stray mesh or a ring remnant; it is the hall stone's moss covering whole wall panels.
   - **(b) `THINGS-TELLDUST2`** (`ralph/reports/LANES/THINGS-TELLDUST2/`): a lower dust band. Each puff grows to about 1.45 times its size, so the shipped 0.8 m puffs reach 1.4 m and cross a creature's legs; at 0.5 m (spacing 0.2, cap raised to 400) the largest is about 0.85 m and the band is still continuous. Base is round 1.
