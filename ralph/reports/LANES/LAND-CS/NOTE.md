@@ -1,5 +1,11 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## F40#15 dark wedge: PARKED after two failed attempts (13 Nov 20:40 UTC)
+- The probe names the overlook ledge's own body (`LandmarkLedge/StratifiedCliffBody`) a few cm in front of the ridge turf: the wedge is the ledge's side face standing above the lower ridge.
+- Attempt 1: join `sink_m` -0.12 (lift the ridge above the crown). No change.
+- Attempt 2: remove the join's 4 m route exemption (temporary code switch). No change to the wedge; only the pavers sink out of sight. So the wedge is outside the join's ease band or not on the ridge rows it lifts.
+- New idea needed before another try: read which ridge vertices sit under the wedge and their distance from the ledge rim (the join only lifts between rim and rim + 9 m), or lower the ledge's edge band instead.
+
 ## HEAD FOR THE GPU LANE (13 Nov 20:20 UTC): `tb/land-cs` 6b5b789f or later (later commits touch only report files)
 - Contains main b8622117c (#954). Against main it differs only by three flag-off blocks (`forest_layers_1113`, `turf_detail_1113`, `paver_strips_1113`), their code and tests, and report files, so base frames from this head are main's.
 - **Scope (coordinator, 20:03):** Cloudreach rows plus the queued SOILOFF (F41#22/#24). LANE-PLACES has the other Stormwood rows; I start no new Stormwood arms.
