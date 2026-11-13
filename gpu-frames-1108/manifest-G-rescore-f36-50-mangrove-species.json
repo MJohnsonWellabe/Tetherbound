@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "mangrove_monitor-faint-000.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-faint-000.jpg",
+  "sky_fraction": 0.956,
+  "lower_edges": 0.062,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-faint-025.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-faint-025.jpg",
+  "sky_fraction": 0.955,
+  "lower_edges": 0.0638,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-faint-050.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-faint-050.jpg",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0639,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-faint-075.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-faint-075.jpg",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0601,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-faint-100.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-faint-100.jpg",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0564,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-hit-000.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-hit-000.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0638,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-hit-025.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-hit-025.jpg",
+  "sky_fraction": 0.953,
+  "lower_edges": 0.0632,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-hit-050.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-hit-050.jpg",
+  "sky_fraction": 0.953,
+  "lower_edges": 0.0635,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-hit-075.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-hit-075.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0628,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ },
+ {
+  "frame": "mangrove_monitor-hit-100.png",
+  "preset": "main-High",
+  "tree": "4f9ae9e2a3bd28723f8188ce1d566bbd32f8c13f",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-rescore-f36-50-mangrove-species/main-High/mangrove_monitor-hit-100.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0638,
+  "script_errors": 0,
+  "note": "F36#50 re-score, corrected species: --species=mangrove_monitor (G-rescore-f36-50-c673 was water_mangrove_monitor = F36#92). Main 4f9ae9e2a content (c673d5285 + main's horizon_ranges.gd; #953 bench model not on this stage). High, one side, pose stage hit/faint + whole body + context."
+ }
+]
