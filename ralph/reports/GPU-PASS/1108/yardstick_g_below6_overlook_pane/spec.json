@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G Overlook routes base-vs-arm",
+  "a": "G-op_Overlook_routes_base.png",
+  "b": "G-op_Overlook_routes_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome: walking route at a summit overlook (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G Overlook edge and vista base-vs-arm",
+  "a": "G-op_Overlook_edge_and_vista_base.png",
+  "b": "G-op_Overlook_edge_and_vista_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome: route edge and dusk vista at a summit overlook (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]
