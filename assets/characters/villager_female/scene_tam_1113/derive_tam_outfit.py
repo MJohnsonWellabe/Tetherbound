@@ -28,8 +28,11 @@ green_guard = np.clip((g / np.maximum(r, 1e-4) - 0.80) / 0.08, 0.0, 1.0)
 hue_w = hue_w * green_guard
 w = (hue_w * sat_w)[..., None]
 # Slate blue at the pixel's own value: keeps folds, shading and stitching.
-target_h, target_s = 0.60, 0.42
-tv = v * 0.92
+# Round 2 (CPU capture): at s 0.42 and the olive's own value the cloth read
+# as dark teal-green beside Mira's olive. A clearer slate blue: more
+# saturation and a small value lift, capped so highlights do not clip.
+target_h, target_s = 0.60, 0.58
+tv = np.minimum(v * 1.18, 0.92)
 c = tv * target_s
 hp = target_h * 6.0
 x = c * (1 - abs(hp % 2 - 1))
