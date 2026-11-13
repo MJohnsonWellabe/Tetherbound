@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "t-000.00.png",
+  "preset": "arm-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/arm-Medium/t-000.00.png",
+  "sky_fraction": 0.321,
+  "lower_edges": 0.3852,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "arm-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/arm-Medium/t-003.02.png",
+  "sky_fraction": 0.124,
+  "lower_edges": 0.2127,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-023.02.png",
+  "preset": "arm-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/arm-Medium/t-023.02.png",
+  "sky_fraction": 0.053,
+  "lower_edges": 0.2268,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-024.02.png",
+  "preset": "arm-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/arm-Medium/t-024.02.png",
+  "sky_fraction": 0.052,
+  "lower_edges": 0.205,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-025.02.png",
+  "preset": "arm-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/arm-Medium/t-025.02.png",
+  "sky_fraction": 0.195,
+  "lower_edges": 0.2204,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-000.00.png",
+  "preset": "base-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/base-Medium/t-000.00.png",
+  "sky_fraction": 0.323,
+  "lower_edges": 0.3625,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "base-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/base-Medium/t-003.02.png",
+  "sky_fraction": 0.113,
+  "lower_edges": 0.2208,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-023.02.png",
+  "preset": "base-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/base-Medium/t-023.02.png",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.185,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-024.02.png",
+  "preset": "base-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/base-Medium/t-024.02.png",
+  "sky_fraction": 0.061,
+  "lower_edges": 0.1919,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-025.02.png",
+  "preset": "base-Medium",
+  "tree": "99aae8073092d4884dea57cc1405ccfc579d1821",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-scene-rosternames-rejudge-medium/base-Medium/t-025.02.png",
+  "sky_fraction": 0.271,
+  "lower_edges": 0.1898,
+  "script_errors": 0,
+  "note": "SCENE-ROSTERNAMES RE-JUDGE (F39#19; F39#7 no-loss), MEDIUM: arm frames are the existing G-scene-rosternames runs (+ the one arm retry); base frames are pooled from two NEW base runs of the same composition (c673 + 99aae8073's party_strip.gd, combat_roster_visual.json + main's horizon_ranges.gd, no overlay; a warm-up run and a second base run). t-000.00 matches at 0.00 m: the arm does NOT move the fight camera. The Venn fight starts at one of two cameras per run (35 m apart) and later frames diverge run to run; the first base-High in G-scene-rosternames had started on the other camera. t-003 and t-023-025 are best-available pairs (2-10 m), not matched. Judge the roster strip: names kept, strip 232 -> 348 px; NOTE the arm's rows render as paler translucent grey panels with grey text. F38#38 control on tb/keep-gpu-frames-1108."
+ }
+]
