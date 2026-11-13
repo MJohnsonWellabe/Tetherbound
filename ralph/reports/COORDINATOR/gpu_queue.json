@@ -4714,7 +4714,7 @@
    ],
    "ask": "BOTH sides carry overlay_tell_dust.json (what #949 lands). Base = telldust only; arm = telldust + overlay_hall_moss.json (stronghold.json site.weathering.moss_amount 0.46->0.22, interior stone only). Warden fight F38#28 frames 03/05 (+ no-loss r16/a03) at High AND Medium, camera-paired, F38#38 control (confirming batch). No-loss: Solene's courtyard conversation and the F38#20 stronghold interior frames. By eye first on Warden 03: the green rectangles on the wall behind the dog should be gone or faint; if unchanged, hold.",
    "added": "13 Nov 12:03",
-   "status": "HELD 13 Nov by GPU by-eye: green wall rectangles unchanged (moss only on pilasters); cause is elsewhere; parked, LANE-SCENE probing"
+   "status": "WITHDRAWN 13 Nov: replaced by scene-hallwalls (cause: arena wall panels wear exterior stone moss 0.78; hallmoss only reached pilasters)."
   },
   {
    "id": "things-telldust2",
@@ -5139,6 +5139,18 @@
    "ask": "Base no overlay vs ralph/reports/LANES/LAND-CS-TURFGRAIN/overlay.json (cloudreach_visual.json surface.turf_detail_1113 on: restores the grass texture's fine detail that cloudreach_turf.gdshaderinc cuts to 0.52 contrast). High; CAPTURE.json lists phase2_capture_locations day approach/close frames plus the F40 matrix sample. By eye: Realm Gate and Sky Shrine approach show fine grass grain up to the camera; hold if unchanged or if mid-distance lawn sparkles. Same tree as land-cs-soiloff: one import, one base capture per tool.",
    "added": "13 Nov 17:55",
    "priority": "ahead of below6-wall-band and below6-gate-terrace (same F40#1 row; turfgrain addresses the judged cause)"
+  },
+  {
+   "id": "scene-hallwalls",
+   "branch": "tb/scene",
+   "commit": "442473e62",
+   "rows": [
+    "F38#28 (close candidate: High 7.47, Medium 7.55)",
+    "no-loss F38#20, F38#17 Keeper Hald"
+   ],
+   "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/SCENE-HALLWALLS/overlay.json (moss x0.3 on wall faces inside roofed rooms only). capture_f38_fight.gd warden_aldis frames 03/05, High then Medium, camera-matched, F38#38 control. By eye on Warden 03 High: the green rectangles on the wall panels behind the dog gone or reduced to mortar moss; pilasters unchanged. If unchanged, hold and report (next suspect: exterior massing piece through the roof breach).",
+   "added": "13 Nov 18:10",
+   "priority": "near-bar closer: run before scene-cache"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
