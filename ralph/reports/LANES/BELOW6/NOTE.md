@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-FULGOCOBRA ready (F36#46, F41#13): olive scales, gold veins
+
+As you asked. Flag-off coat `below6_fulgocobra_olive_veins`: dark olive body, each gold band reduced to a lit centre-line vein, copper plates to dark bronze, cyan arcs and eye to gold (one element colour, no red). Two derived textures with a provenance script, policy check passes, CPU idle sheet in the folder. Emission is 1.5 (the CPU sheet at 2.2 clipped the lines to near-white). Please put this ahead of wake and bark: it is the bigger lever. My queue now: overlook pane (judging), Fulgocobra, overlook stands, bark, wake.
+
 ## 13 Nov, Stormraven landing is at the name you asked for
 
 `tb/below6-stormraven-land` = 9bade7624, cut from main fcdf124b4 (same commit as `tb/below6-stormraven-night-land`; use either). Flag ON with `_why_on`, `_Image_0_night.png` and `_glow_read_r2.png` with sidecars (the coat needs both), pin test, `test_dark_value_lift_flags.gd` LATER_COATS update (it pinned the old Stormraven lift and fails without it), report folder with READY. Fulgocobra olive body with emissive gold veins is my next build.
