@@ -18,7 +18,10 @@ func test_r2_workbench_ships_on_with_its_score() -> void:
 	var built: Dictionary = PROPS.settings().get("workbench", {}).get("vl_candidate", {})
 	assert_true(bool(built.get("enabled", false)), "r2 workbench ships ON (judged gain)")
 	assert_true(str(built.get("_why_on", "")).contains("6.56"), "workbench records its mapped score")
-	assert_true(str(built.get("model", "")).ends_with("camp_workbench_r2.glb"), "the judged r2 model is the one shipped")
+	# r2b is the judged r2 build with its hung tools turned back onto the bench
+	# (tests/test_camp_workbench_model_parts.gd); the r2 file threw them off it.
+	assert_true(str(built.get("model", "")).ends_with("camp_workbench_r2b.glb"), "the judged r2 build, parts fixed, is the one shipped")
+	assert_true(str(built.get("_why_r2b", "")).contains("4.61 m"), "the parts fix records what it fixed")
 	assert_true(ResourceLoader.exists(str(built.get("model", ""))), "workbench model is imported")
 
 
