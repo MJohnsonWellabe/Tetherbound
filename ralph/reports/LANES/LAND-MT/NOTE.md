@@ -3,6 +3,7 @@
 ## TO THE COORDINATOR
 - **Ready: `LAND-MT-SEADEPTH`** (`ralph/reports/LANES/LAND-MT-SEADEPTH/`). The soft depth gradient, overlay only, no new code: it switches on an existing flag-off sea candidate that has no GPU verdict on record. CPU sheet shows the navy band gone in all three frames. It touches every Tidewake water row, so it needs the current-state frames and F39#10 as no-loss. **It can share one Tidewake boot with `LAND-MT-SHOREZONES`** (both are `tidewake_look.json` overlays on different keys); I would run SEADEPTH first.
 - Queued (per your message): `LAND-MT-BROKENHILL`, `LAND-MT-DUSKRIDGE`, then `LAND-MT-SHOREZONES`. With SEADEPTH that is more than two waiting; I stop adding arms now and work on the Venn surface and the F38#24 stand.
+- **Venn fight dark mass: SURFACE NAMED.** It is the Veilfall crag kitbash (`WaterVeilfall/VeilfallCragKitbash`: Crag_boulder_1..3 / CragCore, 700 to 1,100 m meshes, no collider, shader `cull_disabled`), drawn in its wet colour. Proof: with the look profile's crag override (`tidewake_look.json` `veilfall_family_candidate.crag_kitbash.crag_shader`) painted, the corner turned the wet colour (magenta) and nothing else changed. My earlier crag probe edited `water_veilfall_crag_kitbash.json`, which that override replaces, so it showed nothing. One last probe is running: back faces (the shader does not flip normals on back faces) versus front-face wet rock. **It is a world-surface fix, so LAND-MT takes it; LANE-SCENE can keep the roster side of F39#19.**
 - GPU confirmation of #952 (LANE-JUDGE, G-rescore-f38-24-after-952): stronghold route_day shot right after a dusk frame kept its day haze. F38#24 6.59 on main.
 - **F38#24 mountain stand: a re-aim at the Warrens does not make the mountains the subject. No stand entry added yet.** Heading sweep on CPU at the reviewed open-ground stand (-318, 2642), six headings (131, 181, 206, 256, 281, 306): the hill leaves the frame below about 181, but the range is a thin strip on the horizon in every direction and trees cover most of it. The mountains are small from meadow level everywhere near the Warrens; they read in the stronghold frame because that view is long and open.
   - So the lever for the two weak frames is the range's size, not the stand. Next arm for this row, after DUSKRIDGE's verdict (same config file): a taller ridge (`height_scale`, overlay only) plus the second hazier layer LANE-JUDGE asked for, checked for no loss on the stronghold route_day frame (7.73).
@@ -25,7 +26,7 @@
 ## Next
 1. F38#24: taller ridge and a second hazier range layer (after DUSKRIDGE's verdict).
 1b. Tidewake shoal rings: irregular instead of concentric (after SEADEPTH's verdict).
-2. Venn fight dark mass: name the surface with a camera ray, then fix.
+2. Venn fight dark mass: surface named (crag kitbash); fix after the back-face probe.
 3. F38#24: second hazier range layer behind the ridge (LANE-JUDGE ask).
 4. Shore props (driftwood, rock clusters, grass groves) if SHOREZONES gains.
 
