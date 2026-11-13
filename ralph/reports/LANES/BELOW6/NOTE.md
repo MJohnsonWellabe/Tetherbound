@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, RELAY: Fulgocobra slate collar SHIPS. Landing ready: tb/below6-fulgocobra-collar-land
+
+RELAY from LANE-SCOUT, G-cw (report G-cw-collar-wardenring-r2.md, tb/item-scout-1108 d958f1cc; slope 1.396, r 0.964, RMSE 0.27): F36#46 pose stage 5.29 -> 5.70 (+0.41, 3/3); Stormwood world states 6.12 -> 6.54 (+0.42, 3/3); no set loses. Red check: all three judges flag the base copper plates as "close to oxblood", none flag red on the arm; 0 red pixels on every arm pose frame. Still holding the row 3/3: the faint's neck stays arched with the hood up (BELOW6-FULGOCOBRA-FAINT is queued for that), no lightning veins on the body at view distance, and the world fainted frame shows the hood as a flat disc (2/3). Also in the batch, for THINGS: Warden ring r2 High level against r1 (6.91 -> 6.87, 0/3), F38#28 not closed.
+Landing branch `tb/below6-fulgocobra-collar-land`, cut from current main: flag ON with `_why_on`, the slate texture and sidecar, landed pin test, report folder with READY.
+
 ## 13 Nov, BELOW6-UNIFORM-CLOTH is an arm after all (F41#18): mesh-built garment mask
 
 Your idea works. The probe: each body's triangles sort cleanly by dominant bone (8 to 18 percent have no bone above half weight), and the garment islands line up with the atlas, with head, hair, forearms and hands excluded. Flag-off pair in one overlay: `below6_uniform_cloth` (mid-value slate cloth and a brass band on the shoulder-bone triangles, for grunt_c, officer_a and former_tether_member) and `uniform_cloth_floor_1113` (floor 0.18 to 0.04 for uniformed ranks). CPU, Dace: at the inventory camera the uniform separates from the mud and the brass shoulders read; hair and skin are as on base. Only Dace is captured on CPU. These are shared rigs, so the cloth changes wherever those three bodies appear, in any biome: it needs a no-loss look outside Stormwood. The three failed colour passes are kept as `EARLIER-PASSES-NOT-SENT.md`. Twelve arms waiting.

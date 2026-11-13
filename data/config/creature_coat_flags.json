@@ -1064,7 +1064,8 @@
     },
     "below6_fulgocobra_slate_collar": {
       "_why": "LANE-BELOW6 (13 Nov 2026), hard rule: red and oxblood are Team Tether only. G-things-wardenring-f41-13-closeout (LANE-SCOUT, tb/item-scout-1108 7d2ccb33b), 3/3: Fulgocobra's 'copper-red collar plates' sit near the reserved red. Candidate: the live coat (lanekit_face_read_fulgocobra) with its copper plates moved to gunmetal slate in the albedo (ralph/reports/LANES/BELOW6-FULGOCOBRA-COLLAR/make_slate_collar.py); the gold bands, navy scales, cyan arcs, eye, glow map, rim and finish are the live coat's. Fulgocobra only. OFF until GPU-judged.",
-      "enabled": false,
+      "enabled": true,
+      "_why_on": "13 Nov 2026 (LANE-BELOW6 landing): G-cw-collar-wardenring-r2.md (LANE-SCOUT, tb/item-scout-1108 d958f1cc), GPU High: F36#46 pose stage 5.29 -> 5.70 (+0.41, 3/3), Stormwood world states 6.12 -> 6.54 (+0.42, 3/3), no set loses. Hard rule check: all three judges flag the base copper plates as close to oxblood and none flag red on the arm; 0 red pixels on every arm pose frame.",
       "coats": {
         "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_face_slate.png",
