@@ -1,5 +1,5 @@
 {
-  "updated": "13 Nov 2026 16:14 UTC",
+  "updated": "13 Nov 2026 17:34 UTC",
   "headline": [
     "13 Nov 16:14: #951 wrap-up landed: everything from the old lanes is on main (unjudged arms OFF). Branches cleaned (24 deleted, 23 archived under refs/archive/). New lanes running on main 4f9ee3967.",
     "13 Nov 15:50: NEW ROUND, goal every row above 7. Lanes: LANE-LAND-MT (Meadows+Tidewake world), LANE-LAND-CS (Cloudreach+Stormwood world), LANE-BEINGS (creatures+characters), LANE-SCENE (dialogue/UI/fight presentation/pickups), LANE-JUDGE (verdicts), GPU lane (one tree, many arms). Wrap-up PR #951 in CI. 86 rows below 7.",
@@ -2301,6 +2301,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#952",
+      "what": "Meadows ridge backdrop follows the scene fog the frame it changes (no more tan mountain sheet after a time jump); full CI green",
+      "when": "13 Nov 17:33"
+    },
     {
       "pr": "#951",
       "what": "Wrap-up: every lane's unlanded work (all unjudged flags OFF), LANE-SCOUT verdict folder, LANE-CIFIX CI fixes, GPU tools, LANE-PLACES reports, board; full CI green",

@@ -5112,6 +5112,16 @@
       ],
       "ask": "Fourth arm in the BEINGS pose batch on tb/beings 9ae4ea989 (one import). Coat flag beings_trailpup_amber: owner-picked amber paws and eyes on the live coyote. By-eye trailpup-hit-000: all four paws amber, brighter than the legs; if they clip to white or lemon on High, set emission_energy 0.9 in a local overlay before judging and say so.",
       "added": "13 Nov 17:07"
+    },
+    {
+      "id": "rescore-f38-24-after-952",
+      "branch": "main",
+      "commit": "874835eab",
+      "rows": [
+        "F38#24 distant mountains (6.01; ~6.49 on main per redleaf)"
+      ],
+      "ask": "No arm: after #952 (ridge fog follows the environment each frame), re-score F38#24 on main: the redleaf frame set (warrens walk_02/03 and stronghold route_day), with stronghold route_day captured straight after a golden-hour frame to confirm the tan sheet is gone. High.",
+      "added": "13 Nov 17:34"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
