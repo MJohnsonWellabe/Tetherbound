@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 20:50 UTC",
+ "updated": "13 Nov 2026 21:35 UTC",
  "headline": "13 Nov 20:50: #956 landed (water monitor faint, Aquaryn deep swim) after #954 (overlook join + solid, coherent wind-up dust). Six lanes active; queued near-bar closers: CRAGBACK (F39#19), STORMRAVEN-ARCS (F41#13), MONITOR-VALUE (F36#92). Parked: HALLWALLS, overlook wedge. Next landing: Staticub fur + uniform cloth.",
  "batches": [
   {
@@ -2422,8 +2422,8 @@
  "gpu_progress": "GPU PC working through the queue overnight (one section about every 50 minutes). Tonight: 2 wins (Voltarach bloom +1.1; F38#3 staging +0.45 pending confirm), 7 flat or void (storm-light A/A2/B, core v2, F38#23 cobbles, pilot rim, F38#27 boxed menu). Every section now gets a pre-judge render check (change visible in frame, same controller prompts both sides) before scoring.",
  "gpu_scores": {
   "F38#1": {
-   "gpu": 6.58,
-   "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-npc-floor recheck, ghost-glow landed batch 27"
+   "gpu": 6.26,
+   "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-npc-floor recheck, ghost-glow landed batch 27 | 6.58 -> 6.26: fainted poses stiff or hovering, Veridian worst (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6)"
   },
   "F38#10": {
    "gpu": 7.39,
@@ -2636,8 +2636,8 @@
    "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.42 (was 6.37; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
   },
   "F39#21": {
-   "gpu": 7.06,
-   "src": "GPU High 10 Nov (G-nerissa-plinth-stone win, landed #893)"
+   "gpu": 5.84,
+   "src": "GPU High 10 Nov (G-nerissa-plinth-stone win, landed #893) | 7.06 -> 5.84: Venn win camera under a terrain or water surface, flat grey plane fills the lower half (3/3) (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6)"
   },
   "F39#22": {
    "gpu": 6.7,
@@ -2702,8 +2702,8 @@
    "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.42 (was 6.65; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
   },
   "F40#1": {
-   "gpu": 5.9,
-   "src": "GPU High 8-9 Nov (F-cloudreach)"
+   "gpu": 5.84,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | 5.90 -> 5.84: flat empty lawn, terrain-disc edge (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6)"
   },
   "F40#10": {
    "gpu": 6.77,
@@ -2734,8 +2734,8 @@
    "src": "GPU High 8-9 Nov (F-cloudreach) | ARM BELOW6-MUSHROOMS pickups (bc115978b): 6.43 -> 6.34 (1/3), Meadows finds -0.74 (0/3); not shipped (finds read as smudges or herbs) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.19 -> 6.93"
   },
   "F40#17": {
-   "gpu": 6.18,
-   "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08) | ARM BELOW6-MUSHROOMS rim part G-below6-mushrooms (bc115978b, 12 Nov): 6.01 -> 6.94 (3/3, FIXED 3/3), ships as its own part; landing to come"
+   "gpu": 5.61,
+   "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08) | ARM BELOW6-MUSHROOMS rim part G-below6-mushrooms (bc115978b, 12 Nov): 6.01 -> 6.94 (3/3, FIXED 3/3), ships as its own part; landing to come | 6.18 -> 5.61: toy-like glow mushrooms, night grade off-palette navy (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6)"
   },
   "F40#18": {
    "gpu": 7.49,
@@ -2750,8 +2750,8 @@
    "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art; G-below6-f40-3-landmarks (LANE-SCOUT cb3ff531d): re-baselined on new stands 6.00 -> 6.33 (2/3), ships; LANDED #919; LANDED #919"
   },
   "F40#4": {
-   "gpu": 6.47,
-   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.12 -> 6.47"
+   "gpu": 6.07,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.12 -> 6.47 | cross-check 1 of 3 frames 6.07 (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6)"
   },
   "F40#5": {
    "gpu": 7.06,
