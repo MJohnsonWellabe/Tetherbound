@@ -9,3 +9,7 @@
 **Not shown on CPU.** I captured the fight on both sides (32 frames each). No frame on either side caught a trail, so I cannot show the difference; the CPU frames only confirm nothing else changed and there are no script errors.
 
 **Ask.** The same Meadows fight set, base vs arm, High. By-eye check first: frame 02's bead loops should be short puffs. If the strings are still there at a third of the length, the next step is removing the trail for these moves and keeping only the impact burst.
+
+## 13 Nov addition: the Warden fight's "ring of white puffs" is this trail
+
+`G-f38-medium.md` and the wardenring verdict, 3/3 at Medium on F38#28: "a ring of flat, white, blobby billboard puffs over Terrapup" in frame 3. I looked at the Medium base frames 02 and 03 of `G-things-wardenring-medium`: it is the same looping string of pale dots from the opponent's stone move, not a separate burst. This overlay already shortens and fades it, so no second arm is needed. Please capture the Warden set with this arm too (Medium and High) so F38#28 gets a read.

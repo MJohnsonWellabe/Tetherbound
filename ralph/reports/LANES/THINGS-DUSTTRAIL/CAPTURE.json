@@ -3,9 +3,19 @@
  "lane": "LANE-THINGS",
  "branch": "tb/things",
  "preset": "High",
- "status": "READY 13 Nov. Not demonstrated on CPU: no CPU fight frame caught the trail on either side (see ARM).",
+ "status": "READY 13 Nov (queued). 13 Nov addition: please include the Warden fight set; the F38#28 puffs are the same effect.",
  "tool": "tools/capture_f38_fight.gd, the G-things-foestand-meadows set (south_bridge_grunt, --attack --dodge --tell-frames)",
- "base": {"tree": "tb/things", "overlay": null},
- "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-DUSTTRAIL/overlay_dust_trail.json"},
- "rows": {"F38#3": "meadows fight", "F38#11": "no-loss", "F41#3": "no-loss if the Stormwood fight set is cheap to add"}
+ "base": {
+  "tree": "tb/things",
+  "overlay": null
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-DUSTTRAIL/overlay_dust_trail.json"
+ },
+ "rows": {
+  "F38#3": "meadows fight (south_bridge_grunt), High",
+  "F38#28": "Warden fight (--trainer=warden_aldis), Medium and High: the 'ring of white puffs over Terrapup' in frames 02-03 is this same trail",
+  "F38#11": "no-loss"
+ }
 }
