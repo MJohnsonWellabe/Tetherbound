@@ -1,0 +1,11 @@
+{
+ "id": "LAND-MT-DUSKRIDGE",
+ "lane": "LANE-LAND-MT",
+ "branch": "tb/land-mt",
+ "preset": "High",
+ "tool": "tools/phase2_capture_routes.gd --biome=meadows --subset=stronghold_approach --seed=2042 (add the Warrens subset to share the boot with LAND-MT-BROKENHILL's base)",
+ "base": {"tree": "tb/land-mt", "overlay": null},
+ "arm": {"tree": "tb/land-mt", "overlay": "ralph/reports/LANES/LAND-MT-DUSKRIDGE/overlay.json"},
+ "rows": {"F38#0 dusk / F38#24 dusk vista": ["stronghold_approach vista_dusk", "burrow_warrens vista_dusk"], "no-loss": ["stronghold_approach walk_01..03_day and route_day", "any Meadows night frame"]},
+ "by_eye": "stronghold vista_dusk: mountains left of the castle are blue-grey with white snow caps, not a flat tan sheet. Day frames identical to base."
+}

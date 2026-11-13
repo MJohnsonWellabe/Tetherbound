@@ -1,19 +1,11 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
-- **New arm: `LAND-MT-SHOREZONES`** (`ralph/reports/LANES/LAND-MT-SHOREZONES/`), rows F39#1, F39#15, F39#27; overlay over flag-off code on `tb/land-mt`. Same tree and boot can also carry `LAND-MT-BROKENHILL` (different biome, so a second run).
-- That makes two arms waiting (BROKENHILL, SHOREZONES); I build no further GPU arms until one returns.
-- Ridge fog fix is on main (#952). Thanks for queuing the stronghold `route_day` re-shoot.
-- **Venn fight dark mass (from LANE-SCENE): not solved yet; two causes ruled out.** Details under "Venn fight dark mass" below. It is not missing sky or horizon.
-
-## State (13 Nov)
-- **Tan mountain backdrop: cause found and fixed (correctness, not flagged).**
-  - `horizon_ranges.gd` copied the scene fog into the ridge on a 0.5 s poll.
-  - The route tool pins the hour, waits 12 physics ticks (0.2 s) and 4 drawn frames, then shoots. On a GPU that is under 0.5 s, so a day frame taken right after a golden-hour frame (stronghold `route_day` follows warrens `vista_dusk` in one boot) could keep the tan dusk haze. Which boot got it depended on the poll phase. On CPU a drawn frame takes longer than the poll, so it never showed.
-  - Fix: the fog is compared every frame and copied the frame it changes. Pin test: `test_meadows_ridge_vl.gd::test_ridge_fog_follows_the_environment_without_delay`.
-  - Expected board effect: F38#24's `route_day` reads 7.73 every boot (row about 6.49), with no arm needed.
-- **Merged main 4f9ee396 (#951).**
-- **Built, flag-off, not yet looked at:** ridge shader `warm_haze_*` (dusk vistas: "flat tan haze swallows the mountains").
+- **Ready, not yet sent (my two slots are full): `LAND-MT-DUSKRIDGE`** (`ralph/reports/LANES/LAND-MT-DUSKRIDGE/`). Overlay only, two shader values. On CPU it turns the flat tan dusk mountains into a blue-grey snow-capped range (sheet in the folder). It is the clearest of my three; **if you prefer, run it in place of `LAND-MT-SHOREZONES`**, which is the weaker arm. It can share a Meadows boot with `LAND-MT-BROKENHILL`.
+- Waiting: `LAND-MT-BROKENHILL` (F38#30), `LAND-MT-SHOREZONES` (F39#1, F39#15, F39#27).
+- Next arm in build: Tidewake soft depth gradient (LANE-JUDGE: the hard navy edge is "in every current frame"). A flag-off candidate already exists (`tidewake_look.json` `cause_tidewake.sea`, no GPU verdict on record); CPU look next.
+- F38#24 follow-up from LANE-JUDGE (6.59 on main): re-aim Warrens walk_02 / walk_03 at the mountains. Those two frames are also F38#30's frames (the hillside), so re-aiming them trades one row's subject for the other's. Your call: I would rather add a mountain-facing stand for F38#24 than turn F38#30's frames away from the hill.
+- Venn fight dark mass: located (the Veilfall wall behind the arena), surface not yet named. Section below.
 
 ## Venn fight dark mass (F39#19, F39#7), open
 - CPU capture (`phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn`, 40 frames): a near-black mass (RGB about 2, 18, 26) with a scalloped edge fills the top-right corner and runs down the right edge. The top of the frame is the mossy Veilfall cliff foot with a mossy log on it (the judges' "floating olive object").
@@ -30,9 +22,9 @@
 2. `LAND-MT-SHOREZONES` (F39#1, F39#15, F39#27): turf patches on the dunes. Moderate change; honest read in its ARM.md.
 
 ## Next
-1. Venn fight dark mass: identify the node with a camera ray, then fix (see above).
-2. Meadows dusk ridge (`warm_haze_*`, built, flag-off): CPU look on the stronghold dusk vista, then an arm once a GPU slot frees.
-3. Tidewake water: the hard navy-to-cyan depth edge and rimmed shallows discs (F39#15, F13#5, F39#16).
+1. Tidewake soft depth gradient: CPU look at `--tidewake-cause=sea`, then tune the shoal rings to be irregular.
+2. Venn fight dark mass: name the surface with a camera ray, then fix.
+3. F38#24: second hazier range layer behind the ridge (LANE-JUDGE ask).
 4. Shore props (driftwood, rock clusters, grass groves) if SHOREZONES gains.
 
 ## Runbook
