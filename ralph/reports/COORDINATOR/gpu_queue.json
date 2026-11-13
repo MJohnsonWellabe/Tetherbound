@@ -4613,6 +4613,17 @@
       "route": "LANE-SCOUT"
     },
     {
+      "id": "below6-uniforms",
+      "branch": "tb/below6",
+      "commit": "52830ac12",
+      "rows": [
+        "F41#18",
+        "officer and civilian dialogue no-loss"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-UNIFORMS/overlay.json (uniform_separation_1113 ON), High, phase2_capture_dialogue.gd --biome=stormwood --seed=2042 (same as G-things-stormuniform): Varga, Dace, Sable inventory + dialogue; Sera, Maren, Nysa and civilian dialogue as no-loss. Below-6 row, so ahead of stormpool and dusttrail.",
+      "added": "13 Nov 03:03"
+    },
+    {
       "id": "things-stormpool-r2",
       "branch": "tb/things",
       "commit": "a6a79ca70",
