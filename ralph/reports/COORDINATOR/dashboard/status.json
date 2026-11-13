@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 12:30 UTC",
+  "updated": "13 Nov 2026 15:50 UTC",
   "headline": [
+    "13 Nov 15:50: NEW ROUND, goal every row above 7. Lanes: LANE-LAND-MT (Meadows+Tidewake world), LANE-LAND-CS (Cloudreach+Stormwood world), LANE-BEINGS (creatures+characters), LANE-SCENE (dialogue/UI/fight presentation/pickups), LANE-JUDGE (verdicts), GPU lane (one tree, many arms). Wrap-up PR #951 in CI. 86 rows below 7.",
     "13 Nov 12:30: Bedroom wood ships (F38#19 +0.51, 3/3: the loft's orange floor now reads as morning light). Landing next.",
     "13 Nov 12:23: #949 landed: fight wind-up dust is now a soft ground band. F38#3 and F38#28 each sit 0.03 under closing; two close-out arms (hall moss, lower dust band) are at the front of the GPU queue. Overnight: 12 PRs (#937-#939, #941-#949).",
     "13 Nov 11:52: Fight wind-up dust (telldust) ships, 3/3 everywhere: F38#3 High 7.51 / Medium 7.47, F38#28 High 7.47 / Medium 7.55. Both rows sit 0.03 under closing; landing now.",
