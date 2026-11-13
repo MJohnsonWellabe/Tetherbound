@@ -4566,6 +4566,24 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "things-convtight",
+   "kind": "arm (overlay only)",
+   "rows": [
+    "F38#17",
+    "F38#37",
+    "F38#16",
+    "F39#26",
+    "F40#10",
+    "F40#12"
+   ],
+   "branch": "tb/things",
+   "head": "4f26fcac3",
+   "job": "phase2_capture_dialogue.gd, the standard dialogue capture for all four biomes (as G-things-convclear-*)",
+   "capture": "High, base vs overlay_conv_tight.json (camera.json conversation arm 3.5 -> 2.9 m, FOV 40 -> 36)",
+   "priority": "6.5-7.0 shared cause: six dialogue rows; after overlook-stone",
+   "route": "LANE-SCOUT (ship only if no judged row loses)"
+  },
+  {
    "id": "things-cloudnight",
    "kind": "arm",
    "rows": [
