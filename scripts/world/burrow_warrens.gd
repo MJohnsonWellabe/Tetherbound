@@ -3714,16 +3714,17 @@ float relief_d(vec3 w) {
 void vertex() {
 	model_pos = VERTEX;
 	if (relief_amp > 0.0) {
-		// Push the smooth shell in and out along its own normal by a world
-		// noise field, and tilt the normal by the field's surface gradient, so
-		// the flank has shoulders and gullies and its line against the meadow
-		// is ragged. Nothing moves inside relief_keep_r.x of the mouth.
+		// Lift and drop the smooth shell by a world noise field (straight up,
+		// a function of position only, so split-normal seams cannot crack),
+		// and tilt the normal by the field's gradient: the flank gets
+		// shoulders and gullies and its line against the meadow is ragged.
+		// Nothing moves inside relief_keep_r.x of the mouth.
 		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 		vec3 wn = normalize(MODEL_NORMAL_MATRIX * NORMAL);
 		float d = relief_d(wp);
 		vec3 grad = vec3(relief_d(wp + vec3(1.0, 0.0, 0.0)) - d, 0.0, relief_d(wp + vec3(0.0, 0.0, 1.0)) - d);
-		vec3 bent = normalize(wn - (grad - wn * dot(grad, wn)));
-		VERTEX += (inverse(MODEL_MATRIX) * vec4(wn * d, 0.0)).xyz;
+		vec3 bent = normalize(wn - grad * wn.y);
+		VERTEX += (inverse(MODEL_MATRIX) * vec4(0.0, d, 0.0, 0.0)).xyz;
 		NORMAL = normalize(transpose(mat3(MODEL_MATRIX)) * bent);
 	}
 	if (skirt_drop_m > 0.0 && !(all(greaterThan(VERTEX, skirt_keep_min)) && all(lessThan(VERTEX, skirt_keep_max)))) {
@@ -3859,9 +3860,9 @@ void fragment() {
 ## The judges' standing call is "a straight-edged slab with a ruler-straight
 ## lower edge": the Meshy mound is one smooth dome scaled to about 260 m, so
 ## each flank is near-planar and meets the meadow along a straight line.
-## ON: (1) the shell's vertices move along their normals by a world-space
+## ON: (1) the shell's vertices move straight up or down by a world-space
 ## noise field (the same image is sampled here on the CPU, so cover and edge
-## dressing sit on the moved surface); (2) steep faces and noise-picked
+## dressing sit on the lifted surface); (2) steep faces and noise-picked
 ## patches turn to bedded Rock030; (3) rocks, bushes and ferns from the
 ## installed nature pack stand along the line where the hill meets the
 ## meadow. Presentation only: the shell has no collider and gains none.
@@ -3933,8 +3934,9 @@ func _hill_relief_sample(uv: Vector2) -> float:
 
 
 ## Where the `broken` relief puts a point of the shell (both in this node's
-## frame, `normal` outward). The point itself when the relief is off.
-func _hill_relief_point(point: Vector3, normal: Vector3) -> Vector3:
+## frame). The relief lifts straight up, so `_normal` is unused. The point
+## itself when the relief is off.
+func _hill_relief_point(point: Vector3, _normal: Vector3) -> Vector3:
 	if _hill_relief.is_empty():
 		return point
 	var world := to_global(point)
@@ -3947,7 +3949,7 @@ func _hill_relief_point(point: Vector3, normal: Vector3) -> Vector3:
 	var keep: Vector2 = _hill_relief.keep
 	var d: float = float(_hill_relief.amp) * (field - bias) / maxf(1.0 - bias, 0.01) \
 		* smoothstep(keep.x, keep.y, world.distance_to(_hill_relief.centre))
-	return point + normal * d
+	return point + Vector3.UP * d
 
 
 ## `broken.edge`: rocks, bushes and ferns along the line where the (moved)
