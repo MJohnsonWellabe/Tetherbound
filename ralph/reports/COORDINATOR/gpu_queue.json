@@ -5191,6 +5191,17 @@
    ],
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-SHOREZONES/overlay.json (tidewake_look.json dunes: sage/straw turf patches from 8 m to 22 m on gentle slopes, sand flecks; wrack line and damp band). High, phase2_capture_routes.gd --biome=water --seed=2042, subsets east_beach, horizon_stones, terraces, sluice bridge (CAPTURE.json). By eye: horizon_stones route_day and terraces route_day/walk_01, far dunes carry mottled green patches mid-slope to crest; hold if still plain cream. Shares the tb/land-mt import with brokenhill.",
    "added": "13 Nov 18:20"
+  },
+  {
+   "id": "closeout-f38-10-panels-medium",
+   "branch": "main",
+   "commit": "4f9ae9e2a",
+   "rows": [
+    "F38#10 (High 7.75 on Build panel only)"
+   ],
+   "ask": "One-sided close-out capture on main: F38#10 Meadows menus, Players and Quest Log panels at High, then all three panels (Build, Players, Quest Log) at Medium, F38#38 control (confirming batch). Same tool and frames as G-rescore-f38-19-c673's F38#10 section.",
+   "added": "13 Nov 19:15",
+   "priority": "close candidate"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
