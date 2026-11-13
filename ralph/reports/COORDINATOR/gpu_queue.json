@@ -5196,7 +5196,8 @@
    ],
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-SHOREZONES/overlay.json (tidewake_look.json dunes: sage/straw turf patches from 8 m to 22 m on gentle slopes, sand flecks; wrack line and damp band). High, phase2_capture_routes.gd --biome=water --seed=2042, subsets east_beach, horizon_stones, terraces, sluice bridge (CAPTURE.json). By eye: horizon_stones route_day and terraces route_day/walk_01, far dunes carry mottled green patches mid-slope to crest; hold if still plain cream. Shares the tb/land-mt import with brokenhill.",
    "added": "13 Nov 18:20",
-   "note_tree": "Run with land-mt-seadepth in one Tidewake routes boot from tb/land-mt 70937d515: one base, two arms."
+   "note_tree": "Run with land-mt-seadepth in one Tidewake routes boot from tb/land-mt 70937d515: one base, two arms.",
+   "status": "PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand)."
   },
   {
    "id": "closeout-f38-10-panels-medium",
@@ -5264,7 +5265,7 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay.json (tidewake_look.json cause_tidewake.sea.enabled: teal mid stop at 4 m, 16 m falloff, lighter deep blue, range haze; replaces the hard navy shallow-to-deep edge the judges call out in every Tidewake frame). High; phase2_capture_routes.gd --biome=water --seed=2042 horizon_stones, terraces, sluice bridge + phase2_capture_current_states.gd for F39#16/#17. By eye on terraces route_day: the navy channel is mid-blue and the shallows fade into it without a hard line. Same Tidewake routes base as land-mt-shorezones: one boot, two arms.",
    "added": "13 Nov 19:35",
    "priority": "floor-raiser across 7 Tidewake rows; ahead of shorezones in the shared boot",
-   "status": "13 Nov 23:15: round 2 overlay ready (overlay_r2.json on tb/land-mt ee543c40e: gradient without wind slicks and whitecaps). Run r2 instead if r1 not captured; else both arms on the same base. S1/S2 no-loss."
+   "status": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15."
   },
   {
    "id": "scene-rosternames",
