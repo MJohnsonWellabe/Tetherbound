@@ -766,8 +766,18 @@ func _update_subject_fade(delta: float) -> void:
 	# C3 footage judge and device judge r5 read a faded "incoming" as a miss.
 	# It sits top-right, off the framed target.
 	var panels: Array = [[_grid_panel, true, _grid_panel],
-			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel],
-			[_strip_fader, false, _party_strip]]
+			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel]]
+	# F39#19 round 2 (G-scene-rosternames, 3/3): the named roster must never
+	# fade in a fight. With names on (combat_roster_visual.json
+	# compact_names_1113) the roster stays out of the subject fade at full
+	# opacity; otherwise it fades with the other panels as before.
+	if is_instance_valid(_party_strip) and _party_strip.has_method("compact_names_enabled") \
+			and bool(_party_strip.call("compact_names_enabled")):
+		if is_instance_valid(_strip_fader):
+			_strip_fader.modulate.a = 1.0
+			_subject_fade[_strip_fader] = 1.0
+	else:
+		panels.append([_strip_fader, false, _party_strip])
 	# F22#4 judge (13 Oct): the Commands strip sat over the near edge of tells.
 	if is_instance_valid(_tether_meter) and bool(cfg.get("fade_commands_strip", false)):
 		panels.append([_tether_meter, false, _tether_meter])
