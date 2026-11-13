@@ -1,8 +1,9 @@
 extends "res://tests/test_case.gd"
 
-## THINGS-TELLDUST3 candidate (F38#3, F38#28): `dust_phase_coherence`. Off, each
-## puff fades on its own random phase and the band breaks into beads; on, the
-## puffs share one slow wave and none fades out. OFF until GPU-judged.
+## THINGS-TELLDUST3 (ships 13 Nov 2026): `dust_phase_coherence`. Off, each puff
+## fades on its own random phase and the band breaks into beads; on, the puffs
+## share one slow wave and none fades out. ON: LANE-JUDGE
+## G-things-telldust3-grunt-medium.md, F38#11 6.55 -> 7.06 (3/3), no loss.
 const TELL_STYLE := preload("res://scripts/combat/tell_style.gd")
 
 
@@ -22,8 +23,15 @@ func _puffs(style: Dictionary, coherence: float, time: float) -> Array[Vector4]:
 	return out
 
 
-func test_the_flag_is_off() -> void:
-	assert_eq(float(_soft().get("dust_phase_coherence", 1.0)), 0.0)
+func test_the_judged_band_ships_on() -> void:
+	var soft := _soft()
+	assert_eq(float(soft.get("dust_phase_coherence", 0.0)), 1.0)
+	assert_eq(float(soft.get("dust_size_m", 0.0)), 0.5)
+	assert_eq(float(soft.get("dust_spacing_m", 0.0)), 0.2)
+	assert_eq(float(soft.get("dust_rise_m", 0.0)), 0.04)
+	assert_eq(int(soft.get("dust_max", 0)), 400)
+	var why := str(soft.get("_why_dust_coherent_1113", ""))
+	assert_true(why.contains("G-things-telldust3-grunt-medium.md") and why.contains("7.06") and why.contains("6.55"))
 
 
 func test_off_reproduces_the_beads_and_on_keeps_one_band() -> void:
