@@ -4584,6 +4584,20 @@
    "route": "LANE-SCOUT (ship only if no judged row loses)"
   },
   {
+   "id": "below6-fulgocobra-r2",
+   "kind": "arm (import cached)",
+   "rows": [
+    "F36#46",
+    "F41#13"
+   ],
+   "branch": "tb/below6",
+   "head": "ba924ea82",
+   "job": "as below6-fulgocobra, emission energy 0.8",
+   "capture": "High; pre-check: vein cores read gold, not white",
+   "priority": "below-6 row; after redleaf",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-cloudnight",
    "kind": "arm",
    "rows": [
