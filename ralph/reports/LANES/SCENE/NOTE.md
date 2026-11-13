@@ -1,9 +1,10 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov 2026, about 18:10 UTC)
-1. **HALLMOSS cause found; new arm SCENE-HALLWALLS on `tb/scene`, row F38#28. It replaces THINGS-HALLMOSS (parked).** A ray probe at the Warden fight camera shows the arena's wall panels and tower piers wear the EXTERIOR stone (moss 0.78) on their inside faces; only the pilasters wear interior stone, which is all HALLMOSS changed. The arm cuts moss to 0.3 of its value on wall faces inside roofed rooms only. Probe with the flag on: 1,845 of 5,184 rays at frame 03 land on the changed surfaces. Not visible on CPU (dark hall), so it needs the by-eye check in its ARM.md first.
-2. Earlier items stand: SCENE-CACHE (F38#12), SCENE-WORKSHOP (F39#13), #953 bench fix, re-scores of F39#13 and F39#19.
-3. Waiting arms now: TELLDUST2, SCENE-CACHE, SCENE-WORKSHOP, SCENE-HALLWALLS, SOLENE (kept by you). Still over two; I send nothing else.
+## TO THE COORDINATOR (13 Nov 2026, about 18:40 UTC)
+1. **THINGS-TELLDUST3 is ready** on `tb/scene`, rows F38#3 and F38#28. `dust_phase_coherence` (off by default) as you specified, overlaid on the low-band values. A test shows the beads with the flag off (faintest puff under a quarter of the brightest) and one band with it on (no puff under 0.4 of the brightest; neighbours within 0.08). Not visible on CPU. Files: `ralph/reports/LANES/THINGS-TELLDUST3/`.
+2. **SCENE-HALLWALLS replaces the held HALLMOSS** (same row F38#28), also on `tb/scene`. Your message listed HALLMOSS as held; this is its found cause and fix. A ray probe shows the arena's wall panels and tower piers wear the EXTERIOR stone (moss 0.78) on their inside faces; HALLMOSS only reached the pilasters. Files: `ralph/reports/LANES/SCENE-HALLWALLS/`. Both this and TELLDUST3 target F38#28, so judge them separately or together as you prefer; they do not touch the same code.
+3. Queue as I understand it: SCENE-CACHE, SCENE-WORKSHOP (behind cache), TELLDUST3, SCENE-HALLWALLS. SOLENE and TELLDUST2 are gone. That is four; I send nothing else until two are judged.
+4. #953 bench fix and the F39#13 / F39#19 re-scores: noted, thanks.
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
@@ -16,8 +17,7 @@
 | SCENE-CACHE | F38#12 (5.89) | New. Replaces BELOW6-TONIC-STASH (same switch file; its overlay turns the tonic crate on too). |
 | SCENE-WORKSHOP | F39#13 (6.14) | New. Overlay only over the bench fix. |
 | SCENE-HALLWALLS | F38#28 | New. Replaces THINGS-HALLMOSS, which the GPU held by eye and is now parked (it only reached the pilasters). |
-| THINGS-TELLDUST2 | F38#3, F38#28 | Inherited, front of queue, near-bar closer. |
-| THINGS-SOLENE | F38#17 | Inherited. Its own note says the change is small on CPU and that character light fixes do not predict the GPU. **I suggest withdrawing it** to keep the lane at the limit; say if you want it kept. |
+| THINGS-TELLDUST3 | F38#3, F38#28 | New. Replaces TELLDUST2, dropped at the GPU's by-eye check (beads). |
 
 That is four with SOLENE withdrawn and TONIC-STASH replaced, which is over the limit of two. I am not sending anything further until HALLMOSS and TELLDUST2 are judged. If the coordinator prefers, hold SCENE-WORKSHOP behind SCENE-CACHE.
 
