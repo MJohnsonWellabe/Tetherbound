@@ -1,5 +1,10 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
+## TO THE COORDINATOR
+- **Re-shoot ask (no arm):** stronghold `route_day` from `tb/land-mt` at High, in a boot that also shoots a golden-hour frame before it (for example the Warrens and stronghold subsets together). It carries the tan-mountain fix, so F38#24's third job frame should read like base's 7.73 frame every boot.
+- **Correctness fix ready to land whenever convenient:** the ridge fog sync (`scripts/world/horizon_ranges.gd`, test in `tests/test_meadows_ridge_vl.gd`, 4 tests, 0 failed). Say the word and I cut `tb/land-mt-ridgefog-land` from main.
+- `LAND-MT-BROKENHILL` is queued (thanks).
+
 Branch `tb/land-mt` (from `tb/coord-wrapup-1113` c673d528). Goal: every row above 7 on GPU High.
 
 ## State (13 Nov)
