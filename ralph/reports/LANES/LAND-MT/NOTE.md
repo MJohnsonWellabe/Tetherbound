@@ -20,7 +20,9 @@
 - **Not sky or a missing horizon:** the fight camera looks down; no sky is in frame.
 - **Not the open sea:** deep water in the same build is RGB about 0, 82, 122.
 - **Not the crag kitbash rock colours:** false-colour probe with `water_veilfall_crag_kitbash.json` `body_colour` green and `wet_colour` magenta (flip confirmed by `git diff`); the mass stayed near-black.
-- Still to test, one probe each: the WaterfallPassage cave mouth (Venn stands at the foot of the Veilfall climb), the Veilfall terrain rock pass in shadow, and the `PhysicalCragSupport` bodies. A ray from the fight camera through the top-right pixel that prints the node hit would settle it in one run.
+- **It sits where the Veilfall mountain wall is.** The fight camera is at about (377, 10, 3790) looking toward (-x, +z); `water_heightfield.height_at` shows the ground in the top-right of its view (x 300 to 330, z 3800 to 3850) climbing from about 20 m to over 100 m. So the mass is the mountain's steep face or a rock formation standing against it, in shadow.
+- A third probe (terrain cliff tint in `water_visual.json` set to magenta) changed nothing in frame, including the lit mossy cliff, so that key does not colour this wall; inconclusive.
+- **Stopping config-flip probes here (three runs, no identification).** Next step is different: a ray from the fight camera through the top-right pixel that prints the node hit (terrain or a `PhysicalCragSupport` body), then lift that surface's shadow value or keep the fight camera off it.
 - Seen on the way: `water_veilfall_silhouette.gd` copies fog on a 0.25 s poll, the same pattern as the ridge bug fixed in #952. Not yet shown to cause a bad frame.
 
 ## Waiting on the GPU
