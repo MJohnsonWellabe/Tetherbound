@@ -2598,8 +2598,8 @@
    "medium": 7.7
   },
   "F39#1": {
-   "gpu": 6.14,
-   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.14 (was 6.42; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
+   "gpu": 6.23,
+   "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.14 (was 6.42; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-land-mt-grassgroves-r2 SHIP 6.07 -> 6.23 (+0.16, 3/3); routes +0.24; Venn level 6.51 (LANE-JUDGE c9938aeaf, 13 Nov)"
   },
   "F39#10": {
    "gpu": 7.02,
