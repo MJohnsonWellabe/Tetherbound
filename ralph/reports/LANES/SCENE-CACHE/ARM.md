@@ -13,18 +13,18 @@ On the three GPU frames (`tb/gpu-frames-1108`, `G-rescore-stale-tier2/F38-12/mai
 - Switch: `data/config/harvest_stash_support.json` `cache_dressing_enabled` (OFF) and `enabled` (OFF, the inherited tonic crate). Overlay: `overlay.json` turns both on.
 - `scripts/world/harvest_cache_dressing.gd` builds a node's `visual.cache_dressing_1113.props`: installed props at stated offsets round the reward, each rested on the ground under it. Visual only: no collider, prompt, claim or save change; the props leave with the node when it is taken.
 - Three nodes carry a block:
-  - order 1029, "A cache of orbs": a log behind the basket, a small creature cage, a sack and a rope coil.
-  - order 1030, "A dropped travel pack": a log behind the pack, a cold stone fire ring, a bucket. An abandoned camp, as the node's own note says ("a pack left by whoever was here before").
+  - order 1029, "A cache of orbs": a wooden chest behind the basket, a small creature cage, a sack and a rope coil.
+  - order 1030, "A dropped travel pack": a cold stone fire ring with a cauldron on it, a camp stool and a bucket. An abandoned camp, as the node's own note says ("a pack left by whoever was here before").
   - order 3019, "A stashed tonic": the vial on its crate (BELOW6's block) with a barrel, a second crate, a pouch and a rope.
-- All props are from families already in the world (Quaternius fantasy props, the nature logs, the camp stone ring).
+- All props are from families already in the world (Quaternius fantasy props and the camp stone ring).
 
 ## CPU (Compatibility, Low)
 
-`phase2_capture_world_inventory.gd --biome=meadows --subset=…orb_basic --subset=…travel_pack --subset=…attack_tonic --seed=2042`. `_sheet_cpu.jpg`: top row base, bottom row arm.
+`phase2_capture_world_inventory.gd --biome=meadows --subset=…orb_basic --subset=…travel_pack --subset=…attack_tonic --seed=2042`. `_sheet_cpu.jpg`: top row base, bottom row arm. Two earlier CPU rounds used a Kenney log, bedroll and fire pit (flat salmon-pink, off-style) and then a nature log that did not show; both were replaced.
 
 ## By-eye line for the GPU lane
 
-On `meadows__inventory__harvest__attack_tonic`: the vial stands on a crate with a barrel beside it. On `…orb_basic`: a log lies behind the basket and a dark cage stands beside it. On `…travel_pack`: a log behind the pack and a ring of stones to one side. If the rewards still stand alone on the grass, the switch did not apply: hold the arm.
+On `meadows__inventory__harvest__attack_tonic`: the vial stands on a crate with a barrel beside it. On `…orb_basic`: a chest stands behind the basket and a dark cage beside it. On `…travel_pack`: a cauldron on a ring of stones to one side, and a bucket on the other. If the rewards still stand alone on the grass, the switch did not apply: hold the arm.
 
 ## Risks and no-loss frames
 
