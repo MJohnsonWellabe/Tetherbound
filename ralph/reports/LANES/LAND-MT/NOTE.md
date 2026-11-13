@@ -1,11 +1,10 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
-- **Re-shoot ask (no arm):** stronghold `route_day` from `tb/land-mt` at High, in a boot that also shoots a golden-hour frame before it (for example the Warrens and stronghold subsets together). It carries the tan-mountain fix, so F38#24's third job frame should read like base's 7.73 frame every boot.
-- **LANDING READY: `tb/land-mt-ridgefog-land` f1f04706** (from main 4f9ee396; `ralph/reports/LANES/LAND-MT-RIDGEFOG-LAND/READY.md`). The ridge fog sync correctness fix with its pin test; 4 tests, 0 failed. No flag.
-- `LAND-MT-BROKENHILL` is queued (thanks).
-
-Branch `tb/land-mt` (from `tb/coord-wrapup-1113` c673d528). Goal: every row above 7 on GPU High.
+- **New arm: `LAND-MT-SHOREZONES`** (`ralph/reports/LANES/LAND-MT-SHOREZONES/`), rows F39#1, F39#15, F39#27; overlay over flag-off code on `tb/land-mt`. Same tree and boot can also carry `LAND-MT-BROKENHILL` (different biome, so a second run).
+- That makes two arms waiting (BROKENHILL, SHOREZONES); I build no further GPU arms until one returns.
+- Ridge fog fix is on main (#952). Thanks for queuing the stronghold `route_day` re-shoot.
+- Venn fight black void (from LANE-SCENE): taken; looking at it next.
 
 ## State (13 Nov)
 - **Tan mountain backdrop: cause found and fixed (correctness, not flagged).**
@@ -17,14 +16,19 @@ Branch `tb/land-mt` (from `tb/coord-wrapup-1113` c673d528). Goal: every row abov
 - **Built, flag-off, not yet looked at:** ridge shader `warm_haze_*` (dusk vistas: "flat tan haze swallows the mountains").
 
 ## Waiting on the GPU
-1. `LAND-MT-BROKENHILL` (F38#30): `ralph/reports/LANES/LAND-MT-BROKENHILL/`. CPU sheet shows the straight base edge broken and the brown slabs replaced by rock outcrops.
-- Also asked: a re-shoot of stronghold `route_day` on this branch (the fog fix), to confirm F38#24 without the tan state.
+1. `LAND-MT-BROKENHILL` (F38#30): queued.
+2. `LAND-MT-SHOREZONES` (F39#1, F39#15, F39#27): turf patches on the dunes. Moderate change; honest read in its ARM.md.
 
 ## Next
-1. Tidewake shore arm: one cause across F39#1, F39#15, F39#13 and F39#27 ("bare smooth sand with no layered ecology": wet-sand band, wrack line, driftwood, rock clusters, grass in groves).
-2. Tidewake water: the hard navy-to-cyan depth edge and rimmed shallows discs (F39#15, F13#5, F39#16).
+1. Tidewake Venn fight frames: black void at the top right past the dune. Check sky or horizon backdrop first.
+2. Meadows dusk ridge (`warm_haze_*`, built, flag-off): CPU look on the stronghold dusk vista, then an arm once a GPU slot frees.
+3. Tidewake water: the hard navy-to-cyan depth edge and rimmed shallows discs (F39#15, F13#5, F39#16).
+4. Shore props (driftwood, rock clusters, grass groves) if SHOREZONES gains.
 
 ## Runbook
 TECHNICAL §8.1. First import in this container: about 45 min.
 - CPU arm look: flip the flag in the working tree only, capture, `git checkout` the config. Commit the flag-off version.
+- Tidewake's capture biome id is `water`, and frame ids start `water__`.
+- A probe edit by `sed` must be checked before the capture (`git diff --stat`, or a headless print of the resolved value): two probes here shot an unchanged tree.
+- Tidewake islands rise to 18 to 29 m and stands sit near 18 m; height-keyed shore bands under about 5 m are a hairline from them.
 - A `var` declared inside an `if` block is not visible after it; `--check-only` on the script catches it before a 20-minute capture.
