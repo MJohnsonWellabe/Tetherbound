@@ -1,0 +1,12 @@
+{
+ "id": "THINGS-WETPATH3",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "QUEUED 12 Nov (round 3 of PLACES-WETPATH, routed here by the coordinator)",
+ "tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-WETPATH3/overlay_wet_path.json"},
+ "rows": {"F40#0": {"pieces": "4, 84, 88, 92 (rain) plus 3 (clear control); 88 must match base"}, "F40#19": {"pieces": "4"}},
+ "reject_if": "any night frame differs from base in the ground; a grey trail lost in wet grass at the overlook"
+}

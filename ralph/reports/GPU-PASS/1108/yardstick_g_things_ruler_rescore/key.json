@@ -1,0 +1,53 @@
+{
+ "Bd": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Hw": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Sx": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ah": {
+  "anchor": false,
+  "label": "G F36(1) riftfrill ruler base-vs-arm",
+  "A": "G-rr_riftfrill_arm.png",
+  "B": "G-rr_riftfrill_base.png"
+ },
+ "Pl": {
+  "anchor": false,
+  "label": "G F36(1) ashtusk ruler base-vs-arm",
+  "A": "G-rr_ashtusk_arm.png",
+  "B": "G-rr_ashtusk_base.png"
+ },
+ "Bc": {
+  "anchor": false,
+  "label": "G F36(1) sparkit ruler base-vs-arm",
+  "A": "G-rr_sparkit_arm.png",
+  "B": "G-rr_sparkit_base.png"
+ },
+ "Ea": {
+  "anchor": false,
+  "label": "G F36(1) shadelet ruler base-vs-arm",
+  "A": "G-rr_shadelet_arm.png",
+  "B": "G-rr_shadelet_base.png"
+ },
+ "Ej": {
+  "anchor": false,
+  "label": "G F36(1) brooktail ruler base-vs-arm",
+  "A": "G-rr_brooktail_base.png",
+  "B": "G-rr_brooktail_arm.png"
+ },
+ "Pb": {
+  "anchor": false,
+  "label": "G F36(1) mirejaw ruler base-vs-arm",
+  "A": "G-rr_mirejaw_base.png",
+  "B": "G-rr_mirejaw_arm.png"
+ }
+}

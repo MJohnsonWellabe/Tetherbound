@@ -1,0 +1,28 @@
+[
+ {
+  "row": "F38#4",
+  "item": "P2-002",
+  "frame": "meadows__menu_map",
+  "arm": "main",
+  "tree": "506b40292fd19cbf5fa6544a4b14748db6d28148",
+  "preset": "Medium",
+  "tool": "tools/phase2_capture_ui.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_ui.gd",
+   "--",
+   "--biome=meadows",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "F38#4 map parchment (#927, 7.81 at High 3/3) at MEDIUM on main 506b40292, one side, job frame meadows__menu_map.",
+  "match": "exact",
+  "path": "G-closeout-f38-4-map-medium/F38-4/main/Medium/meadows__menu_map.jpg",
+  "sky_fraction": 0.262,
+  "lower_edges": 0.2126
+ }
+]

@@ -1,0 +1,7 @@
+Ly: "none"
+Af: "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+Pz: "none"
+Xs: "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+Pp: none
+Aj: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Za: none

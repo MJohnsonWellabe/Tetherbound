@@ -1,0 +1,4 @@
+{"branch": "tb/gpu-frames-1108", "section": "G-things-cloudrain", "commit": "ed2f549ea", "renderer": "High", "tree": "tb/things 22d3005fa both sides", "base": "no overlay", "arm": "THINGS-CLOUDRAIN/overlay_rain_bright_overcast.json",
+ "stands_3x3": ["realm_gate_crag", "galefoot_waycamp", "broken_skyroad_arch", "sky_shrine", "the_high_perches", "cliffhold", "old_wind_observatory", "summit_eyrie", "stormward_overlook"],
+ "sets": {"F40#0 day rain": "gameplay__day__rain x9", "F40#0 night rain": "gameplay__night__rain x9", "F40#21 rain": "approach__day__rain x9", "F40#19 rain sky": "realm_gate_crag {approach,detail,gameplay,reverse}__day__rain", "Clear no-loss": "three_bells_bridge {approach,gameplay} x {day,night} clear"},
+ "confound": "the_high_perches tile: arm shows compass floor + blue drake, base plain ring + panda (arm stands 05-12 from a re-run boot)"}

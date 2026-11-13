@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F38#15 steer2 High base-vs-arm",
+  "a": "G-st2_High_base.png",
+  "b": "G-st2_High_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: flight and landing pose read (glide on top, landed below). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut"
+  ]
+ },
+ {
+  "label": "G F38#15 steer2 Medium base-vs-arm",
+  "a": "G-st2_Medium_base.png",
+  "b": "G-st2_Medium_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: flight and landing pose read (glide on top, landed below). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut"
+  ]
+ }
+]

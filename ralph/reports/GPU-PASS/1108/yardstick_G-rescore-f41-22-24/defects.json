@@ -1,0 +1,27 @@
+{
+ "forest": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "giant": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "glass": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "rod_line": [
+  "FIXED",
+  "PARTIAL",
+  "FIXED"
+ ],
+ "stormheart": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ]
+}

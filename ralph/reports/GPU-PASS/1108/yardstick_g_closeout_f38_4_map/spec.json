@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F38#4 High-vs-Medium",
+  "a": "G-mpm_F38-4_high.png",
+  "b": "G-mpm_F38-4_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: map. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+  ]
+ },
+ {
+  "label": "G F38#38 High-vs-Medium",
+  "a": "G-mpm_F38-38_high.png",
+  "b": "G-mpm_F38-38_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Craft and leave button hints are faint gray on the dark translucent craft panel"
+  ]
+ }
+]

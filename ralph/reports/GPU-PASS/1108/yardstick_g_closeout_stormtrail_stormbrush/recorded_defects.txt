@@ -1,0 +1,5 @@
+Jq: none
+Ud: none
+Lc: "flat black placeholder look with emissive bands"; "faint flattens to a sheet"
+Wu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Yu: "oversaturated plastic-blue fur"; "bulk hides the trainer ruler"

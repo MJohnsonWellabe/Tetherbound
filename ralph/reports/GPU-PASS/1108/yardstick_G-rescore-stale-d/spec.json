@@ -1,0 +1,24 @@
+[
+ {
+  "label": "F38#8",
+  "frames": [
+   "meadows__flying__launch.jpg",
+   "meadows__flying__glide.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Fly carrier grip pose. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person"
+  ]
+ },
+ {
+  "label": "F41#13",
+  "frames": [
+   "stormwood__fulgocobra__idle.jpg",
+   "stormwood__stormraven__idle.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: electric creature finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ }
+]

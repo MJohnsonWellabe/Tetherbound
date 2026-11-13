@@ -1,0 +1,47 @@
+{
+ "Am": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Mz": {
+  "anchor": false,
+  "label": "G Aldis base-vs-arm",
+  "A": "G-fs_Aldis_arm.png",
+  "B": "G-fs_Aldis_base.png"
+ },
+ "Dj": {
+  "anchor": false,
+  "label": "G F39#7 base-vs-arm",
+  "A": "G-fs_F39-7_arm.png",
+  "B": "G-fs_F39-7_base.png"
+ },
+ "Mn": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Lw": {
+  "anchor": false,
+  "label": "G F38#3 base-vs-arm",
+  "A": "G-fs_F38-3_base.png",
+  "B": "G-fs_F38-3_arm.png"
+ },
+ "Wa": {
+  "anchor": false,
+  "label": "G F41#3 base-vs-arm",
+  "A": "G-fs_F41-3_arm.png",
+  "B": "G-fs_F41-3_base.png"
+ },
+ "Cn": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Sh": {
+  "anchor": false,
+  "label": "G F39#19 base-vs-arm",
+  "A": "G-fs_F39-19_base.png",
+  "B": "G-fs_F39-19_arm.png"
+ }
+}

@@ -1,0 +1,143 @@
+{
+ "Ya": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Fd": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Zs": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Qi": {
+  "anchor": false,
+  "label": "F38#3",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ow": {
+  "anchor": false,
+  "label": "F38#4",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ot": {
+  "anchor": false,
+  "label": "F38#7",
+  "A": "main",
+  "one_sided": true
+ },
+ "Us": {
+  "anchor": false,
+  "label": "F38#8",
+  "A": "main",
+  "one_sided": true
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "F38#9",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ah": {
+  "anchor": false,
+  "label": "F38#10",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ux": {
+  "anchor": false,
+  "label": "F38#11",
+  "A": "main",
+  "one_sided": true
+ },
+ "Nw": {
+  "anchor": false,
+  "label": "F38#13",
+  "A": "main",
+  "one_sided": true
+ },
+ "Nl": {
+  "anchor": false,
+  "label": "F38#14",
+  "A": "main",
+  "one_sided": true
+ },
+ "Kv": {
+  "anchor": false,
+  "label": "F38#15",
+  "A": "main",
+  "one_sided": true
+ },
+ "In": {
+  "anchor": false,
+  "label": "F38#18",
+  "A": "main",
+  "one_sided": true
+ },
+ "Sf": {
+  "anchor": false,
+  "label": "F38#19",
+  "A": "main",
+  "one_sided": true
+ },
+ "Yj": {
+  "anchor": false,
+  "label": "F38#20",
+  "A": "main",
+  "one_sided": true
+ },
+ "Po": {
+  "anchor": false,
+  "label": "F38#21",
+  "A": "main",
+  "one_sided": true
+ },
+ "Al": {
+  "anchor": false,
+  "label": "F38#22",
+  "A": "main",
+  "one_sided": true
+ },
+ "Pe": {
+  "anchor": false,
+  "label": "F38#23",
+  "A": "main",
+  "one_sided": true
+ },
+ "Tm": {
+  "anchor": false,
+  "label": "F38#25",
+  "A": "main",
+  "one_sided": true
+ },
+ "Fm": {
+  "anchor": false,
+  "label": "F38#33",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ed": {
+  "anchor": false,
+  "label": "F38#34",
+  "A": "main",
+  "one_sided": true
+ },
+ "Pv": {
+  "anchor": false,
+  "label": "F38#35",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ii": {
+  "anchor": false,
+  "label": "F38#38",
+  "A": "main",
+  "one_sided": true
+ }
+}

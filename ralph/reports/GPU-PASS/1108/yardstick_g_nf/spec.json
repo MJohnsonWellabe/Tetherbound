@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F41#8 row base-vs-arm",
+  "a": "G-nf_F41-8_row_base.png",
+  "b": "G-nf_F41-8_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character silhouettes. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"
+  ]
+ },
+ {
+  "label": "G F41#8 dialogue base-vs-arm",
+  "a": "G-nf_F41-8_dialogue_base.png",
+  "b": "G-nf_F41-8_dialogue_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (three conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G galewisp landed base-vs-arm",
+  "a": "G-nf_galewisp_landed_base.png",
+  "b": "G-nf_galewisp_landed_arm.png",
+  "brief": "Fixed captures from the game of the trainer's flight in the meadows biome: the landing, with the carrier creature beside the 1.80 m trainer. Catalogue subject: galewisp - the creature carrying the 1.80 m trainer in flight (fly-grip), with every applicable fly-grip pose reading correctly. Judge the creature and the landing as the game's real look: pose, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "the carrier creature is hidden behind the trainer and foliage at landing and looks barely taller than the trainer"
+  ]
+ },
+ {
+  "label": "G galewisp flight base-vs-arm",
+  "a": "G-nf_galewisp_flight_base.png",
+  "b": "G-nf_galewisp_flight_arm.png",
+  "brief": "Fixed captures from the game of the trainer's flight in the meadows biome: launch, glide and landing (left to right, top to bottom). Catalogue subject: galewisp - the creature carrying the 1.80 m trainer in flight (fly-grip), with every applicable fly-grip pose reading correctly. Judge the creature and the carry as the game's real look: pose, grip, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "carrying frame carries nothing"
+  ]
+ },
+ {
+  "label": "G galecrest flight base-vs-arm",
+  "a": "G-nf_galecrest_flight_base.png",
+  "b": "G-nf_galecrest_flight_arm.png",
+  "brief": "Fixed captures from the game of the trainer's flight in the meadows biome: launch, glide and landing (left to right, top to bottom). Catalogue subject: galecrest - the creature carrying the 1.80 m trainer in flight (fly-grip), with every applicable fly-grip pose reading correctly. Judge the creature and the carry as the game's real look: pose, grip, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ }
+]

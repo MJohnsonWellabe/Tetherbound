@@ -1,0 +1,5 @@
+{
+  "_comment": "F38#12 (LANE-BELOW6, 13 Nov 2026). The switch for harvest nodes' own visual.stash_support_1113 blocks (the band-3 stashed tonic, band3_the_river_lock/harvest.json order 3019). Those blocks sit inside a JSON list, which a deep-merge overlay cannot address, so the switch lives here. A node's block applies only when both are enabled; the node blocks ship enabled so this file alone turns the candidate on. OFF until GPU-judged.",
+  "_scope": "world_presentation",
+  "enabled": false
+}

@@ -1,0 +1,10 @@
+Lc: none
+Qb: "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+Hk: "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view"
+Fv: "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks"
+Ar: "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+Vt: none
+Zy: "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+Js: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Dd: "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+Dg: "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"

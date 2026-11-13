@@ -1277,17 +1277,32 @@ func _clearance_score(shot: Dictionary, trainer_anchor: Vector3, speaker_anchor:
 	var head := trainer_anchor + Vector3.UP * float(cfg.get("trainer_head_above_anchor_m", 0.2))
 	var trainer_depth := (head - lens).dot(look)
 	var speaker_depth := (speaker_anchor - lens).dot(look)
-	if trainer_depth <= 0.05 or speaker_depth <= 0.05:
+	if speaker_depth <= 0.05:
 		return 1.0
+	var xs := (speaker_anchor - lens).dot(right) / speaker_depth / half_width
+	if trainer_depth <= 0.05:
+		return minf(1.0, _speaker_centre_term(xs, cfg))
 	var xt := (head - lens).dot(right) / trainer_depth / half_width
 	var rt := float(cfg.get("trainer_radius_m", 0.38)) / trainer_depth / half_width
 	if absf(xt) - rt >= 1.0:
-		return 1.0
-	var xs := (speaker_anchor - lens).dot(right) / speaker_depth / half_width
+		return minf(1.0, _speaker_centre_term(xs, cfg))
 	var rs := float(cfg.get("speaker_radius_m", 0.32)) / speaker_depth / half_width
 	var gap := absf(xs - xt) - rt - rs - float(cfg.get("min_gap", 0.06))
 	var edge := absf(xt) - rt - float(cfg.get("min_edge", 0.3))
-	return minf(gap, edge)
+	return minf(minf(gap, edge), _speaker_centre_term(xs, cfg))
+
+
+## `clearance_1112.speaker_centre` (OFF by default; LANE-THINGS, 12 Nov; GPU
+## Meadows dialogue: Hess stands cut off at the left edge of his own shot
+## with a banner mid-frame). With the trainer out of frame the shot counted
+## as clear wherever the speaker stood. When on, a speaker further than
+## `max_offset` half-frames from the centre makes the shot not clear, so the
+## search looks for an angle that puts them nearer the middle. 1.0 when off.
+static func _speaker_centre_term(xs: float, cfg: Dictionary) -> float:
+	var centre: Variant = cfg.get("speaker_centre", {})
+	if not (centre is Dictionary and bool((centre as Dictionary).get("enabled", false))):
+		return 1.0
+	return float((centre as Dictionary).get("max_offset", 0.5)) - absf(xs)
 
 
 var _clear_last: Variant = null
@@ -1321,10 +1336,22 @@ static func clearance_for_realm(talk_cfg: Dictionary, realm: String) -> Dictiona
 ## candidate wins only if it beats the current shot by `min_gain`.
 func _clearance_shot(shot: Dictionary, cfg: Dictionary, room: float, trainer_anchor: Vector3,
 		speaker_anchor: Vector3, forward: Vector3, clear_cfg: Dictionary) -> Dictionary:
-	var current := _clearance_score(shot, trainer_anchor, speaker_anchor, clear_cfg)
+	var current := _clearance_total(shot, trainer_anchor, speaker_anchor, clear_cfg)
 	if current >= 0.0:
 		_clear_last = null
+		_clear_cooldown = 0
 		return shot
+	# A search that found nothing fully clear is not repeated every frame: the
+	# cone test asks the renderer about every mesh on five lines per candidate.
+	if _clear_cooldown > 0 and _clear_last is Array:
+		_clear_cooldown -= 1
+		var held := cfg.duplicate()
+		held["shoulder_yaw_deg"] = float(cfg.get("shoulder_yaw_deg", 0.0)) + float((_clear_last as Array)[0])
+		held["elevation_deg"] = float(cfg.get("elevation_deg", 6.0)) + float((_clear_last as Array)[1])
+		held["close_shoulder_extra_deg"] = 0.0
+		var again := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, held, room)
+		again["fallback"] = bool(shot.get("fallback", false))
+		return again
 	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
 	var base_elevation := float(cfg.get("elevation_deg", 6.0))
 	var options: Array = []
@@ -1354,7 +1381,7 @@ func _clearance_shot(shot: Dictionary, cfg: Dictionary, room: float, trainer_anc
 		if not _camera_is_reachable(trainer_anchor, probe) or not _speaker_in_sight(probe, speaker_anchor) \
 				or not _speaker_in_frame(probe, speaker_anchor):
 			continue
-		var score := _clearance_score(probe, trainer_anchor, speaker_anchor, clear_cfg)
+		var score := _clearance_total(probe, trainer_anchor, speaker_anchor, clear_cfg)
 		var needed := 0.0 if (_clear_last is Array and option == _clear_last) else gain
 		if score > best_score + needed:
 			probe["fallback"] = bool(shot.get("fallback", false))
@@ -1364,8 +1391,76 @@ func _clearance_shot(shot: Dictionary, cfg: Dictionary, room: float, trainer_anc
 			if score >= 0.0:
 				break
 	_clear_last = best_option
+	# The hold only exists for the cone test's cost, so it is off with the cone:
+	# the shipped clearance rule searches every frame exactly as on main.
+	var cone_cfg: Variant = clear_cfg.get("creature_cone", {})
+	var cone_on: bool = cone_cfg is Dictionary and bool((cone_cfg as Dictionary).get("enabled", false))
+	_clear_cooldown = int(clear_cfg.get("search_cooldown_frames", 12)) if cone_on and best_option != null and best_score < 0.0 else 0
 	return best
 
+
+
+var _clear_cooldown := 0
+
+
+## `clearance_1112.creature_cone` (OFF by default; LANE-THINGS, 12 Nov;
+## G-things-convclear-other-biomes.md: in Stormwood a creature's head hid
+## Lieutenant Sera and the storm bird hid Tamsin on the swung shot, and Nysa
+## was hidden on every side). The one sight line to the speaker's head lets a
+## shot through when a creature covers the rest of them. With this on, the
+## trainer score is joined by how much of the speaker the lens sees: five
+## lines (head, chest, hips, both shoulders), each tested against colliders
+## and visible meshes; fewer than `min_visible` clear makes the shot not
+## clear, so the swing search looks for an angle past the creature.
+func _clearance_total(shot: Dictionary, trainer_anchor: Vector3, speaker_anchor: Vector3, clear_cfg: Dictionary) -> float:
+	var score := _clearance_score(shot, trainer_anchor, speaker_anchor, clear_cfg)
+	var cone: Variant = clear_cfg.get("creature_cone", {})
+	if not (cone is Dictionary and bool((cone as Dictionary).get("enabled", false))):
+		return score
+	var seen := _speaker_visible_fraction(shot, speaker_anchor, cone as Dictionary)
+	return minf(score, seen - float((cone as Dictionary).get("min_visible", 0.8)))
+
+
+## Fraction (0..1) of the speaker's five sample points the lens has a clear
+## line to. `_cone_probe` replaces the world queries in unit tests.
+var _cone_probe: Callable = Callable()
+
+
+func set_cone_probe_for_tests(probe: Callable) -> void:
+	_cone_probe = probe
+
+
+func _speaker_visible_fraction(shot: Dictionary, speaker_anchor: Vector3, cone: Dictionary) -> float:
+	var dir := Vector3(shot["dir"]).normalized()
+	var lens: Vector3 = shot["pivot"] + dir * float(shot["distance"])
+	var right := (-dir).cross(Vector3.UP)
+	right = right.normalized() if right.length_squared() > 0.0001 else Vector3.RIGHT
+	var half := float(cone.get("shoulder_half_width_m", 0.28))
+	var points: Array[Vector3] = [
+		speaker_anchor + Vector3.UP * float(cone.get("head_above_anchor_m", 0.22)),
+		speaker_anchor,
+		speaker_anchor - Vector3.UP * float(cone.get("hips_below_anchor_m", 0.5)),
+		speaker_anchor + right * half,
+		speaker_anchor - right * half,
+	]
+	var clear := 0
+	for point: Vector3 in points:
+		var to_point := point - lens
+		var reach := to_point.length()
+		if reach <= 0.45:
+			clear += 1
+			continue
+		# Stops short of the speaker's own body.
+		var end := lens + to_point / reach * (reach - 0.4)
+		var blocked := false
+		if _cone_probe.is_valid():
+			blocked = bool(_cone_probe.call(lens, end))
+		else:
+			blocked = _free_distance_behind(lens, to_point / reach, reach - 0.4, false) < reach - 0.41 \
+				or _speaker_hidden_by_meshes(lens, end)
+		if not blocked:
+			clear += 1
+	return float(clear) / float(points.size())
 
 ## clearance_1112 `companion`: while a conversation shot is up, this trainer's
 ## own following creature stands behind the lens when it would otherwise be

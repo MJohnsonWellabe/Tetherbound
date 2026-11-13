@@ -1,0 +1,1 @@
+{"data/config/vfx.json": {"move_library": {"archetypes": {"stone_throw": {"trail": {"max_length_m": 0.55, "opacity": 0.5, "wave_amplitude": 0.06, "width": 0.42}}, "charge_dash": {"trail": {"max_length_m": 0.55, "opacity": 0.5, "wave_amplitude": 0.06, "width": 0.42}}, "quake_ring": {"trail": {"max_length_m": 0.55, "opacity": 0.5, "wave_amplitude": 0.06, "width": 0.42}}}}}}

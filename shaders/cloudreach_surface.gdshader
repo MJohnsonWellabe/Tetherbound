@@ -26,7 +26,7 @@ void fragment() {
 	if (up >= grass_slope_cos + edge_breakup) {
 		// Most of the realm is gentle turf: avoid six unused rock samples.
 		ALBEDO = cloudreach_turf(world_at);
-		ROUGHNESS = 0.98;
+		ROUGHNESS = mix(0.98, 0.72, cloudreach_ground_1112.x);
 	} else {
 		float breakup = noise3(world_at * 0.42) * edge_breakup;
 		float turf = smoothstep(rock_slope_cos, grass_slope_cos, up + breakup);
@@ -35,7 +35,7 @@ void fragment() {
 		cloudreach_rock(world_at, n, rock_footprint, rock_albedo, rock_normal_world);
 		ALBEDO = mix(rock_albedo, cloudreach_turf(world_at), turf);
 		NORMAL = normalize((VIEW_MATRIX * vec4(normalize(mix(rock_normal_world, n, turf)), 0.0)).xyz);
-		ROUGHNESS = mix(0.96, 0.98, turf);
+		ROUGHNESS = mix(mix(0.96, 0.98, turf), mix(0.6, 0.72, turf), cloudreach_ground_1112.x);
 	}
 	if (surface_detail_strength > 0.0) {
 		vec3 detail = cloudreach_detail_normal(world_at, n, dot(ALBEDO, vec3(0.333333)));

@@ -1,0 +1,41 @@
+{
+ "Nx": {
+  "anchor": false,
+  "label": "G F41#13 row base-vs-arm",
+  "A": "G-sm_F41-13_row_arm.png",
+  "B": "G-sm_F41-13_row_base.png"
+ },
+ "Wp": {
+  "anchor": false,
+  "label": "G F40#15 row base-vs-arm",
+  "A": "G-sm_F40-15_row_arm.png",
+  "B": "G-sm_F40-15_row_base.png"
+ },
+ "Ii": {
+  "anchor": false,
+  "label": "G Overlook routes base-vs-arm",
+  "A": "G-sm_Overlook_routes_base.png",
+  "B": "G-sm_Overlook_routes_arm.png"
+ },
+ "Pq": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ye": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Tf": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Sr": {
+  "anchor": false,
+  "label": "G Shrine and eyrie base-vs-arm",
+  "A": "G-sm_Shrine_and_eyrie_base.png",
+  "B": "G-sm_Shrine_and_eyrie_arm.png"
+ }
+}

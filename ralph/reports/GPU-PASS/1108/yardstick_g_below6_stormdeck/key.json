@@ -1,0 +1,29 @@
+{
+ "Ye": {
+  "anchor": false,
+  "label": "G F41#1 stormdeck split base-vs-arm",
+  "A": "G-sk_split_base.png",
+  "B": "G-sk_split_arm.png"
+ },
+ "Nz": {
+  "anchor": false,
+  "label": "G F41#15 stormdeck marrow base-vs-arm",
+  "A": "G-sk_marrow_base.png",
+  "B": "G-sk_marrow_arm.png"
+ },
+ "Kr": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ob": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Xt": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

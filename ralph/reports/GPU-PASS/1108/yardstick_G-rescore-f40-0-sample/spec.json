@@ -1,0 +1,242 @@
+[
+ {
+  "label": "three_bells_bridge clear",
+  "stand": "cloudreach__broken_causeways__03__three_bells_bridge",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (three bells bridge) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "three_bells_bridge rain",
+  "stand": "cloudreach__broken_causeways__03__three_bells_bridge",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (three bells bridge) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "broken_skyroad_arch clear",
+  "stand": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (broken skyroad arch) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "broken_skyroad_arch rain",
+  "stand": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (broken skyroad arch) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "realm_gate_crag clear",
+  "stand": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (realm gate crag) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "realm_gate_crag rain",
+  "stand": "cloudreach__gate_lower_cliffs__01__realm_gate_crag",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (realm gate crag) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "galefoot_waycamp clear",
+  "stand": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (galefoot waycamp) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "galefoot_waycamp rain",
+  "stand": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (galefoot waycamp) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "sky_shrine clear",
+  "stand": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (sky shrine) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "sky_shrine rain",
+  "stand": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (sky shrine) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "the_high_perches clear",
+  "stand": "cloudreach__high_roost_sky_shrine__08__the_high_perches",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (the high perches) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "the_high_perches rain",
+  "stand": "cloudreach__high_roost_sky_shrine__08__the_high_perches",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (the high perches) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "summit_eyrie clear",
+  "stand": "cloudreach__summit_final_stronghold__11__summit_eyrie",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (summit eyrie) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "summit_eyrie rain",
+  "stand": "cloudreach__summit_final_stronghold__11__summit_eyrie",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (summit eyrie) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "stormward_overlook clear",
+  "stand": "cloudreach__summit_final_stronghold__12__stormward_overlook",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (stormward overlook) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "stormward_overlook rain",
+  "stand": "cloudreach__summit_final_stronghold__12__stormward_overlook",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (stormward overlook) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "cliffhold clear",
+  "stand": "cloudreach__upper_cloudreach__09__cliffhold",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (cliffhold) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "cliffhold rain",
+  "stand": "cloudreach__upper_cloudreach__09__cliffhold",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (cliffhold) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "old_wind_observatory clear",
+  "stand": "cloudreach__upper_cloudreach__10__old_wind_observatory",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (old wind observatory) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "old_wind_observatory rain",
+  "stand": "cloudreach__upper_cloudreach__10__old_wind_observatory",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (old wind observatory) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "windscar_beacon clear",
+  "stand": "cloudreach__windscar_ravine__05__windscar_beacon",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (windscar beacon) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "windscar_beacon rain",
+  "stand": "cloudreach__windscar_ravine__05__windscar_beacon",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (windscar beacon) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "windscar_flight_aerie clear",
+  "stand": "cloudreach__windscar_ravine__06__windscar_flight_aerie",
+  "weather": "clear",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (windscar flight aerie) in clear weather: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "windscar_flight_aerie rain",
+  "stand": "cloudreach__windscar_ravine__06__windscar_flight_aerie",
+  "weather": "rain",
+  "frames": 8,
+  "brief": "Fixed captures from the game of one Cloudreach place (windscar flight aerie) in rain: four camera views (approach, gameplay camera, reverse, detail) left to right, by day on the top row and at night on the bottom row. Judge how this place looks in the game - whether it reads as the key art's Cloudreach (bright sky, pale stratified stone), with believable form, material, light, weather and staging at each time of day.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ }
+]

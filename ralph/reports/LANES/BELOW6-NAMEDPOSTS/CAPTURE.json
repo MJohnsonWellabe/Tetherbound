@@ -1,0 +1,21 @@
+{
+ "row": "F41#8 (5.80): Stormwood named character silhouettes (Elder Maud, Rodkeeper Hesk, Warden-elect Bryn)",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_characters.gd",
+ "args": ["--biome=stormwood", "--subset=elder_maud", "--subset=rodkeeper_hesk", "--subset=warden_elect_bryn", "--output={OUT}"],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "frames": [
+  "stormwood__inventory__character__elder_maud",
+  "stormwood__inventory__character__rodkeeper_hesk",
+  "stormwood__inventory__character__warden_elect_bryn"
+ ],
+ "overlay": "ralph/reports/LANES/BELOW6-NAMEDPOSTS/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same command",
+ "needs_import": "no: the post is the installed storm-lantern (lantern_pools hero lantern); no new assets",
+ "_why": "The three named villagers stand on near-black wet road, so their legs and outline merge with the ground. Arm: one storm-lantern post 1.9 m to each villager's side (away from the player), warm light 4.2 over 11 m. It gives each a place to stand and lifts the ground and the figure out of the dark. Character side only; the road material is untouched (LANE-PLACES).",
+ "want_to_see": "feet and legs readable against a warm pool of ground, the villager warmer than the background, the post reading as a lantern (bloom on its glass is unverified on CPU). Say if the post crowds the frame or the villager is over-lit: light_energy and offset_m are config.",
+ "note": "CPU selector was --subset=<id>; use whatever selector the Stormwood character re-capture used for these three frames."
+}

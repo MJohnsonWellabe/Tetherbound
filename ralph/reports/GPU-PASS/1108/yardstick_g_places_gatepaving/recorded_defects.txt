@@ -1,0 +1,7 @@
+Sn: "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+Zm: "none"
+Fs: "none"
+Ek: none
+Fg: "none"
+Qx: none
+Yn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

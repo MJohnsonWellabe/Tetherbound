@@ -1,0 +1,2 @@
+{"data/config/stormwood_look.json": {"rig": {"environment": {"player_character_rim_scale": 0.0}}},
+ "data/config/stormwood_surge.json": {"presentation": {"storm_base": {"overrides": {"environment": {"player_character_rim_scale": 0.0}}}}}}

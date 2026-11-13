@@ -364,6 +364,12 @@ func _build_visual(spec: Dictionary = {}) -> void:
 		_visual = _berry_plant_visual(_visual, presentation)
 	elif _item_id in ["orb_basic", "travel_pack", "hide_boots", "hide_leggings", "hide_helm"]:
 		_visual = _mounted_reward_visual(_visual, presentation)
+	# F38#12 `stash_support_1113` (per node, flag-off): a small stashed reward
+	# (the band-3 tonic vial alone on the grass) stands on an installed prop
+	# and is shown at a stated height, so it reads as a deliberate stash.
+	var stash: Variant = presentation.get("stash_support_1113", {})
+	if stash is Dictionary and bool((stash as Dictionary).get("enabled", false)) and _stash_support_switch():
+		_visual = _stash_support_visual(_visual, stash as Dictionary)
 	add_child(_visual)
 	# OP-0830-3. Attached to `_visual` rather than to `self` on purpose:
 	# `_deactivate()` detaches this by the same reference, so pickup_glow.gd
@@ -377,6 +383,46 @@ func _build_visual(spec: Dictionary = {}) -> void:
 ## Keep the authored harvest anchor and its support; only the displayed item
 ## comes from the cache's shared identity builder. Load it lazily so mounting
 ## a harvest prop cannot introduce a preload cycle through world composition.
+## data/config/harvest_stash_support.json `enabled`: the one switch for every
+## node's `stash_support_1113` block (those blocks sit in a JSON list, which a
+## deep-merge overlay cannot address).
+static func _stash_support_switch() -> bool:
+	var parsed: Variant = JSON.parse_string(
+			FileAccess.get_file_as_string("res://data/config/harvest_stash_support.json"))
+	return parsed is Dictionary and bool((parsed as Dictionary).get("enabled", false))
+
+
+## The node's own reward model on top of an installed support prop. Visual
+## only: the harvest anchor, prompt, reward and collision are unchanged.
+func _stash_support_visual(reward: Node3D, stash: Dictionary) -> Node3D:
+	var packed: Variant = load(str(stash.get("model", "")))
+	if not packed is PackedScene:
+		return reward
+	var display := Node3D.new()
+	display.name = "HarvestStashDisplay"
+	var support := (packed as PackedScene).instantiate() as Node3D
+	display.add_child(support)
+	IMPORTED_MATERIALS.make_dielectric(support)
+	var support_bounds := _presentation_bounds(support, true)
+	var support_height := float(stash.get("support_height_m", 0.5))
+	if support_bounds.size.y > 0.0 and support_height > 0.0:
+		support.scale *= support_height / support_bounds.size.y
+		support_bounds = _presentation_bounds(support, true)
+	support.position -= Vector3(support_bounds.get_center().x, support_bounds.position.y, support_bounds.get_center().z)
+	support.rotation.y = deg_to_rad(float(stash.get("support_yaw_deg", 0.0)))
+	var holder := Node3D.new()
+	holder.name = "StashReward"
+	display.add_child(holder)
+	holder.add_child(reward)
+	var bounds := _presentation_bounds(holder)
+	var reward_height := float(stash.get("reward_height_m", 0.0))
+	if bounds.size.y > 0.0 and reward_height > 0.0:
+		holder.scale *= reward_height / bounds.size.y
+		bounds = _presentation_bounds(holder)
+	holder.position += Vector3(-bounds.get_center().x, support_height - bounds.position.y, -bounds.get_center().z)
+	return display
+
+
 func _mounted_reward_visual(support: Node3D, presentation: Dictionary) -> Node3D:
 	var factory: GDScript = load("res://scripts/world/item_cache_pickup.gd") as GDScript
 	if factory == null: return support

@@ -1,0 +1,39 @@
+{
+ "Uf": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ },
+ "Pl": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "En": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Xq": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ba": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Ax": {
+  "anchor": false,
+  "label": "F38#8",
+  "A": "main",
+  "one_sided": true
+ },
+ "Wq": {
+  "anchor": false,
+  "label": "F41#13",
+  "A": "main",
+  "one_sided": true
+ }
+}

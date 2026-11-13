@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F38#28 High base-vs-arm",
+  "a": "G-co_F38_28_High_base_vs_arm_1.png",
+  "b": "G-co_F38_28_High_base_vs_arm_2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Warden arena boundary (three fight frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+  ]
+ },
+ {
+  "label": "G F38#28 Medium base-vs-arm",
+  "a": "G-co_F38_28_Medium_base_vs_arm_1.png",
+  "b": "G-co_F38_28_Medium_base_vs_arm_2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Warden arena boundary (three fight frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+  ]
+ },
+ {
+  "label": "G Warden fight other frames High base-vs-arm",
+  "a": "G-co_Warden_fight_other_frames_High_base_vs_arm_1.png",
+  "b": "G-co_Warden_fight_other_frames_High_base_vs_arm_2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the Warden fight (four more frames, left to right, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F41#13 High-vs-Medium",
+  "a": "G-co_F41_13_High_vs_Medium_1.png",
+  "b": "G-co_F41_13_High_vs_Medium_2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: electric creature finish (two creatures at normal creature-view distance, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ },
+ {
+  "label": "G F38#38 High-vs-Medium",
+  "a": "G-co_F38_38_High_vs_Medium_1.png",
+  "b": "G-co_F38_38_High_vs_Medium_2.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Craft and leave button hints are faint gray on the dark translucent craft panel"
+  ]
+ }
+]

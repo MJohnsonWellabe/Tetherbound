@@ -1,0 +1,20 @@
+{
+ "id": "THINGS-STORMRULE",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY, not queued (two arms out; CPU shows no change on Nysa or Sera)",
+ "tool": "phase2_capture_dialogue.gd --biome=stormwood",
+ "base": {
+  "tree": "tb/things or main after the STORMPOST landing",
+  "overlay": null
+ },
+ "arm": {
+  "overlay": "ralph/reports/LANES/THINGS-STORMRULE/overlay_rule_in_stormwood.json"
+ },
+ "rows": {
+  "F41#7, F41#11, F41#15, F41#20 (the whole Stormwood dialogue set; no-loss check on the nine frames that changed most in G-things-convclear-other-biomes)": [
+   "all Stormwood dialogue frames"
+  ]
+ }
+}

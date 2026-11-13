@@ -1,0 +1,7 @@
+{"branch": "tb/gpu-frames-1108", "renderer": "High", "tree": "tb/below6 6eb2cfa71 both sides", "base": "no overlay", "arm": "BELOW6-MUSHROOMS/overlay.json",
+ "sections": {"G-below6-mush-cloudreach": "a2cc932a7", "G-below6-mush-perch": "b07de21f8", "G-below6-mush-meadows": "4ab660946", "G-below6-mush-stormwood": "aae21e7d7 (byte-identical, not judged)"},
+ "sets": {"F40#16 row": ["cloudreach__inventory__pickup__speed_mushroom", "cloudreach__inventory__pickup__wild_mushroom"],
+  "F40#17 row": ["high-perches-crown-rim-out-day", "high-perches-crown-rim-out-night"],
+  "High Perches views": ["high-perches-arrival-landed-day", "high-perches-crown-court-night", "high-perches-departure-lookback-night"],
+  "Meadows mushrooms": ["meadows__inventory__pickup__speed_mushroom", "meadows__inventory__pickup__stamina_mushroom", "meadows__inventory__pickup__wild_mushroom"],
+  "F38#6 row": ["meadows__inventory__pickup__good_candy", "meadows__inventory__pickup__rare_candy", "meadows__inventory__pickup__potion_small"]}}

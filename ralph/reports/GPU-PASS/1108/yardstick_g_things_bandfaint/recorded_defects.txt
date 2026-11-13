@@ -1,0 +1,7 @@
+Fp: none
+Zg: "near-black plumage hides the face"; "barely above the trainer"
+Fm: none
+Ek: "neon-magenta emissive ribbons read as an effect"; "hit reaction goes airborne"
+Tj: "stock animal look with no rim light or type accent"
+Hr: "none"
+Rx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

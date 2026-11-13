@@ -1,0 +1,29 @@
+{
+ "Tw": {
+  "anchor": false,
+  "label": "F39#4",
+  "A": "F39-4_medium.png",
+  "B": "F39-4_high.png"
+ },
+ "Ra": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Rx": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Tu": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Jj": {
+  "anchor": false,
+  "label": "F39#24",
+  "A": "F39-24_medium.png",
+  "B": "F39-24_high.png"
+ }
+}

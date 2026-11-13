@@ -1,0 +1,25 @@
+{
+ "id": "THINGS-STORMPOOL",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "ROUND 2 READY 13 Nov (round 1 held by the GPU lane on its by-eye check). Not captured on CPU: the Compatibility renderer does not show the sheen.",
+ "tool": "the G-rescore-f41-22-24 capture (five stands x Calm, Break, aftermath Calm)",
+ "base": {
+  "tree": "tb/things",
+  "overlay": null
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-STORMPOOL/overlay_pool_damp_r2.json"
+ },
+ "rows": {
+  "F41#22, F41#24": [
+   "giant",
+   "forest",
+   "rod_line",
+   "glass (no-loss)",
+   "stormheart (no-loss)"
+  ]
+ }
+}

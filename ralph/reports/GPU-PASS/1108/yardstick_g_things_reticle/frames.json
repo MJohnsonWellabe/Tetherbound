@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1108", "base": "main 1c81cdb45, no overlay", "arm": "main + THINGS-RETICLE/overlay_reticle_ring.json (tb/things 07dd4a3a5)",
+ "sections": {"G-things-reticle-meadows": "63520d538 (base/arm x High/Medium)", "G-things-reticle-tidewake": "8fafefacf (base/arm High)"},
+ "sets": {"F38#7 Medium": ["01-aiming-full-health", "catch_low", "catch_high"], "F38#7 High": ["01-aiming-full-health", "catch_low", "catch_high"],
+  "F39#23 High": ["catch_low", "catch_high", "01-aiming-full-health"], "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg"},
+ "caution": "base-High frames the catch camera differently from arm-High (reproduced); the Medium pair is the clean ring comparison"}

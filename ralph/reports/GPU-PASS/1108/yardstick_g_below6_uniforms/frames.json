@@ -1,0 +1,31 @@
+{
+ "branch": "tb/gpu-frames-1108",
+ "section": "G-below6-uniforms",
+ "commit": "53f78cee6",
+ "renderer": "High",
+ "tree": "tb/below6 52830ac12 both sides",
+ "base": "no overlay",
+ "arm": "BELOW6-UNIFORMS/overlay.json (uniform_separation_1113)",
+ "sets": {
+  "F41#18 row": [
+   "stormwood__inventory__character__grunt_lieutenant_dace.jpg",
+   "stormwood__inventory__character__tether_lieutenant_varga.jpg",
+   "stormwood__inventory__character__defector_sable.jpg"
+  ],
+  "F41#18 dialogue": [
+   "stormwood__inventory__character__grunt_lieutenant_dace__dialogue.jpg",
+   "stormwood__inventory__character__tether_lieutenant_varga__dialogue.jpg",
+   "stormwood__inventory__character__defector_sable__dialogue.jpg"
+  ],
+  "Officer dialogue": [
+   "stormwood__inventory__trainer__outerworks_lieutenant_sera__dialogue.jpg",
+   "stormwood__inventory__trainer__officer_maren_verge_rod__dialogue.jpg",
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg"
+  ],
+  "Civilian dialogue": [
+   "stormwood__inventory__character__trainer_ivo__dialogue.jpg",
+   "stormwood__inventory__trainer__tamsin_surge_lesson__dialogue.jpg",
+   "stormwood__inventory__character__archivist_wen__dialogue.jpg"
+  ]
+ }
+}

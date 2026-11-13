@@ -297,7 +297,16 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 		if failures.is_empty():
 			_fail("village fence crossing toward authored %s at %s ended without a verdict" % [item_id, expected])
 		return false
-	if not await _walk_to(stop_at, 1.65, _travel_budget(stop_at)) \
+	var detour := road_detour(Vector2(_player.global_position.x, _player.global_position.z),
+		Vector2(stop_at.x, stop_at.z), JSON.parse_string(FileAccess.get_file_as_string(MATERIAL_PROPS_PATH)),
+		JSON.parse_string(FileAccess.get_file_as_string(MATERIAL_TERRAIN_PATH)))
+	var road_headings: Array[Vector3] = []
+	for at: Vector2 in detour:
+		road_headings.append(Vector3(at.x, _player.global_position.y, at.y))
+	if not road_headings.is_empty():
+		transcript.append("authored %s at %s: the straight line crosses a camp; following the roads via %s"
+			% [item_id, expected, str(detour)])
+	if not await _walk_to(stop_at, 1.65, _travel_budget(stop_at) + _path_extra(detour, stop_at), road_headings) \
 			and _player.global_position.distance_to(stop_at) > WITHIN_REACH:
 		_fail("controller could not reach authored %s at %s (stopped %.1fm short)" % [
 			item_id, expected, _player.global_position.distance_to(stop_at)])
@@ -316,6 +325,126 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 		return false
 	transcript.append("authored %s %+d at (%.1f, %.1f)" % [item_id, int(stop["amount"]), expected.x, expected.y])
 	return true
+
+
+## CI 43302878714 (and 43263382269): the straight line from the gate end of
+## The Rise (37, -18.7) to the wood at (16, -28) runs through the Meadows
+## trainer camp (props.json cluster `trainer_camp`: bag, crate, barrel, the
+## 1.5x fire ring, tent and bed). The stick walk wedged into the bag and crate
+## ("[player] entombed at 30.50, -0.37, -26.68"), was recovered, then pinned on
+## the fire ring 12.9m short. Whether it slid clear depended on the exact start
+## pose, so it was intermittent. A player walks round a camp on the road; so
+## does this route: when the line crosses a camp's footprint, the walk follows
+## the shortest path along the authored roads (terrain_playground.json
+## `paths.routes`, joined where they share a vertex) between the road vertices
+## nearest each end. Empty (the plain straight walk) otherwise.
+const MATERIAL_PROPS_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
+const CAMP_CLEARANCE_M := 2.5
+
+
+static func road_detour(here: Vector2, there: Vector2, props: Variant, terrain: Variant) -> Array[Vector2]:
+	var none: Array[Vector2] = []
+	if not here.is_finite() or not there.is_finite() or not props is Dictionary or not terrain is Dictionary:
+		return none
+	var crosses := false
+	for cluster: Variant in (props as Dictionary).get("clusters", []):
+		if not cluster is Dictionary or not str(cluster.get("name", "")).ends_with("camp"):
+			continue
+		var points := PackedVector2Array()
+		for prop: Variant in cluster.get("props", []):
+			var at := _bounded_points([prop.get("at")] if prop is Dictionary else [], 1, 1)
+			if not at.is_empty():
+				points.append(at[0])
+		if points.is_empty():
+			continue
+		var centre := Vector2.ZERO
+		for p: Vector2 in points:
+			centre += p
+		centre /= float(points.size())
+		var radius := 0.0
+		for p: Vector2 in points:
+			radius = maxf(radius, p.distance_to(centre))
+		var nearest := Geometry2D.get_closest_point_to_segment(centre, here, there)
+		if nearest.distance_to(centre) < radius + CAMP_CLEARANCE_M:
+			crosses = true
+	var routes: Variant = ((terrain as Dictionary).get("paths", {}) as Dictionary).get("routes")
+	if not crosses or not routes is Array:
+		return none
+	# Road graph: vertices shared by two roads (to 0.01 m) are one node.
+	var nodes: Array[Vector2] = []
+	var edges: Dictionary = {}
+	for row: Variant in routes:
+		if not row is Dictionary:
+			continue
+		var line := _bounded_points(row.get("points"), 2, 16)
+		var previous := -1
+		for p: Vector2 in line:
+			var index := -1
+			for i in nodes.size():
+				if nodes[i].distance_to(p) < 0.01:
+					index = i
+			if index < 0:
+				nodes.append(p)
+				index = nodes.size() - 1
+				edges[index] = []
+			if previous >= 0:
+				(edges[previous] as Array).append(index)
+				(edges[index] as Array).append(previous)
+			previous = index
+	if nodes.is_empty():
+		return none
+	var start := 0
+	var goal := 0
+	for i in nodes.size():
+		if nodes[i].distance_to(here) < nodes[start].distance_to(here): start = i
+		if nodes[i].distance_to(there) < nodes[goal].distance_to(there): goal = i
+	# Dijkstra over a few dozen vertices.
+	var dist: Dictionary = {start: 0.0}
+	var back: Dictionary = {}
+	var open: Array = [start]
+	while not open.is_empty():
+		var best := 0
+		for i in open.size():
+			if float(dist[open[i]]) < float(dist[open[best]]): best = i
+		var at: int = open.pop_at(best)
+		if at == goal:
+			break
+		for next: int in edges.get(at, []):
+			var cost := float(dist[at]) + nodes[at].distance_to(nodes[next])
+			if not dist.has(next) or cost < float(dist[next]):
+				dist[next] = cost
+				back[next] = at
+				if not open.has(next): open.append(next)
+	if not dist.has(goal):
+		return none
+	var path: Array[Vector2] = []
+	var cursor := goal
+	while cursor != start:
+		path.push_front(nodes[cursor])
+		cursor = int(back[cursor])
+	path.push_front(nodes[start])
+	# Walk onto the road where it is ahead, and leave it at the last vertex
+	# before the stop: the vertices at either end can lie behind the player or
+	# beyond the stop.
+	if path.size() > 1 and here.distance_to(path[1]) < path[0].distance_to(path[1]):
+		path.pop_front()
+	if path.size() > 1 and there.distance_to(path[-2]) < path[-1].distance_to(path[-2]):
+		path.pop_back()
+	return path
+
+
+func _path_extra(detour: Array[Vector2], stop_at: Vector3) -> int:
+	if detour.is_empty():
+		return 0
+	var here := Vector2(_player.global_position.x, _player.global_position.z)
+	var length := 0.0
+	for p: Vector2 in detour:
+		length += here.distance_to(p)
+		here = p
+	length += here.distance_to(Vector2(stop_at.x, stop_at.z))
+	var straight := Vector2(_player.global_position.x, _player.global_position.z).distance_to(Vector2(stop_at.x, stop_at.z))
+	# Same 60 frames per metre `_travel_budget()` allows a straight walk.
+	return int(maxf(0.0, length - straight) * 60.0)
 
 
 ## The village fence (`data/config/village_boundary.json`, OP-0830-1) is a

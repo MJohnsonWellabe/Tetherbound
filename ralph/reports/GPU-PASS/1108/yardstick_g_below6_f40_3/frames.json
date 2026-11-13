@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "0623dcbfe3db67eda6b136f85a850759a50f5169",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=cloudreach (skyroad arch, old wind observatory, windscar beacon) --times=day --views=approach --seed=2042",
+  "path": "G-below6-f40-3-landmarks/arm-High/cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "sky_fraction": 0.124,
+  "lower_edges": 0.4069,
+  "script_errors": 0,
+  "note": "F40#3, High, tb/below6 0623dcbfe both sides. base = overlay off (old stands, crowns off); arm = BELOW6-F40-3/overlay.json (landmark_crowns_1111 + approach_overrides.candidates_1112). Re-baseline: the arm moves two stands (coordinator ruling)."
+ },
+ {
+  "frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "0623dcbfe3db67eda6b136f85a850759a50f5169",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=cloudreach (skyroad arch, old wind observatory, windscar beacon) --times=day --views=approach --seed=2042",
+  "path": "G-below6-f40-3-landmarks/arm-High/cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "sky_fraction": 0.176,
+  "lower_edges": 0.0324,
+  "script_errors": 0,
+  "note": "F40#3, High, tb/below6 0623dcbfe both sides. base = overlay off (old stands, crowns off); arm = BELOW6-F40-3/overlay.json (landmark_crowns_1111 + approach_overrides.candidates_1112). Re-baseline: the arm moves two stands (coordinator ruling)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "0623dcbfe3db67eda6b136f85a850759a50f5169",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=cloudreach (skyroad arch, old wind observatory, windscar beacon) --times=day --views=approach --seed=2042",
+  "path": "G-below6-f40-3-landmarks/arm-High/cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "sky_fraction": 0.109,
+  "lower_edges": 0.157,
+  "script_errors": 0,
+  "note": "F40#3, High, tb/below6 0623dcbfe both sides. base = overlay off (old stands, crowns off); arm = BELOW6-F40-3/overlay.json (landmark_crowns_1111 + approach_overrides.candidates_1112). Re-baseline: the arm moves two stands (coordinator ruling)."
+ },
+ {
+  "frame": "cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "0623dcbfe3db67eda6b136f85a850759a50f5169",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=cloudreach (skyroad arch, old wind observatory, windscar beacon) --times=day --views=approach --seed=2042",
+  "path": "G-below6-f40-3-landmarks/base-High/cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "sky_fraction": 0.124,
+  "lower_edges": 0.4041,
+  "script_errors": 0,
+  "note": "F40#3, High, tb/below6 0623dcbfe both sides. base = overlay off (old stands, crowns off); arm = BELOW6-F40-3/overlay.json (landmark_crowns_1111 + approach_overrides.candidates_1112). Re-baseline: the arm moves two stands (coordinator ruling)."
+ },
+ {
+  "frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "0623dcbfe3db67eda6b136f85a850759a50f5169",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=cloudreach (skyroad arch, old wind observatory, windscar beacon) --times=day --views=approach --seed=2042",
+  "path": "G-below6-f40-3-landmarks/base-High/cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "sky_fraction": 0.101,
+  "lower_edges": 0.1002,
+  "script_errors": 0,
+  "note": "F40#3, High, tb/below6 0623dcbfe both sides. base = overlay off (old stands, crowns off); arm = BELOW6-F40-3/overlay.json (landmark_crowns_1111 + approach_overrides.candidates_1112). Re-baseline: the arm moves two stands (coordinator ruling)."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "0623dcbfe3db67eda6b136f85a850759a50f5169",
+  "tool": "res://tools/phase2_capture_locations.gd --biome=cloudreach (skyroad arch, old wind observatory, windscar beacon) --times=day --views=approach --seed=2042",
+  "path": "G-below6-f40-3-landmarks/base-High/cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "sky_fraction": 0.143,
+  "lower_edges": 0.1458,
+  "script_errors": 0,
+  "note": "F40#3, High, tb/below6 0623dcbfe both sides. base = overlay off (old stands, crowns off); arm = BELOW6-F40-3/overlay.json (landmark_crowns_1111 + approach_overrides.candidates_1112). Re-baseline: the arm moves two stands (coordinator ruling)."
+ }
+]

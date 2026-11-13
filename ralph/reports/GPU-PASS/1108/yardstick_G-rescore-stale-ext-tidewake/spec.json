@@ -1,0 +1,251 @@
+[
+ {
+  "label": "F39#1",
+  "frames": [
+   "tidewake__brine_steps__06__brine_steps_east_beach__walk_03_day.jpg",
+   "tidewake__first_shore__01__first_shore_welcome_beacon__day__close.jpg",
+   "tidewake__first_shore__02__first_shore_horizon_stones__route_day.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: shore landforms. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions"
+  ]
+ },
+ {
+  "label": "F39#2",
+  "frames": [
+   "tidewake__drowned_garden__21__drowned_garden_terraces__route_day.jpg",
+   "tidewake__first_shore__02__first_shore_horizon_stones__route_day.jpg",
+   "tidewake__landmark__sluice_channel_bridge__day__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: Veilfall silhouette. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks"
+  ]
+ },
+ {
+  "label": "F39#3",
+  "frames": [
+   "tidewake__drowned_garden__21__drowned_garden_terraces__route_day.jpg",
+   "tidewake__gull_rest__19__gull_rest_signal_spire__route_day.jpg",
+   "tidewake__lantern_cove__17__lantern_cove_drift_arch__route_day.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named destination read. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces"
+  ]
+ },
+ {
+  "label": "F39#4",
+  "frames": [
+   "tidewake__aquaryn__shiny_idle.jpg",
+   "tidewake__cannonback__shiny_idle.jpg",
+   "tidewake__riptusk__shiny_idle.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: shiny creature finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity"
+  ]
+ },
+ {
+  "label": "F39#7",
+  "frames": [
+   "tidewake__fight__venn__t-023_02.jpg",
+   "tidewake__fight__venn__t-024_02.jpg",
+   "tidewake__fight__venn__t-025_02.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight actor composition. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases"
+  ]
+ },
+ {
+  "label": "F39#8",
+  "frames": [
+   "tidewake__system__mounted-swim-03-mounted.jpg",
+   "tidewake__system__mounted-swim-04-mounted.jpg",
+   "tidewake__system__mounted-swim-05-mounted.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: Aquaryn mounted-water pose. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response"
+  ]
+ },
+ {
+  "label": "F39#9",
+  "frames": [
+   "tidewake__catching__02-orb-in-flight.jpg",
+   "tidewake__catching__03-strike.jpg",
+   "tidewake__catching__03-absorbing.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: catch camera distance. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path"
+  ]
+ },
+ {
+  "label": "F39#10",
+  "frames": [
+   "tidewake__drowned_garden__21__drowned_garden_terraces__route_day.jpg",
+   "tidewake__first_shore__02__first_shore_horizon_stones__route_day.jpg",
+   "tidewake__landmark__lastlight__day__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: water and island depth. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Broad offshore water reads as uniform light cyan with little depth variation across several island routes"
+  ]
+ },
+ {
+  "label": "F39#12",
+  "frames": [
+   "tidewake__bed__water_camp_first_shore__bed.jpg",
+   "tidewake__bed__water_camp_brine_steps__bed.jpg",
+   "tidewake__bed__water_camp_salt_crown__bed.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: authored camp creature bed silhouette. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place"
+  ]
+ },
+ {
+  "label": "F39#13",
+  "frames": [
+   "tidewake__crafting__water_camp_first_shore__crafting.jpg",
+   "tidewake__crafting__water_camp_brine_steps__crafting.jpg",
+   "tidewake__crafting__water_camp_salt_crown__crafting.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: authored camp workbench identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer"
+  ]
+ },
+ {
+  "label": "F39#14",
+  "frames": [
+   "tidewake__swimming__entry.jpg",
+   "tidewake__swimming__surface_west.jpg",
+   "tidewake__swimming__surface_mid.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: swimmer water contact. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body"
+  ]
+ },
+ {
+  "label": "F39#15",
+  "frames": [
+   "tidewake__drowned_garden__21__drowned_garden_terraces__route_day.jpg",
+   "tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day.jpg",
+   "tidewake__sluice_isle__14__sluice_channel_bridge__route_day.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: Veilfall approach shallows. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows"
+  ]
+ },
+ {
+  "label": "F39#16",
+  "frames": [
+   "tidewake__current_states__S1_live_t0.jpg",
+   "tidewake__current_states__S1_live_t1.jpg",
+   "tidewake__current_states__S2_live_t0.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: live current streaks. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
+  ]
+ },
+ {
+  "label": "F39#17",
+  "frames": [
+   "tidewake__current_states__S1_live_t0.jpg",
+   "tidewake__current_states__S1_restored_t0.jpg",
+   "tidewake__current_states__S2_live_t0.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: current restoration environment. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"
+  ]
+ },
+ {
+  "label": "F39#19",
+  "frames": [
+   "tidewake__fight__venn__t-000_00.jpg",
+   "tidewake__fight__venn__tell-start-000_48.jpg",
+   "tidewake__fight__venn__t-003_02.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight team roster contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The left team roster fades to pale low-contrast text against terrain during active combat"
+  ]
+ },
+ {
+  "label": "F39#20",
+  "frames": [
+   "tidewake__fight__venn__t-000_00.jpg",
+   "tidewake__fight__venn__tell-start-001_65.jpg",
+   "tidewake__fight__venn__t-016_00.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight background creature ground contact. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight"
+  ]
+ },
+ {
+  "label": "F39#22",
+  "frames": [
+   "tidewake__system__mounted-swim-11-land.jpg",
+   "tidewake__system__mounted-swim-12-land.jpg",
+   "tidewake__system__mounted-swim-13-land.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: Aquaryn dismount camera obstruction. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action"
+  ]
+ },
+ {
+  "label": "F39#23",
+  "frames": [
+   "tidewake__catching__catch_low.jpg",
+   "tidewake__catching__catch_high.jpg",
+   "tidewake__catching__01-aiming-full-health.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: catch chance HUD contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+  ]
+ },
+ {
+  "label": "F39#24",
+  "frames": [
+   "tidewake__riptusk__resting.jpg",
+   "tidewake__torrentoad__resting.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: creature rest poses. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled"
+  ]
+ },
+ {
+  "label": "F39#25",
+  "frames": [
+   "tidewake__menu_map.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: map active region. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab"
+  ]
+ },
+ {
+  "label": "F39#28",
+  "frames": [
+   "tidewake__fight__venn__t-000_00.jpg",
+   "tidewake__fight__venn__tell-start-000_48.jpg",
+   "tidewake__fight__nerissa__t-000_00.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight boss title overlay. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The upper-center boss title card overlaps part of Cannonback\u2019s shell and head in the opening and tell views"
+  ]
+ }
+]

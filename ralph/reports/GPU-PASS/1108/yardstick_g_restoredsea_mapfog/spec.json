@@ -1,0 +1,29 @@
+[
+ {
+  "label": "G F39#17 row base-vs-arm",
+  "a": "G-rsm_F39-17_row_base.png",
+  "b": "G-rsm_F39-17_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: current restoration environment. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame. (four frames, left to right, top to bottom.)",
+  "defects": [
+   "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"
+  ]
+ },
+ {
+  "label": "G F39#17 other stands base-vs-arm",
+  "a": "G-rsm_F39-17_other_stands_base.png",
+  "b": "G-rsm_F39-17_other_stands_arm.png",
+  "brief": "Fixed captures from the game of the Tidewake biome (islands, shallows and sea currents): restored sea currents at two more stands, two moments each (left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, water, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#4 row base-vs-arm",
+  "a": "G-rsm_F38-4_base.png",
+  "b": "G-rsm_F38-4_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: map. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+  ]
+ }
+]

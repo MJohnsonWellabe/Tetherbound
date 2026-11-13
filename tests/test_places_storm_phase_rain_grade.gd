@@ -181,3 +181,31 @@ func test_cloudreach_rain_stays_night_at_night_and_keeps_golden_light() -> void:
 			best_sun = float(golden.graded.sun.energy_mult)
 	assert_true(best > 0.03, "some golden or dawn hour keeps a warm horizon under the rain (r-b %.3f)" % best)
 	assert_true(best_sun > float(noon.base.sun.energy_mult), "and more of the low sun than day rain")
+
+
+## ground_wet_path_1112 round 2 (GPU G-places-wetpath): no rain darkening at
+## night; the full amount by day; no wetness in clear weather.
+func test_cloudreach_wet_ground_fades_out_at_night_and_needs_rain() -> void:
+	var arm: Dictionary = _json("res://data/config/cloudreach_visual.json").ground_wet_path_1112
+	var day := Color("#3b6f93")
+	assert_almost_eq(CR_WEATHER.wet_day_scale(day, day, arm), 1.0, 0.001, "full by day")
+	assert_almost_eq(CR_WEATHER.wet_day_scale(Color(day.r * 0.1, day.g * 0.1, day.b * 0.1), day, arm), 0.0, 0.001, "none at night")
+	var clear := CR_WEATHER.ground_wet_path_value(arm, {}, {})
+	assert_almost_eq(clear.x, 0.0, 0.001, "clear weather is dry")
+	assert_true(clear.y > 0.0 and clear.z > 0.0, "the trail keeps its duller, frayed edge in clear weather")
+	var rain := CR_WEATHER.ground_wet_path_value(arm, {"ground_wetness": 0.6}, {"ground_wetness": 1.0})
+	assert_almost_eq(rain.x, 1.0, 0.001, "rain wets the ground")
+
+
+## ground_wet_path_1112 round 3 (G-places-wetpath-r2): the clock gates the wet
+## darkening before the sky value does; none at night.
+func test_wet_darkening_is_gated_by_the_clock() -> void:
+	var weather := preload("res://scripts/world/cloudreach_weather.gd")
+	var hours: Array = _json("res://data/config/cloudreach_visual.json").ground_wet_path_1112.wet_hours
+	for night: float in [23.0, 0.0, 3.0, 4.9, 20.0, 21.5]:
+		assert_almost_eq(weather.wet_hour_scale(night, hours), 0.0, 0.0001, "no wet darkening at %.1f h" % night)
+	for day: float in [7.0, 8.0, 12.0, 18.0]:
+		assert_almost_eq(weather.wet_hour_scale(day, hours), 1.0, 0.0001, "full wet darkening at %.1f h" % day)
+	var dawn: float = weather.wet_hour_scale(6.0, hours)
+	assert_true(dawn > 0.0 and dawn < 1.0, "eased across dawn")
+	assert_almost_eq(weather.wet_hour_scale(23.0, []), 1.0, 0.0001, "no list, no clock gate")

@@ -1,0 +1,8 @@
+Ny: "none"
+Ii: "none"
+Cd: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Lg: none
+Bs: none
+Yj: "none"
+Af: "none"
+Gq: "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"

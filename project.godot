@@ -126,6 +126,10 @@ cloudreach_rock_courses={
 "type": "vec4",
 "value": Vector4(0, 0.36, 4.8, 0.2)
 }
+cloudreach_ground_1112={
+"type": "vec4",
+"value": Vector4(0, 0, 0, 0)
+}
 cloudreach_rock_weathering={
 "type": "vec4",
 "value": Vector4(0.75, 0.18, 0.24, 0.24)

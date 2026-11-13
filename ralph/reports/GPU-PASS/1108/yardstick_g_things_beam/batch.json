@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   6.8,
+   7.3,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   7.3,
+   7.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.4,
+   5.3,
+   5.6
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.8,
+   4.7,
+   4.9
+  ],
+  "craft:after": [
+   6.9,
+   6.5,
+   6.6
+  ],
+  "craft:before": [
+   5.6,
+   5.2,
+   5.3
+  ]
+ },
+ "candidates": {
+  "G F38#14 row base-vs-arm [G-bm_F38-14_base.png]": [
+   6.4,
+   6.8,
+   6.5
+  ],
+  "G F38#14 row base-vs-arm [G-bm_F38-14_arm.png]": [
+   6.8,
+   6.9,
+   6.8
+  ],
+  "G F38#33 row base-vs-arm [G-bm_F38-33_base.png]": [
+   6.6,
+   7.0,
+   6.8
+  ],
+  "G F38#33 row base-vs-arm [G-bm_F38-33_arm.png]": [
+   6.7,
+   7.0,
+   7.0
+  ],
+  "G F38#7 row base-vs-arm [G-bm_F38-7_arm.png]": [
+   6.6,
+   7.0,
+   7.1
+  ],
+  "G F38#7 row base-vs-arm [G-bm_F38-7_base.png]": [
+   6.3,
+   6.6,
+   6.6
+  ]
+ }
+}

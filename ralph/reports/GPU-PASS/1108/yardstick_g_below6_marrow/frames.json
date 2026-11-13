@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "stormwood__inventory__character__captain_marrow.jpg",
+  "preset": "arm-High",
+  "tree": "917e71d5900513b3ecf39172c9fc01eb3c23769d",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow (--fixed-fps 20; tool file from main 8df122a83, PR #910 blend wait)",
+  "path": "G-below6-marrow/arm-High/stormwood__inventory__character__captain_marrow.jpg",
+  "sky_fraction": 0.092,
+  "lower_edges": 0.3483,
+  "script_errors": 0,
+  "note": "F41#15, High, tb/below6 917e71d59 both sides with main's fixed dialogue tool swapped in (the branch predates #910; first run stopped at blend 0.741). base = overlay off; arm = BELOW6-MARROW/overlay.json (below6_marrow_self_lit_off + identity_floor_1112). All 4 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "917e71d5900513b3ecf39172c9fc01eb3c23769d",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow (--fixed-fps 20; tool file from main 8df122a83, PR #910 blend wait)",
+  "path": "G-below6-marrow/arm-High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "sky_fraction": 0.319,
+  "lower_edges": 0.3438,
+  "script_errors": 0,
+  "note": "F41#15, High, tb/below6 917e71d59 both sides with main's fixed dialogue tool swapped in (the branch predates #910; first run stopped at blend 0.741). base = overlay off; arm = BELOW6-MARROW/overlay.json (below6_marrow_self_lit_off + identity_floor_1112). All 4 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core.jpg",
+  "preset": "arm-High",
+  "tree": "917e71d5900513b3ecf39172c9fc01eb3c23769d",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow (--fixed-fps 20; tool file from main 8df122a83, PR #910 blend wait)",
+  "path": "G-below6-marrow/arm-High/stormwood__inventory__trainer__captain_marrow_dynamo_core.jpg",
+  "sky_fraction": 0.091,
+  "lower_edges": 0.3485,
+  "script_errors": 0,
+  "note": "F41#15, High, tb/below6 917e71d59 both sides with main's fixed dialogue tool swapped in (the branch predates #910; first run stopped at blend 0.741). base = overlay off; arm = BELOW6-MARROW/overlay.json (below6_marrow_self_lit_off + identity_floor_1112). All 4 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "preset": "arm-High",
+  "tree": "917e71d5900513b3ecf39172c9fc01eb3c23769d",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow (--fixed-fps 20; tool file from main 8df122a83, PR #910 blend wait)",
+  "path": "G-below6-marrow/arm-High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "sky_fraction": 0.325,
+  "lower_edges": 0.3332,
+  "script_errors": 0,
+  "note": "F41#15, High, tb/below6 917e71d59 both sides with main's fixed dialogue tool swapped in (the branch predates #910; first run stopped at blend 0.741). base = overlay off; arm = BELOW6-MARROW/overlay.json (below6_marrow_self_lit_off + identity_floor_1112). All 4 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__character__captain_marrow.jpg",
+  "preset": "base-High",
+  "tree": "917e71d5900513b3ecf39172c9fc01eb3c23769d",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow (--fixed-fps 20; tool file from main 8df122a83, PR #910 blend wait)",
+  "path": "G-below6-marrow/base-High/stormwood__inventory__character__captain_marrow.jpg",
+  "sky_fraction": 0.091,
+  "lower_edges": 0.3484,
+  "script_errors": 0,
+  "note": "F41#15, High, tb/below6 917e71d59 both sides with main's fixed dialogue tool swapped in (the branch predates #910; first run stopped at blend 0.741). base = overlay off; arm = BELOW6-MARROW/overlay.json (below6_marrow_self_lit_off + identity_floor_1112). All 4 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "917e71d5900513b3ecf39172c9fc01eb3c23769d",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow (--fixed-fps 20; tool file from main 8df122a83, PR #910 blend wait)",
+  "path": "G-below6-marrow/base-High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "sky_fraction": 0.323,
+  "lower_edges": 0.341,
+  "script_errors": 0,
+  "note": "F41#15, High, tb/below6 917e71d59 both sides with main's fixed dialogue tool swapped in (the branch predates #910; first run stopped at blend 0.741). base = overlay off; arm = BELOW6-MARROW/overlay.json (below6_marrow_self_lit_off + identity_floor_1112). All 4 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core.jpg",
+  "preset": "base-High",
+  "tree": "917e71d5900513b3ecf39172c9fc01eb3c23769d",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow (--fixed-fps 20; tool file from main 8df122a83, PR #910 blend wait)",
+  "path": "G-below6-marrow/base-High/stormwood__inventory__trainer__captain_marrow_dynamo_core.jpg",
+  "sky_fraction": 0.091,
+  "lower_edges": 0.3484,
+  "script_errors": 0,
+  "note": "F41#15, High, tb/below6 917e71d59 both sides with main's fixed dialogue tool swapped in (the branch predates #910; first run stopped at blend 0.741). base = overlay off; arm = BELOW6-MARROW/overlay.json (below6_marrow_self_lit_off + identity_floor_1112). All 4 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "917e71d5900513b3ecf39172c9fc01eb3c23769d",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow (--fixed-fps 20; tool file from main 8df122a83, PR #910 blend wait)",
+  "path": "G-below6-marrow/base-High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "sky_fraction": 0.328,
+  "lower_edges": 0.3298,
+  "script_errors": 0,
+  "note": "F41#15, High, tb/below6 917e71d59 both sides with main's fixed dialogue tool swapped in (the branch predates #910; first run stopped at blend 0.741). base = overlay off; arm = BELOW6-MARROW/overlay.json (below6_marrow_self_lit_off + identity_floor_1112). All 4 __dialogue frames blend 1.000."
+ }
+]

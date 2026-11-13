@@ -1,0 +1,7 @@
+Kv: none
+Fp: "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+Az: none
+Ip: "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+Pz: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Es: "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+Ko: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

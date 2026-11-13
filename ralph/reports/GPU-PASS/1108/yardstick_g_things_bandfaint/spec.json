@@ -1,0 +1,40 @@
+[
+ {
+  "label": "G F36#44 duskhush base-vs-arm",
+  "a": "G-bf_duskhush_base.png",
+  "b": "G-bf_duskhush_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: duskhush - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black plumage hides the face",
+   "barely above the trainer"
+  ]
+ },
+ {
+  "label": "G F36#61 ribbonray base-vs-arm",
+  "a": "G-bf_ribbonray_base.png",
+  "b": "G-bf_ribbonray_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: ribbonray - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "neon-magenta emissive ribbons read as an effect",
+   "hit reaction goes airborne"
+  ]
+ },
+ {
+  "label": "G F36#83 trailpup base-vs-arm",
+  "a": "G-bf_trailpup_base.png",
+  "b": "G-bf_trailpup_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: trailpup - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "stock animal look with no rim light or type accent"
+  ]
+ },
+ {
+  "label": "G F36#87 voltwig base-vs-arm",
+  "a": "G-bf_voltwig_base.png",
+  "b": "G-bf_voltwig_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: voltwig - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ }
+]

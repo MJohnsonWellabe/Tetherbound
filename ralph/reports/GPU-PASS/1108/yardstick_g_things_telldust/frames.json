@@ -1,0 +1,7 @@
+{"branch": "tb/gpu-frames-1108", "tree": "tb/things f87e2d1b6 (contains main 0a57e6d75)", "arm": "overlay_tell_dust.json",
+ "High": "G-things-telldust-high @ c3be86595", "Medium": "G-things-telldust-medium @ 3a06c5fc7",
+ "G F38#3 High/Medium": ["south_bridge_grunt-01", "south_bridge_grunt-02", "south_bridge_grunt-03"],
+ "G F38#28 High/Medium": ["warden_aldis-03", "warden_aldis-05"],
+ "excluded": "warden_aldis-08 (2.70 m) and warden_aldis-r04 (2.52 m): cameras not matched",
+ "G F38#11 High": ["warden_aldis-03", "south_bridge_grunt-02", "south_bridge_grunt-03"],
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg"}

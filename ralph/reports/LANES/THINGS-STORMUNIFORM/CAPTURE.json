@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-STORMUNIFORM",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "QUEUED 12 Nov (one other arm out: THINGS-GLIDEBANK)",
+ "tool": "F41#18 row recipe plus phase2_capture_dialogue.gd --biome=stormwood",
+ "base": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-STORMRIM/overlay_player_rim_off.json"},
+ "arm": {"tree": "tb/things", "overlay": ["ralph/reports/LANES/THINGS-STORMRIM/overlay_player_rim_off.json", "ralph/reports/LANES/THINGS-STORMUNIFORM/overlay_uniform_floor_off.json"]},
+ "rows": {"F41#18 (row frames and dialogue), F41#15, F41#7": ["as G-things-stormrim"]}
+}

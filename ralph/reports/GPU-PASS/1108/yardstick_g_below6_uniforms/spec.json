@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F41#18 row",
+  "a": "G-un_F41_18_row_base.png",
+  "b": "G-un_F41_18_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: uniformed character readability (three characters at the normal camera, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+  ]
+ },
+ {
+  "label": "G F41#18 dialogue",
+  "a": "G-un_F41_18_dialogue_base.png",
+  "b": "G-un_F41_18_dialogue_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: uniformed character readability (the same three characters in conversation, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+  ]
+ },
+ {
+  "label": "G Officer dialogue",
+  "a": "G-un_Officer_dialogue_base.png",
+  "b": "G-un_Officer_dialogue_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: uniformed officers in conversation (three officers, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G Civilian dialogue",
+  "a": "G-un_Civilian_dialogue_base.png",
+  "b": "G-un_Civilian_dialogue_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: villagers and trainers in conversation (three characters, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

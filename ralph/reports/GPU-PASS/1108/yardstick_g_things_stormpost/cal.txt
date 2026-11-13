@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9289,
+  "least_squares_slope": 1.4188,
+  "method": "linear",
+  "slope": 1.4188,
+  "intercept": -1.9679,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.512,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1A": {
+   "measured": 6.8,
+   "reference": 7.53,
+   "mapped": 7.68,
+   "residual": -0.15
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.767,
+   "reference": 7.47,
+   "mapped": 7.633,
+   "residual": -0.163
+  },
+  "craft:after": {
+   "measured": 6.5,
+   "reference": 7.35,
+   "mapped": 7.255,
+   "residual": 0.095
+  },
+  "craft:before": {
+   "measured": 5.1,
+   "reference": 4.83,
+   "mapped": 5.268,
+   "residual": -0.438
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.5,
+   "reference": 4.0,
+   "mapped": 4.417,
+   "residual": -0.417
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.233,
+   "reference": 6.53,
+   "mapped": 5.457,
+   "residual": 1.073
+  }
+ },
+ "candidates": {
+  "G Stormwood inventory controls base-vs-arm [G-spo_Stormwood inventory controls_base.png]": {
+   "measured_mean": 5.333,
+   "mapped_mean": 5.6,
+   "mapped_judges": [
+    5.98,
+    5.13,
+    5.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G Stormwood inventory controls base-vs-arm [G-spo_Stormwood inventory controls_arm.png]": {
+   "measured_mean": 5.333,
+   "mapped_mean": 5.6,
+   "mapped_judges": [
+    5.84,
+    5.27,
+    5.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G Stormwood dialogue ride-along base-vs-arm [G-spo_Stormwood dialogue ride-along_base.png]": {
+   "measured_mean": 5.467,
+   "mapped_mean": 5.79,
+   "mapped_judges": [
+    5.69,
+    5.69,
+    5.98
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G Stormwood dialogue ride-along base-vs-arm [G-spo_Stormwood dialogue ride-along_arm.png]": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.97,
+   "mapped_judges": [
+    6.97,
+    6.83,
+    7.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#15 row base-vs-arm [G-spo_F41#15 row_base.png]": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.13,
+   "mapped_judges": [
+    4.98,
+    5.13,
+    5.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F41#15 row base-vs-arm [G-spo_F41#15 row_arm.png]": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.97,
+   "mapped_judges": [
+    6.97,
+    6.97,
+    6.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

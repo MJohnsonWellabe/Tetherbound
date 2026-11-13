@@ -1,0 +1,23 @@
+{
+ "Nh": {
+  "anchor": false,
+  "label": "G F38#15 Medium row base-vs-arm",
+  "A": "G-f15m_arm.png",
+  "B": "G-f15m_base.png"
+ },
+ "Zy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ug": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Iy": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

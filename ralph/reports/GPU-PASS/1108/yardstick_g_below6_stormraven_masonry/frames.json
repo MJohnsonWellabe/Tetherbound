@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1108", "renderer": "High", "tree": "tb/below6 49a4b3dc2 both sides", "base": "no overlay",
+ "sections": {"G-below6-stormraven-r2": "a16cb1d19 (arm BELOW6 stormraven r2 overlay)", "G-below6-masonry": "c2cfcad91", "G-below6-masonry-noloss": "c8689e59a"},
+ "sets": {"F41#13 row": ["stormwood__stormraven__idle", "stormwood__fulgocobra__idle"],
+  "F40#15 row": ["stormward_overlook__walk_03_day", "windscar_flight_aerie__vista_dusk"],
+  "Overlook routes": ["stormward_overlook__walk_01_day", "stormward_overlook__walk_02_day", "stormward_overlook__route_day"],
+  "Shrine and eyrie (2x2)": ["sky_shrine__day__approach", "sky_shrine__day__close", "summit_eyrie__day__approach", "summit_eyrie__day__close"]}}

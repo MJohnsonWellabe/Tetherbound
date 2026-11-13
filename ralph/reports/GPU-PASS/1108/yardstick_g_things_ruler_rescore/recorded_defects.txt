@@ -1,0 +1,9 @@
+Bd: none
+Hw: none
+Sx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ah: "glossy dark purple"; "back below the trainer's head"
+Pl: "near-black plates merge with shadow"; "faint is an armoured ball"
+Bc: "below the trainer's height"; "flat mustard material"; "faint tail passes through the trainer"
+Ea: "near-black with no rim light"; "silhouette dissolves"
+Ej: "about trainer height"
+Pb: "low, at trainer height"; "body passes through the trainer in faint end"; "stretched dark bar on the tail"

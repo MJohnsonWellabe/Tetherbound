@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F40#8 row base-vs-arm",
+  "a": "G-kn_F40-8_row_base.png",
+  "b": "G-kn_F40-8_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: Three Bells bridge route markers (three frames: day, golden hour and night, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer"
+  ]
+ },
+ {
+  "label": "G F40#15 row base-vs-arm",
+  "a": "G-kn_F40-15_row_base.png",
+  "b": "G-kn_F40-15_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: route edges over the void (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+  ]
+ },
+ {
+  "label": "G Overlook and aerie routes base-vs-arm",
+  "a": "G-kn_Overlook_and_aerie_routes_base.png",
+  "b": "G-kn_Overlook_and_aerie_routes_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome: walking routes at a summit overlook and a flight aerie (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 road ends base-vs-arm",
+  "a": "G-kn_F40-0_road_ends_base.png",
+  "b": "G-kn_F40-0_road_ends_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome: a gate road and a summit road with their route edges (four frames, left to right, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

@@ -1,0 +1,89 @@
+{
+ "rows": {
+  "F38#16": [
+   "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+   "meadows__inventory__trainer__tournament_semi_tam__dialogue",
+   "meadows__inventory__trainer__tournament_final_oskar__dialogue"
+  ],
+  "F38#17": [
+   "meadows__inventory__trainer__old_champion_bram__dialogue",
+   "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+   "meadows__inventory__trainer__stronghold_elite__dialogue"
+  ],
+  "F38#37": [
+   "meadows__inventory__character__quarry_foreman__dialogue",
+   "meadows__inventory__character__garrick__dialogue"
+  ],
+  "F39#26": [
+   "tidewake__inventory__character__water_adair__dialogue",
+   "tidewake__inventory__character__water_iona__dialogue",
+   "tidewake__inventory__character__water_rowan__dialogue"
+  ],
+  "F40#10": [
+   "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+   "cloudreach__inventory__character__naturalist_sora__dialogue",
+   "cloudreach__inventory__character__defector_rusk__dialogue"
+  ],
+  "F40#12": [
+   "cloudreach__inventory__character__trader_kelm__dialogue",
+   "cloudreach__inventory__character__captain_veyra__dialogue"
+  ]
+ },
+ "samples": {
+  "meadows sample1": [
+   "meadows__inventory__character__ada__dialogue.jpg",
+   "meadows__inventory__character__kell__dialogue.jpg",
+   "meadows__inventory__character__nessa__dialogue.jpg",
+   "meadows__inventory__character__sela__dialogue.jpg",
+   "meadows__inventory__character__wilhelm__dialogue.jpg",
+   "meadows__inventory__trainer__lost_creature_rue__dialogue.jpg",
+   "meadows__inventory__trainer__practice_trainer__dialogue.jpg",
+   "meadows__inventory__trainer__relay_picket_orrin__dialogue.jpg",
+   "meadows__inventory__trainer__stronghold_outer_watch__dialogue.jpg"
+  ],
+  "meadows sample2": [
+   "meadows__inventory__character__corin__dialogue.jpg",
+   "meadows__inventory__character__maren__dialogue.jpg",
+   "meadows__inventory__character__rae__dialogue.jpg",
+   "meadows__inventory__character__tam__dialogue.jpg",
+   "meadows__inventory__trainer__captain_ridge__dialogue.jpg",
+   "meadows__inventory__trainer__pasture_drover_juno__dialogue.jpg",
+   "meadows__inventory__trainer__relay_captain__dialogue.jpg",
+   "meadows__inventory__trainer__south_bridge_grunt__dialogue.jpg",
+   "meadows__inventory__trainer__wanderer_trail_camp__dialogue.jpg"
+  ],
+  "tidewake sample1": [
+   "water__inventory__character__water_bren__dialogue.jpg",
+   "water__inventory__character__water_halen__dialogue.jpg",
+   "water__inventory__character__water_orsen__dialogue.jpg",
+   "water__inventory__character__water_tovin__dialogue.jpg",
+   "water__inventory__trainer__water_trainer_daro__dialogue.jpg",
+   "water__inventory__trainer__water_trainer_irva__dialogue.jpg",
+   "water__inventory__trainer__water_trainer_nel__dialogue.jpg",
+   "water__inventory__trainer__water_trainer_sera__dialogue.jpg",
+   "water__inventory__trainer__water_trainer_tovin__dialogue.jpg"
+  ],
+  "stormwood sample1": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue.jpg",
+   "stormwood__inventory__character__cook_marl__dialogue.jpg",
+   "stormwood__inventory__character__grunt_lieutenant_dace__dialogue.jpg",
+   "stormwood__inventory__character__trader_fenn__dialogue.jpg",
+   "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue.jpg",
+   "stormwood__inventory__trainer__circuit_orin_blackwater__dialogue.jpg",
+   "stormwood__inventory__trainer__lieutenant_varga_rodline_bridge__dialogue.jpg",
+   "stormwood__inventory__trainer__rodfolk_guard_bram__dialogue.jpg",
+   "stormwood__inventory__trainer__rook_circuit_lantern__dialogue.jpg"
+  ],
+  "stormwood sample2": [
+   "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+   "stormwood__inventory__character__defector_sable__dialogue.jpg",
+   "stormwood__inventory__character__rodkeeper_hesk__dialogue.jpg",
+   "stormwood__inventory__character__trainer_ivo__dialogue.jpg",
+   "stormwood__inventory__trainer__circuit_lena_giant__dialogue.jpg",
+   "stormwood__inventory__trainer__crown_wayfarer_nell__dialogue.jpg",
+   "stormwood__inventory__trainer__outerworks_lieutenant_sera__dialogue.jpg",
+   "stormwood__inventory__trainer__rodline_duelist_ren__dialogue.jpg",
+   "stormwood__inventory__trainer__tamsin_surge_lesson__dialogue.jpg"
+  ]
+ }
+}

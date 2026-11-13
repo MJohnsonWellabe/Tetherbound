@@ -1,0 +1,5 @@
+Ci: none
+Tp: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Si: none
+Wd: "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+Vy: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

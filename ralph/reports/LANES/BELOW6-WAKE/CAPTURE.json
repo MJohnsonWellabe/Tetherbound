@@ -1,0 +1,19 @@
+{
+ "row": "F39#5 (5.98) and F39#14 (6.12): the pinwheel seam in the swimmer's wake foam",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_swimming.gd",
+ "args": ["--seed=2042", "--output={OUT}"],
+ "output_rule": "the tool only accepts an output under res://ralph/reports/VISUAL/phase2/tidewake/",
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "frames": ["tidewake__swimming__entry", "tidewake__swimming__surface_west", "tidewake__swimming__surface_mid"],
+ "overlay": "ralph/reports/LANES/BELOW6-WAKE/overlay.json",
+ "base_is": "tb/below6 with surface_crawl_1112 ON (the shipped swim pose), overlay off",
+ "capture_both": "base and arm (overlay on), same command as G-below6-swim-sea-r5",
+ "needs_import": "no",
+ "_why": "G-below6-swim-sea-r5 3/3: 'a radial pinwheel seam at the centre of the wake foam in surface_west'. The churn inside the foam lip is broken up by angle alone, so its gaps converge on the centre as spokes. Arm: the churn breaks up in patches across the disc and fades toward the centre; the lip is unchanged.",
+ "want_to_see": "no spokes or pinwheel in the wake discs behind the swimmer; foam that reads as patchy churn. Say if the foam now reads as a regular checker or has thinned out too much.",
+ "pre_check_needed": "On CPU the wake foam is too pale against the water to show the difference (0 shader errors, frames otherwise identical), so the GPU pre-check is the first real look. The shore creature differs between runs in these frames; pin it or judge on the swimmer crop."
+}

@@ -1,0 +1,39 @@
+{
+ "row": "F40#3 Cloudreach landmark read (GPU High 5.65)",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_locations.gd",
+ "args": [
+  "--biome=cloudreach",
+  "--subset=cloudreach__landmark__broken_skyroad_arch",
+  "--subset=cloudreach__upper_cloudreach__10__old_wind_observatory",
+  "--subset=cloudreach__windscar_ravine__05__windscar_beacon",
+  "--times=day",
+  "--views=approach",
+  "--seed=2042",
+  "--output={OUT}"
+ ],
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "frames": [
+  "cloudreach__landmark__broken_skyroad_arch__day__approach",
+  "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach",
+  "cloudreach__windscar_ravine__05__windscar_beacon__day__approach"
+ ],
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-F40-3/overlay.json",
+ "capture_both": "base (main, old stands, crowns off) and arm (overlay), same command as G-recheck-1111 F40-3",
+ "needs_import": "no",
+ "_why": "The row's observatory and beacon frames do not show their landmarks (a rim wall with the tower cut off; a gate a twentieth of the frame). Arm: two new approach stands plus the aviary-family dome crowns.",
+ "want_to_see": "beacon: the gate and its blue-gold dome centre-frame; observatory: the tower at the end of its path with the armillary ring, no rim wall (its top is still cut off). Skyroad arch: unchanged. Stand changes: re-baseline, do not compare like-for-like."
+}

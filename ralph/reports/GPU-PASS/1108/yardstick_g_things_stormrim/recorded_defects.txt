@@ -1,0 +1,7 @@
+Hb: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Og: "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+Do: "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+Sj: "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+Qs: "none"
+Mb: none
+Vd: none

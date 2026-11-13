@@ -1,0 +1,8 @@
+{"branch": "tb/gpu-frames-1108", "section": "G-things-stormuniform", "commit": "cb3d65be1", "renderer": "High",
+ "tree": "tb/things 50b041a7b (both sides), phase2_capture_dialogue.gd --biome=stormwood --fixed-fps 20",
+ "base": "THINGS-STORMRIM overlay_player_rim_off", "arm": "base + STORMUNIFORM (stormwood_character_presentation uniform/civilian emission_floor -> 0)",
+ "sets": {"F41#18 row": ["character__tether_lieutenant_varga", "trainer__lieutenant_dace_hollows_rod", "character__defector_sable"],
+  "F41#18 dialogue": ["character__tether_lieutenant_varga__dialogue", "trainer__lieutenant_dace_hollows_rod__dialogue", "character__defector_sable__dialogue"],
+  "Officer dialogue": ["trainer__outerworks_lieutenant_sera__dialogue", "trainer__officer_maren_verge_rod__dialogue", "trainer__officer_nysa_deepwood_rod__dialogue"],
+  "Civilian dialogue": ["character__trainer_ivo__dialogue", "trainer__tamsin_surge_lesson__dialogue", "character__archivist_wen__dialogue"]},
+ "render_diff_mean_range": "0.08-4.62 per frame (Marrow 0.1, unchanged; Nysa dialogue 4.6)"}

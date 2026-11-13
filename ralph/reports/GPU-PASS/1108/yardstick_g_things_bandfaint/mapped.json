@@ -1,0 +1,160 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9111,
+  "least_squares_slope": 1.1502,
+  "method": "linear",
+  "slope": 1.1502,
+  "intercept": -0.1594,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.41,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:r22": {
+   "measured": 5.6,
+   "reference": 6.75,
+   "mapped": 6.282,
+   "residual": 0.468
+  },
+  "f04_6_r22:control": {
+   "measured": 4.867,
+   "reference": 5.83,
+   "mapped": 5.438,
+   "residual": 0.392
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.767,
+   "reference": 7.53,
+   "mapped": 7.623,
+   "residual": -0.093
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.767,
+   "reference": 7.47,
+   "mapped": 7.623,
+   "residual": -0.153
+  },
+  "craft:after": {
+   "measured": 6.4,
+   "reference": 7.35,
+   "mapped": 7.202,
+   "residual": 0.148
+  },
+  "craft:before": {
+   "measured": 5.0,
+   "reference": 4.83,
+   "mapped": 5.592,
+   "residual": -0.762
+  }
+ },
+ "candidates": {
+  "G F36#44 duskhush base-vs-arm [G-bf_duskhush_arm.png]": {
+   "measured_mean": 6.3,
+   "mapped_mean": 7.09,
+   "mapped_judges": [
+    7.09,
+    7.09,
+    7.09
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36#44 duskhush base-vs-arm [G-bf_duskhush_base.png]": {
+   "measured_mean": 5.867,
+   "mapped_mean": 6.59,
+   "mapped_judges": [
+    6.51,
+    6.63,
+    6.63
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36#61 ribbonray base-vs-arm [G-bf_ribbonray_arm.png]": {
+   "measured_mean": 6.3,
+   "mapped_mean": 7.09,
+   "mapped_judges": [
+    6.97,
+    6.97,
+    7.32
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36#61 ribbonray base-vs-arm [G-bf_ribbonray_base.png]": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.55,
+   "mapped_judges": [
+    6.4,
+    6.4,
+    6.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36#83 trailpup base-vs-arm [G-bf_trailpup_base.png]": {
+   "measured_mean": 6.067,
+   "mapped_mean": 6.82,
+   "mapped_judges": [
+    6.74,
+    6.74,
+    6.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36#83 trailpup base-vs-arm [G-bf_trailpup_arm.png]": {
+   "measured_mean": 5.467,
+   "mapped_mean": 6.13,
+   "mapped_judges": [
+    6.17,
+    6.05,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G F36#87 voltwig base-vs-arm [G-bf_voltwig_base.png]": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.51,
+   "mapped_judges": [
+    7.55,
+    7.55,
+    7.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "G F36#87 voltwig base-vs-arm [G-bf_voltwig_arm.png]": {
+   "measured_mean": 6.467,
+   "mapped_mean": 7.28,
+   "mapped_judges": [
+    7.43,
+    7.09,
+    7.32
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
