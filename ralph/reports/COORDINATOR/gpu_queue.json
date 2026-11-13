@@ -4701,6 +4701,17 @@
       "added": "13 Nov 02:58"
     },
     {
+      "id": "rescore-f39-17-f39-5-main",
+      "branch": "main",
+      "commit": "0d8e47167",
+      "rows": [
+        "F39#17",
+        "F39#5"
+      ],
+      "ask": "No arm: row score on current main of F39#17 (restored sea) and F39#5 (swim) after their arms landed (r5 ships). Their own job.json frame sets, High. Board still shows the pre-landing 5.5 and 5.64.",
+      "added": "13 Nov 04:38"
+    },
+    {
       "id": "below6-stormraven-r3",
       "kind": "arm (needs import)",
       "rows": [
