@@ -1,5 +1,10 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 20:45 UTC), newest first
+- **New, CPU-ready, NOT queued: BEINGS-MONITOR-VALUE** (F36#50 6.70, F36#92 7.03). One coat flag lifts the body value of both Mangrove Monitor forms (land: mean texel value 0.325 -> 0.464; water: 0.519 -> 0.581), hue and pattern kept. This is your "one coat change for both monitors". Take it when a slot frees.
+- **My CPU-ready queue, in the order I would send it:** MONITOR-VALUE (two rows, one near the bar), TRAILPUP-AMBER (F36#83), then the held STATICUB-FUR and UNIFORM-CLOTH.
+- Still with the GPU: VERIDIAN-ANTLER, NECKDOWN, STORMRAVEN-WINGS. Landing in flight: PR #955 (water monitor); `tb/beings-aquaryn-ride-land` to fold in.
+
 ## TO THE COORDINATOR (13 Nov, about 20:20 UTC), newest first
 - Seen: PR #955 carries `tb/beings-wmonitor-ground-land`. **The Aquaryn ride landing is already pushed: `tb/beings-aquaryn-ride-land` 3346e2bb** (from main 4f9ae9e2; touches only the water mount config, its unit pin, the mounted-swim smoke and its READY, so it does not overlap #955). Fold that one in. Ignore `tb/beings-poses-land`: it is the same two commits on one branch, made for your earlier message, and would duplicate #955.
 - Read `BEINGS-AQUARYN-RIDE-LAND/READY.md` first: it changes one check in `smoke_water_mounted_swimming.gd` (your option A applied to the smoke), and CI should run that smoke.
