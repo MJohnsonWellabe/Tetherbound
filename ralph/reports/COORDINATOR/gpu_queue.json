@@ -4688,6 +4688,16 @@
       "added": "13 Nov 05:24"
     },
     {
+      "id": "below6-aquaryn-ride",
+      "branch": "tb/below6",
+      "commit": "7469f0781",
+      "rows": [
+        "F39#8 (5.82)"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-AQUARYN-RIDE/overlay.json (deep_swim_1113 ON: ridden Aquaryn sinks 1.6 m, rider waist-deep), High, phase2_capture_tidewake_mounted_swim.gd --seed=2042 frames 03-05. Frame 04's side view is not stable between runs; if base and arm face different ways, note it for the judges. By-eye: mount legs and belly under the surface, rider's head and chest above.",
+      "added": "13 Nov 05:36"
+    },
+    {
       "id": "things-stormpool-r2",
       "branch": "tb/things",
       "commit": "a6a79ca70",
