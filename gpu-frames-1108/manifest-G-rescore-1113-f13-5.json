@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "main-High",
+  "tree": "b8622117cc344ad66d7f2c77ec2b44dc302f955c",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-rescore-1113-f13-5/main-High/swim-across-day.jpg",
+  "sky_fraction": 0.446,
+  "lower_edges": 0.1266,
+  "script_errors": 0,
+  "note": "G-rescore-1113 (LANE-PLACES) F13#5: T2 swim views as G-newapproach-t2-cleanup (camera set T2-current.json): swim-away-day, swim-across-day, swim-away-night and swim-brine-day (it captured this time). Main b8622117 content (c673d5285 + six non-imported main files; tool and camera set unchanged), High, one side."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "main-High",
+  "tree": "b8622117cc344ad66d7f2c77ec2b44dc302f955c",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-rescore-1113-f13-5/main-High/swim-away-day.jpg",
+  "sky_fraction": 0.456,
+  "lower_edges": 0.1341,
+  "script_errors": 0,
+  "note": "G-rescore-1113 (LANE-PLACES) F13#5: T2 swim views as G-newapproach-t2-cleanup (camera set T2-current.json): swim-away-day, swim-across-day, swim-away-night and swim-brine-day (it captured this time). Main b8622117 content (c673d5285 + six non-imported main files; tool and camera set unchanged), High, one side."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "main-High",
+  "tree": "b8622117cc344ad66d7f2c77ec2b44dc302f955c",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-rescore-1113-f13-5/main-High/swim-away-night.jpg",
+  "sky_fraction": 0.631,
+  "lower_edges": 0.1543,
+  "script_errors": 0,
+  "note": "G-rescore-1113 (LANE-PLACES) F13#5: T2 swim views as G-newapproach-t2-cleanup (camera set T2-current.json): swim-away-day, swim-across-day, swim-away-night and swim-brine-day (it captured this time). Main b8622117 content (c673d5285 + six non-imported main files; tool and camera set unchanged), High, one side."
+ },
+ {
+  "frame": "swim-brine-day.jpg",
+  "preset": "main-High",
+  "tree": "b8622117cc344ad66d7f2c77ec2b44dc302f955c",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-rescore-1113-f13-5/main-High/swim-brine-day.jpg",
+  "sky_fraction": 0.094,
+  "lower_edges": 0.0703,
+  "script_errors": 0,
+  "note": "G-rescore-1113 (LANE-PLACES) F13#5: T2 swim views as G-newapproach-t2-cleanup (camera set T2-current.json): swim-away-day, swim-across-day, swim-away-night and swim-brine-day (it captured this time). Main b8622117 content (c673d5285 + six non-imported main files; tool and camera set unchanged), High, one side."
+ }
+]
