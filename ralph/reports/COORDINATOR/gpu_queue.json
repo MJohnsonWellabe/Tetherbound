@@ -5083,7 +5083,8 @@
     "F39#13 camp workbench (6.14)"
    ],
    "ask": "After scene-cache. Overlay only over the bench fix (#953). Capture per ralph/reports/LANES/SCENE-WORKSHOP/. Its base must include the bench fix: use tb/scene (or main once #953 merges).",
-   "added": "13 Nov 17:02"
+   "added": "13 Nov 17:02",
+   "main_ready": "main 4f9ae9e2a has #953; base from main or tb/scene after it merges main."
   },
   {
    "id": "rescore-f39-13-after-953",
@@ -5093,7 +5094,8 @@
     "F39#13"
    ],
    "ask": "No arm: after #953 merges, re-score F39#13 on main (it was judged on the broken workbench model). Can share scene-workshop's base capture.",
-   "added": "13 Nov 17:02"
+   "added": "13 Nov 17:02",
+   "main_ready": "main 4f9ae9e2a has #953; base from main or tb/scene after it merges main."
   },
   {
    "id": "beings-stormraven-wings",
