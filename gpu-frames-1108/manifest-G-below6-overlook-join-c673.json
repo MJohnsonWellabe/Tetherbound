@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.066,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0483,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.312,
+  "lower_edges": 0.251,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.301,
+  "lower_edges": 0.0701,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.363,
+  "lower_edges": 0.1484,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "join-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/join-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.216,
+  "lower_edges": 0.0635,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "join-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/join-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0454,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "join-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/join-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.312,
+  "lower_edges": 0.2569,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "join-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/join-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.301,
+  "lower_edges": 0.0696,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "join-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-join-c673/join-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.363,
+  "lower_edges": 0.146,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-JOIN (F40#15; route_day/vista_dusk feed F40#0/#21): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113). High. By eye: the straight dark seam across the grass at the trainer's feet is gone in route_day and vista_dusk; the dark wedge beside the path remains (as the lane's CPU proof said); the lifted ridge leaves a soft diagonal crease at left."
+ }
+]
