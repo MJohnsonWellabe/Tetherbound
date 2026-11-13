@@ -5382,7 +5382,8 @@
    ],
    "ask": "GPU eye check: Venn fight (warm-up first, per TECHNICAL 8.1) with ralph/reports/LANES/LAND-MT-CRAGCUT/probe_overlay.json (crag back faces painted magenta), t-000 and t-003 at High. Report whether the dark overhead wedge turns magenta. If yes, LAND-MT-CRAGCUT is the arm; if not, it is another mesh.",
    "added": "13 Nov 21:10",
-   "priority": "cheap probe; ride the tb/land-mt boot"
+   "priority": "cheap probe; ride the tb/land-mt boot",
+   "status": "WITHDRAWN 13 Nov 21:15: LANE-LAND-MT proved on CPU (fixed t-000 view) the wedge is the crag back faces; CRAGCUT arm follows."
   },
   {
    "id": "beings-fly-shoulder",
@@ -5394,6 +5395,18 @@
    "ask": "Base vs + ralph/reports/LANES/BEINGS-FLY-SHOULDER/overlay.json (carrier talons hold the trainer's shoulders, hands hold the bird's legs, instead of the bird standing on raised hands). phase2_capture_realm_flight.gd --biome=meadows --seed=2042, frames launch and glide, High. Same tb/beings import (43507f404 adds flag-off code over 31d672f7b).",
    "added": "13 Nov 21:10",
    "priority": "after stormraven-arcs in the beings boot"
+  },
+  {
+   "id": "beings-officer-faces",
+   "branch": "tb/beings",
+   "commit": "06805723e",
+   "rows": [
+    "F41#8 (6.27)",
+    "F41#18 (6.02)"
+   ],
+   "ask": "Two overlay arms, one base: BEINGS-OFFICER-FACES-MAREN (Maren chestnut-honey hair and plate; Sera unchanged) and BEINGS-OFFICER-FACES-NYSA-HAIR (Nysa keeps the current officer_a face per owner 13 Nov; ash-silver hair and plate only). Stormwood dialogue frames per the arm folders' CAPTURE.json, High. By eye: Maren chestnut-honey, Nysa ash-silver, both faces as today. The Nysa face-swap record stays OFF (owner: keep current face).",
+   "added": "13 Nov 21:20",
+   "priority": "with the beings boot after stormraven-arcs"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
