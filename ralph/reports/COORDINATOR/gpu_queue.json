@@ -5011,6 +5011,17 @@
       ],
       "ask": "No arm: row scores on current main from each row's own job.json frames, High. F41#6's recorded defect ('bright magenta danger slab through impact') no longer appears since the attack outlines went off (owner 24 Oct); F39#23 is also flagged by LANE-THINGS as a stale score. Send to LANE-SCOUT.",
       "added": "13 Nov 10:43"
+    },
+    {
+      "id": "beings-veridian-antler",
+      "branch": "tb/beings",
+      "commit": "d7b2989a3",
+      "rows": [
+        "F36#85 Veridian (6.33)",
+        "F38#1, F38#2 no-loss"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BEINGS-VERIDIAN-ANTLER/overlay.json (creature_model_flags beings_veridian_rigid_antlers ON: re-skinned copy of the live model, antlers bound to the head), High, capture_f36_poses.gd --species=veridian --roles=hit,faint --whole-body --context; frames hit-000/050, faint-050/100. By-eye on faint-050/100: the pale-and-green blade rising from the head is gone and a branched antler sits on the head; hit-000 identical. Needs one import of tb/beings (new GLB).",
+      "added": "13 Nov 16:32"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
