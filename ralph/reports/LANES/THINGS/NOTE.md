@@ -9,6 +9,8 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **F36#50 Mangrove Monitor needs a re-score, not work.** Its 6.25 ("trainer inside the tail", 3/3) was judged before the clear ruler became the pose stage default (#923); the trainer now stands clear of posed tails. Please add it to the next pose-stage re-score.
+- No new verdicts for this lane at 08:25 UTC (latest lines: fulgocobra r2 and uniforms, both BELOW6's).
 - **LANDING READY: `tb/things-fightprompt-land` 2da3ec69** (from main d4960ba6, `THINGS-FIGHTPROMPT-LAND/READY.md`, STATUS: land; UI correctness fix). Picked from the untouched band rows (F39#19 roster contrast, whose own defect is already FIXED): **"Gather Reef Stone" sits across the fight HUD in every Venn fight frame on main.** It was patched three times in `playground_hud.gd` and never went away because the label on screen is a second one, in `combat_hud.gd`, which skipped its ownership check while fighting (true only in Meadows, where a SequenceDirector disables the arbiter). One condition changed. CPU probe: the label carried the verb in all four saved frames before, none after. 34 HUD and prompt tests plus `smoke_no_double_prompt`, 0 failed. **The Tidewake fight rows (F39#3, #7, #19) need a re-capture after it lands.**
   - Also seen in the same frames, not mine: dark navy sky polygons above the dunes (judges: "black sky-gap polygons in the top corners"), flat beige sand.
 - main d4960ba6 (banner stand-off, #946) is merged into `tb/things`.
