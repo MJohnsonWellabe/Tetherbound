@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-TONIC-STASH ready (F38#12): the stashed tonic stands on a crate
+
+Of the row's three frames the tonic is the weakest (a bare 0.3 m vial on the grass). Flag-off: the band-3 tonic node gets an installed wooden crate with its own vial on top at 0.62 m. Switch: `data/config/harvest_stash_support.json` `enabled` (the node block sits in a JSON list an overlay cannot address). Visual only. CPU sheet in the folder. Checks: the new flag test passes (2 tests); the wider `--only=harvest` group is slow smokes and I did not get a clean count from it, so treat the wider harvest tests as not run. F39#8 still waits on your A or B answer.
+
 ## 13 Nov, F39#8 Aquaryn ride: a decision for you before I build (BELOW6-AQUARYN-RIDE/QUESTION.md)
 
 The 3/3 defect is "the mount still stands on top of the surface". The sink is capped at 1.0 m by LANE-TW's pin that the rider's art origin stays above sea level (0.105 m of clearance left). CPU look at sink 1.7: the mount's belly and legs go under and it reads as swimming, with the rider in the water to about the waist (sheet in the folder; not frame-matched). LANE-TW's r1 at 1.4 scored +1.34 on CPU and was withheld only for that pin. Option A: allow the rider's legs in the water (one config value, pin rewritten to head and chest above the sea). Option B: keep the rider dry by raising the seat while swimming (riding controller and networked seat; larger). I recommend A but will not rewrite another lane's rule without your word. Going to F38#12 meanwhile.

@@ -368,7 +368,7 @@ func _build_visual(spec: Dictionary = {}) -> void:
 	# (the band-3 tonic vial alone on the grass) stands on an installed prop
 	# and is shown at a stated height, so it reads as a deliberate stash.
 	var stash: Variant = presentation.get("stash_support_1113", {})
-	if stash is Dictionary and bool((stash as Dictionary).get("enabled", false)):
+	if stash is Dictionary and bool((stash as Dictionary).get("enabled", false)) and _stash_support_switch():
 		_visual = _stash_support_visual(_visual, stash as Dictionary)
 	add_child(_visual)
 	# OP-0830-3. Attached to `_visual` rather than to `self` on purpose:
@@ -383,6 +383,15 @@ func _build_visual(spec: Dictionary = {}) -> void:
 ## Keep the authored harvest anchor and its support; only the displayed item
 ## comes from the cache's shared identity builder. Load it lazily so mounting
 ## a harvest prop cannot introduce a preload cycle through world composition.
+## data/config/harvest_stash_support.json `enabled`: the one switch for every
+## node's `stash_support_1113` block (those blocks sit in a JSON list, which a
+## deep-merge overlay cannot address).
+static func _stash_support_switch() -> bool:
+	var parsed: Variant = JSON.parse_string(
+			FileAccess.get_file_as_string("res://data/config/harvest_stash_support.json"))
+	return parsed is Dictionary and bool((parsed as Dictionary).get("enabled", false))
+
+
 ## The node's own reward model on top of an installed support prop. Visual
 ## only: the harvest anchor, prompt, reward and collision are unchanged.
 func _stash_support_visual(reward: Node3D, stash: Dictionary) -> Node3D:
