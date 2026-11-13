@@ -2808,6 +2808,38 @@ func _resource_position(authored: Vector3) -> Vector3:
 	return best
 
 
+## F40#15 `overlook_ridge_join_1113` (flag-off; scope world_geometry: the
+## collider is built from the same rows, identically on every peer, no save
+## state). The Stormward Overlook is the one landmark whose crown follows two
+## sloped strips (cap radius 0). Away from those strips its crown eases back up
+## to the landmark height, while the approach ridge's rows are pinned only
+## inside the ledge's flat radius; just outside it they drop to the ridge's own
+## height, so the top of the ledge wall shows as a dark seam and wedge on the
+## east side of the approach. With the flag on, a ridge vertex within `ease_m`
+## outside that rim is lifted toward the crown height at the nearest rim point,
+## never lowered, so the grass meets the ledge with no exposed wall.
+func _overlook_join_height(point: Vector3, height: float, config: Dictionary) -> float:
+	var cfg: Dictionary = config.get("overlook_ridge_join_1113", {})
+	if not bool(cfg.get("enabled", false)):
+		return height
+	for pad: Dictionary in _all_pad_points:
+		if float(pad.get("cap_radius", -1.0)) != 0.0:
+			continue
+		var centre: Vector3 = pad["position"]
+		var flat := Vector2(point.x - centre.x, point.z - centre.z)
+		var r := flat.length()
+		var rim := float(pad["flat_radius"])
+		var ease := float(cfg.get("ease_m", 9.0))
+		if r <= rim or r >= rim + ease:
+			continue
+		var on_rim := flat / r * rim * 0.985
+		var crown := _crown_height_at({"position": centre, "flat_radius": rim, "cap_radius": 0.5},
+			Vector3(centre.x + on_rim.x, centre.y, centre.z + on_rim.y), _all_crown_reference_lines)
+		var weight := 1.0 - smoothstep(0.0, ease, r - rim)
+		return maxf(height, lerpf(height, crown - float(cfg.get("sink_m", 0.03)), weight))
+	return height
+
+
 func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		half_width: float, seed_value: int, top_material: Material, config: Dictionary,
 		self_route_id: String = "", overpass_lines: Array[Dictionary] = []) -> Array:
@@ -3000,7 +3032,8 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 			if record_shoulder_audit:
 				shoulder_audit_vertices.append({"route": self_route_id, "ridge": str(parent.name) + "/" + label,
 					"row": rows.size(), "column": row.size(), "raw": raw})
-			row.append(Vector3(raw.x, _walkable_height(raw, raw.y, lines, pads), raw.z))
+			row.append(Vector3(raw.x, _overlook_join_height(raw,
+				_walkable_height(raw, raw.y, lines, pads), config), raw.z))
 		rows.append(row)
 	# Walls hang from the rows' outer vertices (no separate station-only edge).
 	var wall_left_top: Array[Vector3] = []
