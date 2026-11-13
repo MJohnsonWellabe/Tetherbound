@@ -44,3 +44,14 @@ func test_other_stormwood_uniforms_keep_their_floor() -> void:
 	var nysa: Dictionary = PRESENTATION.decorate({"name": "Officer Nysa", "config_key": "officer_a",
 		"role_id": "officer_nysa_deepwood_rod"}, "officer_nysa_deepwood_rod")
 	assert_true(float(nysa.get("emission_floor", 0.0)) > 0.0, "an officer keeps the uniform floor")
+
+
+## The uniform cloth floor (uniform_cloth_floor_1113, ON 13 Nov) only ever
+## lowers a floor: Marrow's own 0 survives it, a plain officer takes 0.04.
+func test_cloth_floor_never_raises_an_identity_floor() -> void:
+	var presentation: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_character_presentation.json"))
+	assert_true(bool((presentation.get("uniform_cloth_floor_1113", {}) as Dictionary).get("enabled", false)), "the cloth floor is ON")
+	var marrow := PRESENTATION.decorate({"config_key": "captain_a"}, "marrow")
+	assert_eq(float(marrow.get("emission_floor", -1.0)), 0.0, "Marrow keeps his own 0 floor")
+	var officer := PRESENTATION.decorate({"config_key": "officer_a"}, "nysa")
+	assert_true(absf(float(officer.get("emission_floor", -1.0)) - 0.04) < 0.0001, "an officer takes the cloth floor")
