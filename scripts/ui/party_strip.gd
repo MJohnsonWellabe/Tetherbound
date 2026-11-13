@@ -944,13 +944,20 @@ func set_pinned(pinned: bool) -> void:
 	# treats an already-visible pin as idempotent; unpin/re-pin still reveals.
 	if compact and _stable_compact_pin_reveal and pinned and _pinned and visible:
 		return
+	if compact and compact_names_enabled():
+		# F39#19 round 2 (G-scene-rosternames, 3/3: the named roster read as
+		# ghost text). CombatHUD repeats this call every frame and the pin
+		# flips with switch availability (a stagger); each `_reveal()` restarts
+		# the tween at alpha 0, so the strip sat nearly invisible. With names
+		# on, a strip already showing is left as it is, and it never starts a
+		# fade while the fight runs: it reveals once and stays up.
+		_pinned = pinned
+		_fade_timer = 0.0
+		if not visible:
+			_reveal()
+		return
 	_pinned = pinned
 	if pinned:
-		_reveal()
-	elif compact and compact_names_enabled():
-		# F39#19 round 2 (G-scene-rosternames, 3/3): with names on, the fight
-		# roster faded to ghost text whenever switching was unavailable (a
-		# stagger). The roster stays up for the whole fight instead.
 		_reveal()
 	else:
 		_fade_timer = UI_TOKENS.T_PARTY_FADE

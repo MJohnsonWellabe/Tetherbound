@@ -50,3 +50,16 @@ func test_on_the_fight_roster_does_not_start_its_fade_when_unpinned() -> void:
 		strip.call("set_pinned", false)
 		assert_eq(float(strip.get("_fade_timer")), 0.0, "no fade countdown")
 		strip.free())
+
+
+func test_on_repeated_pin_calls_never_restart_the_reveal() -> void:
+	_with_names_on(func() -> void:
+		var strip: Control = PARTY_STRIP.new()
+		strip.set("compact", true)
+		strip.visible = true
+		strip.modulate.a = 1.0
+		for pinned: bool in [true, false, true, false]:
+			strip.call("set_pinned", pinned)
+			assert_eq(strip.modulate.a, 1.0, "a showing roster stays fully opaque")
+			assert_eq(float(strip.get("_fade_timer")), 0.0)
+		strip.free())

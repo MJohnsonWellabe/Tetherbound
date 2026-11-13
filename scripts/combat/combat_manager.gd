@@ -2566,13 +2566,28 @@ static func named_fight_camera_cap(opponent: Node, candidate_on: bool) -> float:
 static func arena_boundary_for(cfg: Dictionary, trainer_id: String) -> Dictionary:
 	var candidate: Variant = cfg.get("boundary_per_trainer_candidate", {})
 	if not candidate is Dictionary or not bool((candidate as Dictionary).get("enabled", false)) or trainer_id.is_empty():
-		return cfg
+		return _with_boundary_curb(cfg, trainer_id)
 	var row: Variant = (candidate as Dictionary).get(trainer_id, {})
 	if not row is Dictionary:
-		return cfg
+		return _with_boundary_curb(cfg, trainer_id)
 	for key: String in ["boundary_alpha", "boundary_height"]:
 		if (row as Dictionary).has(key):
 			cfg[key] = float((row as Dictionary)[key])
+	return _with_boundary_curb(cfg, trainer_id)
+
+
+## F38#28 `arena.boundary_curb_1113` (OFF until GPU-judged): for the trainers
+## it lists, the boundary is drawn as a low stone curb with an inlay instead of
+## the glowing ring (combat_arena.gd `_build_curb`). Radius and every rule are
+## unchanged; only the look of the edge.
+static func _with_boundary_curb(cfg: Dictionary, trainer_id: String) -> Dictionary:
+	var curb: Variant = cfg.get("boundary_curb_1113", {})
+	if not curb is Dictionary or not bool((curb as Dictionary).get("enabled", false)):
+		return cfg
+	if not trainer_id in ((curb as Dictionary).get("trainers", []) as Array):
+		return cfg
+	cfg["boundary_style"] = "curb"
+	cfg["boundary_curb"] = curb
 	return cfg
 
 
