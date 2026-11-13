@@ -6061,6 +6061,22 @@ func _mesa(
 		_emit_mesa_visual_seam(upper_tool, sides, top_ring)
 	else:
 		_emit_carved_mesa_seam(upper_tool, carved["rim"], carved["natural_rim"])
+	# F40#1 `wall_top_band_1113` (flag-off, material only): the first wall band
+	# under the turf lip is emitted with the same vertices into its own
+	# surface, in a pale strata material, so an island rim seen from outside
+	# shows rock ledge and not a dark soil skirt. No vertex moves; the collider
+	# is built from the crown alone.
+	var top_band_tool: SurfaceTool = null
+	var top_band_cfg: Dictionary = (_visual_config.get("landmass", {}) as Dictionary).get("wall_top_band_1113", {})
+	if bool(top_band_cfg.get("enabled", false)) and label in (top_band_cfg.get("labels", []) as Array) \
+			and side_material != _materials["cliff_shadow"]:
+		if not _materials.has("cliff_pale_band"):
+			var surface_cfg: Dictionary = (_visual_config.get("surface", {}) as Dictionary).get("cliff", {})
+			var tint := str(top_band_cfg.get("tint", "#f1e6cc"))
+			_materials["cliff_pale_band"] = _textured_material(_surface_tint(surface_cfg, tint), Color(tint))
+		top_band_tool = SurfaceTool.new()
+		top_band_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+		top_band_tool.set_material(_materials["cliff_pale_band"])
 	var wall_detail: Dictionary = {}
 	if label == "CliffMass" and parent.name == &"UpperCloudreach":
 		wall_detail = CLIFFHOLD_DETAIL.config().get("plateau_wall", {})
@@ -6070,7 +6086,8 @@ func _mesa(
 		var outward_next := Vector3(top_ring[next].x, 0, top_ring[next].z).normalized()
 		var relief := minf(size.x * 0.055, 15.0)
 		if wall_detail.is_empty():
-			_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next], outward, outward_next, relief)
+			_add_geological_face(top_band_tool if top_band_tool != null else upper_tool,
+				top_ring[i], top_ring[next], upper_ring[i], upper_ring[next], outward, outward_next, relief)
 		else:
 			var edge := CLIFFHOLD_DETAIL.wall_profile(top_ring[i], upper_ring[i], outward, wall_detail)
 			var edge_next := CLIFFHOLD_DETAIL.wall_profile(top_ring[next], upper_ring[next], outward_next, wall_detail)
@@ -6125,6 +6142,9 @@ func _mesa(
 		SETTLEMENT_LIFE.ledge_buttresses(root, top_ring, size, seed_value)
 	lower_tool.generate_normals()
 	lower_tool.commit(mesh)
+	if top_band_tool != null:
+		top_band_tool.generate_normals()
+		top_band_tool.commit(mesh)
 
 	var mass := MeshInstance3D.new()
 	mass.name = "StratifiedCliffBody"
