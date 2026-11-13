@@ -1,0 +1,7 @@
+{
+ "data/config/creature_pose_settle.json": {
+  "things_band_scope": {
+   "enabled": true
+  }
+ }
+}
