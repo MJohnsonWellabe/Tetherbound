@@ -13,5 +13,19 @@
     "base_fog_keep": 0.95,
     "base_fade_top_m": 60.0,
     "albedo_tint": "#ffffff"
+  },
+  "scale_xz": 1.0,
+  "back_layer": {
+    "_why": "F38#24 (LANE-LAND-MT, 13 Nov, OFF until GPU-judged). LANE-JUDGE G-rescore-f38-24-after-952: the ranges read 'as flat painted cards with little aerial layering' and the walk frames show them only as a thin strip; ask: 'a second, hazier range layer behind the current one so distance reads in depth'. A second copy of the same Blender ridge, turned so its peaks fall between the front ridge's, taller so its crests clear the front ridge, with more of the live fog so it recedes. Presentation only: no collider, shadow, camera or gameplay change. scope client_presentation.",
+    "scope": "client_presentation",
+    "enabled": false,
+    "scale_xz": 1.0,
+    "height_scale": 1.8,
+    "yaw_deg": 23.0,
+    "sink_m": 0.0,
+    "shader": {
+      "fog_keep": 0.85,
+      "base_fog_keep": 1.0
+    }
   }
 }
