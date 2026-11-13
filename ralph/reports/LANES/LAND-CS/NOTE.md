@@ -1,11 +1,15 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
-## F40#15 dark wedge: PARKED after two failed attempts (13 Nov 20:40 UTC)
+## F40#17 is stale on the board (13 Nov 21:50 UTC)
+The High Perches rim dressing shipped at 6.01 -> 6.94 (3/3; G-below6-mushrooms) and is on main (`tests/test_below6_perch_rim_landed.gd`, #949). Two judges gave 7.04 and 7.17. It needs a re-score on main (High, then Medium if High is 7.5 or above), not a new arm.
+
+## F40#15 dark wedge: PARKED after three failed attempts (13 Nov 22:00 UTC)
 - The probe names the overlook ledge's own body (`LandmarkLedge/StratifiedCliffBody`) a few cm in front of the ridge turf: the wedge is the ledge's side face standing above the lower ridge.
 - Attempt 1: join `sink_m` -0.12 (lift the ridge above the crown). No change.
 - Attempt 2: remove the join's 4 m route exemption (temporary code switch). No change to the wedge; only the pavers sink out of sight. So the wedge is outside the join's ease band or not on the ridge rows it lifts.
 - **Same family at walk_02 (probe, 13 Nov 21:30):** the thin dark strip at the trainer's feet is the route ledge `SummitOverlookLoop_Ledge3/StratifiedCliffBody`, its surface within 1 to 6 cm of the ridge turf (`Ridge003`) along the ray. So both the wedge and this strip are ledge bodies whose edges stand a few cm proud of the lifted ridge, showing their rock side band.
-- New idea needed before another try: read which ridge vertices sit under the wedge and their distance from the ledge rim (the join only lifts between rim and rim + 9 m), or lower the ledge's edge band instead.
+- Attempt 3 (probe-led): the wedge points are ridge 1108.46-1108.58 and the ledge side face (normal_y 0.10) up to 1108.64, at about 20.6 m from the overlook centre, just inside the larger cap-0 pad's 20.68 m rim (the other cap-0 pad is 13.12 m). A flag-off change made the join consider every cap-0 pad, take the highest lift and start 1.5 m inside the rim. No visible change on CPU at route_day or vista_dusk, so I reverted it. Most likely `SummitOverlookLoopCliffShoulders/Ridge003` rows are not built through `_overlook_join_height` at all (another ridge builder, or the rows are pinned elsewhere).
+- New idea needed before another try (first check which builder makes Ridge003's vertices): read which ridge vertices sit under the wedge and their distance from the ledge rim (the join only lifts between rim and rim + 9 m), or lower the ledge's edge band instead.
 
 ## HEAD FOR THE GPU LANE (13 Nov 20:20 UTC): `tb/land-cs` 6b5b789f or later (later commits touch only report files)
 - Contains main b8622117c (#954). Against main it differs only by three flag-off blocks (`forest_layers_1113`, `turf_detail_1113`, `paver_strips_1113`), their code and tests, and report files, so base frames from this head are main's.
