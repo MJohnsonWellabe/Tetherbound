@@ -4689,6 +4689,19 @@
       "added": "13 Nov 09:11"
     },
     {
+      "id": "things-telldust",
+      "branch": "tb/things",
+      "commit": "f87e2d1b6",
+      "rows": [
+        "F38#3 (close candidate)",
+        "F38#28 Warden (Medium + High)",
+        "F38#11",
+        "F41#3/#6 no-loss optional"
+      ],
+      "ask": "Base vs overlay_tell_dust.json (combat.json telegraph.soft_style: wind-up dust puffs larger, closer, dimmer, lower, darker so they merge into one soft ground band; painted outlines stay off per owner 24 Oct), the same fight sets as dusttrail (south_bridge_grunt + warden_aldis, --attack --tell-frames), High, plus Warden at Medium. By-eye first on a frame showing '! incoming': beads should be one soft band on the ground. LANE-THINGS now thinks the beads are this wind-up dust, not the stone trail; if DUSTTRAIL's by-eye shows the beads unchanged, hold DUSTTRAIL unjudged and judge this instead.",
+      "added": "13 Nov 09:46"
+    },
+    {
       "id": "below6-overlook-join",
       "branch": "tb/below6",
       "commit": "ee1a130c6",
