@@ -1,5 +1,17 @@
 # G-scene-rosternames: F39#19 compact roster names (GPU High + Medium, base vs arm, + F38#38 control)
 
+## AMENDED after the GPU lane's capture finding (CRAGBACK message, 13 Nov)
+- **What the GPU lane found:** the big Venn camera offsets were capture state, not the arm.
+  - A Venn fight run straight after a different tool can start about 35 m off.
+  - The late frames t-023 to t-025 diverge from run to run as the fight diverges.
+- **Matched frames:** of the frames judged below, only Medium t-000.00 was camera-matched. Under the fight-section rule, unmatched frames are excluded.
+- **Revised verdict: NO SHIP VERDICT. Re-capture with matched cameras.**
+  - **F39#7 −1.19 at Medium:** WITHDRAWN. It came from unmatched frames, so it is not a loss caused by the arm. The same holds for the +0.85 at High.
+  - **F39#19 +0.09 (2/3):** cannot carry a ship verdict either, because its frames are unmatched apart from Medium t-000.
+  - **Still valid: the roster fade.** In the t-003.02 stagger frame the named roster fades to pale ghost text, PRESENT on the arm 3/3. This is a HUD state, independent of the camera, so it still stands. Fix it before re-capture: keep the named rows on solid dark cells and never fade them.
+  - **Next ask 1 below is withdrawn**: the camera does not need decoupling from roster width.
+- The original verdict follows unchanged, for the record.
+
 ## Verdict: DO NOT SHIP. F39#7 loses at Medium (−1.19, 3/3). F39#19 is NOT CLOSED: arm 6.97 on both presets.
 
 | Set | Base | Arm | Gain | Prefer arm | Raw a / b / c (base → arm) | Defect (base → arm) |
