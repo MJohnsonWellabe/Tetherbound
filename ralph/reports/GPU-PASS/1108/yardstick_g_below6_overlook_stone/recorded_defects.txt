@@ -1,0 +1,5 @@
+Gd: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ad: "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+Zc: none
+St: "none"
+Tx: none

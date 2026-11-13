@@ -1,0 +1,2 @@
+{"branch": "tb/gpu-frames-1108", "section": "G-below6-overlook-stone", "commit": "27fbbacc9", "renderer": "High", "tree": "tb/below6 e9dd11ce2 both sides (pane fix ON)", "base": "branch as is", "arm": "BELOW6-OVERLOOK-STONE/overlay.json (ruin_material stone_light)",
+ "sets": {"F40#15 overlook": ["stormward_overlook__walk_03_day", "stormward_overlook__vista_dusk"], "Overlook routes": ["stormward_overlook__walk_01_day", "stormward_overlook__walk_02_day", "stormward_overlook__route_day"]}}
