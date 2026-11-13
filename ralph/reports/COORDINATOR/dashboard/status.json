@@ -1,6 +1,6 @@
 {
- "updated": "13 Nov 2026 21:45 UTC",
- "headline": "13 Nov 20:50: #956 landed (water monitor faint, Aquaryn deep swim) after #954 (overlook join + solid, coherent wind-up dust). Six lanes active; queued near-bar closers: CRAGBACK (F39#19), STORMRAVEN-ARCS (F41#13), MONITOR-VALUE (F36#92). Parked: HALLWALLS, overlook wedge. Next landing: Staticub fur + uniform cloth.",
+ "updated": "13 Nov 2026 21:48 UTC",
+ "headline": "13 Nov 21:48: four landings this evening (#954 overlook + dust, #956 monitor + Aquaryn, #957 Staticub fur + uniform cloth). Staticub stage 8.08 High: close batch queued. New regressions found by re-scores: F39#21 Venn win camera (5.84, LANE-SCENE), F13#5 swim cue (5.38, LANE-LAND-MT).",
  "batches": [
   {
    "name": "Stormheart interior and Crown heartstone (PR #756)",
@@ -2138,6 +2138,11 @@
  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
  "score_ledger_pending": [],
  "landed_recent": [
+  {
+   "pr": "#957",
+   "what": "F41#8 Staticub storm-brown fur (Nysa +0.50, Maud/Bryn +0.18; world +1.11, stage 8.08) and F41#18 uniform cloth (+0.07 thin), with a fix keeping Marrow's landed emission floor. LANE-BEINGS; full CI green after one re-run of a Meadows catching smoke (party_count_after_catches) that passed on re-run and is unrelated to the diff",
+   "when": "13 Nov 21:45"
+  },
   {
    "pr": "#956",
    "what": "F36#92 water mangrove monitor faint grounded (+0.35, 3/3) and F39#8 Aquaryn deep swim at the waterline (5.97 -> 6.32, 3/3), mounted-swim smoke updated. LANE-BEINGS; full CI green (4 verify-suite, 15 multiplayer)",

@@ -4831,7 +4831,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-STATICUB-FUR/overlay.json (below6_staticub_storm_fur ON: darker, less blue fur on Staticub so the background bears stop reading salmon pink), High, phase2_capture_dialogue.gd --biome=stormwood --seed=2042 (Maud, Bryn, Nysa frames) plus phase2_capture_creatures.gd --biome=stormwood --only=staticub. No-loss: Staticub in daylight outside Stormwood (Meadows creature stand or stage), since the coat is per model.",
    "added": "13 Nov 06:48",
-   "status": "SHIP (F41#8 +0.18 3/3; Nysa +0.50). LANE-BEINGS to land."
+   "status": "LANDED #957 (main 0ba1cfabd), 13 Nov."
   },
   {
    "id": "things-solene",
@@ -4854,7 +4854,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-UNIFORM-CLOTH/overlay.json (below6_uniform_cloth + uniform_cloth_floor_1113: mid-value slate cloth and a brass shoulder band on a mesh-built garment mask for grunt_c, officer_a and former_tether_member), High, phase2_capture_dialogue.gd --biome=stormwood --seed=2042 (Varga, Dace, Sable inventory + dialogue; officers and civilians as no-loss). These rigs are shared across biomes, so add a no-loss set outside Stormwood: the Meadows dialogue rows and fight frames that use those bodies (e.g. south_bridge_grunt) and a Tidewake or Cloudreach officer frame. By-eye: uniform separates from the mud at the inventory camera, brass shoulders read, hair and skin unchanged; no red.",
    "added": "13 Nov 07:57",
-   "status": "SHIP thin (F41#18 +0.07 2/3; dialogue +0.18 3/3). LANE-BEINGS to land."
+   "status": "LANDED #957 (main 0ba1cfabd), 13 Nov."
   },
   {
    "id": "things-stormpool-r2",
@@ -5423,13 +5423,14 @@
   {
    "id": "closeout-staticub-medium",
    "branch": "main",
-   "commit": "after #957",
+   "commit": "0ba1cfabd",
    "rows": [
     "Staticub roster row (F36 (0) #19): stage 8.08 High, world 7.37"
    ],
    "ask": "After #957 lands (below6_staticub_storm_fur ON on main): one-sided Staticub stage + world capture on main at Medium, plus High again, with the F38#38 control, as a confirming close batch. Same frames as G-below6-staticub-fur-world-stage.",
    "added": "13 Nov 21:45",
-   "priority": "close candidate once #957 is on main"
+   "priority": "close candidate once #957 is on main",
+   "status": "READY: #957 is on main."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
