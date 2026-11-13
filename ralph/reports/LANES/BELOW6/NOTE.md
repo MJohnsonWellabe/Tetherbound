@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-FULGOCOBRA-FAINT ready (F36#46): the neck and hood come down
+
+As you asked: stated end pitches in config, faint only, Fulgocobra only, flag-off (`below6_fulgocobra_scope`). Bone probe: the rig is one vertical chain, so the measured drop could not read it. New small settle option `faint.end_pose` pitches spine_1 to spine_4 by stated angles over the faint's tail; the coils keep their height. CPU pose stage: at faint-100 the hood lies on the floor in front of the coils. Side effect to watch: the scope also runs the settle's hit pass for Fulgocobra (hit-050 is a slightly more upright recoil). ARM, CAPTURE, overlay and sheet in `BELOW6-FULGOCOBRA-FAINT/`. Waiting with you: uniforms, overlook join, Fulgocobra faint, overlook stands, bark, wake.
+
 ## 13 Nov, walk_02 ghost planes: camera-only stops built, no effect on the frame, reverted
 
 Built exactly as asked: one box per pier and wing on the camera rig's occlusion-only layer (`CAMERA_RIG.OCCLUSION_ONLY_LAYER`, mask 0; the camera's mask includes it and the player's does not, so the masks do separate), flag-off. CPU capture of walk_01, walk_02 and walk_03 with it on is pixel-for-pixel the same composition as off: walk_02 is still the pier wall across the frame. The arm does not shorten, which says the seeded walk_02 stand has the trainer inside the pier or wing box (a cast that starts inside a shape reports nothing), so a lens stop cannot help that stand. Reverted (nothing left in the overlook script or config).

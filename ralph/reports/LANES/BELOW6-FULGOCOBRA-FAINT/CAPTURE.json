@@ -1,0 +1,1 @@
+{"row":"F36#46","tool":"res://tools/art_pipeline/capture_f36_poses.gd","args":["--species=fulgocobra","--game-clips","--clear-ruler","--roles=hit,faint","--whole-body","--context","--out={OUT}"],"frames":["fulgocobra-hit-000","fulgocobra-hit-050","fulgocobra-faint-050","fulgocobra-faint-100"]}
