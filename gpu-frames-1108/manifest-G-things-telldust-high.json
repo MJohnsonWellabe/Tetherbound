@@ -1,0 +1,200 @@
+[
+ {
+  "frame": "warden_aldis-03.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/warden_aldis-03.png",
+  "sky_fraction": 0.042,
+  "lower_edges": 0.2149,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-05.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/warden_aldis-05.png",
+  "sky_fraction": 0.046,
+  "lower_edges": 0.2061,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-08.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/warden_aldis-08.png",
+  "sky_fraction": 0.047,
+  "lower_edges": 0.1767,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-r04.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/warden_aldis-r04.png",
+  "sky_fraction": 0.012,
+  "lower_edges": 0.1229,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-r16.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/warden_aldis-r16.png",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.176,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-a03.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/warden_aldis-a03.png",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.16,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "south_bridge_grunt-01.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/south_bridge_grunt-01.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.2712,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "south_bridge_grunt-02.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/south_bridge_grunt-02.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.2892,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "south_bridge_grunt-03.png",
+  "preset": "arm-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/arm-High/south_bridge_grunt-03.png",
+  "sky_fraction": 0.03,
+  "lower_edges": 0.3001,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-03.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/warden_aldis-03.png",
+  "sky_fraction": 0.042,
+  "lower_edges": 0.232,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-05.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/warden_aldis-05.png",
+  "sky_fraction": 0.046,
+  "lower_edges": 0.2062,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-08.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/warden_aldis-08.png",
+  "sky_fraction": 0.038,
+  "lower_edges": 0.1918,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-r04.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/warden_aldis-r04.png",
+  "sky_fraction": 0.008,
+  "lower_edges": 0.1288,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-r16.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/warden_aldis-r16.png",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.1759,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "warden_aldis-a03.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/warden_aldis-a03.png",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.16,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "south_bridge_grunt-01.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/south_bridge_grunt-01.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.2706,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "south_bridge_grunt-02.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/south_bridge_grunt-02.png",
+  "sky_fraction": 0.031,
+  "lower_edges": 0.3114,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ },
+ {
+  "frame": "south_bridge_grunt-03.png",
+  "preset": "base-High",
+  "tree": "f87e2d1b65a35c5fe836e24f98f6269fbcb25f0d",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-telldust-high/base-High/south_bridge_grunt-03.png",
+  "sky_fraction": 0.03,
+  "lower_edges": 0.3261,
+  "script_errors": 0,
+  "note": "things-telldust (F38#3 and F38#28 close candidates; F38#11 no-loss): tb/things f87e2d1b6 (contains main 0a57e6d75), base vs overlay_tell_dust.json (telegraph.soft_style dust 0.42->0.8 m, spacing 0.34->0.3, alpha 0.6->0.32, rise 0.16->0.06, #9c8763->#8a7654; outlines stay off). Meadows fight --attack --tell-frames --fixed-fps 20, High. Frames are camera-matched base/arm pairs (pair_frames.py; fight diverges run to run). Matched 0.00 m: warden 03/05/r16/a03, grunt 01/02/03. NOT matched (one retry cap): warden_aldis-08 (2.70 m) and -r04 (2.52 m), shown with their nearest pair, read with care. By eye: the bead strings become one continuous soft tan band low on the ground, still clearly visible as a danger cue on every '! incoming' frame; on grunt-03 it crosses in front of the boar's legs."
+ }
+]
