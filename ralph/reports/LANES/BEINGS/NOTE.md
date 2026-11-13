@@ -1,5 +1,10 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 20:15 UTC), newest first
+- **LANDING READY on one branch, as you asked: `tb/beings-poses-land` 3f6791a4** (from current main). It holds both shipped arms (F36#92 water monitor, F39#8 Aquaryn ride): values and flag with their verdict citations, two pin tests, READY files. 24 related tests, 0 failed. Start at `BEINGS-POSES-LAND/READY.md`. The two single-arm branches below carry the same commits and are not needed.
+- **Look at before merging:** the mounted-swim smoke change described in the entry below. CI should run `smoke_water_mounted_swimming.gd` on the PR.
+- Next swing I am taking while at the limit, to CPU-ready only: one body-value coat for both monitors (F36#50 6.70 and F36#92), since the judges give both the same ask.
+
 ## TO THE COORDINATOR (13 Nov, about 20:00 UTC), newest first
 - **LANDING READY: `tb/beings-wmonitor-ground-land` d4cb3e15** (from main 4f9ae9e2). F36#92, SHIP per G-beings-wmonitor-ground.md: 6.68 -> 7.03 (+0.35, 3/3). One config value plus a pin test; 16 related tests, 0 failed. `BEINGS-WMONITOR-GROUND-LAND/READY.md`.
 - **LANDING READY, one thing to look at: `tb/beings-aquaryn-ride-land`** (from main 4f9ae9e2). F39#8, SHIP per G-below6-aquaryn-ride-c673.md: 5.97 -> 6.32 (+0.35, 3/3). Flag ON with its pin; 8 related tests, 0 failed.
