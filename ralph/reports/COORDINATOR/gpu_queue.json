@@ -5419,6 +5419,17 @@
    "ask": "Base vs + ralph/reports/LANES/LAND-MT-CRAGCUT/overlay.json (crag shader back_face_cut_m 150: discards the Veilfall crag shells' inner faces near the camera; proven on CPU at the judged t-000 view to be the black wedge). Venn fight with warm-up first (TECHNICAL 8.1), High AND Medium, F38#38 control, pair by camera. By eye at t-000: the black polygon is gone and the mossy cliff and sand show.",
    "added": "13 Nov 21:30",
    "priority": "near-bar closer; first in the tb/land-mt boot"
+  },
+  {
+   "id": "closeout-staticub-medium",
+   "branch": "main",
+   "commit": "after #957",
+   "rows": [
+    "Staticub roster row (F36 (0) #19): stage 8.08 High, world 7.37"
+   ],
+   "ask": "After #957 lands (below6_staticub_storm_fur ON on main): one-sided Staticub stage + world capture on main at Medium, plus High again, with the F38#38 control, as a confirming close batch. Same frames as G-below6-staticub-fur-world-stage.",
+   "added": "13 Nov 21:45",
+   "priority": "close candidate once #957 is on main"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
