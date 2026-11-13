@@ -2580,7 +2580,7 @@
      "frames": [
       {
        "id": "tidewake__F39-look__veilfall-vista",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_tidewake_f13_5.gd -- --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista --source-sha=<tree sha> --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__F39-look__veilfall-vista",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_tidewake_f13_5.gd -- --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista --capture-size=1920x1080 --source-sha=<tree sha> --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__F39-look__veilfall-vista",
        "location": "veilfall",
        "time": "day",
        "phase": "clear",
@@ -2589,7 +2589,7 @@
       },
       {
        "id": "tidewake__F39-look__veilfall-near",
-       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_tidewake_f13_5.gd -- --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-near --source-sha=<tree sha> --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__F39-look__veilfall-near",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_tidewake_f13_5.gd -- --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-near --capture-size=1920x1080 --source-sha=<tree sha> --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__F39-look__veilfall-near",
        "location": "veilfall",
        "time": "day",
        "phase": "clear",
