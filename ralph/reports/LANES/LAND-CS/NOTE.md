@@ -1,10 +1,11 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
-## LANDINGS READY (13 Nov 19:45 UTC): two branches for the coordinator
-Verdicts from LANE-JUDGE (tb/judge ae67d0a5), both SHIP. Each branch is cut from main 874835ea, has the flag ON with `_why_on`, an ON pin test and READY.md with `STATUS: land`.
-- **`tb/land-cs-overlook-join-land` f47d883b**: `overlook_ridge_join_1113` ON. Overlook set 4.86 -> 5.28 (+0.42, 3/3). 43 tests, 0 failed; overlook route smoke PASS flag-on.
-- **`tb/land-cs-overlook-solid-land` 1242789c**: `ruin_collision_1113` ON plus the two reviewed walk stands. F40#15 walk pair 4.23 -> 5.60 (+1.37, 3/3). 24 tests, 0 failed; overlook route smoke PASS flag-on.
-They touch different files and land in either order. F40#15 reads 5.60 after both; not a close.
+## LANDING READY (13 Nov 20:30 UTC): `tb/land-cs-overlook-land` ab992dd4
+One branch for both overlook arms, as the coordinator asked (verdicts: LANE-JUDGE, tb/judge ae67d0a5, both SHIP). Cut from main 874835ea.
+- `overlook_ridge_join_1113` ON (overlook set 4.86 -> 5.28, 3/3) and `ruin_collision_1113` ON with the two reviewed walk stands (F40#15 walk pair 4.23 -> 5.60, 3/3). Each has `_why_on` and an ON pin test.
+- **They compose:** five overlook route frames captured on CPU with both on; no z-fighting or overlap at the join, no translucent planes, 0 script errors. Sheet in `LAND-CS-OVERLOOK-LAND/`.
+- 50 tests, 0 failed; overlook route smoke PASS with both on.
+- It supersedes `tb/land-cs-overlook-join-land` and `tb/land-cs-overlook-solid-land`; do not land those.
 
 ## TO THE COORDINATOR (13 Nov 17:50 UTC; direct message refused, so it is here)
 The session message to the coordinator was refused ("needs proof of a trusted device"), so this NOTE is my channel until that works.
@@ -23,7 +24,7 @@ On `tb/land-cs` with main 874835ea (#951 and #952) merged, flag on, Compatibilit
 |---|---|---|
 | LAND-CS-SOILOFF | F41#22, F41#24 (6.46); riders F41#5, F41#12, F41#2 | New. Cause confirmed by switch-off on CPU. Asks to take THINGS-STORMPOOL round 2's place. |
 | LAND-CS-TURFGRAIN | F40#1, F40#7, F40#0/#19/#21, F40#4 | New, CPU-ready, held until a slot frees. |
-| BELOW6-OVERLOOK-JOIN, BELOW6-OVERLOOK-SOLID | F40#15 | SHIP verdicts; landing branches pushed (see top). |
+| BELOW6-OVERLOOK-JOIN, BELOW6-OVERLOOK-SOLID | F40#15 | SHIP verdicts; one landing branch pushed (see top). |
 | BELOW6-WALL-BAND, BELOW6-GATE-TERRACE | F40#1 | Inherited, queued. |
 | THINGS-CLOUDNIGHT round 2 | F40#0, F40#19, F40#21 | Inherited, queued. |
 | THINGS-WETPATH3 | F40#21 and paths | Inherited, not judged. |
