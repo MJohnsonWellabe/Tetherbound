@@ -64,3 +64,18 @@ func test_round_two_scope_ships_the_winners_and_not_the_losers() -> void:
 		assert_true(SETTLE.excluded(live, id), "%s lost on the GPU and keeps its side-lying faint" % id)
 	assert_false(bool(SETTLE._for_species(cfg, "cragclaw").faint.crumple.get("keep_head_up", false)), "cragclaw's head change was level and is not shipped")
 	assert_false(bool(SETTLE._for_species(cfg, "mangrove_monitor").faint.crumple.get("force", false)), "the land monitor keeps round 1's settle")
+
+
+func test_band_scope_ships_duskhush_and_ribbonray_only() -> void:
+	# G-things-bandfaint.md (13 Nov): Duskhush and Ribbonray +0.5 3/3;
+	# Trailpup and Voltwig lost 0/3 and keep the game's faint.
+	var cfg := _shipped()
+	var scope: Dictionary = cfg.get("things_band_scope", {})
+	assert_true(bool(scope.get("enabled", false)))
+	assert_false(str(scope.get("_why_on", "")).is_empty())
+	assert_eq(scope.get("species", []), ["duskhush", "ribbonray"])
+	var live: Dictionary = SETTLE.scoped(cfg)
+	for id: String in ["duskhush", "ribbonray"]:
+		assert_false(SETTLE.excluded(live, id), "%s takes the settle" % id)
+	for id: String in ["trailpup", "voltwig"]:
+		assert_true(SETTLE.excluded(live, id), "%s lost on the GPU and keeps its own faint" % id)
