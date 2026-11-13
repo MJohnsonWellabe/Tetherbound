@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.081,
+  "lower_edges": 0.3676,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.2957,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.023,
+  "lower_edges": 0.3251,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3163,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.2468,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.217,
+  "lower_edges": 0.4414,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.3567,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.4299,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "sky_fraction": 0.197,
+  "lower_edges": 0.3942,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.3906,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.368,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.2979,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.3287,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.322,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.076,
+  "lower_edges": 0.2492,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.4359,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.3182,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "sky_fraction": 0.164,
+  "lower_edges": 0.4284,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "sky_fraction": 0.19,
+  "lower_edges": 0.3912,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "preset": "brokenhill-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-brokenhill/brokenhill-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.3872,
+  "script_errors": 0,
+  "note": "LAND-MT-BROKENHILL (F38#30 Burrow Warrens hillside 4.99; scored walk_02/walk_03; F38#24 no-loss walk_02/03; no-loss route_day, walk_01, vista_dusk): tb/land-mt 5ef7e327e, base = no overlay, arm = bank.hill_shell.broken ON. High. By eye: route_day the smooth green hill and brown bare patch become grey rock outcrops (brown slabs gone); walk_03 the hill base carries a bush and ferns instead of one straight diagonal. The rock now covers much of the hill face. Stronghold frames unchanged apart from creature spawns. Shares its base run with G-land-mt-duskridge."
+ }
+]
