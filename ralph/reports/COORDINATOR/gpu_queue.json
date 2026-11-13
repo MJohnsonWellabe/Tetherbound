@@ -5327,7 +5327,7 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-CRAGBACK/overlay.json (Veilfall crag shader lights its back faces as rock facing the viewer; the Venn-fight black wedge is the inner side of the cull_disabled crag shells). Venn fight frames per its CAPTURE.json, High AND Medium with F38#38 control (confirming, so F39#19 can close). By eye: the dark mass behind the arena becomes grey rock.",
    "added": "13 Nov 20:35",
    "priority": "near-bar closer; can share the Venn fight boot with SCENE-ROSTERNAMES r2 if both are ready",
-   "status": "BY-EYE PASS 13 Nov 21:00 (black void is grey rock); High + Medium with LANE-JUDGE."
+   "status": "LEVEL 13 Nov (LANE-JUDGE 93537dc89): matched frames nearly identical (mean diffs 0.02-0.57), 0/3 with 3 ties; the dark overhead wedge still flagged 3/3. Attempt 1 of 2; back to LANE-LAND-MT."
   },
   {
    "id": "rescore-f39-31-clear-day",
