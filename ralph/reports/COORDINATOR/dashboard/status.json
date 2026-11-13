@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 07:18 UTC",
+  "updated": "13 Nov 2026 08:14 UTC",
   "headline": [
+    "13 Nov 08:14: #946 landed (Warden fight black-frame camera fix). Overnight: #937, #938, #939, #941, #942, #943, #944, #945, #946. 17 arms queued on the GPU.",
     "13 Nov 07:18: Stormwood uniforms (F41#18) do not ship: the row lost 0/3 though dialogue gained; lighting approach parked after two rounds. Next lever is the cloth albedo and a bigger rank accent.",
     "13 Nov 07:13: #945 landed (Warden ring fainter: F38#28 Medium 7.52). Overnight: #937, #938, #939, #941, #942, #943, #944, #945. 16 arms queued on the GPU.",
     "13 Nov 06:40: Warden ring ships (F38#28 Medium 7.52; High 7.05 keeps it open). F41#13 not closed at 6.91. Fulgocobra's copper-red collar flagged against the red reserve: LANE-BELOW6 moving it off red first.",
@@ -2290,6 +2291,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#946",
+      "what": "Warden fight camera stops 0.8 m in front of the war banner instead of resting in the cloth (the near-black r10 frame); camera-only, no gameplay; full CI green",
+      "when": "13 Nov 08:13"
+    },
     {
       "pr": "#945",
       "what": "Warden arena boundary ring fainter and lower (F38#28 Medium 7.05 to 7.52, 3/3; High level 7.05; no set loses); full CI green (4 suites, 15 multiplayer shards)",
