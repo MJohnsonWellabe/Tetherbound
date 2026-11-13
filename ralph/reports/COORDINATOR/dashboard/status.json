@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 08:55 UTC",
+  "updated": "13 Nov 2026 09:24 UTC",
   "headline": [
+    "13 Nov 09:24: #948 landed (Fulgocobra slate collar: no red outside Team Tether). Overnight: #937-#939, #941-#948 (11 PRs).",
     "13 Nov 08:55: #947 landed (no harvest prompt across Tidewake/Cloudreach/Stormwood fights; Tidewake fight re-capture queued). Overnight: #937-#939, #941-#947 (10 PRs).",
     "13 Nov 08:53: Fulgocobra slate collar ships (+0.41 pose, +0.42 world, no red left on the cobra: hard-rule item cleared). Warden ring round 2 level at High: that approach parked; the dust-trail arm is capturing for the same row.",
     "13 Nov 08:40: False alarm cleared: the four F36 closes (#35, #58, #69, #72) were judged on a real Medium (preset fix a662d7bda landed in #925 before those reads). They stand.",
@@ -2295,6 +2296,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#948",
+      "what": "Fulgocobra copper-red collar plates to gunmetal slate: hard rule (red is Team Tether only) cleared; F36#46 pose 5.29 to 5.70, Stormwood world 6.12 to 6.54 (3/3); full CI green",
+      "when": "13 Nov 09:23"
+    },
+    {
       "pr": "#947",
       "what": "Fight HUD no longer shows a world verb ('Gather Reef Stone') across fights outside Meadows: ownership check now runs in fights too; full CI green (4 suites, 15 multiplayer shards)",
       "when": "13 Nov 08:53"
@@ -3033,7 +3039,7 @@
     },
     "F36#46": {
       "gpu": 5.87,
-      "src": "G-things-faint base (fixed stage): Fulgocobra 5.87; faint arm level (-0.05); hood stays raised, near-black body sinks into stage | ARM fulgocobra olive veins: held at GPU pre-check (vein cores render near-white); round 2 with deeper gold | G-below6-fulgocobra-r2 (13 Nov): olive recolour DOES NOT SHIP (5.94->5.64); recolour PARKED after 2 rounds; faint still neck-up hood-flared 3/3 | G-cw-collar (13 Nov): slate collar SHIPS pose 5.29->5.70 (3/3), removes near-oxblood copper (hard rule); landing via LANE-BELOW6"
+      "src": "G-things-faint base (fixed stage): Fulgocobra 5.87; faint arm level (-0.05); hood stays raised, near-black body sinks into stage | ARM fulgocobra olive veins: held at GPU pre-check (vein cores render near-white); round 2 with deeper gold | G-below6-fulgocobra-r2 (13 Nov): olive recolour DOES NOT SHIP (5.94->5.64); recolour PARKED after 2 rounds; faint still neck-up hood-flared 3/3 | G-cw-collar (13 Nov): slate collar SHIPS pose 5.29->5.70 (3/3), removes near-oxblood copper (hard rule); landing via LANE-BELOW6 | LANDED #948 (13 Nov)"
     },
     "F36#85": {
       "gpu": 6.33,
