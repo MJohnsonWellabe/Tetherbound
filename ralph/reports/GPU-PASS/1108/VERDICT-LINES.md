@@ -1,5 +1,44 @@
 # VERDICT-LINES: one line per verdict, for the coordinator
 
+## Handoff (LANE-SCOUT wrap-up, 13 Nov 2026)
+
+**State.** Every section the GPU lane pushed to `tb/gpu-frames-1108` up to c3be86595 / 21fa0dc6a is judged, except the ones listed below. Each verdict is a `<section>.md` in this folder with a `yardstick_<tag>/` beside it (batch, key, mapped, cal, spec, judges, frames). The branch was merged with origin/main 3cf230b6. There are no frames or images here apart from one `_sheet` (`check_890/_sheet_trunk_890.png`, 0.46 MB).
+
+**Unjudged sections**
+- **Held** (each has a `HELD_README.txt` on the frames branch, so they were skipped): G-below6-fulgocobra-pair, G-below6-fulgocobra-poses, G-below6-stormraven, G-below6-swim-r4 and G-things-stormpool.
+- **Record only:** G-things-wardenring-r2-medium-record. The GPU lane pushed it as a record after the base-Medium camera mismatch. It was not judged, and F38#28 High had already missed the bar.
+- **Parked by the GPU lane before capture:** THINGS-DUSTTRAIL (beads unchanged).
+
+**Judging runbook**
+1. **Fetch.** `git fetch --depth 1 origin +refs/heads/tb/gpu-frames-1108:refs/remotes/origin/tb/gpu-frames-1108`, then `git archive <ref> gpu-frames-1108/<section>/<side>-<preset> | tar -x --strip-components=3`. Use shallow clones only.
+2. **Render check by eye** before judging: read a side-by-side and the mean pixel difference per frame. The difference shows what changed and catches camera or run confounds.
+3. **Sides.** Grid each set's frames (960×540 tiles, stacked or 2×2/2×3). Pose-stage creature sets use the 2×2 of hit-000, hit-050, faint-050 and faint-100, cropped to (560, 200, 1560, 840).
+4. **Spec.** Each set has a label, sides a and b, a neutral brief and defects. Briefs follow the anchor wording: "Fixed captures from the game of one catalogue subject in the {biome} biome: {subject}. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame." Recorded defects come verbatim from `ralph/reports/VISUAL/item-scores/job.json`, or "none".
+5. **Judge folder.** `python3 tools/visual_judge/anchor_tiles.py --out <judge> --key <k>/key.json --candidates <k>/spec.json --pairs 3 --include craft --include f36_0_npc:C1 --include f04_6_r22 --seed <random>`. Add f10_2_r3_capacitor in place of f04_6_r22 for world-only batches. Copy `docs/reference` into the folder, then fill `JUDGE_PROMPT.md`'s block (judge folder, `sets.md`, `recorded_defects.txt`) into `PROMPT.txt`. Add no hints.
+6. **Judges.** Three general-purpose subagents, each with only: "Open <judge>/PROMPT.txt with the Read tool and follow it exactly. Open nothing outside that folder."
+7. **Map.** Write `{"anchors": {id: [a, b, c]}, "candidates": {label: [a, b, c]}}` per side using the key, then `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`. Report the mapped means, per-judge mapped scores, raw scores, the fit (slope, intercept, r, anchor RMSE) and every warning.
+8. **Ship rule** (owner, 12 Nov): gain > 0, at least 2/3 judges prefer the arm, and no judged set loses.
+9. **Close rule:** a mapped 7.5 or above on both High and Medium in one batch, with the F38#38 crafting control (closing 8.16/8.30) to show how strict the panel is. A score above the top anchor needs anchors reaching at least 7.35, which craft and f36_0_npc:C1 provide.
+10. **Stop rule:** park after two rounds gaining under 0.5. The close-out exception covers near-bar items.
+11. **Afterwards:** write `<section>.md`, copy the yardstick and strip local paths, append a line below, commit, push, and message LANE-THINGS or LANE-BELOW6 to relay. Then delete the frames and judge folders.
+
+**Board rows whose scores I know are stale** (newest GPU reads, High unless stated)
+- **F36#62 Riftfrill:** 6.52 on G-rf, against the board's 7.31.
+- **F36#87 Voltwig:** High 7.39 pooled, Medium 7.27. Not closed.
+- **F38#3:** with the telldust arm, High 7.51 and Medium 7.47, both 0.03 short.
+- **F38#28:** with the telldust arm, High 7.47 and Medium 7.55. Ring r2 is level.
+- **F38#11:** 6.95 with telldust.
+- **F38#19:** 7.15 with the darker loft floor (bedroomwood).
+- **F36#46 Fulgocobra poses:** 5.70 with the slate collar.
+- **F41#13** (cobra half): 6.54 with the slate collar.
+- **F41#18:** 6.05 on main. The uniforms arm reads 5.59, and that arm is parked.
+- **F40#15:** the overlook pair reads 4.57; the job-frame read is ≈ 5.47.
+- **F40#0, F40#19, F40#21 rain:** current-main pools in G-things-cloudrain-r2. F40#0 day rain ≈ 6.63, night rain ≈ 6.78, F40#21 ≈ 6.47, F40#19 ≈ 6.54.
+- **Defect:** the High Perches crown-court floor sometimes renders as a flat green disc with a ring (see G-things-cloudrain-r2).
+- **Also check:** rows in `RESCORE-6TO7.md` that were never re-scored. `CLUSTERS-6TO7.md` has the shared-cause map.
+
+---
+
 LANE-SCOUT. Direct messages to the coordinator session are refused ("needs proof of a trusted device"), so this file is the channel. Newest last. Lane messages go directly: LANE-BELOW6, LANE-THINGS and LANE-PLACES were messaged on 11 Nov.
 
 Columns: file | rows | result.
