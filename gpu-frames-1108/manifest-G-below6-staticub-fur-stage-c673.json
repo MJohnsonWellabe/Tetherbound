@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "staticub-faint-000.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-faint-000.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0511,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-025.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-faint-025.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0535,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-050.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-faint-050.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0512,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-075.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-faint-075.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0453,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-100.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-faint-100.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0455,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-000.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-hit-000.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0508,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-025.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-hit-025.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0502,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-050.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-hit-050.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0498,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-075.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-hit-075.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0521,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-100.png",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/base-High/staticub-hit-100.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0508,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-000.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-faint-000.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0473,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-025.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-faint-025.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0498,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-050.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-faint-050.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0481,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-075.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-faint-075.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0427,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-faint-100.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-faint-100.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0427,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-000.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-hit-000.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0478,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-025.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-hit-025.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-050.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-hit-050.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-075.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-hit-075.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0477,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ },
+ {
+  "frame": "staticub-hit-100.png",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-staticub-fur-stage-c673/fur-High/staticub-hit-100.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0478,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR stage frames (Staticub creature rows; no-loss under neutral stage light): main 4f9ee3967 content (c673d5285), base vs creature_coat_flags below6_staticub_storm_fur, pose stage hit/faint, High. By eye: the light tan coat becomes a darker, richer storm brown at every step; lightning marks kept."
+ }
+]
