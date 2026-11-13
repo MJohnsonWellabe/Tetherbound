@@ -4644,6 +4644,18 @@
       "added": "13 Nov 03:03"
     },
     {
+      "id": "below6-fulgocobra-collar",
+      "branch": "tb/below6",
+      "commit": "fa88105d8",
+      "rows": [
+        "F41#13",
+        "F36#46",
+        "HARD RULE: red outside Team Tether"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-FULGOCOBRA-COLLAR/overlay.json (below6_fulgocobra_slate_collar ON: copper-red collar plates to gunmetal slate), High, capture_f36_poses.gd --species=fulgocobra --game-clips --clear-ruler --roles=hit,faint --whole-body --context plus phase2_capture_creatures.gd --biome=stormwood --only=fulgocobra. Hard-rule fix: it ships if nothing loses (level is enough); judges confirm no red outside Team Tether.",
+      "added": "13 Nov 06:48"
+    },
+    {
       "id": "below6-overlook-join",
       "branch": "tb/below6",
       "commit": "ee1a130c6",
@@ -4719,6 +4731,18 @@
       ],
       "ask": "Base vs overlay_night_moonlit_cast_r2.json (cooler, darker, desaturated night fill; emission and rim cuts kept), High, capture_cloudreach_f40_matrix.gd --ground-cover-cache, the same night clear + night rain pieces as round 1 including the no-loss set (Three Bells, Windscar Beacon, Flight Aerie). No local merge: tb/things contains main. Round 2 of the approach: park if any stand loses.",
       "added": "13 Nov 06:28"
+    },
+    {
+      "id": "below6-staticub-fur",
+      "branch": "tb/below6",
+      "commit": "fa88105d8",
+      "rows": [
+        "F41#8 (5.80)",
+        "F41#18",
+        "Staticub daylight no-loss"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-STATICUB-FUR/overlay.json (below6_staticub_storm_fur ON: darker, less blue fur on Staticub so the background bears stop reading salmon pink), High, phase2_capture_dialogue.gd --biome=stormwood --seed=2042 (Maud, Bryn, Nysa frames) plus phase2_capture_creatures.gd --biome=stormwood --only=staticub. No-loss: Staticub in daylight outside Stormwood (Meadows creature stand or stage), since the coat is per model.",
+      "added": "13 Nov 06:48"
     },
     {
       "id": "things-stormpool-r2",
