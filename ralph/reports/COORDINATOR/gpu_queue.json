@@ -4705,6 +4705,17 @@
       "status": "SHIPS 13 Nov (G-things-telldust.md a19cc351b): F38#3 High 7.51 / Medium 7.47; F38#28 High 7.47 / Medium 7.55; landing via LANE-THINGS"
     },
     {
+      "id": "things-hallmoss",
+      "branch": "tb/things",
+      "commit": "2f1475db9",
+      "rows": [
+        "F38#28 (close candidate: High 7.47, Medium 7.55 with telldust)",
+        "no-loss: F38#17 Solene courtyard, F38#20 stronghold interior frames"
+      ],
+      "ask": "BOTH sides carry overlay_tell_dust.json (what #949 lands). Base = telldust only; arm = telldust + overlay_hall_moss.json (stronghold.json site.weathering.moss_amount 0.46->0.22, interior stone only). Warden fight F38#28 frames 03/05 (+ no-loss r16/a03) at High AND Medium, camera-paired, F38#38 control (confirming batch). No-loss: Solene's courtyard conversation and the F38#20 stronghold interior frames. By eye first on Warden 03: the green rectangles on the wall behind the dog should be gone or faint; if unchanged, hold.",
+      "added": "13 Nov 12:03"
+    },
+    {
       "id": "below6-overlook-join",
       "branch": "tb/below6",
       "commit": "ee1a130c6",
