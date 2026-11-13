@@ -4679,6 +4679,16 @@
       "added": "13 Nov 02:58"
     },
     {
+      "id": "things-bedroomwood",
+      "branch": "tb/things",
+      "commit": "44f0847bd",
+      "rows": [
+        "F38#19 (close candidate: High 7.17, Medium 7.17)"
+      ],
+      "ask": "Base vs overlay_bedroom_wood.json (farmhouse_shell interior floor tint #c9b49b -> #7f8a92: the orange loft wood reads mid brown), phase2_capture_ui.gd --biome=meadows frame meadows__exploration_hud at High, then Medium if High reaches 7.5; no-loss: any other frame inside Grandpa's house (the opening) and any other farmhouse_shell interior. Closes only at a mapped 7.5 on both presets in a confirming batch with F38#38.",
+      "added": "13 Nov 09:11"
+    },
+    {
       "id": "below6-overlook-join",
       "branch": "tb/below6",
       "commit": "ee1a130c6",
