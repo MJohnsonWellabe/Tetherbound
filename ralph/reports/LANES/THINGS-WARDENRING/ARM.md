@@ -11,3 +11,17 @@
 - A red banner on the arena wall (3/3 flagged against the oxblood reserve). The Warden is Team Tether, so I read the banner as allowed.
 
 **Ask.** The F38#28 Warden fight set at Medium, base vs arm. If it reaches 7.5 the row closes (High is already there); add a High no-loss read.
+
+## Round 2 (13 Nov): fainter again, for the High close-out
+
+**Round 1 shipped** (`G-things-wardenring-f41-13-closeout.md`): Medium 7.05 to 7.52 (3/3, FIXED), High level at 7.05. At High, 3/3 still read the band as "a soft-glowing cyan ring overlay".
+
+**Change** (`overlay_warden_ring_r2.json`, overlay only): the Warden's row goes from 0.12 alpha / 0.45 m to 0.05 alpha / 0.3 m. Same flag, same scope (the Warden's fight only; radius unchanged).
+
+**Base for this round is round 1** (`overlay_warden_ring.json`), since that is what will be on main.
+
+**Not on CPU.** The ring does not show on CPU on either side.
+
+**If this is level at High too**, the remaining idea is the judges' other one: no band at all and a floor-material edge. That is scene work in the arena floor, not this flag; I have not built it.
+
+**Ask.** The F38#28 Warden fight set at High and Medium, round 1 vs round 2, judged side by side.

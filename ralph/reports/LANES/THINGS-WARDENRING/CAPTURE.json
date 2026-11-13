@@ -2,10 +2,18 @@
  "id": "THINGS-WARDENRING",
  "lane": "LANE-THINGS",
  "branch": "tb/things",
- "preset": "Medium (the row already meets the bar at High: 7.54)",
- "status": "READY 13 Nov. The arc is not visible on CPU on either side (see ARM).",
+ "preset": "High and Medium, side by side",
+ "status": "ROUND 2 READY 13 Nov (round 1 shipped: tb/things-wardenring-land). Base for round 2 is round 1 (the candidate ON at 0.12 / 0.45).",
  "tool": "tools/capture_f38_fight.gd --trainer=warden_aldis, the F38#28 set",
- "base": {"tree": "tb/things", "overlay": null},
- "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-WARDENRING/overlay_warden_ring.json"},
- "rows": {"F38#28": "Warden arena boundary"}
+ "base": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-WARDENRING/overlay_warden_ring.json"
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-WARDENRING/overlay_warden_ring_r2.json"
+ },
+ "rows": {
+  "F38#28": "Warden arena boundary"
+ }
 }

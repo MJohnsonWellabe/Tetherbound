@@ -9,6 +9,7 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Ready: WARDENRING round 2** (`THINGS-WARDENRING/overlay_warden_ring_r2.json`, ARM.md "Round 2"): the Warden's ring from 0.12 / 0.45 m to 0.05 alpha / 0.3 m, overlay only, for the High close-out. Base is round 1. Judge High and Medium side by side. Not visible on CPU.
 - **LANDING READY: `tb/things-wardenring-land` 2f8d14c6** (from main fe19404d, `THINGS-WARDENRING-LAND/READY.md`, STATUS: land). `G-things-wardenring-f41-13-closeout.md` (7d2ccb33): F38#28 Medium 7.05 to 7.52 (3/3, defect FIXED), other Warden frames 5.80 to 6.03 (3/3), High level; no set loses. Config flip with `_why_on`; the existing test now pins ON; 10 arena tests, 0 failed. **F38#28 does not close** (High 7.05).
 - **Next, in your order:** (2) a flag-off arm taking the High ring to what Medium shows; (3) the near-black Warden fight frame r10 (fight camera inside geometry). Solene waits for your call.
 - **Solene (F38#17), the two captures you asked for: it is the courtyard light on pale texels, not something only her variant does.** Sheet: `THINGS-SELFLIT/_sheet_solene_variant_on_off_cpu.jpg` (left main, right her variant off).
