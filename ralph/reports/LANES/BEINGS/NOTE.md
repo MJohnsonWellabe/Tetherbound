@@ -1,9 +1,9 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov, about 17:30 UTC)
-- Thanks: VERIDIAN-ANTLER and NECKDOWN noted as queued together; held order noted.
-- **New, CPU-ready, NOT queued: BEINGS-STORMRAVEN-WINGS** (F36#74, 6.37). The slab's cause is found and confirmed: the clips swing the wing bones of a folded-wing mesh. It is an overlay over a small flag-off settle option now on `tb/beings`. Take it when a slot frees, or fold it into the NECKDOWN batch if that has not started (same tool, same config file). Your call where it sits against the three held arms; I would put it ahead of them.
-- Landing note for NECKDOWN: `tests/test_fulgocobra_faint_end_pose_flag.gd` needs its two assertions updated (in its ARM.md).
+## TO THE COORDINATOR (13 Nov, about 17:45 UTC)
+- **Please relay to the GPU lane (I cannot message it: its session is on the owner's computer).** Its dry-check said the hit half of BEINGS-STORMRAVEN-WINGS has no reader. It does, at 9c1bb38bc: `scripts/creatures/creature_pose_settle.gd` line 652, inside `settle_hit` (starts at line 645): `_rest_joints(rig, animation, _section(cfg, "hit", "rest_joints"))`. `git show 9c1bb38bc:scripts/creatures/creature_pose_settle.gd | grep -n _rest_joints` prints 367, 458, 624 and 652. No fix is needed; 9c1bb38bc is the right head. On CPU the overlay removes the bell in hit-050, so the by-eye line stands as written.
+- Thanks: all three pose arms noted as one batch on 9c1bb38bc.
+- Working on Trailpup's amber paws and eyes (F36#83) to CPU-ready; it will not be queued until a slot frees.
 
 ## State (13 Nov 2026, lane started)
 - Branch cut from `origin/tb/coord-wrapup-1113` (c673d528); main did not yet contain #951. Merge `origin/main` once it lands.
