@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 05:42 UTC",
+  "updated": "13 Nov 2026 06:40 UTC",
   "headline": [
+    "13 Nov 06:40: Warden ring ships (F38#28 Medium 7.52; High 7.05 keeps it open). F41#13 not closed at 6.91. Fulgocobra's copper-red collar flagged against the red reserve: LANE-BELOW6 moving it off red first.",
     "13 Nov 05:42: #944 landed (tournament conversations now captured where the game stages them; F38#16 re-capture queued). Overnight: #937, #938, #939, #941, #942, #943, #944.",
     "13 Nov 05:12: Cloudreach night arm (cloudnight) held: gains on 9 night stands but 3 stands read as dim day. Round 2 with a cooler fill and darker grass goes to LANE-THINGS.",
     "13 Nov 04:48: #943 landed: Trainer Rune now reachable (was stood on a steep sand face). Overnight so far: #937, #938, #939, #941, #942, #943.",
@@ -2600,7 +2601,7 @@
     },
     "F38#28": {
       "gpu": 6.99,
-      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note)"
+      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look"
     },
     "F38#29": {
       "gpu": 6.35,
@@ -2885,8 +2886,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-ext-stormwood 6.90 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
     },
     "F41#13": {
-      "gpu": 6.67,
-      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries | ARM stormraven r3 G-below6-stormraven-r3 (23aba198d, 13 Nov): 5.76 -> 6.67 (3/3), near-black raven with lightning flecks; SHIP, landing to come. Pooled current-main 5.74. Next: Fulgocobra olive body with gold veins | LANDED #938: arm 6.67 now on main | G-below6-fulgocobra-r2 (13 Nov): base on tb/below6 (main + Stormraven night coat #938) 7.37 High: close-out candidate"
+      "gpu": 6.91,
+      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries | ARM stormraven r3 G-below6-stormraven-r3 (23aba198d, 13 Nov): 5.76 -> 6.67 (3/3), near-black raven with lightning flecks; SHIP, landing to come. Pooled current-main 5.74. Next: Fulgocobra olive body with gold veins | LANDED #938: arm 6.67 now on main | G-below6-fulgocobra-r2 (13 Nov): base on tb/below6 (main + Stormraven night coat #938) 7.37 High: close-out candidate | G-closeout-f41-13-main (13 Nov): main 6.91 High and Medium, NOT closed (earlier 7.37 was a single read); Fulgocobra copper-red collar flagged 3/3 (hard rule, to LANE-BELOW6); Stormraven speckles read as frost"
     },
     "F41#14": {
       "gpu": 7.05,
