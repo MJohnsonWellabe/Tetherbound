@@ -25,7 +25,8 @@
       "_why": "Visual lane (3 Nov 2026), P2-116 / F39#13 (GPU WD2 6.08 on the Meshy bench; path 'a larger work surface with clear tools'). Blender-built 2.6 m plank bench with a 2.15 m tool board (hammer, saw, tongs, rope coil on pegs), vise, workpiece, mallet and a 2.6 m lantern post; provenance assets/props/vl-1103/camp_workbench/provenance.json. Same collider and craft offer. OFF until judged.",
       "enabled": true,
       "_why_on": "ON (visual lane v1/b9, 3 Nov 2026): r2 bench F39#13 CPU 6.03 -> 6.56 mapped (three code-blind judges, linear slope 1.06, r 0.79, anchor RMSE 0.74, confirming batch; reads as a work station, defect PARTIAL 3/3: pale on sand and the trainer still covers it in view 1).",
-      "model": "res://assets/props/vl-1103/camp_workbench/camp_workbench_r2.glb",
+      "model": "res://assets/props/vl-1103/camp_workbench/camp_workbench_r2b.glb",
+   "_why_r2b": "Correctness fix (LANE-SCENE, 13 Nov 2026). camp_workbench_r2.glb turned each joined material group about its own origin, so the hung tools, rope coil, vise, jar and lantern sat up to 1.6 m off the bench (model 4.61 m long against a 2.6 m top; the floating dark squares and the stray white ring in the Tidewake camp frames) and the bounds-centred bench stood about 0.9 m off its craft prompt. r2b is the same build with every group turned about the bench centre (source/workbench_r2b.py); tests/test_camp_workbench_model_parts.gd pins it.",
       "_why_r2": "r1 (camp_workbench.glb) judged CPU v1/b6: 5.75 -> 5.36 (worse); the judges saw the tool board from behind ('an upright pale board like a notice board'). r2 is the same bench turned 180 deg so the tools face the camp camera; OFF until judged."
     },
     "_why_yaw": "r2: the camp view stands at (+4, -5) from the bench and looks through the trainer; -39 deg turns the long axis across that view so the bench spans past the trainer."
