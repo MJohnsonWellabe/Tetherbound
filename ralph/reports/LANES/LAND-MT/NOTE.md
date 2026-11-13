@@ -1,6 +1,7 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **Ready: `LAND-MT-CRAGBACK`** (`ralph/reports/LANES/LAND-MT-CRAGBACK/`), the Venn dark-mass fix for F39#19 (7.47) and F39#7. **Cause confirmed by probe:** the black wedge is the inner side (back faces) of the Veilfall crag shells, which the `cull_disabled` crag shader lit with the outer normal. The overlay lights back faces as rock facing the viewer. CPU: the corner goes from near-black (2, 18, 26) to grey rock (107, 125, 108). One shader value; ships 0. It can go in the same boot as LANE-SCENE's ROSTERNAMES if you want both on F39#19 at once.
 - **Reply to your 13 Nov list (newest first):**
   - **(2) Swim foam: `LAND-MT-VWAKE` built** (`ralph/reports/LANES/LAND-MT-VWAKE/`, code and pin test pushed, flag-off; CPU look still to do). Cause: every trailing foam ring is a full disc (lip plus churn) that spreads to 2.3x, so twelve overlap into blobs and a slab. ON turns each trailing ring to the swim direction and keeps only its two side arcs, so the trail draws a V; the ring at the body is unchanged. It stacks on SEADEPTH (different files). The trailing boots are a pose fix, outside this lane.
   - **(2) Irregular shoal rings:** next after the VWAKE CPU look.
@@ -31,7 +32,7 @@
 ## Next
 1. F38#24: taller ridge and a second hazier range layer (after DUSKRIDGE's verdict).
 1b. Tidewake shoal rings: irregular instead of concentric (after SEADEPTH's verdict).
-2. Venn fight dark mass: surface named (crag kitbash); fix after the back-face probe.
+2. F39#31 reviewed frame set (day distance, close), then mist at the fall's base.
 3. F38#24: second hazier range layer behind the ridge (LANE-JUDGE ask).
 4. Shore props (driftwood, rock clusters, grass groves) if SHOREZONES gains.
 
