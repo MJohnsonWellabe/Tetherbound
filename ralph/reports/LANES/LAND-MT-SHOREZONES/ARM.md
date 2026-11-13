@@ -1,3 +1,24 @@
+# LAND-MT-SHOREZONES round 2: far-dune turf only
+
+**GPU eye check of round 1 (GPU lane, G-land-mt-shorezones on tb/gpu-frames-1113, warned in its manifest).**
+- The far dunes get the intended mottled sage patches.
+- But hard, triangular olive facets lie on the **near** sand in front of the trainer in terraces, horizon_stones and sluice_bridge route_day. These did not show on CPU.
+
+**Likely cause.** The turf mask is gated by a tight threshold on the terrain normal (`zone_gentle`, `abs(normal.y)` 0.55 to 0.85). Where the GPU's terrain normals are faceted, a threshold that tight steps per triangle.
+
+**Round 2 change (overlay only; the new uniforms default to round 1's maths).**
+- `zone_slope_free` 1: the normal gate is dropped; patches depend on height and noise only.
+- `zone_edge` 0.3: a softer patch border (was 0.12).
+- `zone_near_fade_m` 45: turf fades out toward the camera, so the near sand stays sand. Round 1's judged-positive part was the far dunes.
+
+**By-eye line for the GPU lane.** Near sand in front of the trainer: no olive facets; far dunes: the sage mottling is still there. If facets remain near the camera, hold.
+
+**Not looked at on CPU.** The CPU never showed the facets, so a CPU look cannot confirm the fix.
+
+---
+
+Round 1 notes follow.
+
 # LAND-MT-SHOREZONES: Tidewake dunes with backdune turf patches
 
 **Rows.** F39#1 shore landforms 6.14; F39#15 Veilfall approach shallows 6.14 (shares two frames); F39#27 6.16 ("bare flat dunes now"); F39#2 6.79 and F39#30 6.70 as no-loss (same islands in frame).

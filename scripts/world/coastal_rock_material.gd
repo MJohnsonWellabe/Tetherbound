@@ -79,6 +79,13 @@ uniform float coast_dune_zone_full_m = 8.0;
 uniform float coast_dune_zone_scale = 0.035;
 uniform vec3 coast_dune_zone_colour : source_color = vec3(0.40, 0.46, 0.27);
 uniform vec3 coast_dune_zone_straw_colour : source_color = vec3(0.62, 0.58, 0.36);
+// Round 2 (GPU G-land-mt-shorezones: hard triangular olive facets on the near
+// sand). near_fade_m fades turf out toward the camera; slope_free drops the
+// terrain-normal gate, which can step per triangle where normals are faceted;
+// edge widens the patch border. Defaults keep round 1 exactly.
+uniform float coast_dune_zone_near_fade_m = 0.0;
+uniform float coast_dune_zone_slope_free = 0.0;
+uniform float coast_dune_zone_edge = 0.12;
 // LANE-LAND-MT damp hollows (flag-off; 0 keeps the shipping sand exactly).
 // Judges on the Venn fight (G-land-mt-cragback, 3/3): "the dune is one flat
 // pale mid-tone". Low sand gets broad, irregular damp patches in the wet
@@ -251,10 +258,14 @@ const MATERIAL := """
 				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 3.1 + vec2(3.7, 9.2)) * 0.3
 				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 11.0 + vec2(8.3, 2.1)) * 0.2;
 			float zone_h = smoothstep(coast_dune_zone_start_m, coast_dune_zone_full_m, v_vertex.y + (zone_n - 0.5) * 4.0);
-			float zone_gentle = smoothstep(0.55, 0.85, abs(dune_normal.y));
+			float zone_gentle = mix(smoothstep(0.55, 0.85, abs(dune_normal.y)), 1.0, coast_dune_zone_slope_free);
 			// Noise-led patches that close up with height: turf islands in
 			// sand, never a lawn (a first try blanketed every dune green).
-			float zone_cover = smoothstep(0.5, 0.62, zone_n * 0.8 + zone_h * 0.2) * smoothstep(0.0, 0.35, zone_h) * zone_gentle;
+			float zone_cover = smoothstep(0.5, 0.5 + coast_dune_zone_edge, zone_n * 0.8 + zone_h * 0.2) * smoothstep(0.0, 0.35, zone_h) * zone_gentle;
+			if (coast_dune_zone_near_fade_m > 0.0) {
+				zone_cover *= smoothstep(coast_dune_zone_near_fade_m * 0.5, coast_dune_zone_near_fade_m,
+					length(v_vertex - (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz));
+			}
 			// Metre-scale sand flecks through the turf, so a patch underfoot is
 			// tufted ground and not one flat green sheet.
 			zone_cover *= mix(0.35, 1.0, smoothstep(0.3, 0.62, coast_noise(v_vertex.xz * 0.85 + vec2(4.4))));
@@ -374,6 +385,7 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 				"flank_strength", "flank_scale", "strata_strength", "scrub_strength", "scrub_scale", "scrub_colour",
 				"wet_wobble_m", "wrack_strength", "wrack_height_m", "wrack_width_m", "wrack_colour",
 				"zone_strength", "zone_start_m", "zone_full_m", "zone_scale", "zone_colour", "zone_straw_colour",
+				"zone_near_fade_m", "zone_slope_free", "zone_edge",
 				"damp_strength", "damp_scale", "damp_top_m"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
