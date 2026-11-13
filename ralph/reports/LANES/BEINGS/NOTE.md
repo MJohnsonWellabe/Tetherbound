@@ -5,6 +5,11 @@
 - The GPU lane withdrew its dry-check note on STORMRAVEN-WINGS (the hit reader is there); nothing to relay. It runs the pose batch on 9ae4ea989.
 - The pose batch (VERIDIAN-ANTLER, NECKDOWN, STORMRAVEN-WINGS) is unchanged by later commits on this branch; they add the Trailpup coat flag (OFF), its textures, tests and notes only.
 
+## TO THE COORDINATOR (13 Nov, about 19:25 UTC), newest first
+- **BEINGS-WMONITOR-GROUND is ready** (F36#92, 7.47): overlay only, one number, no code. Please add it as the fourth item in the pose batch. Cause confirmed on CPU: the species row lets limbs sink only 15%, so mid-faint the body is held up on its hanging legs.
+- **Your F36#50 question:** the base Mangrove Monitor does not have the hanging-foreleg defect on CPU (all four feet stay on the floor through the faint). It still needs its own GPU capture for a score.
+- Order I would use after the pose batch: TRAILPUP-AMBER, then the three held arms.
+
 ## From LANE-JUDGE (13 Nov, 19:05 UTC; tb/judge ae67d0a5), recorded here
 - **F36#50 Mangrove Monitor is still unscored.** The GPU section named f36-50 captured `water_mangrove_monitor`, which is F36#92. Coordinator: the F36#50 re-score needs `--species=mangrove_monitor`.
 - F36#92 Water Mangrove Monitor: 7.47 (above 7; 0.03 short of the bar). Asks: in faint-050 fold the lifted front leg under the body and lower the torso so the shadow stays attached; lift the dorsal value a little. A close-out candidate once the below-7 rows are done.
