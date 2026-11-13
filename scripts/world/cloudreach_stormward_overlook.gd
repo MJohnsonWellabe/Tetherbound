@@ -58,6 +58,48 @@ func build(materials: Dictionary) -> void:
 			(pane_fix.get("ember", {}) as Dictionary) if fixed else {})
 
 
+## F40#15 `ruin_collision_1113` (flag-off; scope world_geometry: static, the
+## same on every peer, no save state). The piers and ruined wings were
+## presentation-only, so a player could walk into the masonry; from inside,
+## the camera's occluder fade drew the walls as translucent "ghost planes"
+## (GPU walk_02, 3/3). One solid box per pier and wing, fitted inside the
+## visible stone, on the ordinary world layer. The arch opening between the
+## piers and the route ribbon stay clear. Returned as a separate node, or null
+## when off: the presentation itself stays collision-free.
+func build_ruin_collision() -> Node3D:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var cfg: Dictionary = parsed if parsed is Dictionary else {}
+	var solid: Dictionary = cfg.get("ruin_collision_1113", {})
+	if not bool(solid.get("enabled", false)):
+		return null
+	var fit := float(solid.get("fit", 0.9))
+	var holder := StaticBody3D.new()
+	holder.name = "StormwardOverlookRuinCollision"
+	holder.position = position
+	for raw: Variant in cfg.get("survey_piers", []):
+		var spec := raw as Dictionary
+		_add_solid(holder, "PierSolid", _v3(spec.position), _v3(spec.size) * fit,
+			Vector3(0.0, 0.0, deg_to_rad(float(spec.get("lean_deg", 0.0)))))
+	for raw: Variant in cfg.get("ruined_wings", []):
+		var spec := raw as Dictionary
+		_add_solid(holder, "WingSolid", _v3(spec.position), _v3(spec.size) * fit,
+			Vector3(deg_to_rad(float(spec.get("pitch_deg", 0.0))),
+				deg_to_rad(float(spec.get("yaw_deg", 0.0))), deg_to_rad(float(spec.get("roll_deg", 0.0)))))
+	return holder
+
+
+func _add_solid(holder: StaticBody3D, label: String, centre: Vector3, extent: Vector3,
+		turn: Vector3) -> void:
+	var shape := CollisionShape3D.new()
+	shape.name = "%s%02d" % [label, holder.get_child_count() + 1]
+	var box := BoxShape3D.new()
+	box.size = extent
+	shape.shape = box
+	shape.position = centre
+	shape.rotation = turn
+	holder.add_child(shape)
+
+
 func _add_needle(cfg: Dictionary, material: Material) -> void:
 	var at := _v3(cfg.get("position", [0.0, 0.16, 4.0]))
 	_box("StormwardNeedleStem", at, Vector3(0.7, 0.14, 8.0), material, "stormward_needle")

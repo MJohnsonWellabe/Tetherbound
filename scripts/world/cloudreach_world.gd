@@ -4856,6 +4856,10 @@ func _build_waterward_overlook(root: Node3D) -> void:
 	presentation.name = "StormwardOverlookPresentation"
 	root.add_child(presentation)
 	presentation.call("build", _materials)
+	# Solid ruins (flag-off `ruin_collision_1113`): null unless enabled.
+	var ruin_collision: Variant = presentation.call("build_ruin_collision")
+	if ruin_collision is Node3D:
+		root.add_child(ruin_collision as Node3D)
 	_exclude_local_wear_segment(root, Vector3(-8.0, -2.4, -28.0), Vector3.ZERO, 5.0)
 
 
