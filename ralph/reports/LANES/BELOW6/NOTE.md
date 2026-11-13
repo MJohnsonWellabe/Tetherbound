@@ -3,7 +3,7 @@
 ## 13 Nov, RELAY: Fulgocobra slate collar SHIPS. Landing ready: tb/below6-collar-land
 
 RELAY from LANE-SCOUT, G-cw (report G-cw-collar-wardenring-r2.md, tb/item-scout-1108 d958f1cc; slope 1.396, r 0.964, RMSE 0.27): F36#46 pose stage 5.29 -> 5.70 (+0.41, 3/3); Stormwood world states 6.12 -> 6.54 (+0.42, 3/3); no set loses. Red check: all three judges flag the base copper plates as "close to oxblood", none flag red on the arm; 0 red pixels on every arm pose frame. Still holding the row 3/3: the faint's neck stays arched with the hood up (BELOW6-FULGOCOBRA-FAINT is queued for that), no lightning veins on the body at view distance, and the world fainted frame shows the hood as a flat disc (2/3). Also in the batch, for THINGS: Warden ring r2 High level against r1 (6.91 -> 6.87, 0/3), F38#28 not closed.
-Landing branch `tb/below6-collar-land` (the name the coordinator asked for; `tb/below6-fulgocobra-collar-land` is an earlier cut of the same files, ignore it), head e1b02a1e4, cut from main 0e5d8c048 (10 files; coat, remake, value-lift, colourway and collar tests on the landing config: 43 tests, 0 failed): flag ON with `_why_on`, the slate texture and sidecar, landed pin test, report folder with READY.
+Landing branch `tb/below6-collar-land` (unused). The coordinator opened PR #948 from the first cut, `tb/below6-fulgocobra-collar-land` 04f38fdc6, which carries the same files; that is the landing, head e1b02a1e4, cut from main 0e5d8c048 (10 files; coat, remake, value-lift, colourway and collar tests on the landing config: 43 tests, 0 failed): flag ON with `_why_on`, the slate texture and sidecar, landed pin test, report folder with READY.
 
 ## 13 Nov, BELOW6-UNIFORM-CLOTH is an arm after all (F41#18): mesh-built garment mask
 
