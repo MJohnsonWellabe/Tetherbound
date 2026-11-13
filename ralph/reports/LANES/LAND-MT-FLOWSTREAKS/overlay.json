@@ -1,4 +1,4 @@
 {
- "data/config/tidewake_look.json": {"current_flow": {"state_shader": {"live": {"chop_cap_opacity": 0.0, "streak_density": 0.6, "dash_fill": 0.85, "fleck_amount": 0.1}}}},
- "data/config/water_current_flow_visual.json": {"shader": {"visual_cell_length_m": 18.0, "visual_cell_width_m": 4.2, "visual_breakup": 0.6}}
+ "data/config/tidewake_look.json": {"current_flow": {"state_shader": {"live": {"chop_cap_opacity": 0.0, "streak_density": 0.95, "dash_fill": 0.7, "fleck_amount": 0.35}}}},
+ "data/config/water_current_flow_visual.json": {"shader": {"visual_cell_length_m": 9.0, "visual_cell_width_m": 2.6, "visual_breakup": 0.75, "visual_density": 0.8}}
 }
