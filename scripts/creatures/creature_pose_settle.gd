@@ -598,7 +598,15 @@ static func _drop_head(rig: Rig, animation: Animation, end: float, rotation: Qua
 	var share := cfg.duplicate()
 	share["max_drop_deg"] = float(cfg.get("max_drop_deg", 90.0)) / float(chain.size())
 	share["max_elevation_deg"] = float(cfg.get("head_max_elevation_deg", cfg.get("max_elevation_deg", -15.0)))
-	for joint: int in chain:
+	# `aim_next_joint` (per species, off by default): a hooded snake holds a
+	# vertical neck with the head hooked down from its top, so joint-to-head is
+	# already level and nothing drops. Each joint is measured against the next
+	# joint up the chain instead, which lays the column itself down.
+	var aim_next := bool(cfg.get("aim_next_joint", false))
+	for index in chain.size():
+		var joint: int = chain[index]
+		if aim_next:
+			share["aim_bone"] = str(rig.skeleton.get_bone_name(chain[index + 1])) if index + 1 < chain.size() else "head"
 		rig.lift_head(animation, end, rotation, position, share, str(rig.skeleton.get_bone_name(joint)), true)
 
 
@@ -1100,7 +1108,10 @@ class Rig:
 			return
 		var to_body := _pivot(rotation, position) * to_model
 		var globals := global_poses(animation, t_end)
-		var d := (to_body * globals[head]).origin - (to_body * globals[neck]).origin
+		var aim := skeleton.find_bone(str(cfg.get("aim_bone", "")))
+		if aim < 0:
+			aim = head
+		var d := (to_body * globals[aim]).origin - (to_body * globals[neck]).origin
 		if d.length() < 0.001:
 			return
 		var elevation := rad_to_deg(asin(clampf(d.normalized().y, -1.0, 1.0)))
