@@ -1,6 +1,7 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **LANDING READY: `tb/land-mt-cragcut-land` 00d1242c** (from main 0ba1cfab; `ralph/reports/LANES/LAND-MT-CRAGCUT-LAND/READY.md`). CRAGCUT judged SHIP (+0.07, 2/3, no loss). Flag ON with the verdict cited, pin test 2 tests / 6 assertions, 0 failed. Crag-shell approach parked for F39#19 as the verdict says. Next from the verdict: the Venn dune (DUNETONE was too faint; trying grass clustering instead) and the floating log at the top of the Venn frames.
 - **BASEMIST: PARKED after two placement rounds.** With the billow floor (PR #958) the puffs render, but even with mid-fall puffs against the rock (7 extra, `at_fraction` 0.55 to 1.0), 1.25x size and a cooler tone, the F39#31 views show at most a softer base on the main fall. The camera-facing puff approach does not make mist read at these distances. A real base mist likely needs a dedicated effect (a lit mist volume or a particle sheet at the plunge), which is a bigger build; not started.
 - **F13#5: `LAND-MT-FLOWSTREAKS` is ready** (see the entry below); it is my next GPU candidate after CRAGCUT.
 - **LANDING READY: `tb/land-mt-veilfallmist-land` 6a2b28f6** (from main 0ba1cfab; `ralph/reports/LANES/LAND-MT-VEILFALLMIST-LAND/READY.md`). The Veilfall mist correctness fix: the spray billow gate erased every puff; a 0.55 floor keeps them. Pin test 2 tests / 5 assertions, 0 failed. Small visible effect (faint whitening at the main fall base); placement remains follow-up in `LAND-MT-BASEMIST`.
