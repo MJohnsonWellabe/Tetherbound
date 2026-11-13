@@ -2836,6 +2836,22 @@ func _overlook_join_height(point: Vector3, height: float, config: Dictionary) ->
 		var crown := _crown_height_at({"position": centre, "flat_radius": rim, "cap_radius": 0.5},
 			Vector3(centre.x + on_rim.x, centre.y, centre.z + on_rim.y), _all_crown_reference_lines)
 		var weight := 1.0 - smoothstep(0.0, ease, r - rim)
+		# Keep the road itself where it is: no lift across a route ribbon's own
+		# width (the lifted grass buried the path), easing in over the next 4 m.
+		var here := Vector2(point.x, point.z)
+		for line: Dictionary in _all_route_lines:
+			if str(line["route_id"]).begins_with("crown:"):
+				continue
+			var from: Vector3 = line["a"]
+			var to: Vector3 = line["b"]
+			var a2 := Vector2(from.x, from.z)
+			var along := Vector2(to.x, to.z) - a2
+			var t := clampf((here - a2).dot(along) / along.length_squared(), 0.0, 1.0)
+			var off := here.distance_to(a2 + along * t)
+			var clear := float(line["half_width"]) + LINE_PIN_MARGIN_M
+			weight *= smoothstep(clear, clear + 4.0, off)
+			if weight <= 0.0:
+				return height
 		return maxf(height, lerpf(height, crown - float(cfg.get("sink_m", 0.03)), weight))
 	return height
 
