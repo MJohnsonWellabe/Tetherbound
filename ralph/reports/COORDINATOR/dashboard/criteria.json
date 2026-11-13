@@ -3708,12 +3708,12 @@
       "title": "Meadows and village: visual catalog burn-down to the full bar",
       "chapter": "Wave 2 · Creature power, homestead and visuals",
       "lane": "tb/visual-meadows",
-      "pct": 21,
+      "pct": 24,
       "counts": {
         "in_progress": 12,
         "blocked": 1,
-        "met": 9,
-        "not_started": 20
+        "met": 10,
+        "not_started": 19
       },
       "criteria": [
         {
@@ -3878,9 +3878,9 @@
         },
         {
           "text": "F38 (1) top-20 item P2-058 catch aim readability: The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc — fixed on main with a GPU before/after pass at the bar.",
-          "status": "not_started",
-          "evidence": "GPU Q31 UI-1 31 Oct (tb/gpu-pass 20bc9054b, High): backing plate 5.77 -> 6.24 (+0.47) with UI-1; readout still sits on the creature (PARTIAL 3). Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. The numeric chance changes are present but small; the aim view does not expose the target health as a clear visual cause. Judged from full-resolution stills.",
-          "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
+          "status": "met",
+          "evidence": "GPU closed 13 Nov: visible catch ring with a thin dark halo landed in #937 (main fcdf124b4); G-things-reticle (LANE-SCOUT, tb/item-scout-1108 bb82ee421): 7.76 High and 7.76 Medium (3/3, lowest judge 7.52), confirming batch, neutral control F38#38 8.28. Builds on the #928 beacon beam fix.",
+          "gap": "",
           "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
           "parent": "F38#1",
           "subject": "P2-058",

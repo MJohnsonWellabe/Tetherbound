@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 00:05 UTC",
+  "updated": "13 Nov 2026 00:16 UTC",
   "headline": [
+    "13 Nov 00:16: #937 landed and F38#7 catch aim CLOSES (7.76 High and Medium). Meadows is now 10 of 42 closed.",
     "13 Nov 00:05, owner direction: LANE-THINGS now works only on the 43 rows at 6.5 to 7.0, cheapest first (nine rows sit at 6.9 or above and need about +0.1), then shared causes (13 creature-pose rows, dialogue framing). LANE-BELOW6 owns all 13 rows below 6, including Cloudreach rain and night and the Stormwood uniforms. Bands now: 43 at 6.5-7.0, 33 at 6.0-6.5, 13 below 6.",
     "12 Nov 23:55: the catch ring ships and closes F38#7 once on main (7.40 to 7.76 on High and Medium, 3/3, neutral control); landing as #937. F39#23 Tidewake catch +0.61.",
     "12 Nov 23:35: Cloudreach brighter rain sky does not ship: three rain sets gain about +0.2 (3/3), but F40#19's sky reads washed out (-0.12). LANE-THINGS will keep the brighter ground and go back to the darker slate cloud deck that won for F40#19 earlier.",
@@ -2271,6 +2272,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#937",
+      "what": "Visible catch ring with a thin dark halo; F38#7 CLOSED (7.76 High and Medium); F39#23 +0.61",
+      "when": "13 Nov 00:16"
+    },
     {
       "pr": "#936",
       "what": "Cloudreach wall stones at human scale (F40#15 5.17 to 5.54); full CI 23 jobs green",
