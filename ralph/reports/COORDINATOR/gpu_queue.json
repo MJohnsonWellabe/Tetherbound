@@ -4678,6 +4678,16 @@
       "added": "13 Nov 04:10"
     },
     {
+      "id": "below6-tonic-stash",
+      "branch": "tb/below6",
+      "commit": "4a369aae6",
+      "rows": [
+        "F38#12 (5.89)"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-TONIC-STASH/overlay.json (harvest_stash_support enabled: the band-3 attack tonic stands on an installed wooden crate), High, phase2_capture_world_inventory.gd --biome=meadows with subsets orb_basic, travel_pack, attack_tonic --seed=2042. Score the row (three frames); orb and pack frames are no-loss.",
+      "added": "13 Nov 05:24"
+    },
+    {
       "id": "things-stormpool-r2",
       "branch": "tb/things",
       "commit": "a6a79ca70",
