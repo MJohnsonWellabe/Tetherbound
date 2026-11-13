@@ -1,5 +1,11 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, RELAY: F41#13 does not close (6.91 both presets). Collar arm ready.
+
+RELAY from LANE-SCOUT, G-closeout-f41-13-main (report G-things-wardenring-f41-13-closeout.md, tb/item-scout-1108 7d2ccb33): F41#13 6.91 mapped on High and on Medium (7.19, 6.77, 6.77), so it does not close; the control F38#38 read 7.94 against 8.16/8.30, so the panel ran about 0.3 strict, and the earlier 7.37 was a single High read. Defect PARTIAL 3/3 on both presets: the raven's speckles "read more like frost or sequins than lightning"; the cobra's gold bands read as pattern, not charge. 3/3: the cobra's copper-red collar plates are near the reserved red. Asks: branching white-violet arcs along the raven's feathers, glowing veins on the cobra, drop or recolour the collar. Fit slope 1.396, r 0.975, RMSE 0.22.
+
+BELOW6-FULGOCOBRA-COLLAR (hard rule, done first as you asked): flag-off `below6_fulgocobra_slate_collar`, the live coat with the copper plates moved to gunmetal slate in the albedo (provenance script in the folder), Fulgocobra only. CPU stage before/after in the folder; red-orange pixels in the frame 1719 to 478 (the rest is the trainer). Separate from the faint arm. Staticub fur for F41#8 was pushed just before your message (BELOW6-STATICUB-FUR). Eleven arms of mine are waiting; I am stopping until verdicts come back.
+
 ## 13 Nov, BELOW6-STATICUB-FUR ready (F41#8, F41#18): the salmon-pink bears
 
 Read both F41#8 panels. The biggest named defect nobody had tried is the background bears: "flat salmon pink ... read as placeholders", 3/3 on G-places-stormlight, G-things-stormuniform and G-below6-namedfaces. They are wild Staticub (r10), not Stormursa. Brown fur, made paler by the shipped value-lift coat, under Stormwood's violet light renders salmon (CPU body crop 196,164,158). Flag-off `below6_staticub_storm_fur`: a darker fur with blue pulled down, derived from the model's own albedo; arcs, eyes and muzzle kept. CPU: 159,111,94, a brown bear with visible fur. Needs a no-loss look at Staticub in daylight, since the lifted coat was judged ON at 6.80 there; ARM.md says what to do if it loses. The crushed black ground is still LANE-PLACES'. Ten arms of mine are waiting now, so I am stopping here until verdicts come back.
