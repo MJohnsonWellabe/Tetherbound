@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 08:53 UTC",
+  "updated": "13 Nov 2026 08:55 UTC",
   "headline": [
+    "13 Nov 08:55: #947 landed (no harvest prompt across Tidewake/Cloudreach/Stormwood fights; Tidewake fight re-capture queued). Overnight: #937-#939, #941-#947 (10 PRs).",
     "13 Nov 08:53: Fulgocobra slate collar ships (+0.41 pose, +0.42 world, no red left on the cobra: hard-rule item cleared). Warden ring round 2 level at High: that approach parked; the dust-trail arm is capturing for the same row.",
     "13 Nov 08:40: False alarm cleared: the four F36 closes (#35, #58, #69, #72) were judged on a real Medium (preset fix a662d7bda landed in #925 before those reads). They stand.",
     "13 Nov 08:14: #946 landed (Warden fight black-frame camera fix). Overnight: #937, #938, #939, #941, #942, #943, #944, #945, #946. 17 arms queued on the GPU.",
@@ -2293,6 +2294,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#947",
+      "what": "Fight HUD no longer shows a world verb ('Gather Reef Stone') across fights outside Meadows: ownership check now runs in fights too; full CI green (4 suites, 15 multiplayer shards)",
+      "when": "13 Nov 08:53"
+    },
     {
       "pr": "#946",
       "what": "Warden fight camera stops 0.8 m in front of the war banner instead of resting in the cloth (the near-black r10 frame); camera-only, no gameplay; full CI green",
