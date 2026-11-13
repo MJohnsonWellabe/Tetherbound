@@ -50,8 +50,12 @@ func build(materials: Dictionary) -> void:
 		_add_needle(cfg.get("stormward_needle", {}) as Dictionary, bronze)
 	_add_compass_signal(cfg.get("compass_signal", {}) as Dictionary, bronze)
 	_add_compass_support(cfg, piers, _material(materials, "weathered_timber"), bronze)
-	_add_banners(cfg.get("banners", []) as Array)
-	_add_beacons(cfg.get("beacons", []) as Array, bronze)
+	var pane_fix: Dictionary = cfg.get("pane_fix_1112", {}) as Dictionary
+	var fixed := bool(pane_fix.get("enabled", false))
+	_add_banners(cfg.get("banners", []) as Array,
+			(pane_fix.get("pennant", {}) as Dictionary) if fixed else {})
+	_add_beacons(cfg.get("beacons", []) as Array, bronze,
+			(pane_fix.get("ember", {}) as Dictionary) if fixed else {})
 
 
 func _add_needle(cfg: Dictionary, material: Material) -> void:
@@ -197,28 +201,75 @@ func _rod(label: String, a: Vector3, b: Vector3, radius: float, material: Materi
 	add_child(instance)
 
 
-func _add_banners(specs: Array) -> void:
+func _add_banners(specs: Array, pennant: Dictionary = {}) -> void:
+	# The streamers were flat unlit-looking cards 2 m by 4.5 m hung at head
+	# height: the route camera beside a pier saw one as a blank pale-yellow
+	# pane over half the frame. With the pennant fix they are narrow
+	# swallow-tailed cloth strips hung from the same top edge, well overhead.
+	var fix := bool(pennant.get("enabled", false))
 	for index in specs.size():
 		var spec := specs[index] as Dictionary
 		var banner := MeshInstance3D.new()
 		banner.name = "StormwardStreamer%02d" % (index + 1)
-		var plane := PlaneMesh.new()
-		plane.orientation = PlaneMesh.FACE_Z
-		plane.size = _v2(spec.get("size", [2.2, 5.5]))
-		plane.subdivide_width = 2
-		plane.subdivide_depth = 4
-		banner.mesh = plane
+		var size := _v2(spec.get("size", [2.2, 5.5]))
+		var colour := Color(str(spec.get("colour", "#315f6c")))
 		var cloth := StandardMaterial3D.new()
-		cloth.albedo_color = Color(str(spec.get("colour", "#315f6c")))
 		cloth.roughness = 0.85
 		cloth.cull_mode = BaseMaterial3D.CULL_DISABLED
-		banner.material_override = cloth
 		banner.position = _v3(spec.position)
+		if fix:
+			var narrow := Vector2(size.x * float(pennant.get("width_scale", 0.42)),
+					size.y * float(pennant.get("height_scale", 0.62)))
+			banner.mesh = _pennant_mesh(narrow, float(pennant.get("notch_fraction", 0.22)),
+					colour.darkened(float(pennant.get("darken", 0.3))),
+					float(pennant.get("hem_darken", 0.35)))
+			cloth.vertex_color_use_as_albedo = true
+			banner.position.y += (size.y - narrow.y) * 0.5
+		else:
+			var plane := PlaneMesh.new()
+			plane.orientation = PlaneMesh.FACE_Z
+			plane.size = size
+			plane.subdivide_width = 2
+			plane.subdivide_depth = 4
+			banner.mesh = plane
+			cloth.albedo_color = colour
+		banner.material_override = cloth
 		banner.set_meta("stormward_role", "direction_streamer")
 		add_child(banner)
 
 
-func _add_beacons(specs: Array, bronze: Material) -> void:
+static func _pennant_mesh(size: Vector2, notch_fraction: float, colour: Color,
+		hem_darken: float) -> ArrayMesh:
+	var half := size * 0.5
+	var hem := colour.darkened(hem_darken)
+	var band := half.y - minf(0.22, size.y * 0.1)
+	var notch := -half.y + size.y * clampf(notch_fraction, 0.0, 0.6)
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	tool.set_normal(Vector3.BACK)
+	var quads: Array = [
+		# top hem band
+		[Vector3(-half.x, half.y, 0), Vector3(half.x, half.y, 0),
+			Vector3(half.x, band, 0), Vector3(-half.x, band, 0), hem, hem],
+		# body, left and right halves down to the swallow tail
+		[Vector3(-half.x, band, 0), Vector3(0, band, 0),
+			Vector3(0, notch, 0), Vector3(-half.x, -half.y, 0), colour, hem],
+		[Vector3(0, band, 0), Vector3(half.x, band, 0),
+			Vector3(half.x, -half.y, 0), Vector3(0, notch, 0), colour, hem],
+	]
+	for quad: Array in quads:
+		var top: Color = quad[4]
+		var bottom: Color = quad[5]
+		for corner: int in [0, 1, 2, 0, 2, 3]:
+			tool.set_color(top if corner < 2 else top.lerp(bottom, 0.45))
+			tool.add_vertex(quad[corner])
+	return tool.commit()
+
+
+func _add_beacons(specs: Array, bronze: Material, ember: Dictionary = {}) -> void:
+	# The glow was a default 1 m sphere at emission 2.8: a blank white ball on
+	# the grass. With the ember fix it is a small coloured ember in the bowl.
+	var fix := bool(ember.get("enabled", false))
 	for index in specs.size():
 		var spec := specs[index] as Dictionary
 		var at := _v3(spec.position)
@@ -228,12 +279,17 @@ func _add_beacons(specs: Array, bronze: Material) -> void:
 		glow_material.albedo_color = colour
 		glow_material.emission_enabled = true
 		glow_material.emission = colour
-		glow_material.emission_energy_multiplier = 2.8
+		glow_material.emission_energy_multiplier = (
+				float(ember.get("emission", 1.0)) if fix else 2.8)
 		var glow := MeshInstance3D.new()
 		glow.name = "StormwardBeaconGlow%02d" % (index + 1)
-		glow.mesh = SphereMesh.new()
+		var sphere := SphereMesh.new()
+		if fix:
+			sphere.radius = float(ember.get("radius", 0.3))
+			sphere.height = float(ember.get("height", 0.42))
+		glow.mesh = sphere
 		glow.material_override = glow_material
-		glow.position = at + Vector3.UP * 0.75
+		glow.position = at + Vector3.UP * (float(ember.get("lift", 0.24)) if fix else 0.75)
 		glow.set_meta("stormward_role", "beacon_glow")
 		add_child(glow)
 		var light := OmniLight3D.new()
