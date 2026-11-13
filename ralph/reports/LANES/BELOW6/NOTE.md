@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, Stormraven landing is at the name you asked for
+
+`tb/below6-stormraven-land` = 9bade7624, cut from main fcdf124b4 (same commit as `tb/below6-stormraven-night-land`; use either). Flag ON with `_why_on`, `_Image_0_night.png` and `_glow_read_r2.png` with sidecars (the coat needs both), pin test, `test_dark_value_lift_flags.gd` LATER_COATS update (it pinned the old Stormraven lift and fails without it), report folder with READY. Fulgocobra olive body with emissive gold veins is my next build.
+
 ## 13 Nov, RELAY from LANE-SCOUT: Stormraven r3 SHIPS (F41#13 clears 6). Landing ready.
 
 G-below6-stormraven-r3 (tb/item-scout-1108 23aba198): F41#13 5.76 -> 6.67 (+0.91, 3/3; per judge 6.56, 6.89, 6.56; fit r 0.969, RMSE 0.25). Defect PRESENT -> PARTIAL 3/3. No judge marked the flecks down for brightness; the note is pattern ("speckle, not forked arcs"). Pooled current-main F41#13 is about 5.74 (the board has 5.97). Landing branch: `tb/below6-stormraven-night-land` (cut from current main; flag ON with `_why_on`, pin test, one older pin updated, READY). Scout's next for the row: forked arc veins and a stronger rim on the raven; Fulgocobra is now the bigger gap (navy with painted gold bands where the board shows olive-black scales with glowing veins; bolted-on copper throat plates); staging (posterised ground, no storm light).
