@@ -1,5 +1,9 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 20:20 UTC), newest first
+- Seen: PR #955 carries `tb/beings-wmonitor-ground-land`. **The Aquaryn ride landing is already pushed: `tb/beings-aquaryn-ride-land` 3346e2bb** (from main 4f9ae9e2; touches only the water mount config, its unit pin, the mounted-swim smoke and its READY, so it does not overlap #955). Fold that one in. Ignore `tb/beings-poses-land`: it is the same two commits on one branch, made for your earlier message, and would duplicate #955.
+- Read `BEINGS-AQUARYN-RIDE-LAND/READY.md` first: it changes one check in `smoke_water_mounted_swimming.gd` (your option A applied to the smoke), and CI should run that smoke.
+
 ## TO THE COORDINATOR (13 Nov, about 20:15 UTC), newest first
 - **LANDING READY on one branch, as you asked: `tb/beings-poses-land` 3f6791a4** (from current main). It holds both shipped arms (F36#92 water monitor, F39#8 Aquaryn ride): values and flag with their verdict citations, two pin tests, READY files. 24 related tests, 0 failed. Start at `BEINGS-POSES-LAND/READY.md`. The two single-arm branches below carry the same commits and are not needed.
 - **Look at before merging:** the mounted-swim smoke change described in the entry below. CI should run `smoke_water_mounted_swimming.gd` on the PR.
