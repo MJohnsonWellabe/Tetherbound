@@ -364,6 +364,7 @@ static func settle_faint(rig: Rig, source: Animation, raw_cfg: Dictionary) -> An
 	if grounded.is_empty() and side.is_empty() and lift.is_empty() and _section(cfg, "faint", "crumple").is_empty():
 		return null
 	var animation := source.duplicate(true) as Animation
+	_rest_joints(rig, animation, _section(cfg, "faint", "rest_joints"))
 	var times := _times(animation, rig, int(cfg.get("samples", 11)))
 	var rotations: Array[Quaternion] = []
 	var positions: Array[Vector3] = []
@@ -453,6 +454,9 @@ static func settle_faint(rig: Rig, source: Animation, raw_cfg: Dictionary) -> An
 		for joint: Variant in joints:
 			rig.pitch_joint(animation, end, rotations[-1], positions[-1], str(joint),
 				float(joints[joint]), float(end_pose.get("ramp_start", 0.3)))
+	# Again after the crumple, which splays a winged rig's wing bones.
+	_rest_joints(rig, animation, _section(cfg, "faint", "rest_joints"))
+	rig.bone_tracks.erase(animation.get_instance_id())
 	if not grounded.is_empty() or not side.is_empty():
 		var sink := rig.standing_height * float(grounded.get("sink_frac", 0.015)) if not grounded.is_empty() else 0.0
 		var centre := grounded.is_empty() or bool(grounded.get("recentre", true))
@@ -612,6 +616,32 @@ static func _drop_head(rig: Rig, animation: Animation, end: float, rotation: Qua
 
 
 ## Hit: a recoil when the authored hit barely moves, then planted samples.
+## `rest_joints` (faint or hit, per species, absent by default): the named
+## joints keep their rest rotation through the clip (`keep` blends back toward
+## the clip, 0 = fully at rest). For a mesh modelled with folded wings whose
+## clips still swing the wing bones: the folded wing leaves the body as a slab
+## (Stormraven, F36#74).
+static func _rest_joints(rig: Rig, animation: Animation, block: Dictionary) -> void:
+	if block.is_empty():
+		return
+	var keep := clampf(float(block.get("keep", 0.0)), 0.0, 1.0)
+	var tracks := rig._bone_tracks(animation)
+	for joint: Variant in block.get("joints", []):
+		var bone := rig.skeleton.find_bone(str(joint))
+		if bone < 0:
+			continue
+		var track: int = (tracks.get(bone, {}) as Dictionary).get(Animation.TYPE_ROTATION_3D, -1)
+		if track < 0:
+			continue
+		hold_track_at_rest(animation, track, rig.skeleton.get_bone_rest(bone).basis.get_rotation_quaternion(), keep)
+
+
+static func hold_track_at_rest(animation: Animation, track: int, rest: Quaternion, keep: float) -> void:
+	for key in animation.track_get_key_count(track):
+		var value: Quaternion = animation.track_get_key_value(track, key)
+		animation.track_set_key_value(track, key, rest.slerp(value, keep).normalized())
+
+
 static func settle_hit(rig: Rig, source: Animation, raw_cfg: Dictionary) -> Animation:
 	var cfg := _hit_for_species(raw_cfg, rig.species_id)
 	var recoil := _section(cfg, "hit", "recoil")
@@ -619,6 +649,7 @@ static func settle_hit(rig: Rig, source: Animation, raw_cfg: Dictionary) -> Anim
 	if recoil.is_empty() and grounded.is_empty():
 		return null
 	var animation := source.duplicate(true) as Animation
+	_rest_joints(rig, animation, _section(cfg, "hit", "rest_joints"))
 	var times := _times(animation, rig, int(cfg.get("samples", 11)))
 	var rotations: Array[Quaternion] = []
 	var positions: Array[Vector3] = []

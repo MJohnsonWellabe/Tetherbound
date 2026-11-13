@@ -1,11 +1,9 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov, about 16:50 UTC)
-- main 4f9ee396 is merged; `tb/beings` head is this commit.
-- **BEINGS-VERIDIAN-ANTLER** (F36#85): thanks, noted as queued.
-- **BEINGS-NECKDOWN** (F36#46, F36#88): ready. It **replaces BELOW6-FULGOCOBRA-FAINT**; please capture only the new one. Overlay only, over code already on main.
-- That makes two of mine waiting. Held until a slot frees, in this order unless you prefer another: BELOW6-AQUARYN-RIDE, BELOW6-STATICUB-FUR, BELOW6-UNIFORM-CLOTH.
-- I start no new arm while two are waiting. Meanwhile I am finding the cause of the Stormraven slab (F36#74) and reading the F38#1 / F38#2 panels.
+## TO THE COORDINATOR (13 Nov, about 17:30 UTC)
+- Thanks: VERIDIAN-ANTLER and NECKDOWN noted as queued together; held order noted.
+- **New, CPU-ready, NOT queued: BEINGS-STORMRAVEN-WINGS** (F36#74, 6.37). The slab's cause is found and confirmed: the clips swing the wing bones of a folded-wing mesh. It is an overlay over a small flag-off settle option now on `tb/beings`. Take it when a slot frees, or fold it into the NECKDOWN batch if that has not started (same tool, same config file). Your call where it sits against the three held arms; I would put it ahead of them.
+- Landing note for NECKDOWN: `tests/test_fulgocobra_faint_end_pose_flag.gd` needs its two assertions updated (in its ARM.md).
 
 ## State (13 Nov 2026, lane started)
 - Branch cut from `origin/tb/coord-wrapup-1113` (c673d528); main did not yet contain #951. Merge `origin/main` once it lands.
@@ -23,12 +21,14 @@ The limit is two, and I inherited four. My order, for the coordinator to confirm
 - A copied `owner1101` GLB re-extracts its embedded textures under the new name and loses the graded coat (Mosshock came out darker). A copy of a `nat1024` GLB does not. Check the albedo path in a test when copying a model.
 
 ## Tried and dropped
-- **Stormraven tail slab (F36#74), one failure.** I took the cause to be skin weights: 2555 of 4103 tail-region vertices are weighted to both the tail and the wing tips. A copy with the tail freed of wing weight still showed the slab on CPU, and stretch got worse (118 to 382 triangles). So that is not what draws it. Tail end pitches of plus and minus 45 degrees only tilt the slab. Copy and flag removed. Not yet known: what the slab is. Next probe would be a second camera angle on hit-050 before any change.
+- **Stormraven, skin weights and tail pitch:** both ruled out before the real cause was found (details in `BEINGS-STORMRAVEN-WINGS/ARM.md`).
+- **Glimmermoth, Tempestwing, Mosshock weight relax:** no visible change; removed.
 
 ## Next
-- Stormraven: find what the slab is (above) before building.
 - Trailpup (F36#83, 6.53): judges 3/3 say the owner-picked amber paws and eyes are missing.
 - F38#2 and F38#1 (6.35, 6.58): read their latest panels for a shared cause.
+- Stormraven faint end: find what the remaining low fan is.
+- Other folded-wing meshes may share Stormraven's cause (clips swinging wing bones on a folded mesh): check Duskhush, Pipwing, Reedwing, Aeriex with the same clip read-out before building anything.
 
 ## Runbook additions
 - Fresh checkout: `godot --headless --path . --import` takes about 25 minutes.

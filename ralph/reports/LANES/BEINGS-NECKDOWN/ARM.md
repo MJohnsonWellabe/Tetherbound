@@ -30,4 +30,4 @@ This arm **replaces BELOW6-FULGOCOBRA-FAINT** in the queue (that arm had not bee
 - Standing frames (`hit-000`) must be identical for both species.
 
 ## Landing notes
-The landing puts the guardian row in the file, empties `exclude_species` with a `_exclude_why` update, and turns the Fulgocobra scope ON. If only one species ships, land that half alone.
+The landing puts the guardian row in the file, empties `exclude_species` with a `_exclude_why` update, and turns the Fulgocobra scope ON. If only one species ships, land that half alone. `tests/test_fulgocobra_faint_end_pose_flag.gd` asserts that only Fulgocobra states an end pose and that its scope is off; the landing updates both assertions.
