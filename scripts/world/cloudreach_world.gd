@@ -4551,6 +4551,7 @@ func _build_gate_crag_terrace(root: Node3D) -> void:
 	var inset := float(cfg.get("inset_m", 2.3))
 	var lip := float(cfg.get("lip_m", 0.32))
 	var wave := float(cfg.get("wave", 0.11))
+	var kerb := float(cfg.get("kerb_m", 0.55))
 	var segments := maxi(12, int(cfg.get("segments", 56)))
 	var base_y := 0.10
 	var outlines: Array = []
@@ -4588,13 +4589,19 @@ func _build_gate_crag_terrace(root: Node3D) -> void:
 			_add_surface_triangle(wall, b, d, c)
 			# The turf top: a ring out to this tier's lip; the last tier closes
 			# to its centre.
+			# A stone kerb along the lip, then turf: the step reads as a rock
+			# ledge with grass on it, not a painted line.
+			var e := inner[index] + Vector3.UP * high
+			var f := inner[next] + Vector3.UP * high
+			var ka := a.move_toward(e, kerb)
+			var kb := b.move_toward(f, kerb)
+			_add_surface_triangle(wall, a, ka, b)
+			_add_surface_triangle(wall, b, ka, kb)
 			if tier < tiers - 1:
-				var e := inner[index] + Vector3.UP * high
-				var f := inner[next] + Vector3.UP * high
-				_add_surface_triangle(top, a, e, b)
-				_add_surface_triangle(top, b, e, f)
+				_add_surface_triangle(top, ka, e, kb)
+				_add_surface_triangle(top, kb, e, f)
 			else:
-				_add_surface_triangle(top, a, Vector3.UP * high, b)
+				_add_surface_triangle(top, ka, Vector3.UP * high, kb)
 	wall.generate_normals()
 	top.generate_normals()
 	var mesh := ArrayMesh.new()
