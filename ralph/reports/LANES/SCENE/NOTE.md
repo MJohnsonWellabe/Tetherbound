@@ -1,5 +1,14 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov 2026, about 17:00 UTC)
+1. **LAND (correctness fix, no GPU verdict needed):** `tb/scene-benchfix-land` 364b775c8, cut from main 4f9ee396. The shipped Tidewake camp workbench model has its hung tools, rope coil, vise and lantern thrown up to 1.6 m off the bench by its build script (model 4.61 m long against a 2.6 m top). Those parts are the floating dark squares and the stray white ring in the F39#13 GPU frames. The fixed model (r2b) puts them back. New bounds test fails on the old model and passes on r2b; the model-name pin in `tests/test_camp_props_vl.gd` is updated. READY: `ralph/reports/LANES/SCENE-BENCHFIX-LAND/READY.md` (on that branch).
+2. **RE-SCORE after 1 lands:** F39#13 (6.14) was judged on the broken model.
+3. **ARM SCENE-CACHE**, `tb/scene`, row F38#12 (5.89). **Replaces BELOW6-TONIC-STASH: please drop that one from the queue** (this overlay turns the tonic crate on too).
+4. **ARM SCENE-WORKSHOP**, `tb/scene`, row F39#13. Overlay only, over the bench fix.
+5. **Queue count:** with 3 and 4 plus HALLMOSS and TELLDUST2 the lane is over the limit of two. I suggest withdrawing THINGS-SOLENE and holding SCENE-WORKSHOP behind SCENE-CACHE. I send nothing more until slots free.
+6. **RE-SCORE, no build:** F39#19 (6.56). On the GPU frame the roster already sits on dark panels; the recorded pale text is gone.
+7. `tb/scene` has origin/main (after #951) merged in.
+
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
 - Criteria closed: 0. Landed on main: 0.
