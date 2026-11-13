@@ -399,7 +399,7 @@
    "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
    "model_scale": 0.5,
    "_why_t3_pickups": "Owner directive 2026-08-29. Beside the bramblebun off-route pocket (spawns.json order 1047, centre (-260,950)) which 'rewards cutting the corner instead of following the road's own longer arc' -- the same corner-cut now pays twice, catch temptation and orb supply together.",
-   "visual": {"reward_height_m": 0.38}
+   "visual": {"reward_height_m": 0.38, "cache_dressing_1113": {"enabled": true, "_switch": "data/config/harvest_stash_support.json cache_dressing_enabled (OFF)", "_scope": "world_presentation", "_candidate": "LANE-SCENE (13 Nov 2026), F38#12 harvest reward identity (GPU High 5.89). On the GPU frames each reward reads as its item but sits alone on bare lawn. Candidate: installed camp props stage it as a traveller's cache. Visual only; anchor, prompt, reward and collision unchanged. OFF until GPU-judged.", "props": [{"name": "CacheLog", "model": "res://assets/props/kenney_survival/tree-log.glb", "height_m": 0.42, "at": [0.25, -0.95], "yaw_deg": 78}, {"name": "CacheCage", "model": "res://assets/props/quaternius_fantasy/Cage_Small.gltf", "height_m": 0.6, "at": [-1.0, -0.45], "yaw_deg": 28}, {"name": "CacheRope", "model": "res://assets/props/quaternius_fantasy/Rope_1.gltf", "height_m": 0.16, "at": [0.85, 0.3], "yaw_deg": 40}, {"name": "CacheBag", "model": "res://assets/props/quaternius_fantasy/Bag.gltf", "height_m": 0.46, "at": [1.0, -0.55], "yaw_deg": -20}]}}
   },
   {
    "order": 1030,
@@ -413,7 +413,7 @@
    "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
    "model_scale": 0.5,
    "_why_t3_pickups": "T3-REWARD found `travel_pack` (items.json) fully modelled with zero acquisition path anywhere in the game. Placed beside the galecrest off-route pocket (spawns.json order 1048, centre (500,1050)), the 'upper ridge' aggressor sighting -- a pack left by whoever was here before, on the same detour. stack:1 gear, so a respawning crate is harmless: nothing is farmable that changes the equip once worn.",
-   "visual": {"reward_height_m": 0.65}
+   "visual": {"reward_height_m": 0.65, "cache_dressing_1113": {"enabled": true, "_switch": "data/config/harvest_stash_support.json cache_dressing_enabled (OFF)", "_scope": "world_presentation", "_candidate": "LANE-SCENE (13 Nov 2026), F38#12 harvest reward identity (GPU High 5.89). On the GPU frames each reward reads as its item but sits alone on bare lawn. Candidate: installed camp props stage it as a traveller's cache. Visual only; anchor, prompt, reward and collision unchanged. OFF until GPU-judged.", "props": [{"name": "CampLog", "model": "res://assets/props/kenney_survival/tree-log.glb", "height_m": 0.42, "at": [0.2, -0.85], "yaw_deg": 84}, {"name": "CampFirePit", "model": "res://assets/props/kenney_survival/campfire-pit.glb", "height_m": 0.26, "at": [1.5, 0.5], "yaw_deg": 0}, {"name": "CampBedroll", "model": "res://assets/props/kenney_survival/bedroll.glb", "height_m": 0.14, "at": [-1.45, 0.2], "yaw_deg": 18}, {"name": "CampBucket", "model": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf", "height_m": 0.36, "at": [1.35, -0.85], "yaw_deg": 10}]}}
   },
   {
    "order": 1031,

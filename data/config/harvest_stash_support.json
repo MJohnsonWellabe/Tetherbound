@@ -1,5 +1,7 @@
 {
   "_comment": "F38#12 (LANE-BELOW6, 13 Nov 2026). The switch for harvest nodes' own visual.stash_support_1113 blocks (the band-3 stashed tonic, band3_the_river_lock/harvest.json order 3019). Those blocks sit inside a JSON list, which a deep-merge overlay cannot address, so the switch lives here. A node's block applies only when both are enabled; the node blocks ship enabled so this file alone turns the candidate on. OFF until GPU-judged.",
   "_scope": "world_presentation",
-  "enabled": false
+  "enabled": false,
+  "_comment_cache_dressing": "F38#12 (LANE-SCENE, 13 Nov 2026). `cache_dressing_enabled` is the switch for harvest nodes' visual.cache_dressing_1113 blocks (band-1 orders 1029 orb cache and 1030 travel pack, band-3 order 3019 stashed tonic): installed camp props round the reward, scripts/world/harvest_cache_dressing.gd. OFF until GPU-judged.",
+  "cache_dressing_enabled": false
 }
