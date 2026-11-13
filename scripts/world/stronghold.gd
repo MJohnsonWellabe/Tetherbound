@@ -870,6 +870,8 @@ func _wall_material(outer: bool) -> Material:
 ## own footprint. Outside faces, open yards and every other surface are
 ## untouched. hall_stone.gdshader `room_*`.
 var _room_wall: Dictionary = {}
+## True while `_build_keep_parapets` dresses a roofed keep chamber's wall.
+var _dressing_roofed_chamber := false
 var _room_wall_materials: Dictionary = {}
 
 
@@ -1810,7 +1812,9 @@ func _build_keep_parapets() -> void:
 		for side in ["-x", "+x", "-z", "+z"]:
 			if skip.has(side):
 				continue
+			_dressing_roofed_chamber = true
 			_dress_exterior_wall(centre, size, height, side, false)
+			_dressing_roofed_chamber = false
 
 
 ## `along_x`-general for the coping/merlon roofline pass, which
@@ -1916,6 +1920,20 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 				else Vector3(_wall_t + BUTTRESS_PROUD, b_h, BUTTRESS_W)
 			var b_at := Vector3(wall_centre.x + d, _floor_y - _skirt + b_h * 0.5, wall_centre.z) \
 				if along_x else Vector3(wall_centre.x, _floor_y - _skirt + b_h * 0.5, wall_centre.z + d)
+			# F38#28 `roofed_room_walls_1113`: the buttress is centred on the wall
+			# line, so half its extra depth stands INSIDE the room -- a 1.6 m wide,
+			# full-height slab of exterior stone 0.4 m proud of the arena wall (the
+			# flat green rectangle left after the wall moss fix). On a roofed
+			# chamber, keep the outer face where it is and stop the inner face
+			# inside the wall's own thickness.
+			if _dressing_roofed_chamber and not _roofed_room_walls_config().is_empty():
+				var depth := (_wall_t + BUTTRESS_PROUD) * 0.5
+				if along_x:
+					b_size.z = depth
+					b_at.z += sign_ * depth * 0.5
+				else:
+					b_size.x = depth
+					b_at.x += sign_ * depth * 0.5
 			# NOT `_stone_dark()`, which is what the first cut used. Rendered, a
 			# #463f37 pilaster against the wall's own #9c9083 reads as a black
 			# bar bolted to the stone -- the same failure JUDGE-5 already named
