@@ -1,0 +1,24 @@
+[
+ {
+  "frame": "veilfall-vista.jpg",
+  "preset": "main-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-rescore-f39-31-clear-day-pre958/main-High/veilfall-vista.jpg",
+  "sky_fraction": 0.405,
+  "lower_edges": 0.2687,
+  "script_errors": 0,
+  "note": "F39#31 first clear-day baseline (only ever scored as a rain rider, 6.02), PRE-#958: tb/land-mt 5ef7e327e, no overlay (its lane code is flag-off; it lacks #958's Veilfall spray-mist fix, which a post-#958 re-shoot will add). capture_tidewake_f13_5.gd --camera-set=F39-look.json --views=veilfall-vista,veilfall-near, High, one side."
+ },
+ {
+  "frame": "veilfall-near.jpg",
+  "preset": "main-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-rescore-f39-31-clear-day-pre958/main-High/veilfall-near.jpg",
+  "sky_fraction": 0.227,
+  "lower_edges": 0.2688,
+  "script_errors": 0,
+  "note": "F39#31 first clear-day baseline (only ever scored as a rain rider, 6.02), PRE-#958: tb/land-mt 5ef7e327e, no overlay (its lane code is flag-off; it lacks #958's Veilfall spray-mist fix, which a post-#958 re-shoot will add). capture_tidewake_f13_5.gd --camera-set=F39-look.json --views=veilfall-vista,veilfall-near, High, one side."
+ }
+]
