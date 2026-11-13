@@ -4552,6 +4552,8 @@ func _build_gate_crag_terrace(root: Node3D) -> void:
 	var lip := float(cfg.get("lip_m", 0.32))
 	var wave := float(cfg.get("wave", 0.11))
 	var kerb := float(cfg.get("kerb_m", 0.55))
+	var shift_raw: Array = cfg.get("tier_shift_xz", [0.0, 0.0])
+	var shift := Vector2(float(shift_raw[0]), float(shift_raw[1]))
 	var segments := maxi(12, int(cfg.get("segments", 56)))
 	var base_y := 0.10
 	var outlines: Array = []
@@ -4562,7 +4564,10 @@ func _build_gate_crag_terrace(root: Node3D) -> void:
 			var angle := TAU * float(index) / float(segments)
 			var wobble := 1.0 + wave * sin(angle * 3.0 + float(tier) * 1.7) \
 				+ wave * 0.45 * sin(angle * 7.0 + float(tier) * 0.9)
-			ring.append(Vector3(cos(angle) * r * wobble, 0.0, sin(angle) * r * wobble))
+			# Each tier is shifted a little further toward one side, so the
+			# steps bunch on that side and open out on the other.
+			ring.append(Vector3(cos(angle) * r * wobble + shift.x * float(tier), 0.0,
+				sin(angle) * r * wobble + shift.y * float(tier)))
 		outlines.append(ring)
 	if not _materials.has("terrace_stone"):
 		var tint := str(cfg.get("stone_tint", "#dedbd0"))
@@ -4601,7 +4606,8 @@ func _build_gate_crag_terrace(root: Node3D) -> void:
 				_add_surface_triangle(top, ka, e, kb)
 				_add_surface_triangle(top, kb, e, f)
 			else:
-				_add_surface_triangle(top, ka, Vector3.UP * high, kb)
+				var hub := Vector3(shift.x * float(tiers), high, shift.y * float(tiers))
+				_add_surface_triangle(top, ka, hub, kb)
 	wall.generate_normals()
 	top.generate_normals()
 	var mesh := ArrayMesh.new()
