@@ -34,7 +34,7 @@
  "faint": {
   "per_species": {"ashtusk": {"_why": "things_hit_scope brings Ashtusk into the settle for its hit only; its faint stays the game's clip.", "grounded": {"enabled": false}, "side_lie": {"enabled": false}, "crumple": {"enabled": false}, "head_lift": {"enabled": false}}, 
    "_why": "A species row is deep-merged over this faint block for that species' bake only (creature_pose_settle.gd _for_species). An exact id wins over the base id.",
-   "fulgocobra": {"_why": "below6_fulgocobra_scope: lower the raised neck and hood to the ground.", "crumple": {"force": true, "head_joints": 3, "aim_next_joint": true, "max_drop_deg": 240.0, "head_max_elevation_deg": 4.0, "ramp_start": 0.25, "torso_drop_ratio": 1.0}}, "pebbik": {"crumple": {"force": true, "tail_relax": 1.0}},
+   "fulgocobra": {"_why": "below6_fulgocobra_scope: lower the raised neck and hood to the ground.", "crumple": {"force": true, "head_joints": 3, "max_drop_deg": 240.0, "head_max_elevation_deg": 4.0, "ramp_start": 0.25, "torso_drop_ratio": 1.0}}, "pebbik": {"crumple": {"force": true, "tail_relax": 1.0}},
    "breezetail": {"crumple": {"force": true, "tail_relax": 1.0}},
    "shadelet": {"crumple": {"force": true, "tail_relax": 1.0}},
    "paddlenewt": {"crumple": {"force": true, "tail_relax": 1.0}},
