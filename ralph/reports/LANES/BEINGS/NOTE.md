@@ -111,6 +111,13 @@
 - F38#16 tournament: 7.31 (above 7). Ask: Mira and Tam share one green-hood body; give them distinct outfits.
 - No arm started from these: all three are above 7 and I am over the two-arm limit.
 
+## Tried and failed, by row (for the coordinator's TRIED_AND_FAILED index)
+- F38#1 (Terrapup faint) PARKED: `faint_fold` for Terrapup. It turns off face-camera, so the plated back faces the lens and the legs and head vanish; no better than the base on CPU.
+- F38#1 (Terrapup rest) PARKED: `settled_rest` for Terrapup. It does not apply, because Terrapup rests on its own `rest` clip through the authored path, not on `rest_faint`. Replaced by BEINGS-TERRAPUP-SPHINX.
+- F41#8 and the Staticub world frames (F36 (0) #19 world read) PARKED: a bluer coat toward Stormursa's average (fur x 0.90, 0.95, 1.35). It renders pink under Stormwood's violet light (CPU round 1). Replaced by the darker coat in BEINGS-STATICUB-COOL.
+- F36#74 (Stormraven) PARKED: skin-weight relax and tail pitch. Neither was the cause; the wing bones swinging on a folded-wing mesh were (BEINGS-STORMRAVEN-WINGS).
+- F36#49 (Glimmermoth), F36#78 (Tempestwing), F36#54 (Mosshock) PARKED: skin-weight relax on wings and spikes. No visible change, because those parts have no bones of their own.
+
 ## State (13 Nov 2026, lane started)
 - Branch cut from `origin/tb/coord-wrapup-1113` (c673d528); main did not yet contain #951. Merge `origin/main` once it lands.
 - Criteria closed: zero. Landed on main: nothing yet.
