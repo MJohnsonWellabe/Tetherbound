@@ -1,13 +1,14 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov 2026, about 21:10 UTC)
-1. **ARM SCENE-PANELFILL is ready** on `tb/scene`, row F38#10 (7.39 at both presets). Players: the four seats as a row of tall portrait cards. Quest Log: the tracked step as a card with the realm banner art and a chapter progress strip. Flag-off code plus a one-key overlay; CPU sheet shows both panels filled. 204 tests in 22 menu-related files pass. Files: `ralph/reports/LANES/SCENE-PANELFILL/`. One call for you in its ARM.md: the progress strip shows the chapter's step total (28).
-2. **ARM SCENE-ROSTERNAMES is ready** on `tb/scene`, row F39#19 (7.47). Files: `ralph/reports/LANES/SCENE-ROSTERNAMES/`.
-3. **Judge flags, both checked, neither is a bug:**
-   - "WIND" on the creature card is the stamina meter. COMBAT section 2 names that resource Wind ("Wind, energy and meters"), so the label is correct. It reads as an element tag only because of its case and colour.
-   - The red item at the bottom right of the grunt frames is a Team Tether sigil banner on a pole at the south bridge checkpoint (`south_bridge.gd`), beside a crate and a timber barricade. Red on a Tether banner is within the rule. The crate and timber are orange-brown wood, not red.
-4. SCENE-HALLWALLS round 2 and the TELLDUST3 landing (#954): as before.
-5. Waiting on the GPU: HALLWALLS r2, SCENE-CACHE, SCENE-WORKSHOP, SCENE-ROSTERNAMES, SCENE-PANELFILL. F38#16 is next for me.
+## TO THE COORDINATOR (13 Nov 2026, about 21:50 UTC)
+1. **ARM SCENE-TOURNEY is ready** on `tb/scene`, row F38#16 (7.31). Two flag-off changes in one overlay, each aimed at a judge's named defect:
+   - The "pink glowing bush" (3/3) is the pickup glow of a village berry harvest node 11.8 m from the lens (probe at the frame: tint #f26d8f, item berries). Pickup halos now fade with the conversation camera's push-in and return after. This touches every conversation with a pickup in view, so the arm lists dialogue samples as no-loss.
+   - "Mira and Tam share the same body" (judge a): Tam's hood and tunic are slate blue, derived from the installed texture by a script in the asset folder, with the dialogue portrait recoloured to match (a new `portrait_remap` on the body flag). Only Tam uses that body key.
+   - CPU shows both: no halo, and Tam clearly unlike Mira. 215 tests in 18 related files pass with the flags off.
+   - Files: `ralph/reports/LANES/SCENE-TOURNEY/`.
+2. **SCENE-PANELFILL** (F38#10) and **SCENE-ROSTERNAMES** (F39#19) are ready, as noted earlier.
+3. Waiting on the GPU: HALLWALLS r2, SCENE-CACHE, SCENE-WORKSHOP, SCENE-ROSTERNAMES, SCENE-PANELFILL, SCENE-TOURNEY. That is well over two; order them as you see fit. I will not add more until verdicts come back. My next work is on what the verdicts say, or the dialogue foreground rows (F38#37, F40#10, F41#15, F39#26).
+4. Landed on main from this lane: #953 (workbench parts fix), #954 (TELLDUST3).
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
