@@ -1,5 +1,60 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+# HANDOFF, 13 Nov 2026 about 13:00 UTC (owner wrap-up; the lane is closed). Branch: `tb/below6-wrapup`
+
+## State
+- No new arms. Nothing is mid-edit. `tb/below6` has main merged in; `tb/below6-wrapup` is one commit on current main that carries everything of the lane's that is not on main.
+- Every flag that has not shipped is OFF in the wrap-up. Nothing in it changes what the game shows.
+- Landed on main from this lane on 12 and 13 Nov: swim pose, restored sea, knife-edge strip, perch rim, masonry (#936), Stormraven night coat (#938, F41#13 5.76 -> 6.67), overlook pane fix (#939), High Perches court apron (#941), Fulgocobra slate collar (#948, F36#46 5.29 -> 5.70; clears the near-oxblood copper).
+- Local land prep (pin tests for overlook solid and gate terrace, Aquaryn notes) was not pushed and is not needed: the pins are the existing flag tests with the OFF assertion turned to ON plus a `_why_on` check.
+- Checks at wrap-up: every test file the lane changed plus the coat, body-flag, pose-settle and landed-pin tests, in one run: 103 tests, 1801 assertions, 0 failed. Overlook route smoke (`smoke_cloudreach_waterward_overlook_join.gd`): PASS flag-off. Gate terrace smoke: skips flag-off as designed; it passed flag-on at 11:50 UTC (top tier ground 151.70). `texture_import_policy.py --check`: PASS.
+
+## Open candidates (all flag-off; none has a GPU verdict)
+Scores are the row's last GPU High mapped score. The GPU order the coordinator set was the order of this table.
+
+| Arm folder (`BELOW6-…`) | Row and score | Flag | Status |
+|---|---|---|---|
+| OVERLOOK-JOIN | F40#15, 5.77 | `cloudreach_visual.json landmass.overlook_ridge_join_1113` | Queued, not captured. Lifts the approach ridge to the ledge to remove the dark seam. Flag-on route smoke passes. |
+| OVERLOOK-SOLID | F40#15, 5.77 | `cloudreach_stormward_overlook_visual.json ruin_collision_1113` plus two `capture_stands.json` frame rows in its overlay | Queued. Makes the piers and ruined wings solid, which removes the walk_02 ghost planes. Replaces OVERLOOK-STANDS. |
+| FULGOCOBRA-FAINT | F36#46, 5.70 after the collar | `creature_pose_settle.json below6_fulgocobra_scope` | Queued. Stated end pitches lay the neck and hood down. All three judges still name the raised faint. |
+| TONIC-STASH | F38#12, 5.89 | `harvest_stash_support.json enabled` | Queued. A landing must turn `test_switch_is_off` into an ON pin. `tests/test_harvest.gd` stalls on this machine with the switch on or off, so its last 14 tests were not verified here. |
+| AQUARYN-RIDE | F39#8, 5.82 | `water_mount_presentation.json mounts.water_aquaryn.deep_swim_1113` | Queued. Sink 1.6 m, rider waist-deep (coordinator's option A). |
+| WALL-BAND | F40#1, 5.90 | `cloudreach_visual.json landmass.wall_top_band_1113` | Queued. |
+| GATE-TERRACE | F40#1, 5.90 | `cloudreach_visual.json landmass.gate_crag_terrace_1113` | Queued. Walk smoke passes flag-on; tiers register as ground. One stand only. |
+| STATICUB-FUR | F41#8 5.80, F41#18 5.89 | `creature_coat_flags.json below6_staticub_storm_fur` | Queued. A landing must add it to `LATER_COATS` in `tests/test_dark_value_lift_flags.gd`. |
+| UNIFORM-CLOTH | F41#18, 5.59 after the lost lighting arm (5.89 before) | `character_body_flags.json below6_uniform_cloth` and `stormwood_character_presentation.json uniform_cloth_floor_1113` | Queued. Only Dace was captured on CPU. The three rigs are shared outside Stormwood, so it needs a no-loss check there. |
+| BARK | F40#15 | `tree_bark_tone_1112` | Queued since 12 Nov. |
+| WAKE | F39#5 5.98, F39#14 6.12 | `human_water_contact_visual.json soft_churn_1112` | Queued since 12 Nov. |
+
+Older flag-off items with no verdict (details in the 12 Nov wrap-up below, section 3): Captain Marrow's white head (`below6_marrow_self_lit_off`, `identity_floor_1112`), aged heartwood (`aged_heartwood_1112`), ramp body (`ramp_body_1112`), `below6_stormraven_eye_lines`. Parked, flag-off: `heartwood_1111.core_v2`, `landmark_crowns_1111`.
+
+Idea not built: white-violet branching arcs along the Stormraven's feather edges (F41#13 is at 6.91 on both presets; that and glowing veins on the cobra are the judges' asks).
+
+## What worked
+- Finding the one concrete object behind a recorded defect, then fixing that object. Each of these shipped: the amber pane was a banner card, the court floor was an apron 3 cm above the turf, the black strip was a shoulder end face, the copper collar was near-oxblood.
+- Coat changes derived from the existing texture by a small script kept in the arm folder (Stormraven night, slate collar). Blend in RGB; a hue lerp passes through green.
+- Hard-rule fixes (red on a creature) ship easily: the judges flag the base and prefer the fix.
+- One overlay per arm over flag-off code, with ARM.md, CAPTURE.json and one sheet.
+
+## What did not work
+- Lighting-only changes on characters (uniform separation lost, 6.05 -> 5.59).
+- Recolouring a whole creature body (Fulgocobra olive lost twice; parked and removed).
+- Stone tint on the overlook, rim turf, and camera-only stops for the ghost planes (no effect or lost).
+- Generic pose settle on the cobra's hood: it cannot fold it. Stated end pitches per joint are the working approach, not yet judged.
+- Dressing props on Cloudreach lawns (eight failed before this lane took the row). Real ground shape is the remaining idea (gate terrace).
+
+## Runbook
+- CPU capture: `export XDG_DATA_HOME=<scratch>/xdg`, then `xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility --resolution 1920x1080 --script res://tools/<tool>.gd -- <args>`. One Godot process at a time.
+- Tools: `phase2_capture_routes.gd` (`--biome --subset --frame=<id> --seed=2042 --output`), `phase2_capture_locations.gd` (`--subset --times --views --spot=id@x,z@heading`; spot runs can hang), `phase2_capture_creatures.gd --biome=<b> --only=<species>`, `tools/art_pipeline/capture_f36_poses.gd --species=X --game-clips --clear-ruler --roles=hit,faint --whole-body --out=`, `phase2_capture_tidewake_mounted_swim.gd`. `capture_cloudreach_f40_matrix.gd` needs a real GPU.
+- An arm: flag-off code and config, a deep-merge `overlay.json` (`{"path": {patch}}`; it cannot address JSON lists), a flag test, CPU proof, then ARM.md, CAPTURE.json, overlay and one `_sheet*.jpg` in `ralph/reports/LANES/BELOW6-<NAME>/`.
+- New textures: derive with a script kept in the arm folder, `godot --headless --path . --import`, `tools/art_pipeline/texture_import_policy.py --apply`, import again, `--check`.
+- Tests: `godot --headless --path . --script tests/run_tests.gd -- --only=<file name parts>`; smokes run as `--script tests/smoke_*.gd`. Use exact names: `--only=harvest` also pulls in slow smokes.
+- A landing: cut from current main; flag ON with `_why_on` naming the verdict file and both scores; a pin test; READY.md with `STATUS: land`; only that arm's files. Grep `tests/` for older pins on the same value. Coats that override a value lift go in `LATER_COATS`.
+- After any revert or removal, grep to confirm it took.
+- Verdicts are on `tb/item-scout-1108` under `ralph/reports/GPU-PASS/1108/`.
+
+---
+
 ## 13 Nov 11:50 UTC, land prep done locally; one small fix pushed to the gate terrace arm
 
 Land prep (coordinator, 11:35): landed pin tests for overlook solid and gate terrace and the Aquaryn test edits are written locally, not pushed. One change is pushed on tb/below6 because it belongs in what the GPU judges: the gate terrace tiers now register as ground surfaces for `ground_height_at()` (flag-on smoke PASS, top tier reads 151.70 = 151.70). Flag-off behaviour is unchanged. The terrace is seventh in the GPU order, so please capture it from this head or later.

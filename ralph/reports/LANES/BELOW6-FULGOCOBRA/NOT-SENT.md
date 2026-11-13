@@ -11,3 +11,4 @@ Two real CPU looks since (`_sheet_cpu.jpg`: base above, the second look below; s
 Both are well under +0.5 by eye, so the albedo-lift approach is parked after two attempts. The cobra is black by identity; lifting it further turns it grey.
 
 What the judges named and this does not touch: the hood stays raised in the faint (LANE-THINGS' faint grounding). A different idea, not built: the stage itself is dark grey, so a near-black animal has no value step to stand on in these frames; in the field it stands on grass. If the row is to move, judge it on a field frame or give the pose stage a lighter floor for dark subjects (a stand change, which needs its own review).
+Removed at wrap-up (13 Nov): the flag block and its 7.5 MB texture are dropped; the slate collar (on main, #948) is the Fulgocobra coat.
