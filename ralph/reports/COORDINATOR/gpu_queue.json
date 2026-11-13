@@ -4716,6 +4716,17 @@
       "added": "13 Nov 12:03"
     },
     {
+      "id": "things-telldust2",
+      "branch": "tb/things",
+      "commit": "303115335",
+      "rows": [
+        "F38#3 (Medium 7.47, 0.03 short)",
+        "F38#28 (High 7.47, 0.03 short)"
+      ],
+      "ask": "Base = round 1 (overlay_tell_dust.json, what #949 lands) vs arm overlay_tell_dust_low.json (dust_size 0.8->0.5, spacing 0.3->0.2, rise 0.06->0.04, dust_max 260->400; alpha and colour unchanged), Meadows fight set (south_bridge_grunt + warden_aldis) at High AND Medium, camera-paired, F38#38 control. By eye first on grunt 03: the band should sit below the boar's body, still continuous (not beads). Close candidate: both rows 0.03 short.",
+      "added": "13 Nov 12:05"
+    },
+    {
       "id": "below6-overlook-join",
       "branch": "tb/below6",
       "commit": "ee1a130c6",
