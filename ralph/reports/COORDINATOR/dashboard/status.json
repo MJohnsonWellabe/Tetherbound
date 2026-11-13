@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 00:16 UTC",
+  "updated": "13 Nov 2026 00:30 UTC",
   "headline": [
+    "13 Nov 00:30: Stormraven reworked as a near-black raven with lightning flecks ships: F41#13 5.76 to 6.67 (3/3), above 6. Landing branch requested from LANE-BELOW6.",
     "13 Nov 00:16: #937 landed and F38#7 catch aim CLOSES (7.76 High and Medium). Meadows is now 10 of 42 closed.",
     "13 Nov 00:05, owner direction: LANE-THINGS now works only on the 43 rows at 6.5 to 7.0, cheapest first (nine rows sit at 6.9 or above and need about +0.1), then shared causes (13 creature-pose rows, dialogue framing). LANE-BELOW6 owns all 13 rows below 6, including Cloudreach rain and night and the Stormwood uniforms. Bands now: 43 at 6.5-7.0, 33 at 6.0-6.5, 13 below 6.",
     "12 Nov 23:55: the catch ring ships and closes F38#7 once on main (7.40 to 7.76 on High and Medium, 3/3, neutral control); landing as #937. F39#23 Tidewake catch +0.61.",
@@ -2840,8 +2841,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-ext-stormwood 6.90 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
     },
     "F41#13": {
-      "gpu": 5.97,
-      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries"
+      "gpu": 5.74,
+      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries | ARM stormraven r3 G-below6-stormraven-r3 (23aba198d, 13 Nov): 5.76 -> 6.67 (3/3), near-black raven with lightning flecks; SHIP, landing to come. Pooled current-main 5.74. Next: Fulgocobra olive body with gold veins"
     },
     "F41#14": {
       "gpu": 7.05,
