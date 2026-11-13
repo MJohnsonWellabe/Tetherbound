@@ -4830,7 +4830,8 @@
     "Staticub daylight no-loss"
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-STATICUB-FUR/overlay.json (below6_staticub_storm_fur ON: darker, less blue fur on Staticub so the background bears stop reading salmon pink), High, phase2_capture_dialogue.gd --biome=stormwood --seed=2042 (Maud, Bryn, Nysa frames) plus phase2_capture_creatures.gd --biome=stormwood --only=staticub. No-loss: Staticub in daylight outside Stormwood (Meadows creature stand or stage), since the coat is per model.",
-   "added": "13 Nov 06:48"
+   "added": "13 Nov 06:48",
+   "status": "SHIP (F41#8 +0.18 3/3; Nysa +0.50). LANE-BEINGS to land."
   },
   {
    "id": "things-solene",
@@ -4852,7 +4853,8 @@
     "no-loss: the same three rigs outside Stormwood"
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-UNIFORM-CLOTH/overlay.json (below6_uniform_cloth + uniform_cloth_floor_1113: mid-value slate cloth and a brass shoulder band on a mesh-built garment mask for grunt_c, officer_a and former_tether_member), High, phase2_capture_dialogue.gd --biome=stormwood --seed=2042 (Varga, Dace, Sable inventory + dialogue; officers and civilians as no-loss). These rigs are shared across biomes, so add a no-loss set outside Stormwood: the Meadows dialogue rows and fight frames that use those bodies (e.g. south_bridge_grunt) and a Tidewake or Cloudreach officer frame. By-eye: uniform separates from the mud at the inventory camera, brass shoulders read, hair and skin unchanged; no red.",
-   "added": "13 Nov 07:57"
+   "added": "13 Nov 07:57",
+   "status": "SHIP thin (F41#18 +0.07 2/3; dialogue +0.18 3/3). LANE-BEINGS to land."
   },
   {
    "id": "things-stormpool-r2",
@@ -5164,7 +5166,7 @@
    "added": "13 Nov 18:10",
    "priority": "near-bar closer: run before scene-cache",
    "note_tree": "1735a7827 adds only TELLDUST3 (flag-off) over 442473e62; one import serves hallwalls, telldust3, scene-cache.",
-   "status": "ROUND 2 queued 13 Nov 19:40 (attempt 2 of 2): tb/scene 063c614ca stronghold.gd clips exterior buttresses inside roofed chambers (the hard-edged rectangle was a buttress 0.4 m through the arena wall). Park if the rectangle remains."
+   "status": "PARKED 13 Nov after 2 attempts: r2 level (0/3, 3 ties); rectangle gone by pixels but not visible at sheet size. F38#28 6.81 on a strict panel. Next idea: authored floor boundary in place of the teal arc."
   },
   {
    "id": "things-telldust3",

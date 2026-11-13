@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 20:10 UTC",
+ "updated": "13 Nov 2026 20:25 UTC",
  "headline": "13 Nov 19:58: #954 landed three GPU-judged ships (overlook join + solid, coherent wind-up dust). #955 (F36#92 water monitor faint) in CI. GPU judging flowing: 8 re-scores and 6 arm verdicts today; near-bar closers queued: F39#19 roster names, HALLWALLS r2. F38#10 not closed (7.39, strict panel).",
  "batches": [
   {
@@ -2500,8 +2500,8 @@
    "src": "CLOSED 10 Nov: High 7.84, Medium 8.25 (G-f38-27-close, G-f38-27-close-medium on tb/item-scout-1108 038a46d59); the 5.89 entry was stale (spotted by LANE-FLOOR2)"
   },
   "F38#28": {
-   "gpu": 7.47,
-   "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look | LANDED #945 (13 Nov): ring r1 on main; r2 (0.05/0.3 m) queued for the High close-out | G-cw (13 Nov): ring r2 (lower alpha) level at High 6.91->6.87 (0/3): ring-alpha approach PARKED; next = in-world edge and cool fill; dusttrail (puffs) still to judge | G-things-telldust (13 Nov): SHIPS, High 7.16->7.47, Medium 7.29->7.55 (3/3); High 0.03 short of close | LANDED #949 (13 Nov): 7.47 High / 7.55 Medium on main",
+   "gpu": 6.81,
+   "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look | LANDED #945 (13 Nov): ring r1 on main; r2 (0.05/0.3 m) queued for the High close-out | G-cw (13 Nov): ring r2 (lower alpha) level at High 6.91->6.87 (0/3): ring-alpha approach PARKED; next = in-world edge and cool fill; dusttrail (puffs) still to judge | G-things-telldust (13 Nov): SHIPS, High 7.16->7.47, Medium 7.29->7.55 (3/3); High 0.03 short of close | LANDED #949 (13 Nov): 7.47 High / 7.55 Medium on main | G-scene-hallwalls-r2: level, NOT CLOSED; 6.81 High and Medium on the strictest panel (control 7.53); next: authored floor boundary in place of the teal arc (LANE-JUDGE tb/judge 190fd4eb4, 13 Nov)",
    "medium": 7.55
   },
   "F38#29": {
@@ -2808,8 +2808,8 @@
    "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-ext-stormwood 7.40 (LANE-PLACES 444270729, main, GPU High, 12 Nov) EXTRAPOLATED: Medium + confirming batch"
   },
   "F41#18": {
-   "gpu": 5.89,
-   "src": "GPU High 8-9 Nov (F-stormwood); G-things-stormrim (b3b9fbd4d): rim off in Stormwood 5.60 -> 6.22 (3/3), LANDED #923; RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.93 (was 6.10) | ARM THINGS-STORMUNIFORM G-things-stormuniform (25ed5dd72, 12 Nov): row 5.56 -> 5.60 (1/3), not shipped; wash gone but cloth sinks into ground; officer dialogue +0.27 (3/3). POOLED current-main 5.89 row (6.22, 5.56), 6.34 dialogue. Next: cool rim/key light, lifted albedo, copper/steel trim, legible rank | G-below6-uniforms (13 Nov): DO NOT SHIP, lighting arms PARKED on this row: row 6.05->5.59 (0/3; coats sink into mud without the emission floor, rim and knots unread at distance); dialogue +0.41 (3/3). Next: mid-value cloth albedo with strong cool rim, bright copper/steel rank accent sized for the normal camera, new Varga/Nysa/Sable faces"
+   "gpu": 6.02,
+   "src": "GPU High 8-9 Nov (F-stormwood); G-things-stormrim (b3b9fbd4d): rim off in Stormwood 5.60 -> 6.22 (3/3), LANDED #923; RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.93 (was 6.10) | ARM THINGS-STORMUNIFORM G-things-stormuniform (25ed5dd72, 12 Nov): row 5.56 -> 5.60 (1/3), not shipped; wash gone but cloth sinks into ground; officer dialogue +0.27 (3/3). POOLED current-main 5.89 row (6.22, 5.56), 6.34 dialogue. Next: cool rim/key light, lifted albedo, copper/steel trim, legible rank | G-below6-uniforms (13 Nov): DO NOT SHIP, lighting arms PARKED on this row: row 6.05->5.59 (0/3; coats sink into mud without the emission floor, rim and knots unread at distance); dialogue +0.41 (3/3). Next: mid-value cloth albedo with strong cool rim, bright copper/steel rank accent sized for the normal camera, new Varga/Nysa/Sable faces | G-below6-uniform-cloth SHIP thin 5.95 -> 6.02 (2/3) (LANE-JUDGE tb/judge 190fd4eb4, 13 Nov)"
   },
   "F41#19": {
    "gpu": 7.25,
@@ -2848,8 +2848,8 @@
    "src": "G-dialogue-recapture-stormwood (LANE-SCOUT 5b7c3a1d9), main 8df122a83, blend 1.000, GPU High, one-sided: named trainer identity; Marrow's head blown white; RE-SCORE G-rescore-stale-ext-stormwood 7.02 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
   },
   "F41#8": {
-   "gpu": 5.8,
-   "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#8 5.22 -> 5.80 (+0.58, 3/3) with distinct_bodies_1111"
+   "gpu": 6.27,
+   "src": "G-places-stormlight (LANE-SCOUT 6ece0b6fc), GPU High, storm_phase_1111 LANDED #914; this batch reads about 0.9 below the board: F41#8 5.22 -> 5.80 (+0.58, 3/3) with distinct_bodies_1111 | G-below6-staticub-fur-dialogue SHIP 6.09 -> 6.27 (3/3); Nysa 5.95 -> 6.45 (LANE-JUDGE tb/judge 190fd4eb4, 13 Nov)"
   },
   "F41#9": {
    "gpu": 7.17,
