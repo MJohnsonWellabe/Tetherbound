@@ -1,0 +1,1 @@
+{"row":"F36#85","tool":"res://tools/art_pipeline/capture_f36_poses.gd","args":["--species=veridian","--roles=hit,faint","--whole-body","--context","--out={OUT}"],"frames":["veridian-hit-000","veridian-hit-050","veridian-faint-050","veridian-faint-100"],"base":"lane head, no overlay","arm":"lane head + overlay.json","crop":"560,200 1000x640","presets":["High"]}

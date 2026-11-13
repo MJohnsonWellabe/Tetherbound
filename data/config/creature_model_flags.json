@@ -1222,6 +1222,7 @@
           "model": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101_grounded.glb"
         }
       }
-    }
+    },
+    "beings_veridian_rigid_antlers": {"_why": "LANE-BEINGS (13 Nov 2026), BEINGS-VERIDIAN-ANTLER. F36#85 Veridian (GPU High 6.33; G-rescore-tier2-batch-1, 3/3: the antler slab 'shoots up and back in a twisted spike' and 'reads as broken geometry'; contorted faint neck PRESENT 3/3). Cause (weight probe, 13 Nov): the antler vertices are weighted 52% head, 31% neck, 13% spine, 4% pelvis, so the hit and faint shear them into a sheet. A copy of the live faint_headdown GLB with every vertex above 66% of the mesh height bound to the head alone (rigid_bind_region.py head 0,1,0.66,1,0,1), then relax_stretched_weights.py --clips=hit,faint: triangles stretching over 0.15 m 1786 -> 107. Mesh, UVs, textures and clips unchanged. OFF until GPU-judged.", "scope": "client presentation: the species' model file; no state", "enabled": false, "species": {"veridian": {"model": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_rigidantler.glb"}}}
   }
 }
