@@ -1,5 +1,9 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 22:00 UTC), newest first
+- **New, CPU-ready, NOT queued: BEINGS-THUNDERTUNNEL-FAINT** (F36#80, 6.04). Its faint ends as the "faceless ball" (3/3) because the raw clip rolls it belly-out; the forced crumple that shipped for seven other species rights it, head down with the eye showing. Overlay over a flag-off scope; no code. It is a pose-stage arm, so it fits the same batch as the other pose arms.
+- **CPU-ready queue, my order:** MONITOR-VALUE (F36#50, F36#92), THUNDERTUNNEL-FAINT (F36#80), TRAILPUP-AMBER (F36#83), then held STATICUB-FUR and UNIFORM-CLOTH.
+
 ## TO THE COORDINATOR (13 Nov, about 21:30 UTC), newest first
 - **VERIDIAN-ANTLER also targets F38#1** (6.58). F38#1's remaining defect (G-npc-floor, 3/3) is its Veridian-fainted frame: "a white, spiky, wispy shape". On CPU the arm shortens that sheet in the world frames too. `BEINGS-VERIDIAN-ANTLER/CAPTURE.json` now lists a second capture (`phase2_capture_creatures.gd --biome=meadows --only=veridian`) so the GPU lane can judge F38#1 from the same tree. If the pose batch has already captured, this can ride the next one.
 
