@@ -4666,6 +4666,19 @@
       "added": "13 Nov 06:58"
     },
     {
+      "id": "things-dusttrail",
+      "branch": "tb/things",
+      "commit": "a6c24558a",
+      "rows": [
+        "F38#3 (close candidate)",
+        "F38#28 (Warden puffs)",
+        "F38#11 no-loss",
+        "F41#3 no-loss"
+      ],
+      "ask": "Base vs overlay_dust_trail.json, High, the G-things-foestand-meadows fight set (capture_f38_fight.gd south_bridge_grunt --attack --dodge --tell-frames). By-eye first: frame 02's pale bead loops during Pebble Toss should be short puffs; if the strings are still there, hold and tell LANE-THINGS. Near-bar item (High 6.89, Medium 7.03). UPDATED 13 Nov 08:17: run on tb/things a6c24558a (contains main d4960ba66 with Warden ring r1); add the Warden set at Medium AND High for F38#28 (the 'white puff ring' is this same trail). Moved up behind wardenring-r2: both rows are close candidates.",
+      "added": "13 Nov 02:58"
+    },
+    {
       "id": "below6-overlook-join",
       "branch": "tb/below6",
       "commit": "ee1a130c6",
@@ -4795,18 +4808,6 @@
       ],
       "ask": "Base vs overlay_pool_damp_r2.json, High, G-rescore-f41-22-24 stands (giant, forest, rod_line; glass and stormheart no-loss) x Calm, Break, aftermath Calm. By-eye first: the pale sheen behind the trainer at giant_break and on the right at forest_break should be gone. Branch head already merges main 317b3372f.",
       "added": "13 Nov 02:40"
-    },
-    {
-      "id": "things-dusttrail",
-      "branch": "tb/things",
-      "commit": "a84a1b5bf",
-      "rows": [
-        "F38#3",
-        "F38#11 no-loss",
-        "F41#3 no-loss optional"
-      ],
-      "ask": "Base vs overlay_dust_trail.json, High, the G-things-foestand-meadows fight set (capture_f38_fight.gd south_bridge_grunt --attack --dodge --tell-frames). By-eye first: frame 02's pale bead loops during Pebble Toss should be short puffs; if the strings are still there, hold and tell LANE-THINGS. Near-bar item (High 6.89, Medium 7.03).",
-      "added": "13 Nov 02:58"
     },
     {
       "id": "rescore-f39-17-f39-5-main",
