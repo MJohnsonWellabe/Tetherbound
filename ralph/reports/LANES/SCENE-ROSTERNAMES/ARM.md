@@ -1,4 +1,4 @@
-# SCENE-ROSTERNAMES: creature names on the fight roster (F39#19 close-out)
+# SCENE-ROSTERNAMES: creature names on the fight roster (F39#19 close-out), round 2
 
 Row: F39#19 fight team roster contrast. GPU High 7.47 on main (`G-rescore-tidewake-fights-c673.md`, +0.91 over the board's 6.56), recorded defect FIXED 3/3, 0.03 short. No Medium score yet.
 
@@ -29,3 +29,22 @@ Venn fight, t-003.02: each of the five roster rows shows the creature's name bet
 ## Judge flag looked at: "Terrapup's HUD element reads WIND"
 
 On the creature card "WIND" is the label of the stamina meter (the bar under health; "Energy" is the bar below it), not the creature's element. It reads as an element tag because it is upper-case and coloured like the element chip on the opponent card. Not changed here; it is a wording and layout call for the coordinator (for example "Wind" in the same style as "Energy").
+
+
+## Round 2 (13 Nov, after G-scene-rosternames: do not ship)
+
+Round 1 verdict: F39#19 6.88 to 6.97 (+0.09, 2/3), and F39#7 Medium lost 7.31 to 6.12 (0/3). Two causes, both found in code and both fixed under the same flag:
+
+1. **The camera moved.** The fight camera keeps creatures clear of every HUD control's screen rectangle. It reads them through `combat_hud.gd fight_occupied_controls` and through `camera.json hud_dynamic_controls` (which names `_party_strip`). The named strip is 116 px wider, so the camera re-framed.
+   - Fix: the roster reports a camera footprint, a child control at the old 232 px compact width (`party_strip.gd camera_footprint`), on both paths.
+   - CPU check: the scenery in frames t-000 to t-008 is pixel-identical between base and arm (mean difference 0.0 to 0.2). Later frames diverge with the fight itself, as fight captures do run to run.
+2. **The named rows read as ghost text.** Three separate causes:
+   - benched names were drawn in the secondary grey;
+   - the combat HUD repeats `set_pinned` every frame and the pin flips with switch availability, and each reveal restarted the alpha tween at 0;
+   - the HUD's subject fade dims the roster when it overlaps a fighter, which the wider strip does.
+   - Fix: names use the primary text colour; a roster already showing never restarts its reveal or starts a fade; the named roster is kept out of the subject fade at full opacity.
+   - CPU check: `_sheet_r2_cpu_arm.jpg`, t-008 and the t-012 stagger frame: solid dark cells, white names.
+
+Tests: `tests/test_party_strip_compact_names_flag.gd` (camera footprint width, no fade countdown, repeated pin calls keep full opacity) with the related HUD tests, 76 tests, 0 failed.
+
+By-eye line, round 2: Venn t-000 and t-003, base and arm, camera within 0.3 m (cam_check.py); the roster rows solid dark with white names in every frame, including the stagger frame. If the camera differs, hold it.
