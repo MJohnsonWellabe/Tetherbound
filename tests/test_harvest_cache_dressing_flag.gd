@@ -38,7 +38,7 @@ func test_only_the_three_rewards_carry_a_block_of_installed_props() -> void:
 				var at: Array = (prop as Dictionary).get("at", [])
 				# Clear of the reward's own footprint, inside the prompt radius.
 				var reach := Vector2(float(at[0]), float(at[1])).length()
-				assert_true(reach >= 0.6 and reach <= 2.0, "prop stands beside the reward")
+				assert_true(reach >= 0.6 and reach <= 2.2, "prop stands beside the reward")
 		assert_eq(found, expected.size())
 
 

@@ -22,13 +22,13 @@ def mat(name, stops, kind='noise', scale=6.0, rough=0.8, metal=0.0, stretch=(1,1
     nt.links.new(t.outputs['Fac'], r.inputs[0]); nt.links.new(r.outputs[0], b.inputs['Base Color'])
     b.inputs['Roughness'].default_value = rough; b.inputs['Metallic'].default_value = metal
     return m
-WOOD = mat('wb_wood', [(0.25,(0.030,0.018,0.010)),(0.5,(0.065,0.040,0.020)),(0.75,(0.115,0.072,0.038))], 'noise', 3, 0.8, stretch=(1,1,14))
+WOOD = mat('wb_wood', [(0.25,(0.050,0.030,0.016)),(0.5,(0.100,0.062,0.032)),(0.75,(0.170,0.108,0.058))], 'noise', 3, 0.8, stretch=(1,1,14))
 TOP  = mat('wb_top',  [(0.25,(0.095,0.058,0.030)),(0.5,(0.16,0.10,0.052)),(0.75,(0.24,0.155,0.085))], 'noise', 3, 0.75, stretch=(14,1,1))
 STEEL= mat('wb_steel',[(0.2,(0.46,0.52,0.58)),(0.8,(0.72,0.78,0.84))], 'noise', 20, 0.4, 0.0)
 IRON = mat('wb_iron', [(0.2,(0.045,0.055,0.075)),(0.8,(0.12,0.14,0.18))], 'noise', 12, 0.5, 0.0)
 BRASS= mat('wb_brass',[(0.2,(0.55,0.36,0.07)),(0.8,(0.86,0.63,0.20))], 'noise', 10, 0.4, 0.0)
 ROPE = mat('wb_rope', [(0.2,(0.48,0.40,0.24)),(0.8,(0.74,0.64,0.42))], 'wave', 30, 0.9)
-SAIL = mat('wb_sail', [(0.3,(0.045,0.21,0.25)),(0.7,(0.075,0.30,0.34))], 'noise', 4, 0.9)
+SAIL = mat('wb_sail', [(0.3,(0.028,0.115,0.145)),(0.7,(0.050,0.180,0.210))], 'noise', 4, 0.9)
 
 def box(name, size, loc, m, rot=(0,0,0)):
     bpy.ops.mesh.primitive_cube_add(size=1, location=loc, rotation=rot); o = bpy.context.object
