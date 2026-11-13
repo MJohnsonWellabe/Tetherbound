@@ -5154,7 +5154,7 @@
   {
    "id": "scene-hallwalls",
    "branch": "tb/scene",
-   "commit": "1735a7827",
+   "commit": "063c614ca",
    "rows": [
     "F38#28 (close candidate: High 7.47, Medium 7.55)",
     "no-loss F38#20, F38#17 Keeper Hald"
@@ -5163,7 +5163,7 @@
    "added": "13 Nov 18:10",
    "priority": "near-bar closer: run before scene-cache",
    "note_tree": "1735a7827 adds only TELLDUST3 (flag-off) over 442473e62; one import serves hallwalls, telldust3, scene-cache.",
-   "status": "HELD 13 Nov 18:25 by GPU by-eye: panels lost some green (right 53->38%, centre 26->10%) but a hard-edged flat green rectangle remains on the right panel (reads as a separate plane/layer). Back to LANE-SCENE to probe for a second surface. Attempt 1 of 2."
+   "status": "ROUND 2 queued 13 Nov 19:40 (attempt 2 of 2): tb/scene 063c614ca stronghold.gd clips exterior buttresses inside roofed chambers (the hard-edged rectangle was a buttress 0.4 m through the arena wall). Park if the rectangle remains."
   },
   {
    "id": "things-telldust3",
@@ -5223,6 +5223,19 @@
    "ask": "Overlay-only, rides in the beings pose batch as a 4th item (same tree; d2bf0aa13 adds only notes and this overlay over 9ae4ea989). Base vs + ralph/reports/LANES/BEINGS-WMONITOR-GROUND/overlay.json (creature_pose_settle faint per_species water_mangrove_monitor crumple.limb_sink_frac 0.5). CAPTURE.json for frames. By eye on water_mangrove_monitor-faint-050: feet touch the floor and the shadow meets the body; faint-100 same as base. High, then Medium if mapped >= 7.5 (close candidate).",
    "added": "13 Nov 19:25",
    "priority": "near-bar closer; with the pose batch"
+  },
+  {
+   "id": "land-mt-duskridge",
+   "branch": "tb/land-mt",
+   "commit": "f7e968bdf",
+   "rows": [
+    "F38#0 dusk frames (6.60)",
+    "F38#24 dusk vistas (6.59)",
+    "no-loss: Meadows day and night frames"
+   ],
+   "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl.json shader warm_haze_mix 0.85, warm_keep_scale 0.6: warm golden-hour fog on the far ridge moves to a cool dusk blue). phase2_capture_routes.gd --biome=meadows --subset=stronghold_approach (+ burrow_warrens to share BROKENHILL's boot) --seed=2042, High. By eye: stronghold vista_dusk mountains blue-grey with snow caps, not a flat tan sheet; day frames identical to base.",
+   "added": "13 Nov 19:40",
+   "priority": "share the Meadows boot with land-mt-brokenhill; ahead of land-mt-shorezones (lane rates it clearer)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
