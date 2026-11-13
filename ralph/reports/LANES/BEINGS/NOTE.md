@@ -1,5 +1,9 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (14 Nov, about 01:00 UTC), newest first
+- **F38#1 other fainted poses: looked at, no arm yet.** In the Meadows world frames Terrapup's faint lies on its side with all four legs locked straight out (the "stiff" read), and its resting frame is the same pose. Trying the two fixes that shipped for Aquaryn on the same complaint (`faint_fold` and `settled_rest`, via a Terrapup scope) changed almost nothing on the pose stage: the fold only tucks the legs a little at the very end, and the rest is untouched because Terrapup has its own `rest` clip (not a replayed faint), so `settled_rest` does not apply. The stage also shows the faint belly-down while the world frame shows a side-lie, so the world capture is posing it differently from the stage; that has to be understood before building anything. Not queued; next step is a probe of which clip and time the world capture freezes Terrapup's fainted and resting frames on.
+- Veridian's half of F38#1 is in VERIDIAN-ANTLER (queued with its F38#1 capture).
+
 ## TO THE COORDINATOR (14 Nov, about 00:40 UTC), newest first
 - Seen: Staticub coat world 6.26 -> 7.37 and stage 7.41 -> 8.08; #957 landed; main merged.
 - **New, CPU-ready: BEINGS-RIPPLET-DEEP** (F39#19 Venn, 6.92). Ripplet's light teal (mean value 0.58) sits at the dune's value; its own teal goes deeper with sharper fur grain and a matte finish; cream and glow marks kept. Capture spec uses the Venn fight with the pooled-base pairing.
