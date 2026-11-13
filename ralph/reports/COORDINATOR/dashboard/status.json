@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 02:00 UTC",
+  "updated": "13 Nov 2026 02:10 UTC",
   "headline": [
+    "13 Nov 02:10: overlook pale stone loses (-0.58, the stone smears to 'clay'); Fulgocobra's gold veins render near-white and were held. LANE-BELOW6 now chases two overlook bugs the judges found (a dark strip at the trainer's feet, ghost planes in the sky). #941 in full CI; the conversation camera is capturing.",
     "13 Nov 02:00: #941 in full CI: the High Perches plaza no longer draws as placeholder grass (bug fix), and grounded faints for Duskhush (F36#44) and Ribbonray (F36#61), which take both over 7. New on the GPU queue: LANE-THINGS' tighter conversation camera, one change for six dialogue rows in the 6.5-7.0 band.",
     "13 Nov 01:25: #939 landed (overlook pane fixed). Voltwig does not close (7.27 on both presets). Riftfrill matte and Cloudreach rain round 2 do not register; the rain arm is parked, but it exposed a bug: the High Perches plaza sometimes renders as a placeholder line ring instead of cobbles. LANE-BELOW6 has it.",
     "13 Nov 00:57: #938 landed (Stormraven, F41#13 above 6). #939 (overlook pane fix) is updated onto the new main and in full CI.",
@@ -2792,7 +2793,7 @@
     },
     "F40#15": {
       "gpu": 5.77,
-      "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08) | G-below6-knifeedge base (current main): 5.77; strips FIXED 3/3 on main already; now held by the flat wall slab (masonry arm queued) | ARM masonry G-below6-stormraven-masonry (832aaa06a): 5.17 -> 5.54 (3/3), landing #936; pooled current-main about 5.47 | FIX overlook pane G-below6-overlook-pane (66760567b, 13 Nov): overlook routes 4.92 -> 5.87 (3/3), edge and vista +0.38 (3/3); landing #939 after #938"
+      "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08) | G-below6-knifeedge base (current main): 5.77; strips FIXED 3/3 on main already; now held by the flat wall slab (masonry arm queued) | ARM masonry G-below6-stormraven-masonry (832aaa06a): 5.17 -> 5.54 (3/3), landing #936; pooled current-main about 5.47 | FIX overlook pane G-below6-overlook-pane (66760567b, 13 Nov): overlook routes 4.92 -> 5.87 (3/3), edge and vista +0.38 (3/3); landing #939 after #938 | ARM overlook stone (575ffd7f6, 13 Nov): -0.58 (0/3), not shipped; strip defect PRESENT at the overlook vista (3/3), ghost planes in walk_02 (3/3): bugs to LANE-BELOW6"
     },
     "F40#16": {
       "gpu": 6.19,
@@ -2983,7 +2984,7 @@
     },
     "F36#46": {
       "gpu": 5.87,
-      "src": "G-things-faint base (fixed stage): Fulgocobra 5.87; faint arm level (-0.05); hood stays raised, near-black body sinks into stage"
+      "src": "G-things-faint base (fixed stage): Fulgocobra 5.87; faint arm level (-0.05); hood stays raised, near-black body sinks into stage | ARM fulgocobra olive veins: held at GPU pre-check (vein cores render near-white); round 2 with deeper gold"
     },
     "F36#85": {
       "gpu": 6.33,
