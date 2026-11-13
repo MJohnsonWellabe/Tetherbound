@@ -1,0 +1,11 @@
+{
+ "id": "LAND-MT-SEADEPTH",
+ "lane": "LANE-LAND-MT",
+ "branch": "tb/land-mt",
+ "preset": "High",
+ "tool": "tools/phase2_capture_routes.gd --biome=water --seed=2042 --subset=first_shore_horizon_stones --subset=drowned_garden_terraces --subset=sluice_channel_bridge ; tools/phase2_capture_current_states.gd --seed=2042 for F39#16 / F39#17",
+ "base": {"tree": "tb/land-mt", "overlay": null},
+ "arm": {"tree": "tb/land-mt", "overlay": "ralph/reports/LANES/LAND-MT-SEADEPTH/overlay.json"},
+ "rows": {"F39#15": ["drowned_garden_terraces route_day", "drowned_garden_terraces walk_01_day", "sluice_channel_bridge route_day"], "F39#1 / F39#2": ["first_shore_horizon_stones route_day"], "F39#16 / F39#17 (no-loss)": ["current_states S1/S2"], "F39#10 (no-loss)": ["its job frames"]},
+ "by_eye": "terraces route_day: the navy channel is mid-blue and the cyan shallows fade into it without a hard line."
+}
