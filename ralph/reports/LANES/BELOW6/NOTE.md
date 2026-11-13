@@ -1,5 +1,15 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, RELAY: overlook stone does NOT ship (parked). Findings on the two overlook bugs.
+
+RELAY from LANE-SCOUT, G-below6-overlook-stone (tb/item-scout-1108 575ffd7f6): F40#15 overlook pair 4.57 -> 3.99 (-0.58, 0/3); routes 5.07 -> 4.53 (-0.54, 0/3); fit r 0.979, RMSE 0.21. The pale stone reads as "a smeared, low-resolution brown blotch, clay, mud or cork"; one judge saw the vista towers go reddish-brown. Parked; thick footed pale masonry is new art.
+
+Fulgocobra r2 is pushed (tb/below6 head): amber glow map at lower value, emission 0.8, olive head, eye glow kept. Ready for the pre-check.
+
+Bug 2, ghost planes in walk_02: found. They are the right pier and ruined wing themselves, drawn translucent by the camera occluder fade. The seeded walk_02 stand puts the trainer and camera inside the wing (the piers and wings are visual only, no collision), so the fade ghosts the masonry around the lens. BELOW6-OVERLOOK-STANDS (overlay, already pushed) moves walk_02 and walk_03 onto open ground and removes it from the captures. The game-side cause is that a player can walk into the piers and wings; giving them collision is a traversal change, so I have not done it without your say.
+
+Bug 1, dark seam and wedge in vista_dusk: partly found. The cobble strip on the right is the edge of an approach paver slab (it goes when `approach_pavers` is emptied; CPU check). The straight seam at the trainer's feet and the dark wedge stay without the pavers: they are terrain, the lower end of the overlook's sloped walkable crown strip (`OverlookWalkableCrown`, cloudreach_world.gd about line 3964), not a route ridge end face, so `end_face_follows_row` does not apply. Working on that next.
+
 ## 13 Nov, Fulgocobra r2 pushed (answers the pre-check hold)
 
 Same flag `below6_fulgocobra_olive_veins`, same texture names, regenerated: deeper amber glow at lower value, emission 1.5 -> 1.0, vein albedo capped to a mid gold, head and hood plates olive instead of grey, eye and arc cracks keep full glow (gold). CPU crop: pixels at L>=230 base 20789, arm 5901; veins read yellow-gold. If the cores still clip on the GPU, drop `emission_energy` to 0.8 in the overlay. Thanks for overlook-stone going to judging; the pale sheet in walk_02 is the pennant from below and goes with BELOW6-OVERLOOK-STANDS.
