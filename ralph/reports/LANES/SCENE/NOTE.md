@@ -11,7 +11,7 @@
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
-- Criteria closed: 0. Landed on main: 1 (#953, the camp workbench parts fix, main 4f9ae9e2). Ready to land: `tb/scene-telldust3-land`.
+- Criteria closed: 0. Landed on main: 2 (#953 the camp workbench parts fix; #954 THINGS-TELLDUST3, the coherent wind-up dust band).
 - `tb/scene` has main 4f9ae9e2 merged in; `tb/scene-benchfix-land` is done.
 
 ## Waiting on the GPU (limit two; inherited arms count)
