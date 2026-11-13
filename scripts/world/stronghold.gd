@@ -2063,7 +2063,14 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	var banner_model := _banner_model_candidate(width, height)
 	if banner_model != null:
 		holder.add_child(banner_model)
-		_add_banner_occluder(holder, Vector3(BANNER_CLOTH_T, -height * 0.5 - 0.09, 0.0), width, height)
+		# `banner_model_candidate.occluder_standoff_m` (LANE-THINGS, 13 Nov;
+		# absent or 0 = the box below as it always was): the model's cloth
+		# and folds reach as far out as the occluder's own front face, so the
+		# Warden fight's lens could stop touching the cloth and draw a
+		# near-black frame (GPU r10, 3/3; lens probe). The stand-off extends
+		# the box outward only, so the lens stops that far in front.
+		var standoff := maxf(0.0, float((_config.get("banner_model_candidate", {}) as Dictionary).get("occluder_standoff_m", 0.0)))
+		_add_banner_occluder(holder, Vector3(BANNER_CLOTH_T + standoff * 0.5, -height * 0.5 - 0.09, 0.0), width, height, standoff)
 		return holder
 
 	# The crossbar it hangs from, in the Hall's own timber.
@@ -2104,7 +2111,7 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	return holder
 
 
-func _add_banner_occluder(holder: Node3D, at: Vector3, width: float, height: float) -> void:
+func _add_banner_occluder(holder: Node3D, at: Vector3, width: float, height: float, extra_depth: float = 0.0) -> void:
 	var occluder := StaticBody3D.new()
 	occluder.name = "CameraOccluder"
 	occluder.collision_layer = BANNER_CAMERA_OCCLUSION_LAYER
@@ -2114,7 +2121,7 @@ func _add_banner_occluder(holder: Node3D, at: Vector3, width: float, height: flo
 	# Deep enough to cover the cloth's folds (a folded banner's render bounds
 	# measured 0.46 m deep), not just the flat panel: at 0.3 m the Warden
 	# fight's lens still ended inside a fold (lens probe, frame 08).
-	occluder_box.size = Vector3(0.7, height, width)
+	occluder_box.size = Vector3(0.7 + extra_depth, height, width)
 	occluder_shape.shape = occluder_box
 	occluder.position = at
 	occluder.add_child(occluder_shape)
