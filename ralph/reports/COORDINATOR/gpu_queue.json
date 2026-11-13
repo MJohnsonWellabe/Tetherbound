@@ -4758,7 +4758,8 @@
         "Fulgocobra hit no-loss"
       ],
       "ask": "Base vs ralph/reports/LANES/BELOW6-FULGOCOBRA-FAINT/overlay.json (below6_fulgocobra_scope ON: faint end pose lays neck and hood down), High, capture_f36_poses.gd --species=fulgocobra --game-clips --clear-ruler --roles=hit,faint --whole-body --context. Score the faint; judge the hit as no-loss (the scope also brings the settle's hit pass).",
-      "added": "13 Nov 04:10"
+      "added": "13 Nov 04:10",
+      "status": "REPLACED 13 Nov by beings-neckdown (same Fulgocobra change plus the water abyssal guardian neck)"
     },
     {
       "id": "below6-tonic-stash",
@@ -5046,6 +5047,17 @@
       ],
       "ask": "Takes THINGS-STORMPOOL r2's slot. Base vs ralph/reports/LANES/LAND-CS-SOILOFF/overlay.json (stormwood_ground_finish forest_layers_1113: wet_soil layer off, the 1,400 near-black glossy discs), High, capture_stormwood_f10_matrix.gd --stands=forest,giant,rod_line,glass,stormheart --phases=calm,break (+aftermath Calm). By-eye: forest_calm/giant_calm black jagged patches gone; forest_break/giant_break no pale slab by the trainer. Else hold.",
       "added": "13 Nov 16:50"
+    },
+    {
+      "id": "beings-neckdown",
+      "branch": "tb/beings",
+      "commit": "ebb732191",
+      "rows": [
+        "F36#46 Fulgocobra (5.70)",
+        "F36#88 water abyssal guardian (6.32)"
+      ],
+      "ask": "Replaces BELOW6-FULGOCOBRA-FAINT (capture only this). Overlay-only over code on main: ralph/reports/LANES/BEINGS-NECKDOWN/overlay.json. Pose stage at High per its CAPTURE.json; batch with beings-veridian-antler on the same tb/beings tree. By-eye per its ARM.md.",
+      "added": "13 Nov 16:52"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
