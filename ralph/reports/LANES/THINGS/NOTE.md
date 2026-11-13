@@ -9,6 +9,8 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Ready: `THINGS-SOLENE`** (`ralph/reports/LANES/THINGS-SOLENE/`), the per-character recipe you chose for F38#17. Two flags, both off: self-emission off (`things_self_lit_off_1112`) and graded copies of Solene's and Hald's variant models (`body_model_floor_1113`; originals untouched, provenance beside each copy, 12 lines of code in `appearance_variants.gd`). **On CPU the change is small:** part of her face comes out of clip, the rest is still white and the hair still reads pink. CPU clips harder than the GPU (no tone mapping), and Marrow looked the same on CPU before his +1.40, so this needs the GPU. If the GPU agrees with the CPU, what is left is the courtyard light on her mid-tones.
+- **Not started: the Warden black-frame fix** (camera rig). Next.
 - **Warden near-black frame (r10): reproduced on CPU with the tool's own `--lens-probe`; cause found, not fixed yet.**
   - It is the frame where the Warden sends out his next creature. The fight camera jumps about 20 m to the other side of the arena, from (-1.1, 11.9, 7659.6) to (19.0, 11.1, 7654.7), and for that one sample the lens sits **inside the Team Tether war banner on the arena wall** (`meadows_tether_war_banner`, bounds 0.68 x 5.62 x 2.27 m). On the next sample it has moved 0.5 m out, in front of the cloth, and the frame is fine.
   - The banner already has a camera-only occluder (`stronghold.gd _add_banner_occluder`, added for this same fight), so the arm does stop in front of it once it has settled. What is left is the first frame after the jump: the lens is drawn at the new spot before the arm has shortened.
