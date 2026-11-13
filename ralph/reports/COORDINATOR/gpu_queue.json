@@ -5020,7 +5020,7 @@
     {
       "id": "beings-veridian-antler",
       "branch": "tb/beings",
-      "commit": "d7b2989a3",
+      "commit": "9c1bb38bc",
       "rows": [
         "F36#85 Veridian (6.33)",
         "F38#1, F38#2 no-loss"
@@ -5054,7 +5054,7 @@
     {
       "id": "beings-neckdown",
       "branch": "tb/beings",
-      "commit": "ebb732191",
+      "commit": "9c1bb38bc",
       "rows": [
         "F36#46 Fulgocobra (5.70)",
         "F36#88 water abyssal guardian (6.32)"
@@ -5091,6 +5091,16 @@
       ],
       "ask": "No arm: after #953 merges, re-score F39#13 on main (it was judged on the broken workbench model). Can share scene-workshop's base capture.",
       "added": "13 Nov 17:02"
+    },
+    {
+      "id": "beings-stormraven-wings",
+      "branch": "tb/beings",
+      "commit": "9c1bb38bc",
+      "rows": [
+        "F36#74 Stormraven (6.37)"
+      ],
+      "ask": "Batch with veridian-antler and neckdown on tb/beings 9c1bb38bc (one import, pose stage, High). Overlay and by-eye per ralph/reports/LANES/BEINGS-STORMRAVEN-WINGS/.",
+      "added": "13 Nov 17:00"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
