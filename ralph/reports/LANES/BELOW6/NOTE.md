@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-UNIFORMS ready (F41#18)
+
+Flag-off `uniform_separation_1113`: uniformed ranks keep the emission floor at 0, take a stronger pale rim (0.6, tint 0.3) and wear the existing rank marks (shoulder knots, collar ring) in their copper or brass identity colour at 62 percent size. Civilians and Captain Marrow unchanged; nothing red. CPU sheet for Dace only (the tool timed out before Varga and Sable). On CPU the gain at the inventory camera is small, so treat the pre-check as the real first look; levers are in ARM.md. Waiting with you now: Fulgocobra r2, overlook stands, uniforms, bark, wake.
+
 ## 13 Nov, overlook rim turf: tried once, no effect, not sent. Moving to F41#18.
 
 Built the turf bank as asked (flag-off, this landmark only, visual only) and CPU-checked vista_dusk, route_day and walk_01: the seam and wedge are unchanged and the bank is not visible anywhere, so my read of where the wall top sits is wrong or the bank is buried. One round only, as you said: the code is reverted (nothing left in `cloudreach_world.gd`). What is established: the cobble strip is an approach paver edge (goes with `approach_pavers: []`); the seam and wedge are terrain and survive removing pavers. Easing the ridge rows needs a probe of the actual surfaces at local (2.5..12, -21) first; I will come back to it after F41#18 unless you want it sooner.
