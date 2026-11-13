@@ -5480,6 +5480,17 @@
    "ask": "Base vs + ralph/reports/LANES/LAND-CS-RIMGLOW/overlay.json (scales the shared pickup glow's 0.7 m halo to 0.45 at the three small rim mushroom patches only; they still glow, owner OP-0830-3). Per its CAPTURE.json, High. By eye: no toy-like glow balls round the rim mushrooms. Same tb/land-cs import as SEAMS/TURFGRAIN/SOILOFF (01971e589 adds only arm files over 91ac0d6a1).",
    "added": "13 Nov 22:40",
    "priority": "below-6 row; in the land-cs boot"
+  },
+  {
+   "id": "land-mt-tiera",
+   "branch": "tb/land-mt",
+   "commit": "ed91e8e13",
+   "rows": [
+    "F39#31 Veilfall (5.93 pre-#958)"
+   ],
+   "ask": "After #958 merges: re-shoot F39#31's two views (capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near) on main + #958 as the base, and the same + ralph/reports/LANES/LAND-MT-TIERA/overlay.json (drops the lifted Meshy cascade tier A, the 'rock cluster floating on the sheet') as the arm. High. By eye at veilfall-near: the big rock on the fall sheet is gone.",
+   "added": "13 Nov 22:45",
+   "priority": "pair with the post-#958 F39#31 re-shoot (one capture serves both)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
