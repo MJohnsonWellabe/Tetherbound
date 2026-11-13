@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "staticub-faint-000.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-faint-000.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0473,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-025.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-faint-025.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0498,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-050.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-faint-050.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0481,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-075.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-faint-075.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0427,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-100.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-faint-100.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0427,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-000.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-hit-000.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0478,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-025.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-hit-025.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-050.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-hit-050.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-075.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-hit-075.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0477,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-100.png",
+  "preset": "main-High",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-High/staticub-hit-100.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0478,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-000.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-faint-000.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0471,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-025.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-faint-025.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0495,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-050.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-faint-050.jpg",
+  "sky_fraction": 0.951,
+  "lower_edges": 0.0474,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-075.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-faint-075.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0428,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-faint-100.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-faint-100.jpg",
+  "sky_fraction": 0.954,
+  "lower_edges": 0.0428,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-000.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-hit-000.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0468,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-025.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-hit-025.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0466,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-050.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-hit-050.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0464,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-075.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-hit-075.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0469,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "staticub-hit-100.png",
+  "preset": "main-Medium",
+  "tree": "0ba1cfabda5af4dc81114014ceed4db2c867dd7b",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-staticub-stage/main-Medium/staticub-hit-100.jpg",
+  "sky_fraction": 0.95,
+  "lower_edges": 0.0468,
+  "script_errors": 0,
+  "note": "closeout-staticub-medium, STAGE (Staticub roster row; High stage 8.08 earlier): one side, MEDIUM + HIGH, pose stage hit/faint with clear ruler, storm fur ON as landed by #957. COMPOSITION: tb/land-mt 5ef7e327e (imported) + main 0ba1cfabd's #957 files byte-copied (creature_coat_flags.json, character_body_flags.json, stormwood_character_presentation.json/.gd). On the Staticub path this equals main 0ba1cfabd; the tree's other differences from main (water-contact, Meadows ridge and Veilfall crag shaders, all flag-off) do not draw in a Stormwood creature or stage frame. F38#38 control on tb/keep-gpu-frames-1108."
+ }
+]
