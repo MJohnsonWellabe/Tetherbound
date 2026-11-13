@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 19:10 UTC",
+ "updated": "13 Nov 2026 19:35 UTC",
  "headline": "13 Nov 19:10: first verdicts of the new round. SHIP: TELLDUST3 (F38#11 Medium +0.51), OVERLOOK-SOLID (F40#15 +1.37), OVERLOOK-JOIN (+0.42). Re-scores lifted F39#17 (+1.05), F38#16 (+0.99), F39#19 (+0.91, now 7.47), F39#5, F38#24 above 6. Near-bar 7.47: F39#19, F36#92.",
  "batches": [
   {
@@ -2416,8 +2416,8 @@
    "src": "ROW-AUDIT-1111 (LANE-SCOUT, tb/item-scout-1108 b1fb52d2e): G-npc-floor recheck, ghost-glow landed batch 27"
   },
   "F38#10": {
-   "gpu": 7.75,
-   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.38 (was 6.58) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-rescore-f38-19-c673: 7.75 High above top anchor (Build panel only); needs Players + Quest Log + Medium to close (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
+   "gpu": 7.39,
+   "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.38 (was 6.58) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-rescore-f38-19-c673: 7.75 High above top anchor (Build panel only); needs Players + Quest Log + Medium to close (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov) | G-closeout-f38-10-panels: 7.39 High and Medium, NOT CLOSED; Players/Quest Log lower third empty (LANE-JUDGE tb/judge 83d0819fd, 13 Nov; strict panel, control 7.63)"
   },
   "F38#11": {
    "gpu": 6.95,
@@ -2684,8 +2684,8 @@
    "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 7.07 (was 6.61; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-tidewake-fights-c673: 7.11 level (Venn behind Cannonback shell) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F39#8": {
-   "gpu": 5.82,
-   "src": "GPU High 8-9 Nov (B); RE-SCORE G-rescore-stale-ext-tidewake 5.82 (was 5.66; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
+   "gpu": 6.32,
+   "src": "GPU High 8-9 Nov (B); RE-SCORE G-rescore-stale-ext-tidewake 5.82 (was 5.66; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-below6-aquaryn-ride SHIP 5.97 -> 6.32 (+0.35, 3/3) (LANE-JUDGE tb/judge 83d0819fd, 13 Nov; strict panel, control 7.63)"
   },
   "F39#9": {
    "gpu": 6.42,
@@ -2944,12 +2944,12 @@
    "src": "G-newapproach-travel-pose (LANE-SCOUT, tb/item-scout-1108 841b3dbf6), LANDED #912, GPU High: Galewisp 6.35 -> 7.44 (+1.09, 3/3); carried trainer dark and clipped into belly feathers; G-faint2-medium-galecarrier: Galewisp remake as flight carrier 6.17 -> 6.83 on the flight frames (+0.66, 3/3), landing in the final batch; carrier LANDED #917"
   },
   "F36#92": {
-   "gpu": 7.47,
-   "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: water mangrove monitor 6.84 -> 7.19 (3/3) | G-rescore-f36-50-c673 (water_mangrove_monitor): 7.47 High, 0.03 short; faint-mid hanging foreleg (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
+   "gpu": 7.03,
+   "src": "G-things-faint2 (LANE-SCOUT 102221c2e), GPU High, faint round 2 ships LANDED #915: water mangrove monitor 6.84 -> 7.19 (3/3) | G-rescore-f36-50-c673 (water_mangrove_monitor): 7.47 High, 0.03 short; faint-mid hanging foreleg (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov) | G-beings-wmonitor-ground SHIP 6.68 -> 7.03 (+0.35, 3/3) (LANE-JUDGE tb/judge 83d0819fd, 13 Nov; strict panel, control 7.63)"
   },
   "F36#50": {
-   "gpu": 6.98,
-   "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mangrove Monitor 6.51 -> 6.98 (3/3)"
+   "gpu": 6.7,
+   "src": "G-things-faint (LANE-SCOUT, tb/item-scout-1108 58bf5187a), GPU High, faint-grounding LANDED #912: Mangrove Monitor 6.51 -> 6.98 (3/3) | G-rescore-f36-50-mangrove-species 6.70; near-black body (LANE-JUDGE tb/judge 83d0819fd, 13 Nov; strict panel, control 7.63)"
   },
   "F36#88": {
    "gpu": 6.32,

@@ -4785,7 +4785,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-AQUARYN-RIDE/overlay.json (deep_swim_1113 ON: ridden Aquaryn sinks 1.6 m, rider waist-deep), High, phase2_capture_tidewake_mounted_swim.gd --seed=2042 frames 03-05. Frame 04's side view is not stable between runs; if base and arm face different ways, note it for the judges. By-eye: mount legs and belly under the surface, rider's head and chest above.",
    "added": "13 Nov 05:36",
-   "status": "CAPTURED 13 Nov 19:30: on tb/gpu-frames-1113, with LANE-JUDGE."
+   "status": "SHIP 13 Nov (LANE-JUDGE 83d0819fd): F39#8 5.97 -> 6.32 (+0.35, 3/3). LANE-BEINGS to land."
   },
   {
    "id": "below6-wall-band",
@@ -5191,7 +5191,8 @@
     "no-loss F39#2, F39#30"
    ],
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-SHOREZONES/overlay.json (tidewake_look.json dunes: sage/straw turf patches from 8 m to 22 m on gentle slopes, sand flecks; wrack line and damp band). High, phase2_capture_routes.gd --biome=water --seed=2042, subsets east_beach, horizon_stones, terraces, sluice bridge (CAPTURE.json). By eye: horizon_stones route_day and terraces route_day/walk_01, far dunes carry mottled green patches mid-slope to crest; hold if still plain cream. Shares the tb/land-mt import with brokenhill.",
-   "added": "13 Nov 18:20"
+   "added": "13 Nov 18:20",
+   "note_tree": "Run with land-mt-seadepth in one Tidewake routes boot from tb/land-mt 70937d515: one base, two arms."
   },
   {
    "id": "closeout-f38-10-panels-medium",
@@ -5203,7 +5204,7 @@
    "ask": "One-sided close-out capture on main: F38#10 Meadows menus, Players and Quest Log panels at High, then all three panels (Build, Players, Quest Log) at Medium, F38#38 control (confirming batch). Same tool and frames as G-rescore-f38-19-c673's F38#10 section.",
    "added": "13 Nov 19:15",
    "priority": "close candidate",
-   "status": "CAPTURED 13 Nov 19:30: on tb/gpu-frames-1113, with LANE-JUDGE."
+   "status": "NOT CLOSED 13 Nov: 7.39 High and Medium (panel ~0.6 strict); Players and Quest Log leave the lower third to half empty. To LANE-SCENE."
   },
   {
    "id": "rescore-f36-50-mangrove-species",
@@ -5214,7 +5215,7 @@
    ],
    "ask": "One-sided re-score on main: the same creature capture as rescore-f36-50-mangrove-main but with --species=mangrove_monitor (that run captured water_mangrove_monitor = F36#92). High; Medium only if High >= 7.5.",
    "added": "13 Nov 19:20",
-   "status": "CAPTURED 13 Nov 19:30: on tb/gpu-frames-1113, with LANE-JUDGE."
+   "status": "JUDGED 13 Nov: F36#50 6.70 (strict panel); near-black body holds it. To LANE-BEINGS."
   },
   {
    "id": "beings-wmonitor-ground",
@@ -5226,7 +5227,7 @@
    "ask": "Overlay-only, rides in the beings pose batch as a 4th item (same tree; d2bf0aa13 adds only notes and this overlay over 9ae4ea989). Base vs + ralph/reports/LANES/BEINGS-WMONITOR-GROUND/overlay.json (creature_pose_settle faint per_species water_mangrove_monitor crumple.limb_sink_frac 0.5). CAPTURE.json for frames. By eye on water_mangrove_monitor-faint-050: feet touch the floor and the shadow meets the body; faint-100 same as base. High, then Medium if mapped >= 7.5 (close candidate).",
    "added": "13 Nov 19:25",
    "priority": "near-bar closer; with the pose batch",
-   "status": "CAPTURED 13 Nov 19:30: on tb/gpu-frames-1113, with LANE-JUDGE."
+   "status": "SHIP 13 Nov (LANE-JUDGE 83d0819fd): 6.68 -> 7.03 (+0.35, 3/3) on a strict panel; no Medium. LANE-BEINGS to land."
   },
   {
    "id": "land-mt-duskridge",
@@ -5240,6 +5241,24 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl.json shader warm_haze_mix 0.85, warm_keep_scale 0.6: warm golden-hour fog on the far ridge moves to a cool dusk blue). phase2_capture_routes.gd --biome=meadows --subset=stronghold_approach (+ burrow_warrens to share BROKENHILL's boot) --seed=2042, High. By eye: stronghold vista_dusk mountains blue-grey with snow caps, not a flat tan sheet; day frames identical to base.",
    "added": "13 Nov 19:40",
    "priority": "share the Meadows boot with land-mt-brokenhill; ahead of land-mt-shorezones (lane rates it clearer)"
+  },
+  {
+   "id": "land-mt-seadepth",
+   "branch": "tb/land-mt",
+   "commit": "70937d515",
+   "rows": [
+    "F39#15 (6.14)",
+    "F39#1 (6.14)",
+    "F13#5 (6.28)",
+    "F39#16 (6.55)",
+    "F39#17 (6.55)",
+    "F39#30 (6.70)",
+    "F39#2 (6.79)",
+    "no-loss F39#10 (7.02)"
+   ],
+   "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay.json (tidewake_look.json cause_tidewake.sea.enabled: teal mid stop at 4 m, 16 m falloff, lighter deep blue, range haze; replaces the hard navy shallow-to-deep edge the judges call out in every Tidewake frame). High; phase2_capture_routes.gd --biome=water --seed=2042 horizon_stones, terraces, sluice bridge + phase2_capture_current_states.gd for F39#16/#17. By eye on terraces route_day: the navy channel is mid-blue and the shallows fade into it without a hard line. Same Tidewake routes base as land-mt-shorezones: one boot, two arms.",
+   "added": "13 Nov 19:35",
+   "priority": "floor-raiser across 7 Tidewake rows; ahead of shorezones in the shared boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
