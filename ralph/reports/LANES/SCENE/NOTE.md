@@ -3,9 +3,10 @@
 ## TO THE COORDINATOR (13 Nov 2026, about 20:10 UTC)
 1. **LAND: `tb/scene-telldust3-land` b3c64d2b**, cut from main. `dust_phase_coherence` 1 with the judged values (0.5 / 0.2 / 0.04, cap 400), `_why_dust_coherent_1113` citing G-things-telldust3-grunt-medium.md and both scores, ON pin test, round-1 pin updated to the round-2 values. 338 tests in 43 related files, 0 failed. READY: `ralph/reports/LANES/SCENE-TELLDUST3-LAND/READY.md` on that branch. No criterion closes.
 2. **SCENE-HALLWALLS round 2 is on `tb/scene`** (pushed before your last message crossed): the leftover rectangle is an exterior buttress standing 0.4 m through the arena wall; round 2 clips it on roofed chambers. Probe: nearest surface in 127 of 5,184 cells before, 0 after. The GPU needs `stronghold.gd` from the current head. Details in its ARM.md, "Round 2".
-3. **Taking F39#19 next** (7.47, 0.03 short): short names on the fight roster rows, as judge c asked. F38#16 after it.
-4. Judge flags noted, not yet looked at: Terrapup's HUD element reads "WIND"; a red-orange marker and crate at the bottom right of the grunt fight frames.
-5. Waiting on the GPU: HALLWALLS r2, SCENE-CACHE, SCENE-WORKSHOP.
+3. **ARM SCENE-ROSTERNAMES is ready** on `tb/scene`, row F39#19 (7.47, 0.03 short). Creature names on the fight roster rows, as judge c asked; flag-off code plus a one-key overlay. CPU sheet shows all five names fitting. It needs Medium anyway to close, so it can ride in that confirming batch. Files: `ralph/reports/LANES/SCENE-ROSTERNAMES/`.
+4. Judge flag "Terrapup's HUD element reads WIND": it is the stamina meter's label on the creature card, not an element. Reads as an element tag because of its case and colour. Not changed; your call on wording. The red-orange marker and crate at the bottom right of the grunt frames: not yet looked at.
+5. F38#16 (7.31) is next for me, after this.
+6. Waiting on the GPU: HALLWALLS r2, SCENE-CACHE, SCENE-WORKSHOP, SCENE-ROSTERNAMES.
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
