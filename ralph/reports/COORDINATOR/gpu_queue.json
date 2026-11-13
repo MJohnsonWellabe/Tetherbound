@@ -4623,6 +4623,16 @@
       "added": "13 Nov 03:50"
     },
     {
+      "id": "closeout-f41-13-main",
+      "branch": "main",
+      "commit": "317b3372f",
+      "rows": [
+        "F41#13 (close candidate: 7.37 on main + Stormraven night coat)"
+      ],
+      "ask": "No arm: F41#13's own frame set on current main at High and Medium, in a confirming batch with the F38#38 control. Closes at a mapped 7.5 or above on both.",
+      "added": "13 Nov 03:57"
+    },
+    {
       "id": "below6-uniforms",
       "branch": "tb/below6",
       "commit": "52830ac12",
