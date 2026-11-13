@@ -41,7 +41,7 @@
    "riftfrill": {"crumple": {"force": true, "tail_relax": 1.0}},
    "mosshock": {"crumple": {"force": true, "tail_relax": 1.0}},
    "stormraven": {"crumple": {"force": true, "tail_relax": 1.0}},
-   "water_mangrove_monitor": {"crumple": {"force": true, "tail_relax": 1.0, "torso_drop_ratio": 1.0, "limb_sink_frac": 0.15, "min_top_frac": 0.5, "_why": "The standard crumple sank it almost out of sight (CPU); with no torso drop it rights itself and lies belly down on the floor."}},
+   "water_mangrove_monitor": {"crumple": {"force": true, "tail_relax": 1.0, "torso_drop_ratio": 1.0, "limb_sink_frac": 0.5, "_why_limb_sink": "Ships at 0.5 (was 0.15), 13 Nov 2026. LANE-JUDGE G-beings-wmonitor-ground.md (tb/judge 83d0819f), GPU High, base and arm: F36#92 6.68 -> 7.03 (+0.35), 3/3 prefer, no loss; only faint-050 changes. At 0.15 the trunk was held up on the hanging legs mid-faint (body floating, shadow detached); at 0.5 it comes down and the feet meet the floor. The batch ran about 0.6 strict (control 7.63), so High is not at 7.5 and the row stays open.", "min_top_frac": 0.5, "_why": "The standard crumple sank it almost out of sight (CPU); with no torso drop it rights itself and lies belly down on the floor."}},
    "water_mirejaw": {"crumple": {"tail_relax": 1.0, "_why": "The recipe faint curls the tail for a side-lying body; once the crumple rights the body the curl stood the tail straight up (CPU). The tail eases to rest. G-things-faint.md: water mirejaw 6.37 -> 7.39."}}
   },
   "grounded": {

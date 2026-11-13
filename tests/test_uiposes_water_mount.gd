@@ -56,15 +56,19 @@ func test_f39_8_rider_shadow_and_sink_ship_on() -> void:
 
 
 
-## F39#8 `deep_swim_1113` (LANE-BELOW6, 13 Nov; OFF until GPU-judged). With
-## the candidate's sink, at the deepest bob the rider's chest stays above the
+## F39#8 `deep_swim_1113` (LANE-BELOW6, 13 Nov; landed ON by LANE-BEINGS after
+## G-below6-aquaryn-ride-c673.md). With its sink, at the deepest bob the rider's chest stays above the
 ## sea and the seat is below it: waist-deep on a swimming mount.
 func test_f39_8_deep_swim_pin() -> void:
 	var mounts: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_mounts.json")).mounts
 	var geo: Dictionary = mounts.water_aquaryn
 	var shipped: Dictionary = LOOK.config().mounts.water_aquaryn
 	var deep: Dictionary = shipped.get("deep_swim_1113", {})
-	assert_false(bool(deep.get("enabled", true)), "the candidate is OFF")
+	assert_true(bool(deep.get("enabled", false)), "deep_swim_1113 ships ON (GPU High 5.97 -> 6.32, 3/3)")
+	var why := str(deep.get("_why_on", ""))
+	assert_true(why.contains("G-below6-aquaryn-ride-c673") and why.contains("5.97") and why.contains("6.32"),
+		"it cites its verdict and both scores")
+	assert_true(absf(float(LOOK.row("water_aquaryn").extra_sink_m) - 1.6) < 0.0001, "the game resolves the 1.6 m sink")
 	var on := shipped.duplicate(true)
 	(on.deep_swim_1113 as Dictionary)["enabled"] = true
 	var look: Dictionary = LOOK.row("water_aquaryn", {"enabled": true, "mounts": {"water_aquaryn": on}})
