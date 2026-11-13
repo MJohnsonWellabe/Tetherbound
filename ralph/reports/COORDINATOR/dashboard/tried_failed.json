@@ -1,5 +1,5 @@
 {
- "entries": 199,
+ "entries": 200,
  "rows": {
   "F13#5": [
    {
@@ -649,6 +649,17 @@
     "approach": "PLACES",
     "result": "Flags:** eleven rows map at 7.5 or above (F38#3, #4, #7, #9, #13, #14 partial, #18, #19, #33, #34, #38): candidates for a Medium capture plus a confirming two-sided judgement, not High passes yet. F38#23 dropped 7.58 → 6.57 (its defect is fixed; the yard is now an empty stretched-cobble plane). None below 6.",
     "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#24": [
+   {
+    "rows": [
+     "F38#24"
+    ],
+    "approach": "LAND-MT-TWORANGES",
+    "result": "LAND-MT-TWORANGES (F38#24): PARKED on CPU, not sent",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-TWORANGES/ARM.md",
     "status": "parked"
    }
   ],

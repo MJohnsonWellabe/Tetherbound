@@ -1,6 +1,6 @@
 {
- "updated": "13 Nov 2026 23:35 UTC",
- "headline": "13 Nov 23:28: six PRs landed this evening (#954, #956, #957, #958, #959) and the first close (Staticub roster row). New board tab \"Tried and failed\": 181 failed or parked approaches by row, so they are not retried.",
+ "updated": "13 Nov 2026 23:57 UTC",
+ "headline": "13 Nov 23:57: seven PRs landed this evening (#954, #956, #957, #958, #959, #960) and the first close (Staticub roster row). FLOWSTREAKS r2 ships (F13#5 5.70 -> 6.55), landing next. Tried-and-failed tab live.",
  "batches": [
   {
    "name": "Stormheart interior and Crown heartstone (PR #756)",
@@ -2138,6 +2138,11 @@
  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
  "score_ledger_pending": [],
  "landed_recent": [
+  {
+   "pr": "#960",
+   "what": "F39#1 Tidewake dune grass in clumps (GRASSGROVES r2, 6.07 -> 6.23, routes +0.24). LANE-LAND-MT; full CI green",
+   "when": "13 Nov 23:54"
+  },
   {
    "pr": "#959",
    "what": "Tidewake drift floaters stay afloat (Venn 'floating log'); Meadows DUSKRIDGE (dusk vistas 6.41 -> 7.10) and BROKENHILL (F38#30 5.06 -> 6.48). LANE-LAND-MT; full CI green",

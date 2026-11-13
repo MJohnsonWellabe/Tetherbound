@@ -5474,7 +5474,7 @@
    "ask": "Round 2: base vs + ralph/reports/LANES/LAND-MT-GRASSGROVES/overlay.json (overlays the look profile's dune_grass_candidate: denser grass in fewer clumps with wider bare sand). In the Tidewake routes boot with SEADEPTH and SHOREZONES (stacks), plus the Venn fight t-000 (warm-up, pooled bases) for F39#19. High. By eye: grass in distinct clumps with bare sand between at First Shore and the Venn arena.",
    "added": "13 Nov 22:35",
    "priority": "in the Tidewake boot",
-   "status": "SHIP 13 Nov (F39#1 +0.16, routes +0.24, no loss). LANE-LAND-MT landing."
+   "status": "LANDED #960 (main b52651b07), 13 Nov."
   },
   {
    "id": "land-cs-rimglow",

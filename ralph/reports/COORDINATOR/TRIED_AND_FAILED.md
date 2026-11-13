@@ -8,7 +8,7 @@ coordinator's GPU queue and every lane NOTE.md / ARM.md on main and the live lan
 is closed: do not retry it without a new cause or a new idea, and say in the ARM.md what
 is new. `held` means the arm exists and is waiting on a named fix.
 
-199 entries across 81 rows.
+200 entries across 82 rows.
 
 ## F13#5
 - **parked** · G-land-mt-flowstreaks: DO NOT SHIP: current states LOSE 6.08 → 5.66 (−0.42, 0/3); the arm's live streaks read as parallel guide lanes (F39#16 defect PARTIAL → PRESENT 3/3). F13#5 swim views 5.52 → 6.04 (+0.52, 3/3; crescents PRESENT → PARTIAL). Fit r 0.875, RMSE 0.67. Next: gate the streaks to the swim cue, and anchor a wake to the swimmer _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -119,6 +119,9 @@ is new. `held` means the arm exists and is waiting on a named fix.
 
 ## F38#23
 - **parked** · PLACES: Flags:** eleven rows map at 7.5 or above (F38#3, #4, #7, #9, #13, #14 partial, #18, #19, #33, #34, #38): candidates for a Medium capture plus a confirming two-sided judgement, not High passes yet. F38#23 dropped 7.58 → 6.57 (its defect is fixed; the yard is now an empty stretched-cobble plane). None below 6. _(source: places:ralph/reports/LANES/PLACES/NOTE.md)_
+
+## F38#24
+- **parked** · LAND-MT-TWORANGES: LAND-MT-TWORANGES (F38#24): PARKED on CPU, not sent _(source: land-mt:ralph/reports/LANES/LAND-MT-TWORANGES/ARM.md)_
 
 ## F38#28
 - **parked** · G-scene-hallwalls-r2: DO NOT SHIP (level): arm = base on every set (0/3, 3 ties). F38#28 NOT CLOSED: 6.81 at High and at Medium on the strictest panel today (control 7.53). The green-rectangle fix is not visible at sheet size. F38#20 frame level at 6.42. PARK the roofed-room walls arm for F38#28 (two rounds of hall-wall moss, no gain). Next: authored floor boundary in place of the teal arc. Flag: red banner in Aldis's arena _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
