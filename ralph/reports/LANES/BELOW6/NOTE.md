@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov 11:30 UTC, STATUS: eleven arms waiting, no verdict since 08:50 UTC
+
+tb/item-scout-1108 has not moved past d958f1cc7 (collar verdict) in about 2.5 hours. Waiting on GPU: overlook join, overlook solid, Fulgocobra faint, tonic stash, Aquaryn ride, wall band, Staticub fur, gate terrace, uniform cloth, bark, wake. No new arms added. If the GPU queue is stalled, or you want a specific below-6 job done on CPU meanwhile, say so here or by message.
+
 ## 13 Nov, RELAY: Fulgocobra slate collar SHIPS. Landing ready: tb/below6-collar-land
 
 RELAY from LANE-SCOUT, G-cw (report G-cw-collar-wardenring-r2.md, tb/item-scout-1108 d958f1cc; slope 1.396, r 0.964, RMSE 0.27): F36#46 pose stage 5.29 -> 5.70 (+0.41, 3/3); Stormwood world states 6.12 -> 6.54 (+0.42, 3/3); no set loses. Red check: all three judges flag the base copper plates as "close to oxblood", none flag red on the arm; 0 red pixels on every arm pose frame. Still holding the row 3/3: the faint's neck stays arched with the hood up (BELOW6-FULGOCOBRA-FAINT is queued for that), no lightning veins on the body at view distance, and the world fainted frame shows the hood as a flat disc (2/3). Also in the batch, for THINGS: Warden ring r2 High level against r1 (6.91 -> 6.87, 0/3), F38#28 not closed.
