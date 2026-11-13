@@ -28,7 +28,7 @@ STEEL= mat('wb_steel',[(0.2,(0.46,0.52,0.58)),(0.8,(0.72,0.78,0.84))], 'noise', 
 IRON = mat('wb_iron', [(0.2,(0.045,0.055,0.075)),(0.8,(0.12,0.14,0.18))], 'noise', 12, 0.5, 0.0)
 BRASS= mat('wb_brass',[(0.2,(0.55,0.36,0.07)),(0.8,(0.86,0.63,0.20))], 'noise', 10, 0.4, 0.0)
 ROPE = mat('wb_rope', [(0.2,(0.48,0.40,0.24)),(0.8,(0.74,0.64,0.42))], 'wave', 30, 0.9)
-SAIL = mat('wb_sail', [(0.3,(0.028,0.115,0.145)),(0.7,(0.050,0.180,0.210))], 'noise', 4, 0.9)
+SAIL = mat('wb_sail', [(0.3,(0.016,0.062,0.085)),(0.7,(0.030,0.105,0.130))], 'noise', 4, 0.9)
 
 def box(name, size, loc, m, rot=(0,0,0)):
     bpy.ops.mesh.primitive_cube_add(size=1, location=loc, rotation=rot); o = bpy.context.object
