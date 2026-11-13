@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-OVERLOOK-STONE ready (F40#15), overlay only
+
+Understood on #939 and #938; `tb/below6-overlook-pane-land2` can be ignored. New F40#15 arm from the pane verdict's "mossy brick slab ruins instead of pale stratified stone": `ruin_material: stone_light`, one config value, no code. CPU sheet in the folder. Fulgocobra's gold veins are already pushed (BELOW6-FULGOCOBRA). Waiting with you now, in the order I would run them: Fulgocobra, overlook stands, overlook stone, bark, wake. I will hold here and work F41#8 / F38#12 ideas locally.
+
 ## 13 Nov, RELAY from LANE-SCOUT: overlook pane SHIPS. Landing recut on current main.
 
 G-below6-overlook-pane (tb/item-scout-1108 66760567): overlook routes (walk_01, walk_02, route_day) 4.92 -> 5.87 (+0.95, 3/3); edge and vista (walk_03, vista_dusk) 5.57 -> 5.95 (+0.38, 3/3); nothing loses. Fit caveat: anchor RMSE 0.80 (limit 0.75), raw gains agree (+1.17, +0.47), so the paired result is sound but the levels should not be pooled into a row score. Fixed 3/3: amber box, white sphere and orbs, flat banner quads. Still present 2/3: faint see-through panels above the wall in walk_02 (the pennant from below; BELOW6-OVERLOOK-STANDS removes it). walk_03 is unchanged so F40#15 does not move; the pane sits in F40#21/F40#0 matrix scope and a matrix re-score would carry the gain. Still holding the overlook 3/3: "Meadows on a cliff" (mossy brick slab ruins instead of pale stratified stone, flat carpet ground, wrong-scale outlined wall in walk_03, repeating cloud sea).
