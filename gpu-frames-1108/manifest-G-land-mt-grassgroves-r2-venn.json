@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "t-000.00.png",
+  "preset": "arm-High",
+  "tree": "6c710c034b348c88dd8b60eac6df182a80199c9d",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-grassgroves-r2-venn/arm-High/t-000.00.png",
+  "sky_fraction": 0.06,
+  "lower_edges": 0.2036,
+  "script_errors": 0,
+  "note": "LAND-MT-GRASSGROVES round 2, the sand half of F39#19: Venn fight t-000 and t-003, High, camera-matched 0.00 m (pooled base runs: warm-up + base). Every side = tb/land-mt 5ef7e327e + 6c710c034's drift-markers script and spray shader; arm = dune_grass_candidate clump overlay. By eye: the dune slope behind the arena goes from evenly scattered blades to a denser clump along the ridge with bare sand around it."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "arm-High",
+  "tree": "6c710c034b348c88dd8b60eac6df182a80199c9d",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-grassgroves-r2-venn/arm-High/t-003.02.png",
+  "sky_fraction": 0.052,
+  "lower_edges": 0.2261,
+  "script_errors": 0,
+  "note": "LAND-MT-GRASSGROVES round 2, the sand half of F39#19: Venn fight t-000 and t-003, High, camera-matched 0.00 m (pooled base runs: warm-up + base). Every side = tb/land-mt 5ef7e327e + 6c710c034's drift-markers script and spray shader; arm = dune_grass_candidate clump overlay. By eye: the dune slope behind the arena goes from evenly scattered blades to a denser clump along the ridge with bare sand around it."
+ },
+ {
+  "frame": "t-000.00.png",
+  "preset": "base-High",
+  "tree": "6c710c034b348c88dd8b60eac6df182a80199c9d",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-grassgroves-r2-venn/base-High/t-000.00.png",
+  "sky_fraction": 0.06,
+  "lower_edges": 0.2036,
+  "script_errors": 0,
+  "note": "LAND-MT-GRASSGROVES round 2, the sand half of F39#19: Venn fight t-000 and t-003, High, camera-matched 0.00 m (pooled base runs: warm-up + base). Every side = tb/land-mt 5ef7e327e + 6c710c034's drift-markers script and spray shader; arm = dune_grass_candidate clump overlay. By eye: the dune slope behind the arena goes from evenly scattered blades to a denser clump along the ridge with bare sand around it."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "base-High",
+  "tree": "6c710c034b348c88dd8b60eac6df182a80199c9d",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-grassgroves-r2-venn/base-High/t-003.02.png",
+  "sky_fraction": 0.053,
+  "lower_edges": 0.2261,
+  "script_errors": 0,
+  "note": "LAND-MT-GRASSGROVES round 2, the sand half of F39#19: Venn fight t-000 and t-003, High, camera-matched 0.00 m (pooled base runs: warm-up + base). Every side = tb/land-mt 5ef7e327e + 6c710c034's drift-markers script and spray shader; arm = dune_grass_candidate clump overlay. By eye: the dune slope behind the arena goes from evenly scattered blades to a denser clump along the ridge with bare sand around it."
+ }
+]
