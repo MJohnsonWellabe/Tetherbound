@@ -9,6 +9,13 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **`tb/things-bedroomwood-land` head is eaaf3947** (cut from main 3cf230b6; the entry below has the details). The reason key is `_why_tint_1113` rather than `_why_on`, because it is a value and not a flag; it cites the verdict and numbers.
+- **F38#19 right-hand HUD cluster: what I would change, for your call before I build anything.** In the judged frame the quick slots sit at about 60 to 68 percent of the screen height and the hint row (Map, Satchel, Build, Call Out) under them at about 71 to 78 percent, both floating over the middle of the room on the right, under the quest card and minimap.
+  1. **Empty quick slots stay visible but go quiet.** The hard rule is five visible quick bindings, so I would not hide them. Empty slots would keep their outline at about a third of today's opacity and lose the "+" glyph until the satchel or the bind flow is open. Filled slots are unchanged.
+  2. **The hint row rests.** After about 6 seconds with no input it would fade to about a third opacity, and come back at once on any pad or key press. It already steps aside for fights and the build menu, so this is one more state on the same row. Nothing is removed for a new player: it is fully shown whenever they touch the controls.
+  3. **Both move down to the bottom edge.** Anchor the quick slots and the hint row to the bottom-right corner as one compact stack, in line with the health and food panel on the left, so the middle of the right side is clear.
+  - **My recommendation: 1 and 3 together as one flag-off arm** (they are layout only and always-on, so a still frame shows them). 2 is the larger gain for a player but a still capture only shows it if the capture waits out the idle time, so it would need its own frame (`exploration_hud_idle` already exists in the UI capture).
+  - **What I would not touch:** the quest card and minimap (their own rows are at or near the bar), and the count of slots.
 - main 3cf230b6 (telldust round 1, #949) is merged into `tb/things`.
 - **LANDING READY: `tb/things-bedroomwood-land` eaaf3947** (from main 3cf230b6, `THINGS-BEDROOMWOOD-LAND/READY.md`, STATUS: land). **Relay from LANE-SCOUT, `G-things-bedroomwood.md` (a32b6659): SHIP.** F38#19 High 6.64 to 7.15 (+0.51, 3/3); the three menu rows identical per judge (no loss). Not closed (7.15; the panel ran about 0.5 strict). Config only, one tint; 308 building tests, 0 failed.
   - Still holding F38#19 (3/3): the quest card, minimap and hint row cluster on the right, and the empty "+" quick slots. One judge: a smeared ceiling wood texture.
