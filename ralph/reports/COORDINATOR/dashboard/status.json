@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 00:30 UTC",
+  "updated": "13 Nov 2026 00:35 UTC",
   "headline": [
+    "13 Nov 00:35: #938 in full CI: near-black Stormraven (F41#13 5.76 to 6.67). Auto-merge is off; I merge by hand once the engine jobs have run.",
     "13 Nov 00:30: Stormraven reworked as a near-black raven with lightning flecks ships: F41#13 5.76 to 6.67 (3/3), above 6. Landing branch requested from LANE-BELOW6.",
     "13 Nov 00:16: #937 landed and F38#7 catch aim CLOSES (7.76 High and Medium). Meadows is now 10 of 42 closed.",
     "13 Nov 00:05, owner direction: LANE-THINGS now works only on the 43 rows at 6.5 to 7.0, cheapest first (nine rows sit at 6.9 or above and need about +0.1), then shared causes (13 creature-pose rows, dialogue framing). LANE-BELOW6 owns all 13 rows below 6, including Cloudreach rain and night and the Stormwood uniforms. Bands now: 43 at 6.5-7.0, 33 at 6.0-6.5, 13 below 6.",
