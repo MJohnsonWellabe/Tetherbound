@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 02:25 UTC",
+  "updated": "13 Nov 2026 03:20 UTC",
   "headline": [
+    "13 Nov 03:20: Conversation camera (convtight) SHIPS: 10 of 11 sets gain, none lose (F39#26 to 7.04, F40#12 to 7.12, F38#17, F38#37, F40#10 up). Landing branch being cut by LANE-THINGS. Red-leaf fix #930 confirmed on GPU: no red outside Team Tether.",
     "13 Nov 02:25: #941 landed: Duskhush and Ribbonray over 7, and the High Perches plaza bug fixed. Overnight landings so far: #937 (catch ring, F38#7 closed), #938 (Stormraven over 6), #939 (overlook pane), #941.",
     "13 Nov 02:10: overlook pale stone loses (-0.58, the stone smears to 'clay'); Fulgocobra's gold veins render near-white and were held. LANE-BELOW6 now chases two overlook bugs the judges found (a dark strip at the trainer's feet, ghost planes in the sky). #941 in full CI; the conversation camera is capturing.",
     "13 Nov 02:00: #941 in full CI: the High Perches plaza no longer draws as placeholder grass (bug fix), and grounded faints for Duskhush (F36#44) and Ribbonray (F36#61), which take both over 7. New on the GPU queue: LANE-THINGS' tighter conversation camera, one change for six dialogue rows in the 6.5-7.0 band.",
@@ -2525,11 +2526,11 @@
     },
     "F38#16": {
       "gpu": 6.32,
-      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#16 6.32"
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#16 6.32 | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 5.57->5.57; landing via tb/things-convtight-land"
     },
     "F38#17": {
       "gpu": 6.97,
-      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#17 6.97"
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#17 6.97 | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 6.46->6.85; landing via tb/things-convtight-land"
     },
     "F38#18": {
       "gpu": 8.24,
@@ -2563,7 +2564,7 @@
     },
     "F38#24": {
       "gpu": 6.01,
-      "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51; stronghold 7.51)"
+      "src": "GPU High 10 Nov (G-newapproach-warrens-flank-stand, row mean; walk_03 open-ground stand pending as batch 51; stronghold 7.51) | G-things-redleaf (13 Nov): walk frames 5.87 level; stronghold route_day 7.73 on base; current main ~6.49; arm route_day tan-backdrop confound, re-shoot"
     },
     "F38#25": {
       "gpu": 7.23,
@@ -2592,7 +2593,7 @@
     },
     "F38#30": {
       "gpu": 6.02,
-      "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905"
+      "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905 | G-things-redleaf (13 Nov): main after #930 4.99 (hillside slab PRESENT 3/3, new art)"
     },
     "F38#31": {
       "gpu": 7.2,
@@ -2622,7 +2623,7 @@
     },
     "F38#37": {
       "gpu": 6.9,
-      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#37 6.9"
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#37 6.9 | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 6.5->6.69; landing via tb/things-convtight-land"
     },
     "F38#38": {
       "gpu": 8.52,
@@ -2730,7 +2731,7 @@
     },
     "F39#26": {
       "gpu": 6.94,
-      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression) | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 6.73->7.04; landing via tb/things-convtight-land"
     },
     "F39#27": {
       "gpu": 6.16,
@@ -2779,7 +2780,7 @@
     },
     "F40#10": {
       "gpu": 6.77,
-      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression) | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 6.61->6.92; landing via tb/things-convtight-land"
     },
     "F40#11": {
       "gpu": 6.97,
@@ -2787,7 +2788,7 @@
     },
     "F40#12": {
       "gpu": 7.25,
-      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
+      "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression) | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 6.85->7.12; landing via tb/things-convtight-land"
     },
     "F40#13": {
       "gpu": 7.62,
