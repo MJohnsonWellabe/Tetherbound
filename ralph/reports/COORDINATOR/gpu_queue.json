@@ -4613,6 +4613,16 @@
       "route": "LANE-SCOUT"
     },
     {
+      "id": "things-wardenring",
+      "branch": "tb/things",
+      "commit": "5f3d5c320",
+      "rows": [
+        "F38#28 (close candidate: High 7.54, Medium 6.99)"
+      ],
+      "ask": "Base vs overlay_warden_ring.json (combat.json arena.boundary_per_trainer_candidate ON: Warden fight only, ring alpha 0.3->0.12, height 0.8->0.45 m), MEDIUM first, capture_f38_fight.gd --trainer=warden_aldis (F38#28 set); add a High no-loss read. Closing needs a confirming batch with the F38#38 control. Closers go first (owner 25 Oct).",
+      "added": "13 Nov 03:50"
+    },
+    {
       "id": "below6-uniforms",
       "branch": "tb/below6",
       "commit": "52830ac12",
