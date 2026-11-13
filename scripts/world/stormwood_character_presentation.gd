@@ -35,6 +35,14 @@ static func decorate(spec: Dictionary, identity_id: String, authored_rank: Strin
 			result["tint"] = str(tints[canonical])
 	if uniform_rank.is_empty():
 		return result
+	# F41#18 uniform_separation_1113 (OFF until GPU-judged): the floor at 0 lost
+	# the "chalky ghost wash" but the dark cloth then "sinks into the dark green
+	# and black ground" (G-things-stormuniform, 3/3). Uniformed ranks keep the
+	# floor at 0 and take a strong pale rim instead, plus the rank marks below.
+	var separation: Variant = settings.get("uniform_separation_1113", {})
+	if separation is Dictionary and bool((separation as Dictionary).get("enabled", false)):
+		result["emission_floor"] = float((separation as Dictionary).get("emission_floor", 0.0))
+		result["night_rim"] = ((separation as Dictionary).get("night_rim", {}) as Dictionary).duplicate(true)
 	result["presentation_rank"] = uniform_rank
 	result["base"] = str(spec.get("config_key", ""))
 	var ranked := NPC_RANKS.config_for(uniform_rank, result.base)
@@ -66,7 +74,11 @@ static func decorate(spec: Dictionary, identity_id: String, authored_rank: Strin
 ## only: the base rig, palette, rank and dialogue are unchanged.
 static func rank_marks(settings: Dictionary, identity: Dictionary, rank: String) -> Array:
 	var cfg: Variant = settings.get("rank_marks_1104", {})
-	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+	var separation: Variant = settings.get("uniform_separation_1113", {})
+	var with_separation: bool = separation is Dictionary \
+			and bool((separation as Dictionary).get("enabled", false)) \
+			and bool((separation as Dictionary).get("rank_marks", false))
+	if not cfg is Dictionary or not (bool((cfg as Dictionary).get("enabled", false)) or with_separation):
 		return []
 	var scale := float(((cfg as Dictionary).get("rank_scale", {}) as Dictionary).get(rank, 1.0))
 	var colour := str(identity.get("rim_color", (cfg as Dictionary).get("colour", "#d8cba0")))
