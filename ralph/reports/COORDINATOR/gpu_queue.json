@@ -5338,6 +5338,17 @@
    "ask": "One-sided baseline in the tb/land-mt boot (no overlay = main content plus flag-off code): capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near, High. New F39#31 job.json item on tb/land-mt 336b5cb64. LANE-JUDGE scores it as a re-score.",
    "added": "13 Nov 20:40",
    "priority": "cheap; ride the tb/land-mt boot"
+  },
+  {
+   "id": "beings-thundertunnel-faint",
+   "branch": "tb/beings",
+   "commit": "83c350239",
+   "rows": [
+    "F36#80 Thundertunnel (6.04)"
+   ],
+   "ask": "Pose-stage overlay arm: base vs + ralph/reports/LANES/BEINGS-THUNDERTUNNEL-FAINT/overlay.json (forced crumple settle scope so the faint ends head down with the eye showing, not the belly-out 'faceless ball'). capture_f36_poses.gd per its CAPTURE.json, High. Same tb/beings import as the pose batch and MONITOR-VALUE.",
+   "added": "13 Nov 20:45",
+   "priority": "worst creature row left without an arm; with the beings boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
