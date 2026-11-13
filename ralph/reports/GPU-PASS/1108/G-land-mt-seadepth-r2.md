@@ -5,7 +5,7 @@
 | Set | Base | Arm | Gain | Prefer arm | Raw a / b / c (base → arm) | Defect (base / arm) |
 |---|---|---|---|---|---|---|
 | **F39#15** (terraces route + walk_01, sluice route) | 5.81 | 6.01 | +0.20 | 3/3 | 6.0→6.2, 5.0→5.1, 4.9→5.1 | PRESENT / PRESENT 3/3 |
-| **F39#10** (terraces route, first shore route) | 6.60 | **6.31** | **−0.29** | **0/3** | 6.4→6.1, 5.8→5.6, 5.6→5.4 | a,c PARTIAL→FIXED on base side; b PARTIAL/PARTIAL (base FIXED, arm PARTIAL for a, c) |
+| **F39#10** (terraces route, first shore route) | 6.60 | **6.31** | **−0.29** | **0/3** | 6.4→6.1, 5.8→5.6, 5.6→5.4 | base a FIXED, b FIXED, c PARTIAL / arm PARTIAL 3/3 |
 | F39#1 (brine walk_03, first shore route) | 6.26 | 6.22 | −0.04 | 0/3 (2 ties) | 6.1→6.0, 5.4→5.4, 5.5→5.5 | PARTIAL / PARTIAL 3/3 |
 | F39#17/#16 states no-loss | 6.31 | 6.31 | 0.00 | 1/3 | 6.2→6.1, 5.6→5.4, 5.3→5.6 | streaks PARTIAL both; restored-only change a,b PRESENT, c PARTIAL |
 
