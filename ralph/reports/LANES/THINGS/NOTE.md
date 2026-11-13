@@ -9,6 +9,10 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- main 0e5d8c04 (fight prompt fix, #947) is merged into `tb/things`.
+- **Ready: `THINGS-BEDROOMWOOD`** (`ralph/reports/LANES/THINGS-BEDROOMWOOD/`), next untouched band row: F38#19 exploration HUD, 7.17. The HUD itself is no longer the complaint; 3/3 hold it on "oversaturated orange ceiling and floor" in Grandpa's loft. Overlay only, one tint value on the house's wood floor, loft, stairs and ceiling. CPU: orange goes to mid brown, grain kept. The blown windows are not addressed.
+- **F39#23 catch chance HUD needs a re-score, not work:** it read 7.44 with the reticle ring (now on main), 0.06 under the bar.
+- **F38#10 secondary menu panels (6.58): not started.** The defect is empty panel area round a few lines, which is a layout redesign, not a tweak.
 - **Relay from LANE-SCOUT, `G-cw-collar-wardenring-r2.md` (d958f1cc): WARDENRING round 2 is level at High; do not ship. The ring-alpha approach is PARKED.** F38#28 row frames 6.91 to 6.87 (0/3 prefer round 2); other Warden frames identical at 6.77. F38#28 is not closed (High 6.87, pooled about 6.98), so the held Medium re-run cannot close it this round. The round-2 overlay stays unlanded; round 1 on main is unchanged.
   - Judges, 3/3: the teal boundary is now a thin curved line but still reads as guide geometry and crosses the Burrowback in frame 3; going from 0.12 to 0.05 alpha does not register.
   - **Their asks, neither built:** an in-world edge in place of the band (stones, scorch or a dust ring on the arena floor), and a cool fill so the creatures separate from the single orange-brown value band. Also flagged 3/3: the win frame's flat heart and key icons over the dark floor.
