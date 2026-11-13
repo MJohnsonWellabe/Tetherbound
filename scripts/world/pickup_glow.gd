@@ -354,10 +354,53 @@ func _unregister(owner_node: Node3D) -> void:
 ## glow tracks what the player can actually see without the pickup scripts
 ## having to know this class exists beyond attach/detach.
 func _process(_delta: float) -> void:
+	_conversation_fade()
 	if not _dirty and not _any_visibility_changed():
 		return
 	_dirty = false
 	_rebuild()
+
+
+## F38#16 and the dialogue rows: `conversation_fade_1113` (pickup_glow.json,
+## OFF until judged). A pickup's glow says "you can take this", but nothing can
+## be gathered mid-conversation, and in a conversation shot a nearby halo
+## reads as a stray effect beside the speaker (G-rescore-f38-16-c673, 3/3:
+## "a pink glowing bush" -- the village berry node's glow). When enabled the
+## halos fade with the conversation camera's own push-in and return as it
+## eases out. Presentation only; nothing about the pickups changes.
+var _talk_fade := 0.0
+
+
+static func conversation_fade_enabled() -> bool:
+	var block: Variant = config().get("conversation_fade_1113", {})
+	return block is Dictionary and bool((block as Dictionary).get("enabled", false))
+
+
+## 0 = full glow, 1 = faded out. The strongest push-in of any rig in the tree.
+func conversation_fade_amount() -> float:
+	if not conversation_fade_enabled() or not is_inside_tree():
+		return 0.0
+	var blend := 0.0
+	for rig: Node in get_tree().get_nodes_in_group("camera_rig"):
+		if rig.has_method("conversation_blend") and rig.has_method("is_in_conversation"):
+			if bool(rig.call("is_in_conversation")) or float(rig.call("conversation_blend")) > 0.0:
+				blend = maxf(blend, clampf(float(rig.call("conversation_blend")), 0.0, 1.0))
+	return blend
+
+
+func _conversation_fade() -> void:
+	var fade := conversation_fade_amount()
+	if is_equal_approx(fade, _talk_fade):
+		return
+	_talk_fade = fade
+	var cfg := config()
+	for pair: Array in [[_motes, cfg.get("mote", {})], [_auras, cfg.get("aura", {})]]:
+		var layer := pair[0] as MultiMeshInstance3D
+		if layer == null or not layer.material_override is ShaderMaterial:
+			continue
+		var base := float((pair[1] as Dictionary).get("strength", 1.0))
+		(layer.material_override as ShaderMaterial).set_shader_parameter("strength", base * (1.0 - fade))
+		layer.visible = fade < 0.999
 
 
 func _any_visibility_changed() -> bool:
