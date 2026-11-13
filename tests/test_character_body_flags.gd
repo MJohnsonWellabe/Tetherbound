@@ -9,7 +9,7 @@ const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const FLAGS_PATH := "res://data/config/character_body_flags.json"
 ## Looks judged on GPU batch 7 (2 Nov, three code-blind judges, mapped) and kept
 ## ON; each one's _why records its score. Every other flag ships OFF.
-const JUDGED_ON := ["npc_vis_look_grunt", "npc_vis_look_farmer", "npc_vis_look_local_historian",
+const JUDGED_ON := ["below6_uniform_cloth", "npc_vis_look_grunt", "npc_vis_look_farmer", "npc_vis_look_local_historian",
 	"npc_vis_look_lost_traveler", "npc_vis_look_field_researcher", "npc_vis_look_warden",
 	"npc_vis_look_grunt_a", "npc_vis_look_grunt_c", "npc_vis_look_officer_b", "npc_vis_look_officer_a",
 	"npc_vis_look_inn_helper", "npc_vis_look_creature_caretaker", "below6_marrow_self_lit_off"]
