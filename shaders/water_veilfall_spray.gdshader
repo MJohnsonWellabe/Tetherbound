@@ -17,6 +17,14 @@ uniform vec2 centre_xz = vec2(200.0, 4140.0);
 uniform float presentation_pull_start_m = 900.0;
 uniform float presentation_pull_end_m = 1100.0;
 uniform float night_lift = 0.06;
+// F39#31 / F39#2 base mist (LANE-LAND-MT, 13 Nov; the defaults keep the
+// shipped look). CPU probes on the Veilfall views: the puff quads draw (alpha
+// forced to 1 paints them) and alpha = opacity * radial shows a soft glow, but
+// with the billow gate below the mist shows nothing, so the judges see "no
+// mist at the base". billow_floor keeps at least that share of the puff when
+// the billow noise is low; size_scale enlarges every puff.
+uniform float billow_floor = 0.0;
+uniform float size_scale = 1.0;
 varying float v_distance;
 // Own fog (copied from the live WorldEnvironment by water_veilfall_silhouette.gd):
 // the same colour at a reduced amount so the white water survives 4 km of haze.
@@ -42,7 +50,7 @@ void vertex() {
 	vec3 camera = INV_VIEW_MATRIX[3].xyz;
 	float distance_m = length(centre - camera);
 	v_distance = distance_m;
-	float size_m = max(COLOR.a * 100.0, distance_m * min_angular_size);
+	float size_m = max(COLOR.a * 100.0 * size_scale, distance_m * min_angular_size);
 	vec3 view = (VIEW_MATRIX * vec4(centre, 1.0)).xyz;
 	// Wider than tall: mist spreads across the plunge pool.
 	view.xy += UV2 * vec2(size_m, size_m * 0.62);
@@ -72,6 +80,6 @@ void fragment() {
 		* 0.6 + noise(p * 4.7 + vec2(-phase, TIME * drift_speed * 1.7)) * 0.4;
 	ALBEDO = mist_colour.rgb;
 	EMISSION = mist_colour.rgb * night_lift;
-	ALPHA = opacity * radial * smoothstep(0.2, 0.75, billow + radial * 0.35);
+	ALPHA = opacity * radial * mix(billow_floor, 1.0, smoothstep(0.2, 0.75, billow + radial * 0.35));
 	FOG = vec4(fog_colour, fog_enabled ? (1.0 - exp(-fog_density * v_distance)) * fog_keep : 0.0);
 }
