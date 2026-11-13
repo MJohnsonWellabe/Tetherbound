@@ -1,1 +1,1 @@
-{"data/config/meadows_ridge_vl.json": {"scale_xz": 0.82, "height_scale": 1.25, "back_layer": {"enabled": true}}}
+{"data/config/meadows_ridge_vl.json": {"back_layer": {"enabled": true, "height_scale": 1.4, "yaw_deg": 23.0, "shader": {"fog_keep": 0.9, "base_fog_keep": 1.0}}}}
