@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-AQUARYN-RIDE ready (F39#8): option A built
+
+Flag-off `deep_swim_1113`: sink 1.6 m. Gameplay check done first and written in ARM.md: the trainer's state is forced MOUNTED and is already inside the swim entry band at 1.0; contact rings draw only in HUMAN mode; no camera underwater check; the networked seat is unchanged. Pins: the old test is kept and holds while the flag is off; the new one (flag on) keeps the chest above the sea (+0.26 m) and the seat below it (-0.49 m). CPU: frames 03 and 05 are matched and show the mount in the water with the rider at the waterline; frame 04 is not matched (the tool's side view faces the other way between runs). Waiting with you: uniforms, overlook join, overlook solid, Fulgocobra faint, tonic stash, Aquaryn ride, bark, wake.
+
 ## 13 Nov, BELOW6-TONIC-STASH ready (F38#12): the stashed tonic stands on a crate
 
 Of the row's three frames the tonic is the weakest (a bare 0.3 m vial on the grass). Flag-off: the band-3 tonic node gets an installed wooden crate with its own vial on top at 0.62 m. Switch: `data/config/harvest_stash_support.json` `enabled` (the node block sits in a JSON list an overlay cannot address). Visual only. CPU sheet in the folder. Checks: the new flag test passes (2 tests); the wider `--only=harvest` group is slow smokes and I did not get a clean count from it, so treat the wider harvest tests as not run. F39#8 still waits on your A or B answer.
