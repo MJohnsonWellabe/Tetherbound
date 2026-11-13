@@ -5288,6 +5288,18 @@
    "added": "13 Nov 20:10",
    "priority": "re-score: refreshes stale board numbers",
    "status": "13 Nov 20:15: job-frame rows only (F39#21, F40#1, F38#1; F13#5 once frames named). F40#0/#19/#21 read from TURFGRAIN base (tb/land-cs, flags off = main content) instead of a standalone 192-frame run. F38#0 skipped."
+  },
+  {
+   "id": "beings-monitor-value",
+   "branch": "tb/beings",
+   "commit": "37fdf1432",
+   "rows": [
+    "F36#92 water mangrove monitor (7.03 strict panel / 7.47 earlier)",
+    "F36#50 mangrove monitor (6.70)"
+   ],
+   "ask": "Base no overlay vs + ralph/reports/LANES/BEINGS-MONITOR-VALUE/overlay.json (one coat flag lifts the body value of both monitor forms; hue and pattern kept). Per its CAPTURE.json; High, then Medium if F36#92 maps >= 7.5 (close candidate). One import with the rest of tb/beings (pose batch tree + flag-off code). Base for F36#92 must include main's limb_sink 0.5 once #956 lands.",
+   "added": "13 Nov 20:20",
+   "priority": "after the beings pose batch; ahead of trailpup-amber"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
