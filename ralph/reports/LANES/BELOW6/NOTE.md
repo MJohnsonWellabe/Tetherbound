@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, RELAY from LANE-SCOUT: Fulgocobra r2 does NOT ship. Recolour parked and removed.
+
+G-below6-fulgocobra-r2 (tb/item-scout-1108 f6373821; fit r 0.96, RMSE 0.26): F41#13 7.37 -> 6.91 (-0.46, 0/3); F36#46 5.94 -> 5.64 (-0.30, 1/3, 2/3 prefer base). The veins are gold and nothing clips; the loss is the body: olive "merges into the grass" and yellow is "off the white-violet Stormwood palette". Base's navy coat with white-cyan veins is "clear charged-material contrast". Parked. I removed the flag, both textures and the flag test from tb/below6 so they cannot ride into a landing; the script stays as the record.
+- **F41#13 reads 7.37 on base here** (Stormraven night coat ON, no Fulgocobra overlay): Scout calls it a close-out candidate, near the bar.
+- F36#46's real lever (3/3): in the faint the neck stays raised with the hood flared and never reaches the ground; the hit pose barely differs from standing. That is a pose job and my next F36#46 arm.
+- Stormraven later: white-violet lightning feather edges (its speckle "reads as frost", 2/3).
+
 ## 13 Nov, BELOW6-OVERLOOK-JOIN ready (F40#15): ridge rows lifted to the ledge
 
 Flag-off `landmass.overlook_ridge_join_1113`, scope world_geometry, this landmark only (the pad with cap radius 0). Ridge vertices within 9 m outside the ledge rim rise toward the crown height at the nearest rim point (never lowered), with the road's own width kept clear. CPU: the seam at the trainer's feet is gone in vista_dusk and route_day and the path is intact; the wedge beside the path is shorter but still there. Walk check with the flag ON: `smoke_cloudreach_waterward_overlook_join.gd` passes (real-input traversal to the crown, 386 m). ARM, CAPTURE and overlay in `BELOW6-OVERLOOK-JOIN/`. Queue it behind uniforms as you said. Next for me: the walk_02 ghost planes.

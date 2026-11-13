@@ -1,3 +1,7 @@
+# PARKED (13 Nov): G-below6-fulgocobra-r2 DO NOT SHIP
+
+F41#13 7.37 -> 6.91 (-0.46, 0/3); F36#46 5.94 -> 5.64 (-0.30, 1/3). The olive body "merges into the grass" and yellow is "off the white-violet Stormwood palette". The flag, both textures and the flag test are removed from tb/below6; `make_olive_veins.py` stays as the record. Keep base's navy coat.
+
 # BELOW6-FULGOCOBRA: olive scales with glowing gold veins (F36#46, F41#13)
 
 Rows: F36#46 Fulgocobra (5.87) and F41#13 electric creature finish (6.67 after Stormraven r3; the judges name Fulgocobra as the bigger remaining gap).
