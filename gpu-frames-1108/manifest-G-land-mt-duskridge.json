@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.081,
+  "lower_edges": 0.3676,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.2957,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.023,
+  "lower_edges": 0.3251,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3163,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.2468,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.217,
+  "lower_edges": 0.4414,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.3567,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.4299,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "sky_fraction": 0.197,
+  "lower_edges": 0.3942,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.3906,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.3709,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.005,
+  "lower_edges": 0.2968,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.029,
+  "lower_edges": 0.3279,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3199,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.075,
+  "lower_edges": 0.2478,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.4364,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "sky_fraction": 0.071,
+  "lower_edges": 0.3487,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "sky_fraction": 0.163,
+  "lower_edges": 0.4283,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "sky_fraction": 0.191,
+  "lower_edges": 0.3934,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "preset": "duskridge-High",
+  "tree": "5ef7e327e05d811c9fd7fd77e789c328812747bf",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-duskridge/duskridge-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "sky_fraction": 0.168,
+  "lower_edges": 0.3855,
+  "script_errors": 0,
+  "note": "LAND-MT-DUSKRIDGE (F38#0 dusk frames 6.60, F38#24 dusk vistas 6.59): tb/land-mt 5ef7e327e (lane code flag-off), base = no overlay, arm = LAND-MT-DUSKRIDGE/overlay.json (meadows_ridge_vl shader warm_haze_mix 0.85, warm_keep_scale 0.6). Meadows routes: burrow warrens + stronghold approach, High. By eye: stronghold vista_dusk mountains go from a flat tan sheet to blue-grey silhouettes; day frames unchanged apart from wild-creature spawns. Shares its base run with G-land-mt-brokenhill."
+ }
+]
