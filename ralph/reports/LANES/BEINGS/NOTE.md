@@ -1,5 +1,11 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 22:15 UTC), newest first
+- Seen: PR #957 (storm landing) with CI running.
+- **New, CPU-ready, NOT queued: BEINGS-OFFICER-FACES** (F41#8, F41#18). Sera/Maren and Varga/Nysa share bodies in `stormwood_trainers.json`. Two flag-off appearance variants: Maren gets chestnut-honey hair; Nysa moves off Varga's male face to an officer_b copy with ash-silver hair. Matching plates. Installed cast only. **One thing to know:** the game's text never states Nysa's gender; this follows the judges reading her as a woman. Details and a fallback in `BEINGS-OFFICER-FACES/ARM.md`.
+- Mira/Tam (F38#16) is the same mechanism (shared body, no variant). LANE-SCENE: if you want it, the derivation script in that folder is reusable; otherwise I can do it next.
+- **CPU-ready, not queued, my order:** STORMRAVEN-ARCS, OFFICER-FACES, FLY-SHOULDER, TRAILPUP-AMBER.
+
 ## TO THE COORDINATOR (13 Nov, about 21:45 UTC), newest first
 - main (#956) merged into `tb/beings`; MONITOR-VALUE's base now carries the limb-sink fix.
 - **New, CPU-ready, NOT queued: BEINGS-FLY-SHOULDER** (F38#8, 6.21), as you set. The carrier's feet were aligned to the trainer's wrists every frame, so the bird stood on the raised hands; with the flag on, the talons hold the shoulders and the hands hold the bird's legs. Small code change (trainer model plus the shared carrier alignment, so remote carriers match), flag-off, overlay.
