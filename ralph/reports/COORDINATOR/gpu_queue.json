@@ -4709,6 +4709,18 @@
       "added": "13 Nov 06:24"
     },
     {
+      "id": "things-cloudnight-r2",
+      "branch": "tb/things",
+      "commit": "28b4dc4ca",
+      "rows": [
+        "F40#0",
+        "F40#19",
+        "F40#21 (all 5.98)"
+      ],
+      "ask": "Base vs overlay_night_moonlit_cast_r2.json (cooler, darker, desaturated night fill; emission and rim cuts kept), High, capture_cloudreach_f40_matrix.gd --ground-cover-cache, the same night clear + night rain pieces as round 1 including the no-loss set (Three Bells, Windscar Beacon, Flight Aerie). No local merge: tb/things contains main. Round 2 of the approach: park if any stand loses.",
+      "added": "13 Nov 06:28"
+    },
+    {
       "id": "things-stormpool-r2",
       "branch": "tb/things",
       "commit": "a6a79ca70",
