@@ -5278,7 +5278,7 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/SCENE-ROSTERNAMES/overlay.json (combat_roster_visual.json compact_names_1113: compact fight roster rows keep each creature's name; rows 232 -> 348 px). phase2_capture_fights.gd Venn fight, frames t-000.00, tell-start-000.57, t-003.02, High AND Medium, F38#38 control (confirming batch, so the row can close). By eye at t-003.02: each of the five roster rows shows the creature's name between portrait and health bar; the wider strip covers no fighter.",
    "added": "13 Nov 19:40",
    "priority": "near-bar closer",
-   "status": "ROUND 2 ready 13 Nov 23:00 on tb/scene 94e97a6c7: roster reports its old 232 px footprint to the fight camera, white names, no tween restart, out of the subject fade."
+   "status": "R1 DO NOT SHIP (re-judge, LANE-JUDGE): F39#19 6.78 -> 6.38 (0/3) at both presets on matched t-000; the named roster fades. R2 (solid rows, footprint) queued as scene-rosternames-r2."
   },
   {
    "id": "places-rescore-d-1113",
