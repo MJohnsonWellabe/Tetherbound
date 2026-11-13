@@ -4808,57 +4808,6 @@ func _build_waterward_overlook(root: Node3D) -> void:
 	root.add_child(presentation)
 	presentation.call("build", _materials)
 	_exclude_local_wear_segment(root, Vector3(-8.0, -2.4, -28.0), Vector3.ZERO, 5.0)
-	_build_overlook_rim_turf(root)
-
-
-## F40#15 (flag-off, this landmark only, visual only). The overlook is the one
-## ledge whose crown follows two sloped strips (cap radius 0). Where the
-## approach ridge's shoulders fall away below that crown, the top of the
-## ledge's cliff wall shows as a dark seam and wedge across the grass at the
-## route's arrival stand. A turf bank from just under the crown rim outward and
-## down covers that wall top. No collision; the crown and its footing are
-## untouched.
-func _build_overlook_rim_turf(root: Node3D) -> void:
-	var cfg: Dictionary = _visual_config.get("overlook_rim_turf_1112", {})
-	if simulation_only or not bool(cfg.get("enabled", false)):
-		return
-	var at := root.global_position
-	var flat_radius := minf(46.0, 44.0) * 0.47
-	var pad := {"position": Vector3(at.x, at.y + 0.10, at.z), "flat_radius": flat_radius, "cap_radius": 0.5}
-	var reach := flat_radius + 12.0
-	var lines := _lines_near(at.x - reach, at.x + reach, at.z - reach, at.z + reach)
-	var inner_r := flat_radius - float(cfg.get("inset_m", 0.25))
-	var outer_r := flat_radius + float(cfg.get("width_m", 4.2))
-	var drop := float(cfg.get("drop_m", 1.5))
-	var sink := float(cfg.get("sink_m", 0.04))
-	var segments := int(cfg.get("segments", 72))
-	var tool := SurfaceTool.new()
-	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var inner: Array[Vector3] = []
-	var outer: Array[Vector3] = []
-	for index in segments + 1:
-		var angle := TAU * float(index) / float(segments)
-		var direction := Vector3(cos(angle), 0.0, sin(angle))
-		var rim_world := at + direction * inner_r
-		var rim_y := _crown_height_at(pad, rim_world, lines)
-		inner.append(Vector3(direction.x * inner_r, rim_y - at.y - sink, direction.z * inner_r))
-		outer.append(Vector3(direction.x * outer_r, rim_y - at.y - drop, direction.z * outer_r))
-	for index in segments:
-		var quad: Array[Vector3] = [inner[index], inner[index + 1], outer[index + 1], outer[index]]
-		var normal := (quad[3] - quad[0]).cross(quad[1] - quad[0]).normalized()
-		for corner: int in [0, 1, 2, 0, 2, 3]:
-			tool.set_normal(normal)
-			tool.set_uv(Vector2(quad[corner].x, quad[corner].z) * 0.25)
-			tool.add_vertex(quad[corner])
-	var bank := MeshInstance3D.new()
-	bank.name = "OverlookRimTurf"
-	bank.mesh = tool.commit()
-	var turf := (_materials["upland_dry"] as Material).duplicate() as Material
-	if turf is BaseMaterial3D:
-		(turf as BaseMaterial3D).cull_mode = BaseMaterial3D.CULL_DISABLED
-	bank.material_override = turf
-	bank.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	root.add_child(bank)
 
 
 func _build_sky_shrine(root: Node3D) -> void:
