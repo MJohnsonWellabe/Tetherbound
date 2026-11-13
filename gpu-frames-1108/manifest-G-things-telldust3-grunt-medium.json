@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "south_bridge_grunt-00-before.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-00-before.jpg",
+  "sky_fraction": 0.074,
+  "lower_edges": 0.2393,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-01.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-01.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.2854,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-02.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-02.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.2882,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-03.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-03.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.2836,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-04.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-04.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.3017,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-05.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-05.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.2911,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-06.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-06.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.2895,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-99-after.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-99-after.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.2792,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-t01-stand-mid.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-t01-stand-mid.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.3011,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-t01-stand-start.png",
+  "preset": "base-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/base-Medium/south_bridge_grunt-t01-stand-start.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.2842,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-00-before.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-00-before.jpg",
+  "sky_fraction": 0.074,
+  "lower_edges": 0.2387,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-01.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-01.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.2853,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-02.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-02.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.2888,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-03.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-03.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.2941,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-04.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-04.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.3286,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-05.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-05.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.3156,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-06.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-06.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.3197,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-99-after.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-99-after.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.283,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-t01-stand-mid.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-t01-stand-mid.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.3265,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ },
+ {
+  "frame": "south_bridge_grunt-t01-stand-start.png",
+  "preset": "telldust3-Medium",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-grunt-medium/telldust3-Medium/south_bridge_grunt-t01-stand-start.jpg",
+  "sky_fraction": 0.034,
+  "lower_edges": 0.2987,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 (F38#3 close-out, Medium 7.47; F38#11 no-loss): MEDIUM, camera-matched 0.00 m on grunt 01/02/03. Tree: c673d5285 (= main) + tb/scene 1735a7827's six non-imported files (stronghold.gd, hall_stone.gdshader, stronghold.json, tell_style.gd, combat.json, horizon_ranges.gd) on both sides = tb/scene content; base = no overlay (telldust r1 as on main), arm = THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1, size 0.5, spacing 0.2, rise 0.04, max 400). capture_f38_fight.gd --trainer=south_bridge_grunt --frames=6 --interval=0.15 --attack --dodge --tell-frames --fixed-fps 20 (HALLWALLS' explicit frames/interval so one base serves both arms). By eye grunt 03: one thin continuous low band along the ground, no beads; base is a broad soft cloud across the boar's front legs. F38#38 control: tb/keep-gpu-frames-1108 F38-38/live."
+ }
+]
