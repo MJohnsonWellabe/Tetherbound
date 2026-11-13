@@ -1,0 +1,186 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9453,
+  "least_squares_slope": 1.5836,
+  "method": "linear",
+  "slope": 1.5836,
+  "intercept": -2.6357,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.451,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.5,
+   "reference": 4.0,
+   "mapped": 4.49,
+   "residual": -0.49
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.2,
+   "reference": 6.53,
+   "mapped": 5.599,
+   "residual": 0.931
+  },
+  "craft:before": {
+   "measured": 4.8,
+   "reference": 4.83,
+   "mapped": 4.965,
+   "residual": -0.135
+  },
+  "craft:after": {
+   "measured": 6.5,
+   "reference": 7.35,
+   "mapped": 7.657,
+   "residual": -0.307
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.4,
+   "reference": 7.47,
+   "mapped": 7.499,
+   "residual": -0.029
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.4,
+   "reference": 7.53,
+   "mapped": 7.499,
+   "residual": 0.031
+  }
+ },
+ "candidates": {
+  "A perches perches [base]": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.49,
+   "mapped_judges": [
+    6.23,
+    5.76,
+    4.49
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A perches perches [arm]": {
+   "measured_mean": 5.2,
+   "mapped_mean": 5.6,
+   "mapped_judges": [
+    6.23,
+    5.76,
+    4.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A solid other [base]": {
+   "measured_mean": 4.733,
+   "mapped_mean": 4.86,
+   "mapped_judges": [
+    5.28,
+    5.28,
+    4.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A solid other [arm]": {
+   "measured_mean": 4.733,
+   "mapped_mean": 4.86,
+   "mapped_judges": [
+    5.28,
+    5.28,
+    4.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A join overlook [base]": {
+   "measured_mean": 4.733,
+   "mapped_mean": 4.86,
+   "mapped_judges": [
+    5.28,
+    5.28,
+    4.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A join overlook [arm]": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.28,
+   "mapped_judges": [
+    5.6,
+    5.76,
+    4.49
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A solid F40#15 [base]": {
+   "measured_mean": 4.333,
+   "mapped_mean": 4.23,
+   "mapped_judges": [
+    4.97,
+    4.33,
+    3.38
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A solid F40#15 [arm]": {
+   "measured_mean": 5.2,
+   "mapped_mean": 5.6,
+   "mapped_judges": [
+    5.76,
+    5.92,
+    5.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A perches shrine [arm]": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.76,
+   "mapped_judges": [
+    7.18,
+    7.34,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "A perches shrine [base]": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.71,
+   "mapped_judges": [
+    7.02,
+    7.34,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

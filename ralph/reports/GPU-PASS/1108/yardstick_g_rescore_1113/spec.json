@@ -1,0 +1,122 @@
+[
+ {
+  "label": "R F39#17 High",
+  "a": "R_F39_17_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: sea currents in live and restored states (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged",
+   "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
+  ],
+  "b": "R_F39_17_High.png"
+ },
+ {
+  "label": "R F39#5 High",
+  "a": "R_F39_5_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: the trainer swimming at the surface (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming",
+   "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body"
+  ],
+  "b": "R_F39_5_High.png"
+ },
+ {
+  "label": "R F38#16 High",
+  "a": "R_F38_16_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: three tournament conversations (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"
+  ],
+  "b": "R_F38_16_High.png"
+ },
+ {
+  "label": "R F36#92 High",
+  "a": "R_F36_92_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: a water monitor lizard creature beside the 1.80 m trainer ruler: standing, hit, faint mid, faint end. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "dark olive body with low contrast against the stage",
+   "faint does not settle onto the ground"
+  ],
+  "b": "R_F36_92_High.png"
+ },
+ {
+  "label": "R F39#7 High",
+  "a": "R_F39_7_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight actor composition against a trainer opponent (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several opponent phases"
+  ],
+  "b": "R_F39_7_High.png"
+ },
+ {
+  "label": "R F39#19 High",
+  "a": "R_F39_19_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: the fight team roster on the left during combat (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The left team roster fades to pale low-contrast text against terrain during active combat"
+  ],
+  "b": "R_F39_19_High.png"
+ },
+ {
+  "label": "R F41#6 High",
+  "a": "R_F41_6_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild creature danger and opening cues (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals"
+  ],
+  "b": "R_F41_6_High.png"
+ },
+ {
+  "label": "R F41#3 High",
+  "a": "R_F41_3_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing (one frame). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The large wild creature and the ally crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ],
+  "b": "R_F41_3_High.png"
+ },
+ {
+  "label": "R F39#23 High",
+  "a": "R_F39_23_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: the catch chance HUD while aiming (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+  ],
+  "b": "R_F39_23_High.png"
+ },
+ {
+  "label": "R F38#19 High",
+  "a": "R_F38_19_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the exploration HUD (one frame). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+  ],
+  "b": "R_F38_19_High.png"
+ },
+ {
+  "label": "R F38#10 High",
+  "a": "R_F38_10_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: a secondary menu panel (one frame). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+  ],
+  "b": "R_F38_10_High.png"
+ },
+ {
+  "label": "R F38#34 High",
+  "a": "R_F38_34_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: a placed wall built by the player (one frame). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+  ],
+  "b": "R_F38_34_High.png"
+ },
+ {
+  "label": "R F38#24 High",
+  "a": "R_F38_24_High.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the distant mountain backdrop (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ],
+  "b": "R_F38_24_High.png"
+ }
+]

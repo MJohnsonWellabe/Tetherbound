@@ -1,0 +1,47 @@
+{
+ "Dg": {
+  "anchor": false,
+  "label": "A perches perches",
+  "A": "A_perches_perches_base.png",
+  "B": "A_perches_perches_arm.png"
+ },
+ "Op": {
+  "anchor": false,
+  "label": "A solid other",
+  "A": "A_solid_other_base.png",
+  "B": "A_solid_other_arm.png"
+ },
+ "Un": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Zb": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Uf": {
+  "anchor": false,
+  "label": "A join overlook",
+  "A": "A_join_overlook_base.png",
+  "B": "A_join_overlook_arm.png"
+ },
+ "Jm": {
+  "anchor": false,
+  "label": "A solid F40#15",
+  "A": "A_solid_F40_15_base.png",
+  "B": "A_solid_F40_15_arm.png"
+ },
+ "Nh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Uy": {
+  "anchor": false,
+  "label": "A perches shrine",
+  "A": "A_perches_shrine_arm.png",
+  "B": "A_perches_shrine_base.png"
+ }
+}

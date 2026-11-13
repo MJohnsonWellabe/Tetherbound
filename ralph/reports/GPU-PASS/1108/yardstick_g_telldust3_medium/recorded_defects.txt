@@ -1,0 +1,6 @@
+Iv: "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes"
+Dv: none
+Ui: none
+Hx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bm: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Ou: "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
