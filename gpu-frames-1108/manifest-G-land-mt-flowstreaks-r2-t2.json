@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "arm-High",
+  "tree": "5b7c12bc64f0a634b5b1b54f844a736ca7a022a1",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-r2-t2/arm-High/swim-across-day.jpg",
+  "sky_fraction": 0.465,
+  "lower_edges": 0.1095,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS round 2 (F13#5): current_flow.lesson_cue ON drops chop caps only on the four swim-lesson lanes. COMPOSITION: tb/land-mt 5ef7e327e (imported) + 5b7c12bc6's non-imported water/current files byte-copied on both sides (water_current_flow_view.gd, water_current_flow.gdshader, water_current_drift_markers.gd, water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader, water_mount_presentation.json) = 5b7c12bc6 content for these views. Four T2 views, High. By eye: no crescents in any view, only faint soft streaks; no broad pale band in swim-brine-day (round 1 had one). Current states S1/S2 match base (G-land-mt-flowstreaks-r2-states, mean diff 0.6-0.9)."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "arm-High",
+  "tree": "5b7c12bc64f0a634b5b1b54f844a736ca7a022a1",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-r2-t2/arm-High/swim-away-day.jpg",
+  "sky_fraction": 0.479,
+  "lower_edges": 0.1243,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS round 2 (F13#5): current_flow.lesson_cue ON drops chop caps only on the four swim-lesson lanes. COMPOSITION: tb/land-mt 5ef7e327e (imported) + 5b7c12bc6's non-imported water/current files byte-copied on both sides (water_current_flow_view.gd, water_current_flow.gdshader, water_current_drift_markers.gd, water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader, water_mount_presentation.json) = 5b7c12bc6 content for these views. Four T2 views, High. By eye: no crescents in any view, only faint soft streaks; no broad pale band in swim-brine-day (round 1 had one). Current states S1/S2 match base (G-land-mt-flowstreaks-r2-states, mean diff 0.6-0.9)."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "arm-High",
+  "tree": "5b7c12bc64f0a634b5b1b54f844a736ca7a022a1",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-r2-t2/arm-High/swim-away-night.jpg",
+  "sky_fraction": 0.66,
+  "lower_edges": 0.1233,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS round 2 (F13#5): current_flow.lesson_cue ON drops chop caps only on the four swim-lesson lanes. COMPOSITION: tb/land-mt 5ef7e327e (imported) + 5b7c12bc6's non-imported water/current files byte-copied on both sides (water_current_flow_view.gd, water_current_flow.gdshader, water_current_drift_markers.gd, water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader, water_mount_presentation.json) = 5b7c12bc6 content for these views. Four T2 views, High. By eye: no crescents in any view, only faint soft streaks; no broad pale band in swim-brine-day (round 1 had one). Current states S1/S2 match base (G-land-mt-flowstreaks-r2-states, mean diff 0.6-0.9)."
+ },
+ {
+  "frame": "swim-brine-day.jpg",
+  "preset": "arm-High",
+  "tree": "5b7c12bc64f0a634b5b1b54f844a736ca7a022a1",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-r2-t2/arm-High/swim-brine-day.jpg",
+  "sky_fraction": 0.098,
+  "lower_edges": 0.064,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS round 2 (F13#5): current_flow.lesson_cue ON drops chop caps only on the four swim-lesson lanes. COMPOSITION: tb/land-mt 5ef7e327e (imported) + 5b7c12bc6's non-imported water/current files byte-copied on both sides (water_current_flow_view.gd, water_current_flow.gdshader, water_current_drift_markers.gd, water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader, water_mount_presentation.json) = 5b7c12bc6 content for these views. Four T2 views, High. By eye: no crescents in any view, only faint soft streaks; no broad pale band in swim-brine-day (round 1 had one). Current states S1/S2 match base (G-land-mt-flowstreaks-r2-states, mean diff 0.6-0.9)."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "base-High",
+  "tree": "5b7c12bc64f0a634b5b1b54f844a736ca7a022a1",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-r2-t2/base-High/swim-across-day.jpg",
+  "sky_fraction": 0.448,
+  "lower_edges": 0.1267,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS round 2 (F13#5): current_flow.lesson_cue ON drops chop caps only on the four swim-lesson lanes. COMPOSITION: tb/land-mt 5ef7e327e (imported) + 5b7c12bc6's non-imported water/current files byte-copied on both sides (water_current_flow_view.gd, water_current_flow.gdshader, water_current_drift_markers.gd, water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader, water_mount_presentation.json) = 5b7c12bc6 content for these views. Four T2 views, High. By eye: no crescents in any view, only faint soft streaks; no broad pale band in swim-brine-day (round 1 had one). Current states S1/S2 match base (G-land-mt-flowstreaks-r2-states, mean diff 0.6-0.9)."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "base-High",
+  "tree": "5b7c12bc64f0a634b5b1b54f844a736ca7a022a1",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-r2-t2/base-High/swim-away-day.jpg",
+  "sky_fraction": 0.452,
+  "lower_edges": 0.1355,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS round 2 (F13#5): current_flow.lesson_cue ON drops chop caps only on the four swim-lesson lanes. COMPOSITION: tb/land-mt 5ef7e327e (imported) + 5b7c12bc6's non-imported water/current files byte-copied on both sides (water_current_flow_view.gd, water_current_flow.gdshader, water_current_drift_markers.gd, water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader, water_mount_presentation.json) = 5b7c12bc6 content for these views. Four T2 views, High. By eye: no crescents in any view, only faint soft streaks; no broad pale band in swim-brine-day (round 1 had one). Current states S1/S2 match base (G-land-mt-flowstreaks-r2-states, mean diff 0.6-0.9)."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "base-High",
+  "tree": "5b7c12bc64f0a634b5b1b54f844a736ca7a022a1",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-r2-t2/base-High/swim-away-night.jpg",
+  "sky_fraction": 0.634,
+  "lower_edges": 0.1503,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS round 2 (F13#5): current_flow.lesson_cue ON drops chop caps only on the four swim-lesson lanes. COMPOSITION: tb/land-mt 5ef7e327e (imported) + 5b7c12bc6's non-imported water/current files byte-copied on both sides (water_current_flow_view.gd, water_current_flow.gdshader, water_current_drift_markers.gd, water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader, water_mount_presentation.json) = 5b7c12bc6 content for these views. Four T2 views, High. By eye: no crescents in any view, only faint soft streaks; no broad pale band in swim-brine-day (round 1 had one). Current states S1/S2 match base (G-land-mt-flowstreaks-r2-states, mean diff 0.6-0.9)."
+ },
+ {
+  "frame": "swim-brine-day.jpg",
+  "preset": "base-High",
+  "tree": "5b7c12bc64f0a634b5b1b54f844a736ca7a022a1",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-r2-t2/base-High/swim-brine-day.jpg",
+  "sky_fraction": 0.093,
+  "lower_edges": 0.07,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS round 2 (F13#5): current_flow.lesson_cue ON drops chop caps only on the four swim-lesson lanes. COMPOSITION: tb/land-mt 5ef7e327e (imported) + 5b7c12bc6's non-imported water/current files byte-copied on both sides (water_current_flow_view.gd, water_current_flow.gdshader, water_current_drift_markers.gd, water_veilfall.json, water_veilfall_crag_kitbash.json, water_veilfall_spray.gdshader, water_mount_presentation.json) = 5b7c12bc6 content for these views. Four T2 views, High. By eye: no crescents in any view, only faint soft streaks; no broad pale band in swim-brine-day (round 1 had one). Current states S1/S2 match base (G-land-mt-flowstreaks-r2-states, mean diff 0.6-0.9)."
+ }
+]
