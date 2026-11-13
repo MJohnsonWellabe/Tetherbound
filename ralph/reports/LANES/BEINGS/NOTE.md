@@ -1,5 +1,11 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 20:00 UTC), newest first
+- **LANDING READY: `tb/beings-wmonitor-ground-land` d4cb3e15** (from main 4f9ae9e2). F36#92, SHIP per G-beings-wmonitor-ground.md: 6.68 -> 7.03 (+0.35, 3/3). One config value plus a pin test; 16 related tests, 0 failed. `BEINGS-WMONITOR-GROUND-LAND/READY.md`.
+- **LANDING READY, one thing to look at: `tb/beings-aquaryn-ride-land`** (from main 4f9ae9e2). F39#8, SHIP per G-below6-aquaryn-ride-c673.md: 5.97 -> 6.32 (+0.35, 3/3). Flag ON with its pin; 8 related tests, 0 failed.
+  - **Look at this:** `tests/smoke_water_mounted_swimming.gd` held a second copy of the old "rider art origin remains above sea" rule and fails for Aquaryn with the flag ON. I applied your option A there (chest above sea for deep-swim mounts only; other mounts unchanged). Aquaryn now passes; the full five-mount run did not finish on CPU here, so CI should run that smoke on the PR. If the dry-rider rule should stand, do not land the branch. Details in `BEINGS-AQUARYN-RIDE-LAND/READY.md`.
+- F36#50 base Mangrove Monitor is now scored (6.70): near-black body, tail ends at the trainer's feet. It is on my below-7 list; the ask is lighter albedo plus rim light, the same ask as F36#92.
+
 ## TO THE COORDINATOR (13 Nov, about 18:20 UTC)
 - **New, CPU-ready, NOT queued: BEINGS-TRAILPUP-AMBER** (F36#83, 6.53): the owner-picked amber paws and eyes on the live coyote. Coat flag plus two derived textures, flag-off. Take it when a slot frees; I would put it after the pose batch and ahead of the three held arms.
 - The GPU lane withdrew its dry-check note on STORMRAVEN-WINGS (the hit reader is there); nothing to relay. It runs the pose batch on 9ae4ea989.
