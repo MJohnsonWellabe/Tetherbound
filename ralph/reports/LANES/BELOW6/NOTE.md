@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, tonic-stash: harvest unit tests with the switch ON
+
+Aquaryn ride (option A) is already pushed, see the entry below. Tonic stash, plain harvest unit tests with the switch ON: orb_reward_candidate, permanence (22), rock_tint and sibling_leaf_fixup pass. My own `test_switch_is_off` fails with it on, as it should; the landing replaces it with an ON pin. `test_harvest.gd` (30 tests) does not finish in 270 s here with the switch OFF or ON: both runs pass the same first 16 tests and stall on the same 17th, so it is not the arm, but its last 14 tests are unverified on this machine. Worth one CI run of that file on the land branch.
+
 ## 13 Nov, BELOW6-AQUARYN-RIDE ready (F39#8): option A built
 
 Flag-off `deep_swim_1113`: sink 1.6 m. Gameplay check done first and written in ARM.md: the trainer's state is forced MOUNTED and is already inside the swim entry band at 1.0; contact rings draw only in HUMAN mode; no camera underwater check; the networked seat is unchanged. Pins: the old test is kept and holds while the flag is off; the new one (flag on) keeps the chest above the sea (+0.26 m) and the seat below it (-0.49 m). CPU: frames 03 and 05 are matched and show the mount in the water with the rider at the waterline; frame 04 is not matched (the tool's side view faces the other way between runs). Waiting with you: uniforms, overlook join, overlook solid, Fulgocobra faint, tonic stash, Aquaryn ride, bark, wake.
