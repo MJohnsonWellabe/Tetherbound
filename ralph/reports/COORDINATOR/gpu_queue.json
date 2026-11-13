@@ -5444,6 +5444,17 @@
    "ask": "Base vs + ralph/reports/LANES/LAND-MT-FLOWSTREAKS/overlay.json (chop_cap_opacity 0.45 -> 0 removes the white crescent arcs; the shader's existing soft foam groups return at low strength, aligned with the flow). capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/T2-current.json --capture-size=1920x1080, four T2 views, High; plus phase2_capture_current_states.gd S1/S2 as no-loss. By eye: no white crescent arcs on the water in all four views.",
    "added": "13 Nov 22:00",
    "priority": "worst Tidewake row; in the tb/land-mt boot"
+  },
+  {
+   "id": "beings-tam-coat",
+   "branch": "tb/beings",
+   "commit": "3780de10a",
+   "rows": [
+    "F38#16 tournament conversation (7.31, near-bar)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/BEINGS-TAM-COAT/overlay.json (Tam's coat slate blue with matching plate; Mira and Oskar unchanged; presented gender unchanged; needs the charfix in the tree, which 3780de10a has). Per its CAPTURE.json (tournament_semi_tam dialogue and the F38#16 set), High; Medium too if High maps near 7.5. By eye: Tam in a slate-blue coat, Mira unchanged.",
+   "added": "13 Nov 22:10",
+   "priority": "near-bar; in the beings boot (use 3780de10a as the single tb/beings import if not yet imported)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
