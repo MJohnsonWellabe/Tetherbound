@@ -1,6 +1,5 @@
 {
   "_comment": "P2-050: role-specific standing poses, applied to a private copy of each NPC's installed idle. Values are extra bone-local XYZ degrees over the breathing clip. Negative forearm X flexes the elbow, following tools/art_pipeline/blender/animate_humanoid.py's anatomical axes. No hips, legs, feet or translations change. Keep hands below the face and away from each other; these are social postures, not attacks or guards in a human combat system.",
-  "posture_gain_1113": {"enabled": false, "_scope": "client_presentation", "gain": 1.8, "max_deg": 80.0, "_why": "LANE-SCENE (13 Nov 2026), F38#35 human post poses (GPU 6.33; recorded defect: 'many named villagers and trainers hold the same straight neutral stance with arms down despite different roles'). A CPU capture confirmed every role posture applies (no npc_posture.gd mismatch warning on Halda, Lark or Oskar); the offsets are 4-38 degrees, which do not read on a villager about 40 px tall at the post camera. When enabled every profile angle is scaled by gain (capped so no offset exceeds max_deg). OFF until GPU-judged."},
   "by_name": {
     "Mira": "grower",
     "Tam": "artisan",
