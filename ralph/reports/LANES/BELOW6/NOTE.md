@@ -1,5 +1,12 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, F36#46 Fulgocobra faint: two approaches tried on CPU, neither works, nothing sent
+
+Pose stage (`capture_f36_poses.gd --species=fulgocobra --game-clips --clear-ruler --roles=hit,faint --whole-body`), base against a Fulgocobra-only settle scope:
+1. Standard crumple with a bigger head drop (3 to 4 joints, up to 240 degrees): the crumple's torso drop sinks the whole snake into the floor (only the hood stub is left). With `torso_drop_ratio` 1.0 the coils stay, but the neck does not move: the drop measures joint-to-head elevation, and this snake's head already hooks down from a vertical neck.
+2. Measuring each joint against the next joint up the chain instead: the hood tips a few degrees and the column still stands.
+Two failed attempts on the same mechanism, so I stopped and reverted all of it (no scope, no code option left on tb/below6). The rig has five bones (root, spine_1..4, head); the standing column is mostly one or two bones' skin. What would work is an authored end pose for the faint (explicit rotations for spine_2 to spine_4 that lay the column along the ground), which needs a bone-axis probe first. Say if you want that next, or the walk_02 collision question answered first: the ghost planes are the pier and wing faded around a camera standing inside them, and the game-side fix is collision on those visual-only meshes.
+
 ## 13 Nov, RELAY from LANE-SCOUT: Fulgocobra r2 does NOT ship. Recolour parked and removed.
 
 G-below6-fulgocobra-r2 (tb/item-scout-1108 f6373821; fit r 0.96, RMSE 0.26): F41#13 7.37 -> 6.91 (-0.46, 0/3); F36#46 5.94 -> 5.64 (-0.30, 1/3, 2/3 prefer base). The veins are gold and nothing clips; the loss is the body: olive "merges into the grass" and yellow is "off the white-violet Stormwood palette". Base's navy coat with white-cyan veins is "clear charged-material contrast". Parked. I removed the flag, both textures and the flag test from tb/below6 so they cannot ride into a landing; the script stays as the record.
