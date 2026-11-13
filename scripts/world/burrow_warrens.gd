@@ -3577,6 +3577,9 @@ func _bank_cache_key(bank: Dictionary, min_x: float, min_z: float, max_x: float,
 ## dungeon; the bank's own visible surfaces hide, while every bank collider,
 ## the mouth and all interiors stay. The shell's own tunnel is clipped past
 ## its framing so it never shows inside the real mouth chamber.
+## `bank.hill_shell.broken` relief field for CPU sampling; empty when off.
+var _hill_relief: Dictionary = {}
+
 func _build_hill_shell() -> void:
 	var cfg: Dictionary = hill_shell_config(_config)
 	if not bool(cfg.get("enabled", false)):
@@ -3654,6 +3657,7 @@ func _build_hill_shell() -> void:
 	# `meadow_match` (F38#30, OFF until judged): see the shader and
 	# `_build_hill_shell_cover`.
 	var meadow: Dictionary = cfg.get("meadow_match", {})
+	var broken: Dictionary = {}
 	if not clip.is_empty():
 		var shader := Shader.new()
 		shader.code = """shader_type spatial;
@@ -3677,11 +3681,52 @@ uniform float skirt_normal_start = -0.05;
 uniform float skirt_normal_full = -0.45;
 uniform vec3 skirt_keep_min;
 uniform vec3 skirt_keep_max;
+// `broken` (F38#30, OFF until judged): world-space relief, rock on steep
+// faces and outcrop patches; see `_hill_broken_setup`.
+uniform sampler2D relief_tex : filter_linear, repeat_enable;
+uniform float relief_amp = 0.0;
+uniform float relief_bias = 0.3;
+uniform vec2 relief_per_m = vec2(0.038, 0.125);
+uniform float relief_second = 0.45;
+uniform vec3 relief_keep_centre;
+uniform vec2 relief_keep_r = vec2(9.0, 20.0);
+uniform sampler2D rock_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform float rock_mix = 0.0;
+uniform float rock_uv_per_m = 0.11;
+uniform vec4 rock_tint : source_color = vec4(1.0);
+uniform vec2 rock_slope = vec2(0.72, 0.5);
+uniform vec2 rock_patch = vec2(0.66, 0.8);
+uniform float rock_patch_strength = 0.85;
+uniform float rock_strata = 0.2;
+uniform float rock_strata_per_m = 0.55;
 varying vec3 model_pos;
 varying vec3 world_pos;
 varying vec3 world_normal;
+float relief_field(vec2 xz) {
+	float a = textureLod(relief_tex, xz * relief_per_m.x, 0.0).r;
+	float b = textureLod(relief_tex, xz * relief_per_m.y + vec2(0.37, 0.11), 0.0).r;
+	return (a + b * relief_second) / (1.0 + relief_second);
+}
+float relief_d(vec3 w) {
+	return relief_amp * (relief_field(w.xz) - relief_bias) / max(1.0 - relief_bias, 0.01)
+		* smoothstep(relief_keep_r.x, relief_keep_r.y, distance(w, relief_keep_centre));
+}
 void vertex() {
 	model_pos = VERTEX;
+	if (relief_amp > 0.0) {
+		// Lift and drop the smooth shell by a world noise field (straight up,
+		// a function of position only, so split-normal seams cannot crack),
+		// and tilt the normal by the field's gradient: the flank gets
+		// shoulders and gullies and its line against the meadow is ragged.
+		// Nothing moves inside relief_keep_r.x of the mouth.
+		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		vec3 wn = normalize(MODEL_NORMAL_MATRIX * NORMAL);
+		float d = relief_d(wp);
+		vec3 grad = vec3(relief_d(wp + vec3(1.0, 0.0, 0.0)) - d, 0.0, relief_d(wp + vec3(0.0, 0.0, 1.0)) - d);
+		vec3 bent = normalize(wn - grad * wn.y);
+		VERTEX += (inverse(MODEL_MATRIX) * vec4(0.0, d, 0.0, 0.0)).xyz;
+		NORMAL = normalize(transpose(mat3(MODEL_MATRIX)) * bent);
+	}
 	if (skirt_drop_m > 0.0 && !(all(greaterThan(VERTEX, skirt_keep_min)) && all(lessThan(VERTEX, skirt_keep_max)))) {
 		// F38#30 skirt: a downward-facing face of the mound (an overhang the
 		// player can walk under) is pulled straight down below the meadow, so
@@ -3694,6 +3739,9 @@ void vertex() {
 	}
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	if (relief_amp > 0.0) {
+		world_normal = normalize(MODEL_NORMAL_MATRIX * NORMAL);
+	}
 }
 void fragment() {
 	if (all(greaterThan(model_pos, clip_min)) && all(lessThan(model_pos, clip_max))) discard;
@@ -3725,10 +3773,27 @@ void fragment() {
 		vec3 grass = fine * meadow_tint.rgb * mix(1.0, broad_luma * 2.2, 0.35);
 		base = mix(base, grass, meadow_mix * smoothstep(meadow_normal_start, meadow_normal_full, world_normal.y));
 	}
+	if (rock_mix > 0.0) {
+		// Steep faces and noise-picked outcrop patches are bedded rock in
+		// world space, instead of the shell's stretched earth or grass.
+		vec3 rw = pow(abs(world_normal), vec3(4.0));
+		rw /= max(rw.x + rw.y + rw.z, 0.0001);
+		vec3 rp = world_pos * rock_uv_per_m;
+		vec3 rock = texture(rock_tex, rp.zy).rgb * rw.x + texture(rock_tex, rp.xz).rgb * rw.y
+			+ texture(rock_tex, rp.xy).rgb * rw.z;
+		float n = texture(relief_tex, world_pos.xz * relief_per_m.y * 1.7 + vec2(0.63, 0.29)).r;
+		float n2 = texture(relief_tex, world_pos.xz * relief_per_m.y * 5.1).r;
+		rock *= rock_tint.rgb * (1.0 - rock_strata * (0.5 + 0.5 * sin((world_pos.y + n2 * 1.6) * rock_strata_per_m * 6.2832)));
+		float up = world_normal.y + (n2 - 0.5) * 0.22;
+		float k = 1.0 - smoothstep(rock_slope.y, rock_slope.x, up);
+		k = max(k, smoothstep(rock_patch.x, rock_patch.y, n + (n2 - 0.5) * 0.2) * rock_patch_strength);
+		base = mix(base, rock, rock_mix * k);
+	}
 	ALBEDO = base;
 	ROUGHNESS = 0.95;
 }
 """
+		broken = _hill_broken_setup(cfg, clip)
 		for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
 			var mesh := raw as MeshInstance3D
 			var to_mesh := Transform3D()
@@ -3779,9 +3844,189 @@ void fragment() {
 					material.set_shader_parameter("skirt_drop_m", float(skirt.get("drop_m", 0.0)))
 					material.set_shader_parameter("skirt_normal_start", float(skirt.get("normal_start", -0.05)))
 					material.set_shader_parameter("skirt_normal_full", float(skirt.get("normal_full", -0.45)))
+				for key: String in broken:
+					material.set_shader_parameter(key, broken[key])
+				if not broken.is_empty():
+					# The relief moves vertices up to relief_amp outside the mesh's box.
+					mesh.extra_cull_margin = maxf(mesh.extra_cull_margin, float(broken.get("relief_amp", 0.0)) + 1.0)
 				mesh.set_surface_override_material(i, material)
 	if bool(meadow.get("enabled", false)):
 		_build_hill_shell_cover(model, meadow, clip)
+	if not broken.is_empty():
+		_build_hill_broken_edge(model, cfg.get("broken", {}), clip)
+
+
+## `bank.hill_shell.broken` (F38#30, LANE-LAND-MT 13 Nov, OFF until judged).
+## The judges' standing call is "a straight-edged slab with a ruler-straight
+## lower edge": the Meshy mound is one smooth dome scaled to about 260 m, so
+## each flank is near-planar and meets the meadow along a straight line.
+## ON: (1) the shell's vertices move straight up or down by a world-space
+## noise field (the same image is sampled here on the CPU, so cover and edge
+## dressing sit on the lifted surface); (2) steep faces and noise-picked
+## patches turn to bedded Rock030; (3) rocks, bushes and ferns from the
+## installed nature pack stand along the line where the hill meets the
+## meadow. Presentation only: the shell has no collider and gains none.
+## Returns the shader parameters, or {} when off or outside the tree.
+func _hill_broken_setup(cfg: Dictionary, clip: Dictionary) -> Dictionary:
+	_hill_relief = {}
+	var broken: Dictionary = cfg.get("broken", {})
+	if not bool(broken.get("enabled", false)) or not is_inside_tree():
+		return {}
+	var relief: Dictionary = broken.get("relief", {})
+	var noise := FastNoiseLite.new()
+	noise.seed = int(relief.get("seed", 3830))
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
+	noise.fractal_octaves = 3
+	noise.frequency = 0.012
+	var image := noise.get_seamless_image(256, 256, false, false, 0.2, true)
+	image.convert(Image.FORMAT_L8)
+	var waves: Array = relief.get("wave_m", [26.0, 8.0])
+	var keep: Array = relief.get("mouth_keep_m", [9.0, 20.0])
+	var centre := global_position
+	if not clip.is_empty() and str(clip.get("space", "model")) == "warrens":
+		centre = to_global((Vector3(float(clip.min[0]), float(clip.min[1]), float(clip.min[2]))
+			+ Vector3(float(clip.max[0]), float(clip.max[1]), float(clip.max[2]))) * 0.5)
+	_hill_relief = {
+		"image": image, "amp": float(relief.get("amp_m", 2.2)), "bias": float(relief.get("bias", 0.3)),
+		"per_m": Vector2(1.0 / maxf(float(waves[0]), 0.1), 1.0 / maxf(float(waves[1]), 0.1)),
+		"second": float(relief.get("second", 0.45)), "centre": centre,
+		"keep": Vector2(float(keep[0]), float(keep[1])),
+	}
+	var out := {
+		"relief_tex": ImageTexture.create_from_image(image),
+		"relief_amp": _hill_relief.amp, "relief_bias": _hill_relief.bias,
+		"relief_per_m": _hill_relief.per_m, "relief_second": _hill_relief.second,
+		"relief_keep_centre": centre, "relief_keep_r": _hill_relief.keep,
+	}
+	var rock: Dictionary = broken.get("rock", {})
+	var rock_path := str(rock.get("texture", "res://assets/environment/terrain/Rock030_Color.jpg"))
+	if bool(rock.get("enabled", true)) and ResourceLoader.exists(rock_path):
+		var slope: Array = rock.get("slope_up", [0.72, 0.5])
+		var patch: Array = rock.get("patch", [0.66, 0.8])
+		out.merge({
+			"rock_tex": load(rock_path) as Texture2D, "rock_mix": float(rock.get("mix", 1.0)),
+			"rock_uv_per_m": float(rock.get("uv_per_m", 0.11)), "rock_tint": Color(str(rock.get("tint", "#ffffff"))),
+			"rock_slope": Vector2(float(slope[0]), float(slope[1])),
+			"rock_patch": Vector2(float(patch[0]), float(patch[1])),
+			"rock_patch_strength": float(rock.get("patch_strength", 0.85)),
+			"rock_strata": float(rock.get("strata", 0.2)), "rock_strata_per_m": float(rock.get("strata_per_m", 0.55)),
+		})
+	return out
+
+
+## The relief field at a world position, bilinear like the shader's sampler.
+func _hill_relief_sample(uv: Vector2) -> float:
+	var image: Image = _hill_relief.image
+	var w := image.get_width()
+	var h := image.get_height()
+	var x := uv.x * float(w) - 0.5
+	var y := uv.y * float(h) - 0.5
+	var x0 := int(floorf(x))
+	var y0 := int(floorf(y))
+	var fx := x - float(x0)
+	var fy := y - float(y0)
+	var a := image.get_pixel(posmod(x0, w), posmod(y0, h)).r
+	var b := image.get_pixel(posmod(x0 + 1, w), posmod(y0, h)).r
+	var c := image.get_pixel(posmod(x0, w), posmod(y0 + 1, h)).r
+	var d := image.get_pixel(posmod(x0 + 1, w), posmod(y0 + 1, h)).r
+	return lerpf(lerpf(a, b, fx), lerpf(c, d, fx), fy)
+
+
+## Where the `broken` relief puts a point of the shell (both in this node's
+## frame). The relief lifts straight up, so `_normal` is unused. The point
+## itself when the relief is off.
+func _hill_relief_point(point: Vector3, _normal: Vector3) -> Vector3:
+	if _hill_relief.is_empty():
+		return point
+	var world := to_global(point)
+	var xz := Vector2(world.x, world.z)
+	var per_m: Vector2 = _hill_relief.per_m
+	var second: float = _hill_relief.second
+	var field := (_hill_relief_sample(xz * per_m.x) + _hill_relief_sample(xz * per_m.y + Vector2(0.37, 0.11)) * second) \
+		/ (1.0 + second)
+	var bias: float = _hill_relief.bias
+	var keep: Vector2 = _hill_relief.keep
+	var d: float = float(_hill_relief.amp) * (field - bias) / maxf(1.0 - bias, 0.01) \
+		* smoothstep(keep.x, keep.y, world.distance_to(_hill_relief.centre))
+	return point + Vector3.UP * d
+
+
+## `broken.edge`: rocks, bushes and ferns along the line where the (moved)
+## hill surface meets the meadow, so the base reads as a grown-in bank and
+## not a cut. No collision.
+func _build_hill_broken_edge(model: Node3D, broken: Dictionary, clip: Dictionary) -> void:
+	var edge: Dictionary = broken.get("edge", {})
+	var groups: Array = edge.get("groups", [])
+	if not bool(edge.get("enabled", true)) or groups.is_empty() \
+			or _world == null or not _world.has_method("ground_height_at"):
+		return
+	var band: Array = edge.get("band_m", [-0.3, 1.3])
+	var pad := float(edge.get("mouth_pad_m", 4.0))
+	var clip_min := Vector3(-INF, -INF, -INF)
+	var clip_max := Vector3(-INF, -INF, -INF)
+	if not clip.is_empty() and str(clip.get("space", "model")) == "warrens":
+		clip_min = Vector3(float(clip.min[0]), float(clip.min[1]), float(clip.min[2])) - Vector3.ONE * pad
+		clip_max = Vector3(float(clip.max[0]), float(clip.max[1]), float(clip.max[2])) + Vector3.ONE * pad
+	var spots: Array[Vector3] = []
+	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		var to_self := _chain_to_self(mesh)
+		var faces := mesh.mesh.get_faces()
+		for face in range(0, faces.size() - 2, 3):
+			var a := to_self * faces[face]
+			var b := to_self * faces[face + 1]
+			var c := to_self * faces[face + 2]
+			var normal := (c - a).cross(b - a).normalized()
+			if normal.y < 0.0:
+				normal = -normal
+			if normal.y < float(edge.get("min_up", 0.25)):
+				continue
+			var centre := _hill_relief_point((a + b + c) / 3.0, normal)
+			if centre.x > clip_min.x and centre.x < clip_max.x and centre.y > clip_min.y and centre.y < clip_max.y \
+					and centre.z > clip_min.z and centre.z < clip_max.z:
+				continue
+			var world_at := to_global(centre)
+			var ground := float(_world.call("ground_height_at", world_at.x, world_at.z))
+			if not is_finite(ground):
+				continue
+			var above := world_at.y - ground
+			if above < float(band[0]) or above > float(band[1]):
+				continue
+			spots.append(to_local(Vector3(world_at.x, ground, world_at.z)))
+	if spots.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = "HillShellEdge"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(edge.get("seed", 3831))
+	var placed := 0
+	for group: Dictionary in groups:
+		var models: Array = group.get("models", [])
+		var scale_range: Array = group.get("scale", [0.9, 1.5])
+		var sink := float(group.get("sink_m", 0.05))
+		if models.is_empty():
+			continue
+		for _index in int(group.get("count", 0)):
+			var packed_edge := load("res://assets/environment/stylized_nature/%s.gltf" % str(
+				models[rng.randi() % models.size()])) as PackedScene
+			var piece := packed_edge.instantiate() as Node3D if packed_edge != null else null
+			if piece == null:
+				continue
+			var size := rng.randf_range(float(scale_range[0]), float(scale_range[1]))
+			piece.position = spots[rng.randi() % spots.size()] + Vector3(rng.randf_range(-0.8, 0.8), -sink * size,
+				rng.randf_range(-0.8, 0.8))
+			piece.rotation.y = rng.randf_range(0.0, TAU)
+			piece.scale = Vector3.ONE * size
+			for body: Node in piece.find_children("*", "CollisionObject3D", true, false):
+				body.queue_free()
+			holder.add_child(piece)
+			_dress_skirt_flora(piece)
+			placed += 1
+	print("[warrens] broken hill edge: %d pieces on %d base-line spots" % [placed, spots.size()])
 
 
 ## `meadow_match.cover`: grass tufts from the installed nature pack stood on
@@ -3814,7 +4059,7 @@ func _build_hill_shell_cover(model: Node3D, meadow: Dictionary, clip: Dictionary
 			var normal := (c - a).cross(b - a).normalized()
 			if absf(normal.y) < min_up:
 				continue
-			var centre := (a + b + c) / 3.0
+			var centre := _hill_relief_point((a + b + c) / 3.0, normal if normal.y >= 0.0 else -normal)
 			if centre.x > clip_min.x and centre.x < clip_max.x and centre.y > clip_min.y and centre.y < clip_max.y \
 					and centre.z > clip_min.z and centre.z < clip_max.z:
 				continue

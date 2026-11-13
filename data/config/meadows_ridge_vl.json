@@ -12,6 +12,9 @@
     "fog_keep": 0.6,
     "base_fog_keep": 0.95,
     "base_fade_top_m": 60.0,
-    "albedo_tint": "#ffffff"
+    "albedo_tint": "#ffffff",
+    "warm_haze_mix": 0.85,
+    "warm_keep_scale": 0.6,
+    "_why_warm_haze": "ON (GPU judged, LANE-JUDGE G-land-mt-duskridge, 13 Nov 2026): at golden hour the ridge took 60% of a tan fog and read as a flat peach sheet. These values move the ridge's own haze toward a cool dusk blue by how warm the live fog is, and thin it; blue day and night fog are untouched. Dusk vistas 6.41 -> 7.10 (+0.69, 3/3); F38#24 day frames level at 6.56 (no loss)."
   }
 }
