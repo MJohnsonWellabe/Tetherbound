@@ -5181,7 +5181,7 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1: neighbouring puffs share one slow wave so they never fade out independently; size 0.5, spacing 0.2, rise 0.04). capture_f38_fight.gd south_bridge_grunt + warden_aldis, --attack --dodge --tell-frames, High then Medium, camera-matched, F38#38 control. By eye on grunt 03: one continuous low band at the feet, no beads. The warden base capture is shared with scene-hallwalls (same tree, same base).",
    "added": "13 Nov 18:40",
    "priority": "near-bar closer, with scene-hallwalls before scene-cache",
-   "status": "LANDED #954 (main b8622117c), 13 Nov."
+   "status": "LANDED #954 (main b8622117c), 13 Nov. | 13 Nov 21:05: Warden pairs re-paired at 0.00 m via HALLWALLS r2 bases (same tell/combat bytes): G-things-telldust3-warden-high @e2da2966e and -medium @8d6795790 with LANE-JUDGE for F38#28 (no-loss after landing)."
   },
   {
    "id": "land-mt-shorezones",
@@ -5274,7 +5274,7 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/SCENE-ROSTERNAMES/overlay.json (combat_roster_visual.json compact_names_1113: compact fight roster rows keep each creature's name; rows 232 -> 348 px). phase2_capture_fights.gd Venn fight, frames t-000.00, tell-start-000.57, t-003.02, High AND Medium, F38#38 control (confirming batch, so the row can close). By eye at t-003.02: each of the five roster rows shows the creature's name between portrait and health bar; the wider strip covers no fighter.",
    "added": "13 Nov 19:40",
    "priority": "near-bar closer",
-   "status": "AMENDED 13 Nov 21:00: the camera shift was capture state (GPU lane), F39#7 loss withdrawn, no ship verdict yet. Base re-run with warm-up in progress; LANE-SCENE fixing the faded rows (r2) first. Attempt count reset."
+   "status": "AMENDED 13 Nov 21:00: the camera shift was capture state (GPU lane), F39#7 loss withdrawn, no ship verdict yet. Base re-run with warm-up in progress; LANE-SCENE fixing the faded rows (r2) first. Attempt count reset. | Base re-run G-scene-rosternames-base2 queued at the front."
   },
   {
    "id": "places-rescore-d-1113",
