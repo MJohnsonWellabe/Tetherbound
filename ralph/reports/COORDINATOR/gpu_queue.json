@@ -4769,7 +4769,8 @@
         "F38#12 (5.89)"
       ],
       "ask": "Base vs ralph/reports/LANES/BELOW6-TONIC-STASH/overlay.json (harvest_stash_support enabled: the band-3 attack tonic stands on an installed wooden crate), High, phase2_capture_world_inventory.gd --biome=meadows with subsets orb_basic, travel_pack, attack_tonic --seed=2042. Score the row (three frames); orb and pack frames are no-loss.",
-      "added": "13 Nov 05:24"
+      "added": "13 Nov 05:24",
+      "status": "REPLACED 13 Nov by scene-cache (same switch file; turns the tonic crate on too)"
     },
     {
       "id": "below6-aquaryn-ride",
@@ -4834,7 +4835,8 @@
         "F38#17 (6.85)"
       ],
       "ask": "Base vs overlay_solene_floor.json (things_self_lit_off_1112 ON + graded model copies for Solene and Keeper Hald via body_model_floor_1113), High, phase2_capture_dialogue.gd --biome=meadows: Warder Solene (stronghold_courtyard) and Keeper Hald rows, plus a no-loss look at any other frame where either stands. New model copies import once. By-eye: does her face come out of clip and the hair read plum, not pink?",
-      "added": "13 Nov 07:09"
+      "added": "13 Nov 07:09",
+      "status": "kept, last in LANE-SCENE order (Marrow recipe was +1.40 on GPU despite small CPU change)"
     },
     {
       "id": "below6-uniform-cloth",
@@ -4998,7 +5000,8 @@
       "rows": [
         "F39#7",
         "F39#19",
-        "F39#3"
+        "F39#3",
+        "F39#19 roster contrast (LANE-SCENE: dark panels already present)"
       ],
       "ask": "No arm: after #947 the fight HUD no longer shows a harvest verb ('Gather Reef Stone') in Tidewake fights. Re-capture the Tidewake fight rows' own job frames (the G-things-foestand-tidewake Venn set) at High on main 0e5d8c048 for row scores; check by eye that no world verb is on the fight HUD. Send to LANE-SCOUT.",
       "added": "13 Nov 08:55"
@@ -5058,6 +5061,36 @@
       ],
       "ask": "Replaces BELOW6-FULGOCOBRA-FAINT (capture only this). Overlay-only over code on main: ralph/reports/LANES/BEINGS-NECKDOWN/overlay.json. Pose stage at High per its CAPTURE.json; batch with beings-veridian-antler on the same tb/beings tree. By-eye per its ARM.md.",
       "added": "13 Nov 16:52"
+    },
+    {
+      "id": "scene-cache",
+      "branch": "tb/scene",
+      "commit": "9c1e93d0e",
+      "rows": [
+        "F38#12 harvest reward identity (5.89)"
+      ],
+      "ask": "Replaces BELOW6-TONIC-STASH. Overlay and capture per ralph/reports/LANES/SCENE-CACHE/ (ARM.md by-eye line). High.",
+      "added": "13 Nov 17:02"
+    },
+    {
+      "id": "scene-workshop",
+      "branch": "tb/scene",
+      "commit": "9c1e93d0e",
+      "rows": [
+        "F39#13 camp workbench (6.14)"
+      ],
+      "ask": "After scene-cache. Overlay only over the bench fix (#953). Capture per ralph/reports/LANES/SCENE-WORKSHOP/. Its base must include the bench fix: use tb/scene (or main once #953 merges).",
+      "added": "13 Nov 17:02"
+    },
+    {
+      "id": "rescore-f39-13-after-953",
+      "branch": "main",
+      "commit": "after #953",
+      "rows": [
+        "F39#13"
+      ],
+      "ask": "No arm: after #953 merges, re-score F39#13 on main (it was judged on the broken workbench model). Can share scene-workshop's base capture.",
+      "added": "13 Nov 17:02"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
