@@ -7,6 +7,8 @@
   "arrival_arch_yaw_deg": 0.0,
   "arrival_arch_camera_stops": {"opening_half_width_m": 4.6, "opening_top_m": 6.7},
   "_arrival_arch_camera_stops_note": "Measured from WallEntranceBricks.obj scaled to arrival_arch_size_m: the aperture spans the middle half of the width and tops out at 64% of the height. Piers and lintel get occlusion-only camera stops (camera_rig OCCLUSION_ONLY_LAYER); traversal collision is unchanged.",
+  "landing_apron_top_m": 0.22,
+  "_landing_apron_top_why": "Bug fix (LANE-BELOW6, 13 Nov 2026; G-things-cloudrain-r2, tb/item-scout-1108 836c675f3): the court's stone apron top was 0.13 m, 3 cm above the crown turf (+0.10). The turf won the depth test in some views, so the court drew as bare grass with only the compass lines ('placeholder geometry', 3/3) and differed between captures; on CPU it never showed. 0.22 seats the stone clear of the turf in every view. Visual only: no collision change.",
   "compass_outer_radii_m": [6.35, 6.55],
   "compass_inner_radii_m": [2.0, 2.35],
   "banner_blue": "#2f527d",
