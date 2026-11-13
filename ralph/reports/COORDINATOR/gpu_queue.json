@@ -5268,7 +5268,7 @@
   {
    "id": "scene-rosternames",
    "branch": "tb/scene",
-   "commit": "99aae8073",
+   "commit": "94e97a6c7",
    "rows": [
     "F39#19 fight roster (close candidate: High 7.47, no Medium yet)",
     "no-loss F39#7 (t-023/024/025), F38#3 grunt 03"
@@ -5276,7 +5276,7 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/SCENE-ROSTERNAMES/overlay.json (combat_roster_visual.json compact_names_1113: compact fight roster rows keep each creature's name; rows 232 -> 348 px). phase2_capture_fights.gd Venn fight, frames t-000.00, tell-start-000.57, t-003.02, High AND Medium, F38#38 control (confirming batch, so the row can close). By eye at t-003.02: each of the five roster rows shows the creature's name between portrait and health bar; the wider strip covers no fighter.",
    "added": "13 Nov 19:40",
    "priority": "near-bar closer",
-   "status": "AMENDED 13 Nov 21:00: the camera shift was capture state (GPU lane), F39#7 loss withdrawn, no ship verdict yet. Base re-run with warm-up in progress; LANE-SCENE fixing the faded rows (r2) first. Attempt count reset. | Base re-run G-scene-rosternames-base2 queued at the front."
+   "status": "ROUND 2 ready 13 Nov 23:00 on tb/scene 94e97a6c7: roster reports its old 232 px footprint to the fight camera, white names, no tween restart, out of the subject fade."
   },
   {
    "id": "places-rescore-d-1113",
@@ -5494,6 +5494,61 @@
    "ask": "After #958 merges: re-shoot F39#31's two views (capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near) on main + #958 as the base, and the same + ralph/reports/LANES/LAND-MT-TIERA/overlay.json (drops the lifted Meshy cascade tier A, the 'rock cluster floating on the sheet') as the arm. High. By eye at veilfall-near: the big rock on the fall sheet is gone.",
    "added": "13 Nov 22:45",
    "priority": "pair with the post-#958 F39#31 re-shoot (one capture serves both)"
+  },
+  {
+   "id": "scene-rosternames-r2",
+   "branch": "tb/scene",
+   "commit": "94e97a6c7",
+   "rows": [
+    "F39#19 (6.92; near-bar)",
+    "no-loss F39#7"
+   ],
+   "ask": "ROSTERNAMES round 2 (same flag, same overlay ralph/reports/LANES/SCENE-ROSTERNAMES/overlay.json). Venn fight, warm-up and pooled base runs (TECHNICAL 8.1), High AND Medium, F38#38 control. By eye: names white and solid in t-003/t-008/t-012 stagger; no fighter covered.",
+   "added": "13 Nov 23:05",
+   "priority": "near-bar closer"
+  },
+  {
+   "id": "scene-panelfill",
+   "branch": "tb/scene",
+   "commit": "94e97a6c7",
+   "rows": [
+    "F38#10 Meadows menus (7.39 on a strict panel; Build alone 7.75)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/SCENE-PANELFILL/overlay.json (Players and Quest Log fill their panels). phase2_capture_ui.gd --biome=meadows --tabs=players,quest_log,build --gamepad --seed=2042, High AND Medium, F38#38 control (confirming batch: can close).",
+   "added": "13 Nov 23:05",
+   "priority": "close candidate: first in the tb/scene boot"
+  },
+  {
+   "id": "scene-curb",
+   "branch": "tb/scene",
+   "commit": "94e97a6c7",
+   "rows": [
+    "F38#28 Warden fight (7.27 High / 7.32 Medium)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/SCENE-CURB/overlay.json (low stone curb with brass inlay replaces the glowing teal ring in the Warden arena only). capture_f38_fight.gd --trainer=warden_aldis frames 03/05/08, pooled bases (two paths), High AND Medium, F38#38 control. By eye: the teal arc is now a stone curb.",
+   "added": "13 Nov 23:05",
+   "priority": "near-bar"
+  },
+  {
+   "id": "scene-tourney",
+   "branch": "tb/scene",
+   "commit": "94e97a6c7",
+   "rows": [
+    "F38#16 tournament dialogue (7.31)"
+   ],
+   "ask": "Pink-halo part only until LANE-SCENE and LANE-BEINGS reconcile Tam (BEINGS-TAM-COAT is already queued for Tam's colours). See SCENE-TOURNEY/ARM.md.",
+   "added": "13 Nov 23:05",
+   "priority": "hold until split"
+  },
+  {
+   "id": "rescore-f39-20-main",
+   "branch": "main",
+   "commit": "13a7ab153",
+   "rows": [
+    "F39#20 (6.42; recorded defect FIXED 3/3, frames carried a stale prompt fixed by #947)"
+   ],
+   "ask": "One-sided re-score of F39#20's job frames on main, High.",
+   "added": "13 Nov 23:05"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
