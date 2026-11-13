@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-pair/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.3722,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F41#13 pair) pre-check failed: the vein lines clip to white (brightest pixels RGB ~251,251,231 to 255,255,248), not gold. Pushed so LANE-BELOW6 can see the GPU result. tb/below6 1095069bb, base vs BELOW6-FULGOCOBRA/overlay.json; High."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-pair/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3547,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F41#13 pair) pre-check failed: the vein lines clip to white (brightest pixels RGB ~251,251,231 to 255,255,248), not gold. Pushed so LANE-BELOW6 can see the GPU result. tb/below6 1095069bb, base vs BELOW6-FULGOCOBRA/overlay.json; High."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-pair/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.371,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F41#13 pair) pre-check failed: the vein lines clip to white (brightest pixels RGB ~251,251,231 to 255,255,248), not gold. Pushed so LANE-BELOW6 can see the GPU result. tb/below6 1095069bb, base vs BELOW6-FULGOCOBRA/overlay.json; High."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-pair/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3547,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F41#13 pair) pre-check failed: the vein lines clip to white (brightest pixels RGB ~251,251,231 to 255,255,248), not gold. Pushed so LANE-BELOW6 can see the GPU result. tb/below6 1095069bb, base vs BELOW6-FULGOCOBRA/overlay.json; High."
+ }
+]
