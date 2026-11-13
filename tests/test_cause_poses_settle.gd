@@ -60,6 +60,8 @@ func test_enabled_scopes_union_their_species_and_master_or_none_change_nothing()
 	# things_faint_scope ON (T1, G-things-faint.md, seven rows).
 	assert_eq(live.only_species, ["mosshell", "aquaryn", "mirejaw", "abyssal_guardian", "mangrove_monitor", "cragclaw", "cannonback",
 		"pebbik", "breezetail", "shadelet", "paddlenewt", "riftfrill", "mosshock", "stormraven",
+		# things_band_scope ON (13 Nov, G-things-bandfaint.md): Duskhush, Ribbonray.
+		"duskhush", "ribbonray",
 		# things_hit_scope ON (12 Nov, G-things-creature-closeout.md): Ashtusk, hit only.
 		"ashtusk"])
 	# The Aquaryn scope ships with settled_rest in rest_only mode: its own
