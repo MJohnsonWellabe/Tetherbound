@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "warden_aldis-03.png",
+  "preset": "arm-Medium",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-medium-record/arm-Medium/warden_aldis-03.png",
+  "sky_fraction": 0.043,
+  "lower_edges": 0.2243,
+  "script_errors": 0,
+  "note": "RECORD ONLY - NOT FOR JUDGING (coordinator 13 Nov: r2 level at High 6.91->6.87, ring-alpha approach parked). things-wardenring-r2 MEDIUM, tb/things a85dde69b, camera-matched pairs only: warden_aldis-03/05 (base from the re-run base-Medium, arm from the first arm-Medium; camera distance 0.00 m). 08/r04 never matched. Fight camera: warden_aldis-08 landed at 7 distinct positions over 15 runs of this fight (max 10.7 m apart, mostly along the arena's long axis); -03 at 3 positions (2.3 m). Damage numbers at the same frame also differ between runs (5 vs 6), so the fight itself diverges and the camera likely follows it; a within-run trace would tell camera jitter from fight divergence."
+ },
+ {
+  "frame": "warden_aldis-05.png",
+  "preset": "arm-Medium",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-medium-record/arm-Medium/warden_aldis-05.png",
+  "sky_fraction": 0.045,
+  "lower_edges": 0.1927,
+  "script_errors": 0,
+  "note": "RECORD ONLY - NOT FOR JUDGING (coordinator 13 Nov: r2 level at High 6.91->6.87, ring-alpha approach parked). things-wardenring-r2 MEDIUM, tb/things a85dde69b, camera-matched pairs only: warden_aldis-03/05 (base from the re-run base-Medium, arm from the first arm-Medium; camera distance 0.00 m). 08/r04 never matched. Fight camera: warden_aldis-08 landed at 7 distinct positions over 15 runs of this fight (max 10.7 m apart, mostly along the arena's long axis); -03 at 3 positions (2.3 m). Damage numbers at the same frame also differ between runs (5 vs 6), so the fight itself diverges and the camera likely follows it; a within-run trace would tell camera jitter from fight divergence."
+ },
+ {
+  "frame": "warden_aldis-03.png",
+  "preset": "base-Medium",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-medium-record/base-Medium/warden_aldis-03.png",
+  "sky_fraction": 0.043,
+  "lower_edges": 0.2326,
+  "script_errors": 0,
+  "note": "RECORD ONLY - NOT FOR JUDGING (coordinator 13 Nov: r2 level at High 6.91->6.87, ring-alpha approach parked). things-wardenring-r2 MEDIUM, tb/things a85dde69b, camera-matched pairs only: warden_aldis-03/05 (base from the re-run base-Medium, arm from the first arm-Medium; camera distance 0.00 m). 08/r04 never matched. Fight camera: warden_aldis-08 landed at 7 distinct positions over 15 runs of this fight (max 10.7 m apart, mostly along the arena's long axis); -03 at 3 positions (2.3 m). Damage numbers at the same frame also differ between runs (5 vs 6), so the fight itself diverges and the camera likely follows it; a within-run trace would tell camera jitter from fight divergence."
+ },
+ {
+  "frame": "warden_aldis-05.png",
+  "preset": "base-Medium",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-medium-record/base-Medium/warden_aldis-05.png",
+  "sky_fraction": 0.045,
+  "lower_edges": 0.2003,
+  "script_errors": 0,
+  "note": "RECORD ONLY - NOT FOR JUDGING (coordinator 13 Nov: r2 level at High 6.91->6.87, ring-alpha approach parked). things-wardenring-r2 MEDIUM, tb/things a85dde69b, camera-matched pairs only: warden_aldis-03/05 (base from the re-run base-Medium, arm from the first arm-Medium; camera distance 0.00 m). 08/r04 never matched. Fight camera: warden_aldis-08 landed at 7 distinct positions over 15 runs of this fight (max 10.7 m apart, mostly along the arena's long axis); -03 at 3 positions (2.3 m). Damage numbers at the same frame also differ between runs (5 vs 6), so the fight itself diverges and the camera likely follows it; a within-run trace would tell camera jitter from fight divergence."
+ }
+]
