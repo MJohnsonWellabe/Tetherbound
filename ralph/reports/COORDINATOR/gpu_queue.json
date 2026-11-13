@@ -5582,6 +5582,18 @@
    ],
    "ask": "Base vs + ralph/reports/LANES/BEINGS-RIPPLET-DEEP/overlay.json, per its CAPTURE.json; Venn fight with warm-up and pooled bases (TECHNICAL 8.1), High and Medium with control.",
    "added": "13 Nov 23:10"
+  },
+  {
+   "id": "land-mt-flowstreaks-r2",
+   "branch": "tb/land-mt",
+   "commit": "5b7c12bc6",
+   "rows": [
+    "F13#5 swim current cue (5.38; r1 gained +0.52)",
+    "no-loss F39#16/#17 current states (must not lose)"
+   ],
+   "ask": "Round 2: base vs + ralph/reports/LANES/LAND-MT-FLOWSTREAKS/overlay.json (flag-off current_flow.lesson_cue: only the four swim-lesson lanes drop their chop caps; S1/S2 current-state lanes untouched by construction). Four T2 views (capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/T2-current.json --capture-size=1920x1080) plus phase2_capture_current_states.gd S1/S2 as no-loss, High. By eye: no crescents in T2 views; current-state frames identical to base.",
+   "added": "13 Nov 23:10",
+   "priority": "in the land-mt boot after SEADEPTH/SHOREZONES"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
