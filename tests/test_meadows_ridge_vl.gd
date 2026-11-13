@@ -63,3 +63,36 @@ func test_on_replaces_only_the_named_rings() -> void:
 		assert_true(replaced.has(str(layer.get("name", ""))), "each replaced name is a real layer")
 	assert_eq(float(on.get("sink_m", -1.0)) >= 0.0, true, "the ridge never rises above its ring base")
 	assert_true((on.get("shader", {}) as Dictionary).has("fog_keep"), "ON keeps a declared share of the live fog")
+
+
+## Correctness (LANE-LAND-MT, 13 Nov): the ridge takes the scene fog the frame
+## it changes, with no time passing. The old 0.5 s poll left a day frame taken
+## right after a dusk frame with tan dusk haze on the mountains.
+func test_ridge_fog_follows_the_environment_without_delay() -> void:
+	var horizon := HORIZON.new() as Node3D
+	var ridge := Node3D.new()
+	var mesh := MeshInstance3D.new()
+	mesh.mesh = BoxMesh.new()
+	var far := ShaderMaterial.new()
+	far.shader = load("res://shaders/meadows_ridge_far.gdshader")
+	mesh.set_surface_override_material(0, far)
+	ridge.add_child(mesh)
+	horizon.add_child(ridge)
+	horizon.set("_ridge", ridge)
+	var env := Environment.new()
+	env.fog_enabled = true
+	env.fog_density = 0.0009
+	env.fog_light_color = Color("#d8a878")  # dusk tan
+	horizon.call("sync_ridge_fog", env)
+	var dusk: Vector3 = far.get_shader_parameter("fog_colour")
+	env.fog_light_color = Color("#9cb8d0")  # day blue, same frame
+	env.fog_density = 0.0005
+	horizon.call("sync_ridge_fog", env)
+	var day: Vector3 = far.get_shader_parameter("fog_colour")
+	assert_true(dusk.x > dusk.z, "the dusk haze reached the ridge")
+	assert_true(day.z > day.x, "the day haze replaces it at once, not on a later poll")
+	assert_true(absf(float(far.get_shader_parameter("fog_density")) - 0.0005) < 1e-6, "density follows too")
+	env.fog_enabled = false
+	horizon.call("sync_ridge_fog", env)
+	assert_false(bool(far.get_shader_parameter("fog_enabled")), "fog off follows too")
+	horizon.free()
