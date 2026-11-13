@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-WALL-BAND ready (F40#1): pale top band on the island walls
+
+Step 1 as asked. No false-colour run was needed: `_mesa` puts every wall band of a mass in one `cliff_high` surface. Flag-off `landmass.wall_top_band_1113`: the first wall band of `LandmarkLedge` and `CliffMass` goes, with the same vertices, into its own surface under a pale tint. Material only, Cloudreach only. CPU: at the Realm Gate Crag approach the dark soil band becomes a pale stone band; the other two row stands show no wall and do not change. Two cautions in ARM.md: at the shipped tint the band can read as sand (a greyer tint is given as the lever), and it changes every Cloudreach frame that looks across at an island wall, so it needs a wide no-loss set. Next for me: F41#8 panels.
+
 ## 13 Nov, tonic-stash: harvest unit tests with the switch ON
 
 Aquaryn ride (option A) is already pushed, see the entry below. Tonic stash, plain harvest unit tests with the switch ON: orb_reward_candidate, permanence (22), rock_tint and sibling_leaf_fixup pass. My own `test_switch_is_off` fails with it on, as it should; the landing replaces it with an ON pin. `test_harvest.gd` (30 tests) does not finish in 270 s here with the switch OFF or ON: both runs pass the same first 16 tests and stall on the same 17th, so it is not the arm, but its last 14 tests are unverified on this machine. Worth one CI run of that file on the land branch.
